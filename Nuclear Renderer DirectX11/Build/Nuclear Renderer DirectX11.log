@@ -1,0 +1,15 @@
+﻿  DX11Shader.cpp
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11shader.h(29): warning C4251: 'NuclearRenderer::DX11Shader::m_vertexShader': class 'Microsoft::WRL::ComPtr<ID3D11VertexShader>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Shader'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11VertexShader>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11shader.h(30): warning C4251: 'NuclearRenderer::DX11Shader::m_pixelShader': class 'Microsoft::WRL::ComPtr<ID3D11PixelShader>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Shader'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11PixelShader>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11shader.h(31): warning C4251: 'NuclearRenderer::DX11Shader::m_geometryShader': class 'Microsoft::WRL::ComPtr<ID3D11GeometryShader>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Shader'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11GeometryShader>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11shader.h(33): warning C4251: 'NuclearRenderer::DX11Shader::m_VSBL': class 'Microsoft::WRL::ComPtr<ID3D10Blob>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Shader'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D10Blob>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11shader.h(34): warning C4251: 'NuclearRenderer::DX11Shader::m_PSBL': class 'Microsoft::WRL::ComPtr<ID3D10Blob>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Shader'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D10Blob>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11shader.h(35): warning C4251: 'NuclearRenderer::DX11Shader::m_GSBL': class 'Microsoft::WRL::ComPtr<ID3D10Blob>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Shader'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D10Blob>'
+  Nuclear Renderer DirectX11.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.DirectX11.dll
+  Nuclear Renderer DirectX11.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.DirectX11.pdb (Partial PDB)
