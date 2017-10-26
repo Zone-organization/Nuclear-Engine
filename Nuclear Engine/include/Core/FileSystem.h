@@ -9,7 +9,7 @@ namespace NuclearEngine
 			{
 				static std::string LoadFileToString(std::string Filepath);
 
-				static std::string LoadGLSLShaderWithDefines(std::string Filepath, std::vector<std::string> defines);
+				static std::string LoadShaderWithDefines(std::string Filepath, std::vector<std::string> defines);
 
 				static char* LoadBinaryFile(std::string Filepath, size_t* size);
 			};

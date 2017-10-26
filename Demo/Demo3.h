@@ -1,21 +1,23 @@
 #pragma once
 #include "Common.h"
 
-class Demo4 : public Core::Game
+struct Shader_Uniforms_t {
+	Math::Matrix4 Model;
+	Math::Matrix4 View;
+	Math::Matrix4 Projection;
+}Shader_Uniforms;
+
+class Demo3 : public Core::Game
 {
 protected:
 	API::Shader *CubeShader;
 	API::VertexBuffer *CubeVB;
+	API::UniformBuffer *CubeCB;
 	API::InputLayout *CubeIL;
 	API::Texture2D *WoodenBoxTex;
-	Components::FlyCamera *Camera;
-
-	float lastX = _Width_ / 2.0f;
-	float lastY = _Height_ / 2.0f;
-	bool firstMouse = true;
-
+	
 public:
-	Demo4()
+	Demo3()
 	{
 	}
 	void Load()
@@ -23,19 +25,19 @@ public:
 		if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 		{
 			CubeShader = new API::Shader("CubeShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/OpenGL/CubeShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/OpenGL/CubeShader.fs").c_str(),
+				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/OpenGL/CubeShader.vs").c_str(),
+				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/OpenGL/CubeShader.fs").c_str(),
 				nullptr,
 				ShaderType::GLSL);
 		}
 		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 		{
 			CubeShader = new API::Shader("CubeShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(),
+				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.vs").c_str(),
+				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.ps").c_str(),
 				nullptr,
 				ShaderType::HLSL);
-		}
+		}		
 
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -86,7 +88,6 @@ public:
 		vDesc.size = sizeof(vertices);
 		vDesc.usage = API::BufferUsage::Dynamic;
 		vDesc.accessflag = API::BufferAccess::Default;
-
 		CubeVB = new API::VertexBuffer(vDesc);
 
 		CubeIL = new API::InputLayout();
@@ -94,10 +95,10 @@ public:
 		CubeIL->Push(1, "TEXCOORD", API::DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
 
 		CubeVB->SetInputLayout(CubeIL, CubeShader);
+		
+		CubeCB = new API::UniformBuffer("NECamera", sizeof(Shader_Uniforms));
+		CubeShader->SetUniformBuffer(CubeCB);
 
-		Camera = new Components::FlyCamera();
-		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		CubeShader->SetUniformBuffer(Camera->GetCBuffer());
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
@@ -109,43 +110,7 @@ public:
 		Core::Context::EnableDepthBuffer(true);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
-
 	}
-
-	void PreRender(float deltatime) override
-	{
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::W))
-			Camera->ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::A))
-			Camera->ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::S))
-			Camera->ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::D))
-			Camera->ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
-
-		//Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
-		//Input::Mouse::ShowMouseCursor(false);
-		Camera->Update();
-	}
-
-	void MouseMovementCallback(double xpos, double ypos) override
-	{
-		if (firstMouse)
-		{
-			lastX = xpos;
-			lastY = ypos;
-			firstMouse = false;
-		}
-
-		float xoffset = xpos - lastX;
-		float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-		lastX = xpos;
-		lastY = ypos;
-
-		Camera->ProcessEye(xoffset, yoffset);
-	}
-
 	void Render()
 	{
 		Core::Context::Begin();
@@ -156,6 +121,14 @@ public:
 		WoodenBoxTex->Bind(0);
 		CubeShader->Bind();
 		CubeVB->Bind();
+
+
+		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f), 5.0f);
+		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
+		Shader_Uniforms.Projection = Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
+
+		CubeCB->Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
+
 		Core::Context::Draw(36);
 		CubeVB->Unbind();
 		CubeShader->Unbind();

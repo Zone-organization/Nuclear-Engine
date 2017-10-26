@@ -6,7 +6,6 @@
 #include "Demo4.h"
 #include "Demo5.h"
 #include "Demo6.h"
-#include "Demo7.h"
 
 void Start()
 {
@@ -28,7 +27,6 @@ void Start()
 	else {
 		std::cout << "Wrong Choice Setting to OpenGL As Default\n";
 		Core::Context::Initialize(Core::RenderAPI::OpenGL3);
-		system("pause");
 	}
 }
 
@@ -62,24 +60,19 @@ int main(int argc, char* argv[])
 		Demo3 demo;
 		Core::Engine::Run(&demo);
 	}
-	else if (choice == 'd') {
+	else if (choice == '1') {
 		Start();
 		Demo4 demo;
 		Core::Engine::Run(&demo);
 	}
-	else if (choice == 'e') {
+	else if (choice == '2') {
 		Start();
 		Demo5 demo;
 		Core::Engine::Run(&demo);
 	}
-	else if (choice == 'f') {
+	else if (choice == '3') {
 		Start();
 		Demo6 demo;
-		Core::Engine::Run(&demo);
-	}
-	else if (choice == 'g') {
-		Start();
-		Demo7 demo;
 		Core::Engine::Run(&demo);
 	}
 	else {

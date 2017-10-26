@@ -1,4 +1,6 @@
-﻿  FileSystem.cpp
+﻿  Renderer3D.cpp
+  FileSystem.cpp
+  Generating Code...
      Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Engine.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Engine.exp
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.pdb (Partial PDB)

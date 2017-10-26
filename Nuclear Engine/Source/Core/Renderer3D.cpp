@@ -1,7 +1,8 @@
 #include <Core\Renderer3D.h>
+#include <Core\FileSystem.h>
+#include <Core\Context.h>
 #include <Core\Engine.h>
 #include <Components\Skybox.h>
-#include <Core\FileSystem.h>
 #include <Components\Light.h>
 
 namespace NuclearEngine {
@@ -100,18 +101,28 @@ namespace NuclearEngine {
 				delete m_lightubo;
 			}
 			if (m_desc.lightmodel == LightShading::PhongShading)
-			{
-
+			{			
 				std::vector<std::string> defines;
 				defines.push_back("NR_POINT_LIGHTS " + std::to_string(pointLights.capacity()));
 				defines.push_back("NR_SPOT_LIGHTS " + std::to_string(spotLights.capacity()));
 				defines.push_back("NR_DIR_LIGHTS " + std::to_string(dirLights.capacity()));
 				
-				m_shader = new API::Shader("Nuclear_OpenGL_Phong_Light_Shader",
-					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.vs").c_str(),
-					Core::FileSystem::LoadGLSLShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.fs", defines).c_str(),
-					nullptr,
-					ShaderType::GLSL);
+				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				{
+					m_shader = new API::Shader("NE_Phong_Light",
+						Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.vs").c_str(),
+						Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.fs", defines).c_str(),
+						nullptr,
+						ShaderType::GLSL);
+				}
+				else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				{
+					m_shader = new API::Shader("NE_Phong_Light",
+						Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs").c_str(),
+						Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps", defines).c_str(),
+						nullptr,
+						ShaderType::HLSL);
+				}			
 				
 				m_shader->SetUniformBuffer(m_cam->GetCBuffer());
 
