@@ -27,7 +27,15 @@ namespace NuclearRenderer {
 	{
 		DX11Context::GetContext()->UpdateSubresource(buffer, 0, NULL, data, 0, 0);
 
-		DX11Context::GetContext()->VSSetConstantBuffers(0, 1, &buffer);
+		if(VS == true)
+			DX11Context::GetContext()->VSSetConstantBuffers(vsindex, 1, &buffer);
+		
+		if(PS == true)
+			DX11Context::GetContext()->PSSetConstantBuffers(psindex, 1, &buffer);
+
+		if(GS == true)
+			DX11Context::GetContext()->GSSetConstantBuffers(gsindex, 1, &buffer);
+
 	}
 	void DX11UniformBuffer::Delete()
 	{

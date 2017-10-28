@@ -34,10 +34,10 @@ namespace NuclearEngine {
 		class NEAPI Shader
 		{
 		public:
-			Shader(const char *name, const char* VertexShader, const char* PixelShader, const char* GeometryShader, ShaderType inputtype);
+			Shader(const char *name, const char* VertexShader, const char* PixelShader, const char* GeometryShader, ShaderLanguage inputtype);
 			~Shader();
 
-			void SetUniformBuffer(UniformBuffer* cbuffer);
+			void SetUniformBuffer(UniformBuffer* cbuffer, ShaderType type);
 			void Bind();
 			void Unbind();
 

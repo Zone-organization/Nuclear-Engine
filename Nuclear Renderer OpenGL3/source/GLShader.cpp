@@ -49,9 +49,9 @@ namespace NuclearRenderer
 		return true;
 	}
 
-	bool GLShader::Create(const char* VertexShaderCode, const char* FragmentShaderCode, const char* GeometryShaderCode, ShaderType Input)
+	bool GLShader::Create(const char* VertexShaderCode, const char* FragmentShaderCode, const char* GeometryShaderCode, ShaderLanguage Input)
 	{
-		if (Input == ShaderType::GLSL)
+		if (Input == ShaderLanguage::GLSL)
 		{
 			GLuint vertex, fragment, geometry;
 			bool vsuccess , fsuccess , gsuccess, lsuccess;
@@ -123,10 +123,14 @@ namespace NuclearRenderer
 		return false;
 	}
 
-	void GLShader::SetUniformBuffer(NRBUniformBuffer * ubuffer)
+	void GLShader::SetUniformBuffer(NRBUniformBuffer * ubuffer, NuclearEngine::ShaderType type)
 	{
-		unsigned int block_index = glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());
-		glUniformBlockBinding(GetGLShaderID(), block_index, ubuffer->GetBindingIndex());
+		if(ubuffer->VS != true)
+		{
+			unsigned int block_index = glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());
+			glUniformBlockBinding(GetGLShaderID(), block_index, ubuffer->GetBindingIndex());
+			ubuffer->VS = true;
+		}
 	}
 
 	void GLShader::Bind()

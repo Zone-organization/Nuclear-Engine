@@ -1,6 +1,6 @@
-﻿  Renderer3D.cpp
-  FileSystem.cpp
+﻿  UniformBuffer.cpp
   Generating Code...
-     Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Engine.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Engine.exp
+  Skipping... (no relevant changes detected)
+  Context.cpp
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.pdb (Partial PDB)

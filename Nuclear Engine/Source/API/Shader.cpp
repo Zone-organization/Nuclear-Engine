@@ -6,7 +6,7 @@
 namespace NuclearEngine {
 	namespace API {
 
-		Shader::Shader(const char *name, const char* VertexShader, const char* PixelShader, const char* GeometryShader, ShaderType inputtype)
+		Shader::Shader(const char *name, const char* VertexShader, const char* PixelShader, const char* GeometryShader, ShaderLanguage inputtype)
 		{
 			Log->Info("[Shader] Initializing Shader: ");
 			Log->Info(name);
@@ -24,9 +24,9 @@ namespace NuclearEngine {
 			delete shader;
 		}
 
-		void Shader::SetUniformBuffer(UniformBuffer * cbuffer)
+		void Shader::SetUniformBuffer(UniformBuffer * cbuffer, ShaderType type)
 		{
-			shader->SetUniformBuffer(cbuffer->GetBase());
+			shader->SetUniformBuffer(cbuffer->GetBase(), type);
 		}
 		void Shader::Bind()
 		{

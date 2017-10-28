@@ -2,6 +2,11 @@
 #include <NuclearRendererDX11\DX11Common.h>
 #include <NuclearRendererBase/NRBShader.h>
 
+namespace NuclearEngine
+{
+	enum ShaderType;
+}
+
 namespace NuclearRenderer {
 
 	class NRDX11API DX11Shader : public NRBShader
@@ -9,8 +14,8 @@ namespace NuclearRenderer {
 	public:
 		DX11Shader();
 
-		bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderType Input) override;
-		void SetUniformBuffer(NRBUniformBuffer* ubuffer) override;
+		bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) override;
+		void SetUniformBuffer(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) override;
 		void Bind() override;
 		void Unbind() override;
 		void Delete() override;

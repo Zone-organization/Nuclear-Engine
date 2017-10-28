@@ -2,6 +2,7 @@
 
 namespace NuclearEngine {
 	enum class ShaderType;
+	enum class ShaderLanguage;
 }
 namespace NuclearRenderer {
 
@@ -10,9 +11,9 @@ namespace NuclearRenderer {
 	class NRBShader
 	{
 	public:
-		virtual bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderType Input) = 0;
+		virtual bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) = 0;
 
-		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer) = 0;
+		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) = 0;
 		virtual void Delete() = 0;
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;

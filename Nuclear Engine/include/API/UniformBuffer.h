@@ -15,7 +15,7 @@ namespace NuclearEngine {
 			~UniformBuffer();
 
 			void Update(void* data, unsigned int size);
-			void Update(void* data,unsigned int offset, unsigned int size);
+			void Update(void * data, unsigned int offset, unsigned int size)
 
 			unsigned int GetBindingIndex();
 			const char * GetName();

@@ -3,10 +3,16 @@
 //To be used with a client
 namespace NuclearEngine {
 
-	enum class ShaderType {
+	enum class ShaderLanguage {
 		HLSL,
 		DXBC,
 		GLSL
+	};
+
+	enum class ShaderType {
+		Vertex,
+		Pixel,
+		Geometry
 	};
 
 	enum class TextureFormat { R8 = 8, R8G8 = 16, R8G8B8 = 24, R8G8B8A8 = 32 };

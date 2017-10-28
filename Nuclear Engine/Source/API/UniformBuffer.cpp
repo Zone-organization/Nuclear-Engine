@@ -32,7 +32,7 @@ namespace NuclearEngine {
 
 		void UniformBuffer::Update(void * data, unsigned int size)
 		{
-			buf->Update(data,0, size);
+			buf->Update(data, 0, size);
 		}
 
 		void UniformBuffer::Update(void * data, unsigned int offset, unsigned int size)

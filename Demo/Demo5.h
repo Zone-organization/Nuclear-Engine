@@ -155,7 +155,7 @@ public:
 		LampVB->SetInputLayout(LampIL, LampShader);
 
 		Texture_Desc Desc;
-		Desc.Filter = TextureFilter::Trilinear;
+		Desc.Filter = TextureFilter::Linear2D;
 		Desc.Wrap = TextureWrap::Repeat;
 		Desc.Format = TextureFormat::R8G8B8A8;
 

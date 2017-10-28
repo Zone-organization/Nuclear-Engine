@@ -28,7 +28,7 @@ namespace NuclearRenderer
 		NRBShader* ConstructShader(NRBShader* param) override;
 
 		// Implementation Specific
-		static ID3D11Device* GetDevice();
-		static ID3D11DeviceContext* GetContext();
+		static ID3D11Device1* GetDevice();
+		static ID3D11DeviceContext1* GetContext();
 	};
 }

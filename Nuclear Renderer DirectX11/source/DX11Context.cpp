@@ -16,9 +16,9 @@ using namespace NuclearPlatform;
 
 namespace NuclearRenderer {
 
-	static ComPtr<ID3D11Device> Device;
-	static ComPtr<ID3D11DeviceContext> Context;
-	static ComPtr<IDXGISwapChain> SwapChain;
+	static ComPtr<ID3D11Device1> Device;
+	static ComPtr<ID3D11DeviceContext1> Context;
+	static ComPtr<IDXGISwapChain1> SwapChain;
 	static D3D_PRIMITIVE_TOPOLOGY D3DPrimitiveType;
 	static ID3D11RenderTargetView* RenderTarget;
 	static ID3D11Texture2D* depthBuffer;
