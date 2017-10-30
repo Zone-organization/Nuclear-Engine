@@ -31,7 +31,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.ps").c_str(),
 				nullptr,
-				ShaderType::HLSL);
+				ShaderLanguage::HLSL);
 		}
 		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 		{
@@ -39,7 +39,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/OpenGL/Triangle.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/OpenGL/Triangle.fs").c_str(),
 				nullptr,
-				ShaderType::GLSL);
+				ShaderLanguage::GLSL);
 		}
 
 		API::VertexBufferDesc Desc;

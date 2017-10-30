@@ -65,7 +65,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/OpenGL/LampShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/OpenGL/LampShader.fs").c_str(),
 				nullptr,
-				ShaderType::GLSL);
+				ShaderLanguage::GLSL);
 		}
 		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 		{
@@ -73,7 +73,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.ps").c_str(),
 				nullptr,
-				ShaderType::HLSL);
+				ShaderLanguage::HLSL);
 		}
 
 		Core::Renderer3D_Desc desc;
@@ -143,7 +143,7 @@ public:
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
-		LampShader->SetUniformBuffer(Camera->GetCBuffer());
+		LampShader->SetUniformBuffer(Camera->GetCBuffer(), ShaderType::Vertex);
 		Renderer = new Core::Renderer3D(desc, Camera);
 
 		CubeVB->SetInputLayout(CubeIL, Renderer->GetShader());

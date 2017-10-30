@@ -28,7 +28,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/OpenGL/CubeShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/OpenGL/CubeShader.fs").c_str(),
 				nullptr,
-				ShaderType::GLSL);
+				ShaderLanguage::GLSL);
 		}
 		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 		{
@@ -36,7 +36,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.ps").c_str(),
 				nullptr,
-				ShaderType::HLSL);
+				ShaderLanguage::HLSL);
 		}		
 
 		float vertices[] = {
@@ -97,7 +97,7 @@ public:
 		CubeVB->SetInputLayout(CubeIL, CubeShader);
 		
 		CubeCB = new API::UniformBuffer("NECamera", sizeof(Shader_Uniforms));
-		CubeShader->SetUniformBuffer(CubeCB);
+		CubeShader->SetUniformBuffer(CubeCB, ShaderType::Vertex);
 
 
 		Texture_Desc Desc;

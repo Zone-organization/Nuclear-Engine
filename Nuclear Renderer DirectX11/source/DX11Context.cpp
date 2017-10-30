@@ -6,12 +6,15 @@
 #include <NuclearRendererDX11\DX11UniformBuffer.h>
 #include <NuclearRendererDX11\DX11Texture2D.h>
 #include <NuclearRendererDX11\DX11Shader.h>
+
+#include <iostream>
 using namespace NuclearCommon;
 using namespace NuclearPlatform;
 
 // include the Direct3D Library file
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "dxgi.lib")
+#pragma comment (lib, "dxguid.lib")
 
 
 namespace NuclearRenderer {
@@ -21,7 +24,10 @@ namespace NuclearRenderer {
 	static ComPtr<IDXGISwapChain1> SwapChain;
 	static D3D_PRIMITIVE_TOPOLOGY D3DPrimitiveType;
 	static ID3D11RenderTargetView* RenderTarget;
-	static ID3D11Texture2D* depthBuffer;
+	static ComPtr<ID3D11Device> _Device;
+	static ComPtr<ID3D11DeviceContext> _Context;
+	static ComPtr<IDXGISwapChain> _SwapChain;
+	static ID3D11Texture2D *depthBuffer;
 	static ID3D11DepthStencilState* m_depthStencilState;
 	static ID3D11DepthStencilView* m_depthStencilView;
 	static ID3D11RasterizerState* m_rasterState;
@@ -30,7 +36,6 @@ namespace NuclearRenderer {
 	bool DX11Context::Initialize()
 	{
 		Log->Info("[Engine] Initializing DirectX 11 Renderer.\n");
-
 		IDXGIFactory1* factory;
 		IDXGIAdapter1* adapter;
 		IDXGIOutput* adapterOutput;
@@ -149,10 +154,16 @@ namespace NuclearRenderer {
 			1,
 			D3D11_SDK_VERSION,
 			&SwapChainDesc,
-			&SwapChain,
-			&Device,
+			&_SwapChain,
+			&_Device,
 			NULL,
-			&Context);
+			&_Context);
+
+		if (SUCCEEDED(_Device.As(&Device)))
+		{
+			(void)_Context.As(&Context);
+			(void)_SwapChain.As(&SwapChain);
+		}
 
 		if (FAILED(result))
 		{
@@ -313,7 +324,10 @@ namespace NuclearRenderer {
 		Log->Info("[DirectX] Vendor: ");
 		Log->Info(m_videoCardDescription);
 		Log->Info("\n");
+		D3D11_FEATURE_DATA_D3D11_OPTIONS fl;
+		Device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS , &fl, sizeof(fl));
 
+		std::cout << fl.ConstantBufferPartialUpdate << fl.ConstantBufferOffsetting;
 
 		return true;
 	}
@@ -409,12 +423,12 @@ namespace NuclearRenderer {
 	{
 	}
 
-	ID3D11Device* DX11Context::GetDevice()
+	ID3D11Device1* DX11Context::GetDevice()
 	{
 		return Device.Get();
 	}
 
-	ID3D11DeviceContext* DX11Context::GetContext()
+	ID3D11DeviceContext1* DX11Context::GetContext()
 	{
 		return Context.Get();
 	}

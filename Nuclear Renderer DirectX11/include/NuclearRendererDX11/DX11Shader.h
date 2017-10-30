@@ -2,11 +2,6 @@
 #include <NuclearRendererDX11\DX11Common.h>
 #include <NuclearRendererBase/NRBShader.h>
 
-namespace NuclearEngine
-{
-	enum ShaderType;
-}
-
 namespace NuclearRenderer {
 
 	class NRDX11API DX11Shader : public NRBShader

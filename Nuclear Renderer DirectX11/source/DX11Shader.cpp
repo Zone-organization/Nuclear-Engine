@@ -6,7 +6,7 @@
 #include <NuclearCommon\Common_API_Types.h>
 using namespace NuclearEngine;
 
-#pragma comment(lib,"d3dcompiler.lib")
+#pragma comment(lib,"D3DCompiler.lib")
 
 using namespace NuclearCommon;
 namespace NuclearRenderer {
@@ -102,17 +102,18 @@ namespace NuclearRenderer {
 	void DX11Shader::SetUniformBuffer(NRBUniformBuffer * ubuffer, ShaderType type)
 	{
 		ID3D11ShaderReflection* pReflector = NULL;
-		D3D11_SHADER_INPUT_BIND_DESC* Desc;
+		D3D11_SHADER_INPUT_BIND_DESC Desc;
 		if (type == ShaderType::Vertex)
 		{
 			D3DReflect(m_VSBL->GetBufferPointer(),
 				m_VSBL->GetBufferSize(),
 				IID_ID3D11ShaderReflection, (void**)&pReflector);
 
-			pReflector->GetResourceBindingDescByName(ubuffer->GetName(), Desc);
-			ubuffer->VS = true;
-
-			ubuffer->vsindex = Desc->BindPoint;
+			if(SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)));
+			{	
+				ubuffer->VS = true;
+				ubuffer->vsindex = Desc.BindPoint;
+			}
 		}
 		else if(type == ShaderType::Pixel)
 		{
@@ -120,11 +121,11 @@ namespace NuclearRenderer {
 				m_PSBL->GetBufferSize(),
 				IID_ID3D11ShaderReflection, (void**)&pReflector);
 
-			pReflector->GetResourceBindingDescByName(ubuffer->GetName(), Desc);
-
-			ubuffer->PS = true;
-
-			ubuffer->psindex = Desc->BindPoint;
+			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)));
+			{
+				ubuffer->PS = true;
+				ubuffer->psindex = Desc.BindPoint;
+			}
 		}
 		else if (type == ShaderType::Geometry)
 		{
@@ -132,11 +133,11 @@ namespace NuclearRenderer {
 				m_GSBL->GetBufferSize(),
 				IID_ID3D11ShaderReflection, (void**)&pReflector);
 
-			pReflector->GetResourceBindingDescByName(ubuffer->GetName(), Desc);
-
-			ubuffer->GS = true;
-
-			ubuffer->gsindex = Desc->BindPoint;
+			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)));
+			{
+				ubuffer->GS = true;
+				ubuffer->gsindex = Desc.BindPoint;
+			}
 		}
 	}
 

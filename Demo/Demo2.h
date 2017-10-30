@@ -33,7 +33,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.fs").c_str(),
 				nullptr,
-				ShaderType::GLSL);
+				ShaderLanguage::GLSL);
 		}
 		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 		{
@@ -41,7 +41,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.ps").c_str(),
 				nullptr,
-				ShaderType::HLSL);
+				ShaderLanguage::HLSL);
 		}
 
 		API::VertexBufferDesc Desc;

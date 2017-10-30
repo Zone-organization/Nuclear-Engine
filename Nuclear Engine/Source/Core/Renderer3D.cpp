@@ -113,7 +113,7 @@ namespace NuclearEngine {
 						Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.vs").c_str(),
 						Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.fs", defines).c_str(),
 						nullptr,
-						ShaderType::GLSL);
+						ShaderLanguage::GLSL);
 				}
 				else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 				{
@@ -121,13 +121,13 @@ namespace NuclearEngine {
 						Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs").c_str(),
 						Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps", defines).c_str(),
 						nullptr,
-						ShaderType::HLSL);
+						ShaderLanguage::HLSL);
 				}			
 				
-				m_shader->SetUniformBuffer(m_cam->GetCBuffer());
+				m_shader->SetUniformBuffer(m_cam->GetCBuffer(),ShaderType::Vertex);
 
 				m_lightubo = new API::UniformBuffer("NE_LightUBO", lightubosize);
-				m_shader->SetUniformBuffer(m_lightubo);
+				m_shader->SetUniformBuffer(m_lightubo, ShaderType::Pixel);
 			}
 
 			flag = Renderer3DStatusFlag::Ready;

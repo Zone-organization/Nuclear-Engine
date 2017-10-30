@@ -48,7 +48,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo6/Shaders/OpenGL/model.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo6/Shaders/OpenGL/model.fs").c_str(),
 				nullptr,
-				ShaderType::GLSL);
+				ShaderLanguage::GLSL);
 		}
 		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 		{
@@ -56,12 +56,12 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo6/Shaders/DirectX/model.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo6/Shaders/DirectX/model.ps").c_str(),
 				nullptr,
-				ShaderType::HLSL);
+				ShaderLanguage::HLSL);
 		}
 	
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)_Width_ / (float)_Height_, 0.1f, 100.0f));
-		Shader->SetUniformBuffer(Camera->GetCBuffer());
+		Shader->SetUniformBuffer(Camera->GetCBuffer(), ShaderType::Vertex);
 
 		model = new Components::Model("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", Shader);
 

@@ -25,16 +25,18 @@ namespace NuclearRenderer {
 	}
 	void DX11UniformBuffer::Update(void * data, unsigned int offset, unsigned int size)
 	{
-		DX11Context::GetContext()->UpdateSubresource(buffer, 0, NULL, data, 0, 0);
+		const D3D11_BOX sDstBox = { offset, 0U, 0U, offset + size, 1U, 1U };
 
-		if(VS == true)
-			DX11Context::GetContext()->VSSetConstantBuffers(vsindex, 1, &buffer);
+		DX11Context::GetContext()->UpdateSubresource1(buffer, 0, &sDstBox, data, 0, 0,D3D11_COPY_DISCARD);
 		
-		if(PS == true)
-			DX11Context::GetContext()->PSSetConstantBuffers(psindex, 1, &buffer);
+		if (VS == true)
+			DX11Context::GetContext()->VSSetConstantBuffers1(vsindex, 1, &buffer, &offset, &size);
 
-		if(GS == true)
-			DX11Context::GetContext()->GSSetConstantBuffers(gsindex, 1, &buffer);
+		if (PS == true)
+			DX11Context::GetContext()->PSSetConstantBuffers1(psindex, 1, &buffer, &offset, &size);
+
+		if (GS == true)
+			DX11Context::GetContext()->GSSetConstantBuffers1(gsindex, 1, &buffer, &offset, &size);
 
 	}
 	void DX11UniformBuffer::Delete()

@@ -1,9 +1,6 @@
 ﻿  DX11UniformBuffer.cpp
 e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11uniformbuffer.h(8): warning C4275: non dll-interface class 'NuclearRenderer::NRBUniformBuffer' used as base for dll-interface class 'NuclearRenderer::DX11UniformBuffer'
-  e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(10): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
+  e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(9): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
   e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11uniformbuffer.h(7): note: see declaration of 'NuclearRenderer::DX11UniformBuffer'
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  DX11Context.cpp
   Nuclear Renderer DirectX11.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.DirectX11.dll
   Nuclear Renderer DirectX11.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.DirectX11.pdb (Partial PDB)

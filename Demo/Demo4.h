@@ -26,7 +26,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/OpenGL/CubeShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/OpenGL/CubeShader.fs").c_str(),
 				nullptr,
-				ShaderType::GLSL);
+				ShaderLanguage::GLSL);
 		}
 		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 		{
@@ -34,7 +34,7 @@ public:
 				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(),
 				nullptr,
-				ShaderType::HLSL);
+				ShaderLanguage::HLSL);
 		}
 
 		float vertices[] = {
@@ -97,7 +97,7 @@ public:
 
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		CubeShader->SetUniformBuffer(Camera->GetCBuffer());
+		CubeShader->SetUniformBuffer(Camera->GetCBuffer(), ShaderType::Vertex);
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
