@@ -319,16 +319,21 @@ namespace NuclearRenderer {
 		//TODO Redo the dwrite backend for renderering fonts
 		//GUI::Internals::InitializeD2DResources();
 
+		D3D11_FEATURE_DATA_D3D11_OPTIONS fl;
+		Device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &fl, sizeof(fl));
+
+		if (fl.ConstantBufferPartialUpdate != TRUE || fl.ConstantBufferOffsetting != TRUE)
+		{
+			Log->FatalError("[DirectX] Your GPU doesn't support constant buffer Partial update which is required to run the Nuclear Engine, Please Update your Drivers.\n");
+			return false;
+		}
+
 		Log->Info("[DirectX] Successfully Initialized\n");
-		Log->Info("[DirectX] Version: 11\n");
+		Log->Info("[DirectX] Version: 11.1\n");
 		Log->Info("[DirectX] Vendor: ");
 		Log->Info(m_videoCardDescription);
 		Log->Info("\n");
-		D3D11_FEATURE_DATA_D3D11_OPTIONS fl;
-		Device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS , &fl, sizeof(fl));
-
-		std::cout << fl.ConstantBufferPartialUpdate << fl.ConstantBufferOffsetting;
-
+		
 		return true;
 	}
 

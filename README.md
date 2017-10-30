@@ -1,27 +1,26 @@
 # Nuclear Engine
-A Cross-Platform Multi-Renderer 3D Game Engine using Opengl 3.3+ , DirectX 11
+A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
 
-## OneAPI Progress (Current Milestone: Cube OBJ Model)
--OpenGL 3.3    (100%)
+## Features:-
+* __Core__
+	*Crossplatform ready
+	*Modern Fast code using C++
 
--DirectX 11    (100%)
+* __Renderer3D__
+	*Support for Dynamic Lights.
+
+* __OneAPI__
+	*Support for DirectX 11.1 Runtime [Feature Level 10.1] and OpenGL 3.3 Core Renderers 
+	*Support for Point, Bilinear, Trilinear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
+	*Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and Many more Image formats.
+	*Support for GLSL & HLSL Shaders.
 
 ## Targeted Platforms
--Windows -WIN32 (%100)      
-
--Universal Windows Platform  -UWP (%0)
-
--Android (%0)
+-Windows 7 , 8 , 10+     
 
 ### Building
 You need Visual Studio 2017 to build it and look at Deps section
 
-### Deps
+### Required Deps
 -Glew
-
 -OpenAL
-
--DirectX SDK (Not Included)
-
-
-### Current Status : Unstable & Buggy
