@@ -18,10 +18,18 @@ namespace NuclearRenderer
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	void GLUniformBuffer::Update(void * data, unsigned int offset, unsigned int size)
+	void GLUniformBuffer::Update(void* data, unsigned int size, unsigned int offset, unsigned int slot, NuclearEngine::ShaderType type)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+
+	void GLUniformBuffer::Update(void* data, unsigned int size, unsigned int slot, NuclearEngine::ShaderType type)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 

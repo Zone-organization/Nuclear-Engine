@@ -56,14 +56,14 @@ namespace NuclearEngine {
 				this->Bake();
 			}
 
-			m_lightubo->Update(&Math::Vector4(m_cam->GetPosition(), 32.0f), 0, sizeof(Math::Vector4));
+			m_lightubo->Update(&Math::Vector4(m_cam->GetPosition(), 32.0f), 0, sizeof(Math::Vector4), ShaderType::Pixel);
 
 			uint point = 0;
 			for (uint i = 0; i < dirLights.size(); i++)
 			{
 				m_lightubo->Update(&dirLights.at(i)->data,
 					sizeof(Math::Vector4) + sizeof(Components::Internal::_DirLight) * point,
-					sizeof(Components::Internal::_DirLight));
+					sizeof(Components::Internal::_DirLight),0, ShaderType::Pixel);
 
 				point++;
 			}
@@ -73,7 +73,7 @@ namespace NuclearEngine {
 			{
 				m_lightubo->Update(&pointLights.at(i)->data,
 					(sizeof(Math::Vector4) + dirLights.size() * sizeof(Components::Internal::_DirLight)) + sizeof(Components::Internal::_PointLight) * point,
-					sizeof(Components::Internal::_PointLight));
+					sizeof(Components::Internal::_PointLight),0, ShaderType::Pixel);
 
 				point++;
 			} 
@@ -83,7 +83,7 @@ namespace NuclearEngine {
 			{
 				m_lightubo->Update(&spotLights.at(i)->data,
 					(sizeof(Math::Vector4) + dirLights.size() * sizeof(Components::Internal::_DirLight) + pointLights.size() * sizeof(Components::Internal::_PointLight)) + +sizeof(Components::Internal::_SpotLight) * point,
-					sizeof(Components::Internal::_SpotLight));
+					sizeof(Components::Internal::_SpotLight),0, ShaderType::Pixel);
 			}
 
 		}
@@ -124,10 +124,10 @@ namespace NuclearEngine {
 						ShaderLanguage::HLSL);
 				}			
 				
-				m_shader->SetUniformBuffer(m_cam->GetCBuffer(),ShaderType::Vertex);
+				m_shader->SetUniformBuffer(m_cam->GetCBuffer());
 
 				m_lightubo = new API::UniformBuffer("NE_LightUBO", lightubosize);
-				m_shader->SetUniformBuffer(m_lightubo, ShaderType::Pixel);
+				m_shader->SetUniformBuffer(m_lightubo);
 			}
 
 			flag = Renderer3DStatusFlag::Ready;

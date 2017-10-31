@@ -1,5 +1,6 @@
 #include <NuclearRendererDX11\DX11Context.h>
 #include <NuclearRendererDX11\DX11UniformBuffer.h>
+#include <NuclearCommon\Common_API_Types.h>
 
 namespace NuclearRenderer {
 
@@ -23,21 +24,40 @@ namespace NuclearRenderer {
 
 		DX11Context::GetDevice()->CreateBuffer(&bufferDesc, NULL, &buffer);
 	}
-	void DX11UniformBuffer::Update(void * data, unsigned int offset, unsigned int size)
+	void DX11UniformBuffer::Update(void* data, unsigned int size, unsigned int offset, unsigned int slot, NuclearEngine::ShaderType type)
 	{
 		const D3D11_BOX sDstBox = { offset, 0U, 0U, offset + size, 1U, 1U };
 
-		DX11Context::GetContext()->UpdateSubresource1(buffer, 0, &sDstBox, data, 0, 0,D3D11_COPY_DISCARD);
+		DX11Context::GetContext()->UpdateSubresource1(buffer, 0, &sDstBox, data, 0, 0, D3D11_COPY_DISCARD);
 		
-		if (VS == true)
-			DX11Context::GetContext()->VSSetConstantBuffers1(vsindex, 1, &buffer, &offset, &size);
+		switch (type)
+		{
+		case NuclearEngine::ShaderType::Vertex:
+			DX11Context::GetContext()->VSSetConstantBuffers1(slot, 1, &buffer, &offset, &size);
+		case NuclearEngine::ShaderType::Pixel:
+			DX11Context::GetContext()->PSSetConstantBuffers1(slot, 1, &buffer, &offset, &size);
+		case NuclearEngine::ShaderType::Geometry:
+			DX11Context::GetContext()->GSSetConstantBuffers1(slot, 1, &buffer, &offset, &size);
+		default:
+			break;
+		}
+	}
+	void DX11UniformBuffer::Update(void * data, unsigned int size, unsigned int slot, NuclearEngine::ShaderType type)
+	{
 
-		if (PS == true)
-			DX11Context::GetContext()->PSSetConstantBuffers1(psindex, 1, &buffer, &offset, &size);
+		DX11Context::GetContext()->UpdateSubresource(buffer, 0, NULL, data, 0, 0);
 
-		if (GS == true)
-			DX11Context::GetContext()->GSSetConstantBuffers1(gsindex, 1, &buffer, &offset, &size);
-
+		switch (type)
+		{
+		case NuclearEngine::ShaderType::Vertex:
+			DX11Context::GetContext()->VSSetConstantBuffers(0, 1, &buffer);
+		case NuclearEngine::ShaderType::Pixel:
+			DX11Context::GetContext()->PSSetConstantBuffers(0, 1, &buffer);
+		case NuclearEngine::ShaderType::Geometry:
+			DX11Context::GetContext()->GSSetConstantBuffers(0, 1, &buffer);
+		default:
+			break;
+		}
 	}
 	void DX11UniformBuffer::Delete()
 	{

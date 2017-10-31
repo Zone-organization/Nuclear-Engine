@@ -24,7 +24,7 @@ namespace NuclearEngine
 
 		void GenericCamera::Update()
 		{
-			UniformBuffer->Update(&_CameraBuffer, sizeof(_CameraBuffer));
+			UniformBuffer->Update(&_CameraBuffer, sizeof(_CameraBuffer), 0, ShaderType::Vertex);
 
 		}
 		void GenericCamera::SetModelMatrix(Math::Matrix4 modelMatrix)

@@ -123,14 +123,15 @@ namespace NuclearRenderer
 		return false;
 	}
 
-	void GLShader::SetUniformBuffer(NRBUniformBuffer * ubuffer, NuclearEngine::ShaderType type)
+	void GLShader::SetUniformBuffer(NRBUniformBuffer * ubuffer)
 	{
-		if(ubuffer->VS != true)
-		{
-			unsigned int block_index = glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());
-			glUniformBlockBinding(GetGLShaderID(), block_index, ubuffer->GetBindingIndex());
-			ubuffer->VS = true;
-		}
+		unsigned int block_index = glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());
+		glUniformBlockBinding(GetGLShaderID(), block_index, ubuffer->GetBindingIndex());		
+	}
+
+	unsigned int GLShader::GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type)
+	{
+		return glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());;
 	}
 
 	void GLShader::Bind()

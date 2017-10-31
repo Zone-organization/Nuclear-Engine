@@ -97,7 +97,7 @@ public:
 		CubeVB->SetInputLayout(CubeIL, CubeShader);
 		
 		CubeCB = new API::UniformBuffer("NECamera", sizeof(Shader_Uniforms));
-		CubeShader->SetUniformBuffer(CubeCB, ShaderType::Vertex);
+		CubeShader->SetUniformBuffer(CubeCB);
 
 
 		Texture_Desc Desc;
@@ -127,7 +127,7 @@ public:
 		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
 		Shader_Uniforms.Projection = Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
-		CubeCB->Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
+		CubeCB->Update(&Shader_Uniforms, sizeof(Shader_Uniforms), 0, ShaderType::Vertex);
 
 		Core::Context::Draw(36);
 		CubeVB->Unbind();

@@ -30,14 +30,14 @@ namespace NuclearEngine {
 			delete buf;
 		}
 
-		void UniformBuffer::Update(void * data, unsigned int size)
+		void UniformBuffer::Update(void* data, unsigned int size, unsigned int slot, NuclearEngine::ShaderType type)
 		{
-			buf->Update(data, 0, size);
+			buf->Update(data, size, slot, type);
 		}
 
-		void UniformBuffer::Update(void * data, unsigned int offset, unsigned int size)
+		void UniformBuffer::Update(void* data, unsigned int size, unsigned int offset, unsigned int slot, NuclearEngine::ShaderType type)
 		{
-			buf->Update(data, offset, size);
+			buf->Update(data,size, offset, slot, type);
 		}
 
 		unsigned int UniformBuffer::GetBindingIndex()

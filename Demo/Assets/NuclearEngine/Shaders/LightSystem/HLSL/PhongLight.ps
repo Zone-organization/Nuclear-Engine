@@ -32,7 +32,7 @@ struct SpotLight {
 	float4 color;
 };
 
-cbuffer NE_LightUBO
+cbuffer NE_LightUBO : register(b0)
 {
 	float4 viewPosandMaterialshininess;
 	DirLight dirLights[NR_DIR_LIGHTS];

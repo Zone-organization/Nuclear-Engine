@@ -143,7 +143,7 @@ public:
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
-		LampShader->SetUniformBuffer(Camera->GetCBuffer(), ShaderType::Vertex);
+		LampShader->SetUniformBuffer(Camera->GetCBuffer());
 		Renderer = new Core::Renderer3D(desc, Camera);
 
 		CubeVB->SetInputLayout(CubeIL, Renderer->GetShader());

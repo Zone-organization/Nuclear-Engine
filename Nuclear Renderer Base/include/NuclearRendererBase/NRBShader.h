@@ -1,8 +1,8 @@
 #pragma once
 
 namespace NuclearEngine {
-	enum class ShaderType;
 	enum class ShaderLanguage;
+	enum class ShaderType;
 }
 namespace NuclearRenderer {
 
@@ -13,11 +13,13 @@ namespace NuclearRenderer {
 	public:
 		virtual bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) = 0;
 
-		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) = 0;
+		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer) = 0;
+		virtual unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) = 0;
+
 		virtual void Delete() = 0;
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
-
+		
 		//OpenGL Specific
 		virtual unsigned int GetGLShaderID() = 0;
 

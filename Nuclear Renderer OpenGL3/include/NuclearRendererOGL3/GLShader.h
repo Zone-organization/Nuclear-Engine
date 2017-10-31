@@ -10,7 +10,9 @@ namespace NuclearRenderer
 		GLShader();
 
 		bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) override;
-		void SetUniformBuffer(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) override;
+		void SetUniformBuffer(NRBUniformBuffer* ubuffer) override;
+		unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) override;
+
 		void Bind() override;
 		void Unbind() override;
 		void Delete() override;

@@ -1,6 +1,6 @@
 ﻿  GLUniformBuffer.cpp
 e:\zone\nuclear-project\nuclear renderer opengl3\include\nuclearrendererogl3\gluniformbuffer.h(8): warning C4275: non dll-interface class 'NuclearRenderer::NRBUniformBuffer' used as base for dll-interface class 'NuclearRenderer::GLUniformBuffer'
-  e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(9): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
+  e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(13): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
   e:\zone\nuclear-project\nuclear renderer opengl3\include\nuclearrendererogl3\gluniformbuffer.h(7): note: see declaration of 'NuclearRenderer::GLUniformBuffer'
   GLShader.cpp
 e:\zone\nuclear-project\nuclear renderer opengl3\source\glshader.cpp(58): warning C4101: 'infoLog': unreferenced local variable
@@ -9,7 +9,7 @@ e:\zone\nuclear-project\nuclear renderer opengl3\source\glshader.cpp(58): warnin
   GLTexture2D.cpp
   GLContext.cpp
 e:\zone\nuclear-project\nuclear renderer opengl3\include\nuclearrendererogl3\gluniformbuffer.h(8): warning C4275: non dll-interface class 'NuclearRenderer::NRBUniformBuffer' used as base for dll-interface class 'NuclearRenderer::GLUniformBuffer'
-  e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(9): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
+  e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(13): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
   e:\zone\nuclear-project\nuclear renderer opengl3\include\nuclearrendererogl3\gluniformbuffer.h(7): note: see declaration of 'NuclearRenderer::GLUniformBuffer'
   Generating Code...
      Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.OpenGL3.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.OpenGL3.exp
