@@ -99,9 +99,27 @@ namespace NuclearRenderer {
 			return false;
 	}
 
-	void DX11Shader::SetUniformBuffer(NRBUniformBuffer * ubuffer)
+	void DX11Shader::SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
 	{
+		if (type == ShaderType::Vertex)
+		{
+			DX11Context::GetContext()->VSSetShader(m_vertexShader.Get(), 0, 0);
+			DX11Context::GetContext()->VSSetConstantBuffers(slot, 1, ubuffer->GetDXBuffer());
+		}
+		else if (type == ShaderType::Pixel)
+		{
+			DX11Context::GetContext()->PSSetShader(m_pixelShader.Get(), 0, 0);
+			DX11Context::GetContext()->PSSetConstantBuffers(slot, 1, ubuffer->GetDXBuffer());
+		}
+		else if (type == ShaderType::Geometry)
+		{
+			DX11Context::GetContext()->GSSetShader(m_geometryShader.Get(), 0, 0);
+			DX11Context::GetContext()->GSSetConstantBuffers(slot, 1, ubuffer->GetDXBuffer());
+		}
+
+		return;
 	}
+
 
 	unsigned int DX11Shader::GetUniformBufferSlot(NRBUniformBuffer * ubuffer, NuclearEngine::ShaderType type)
 	{

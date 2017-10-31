@@ -17,7 +17,7 @@ namespace NuclearEngine {
 			Shader(const char *name, const char* VertexShader, const char* PixelShader, const char* GeometryShader, ShaderLanguage inputtype);
 			~Shader();
 
-			void SetUniformBuffer(UniformBuffer* cbuffer);
+			void SetUniformBuffer(UniformBuffer* cbuffer, unsigned int slot , ShaderType type);
 			unsigned int GetUniformBufferSlot(UniformBuffer* cbuffer, ShaderType type);
 			void Bind();
 			void Unbind();

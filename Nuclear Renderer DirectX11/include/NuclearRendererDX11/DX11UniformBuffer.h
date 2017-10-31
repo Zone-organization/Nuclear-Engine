@@ -9,14 +9,14 @@ namespace NuclearRenderer {
 	public:
 		DX11UniformBuffer();
 
-		void Create(const char *Nameinshader, unsigned int size, unsigned int Bindingindex) override;
-		void Update(void* data, unsigned int size, unsigned int offset, unsigned int slot, NuclearEngine::ShaderType type) override;
-		void Update(void* data, unsigned int size, unsigned int slot, NuclearEngine::ShaderType type) override;
+		void Create(const char *Nameinshader, unsigned int size) override;
+		void Update(void* data, unsigned int size) override;
 
 		void Delete() override;
 		unsigned int GetBindingIndex() override;
 		const char * GetName() override;
 
+		ID3D11Buffer* const *GetDXBuffer();
 	protected:
 		ID3D11Buffer* buffer;
 	};

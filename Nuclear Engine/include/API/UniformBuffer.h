@@ -15,12 +15,8 @@ namespace NuclearEngine {
 			UniformBuffer(const char *_nameinshaders, unsigned int size);
 			~UniformBuffer();
 
-			void Update(void* data, unsigned int size, unsigned int offset, unsigned int slot, NuclearEngine::ShaderType type);
-			void Update(void* data, unsigned int size, unsigned int slot, NuclearEngine::ShaderType type);
-
-			unsigned int GetBindingIndex();
-			const char * GetName();
-
+			void Update(void* data, unsigned int size);
+	
 			NuclearRenderer::NRBUniformBuffer* GetBase();
 		protected:
 			NuclearRenderer::NRBUniformBuffer *buf;

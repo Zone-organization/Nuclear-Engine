@@ -24,9 +24,9 @@ namespace NuclearEngine {
 			delete shader;
 		}
 
-		void Shader::SetUniformBuffer(UniformBuffer * cbuffer)
+		void Shader::SetUniformBuffer(UniformBuffer* cbuffer, unsigned int slot, ShaderType type)
 		{
-			shader->SetUniformBuffer(cbuffer->GetBase());
+			shader->SetUniformBuffer(cbuffer->GetBase(), slot, type);
 		}
 		unsigned int Shader::GetUniformBufferSlot(UniformBuffer * cbuffer, ShaderType type)
 		{

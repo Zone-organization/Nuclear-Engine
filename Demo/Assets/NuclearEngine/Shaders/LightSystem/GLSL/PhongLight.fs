@@ -29,14 +29,31 @@ struct SpotLight {
 	vec4 color;
 };
 
-layout(std140) uniform NE_LightUBO
+layout(std140) uniform NE_GlobalUBO
 {
 	vec4 viewPosandMaterialshininess;
-	DirLight dirLights[NR_DIR_LIGHTS];
-	PointLight pointLights[NR_POINT_LIGHTS];
-	SpotLight spotLights[NR_SPOT_LIGHTS];
 };
 
+#ifdef NR_DIR_LIGHTS
+layout(std140) uniform NE_DirLightUBO
+{
+	DirLight dirLights[NR_DIR_LIGHTS];
+};
+#endif
+
+#ifdef NR_POINT_LIGHTS
+layout(std140) uniform NE_PointLightUBO
+{
+	PointLight pointLights[NR_POINT_LIGHTS];
+};
+#endif
+
+#ifdef NR_SPOT_LIGHTS
+layout(std140) uniform NE_SpotLightUBO
+{
+	SpotLight spotLights[NR_SPOT_LIGHTS];
+};
+#endif
 
 // function prototypes
 vec4 CalcDirLight(DirLight light, vec4 normal, vec4 viewDir);
@@ -49,17 +66,21 @@ void main()
 	vec4 norm = normalize(Normal);
 	vec4 viewDir = normalize(viewPosandMaterialshininess - FragPos);
 	
-	// phase 1: directional lighting
+	#ifdef NR_DIR_LIGHTS
 	for (int i = 0; i < NR_DIR_LIGHTS; i++)
 		FragColor = CalcDirLight(dirLights[i], norm, viewDir);
+	#endif
 
-	// phase 2: point lights
+	#ifdef NR_POINT_LIGHTS
 	for (int i = 0; i < NR_POINT_LIGHTS; i++)
 		FragColor += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
+	#endif
 
-	// phase 3: spot light
+	#ifdef NR_SPOT_LIGHTS
 	for (int i = 0; i < NR_SPOT_LIGHTS; i++)
 		FragColor += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
+	#endif
+
 }
 
 // calculates the color when using a directional light.

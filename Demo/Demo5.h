@@ -143,8 +143,16 @@ public:
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
-		LampShader->SetUniformBuffer(Camera->GetCBuffer());
+		LampShader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);
+
 		Renderer = new Core::Renderer3D(desc, Camera);
+		Renderer->AddLight(&dirlight);
+		Renderer->AddLight(&flashlight);
+		Renderer->AddLight(&pointlight1);
+		Renderer->AddLight(&pointlight2);
+		Renderer->AddLight(&pointlight3);
+		Renderer->AddLight(&pointlight4);
+		Renderer->Bake();
 
 		CubeVB->SetInputLayout(CubeIL, Renderer->GetShader());
 
@@ -161,14 +169,6 @@ public:
 
 		CrateTexture_Diffuse = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
 		CrateTexture_Specular = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_specular.png", Desc), Desc);
-
-		Renderer->AddLight(&dirlight);
-		Renderer->AddLight(&flashlight);
-		Renderer->AddLight(&pointlight1);
-		Renderer->AddLight(&pointlight2);
-		Renderer->AddLight(&pointlight3);
-		Renderer->AddLight(&pointlight4);
-		Renderer->Bake();
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

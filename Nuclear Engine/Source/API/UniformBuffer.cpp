@@ -4,9 +4,6 @@
 
 namespace NuclearEngine {
 	namespace API {
-
-		static int ubosBindingindex = 0;
-
 		UniformBuffer::UniformBuffer(const char *_nameinshaders, unsigned int size)
 		{
 			buf = Core::Context::ConstructUniformBuffer(buf);
@@ -18,10 +15,7 @@ namespace NuclearEngine {
 				Log->Warning("[UniformBuffer] The size of buffer isn't a multiple of 16 which can cause many problems and errors! \n");
 			}
 
-			buf->Create(_nameinshaders, size, ubosBindingindex);
-
-			//Increment the binding index
-			ubosBindingindex++;
+			buf->Create(_nameinshaders, size);
 		}
 		UniformBuffer::~UniformBuffer()
 		{
@@ -30,23 +24,9 @@ namespace NuclearEngine {
 			delete buf;
 		}
 
-		void UniformBuffer::Update(void* data, unsigned int size, unsigned int slot, NuclearEngine::ShaderType type)
+		void UniformBuffer::Update(void* data, unsigned int size)
 		{
-			buf->Update(data, size, slot, type);
-		}
-
-		void UniformBuffer::Update(void* data, unsigned int size, unsigned int offset, unsigned int slot, NuclearEngine::ShaderType type)
-		{
-			buf->Update(data,size, offset, slot, type);
-		}
-
-		unsigned int UniformBuffer::GetBindingIndex()
-		{
-			return buf->GetBindingIndex();
-		}
-		const char * UniformBuffer::GetName()
-		{
-			return buf->GetName();
+			buf->Update(data, size);
 		}
 		NuclearRenderer::NRBUniformBuffer * UniformBuffer::GetBase()
 		{

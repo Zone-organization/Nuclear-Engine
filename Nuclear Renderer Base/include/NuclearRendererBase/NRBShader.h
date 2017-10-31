@@ -13,7 +13,7 @@ namespace NuclearRenderer {
 	public:
 		virtual bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) = 0;
 
-		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer) = 0;
+		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) = 0;
 		virtual unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) = 0;
 
 		virtual void Delete() = 0;

@@ -62,14 +62,19 @@ namespace NuclearEngine {
 
 			void Render();
 		private:
+			void Bake_Uniform_Buffers();
+			void Bake_Forward_Phong();
+
 			API::Shader *m_shader;
-			API::UniformBuffer *m_lightubo;
+			API::UniformBuffer *GlobalUBO;
+			API::UniformBuffer *PointLightUBO;
+			API::UniformBuffer *DirLightUBO;
+			API::UniformBuffer *SpotLightUBO;
 
 			std::vector<Components::DirectionalLight*> dirLights;
 			std::vector<Components::PointLight*> pointLights;
 			std::vector<Components::SpotLight*> spotLights;
 			Renderer3DStatusFlag flag;
-			size_t lightubosize;
 
 			Renderer3D_Desc m_desc;
 			Components::GenericCamera *m_cam;

@@ -97,7 +97,7 @@ public:
 
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		CubeShader->SetUniformBuffer(Camera->GetCBuffer());
+		CubeShader->SetUniformBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
@@ -125,7 +125,13 @@ public:
 
 		//Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
 		//Input::Mouse::ShowMouseCursor(false);
-		Camera->Update();
+		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::Z))
+		{
+
+		}
+		else {
+			Camera->Update();
+		}
 	}
 
 	void MouseMovementCallback(double xpos, double ypos) override

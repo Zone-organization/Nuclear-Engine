@@ -1,11 +1,9 @@
 #include <NuclearRendererOGL3\GLShader.h>
 #include <NuclearRendererBase\NRBUniformBuffer.h>
 #include <NuclearCommon\Utilities\Logger.h>
-using namespace NuclearCommon;
 #include <NuclearCommon\Common_API_Types.h>
 using namespace NuclearEngine;
-
-#define quote(x) #x
+using namespace NuclearCommon;
 
 namespace NuclearRenderer
 {
@@ -123,10 +121,13 @@ namespace NuclearRenderer
 		return false;
 	}
 
-	void GLShader::SetUniformBuffer(NRBUniformBuffer * ubuffer)
+	void GLShader::SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
 	{
-		unsigned int block_index = glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());
-		glUniformBlockBinding(GetGLShaderID(), block_index, ubuffer->GetBindingIndex());		
+		if (ubuffer->shaderidx != GetGLShaderID())
+		{
+			ubuffer->shaderidx == GetGLShaderID();
+			glUniformBlockBinding(GetGLShaderID(), slot, ubuffer->GetBindingIndex());
+		}
 	}
 
 	unsigned int GLShader::GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type)

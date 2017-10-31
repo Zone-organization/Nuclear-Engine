@@ -61,7 +61,7 @@ public:
 	
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)_Width_ / (float)_Height_, 0.1f, 100.0f));
-		Shader->SetUniformBuffer(Camera->GetCBuffer());
+		Shader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);
 
 		model = new Components::Model("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", Shader);
 
