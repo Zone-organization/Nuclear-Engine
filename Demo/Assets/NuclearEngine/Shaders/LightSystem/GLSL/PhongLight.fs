@@ -29,31 +29,19 @@ struct SpotLight {
 	vec4 color;
 };
 
-layout(std140) uniform NE_GlobalUBO
+layout(std140) uniform NE_LightUBO
 {
 	vec4 viewPosandMaterialshininess;
-};
-
 #ifdef NR_DIR_LIGHTS
-layout(std140) uniform NE_DirLightUBO
-{
 	DirLight dirLights[NR_DIR_LIGHTS];
-};
 #endif
-
 #ifdef NR_POINT_LIGHTS
-layout(std140) uniform NE_PointLightUBO
-{
 	PointLight pointLights[NR_POINT_LIGHTS];
-};
 #endif
-
 #ifdef NR_SPOT_LIGHTS
-layout(std140) uniform NE_SpotLightUBO
-{
 	SpotLight spotLights[NR_SPOT_LIGHTS];
-};
 #endif
+};
 
 // function prototypes
 vec4 CalcDirLight(DirLight light, vec4 normal, vec4 viewDir);

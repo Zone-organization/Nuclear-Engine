@@ -24,7 +24,7 @@ namespace NuclearRenderer {
 		DX11Context::GetDevice()->CreateBuffer(&bufferDesc, NULL, &buffer);
 	}
 
-	void DX11UniformBuffer::Update(void * data, unsigned int size)
+	void DX11UniformBuffer::Update(const void * data, unsigned int size)
 	{
 		DX11Context::GetContext()->UpdateSubresource(buffer, 0, NULL, data, 0, 0);
 	}

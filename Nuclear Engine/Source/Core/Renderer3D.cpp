@@ -13,9 +13,9 @@ namespace NuclearEngine {
 		{
 			m_desc = desc;
 			this->SetCamera(cam);
-			/*initialized = false;
+			initialized = false;
 			this->Bake();
-			initialized = true;*/
+			initialized = true;
 		}
 
 
@@ -37,7 +37,7 @@ namespace NuclearEngine {
 
 		API::Shader * Renderer3D::GetShader()
 		{
-			return m_shader;
+			return Renderer_Shader;
 		}
 
 		void Renderer3D::SetCamera(Components::GenericCamera * cam)
@@ -52,38 +52,46 @@ namespace NuclearEngine {
 				this->Bake();
 			}
 
-			GlobalUBO->Update(&Math::Vector4(m_cam->GetPosition(), 32.0f), sizeof(Math::Vector4));
+			std::vector<Math::Vector4> UBOBuffer;
+
+			UBOBuffer.push_back(Math::Vector4(m_cam->GetPosition(), 32.0f));
 
 			for (uint i = 0; i < dirLights.size(); i++)
 			{
-				DirLightUBO->Update(&dirLights.at(i)->data, sizeof(Components::Internal::_DirLight));
+				UBOBuffer.push_back(dirLights.at(i)->data.m_dir);
+				UBOBuffer.push_back(dirLights.at(i)->data.m_color);
 			}
 			
 			for (uint i = 0; i < pointLights.size(); i++)
 			{
-				PointLightUBO->Update(&pointLights.at(i)->data, sizeof(Components::Internal::_PointLight));
+				UBOBuffer.push_back(pointLights.at(i)->data.m_pos);
+				UBOBuffer.push_back(pointLights.at(i)->data.m_intensity_att);
+				UBOBuffer.push_back(pointLights.at(i)->data.m_color);
 			} 
 			
 			for (uint i = 0; i < spotLights.size(); i++)
 			{
-				SpotLightUBO->Update(&spotLights.at(i)->data, sizeof(Components::Internal::_SpotLight));
+				UBOBuffer.push_back(spotLights.at(i)->data.m_pos);
+				UBOBuffer.push_back(spotLights.at(i)->data.m_dir);
+				UBOBuffer.push_back(spotLights.at(i)->data.m_intensity_att);
+				UBOBuffer.push_back(spotLights.at(i)->data.m_cutoff_outercutoff);
+				UBOBuffer.push_back(spotLights.at(i)->data.m_color);
 			}
+			
+			NE_LightUBO->Update(UBOBuffer.data(), LightUBOSize);
 
 		}
 		void Renderer3D::Bake()
 		{
-			/*if (initialized)
+			if (initialized)
 			{
 				if (flag != Renderer3DStatusFlag::RequireBaking)
 				{
 					Log->Warning("[Renderer3D] Baking the renderer while no changes is recorded!\n");
 				}
-				delete m_shader;
-				delete GlobalUBO;
-				delete DirLightUBO;			
-				delete PointLightUBO;
-				delete SpotLightUBO;
-			}*/
+				delete Renderer_Shader;
+				delete NE_LightUBO;
+			}
 			if (m_desc.lightmodel == LightShading::PhongShading)
 			{			
 				if (m_desc.tech == RenderingTechnique::Forward)
@@ -115,7 +123,7 @@ namespace NuclearEngine {
 
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				m_shader = new API::Shader("NE_Phong_Light",
+				Renderer_Shader = new API::Shader("NE_Phong_Light",
 					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.vs").c_str(),
 					Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.fs", defines).c_str(),
 					nullptr,
@@ -123,7 +131,7 @@ namespace NuclearEngine {
 			}
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
-				m_shader = new API::Shader("NE_Phong_Light",
+				Renderer_Shader = new API::Shader("NE_Phong_Light",
 					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs").c_str(),
 					Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps", defines).c_str(),
 					nullptr,
@@ -135,35 +143,26 @@ namespace NuclearEngine {
 
 		void Renderer3D::Bake_Uniform_Buffers()
 		{
-
-			m_shader->SetUniformBuffer(m_cam->GetCBuffer(), 0, ShaderType::Vertex);
-
-			/*
-			Pixel Shader Slots:
-			0:Global
-			1:DirLightUBO
-			2:PointLightUBO
-			3:SpotLightUBO
-			*/
-
-			GlobalUBO = new API::UniformBuffer("NE_GlobalUBO", sizeof(Math::Vector4));
-			m_shader->SetUniformBuffer(DirLightUBO, 0, ShaderType::Pixel);
+			unsigned int NECslot = Renderer_Shader->GetUniformBufferSlot(m_cam->GetCBuffer(), ShaderType::Vertex);
+			Renderer_Shader->SetUniformBuffer(m_cam->GetCBuffer(), NECslot, ShaderType::Vertex);
+			LightUBOSize = sizeof(Math::Vector4);
 
 			if (dirLights.size() > 0)
 			{
-				DirLightUBO = new API::UniformBuffer("NE_DirLightUBO", dirLights.size() * sizeof(Components::Internal::_DirLight));
-				m_shader->SetUniformBuffer(DirLightUBO, 1, ShaderType::Pixel);
+				LightUBOSize = LightUBOSize + (dirLights.size() * sizeof(Components::Internal::_DirLight));
 			}
 			if (pointLights.size() > 0)
 			{
-				PointLightUBO = new API::UniformBuffer("NE_PointLightUBO", pointLights.size() * sizeof(Components::Internal::_PointLight));
-				m_shader->SetUniformBuffer(PointLightUBO, 2, ShaderType::Pixel);
+				LightUBOSize = LightUBOSize + (pointLights.size() * sizeof(Components::Internal::_PointLight));
 			}
 			if (spotLights.size() > 0)
 			{
-				SpotLightUBO = new API::UniformBuffer("NE_SpotLightUBO", spotLights.size() * sizeof(Components::Internal::_SpotLight));
-				m_shader->SetUniformBuffer(SpotLightUBO, 3, ShaderType::Pixel);
+				LightUBOSize = LightUBOSize + (spotLights.size() * sizeof(Components::Internal::_SpotLight));
 			}
+
+			NE_LightUBO = new API::UniformBuffer("NE_LightUBO", LightUBOSize);
+			unsigned int NELslot = Renderer_Shader->GetUniformBufferSlot(NE_LightUBO, ShaderType::Pixel);
+			Renderer_Shader->SetUniformBuffer(NE_LightUBO, NELslot, ShaderType::Pixel);
 		}
 
 	}

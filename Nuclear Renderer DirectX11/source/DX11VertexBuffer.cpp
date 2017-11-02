@@ -81,7 +81,7 @@ namespace NuclearRenderer
 
 	}
 
-	void DX11VertexBuffer::Update(void* data, unsigned int size)
+	void DX11VertexBuffer::Update(const void* data, unsigned int size)
 	{
 		DX11Context::GetContext()->UpdateSubresource(VertexBuffer.Get(), 0, 0, data, 0, 0);
 	}

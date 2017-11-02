@@ -132,7 +132,7 @@ namespace NuclearRenderer {
 				m_VSBL->GetBufferSize(),
 				IID_ID3D11ShaderReflection, (void**)&pReflector);
 
-			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)));
+			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
 			{
 				return Desc.BindPoint;
 			}
@@ -143,7 +143,7 @@ namespace NuclearRenderer {
 				m_PSBL->GetBufferSize(),
 				IID_ID3D11ShaderReflection, (void**)&pReflector);
 
-			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)));
+			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
 			{
 				return Desc.BindPoint;
 			}
@@ -154,7 +154,7 @@ namespace NuclearRenderer {
 				m_GSBL->GetBufferSize(),
 				IID_ID3D11ShaderReflection, (void**)&pReflector);
 
-			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)));
+			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
 			{
 				return Desc.BindPoint;
 			}

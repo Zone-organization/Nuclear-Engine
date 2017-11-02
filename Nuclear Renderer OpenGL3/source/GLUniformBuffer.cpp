@@ -23,7 +23,7 @@ namespace NuclearRenderer
 
 	}
 
-	void GLUniformBuffer::Update(void* data, unsigned int size)
+	void GLUniformBuffer::Update(const void* data, unsigned int size)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);

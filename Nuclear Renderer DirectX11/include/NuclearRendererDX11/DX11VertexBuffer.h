@@ -14,7 +14,7 @@ namespace NuclearRenderer {
 
 		void Create(const void* data, unsigned int size, int usage, int access) override;
 
-		void Update(void* data, unsigned int size) override;
+		void Update(const void* data, unsigned int size) override;
 
 		void SetInputLayout(NRBInputLayout * layout, NRBShader *shader) override;
 

@@ -65,11 +65,9 @@ namespace NuclearEngine {
 			void Bake_Uniform_Buffers();
 			void Bake_Forward_Phong();
 
-			API::Shader *m_shader;
-			API::UniformBuffer *GlobalUBO;
-			API::UniformBuffer *PointLightUBO;
-			API::UniformBuffer *DirLightUBO;
-			API::UniformBuffer *SpotLightUBO;
+			API::Shader *Renderer_Shader;
+			API::UniformBuffer *NE_LightUBO;
+			size_t LightUBOSize;
 
 			std::vector<Components::DirectionalLight*> dirLights;
 			std::vector<Components::PointLight*> pointLights;

@@ -10,7 +10,7 @@ namespace NuclearRenderer {
 		DX11UniformBuffer();
 
 		void Create(const char *Nameinshader, unsigned int size) override;
-		void Update(void* data, unsigned int size) override;
+		void Update(const void* data, unsigned int size) override;
 
 		void Delete() override;
 		unsigned int GetBindingIndex() override;

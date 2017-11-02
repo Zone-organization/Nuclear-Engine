@@ -78,6 +78,7 @@ public:
 
 		Core::Renderer3D_Desc desc;
 		desc.lightmodel = Core::LightShading::PhongShading;
+		desc.tech = Core::RenderingTechnique::Forward;
 		desc.effect = Core::LightEffects::None;
 
 		float vertices[] = {
@@ -163,12 +164,12 @@ public:
 		LampVB->SetInputLayout(LampIL, LampShader);
 
 		Texture_Desc Desc;
-		Desc.Filter = TextureFilter::Linear2D;
+		Desc.Filter = TextureFilter::Trilinear;
 		Desc.Wrap = TextureWrap::Repeat;
 		Desc.Format = TextureFormat::R8G8B8A8;
 
 		CrateTexture_Diffuse = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
-		CrateTexture_Specular = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_specular.png", Desc), Desc);
+		CrateTexture_Specular = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -214,7 +215,6 @@ public:
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.1f, 0.1f, 0.1f, 1.0f));
-
 
 		// directional light
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -262,10 +262,11 @@ public:
 		}
 
 		CubeVB->Unbind();
-		Renderer->GetShader()->Unbind();
 
-		CrateTexture_Diffuse->Unbind(0);
 		CrateTexture_Specular->Unbind(1);
+		CrateTexture_Diffuse->Unbind(0);
+
+		Renderer->GetShader()->Unbind();
 
 		/* Render Lamp Cube*/
 		LampShader->Bind();
@@ -294,5 +295,6 @@ public:
 	{
 		delete CubeVB;
 		delete CrateTexture_Diffuse;
+		delete CrateTexture_Specular;
 	}
 };

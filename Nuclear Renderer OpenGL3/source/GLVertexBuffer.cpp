@@ -38,7 +38,7 @@ namespace NuclearRenderer {
 
 	}
 
-	void GLVertexBuffer::Update(void * data, unsigned int size)
+	void GLVertexBuffer::Update(const void * data, unsigned int size)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, this->VertexBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);

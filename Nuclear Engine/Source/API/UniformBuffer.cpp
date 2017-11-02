@@ -24,7 +24,7 @@ namespace NuclearEngine {
 			delete buf;
 		}
 
-		void UniformBuffer::Update(void* data, unsigned int size)
+		void UniformBuffer::Update(const void* data, unsigned int size)
 		{
 			buf->Update(data, size);
 		}

@@ -1,7 +1,7 @@
 struct PixelInputType
 {
     float4 FragPos : SV_POSITION;
-	float4 Normal : NORMAL;
+	float3 Normal : NORMAL;
 	float2 TexCoords : TEXCOORD;
 };
 
@@ -11,7 +11,7 @@ SamplerState diffusemapsample : register(s0);
 Texture2D specularmap : register(t1);
 SamplerState specularmapsample : register(s1);
 
-float4 ambientvalue = float4(0.05f, 0.05f, 0.05f,1.0f);
+static float4 ambientvalue = float4(0.05f, 0.05f, 0.05f,1.0f);
 
 struct DirLight {
 	float4 direction;
@@ -35,11 +35,16 @@ struct SpotLight {
 cbuffer NE_LightUBO : register(b0)
 {
 	float4 viewPosandMaterialshininess;
+#ifdef NR_DIR_LIGHTS
 	DirLight dirLights[NR_DIR_LIGHTS];
+#endif
+#ifdef NR_POINT_LIGHTS
 	PointLight pointLights[NR_POINT_LIGHTS];
+#endif
+#ifdef NR_SPOT_LIGHTS
 	SpotLight spotLights[NR_SPOT_LIGHTS];
+#endif
 };
-
 
 // function prototypes
 float4 CalcDirLight(DirLight light, float4 normal, float4 viewDir, float2 tex);
@@ -49,21 +54,23 @@ float4 CalcSpotLight(SpotLight light, float4 normal, float4 fragPos, float4 view
 float4 main(PixelInputType input) : SV_TARGET
 {
 	// properties
-	float4 norm = normalize(input.Normal);
+	float4 norm = float4(normalize(input.Normal) ,0.0f);
 	float4 viewDir = normalize(viewPosandMaterialshininess - input.FragPos);
 	float4 FragColor;
-	// phase 1: directional lighting
+#ifdef NR_DIR_LIGHTS
 	for (int i0 = 0; i0 < NR_DIR_LIGHTS; i0++)
 		FragColor = CalcDirLight(dirLights[i0], norm, viewDir, input.TexCoords);
+#endif
 
-	// phase 2: point lights
+#ifdef NR_POINT_LIGHTS
 	for (int i1 = 0; i1 < NR_POINT_LIGHTS; i1++)
 		FragColor += CalcPointLight(pointLights[i1], norm, input.FragPos, viewDir, input.TexCoords);
+#endif
 
-	// phase 3: spot light
+#ifdef NR_SPOT_LIGHTS
 	for (int i2 = 0; i2 < NR_SPOT_LIGHTS; i2++)
 		FragColor += CalcSpotLight(spotLights[i2], norm, input.FragPos, viewDir, input.TexCoords);
-	
+#endif
 	return FragColor;
 }
 
@@ -93,15 +100,19 @@ float4 CalcPointLight(PointLight light, float4 normal, float4 fragPos, float4 vi
 	float4 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), viewPosandMaterialshininess.w);
 	// attenuation
-	float distance = length(light.position - fragPos);
-	float attenuation = light.Intensity_attenuation.x / (light.Intensity_attenuation.y + light.Intensity_attenuation.z * distance + light.Intensity_attenuation.w * (distance * distance));
+
+	float3 L = (light.position - fragPos).xyz;
+	float distance = length(L);
+	L = L / distance;
+
+	float attenuation = light.Intensity_attenuation.x / (light.Intensity_attenuation.y + light.Intensity_attenuation.z * distance + light.Intensity_attenuation.w * distance * distance);
 	// combine results
 	float4 ambient = ambientvalue * diffusemap.Sample(diffusemapsample, tex);
 	float4 diffuse = light.color * diff * diffusemap.Sample(diffusemapsample, tex);
 	float4 specular = light.color * spec * 	specularmap.Sample(specularmapsample, tex);
-	ambient *= attenuation;
-	diffuse *= attenuation;
-	specular *= attenuation;
+	//ambient = ambient * attenuation;
+	diffuse = diffuse * attenuation;
+	//specular = specular * attenuation;
 	return (ambient + diffuse + specular);
 }
 
@@ -118,7 +129,11 @@ float4 CalcSpotLight(SpotLight light, float4 normal, float4 fragPos, float4 view
 	float4 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), viewPosandMaterialshininess.w);
 	// attenuation
-	float distance = length(light.position - fragPos);
+
+	float3 L = (light.position - fragPos).xyz;
+	float distance = length(L);
+	L = L / distance;
+
 	float attenuation = light.Intensity_attenuation.x / (light.Intensity_attenuation.y + light.Intensity_attenuation.z * distance + light.Intensity_attenuation.w * (distance * distance));
 	// spotlight intensity
 	float theta = dot(lightDir, normalize(-light.direction));

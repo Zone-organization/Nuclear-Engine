@@ -20,7 +20,7 @@ namespace NuclearEngine {
 			delete buf;
 		}
 
-		void VertexBuffer::Update(void * data, unsigned int size)
+		void VertexBuffer::Update(const void * data, unsigned int size)
 		{
 			buf->Update(data, size);
 		}

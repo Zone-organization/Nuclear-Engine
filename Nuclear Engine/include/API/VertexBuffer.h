@@ -36,7 +36,7 @@ namespace NuclearEngine {
 			VertexBuffer(const VertexBufferDesc& desc);
 			~VertexBuffer();
 
-			void Update(void* data, unsigned int size);
+			void Update(const void* data, unsigned int size);
 
 			void SetInputLayout(InputLayout* layout, Shader* shader);
 

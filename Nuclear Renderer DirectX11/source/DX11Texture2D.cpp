@@ -1,8 +1,10 @@
 #include <NuclearRendererDX11\DX11Context.h>
 #include <NuclearRendererDX11\DX11Texture2D.h>
 #include <NuclearCommon\Common_API_Types.h>
-using namespace NuclearEngine; 
 #include <vector>
+#include <iostream>
+using namespace NuclearEngine;
+
 namespace NuclearRenderer {
 
 	DXGI_FORMAT GetDXTextureFormat(TextureFormat format);
@@ -63,8 +65,9 @@ namespace NuclearRenderer {
 		}
 		else
 		{
-			if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, nullptr, &textureID)))
+			if (FAILED( DX11Context::GetDevice()->CreateTexture2D(&texDesc, nullptr, &textureID)))
 			{
+				std::cout << "FAILED" << std::endl;
 				return false;
 			}
 			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
