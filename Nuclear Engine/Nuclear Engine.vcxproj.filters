@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="include\CompilerConfig.h" />
-    <ClInclude Include="include\API\Format.h" />
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\Core\Systems\AudioSystem.h" />
     <ClInclude Include="include\Core\Parsers\INIParserClass.h" />
@@ -26,7 +25,6 @@
     <ClInclude Include="include\Components\Skybox.h" />
     <ClInclude Include="include\Math\Quaternion.h" />
     <ClInclude Include="include\NE_Common.h" />
-    <ClInclude Include="include\API\Buffer.h" />
     <ClInclude Include="include\NE_PrivateCommon.h" />
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\Core\Context.h" />
@@ -38,6 +36,7 @@
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\ResourceManager\ModelLoader\OBJ_Loader.h" />
+    <ClInclude Include="include\API\RenderTarget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -64,5 +63,6 @@
     <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\ResourceManager\ModelLoader\OBJ_Loader.cpp" />
+    <ClCompile Include="Source\API\RenderTarget.cpp" />
   </ItemGroup>
 </Project>

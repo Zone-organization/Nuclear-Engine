@@ -19,6 +19,6 @@ namespace NuclearRenderer {
 		virtual void Unbind() = 0;
 		virtual void Unbind(unsigned int index) = 0;
 
-		//virtual unsigned int GL_GetID() = 0;
+		virtual unsigned int GLGetTextureID() = 0;
 	};
 }

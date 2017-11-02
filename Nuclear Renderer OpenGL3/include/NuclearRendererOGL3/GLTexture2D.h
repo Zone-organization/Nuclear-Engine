@@ -15,6 +15,8 @@ namespace NuclearRenderer {
 		void Unbind() override;
 		void Unbind(unsigned int index) override;
 
+		unsigned int GLGetTextureID() override;
+
 	private:
 		GLuint textureID;
 	};

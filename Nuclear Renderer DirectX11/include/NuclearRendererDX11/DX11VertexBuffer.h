@@ -12,7 +12,7 @@ namespace NuclearRenderer {
 
 		void Delete() override;
 
-		void Create(const void* data, unsigned int size, int usage, int access) override;
+		void Create(const void* data, unsigned int size, NuclearEngine::BufferGPUUsage usage, NuclearEngine::BufferCPUAccess access) override;
 
 		void Update(const void* data, unsigned int size) override;
 

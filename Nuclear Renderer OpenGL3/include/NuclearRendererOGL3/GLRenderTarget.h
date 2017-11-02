@@ -9,25 +9,25 @@ namespace NuclearRenderer
 	public:
 		GLRenderTarget();
 
-		void Create();
+		void Create() override;
 
-		void Delete();
+		void Delete() override;
 
-		void AttachDepthBuffer(unsigned int x, unsigned int y);
+		void AttachDepthBuffer(NRBTexture2D* texture) override;
 
-		void AttachStencilBuffer(unsigned int x, unsigned int y);
+		void AttachStencilBuffer(NRBTexture2D* texture) override;
 
-		void AttachDepthStencilBuffer(unsigned int x, unsigned int y);
+		void AttachDepthStencilBuffer(NRBTexture2D* texture) override;
 
-		void AttachTexture(NRBTexture2D* texture);
+		void AttachTexture(NRBTexture2D* texture) override;
 
-		void DetachAll();
+		void Bind() override;
 
-		void Bind();
-
-		void Unbind();
+		void Unbind() override;
 
 	private:
 		GLuint FBO;
+
+		GLuint i;
 	};
 }

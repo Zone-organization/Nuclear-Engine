@@ -332,13 +332,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\API\Buffer.h" />
+    <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\Core\Context.h" />
     <ClInclude Include="include\Core\ContextDesc.h" />
     <ClInclude Include="include\API\UniformBuffer.h" />
-    <ClInclude Include="include\API\Format.h" />
     <ClInclude Include="include\API\Texture2D.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\InputLayout.h" />
@@ -372,6 +371,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Color.cpp" />
+    <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\API\UniformBuffer.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />

@@ -9,7 +9,7 @@ namespace NuclearEngine {
 		VertexBuffer::VertexBuffer(const VertexBufferDesc & desc)
 		{
 			buf = Core::Context::ConstructVertexBuffer(buf);
-			buf->Create(desc.data, desc.size, (int)desc.usage, (int)desc.accessflag);
+			buf->Create(desc.data, desc.size, desc.usage, desc.accessflag);
 
 		}
 
@@ -24,7 +24,6 @@ namespace NuclearEngine {
 		{
 			buf->Update(data, size);
 		}
-
 
 		void VertexBuffer::SetInputLayout(InputLayout* layout, Shader* shader)
 		{

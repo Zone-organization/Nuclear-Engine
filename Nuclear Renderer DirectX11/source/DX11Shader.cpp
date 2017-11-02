@@ -18,15 +18,15 @@ namespace NuclearRenderer {
 
 	bool DX11Shader::Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, ShaderLanguage Input)
 	{
-		ID3D10Blob* ERRMSG;
 		bool result = true;
-		ERRMSG = 0;
 
 		if (Input == ShaderLanguage::HLSL)
 		{
 			if (VertexShaderCode != nullptr)
 			{
-				if (FAILED(D3DCompile(VertexShaderCode, lstrlenA(VertexShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_4_0", 0, 0, m_VSBL.GetAddressOf(), &ERRMSG)))
+				ID3D10Blob* ERRMSG = nullptr;
+
+				if (FAILED(D3DCompile(VertexShaderCode, lstrlenA(VertexShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_4_1", 0, 0, m_VSBL.GetAddressOf(), &ERRMSG)))
 				{
 					Log->Info("[DX11Shader] Compiling Error -- In Vertex Shader.\nInfo: ");
 					CheckShaderErrors(ERRMSG);
@@ -35,7 +35,9 @@ namespace NuclearRenderer {
 			}
 			if (PixelShaderCode != nullptr)
 			{
-				if (FAILED(D3DCompile(PixelShaderCode, lstrlenA(PixelShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", 0, 0, m_PSBL.GetAddressOf(), &ERRMSG)))
+				ID3D10Blob* ERRMSG = nullptr;
+
+				if (FAILED(D3DCompile(PixelShaderCode, lstrlenA(PixelShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_1", 0, 0, m_PSBL.GetAddressOf(), &ERRMSG)))
 				{
 					Log->Info("[DX11Shader] Compiling Error -- In Pixel Shader.\nInfo: ");
 					CheckShaderErrors(ERRMSG);
@@ -45,7 +47,9 @@ namespace NuclearRenderer {
 			}
 			if (GeometryShaderCode != nullptr)
 			{
-				if (FAILED(D3DCompile(GeometryShaderCode, lstrlenA(GeometryShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_4_0", 0, 0, m_GSBL.GetAddressOf(), &ERRMSG)))
+				ID3D10Blob* ERRMSG = nullptr;
+
+				if (FAILED(D3DCompile(GeometryShaderCode, lstrlenA(GeometryShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_4_1", 0, 0, m_GSBL.GetAddressOf(), &ERRMSG)))
 				{
 					Log->Info("[DX11Shader] Compiling Error -- In Geometry Shader.\nInfo: ");
 					CheckShaderErrors(ERRMSG);
@@ -128,37 +132,48 @@ namespace NuclearRenderer {
 
 		if (type == ShaderType::Vertex)
 		{
-			D3DReflect(m_VSBL->GetBufferPointer(),
-				m_VSBL->GetBufferSize(),
-				IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
+			if (m_VSBL != nullptr)
 			{
-				return Desc.BindPoint;
+				D3DReflect(m_VSBL->GetBufferPointer(),
+					m_VSBL->GetBufferSize(),
+					IID_ID3D11ShaderReflection, (void**)&pReflector);
+
+				if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
+				{
+					return Desc.BindPoint;
+				}
 			}
 		}
 		else if (type == ShaderType::Pixel)
 		{
-			D3DReflect(m_PSBL->GetBufferPointer(),
-				m_PSBL->GetBufferSize(),
-				IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
+			if (m_PSBL != nullptr)
 			{
-				return Desc.BindPoint;
+				D3DReflect(m_PSBL->GetBufferPointer(),
+					m_PSBL->GetBufferSize(),
+					IID_ID3D11ShaderReflection, (void**)&pReflector);
+
+				if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
+				{
+					return Desc.BindPoint;
+				}
 			}
 		}
 		else if (type == ShaderType::Geometry)
 		{
-			D3DReflect(m_GSBL->GetBufferPointer(),
-				m_GSBL->GetBufferSize(),
-				IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-			if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
+			if (m_PSBL != nullptr)
 			{
-				return Desc.BindPoint;
+				D3DReflect(m_GSBL->GetBufferPointer(),
+					m_GSBL->GetBufferSize(),
+					IID_ID3D11ShaderReflection, (void**)&pReflector);
+
+				if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
+				{
+					return Desc.BindPoint;
+				}
 			}
 		}
+		
+		Log->Warning(std::string("[DirectX] GetUniformBufferSlot for: \"" + std::string(ubuffer->GetName()) + "\" failed, Returning 0 as default.\n"));
 		return 0;
 	}
 
@@ -227,7 +242,7 @@ namespace NuclearRenderer {
 		// Get a pointer to the error message text Buffer.
 		compileErrors = (char*)(Shader->GetBufferPointer());
 
-		Log->Info(&compileErrors[1]);
+		Log->Info(compileErrors);
 
 		// Release the error message.
 		Shader->Release();

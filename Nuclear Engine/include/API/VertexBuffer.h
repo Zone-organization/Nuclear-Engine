@@ -1,6 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <API\Shader.h>
+#include <NuclearCommon\Common_API_Types.h>
 
 namespace NuclearRenderer
 {
@@ -11,23 +12,11 @@ namespace NuclearEngine {
 	namespace API {
 		class InputLayout;
 
-		enum class NEAPI BufferUsage {
-			Default = 0,
-			Static = 1,
-			Dynamic = 2
-		};
-
-		enum class NEAPI BufferAccess {
-			Default = 0,
-			ReadOnly = 1,
-			WriteOnly = 2
-		};
-
 		struct VertexBufferDesc {
-			void* data;
+			const void* data;
 			unsigned int size;
-			BufferUsage usage = BufferUsage::Default;
-			BufferAccess accessflag = BufferAccess::Default;
+			BufferGPUUsage usage = BufferGPUUsage::Default;
+			BufferCPUAccess accessflag = BufferCPUAccess::Default;
 		};
 
 		class NEAPI VertexBuffer

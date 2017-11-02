@@ -21,6 +21,35 @@ namespace NuclearRenderer {
 
 	bool GLTexture2D::Create(Texture_Data Data, Texture_Desc Desc)
 	{
+		//Check is it for a frame buffer
+		if (Desc.Format == TextureFormat::Depth)
+		{
+			glGenRenderbuffers(1, &textureID);
+			glBindRenderbuffer(GL_RENDERBUFFER, textureID);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, Data.width, Data.height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+			return true;
+		}
+		if (Desc.Format == TextureFormat::Stencil)
+		{
+			glGenRenderbuffers(1, &textureID);
+			glBindRenderbuffer(GL_RENDERBUFFER, textureID);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, Data.width, Data.height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+			return true;
+		}
+		
+		if (Desc.Format == TextureFormat::Depth_Stencil)
+		{
+			glGenRenderbuffers(1, &textureID);
+			glBindRenderbuffer(GL_RENDERBUFFER, textureID);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, Data.width, Data.height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+			return true;
+		}
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -28,6 +57,7 @@ namespace NuclearRenderer {
 		{
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
+	
 		glTexImage2D(GL_TEXTURE_2D,
 			0,
 			GetGLTextureFormat(Desc.Format),
@@ -76,6 +106,7 @@ namespace NuclearRenderer {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			break;
 		}
+				
 		default:
 			break;
 		}
@@ -145,6 +176,10 @@ namespace NuclearRenderer {
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	unsigned int GLTexture2D::GLGetTextureID()
+	{
+		return textureID;
+	}
 	int GetGLTextureFormat(TextureFormat format)
 	{
 		switch (format)
@@ -157,6 +192,7 @@ namespace NuclearRenderer {
 		}
 
 	}
+
 	int GetGLTextureWrap(TextureWrap textureWrap)
 	{
 		switch (textureWrap)

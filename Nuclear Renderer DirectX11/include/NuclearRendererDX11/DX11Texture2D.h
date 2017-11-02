@@ -15,6 +15,8 @@ namespace NuclearRenderer {
 		void Unbind() override;
 		void Unbind(unsigned int index) override;
 
+		unsigned int GLGetTextureID() override;
+
 	protected:
 		ID3D11Texture2D* textureID;
 		ID3D11ShaderResourceView* resourceView;

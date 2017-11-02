@@ -1,5 +1,6 @@
 #include <NuclearRendererDX11\DX11Context.h>
 #include <NuclearRendererDX11\DX11IndexBuffer.h>
+#include <NuclearCommon\Common_API_Types.h>
 
 namespace NuclearRenderer {
 	DX11IndexBuffer::DX11IndexBuffer()
@@ -37,9 +38,9 @@ namespace NuclearRenderer {
 	{
 		DX11Context::GetContext()->IASetIndexBuffer(buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	}
+
 	void DX11IndexBuffer::Unbind()
 	{
-		//Todo: Research if this method is applicable in directx 11 renderer
-		return;
 	}
+
 }

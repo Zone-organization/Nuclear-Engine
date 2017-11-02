@@ -91,6 +91,7 @@ namespace NuclearEngine {
 				}
 				delete Renderer_Shader;
 				delete NE_LightUBO;
+				LightUBOSize = 0;
 			}
 			if (m_desc.lightmodel == LightShading::PhongShading)
 			{			

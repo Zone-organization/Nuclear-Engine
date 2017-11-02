@@ -9,11 +9,12 @@ namespace NuclearRenderer {
 	public:
 		DX11IndexBuffer();
 
+		void Create(const void* data, unsigned int size) override;
+
 		void Delete() override;
 
-		void Create(void* indices, unsigned int count) override;
-
 		void Bind() override;
+
 		void Unbind() override;
 	protected:
 		ComPtr<ID3D11Buffer> buffer;

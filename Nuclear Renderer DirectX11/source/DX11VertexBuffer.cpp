@@ -2,8 +2,9 @@
 #include <NuclearRendererDX11\DX11VertexBuffer.h>
 #include <NuclearRendererDX11\DX11Shader.h>
 #include <NuclearRendererBase/NRBInputLayout.h>
+#include <NuclearCommon\Common_API_Types.h>
 #include "comdef.h"
-
+using namespace NuclearEngine;
 namespace NuclearRenderer
 {
 	DX11VertexBuffer::DX11VertexBuffer() : VertexBuffer(nullptr), offset(0), stride(0)
@@ -16,46 +17,26 @@ namespace NuclearRenderer
 		inputLayout.Reset();
 	}
 	
-	void DX11VertexBuffer::Create(const void* data, unsigned int size, int usage, int accessflag)
+	void DX11VertexBuffer::Create(const void* data, unsigned int size, BufferGPUUsage usage, BufferCPUAccess access)
 	{
-		/*
-		NOTE:
-
-		BufferUsage {
-
-		Default = 0,
-		Static = 1,
-		Dynamic = 2
-		};
-
-
-		BufferAccess {
-
-		Default = 0,
-		ReadOnly = 1,
-		WriteOnly = 2,
-
-		};
-
-		*/
 		D3D11_BUFFER_DESC VertexBufferDesc;
 
-		if (usage == 0) {
-			VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		}
-		else if (usage == 1)
-		{
+		if (usage == BufferGPUUsage::Static) {
 			VertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		}
+		else if (usage == BufferGPUUsage::Dynamic)
+		{
+			VertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 		}
 		else
 		{
-			VertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+			VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		}
 
 		VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		VertexBufferDesc.ByteWidth = size;
 
-		if (accessflag == 1)
+		if (access == BufferCPUAccess::ReadOnly)
 		{
 			VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 		}

@@ -1,5 +1,9 @@
 #pragma once
 
+namespace NuclearEngine {
+	enum class BufferGPUUsage;
+	enum class BufferCPUAccess;
+}
 
 namespace NuclearRenderer {
 	class NRBInputLayout;
@@ -8,27 +12,7 @@ namespace NuclearRenderer {
 	class NRBVertexBuffer
 	{
 	public:
-		/*
-		NOTE:
-
-		BufferUsage {
-
-		Default = 0,
-		Static = 1,
-		Dynamic = 2
-		};
-
-
-		BufferAccess {
-
-		Default = 0,
-		ReadOnly = 1,
-		WriteOnly = 2,
-		};
-
-		*/
-
-		virtual void Create(const void* data, unsigned int size, int usage, int access) = 0;
+		virtual void Create(const void* data, unsigned int size, NuclearEngine::BufferGPUUsage usage, NuclearEngine::BufferCPUAccess access) = 0;
 		virtual void Update(const void* data, unsigned int size) = 0;
 		virtual void SetInputLayout(NRBInputLayout *layout, NRBShader *shader) = 0;
 		virtual void Delete() = 0;

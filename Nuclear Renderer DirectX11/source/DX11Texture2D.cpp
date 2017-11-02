@@ -159,6 +159,10 @@ namespace NuclearRenderer {
 	{
 		return;
 	}
+	unsigned int DX11Texture2D::GLGetTextureID()
+	{
+		return 0;
+	}
 	DXGI_FORMAT GetDXTextureFormat(TextureFormat format)
 	{
 		switch (format)

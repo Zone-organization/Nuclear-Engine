@@ -65,8 +65,8 @@ void main()
 	#endif
 
 	#ifdef NR_SPOT_LIGHTS
-	for (int i = 0; i < NR_SPOT_LIGHTS; i++)
-		FragColor += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
+	//for (int i = 0; i < NR_SPOT_LIGHTS; i++)
+	//	FragColor += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
 	#endif
 
 }

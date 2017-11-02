@@ -6,15 +6,15 @@ namespace NuclearRenderer {
 	{
 		virtual void Create() = 0;
 
-		virtual void AttachDepthBuffer(unsigned int x, unsigned int y) = 0;
+		virtual void Delete() = 0;
 
-		virtual void AttachStencilBuffer(unsigned int x, unsigned int y) = 0;
+		virtual void AttachDepthBuffer(NRBTexture2D* texture) = 0;
 
-		virtual void AttachDepthStencilBuffer(unsigned int x, unsigned int y) = 0;
+		virtual void AttachStencilBuffer(NRBTexture2D* texture) = 0;
 
-		virtual void AttachTexture(NRBTexture2D& texture) = 0;
+		virtual void AttachDepthStencilBuffer(NRBTexture2D* texture) = 0;
 
-		virtual void DetachAll() = 0;
+		virtual void AttachTexture(NRBTexture2D* texture) = 0;
 
 		virtual void Bind() =0;
 

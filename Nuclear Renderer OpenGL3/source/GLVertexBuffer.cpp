@@ -1,5 +1,6 @@
 #include <NuclearRendererOGL3\GLVertexBuffer.h>
 #include <NuclearRendererBase/NRBInputLayout.h>
+#include <NuclearCommon\Common_API_Types.h>
 
 namespace NuclearRenderer {
 
@@ -19,14 +20,14 @@ namespace NuclearRenderer {
 		glDeleteBuffers(1, &VAO);
 	}
 
-	void GLVertexBuffer::Create(const void* data, unsigned int size, int usage, int access)
+	void GLVertexBuffer::Create(const void* data, unsigned int size, NuclearEngine::BufferGPUUsage usage, NuclearEngine::BufferCPUAccess access)
 	{
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(0);
 
 		glGenBuffers(1, &VertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
-		if (usage == 1)
+		if (usage == NuclearEngine::BufferGPUUsage::Static)
 		{
 			glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 		}
