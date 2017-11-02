@@ -1,6 +1,8 @@
 # Nuclear Engine
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
 
+![Alt text](http://media.indiedb.com/images/engines/1/1/764/shit.png "The Current MileStone")
+
 ## Features:-
 - __Core__
   - Crossplatform ready
@@ -26,8 +28,10 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Finish the OneAPI:
     - Finish RenderTarget class (also known as Framebuffer in OpenGL).
     - Correctly Implement The Uniform Buffer Class (also known as The Constant Pain in DirectX).
+    - Implement TextureCube class (required for Skybox).
   - Correctly Implement Model Loading with Assimp.
   - Implement Blinn-Phong & Gourard Light Model.
+  - Implement Skybox.
 
 ## Roadmap
   - Support Android & Linux & UWP Platforms.
