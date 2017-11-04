@@ -81,8 +81,6 @@ namespace NuclearRenderer {
 
 		}
 
-
-
 		D3D11_SAMPLER_DESC samplerDesc;
 		ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
 
@@ -133,6 +131,32 @@ namespace NuclearRenderer {
 		}
 
 		return true;
+	}
+	bool DX11Texture2D::Create(NuclearEngine::RenderTarget_Attachment_Desc Desc)
+	{
+		D3D11_TEXTURE2D_DESC textureDesc;
+		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+		ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+		textureDesc.Width = Desc.width;
+		textureDesc.Height = Desc.height;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+
+		if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&textureDesc, NULL, &textureID)))
+		{
+			return false;
+		}
+
+		return false;
 	}
 	void DX11Texture2D::Delete()
 	{

@@ -10,7 +10,7 @@ namespace NuclearRenderer {
 		glDeleteBuffers(1, &buffer);
 	}
 
-	void GLIndexBuffer::Create(void * indices, unsigned int count)
+	void GLIndexBuffer::Create(const void * indices, unsigned int count)
 	{
 		glGenBuffers(1, &buffer);
 

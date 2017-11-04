@@ -10,6 +10,7 @@ namespace NuclearRenderer
 	class NRBVertexBuffer;
 	class NRBIndexBuffer;
 	class NRBUniformBuffer;
+	class NRBRenderTarget;
 	class NRBTexture2D;
 	class NRBShader;
 
@@ -40,6 +41,7 @@ namespace NuclearRenderer
 		virtual NRBVertexBuffer* ConstructVertexBuffer(NRBVertexBuffer* param) = 0;
 		virtual NRBIndexBuffer* ConstructIndexBuffer(NRBIndexBuffer* param) = 0;
 		virtual NRBUniformBuffer* ConstructUniformBuffer(NRBUniformBuffer* param) = 0;
+		virtual NRBRenderTarget* ConstructRenderTarget(NRBRenderTarget* param) = 0;		
 		virtual NRBTexture2D* ConstructTexture2D(NRBTexture2D* param) = 0;
 		virtual NRBShader* ConstructShader(NRBShader* param) = 0;
 	};

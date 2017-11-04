@@ -8,7 +8,7 @@ namespace NuclearRenderer {
 
 	int GetGLTextureFormat(TextureFormat format);
 	int GetGLTextureWrap(TextureWrap textureWrap);
-
+	int GetRTPrecision(RenderTargetPrecision precision);
 	template<class T>
 	const T& _min(const T& a, const T& b)
 	{
@@ -21,35 +21,7 @@ namespace NuclearRenderer {
 
 	bool GLTexture2D::Create(Texture_Data Data, Texture_Desc Desc)
 	{
-		//Check is it for a frame buffer
-		if (Desc.Format == TextureFormat::Depth)
-		{
-			glGenRenderbuffers(1, &textureID);
-			glBindRenderbuffer(GL_RENDERBUFFER, textureID);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, Data.width, Data.height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-			return true;
-		}
-		if (Desc.Format == TextureFormat::Stencil)
-		{
-			glGenRenderbuffers(1, &textureID);
-			glBindRenderbuffer(GL_RENDERBUFFER, textureID);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, Data.width, Data.height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-			return true;
-		}
 		
-		if (Desc.Format == TextureFormat::Depth_Stencil)
-		{
-			glGenRenderbuffers(1, &textureID);
-			glBindRenderbuffer(GL_RENDERBUFFER, textureID);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, Data.width, Data.height);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-			return true;
-		}
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -81,8 +53,8 @@ namespace NuclearRenderer {
 		}
 		case TextureFilter::Linear2D:
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			break;
 		}
 		case TextureFilter::Point:
@@ -147,6 +119,103 @@ namespace NuclearRenderer {
 		return true;
 	}
 
+	bool GLTexture2D::Create(NuclearEngine::RenderTarget_Attachment_Desc Desc)
+	{
+		if (Desc.Read == true)
+		{
+			glGenRenderbuffers(1, &textureID);
+			glBindRenderbuffer(GL_RENDERBUFFER, textureID);
+
+			if (Desc.Format == TextureFormat::Depth)
+			{
+				
+				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, Desc.width, Desc.height);
+			}
+			else if (Desc.Format == TextureFormat::Stencil)
+			{
+				glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, Desc.width, Desc.height);
+			}
+
+			else
+			{
+				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, Desc.width, Desc.width);
+			}
+
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+			return true;
+		}
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		if (Desc.Format == TextureFormat::Depth)
+		{
+			glTexImage2D(GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				Desc.width,
+				Desc.height,
+				0,
+				GL_DEPTH_COMPONENT,
+				GetRTPrecision(Desc.precision),
+				NULL);
+		}
+		else if (Desc.Format == TextureFormat::Stencil)
+		{
+			glTexImage2D(GL_TEXTURE_2D,
+				0,
+				GL_STENCIL_INDEX8,
+				Desc.width,
+				Desc.height,
+				0,
+				GL_STENCIL_INDEX,
+				GetRTPrecision(Desc.precision),
+				NULL);
+		}
+		else if (Desc.Format == TextureFormat::Depth_Stencil)
+		{
+			glTexImage2D(GL_TEXTURE_2D,
+				0,
+				GL_DEPTH24_STENCIL8,
+				Desc.width,
+				Desc.height,
+				0,
+				GL_DEPTH_STENCIL,
+				GL_UNSIGNED_INT_24_8,
+				NULL);
+		}
+		else
+		{
+			glTexImage2D(GL_TEXTURE_2D,
+				0,
+				GetGLTextureFormat(Desc.Format),
+				Desc.width,
+				Desc.height,
+				0,
+				GetGLTextureFormat(Desc.Format),
+				GetRTPrecision(Desc.precision),
+				NULL);
+		}
+	
+
+		switch (Desc.Filter)
+		{
+		case TextureFilter::Linear2D:
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			break;
+		}
+		default:
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		}
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		return true;
+	}
+
 	void GLTexture2D::Delete()
 	{
 		glDeleteTextures(1, &textureID);
@@ -204,5 +273,15 @@ namespace NuclearRenderer {
 		default: return GL_REPEAT;
 		}
 
+	}
+	int GetRTPrecision(RenderTargetPrecision precision)
+	{
+		switch (precision)
+		{
+		case RenderTargetPrecision::Float: return GL_FLOAT;
+		case RenderTargetPrecision::Half_Float: return GL_HALF_FLOAT;
+		case RenderTargetPrecision::Unsigned_Int: return GL_UNSIGNED_INT;
+		default: return GL_FLOAT;
+		}
 	}
 }

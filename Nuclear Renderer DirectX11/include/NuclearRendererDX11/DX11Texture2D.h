@@ -9,6 +9,7 @@ namespace NuclearRenderer {
 		DX11Texture2D();
 
 		bool Create(NuclearEngine::Texture_Data TexData, NuclearEngine::Texture_Desc Desc) override;
+		bool Create(NuclearEngine::RenderTarget_Attachment_Desc Desc) override;
 		void Delete() override;
 		void Bind(unsigned int index) override;
 		void Bind(const char *samplerName, NRBShader *shader, unsigned int index) override;

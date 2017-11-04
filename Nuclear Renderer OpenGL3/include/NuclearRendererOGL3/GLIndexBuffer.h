@@ -15,10 +15,8 @@ namespace NuclearRenderer {
 	public:
 		GLIndexBuffer();
 
+		void Create(const void* indices, unsigned int count) override;
 		void Delete() override;
-
-		void Create(void* indices, unsigned int count) override;
-
 		void Bind() override;
 		void Unbind() override;
 

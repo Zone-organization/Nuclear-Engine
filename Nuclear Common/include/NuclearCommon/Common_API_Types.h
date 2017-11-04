@@ -19,6 +19,7 @@ namespace NuclearEngine {
 	enum class TextureWrap { Repeat, MirroredReapeat, ClampToEdge, ClampToBorder };
 	enum class TextureFilter { Point2D, Linear2D, Point, Bilinear, Trilinear };
 	enum class AnisotropicFilter { None, AnisotropicX2, AnisotropicX4, AnisotropicX8, AnisotropicX16 };
+	enum class RenderTargetPrecision { Float, Half_Float, Unsigned_Int };
 
 	struct Texture_Desc
 	{
@@ -26,6 +27,16 @@ namespace NuclearEngine {
 		TextureWrap Wrap = TextureWrap::ClampToEdge;
 		TextureFilter Filter = TextureFilter::Point;
 		AnisotropicFilter AnisoFilter = AnisotropicFilter::None;
+	};
+
+	struct RenderTarget_Attachment_Desc
+	{
+		TextureFormat Format = TextureFormat::R8G8B8A8;
+		TextureFilter Filter = TextureFilter::Point2D;
+		RenderTargetPrecision precision = RenderTargetPrecision::Float;
+		bool Read;
+		int width;
+		int height;
 	};
 
 	struct Texture_Data {

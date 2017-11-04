@@ -2,6 +2,7 @@
 #include <NuclearRendererOGL3\GLVertexBuffer.h>
 #include <NuclearRendererOGL3\GLIndexBuffer.h>
 #include <NuclearRendererOGL3\GLUniformBuffer.h>
+#include <NuclearRendererOGL3\GLRenderTarget.h>
 #include <NuclearRendererOGL3\GLTexture2D.h>
 #include <NuclearRendererOGL3\GLShader.h>
 #include "Platform\Win32\Win32_OGL.h"
@@ -126,6 +127,13 @@ namespace NuclearRenderer
 	NRBUniformBuffer * GLContext::ConstructUniformBuffer(NRBUniformBuffer * param)
 	{
 		param = new NuclearRenderer::GLUniformBuffer();
+
+		return param;
+	}
+
+	NRBRenderTarget * GLContext::ConstructRenderTarget(NRBRenderTarget * param)
+	{
+		param = new NuclearRenderer::GLRenderTarget();
 
 		return param;
 	}
