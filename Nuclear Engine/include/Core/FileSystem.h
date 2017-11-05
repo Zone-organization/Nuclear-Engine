@@ -5,8 +5,19 @@ namespace NuclearEngine
 {
 	namespace Core
 	{
-			struct NEAPI FileSystem
+			class NEAPI BinaryBlob {
+			public:
+				void* GetBufferPointer();
+
+				size_t GetBufferSize();
+
+				void* buffer;
+				size_t size;
+			};
+
+			class NEAPI FileSystem
 			{
+			public:
 				static std::string LoadFileToString(std::string Filepath);
 
 				static std::string LoadShaderWithDefines(std::string Filepath, std::vector<std::string> defines);

@@ -1,6 +1,6 @@
 #include "ResourceManager\ResourceManager.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "..\Thirdparty\stb_image.h"
 
 namespace NuclearEngine {
 	Texture_Data ResourceManager::LoadTextureFromFile(const char * filename, const Texture_Desc & Desc)

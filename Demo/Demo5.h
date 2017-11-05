@@ -131,8 +131,8 @@ public:
 		API::VertexBufferDesc vDesc;
 		vDesc.data = vertices;
 		vDesc.size = sizeof(vertices);
-		vDesc.usage = API::BufferUsage::Dynamic;
-		vDesc.accessflag = API::BufferAccess::Default;
+		vDesc.usage = BufferGPUUsage::Dynamic;
+		vDesc.accessflag = BufferCPUAccess::Default;
 
 		CubeVB = new API::VertexBuffer(vDesc);
 

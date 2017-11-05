@@ -1,2 +1,44 @@
-﻿  Renderer3D.cpp
-  Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll
+﻿C:\Program Files\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(937,5): warning MSB8027: Two or more files with the name of Shader.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are Source\API\Shader.cpp, Source\Thirdparty\HLSLCC\src\Shader.cpp.
+  Shader.cpp
+e:\zone\nuclear-project\nuclear engine\source\thirdparty\hlslcc\include\hlslcc.h(247): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(2260): note: see declaration of 'sscanf'
+  Generating Code...
+  Compiling...
+  Renderer3D.cpp
+  Cube.cpp
+e:\zone\nuclear-project\nuclear engine\source\components\models\cube.cpp(143): warning C4018: '<': signed/unsigned mismatch
+e:\zone\nuclear-project\nuclear engine\source\components\models\cube.cpp(166): warning C4018: '<': signed/unsigned mismatch
+  Model.cpp
+  Mesh.cpp
+  Light.cpp
+  GenericCamera.cpp
+  FlyCamera.cpp
+  VertexBuffer.cpp
+  Texture2D.cpp
+  Generating Code...
+e:\zone\nuclear-project\nuclear engine\source\components\models\cube.cpp(150): warning C4700: uninitialized local variable 'Tex' used
+Build\Shader.obj : warning LNK4042: object specified more than once; extras ignored
+     Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Engine.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Engine.exp
+HLSLCrossCompilerContext.obj : error LNK2019: unresolved external symbol "public: class HLSLcc::ControlFlow::ControlFlowGraph & __thiscall ShaderPhase::GetCFG(void)" (?GetCFG@ShaderPhase@@QAEAAVControlFlowGraph@ControlFlow@HLSLcc@@XZ) referenced in function "public: void __thiscall HLSLCrossCompilerContext::DoDataTypeAnalysis(class ShaderPhase *)" (?DoDataTypeAnalysis@HLSLCrossCompilerContext@@QAEXPAVShaderPhase@@@Z)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall ShaderPhase::ResolveUAVProperties(void)" (?ResolveUAVProperties@ShaderPhase@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall ShaderPhase::ResolveUAVProperties(void)" (?ResolveUAVProperties@ShaderPhase@@QAEXXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall ShaderPhase::UnvectorizeImmMoves(void)" (?UnvectorizeImmMoves@ShaderPhase@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall ShaderPhase::UnvectorizeImmMoves(void)" (?UnvectorizeImmMoves@ShaderPhase@@QAEXXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall ShaderPhase::PruneConstArrays(void)" (?PruneConstArrays@ShaderPhase@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall ShaderPhase::PruneConstArrays(void)" (?PruneConstArrays@ShaderPhase@@QAEXXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::ConsolidateHullTempVars(void)" (?ConsolidateHullTempVars@Shader@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::ResolveStructuredBufferBindingSlots(class ShaderPhase *)" (?ResolveStructuredBufferBindingSlots@Shader@@QAEXPAVShaderPhase@@@Z) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::PrepareStructuredBufferBindingSlots(void)" (?PrepareStructuredBufferBindingSlots@Shader@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::PruneTempRegisters(void)" (?PruneTempRegisters@Shader@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall Shader::PruneTempRegisters(void)" (?PruneTempRegisters@Shader@@QAEXXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::AnalyzeIOOverlap(void)" (?AnalyzeIOOverlap@Shader@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall Shader::AnalyzeIOOverlap(void)" (?AnalyzeIOOverlap@Shader@@QAEXXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::ForcePositionToHighp(void)" (?ForcePositionToHighp@Shader@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall Shader::ForcePositionToHighp(void)" (?ForcePositionToHighp@Shader@@QAEXXZ)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::FindUnusedGlobals(unsigned int)" (?FindUnusedGlobals@Shader@@QAEXI@Z) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall Shader::FindUnusedGlobals(unsigned int)" (?FindUnusedGlobals@Shader@@QAEXI@Z)
+toGLSL.obj : error LNK2019: unresolved external symbol "public: void __thiscall Shader::ExpandSWAPCs(void)" (?ExpandSWAPCs@Shader@@QAEXXZ) referenced in function "public: virtual bool __thiscall ToGLSL::Translate(void)" (?Translate@ToGLSL@@UAE_NXZ)
+toMetal.obj : error LNK2001: unresolved external symbol "public: void __thiscall Shader::ExpandSWAPCs(void)" (?ExpandSWAPCs@Shader@@QAEXXZ)
+toGLSLOperand.obj : error LNK2019: unresolved external symbol "public: unsigned int __thiscall Shader::GetTempComponentCount(enum _SHADER_VARIABLE_TYPE,unsigned int)const " (?GetTempComponentCount@Shader@@QBEIW4_SHADER_VARIABLE_TYPE@@I@Z) referenced in function "private: void __thiscall ToGLSL::TranslateVariableNameWithMask(struct tagbstring *,class Operand const *,unsigned int,unsigned int *,unsigned int,int *)" (?TranslateVariableNameWithMask@ToGLSL@@AAEXPAUtagbstring@@PBVOperand@@IPAIIPAH@Z)
+toMetalOperand.obj : error LNK2001: unresolved external symbol "public: unsigned int __thiscall Shader::GetTempComponentCount(enum _SHADER_VARIABLE_TYPE,unsigned int)const " (?GetTempComponentCount@Shader@@QBEIW4_SHADER_VARIABLE_TYPE@@I@Z)
+E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll : fatal error LNK1120: 13 unresolved externals

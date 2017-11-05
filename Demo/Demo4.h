@@ -5,10 +5,12 @@ class Demo4 : public Core::Game
 {
 protected:
 	API::Shader *CubeShader;
-	API::VertexBuffer *CubeVB;
-	API::InputLayout *CubeIL;
+	//API::VertexBuffer *CubeVB;
+	//API::InputLayout *CubeIL;
 	API::Texture2D *WoodenBoxTex;
 	Components::FlyCamera *Camera;
+
+	Components::Cube *cube;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -37,64 +39,6 @@ public:
 				ShaderLanguage::HLSL);
 		}
 
-		float vertices[] = {
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-			0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-		};
-
-		API::VertexBufferDesc vDesc;
-		vDesc.data = vertices;
-		vDesc.size = sizeof(vertices);
-		vDesc.usage = API::BufferUsage::Dynamic;
-		vDesc.accessflag = API::BufferAccess::Default;
-
-		CubeVB = new API::VertexBuffer(vDesc);
-
-		CubeIL = new API::InputLayout();
-		CubeIL->Push(0, "POSITION", API::DataType::Float3, 5 * sizeof(float), 0);
-		CubeIL->Push(1, "TEXCOORD", API::DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
-
-		CubeVB->SetInputLayout(CubeIL, CubeShader);
-
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 		CubeShader->SetUniformBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
@@ -105,6 +49,7 @@ public:
 		Desc.Format = TextureFormat::R8G8B8A8;
 
 		WoodenBoxTex = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
+		cube = new Components::Cube(WoodenBoxTex);
 
 		Core::Context::EnableDepthBuffer(true);
 
@@ -159,20 +104,22 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
 
-		WoodenBoxTex->Bind(0);
+		//WoodenBoxTex->Bind(0);
+		//CubeShader->Bind();
+		//CubeVB->Bind();
+		//Core::Context::Draw(36);
+		//CubeVB->Unbind();
 		CubeShader->Bind();
-		CubeVB->Bind();
-		Core::Context::Draw(36);
-		CubeVB->Unbind();
-		CubeShader->Unbind();
-		WoodenBoxTex->Unbind();
+		cube->Draw(CubeShader);
+		//CubeShader->Unbind();
+		//WoodenBoxTex->Unbind();
 
 		Core::Context::End();
 	}
 	void ExitRendering()	// Exit Rendering
 	{
 		delete CubeShader;
-		delete CubeVB;
+		//delete CubeVB;
 		delete WoodenBoxTex;
 	}
 };
@@ -265,8 +212,8 @@ float vertices[] = {
 API::VertexBufferDesc vDesc;
 vDesc.data = vertices;
 vDesc.size = sizeof(vertices);
-vDesc.usage = API::BufferUsage::Dynamic;
-vDesc.accessflag = API::BufferAccess::Default;
+vDesc.usage = BufferGPUUsage::Dynamic;
+vDesc.accessflag = BufferCPUAccess::Default;
 
 CubeVB = new API::VertexBuffer(vDesc);
 

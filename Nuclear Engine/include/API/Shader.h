@@ -7,6 +7,7 @@ namespace NuclearRenderer
 {
 	class NRBShader;
 }
+struct ID3D10Blob;
 
 namespace NuclearEngine {
 	namespace API {
@@ -25,6 +26,10 @@ namespace NuclearEngine {
 			NuclearRenderer::NRBShader* GetBase();
 		protected:
 			NuclearRenderer::NRBShader *shader;
+
+			ID3D10Blob* m_VSBL;
+			ID3D10Blob* m_PSBL;
+			ID3D10Blob* m_GSBL;
 		};
 	}
 }

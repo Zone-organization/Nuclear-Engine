@@ -94,5 +94,15 @@ namespace NuclearEngine
 				return data;
 			}
 
+			void * BinaryBlob::GetBufferPointer()
+			{
+				return buffer;
+			}
+
+			size_t BinaryBlob::GetBufferSize()
+			{
+				return size;
+			}
+
 	}
 }

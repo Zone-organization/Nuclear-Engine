@@ -11,7 +11,7 @@ namespace NuclearRenderer {
 		buffer.Reset();
 	}
 
-	void DX11IndexBuffer::Create(void * indices, unsigned int count)
+	void DX11IndexBuffer::Create(const void * indices, unsigned int count)
 	{
 		this->count = count;
 

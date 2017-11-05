@@ -27,28 +27,28 @@ public:
 	}
 	void Load()
 	{
-		if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-		{
-			RectangleShader = new API::Shader("RectangleShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.fs").c_str(),
-				nullptr,
-				ShaderLanguage::GLSL);
-		}
-		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-		{
+		//if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+		//{
+			//RectangleShader = new API::Shader("RectangleShader",
+			//	Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.vs").c_str(),
+			//	Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.fs").c_str(),
+			//	nullptr,
+			//	ShaderLanguage::GLSL);
+		//}
+		//else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+		//{
 			RectangleShader = new API::Shader("RectangleShader",
 				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.vs").c_str(),
 				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.ps").c_str(),
 				nullptr,
 				ShaderLanguage::HLSL);
-		}
+		//}
 
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = API::BufferUsage::Dynamic;
-		Desc.accessflag = API::BufferAccess::Default;
+		Desc.usage = BufferGPUUsage::Dynamic;
+		Desc.accessflag = BufferCPUAccess::Default;
 
 		RectangleVB = new API::VertexBuffer(Desc);
 

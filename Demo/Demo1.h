@@ -45,8 +45,8 @@ public:
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = API::BufferUsage::Dynamic;
-		Desc.accessflag = API::BufferAccess::Default;
+		Desc.usage = BufferGPUUsage::Dynamic;
+		Desc.accessflag = BufferCPUAccess::Default;
 
 		TriangleVB = new API::VertexBuffer(Desc);
 

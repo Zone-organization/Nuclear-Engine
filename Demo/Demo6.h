@@ -63,7 +63,7 @@ public:
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)_Width_ / (float)_Height_, 0.1f, 100.0f));
 		Shader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);
 
-		model = new Components::Model("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", Shader);
+	//	model = new Components::Model("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", Shader);
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -111,7 +111,7 @@ public:
 		Core::Context::ClearColor(API::Color(0.1f, 0.1f, 0.1f, 1.0f));
 		Shader->Bind();
 
-		model->Draw();
+	//	model->Draw();
 		Shader->Unbind();
 
 		Core::Context::End();

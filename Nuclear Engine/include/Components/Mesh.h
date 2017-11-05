@@ -10,16 +10,18 @@ namespace NuclearEngine {
 
 	namespace Components {
 		struct Vertex {
+			Vertex(Math::Vector3 pos, Math::Vector3 norm, Math::Vector2 uv)
+			{
+				Position = pos;
+				Normal = norm;
+				TexCoords = uv;
+			}
 			// position
 			Math::Vector3 Position;
 			// normal
 			Math::Vector3 Normal;
 			// texCoords
 			Math::Vector2 TexCoords;
-			// tangent
-			Math::Vector3 Tangent;
-			// bitangent
-			Math::Vector3 Bitangent;
 		};
 
 		struct MeshTexture {
@@ -28,22 +30,42 @@ namespace NuclearEngine {
 			const char* path;
 		};
 
-		class NEAPI Mesh {
-		public:
-			/*  Mesh Data  */
-			std::vector<Vertex> vertices;
-			std::vector<unsigned int> indices;
-			std::vector<MeshTexture> textures;
+		struct Material 
+		{
+			API::Texture2D *Diffuse;
+			API::Texture2D *Specular;
+		};
 
-			Mesh(API::Shader* shader, std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures);
+
+		class NEAPI Mesh_NoIndices {
+		public:	
+			Mesh_NoIndices();
+			Mesh_NoIndices(std::vector<Vertex> vertices, std::vector<MeshTexture> textures);
 
 			// render the mesh
-			void Draw();
+			virtual void Draw(API::Shader* shader);
+
+		protected:
+			API::VertexBuffer *VBO;
+			/*  Mesh Data  */
+			std::vector<Vertex> vertices;
+			std::vector<MeshTexture> textures;
+
+			bool RenderInit;
+		};
+
+		class NEAPI Mesh : Mesh_NoIndices {
+		public:
+
+			/*  Mesh Data  */
+			Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures);
+
+			// render the mesh
+			virtual void Draw(API::Shader* shader) override;
 
 		private:
-			API::VertexBuffer *VBO;
 			API::IndexBuffer *IBO;
-			API::Shader* m_shader;
+			std::vector<unsigned int> indices;
 		};
 	}
 }

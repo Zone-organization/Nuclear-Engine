@@ -472,6 +472,11 @@ namespace NuclearRenderer {
 		return param;
 	}
 
+	NRBRenderTarget * DX11Context::ConstructRenderTarget(NRBRenderTarget * param)
+	{
+		return nullptr;
+	}
+
 	NRBTexture2D * DX11Context::ConstructTexture2D(NRBTexture2D * param)
 	{
 		param = new NuclearRenderer::DX11Texture2D();

@@ -30,13 +30,14 @@
     <ClInclude Include="include\Core\Context.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\ResourceManager\ResourceManager.h" />
-    <ClInclude Include="Source\ResourceManager\stb_image.h" />
     <ClInclude Include="include\Core\Renderer3D.h" />
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\ResourceManager\ModelLoader\OBJ_Loader.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
+    <ClInclude Include="include\Components\Models\Cube.h" />
+    <ClInclude Include="Source\Thirdparty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -64,5 +65,6 @@
     <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\ResourceManager\ModelLoader\OBJ_Loader.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
+    <ClCompile Include="Source\Components\Models\Cube.cpp" />
   </ItemGroup>
 </Project>

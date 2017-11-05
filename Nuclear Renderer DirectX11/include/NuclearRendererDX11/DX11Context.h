@@ -24,6 +24,7 @@ namespace NuclearRenderer
 		NRBVertexBuffer* ConstructVertexBuffer(NRBVertexBuffer* param) override;
 		NRBIndexBuffer* ConstructIndexBuffer(NRBIndexBuffer* param) override;
 		NRBUniformBuffer* ConstructUniformBuffer(NRBUniformBuffer* param) override;
+		NRBRenderTarget* ConstructRenderTarget(NRBRenderTarget* param) override;
 		NRBTexture2D* ConstructTexture2D(NRBTexture2D* param) override;
 		NRBShader* ConstructShader(NRBShader* param) override;
 
