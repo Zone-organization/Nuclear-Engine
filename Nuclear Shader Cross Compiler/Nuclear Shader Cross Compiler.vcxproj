@@ -18,11 +18,70 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\cbstring\bsafe.c" />
+    <ClCompile Include="source\cbstring\bstraux.c" />
+    <ClCompile Include="source\cbstring\bstrlib.c" />
+    <ClCompile Include="source\ControlFlowGraph.cpp" />
+    <ClCompile Include="source\ControlFlowGraphUtils.cpp" />
+    <ClCompile Include="source\DataTypeAnalysis.cpp" />
+    <ClCompile Include="source\Declaration.cpp" />
+    <ClCompile Include="source\decode.cpp" />
+    <ClCompile Include="source\dllmain.cpp" />
+    <ClCompile Include="source\HLSLcc.cpp" />
+    <ClCompile Include="source\HLSLccToolkit.cpp" />
+    <ClCompile Include="source\HLSLCrossCompilerContext.cpp" />
+    <ClCompile Include="source\Instruction.cpp" />
+    <ClCompile Include="source\LoopTransform.cpp" />
+    <ClCompile Include="source\Operand.cpp" />
+    <ClCompile Include="source\reflect.cpp" />
+    <ClCompile Include="source\Shader.cpp" />
+    <ClCompile Include="source\ShaderInfo.cpp" />
+    <ClCompile Include="source\toGLSL.cpp" />
+    <ClCompile Include="source\toGLSLDeclaration.cpp" />
+    <ClCompile Include="source\toGLSLInstruction.cpp" />
+    <ClCompile Include="source\toGLSLOperand.cpp" />
+    <ClCompile Include="source\toMetal.cpp" />
+    <ClCompile Include="source\toMetalDeclaration.cpp" />
+    <ClCompile Include="source\toMetalInstruction.cpp" />
+    <ClCompile Include="source\toMetalOperand.cpp" />
+    <ClCompile Include="source\UseDefineChains.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\growing_array.h" />
+    <ClInclude Include="include\hlslcc.h" />
+    <ClInclude Include="include\pstdint.h" />
+    <ClInclude Include="include\ShaderInfo.h" />
+    <ClInclude Include="source\cbstring\bsafe.h" />
+    <ClInclude Include="source\cbstring\bstraux.h" />
+    <ClInclude Include="source\cbstring\bstrlib.h" />
+    <ClInclude Include="source\internal_includes\ControlFlowGraph.h" />
+    <ClInclude Include="source\internal_includes\ControlFlowGraphUtils.h" />
+    <ClInclude Include="source\internal_includes\DataTypeAnalysis.h" />
+    <ClInclude Include="source\internal_includes\debug.h" />
+    <ClInclude Include="source\internal_includes\Declaration.h" />
+    <ClInclude Include="source\internal_includes\decode.h" />
+    <ClInclude Include="source\internal_includes\HLSLccToolkit.h" />
+    <ClInclude Include="source\internal_includes\HLSLCrossCompilerContext.h" />
+    <ClInclude Include="source\internal_includes\Instruction.h" />
+    <ClInclude Include="source\internal_includes\languages.h" />
+    <ClInclude Include="source\internal_includes\LoopTransform.h" />
+    <ClInclude Include="source\internal_includes\Operand.h" />
+    <ClInclude Include="source\internal_includes\reflect.h" />
+    <ClInclude Include="source\internal_includes\Shader.h" />
+    <ClInclude Include="source\internal_includes\toGLSL.h" />
+    <ClInclude Include="source\internal_includes\toGLSLOperand.h" />
+    <ClInclude Include="source\internal_includes\tokens.h" />
+    <ClInclude Include="source\internal_includes\toMetal.h" />
+    <ClInclude Include="source\internal_includes\toMetalDeclaration.h" />
+    <ClInclude Include="source\internal_includes\Translator.h" />
+    <ClInclude Include="source\internal_includes\UseDefineChains.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{70D5D897-80CD-4C3C-9A57-183D6F14A096}</ProjectGuid>
+    <ProjectGuid>{922FDF6B-9C6E-4166-BF3C-400EAEEAB3CC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HLSLCC</RootNamespace>
+    <RootNamespace>NuclearShaderCrossCompiler</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -72,6 +131,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Build\</OutDir>
+    <IntDir>Build\</IntDir>
+    <TargetName>Nuclear.Shader.Cross.Compiler</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -84,11 +146,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;HLSLCC_DYNLIB;libHLSLcc_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;libHLSLcc_EXPORTS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
+      <AdditionalIncludeDirectories>E:\Zone\Nuclear-Project\Nuclear Shader Cross Compiler;include;source\internal_includes;source\cbstring;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,7 +166,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;HLSLCC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;NUCLEARSHADERCROSSCOMPILER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,7 +181,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;HLSLCC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;NUCLEARSHADERCROSSCOMPILER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,7 +198,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;HLSLCC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;NUCLEARSHADERCROSSCOMPILER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -142,65 +207,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="src\cbstring\bsafe.c" />
-    <ClCompile Include="src\cbstring\bstraux.c" />
-    <ClCompile Include="src\cbstring\bstrlib.c" />
-    <ClCompile Include="src\ControlFlowGraph.cpp" />
-    <ClCompile Include="src\ControlFlowGraphUtils.cpp" />
-    <ClCompile Include="src\DataTypeAnalysis.cpp" />
-    <ClCompile Include="src\Declaration.cpp" />
-    <ClCompile Include="src\decode.cpp" />
-    <ClCompile Include="src\HLSLcc.cpp" />
-    <ClCompile Include="src\HLSLccToolkit.cpp" />
-    <ClCompile Include="src\HLSLCrossCompilerContext.cpp" />
-    <ClCompile Include="src\Instruction.cpp" />
-    <ClCompile Include="src\LoopTransform.cpp" />
-    <ClCompile Include="src\Operand.cpp" />
-    <ClCompile Include="src\reflect.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\ShaderInfo.cpp" />
-    <ClCompile Include="src\toGLSL.cpp" />
-    <ClCompile Include="src\toGLSLDeclaration.cpp" />
-    <ClCompile Include="src\toGLSLInstruction.cpp" />
-    <ClCompile Include="src\toGLSLOperand.cpp" />
-    <ClCompile Include="src\toMetal.cpp" />
-    <ClCompile Include="src\toMetalDeclaration.cpp" />
-    <ClCompile Include="src\toMetalInstruction.cpp" />
-    <ClCompile Include="src\toMetalOperand.cpp" />
-    <ClCompile Include="src\UseDefineChains.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\growing_array.h" />
-    <ClInclude Include="include\hlslcc.h" />
-    <ClInclude Include="include\pstdint.h" />
-    <ClInclude Include="include\ShaderInfo.h" />
-    <ClInclude Include="src\cbstring\bsafe.h" />
-    <ClInclude Include="src\cbstring\bstraux.h" />
-    <ClInclude Include="src\cbstring\bstrlib.h" />
-    <ClInclude Include="src\internal_includes\ControlFlowGraph.h" />
-    <ClInclude Include="src\internal_includes\ControlFlowGraphUtils.h" />
-    <ClInclude Include="src\internal_includes\DataTypeAnalysis.h" />
-    <ClInclude Include="src\internal_includes\debug.h" />
-    <ClInclude Include="src\internal_includes\Declaration.h" />
-    <ClInclude Include="src\internal_includes\decode.h" />
-    <ClInclude Include="src\internal_includes\HLSLccToolkit.h" />
-    <ClInclude Include="src\internal_includes\HLSLCrossCompilerContext.h" />
-    <ClInclude Include="src\internal_includes\Instruction.h" />
-    <ClInclude Include="src\internal_includes\languages.h" />
-    <ClInclude Include="src\internal_includes\LoopTransform.h" />
-    <ClInclude Include="src\internal_includes\Operand.h" />
-    <ClInclude Include="src\internal_includes\reflect.h" />
-    <ClInclude Include="src\internal_includes\Shader.h" />
-    <ClInclude Include="src\internal_includes\toGLSL.h" />
-    <ClInclude Include="src\internal_includes\toGLSLOperand.h" />
-    <ClInclude Include="src\internal_includes\tokens.h" />
-    <ClInclude Include="src\internal_includes\toMetal.h" />
-    <ClInclude Include="src\internal_includes\toMetalDeclaration.h" />
-    <ClInclude Include="src\internal_includes\Translator.h" />
-    <ClInclude Include="src\internal_includes\UseDefineChains.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

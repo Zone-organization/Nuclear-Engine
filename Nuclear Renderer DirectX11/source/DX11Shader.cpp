@@ -16,56 +16,40 @@ namespace NuclearRenderer {
 
 	}
 
-	bool DX11Shader::Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, ShaderLanguage Input)
+	bool DX11Shader::Create(BinaryShaderBlob* VertexShaderCode, BinaryShaderBlob* PixelShaderCode, BinaryShaderBlob* GeometryShaderCode)
 	{
 		bool result = true;
-
-		if (Input == ShaderLanguage::HLSL)
+		m_VSBL = VertexShaderCode;
+		m_PSBL = PixelShaderCode;
+		m_GSBL = GeometryShaderCode;
+		if (VertexShaderCode != nullptr)
 		{
-			if (VertexShaderCode != nullptr)
+			if (VertexShaderCode->Language != ShaderLanguage::DXBC)
 			{
-				ID3D10Blob* ERRMSG = nullptr;
+				Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Vertex- shaders in DirectX Bytecode \"DXBC\" language!\n");
 
-				if (FAILED(D3DCompile(VertexShaderCode, lstrlenA(VertexShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_4_1", 0, 0, m_VSBL.GetAddressOf(), &ERRMSG)))
-				{
-					Log->Info("[DX11Shader] Compiling Error -- In Vertex Shader.\nInfo: ");
-					CheckShaderErrors(ERRMSG);
-					result = false;
-				}
-			}
-			if (PixelShaderCode != nullptr)
-			{
-				ID3D10Blob* ERRMSG = nullptr;
-
-				if (FAILED(D3DCompile(PixelShaderCode, lstrlenA(PixelShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_1", 0, 0, m_PSBL.GetAddressOf(), &ERRMSG)))
-				{
-					Log->Info("[DX11Shader] Compiling Error -- In Pixel Shader.\nInfo: ");
-					CheckShaderErrors(ERRMSG);
-
-					result = false;
-				}
-			}
-			if (GeometryShaderCode != nullptr)
-			{
-				ID3D10Blob* ERRMSG = nullptr;
-
-				if (FAILED(D3DCompile(GeometryShaderCode, lstrlenA(GeometryShaderCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_4_1", 0, 0, m_GSBL.GetAddressOf(), &ERRMSG)))
-				{
-					Log->Info("[DX11Shader] Compiling Error -- In Geometry Shader.\nInfo: ");
-					CheckShaderErrors(ERRMSG);
-
-					result = false;
-				}
+				result = false;
 			}
 		}
-		else if (Input == ShaderLanguage::DXBC)
+		if (PixelShaderCode != nullptr)
 		{
-			//Continue loading...
+			if (PixelShaderCode->Language != ShaderLanguage::DXBC)
+			{
+				Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Pixel- shaders in DirectX Bytecode \"DXBC\" language!\n");
+
+				result = false;
+			}
 		}
-		else {
-			Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all shaders in HLSL or DXBC language!\n");
-			return false;
+		if (GeometryShaderCode != nullptr)
+		{
+			if (GeometryShaderCode->Language != ShaderLanguage::DXBC)
+			{
+				Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Geometry- shaders in DirectX Bytecode \"DXBC\" language!\n");
+
+				result = false;
+			}
 		}
+
 
 		if (result == false)
 		{
@@ -98,9 +82,13 @@ namespace NuclearRenderer {
 			}
 		}
 		if (result != false)
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	void DX11Shader::SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
@@ -182,9 +170,6 @@ namespace NuclearRenderer {
 		m_vertexShader.Reset();
 		m_pixelShader.Reset();
 		m_geometryShader.Reset();
-		m_VSBL.Reset();
-		m_PSBL.Reset();
-		m_GSBL.Reset();
 	}
 
 	void DX11Shader::Bind()
@@ -218,7 +203,7 @@ namespace NuclearRenderer {
 	{
 		if (m_vertexShader != nullptr)
 		{
-			return m_VSBL->GetBufferPointer();
+			return (void*)m_VSBL->GetBufferPointer();
 		}
 
 		return 0;

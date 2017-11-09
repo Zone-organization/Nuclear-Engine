@@ -9,7 +9,7 @@ namespace NuclearRenderer
 	public:
 		GLShader();
 
-		bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) override;
+		bool Create(NuclearEngine::BinaryShaderBlob* VertexShaderCode, NuclearEngine::BinaryShaderBlob* PixelShaderCode, NuclearEngine::BinaryShaderBlob* GeometryShaderCode) override;
 		void SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) override;
 		unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) override;
 
@@ -25,6 +25,6 @@ namespace NuclearRenderer
 		unsigned long GetDXBufferSize() override;
 
 	private:
-		GLuint _ProgramID;     //<-- Handler Of The Shader Be careful with it
+		GLuint _ProgramID;
 	};
 }

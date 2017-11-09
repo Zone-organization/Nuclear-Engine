@@ -122,7 +122,7 @@ namespace NuclearEngine {
 				defines.push_back("NR_DIR_LIGHTS " + std::to_string(dirLights.size()));
 			}
 
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			/*if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
 				Renderer_Shader = new API::Shader("NE_Phong_Light",
 					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.vs").c_str(),
@@ -137,7 +137,7 @@ namespace NuclearEngine {
 					Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps", defines).c_str(),
 					nullptr,
 					ShaderLanguage::HLSL);
-			}
+			}*/
 
 			Bake_Uniform_Buffers();
 		}

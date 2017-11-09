@@ -160,7 +160,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\Zone\Nuclear-Project\Nuclear Engine\Source\Thirdparty\HLSLCC\include;..\Nuclear Renderer OpenGL3\include;..\Nuclear Renderer DirectX11\include;..\Nuclear Renderer Base\include;..\Nuclear Platform\include;..\Nuclear Common\include;..\Deps\FreetypeLib;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Nuclear Shader Cross Compiler\include;..\Nuclear Renderer OpenGL3\include;..\Nuclear Renderer DirectX11\include;..\Nuclear Renderer Base\include;..\Nuclear Platform\include;..\Nuclear Common\include;..\Deps\FreetypeLib;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -169,7 +169,7 @@
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Build\;..\Deps\assimp\Libs;..\Deps\OpenAL\libs;..\Deps\GLEW\Libs;..\Deps\FreetypeLib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclear.Common.lib;Nuclear.Platform.lib;Nuclear.Renderer.DirectX11.lib;Nuclear.Renderer.OpenGL3.lib;Assimp.lib;winmm.lib;Freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Nuclear.Common.lib;Nuclear.Platform.lib;Nuclear.Renderer.DirectX11.lib;Nuclear.Renderer.OpenGL3.lib;Nuclear.Shader.Cross.Compiler.lib;Assimp.lib;winmm.lib;Freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 //To be used with a client
 namespace NuclearEngine {
@@ -12,7 +13,29 @@ namespace NuclearEngine {
 	enum class ShaderType {
 		Vertex,
 		Pixel,
-		Geometry
+		Geometry,
+
+		Vertex_Pixel,
+		Vertex_Geometry,
+		Vertex_Pixel_Geometry
+	};
+
+
+	struct BinaryShaderBlob {
+		void* GetBufferPointer()
+		{
+			return this->hlslsourcecode;
+		}
+		size_t GetBufferSize()
+		{
+			return this->hlslsize;
+		}
+
+		void* hlslsourcecode;
+		size_t hlslsize;
+
+		std::string glslsourcecode;
+		ShaderLanguage Language;
 	};
 
 	enum class TextureFormat { R8 = 8, R8G8 = 16, R8G8B8 = 24, R8G8B8A8 = 32, Depth, Stencil, Depth_Stencil };

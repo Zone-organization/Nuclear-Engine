@@ -22,22 +22,9 @@ public:
 	}
 	void Load()
 	{
-		if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-		{
-			CubeShader = new API::Shader("CubeShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/OpenGL/CubeShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/OpenGL/CubeShader.fs").c_str(),
-				nullptr,
-				ShaderLanguage::GLSL);
-		}
-		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-		{
-			CubeShader = new API::Shader("CubeShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(),
-				nullptr,
-				ShaderLanguage::HLSL);
-		}
+		CubeShader = new API::Shader("CubeShader",
+			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));

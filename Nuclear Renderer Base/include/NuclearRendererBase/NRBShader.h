@@ -3,15 +3,15 @@
 namespace NuclearEngine {
 	enum class ShaderLanguage;
 	enum class ShaderType;
+	struct BinaryShaderBlob;
 }
+
 namespace NuclearRenderer {
-
 	class NRBUniformBuffer;
-
 	class NRBShader
 	{
 	public:
-		virtual bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) = 0;
+		virtual bool Create(NuclearEngine::BinaryShaderBlob* VertexShaderCode, NuclearEngine::BinaryShaderBlob* PixelShaderCode, NuclearEngine::BinaryShaderBlob* GeometryShaderCode) = 0;
 
 		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) = 0;
 		virtual unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) = 0;

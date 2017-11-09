@@ -1,13 +1,11 @@
 e:\zone\nuclear-project\nuclear engine\build\vc141.pdb
 e:\zone\nuclear-project\nuclear engine\build\vc141.idb
-e:\zone\nuclear-project\nuclear engine\build\color.obj
 e:\zone\nuclear-project\nuclear engine\build\uniformbuffer.obj
-e:\zone\nuclear-project\nuclear engine\build\textureatlas.obj
 e:\zone\nuclear-project\nuclear engine\build\context.obj
 e:\zone\nuclear-project\nuclear engine\build\engine.obj
 e:\zone\nuclear-project\nuclear engine\build\inifile.obj
 e:\zone\nuclear-project\nuclear engine\build\iniparserclass.obj
-e:\zone\nuclear-project\nuclear engine\build\renderer.obj
+e:\zone\nuclear-project\nuclear engine\build\renderer3d.obj
 e:\zone\nuclear-project\nuclear engine\build\flycamera.obj
 e:\zone\nuclear-project\nuclear engine\build\genericcamera.obj
 e:\zone\nuclear-project\nuclear engine\build\skybox.obj
@@ -19,46 +17,69 @@ e:\zone\nuclear-project\nuclear engine\build\vertexbuffer.obj
 e:\zone\nuclear-project\nuclear engine\build\inputlayout.obj
 e:\zone\nuclear-project\nuclear engine\build\filesystem.obj
 e:\zone\nuclear-project\nuclear engine\build\audiosystem.obj
-e:\zone\nuclear-project\nuclear engine\build\ne_common.obj
-e:\zone\nuclear-project\nuclear engine\build\lightsystem.obj
 e:\zone\nuclear-project\nuclear engine\build\light.obj
+e:\zone\nuclear-project\nuclear engine\build\ne_common.obj
 e:\zone\nuclear-project\nuclear engine\build\resourcemanager.obj
-e:\zone\nuclear-project\nuclear engine\build\renderer3d.obj
-e:\zone\nuclear-project\build\nuclear.engine.dll
-e:\zone\nuclear-project\build\nuclear.engine.ilk
-e:\zone\nuclear-project\build\nuclear.engine.pdb
+e:\zone\nuclear-project\nuclear engine\build\color.obj
+e:\zone\nuclear-project\nuclear engine\build\mesh.obj
+e:\zone\nuclear-project\nuclear engine\build\model.obj
+e:\zone\nuclear-project\nuclear engine\build\obj_loader.obj
+e:\zone\nuclear-project\nuclear engine\build\rendertarget.obj
+e:\zone\nuclear-project\nuclear engine\build\cube.obj
+e:\zone\nuclear-project\nuclear engine\build\instruction.obj
+e:\zone\nuclear-project\nuclear engine\build\declaration.obj
+e:\zone\nuclear-project\nuclear engine\build\datatypeanalysis.obj
+e:\zone\nuclear-project\nuclear engine\build\hlslcrosscompilercontext.obj
+e:\zone\nuclear-project\nuclear engine\build\hlslcc.obj
+e:\zone\nuclear-project\nuclear engine\build\hlslcctoolkit.obj
+e:\zone\nuclear-project\nuclear engine\build\looptransform.obj
+e:\zone\nuclear-project\nuclear engine\build\operand.obj
+e:\zone\nuclear-project\nuclear engine\build\shaderinfo.obj
+e:\zone\nuclear-project\nuclear engine\build\usedefinechains.obj
+e:\zone\nuclear-project\nuclear engine\build\decode.obj
+e:\zone\nuclear-project\nuclear engine\build\reflect.obj
+e:\zone\nuclear-project\nuclear engine\build\toglsl.obj
+e:\zone\nuclear-project\nuclear engine\build\toglsldeclaration.obj
+e:\zone\nuclear-project\nuclear engine\build\toglslinstruction.obj
+e:\zone\nuclear-project\nuclear engine\build\toglsloperand.obj
+e:\zone\nuclear-project\nuclear engine\build\tometal.obj
+e:\zone\nuclear-project\nuclear engine\build\tometaldeclaration.obj
+e:\zone\nuclear-project\nuclear engine\build\tometalinstruction.obj
+e:\zone\nuclear-project\nuclear engine\build\tometaloperand.obj
+e:\zone\nuclear-project\nuclear engine\build\controlflowgraph.obj
+e:\zone\nuclear-project\nuclear engine\build\controlflowgraphutils.obj
+e:\zone\nuclear-project\nuclear engine\build\bsafe.obj
+e:\zone\nuclear-project\nuclear engine\build\bstraux.obj
+e:\zone\nuclear-project\nuclear engine\build\bstrlib.obj
 e:\zone\nuclear-project\build\nuclear.engine.lib
 e:\zone\nuclear-project\build\nuclear.engine.exp
-e:\zone\nuclear-project\nuclear engine\build\flycamera.obj.enc
-e:\zone\nuclear-project\nuclear engine\build\genericcamera.obj.enc
+e:\zone\nuclear-project\build\nuclear.engine.pdb
 e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\cl.command.1.tlog
 e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\cl.read.1.tlog
 e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\cl.write.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.2416.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.2448.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.2560.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.2588.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3240.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3340.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3488.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.4272.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.4892.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.5016.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.5828.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.5848.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.6060.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.6468.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.7436.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.7660.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.7812.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.784.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.7936.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.8004.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.8008.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.8472.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.892.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.9172.delete.1.tlog
-e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.9776.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link-cvtres.read.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link-cvtres.write.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link-rc.read.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link-rc.write.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.10104.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.1548.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.1580.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.2332.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3588.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3596.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3756-cvtres.read.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3756-cvtres.write.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3756-rc.read.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3756-rc.write.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3756.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3756.read.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.3756.write.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.4944.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.5652.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.5656.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.7784.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.8824.delete.1.tlog
+e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.9212.delete.1.tlog
 e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.command.1.tlog
 e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.delete.1.tlog
 e:\zone\nuclear-project\nuclear engine\build\nuclear engine.tlog\link.read.1.tlog

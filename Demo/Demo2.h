@@ -27,22 +27,11 @@ public:
 	}
 	void Load()
 	{
-		//if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-		//{
-			//RectangleShader = new API::Shader("RectangleShader",
-			//	Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.vs").c_str(),
-			//	Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/OpenGL/RectangleShader.fs").c_str(),
-			//	nullptr,
-			//	ShaderLanguage::GLSL);
-		//}
-		//else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-		//{
-			RectangleShader = new API::Shader("RectangleShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.ps").c_str(),
-				nullptr,
-				ShaderLanguage::HLSL);
-		//}
+
+		RectangleShader = new API::Shader("RectangleShader",
+			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+
 
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;

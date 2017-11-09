@@ -7,15 +7,20 @@ namespace NuclearRenderer
 {
 	class NRBShader;
 }
-struct ID3D10Blob;
 
 namespace NuclearEngine {
 	namespace API {
 
+		NEAPI BinaryShaderBlob* CompileShader(const char* SourceCode, ShaderType type, ShaderLanguage language);
+
 		class NEAPI Shader
 		{
 		public:
-			Shader(const char *name, const char* VertexShader, const char* PixelShader, const char* GeometryShader, ShaderLanguage inputtype);
+			//Now expects all shaders in HLSL!!
+			Shader(const char *name, BinaryShaderBlob* VertexShader, BinaryShaderBlob* PixelShader, BinaryShaderBlob* GeometryShader = nullptr);
+			Shader(const char *name, const char* VertexShader, const char* PixelShader, const char* GeometryShader, ShaderLanguage language);
+
+
 			~Shader();
 
 			void SetUniformBuffer(UniformBuffer* cbuffer, unsigned int slot , ShaderType type);
@@ -27,9 +32,9 @@ namespace NuclearEngine {
 		protected:
 			NuclearRenderer::NRBShader *shader;
 
-			ID3D10Blob* m_VSBL;
-			ID3D10Blob* m_PSBL;
-			ID3D10Blob* m_GSBL;
+			BinaryShaderBlob vblob;
+			BinaryShaderBlob pblob;
+			BinaryShaderBlob gblob;
 		};
 	}
 }

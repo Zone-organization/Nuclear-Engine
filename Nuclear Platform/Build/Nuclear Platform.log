@@ -1,3 +1,10 @@
-﻿  Win32_Window.cpp
+﻿  Application.cpp
+  Win32_Window.cpp
+  Win32_Clock.cpp
+  dllmain.cpp
+  Timer.cpp
+  Input.cpp
+  Clock.cpp
+  Generating Code...
      Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Platform.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Platform.exp
   Nuclear Platform.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Platform.dll

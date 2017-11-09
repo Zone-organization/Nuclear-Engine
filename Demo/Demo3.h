@@ -22,22 +22,9 @@ public:
 	}
 	void Load()
 	{
-		if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-		{
-			CubeShader = new API::Shader("CubeShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/OpenGL/CubeShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/OpenGL/CubeShader.fs").c_str(),
-				nullptr,
-				ShaderLanguage::GLSL);
-		}
-		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-		{
-			CubeShader = new API::Shader("CubeShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.ps").c_str(),
-				nullptr,
-				ShaderLanguage::HLSL);
-		}		
+		CubeShader = new API::Shader("CubeShader",Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.vs").c_str(),
+			Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.ps").c_str(),nullptr,ShaderLanguage::HLSL);
+
 
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

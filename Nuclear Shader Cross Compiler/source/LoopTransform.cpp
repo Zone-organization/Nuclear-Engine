@@ -1,7 +1,7 @@
 
-#include "src/internal_includes/LoopTransform.h"
-#include "src/internal_includes/Shader.h"
-#include "src/internal_includes/debug.h"
+#include "source/internal_includes/LoopTransform.h"
+#include "source/internal_includes/Shader.h"
+#include "source/internal_includes/debug.h"
 #include <algorithm>
 #include <vector>
 #include <list>

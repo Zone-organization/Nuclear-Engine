@@ -42,7 +42,7 @@ public:
 	}
 	void Load()
 	{
-		if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+		/*if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 		{
 			Shader = new API::Shader("ModelShader",
 				Core::FileSystem::LoadFileToString("Assets/Demo6/Shaders/OpenGL/model.vs").c_str(),
@@ -58,7 +58,7 @@ public:
 				nullptr,
 				ShaderLanguage::HLSL);
 		}
-	
+	*/
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)_Width_ / (float)_Height_, 0.1f, 100.0f));
 		Shader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);

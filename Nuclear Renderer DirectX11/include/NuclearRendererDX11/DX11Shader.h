@@ -9,7 +9,7 @@ namespace NuclearRenderer {
 	public:
 		DX11Shader();
 
-		bool Create(const char* VertexShaderCode, const char* PixelShaderCode, const char* GeometryShaderCode, NuclearEngine::ShaderLanguage Input) override;
+		bool Create(NuclearEngine::BinaryShaderBlob* VertexShaderCode, NuclearEngine::BinaryShaderBlob* PixelShaderCode, NuclearEngine::BinaryShaderBlob* GeometryShaderCode) override;
 
 		void SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) override;
 		unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) override;
@@ -33,8 +33,8 @@ namespace NuclearRenderer {
 		ComPtr<ID3D11PixelShader> m_pixelShader;
 		ComPtr<ID3D11GeometryShader> m_geometryShader;
 		
-		ComPtr<ID3D10Blob> m_VSBL;
-		ComPtr<ID3D10Blob> m_PSBL;
-		ComPtr<ID3D10Blob> m_GSBL;
+		NuclearEngine::BinaryShaderBlob* m_VSBL;
+		NuclearEngine::BinaryShaderBlob* m_PSBL;
+		NuclearEngine::BinaryShaderBlob* m_GSBL;
 	};
 }

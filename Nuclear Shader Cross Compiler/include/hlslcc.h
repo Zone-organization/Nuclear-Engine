@@ -5,16 +5,13 @@
 #include <vector>
 #include <map>
 
-#if defined (_WIN32) && defined(HLSLCC_DYNLIB)
+#if defined (_WIN32)
     #define HLSLCC_APIENTRY __stdcall
     #if defined(libHLSLcc_EXPORTS)
         #define HLSLCC_API __declspec(dllexport)
     #else
         #define HLSLCC_API __declspec(dllimport)
     #endif
-#else
-    #define HLSLCC_APIENTRY
-    #define HLSLCC_API
 #endif
 
 #include <stdint.h>

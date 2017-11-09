@@ -2,7 +2,7 @@
 
 #include "internal_includes/Operand.h"
 #include "internal_includes/tokens.h"
-#include "include/ShaderInfo.h"
+#include "ShaderInfo.h"
 #include <memory>
 
 #define ATOMIC_ADDRESS_BASIC 0

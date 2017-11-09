@@ -1,12 +1,14 @@
 struct VertexInputType
 {
-    float4 position : POSITION;
+    float3 position : POSITION;
+	float3 norm : NORMAL;
 	float2 tex : TEXCOORD;
 };
 
 struct PixelInputType
 {
     float4 position : SV_POSITION;
+	float3 norm : NORMAL;
 	float2 tex : TEXCOORD;
 };
 
@@ -22,6 +24,7 @@ PixelInputType main(VertexInputType input)
     PixelInputType output;
 	
 	// Calculate the position of the vertex against the world, view, and projection matrices.
+	output.norm = input.norm;
 
 	output.position = mul(Model, input.position);
     output.position = mul( View, output.position);

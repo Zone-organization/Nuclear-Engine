@@ -58,24 +58,10 @@ public:
 	}
 	void Load()
 	{
-
-		if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-		{
-			LampShader = new API::Shader("LampShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/OpenGL/LampShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/OpenGL/LampShader.fs").c_str(),
-				nullptr,
-				ShaderLanguage::GLSL);
-		}
-		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-		{
-			LampShader = new API::Shader("LampShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.ps").c_str(),
-				nullptr,
-				ShaderLanguage::HLSL);
-		}
-
+		LampShader = new API::Shader("LampShader",
+			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+		
 		Core::Renderer3D_Desc desc;
 		desc.lightmodel = Core::LightShading::PhongShading;
 		desc.tech = Core::RenderingTechnique::Forward;

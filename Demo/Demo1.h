@@ -25,22 +25,13 @@ public:
 	{
 		Core::Context::EnableBlending(true);
 
-		if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-		{
-			TriangleShader = new API::Shader("TriangleShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.ps").c_str(),
-				nullptr,
-				ShaderLanguage::HLSL);
-		}
-		else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-		{
-			TriangleShader = new API::Shader("TriangleShader",
-				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/OpenGL/Triangle.vs").c_str(),
-				Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/OpenGL/Triangle.fs").c_str(),
-				nullptr,
-				ShaderLanguage::GLSL);
-		}
+
+
+		TriangleShader = new API::Shader("TriangleShader",
+				API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+				API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+
+
 
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
