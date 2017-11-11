@@ -28,8 +28,8 @@ public:
 
 
 		TriangleShader = new API::Shader("TriangleShader",
-				API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-				API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 
 

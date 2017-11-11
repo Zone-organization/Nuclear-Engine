@@ -22,9 +22,10 @@ public:
 	}
 	void Load()
 	{
-		CubeShader = new API::Shader("CubeShader",Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.vs").c_str(),
-			Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.ps").c_str(),nullptr,ShaderLanguage::HLSL);
 
+		CubeShader = new API::Shader("CubeShader",
+		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

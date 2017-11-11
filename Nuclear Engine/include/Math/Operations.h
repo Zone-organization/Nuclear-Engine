@@ -149,12 +149,66 @@ namespace NuclearEngine
 			return result;
 		}
 
-		template <std::size_t  m, std::size_t  n, typename T>
-		inline Matrix<m, n, T> Inverse(const Matrix<m, n, T>& mat)
+		template <std::size_t  _m, std::size_t  n, typename T>
+		inline Matrix<_m, n, T> Inverse(const Matrix<_m, n, T>& m)
 		{
-			Matrix<m, n, T> result;
+
+			T Coef00 = m[2][2] * m[3][3] - m[3][2] * m[2][3];
+			T Coef02 = m[1][2] * m[3][3] - m[3][2] * m[1][3];
+			T Coef03 = m[1][2] * m[2][3] - m[2][2] * m[1][3];
+
+			T Coef04 = m[2][1] * m[3][3] - m[3][1] * m[2][3];
+			T Coef06 = m[1][1] * m[3][3] - m[3][1] * m[1][3];
+			T Coef07 = m[1][1] * m[2][3] - m[2][1] * m[1][3];
+
+			T Coef08 = m[2][1] * m[3][2] - m[3][1] * m[2][2];
+			T Coef10 = m[1][1] * m[3][2] - m[3][1] * m[1][2];
+			T Coef11 = m[1][1] * m[2][2] - m[2][1] * m[1][2];
+
+			T Coef12 = m[2][0] * m[3][3] - m[3][0] * m[2][3];
+			T Coef14 = m[1][0] * m[3][3] - m[3][0] * m[1][3];
+			T Coef15 = m[1][0] * m[2][3] - m[2][0] * m[1][3];
+
+			T Coef16 = m[2][0] * m[3][2] - m[3][0] * m[2][2];
+			T Coef18 = m[1][0] * m[3][2] - m[3][0] * m[1][2];
+			T Coef19 = m[1][0] * m[2][2] - m[2][0] * m[1][2];
+
+			T Coef20 = m[2][0] * m[3][1] - m[3][0] * m[2][1];
+			T Coef22 = m[1][0] * m[3][1] - m[3][0] * m[1][1];
+			T Coef23 = m[1][0] * m[2][1] - m[2][0] * m[1][1];
+
+			Vector<4, T> Fac0(Coef00, Coef00, Coef02, Coef03);
+			Vector<4, T> Fac1(Coef04, Coef04, Coef06, Coef07);
+			Vector<4, T> Fac2(Coef08, Coef08, Coef10, Coef11);
+			Vector<4, T> Fac3(Coef12, Coef12, Coef14, Coef15);
+			Vector<4, T> Fac4(Coef16, Coef16, Coef18, Coef19);
+			Vector<4, T> Fac5(Coef20, Coef20, Coef22, Coef23);
+
+			Vector<4, T> Vec0(m[1][0], m[0][0], m[0][0], m[0][0]);
+			Vector<4, T> Vec1(m[1][1], m[0][1], m[0][1], m[0][1]);
+			Vector<4, T> Vec2(m[1][2], m[0][2], m[0][2], m[0][2]);
+			Vector<4, T> Vec3(m[1][3], m[0][3], m[0][3], m[0][3]);
+
+			Vector<4, T> Inv0(Vec1 * Fac0 - Vec2 * Fac1 + Vec3 * Fac2);
+			Vector<4, T> Inv1(Vec0 * Fac0 - Vec2 * Fac3 + Vec3 * Fac4);
+			Vector<4, T> Inv2(Vec0 * Fac1 - Vec1 * Fac3 + Vec3 * Fac5);
+			Vector<4, T> Inv3(Vec0 * Fac2 - Vec1 * Fac4 + Vec2 * Fac5);
+
+			Vector<4, T> SignA(+1, -1, +1, -1);
+			Vector<4, T> SignB(-1, +1, -1, +1);
+			Matrix<4, 4, T> inverse(Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB);
+
+			Vector<4, T> Row0(inverse[0][0], inverse[1][0], inverse[2][0], inverse[3][0]);
+
+			Vector<4, T> Dot0(m[0] * Row0);
+			T Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
+
+			T OneOverDeterminant = static_cast<T>(1) / Dot1;
+
+			return inverse * OneOverDeterminant;
+
 			// TODO(Joey): calculate determinant algebraically and retrieve inverse.
-			return result;
+			//return result;
 		}
 
 		// NOTE(Joey): constants

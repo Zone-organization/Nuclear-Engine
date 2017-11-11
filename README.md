@@ -19,7 +19,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 - __OneAPI__
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core Renderers.
   - Support for Point, Bilinear, Trilinear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
-  - Support for GLSL & HLSL Shaders.
+  - Support for HLSL Shaders which can be Cross Compiled to GLSL.
   
 ## Current Platforms
   - Windows 7+     
@@ -27,7 +27,6 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Current Milestones
   - Finish the OneAPI:
     - Finish RenderTarget class (also known as Framebuffer in OpenGL).
-    - Correctly Implement The Uniform Buffer Class (also known as The Constant Pain in DirectX).
     - Implement TextureCube class (required for Skybox).
   - Correctly Implement Model Loading with Assimp.
   - Implement Blinn-Phong & Gourard Light Model.

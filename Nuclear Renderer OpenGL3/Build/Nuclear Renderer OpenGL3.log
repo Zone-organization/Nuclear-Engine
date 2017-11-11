@@ -1,8 +1,2 @@
-﻿  GLShader.cpp
-e:\zone\nuclear-project\nuclear renderer opengl3\source\glshader.cpp(88): warning C4101: 'infoLog': unreferenced local variable
-  Generating Code...
-  Compiling...
-  GLVertexBuffer.cpp
-  GLTexture2D.cpp
-  Generating Code...
+﻿  GLVertexBuffer.cpp
   Nuclear Renderer OpenGL3.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.OpenGL3.dll

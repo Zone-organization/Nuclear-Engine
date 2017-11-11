@@ -33,117 +33,14 @@ namespace NuclearEngine {
 			Log->Info(name);
 			Log->Info("\n");
 
+			this->vblob = VertexShader;
+			this->pblob = PixelShader;
+			this->gblob = GeometryShader;
+
+
 			shader = Core::Context::ConstructShader(shader);
 
 			shader->Create(VertexShader, PixelShader, GeometryShader);
-		}
-
-		Shader::Shader(const char * name, const char * VertexShader, const char * PixelShader, const char * GeometryShader, ShaderLanguage language)
-		{
-			Log->Info("[Shader] Initializing Shader: ");
-			Log->Info(name);
-			Log->Info("\n");
-						
-			ID3DBlob* vhlslblob;
-			ID3DBlob* phlslblob;
-			ID3DBlob* ghlslblob;
-
-			if (language == ShaderLanguage::HLSL)
-			{			
-				if (VertexShader != nullptr)
-				{
-					ID3D10Blob* ERRMSG = nullptr;
-
-					if (FAILED(D3DCompile(VertexShader, lstrlenA(VertexShader) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_4_1", 0, 0, &vhlslblob, &ERRMSG)))
-					{
-						Log->Info("[Shader] Compiling Error In Vertex Shader-- \nInfo: ");
-						CheckShaderErrors(ERRMSG);
-					}
-					vblob.hlslsourcecode = vhlslblob->GetBufferPointer();
-					vblob.hlslsize = vhlslblob->GetBufferSize();
-					vblob.Language = ShaderLanguage::DXBC;
-
-					
-					if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-					{
-						GlExtensions extensions;
-						GLSLCrossDependencyData deps;
-						extensions.ARB_shading_language_420pack = false;
-						HLSLccSamplerPrecisionInfo samplerPrecisions;
-						HLSLccReflection reflectionCallbacks;
-						GLSLShader glshader;
-
-						TranslateHLSLFromMem((const char*)vhlslblob->GetBufferPointer(), HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT,
-							LANG_330, &extensions, &deps, samplerPrecisions, reflectionCallbacks, &glshader);
-
-						vblob.glslsourcecode = glshader.sourceCode;
-						vblob.Language = ShaderLanguage::GLSL;
-					}
-				}
-				if (PixelShader != nullptr)
-				{
-					ID3D10Blob *ERRMSG = nullptr;
-
-					if (FAILED(D3DCompile(PixelShader, lstrlenA(PixelShader) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_1", 0, 0, &phlslblob, &ERRMSG)))
-					{
-						Log->Info("[Shader] Compiling Error In Pixel Shader-- \nInfo: ");
-						CheckShaderErrors(ERRMSG);
-					}
-					pblob.hlslsourcecode = phlslblob->GetBufferPointer();
-					pblob.hlslsize = phlslblob->GetBufferSize();
-					pblob.Language = ShaderLanguage::DXBC;
-
-					if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-					{
-						GlExtensions _extensions;
-						GLSLCrossDependencyData _deps;
-						_extensions.ARB_shading_language_420pack = false;
-						HLSLccSamplerPrecisionInfo _samplerPrecisions;
-						HLSLccReflection _reflectionCallbacks;
-						GLSLShader _glshader;
-
-
-						TranslateHLSLFromMem((const char*)phlslblob->GetBufferPointer(), HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT,
-							LANG_330, &_extensions, &_deps, _samplerPrecisions, _reflectionCallbacks, &_glshader);
-						pblob.glslsourcecode = _glshader.sourceCode;
-						pblob.Language = ShaderLanguage::GLSL;
-					}
-				}
-				
-				if (GeometryShader != nullptr)
-				{
-					ID3D10Blob* ERRMSG = nullptr;
-
-					if (FAILED(D3DCompile(GeometryShader, lstrlenA(GeometryShader) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "gs_4_1", 0, 0, &ghlslblob, &ERRMSG)))
-					{
-						Log->Info("[Shader] Compiling Error In Geometry Shader-- \nInfo: ");
-						CheckShaderErrors(ERRMSG);
-					}
-					gblob.hlslsourcecode = ghlslblob->GetBufferPointer();
-					gblob.hlslsize = ghlslblob->GetBufferSize();
-					gblob.Language = ShaderLanguage::DXBC;
-
-					if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-					{
-						GlExtensions extensions;
-						GLSLCrossDependencyData deps;
-						extensions.ARB_shading_language_420pack = false;
-						HLSLccSamplerPrecisionInfo samplerPrecisions;
-						HLSLccReflection reflectionCallbacks;
-						GLSLShader glshader;
-
-						TranslateHLSLFromMem((const char*)ghlslblob->GetBufferPointer(), HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT,
-							LANG_330, &extensions, &deps, samplerPrecisions, reflectionCallbacks, &glshader);
-
-						gblob.glslsourcecode = glshader.sourceCode;
-						gblob.Language = ShaderLanguage::GLSL;
-					}
-				}
-			}
-			
-			shader = Core::Context::ConstructShader(shader);
-
-			shader->Create(&vblob, &pblob, nullptr);
 		}
 
 		Shader::~Shader()
@@ -175,7 +72,7 @@ namespace NuclearEngine {
 			return shader;
 		}
 
-		BinaryShaderBlob* CompileShader(const char * SourceCode, ShaderType type, ShaderLanguage language)
+		BinaryShaderBlob CompileShader(const char * SourceCode, ShaderType type, ShaderLanguage language)
 		{
 			BinaryShaderBlob blob;
 
@@ -223,10 +120,12 @@ namespace NuclearEngine {
 						LANG_330, &extensions, &deps, samplerPrecisions, reflectionCallbacks, &glshader);
 
 					blob.glslsourcecode = glshader.sourceCode;
+
+					std::cout << blob.glslsourcecode;
 					blob.Language = ShaderLanguage::GLSL;
 				}
 			}	
-			return &blob;
+			return blob;
 		}
 
 	}

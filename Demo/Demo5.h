@@ -59,8 +59,8 @@ public:
 	void Load()
 	{
 		LampShader = new API::Shader("LampShader",
-			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo5/Shaders/DirectX/LampShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 		
 		Core::Renderer3D_Desc desc;
 		desc.lightmodel = Core::LightShading::PhongShading;

@@ -23,8 +23,8 @@ public:
 	void Load()
 	{
 		CubeShader = new API::Shader("CubeShader",
-			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));

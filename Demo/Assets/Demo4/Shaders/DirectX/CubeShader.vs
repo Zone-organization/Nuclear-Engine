@@ -27,8 +27,8 @@ PixelInputType main(VertexInputType input)
 	output.norm = input.norm;
 
 	output.position = mul(Model, input.position);
-    output.position = mul( View, output.position);
-    output.position = mul( Projection, output.position);
+    output.position = mul(View, output.position);
+    output.position = mul(Projection, output.position);
 
 	// Store the input texture for the pixel shader to use.
     output.tex = input.tex;

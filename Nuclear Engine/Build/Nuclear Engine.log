@@ -1,18 +1,8 @@
-﻿  Shader.cpp
-e:\zone\nuclear-project\nuclear shader cross compiler\include\hlslcc.h(244): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(2260): note: see declaration of 'sscanf'
+﻿  FlyCamera.cpp
   Generating Code...
-e:\zone\nuclear-project\nuclear engine\source\api\shader.cpp(229): warning C4172: returning address of local variable or temporary: blob
-  Skipping... (no relevant changes detected)
-  ResourceManager.cpp
+  Compiling...
   Renderer3D.cpp
-  Cube.cpp
-  Model.cpp
-  Mesh.cpp
   Light.cpp
   GenericCamera.cpp
-  FlyCamera.cpp
-  VertexBuffer.cpp
-  UniformBuffer.cpp
-  Texture2D.cpp
+  Generating Code...
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll

@@ -122,22 +122,11 @@ namespace NuclearEngine {
 				defines.push_back("NR_DIR_LIGHTS " + std::to_string(dirLights.size()));
 			}
 
-			/*if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				Renderer_Shader = new API::Shader("NE_Phong_Light",
-					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.vs").c_str(),
-					Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/GLSL/PhongLight.fs", defines).c_str(),
-					nullptr,
-					ShaderLanguage::GLSL);
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				Renderer_Shader = new API::Shader("NE_Phong_Light",
-					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs").c_str(),
-					Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps", defines).c_str(),
-					nullptr,
-					ShaderLanguage::HLSL);
-			}*/
+							
+				Renderer_Shader = new API::Shader("NE_Phong_Light", 
+					&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+					&API::CompileShader(Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps", defines).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			
 
 			Bake_Uniform_Buffers();
 		}
