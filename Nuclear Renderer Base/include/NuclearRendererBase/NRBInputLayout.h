@@ -1,9 +1,11 @@
 #pragma once
-
 #include <vector>
 
+namespace NuclearEngine {
+	enum class DataType;
+}
+
 namespace NuclearRenderer {
-	enum class DataType { Float, Float2, Float3, Float4 };
 
 	class NRBInputLayout
 	{
@@ -12,17 +14,17 @@ namespace NuclearRenderer {
 		{
 			int index = 0;
 			const char* name = "";
-			DataType dataType;
+			NuclearEngine::DataType dataType;
 			unsigned int stride = 0;
 			unsigned int offset = 0;
 		};
 
-		void Push(int index, const char* name, DataType dataType, unsigned int stride, unsigned int offset)
+		void Push(const char* SemanticName, int SemanticIndex, NuclearEngine::DataType dataType, unsigned int stride, unsigned int offset)
 		{
 			ILElement Block;
 
-			Block.index = index;
-			Block.name = name;
+			Block.index = SemanticIndex;
+			Block.name = SemanticName;
 			Block.dataType = dataType;
 			Block.stride = stride;
 			Block.offset = offset;

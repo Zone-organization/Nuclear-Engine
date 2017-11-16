@@ -42,8 +42,8 @@ public:
 		RectangleVB = new API::VertexBuffer(Desc);
 
 		RectangleIL = new API::InputLayout();
-		RectangleIL->Push(0, "POSITION", API::DataType::Float3, 5 * sizeof(float), 0);
-		RectangleIL->Push(1, "TEXCOORD", API::DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
+		RectangleIL->Push("POSITION", 0, DataType::Float3, 5 * sizeof(float), 0);
+		RectangleIL->Push("TEXCOORD", 0, DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
 
 		RectangleVB->SetInputLayout(RectangleIL, RectangleShader);
 		RectangleIB = new API::IndexBuffer(indices, sizeof(indices));

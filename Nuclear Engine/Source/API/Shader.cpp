@@ -101,7 +101,7 @@ namespace NuclearEngine {
 					Log->Info("[ShaderCompiler] Compiling Error -- \nInfo: ");
 					CheckShaderErrors(ERRMSG);
 
-					//return blob;
+					return blob;
 				}
 				blob.hlslsourcecode = hlslblob->GetBufferPointer();
 				blob.hlslsize = hlslblob->GetBufferSize();
@@ -125,6 +125,17 @@ namespace NuclearEngine {
 					blob.Language = ShaderLanguage::GLSL;
 				}
 			}	
+			else if (language == ShaderLanguage::GLSL)
+			{
+				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				{
+					blob.glslsourcecode = SourceCode;
+					blob.Language = ShaderLanguage::GLSL;
+				}
+				else {
+					Exceptions::NotImplementedException();
+				}
+			}
 			return blob;
 		}
 

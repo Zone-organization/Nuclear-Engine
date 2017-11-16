@@ -1,8 +1,10 @@
 #include <NuclearRendererOGL3\GLVertexBuffer.h>
 #include <NuclearRendererBase/NRBInputLayout.h>
 #include <NuclearCommon\Common_API_Types.h>
-
+using namespace NuclearEngine;
 namespace NuclearRenderer {
+	GLenum GetGLDataType(DataType dataType);
+	unsigned int GetComponentCount(DataType dataType);
 
 	GLVertexBuffer::GLVertexBuffer() 
 	{
@@ -48,17 +50,20 @@ namespace NuclearRenderer {
 
 	void GLVertexBuffer::SetInputLayout(NRBInputLayout * layout, NRBShader * shader)
 	{
+		unsigned int index = 0;
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
 
 		for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
 		{
-			glEnableVertexAttribArray(layout->GetBufferElement()[i].index);
-			glVertexAttribPointer(layout->GetBufferElement()[i].index,
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index,
 				GetComponentCount(layout->GetBufferElement()[i].dataType),
 				GetGLDataType(layout->GetBufferElement()[i].dataType),
 				GL_FALSE, layout->GetBufferElement()[i].stride,
 				(GLvoid*)layout->GetBufferElement()[i].offset);
+
+			index++;
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -75,7 +80,7 @@ namespace NuclearRenderer {
 		glBindVertexArray(0);
 	}
 
-	GLenum GLVertexBuffer::GetGLDataType(DataType dataType)
+	GLenum GetGLDataType(DataType dataType)
 	{
 
 		switch (dataType)
@@ -106,7 +111,7 @@ namespace NuclearRenderer {
 		}
 	}
 
-	unsigned int GLVertexBuffer::GetComponentCount(DataType dataType)
+	unsigned int GetComponentCount(DataType dataType)
 	{
 		switch (dataType)
 		{

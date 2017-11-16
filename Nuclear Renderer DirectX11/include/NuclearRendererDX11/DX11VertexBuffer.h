@@ -3,7 +3,6 @@
 #include <NuclearRendererBase/NRBVertexBuffer.h>
 
 namespace NuclearRenderer {
-	enum class DataType;
 
 	class NRDX11API DX11VertexBuffer : public NRBVertexBuffer
 	{
@@ -25,6 +24,5 @@ namespace NuclearRenderer {
 		ComPtr<ID3D11InputLayout> inputLayout;
 
 		unsigned int offset, stride;
-		DXGI_FORMAT GetDXDataType(DataType dataType);
 	};
 }

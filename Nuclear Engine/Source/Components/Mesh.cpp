@@ -23,11 +23,11 @@ namespace NuclearEngine {
 			if (this->RenderInit != false)
 			{
 				API::InputLayout layout;
-				layout.Push(0, "Positions", API::DataType::Float3, sizeof(Vertex), 0);
-				layout.Push(1, "Normals", API::DataType::Float3, sizeof(Vertex), offsetof(Vertex, Normal));
-				layout.Push(2, "TexCoords", API::DataType::Float3, sizeof(Vertex), offsetof(Vertex, TexCoords));
-				//layout.Push(3, "Tangent", API::DataType::Float3, sizeof(Vertex), offsetof(Vertex, Tangent));
-				//layout.Push(4, "Bitangent", API::DataType::Float3, sizeof(Vertex), offsetof(Vertex, Bitangent));
+				layout.Push("POSITION", 0, DataType::Float3, sizeof(Vertex), 0);
+				layout.Push("NORMAL", 0, DataType::Float3, sizeof(Vertex), offsetof(Vertex, Normal));
+				layout.Push("TEXCOORD", 0, DataType::Float2, sizeof(Vertex), offsetof(Vertex, TexCoords));
+				//layout.Push(3, "Tangent", DataType::Float3, sizeof(Vertex), offsetof(Vertex, Tangent));
+				//layout.Push(4, "Bitangent", DataType::Float3, sizeof(Vertex), offsetof(Vertex, Bitangent));
 
 				VBO->SetInputLayout(&layout, _shader);
 			}
@@ -90,11 +90,11 @@ namespace NuclearEngine {
 			if (this->RenderInit == false)
 			{
 				API::InputLayout layout;
-				layout.Push(0, "Positions", API::DataType::Float3, sizeof(Vertex), 0);
-				layout.Push(1, "Normals", API::DataType::Float3, sizeof(Vertex), offsetof(Vertex, Normal));
-				layout.Push(2, "TexCoords", API::DataType::Float2, sizeof(Vertex), offsetof(Vertex, TexCoords));
-				//layout.Push(3, "Tangent", API::DataType::Float3, sizeof(Vertex), offsetof(Vertex, Tangent));
-				//layout.Push(4, "Bitangent", API::DataType::Float3, sizeof(Vertex), offsetof(Vertex, Bitangent));
+				layout.Push("POSITION",0, DataType::Float3, sizeof(Vertex), 0);
+				layout.Push("NORMAL",0, DataType::Float3, sizeof(Vertex), offsetof(Vertex, Normal));
+				layout.Push("TEXCOORD",0, DataType::Float2, sizeof(Vertex), offsetof(Vertex, TexCoords));
+				//layout.Push(3, "Tangent", DataType::Float3, sizeof(Vertex), offsetof(Vertex, Tangent));
+				//layout.Push(4, "Bitangent", DataType::Float3, sizeof(Vertex), offsetof(Vertex, Bitangent));
 
 				VBO->SetInputLayout(&layout, shader);
 

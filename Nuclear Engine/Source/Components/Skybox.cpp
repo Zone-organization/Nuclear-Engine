@@ -149,7 +149,7 @@
 //
 //			vertexBuffer->Create(_vertices, sizeof(_vertices),API::Usage::Static);
 //
-//			vertexBufferLayout->Push(0, "POSITION", API::DataType::Float3, sizeof(float) * 3, 0);
+//			vertexBufferLayout->Push(0, "POSITION", DataType::Float3, sizeof(float) * 3, 0);
 //			vertexBuffer->SetInputLayout(vertexBufferLayout,shader);
 //
 //			API::Texture_Desc Desc;

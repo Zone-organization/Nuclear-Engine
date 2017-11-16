@@ -124,8 +124,8 @@ namespace NuclearEngine {
 
 							
 				Renderer_Shader = new API::Shader("NE_Phong_Light", 
-					&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-					&API::CompileShader(Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps", defines).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+					&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+					&API::CompileShader(Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps.hlsl", defines).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 			
 
 			Bake_Uniform_Buffers();

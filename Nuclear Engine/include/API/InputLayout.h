@@ -1,5 +1,6 @@
 #pragma once
 #include <NE_Common.h>
+#include <NuclearCommon\Common_API_Types.h>
 #include <vector>
 
 namespace NuclearRenderer {
@@ -7,16 +8,6 @@ namespace NuclearRenderer {
 }
 namespace NuclearEngine {
 	namespace API {
-		enum class DataType { Float, Float2, Float3, Float4 };
-
-		struct InputLayoutElement
-		{
-			int index = 0;
-			const char* name = "";
-			DataType dataType;
-			unsigned int stride = 0;
-			unsigned int offset = 0;
-		};
 
 		class NEAPI InputLayout
 		{
@@ -24,13 +15,9 @@ namespace NuclearEngine {
 			InputLayout();
 			~InputLayout();
 
-			void Push(int index, const char* name, DataType dataType, unsigned int stride, unsigned int offset);
+			void Push(const char* SemanticName, int SemanticIndex, DataType dataType, unsigned int stride, unsigned int offset);
 
 			NuclearRenderer::NRBInputLayout *GetBase();
-
-			//TODO: Implement
-			//InputLayoutElement GetBufferElement(int number);
-
 		protected:
 			NuclearRenderer::NRBInputLayout *layout;
 		};

@@ -42,8 +42,8 @@ public:
 		TriangleVB = new API::VertexBuffer(Desc);
 
 		TriangleIL = new API::InputLayout();
-		TriangleIL->Push(0, "POSITION", API::DataType::Float3, 6 * sizeof(float), 0);
-		TriangleIL->Push(1, "COLOR", API::DataType::Float3, 6 * sizeof(float), 3 * sizeof(float));
+		TriangleIL->Push("POSITION", 0, DataType::Float3, 6 * sizeof(float), 0);
+		TriangleIL->Push("COLOR" , 0 , DataType::Float3, 6 * sizeof(float), 3 * sizeof(float));
 
 		TriangleVB->SetInputLayout(TriangleIL, TriangleShader);
 

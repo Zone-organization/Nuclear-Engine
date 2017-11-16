@@ -79,8 +79,8 @@ public:
 		CubeVB = new API::VertexBuffer(vDesc);
 
 		CubeIL = new API::InputLayout();
-		CubeIL->Push(0, "POSITION", API::DataType::Float3, 5 * sizeof(float), 0);
-		CubeIL->Push(1, "TEXCOORD", API::DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
+		CubeIL->Push("POSITION", 0, DataType::Float3, 5 * sizeof(float), 0);
+		CubeIL->Push("TEXCOORD", 0, DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
 
 		CubeVB->SetInputLayout(CubeIL, CubeShader);
 		

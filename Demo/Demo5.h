@@ -123,9 +123,9 @@ public:
 		CubeVB = new API::VertexBuffer(vDesc);
 
 		CubeIL = new API::InputLayout();
-		CubeIL->Push(0, "POSITION", API::DataType::Float3, 8 * sizeof(float), 0);
-		CubeIL->Push(1, "NORMAL", API::DataType::Float3, 8 * sizeof(float), 3 * sizeof(float));
-		CubeIL->Push(2, "TEXCOORD", API::DataType::Float2, 8 * sizeof(float), 6 * sizeof(float));
+		CubeIL->Push("POSITION", 0, DataType::Float3, 8 * sizeof(float), 0);
+		CubeIL->Push("NORMAL", 0, DataType::Float3, 8 * sizeof(float), 3 * sizeof(float));
+		CubeIL->Push("TEXCOORD", 0, DataType::Float2, 8 * sizeof(float), 6 * sizeof(float));
 
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
@@ -146,7 +146,7 @@ public:
 		LampVB = new API::VertexBuffer(vDesc);
 
 		LampIL = new API::InputLayout();
-		LampIL->Push(0, "POSITION", API::DataType::Float3, 8 * sizeof(float), 0);
+		LampIL->Push("POSITION", 0, DataType::Float3, 3 * sizeof(float), 0);
 		LampVB->SetInputLayout(LampIL, LampShader);
 
 		Texture_Desc Desc;

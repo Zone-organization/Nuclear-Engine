@@ -4,6 +4,8 @@
 //To be used with a client
 namespace NuclearEngine {
 
+	enum class DataType { Float, Float2, Float3, Float4 };
+
 	enum class ShaderLanguage {
 		HLSL,
 		DXBC,

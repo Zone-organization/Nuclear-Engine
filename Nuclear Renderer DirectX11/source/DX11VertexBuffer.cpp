@@ -7,6 +7,8 @@
 using namespace NuclearEngine;
 namespace NuclearRenderer
 {
+	DXGI_FORMAT GetDXDataType(DataType dataType);
+
 	DX11VertexBuffer::DX11VertexBuffer() : VertexBuffer(nullptr), offset(0), stride(0)
 	{
 	}
@@ -78,7 +80,7 @@ namespace NuclearRenderer
 		return;
 	}
 
-	DXGI_FORMAT DX11VertexBuffer::GetDXDataType(DataType dataType)
+	DXGI_FORMAT GetDXDataType(DataType dataType)
 	{
 		switch (dataType)
 		{
@@ -116,7 +118,7 @@ namespace NuclearRenderer
 		for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
 		{
 			inputElementDesc[i].SemanticName = layout->GetBufferElement()[i].name;
-			inputElementDesc[i].SemanticIndex = 0;
+			inputElementDesc[i].SemanticIndex = layout->GetBufferElement()[i].index;
 			inputElementDesc[i].Format = GetDXDataType(layout->GetBufferElement()[i].dataType);
 			inputElementDesc[i].InputSlot = 0;
 			inputElementDesc[i].AlignedByteOffset = layout->GetBufferElement()[i].offset;

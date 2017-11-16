@@ -68,8 +68,8 @@ float4 main(PixelInputType input) : SV_TARGET
 #endif
 
 #ifdef NR_SPOT_LIGHTS
-	//for (int i2 = 0; i2 < NR_SPOT_LIGHTS; i2++)
-	//	FragColor += CalcSpotLight(spotLights[i2], norm, input.FragPos, viewDir, input.TexCoords);
+	for (int i2 = 0; i2 < NR_SPOT_LIGHTS; i2++)
+		FragColor += CalcSpotLight(spotLights[i2], norm, input.FragPos, viewDir, input.TexCoords);
 #endif
 	return FragColor;
 }
@@ -109,12 +109,9 @@ float4 CalcPointLight(PointLight light, float4 normal, float4 fragPos, float4 vi
 	float4 specular = light.color * spec * 	specularmap.Sample(specularmapsample, tex);
 	ambient = ambient * attenuation;
 	diffuse = diffuse * attenuation;
-	//specular = specular * attenuation;
+	specular = specular * attenuation;
 	return (ambient + diffuse + specular);
 }
-
-
-
 
 // calculates the color when using a spot light.
 float4 CalcSpotLight(SpotLight light, float4 normal, float4 fragPos, float4 viewDir,float2 tex)
@@ -126,12 +123,9 @@ float4 CalcSpotLight(SpotLight light, float4 normal, float4 fragPos, float4 view
 	float4 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), viewPosandMaterialshininess.w);
 	// attenuation
-
-	float3 L = (light.position - fragPos).xyz;
-	float distance = length(L);
-	L = L / distance;
-
+	float distance = length(light.position - fragPos);
 	float attenuation = light.Intensity_attenuation.x / (light.Intensity_attenuation.y + light.Intensity_attenuation.z * distance + light.Intensity_attenuation.w * (distance * distance));
+
 	// spotlight intensity
 	float theta = dot(lightDir, normalize(-light.direction));
 	float epsilon = light.SpotlightCutOf.x - light.SpotlightCutOf.y;
