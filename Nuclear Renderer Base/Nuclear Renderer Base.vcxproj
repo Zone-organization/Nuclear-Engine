@@ -155,6 +155,7 @@
     <ClInclude Include="include\NuclearRendererBase\NRBInputLayout.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBContext.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBRenderTarget.h" />
+    <ClInclude Include="include\NuclearRendererBase\NRBTextureCube.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBVertexBuffer.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBShader.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBTexture2D.h" />

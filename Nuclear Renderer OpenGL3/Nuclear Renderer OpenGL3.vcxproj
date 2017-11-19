@@ -157,6 +157,7 @@
     <ClInclude Include="include\NuclearRendererOGL3\GLRenderTarget.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLShader.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLTexture2D.h" />
+    <ClInclude Include="include\NuclearRendererOGL3\GLTextureCube.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLUniformBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLVertexBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GL_Common.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="source\GLIndexBuffer.cpp" />
     <ClCompile Include="source\GLRenderTarget.cpp" />
     <ClCompile Include="source\GLTexture2D.cpp" />
+    <ClCompile Include="source\GLTextureCube.cpp" />
     <ClCompile Include="source\GLUniformBuffer.cpp" />
     <ClCompile Include="source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="source\GLContext.cpp" />

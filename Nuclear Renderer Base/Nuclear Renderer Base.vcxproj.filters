@@ -39,5 +39,8 @@
     <ClInclude Include="include\NuclearRendererBase\NRBRenderTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\NuclearRendererBase\NRBTextureCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -34,4 +34,29 @@ namespace NuclearEngine {
 		}
 		return Data;
 	}
+	Texture_Data ResourceManager::FillWithColor(API::Color color, int width, int height, const Texture_Desc & Desc)
+	{
+		Exceptions::NotImplementedException();
+		int req_c;
+		switch (Desc.Format)   //Correctly Set The Required Componenets for stb_image
+		{
+		case TextureFormat::R8:
+			req_c = 1;
+		case TextureFormat::R8G8:
+			req_c = 2;
+		case TextureFormat::R8G8B8:
+			req_c = 3;
+		case TextureFormat::R8G8B8A8:
+			req_c = 4;
+		default:
+			req_c = 4;
+		}
+
+		Texture_Data Data;
+
+		std::fill(
+			Data.databuf,
+			Data.databuf,
+			color);
+	}
 }
