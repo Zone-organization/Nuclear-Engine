@@ -38,6 +38,7 @@
     <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\Components\Models\Cube.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
+    <ClInclude Include="include\API\TextureCube.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -66,5 +67,6 @@
     <ClCompile Include="Source\ResourceManager\ModelLoader\OBJ_Loader.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
+    <ClCompile Include="Source\API\TextureCube.cpp" />
   </ItemGroup>
 </Project>

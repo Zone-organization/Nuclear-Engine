@@ -5,6 +5,7 @@
 #include <NuclearRendererDX11\DX11IndexBuffer.h>
 #include <NuclearRendererDX11\DX11UniformBuffer.h>
 #include <NuclearRendererDX11\DX11Texture2D.h>
+#include <NuclearRendererDX11\DX11TextureCube.h>
 #include <NuclearRendererDX11\DX11Shader.h>
 
 #include <iostream>
@@ -480,6 +481,13 @@ namespace NuclearRenderer {
 	NRBTexture2D * DX11Context::ConstructTexture2D(NRBTexture2D * param)
 	{
 		param = new NuclearRenderer::DX11Texture2D();
+
+		return param;
+	}
+
+	NRBTextureCube * DX11Context::ConstructTextureCube(NRBTextureCube * param)
+	{
+		param = new NuclearRenderer::DX11TextureCube();
 
 		return param;
 	}

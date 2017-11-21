@@ -6,6 +6,17 @@ namespace NuclearEngine {
 
 	enum class DataType { Float, Float2, Float3, Float4 };
 
+	enum class Comparison_Func {
+		NEVER,
+		LESS,
+		EQUAL,
+		LESS_EQUAL,
+		GREATER,
+		NOT_EQUAL,
+		GREATER_EQUAL,
+		ALWAYS
+	};
+
 	enum class ShaderLanguage {
 		HLSL,
 		DXBC,

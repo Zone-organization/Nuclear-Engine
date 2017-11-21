@@ -116,6 +116,11 @@ namespace NuclearEngine
 			return ctx->ConstructTexture2D(param);
 		}
 
+		NuclearRenderer::NRBTextureCube * Context::ConstructTextureCube(NuclearRenderer::NRBTextureCube * param)
+		{
+			return ctx->ConstructTextureCube(param);
+		}
+
 		NRBShader* Context::ConstructShader(NRBShader * param)
 		{
 			return ctx->ConstructShader(param);

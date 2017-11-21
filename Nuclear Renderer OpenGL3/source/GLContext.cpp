@@ -4,6 +4,7 @@
 #include <NuclearRendererOGL3\GLUniformBuffer.h>
 #include <NuclearRendererOGL3\GLRenderTarget.h>
 #include <NuclearRendererOGL3\GLTexture2D.h>
+#include <NuclearRendererOGL3\GLTextureCube.h>
 #include <NuclearRendererOGL3\GLShader.h>
 #include "Platform\Win32\Win32_OGL.h"
 #include <NuclearCommon\Utilities\Logger.h>
@@ -141,6 +142,13 @@ namespace NuclearRenderer
 	NRBTexture2D * GLContext::ConstructTexture2D(NRBTexture2D * param)
 	{
 		param = new NuclearRenderer::GLTexture2D();
+
+		return param;
+	}
+
+	NRBTextureCube * GLContext::ConstructTextureCube(NRBTextureCube * param)
+	{
+		param = new NuclearRenderer::GLTextureCube();
 
 		return param;
 	}

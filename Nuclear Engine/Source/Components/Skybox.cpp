@@ -1,10 +1,10 @@
-//#include "Components\Skybox.h"
-//#include "Core\Renderer\Renderer.h"
-//
-//namespace NuclearEngine
-//{
-//	namespace Components
-//	{
+#include "Components\Skybox.h"
+#include <Core\Context.h>
+
+namespace NuclearEngine
+{
+	namespace Components
+	{
 //		const char *GLVS = R"(
 //#version 330 core
 //layout (location) in vec3 aPos;
@@ -83,102 +83,100 @@
 //{
 //    return shaderTexture.Sample(_Sampler, input.tex);
 //})";
-//
-//
-//
-//		Skybox::Skybox(API::UniformBuffer* CameraCbuffer)
-//		{
-//			vertexBuffer = new API::VertexBuffer();
-//			vertexBufferLayout = new API::InputLayout();
-//			shader = new API::Shader(GLVS, GLFS,nullptr, DXVS, DXPS, nullptr);
-//			shader->SetUniformBuffer(CameraCbuffer);
-//
-//			//_CameraCbuffer = CameraCbuffer;
-//		}
-//		Skybox::~Skybox()
-//		{
-//		}
-//
-//		void Skybox::Load(const std::vector<std::string>& filenames)
-//		{
-//			float _vertices[108] = {
-//				// positions          
-//				-1.0f,  1.0f, -1.0f,
-//				-1.0f, -1.0f, -1.0f,
-//				1.0f, -1.0f, -1.0f,
-//				1.0f, -1.0f, -1.0f,
-//				1.0f,  1.0f, -1.0f,
-//				-1.0f,  1.0f, -1.0f,
-//
-//				-1.0f, -1.0f,  1.0f,
-//				-1.0f, -1.0f, -1.0f,
-//				-1.0f,  1.0f, -1.0f,
-//				-1.0f,  1.0f, -1.0f,
-//				-1.0f,  1.0f,  1.0f,
-//				-1.0f, -1.0f,  1.0f,
-//
-//				1.0f, -1.0f, -1.0f,
-//				1.0f, -1.0f,  1.0f,
-//				1.0f,  1.0f,  1.0f,
-//				1.0f,  1.0f,  1.0f,
-//				1.0f,  1.0f, -1.0f,
-//				1.0f, -1.0f, -1.0f,
-//
-//				-1.0f, -1.0f,  1.0f,
-//				-1.0f,  1.0f,  1.0f,
-//				1.0f,  1.0f,  1.0f,
-//				1.0f,  1.0f,  1.0f,
-//				1.0f, -1.0f,  1.0f,
-//				-1.0f, -1.0f,  1.0f,
-//
-//				-1.0f,  1.0f, -1.0f,
-//				1.0f,  1.0f, -1.0f,
-//				1.0f,  1.0f,  1.0f,
-//				1.0f,  1.0f,  1.0f,
-//				-1.0f,  1.0f,  1.0f,
-//				-1.0f,  1.0f, -1.0f,
-//
-//				-1.0f, -1.0f, -1.0f,
-//				-1.0f, -1.0f,  1.0f,
-//				1.0f, -1.0f, -1.0f,
-//				1.0f, -1.0f, -1.0f,
-//				-1.0f, -1.0f,  1.0f,
-//				1.0f, -1.0f,  1.0f
-//			};
-//
-//
-//			vertexBuffer->Create(_vertices, sizeof(_vertices),API::Usage::Static);
-//
-//			vertexBufferLayout->Push(0, "POSITION", DataType::Float3, sizeof(float) * 3, 0);
-//			vertexBuffer->SetInputLayout(vertexBufferLayout,shader);
-//
-//			API::Texture_Desc Desc;
-//			Desc.Format = API::TextureFormat::R8G8B8A8;
-//			Desc.Wrap = API::TextureWrap::ClampToEdge;
-//			Desc.Filter = API::TextureFilter::Bilinear;
-//
-//			textureCube.Load(filenames, Desc);
-//		}
-//
-//		void Skybox::Render()
-//		{
-//			shader->Bind();
-//			// TODO: Remove The depth function to OneAPI
-//			if (GetRenderer() == Renderers::OpenGL3)
-//			{
-//				glDepthFunc(GL_LEQUAL);
-//			}
-//			vertexBuffer->Bind();
-//			textureCube.Bind();
-//			Core::Context::Draw(36);
-//			textureCube.Unbind();
-//			vertexBuffer->Unbind();
-//			if (GetRenderer() == Renderers::OpenGL3)
-//			{
-//				glDepthFunc(GL_LESS); // set depth function back to default
-//			}
-//			shader->Unbind();
-//
-//		}
-//	}
-//}
+
+		float _vertices[108] = {
+			// positions          
+			-1.0f,  1.0f, -1.0f,
+			-1.0f, -1.0f, -1.0f,
+			1.0f, -1.0f, -1.0f,
+			1.0f, -1.0f, -1.0f,
+			1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+
+			-1.0f, -1.0f,  1.0f,
+			-1.0f, -1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f,  1.0f,
+			-1.0f, -1.0f,  1.0f,
+
+			1.0f, -1.0f, -1.0f,
+			1.0f, -1.0f,  1.0f,
+			1.0f,  1.0f,  1.0f,
+			1.0f,  1.0f,  1.0f,
+			1.0f,  1.0f, -1.0f,
+			1.0f, -1.0f, -1.0f,
+
+			-1.0f, -1.0f,  1.0f,
+			-1.0f,  1.0f,  1.0f,
+			1.0f,  1.0f,  1.0f,
+			1.0f,  1.0f,  1.0f,
+			1.0f, -1.0f,  1.0f,
+			-1.0f, -1.0f,  1.0f,
+
+			-1.0f,  1.0f, -1.0f,
+			1.0f,  1.0f, -1.0f,
+			1.0f,  1.0f,  1.0f,
+			1.0f,  1.0f,  1.0f,
+			-1.0f,  1.0f,  1.0f,
+			-1.0f,  1.0f, -1.0f,
+
+			-1.0f, -1.0f, -1.0f,
+			-1.0f, -1.0f,  1.0f,
+			1.0f, -1.0f, -1.0f,
+			1.0f, -1.0f, -1.0f,
+			-1.0f, -1.0f,  1.0f,
+			1.0f, -1.0f,  1.0f
+		};
+
+		
+		Skybox::Skybox(API::UniformBuffer* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6> data)
+		{
+			vertexBufferLayout = new API::InputLayout();			
+			unsigned int slot = shader->GetUniformBufferSlot(CameraCbuffer, ShaderType::Vertex);
+			//shader = new API::Shader(GLVS, GLFS,nullptr, DXVS, DXPS, nullptr);
+			shader->SetUniformBuffer(CameraCbuffer, slot, ShaderType::Vertex);
+
+			API::VertexBufferDesc VDesc;
+			VDesc.data = _vertices;
+			VDesc.size = sizeof(_vertices);
+			VDesc.usage = BufferGPUUsage::Static;
+			VDesc.accessflag = BufferCPUAccess::Default;
+
+			vertexBuffer = new API::VertexBuffer(VDesc);
+
+			vertexBufferLayout->Push("POSITION",0 , DataType::Float3, sizeof(float) * 3, 0);
+			vertexBuffer->SetInputLayout(vertexBufferLayout, shader);
+
+			Texture_Desc Desc;
+			Desc.Format = TextureFormat::R8G8B8A8;
+			Desc.Wrap = TextureWrap::ClampToEdge;
+			Desc.Filter = TextureFilter::Bilinear;
+			texcube = new API::TextureCube(data, Desc);
+		}
+		Skybox::~Skybox()
+		{
+		}
+
+		void Skybox::Render()
+		{
+			shader->Bind();
+			//// TODO: Remove The depth function to OneAPI
+			//if (GetRenderer() == Renderers::OpenGL3)
+			//{
+			//	glDepthFunc(GL_LEQUAL);
+			//}
+			vertexBuffer->Bind();
+			texcube->Bind("skybox", shader,0);
+			Core::Context::Draw(36);
+			texcube->Unbind();
+			vertexBuffer->Unbind();
+			//if (GetRenderer() == Renderers::OpenGL3)
+			//{
+			//	glDepthFunc(GL_LESS); // set depth function back to default
+			//}
+			shader->Unbind();
+
+		}
+	}
+}

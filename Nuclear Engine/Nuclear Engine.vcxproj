@@ -333,6 +333,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\API\RenderTarget.h" />
+    <ClInclude Include="include\API\TextureCube.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\Components\Models\Cube.h" />
@@ -373,6 +374,7 @@
   <ItemGroup>
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
+    <ClCompile Include="Source\API\TextureCube.cpp" />
     <ClCompile Include="Source\API\UniformBuffer.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />

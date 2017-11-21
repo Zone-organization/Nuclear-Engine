@@ -12,6 +12,7 @@ namespace NuclearRenderer
 	class NRBUniformBuffer;
 	class NRBRenderTarget;
 	class NRBTexture2D;
+	class NRBTextureCube;
 	class NRBShader;
 
 	namespace ContextDesc
@@ -43,6 +44,7 @@ namespace NuclearRenderer
 		virtual NRBUniformBuffer* ConstructUniformBuffer(NRBUniformBuffer* param) = 0;
 		virtual NRBRenderTarget* ConstructRenderTarget(NRBRenderTarget* param) = 0;		
 		virtual NRBTexture2D* ConstructTexture2D(NRBTexture2D* param) = 0;
+		virtual NRBTextureCube* ConstructTextureCube(NRBTextureCube* param) = 0;
 		virtual NRBShader* ConstructShader(NRBShader* param) = 0;
 	};
 }
