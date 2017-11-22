@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="include\NuclearRendererDX11\DX11Context.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11IndexBuffer.h" />
+    <ClInclude Include="include\NuclearRendererDX11\DX11PipelineState.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Shader.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Texture2D.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11TextureCube.h" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="source\DX11Context.cpp" />
     <ClCompile Include="source\DX11IndexBuffer.cpp" />
+    <ClCompile Include="source\DX11PipelineState.cpp" />
     <ClCompile Include="source\DX11Shader.cpp" />
     <ClCompile Include="source\DX11Texture2D.cpp" />
     <ClCompile Include="source\DX11TextureCube.cpp" />

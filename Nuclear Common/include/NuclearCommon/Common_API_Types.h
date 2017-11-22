@@ -16,6 +16,33 @@ namespace NuclearEngine {
 		GREATER_EQUAL,
 		ALWAYS
 	};
+	enum class Stencil_OP
+	{
+		KEEP,
+		ZERO,
+		REPLACE,
+		INCREASE_SAT,
+		DECREASE_SAT,
+		INVERT,
+		INCREASE,
+		DECREASE
+	};
+	
+	struct PipelineStateDesc {
+		bool DepthEnabled;
+		bool DepthMaskEnabled;
+		Comparison_Func DepthFunc;
+
+		bool StencilEnabled;
+		unsigned char StencilReadMask;
+		unsigned char StencilWriteMask;
+		Stencil_OP StencilFailOp;
+		Stencil_OP StencilDepthFailOp;
+		Stencil_OP StencilPassOp;
+		Comparison_Func StencilFunc;
+
+
+	};
 
 	enum class ShaderLanguage {
 		HLSL,
