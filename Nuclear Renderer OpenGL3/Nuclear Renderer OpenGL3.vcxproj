@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\NuclearRendererOGL3\GLPipelineState.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLIndexBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLRenderTarget.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLShader.h" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\GLIndexBuffer.cpp" />
+    <ClCompile Include="source\GLPipelineState.cpp" />
     <ClCompile Include="source\GLRenderTarget.cpp" />
     <ClCompile Include="source\GLTexture2D.cpp" />
     <ClCompile Include="source\GLTextureCube.cpp" />

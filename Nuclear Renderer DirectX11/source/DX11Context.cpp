@@ -4,6 +4,7 @@
 #include <NuclearRendererDX11\DX11VertexBuffer.h>
 #include <NuclearRendererDX11\DX11IndexBuffer.h>
 #include <NuclearRendererDX11\DX11UniformBuffer.h>
+#include <NuclearRendererDX11\DX11PipelineState.h>
 #include <NuclearRendererDX11\DX11Texture2D.h>
 #include <NuclearRendererDX11\DX11TextureCube.h>
 #include <NuclearRendererDX11\DX11Shader.h>
@@ -345,9 +346,16 @@ namespace NuclearRenderer {
 		};
 
 		Context->ClearRenderTargetView(RenderTarget, Colors);
+	}
 
-		//Refresh the Depth/Stencil view
-		Context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	void DX11Context::ClearDepthBuffer()
+	{
+		Context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	}
+
+	void DX11Context::ClearStencilBuffer()
+	{	
+		Context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	void DX11Context::SwapBuffers()
@@ -417,18 +425,6 @@ namespace NuclearRenderer {
 		Context->IASetPrimitiveTopology(D3DPrimitiveType);
 	}
 
-	void DX11Context::EnableDepthBuffer(bool state)
-	{
-		if (state)
-			Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
-		else
-			Context->OMSetRenderTargets(1, &RenderTarget, 0);
-	}
-
-	void DX11Context::EnableBlending(bool state)
-	{
-	}
-
 	ID3D11Device1* DX11Context::GetDevice()
 	{
 		return Device.Get();
@@ -475,7 +471,15 @@ namespace NuclearRenderer {
 
 	NRBRenderTarget * DX11Context::ConstructRenderTarget(NRBRenderTarget * param)
 	{
+		// URGENT TODO
 		return nullptr;
+	}
+
+	NRBPipelineState * DX11Context::ConstructPipelineState(NRBPipelineState * param)
+	{
+		param = new NuclearRenderer::DX11PipelineState();
+
+		return param;
 	}
 
 	NRBTexture2D * DX11Context::ConstructTexture2D(NRBTexture2D * param)

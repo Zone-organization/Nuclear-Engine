@@ -332,6 +332,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\API\PipelineState.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\API\TextureCube.h" />
     <ClInclude Include="include\Components\Mesh.h" />

@@ -9,6 +9,7 @@ namespace NuclearRenderer {
 	
 	class NRBPipelineState
 	{
+	public:
 		virtual void Create(NuclearEngine::PipelineStateDesc type) = 0;
 
 		virtual void Delete() = 0;

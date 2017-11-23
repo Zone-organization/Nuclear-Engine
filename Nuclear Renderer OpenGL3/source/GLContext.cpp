@@ -3,6 +3,7 @@
 #include <NuclearRendererOGL3\GLIndexBuffer.h>
 #include <NuclearRendererOGL3\GLUniformBuffer.h>
 #include <NuclearRendererOGL3\GLRenderTarget.h>
+#include <NuclearRendererOGL3\GLPipelineState.h>
 #include <NuclearRendererOGL3\GLTexture2D.h>
 #include <NuclearRendererOGL3\GLTextureCube.h>
 #include <NuclearRendererOGL3\GLShader.h>
@@ -57,7 +58,17 @@ namespace NuclearRenderer
 	{
 		glClearColor(Red, Green, Blue, Alpha);
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	void GLContext::ClearDepthBuffer()
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
+	void GLContext::ClearStencilBuffer()
+	{
+		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
 	void GLContext::SwapBuffers()
@@ -81,30 +92,6 @@ namespace NuclearRenderer
 		glDrawElements(GL_PRIMITIVE_TYPE, vertexCount, GL_UNSIGNED_INT, 0);
 	}
 
-	void GLContext::EnableDepthBuffer(bool state)
-	{
-		if (state)
-		{
-			glEnable(GL_DEPTH_TEST);
-		}
-		else
-		{
-			glDisable(GL_DEPTH_TEST);
-		}
-	}
-
-	void GLContext::EnableBlending(bool state)
-	{
-		if (state)
-		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		}
-		else
-		{
-			glDisable(GL_BLEND);
-		}
-	}
 
 	void GLContext::SetViewPort(int x, int y, int width, int height)
 	{
@@ -137,6 +124,13 @@ namespace NuclearRenderer
 		param = new NuclearRenderer::GLRenderTarget();
 
 		return param;
+	}
+
+	NRBPipelineState * GLContext::ConstructPipelineState(NRBPipelineState * param)
+	{
+		param = new NuclearRenderer::GLPipelineState();
+
+		return param; 
 	}
 
 	NRBTexture2D * GLContext::ConstructTexture2D(NRBTexture2D * param)

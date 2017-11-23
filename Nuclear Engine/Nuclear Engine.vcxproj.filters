@@ -39,6 +39,7 @@
     <ClInclude Include="include\Components\Models\Cube.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="include\API\TextureCube.h" />
+    <ClInclude Include="include\API\PipelineState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />

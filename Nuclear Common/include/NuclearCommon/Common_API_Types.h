@@ -27,21 +27,24 @@ namespace NuclearEngine {
 		INCREASE,
 		DECREASE
 	};
+
+	struct Stencil_Face_Desc {
+		Stencil_OP StencilFailOp = Stencil_OP::KEEP;
+		Stencil_OP StencilDepthFailOp = Stencil_OP::KEEP;
+		Stencil_OP StencilPassOp = Stencil_OP::KEEP;
+		Comparison_Func StencilFunc = Comparison_Func::NOT_EQUAL;
+	};
 	
 	struct PipelineStateDesc {
-		bool DepthEnabled;
-		bool DepthMaskEnabled;
-		Comparison_Func DepthFunc;
+		bool DepthStencilEnabled = false;
+		bool DepthMaskEnabled = false;
+		Comparison_Func DepthFunc = Comparison_Func::LESS;
 
-		bool StencilEnabled;
-		unsigned char StencilReadMask;
-		unsigned char StencilWriteMask;
-		Stencil_OP StencilFailOp;
-		Stencil_OP StencilDepthFailOp;
-		Stencil_OP StencilPassOp;
-		Comparison_Func StencilFunc;
+		unsigned char StencilReadMask = 0xFF;
+		unsigned char StencilWriteMask = 0xFF;
 
-
+		Stencil_Face_Desc StencilFrontFace;
+		Stencil_Face_Desc StencilBackFace;		
 	};
 
 	enum class ShaderLanguage {

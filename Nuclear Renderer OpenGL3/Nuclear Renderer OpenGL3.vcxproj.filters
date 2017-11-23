@@ -45,6 +45,9 @@
     <ClCompile Include="source\GLTextureCube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\GLPipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\NuclearRendererOGL3\GL_Common.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NuclearRendererOGL3\GLTextureCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NuclearRendererOGL3\GLPipelineState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

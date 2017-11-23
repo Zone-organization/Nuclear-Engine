@@ -47,32 +47,29 @@ namespace NuclearRenderer {
 	{
 		desc = &type;
 
-		if (desc->DepthEnabled == true || desc->StencilEnabled == true)
+		if (desc->DepthStencilEnabled == true)
 		{
 			D3D11_DEPTH_STENCIL_DESC DSDesc;
 			ZeroMemory(&DSDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
-			if (desc->DepthEnabled == true)
-			{
-				DSDesc.DepthEnable = true;
-				if (desc->DepthMaskEnabled == true) 
-				{ DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; }
-				else 
-				{ DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; }
+		
+			DSDesc.DepthEnable = true;
+			if (desc->DepthMaskEnabled == true) 
+			{ DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; }
+			else 
+			{ DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; }
 
-				DSDesc.DepthFunc = GetDXComparisonFunc(desc->DepthFunc);
-			}
-			if (desc->StencilEnabled == true)
-			{
-				DSDesc.StencilEnable = true;
-				DSDesc.StencilReadMask = desc->StencilReadMask;
-				DSDesc.StencilWriteMask = desc->StencilWriteMask;
-			}
+			DSDesc.DepthFunc = GetDXComparisonFunc(desc->DepthFunc);
+		
+			DSDesc.StencilEnable = true;
+			DSDesc.StencilReadMask = desc->StencilReadMask;
+			DSDesc.StencilWriteMask = desc->StencilWriteMask;		
 
 			DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &DS_State);
 		}
 	}
 	void DX11PipelineState::Delete()
 	{
+		DS_State.Reset();
 	}
 	void DX11PipelineState::Bind_DepthStencil()
 	{
