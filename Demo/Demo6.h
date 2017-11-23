@@ -64,8 +64,8 @@ public:
 		Shader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);
 
 	//	model = new Components::Model("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", Shader);
-
 		Core::Context::EnableDepthBuffer(true);
+
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 

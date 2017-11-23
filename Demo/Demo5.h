@@ -156,8 +156,8 @@ public:
 
 		CrateTexture_Diffuse = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
 		CrateTexture_Specular = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
-
 		Core::Context::EnableDepthBuffer(true);
+
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
@@ -201,6 +201,8 @@ public:
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.1f, 0.1f, 0.1f, 1.0f));
+		//Don't Forget to clear the depth buffer each frame
+		Core::Context::ClearDepthBuffer();
 
 		// directional light
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));

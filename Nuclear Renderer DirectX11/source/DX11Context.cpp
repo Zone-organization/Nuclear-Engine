@@ -324,11 +324,11 @@ namespace NuclearRenderer {
 		D3D11_FEATURE_DATA_D3D11_OPTIONS fl;
 		Device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &fl, sizeof(fl));
 
-		if (fl.ConstantBufferPartialUpdate != TRUE || fl.ConstantBufferOffsetting != TRUE)
-		{
-			Log->FatalError("[DirectX] Your GPU doesn't support constant buffer Partial update which is required to run the Nuclear Engine, Please Update your Drivers.\n");
-			return false;
-		}
+		//if (fl.ConstantBufferPartialUpdate != TRUE || fl.ConstantBufferOffsetting != TRUE)
+		//{
+		//	Log->FatalError("[DirectX] Your GPU doesn't support constant buffer Partial update which is required to run the Nuclear Engine, Please Update your Drivers.\n");
+		//	return false;
+		//}
 
 		Log->Info("[DirectX] Successfully Initialized\n");
 		Log->Info("[DirectX] Version: 11.1\n");
@@ -356,6 +356,14 @@ namespace NuclearRenderer {
 	void DX11Context::ClearStencilBuffer()
 	{	
 		Context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+
+	void DX11Context::EnableDepthBuffer(bool state)
+	{
+		if (state)
+			Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
+		else
+			Context->OMSetRenderTargets(1, &RenderTarget, 0);
 	}
 
 	void DX11Context::SwapBuffers()

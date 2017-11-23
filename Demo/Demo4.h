@@ -37,7 +37,6 @@ public:
 
 		WoodenBoxTex = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
 		cube = new Components::Cube(WoodenBoxTex);
-
 		Core::Context::EnableDepthBuffer(true);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -90,6 +89,8 @@ public:
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
+		//Don't Forget to clear the depth buffer each frame
+		Core::Context::ClearDepthBuffer();
 
 		//WoodenBoxTex->Bind(0);
 		//CubeShader->Bind();

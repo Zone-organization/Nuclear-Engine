@@ -71,6 +71,19 @@ namespace NuclearRenderer
 		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
+	void GLContext::EnableDepthBuffer(bool state)
+	{
+		if (state)
+		{
+			glEnable(GL_DEPTH_TEST);
+			glClearDepth(1.0);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+	}
+
 	void GLContext::SwapBuffers()
 	{
 		return Internals::Win32_OGL::SwapBuffer();

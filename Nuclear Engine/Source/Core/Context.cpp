@@ -51,6 +51,16 @@ namespace NuclearEngine
 			ctx->ClearColor(color.r, color.g, color.b, color.a);
 		}
 
+		void Context::ClearDepthBuffer()
+		{
+			ctx->ClearDepthBuffer();
+		}
+
+		void Context::ClearStencilBuffer()
+		{
+			ctx->ClearStencilBuffer();
+		}
+
 		void Context::Shutdown()
 		{
 			ctx->Shutdown();
@@ -66,27 +76,19 @@ namespace NuclearEngine
 			ctx->SwapBuffers();
 		}
 
+		void Context::EnableDepthBuffer(bool state)
+		{
+			ctx->EnableDepthBuffer(state);
+		}
+
 		void Context::Draw(unsigned int count)
 		{
 			ctx->Draw(count);
-
 		}
 
 		void Context::DrawIndexed(unsigned int vertexCount)
 		{
 			ctx->DrawIndexed(vertexCount);
-
-		}
-
-		void Context::EnableDepthBuffer(bool state)
-		{
-			ctx->EnableDepthBuffer(state);
-
-		}
-
-		void Context::EnableBlending(bool state)
-		{
-			ctx->EnableBlending(state);
 
 		}
 
@@ -114,6 +116,11 @@ namespace NuclearEngine
 		NRBTexture2D * Context::ConstructTexture2D(NRBTexture2D * param)
 		{
 			return ctx->ConstructTexture2D(param);
+		}
+
+		NuclearRenderer::NRBPipelineState * Context::ConstructPipelineState(NuclearRenderer::NRBPipelineState * param)
+		{
+			return ctx->ConstructPipelineState(param);
 		}
 
 		NuclearRenderer::NRBTextureCube * Context::ConstructTextureCube(NuclearRenderer::NRBTextureCube * param)

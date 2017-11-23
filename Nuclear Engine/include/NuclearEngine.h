@@ -28,6 +28,8 @@ _____________/BOOOM\_____________
 #include <API/UniformBuffer.h>
 #include <API/InputLayout.h>
 #include <API/Texture2D.h>
+#include <API/TextureCube.h>
+#include <API/PipelineState.h>
 #include <API/Shader.h>
 #include <API/Color.h>
 

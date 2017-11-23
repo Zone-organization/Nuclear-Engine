@@ -374,6 +374,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Color.cpp" />
+    <ClCompile Include="Source\API\PipelineState.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\API\TextureCube.cpp" />
     <ClCompile Include="Source\API\UniformBuffer.cpp" />

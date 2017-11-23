@@ -1,17 +1,26 @@
 #pragma once
 #include <NuclearCommon\Common_API_Types.h>
 
+namespace NuclearRenderer
+{
+	class NRBPipelineState;
+}
+
 namespace NuclearEngine {
 
-	class PipelineState
-	{
-	public:
-		void Create(PipelineStateDesc type);
+	namespace API {
+		class PipelineState
+		{
+		public:
+			PipelineState(PipelineStateDesc type);
+			~PipelineState();
 
-		void Delete();
+			void Bind_DepthStencil();
 
-		void Bind_DepthStencil();
+			void Unbind_DepthStencil();
+		private:
+			NuclearRenderer::NRBPipelineState *state;
 
-		void Unbind_DepthStencil();
-	};
+		};
+	}
 }

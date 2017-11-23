@@ -69,5 +69,6 @@
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\API\TextureCube.cpp" />
+    <ClCompile Include="Source\API\PipelineState.cpp" />
   </ItemGroup>
 </Project>

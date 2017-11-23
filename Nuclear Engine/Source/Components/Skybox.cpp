@@ -132,9 +132,13 @@ namespace NuclearEngine
 		
 		Skybox::Skybox(API::UniformBuffer* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6> data)
 		{
+			shader = new API::Shader("Skybox",
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+
+
 			vertexBufferLayout = new API::InputLayout();			
 			unsigned int slot = shader->GetUniformBufferSlot(CameraCbuffer, ShaderType::Vertex);
-			//shader = new API::Shader(GLVS, GLFS,nullptr, DXVS, DXPS, nullptr);
 			shader->SetUniformBuffer(CameraCbuffer, slot, ShaderType::Vertex);
 
 			API::VertexBufferDesc VDesc;
@@ -153,6 +157,12 @@ namespace NuclearEngine
 			Desc.Wrap = TextureWrap::ClampToEdge;
 			Desc.Filter = TextureFilter::Bilinear;
 			texcube = new API::TextureCube(data, Desc);
+
+			PipelineStateDesc DS_State;
+			DS_State.DepthStencilEnabled = true;
+			DS_State.DepthFunc = Comparison_Func::LESS_EQUAL;
+
+			cubemapstate = new API::PipelineState(DS_State);
 		}
 		Skybox::~Skybox()
 		{
@@ -160,22 +170,15 @@ namespace NuclearEngine
 
 		void Skybox::Render()
 		{
+			cubemapstate->Bind_DepthStencil();
 			shader->Bind();
-			//// TODO: Remove The depth function to OneAPI
-			//if (GetRenderer() == Renderers::OpenGL3)
-			//{
-			//	glDepthFunc(GL_LEQUAL);
-			//}
 			vertexBuffer->Bind();
-			texcube->Bind("skybox", shader,0);
+			texcube->Bind("NE_SkyboxTexture", shader,0);
 			Core::Context::Draw(36);
 			texcube->Unbind();
 			vertexBuffer->Unbind();
-			//if (GetRenderer() == Renderers::OpenGL3)
-			//{
-			//	glDepthFunc(GL_LESS); // set depth function back to default
-			//}
 			shader->Unbind();
+			cubemapstate->Unbind_DepthStencil();
 
 		}
 	}

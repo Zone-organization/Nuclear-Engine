@@ -37,13 +37,13 @@ namespace NuclearEngine {
 	std::array<NuclearEngine::Texture_Data, 6> ResourceManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& filenames, const Texture_Desc& Desc)
 	{
 		Texture_Data data1, data2, data3, data4, data5, data6;
-		
-		data1 = LoadTextureFromFile(filenames.at(1).c_str(), Desc);
-		data2 = LoadTextureFromFile(filenames.at(2).c_str(), Desc);
-		data3 = LoadTextureFromFile(filenames.at(3).c_str(), Desc);
-		data4 = LoadTextureFromFile(filenames.at(4).c_str(), Desc);
-		data5 = LoadTextureFromFile(filenames.at(5).c_str(), Desc);
-		data6 = LoadTextureFromFile(filenames.at(6).c_str(), Desc);
+
+		data1 = LoadTextureFromFile(filenames.at(0).c_str(), Desc);
+		data2 = LoadTextureFromFile(filenames.at(1).c_str(), Desc);
+		data3 = LoadTextureFromFile(filenames.at(2).c_str(), Desc);
+		data4 = LoadTextureFromFile(filenames.at(3).c_str(), Desc);
+		data5 = LoadTextureFromFile(filenames.at(4).c_str(), Desc);
+		data6 = LoadTextureFromFile(filenames.at(5).c_str(), Desc);
 
 		std::array<NuclearEngine::Texture_Data, 6> result = { data1, data2, data3, data4, data5, data6 };
 
@@ -70,9 +70,11 @@ namespace NuclearEngine {
 
 		Texture_Data Data;
 
-		std::fill(
+	/*	std::fill(
 			Data.databuf,
 			Data.databuf,
-			color);
+			color);*/
+
+		return Data;
 	}
 }

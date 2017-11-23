@@ -39,8 +39,7 @@ namespace NuclearRenderer {
 	}
 	void GLPipelineState::Bind_DepthStencil()
 	{
-		glEnable(GL_DEPTH_TEST);
-		glDepthMask(depthmask);
+		//glDepthMask(depthmask);
 		glDepthFunc(depthfunc);
 
 		//glEnable(GL_STENCIL_TEST);
@@ -49,9 +48,7 @@ namespace NuclearRenderer {
 	}
 	void GLPipelineState::Unbind_DepthStencil()
 	{
-		glDepthMask(GL_FALSE);
+		//glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LESS);
-		glDisable(GL_DEPTH_TEST);
-
 	}
 }

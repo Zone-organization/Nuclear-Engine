@@ -4,9 +4,9 @@
 using namespace NuclearEngine;
 
 namespace NuclearRenderer {
-	DXGI_FORMAT GetDXTextureFormat(TextureFormat format);
-	D3D11_TEXTURE_ADDRESS_MODE GetDXTextureWrap(TextureWrap textureWrap);
-	D3D11_FILTER GetDXTextureFilter(TextureFilter textureFilter);
+	DXGI_FORMAT _GetDXTextureFormat(TextureFormat format);
+	D3D11_TEXTURE_ADDRESS_MODE _GetDXTextureWrap(TextureWrap textureWrap);
+	D3D11_FILTER _GetDXTextureFilter(TextureFilter textureFilter);
 
 	DX11TextureCube::DX11TextureCube()
 	{
@@ -17,7 +17,7 @@ namespace NuclearRenderer {
 		ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
 
-		texDesc.Format = GetDXTextureFormat(Desc.Format);
+		texDesc.Format = _GetDXTextureFormat(Desc.Format);
 		texDesc.Usage = D3D11_USAGE_DEFAULT;
 		texDesc.SampleDesc.Count = 1;
 		texDesc.SampleDesc.Quality = 0;
@@ -69,9 +69,13 @@ namespace NuclearRenderer {
 	}
 	void DX11TextureCube::Bind(unsigned int index)
 	{
+		DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
+		DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
 	}
 	void DX11TextureCube::Bind(const char * samplerName, NRBShader * shader, unsigned int index)
 	{
+		DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
+		DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
 	}
 	void DX11TextureCube::Unbind()
 	{
@@ -84,7 +88,7 @@ namespace NuclearRenderer {
 		return 0;
 	}
 
-	DXGI_FORMAT GetDXTextureFormat(TextureFormat format)
+	DXGI_FORMAT _GetDXTextureFormat(TextureFormat format)
 	{
 		switch (format)
 		{
@@ -95,7 +99,7 @@ namespace NuclearRenderer {
 		default: return DXGI_FORMAT_R8G8B8A8_UNORM;
 		}
 	}
-	D3D11_TEXTURE_ADDRESS_MODE GetDXTextureWrap(TextureWrap textureWrap)
+	D3D11_TEXTURE_ADDRESS_MODE _GetDXTextureWrap(TextureWrap textureWrap)
 	{
 		switch (textureWrap)
 		{
@@ -106,7 +110,7 @@ namespace NuclearRenderer {
 		default: return D3D11_TEXTURE_ADDRESS_WRAP;
 		}
 	}
-	D3D11_FILTER GetDXTextureFilter(TextureFilter textureFilter)
+	D3D11_FILTER _GetDXTextureFilter(TextureFilter textureFilter)
 	{
 		switch (textureFilter)
 		{

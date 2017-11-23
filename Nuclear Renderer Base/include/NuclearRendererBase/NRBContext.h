@@ -34,6 +34,8 @@ namespace NuclearRenderer
 		virtual void SwapBuffers() = 0;
 		virtual void Shutdown() = 0;
 
+		virtual void EnableDepthBuffer(bool state) = 0;
+
 		virtual void Draw(unsigned int count) = 0;
 		virtual void DrawIndexed(unsigned int vertexCount) = 0;
 

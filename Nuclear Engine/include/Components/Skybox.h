@@ -4,6 +4,8 @@
 #include <API/IndexBuffer.h>
 #include <API/TextureCube.h>
 #include <API/InputLayout.h>
+#include <API/PipelineState.h>
+#include <Core/FileSystem.h>
 #include <NE_Common.h>
 #include "Core\Renderer3D.h"
 
@@ -20,6 +22,7 @@ namespace NuclearEngine
 			API::InputLayout *vertexBufferLayout;
 			API::TextureCube *texcube;
 			API::UniformBuffer* _CameraCbuffer;
+			API::PipelineState* cubemapstate;
 		public:
 			Skybox(API::UniformBuffer* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6>);
 			~Skybox();

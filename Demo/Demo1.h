@@ -23,16 +23,13 @@ public:
 	}
 	void Load() override
 	{
-		Core::Context::EnableBlending(true);
-
-
-
+		//Core::Context::EnableBlending(true);
+		
 		TriangleShader = new API::Shader("TriangleShader",
 				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
-
-
+		
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
@@ -58,6 +55,8 @@ public:
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
+		//Don't Forget to clear the depth buffer each frame
+		Core::Context::ClearDepthBuffer();
 
 		// Render Triangle!
 		TriangleShader->Bind();

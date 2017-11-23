@@ -14,6 +14,7 @@ namespace NuclearRenderer
 	class NRBUniformBuffer;
 	class NRBTexture2D;
 	class NRBTextureCube;
+	class NRBPipelineState;
 	class NRBShader;
 }
 namespace NuclearEngine
@@ -47,17 +48,18 @@ namespace NuclearEngine
 
 			static void SetPrimitiveType(PrimitiveType primitivetype);
 			static void ClearColor(API::Color color);
+			static void ClearDepthBuffer();
+			static void ClearStencilBuffer();
 
 			static void Shutdown();
 
 			static void Begin();
 			static void End();
 
+			static void EnableDepthBuffer(bool state);
+
 			static void Draw(unsigned int count);
 			static void DrawIndexed(unsigned int vertexCount);
-
-			static void EnableDepthBuffer(bool state);
-			static void EnableBlending(bool state);
 
 			static void SetViewPort(int x, int y, int width, int height);
 			
@@ -65,6 +67,7 @@ namespace NuclearEngine
 			static NuclearRenderer::NRBIndexBuffer* ConstructIndexBuffer(NuclearRenderer::NRBIndexBuffer* param);
 			static NuclearRenderer::NRBUniformBuffer* ConstructUniformBuffer(NuclearRenderer::NRBUniformBuffer* param);
 			static NuclearRenderer::NRBTexture2D* ConstructTexture2D(NuclearRenderer::NRBTexture2D* param);
+			static NuclearRenderer::NRBPipelineState* ConstructPipelineState(NuclearRenderer::NRBPipelineState* param);
 			static NuclearRenderer::NRBTextureCube* ConstructTextureCube(NuclearRenderer::NRBTextureCube* param);
 			static NuclearRenderer::NRBShader* ConstructShader(NuclearRenderer::NRBShader* param);
 		};

@@ -6,8 +6,8 @@ using namespace NuclearEngine;
 
 namespace NuclearRenderer {
 
-	int GetGLTextureFormat(TextureFormat format);
-	int GetGLTextureWrap(TextureWrap textureWrap);
+	int _GetGLTextureFormat(TextureFormat format);
+	int _GetGLTextureWrap(TextureWrap textureWrap);
 	template<class T>
 	const T& _min(const T& a, const T& b)
 	{
@@ -25,11 +25,11 @@ namespace NuclearRenderer {
 		for (GLuint i = 0; i < data.size(); i++)
 		{
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-				GetGLTextureFormat(Desc.Format),
+				_GetGLTextureFormat(Desc.Format),
 				data[i].width,
 				data[i].height,
 				0,
-				GetGLTextureFormat(Desc.Format),
+				_GetGLTextureFormat(Desc.Format),
 				GL_UNSIGNED_BYTE,
 				data[i].databuf);
 		}
@@ -105,12 +105,14 @@ namespace NuclearRenderer {
 		}
 
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap));
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc.Wrap));
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc.Wrap));
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, _GetGLTextureWrap(Desc.Wrap));
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, _GetGLTextureWrap(Desc.Wrap));
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, _GetGLTextureWrap(Desc.Wrap));
 
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+		return true;
 	}
 
 	void GLTextureCube::Delete()
@@ -120,31 +122,31 @@ namespace NuclearRenderer {
 	void GLTextureCube::Bind(unsigned int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 	}
 	void GLTextureCube::Bind(const char * samplerName, NRBShader * shader, unsigned int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);
 
 	}
 	void GLTextureCube::Unbind()
 	{
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	}
 	void GLTextureCube::Unbind(unsigned int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 	unsigned int GLTextureCube::GLGetTextureID()
 	{
 		return textureID;
 	}
 
-	int GetGLTextureFormat(TextureFormat format)
+	int _GetGLTextureFormat(TextureFormat format)
 	{
 		switch (format)
 		{
@@ -157,7 +159,7 @@ namespace NuclearRenderer {
 
 	}
 
-	int GetGLTextureWrap(TextureWrap textureWrap)
+	int _GetGLTextureWrap(TextureWrap textureWrap)
 	{
 		switch (textureWrap)
 		{

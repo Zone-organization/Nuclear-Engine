@@ -12,6 +12,8 @@ namespace NuclearRenderer
 		void ClearDepthBuffer() override;
 		void ClearStencilBuffer() override;
 
+		void EnableDepthBuffer(bool state) override;
+		
 		void SwapBuffers() override;
 		void Shutdown() override;
 
