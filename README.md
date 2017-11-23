@@ -1,7 +1,6 @@
 # Nuclear Engine
+![Alt text](http://media.indiedb.com/images/engines/1/1/764/NELOgo.png)
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
-
-![Alt text](http://media.indiedb.com/images/engines/1/1/764/shit.png "The Current MileStone")
 
 ## Features:-
 - __Core__
@@ -30,6 +29,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
     - Implement TextureCube class (required for Skybox).
   - Correctly Implement Model Loading with Assimp.
   - Implement Blinn-Phong & Gourard Light Model.
+  ![Alt text](http://media.indiedb.com/images/engines/1/1/764/shit.png "The Current MileStone")
   - Implement Skybox.
 
 ## Roadmap
