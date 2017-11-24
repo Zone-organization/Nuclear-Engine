@@ -1,6 +1,6 @@
 struct VertexInputType
 {
-    float3 Position : POSITION;
+	float4 Position : POSITION;
 	float3 Normal : NORMAL;
 	float2 TexCoord : TEXCOORD;
 };

@@ -177,6 +177,32 @@ namespace NuclearEngine {
 			texturebuf.push_back(_tex);
 			cube = new Mesh_NoIndices(vertices, texturebuf);
 		}
+		Cube::Cube(Material * mat)
+		{
+			std::vector<Vertex> vertices;
+
+			for (int i = 0; i < Positions.size(); i++)
+			{
+				Vertex vert(Positions[i], Normals[i], UV[i]);
+				vertices.push_back(vert);
+			}
+			MeshTexture _tex;
+			_tex.tex = mat->Diffuse;
+			_tex.path = nullptr;
+			_tex.type = "texture_diffuse";
+			
+
+			std::vector<MeshTexture> texturebuf;
+			texturebuf.push_back(_tex);
+
+			_tex.tex = mat->Specular;
+			_tex.path = nullptr;
+			_tex.type = "texture_specular";
+
+			texturebuf.push_back(_tex);
+
+			cube = new Mesh_NoIndices(vertices, texturebuf);
+		}
 		void Cube::Draw(API::Shader* shader)
 		{
 			cube->Draw(shader);

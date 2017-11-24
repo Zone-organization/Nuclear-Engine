@@ -51,7 +51,7 @@ namespace NuclearEngine {
 					number = std::to_string(heightNr++); // transfer unsigned int to stream
 
 				std::cout << (name + number).c_str();
-				textures[i].tex->Bind((name + number).c_str(), _shader, i);
+				textures[i].tex->PSBind((name + number).c_str(), _shader, i);
 			}
 
 			// draw mesh
@@ -60,8 +60,6 @@ namespace NuclearEngine {
 			Core::Context::DrawIndexed(indices.size());
 			IBO->Unbind();
 			VBO->Unbind();
-
-			textures[0].tex->Unbind();
 		}
 
 		Mesh_NoIndices::Mesh_NoIndices()
@@ -119,7 +117,7 @@ namespace NuclearEngine {
 				else if (name == "texture_height")
 					number = std::to_string(heightNr++); // transfer unsigned int to stream
 
-				textures[i].tex->Bind((name + number).c_str(), shader, i);
+				textures[i].tex->PSBind((name + number).c_str(), shader, i);
 			}
 
 			// draw mesh
@@ -127,7 +125,6 @@ namespace NuclearEngine {
 			Core::Context::Draw(vertices.size());
 			VBO->Unbind();
 
-			textures[0].tex->Unbind();
 		}
 
 	}

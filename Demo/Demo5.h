@@ -17,6 +17,9 @@ protected:
 	Components::PointLight pointlight3;
 	Components::PointLight pointlight4;
 
+	Components::Skybox* skybox;
+	Components::Cube *cube;
+
 	API::VertexBuffer *CubeVB;
 	API::InputLayout *CubeIL;
 	API::UniformBuffer *LightCubeUBO;
@@ -112,6 +115,49 @@ public:
 			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 		};
 
+		float __vertices[] = {
+			-0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f,
+			0.5f,  0.5f, -0.5f,
+			0.5f,  0.5f, -0.5f,
+			-0.5f,  0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+
+			-0.5f, -0.5f,  0.5f, 
+			0.5f, -0.5f,  0.5f, 
+			0.5f,  0.5f,  0.5f, 
+			0.5f,  0.5f,  0.5f, 
+			-0.5f,  0.5f,  0.5f, 
+			-0.5f, -0.5f,  0.5f,
+
+			-0.5f,  0.5f,  0.5f,
+			-0.5f,  0.5f, -0.5f, 
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f,  0.5f,
+			-0.5f,  0.5f,  0.5f,
+
+			0.5f,  0.5f,  0.5f,
+			0.5f,  0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f, 
+			0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f,  0.5f,
+			0.5f,  0.5f,  0.5f,
+
+			-0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f,  0.5f,
+			0.5f, -0.5f,  0.5f,
+			-0.5f, -0.5f,  0.5f,
+			-0.5f, -0.5f, -0.5f,
+
+			-0.5f,  0.5f, -0.5f,
+			0.5f,  0.5f, -0.5f, 
+			0.5f,  0.5f,  0.5f,
+			0.5f,  0.5f,  0.5f, 
+			-0.5f,  0.5f,  0.5f, 
+			-0.5f,  0.5f, -0.5f
+		};
 
 
 		API::VertexBufferDesc vDesc;
@@ -143,11 +189,31 @@ public:
 
 		CubeVB->SetInputLayout(CubeIL, Renderer->GetShader());
 
+		vDesc.data = __vertices;
+		vDesc.size = sizeof(__vertices);
+		vDesc.usage = BufferGPUUsage::Dynamic;
+		vDesc.accessflag = BufferCPUAccess::Default;
 		LampVB = new API::VertexBuffer(vDesc);
 
 		LampIL = new API::InputLayout();
 		LampIL->Push("POSITION", 0, DataType::Float3, 3 * sizeof(float), 0);
 		LampVB->SetInputLayout(LampIL, LampShader);
+
+		std::array<std::string, 6 > filenames = {
+			"Assets/Common/Skybox/right.jpg",
+			"Assets/Common/Skybox/left.jpg",
+			"Assets/Common/Skybox/top.jpg",
+			"Assets/Common/Skybox/bottom.jpg",
+			"Assets/Common/Skybox/front.jpg" ,
+			"Assets/Common/Skybox/back.jpg"
+		};
+
+		Texture_Desc _Desc;
+		_Desc.Filter = TextureFilter::Linear2D;
+		_Desc.Wrap = TextureWrap::ClampToEdge;
+		_Desc.Format = TextureFormat::R8G8B8A8;
+
+		skybox = new Components::Skybox(Camera->GetCBuffer(), ResourceManager::LoadTextureCubeFromFile(filenames, _Desc));
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
@@ -156,8 +222,14 @@ public:
 
 		CrateTexture_Diffuse = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
 		CrateTexture_Specular = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
-		Core::Context::EnableDepthBuffer(true);
 
+		Components::Material CubeMat;
+		CubeMat.Diffuse = CrateTexture_Diffuse;
+		CubeMat.Specular = CrateTexture_Specular;
+
+		cube = new Components::Cube(&CubeMat);
+
+		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
@@ -232,8 +304,8 @@ public:
 		Renderer->GetShader()->Bind();
 
 		/* Render Textured Cube*/
-		CrateTexture_Diffuse->Bind("diffusemap", Renderer->GetShader(), 0);
-		CrateTexture_Specular->Bind("specularmap", Renderer->GetShader(), 1);
+		CrateTexture_Diffuse->PSBind("NE_Diffuse_Map", Renderer->GetShader(), 0);
+		CrateTexture_Specular->PSBind("NE_Specular_Map", Renderer->GetShader(), 1);
 
 		CubeVB->Bind();
 
@@ -250,9 +322,6 @@ public:
 		}
 
 		CubeVB->Unbind();
-
-		CrateTexture_Specular->Unbind(1);
-		CrateTexture_Diffuse->Unbind(0);
 
 		Renderer->GetShader()->Unbind();
 
@@ -275,7 +344,11 @@ public:
 		LampVB->Unbind();
 		LampShader->Unbind();
 
-		Renderer->Render();
+		//Renderer->Render();
+
+
+		skybox->Render();
+
 
 		Core::Context::End();
 	}

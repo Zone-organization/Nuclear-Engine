@@ -15,7 +15,6 @@ protected:
 	API::UniformBuffer *CubeCB;
 	API::InputLayout *CubeIL;
 	API::Texture2D *WoodenBoxTex;
-	Components::Skybox* skybox;
 public:
 	Demo3()
 	{
@@ -87,22 +86,6 @@ public:
 		CubeCB = new API::UniformBuffer("NE_Camera", sizeof(Shader_Uniforms));
 		CubeShader->SetUniformBuffer(CubeCB, 0, ShaderType::Vertex);
 	
-		std::array<std::string, 6 > filenames = {
-			"Assets/Common/Skybox/right.jpg",
-			"Assets/Common/Skybox/left.jpg",
-			"Assets/Common/Skybox/top.jpg",
-			"Assets/Common/Skybox/bottom.jpg",
-			"Assets/Common/Skybox/front.jpg" ,
-			"Assets/Common/Skybox/back.jpg"
-		};
-
-		Texture_Desc _Desc;
-		_Desc.Filter = TextureFilter::Linear2D;
-		_Desc.Wrap = TextureWrap::ClampToEdge;
-		_Desc.Format = TextureFormat::R8G8B8A8;
-
-		skybox = new Components::Skybox(CubeCB, ResourceManager::LoadTextureCubeFromFile(filenames, _Desc));
-
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
 		Desc.Wrap = TextureWrap::Repeat;
@@ -122,7 +105,7 @@ public:
 		//Don't Forget to clear the depth buffer each frame
 		Core::Context::ClearDepthBuffer();
 
-		WoodenBoxTex->Bind(0);
+		WoodenBoxTex->PSBind(0);
 		CubeShader->Bind();
 		CubeVB->Bind();
 
@@ -136,9 +119,6 @@ public:
 		Core::Context::Draw(36);
 		CubeVB->Unbind();
 		CubeShader->Unbind();
-		WoodenBoxTex->Unbind();
-
-		skybox->Render();
 
 		Core::Context::End();
 	}

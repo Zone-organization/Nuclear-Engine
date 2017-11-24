@@ -17,10 +17,12 @@ namespace NuclearEngine {
 			Texture2D(const Texture_Data& TexData, const Texture_Desc& Desc);
 			~Texture2D();
 			
-			void Bind(unsigned int index);
-			void Bind(const char* samplerName, API::Shader* shader, unsigned int index);
-			void Unbind();
-			void Unbind(unsigned int index);
+			void VSBind(unsigned int index);
+			void VSBind(const char *samplerName, API::Shader *shader, unsigned int index);
+			void GSBind(unsigned int index);
+			void GSBind(const char *samplerName, API::Shader *shader, unsigned int index);
+			void PSBind(unsigned int index);
+			void PSBind(const char *samplerName, API::Shader *shader, unsigned int index);
 
 			Texture_Data& GetTextureData() { return Data; }
 			NuclearRenderer::NRBTexture2D *GetBase();

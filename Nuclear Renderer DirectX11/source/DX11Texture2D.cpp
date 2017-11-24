@@ -164,24 +164,35 @@ namespace NuclearRenderer {
 		resourceView->Release();
 		samplerState->Release();
 	}
-	void DX11Texture2D::Bind(unsigned int index)
+	void DX11Texture2D::PSBind(unsigned int index)
 	{
 		DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
 		DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
 	}
-	void DX11Texture2D::Bind(const char * samplerName, NRBShader * shader, unsigned int index)
+	void DX11Texture2D::PSBind(const char * samplerName, NRBShader * shader, unsigned int index)
 	{
 		DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
 		DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
 	}
-
-	void DX11Texture2D::Unbind()
+	void DX11Texture2D::VSBind(unsigned int index)
 	{
-		return;
+		DX11Context::GetContext()->VSSetShaderResources(index, 1, &resourceView);
+		DX11Context::GetContext()->VSSetSamplers(index, 1, &samplerState);
 	}
-	void DX11Texture2D::Unbind(unsigned int index)
+	void DX11Texture2D::VSBind(const char * samplerName, NRBShader * shader, unsigned int index)
 	{
-		return;
+		DX11Context::GetContext()->VSSetShaderResources(index, 1, &resourceView);
+		DX11Context::GetContext()->VSSetSamplers(index, 1, &samplerState);
+	}
+	void DX11Texture2D::GSBind(const char * samplerName, NRBShader * shader, unsigned int index)
+	{
+		DX11Context::GetContext()->GSSetShaderResources(index, 1, &resourceView);
+		DX11Context::GetContext()->GSSetSamplers(index, 1, &samplerState);
+	}	
+	void DX11Texture2D::GSBind(unsigned int index)
+	{
+		DX11Context::GetContext()->GSSetShaderResources(index, 1, &resourceView);
+		DX11Context::GetContext()->GSSetSamplers(index, 1, &samplerState);
 	}
 	unsigned int DX11Texture2D::GLGetTextureID()
 	{

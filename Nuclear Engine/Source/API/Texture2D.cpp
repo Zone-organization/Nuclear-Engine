@@ -23,23 +23,31 @@ namespace NuclearEngine {
 
 			delete tex;
 		}	
-		void Texture2D::Bind(unsigned int index)
+		void Texture2D::VSBind(unsigned int index)
 		{
-			tex->Bind(index);
+			tex->VSBind(index);
 		}
-		void Texture2D::Bind(const char * samplerName, API::Shader* shader, unsigned int index)
+		void Texture2D::VSBind(const char * samplerName, API::Shader* shader, unsigned int index)
 		{
-			tex->Bind(samplerName, shader->GetBase(), index);
+			tex->VSBind(samplerName, shader->GetBase(), index);
+		}
+		void Texture2D::PSBind(unsigned int index)
+		{
+			tex->PSBind(index);
+		}
+		void Texture2D::PSBind(const char * samplerName, API::Shader* shader, unsigned int index)
+		{
+			tex->PSBind(samplerName, shader->GetBase(), index);
+		}	
+		void Texture2D::GSBind(unsigned int index)
+		{
+			tex->GSBind(index);
+		}
+		void Texture2D::GSBind(const char * samplerName, API::Shader* shader, unsigned int index)
+		{
+			tex->GSBind(samplerName, shader->GetBase(), index);
 		}
 
-		void Texture2D::Unbind()
-		{
-			tex->Unbind();
-		}
-		void Texture2D::Unbind(unsigned int index)
-		{
-			tex->Unbind(index);
-		}
 		NuclearRenderer::NRBTexture2D * Texture2D::GetBase()
 		{
 			return tex;

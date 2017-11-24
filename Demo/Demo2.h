@@ -68,7 +68,7 @@ public:
 		Core::Context::ClearDepthBuffer();
 
 
-		WoodenBoxTex->Bind(0);
+		WoodenBoxTex->PSBind(0);
 		RectangleShader->Bind();
 		RectangleVB->Bind();
 		RectangleIB->Bind();
@@ -76,7 +76,6 @@ public:
 		RectangleIB->Unbind();
 		RectangleVB->Unbind();
 		RectangleShader->Unbind();
-		WoodenBoxTex->Unbind();
 
 		Core::Context::End();
 	}

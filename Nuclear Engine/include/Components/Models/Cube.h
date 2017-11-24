@@ -9,6 +9,7 @@ namespace NuclearEngine {
 		public:
 			Cube();
 			Cube(API::Texture2D *Diffuse);
+			Cube(Material* mat);
 
 			virtual void Draw(API::Shader* shader);
 

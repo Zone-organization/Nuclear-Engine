@@ -221,30 +221,43 @@ namespace NuclearRenderer {
 		glDeleteTextures(1, &textureID);
 	}
 
-	void GLTexture2D::Bind(unsigned int index)
+	void GLTexture2D::VSBind(unsigned int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 
-	void GLTexture2D::Bind(const char * samplerName, NRBShader * shader, unsigned int index)
+	void GLTexture2D::VSBind(const char * samplerName, NRBShader * shader, unsigned int index)
 	{		
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, textureID);		
-		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);
-		
+		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);		
 	}
-
-	void GLTexture2D::Unbind()
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	void GLTexture2D::Unbind(unsigned int index)
+	void GLTexture2D::PSBind(unsigned int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
+
+	void GLTexture2D::PSBind(const char * samplerName, NRBShader * shader, unsigned int index)
+	{
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);
+	}
+	void GLTexture2D::GSBind(unsigned int index)
+	{
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+
+	void GLTexture2D::GSBind(const char * samplerName, NRBShader * shader, unsigned int index)
+	{
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);
+	}
+
 	unsigned int GLTexture2D::GLGetTextureID()
 	{
 		return textureID;

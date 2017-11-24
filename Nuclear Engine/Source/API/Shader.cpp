@@ -121,7 +121,7 @@ namespace NuclearEngine {
 
 					blob.glslsourcecode = glshader.sourceCode;
 
-					std::cout << blob.glslsourcecode;
+					//std::cout << blob.glslsourcecode;
 					blob.Language = ShaderLanguage::GLSL;
 				}
 			}	
