@@ -213,7 +213,7 @@ public:
 		_Desc.Wrap = TextureWrap::ClampToEdge;
 		_Desc.Format = TextureFormat::R8G8B8A8;
 
-		skybox = new Components::Skybox(Camera->GetCBuffer(), ResourceManager::LoadTextureCubeFromFile(filenames, _Desc));
+		skybox = new Components::Skybox(Camera, ResourceManager::LoadTextureCubeFromFile(filenames, _Desc));
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;

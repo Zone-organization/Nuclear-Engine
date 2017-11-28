@@ -13,21 +13,21 @@ namespace NuclearEngine
 			// Math::Vector3 Cross Product
 			Math::Vector3 CrossV3(const Math::Vector3 a, const Math::Vector3 b)
 			{
-				return Math::Vector3(a.Y * b.Z - a.Z * b.Y,
-					a.Z * b.X - a.X * b.Z,
-					a.X * b.Y - a.Y * b.X);
+				return Math::Vector3(a.y * b.z - a.z * b.y,
+					a.z * b.x - a.x * b.z,
+					a.x * b.y - a.y * b.x);
 			}
 
 			// Math::Vector3 Magnitude Calculation
 			float MagnitudeV3(const Math::Vector3 in)
 			{
-				return (sqrtf(powf(in.X, 2) + powf(in.Y, 2) + powf(in.Z, 2)));
+				return (sqrtf(powf(in.x, 2) + powf(in.y, 2) + powf(in.z, 2)));
 			}
 
 			// Math::Vector3 DotProduct
 			float DotV3(const Math::Vector3 a, const Math::Vector3 b)
 			{
-				return (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z);
+				return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 			}
 
 			// Angle between 2 Math::Vector3 Objects
@@ -48,7 +48,7 @@ namespace NuclearEngine
 			// Math::Vector3 Multiplication Opertor Overload
 			Math::Vector3 operator*(const float& left, const Math::Vector3& right)
 			{
-				return Math::Vector3(right.X * left, right.Y * left, right.Z * left);
+				return Math::Vector3(right.x * left, right.y * left, right.z * left);
 			}
 
 			// Check to see if a Math::Vector3 Point is within a 3 Math::Vector3 Triangle
@@ -276,9 +276,9 @@ namespace NuclearEngine
 					Math::Vector3 vpos;
 					algorithm::split(algorithm::tail(curline), spos, " ");
 
-					vpos.X = std::stof(spos[0]);
-					vpos.Y = std::stof(spos[1]);
-					vpos.Z = std::stof(spos[2]);
+					vpos.x = std::stof(spos[0]);
+					vpos.y = std::stof(spos[1]);
+					vpos.z = std::stof(spos[2]);
 
 					Positions.push_back(vpos);
 				}
@@ -289,8 +289,8 @@ namespace NuclearEngine
 					Math::Vector2 vtex;
 					algorithm::split(algorithm::tail(curline), stex, " ");
 
-					vtex.X = std::stof(stex[0]);
-					vtex.Y = std::stof(stex[1]);
+					vtex.x = std::stof(stex[0]);
+					vtex.y = std::stof(stex[1]);
 
 					TCoords.push_back(vtex);
 				}
@@ -301,9 +301,9 @@ namespace NuclearEngine
 					Math::Vector3 vnor;
 					algorithm::split(algorithm::tail(curline), snor, " ");
 
-					vnor.X = std::stof(snor[0]);
-					vnor.Y = std::stof(snor[1]);
-					vnor.Z = std::stof(snor[2]);
+					vnor.x = std::stof(snor[0]);
+					vnor.y = std::stof(snor[1]);
+					vnor.z = std::stof(snor[2]);
 
 					Normals.push_back(vnor);
 				}
@@ -773,9 +773,9 @@ namespace NuclearEngine
 					if (temp.size() != 3)
 						continue;
 
-					tempMaterial.Ka.X = std::stof(temp[0]);
-					tempMaterial.Ka.Y = std::stof(temp[1]);
-					tempMaterial.Ka.Z = std::stof(temp[2]);
+					tempMaterial.Ka.x = std::stof(temp[0]);
+					tempMaterial.Ka.y = std::stof(temp[1]);
+					tempMaterial.Ka.z = std::stof(temp[2]);
 				}
 				// Diffuse Color
 				if (algorithm::firstToken(curline) == "Kd")
@@ -786,9 +786,9 @@ namespace NuclearEngine
 					if (temp.size() != 3)
 						continue;
 
-					tempMaterial.Kd.X = std::stof(temp[0]);
-					tempMaterial.Kd.Y = std::stof(temp[1]);
-					tempMaterial.Kd.Z = std::stof(temp[2]);
+					tempMaterial.Kd.x = std::stof(temp[0]);
+					tempMaterial.Kd.y = std::stof(temp[1]);
+					tempMaterial.Kd.z = std::stof(temp[2]);
 				}
 				// Specular Color
 				if (algorithm::firstToken(curline) == "Ks")
@@ -799,9 +799,9 @@ namespace NuclearEngine
 					if (temp.size() != 3)
 						continue;
 
-					tempMaterial.Ks.X = std::stof(temp[0]);
-					tempMaterial.Ks.Y = std::stof(temp[1]);
-					tempMaterial.Ks.Z = std::stof(temp[2]);
+					tempMaterial.Ks.x = std::stof(temp[0]);
+					tempMaterial.Ks.y = std::stof(temp[1]);
+					tempMaterial.Ks.z = std::stof(temp[2]);
 				}
 				// Specular Exponent
 				if (algorithm::firstToken(curline) == "Ns")

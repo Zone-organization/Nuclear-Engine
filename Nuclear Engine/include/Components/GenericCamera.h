@@ -1,8 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Math\Matrix.h>
-#include <Math\Vector.h>
-#include <Math\Operations.h>
+#include <Math\Math.h>
 #include <API\UniformBuffer.h>
 #include <API\Shader.h>
 //#include <Components\Component.h>
@@ -39,7 +37,7 @@ namespace NuclearEngine
 
 			struct CameraBuffer
 			{
-				Math::Matrix4 modelMatrix;
+				Math::ProjectionMatrix4 modelMatrix;
 				Math::Matrix4 viewMatrix;
 				Math::Matrix4 projectionMatrix;
 			}_CameraBuffer;

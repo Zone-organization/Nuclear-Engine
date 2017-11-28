@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <API\Color.h>
-#include <Math\Matrix.h>
+#include <Math\Math.h>
 #include <Core\Renderer3D.h>
 
 namespace NuclearEngine {

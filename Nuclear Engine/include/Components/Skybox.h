@@ -6,6 +6,7 @@
 #include <API/InputLayout.h>
 #include <API/PipelineState.h>
 #include <Core/FileSystem.h>
+#include <Components\GenericCamera.h>
 #include <NE_Common.h>
 #include "Core\Renderer3D.h"
 
@@ -21,10 +22,10 @@ namespace NuclearEngine
 			API::VertexBuffer *vertexBuffer;
 			API::InputLayout *vertexBufferLayout;
 			API::TextureCube *texcube;
-			API::UniformBuffer* _CameraCbuffer;
+			Components::GenericCamera* _CameraCbuffer;
 			API::PipelineState* cubemapstate;
 		public:
-			Skybox(API::UniformBuffer* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6>);
+			Skybox(Components::GenericCamera* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6>);
 			~Skybox();
 
 			void Render();

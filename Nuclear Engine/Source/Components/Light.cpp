@@ -1,5 +1,5 @@
 #include <Components\Light.h>
-#include <Math\Operations.h>
+#include <Math\Math.h>
 namespace NuclearEngine {
 	namespace Components {
 
@@ -9,7 +9,7 @@ namespace NuclearEngine {
 			data.m_pos = Math::Vector4();
 			data.m_dir = Math::Vector4();
 			data.m_intensity_att = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
-			data.m_cutoff_outercutoff = Math::Vector4(cos(Math::Deg2Rad(12.5f)), cos(Math::Deg2Rad(15.0f)), 0.0f);
+			data.m_cutoff_outercutoff = Math::Vector4(cos(Math::Deg2Rad(12.5f)), cos(Math::Deg2Rad(15.0f)), 0.0f,0.0f);
 		}
 		SpotLight::~SpotLight()
 		{
@@ -21,11 +21,11 @@ namespace NuclearEngine {
 		}
 		void SpotLight::SetPosition(Math::Vector3 pos)
 		{
-			data.m_pos = Math::Vector4(pos);
+			data.m_pos = Math::Vector4(pos, 1.0f);
 		}
 		void SpotLight::SetDirection(Math::Vector3 dir)
 		{
-			data.m_dir = Math::Vector4(dir);
+			data.m_dir = Math::Vector4(dir, 1.0f);
 		}
 		void SpotLight::SetIntensity(float intensity)
 		{
@@ -54,7 +54,7 @@ namespace NuclearEngine {
 		}
 		void DirectionalLight::SetDirection(Math::Vector3 dir)
 		{
-			data.m_dir = Math::Vector4(dir);
+			data.m_dir = Math::Vector4(dir, 1.0f);
 		}
 		PointLight::PointLight()
 		{
@@ -71,7 +71,7 @@ namespace NuclearEngine {
 		}
 		void PointLight::SetPosition(Math::Vector3 pos)
 		{
-			data.m_pos = Math::Vector4(pos);
+			data.m_pos = Math::Vector4(pos, 1.0f);
 		}
 		void PointLight::SetIntensity(float intensity)
 		{

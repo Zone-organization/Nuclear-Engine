@@ -8,11 +8,10 @@ namespace NuclearEngine
 	namespace Components
 	{
 		FlyCamera::FlyCamera(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
-			: MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
+			: Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
 		{
 			
 			GenericCamera::GenericCamera(__position);
-			//Update();
 		}
 		FlyCamera::~FlyCamera()
 		{
@@ -69,11 +68,10 @@ namespace NuclearEngine
 			front.x = cos(Deg2Rad(Yaw)) * cos(Deg2Rad(Pitch));
 			front.y = sin(Deg2Rad(Pitch));
 			front.z = sin(Deg2Rad(Yaw)) * cos(Deg2Rad(Pitch));
-			Front = Math::Normalize(front);
-
+			Front = front.Normalized();
 			// Also re-calculate the Right and Up vector
-			Right = Math::Normalize(Math::Cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-			Up = Math::Normalize(Math::Cross(Right, Front));
+			Right = Math::Cross(Front, WorldUp).Normalized();  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+			Up = Math::Cross(Right, Front).Normalized();
 
 			_CameraBuffer.viewMatrix = Math::LookAt(position, position + Front, Up);
 			GenericCamera::Update();

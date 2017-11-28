@@ -1,5 +1,5 @@
 #pragma once
-#include <Math\Vector.h>
+#include <Math\Math.h>
 #include <API\Shader.h>
 #include <API\Texture2D.h>
 #include <API\VertexBuffer.h>

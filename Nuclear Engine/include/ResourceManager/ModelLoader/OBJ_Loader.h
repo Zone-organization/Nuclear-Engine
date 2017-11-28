@@ -4,7 +4,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <Math\Vector.h>
+#include <Math\Math.h>
 
 namespace NuclearEngine
 {

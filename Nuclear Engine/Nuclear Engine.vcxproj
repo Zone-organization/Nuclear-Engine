@@ -352,10 +352,6 @@
     <ClInclude Include="include\Components\Skybox.h" />
     <ClInclude Include="include\Core\Game.h" />
     <ClInclude Include="include\Components\Light.h" />
-    <ClInclude Include="include\Math\Matrix.h" />
-    <ClInclude Include="include\Math\Operations.h" />
-    <ClInclude Include="include\Math\Quaternion.h" />
-    <ClInclude Include="include\Math\Vector.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\NE_Common.h" />
     <ClInclude Include="include\NE_PrivateCommon.h" />
@@ -365,7 +361,6 @@
     <ClInclude Include="include\Core\Parsers\INIFile.h" />
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\Core\Engine.h" />
-    <ClInclude Include="include\Math\Rectangle.h" />
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\Core\Renderer3D.h" />
     <ClInclude Include="include\ResourceManager\ModelLoader\OBJ_Loader.h" />
