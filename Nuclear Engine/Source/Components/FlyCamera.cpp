@@ -58,20 +58,17 @@ namespace NuclearEngine
 		{
 			return Front;
 		}
-		/*void FlyCamera::Initialize(Math::Matrix4 projectionMatrix)
-		{
-			GenericCamera::Initialize(projectionMatrix);
-		}*/
+
 		void FlyCamera::Update()
 		{
 			Vector3 front;
-			front.x = cos(Deg2Rad(Yaw)) * cos(Deg2Rad(Pitch));
-			front.y = sin(Deg2Rad(Pitch));
-			front.z = sin(Deg2Rad(Yaw)) * cos(Deg2Rad(Pitch));
-			Front = front.Normalized();
+			front.x = cos(ToRadians(Yaw)) * cos(ToRadians(Pitch));
+			front.y = sin(ToRadians(Pitch));
+			front.z = sin(ToRadians(Yaw)) * cos(ToRadians(Pitch));
+			Front = Normalize(front);
 			// Also re-calculate the Right and Up vector
-			Right = Math::Cross(Front, WorldUp).Normalized();  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-			Up = Math::Cross(Right, Front).Normalized();
+			Right = Normalize(Math::Cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+			Up = Normalize(Math::Cross(Right, Front));
 
 			_CameraBuffer.viewMatrix = Math::LookAt(position, position + Front, Up);
 			GenericCamera::Update();

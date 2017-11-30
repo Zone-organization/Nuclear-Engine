@@ -1,479 +1,192 @@
-/*
- * Matrix.h
- * 
- * This file is part of the "GaussianLib" project (Copyright (c) 2015 by Lukas Hermanns)
- * See "LICENSE.txt" for license information.
- */
+#pragma once
 
-#ifndef GS_MATRIX_H
-#define GS_MATRIX_H
+#include <initializer_list>
+#include <assert.h>
 
-
-#include "Real.h"
-#include "Assert.h"
-#include "Macros.h"
-#include "Tags.h"
-#include "Rotate.h"
-#include "MatrixInitializer.h"
-
-#include <cmath>
-#include <cstring>
-#include <algorithm>
-#include <cstdint>
-
+#include "Vector.h"
 
 namespace Math
-{
+{    
+    /* 
 
+      Generic m by n dimensional Matrix template type version supporting matrices of any type. The 
+      Matrix type follows in functionality conventions from the mathematical literature. By default 
+      we will only be using floating point matrices, but having a generic version allows us to 
+      potentially use double precision matrices as well (or even integer matrices).
 
-#define GS_ASSERT_NxN_MATRIX \
-    static_assert(Rows == Cols, GS_FILE_LINE "function can only be used with NxN matrices")
+      The matrices are stored in column-major order, the resulting transformations will also assume 
+      column-major order, keeping Matrix-Vector multiplications with the Matrix on the left side of 
+      the equation and representing Vectors as column Vectors (post-multiplication).
 
-#ifdef GS_ROW_MAJOR_STORAGE
-#   define GS_FOREACH_ROW_COL(r, c)             \
-        for (std::size_t r = 0; r < Rows; ++r)  \
-        for (std::size_t c = 0; c < Cols; ++c)
-#else
-#   define GS_FOREACH_ROW_COL(r, c)             \
-        for (std::size_t c = 0; c < Cols; ++c)  \
-        for (std::size_t r = 0; r < Rows; ++r)
-#endif
+      Matrix numbering by math conventions:
+      |  0  1  2  3 |
+      |  4  5  6  7 |
+      |  8  9 10 11 |
+      | 12 13 14 15 |
+      Column-major layout in memory:
+      [ 0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15 ]
+      Matrix numbering if we access column-major memory sequentially in the array:
+      |  0  4  8 12 |
+      |  1  5  9 13 |
+      |  2  6 10 14 |
+      |  3  7 11 15 |
 
-/**
-\brief Base matrix class.
-\tparam T Specifies the data type of the matrix components.
-This should be a primitive data type such as float, double, int etc.
-\remarks The macro GS_ROW_MAJOR_STORAGE can be defined, to use row-major storage layout.
-By default column-major storage layout is used.
-The macro GS_ROW_VECTORS can be defined, to use row vectors. By default column vectors are used.
-Here is an example, how a 4x4 matrix is laid-out with column- and row vectors:
-\code
-// 4x4 matrix with column vectors:
-// / x1 y1 z1 w1 \
-// | x2 y2 z2 w2 |
-// | x3 y3 z3 w3 |
-// \ x4 y4 z4 w4 /
+      There is no need for Matrix template specialization.
 
-// 4x4 matrix with row vectors:
-// / x1 x2 x3 x4 \
-// | y1 y2 y3 y4 |
-// | z1 z2 z3 z4 |
-// \ w1 w2 w3 w4 /
-
-// In both cases, (w1, w2, w3, w4) stores the position in an affine transformation.
-\endcode
-Matrix elements can be accessed by the bracket operator:
-\code
-Math::Matrix4 A;
-A(0, 0) = row0column0;
-A(2, 1) = row2column1;
-\endcode
-This is independent of the matrix storage layout and independent of the usage of row- or column vectors.
-But the following function is dependent of the usage of row- or column vectors:
-\code
-// For column vectors:
-A.At(2, 1) = row2column1;
-
-// For row vectors:
-A.At(2, 1) = row1column2;
-\endcode
-This function is used for easier support between row- and column vectors.
-*/
-template <typename T, std::size_t Rows, std::size_t Cols>
-class Matrix
-{
-    
-    public:
-        
-        static_assert(Rows*Cols > 0, "matrices must consist of at least 1x1 elements");
-
-        /* ----- Static members ----- */
-
-        //! Number of rows of this matrix type.
-        static const std::size_t rows       = Rows;
-
-        //! Number of columns of this matrix type.
-        static const std::size_t columns    = Cols;
-
-        //! Number of scalar elements of this matrix type.
-        static const std::size_t elements   = Rows*Cols;
-
-        /* ----- Typenames ----- */
-
-        //! Specifies the typename of the scalar components.
-        using ScalarType        = T;
-
-        //! Typename of this matrix type.
-        using ThisType          = Matrix<T, Rows, Cols>;
-
-        //! Typename of the transposed of this matrix type.
-        using TransposedType    = Matrix<T, Cols, Rows>;
-
-        //! Typename of the matrix initializer.
-        using Initializer       = Details::MatrixInitializer<Matrix<T, Rows, Cols>, T, Cols>;
-
-        /* ----- Functions ----- */
-
-        /**
-        \brief Default constructor.
-        \remarks If the 'GS_DISABLE_AUTO_INIT' is NOT defined, the matrix elements will be initialized. Otherwise, the matrix is in an uninitialized state.
-        */
+    */
+    template <std::size_t m, std::size_t n, typename T>
+    struct Matrix
+    {
+        union
+        {
+            T e[n][m];
+            struct
+            {
+                // allow access on a per-column basis. We do not provide support for per-row access 
+                // as this is not sequential in memory.
+                Vector<m, T> col[n];
+            };
+        };
+        // --------------------------------------------------------------------------------------------
+        // consturctor0: default initializes Matrix to identity Matrix 
         Matrix()
         {
-            #ifndef GS_DISABLE_AUTO_INIT
-            Details::MatrixDefaultInitializer<T, Rows, Cols>::Initialize(*this);
-            #endif
-        }
-
-        //! Copy constructor.
-        Matrix(const ThisType& rhs)
-        {
-            *this = rhs;
-        }
-
-        /**
-        \brief Explicitly uninitialization constructor.
-        \remarks With this constructor, the matrix is always in an uninitialized state.
-        */
-        explicit Matrix(UninitializeTag)
-        {
-            // do nothing
-        }
-
-        /**
-        \brief Returns a reference to a single matrix element at the specified location.
-        \param[in] row Specifies the zero-based row index. Must be in the range [0, Rows).
-        \param[in] col Specifies the zero-based column index. Must be in the range [0, Cols).
-        \throws std::runtime_error If the macro 'GS_ENABLE_ASSERT' and the macro 'GS_ASSERT_EXCEPTION' are defined,
-        and either the row or the column is out of range.
-        */
-        T& operator () (std::size_t row, std::size_t col)
-        {
-            GS_ASSERT(row < Rows);
-            GS_ASSERT(col < Cols);
-            #ifdef GS_ROW_MAJOR_STORAGE
-            return m_[row*Cols + col];
-            #else
-            return m_[col*Rows + row];
-            #endif
-        }
-
-        /**
-        \brief Returns a constant reference to a single matrix element at the specified location.
-        \param[in] row Specifies the zero-based row index. Must be in the range [0, Rows).
-        \param[in] col Specifies the zero-based column index. Must be in the range [0, Cols).
-        \throws std::runtime_error If the macro 'GS_ENABLE_ASSERT' and the macro 'GS_ASSERT_EXCEPTION' are defined,
-        and either the row or the column is out of range.
-        */
-        const T& operator () (std::size_t row, std::size_t col) const
-        {
-            GS_ASSERT(row < Rows);
-            GS_ASSERT(col < Cols);
-            #ifdef GS_ROW_MAJOR_STORAGE
-            return m_[row*Cols + col];
-            #else
-            return m_[col*Rows + row];
-            #endif
-        }
-
-        T& operator [] (std::size_t element)
-        {
-            GS_ASSERT(element < ThisType::elements);
-            return m_[element];
-        }
-
-        const T& operator [] (std::size_t element) const
-        {
-            GS_ASSERT(element < ThisType::elements);
-            return m_[element];
-        }
-
-        ThisType& operator += (const ThisType& rhs)
-        {
-            for (std::size_t i = 0; i < ThisType::elements; ++i)
-                m_[i] += rhs.m_[i];
-            return *this;
-        }
-
-        ThisType& operator -= (const ThisType& rhs)
-        {
-            for (std::size_t i = 0; i < ThisType::elements; ++i)
-                m_[i] -= rhs.m_[i];
-            return *this;
-        }
-
-        ThisType& operator *= (const ThisType& rhs)
-        {
-            GS_ASSERT_NxN_MATRIX;
-            *this = (*this * rhs);
-            return *this;
-        }
-
-        ThisType& operator *= (const T& rhs)
-        {
-            for (std::size_t i = 0; i < ThisType::elements; ++i)
-                m_[i] *= rhs;
-            return *this;
-        }
-
-        ThisType& operator = (const ThisType& rhs)
-        {
-            for (std::size_t i = 0; i < ThisType::elements; ++i)
-                m_[i] = rhs.m_[i];
-            return *this;
-        }
-
-        #ifdef GS_ROW_VECTORS
-
-        T& At(std::size_t col, std::size_t row)
-        {
-            return (*this)(row, col);
-        }
-
-        const T& At(std::size_t col, std::size_t row) const
-        {
-            return (*this)(row, col);
-        }
-
-        #else
-
-        T& At(std::size_t row, std::size_t col)
-        {
-            return (*this)(row, col);
-        }
-
-        const T& At(std::size_t row, std::size_t col) const
-        {
-            return (*this)(row, col);
-        }
-
-        #endif
-
-        //! Restes all matrix elements to zero.
-        void Reset()
-        {
-            for (std::size_t i = 0; i < ThisType::elements; ++i)
-                m_[i] = T(0);
-        }
-
-        //! Loads the identity for this matrix.
-        void LoadIdentity()
-        {
-            GS_ASSERT_NxN_MATRIX;
-            GS_FOREACH_ROW_COL(r, c)
+            for (std::size_t col = 0; col < n; ++col)
             {
-                (*this)(r, c) = (r == c ? T(1) : T(0));
-            }
-        }
-
-        //! Returns an identity matrix.
-        static ThisType Identity()
-        {
-            ThisType result;
-            result.LoadIdentity();
-            return result;
-        }
-
-        //! Returns a transposed copy of this matrix.
-        TransposedType Transposed() const
-        {
-            TransposedType result;
-
-            GS_FOREACH_ROW_COL(r, c)
-            {
-                result(c, r) = (*this)(r, c);
-            }
-
-            return result;
-        }
-
-        //! Transposes this matrix.
-        void Transpose()
-        {
-            GS_ASSERT_NxN_MATRIX;
-
-            for (std::size_t i = 0; i + 1 < Cols; ++i)
-            {
-                for (std::size_t j = 1; j + i < Cols; ++j)
+                for (std::size_t row = 0; row < m; ++row)
                 {
-                    std::swap(
-                        m_[i*(Cols + 1) + j],
-                        m_[(j + i)*Cols + i]
-                    );
+                    e[col][row] = (col == row) ? T(1.0f) : T(0.0f);
                 }
             }
         }
-
-        /**
-        \brief Returns the determinant of this matrix.
-        \see Math::Determinant
-        */
-        T Determinant() const
+        // --------------------------------------------------------------------------------------------
+        // constructor1: initialize Matrix with initializer list
+        Matrix(const std::initializer_list<T> args)
         {
-            return Math::Determinant(*this);
-        }
+            assert(args.size() <= m * n);
+            std::size_t cols = 0, rows = 0;
 
-        /**
-        Returns the trace of this matrix: M(0, 0) + M(1, 1) + ... + M(N - 1, N - 1).
-        \note This can only be used for squared matrices!
-        */
-        T Trace() const
+			for (auto& it : args)
+			{
+				e[cols][rows++] = it;
+				if (rows >= m)
+				{
+					++cols;
+					rows = 0;
+				}
+			}
+        }
+        // --------------------------------------------------------------------------------------------
+        // returns a column Vector, that can again be indexed with the Vector subscript operator. 
+        // In effect: [][] and [] indexing is possible.
+        Vector<m, T>& operator[](const std::size_t colIndex)
         {
-            static_assert(Rows == Cols, "traces can only be computed for squared matrices");
-            
-            T trace = T(0);
-
-            for (std::size_t i = 0; i < Rows; ++i)
-                trace += (*this)(i, i);
-
-            return trace;
+            assert(colIndex >= 0 && colIndex < n);
+            return col[colIndex];
         }
+    };
 
-        Matrix<T, Rows, Cols> Inverse() const
-        {
-            Matrix<T, Rows, Cols> inv{ *this };
-            inv.MakeInverse();
-            return inv;
-        }
-
-        bool MakeInverse()
-        {
-            Matrix<T, Rows, Cols> in{ *this };
-            return Math::Inverse(*this, in);
-        }
-
-        //! Returns a pointer to the first element of this matrix.
-        T* Ptr()
-        {
-            return &(m_[0]);
-        }
-
-        //! Returns a constant pointer to the first element of this matrix.
-        const T* Ptr() const
-        {
-            return &(m_[0]);
-        }
-
-        /**
-        Returns a type casted instance of this matrix.
-        \tparam C Specifies the static cast type.
-        */
-        template <typename C> Matrix<C, Rows, Cols> Cast() const
-        {
-            Matrix<C, Rows, Cols> result(UninitializeTag{});
-
-            for (std::size_t i = 0; i < ThisType::elements; ++i)
-                result[i] = static_cast<C>(m_[i]);
-
-            return result;
-        }
-
-    private:
-        
-        T m_[ThisType::elements];
-
-};
+    typedef Matrix<2, 2, float>  Matrix2;
+    typedef Matrix<3, 3, float>  Matrix3;
+    typedef Matrix<4, 4, float>  Matrix4;
+    typedef Matrix<2, 2, double> Matrix2d;
+    typedef Matrix<3, 3, double> Matrix3d;
+    typedef Matrix<4, 4, double> Matrix4d;
 
 
-/* --- Global Operators --- */
-
-template <typename T, std::size_t Rows, std::size_t Cols>
-Matrix<T, Rows, Cols> operator + (const Matrix<T, Rows, Cols>& lhs, const Matrix<T, Rows, Cols>& rhs)
-{
-    auto result = lhs;
-    result += rhs;
-    return result;
-}
-
-template <typename T, std::size_t Rows, std::size_t Cols>
-Matrix<T, Rows, Cols> operator - (const Matrix<T, Rows, Cols>& lhs, const Matrix<T, Rows, Cols>& rhs)
-{
-    auto result = lhs;
-    result -= rhs;
-    return result;
-}
-
-template <typename T, std::size_t Rows, std::size_t Cols>
-Matrix<T, Rows, Cols> operator * (const Matrix<T, Rows, Cols>& lhs, const T& rhs)
-{
-    auto result = lhs;
-    result *= rhs;
-    return result;
-}
-
-template <typename T, std::size_t Rows, std::size_t Cols>
-Matrix<T, Rows, Cols> operator * (const T& lhs, const Matrix<T, Rows, Cols>& rhs)
-{
-    auto result = rhs;
-    result *= lhs;
-    return result;
-}
-
-template <typename T, std::size_t Rows, std::size_t ColsRows, std::size_t Cols>
-Matrix<T, Rows, Cols> operator * (const Matrix<T, Rows, ColsRows>& lhs, const Matrix<T, ColsRows, Cols>& rhs)
-{
-    Matrix<T, Rows, Cols> result(UninitializeTag{});
-
-    GS_FOREACH_ROW_COL(r, c)
+    // per-Matrix operations
+    // --------------------------------------------------------------------------------------------
+    // addition (note that we do not define Matrix scalar operations as they are not mathematically 
+    // defined; they should be defined as  operations on a Matrix completely filled with the 
+    // respective scalar.
+    template <std::size_t m, std::size_t n, typename T>
+    Matrix<m, n, T> operator+(Matrix<m, n, T>& lhs, Matrix<m, n, T>& rhs)
     {
-        result(r, c) = T(0);
-        for (std::size_t i = 0; i < ColsRows; ++i)
-            result(r, c) += lhs(r, i)*rhs(i, c);
+        Matrix<m, n, T> result;
+        for (std::size_t col = 0; col < n; ++col)
+        {
+            for (std::size_t row = 0; row < m; ++row)
+            {
+                result[col][row] = lhs[col][row] + rhs[col][row];
+            }
+        }
+        return result;
     }
-
-    return result;
-}
-
-template <typename T, typename I, std::size_t Rows, std::size_t Cols>
-typename Matrix<T, Rows, Cols>::Initializer operator << (Matrix<T, Rows, Cols>& matrix, const I& firstValue)
-{
-    typename Matrix<T, Rows, Cols>::Initializer initializer(matrix);
-    initializer , static_cast<T>(firstValue);
-    return initializer;
-}
-
-
-/* --- Type Alias --- */
-
-#define GS_DEF_MATRIX_TYPES_MxN(m, n)                               \
-    template <typename T> using Matrix##m##n##T = Matrix<T, m, n>;  \
-    using Matrix##m##n      = Matrix##m##n##T<Real>;                \
-    using Matrix##m##n##f   = Matrix##m##n##T<float>;               \
-    using Matrix##m##n##d   = Matrix##m##n##T<double>;              \
-    using Matrix##m##n##i   = Matrix##m##n##T<std::int32_t>;        \
-    using Matrix##m##n##ui  = Matrix##m##n##T<std::uint32_t>;       \
-    using Matrix##m##n##b   = Matrix##m##n##T<std::int8_t>;         \
-    using Matrix##m##n##ub  = Matrix##m##n##T<std::uint8_t>
-
-GS_DEF_MATRIX_TYPES_MxN(3, 4);
-GS_DEF_MATRIX_TYPES_MxN(4, 3);
-
-#define GS_DEF_MATRIX_TYPES_NxN(n)                              \
-    template <typename T> using Matrix##n##T = Matrix<T, n, n>; \
-    using Matrix##n     = Matrix##n##T<Real>;                   \
-    using Matrix##n##f  = Matrix##n##T<float>;                  \
-    using Matrix##n##d  = Matrix##n##T<double>;                 \
-    using Matrix##n##i  = Matrix##n##T<std::int32_t>;           \
-    using Matrix##n##ui = Matrix##n##T<std::uint32_t>;          \
-    using Matrix##n##b  = Matrix##n##T<std::int8_t>;            \
-    using Matrix##n##ub = Matrix##n##T<std::uint8_t>
-
-GS_DEF_MATRIX_TYPES_NxN(2);
-GS_DEF_MATRIX_TYPES_NxN(3);
-GS_DEF_MATRIX_TYPES_NxN(4);
-
-#undef GS_DEF_MATRIX_TYPES_MxN
-#undef GS_DEF_MATRIX_TYPES_NxN
-
-#undef GS_ASSERT_NxN_MATRIX
-#undef GS_FOREACH_ROW_COL
-
-
-} // /namespace Math
-
-
-#endif
-
-
-
-// ================================================================================
+    // subtraction
+    // --------------------------------------------------------------------------------------------
+    template <std::size_t m, std::size_t n, typename T>
+    Matrix<m, n, T> operator-(Matrix<m, n, T>& lhs, Matrix<m, n, T>& rhs)
+    {
+        Matrix<m, n, T> result;
+        for (std::size_t col = 0; col < n; ++col)
+        {
+            for (std::size_t row = 0; row < m; ++row)
+            {
+                result[col][row] = lhs[col][row] - rhs[col][row];
+            }
+        }
+        return result;
+    }
+    // multiplication
+    // --------------------------------------------------------------------------------------------
+    // note that with Matrix multiplication both matrices can have varying dimensions/sizes as long 
+    // as they adhere to the following rule: the number of columns (n) of the LHS Matrix should 
+    // equal the number of rows (n) on the RHS Matrix.  Theresult of the Matrix multiplication is 
+    // then always a Matrix of dimensions m x o (LHS:rows x RHS:cols) dimensions.
+    template <std::size_t m, std::size_t n, std::size_t o, typename T>
+    Matrix<m, o, T> operator*(Matrix<m, n, T>& lhs, Matrix<n, o, T>& rhs)
+    {
+        Matrix<m, o, T> result;
+        for (std::size_t col = 0; col < o; ++col)
+        {
+            for (std::size_t row = 0; row < m; ++row)
+            {
+                T value = {};
+                for (std::size_t j = 0; j < n; ++j) // j equals col in math notation (i = row)
+                {
+                    value += lhs[j][row] * rhs[col][j];
+                }
+                result[col][row] = value;
+            }
+        }
+        return result;
+    }
+    // multiplication with reference Matrix (store directly inside provided Matrix)
+    // --------------------------------------------------------------------------------------------
+    template <std::size_t m, std::size_t n, std::size_t o, typename T>
+    Matrix<m, o, T>& mul(Matrix <m, n, T> &result, const Matrix<m, n, T>& lhs, const Matrix<n, o, T>& rhs)
+    {
+        for (std::size_t col = 0; col < o; ++col)
+        {
+            for (std::size_t row = 0; row < m; ++row)
+            {
+                T value = {};
+                for (std::size_t j = 0; j < n; ++j) // j equals col in math notation (i = row)
+                {
+                    value += lhs[j][row] * rhs[col][j];
+                }
+                result[col][row] = value;
+            }
+        }
+        return result;
+    }
+    // Matrix * Vector multiplication
+    // --------------------------------------------------------------------------------------------
+    // rhs Vector multiplication. We only define Vector-Matrix multiplication with the Vector on 
+    // the right-side of the equation due to the column-major convention.
+    template <std::size_t m, std::size_t n, typename T>
+    Vector<m, T> operator*(Matrix<m, n, T>& lhs, Vector<n, T>& rhs)
+    {
+        Vector<m, T> result;
+        for (std::size_t row = 0; row < m; ++row)
+        {
+            T value = {};
+            for (std::size_t j = 0; j < n; ++j) // j equals col in math notation (i = row)
+            {
+                value += lhs[j][row] * rhs[j];
+            }
+            result[row] = value;
+        }
+        return result;
+    }
+} 

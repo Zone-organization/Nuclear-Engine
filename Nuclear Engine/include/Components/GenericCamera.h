@@ -37,7 +37,7 @@ namespace NuclearEngine
 
 			struct CameraBuffer
 			{
-				Math::ProjectionMatrix4 modelMatrix;
+				Math::Matrix4 modelMatrix;
 				Math::Matrix4 viewMatrix;
 				Math::Matrix4 projectionMatrix;
 			}_CameraBuffer;

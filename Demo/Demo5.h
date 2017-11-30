@@ -174,7 +174,7 @@ public:
 		CubeIL->Push("TEXCOORD", 0, DataType::Float2, 8 * sizeof(float), 6 * sizeof(float));
 
 		Camera = new Components::FlyCamera();
-		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
 		LampShader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);
 
@@ -315,7 +315,7 @@ public:
 			Math::Matrix4 model;
 			model = Math::Translate(model, cubePositions[i]);
 			float angle = 20.0f * i;
-			model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::Deg2Rad(angle));
+			model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
 			Camera->SetModelMatrix(model);
 
 			Core::Context::Draw(36);
@@ -344,11 +344,9 @@ public:
 		LampVB->Unbind();
 		LampShader->Unbind();
 
-		//Renderer->Render();
-
+		Renderer->Render();
 
 		skybox->Render();
-
 
 		Core::Context::End();
 	}

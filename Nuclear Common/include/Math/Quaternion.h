@@ -1,406 +1,191 @@
-/*
- * Quaternion.h
- * 
- * This file is part of the "GaussianLib" project (Copyright (c) 2015 by Lukas Hermanns)
- * See "LICENSE.txt" for license information.
- */
-
-#ifndef GS_QUATERNION_H
-#define GS_QUATERNION_H
+#pragma once
 
 
-#include "Decl.h"
-#include "Real.h"
-#include "Assert.h"
-#include "Algebra.h"
-#include "Tags.h"
-#include "Matrix.h"
-#include "Conversions.h"
+#include "Vector.h"
+#include "operation.h"
 
-#include <cmath>
-#include <limits>
-#include <type_traits>
-
+#include <math.h>
 
 namespace Math
 {
+    /* Note: 
 
+      A Quaternion is a 4-dimensional Vector consisting of
+      a scalar part w and a 3-dimensional semi-rotation 
+      axis v: { w, v } or { w, v_x, v_y, v_z }.
 
-/**
-Base quaternion class with components: x, y, z, and w.
-\tparam T Specifies the data type of the quaternion components.
-This should be a primitive data type such as float, double.
-*/
-template <typename T>
-class QuaternionT
-{
-    
-    public:
-        
-        static_assert(std::is_floating_point<T>::value, "quaternions can only be used with floating point types");
+      Quaternions are an efficient and precise tool for
+      representing rotations in 3D space as an angle-axis
+      representation with w being the angle/2 and the 
+      Vector v being the axis of rotation, but normalized
+      and scaled by sin(angle/2).
 
-        //! Specifies the typename of the scalar components.
-        using ScalarType = T;
+      Note that there is no need for templates here, a 
+      Quaternion is always a 4-dimensional entity and as 
+      we always use Quaternions within the range [-1,1] 
+      float precision is sufficient enough.
 
-        //! Specifies the number of quaternion components. This is just for the internal template interface.
-        static const std::size_t components = 4;
-
-        #ifndef GS_DISABLE_AUTO_INIT
-        QuaternionT() :
-            x { T(0) },
-            y { T(0) },
-            z { T(0) },
-            w { T(1) }
-        {
-        }
-        #else
-        QuaternionT() = default;
-        #endif
-
-        QuaternionT(const QuaternionT<T>& rhs) :
-            x { rhs.x },
-            y { rhs.y },
-            z { rhs.z },
-            w { rhs.w }
-        {
-        }
-
-        QuaternionT(const T& x, const T& y, const T& z, const T& w) :
-            x { x },
-            y { y },
-            z { z },
-            w { w }
-        {
-        }
-
-        template <template <typename, std::size_t, std::size_t> class M, std::size_t Rows, std::size_t Cols>
-        explicit QuaternionT(const M<T, Rows, Cols>& matrix)
-        {
-            Math::MatrixToQuaternion(*this, matrix);
-        }
-
-        explicit QuaternionT(UninitializeTag)
-        {
-            // do nothing
-        }
-
-        QuaternionT<T>& operator += (const QuaternionT<T>& rhs)
-        {
-            x += rhs.x;
-            y += rhs.y;
-            z += rhs.z;
-            w += rhs.w;
-            return *this;
-        }
-
-        QuaternionT<T>& operator -= (const QuaternionT<T>& rhs)
-        {
-            x -= rhs.x;
-            y -= rhs.y;
-            z -= rhs.z;
-            w -= rhs.w;
-            return *this;
-        }
-
-        QuaternionT<T>& operator *= (const QuaternionT<T>& rhs)
-        {
-            *this = (*this * rhs);
-            return *this;
-        }
-
-        QuaternionT<T>& operator *= (const T& rhs)
-        {
-            x *= rhs;
-            y *= rhs;
-            z *= rhs;
-            w *= rhs;
-            return *this;
-        }
-
-        /**
-        \brief Returns the specified quaternion component.
-        \param[in] component Specifies the quaternion component index. This must be 0, 1, 2, or 3.
-        */
-        T& operator [] (std::size_t component)
-        {
-            GS_ASSERT(component < QuaternionT<T>::components);
-            return *((&x) + component);
-        }
-
-        /**
-        \brief Returns the specified quaternion component.
-        \param[in] component Specifies the quaternion component index. This must be 0, 1, 2, or 3.
-        */
-        const T& operator [] (std::size_t component) const
-        {
-            GS_ASSERT(component < QuaternionT<T>::components);
-            return *((&x) + component);
-        }
-
-        /**
-        \brief Normalizes the quaternion to the unit length of 1.
-        \see Normalized
-        \see Length
-        */
-        void Normalize()
-        {
-            Math::Normalize(*this);
-        }
-
-        /**
-        \brief Returns a normalized instance of this quaternion.
-        \see Normalize
-        */
-        QuaternionT<T> Normalized() const
-        {
-            auto quat = *this;
-            quat.Normalize();
-            return quat;
-        }
-
-        //! Sets this quaternion to the identity quaternion (x = y = z = 0, w = 1).
-        void LoadIdentity()
-        {
-            x = y = z = T(0);
-            w = T(1);
-        }
-
-        //! Makes this quaternion to its inverse.
-        void MakeInverse()
-        {
-            x = -x;
-            y = -y;
-            z = -z;
-        }
-
-        //! Returns the inverse of this quaternion.
-        QuaternionT<T> Inverse() const
-        {
-            return QuaternionT<T>{ -x, -y, -z, w };
-        }
-
-        /**
-        \brief Computes a spherical linear interpolation between the two quaternions and stores the result into this quaternion.
-        \param[in] t Specifies the interpolation factor. This should be in the range [0.0, 1.0].
-        */
-        void Slerp(const QuaternionT<T>& from, QuaternionT<T> to, const T& t)
-        {
-            *this = Math::Slerp(from, to, t);
-        }
-
-        //! Sets the quaternion to an euler rotation with the specified angles (in radian).
-        void SetEulerAngles(const Vector<T, 3>& angles)
-        {
-            const T cr = std::cos(angles.x/T(2));
-            const T cp = std::cos(angles.y/T(2));
-            const T cy = std::cos(angles.z/T(2));
-
-            const T sr = std::sin(angles.x/T(2));
-            const T sp = std::sin(angles.y/T(2));
-            const T sy = std::sin(angles.z/T(2));
-
-            const T cpcy = cp * cy;
-            const T spsy = sp * sy;
-            const T cpsy = cp * sy;
-            const T spcy = sp * cy;
-
-            x = sr * cpcy - cr * spsy;
-            y = cr * spcy + sr * cpsy;
-            z = cr * cpsy - sr * spcy;
-            w = cr * cpcy + sr * spsy;
-
-            Normalize();
-        }
-
-        void GetEulerAngles(Vector<T, 3>& angles) const
-        {
-            const T xx = x*x;
-            const T yy = y*y;
-            const T zz = z*z;
-            const T ww = w*w;
-
-            angles.x = std::atan2(T(2) * (y*z + x*w), -xx - yy + zz + ww);
-            angles.y = std::asin(Clamp(T(2) * (y*w - x*z), T(-1), T(1)));
-            angles.z = std::atan2(T(2) * (x*y + z*w), xx - yy - zz + ww);
-        }
-
-        /**
-        \brief Sets the rotation of this quaternion by the specified euler axis.
-        \param[in] aixs Specifies the aixs. This must be normalized!
-        \param[in] angle Specifies the rotation angle (in radians).
-        */
-        void SetAngleAxis(const Vector<T, 3>& axis, const T& angle)
-        {
-            const T halfAngle   = angle / T(2);
-            const T sine        = std::sin(halfAngle);
-
-            x = sine * axis.x;
-            y = sine * axis.y;
-            z = sine * axis.z;
-            w = std::cos(halfAngle);
-        }
-
-        void GetAngleAxis(Vector<T, 3>& axis, T& angle) const
-        {
-            const T scale = std::sqrt(x*x + y*y + z*z);
-
-            if ( ( std::abs(scale) <= std::numeric_limits<T>::epsilon() ) || w > T(1) || w < T(-1) )
-            {
-                axis.x  = T(0);
-                axis.y  = T(1);
-                axis.z  = T(0);
-                angle   = T(0);
-            }
-            else
-            {
-                const T invScale = T(1) / scale;
-                axis.x  = x * invScale;
-                axis.y  = y * invScale;
-                axis.z  = z * invScale;
-                angle   = T(2) * std::acos(w);
-            }
-        }
-
-        Matrix3T<T> ToMatrix3() const
-        {
-            Matrix3T<T> result(UninitializeTag{});
-            Math::QuaternionToMatrix(result, *this);
-            return result;
-        }
-
-        Matrix3T<T> ToMatrix3Transposed() const
-        {
-            Matrix3T<T> result(UninitializeTag{});
-            Math::QuaternionToMatrixTransposed(result, *this);
-            return result;
-        }
-
-        /**
-        Returns a type casted instance of this quaternion.
-        \tparam C Specifies the static cast type.
-        */
-        template <typename C>
-        QuaternionT<C> Cast() const
-        {
-            return QuaternionT<C>(
-                static_cast<C>(x),
-                static_cast<C>(y),
-                static_cast<C>(z),
-                static_cast<C>(w)
-            );
-        }
-
-        //! Returns a pointer to the first element of this quaternion.
-        T* Ptr()
-        {
-            return &x;
-        }
-
-        //! Returns a constant pointer to the first element of this quaternion.
-        const T* Ptr() const
-        {
-            return &x;
-        }
-
-        //! Returns a new quaternion, rotated with the specified euler angles.
-        static QuaternionT<T> EulerAngles(const Vector<T, 3>& angles)
-        {
-            QuaternionT<T> result;
-            result.SetEulerAngles(angles);
-            return result;
-        }
-
-        //! Returns a new quaternion, rotated with the specified angle axis.
-        static QuaternionT<T> AngleAxis(const Vector<T, 3>& axis, const T& angle)
-        {
-            QuaternionT<T> result;
-            result.SetAngleAxis(axis, angle);
-            return result;
-        }
-
-        T x, y, z, w;
-
-};
-
-
-/* --- Global Operators --- */
-
-template <typename T>
-QuaternionT<T> operator + (const QuaternionT<T>& lhs, const QuaternionT<T>& rhs)
-{
-    auto result = lhs;
-    result += rhs;
-    return result;
-}
-
-template <typename T>
-QuaternionT<T> operator - (const QuaternionT<T>& lhs, const QuaternionT<T>& rhs)
-{
-    auto result = lhs;
-    result -= rhs;
-    return result;
-}
-
-template <typename T>
-QuaternionT<T> operator * (const QuaternionT<T>& lhs, const QuaternionT<T>& rhs)
-{
-    return QuaternionT<T>
+    */
+    struct Quaternion
     {
-        ( (lhs.x * rhs.w) + (lhs.w * rhs.x) + (lhs.z * rhs.y) - (lhs.y * rhs.z) ),
-        ( (lhs.y * rhs.w) - (lhs.z * rhs.x) + (lhs.w * rhs.y) + (lhs.x * rhs.z) ),
-        ( (lhs.z * rhs.w) + (lhs.y * rhs.x) - (lhs.x * rhs.y) + (lhs.w * rhs.z) ),
-        ( (lhs.w * rhs.w) - (lhs.x * rhs.x) - (lhs.y * rhs.y) - (lhs.z * rhs.z) )
+        float w;
+        union
+        {
+            struct 
+            {
+                float x, y, z;
+            };
+            Vector3 r;
+        };
+
+        // Note: construct a zero Quaternion rotation
+        Quaternion() : w(0.0f), x(0.0f), y(0.0f), z(0.0f) 
+        {
+
+        }
+
+        // Note: construct a Quaternion explicitly
+        Quaternion(const float w, const float x, const float y, const float z) : w(w), x(x), y(y), z(z)
+        {
+
+        }
+
+        // Note: convert from axis-angle format (in radians) to Quaternion
+        Quaternion(const Vector3& axis, const float radians)
+        {
+            const float halfAngle = 0.5f * radians;
+            w = cos(halfAngle);
+            x = axis.x * sin(halfAngle);
+            y = axis.y * sin(halfAngle);
+            z = axis.z * sin(halfAngle);
+        }
+        // Note: convert from axis-angle format (with w being 0.0f)
+        explicit Quaternion(const Vector3& axis) 
+        {
+            w = 0.0f;
+            x = axis.x;
+            y = axis.y;
+            z = axis.z;
+        }
+
+        Vector4 ToAxisAngle();
+        Matrix3 ToMatrix();
+
+        Quaternion operator-();
     };
-}
 
-template <typename T>
-QuaternionT<T> operator * (const QuaternionT<T>& lhs, const T& rhs)
-{
-    auto result = lhs;
-    result *= rhs;
-    return result;
-}
+    // Note: Quaternion algebra
+    // ------------------------------
+    inline Quaternion Quaternion::operator-()
+    {
+        return Quaternion( -w, -x, -y, -z );
+    }
 
-template <typename T>
-QuaternionT<T> operator * (const T& lhs, const QuaternionT<T>& rhs)
-{
-    auto result = rhs;
-    result *= lhs;
-    return result;
-}
+    inline Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs)
+    {
+        return Quaternion(lhs.w + rhs.w, lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+    }
 
-//! Rotates the specified vector 'rhs' by the quaternion 'lhs' and returns the new rotated vector.
-template <typename T>
-Vector<T, 3> operator * (const QuaternionT<T>& lhs, const Vector<T, 3>& rhs)
-{
-    Vector<T, 3> qvec(lhs.x, lhs.y, lhs.z);
+    inline Quaternion operator*(const Quaternion& lhs, const float scalar)
+    {
+        return Quaternion(scalar*lhs.w, scalar*lhs.x, scalar*lhs.y, scalar*lhs.z);
+    }
+    inline Quaternion operator*(const float scalar, const Quaternion& rhs)
+    {
+        return Quaternion(scalar*rhs.w, scalar*rhs.x, scalar*rhs.y, scalar*rhs.z);
+    }
 
-    auto uv = Cross(qvec, rhs);
-    auto uuv = Cross(qvec, uv);
+    // Note: Quaternion geometry
+    // -------------------------------
+    inline float length(const Quaternion& quat)
+    {
+        return sqrt(quat.w*quat.w + quat.x*quat.x + quat.y*quat.y + quat.z*quat.z);
+    }
+    
+    inline Quaternion& normalize(Quaternion& quat)
+    {
+        const float l = length(quat);
+        quat = quat * (1.0f / l);
+        return quat;
+    }
 
-    uv *= (T(2) * lhs.w);
-    uuv *= T(2);
+    inline float Dot(const Quaternion& lhs, const Quaternion& rhs)
+    {
+        return lhs.w*rhs.w + lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z;
+    }
 
-    /* Result := vec + uv + uuv */
-    uv += uuv;
-    uv += rhs;
+    inline Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
+    {
+        Vector3 v1(rhs.x, rhs.y, rhs.z);
+        Vector3 v2(lhs.x, lhs.y, lhs.z);
 
-    return uv;
-}
+        const float w = rhs.w*lhs.w - Dot(rhs, lhs);
+        Vector3  v = rhs.w*v2 + lhs.w*v1 + Cross(v2, v1);
 
+        return Quaternion(w, v.x, v.y, v.z);
+    }
 
-/* --- Type Alias --- */
+    // Note: rotates a Vector p by Quaternion q. 
+    // This rotation equals: q * p * q^-1. To multiply q with p we transform p 
+    // to a pure Quaternion (0, p) with a 0 angle and default multiplication.
+    // We won't take that exact equation here; instead we use a more efficient 
+    // multiplication which is the expanded equation: 
+    // (2w^2 - 1)*p + 2*dot(v, p)*r _ 2*w*cross(v, p) 
+    // TODO(Joey): this one is important; make sure to test extensively in unit tests!
+    inline Vector3 operator*(const Quaternion& quat, const Vector3& vec)
+    {
+        // TODO(Joey): assert that we're dealing with a unit Vector
 
-using Quaternion = QuaternionT<Real>;
-using Quaternionf = QuaternionT<float>;
-using Quaterniond = QuaternionT<double>;
+        const float w2 = quat.w * quat.w;
 
+        return (2.0f*w2 - 1.0f)*vec + 2.0f*Dot(quat.r, vec)*quat.r + w2*Cross(quat.r, vec);
+    }
 
-} // /namespace Math
+    // Note: the Quaternion is assumed to be normalized (length of 1)
+    inline Quaternion inverse(const Quaternion& quat)
+    {
+        // TODO(Joey): assert that we're dealing with a unity Vector
+        return Quaternion(quat.w, -quat.x, -quat.y, -quat.z);
+    }
 
+    // Note: conversions
+    // -----------------------
+    inline Vector4 Quaternion::ToAxisAngle()
+    {
+        Vector4 result;
+        
+        const float angle  = 2.0f * acos(w);
+        const float length = sqrt(1.0f - angle*angle);
 
-#endif
+        result.xyz = Vector3(x, y, z) / length;
+        result.w   = angle;
 
+        return result;
+    }
 
+    // Note: as there are a lot of duplicated terms there is a more 
+    // efficient way to convert a Quaternion to a Matrix; however, to keep the
+    // code just a tiny bit more readable (for educational purposes) we perform
+    // the convetional math conversion.
+    // See'Essential mathematics for games and interactive applications' p.165.
+    // NOTTE(Joey): this operation requires the Quaternion to be normalized.
+    inline Matrix3 Quaternion::ToMatrix()
+    {
+        Matrix3 mat;
 
-// ================================================================================
+        mat[0][0] = 1.0f - 2.0f*y*y - 2.0f*z*z;
+        mat[0][1] = 2.0f*x*y + 2.0f*w*z;
+        mat[0][2] = 2.0f*x*z - 2.0f*w*y;
+
+        mat[1][0] = 2.0f*x*y - 2.0f*w*z;
+        mat[1][1] = 1.0f - 2.0f*x*x - 2.0f*z*z;
+        mat[1][2] = 2.0f*y*z + 2.0f*w*x;
+        
+        mat[2][0] = 2.0f*x*z + 2.0f*w*y;
+        mat[2][1] = 2.0f*y*z - 2.0f*w*x;
+        mat[2][2] = 1.0f - 2.0f*x*x - 2.0f*y*y;
+
+        return mat;
+    }
+
+} // namepace math

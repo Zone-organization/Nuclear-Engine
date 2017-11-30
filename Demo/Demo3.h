@@ -96,6 +96,7 @@ public:
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
+
 	void Render()
 	{
 		Core::Context::Begin();
@@ -109,10 +110,9 @@ public:
 		CubeShader->Bind();
 		CubeVB->Bind();
 
-
-		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f), 5.0f);
+		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f),5.0f);
 		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
-		Shader_Uniforms.Projection = Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
+		Shader_Uniforms.Projection = Math::Perspective(45.0f, (float)800 / (float)600, 0.1f, 100.0f);
 
 		CubeCB->Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 
@@ -246,7 +246,7 @@ public:
 
 		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f), 5.0f);
 		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
-		Shader_Uniforms.Projection = Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
+		Shader_Uniforms.Projection = Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
 		CubeCB->Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 

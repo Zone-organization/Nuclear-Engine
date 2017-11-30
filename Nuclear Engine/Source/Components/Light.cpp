@@ -9,7 +9,7 @@ namespace NuclearEngine {
 			data.m_pos = Math::Vector4();
 			data.m_dir = Math::Vector4();
 			data.m_intensity_att = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
-			data.m_cutoff_outercutoff = Math::Vector4(cos(Math::Deg2Rad(12.5f)), cos(Math::Deg2Rad(15.0f)), 0.0f,0.0f);
+			data.m_cutoff_outercutoff = Math::Vector4(cos(Math::ToRadians(12.5f)), cos(Math::ToRadians(15.0f)), 0.0f,0.0f);
 		}
 		SpotLight::~SpotLight()
 		{

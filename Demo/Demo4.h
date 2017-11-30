@@ -27,7 +27,7 @@ public:
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		Camera = new Components::FlyCamera();
-		Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		//Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 		CubeShader->SetUniformBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
 
 		Texture_Desc Desc;
@@ -212,7 +212,7 @@ CubeIL->Push(1, "TEXCOORD", DataType::Float2, 5 * sizeof(float), 3 * sizeof(floa
 CubeVB->SetInputLayout(CubeIL, CubeShader);
 
 Camera = new Components::FlyCamera();
-Camera->Initialize(Math::Perspective(Math::Deg2Rad(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 CubeShader->SetUniformBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
 
 Texture_Desc Desc;
