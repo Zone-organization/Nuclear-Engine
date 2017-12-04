@@ -151,16 +151,22 @@ namespace NuclearPlatform {
 #endif
 		}
 
-	/*	void Mouse::SetInputMode(InputMode mode)
+		void Mouse::SetInputMode(InputMode mode)
 		{
-			
+			_mode = mode;
+
+			if (_mode == Mouse::InputMode::Virtual)
+			{
+				Application::GetInternalWindow()->UpdateRectClip(true);
+				SetPosition(Application::GetWidth() / 2.0, Application::GetHeight() / 2.0);
+			}
 		}
 
 		Mouse::InputMode Mouse::GetInputMode()
 		{
-			return Mouse::InputMode::Normal;
+			return _mode;
 		}
-*/
+
 		void Mouse::ShowMouseCursor(bool value)
 		{
 #ifdef NUCLEAR_PLATFORM_WINDOWS32

@@ -1,1 +1,5 @@
-﻿  Nuclear Common.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Common.dll
+﻿  Logger.cpp
+  dllmain.cpp
+  Generating Code...
+     Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Common.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Common.exp
+  Nuclear Common.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Common.dll

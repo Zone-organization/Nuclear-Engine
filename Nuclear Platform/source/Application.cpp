@@ -1,10 +1,12 @@
 #include <NuclearPlatform\Application.h>
+#include <iostream>
 
 namespace NuclearPlatform {
 	static Clock *windowclock;
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
 	static Internals::Win32_Window* WinType;
 #endif
+
 	bool Application::Create(std::wstring Title, int Width, int Height, bool fullscreen)
 	{
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
@@ -16,6 +18,7 @@ namespace NuclearPlatform {
 		{
 			return false;
 		}
+
 		return true;
 	}
 
@@ -69,10 +72,12 @@ namespace NuclearPlatform {
 	{
 		return windowclock->GetElapsedTime().AsSeconds();
 	}
-	void Application::SetMouseMovementCallback(void(*function)(double , double))
+
+	void Application::SetMouseMovementCallback(void(*Callback)(double, double))
 	{
-		WinType->cursormovcallback = function;
+		WinType->SetMouseMovementCallback(Callback);
 	}
+
 	Internals::Win32_Window * Application::GetInternalWindow()
 	{
 		return WinType;

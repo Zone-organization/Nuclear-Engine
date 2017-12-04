@@ -12,7 +12,7 @@ struct PixelInputType
 	float2 TexCoord : TEXCOORD;
 };
 
-cbuffer NE_Camera : register(b0)
+cbuffer NE_Camera
 {
 	matrix Model;
 	matrix View;
@@ -61,7 +61,8 @@ PixelInputType main(VertexInputType input)
 
 	// Store the input texture for the pixel shader to use.
     output.TexCoord = input.TexCoord;
-	output.Normal = mul(transpose(inverse(Model)), input.Normal);
+	//output.Normal = mul(transpose(inverse(Model)), input.Normal);
+	output.Normal = mul(Model, input.Normal);
 
     return output;
 }

@@ -2,7 +2,8 @@
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
 #include <windowsx.h>
 #include <NuclearPlatform\Input.h>
-
+#include <NuclearPLatform\Application.h>
+#include <iostream>
 namespace NuclearPlatform {
 	using namespace Input;
 
@@ -12,9 +13,17 @@ namespace NuclearPlatform {
 		static int virtualx;
 		static int virtualy;
 
+		static void(*MouseMoveCB)(double,double);
+
 		Win32_Window::Win32_Window()
 		{
 
+		}
+
+		void firstmousecb(double, double)
+		{
+			std::cout << "WIN32";
+			return;
 		}
 
 		Win32_Window::Win32_Window(HANDLE handle)
@@ -40,6 +49,8 @@ namespace NuclearPlatform {
 			Width = width;
 			Height = height;
 
+		   MouseMoveCB = firstmousecb;
+
 			if (this->InitWindow() == FALSE)
 			{
 				return false;
@@ -63,7 +74,7 @@ namespace NuclearPlatform {
 
 		void Win32_Window::UpdateRectClip(bool flag)
 		{
-			/*if (flag)
+			if (flag)
 			{
 				RECT clipRect;
 				GetClientRect(m_Handle, &clipRect);
@@ -72,7 +83,14 @@ namespace NuclearPlatform {
 				ClipCursor(&clipRect);
 			}
 			else
-				ClipCursor(NULL);*/
+			{
+				ClipCursor(NULL);
+			}
+		}
+
+		void Win32_Window::SetMouseMovementCallback(void(*MVCB)(double, double))
+		{
+			MouseMoveCB = MVCB;
 		}
 
 		HWND Win32_Window::GetHandle()
@@ -99,6 +117,14 @@ namespace NuclearPlatform {
 				{
 					TranslateMessage(&msg);
 					DispatchMessage(&msg);
+				}
+			}
+
+			if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+			{
+				if (lastx != Width / 2 || lasty != Height / 2)
+				{
+					Input::Mouse::SetPosition(Width / 2, Height / 2);
 				}
 			}
 		}
@@ -227,15 +253,6 @@ namespace NuclearPlatform {
 				hInstance = NULL;									// Set hInstance To NULL
 			}
 
-			//if (GetRenderer() == Renderers::OpenGL3)
-			//{
-			//	Core::Internals::GLRenderer::Shutdown();
-			//}
-			//else if (GetRenderer() == Renderers::DirectX11)
-			//{
-			//	Core::Internals::DX11Renderer::Shutdown();
-			//}
-
 			return TRUE;
 		}
 
@@ -326,7 +343,60 @@ namespace NuclearPlatform {
 					Mouse::buttons[(unsigned char)Mouse::Button::X2] = false;
 				return 0;								// Jump Back
 			}
+
+			case WM_MOUSEMOVE:								// Resize The OpenGL Window
+			{
 			
+					int x = GET_X_LPARAM(lParam);
+					int y = GET_Y_LPARAM(lParam);
+
+					if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+					{
+						int dx = x - lastx;
+						int dy = y - lasty;
+
+						// get mouse coordinates from Windows
+						MouseMoveCB(virtualx + dx, virtualy + dy);
+					}
+					else
+					{
+						MouseMoveCB(x,y);
+					}
+					lastx = x;
+					lasty = y;
+				
+				return 0;								// Jump Back
+			}
+
+			case WM_SETFOCUS:
+			{
+				if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+				{
+					Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
+				}
+				return 0;
+			}
+
+			case WM_KILLFOCUS:
+			{
+				if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+				{
+					Input::Mouse::SetInputMode(Input::Mouse::InputMode::Normal);
+				}
+				return 0;
+			}
+
+			case WM_MOVE:
+			{
+				if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+				{
+					window.UpdateRectClip(true);
+				}
+
+				//TODO: Implement GetWindowPos...
+				return 0;
+			}
+
 			}
 
 			// Pass All Unhandled Messages To DefWindowProc

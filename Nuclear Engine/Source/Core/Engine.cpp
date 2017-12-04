@@ -25,6 +25,10 @@ namespace NuclearEngine {
 			static std::string MajorVersion = "0";
 			static std::string MinorVersion = "001";
 
+			// timing
+			static float deltaTime = 0.0f;	// time between current frame and last frame
+			static float lastFrame = 0.0f;
+
 			static Game * YourGame;
 				
 			bool Engine::Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool Debug, bool DisableLog )
@@ -93,9 +97,16 @@ namespace NuclearEngine {
 				Application::Delete();
 			}
 
+			void Mousecb(double X, double Y)
+			{
+				YourGame->MouseMovementCallback(X, Y);
+			}
+
 			void Engine::Run(Game * _YourGame)
 			{	
 				YourGame = _YourGame;
+
+				Application::SetMouseMovementCallback(Mousecb);
 
 				 Engine::Game_Initialize();
 				 Application::Display();
@@ -141,8 +152,14 @@ namespace NuclearEngine {
 				NuclearPlatform::Clock clock;
 				//Main Game Loop
 				while (Core::Engine::ShouldClose() != true)
-				{
-					YourGame->PreRender(clock.GetElapsedTime().AsSeconds());
+				{	
+					// per-frame time logic (ensure speed is constant through all platforms)
+					// --------------------
+					float currentFrame = clock.GetElapsedTime().AsSeconds();
+					deltaTime = currentFrame - lastFrame;
+					lastFrame = currentFrame;
+
+					YourGame->PreRender(deltaTime);
 					YourGame->Render();
 					YourGame->PostRender();
 				}

@@ -27,7 +27,7 @@ public:
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/DirectX/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		Camera = new Components::FlyCamera();
-		//Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 		CubeShader->SetUniformBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
 
 		Texture_Desc Desc;
@@ -56,13 +56,9 @@ public:
 
 		//Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
 		//Input::Mouse::ShowMouseCursor(false);
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::Z))
-		{
 
-		}
-		else {
-			Camera->Update();
-		}
+		Camera->Update();
+		
 	}
 
 	void MouseMovementCallback(double xpos, double ypos) override

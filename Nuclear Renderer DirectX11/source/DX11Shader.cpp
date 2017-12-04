@@ -128,6 +128,7 @@ namespace NuclearRenderer {
 
 				if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
 				{
+					pReflector->Release();
 					return Desc.BindPoint;
 				}
 			}
@@ -170,6 +171,10 @@ namespace NuclearRenderer {
 		m_vertexShader.Reset();
 		m_pixelShader.Reset();
 		m_geometryShader.Reset();
+
+		m_VSBL = nullptr;
+		m_PSBL = nullptr;
+		m_GSBL = nullptr;
 	}
 
 	void DX11Shader::Bind()

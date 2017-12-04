@@ -1,6 +1,7 @@
 e:\zone\nuclear-project\nuclear renderer opengl3\build\vc141.pdb
 e:\zone\nuclear-project\nuclear renderer opengl3\build\vc141.idb
 e:\zone\nuclear-project\nuclear renderer opengl3\build\glindexbuffer.obj
+e:\zone\nuclear-project\nuclear renderer opengl3\build\glrendertarget.obj
 e:\zone\nuclear-project\nuclear renderer opengl3\build\gltexture2d.obj
 e:\zone\nuclear-project\nuclear renderer opengl3\build\gluniformbuffer.obj
 e:\zone\nuclear-project\nuclear renderer opengl3\build\dllmain.obj
@@ -8,23 +9,22 @@ e:\zone\nuclear-project\nuclear renderer opengl3\build\glcontext.obj
 e:\zone\nuclear-project\nuclear renderer opengl3\build\glshader.obj
 e:\zone\nuclear-project\nuclear renderer opengl3\build\glvertexbuffer.obj
 e:\zone\nuclear-project\nuclear renderer opengl3\build\win32_ogl.obj
-e:\zone\nuclear-project\nuclear renderer opengl3\build\glrendertarget.obj
-e:\zone\nuclear-project\build\nuclear.renderer.opengl3.dll
-e:\zone\nuclear-project\build\nuclear.renderer.opengl3.ilk
-e:\zone\nuclear-project\build\nuclear.renderer.opengl3.pdb
+e:\zone\nuclear-project\nuclear renderer opengl3\build\glpipelinestate.obj
+e:\zone\nuclear-project\nuclear renderer opengl3\build\gltexturecube.obj
 e:\zone\nuclear-project\build\nuclear.renderer.opengl3.lib
 e:\zone\nuclear-project\build\nuclear.renderer.opengl3.exp
+e:\zone\nuclear-project\build\nuclear.renderer.opengl3.pdb
 e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\cl.command.1.tlog
 e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\cl.read.1.tlog
 e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\cl.write.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.1036.delete.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.5356.delete.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.5408.delete.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.5516.delete.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.5860.delete.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.6164.delete.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.6276.delete.1.tlog
-e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.9972.delete.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.3388.delete.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.4384-cvtres.read.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.4384-cvtres.write.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.4384-rc.read.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.4384-rc.write.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.4384.read.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.4384.write.1.tlog
+e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.8744.delete.1.tlog
 e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.command.1.tlog
 e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.delete.1.tlog
 e:\zone\nuclear-project\nuclear renderer opengl3\build\nuclear .7ede5204.tlog\link.read.1.tlog

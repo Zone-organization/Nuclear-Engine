@@ -3,7 +3,6 @@
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
 #include <string>
 #include <Windows.h>
-#include <functional>
 
 namespace NuclearPlatform {
 
@@ -36,7 +35,7 @@ namespace NuclearPlatform {
 
 			void UpdateRectClip(bool flag);
 
-			void(*cursormovcallback)(double, double);
+			void SetMouseMovementCallback(void(*MVCB)(double, double));
 
 			HWND GetHandle();
 

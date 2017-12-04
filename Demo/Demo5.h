@@ -69,7 +69,7 @@ public:
 		desc.lightmodel = Core::LightShading::PhongShading;
 		desc.tech = Core::RenderingTechnique::Forward;
 		desc.effect = Core::LightEffects::None;
-
+		
 		float vertices[] = {
 			// positions          // normals           // texture coords
 			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
@@ -174,7 +174,7 @@ public:
 		CubeIL->Push("TEXCOORD", 0, DataType::Float2, 8 * sizeof(float), 6 * sizeof(float));
 
 		Camera = new Components::FlyCamera();
-		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		Camera->Initialize(Math::Perspective(Math::ToRadians(60.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
 		LampShader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);
 
@@ -213,7 +213,7 @@ public:
 		_Desc.Wrap = TextureWrap::ClampToEdge;
 		_Desc.Format = TextureFormat::R8G8B8A8;
 
-		skybox = new Components::Skybox(Camera, ResourceManager::LoadTextureCubeFromFile(filenames, _Desc));
+		//skybox = new Components::Skybox(Camera, ResourceManager::LoadTextureCubeFromFile(filenames, _Desc));
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
@@ -229,12 +229,14 @@ public:
 
 		cube = new Components::Cube(&CubeMat);
 
+		Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
+		
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
 	void PreRender(float deltatime) override
-	{
+	{     	
 		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::W))
 			Camera->ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
 		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::A))
@@ -244,8 +246,6 @@ public:
 		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::D))
 			Camera->ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
-		//Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
-		//Input::Mouse::ShowMouseCursor(false);
 		Camera->Update();
 	}
 
@@ -346,7 +346,7 @@ public:
 
 		Renderer->Render();
 
-		skybox->Render();
+		//skybox->Render();
 
 		Core::Context::End();
 	}

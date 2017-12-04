@@ -5,9 +5,9 @@
 #include <NuclearPlatform\Win32\Win32_Window.h>
 #endif
 #include <string>
-#include <functional>
 
 namespace NuclearPlatform {
+
 	class NPAPI Application
 	{
 	public:
@@ -33,7 +33,7 @@ namespace NuclearPlatform {
 
 		static double GetTime();
 
-		static void SetMouseMovementCallback(void(*function)(double, double));
+		static void SetMouseMovementCallback(void(*Callback)(double, double));
 
 		static Internals::Win32_Window* GetInternalWindow();
 	};

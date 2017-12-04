@@ -137,10 +137,9 @@ namespace NuclearPlatform {
 			static bool IsButtonPressed(Button button);
 			static void SetPosition(int x, int y);
 			static void GetPosition(int& x, int& y);
-
-
-			/*static void SetInputMode(InputMode mode);
-			static InputMode GetInputMode();*/
+			
+			static void SetInputMode(InputMode mode);
+			static InputMode GetInputMode();
 
 			static void ShowMouseCursor(bool value);
 		};

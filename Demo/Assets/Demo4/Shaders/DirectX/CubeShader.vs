@@ -12,7 +12,7 @@ struct PixelInputType
 	float2 tex : TEXCOORD;
 };
 
-cbuffer PTE_Camera : register(b0)
+cbuffer NE_Camera : register(b0)
 {
 	matrix Model;
 	matrix View;

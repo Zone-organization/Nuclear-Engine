@@ -32,7 +32,7 @@ struct SpotLight {
 	float4 color;
 };
 
-cbuffer NE_LightUBO : register(b0)
+cbuffer NE_LightUBO
 {
 	float4 viewPosandMaterialshininess;
 #ifdef NR_DIR_LIGHTS
@@ -63,24 +63,24 @@ float4 main(PixelInputType input) : SV_TARGET
 #endif
 
 #ifdef NR_POINT_LIGHTS
-	//for (int i1 = 0; i1 < NR_POINT_LIGHTS; i1++)
-	//	FragColor += CalcPointLight(pointLights[i1], norm, input.FragPos, viewDir, input.TexCoords);
+	for (int i1 = 0; i1 < NR_POINT_LIGHTS; i1++)
+		FragColor += CalcPointLight(pointLights[i1], norm, input.FragPos, viewDir, input.TexCoords);
 #endif
 
 #ifdef NR_SPOT_LIGHTS
-	//for (int i2 = 0; i2 < NR_SPOT_LIGHTS; i2++)
-	//	FragColor += CalcSpotLight(spotLights[i2], norm, input.FragPos, viewDir, input.TexCoords);
+	for (int i2 = 0; i2 < NR_SPOT_LIGHTS; i2++)
+		FragColor += CalcSpotLight(spotLights[i2], norm, input.FragPos, viewDir, input.TexCoords);
 #endif
 	return FragColor;
 }
 
 // calculates the color when using a directional light.
-float4 CalcDirLight(DirLight light, float4 normal, float4 viewDir,float2 tex)
-{
-	return NE_Diffuse_Map.Sample(diffusemapsample, tex);
-}
+//float4 CalcDirLight(DirLight light, float4 normal, float4 viewDir,float2 tex)
+//{
+//	return NE_Diffuse_Map.Sample(diffusemapsample, tex);
+//}
 
-/*float4 CalcDirLight(DirLight light, float4 normal, float4 viewDir,float2 tex)
+float4 CalcDirLight(DirLight light, float4 normal, float4 viewDir,float2 tex)
 {
 	float4 lightDir = normalize(-light.direction);
 	// diffuse shading
@@ -94,7 +94,6 @@ float4 CalcDirLight(DirLight light, float4 normal, float4 viewDir,float2 tex)
 	float4 specular = light.color * spec * 	NE_Specular_Map.Sample(specularmapsample, tex);
 	return (ambient + diffuse + specular);
 }
-*/
 
 // calculates the color when using a point light.
 float4 CalcPointLight(PointLight light, float4 normal, float4 fragPos, float4 viewDir,float2 tex)
