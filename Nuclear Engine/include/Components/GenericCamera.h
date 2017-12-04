@@ -30,7 +30,7 @@ namespace NuclearEngine
 			Math::Matrix4 GetProjectionMatrix();
 			Math::Vector3 GetPosition();
 
-			//Note: Shader CBuffer name is "PTE_Camera", Binding Index Must be Zero!!
+			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
 			API::UniformBuffer* GetCBuffer();
 
 		protected:

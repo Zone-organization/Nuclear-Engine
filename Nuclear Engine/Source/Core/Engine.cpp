@@ -81,6 +81,8 @@ namespace NuclearEngine {
 					Log->Info("Unknown Operating System\n");
 #endif
 
+					Input::Mouse::SetInputMode(Input::Mouse::InputMode::Normal);
+
 					HasBeenInitialized = true;
 					return true;
 				}

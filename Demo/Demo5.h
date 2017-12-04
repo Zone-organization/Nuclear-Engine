@@ -229,7 +229,7 @@ public:
 
 		cube = new Components::Cube(&CubeMat);
 
-		Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
+		//Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
 		
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

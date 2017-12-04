@@ -119,6 +119,7 @@ namespace NuclearPlatform {
 
 			return (GetAsyncKeyState(vkey) & 0x8000) != 0;
 		}
+		static int restoreCursorPosX, restoreCursorPosY;
 
 		bool Mouse::IsButtonPressed(Button button)
 		{
@@ -157,9 +158,14 @@ namespace NuclearPlatform {
 
 			if (_mode == Mouse::InputMode::Virtual)
 			{
+				GetPosition(restoreCursorPosX, restoreCursorPosY);
+
 				Application::GetInternalWindow()->UpdateRectClip(true);
 				SetPosition(Application::GetWidth() / 2.0, Application::GetHeight() / 2.0);
 			}
+		/*	else if (_mode == Mouse::InputMode::Virtual) {
+				SetPosition(restoreCursorPosX, restoreCursorPosY);			
+			}*/
 		}
 
 		Mouse::InputMode Mouse::GetInputMode()

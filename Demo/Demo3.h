@@ -23,8 +23,8 @@ public:
 	{
 
 		CubeShader = new API::Shader("CubeShader",
-		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/DirectX/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -126,6 +126,8 @@ public:
 	{
 		delete CubeShader;
 		delete CubeVB;
+		delete CubeCB;
+		delete CubeIL;
 		delete WoodenBoxTex;
 	}
 };

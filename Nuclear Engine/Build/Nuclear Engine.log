@@ -1,7 +1,11 @@
-﻿  Engine.cpp
+﻿  FlyCamera.cpp
   Generating Code...
   Compiling...
-  FlyCamera.cpp
+  GenericCamera.cpp
   Generating Code...
+  Skipping... (no relevant changes detected)
+  Renderer3D.cpp
+  Skybox.cpp
+  Light.cpp
      Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Engine.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Engine.exp
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll

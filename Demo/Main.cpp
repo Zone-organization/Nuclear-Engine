@@ -5,24 +5,22 @@
 #include "Demo3.h"
 #include "Demo4.h"
 #include "Demo5.h"
-#include "Demo6.h"
 
 void Start()
 {
-
 	char choice;
 	std::cout << "--Choose A Renderer: \nA) OpenGL 3 \nB) DirectX 11\n";
 	std::cin >> choice;
+
+	//Initialize Engine
+	Core::Engine::Initialize(L"Nuclear Engine", _Width_, _Height_);
+
 	if (choice == 'a') {
-		//Initialize Engine
-		Core::Engine::Initialize(L"Prototype Engine", _Width_, _Height_);
 		Core::Context::Initialize(Core::RenderAPI::OpenGL3);
 	}
-	else if (choice == 'b') {
-		//Initialize Engine
-		Core::Engine::Initialize(L"Prototype Engine", _Width_, _Height_);
+	else if (choice == 'b')
+	{
 		Core::Context::Initialize(Core::RenderAPI::DirectX11);
-
 	}
 	else {
 		std::cout << "Wrong Choice Setting to OpenGL As Default\n";
@@ -40,8 +38,7 @@ int main(int argc, char* argv[])
 
 		<< "--Select High Level Engine Demos:\n"
 		<< "1) Demo 4 - Introduction To Camera & Input\n"
-		<< "2) Demo 5 - Introduction To Lights & Renderer3D\n"
-		<< "3) Demo 6 - Introduction To Model Loading\n";
+		<< "2) Demo 5 - Introduction To Lights & Renderer3D\n";
 
 	char choice;
 	std::cin >> choice;
@@ -68,11 +65,6 @@ int main(int argc, char* argv[])
 	else if (choice == '2') {
 		Start();
 		Demo5 demo;
-		Core::Engine::Run(&demo);
-	}
-	else if (choice == '3') {
-		Start();
-		Demo6 demo;
 		Core::Engine::Run(&demo);
 	}
 	else {

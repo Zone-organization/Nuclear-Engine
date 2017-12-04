@@ -23,11 +23,10 @@ public:
 	}
 	void Load() override
 	{
-		//Core::Context::EnableBlending(true);
-		
+		//Load The Shader
 		TriangleShader = new API::Shader("TriangleShader",
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/DirectX/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		
 		API::VertexBufferDesc Desc;
@@ -36,6 +35,7 @@ public:
 		Desc.usage = BufferGPUUsage::Dynamic;
 		Desc.accessflag = BufferCPUAccess::Default;
 
+		//Create the vertex Buffer
 		TriangleVB = new API::VertexBuffer(Desc);
 
 		TriangleIL = new API::InputLayout();
@@ -71,5 +71,6 @@ public:
 	{
 		delete TriangleShader;
 		delete TriangleVB;
+		delete TriangleIL;
 	}
 };

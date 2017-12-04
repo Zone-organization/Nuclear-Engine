@@ -29,8 +29,8 @@ public:
 	{
 
 		RectangleShader = new API::Shader("RectangleShader",
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/DirectX/RectangleShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 
 		API::VertexBufferDesc Desc;
@@ -84,6 +84,7 @@ public:
 		delete RectangleShader;
 		delete RectangleVB;
 		delete RectangleIB;
+		delete RectangleIL;
 		delete WoodenBoxTex;
 	}
 };

@@ -155,6 +155,22 @@ namespace NuclearPlatform {
 		{
 			return this->Title;
 		}
+
+		void Win32_Window::updateCursorImage()
+		{
+			//if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Normal)
+			//{
+			//	/*if (window->cursor)
+			//		SetCursor(window->cursor->win32.handle);
+			//	else*/
+			//		SetCursor(LoadCursorW(NULL, IDC_ARROW));
+			//}
+			//else
+			//{
+			//	SetCursor(NULL);
+			//}
+		}
+
 		BOOL Win32_Window::InitWindow()
 		{
 
@@ -367,6 +383,17 @@ namespace NuclearPlatform {
 				
 				return 0;								// Jump Back
 			}
+
+		/*	case WM_SETCURSOR:
+			{
+				if (LOWORD(lParam) == HTCLIENT)
+				{
+					window.updateCursorImage();
+					return TRUE;
+				}
+
+				break;
+			}*/
 
 			case WM_SETFOCUS:
 			{

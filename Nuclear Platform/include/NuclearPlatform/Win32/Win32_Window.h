@@ -31,6 +31,8 @@ namespace NuclearPlatform {
 
 			const wchar_t* GetTitle();
 
+			void updateCursorImage();
+
 			void SetTitle(std::wstring _title);
 
 			void UpdateRectClip(bool flag);
