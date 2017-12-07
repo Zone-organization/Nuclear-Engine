@@ -338,6 +338,8 @@
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\Components\Models\Cube.h" />
+    <ClInclude Include="include\Renderer\Material.h" />
+    <ClInclude Include="include\Renderer\Technique.h" />
     <ClInclude Include="include\Core\Context.h" />
     <ClInclude Include="include\Core\ContextDesc.h" />
     <ClInclude Include="include\API\UniformBuffer.h" />
@@ -362,7 +364,7 @@
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\NE_Exception.h" />
-    <ClInclude Include="include\Core\Renderer3D.h" />
+    <ClInclude Include="include\Renderer\Renderer.h" />
     <ClInclude Include="include\ResourceManager\ModelLoader\OBJ_Loader.h" />
     <ClInclude Include="include\ResourceManager\ResourceManager.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
@@ -380,7 +382,7 @@
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
-    <ClCompile Include="Source\Core\Renderer3D.cpp" />
+    <ClCompile Include="Source\Renderer\Renderer.cpp" />
     <ClCompile Include="Source\Components\FlyCamera.cpp" />
     <ClCompile Include="Source\Components\GenericCamera.cpp" />
     <ClCompile Include="Source\Components\Skybox.cpp" />

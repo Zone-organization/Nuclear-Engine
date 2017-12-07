@@ -5,8 +5,6 @@ class Demo4 : public Core::Game
 {
 protected:
 	API::Shader *CubeShader;
-	API::VertexBuffer *CubeVB;
-	API::InputLayout *CubeIL;
 	API::Texture *WoodenBoxTex;
 	Components::FlyCamera *Camera;
 
@@ -69,20 +67,7 @@ public:
 			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 		};
-
-		API::VertexBufferDesc vDesc;
-		vDesc.data = vertices;
-		vDesc.size = sizeof(vertices);
-		vDesc.usage = BufferGPUUsage::Dynamic;
-		vDesc.accessflag = BufferCPUAccess::Default;
-
-		CubeVB = new API::VertexBuffer(vDesc);
-
-		CubeIL = new API::InputLayout();
-		CubeIL->Push("POSITION",0, DataType::Float3);
-		CubeIL->Push("TEXCOORD",0, DataType::Float2);
-
-		CubeVB->SetInputLayout(CubeIL, CubeShader);
+			
 
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
@@ -147,13 +132,10 @@ public:
 		//Don't Forget to clear the depth buffer each frame
 		Core::Context::ClearDepthBuffer();
 
-		//WoodenBoxTex->PSBind(0);
 	 	CubeShader->Bind();
 
 		cube->Draw(CubeShader);
-	  /*  CubeVB->Bind();
-		Core::Context::Draw(36);
-		CubeVB->Unbind();*/
+
 		CubeShader->Unbind();
 
 		Core::Context::End();
@@ -161,9 +143,8 @@ public:
 	void ExitRendering()	// Exit Rendering
 	{
 		delete CubeShader;
-		delete CubeVB;
+		delete cube;
 	    delete Camera;
-		delete CubeIL;
 		delete WoodenBoxTex;
 	}
 };

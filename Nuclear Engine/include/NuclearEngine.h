@@ -13,11 +13,14 @@ _____________/BOOOM\_____________
 
 //# Core Engine Headers
 #include <Core/Engine.h>
-#include <Core/Renderer3D.h>
 #include <Core/Context.h>
 #include <Core/Game.h>
 #include <Core/FileSystem.h>
 #include <Core/Systems/AudioSystem.h>
+
+//# Global Renderer
+#include <Renderer/Renderer.h>
+
 
 //# Managers Headers
 #include <ResourceManager\ResourceManager.h>

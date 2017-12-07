@@ -2,76 +2,48 @@
 #include <NE_Common.h>
 #include <API\Color.h>
 #include <Math\Math.h>
-#include <Core\Renderer3D.h>
+#include <Renderer\Renderer.h>
 
 namespace NuclearEngine {
 
 	namespace Components {
 
 		namespace Internal {
-			struct NEAPI _DirLight
+
+			struct Shader_Material_Struct
 			{
-				Math::Vector4 m_dir;
-				Math::Vector4 m_color;
+				Math::Vector4  Emissive;
+				Math::Vector4  Ambient;
+				Math::Vector4  Diffuse;
+				Math::Vector4  Specular;
+				Math::Vector4  SpecularPower_UseTexture;
 			};
 
-			struct NEAPI _PointLight
+			struct NEAPI Shader_Light_Struct
 			{
-				Math::Vector4 m_pos;
-				Math::Vector4 m_intensity_att;
-				Math::Vector4 m_color;
-			};
-
-			struct NEAPI _SpotLight
-			{
-				Math::Vector4 m_pos;
-				Math::Vector4 m_dir;
-				Math::Vector4 m_intensity_att;
-				Math::Vector4 m_cutoff_outercutoff;
-				Math::Vector4 m_color;
+				Math::Vector4 Position;
+				Math::Vector4 Direction;
+				Math::Vector4 Attenuation_Intensity;
+				Math::Vector4 InnerCutOf_OuterCutoff;
+				Math::Vector4 Color;
 			};
 		}
 
-		struct NEAPI DirectionalLight
+		struct NEAPI Light
 		{
-			friend class Core::Renderer3D;
+			friend class Core::Renderer;
 		public:
-			DirectionalLight();
-			~DirectionalLight();
+			enum Type
+			{
+				DirectionalLight = 0,
+				PointLight = 1,
+				SpotLight = 2
+			};
 
-			void SetColor(API::Color color);
+			Light(Type type);
+			~Light();
 
-			void SetDirection(Math::Vector3 dir);
-
-		protected:
-			Internal::_DirLight data;
-		};
-
-		struct NEAPI PointLight
-		{
-			friend class Core::Renderer3D;
-		public:
-			PointLight();
-			~PointLight();
-
-			void SetColor(API::Color color);
-
-			void SetPosition(Math::Vector3 pos);
-
-			void SetIntensity(float intensity);
-
-			void SetAttenuation(Math::Vector3 att);
-
-		protected:
-			Internal::_PointLight data;
-		};
-
-		struct NEAPI SpotLight
-		{
-			friend class Core::Renderer3D;
-		public:
-			SpotLight();
-			~SpotLight();
+			void SetType(Type type);
 
 			void SetColor(API::Color color);
 
@@ -86,8 +58,7 @@ namespace NuclearEngine {
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
 
 		protected:
-			Internal::_SpotLight data;
-
+			Internal::Shader_Light_Struct data;
 		};
 	}
 }

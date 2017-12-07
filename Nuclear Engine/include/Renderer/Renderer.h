@@ -4,13 +4,9 @@
 #include <vector>
 
 namespace NuclearEngine {
-
-
 	namespace Components 
 	{
-		struct DirectionalLight;
-		struct PointLight;
-		struct SpotLight;
+		struct Light;
 	}
 
 	namespace Core {
@@ -44,18 +40,18 @@ namespace NuclearEngine {
 			RenderingTechnique tech;
 		};
 
-
-		class NEAPI Renderer3D
+		class NEAPI Renderer
 		{
 		public:
-			Renderer3D(const Renderer3D_Desc& desc);
+			Renderer(const Renderer3D_Desc& desc);
 
-			void AddLight(Components::DirectionalLight *light);
-			void AddLight(Components::PointLight *light);
-			void AddLight(Components::SpotLight *light);
+			void AddLight(Components::Light *light);
 
 			API::Shader *GetShader();
 
+			void SetCamera(Components::GenericCamera *cam);
+
+			void SetLightGlobalAmbient(API::Color globalambient);
 			void SetCamera(Components::GenericCamera *cam);
 
 			void Bake();
@@ -69,15 +65,17 @@ namespace NuclearEngine {
 			API::UniformBuffer *NE_LightUBO;
 			size_t LightUBOSize;
 
-			std::vector<Components::DirectionalLight*> dirLights;
-			std::vector<Components::PointLight*> pointLights;
-			std::vector<Components::SpotLight*> spotLights;
+			std::vector<Components::Light*> Lights;
+
 			Renderer3DStatusFlag flag;
 
 			Renderer3D_Desc m_desc;
 			Components::GenericCamera *m_cam;
 
+			Math::Vector4 m_globalambient;
+
 			bool bakedbefore;
+			bool materialubochanged = false;
 		};
 	}
 }

@@ -24,7 +24,6 @@
     <ClInclude Include="include\Core\Context.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\ResourceManager\ResourceManager.h" />
-    <ClInclude Include="include\Core\Renderer3D.h" />
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
@@ -35,6 +34,9 @@
     <ClInclude Include="include\API\TextureCube.h" />
     <ClInclude Include="include\API\PipelineState.h" />
     <ClInclude Include="include\API\Texture.h" />
+    <ClInclude Include="include\Renderer\Technique.h" />
+    <ClInclude Include="include\Renderer\Renderer.h" />
+    <ClInclude Include="include\Renderer\Material.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -55,7 +57,6 @@
     <ClCompile Include="Source\Core\Context.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
-    <ClCompile Include="Source\Core\Renderer3D.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
@@ -65,5 +66,6 @@
     <ClCompile Include="Source\API\TextureCube.cpp" />
     <ClCompile Include="Source\API\PipelineState.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
+    <ClCompile Include="Source\Renderer\Renderer.cpp" />
   </ItemGroup>
 </Project>

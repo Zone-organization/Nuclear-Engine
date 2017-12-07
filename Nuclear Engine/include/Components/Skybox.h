@@ -8,7 +8,7 @@
 #include <Core/FileSystem.h>
 #include <Components\GenericCamera.h>
 #include <NE_Common.h>
-#include "Core\Renderer3D.h"
+#include "Renderer\Renderer.h"
 
 namespace NuclearEngine
 {
@@ -16,7 +16,7 @@ namespace NuclearEngine
 	{
 		class NEAPI Skybox
 		{
-			friend class Core::Renderer3D;
+			friend class Core::Renderer;
 		private:
 			API::Shader *shader;
 			API::VertexBuffer *vertexBuffer;

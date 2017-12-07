@@ -8,14 +8,14 @@ protected:
 	API::VertexBuffer *LampVB;
 	API::InputLayout *LampIL;
 
-	Core::Renderer3D *Renderer;
+	Core::Renderer *Renderer;
 
-	Components::DirectionalLight dirlight;
-	Components::SpotLight flashlight;
-	Components::PointLight pointlight1;
-	Components::PointLight pointlight2;
-	Components::PointLight pointlight3;
-	Components::PointLight pointlight4;
+	Components::Light dirlight;
+	Components::Light flashlight;
+	Components::Light pointlight1;
+	Components::Light pointlight2;
+	Components::Light pointlight3;
+	Components::Light pointlight4;
 
 	Components::Skybox* skybox;
 	Components::Cube *cube;
