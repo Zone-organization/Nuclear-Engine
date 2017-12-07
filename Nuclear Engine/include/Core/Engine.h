@@ -3,12 +3,12 @@
 #include <string>
 namespace NuclearEngine {
 	namespace Core {
-		enum class NEAPI GameState { Initializing, StartupLoad, Loading, Rendering, ExitingRendering, Shuttingdown };
-
+		
 
 			class NEAPI Engine
 			{
 			public:
+				enum class State { Initializing, StartupLoad, Loading, Rendering, ExitingRendering, Shuttingdown };
 
 				static bool Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool Debug = true, bool DisableLog = false);
 

@@ -61,7 +61,6 @@ namespace NuclearEngine {
 		struct MaterialTexture {
 			API::Texture *tex;
 			MaterialTextureType type;
-			const char* path;
 		};
 
 		class NEAPI Mesh_NoIndices {

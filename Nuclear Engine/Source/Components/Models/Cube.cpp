@@ -182,7 +182,6 @@ namespace NuclearEngine {
 		{
 			MaterialTexture _tex;
 			_tex.tex = mat->Diffuse;
-			_tex.path = nullptr;
 			_tex.type = MaterialTextureType::Diffuse;
 			
 
@@ -192,7 +191,6 @@ namespace NuclearEngine {
 			if (mat->Specular != nullptr)
 			{
 				_tex.tex = mat->Specular;
-				_tex.path = nullptr;
 				_tex.type = MaterialTextureType::Specular;
 			
 			texturebuf.push_back(_tex);

@@ -5,6 +5,7 @@ namespace NuclearEngine {
 	namespace Core {
 		Game::Game()
 		{
+			gameinfo = nullptr;
 		}
 		Game::Game(GameInfo * yourinfo)
 		{

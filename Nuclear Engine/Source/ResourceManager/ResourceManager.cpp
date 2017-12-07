@@ -5,10 +5,7 @@
 namespace NuclearEngine {
 	Texture_Data ResourceManager::LoadTextureFromFile(const char * filename, const Texture_Desc & Desc)
 	{
-		Log->Info("[ResourceManager] Loading Image: ");
-		Log->Info(filename);
-		Log->Info(" \n");
-
+		
 		int req_c;
 		switch (Desc.Format)   //Correctly Set The Required Componenets for stb_image
 		{
@@ -28,19 +25,21 @@ namespace NuclearEngine {
 
 		stbi_set_flip_vertically_on_load(true); // Note:FLip Texture in Y - axis while loading
 		Data.databuf = stbi_load(filename, &Data.width, &Data.height, &Data.no_of_components, req_c);
+
 		if (Data.databuf == NULL)
 		{
-			Log->Error("[ResourceManager] Texture File Loading Failed!\n");
+			Log->Error(std::string("[ResourceManager] Failed To Load Texture: " + std::string(filename) + '\n'));
+
 		}
+
+		Log->Info(std::string("[ResourceManager] Loaded Texture: " + std::string(filename) + '\n'));
+
 		return Data;
 	}
 
 	Texture_Data LoadTextureFromFile_NoFlip(const char * filename, const Texture_Desc & Desc)
 	{
-		Log->Info("[ResourceManager] Loading Image: ");
-		Log->Info(filename);
-		Log->Info(" \n");
-
+		
 		int req_c;
 		switch (Desc.Format)   //Correctly Set The Required Componenets for stb_image
 		{
@@ -61,8 +60,12 @@ namespace NuclearEngine {
 		Data.databuf = stbi_load(filename, &Data.width, &Data.height, &Data.no_of_components, req_c);
 		if (Data.databuf == NULL)
 		{
-			Log->Error("[ResourceManager] Texture File Loading Failed!\n");
+			Log->Error(std::string("[ResourceManager] Failed To Load Texture: " + std::string(filename) + '\n'));
+
 		}
+
+		Log->Info(std::string("[ResourceManager] Loaded Texture: " + std::string(filename) + '\n'));
+
 		return Data;
 	}
 	std::array<NuclearEngine::Texture_Data, 6> ResourceManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& filenames, const Texture_Desc& Desc)

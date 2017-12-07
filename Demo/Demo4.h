@@ -10,6 +10,8 @@ protected:
 
 	Components::Cube *cube;
 
+	Components::Model *model;
+
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -86,6 +88,9 @@ public:
 
 		cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
 
+		model = new Components::Model();
+		model->loadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", Components::InputSignatures::Position_Texcoord);
+
 		Core::Context::EnableDepthBuffer(true);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -135,6 +140,8 @@ public:
 	 	CubeShader->Bind();
 
 		cube->Draw(CubeShader);
+
+		model->Draw(CubeShader);
 
 		CubeShader->Unbind();
 

@@ -11,10 +11,10 @@ namespace NuclearEngine {
 		{
 			switch (Signature)
 			{
-			case InputSignatures::Position: return sizeof(Vertex_P);
-			case InputSignatures::Position_Texcoord: return sizeof(Vertex_PT);
-			case InputSignatures::Position_Normal_Texcoord: return sizeof(Vertex_PNT);
-			default: return sizeof(Vertex_PNT);
+			case InputSignatures::Position: return 12;
+			case InputSignatures::Position_Texcoord: return 20;
+			case InputSignatures::Position_Normal_Texcoord: return 32;
+			default: return 32;
 			}
 		}
 
@@ -24,7 +24,41 @@ namespace NuclearEngine {
 			Mesh_NoIndices::Mesh_NoIndices(_vertices, _textures, Signature);
 
 			this->indices = _indices;
-			IBO = new API::IndexBuffer(&this->indices[0], indices.size() * sizeof indices[0]);			
+			IBO = new API::IndexBuffer(indices.data(), indices.size() * 4);			
+		}
+		void Mesh::Draw(API::Shader* _shader)
+		{
+			if (this->RenderInit == false)
+			{
+				API::InputLayout layout;
+				layout.Push("POSITION", 0, DataType::Float3);
+
+				if (signature == InputSignatures::Position_Texcoord)
+				{
+					layout.Push("TEXCOORD", 0, DataType::Float2);
+				}
+				else if (signature == InputSignatures::Position_Normal_Texcoord)
+				{
+					layout.Push("NORMAL", 0, DataType::Float3);
+					layout.Push("TEXCOORD", 0, DataType::Float2);
+				}
+				VBO->SetInputLayout(&layout, _shader);
+
+				RenderInit = true;
+			}
+
+			for (unsigned int i = 0; i < textures.size(); i++)
+			{
+				textures[i].tex->PSBind(TextureBindings[i], _shader, i);
+			}
+
+
+			// draw mesh
+			VBO->Bind();
+			IBO->Bind();
+			Core::Context::DrawIndexed(indices.size());
+			IBO->Unbind();
+			VBO->Unbind();
 		}
 
 		// render the mesh
@@ -51,43 +85,6 @@ namespace NuclearEngine {
 			}
 		}
 
-		void Mesh::Draw(API::Shader* _shader)
-		{
-			if (this->RenderInit != false)
-			{
-				API::InputLayout layout;
-				layout.Push("POSITION", 0, DataType::Float3);
-				layout.Push("NORMAL", 0, DataType::Float);
-				layout.Push("TEXCOORD", 0, DataType::Float2);
-	
-				VBO->SetInputLayout(&layout, _shader);
-			}
-			// bind appropriate textures
-			unsigned int diffuseNr = 1;
-			unsigned int specularNr = 1;
-			unsigned int normalNr = 1;
-			unsigned int heightNr = 1;
-			for (unsigned int i = 0; i < textures.size(); i++)
-			{
-
-				std::string number;
-				//std::string name = textures[i].type;
-				//if (name == "texture_diffuse")
-				//	number = std::to_string(diffuseNr++);
-				//else if (name == "texture_specular")
-				//	number = std::to_string(specularNr++); // transfer unsigned int to stream
-
-				//std::cout << (name + number).c_str();
-				//textures[i].tex->PSBind((name + number).c_str(), _shader, i);
-			}
-
-			// draw mesh
-			VBO->Bind();
-			IBO->Bind();
-			Core::Context::DrawIndexed(indices.size());
-			IBO->Unbind();
-			VBO->Unbind();
-		}
 
 		Mesh_NoIndices::Mesh_NoIndices()
 		{

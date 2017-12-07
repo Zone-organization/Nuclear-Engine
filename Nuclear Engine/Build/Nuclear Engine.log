@@ -1,2 +1,3 @@
-﻿  Cube.cpp
+﻿  Model.cpp
+e:\zone\nuclear-project\nuclear engine\source\components\model.cpp(163): warning C4018: '<': signed/unsigned mismatch
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll
