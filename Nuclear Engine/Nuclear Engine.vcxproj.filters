@@ -27,16 +27,12 @@
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
-    <ClInclude Include="include\ResourceManager\ModelLoader\OBJ_Loader.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\Components\Models\Cube.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="include\API\TextureCube.h" />
     <ClInclude Include="include\API\PipelineState.h" />
     <ClInclude Include="include\API\Texture.h" />
-    <ClInclude Include="include\Renderer\Technique.h" />
-    <ClInclude Include="include\Renderer\Renderer.h" />
-    <ClInclude Include="include\Renderer\Material.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -60,12 +56,10 @@
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
-    <ClCompile Include="Source\ResourceManager\ModelLoader\OBJ_Loader.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\API\TextureCube.cpp" />
     <ClCompile Include="Source\API\PipelineState.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
-    <ClCompile Include="Source\Renderer\Renderer.cpp" />
   </ItemGroup>
 </Project>

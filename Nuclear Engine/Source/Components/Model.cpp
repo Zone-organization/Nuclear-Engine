@@ -1,6 +1,5 @@
 #include "Components\Model.h"
 #include <ResourceManager/ResourceManager.h>
-#include <ResourceManager\ModelLoader\OBJ_Loader.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>

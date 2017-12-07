@@ -2,22 +2,12 @@
 #include <NE_Common.h>
 #include <API\Color.h>
 #include <Math\Math.h>
-#include <Renderer\Renderer.h>
 
 namespace NuclearEngine {
 
 	namespace Components {
 
 		namespace Internal {
-
-			struct Shader_Material_Struct
-			{
-				Math::Vector4  Emissive;
-				Math::Vector4  Ambient;
-				Math::Vector4  Diffuse;
-				Math::Vector4  Specular;
-				Math::Vector4  SpecularPower_UseTexture;
-			};
 
 			struct NEAPI Shader_Light_Struct
 			{
@@ -31,7 +21,6 @@ namespace NuclearEngine {
 
 		struct NEAPI Light
 		{
-			friend class Core::Renderer;
 		public:
 			enum Type
 			{

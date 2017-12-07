@@ -4,7 +4,6 @@
 #include "Demo2.h"
 #include "Demo3.h"
 #include "Demo4.h"
-#include "Demo5.h"
 
 void Start()
 {
@@ -37,8 +36,7 @@ int main(int argc, char* argv[])
 		<< "C) Demo 3 - Introduction To Transformations & Constant Buffers\n"
 
 		<< "--Select High Level Engine Demos:\n"
-		<< "1) Demo 4 - Introduction To Camera & Input\n"
-		<< "2) Demo 5 - Introduction To Lights & Renderer3D\n";
+		<< "1) Demo 4 - Introduction To Camera & Input\n";
 
 	char choice;
 	std::cin >> choice;
@@ -60,11 +58,6 @@ int main(int argc, char* argv[])
 	else if (choice == '1') {
 		Start();
 		Demo4 demo;
-		Core::Engine::Run(&demo);
-	}
-	else if (choice == '2') {
-		Start();
-		Demo5 demo;
 		Core::Engine::Run(&demo);
 	}
 	else {

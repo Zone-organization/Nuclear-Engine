@@ -30,6 +30,11 @@ namespace NuclearEngine {
 		{
 		}
 
+		Math::Vector4 Color::Get4f()
+		{
+			return Math::Vector4(r,g,b,a);
+		}
+
 		Color operator+(const Color& left, const Color& right)
 		{
 			return Color(left.r + right.r, left.g + right.g, left.b + right.b, left.a + right.a);

@@ -64,13 +64,6 @@ namespace NuclearEngine {
 			const char* path;
 		};
 
-		struct Material 
-		{
-			API::Texture *Diffuse = nullptr;
-			API::Texture *Specular = nullptr;
-		};
-
-
 		class NEAPI Mesh_NoIndices {
 		public:	
 			Mesh_NoIndices();

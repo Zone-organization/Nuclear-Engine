@@ -18,10 +18,6 @@ _____________/BOOOM\_____________
 #include <Core/FileSystem.h>
 #include <Core/Systems/AudioSystem.h>
 
-//# Global Renderer
-#include <Renderer/Renderer.h>
-
-
 //# Managers Headers
 #include <ResourceManager\ResourceManager.h>
 
