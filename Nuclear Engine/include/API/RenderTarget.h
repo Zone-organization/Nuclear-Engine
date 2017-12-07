@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <API\Texture2D.h>
+#include <API\Texture.h>
 
 namespace NuclearRenderer
 {
@@ -17,13 +17,13 @@ namespace NuclearEngine
 
 			~RenderTarget();
 
-			void AttachDepthBuffer(Texture2D* texture);
+			void AttachDepthBuffer(Texture* texture);
 
-			void AttachStencilBuffer(Texture2D* texture);
+			void AttachStencilBuffer(Texture* texture);
 
-			void AttachDepthStencilBuffer(Texture2D* texture);
+			void AttachDepthStencilBuffer(Texture* texture);
 
-			void AttachTexture(Texture2D* texture);
+			void AttachTexture(Texture* texture);
 
 			void Bind();
 

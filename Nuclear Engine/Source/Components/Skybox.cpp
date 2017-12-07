@@ -71,7 +71,7 @@ namespace NuclearEngine
 
 			vertexBuffer = new API::VertexBuffer(VDesc);
 
-			vertexBufferLayout->Push("POSITION",0 , DataType::Float3, sizeof(float) * 3, 0);
+			vertexBufferLayout->Push("POSITION",0 , DataType::Float3);
 			vertexBuffer->SetInputLayout(vertexBufferLayout, shader);
 
 			Texture_Desc Desc;

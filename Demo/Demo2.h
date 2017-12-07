@@ -8,7 +8,7 @@ protected:
 	API::VertexBuffer *RectangleVB;
 	API::IndexBuffer *RectangleIB;
 	API::InputLayout *RectangleIL;
-	API::Texture2D *WoodenBoxTex;
+	API::Texture *WoodenBoxTex;
 	float vertices[20] = {
 		// positions          // texture coords
 		0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
@@ -42,8 +42,8 @@ public:
 		RectangleVB = new API::VertexBuffer(Desc);
 
 		RectangleIL = new API::InputLayout();
-		RectangleIL->Push("POSITION", 0, DataType::Float3, 5 * sizeof(float), 0);
-		RectangleIL->Push("TEXCOORD", 0, DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
+		RectangleIL->Push("POSITION", 0, DataType::Float3);
+		RectangleIL->Push("TEXCOORD", 0, DataType::Float2);
 
 		RectangleVB->SetInputLayout(RectangleIL, RectangleShader);
 		RectangleIB = new API::IndexBuffer(indices, sizeof(indices));
@@ -53,7 +53,7 @@ public:
 		TexDesc.Wrap = TextureWrap::Repeat;
 		TexDesc.Format = TextureFormat::R8G8B8A8;
 
-		WoodenBoxTex = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", TexDesc), TexDesc);
+		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", TexDesc), TexDesc);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}

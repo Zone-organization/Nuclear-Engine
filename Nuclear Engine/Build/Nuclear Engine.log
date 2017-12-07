@@ -1,11 +1,4 @@
-﻿  FlyCamera.cpp
-  Generating Code...
-  Compiling...
-  GenericCamera.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Renderer3D.cpp
-  Skybox.cpp
-  Light.cpp
+﻿  ResourceManager.cpp
+e:\zone\nuclear-project\nuclear engine\source\resourcemanager\resourcemanager.cpp(110): warning C4700: uninitialized local variable 'Data' used
      Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Engine.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Engine.exp
   Nuclear Engine.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Engine.dll

@@ -33,9 +33,6 @@
     <ClCompile Include="source\GLIndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\GLTexture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\GLUniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\GLPipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GLTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,9 +68,6 @@
     <ClInclude Include="include\NuclearRendererOGL3\GLIndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NuclearRendererOGL3\GLTexture2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NuclearRendererOGL3\GLUniformBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -81,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NuclearRendererOGL3\GLPipelineState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NuclearRendererOGL3\GLTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

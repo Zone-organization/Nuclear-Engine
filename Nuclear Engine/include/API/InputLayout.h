@@ -15,7 +15,7 @@ namespace NuclearEngine {
 			InputLayout();
 			~InputLayout();
 
-			void Push(const char* SemanticName, int SemanticIndex, DataType dataType, unsigned int stride, unsigned int offset);
+			void Push(const char* SemanticName, int SemanticIndex, DataType dataType);
 
 			NuclearRenderer::NRBInputLayout *GetBase();
 		protected:

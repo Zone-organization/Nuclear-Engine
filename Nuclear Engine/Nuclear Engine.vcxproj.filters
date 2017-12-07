@@ -10,7 +10,6 @@
     <ClInclude Include="include\API\InputLayout.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\IndexBuffer.h" />
-    <ClInclude Include="include\API\Texture2D.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\Core\FileSystem.h" />
     <ClInclude Include="include\Core\Game.h" />
@@ -35,6 +34,7 @@
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="include\API\TextureCube.h" />
     <ClInclude Include="include\API\PipelineState.h" />
+    <ClInclude Include="include\API\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -42,7 +42,6 @@
     <ClCompile Include="Source\API\InputLayout.cpp" />
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\IndexBuffer.cpp" />
-    <ClCompile Include="Source\API\Texture2D.cpp" />
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\Core\FileSystem.cpp" />
     <ClCompile Include="Source\Core\Game.cpp" />
@@ -65,5 +64,6 @@
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\API\TextureCube.cpp" />
     <ClCompile Include="Source\API\PipelineState.cpp" />
+    <ClCompile Include="Source\API\Texture.cpp" />
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ namespace NuclearRenderer
 {
 	DXGI_FORMAT GetDXDataType(DataType dataType);
 
-	DX11VertexBuffer::DX11VertexBuffer() : VertexBuffer(nullptr), offset(0), stride(0)
+	DX11VertexBuffer::DX11VertexBuffer() : VertexBuffer(nullptr), stride(0), offset(0)
 	{
 	}
 
@@ -110,6 +110,35 @@ namespace NuclearRenderer
 
 		return DXGI_FORMAT();
 	}
+	unsigned int GetDXDataTypeSizeInBytes(DataType dataType)
+	{
+		switch (dataType)
+		{
+		case DataType::Float:
+		{
+			return 4;
+			break;
+		}
+		case DataType::Float2:
+		{
+			return 8;
+			break;
+		}
+		case DataType::Float3:
+		{
+			return 12;
+			break;
+		}
+		case DataType::Float4:
+		{
+			return 16;
+			break;
+		}
+		default:
+			return -1;
+			break;
+		}
+	}
 
 	void DX11VertexBuffer::SetInputLayout(NRBInputLayout * layout, NRBShader *shader)
 	{
@@ -121,9 +150,11 @@ namespace NuclearRenderer
 			inputElementDesc[i].SemanticIndex = layout->GetBufferElement()[i].index;
 			inputElementDesc[i].Format = GetDXDataType(layout->GetBufferElement()[i].dataType);
 			inputElementDesc[i].InputSlot = 0;
-			inputElementDesc[i].AlignedByteOffset = layout->GetBufferElement()[i].offset;
+			inputElementDesc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 			inputElementDesc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 			inputElementDesc[i].InstanceDataStepRate = 0;
+
+			stride = stride + GetDXDataTypeSizeInBytes(layout->GetBufferElement()[i].dataType);
 		}
 
 		DX11Context::GetDevice()->CreateInputLayout(inputElementDesc,
@@ -131,9 +162,6 @@ namespace NuclearRenderer
 			shader->GetDXBufferPointer(),
 			shader->GetDXBufferSize(),
 			&inputLayout);
-
-		offset = layout->GetBufferElement()[0].offset;
-		stride = layout->GetBufferElement()[0].stride;
 
 		delete[] inputElementDesc;
 	}

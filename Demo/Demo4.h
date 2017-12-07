@@ -7,8 +7,10 @@ protected:
 	API::Shader *CubeShader;
 	API::VertexBuffer *CubeVB;
 	API::InputLayout *CubeIL;
-	API::Texture2D *WoodenBoxTex;
+	API::Texture *WoodenBoxTex;
 	Components::FlyCamera *Camera;
+
+	Components::Cube *cube;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -77,8 +79,8 @@ public:
 		CubeVB = new API::VertexBuffer(vDesc);
 
 		CubeIL = new API::InputLayout();
-		CubeIL->Push("POSITION",0, DataType::Float3, 5 * sizeof(float), 0);
-		CubeIL->Push("TEXCOORD",0, DataType::Float2, 5 * sizeof(float), 3 * sizeof(float));
+		CubeIL->Push("POSITION",0, DataType::Float3);
+		CubeIL->Push("TEXCOORD",0, DataType::Float2);
 
 		CubeVB->SetInputLayout(CubeIL, CubeShader);
 
@@ -91,7 +93,14 @@ public:
 		Desc.Wrap = TextureWrap::Repeat;
 		Desc.Format = TextureFormat::R8G8B8A8;
 
-		WoodenBoxTex = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
+		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
+
+
+		Components::Material CubeMat;
+		CubeMat.Diffuse = WoodenBoxTex;
+
+		cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
+
 		Core::Context::EnableDepthBuffer(true);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -138,11 +147,13 @@ public:
 		//Don't Forget to clear the depth buffer each frame
 		Core::Context::ClearDepthBuffer();
 
-		WoodenBoxTex->PSBind(0);
+		//WoodenBoxTex->PSBind(0);
 	 	CubeShader->Bind();
-	    CubeVB->Bind();
+
+		cube->Draw(CubeShader);
+	  /*  CubeVB->Bind();
 		Core::Context::Draw(36);
-		CubeVB->Unbind();
+		CubeVB->Unbind();*/
 		CubeShader->Unbind();
 
 		Core::Context::End();

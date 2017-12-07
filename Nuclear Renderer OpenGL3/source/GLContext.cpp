@@ -4,7 +4,7 @@
 #include <NuclearRendererOGL3\GLUniformBuffer.h>
 #include <NuclearRendererOGL3\GLRenderTarget.h>
 #include <NuclearRendererOGL3\GLPipelineState.h>
-#include <NuclearRendererOGL3\GLTexture2D.h>
+#include <NuclearRendererOGL3\GLTexture.h>
 #include <NuclearRendererOGL3\GLTextureCube.h>
 #include <NuclearRendererOGL3\GLShader.h>
 #include "Platform\Win32\Win32_OGL.h"
@@ -146,9 +146,9 @@ namespace NuclearRenderer
 		return param; 
 	}
 
-	NRBTexture2D * GLContext::ConstructTexture2D(NRBTexture2D * param)
+	NRBTexture * GLContext::ConstructTexture(NRBTexture * param)
 	{
-		param = new NuclearRenderer::GLTexture2D();
+		param = new NuclearRenderer::GLTexture();
 
 		return param;
 	}

@@ -9,15 +9,11 @@ namespace NuclearEngine {
 	
 	namespace Core {
 
-		Renderer3D::Renderer3D(const Renderer3D_Desc& desc, Components::GenericCamera *cam)
+		Renderer3D::Renderer3D(const Renderer3D_Desc& desc)
 		{
 			m_desc = desc;
-			this->SetCamera(cam);
-			initialized = false;
-			this->Bake();
-			initialized = true;
+			bakedbefore = false;
 		}
-
 
 		void Renderer3D::AddLight(Components::DirectionalLight * light)
 		{
@@ -42,6 +38,11 @@ namespace NuclearEngine {
 
 		void Renderer3D::SetCamera(Components::GenericCamera * cam)
 		{
+			if (cam == nullptr)
+			{
+				Log->Warning("[Renderer3D] Setting Camera to a null pointer!\n");
+			}
+
 			m_cam = cam;
 		}
 
@@ -83,7 +84,7 @@ namespace NuclearEngine {
 		}
 		void Renderer3D::Bake()
 		{
-			if (initialized)
+			if (bakedbefore)
 			{
 				if (flag != Renderer3DStatusFlag::RequireBaking)
 				{
@@ -93,6 +94,12 @@ namespace NuclearEngine {
 				delete NE_LightUBO;
 				LightUBOSize = 0;
 			}
+
+			if (m_cam == nullptr)
+			{
+				Log->Warning("[Renderer3D] Baking Renderer While Camera is Nullptr!\n");
+			}
+
 			if (m_desc.lightmodel == LightShading::PhongShading)
 			{			
 				if (m_desc.tech == RenderingTechnique::Forward)
@@ -102,6 +109,8 @@ namespace NuclearEngine {
 			}
 
 			flag = Renderer3DStatusFlag::Ready;
+
+			bakedbefore = true;
 			return;
 		}
 
@@ -123,9 +132,9 @@ namespace NuclearEngine {
 			}
 
 							
-				Renderer_Shader = new API::Shader("NE_Phong_Light", 
-					&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-					&API::CompileShader(Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps.hlsl", defines).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			Renderer_Shader = new API::Shader("NE_Phong_Light", 
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
+				&API::CompileShader(Core::FileSystem::LoadShaderWithDefines("Assets/NuclearEngine/Shaders/LightSystem/HLSL/PhongLight.ps.hlsl", defines).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 			
 
 			Bake_Uniform_Buffers();

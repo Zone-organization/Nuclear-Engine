@@ -4,6 +4,8 @@
 using namespace NuclearEngine;
 namespace NuclearRenderer {
 	GLenum GetGLDataType(DataType dataType);
+	unsigned int GetDataTypeSizeInBytes(DataType dataType);
+
 	unsigned int GetComponentCount(DataType dataType);
 
 	GLVertexBuffer::GLVertexBuffer() 
@@ -50,9 +52,21 @@ namespace NuclearRenderer {
 
 	void GLVertexBuffer::SetInputLayout(NRBInputLayout * layout, NRBShader * shader)
 	{
+		//TODO: See https://www.khronos.org/opengl/wiki/GLAPI/glGetVertexAttrib
+		//https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetVertexAttrib.xhtml
+
 		unsigned int index = 0;
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
+
+		//Calculate Stride & Offset
+		unsigned int stride = 0;
+		unsigned int offset = 0;
+
+		for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
+		{
+			stride = stride + GetDataTypeSizeInBytes(layout->GetBufferElement()[i].dataType);
+		}
 
 		for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
 		{
@@ -60,10 +74,12 @@ namespace NuclearRenderer {
 			glVertexAttribPointer(index,
 				GetComponentCount(layout->GetBufferElement()[i].dataType),
 				GetGLDataType(layout->GetBufferElement()[i].dataType),
-				GL_FALSE, layout->GetBufferElement()[i].stride,
-				(GLvoid*)layout->GetBufferElement()[i].offset);
+				GL_FALSE, stride,
+				(GLvoid*)offset);
 
 			index++;
+
+			offset = offset + GetDataTypeSizeInBytes(layout->GetBufferElement()[i].dataType);
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -103,6 +119,36 @@ namespace NuclearRenderer {
 		case DataType::Float4:
 		{
 			return GL_FLOAT;
+			break;
+		}
+		default:
+			return -1;
+			break;
+		}
+	}
+
+	unsigned int GetDataTypeSizeInBytes(DataType dataType)
+	{
+		switch (dataType)
+		{
+		case DataType::Float:
+		{
+			return 4;
+			break;
+		}
+		case DataType::Float2:
+		{
+			return 8;
+			break;
+		}
+		case DataType::Float3:
+		{
+			return 12;
+			break;
+		}
+		case DataType::Float4:
+		{
+			return 16;
 			break;
 		}
 		default:

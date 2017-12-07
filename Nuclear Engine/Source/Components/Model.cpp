@@ -133,7 +133,7 @@ namespace NuclearEngine {
 		//	// data to fill
 		//	vector<Vertex> vertices;
 		//	vector<unsigned int> indices;
-		//	vector<MeshTexture> textures;
+		//	vector<MaterialTexture> textures;
 
 		//	// Walk through each of the mesh's vertices
 		//	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -194,16 +194,16 @@ namespace NuclearEngine {
 		//	// normal: texture_normalN
 
 		//	// 1. diffuse maps
-		//	vector<MeshTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		//	vector<MaterialTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		//	textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		//	// 2. specular maps
-		//	vector<MeshTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		//	vector<MaterialTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		//	textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		//	//// 3. normal maps
-		//	std::vector<MeshTexture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+		//	std::vector<MaterialTexture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
 		//	textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 		//	//// 4. height maps
-		//	std::vector<MeshTexture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+		//	std::vector<MaterialTexture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
 		//	textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 		//	// return a mesh object created from the extracted mesh data
@@ -213,9 +213,9 @@ namespace NuclearEngine {
 		//// checks all material textures of a given type and loads the textures if they're not loaded yet.
 		//// the required info is returned as a Texture struct.
 
-		//vector<MeshTexture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType type, string typeName)
+		//vector<MaterialTexture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType type, string typeName)
 		//{
-		//	vector<MeshTexture> textures;
+		//	vector<MaterialTexture> textures;
 		//	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 		//	{
 		//		aiString str;
@@ -243,8 +243,8 @@ namespace NuclearEngine {
 		//			Desc.Wrap = TextureWrap::Repeat;
 		//			Desc.Format = TextureFormat::R8G8B8A8;
 		//		
-		//			MeshTexture texture;
-		//			texture.tex = new API::Texture2D(ResourceManager::LoadTextureFromFile(filename.c_str(), Desc), Desc);
+		//			MaterialTexture texture;
+		//			texture.tex = new API::Texture(ResourceManager::LoadTextureFromFile(filename.c_str(), Desc), Desc);
 		//			texture.type = typeName.c_str();
 		//			texture.path = str.C_Str();
 		//			textures.push_back(texture);

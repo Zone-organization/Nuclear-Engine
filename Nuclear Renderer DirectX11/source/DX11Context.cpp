@@ -5,7 +5,7 @@
 #include <NuclearRendererDX11\DX11IndexBuffer.h>
 #include <NuclearRendererDX11\DX11UniformBuffer.h>
 #include <NuclearRendererDX11\DX11PipelineState.h>
-#include <NuclearRendererDX11\DX11Texture2D.h>
+#include <NuclearRendererDX11\DX11Texture.h>
 #include <NuclearRendererDX11\DX11TextureCube.h>
 #include <NuclearRendererDX11\DX11Shader.h>
 
@@ -223,7 +223,7 @@ namespace NuclearRenderer {
 		result = Device->CreateTexture2D(&depthBufferDesc, NULL, &depthBuffer);
 		if (FAILED(result))
 		{
-			Log->FatalError("[DirectX] Create Depth Buffer Failed!!.\n");
+			Log->FatalError("[DirectX] Create Depth Buffer Failed!!\n");
 
 			return false;
 		}
@@ -490,9 +490,9 @@ namespace NuclearRenderer {
 		return param;
 	}
 
-	NRBTexture2D * DX11Context::ConstructTexture2D(NRBTexture2D * param)
+	NRBTexture * DX11Context::ConstructTexture(NRBTexture * param)
 	{
-		param = new NuclearRenderer::DX11Texture2D();
+		param = new NuclearRenderer::DX11Texture();
 
 		return param;
 	}

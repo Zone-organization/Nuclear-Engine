@@ -1916,7 +1916,7 @@ void ToGLSL::TranslateDeclaration(const Declaration* psDecl)
 				if (HaveUniformBindingsAndLocations(psContext->psShader->eTargetLanguage, psContext->psShader->extensions, psContext->flags))
 					bformata(glsl, "layout(location = %d) ",ui32BindingPoint);
 					
-				bformata(glsl, "layout(std140) uniform ConstantBuffer%d {\n\Vector data[%d];\n} cb%d;\n", ui32BindingPoint,psOperand->aui32ArraySizes[1],ui32BindingPoint);
+				bformata(glsl, "layout(std140) uniform ConstantBuffer%d {\n\tvec4 data[%d];\n} cb%d;\n", ui32BindingPoint,psOperand->aui32ArraySizes[1],ui32BindingPoint);
 				break;
 			}
 			

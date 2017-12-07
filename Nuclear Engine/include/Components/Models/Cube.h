@@ -4,12 +4,12 @@
 
 namespace NuclearEngine {
 	namespace Components {
+
 		class NEAPI Cube : Model
 		{
 		public:
 			Cube();
-			Cube(API::Texture2D *Diffuse);
-			Cube(Material* mat);
+			Cube(InputSignatures Signature, Material* mat);
 
 			virtual void Draw(API::Shader* shader);
 

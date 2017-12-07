@@ -20,12 +20,10 @@ protected:
 	Components::Skybox* skybox;
 	Components::Cube *cube;
 
-	API::VertexBuffer *CubeVB;
-	API::InputLayout *CubeIL;
 	API::UniformBuffer *LightCubeUBO;
 
-	API::Texture2D *CrateTexture_Diffuse;
-	API::Texture2D *CrateTexture_Specular;
+	API::Texture *CrateTexture_Diffuse;
+	API::Texture *CrateTexture_Specular;
 
 	Components::FlyCamera *Camera;
 
@@ -70,51 +68,6 @@ public:
 		desc.tech = Core::RenderingTechnique::Forward;
 		desc.effect = Core::LightEffects::None;
 		
-		float vertices[] = {
-			// positions          // normals           // texture coords
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-			0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-			0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-			0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-			0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-			0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-			0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-
-			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-			-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-			-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-			0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-			0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-			0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-			0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-			0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-			0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-			0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-			0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-			0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-			0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-			0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-			0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-		};
-
 		float __vertices[] = {
 			-0.5f, -0.5f, -0.5f,
 			0.5f, -0.5f, -0.5f,
@@ -160,35 +113,23 @@ public:
 		};
 
 
-		API::VertexBufferDesc vDesc;
-		vDesc.data = vertices;
-		vDesc.size = sizeof(vertices);
-		vDesc.usage = BufferGPUUsage::Dynamic;
-		vDesc.accessflag = BufferCPUAccess::Default;
-
-		CubeVB = new API::VertexBuffer(vDesc);
-
-		CubeIL = new API::InputLayout();
-		CubeIL->Push("POSITION", 0, DataType::Float3, 8 * sizeof(float), 0);
-		CubeIL->Push("NORMAL", 0, DataType::Float3, 8 * sizeof(float), 3 * sizeof(float));
-		CubeIL->Push("TEXCOORD", 0, DataType::Float2, 8 * sizeof(float), 6 * sizeof(float));
 
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::ToRadians(60.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
 		LampShader->SetUniformBuffer(Camera->GetCBuffer(), 0, ShaderType::Vertex);
 
-		Renderer = new Core::Renderer3D(desc, Camera);
+		Renderer = new Core::Renderer3D(desc);
 		Renderer->AddLight(&dirlight);
 		Renderer->AddLight(&flashlight);
 		Renderer->AddLight(&pointlight1);
 		Renderer->AddLight(&pointlight2);
 		Renderer->AddLight(&pointlight3);
 		Renderer->AddLight(&pointlight4);
+		Renderer->SetCamera(Camera);
 		Renderer->Bake();
 
-		CubeVB->SetInputLayout(CubeIL, Renderer->GetShader());
-
+		API::VertexBufferDesc vDesc;
 		vDesc.data = __vertices;
 		vDesc.size = sizeof(__vertices);
 		vDesc.usage = BufferGPUUsage::Dynamic;
@@ -196,7 +137,7 @@ public:
 		LampVB = new API::VertexBuffer(vDesc);
 
 		LampIL = new API::InputLayout();
-		LampIL->Push("POSITION", 0, DataType::Float3, 3 * sizeof(float), 0);
+		LampIL->Push("POSITION", 0, DataType::Float3);
 		LampVB->SetInputLayout(LampIL, LampShader);
 
 		std::array<std::string, 6 > filenames = {
@@ -220,17 +161,16 @@ public:
 		Desc.Wrap = TextureWrap::Repeat;
 		Desc.Format = TextureFormat::R8G8B8A8;
 
-		CrateTexture_Diffuse = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
-		CrateTexture_Specular = new API::Texture2D(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
+		CrateTexture_Diffuse = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
+		CrateTexture_Specular = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_specular.png", Desc), Desc);
 
 		Components::Material CubeMat;
 		CubeMat.Diffuse = CrateTexture_Diffuse;
 		CubeMat.Specular = CrateTexture_Specular;
 
-		cube = new Components::Cube(&CubeMat);
+		cube = new Components::Cube(Components::InputSignatures::Position_Normal_Texcoord, &CubeMat);
 
-		//Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
-		
+	
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
@@ -307,21 +247,18 @@ public:
 		CrateTexture_Diffuse->PSBind("NE_Diffuse_Map", Renderer->GetShader(), 0);
 		CrateTexture_Specular->PSBind("NE_Specular_Map", Renderer->GetShader(), 1);
 
-		CubeVB->Bind();
 
 		for (unsigned int i = 0; i < 10; i++)
 		{
 			// calculate the model matrix for each object and pass it to shader before drawing
 			Math::Matrix4 model;
 			model = Math::Translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
-			model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
+			//float angle = 20.0f * i;
+			//model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
 			Camera->SetModelMatrix(model);
 
-			Core::Context::Draw(36);
+			cube->Draw(Renderer->GetShader());
 		}
-
-		CubeVB->Unbind();
 
 		Renderer->GetShader()->Unbind();
 
@@ -352,7 +289,6 @@ public:
 	}
 	void ExitRendering()	// Exit Rendering
 	{
-		delete CubeVB;
 		delete CrateTexture_Diffuse;
 		delete CrateTexture_Specular;
 	}

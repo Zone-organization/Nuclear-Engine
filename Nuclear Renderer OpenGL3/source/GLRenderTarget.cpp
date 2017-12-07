@@ -18,21 +18,21 @@ namespace NuclearRenderer
 
 		i = 0;
 	}
-	void GLRenderTarget::AttachDepthBuffer(NRBTexture2D* texture)
+	void GLRenderTarget::AttachDepthBuffer(NRBTexture* texture)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
+//		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
 	}
-	void GLRenderTarget::AttachStencilBuffer(NRBTexture2D* texture)
+	void GLRenderTarget::AttachStencilBuffer(NRBTexture* texture)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
+		//glFramebufferTexture(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
 	}
-	void GLRenderTarget::AttachDepthStencilBuffer(NRBTexture2D* texture)
+	void GLRenderTarget::AttachDepthStencilBuffer(NRBTexture* texture)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
+		//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
 	}
-	void GLRenderTarget::AttachTexture(NRBTexture2D* texture)
+	void GLRenderTarget::AttachTexture(NRBTexture* texture)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
+		//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
 		i++;
 	}
 	void GLRenderTarget::Bind()

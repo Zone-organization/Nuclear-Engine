@@ -27,7 +27,7 @@ _____________/BOOOM\_____________
 #include <API/IndexBuffer.h>
 #include <API/UniformBuffer.h>
 #include <API/InputLayout.h>
-#include <API/Texture2D.h>
+#include <API/Texture.h>
 #include <API/TextureCube.h>
 #include <API/PipelineState.h>
 #include <API/Shader.h>

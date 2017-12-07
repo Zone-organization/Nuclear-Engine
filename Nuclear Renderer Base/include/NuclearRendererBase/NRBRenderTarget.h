@@ -1,5 +1,5 @@
 #pragma once
-#include <NuclearRendererBase\NRBTexture2D.h>
+#include <NuclearRendererBase\NRBTexture.h>
 namespace NuclearRenderer {
 
 	class NRBRenderTarget
@@ -8,13 +8,13 @@ namespace NuclearRenderer {
 
 		virtual void Delete() = 0;
 
-		virtual void AttachDepthBuffer(NRBTexture2D* texture) = 0;
+		virtual void AttachDepthBuffer(NRBTexture* texture) = 0;
 
-		virtual void AttachStencilBuffer(NRBTexture2D* texture) = 0;
+		virtual void AttachStencilBuffer(NRBTexture* texture) = 0;
 
-		virtual void AttachDepthStencilBuffer(NRBTexture2D* texture) = 0;
+		virtual void AttachDepthStencilBuffer(NRBTexture* texture) = 0;
 
-		virtual void AttachTexture(NRBTexture2D* texture) = 0;
+		virtual void AttachTexture(NRBTexture* texture) = 0;
 
 		virtual void Bind() =0;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <API\Texture2D.h>
+#include <API\Texture.h>
 #include <API\Color.h>
 #include <array>
 namespace NuclearEngine {

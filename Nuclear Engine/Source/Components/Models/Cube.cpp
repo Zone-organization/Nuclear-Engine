@@ -45,49 +45,6 @@ namespace NuclearEngine {
 			Math::Vector3(-0.5f,  0.5f,  0.5f),
 			Math::Vector3(-0.5f,  0.5f, -0.5f),
 		};
-		std::vector<Math::Vector2> UV = {
-			Math::Vector2(0.0f, 0.0f),
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(0.0f, 0.0f),
-
-			Math::Vector2(0.0f, 0.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(0.0f, 0.0f),
-			Math::Vector2(0.0f, 1.0f),
-
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(0.0f, 0.0f),
-
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(0.0f, 0.0f),
-			Math::Vector2(1.0f, 0.0f),
-
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(0.0f, 0.0f),
-
-			Math::Vector2(0.0f, 1.0f),
-			Math::Vector2(1.0f, 1.0f),
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(1.0f, 0.0f),
-			Math::Vector2(0.0f, 0.0f),
-			Math::Vector2(0.0f, 1.0f),
-		};
 		std::vector<Math::Vector3> Normals = {
 			Math::Vector3(0.0f,  0.0f, -1.0f),
 			Math::Vector3(0.0f,  0.0f, -1.0f),
@@ -131,77 +88,116 @@ namespace NuclearEngine {
 			Math::Vector3(0.0f,  1.0f,  0.0f),
 			Math::Vector3(0.0f,  1.0f,  0.0f),
 		};
-	
+		std::vector<Math::Vector2> TexCoords = {
+			Math::Vector2(0.0f, 0.0f),
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(0.0f, 0.0f),
+
+			Math::Vector2(0.0f, 0.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(0.0f, 0.0f),
+			Math::Vector2(0.0f, 1.0f),
+
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(0.0f, 0.0f),
+
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(0.0f, 0.0f),
+			Math::Vector2(1.0f, 0.0f),
+
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(0.0f, 0.0f),
+
+			Math::Vector2(0.0f, 1.0f),
+			Math::Vector2(1.0f, 1.0f),
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(1.0f, 0.0f),
+			Math::Vector2(0.0f, 0.0f),
+			Math::Vector2(0.0f, 1.0f),
+		};
+
 		Cube::Cube()
 		{
-
-			std::vector<Vertex> vertices;
-
-
-			Exceptions::NotImplementedException();
-
-			for (int i = 0; i < Positions.size(); i++)
-			{
-				Vertex vert(Positions[i], Normals[i], UV[i]);
-				vertices.push_back(vert);
-			}
-			MeshTexture _tex;
-			API::Texture2D* Tex;
-			_tex.tex = Tex;
-			_tex.path = nullptr;
-			_tex.type = "texture_diffuse";
-
-			std::vector<MeshTexture> texturebuf;
-			texturebuf.push_back(_tex);
-			cube = new Mesh_NoIndices(vertices, texturebuf);
-
+			Exceptions::NotImplementedException();	
 		}
-		Cube::Cube(API::Texture2D * Diffuse)
+		
+		std::vector<float> ParseInputSignatureForCube(InputSignatures Signature)
 		{
-			
-			std::vector<Vertex> vertices;
-			
-			Exceptions::NotImplementedException();
+			std::vector<float> result;
 
-			for (int i = 0; i < Positions.size(); i++)
+			if (Signature == InputSignatures::Position)
 			{
-				Vertex vert(Positions[i], Normals[i], UV[i]);
-				vertices.push_back(vert);
+				for (int i = 0; i < 36; i++)
+				{
+					result.push_back(Positions[i].x);
+					result.push_back(Positions[i].y);
+					result.push_back(Positions[i].z);
+				}
 			}
-			MeshTexture _tex;
-			_tex.tex = Diffuse;
-			_tex.path = nullptr;
-			_tex.type = "texture_diffuse";
-
-			std::vector<MeshTexture> texturebuf;
-			texturebuf.push_back(_tex);
-			cube = new Mesh_NoIndices(vertices, texturebuf);
+			else if (Signature == InputSignatures::Position_Texcoord)
+			{
+				for (int i = 0; i < 36; i++)
+				{
+					result.push_back(Positions[i].x);
+					result.push_back(Positions[i].y);
+					result.push_back(Positions[i].z);
+					result.push_back(TexCoords[i].x);
+					result.push_back(TexCoords[i].y);
+				}
+			}
+			else if (Signature == InputSignatures::Position_Normal_Texcoord)
+			{
+				for (int i = 0; i < 36; i++)
+				{
+					result.push_back(Positions[i].x);
+					result.push_back(Positions[i].y);
+					result.push_back(Positions[i].z);
+					result.push_back(Normals[i].x);
+					result.push_back(Normals[i].y);
+					result.push_back(Normals[i].z);
+					result.push_back(TexCoords[i].x);
+					result.push_back(TexCoords[i].y);
+				}
+			}
+			return result;
 		}
-		Cube::Cube(Material * mat)
-		{
-			std::vector<Vertex> vertices;
 
-			for (int i = 0; i < Positions.size(); i++)
-			{
-				Vertex vert(Positions[i], Normals[i], UV[i]);
-				vertices.push_back(vert);
-			}
-			MeshTexture _tex;
+		Cube::Cube(InputSignatures Signature, Material * mat)
+		{
+			MaterialTexture _tex;
 			_tex.tex = mat->Diffuse;
 			_tex.path = nullptr;
-			_tex.type = "texture_diffuse";
+			_tex.type = MaterialTextureType::Diffuse;
 			
 
-			std::vector<MeshTexture> texturebuf;
+			std::vector<MaterialTexture> texturebuf;
 			texturebuf.push_back(_tex);
 
-			_tex.tex = mat->Specular;
-			_tex.path = nullptr;
-			_tex.type = "texture_specular";
-
+			if (mat->Specular != nullptr)
+			{
+				_tex.tex = mat->Specular;
+				_tex.path = nullptr;
+				_tex.type = MaterialTextureType::Specular;
+			
 			texturebuf.push_back(_tex);
-
-			cube = new Mesh_NoIndices(vertices, texturebuf);
+			}
+			cube = new Mesh_NoIndices(ParseInputSignatureForCube(Signature), texturebuf, Signature);
 		}
 		void Cube::Draw(API::Shader* shader)
 		{

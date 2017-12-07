@@ -159,7 +159,7 @@
     <ClInclude Include="include\NuclearRendererBase\NRBTextureCube.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBVertexBuffer.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBShader.h" />
-    <ClInclude Include="include\NuclearRendererBase\NRBTexture2D.h" />
+    <ClInclude Include="include\NuclearRendererBase\NRBTexture.h" />
     <ClInclude Include="include\NuclearRendererBase\NRBUniformBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -48,7 +48,7 @@ namespace NuclearEngine {
 		class NEAPI Renderer3D
 		{
 		public:
-			Renderer3D(const Renderer3D_Desc& desc, Components::GenericCamera *cam);
+			Renderer3D(const Renderer3D_Desc& desc);
 
 			void AddLight(Components::DirectionalLight *light);
 			void AddLight(Components::PointLight *light);
@@ -77,7 +77,7 @@ namespace NuclearEngine {
 			Renderer3D_Desc m_desc;
 			Components::GenericCamera *m_cam;
 
-			bool initialized;
+			bool bakedbefore;
 		};
 	}
 }

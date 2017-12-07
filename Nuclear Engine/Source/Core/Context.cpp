@@ -4,7 +4,7 @@
 #include <NuclearRendererBase\NRBVertexBuffer.h>
 #include <NuclearRendererBase\NRBIndexBuffer.h>
 #include <NuclearRendererBase\NRBUniformBuffer.h>
-#include <NuclearRendererBase\NRBTexture2D.h>
+#include <NuclearRendererBase\NRBTexture.h>
 #include <NuclearRendererBase\NRBShader.h>
 #include <NuclearRendererOGL3\GLContext.h>
 #include <NuclearRendererDX11\DX11Context.h>
@@ -113,9 +113,9 @@ namespace NuclearEngine
 			return ctx->ConstructUniformBuffer(param);
 		}
 
-		NRBTexture2D * Context::ConstructTexture2D(NRBTexture2D * param)
+		NRBTexture * Context::ConstructTexture(NRBTexture * param)
 		{
-			return ctx->ConstructTexture2D(param);
+			return ctx->ConstructTexture(param);
 		}
 
 		NuclearRenderer::NRBPipelineState * Context::ConstructPipelineState(NuclearRenderer::NRBPipelineState * param)

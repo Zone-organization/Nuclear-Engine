@@ -1,7 +1,7 @@
 #pragma once
 #include <Math\Math.h>
 #include <API\Shader.h>
-#include <API\Texture2D.h>
+#include <API\Texture.h>
 #include <API\VertexBuffer.h>
 #include <API\IndexBuffer.h>
 #include <vector>
@@ -9,13 +9,20 @@
 namespace NuclearEngine {
 
 	namespace Components {
-		struct Vertex {
-			Vertex(Math::Vector3 pos, Math::Vector3 norm, Math::Vector2 uv)
+		enum class NEAPI InputSignatures {
+			Position,
+			Position_Texcoord,
+			Position_Normal_Texcoord
+		};
+		
+		struct Vertex_PNT {
+			Vertex_PNT(Math::Vector3 pos, Math::Vector3 norm, Math::Vector2 uv)
 			{
 				Position = pos;
 				Normal = norm;
 				TexCoords = uv;
 			}
+		
 			// position
 			Math::Vector3 Position;
 			// normal
@@ -23,34 +30,68 @@ namespace NuclearEngine {
 			// texCoords
 			Math::Vector2 TexCoords;
 		};
+		struct Vertex_PT {
+			Vertex_PT(Math::Vector3 pos, Math::Vector2 uv)
+			{
+				Position = pos;
+				TexCoords = uv;
+			}
 
-		struct MeshTexture {
-			API::Texture2D *tex;
-			const char* type;
+			// position
+			Math::Vector3 Position;
+			// texCoords
+			Math::Vector2 TexCoords;
+		};
+		struct Vertex_P {
+			Vertex_P(Math::Vector3 pos)
+			{
+				Position = pos;
+			}
+			
+			// position
+			Math::Vector3 Position;
+		};
+		
+		enum class MaterialTextureType 
+		{
+			Diffuse,
+			Specular
+		};
+
+		struct MaterialTexture {
+			API::Texture *tex;
+			MaterialTextureType type;
 			const char* path;
 		};
 
 		struct Material 
 		{
-			API::Texture2D *Diffuse;
-			API::Texture2D *Specular;
+			API::Texture *Diffuse = nullptr;
+			API::Texture *Specular = nullptr;
 		};
 
 
 		class NEAPI Mesh_NoIndices {
 		public:	
 			Mesh_NoIndices();
-			Mesh_NoIndices(std::vector<Vertex> vertices, std::vector<MeshTexture> textures);
+			Mesh_NoIndices(std::vector<float> vertices, std::vector<MaterialTexture> textures, InputSignatures Signature);
 
 			// render the mesh
 			virtual void Draw(API::Shader* shader);
 
 		protected:
-			API::VertexBuffer *VBO;
-			/*  Mesh Data  */
-			std::vector<Vertex> vertices;
-			std::vector<MeshTexture> textures;
+			void PreCalculate_TextureBindings();
 
+			API::VertexBuffer *VBO;
+			std::vector<float> vertices;
+			std::vector<MaterialTexture> textures;		
+			std::vector<const char*> TextureBindings;
+
+			// bind appropriate textures
+			unsigned int diffuseNr = 1;
+			unsigned int specularNr = 1;
+
+			InputSignatures signature;
 			bool RenderInit;
 		};
 
@@ -58,7 +99,7 @@ namespace NuclearEngine {
 		public:
 
 			/*  Mesh Data  */
-			Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures);
+			Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<MaterialTexture> textures, InputSignatures Signature);
 
 			// render the mesh
 			virtual void Draw(API::Shader* shader) override;

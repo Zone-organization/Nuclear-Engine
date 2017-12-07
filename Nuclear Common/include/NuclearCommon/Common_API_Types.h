@@ -81,14 +81,16 @@ namespace NuclearEngine {
 		ShaderLanguage Language;
 	};
 
-	enum class TextureFormat { R8 = 8, R8G8 = 16, R8G8B8 = 24, R8G8B8A8 = 32, Depth, Stencil, Depth_Stencil };
+	enum class TextureFormat { R8 = 8, R8G8 = 16, R8G8B8 = 24, R8G8B8A8 = 32};
 	enum class TextureWrap { Repeat, MirroredReapeat, ClampToEdge, ClampToBorder };
 	enum class TextureFilter { Point2D, Linear2D, Point, Bilinear, Trilinear };
+	enum class TextureType { Texture1D, Texture2D, Texture3D };
 	enum class AnisotropicFilter { None, AnisotropicX2, AnisotropicX4, AnisotropicX8, AnisotropicX16 };
 	enum class RenderTargetPrecision { Float, Half_Float, Unsigned_Int };
 
 	struct Texture_Desc
 	{
+		TextureType Type = TextureType::Texture2D;
 		TextureFormat Format = TextureFormat::R8G8B8A8;
 		TextureWrap Wrap = TextureWrap::ClampToEdge;
 		TextureFilter Filter = TextureFilter::Point;
@@ -108,6 +110,7 @@ namespace NuclearEngine {
 	struct Texture_Data {
 		int width;
 		int height;
+		int depth;
 		int no_of_components;
 		unsigned char *databuf;
 	};

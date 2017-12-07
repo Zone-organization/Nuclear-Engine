@@ -1,4 +1,5 @@
-﻿  DX11Context.cpp
+﻿  DX11TextureCube.cpp
+  DX11Context.cpp
 e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11uniformbuffer.h(8): warning C4275: non dll-interface class 'NuclearRenderer::NRBUniformBuffer' used as base for dll-interface class 'NuclearRenderer::DX11UniformBuffer'
   e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(15): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
   e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11uniformbuffer.h(7): note: see declaration of 'NuclearRenderer::DX11UniformBuffer'
@@ -8,5 +9,25 @@ e:\zone\nuclear-project\nuclear renderer directx11\source\dx11context.cpp(451): 
 e:\zone\nuclear-project\nuclear renderer directx11\source\dx11context.cpp(452): warning C4244: '=': conversion from 'int' to 'FLOAT', possible loss of data
 e:\zone\nuclear-project\nuclear renderer directx11\source\dx11context.cpp(453): warning C4244: '=': conversion from 'int' to 'FLOAT', possible loss of data
 e:\zone\nuclear-project\nuclear renderer directx11\source\dx11context.cpp(454): warning C4244: '=': conversion from 'int' to 'FLOAT', possible loss of data
+  Generating Code...
+  Compiling...
+  DX11Texture.cpp
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11texture.h(28): warning C4251: 'NuclearRenderer::DX11Texture::tex1D': class 'Microsoft::WRL::ComPtr<ID3D11Texture1D>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Texture'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11Texture1D>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11texture.h(29): warning C4251: 'NuclearRenderer::DX11Texture::tex2D': class 'Microsoft::WRL::ComPtr<ID3D11Texture2D>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Texture'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11Texture2D>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11texture.h(30): warning C4251: 'NuclearRenderer::DX11Texture::tex3D': class 'Microsoft::WRL::ComPtr<ID3D11Texture3D>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Texture'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11Texture3D>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11texture.h(31): warning C4251: 'NuclearRenderer::DX11Texture::resourceView': class 'Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Texture'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>'
+e:\zone\nuclear-project\nuclear renderer directx11\include\nuclearrendererdx11\dx11texture.h(32): warning C4251: 'NuclearRenderer::DX11Texture::samplerState': class 'Microsoft::WRL::ComPtr<ID3D11SamplerState>' needs to have dll-interface to be used by clients of class 'NuclearRenderer::DX11Texture'
+  c:\program files\windows kits\10\include\10.0.15063.0\winrt\wrl\client.h(202): note: see declaration of 'Microsoft::WRL::ComPtr<ID3D11SamplerState>'
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  DX11VertexBuffer.cpp
+  DX11UniformBuffer.cpp
+  DX11Shader.cpp
+  DX11PipelineState.cpp
+  DX11IndexBuffer.cpp
      Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.DirectX11.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.DirectX11.exp
   Nuclear Renderer DirectX11.vcxproj -> E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.DirectX11.dll

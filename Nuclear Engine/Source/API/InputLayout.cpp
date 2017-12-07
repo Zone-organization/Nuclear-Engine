@@ -15,9 +15,9 @@ namespace NuclearEngine
 				delete layout;
 			}
 
-			void InputLayout::Push(const char* SemanticName, int SemanticIndex, DataType dataType, unsigned int stride, unsigned int offset)
+			void InputLayout::Push(const char* SemanticName, int SemanticIndex, DataType dataType)
 			{
-				return layout->Push(SemanticName, SemanticIndex, dataType, stride, offset);
+				return layout->Push(SemanticName, SemanticIndex, dataType);
 			}
 
 			NuclearRenderer::NRBInputLayout * InputLayout::GetBase()

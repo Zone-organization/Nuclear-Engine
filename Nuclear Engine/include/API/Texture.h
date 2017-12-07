@@ -4,18 +4,18 @@
 
 namespace NuclearRenderer
 {
-	class NRBTexture2D;
+	class NRBTexture;
 }
 
 namespace NuclearEngine {
 	namespace API {
 		class Shader;
 
-		class NEAPI Texture2D
+		class NEAPI Texture
 		{
 		public:
-			Texture2D(const Texture_Data& TexData, const Texture_Desc& Desc);
-			~Texture2D();
+			Texture(const Texture_Data& TexData, const Texture_Desc& Desc);
+			~Texture();
 			
 			void VSBind(unsigned int index);
 			void VSBind(const char *samplerName, API::Shader *shader, unsigned int index);
@@ -25,10 +25,10 @@ namespace NuclearEngine {
 			void PSBind(const char *samplerName, API::Shader *shader, unsigned int index);
 
 			Texture_Data& GetTextureData() { return Data; }
-			NuclearRenderer::NRBTexture2D *GetBase();
+			NuclearRenderer::NRBTexture *GetBase();
 		protected:
 			Texture_Data Data;
-			NuclearRenderer::NRBTexture2D *tex;
+			NuclearRenderer::NRBTexture *tex;
 		};
 	}
 }

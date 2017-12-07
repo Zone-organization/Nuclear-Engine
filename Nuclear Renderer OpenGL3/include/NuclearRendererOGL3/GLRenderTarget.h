@@ -13,13 +13,13 @@ namespace NuclearRenderer
 
 		void Delete() override;
 
-		void AttachDepthBuffer(NRBTexture2D* texture) override;
+		void AttachDepthBuffer(NRBTexture* texture) override;
 
-		void AttachStencilBuffer(NRBTexture2D* texture) override;
+		void AttachStencilBuffer(NRBTexture* texture) override;
 
-		void AttachDepthStencilBuffer(NRBTexture2D* texture) override;
+		void AttachDepthStencilBuffer(NRBTexture* texture) override;
 
-		void AttachTexture(NRBTexture2D* texture) override;
+		void AttachTexture(NRBTexture* texture) override;
 
 		void Bind() override;
 
