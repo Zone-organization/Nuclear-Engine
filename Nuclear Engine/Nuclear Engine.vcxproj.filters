@@ -33,6 +33,7 @@
     <ClInclude Include="include\API\TextureCube.h" />
     <ClInclude Include="include\API\PipelineState.h" />
     <ClInclude Include="include\API\Texture.h" />
+    <ClInclude Include="include\Shading\Material.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />

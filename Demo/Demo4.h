@@ -88,9 +88,6 @@ public:
 
 		cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
 
-		model = new Components::Model();
-		model->loadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", Components::InputSignatures::Position_Texcoord);
-
 		Core::Context::EnableDepthBuffer(true);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

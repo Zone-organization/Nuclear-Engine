@@ -169,7 +169,7 @@
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Build\;..\Deps\assimp\Libs;..\Deps\OpenAL\libs;..\Deps\GLEW\Libs;..\Deps\FreetypeLib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclear.Common.lib;Nuclear.Platform.lib;Nuclear.Renderer.DirectX11.lib;Nuclear.Renderer.OpenGL3.lib;Nuclear.Shader.Cross.Compiler.lib;Assimp.lib;winmm.lib;Freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Nuclear.Common.lib;Nuclear.Platform.lib;Nuclear.Renderer.DirectX11.lib;Nuclear.Renderer.OpenGL3.lib;Nuclear.Shader.Cross.Compiler.lib;winmm.lib;Freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -363,6 +363,7 @@
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\ResourceManager\ResourceManager.h" />
+    <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

@@ -121,8 +121,58 @@ namespace NuclearEngine {
 
 					blob.glslsourcecode = glshader.sourceCode;
 
-					//std::cout << blob.glslsourcecode;
+					for (unsigned int i; i < glshader.reflection.psResourceBindings.size(); i++)
+					{
+						if (glshader.reflection.psResourceBindings.at(i).eType == RTYPE_TEXTURE)
+						{
+							ReflectedTextureDesc tex;
+							tex.Name = glshader.reflection.psResourceBindings.at(i).name.c_str();
+
+							switch (glshader.reflection.psResourceBindings.at(i).eDimension)
+							{
+							case REFLECT_RESOURCE_DIMENSION_TEXTURE1D:
+								blob.reflection.textures.at(i).type == ReflectedTextureType::Texture1D;
+								break;
+							case REFLECT_RESOURCE_DIMENSION_TEXTURE2D:
+								blob.reflection.textures.at(i).type == ReflectedTextureType::Texture2D;
+								break;
+							case REFLECT_RESOURCE_DIMENSION_TEXTURE3D:
+								blob.reflection.textures.at(i).type == ReflectedTextureType::Texture3D;
+								break;
+							case REFLECT_RESOURCE_DIMENSION_TEXTURECUBE:
+								blob.reflection.textures.at(i).type == ReflectedTextureType::TextureCube;
+								break;
+							}
+						}
+					}
+
 					blob.Language = ShaderLanguage::GLSL;
+				}
+				else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				{
+					ID3D11ShaderReflection* pReflector = NULL;
+					D3D11_SHADER_INPUT_BIND_DESC Desc;
+					D3D11_SHADER_DESC shaderdesc;
+
+					D3DReflect(blob.GetBufferPointer(),
+						blob.GetBufferSize(),
+						IID_ID3D11ShaderReflection, (void**)&pReflector);
+					pReflector->GetDesc(&shaderdesc);
+
+					//for (UINT i; i < shaderdesc.BoundResources; i++)
+					//{
+					//	pReflector->
+					//}
+					//if (type == ShaderType::Vertex)
+					//{										
+
+					//	if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
+					//	{
+					//		pReflector->Release();
+					//		return Desc.BindPoint;
+					//	}
+
+					//}
 				}
 			}	
 			else if (language == ShaderLanguage::GLSL)

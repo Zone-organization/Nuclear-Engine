@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 //To be used with a client
 namespace NuclearEngine {
@@ -63,6 +64,18 @@ namespace NuclearEngine {
 		Vertex_Pixel_Geometry
 	};
 
+	enum class ReflectedTextureType { Texture1D, Texture2D, Texture3D, TextureCube };
+
+	struct ReflectedTextureDesc {
+		const char* Name;
+		ReflectedTextureType type;
+	};
+
+	struct ShaderReflection
+	{
+		std::vector<ReflectedTextureDesc> textures;
+	};
+
 
 	struct BinaryShaderBlob {
 		void* GetBufferPointer()
@@ -79,6 +92,7 @@ namespace NuclearEngine {
 
 		std::string glslsourcecode;
 		ShaderLanguage Language;
+		ShaderReflection reflection;
 	};
 
 	enum class TextureFormat { R8 = 8, R8G8 = 16, R8G8B8 = 24, R8G8B8A8 = 32};
