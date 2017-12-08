@@ -332,9 +332,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\API\PipelineState.h" />
+    <ClInclude Include="include\API\DepthStencilState.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
-    <ClInclude Include="include\API\TextureCube.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\Components\Models\Cube.h" />
@@ -368,9 +367,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Color.cpp" />
-    <ClCompile Include="Source\API\PipelineState.cpp" />
+    <ClCompile Include="Source\API\DepthStencilState.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
-    <ClCompile Include="Source\API\TextureCube.cpp" />
     <ClCompile Include="Source\API\UniformBuffer.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
@@ -393,6 +391,7 @@
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
+    <ClCompile Include="Source\Shading\Material.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

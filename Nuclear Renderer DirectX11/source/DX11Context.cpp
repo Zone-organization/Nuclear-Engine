@@ -4,9 +4,8 @@
 #include <NuclearRendererDX11\DX11VertexBuffer.h>
 #include <NuclearRendererDX11\DX11IndexBuffer.h>
 #include <NuclearRendererDX11\DX11UniformBuffer.h>
-#include <NuclearRendererDX11\DX11PipelineState.h>
+#include <NuclearRendererDX11\DX11DepthStencilState.h>
 #include <NuclearRendererDX11\DX11Texture.h>
-#include <NuclearRendererDX11\DX11TextureCube.h>
 #include <NuclearRendererDX11\DX11Shader.h>
 
 #include <iostream>
@@ -483,9 +482,9 @@ namespace NuclearRenderer {
 		return nullptr;
 	}
 
-	NRBPipelineState * DX11Context::ConstructPipelineState(NRBPipelineState * param)
+	NRBDepthStencilState * DX11Context::ConstructDepthStencilState(NRBDepthStencilState * param)
 	{
-		param = new NuclearRenderer::DX11PipelineState();
+		param = new NuclearRenderer::DX11DepthStencilState();
 
 		return param;
 	}
@@ -493,13 +492,6 @@ namespace NuclearRenderer {
 	NRBTexture * DX11Context::ConstructTexture(NRBTexture * param)
 	{
 		param = new NuclearRenderer::DX11Texture();
-
-		return param;
-	}
-
-	NRBTextureCube * DX11Context::ConstructTextureCube(NRBTextureCube * param)
-	{
-		param = new NuclearRenderer::DX11TextureCube();
 
 		return param;
 	}

@@ -1,11 +1,18 @@
-﻿  GLPipelineState.cpp
+﻿  GLContext.cpp
+e:\zone\nuclear-project\nuclear renderer opengl3\include\nuclearrendererogl3\gluniformbuffer.h(8): warning C4275: non dll-interface class 'NuclearRenderer::NRBUniformBuffer' used as base for dll-interface class 'NuclearRenderer::GLUniformBuffer'
+  e:\zone\nuclear-project\nuclear renderer base\include\nuclearrendererbase\nrbuniformbuffer.h(15): note: see declaration of 'NuclearRenderer::NRBUniformBuffer'
+  e:\zone\nuclear-project\nuclear renderer opengl3\include\nuclearrendererogl3\gluniformbuffer.h(7): note: see declaration of 'NuclearRenderer::GLUniformBuffer'
+  GLTexture.cpp
+  GLDepthStencilState.cpp
   Generating Code...
   Compiling...
+  Win32_OGL.cpp
+e:\zone\nuclear-project\nuclear renderer opengl3\source\platform\win32\win32_ogl.cpp(46): warning C4302: 'type cast': truncation from 'LPWSTR' to 'WORD'
+e:\zone\nuclear-project\nuclear renderer opengl3\source\platform\win32\win32_ogl.cpp(47): warning C4302: 'type cast': truncation from 'LPWSTR' to 'WORD'
   GLVertexBuffer.cpp
-  GLTextureCube.cpp
-  GLTexture.cpp
   GLShader.cpp
 e:\zone\nuclear-project\nuclear renderer opengl3\source\glshader.cpp(88): warning C4101: 'infoLog': unreferenced local variable
+  GLRenderTarget.cpp
   Generating Code...
      Creating library E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.OpenGL3.lib and object E:\Zone\Nuclear-Project\Build\Nuclear.Renderer.OpenGL3.exp
 MSVCRTD.lib(initializers.obj) : warning LNK4098: defaultlib 'libcmt.lib' conflicts with use of other libs; use /NODEFAULTLIB:library

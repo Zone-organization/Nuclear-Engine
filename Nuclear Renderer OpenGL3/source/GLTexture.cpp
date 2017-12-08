@@ -156,6 +156,103 @@ namespace NuclearRenderer {
 		glBindTexture(type, 0);
 	}
 
+	void GLTexture::Create(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc)
+	{
+		glGenTextures(1, &textureID);
+		type = GL_TEXTURE_CUBE_MAP;
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+		for (GLuint i = 0; i < data.size(); i++)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+				GetGLTextureFormat(Desc.Format),
+				data[i].width,
+				data[i].height,
+				0,
+				GetGLTextureFormat(Desc.Format),
+				GL_UNSIGNED_BYTE,
+				data[i].databuf);
+		}
+		switch (Desc.Filter)
+		{
+		case TextureFilter::Point2D:
+		{
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			break;
+		}
+		case TextureFilter::Linear2D:
+		{
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			break;
+		}
+		case TextureFilter::Point:
+		{
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			break;
+		}
+		case TextureFilter::Bilinear:
+		{
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			break;
+		}
+		case TextureFilter::Trilinear:
+		{
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			break;
+		}
+
+		default:
+			break;
+		}
+
+		if (ContextDesc::SupportAnisotropic == true)
+		{
+			switch (Desc.AnisoFilter)
+			{
+			case AnisotropicFilter::AnisotropicX2:
+			{
+				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(2.0f, ContextDesc::MaxAnisotropicLevel));
+
+				break;
+			}
+			case AnisotropicFilter::AnisotropicX4:
+			{
+				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(4.0f, ContextDesc::MaxAnisotropicLevel));
+				break;
+			}
+			case AnisotropicFilter::AnisotropicX8:
+			{
+				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(8.0f, ContextDesc::MaxAnisotropicLevel));
+				break;
+			}
+			case AnisotropicFilter::AnisotropicX16:
+			{
+				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(16.0f, ContextDesc::MaxAnisotropicLevel));
+				//glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, -10.4f);
+				break;
+			}
+			default:
+				break;
+			}
+		}
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap));
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc.Wrap));
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc.Wrap));
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+	}
+
 	void GLTexture::Delete()
 	{
 		glDeleteTextures(1, &textureID);

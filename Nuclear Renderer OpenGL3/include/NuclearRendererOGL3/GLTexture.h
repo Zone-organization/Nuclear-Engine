@@ -9,6 +9,7 @@ namespace NuclearRenderer {
 		GLTexture();
 
 		void Create(NuclearEngine::Texture_Data TexData, NuclearEngine::Texture_Desc Desc) override;
+		void Create(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc) override;
 		void Delete() override;
 		void VSBind(unsigned int index) override;
 		void VSBind(const char *samplerName, NRBShader *shader, unsigned int index) override;

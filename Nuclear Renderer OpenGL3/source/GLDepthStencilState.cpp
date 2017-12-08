@@ -1,5 +1,5 @@
 #include <NuclearCommon\Common_API_Types.h>
-#include "..\include\NuclearRendererOGL3\GLPipelineState.h"
+#include "..\include\NuclearRendererOGL3\GLDepthStencilState.h"
 
 using namespace NuclearEngine;
 
@@ -21,10 +21,10 @@ namespace NuclearRenderer {
 		}
 	}
 
-	GLPipelineState::GLPipelineState()
+	GLDepthStencilState::GLDepthStencilState()
 	{
 	}
-	void GLPipelineState::Create(NuclearEngine::PipelineStateDesc type)
+	void GLDepthStencilState::Create(NuclearEngine::DepthStencilStateDesc type)
 	{
 		this->desc = &type;
 		if (desc->DepthStencilEnabled == true)
@@ -34,10 +34,10 @@ namespace NuclearRenderer {
 
 		}
 	}
-	void GLPipelineState::Delete()
+	void GLDepthStencilState::Delete()
 	{
 	}
-	void GLPipelineState::Bind_DepthStencil()
+	void GLDepthStencilState::Bind()
 	{
 		//glDepthMask(depthmask);
 		glDepthFunc(depthfunc);
@@ -46,7 +46,7 @@ namespace NuclearRenderer {
 		//glStencilMask(facesmask);
 
 	}
-	void GLPipelineState::Unbind_DepthStencil()
+	void GLDepthStencilState::Unbind()
 	{
 		//glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LESS);

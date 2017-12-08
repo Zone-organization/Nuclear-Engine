@@ -153,12 +153,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\NuclearRendererOGL3\GLPipelineState.h" />
+    <ClInclude Include="include\NuclearRendererOGL3\GLDepthStencilState.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLIndexBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLRenderTarget.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLShader.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLTexture.h" />
-    <ClInclude Include="include\NuclearRendererOGL3\GLTextureCube.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLUniformBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLVertexBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GL_Common.h" />
@@ -167,10 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\GLIndexBuffer.cpp" />
-    <ClCompile Include="source\GLPipelineState.cpp" />
+    <ClCompile Include="source\GLDepthStencilState.cpp" />
     <ClCompile Include="source\GLRenderTarget.cpp" />
     <ClCompile Include="source\GLTexture.cpp" />
-    <ClCompile Include="source\GLTextureCube.cpp" />
     <ClCompile Include="source\GLUniformBuffer.cpp" />
     <ClCompile Include="source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="source\GLContext.cpp" />

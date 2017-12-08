@@ -39,7 +39,7 @@ namespace NuclearEngine {
 			{
 				Application::Create(WindowTitle, width, height, false);
 				Log->Info("-------------------------- -Nuclear Engine- --------------------------\n");
-				Log->Info("[Engine] Starting Engine... ");
+				Log->Info("[Engine] Starting Engine...\n");
 				Log->Info("[Engine] Version: ");
 				Log->Info(MajorVersion);
 				Log->Info(".");

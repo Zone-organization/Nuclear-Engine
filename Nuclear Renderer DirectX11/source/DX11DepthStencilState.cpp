@@ -1,4 +1,4 @@
-#include "..\include\NuclearRendererDX11\DX11PipelineState.h"
+#include "..\include\NuclearRendererDX11\DX11DepthStencilState.h"
 #include <NuclearCommon\Common_API_Types.h>
 #include <NuclearRendererDX11\DX11Context.h>
 
@@ -40,10 +40,10 @@ namespace NuclearRenderer {
 		}
 	}
 
-	DX11PipelineState::DX11PipelineState()
+	DX11DepthStencilState::DX11DepthStencilState()
 	{
 	}
-	void DX11PipelineState::Create(PipelineStateDesc type)
+	void DX11DepthStencilState::Create(DepthStencilStateDesc type)
 	{
 		desc = &type;
 
@@ -67,15 +67,15 @@ namespace NuclearRenderer {
 			DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &DS_State);
 		}
 	}
-	void DX11PipelineState::Delete()
+	void DX11DepthStencilState::Delete()
 	{
 		DS_State.Reset();
 	}
-	void DX11PipelineState::Bind_DepthStencil()
+	void DX11DepthStencilState::Bind()
 	{
 		DX11Context::GetContext()->OMSetDepthStencilState(DS_State.Get(), 0);
 	}
-	void DX11PipelineState::Unbind_DepthStencil()
+	void DX11DepthStencilState::Unbind()
 	{
 		DX11Context::GetContext()->OMSetDepthStencilState(NULL, 0);
 	}

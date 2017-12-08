@@ -1,5 +1,6 @@
 #pragma once
 #include <Components\Model.h>
+#include <Shading\Material.h>
 namespace NuclearEngine {
 	namespace Components {
 
@@ -7,7 +8,7 @@ namespace NuclearEngine {
 		{
 		public:
 			Cube();
-			Cube(InputSignatures Signature, Material* mat);
+			Cube(InputSignatures Signature, Shading::Material* mat);
 
 			virtual void Draw(API::Shader* shader);
 

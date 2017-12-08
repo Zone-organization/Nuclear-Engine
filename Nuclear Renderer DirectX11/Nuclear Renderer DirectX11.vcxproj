@@ -155,10 +155,9 @@
   <ItemGroup>
     <ClInclude Include="include\NuclearRendererDX11\DX11Context.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11IndexBuffer.h" />
-    <ClInclude Include="include\NuclearRendererDX11\DX11PipelineState.h" />
+    <ClInclude Include="include\NuclearRendererDX11\DX11DepthStencilState.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Shader.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Texture.h" />
-    <ClInclude Include="include\NuclearRendererDX11\DX11TextureCube.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11UniformBuffer.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11VertexBuffer.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Common.h" />
@@ -167,10 +166,9 @@
   <ItemGroup>
     <ClCompile Include="source\DX11Context.cpp" />
     <ClCompile Include="source\DX11IndexBuffer.cpp" />
-    <ClCompile Include="source\DX11PipelineState.cpp" />
+    <ClCompile Include="source\DX11DepthStencilState.cpp" />
     <ClCompile Include="source\DX11Shader.cpp" />
     <ClCompile Include="source\DX11Texture.cpp" />
-    <ClCompile Include="source\DX11TextureCube.cpp" />
     <ClCompile Include="source\DX11UniformBuffer.cpp" />
     <ClCompile Include="source\DX11VertexBuffer.cpp" />
   </ItemGroup>

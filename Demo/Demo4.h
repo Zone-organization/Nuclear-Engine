@@ -79,14 +79,15 @@ public:
 		Desc.Filter = TextureFilter::Trilinear;
 		Desc.Wrap = TextureWrap::Repeat;
 		Desc.Format = TextureFormat::R8G8B8A8;
+		Desc.Type = TextureType::Texture2D;
 
 		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
 
 
-		Components::Material CubeMat;
-		CubeMat.Diffuse = WoodenBoxTex;
+	//	Components::Material CubeMat;
+	//	CubeMat.Diffuse = WoodenBoxTex;
 
-		cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
+	//	cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
 
 		Core::Context::EnableDepthBuffer(true);
 
@@ -136,9 +137,9 @@ public:
 
 	 	CubeShader->Bind();
 
-		cube->Draw(CubeShader);
+	//	cube->Draw(CubeShader);
 
-		model->Draw(CubeShader);
+		//model->Draw(CubeShader);
 
 		CubeShader->Unbind();
 

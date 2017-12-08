@@ -34,6 +34,11 @@ namespace NuclearRenderer {
 		}
 	}
 
+	void DX11Texture::Create(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc)
+	{
+		this->CreateCube(data, Desc);
+	}
+
 	void DX11Texture::Delete()
 	{
 		tex1D.Reset();
@@ -271,6 +276,53 @@ namespace NuclearRenderer {
 	{
 		//TODO
 		return;
+	}
+	void DX11Texture::CreateCube(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc)
+	{
+		D3D11_TEXTURE2D_DESC texDesc;
+		ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
+		
+		texDesc.Format = GetDXTextureFormat(Desc.Format);
+		texDesc.Usage = D3D11_USAGE_DEFAULT;
+		texDesc.SampleDesc.Count = 1;
+		texDesc.SampleDesc.Quality = 0;
+		texDesc.CPUAccessFlags = 0;
+		texDesc.ArraySize = 6;
+		texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+		if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
+		{
+			texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			texDesc.MipLevels = 1;
+		}
+		else
+		{
+			texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+			texDesc.MipLevels = 10;
+		}
+
+		D3D11_SUBRESOURCE_DATA subData[6];
+		for (unsigned int i = 0; i < data.size(); i++)
+		{
+			texDesc.Width = data[i].width;
+			texDesc.Height = data[i].height;
+			subData[i].pSysMem = data[i].databuf;
+			subData[i].SysMemPitch = data[i].width * 4;
+			subData[i].SysMemSlicePitch = 0;
+		}
+
+		if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, &subData[0], &tex2D)))
+		{
+			NuclearCommon::Log->Error("[DirectX] TextureCube Creation Failed!\n");
+		}
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		srvDesc.Format = texDesc.Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+		srvDesc.TextureCube.MipLevels = texDesc.MipLevels;
+		srvDesc.TextureCube.MostDetailedMip = 0;
+
+		DX11Context::GetDevice()->CreateShaderResourceView(tex2D.Get(), &srvDesc, &resourceView);
 	}
 	DXGI_FORMAT GetDXTextureFormat(TextureFormat format)
 	{

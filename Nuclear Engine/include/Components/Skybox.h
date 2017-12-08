@@ -2,9 +2,9 @@
 #include <vector>
 #include <API/VertexBuffer.h>
 #include <API/IndexBuffer.h>
-#include <API/TextureCube.h>
+#include <API/Texture.h>
 #include <API/InputLayout.h>
-#include <API/PipelineState.h>
+#include <API/DepthStencilState.h>
 #include <Core/FileSystem.h>
 #include <Components\GenericCamera.h>
 #include <NE_Common.h>
@@ -19,9 +19,9 @@ namespace NuclearEngine
 			API::Shader *shader;
 			API::VertexBuffer *vertexBuffer;
 			API::InputLayout *vertexBufferLayout;
-			API::TextureCube *texcube;
+			API::Texture *texcube;
 			Components::GenericCamera* _CameraCbuffer;
-			API::PipelineState* cubemapstate;
+			API::DepthStencilState* cubemapstate;
 		public:
 			Skybox(Components::GenericCamera* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6>);
 			~Skybox();

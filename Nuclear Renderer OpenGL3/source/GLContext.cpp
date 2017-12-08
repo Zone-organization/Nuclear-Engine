@@ -3,9 +3,8 @@
 #include <NuclearRendererOGL3\GLIndexBuffer.h>
 #include <NuclearRendererOGL3\GLUniformBuffer.h>
 #include <NuclearRendererOGL3\GLRenderTarget.h>
-#include <NuclearRendererOGL3\GLPipelineState.h>
+#include <NuclearRendererOGL3\GLDepthStencilState.h>
 #include <NuclearRendererOGL3\GLTexture.h>
-#include <NuclearRendererOGL3\GLTextureCube.h>
 #include <NuclearRendererOGL3\GLShader.h>
 #include "Platform\Win32\Win32_OGL.h"
 #include <NuclearCommon\Utilities\Logger.h>
@@ -139,9 +138,9 @@ namespace NuclearRenderer
 		return param;
 	}
 
-	NRBPipelineState * GLContext::ConstructPipelineState(NRBPipelineState * param)
+	NRBDepthStencilState * GLContext::ConstructDepthStencilState(NRBDepthStencilState * param)
 	{
-		param = new NuclearRenderer::GLPipelineState();
+		param = new NuclearRenderer::GLDepthStencilState();
 
 		return param; 
 	}
@@ -153,12 +152,6 @@ namespace NuclearRenderer
 		return param;
 	}
 
-	NRBTextureCube * GLContext::ConstructTextureCube(NRBTextureCube * param)
-	{
-		param = new NuclearRenderer::GLTextureCube();
-
-		return param;
-	}
 
 	NRBShader* GLContext::ConstructShader(NRBShader * param)
 	{

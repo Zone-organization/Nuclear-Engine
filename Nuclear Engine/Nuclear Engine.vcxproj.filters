@@ -30,10 +30,9 @@
     <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\Components\Models\Cube.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
-    <ClInclude Include="include\API\TextureCube.h" />
-    <ClInclude Include="include\API\PipelineState.h" />
     <ClInclude Include="include\API\Texture.h" />
     <ClInclude Include="include\Shading\Material.h" />
+    <ClInclude Include="include\API\DepthStencilState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -59,8 +58,8 @@
     <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
-    <ClCompile Include="Source\API\TextureCube.cpp" />
-    <ClCompile Include="Source\API\PipelineState.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
+    <ClCompile Include="Source\Shading\Material.cpp" />
+    <ClCompile Include="Source\API\DepthStencilState.cpp" />
   </ItemGroup>
 </Project>

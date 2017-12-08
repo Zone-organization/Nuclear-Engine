@@ -15,6 +15,8 @@ namespace NuclearEngine {
 		{
 		public:
 			Texture(const Texture_Data& TexData, const Texture_Desc& Desc);
+			//Create Texture Cube
+			Texture(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc);
 			~Texture();
 			
 			void VSBind(unsigned int index);
@@ -24,10 +26,8 @@ namespace NuclearEngine {
 			void PSBind(unsigned int index);
 			void PSBind(const char *samplerName, API::Shader *shader, unsigned int index);
 
-			Texture_Data& GetTextureData() { return Data; }
 			NuclearRenderer::NRBTexture *GetBase();
 		protected:
-			Texture_Data Data;
 			NuclearRenderer::NRBTexture *tex;
 		};
 	}

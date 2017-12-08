@@ -7,10 +7,6 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Crossplatform ready
   - Modern Fast code using C++
   
-- __Renderer3D__
-  - Support for Forward Shading with Phong Light Model.
-  
-  
 - __ResourceManager__
   - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using stb_image library).
   - Support for OBJ, FBX, Blend, 3DS, CAD, and many more 3D model formats (using Assimp library).
@@ -28,9 +24,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
     - Finish RenderTarget class (also known as Framebuffer in OpenGL).
     - Implement TextureCube class (required for Skybox).
   - Correctly Implement Model Loading with Assimp.
-  - Implement Blinn-Phong & Gourard Light Model.
-  ![Alt text](http://media.indiedb.com/images/engines/1/1/764/shit.png "The Current MileStone")
-  - Implement Skybox.
+  - Implement Phong-Lighting.
 
 ## Roadmap
   - Support Android & Linux & UWP Platforms.

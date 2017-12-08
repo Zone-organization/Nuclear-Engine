@@ -9,9 +9,14 @@ namespace NuclearEngine {
 		Texture::Texture(const Texture_Data& TexData, const Texture_Desc& Desc)
 		{
 			tex = Core::Context::ConstructTexture(tex);
-			Data = TexData;
 			
-			tex->Create(Data, Desc);
+			tex->Create(TexData, Desc);
+		}
+		Texture::Texture(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc)
+		{
+			tex = Core::Context::ConstructTexture(tex);
+
+			tex->Create(data, Desc);
 		}
 		Texture::~Texture()
 		{

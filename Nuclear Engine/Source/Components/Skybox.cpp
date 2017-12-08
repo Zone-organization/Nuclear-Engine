@@ -78,13 +78,13 @@ namespace NuclearEngine
 			Desc.Format = TextureFormat::R8G8B8A8;
 			Desc.Wrap = TextureWrap::ClampToEdge;
 			Desc.Filter = TextureFilter::Linear2D;
-			texcube = new API::TextureCube(data, Desc);
+			texcube = new API::Texture(data, Desc);
 
-			PipelineStateDesc DS_State;
+			DepthStencilStateDesc DS_State;
 			DS_State.DepthStencilEnabled = true;
 			DS_State.DepthFunc = Comparison_Func::LESS_EQUAL;
 
-			cubemapstate = new API::PipelineState(DS_State);
+			cubemapstate = new API::DepthStencilState(DS_State);
 		}
 		Skybox::~Skybox()
 		{
@@ -98,13 +98,12 @@ namespace NuclearEngine
 			//_CameraCbuffer->SetViewMatrix(view);
 			//_CameraCbuffer->Update();
 			vertexBuffer->Bind();
-			cubemapstate->Bind_DepthStencil();
+			cubemapstate->Bind();
 			shader->Bind();
-			texcube->Bind("NE_SkyboxTexture",shader,0);
+			texcube->PSBind("NE_SkyboxTexture",shader,0);
 			Core::Context::Draw(36);
-			texcube->Unbind();
 			shader->Unbind();
-			cubemapstate->Unbind_DepthStencil();
+			cubemapstate->Unbind();
 			vertexBuffer->Unbind();
 		}
 	}

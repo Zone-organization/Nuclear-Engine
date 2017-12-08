@@ -118,14 +118,9 @@ namespace NuclearEngine
 			return ctx->ConstructTexture(param);
 		}
 
-		NuclearRenderer::NRBPipelineState * Context::ConstructPipelineState(NuclearRenderer::NRBPipelineState * param)
+		NuclearRenderer::NRBDepthStencilState * Context::ConstructDepthStencilState(NuclearRenderer::NRBDepthStencilState * param)
 		{
-			return ctx->ConstructPipelineState(param);
-		}
-
-		NuclearRenderer::NRBTextureCube * Context::ConstructTextureCube(NuclearRenderer::NRBTextureCube * param)
-		{
-			return ctx->ConstructTextureCube(param);
+			return ctx->ConstructDepthStencilState(param);
 		}
 
 		NRBShader* Context::ConstructShader(NRBShader * param)

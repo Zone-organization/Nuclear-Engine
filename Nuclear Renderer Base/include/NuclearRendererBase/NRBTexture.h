@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 
 namespace NuclearEngine
 {
@@ -13,6 +14,7 @@ namespace NuclearRenderer {
 	{
 	public:
 		virtual void Create(NuclearEngine::Texture_Data TexData, NuclearEngine::Texture_Desc Desc) = 0;
+		virtual void Create(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc) = 0;
 		virtual void Delete() = 0;
 
 		virtual void VSBind(unsigned int index) = 0;
