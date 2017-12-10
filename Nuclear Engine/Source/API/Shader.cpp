@@ -67,6 +67,23 @@ namespace NuclearEngine {
 			shader->Unbind();
 		}
 
+		ShaderReflection Shader::GetReflection(ShaderType type)
+		{
+			if (type == ShaderType::Vertex)
+			{
+				return vblob->reflection;
+			}
+			else if (type == ShaderType::Pixel)
+			{
+				return pblob->reflection;
+			}
+			else if (type == ShaderType::Geometry)
+			{
+				return gblob->reflection;
+			}
+			return ShaderReflection();
+		}
+
 		NuclearRenderer::NRBShader * Shader::GetBase()
 		{
 			return shader;
@@ -84,7 +101,6 @@ namespace NuclearEngine {
 			else if (type == ShaderType::Pixel)
 			{
 				shadermodel = "ps_4_1";
-
 			}
 			else if (type == ShaderType::Geometry)
 			{
@@ -152,41 +168,49 @@ namespace NuclearEngine {
 				}
 				else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 				{
-				/*	ID3D11ShaderReflection* pReflector = NULL;
-					D3D11_SHADER_INPUT_BIND_DESC Desc;
-					D3D11_SHADER_DESC shaderdesc;
+					// We are using HLSLCC as reflection engine as we can't get texture names by ourselves through Dx reflection
+					GlExtensions extensions;
+					GLSLCrossDependencyData deps;
+					extensions.ARB_shading_language_420pack = false;
+					HLSLccSamplerPrecisionInfo samplerPrecisions;
+					HLSLccReflection reflectionCallbacks;
+					GLSLShader glshader;
+					
+					TranslateHLSLFromMem((const char*)blob.hlslsourcecode, HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT,
+						LANG_330, &extensions, &deps, samplerPrecisions, reflectionCallbacks, &glshader);
 
-					D3DReflect(blob.GetBufferPointer(),
-						blob.GetBufferSize(),
-						IID_ID3D11ShaderReflection, (void**)&pReflector);
-					pReflector->GetDesc(&shaderdesc);*/
+					for (unsigned int i = 0; i < glshader.reflection.psResourceBindings.size(); i++)
+					{
 
-					//for (UINT i; i < shaderdesc.BoundResources; i++)
-					//{
-					//	pReflector->
-					//}
-					//if (type == ShaderType::Vertex)
-					//{										
+						if (glshader.reflection.psResourceBindings.at(i).eType == RTYPE_TEXTURE)
+						{
+							ReflectedTextureDesc tex;
+							tex.Name = glshader.reflection.psResourceBindings.at(i).name.c_str();
 
-					//	if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->GetName(), &Desc)))
-					//	{
-					//		pReflector->Release();
-					//		return Desc.BindPoint;
-					//	}
-
-					//}
+							switch (glshader.reflection.psResourceBindings.at(i).eDimension)
+							{
+							case REFLECT_RESOURCE_DIMENSION_TEXTURE1D:
+								tex.type = ReflectedTextureType::Texture1D;
+								break;
+							case REFLECT_RESOURCE_DIMENSION_TEXTURE2D:
+								tex.type = ReflectedTextureType::Texture2D;
+								break;
+							case REFLECT_RESOURCE_DIMENSION_TEXTURE3D:
+								tex.type = ReflectedTextureType::Texture3D;
+								break;
+							case REFLECT_RESOURCE_DIMENSION_TEXTURECUBE:
+								tex.type = ReflectedTextureType::TextureCube;
+								break;
+							}
+			
+							blob.reflection.textures.push_back(tex);
+						}
+					}
 				}
 			}	
 			else if (language == ShaderLanguage::GLSL)
 			{
-				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-				{
-					blob.glslsourcecode = SourceCode;
-					blob.Language = ShaderLanguage::GLSL;
-				}
-				else {
-					Exceptions::NotImplementedException();
-				}
+				Exceptions::NotImplementedException();
 			}
 			return blob;
 		}

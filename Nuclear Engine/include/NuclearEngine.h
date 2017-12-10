@@ -21,6 +21,8 @@ _____________/BOOOM\_____________
 //# Managers Headers
 #include <ResourceManager\ResourceManager.h>
 
+#include <Shading/Material.h>
+
 //# OneAPI Headers
 #include <API/VertexBuffer.h>
 #include <API/IndexBuffer.h>

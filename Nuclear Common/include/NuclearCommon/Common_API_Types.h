@@ -67,7 +67,7 @@ namespace NuclearEngine {
 	enum class ReflectedTextureType { Texture1D, Texture2D, Texture3D, TextureCube };
 
 	struct ReflectedTextureDesc {
-		const char* Name;
+		std::string Name;
 		ReflectedTextureType type;
 	};
 

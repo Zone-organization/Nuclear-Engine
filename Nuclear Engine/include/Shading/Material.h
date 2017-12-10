@@ -6,24 +6,22 @@
 
 namespace NuclearEngine {
 	namespace Shading {
-		struct Material_Texture
+		struct NEAPI Material_Texture
 		{
 			const char* Name;
 			unsigned int Slot;			
 			API::Texture *Texture;			
 		};
 
-		class Material {
+		class NEAPI Material {
 		public:
 			std::map<std::string, Material_Texture> Material_Textures; // NOTE(Joey): process samplers differently 
 
 			Material();
-			Material(API::Shader* shader);
+			Material(API::Shader* shader, ShaderType type);
 
 			API::Shader* GetShader();
-			void    SetShader(API::Shader* shader);
-
-			API::Color SolidColor;
+			void    SetShader(API::Shader* shader, ShaderType type);
 
 			void SetTexture(const char* name, API::Texture* value, unsigned int slot = 0);
 

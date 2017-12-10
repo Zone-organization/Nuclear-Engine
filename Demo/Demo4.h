@@ -84,10 +84,9 @@ public:
 		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
 
 
-	//	Components::Material CubeMat;
-	//	CubeMat.Diffuse = WoodenBoxTex;
+		Shading::Material CubeMat(CubeShader,ShaderType::Pixel);
 
-	//	cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
+		cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
 
 		Core::Context::EnableDepthBuffer(true);
 
@@ -137,7 +136,7 @@ public:
 
 	 	CubeShader->Bind();
 
-	//	cube->Draw(CubeShader);
+		cube->Draw(CubeShader);
 
 		//model->Draw(CubeShader);
 

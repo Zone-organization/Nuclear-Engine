@@ -25,6 +25,8 @@ namespace NuclearEngine {
 			void Bind();
 			void Unbind();
 
+			ShaderReflection  GetReflection(ShaderType type);
+
 			NuclearRenderer::NRBShader* GetBase();
 		protected:
 			NuclearRenderer::NRBShader *shader;
