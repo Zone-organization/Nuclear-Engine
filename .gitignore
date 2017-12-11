@@ -1,0 +1,22 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Build
+/Demo/Build
+.vs
+/Deps/DirectX
+/Deps/cppwinrt
+/Deps/cppwinrt
+/Deps/FreetypeLib
+
+*.obj
+*.idb
+*.pdb
+*.opendb
+*.db
+*.png
+*.jpg
+*.mtl
+*.tlog
+*.log

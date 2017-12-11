@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="include\CompilerConfig.h" />
+    <ClInclude Include="include\API\Shader.h" />
+    <ClInclude Include="include\Core\Systems\AudioSystem.h" />
+    <ClInclude Include="include\Core\Parsers\INIParserClass.h" />
+    <ClInclude Include="include\Core\Parsers\INIFile.h" />
+    <ClInclude Include="include\API\Color.h" />
+    <ClInclude Include="include\API\InputLayout.h" />
+    <ClInclude Include="include\API\VertexBuffer.h" />
+    <ClInclude Include="include\API\IndexBuffer.h" />
+    <ClInclude Include="include\Core\Engine.h" />
+    <ClInclude Include="include\Core\FileSystem.h" />
+    <ClInclude Include="include\Core\Game.h" />
+    <ClInclude Include="include\Core\ContextDesc.h" />
+    <ClInclude Include="include\API\UniformBuffer.h" />
+    <ClInclude Include="include\Components\FlyCamera.h" />
+    <ClInclude Include="include\Components\GenericCamera.h" />
+    <ClInclude Include="include\Components\Skybox.h" />
+    <ClInclude Include="include\NE_Common.h" />
+    <ClInclude Include="include\NE_PrivateCommon.h" />
+    <ClInclude Include="include\NE_Exception.h" />
+    <ClInclude Include="include\Core\Context.h" />
+    <ClInclude Include="include\NuclearEngine.h" />
+    <ClInclude Include="include\ResourceManager\ResourceManager.h" />
+    <ClInclude Include="include\Components\Light.h" />
+    <ClInclude Include="include\Components\Mesh.h" />
+    <ClInclude Include="include\Components\Model.h" />
+    <ClInclude Include="include\API\RenderTarget.h" />
+    <ClInclude Include="include\Components\Models\Cube.h" />
+    <ClInclude Include="Source\Thirdparty\stb_image.h" />
+    <ClInclude Include="include\API\Texture.h" />
+    <ClInclude Include="include\Shading\Material.h" />
+    <ClInclude Include="include\API\DepthStencilState.h" />
+    <ClInclude Include="include\Shading\Technique.h" />
+    <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
+    <ClInclude Include="include\Shading\Techniques\NoLight.h" />
+    <ClInclude Include="include\Renderers\Renderer3D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\API\Shader.cpp" />
+    <ClCompile Include="Source\Core\Systems\AudioSystem.cpp" />
+    <ClCompile Include="Source\API\InputLayout.cpp" />
+    <ClCompile Include="Source\API\VertexBuffer.cpp" />
+    <ClCompile Include="Source\API\IndexBuffer.cpp" />
+    <ClCompile Include="Source\API\Color.cpp" />
+    <ClCompile Include="Source\Core\FileSystem.cpp" />
+    <ClCompile Include="Source\Core\Game.cpp" />
+    <ClCompile Include="Source\API\UniformBuffer.cpp" />
+    <ClCompile Include="Source\Core\Engine.cpp" />
+    <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
+    <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
+    <ClCompile Include="Source\Components\FlyCamera.cpp" />
+    <ClCompile Include="Source\Components\GenericCamera.cpp" />
+    <ClCompile Include="Source\Components\Skybox.cpp" />
+    <ClCompile Include="Source\Core\Context.cpp" />
+    <ClCompile Include="Source\NE_Common.cpp" />
+    <ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
+    <ClCompile Include="Source\Components\Light.cpp" />
+    <ClCompile Include="Source\Components\Mesh.cpp" />
+    <ClCompile Include="Source\Components\Model.cpp" />
+    <ClCompile Include="Source\API\RenderTarget.cpp" />
+    <ClCompile Include="Source\Components\Models\Cube.cpp" />
+    <ClCompile Include="Source\API\Texture.cpp" />
+    <ClCompile Include="Source\Shading\Material.cpp" />
+    <ClCompile Include="Source\API\DepthStencilState.cpp" />
+    <ClCompile Include="Source\Shading\Technique.cpp" />
+    <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
+    <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
+  </ItemGroup>
+</Project>
