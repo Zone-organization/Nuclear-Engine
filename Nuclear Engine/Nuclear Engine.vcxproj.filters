@@ -33,6 +33,10 @@
     <ClInclude Include="include\API\Texture.h" />
     <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
+    <ClInclude Include="include\Shading\Technique.h" />
+    <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
+    <ClInclude Include="include\Shading\Techniques\NoLight.h" />
+    <ClInclude Include="include\Renderers\Renderer3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\API\Shader.cpp" />
@@ -61,5 +65,8 @@
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\API\DepthStencilState.cpp" />
+    <ClCompile Include="Source\Shading\Technique.cpp" />
+    <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
+    <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
   </ItemGroup>
 </Project>

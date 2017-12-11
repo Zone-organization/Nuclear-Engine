@@ -12,6 +12,7 @@ namespace NuclearEngine {
 		class NEAPI UniformBuffer
 		{
 		public:
+			UniformBuffer();
 			UniformBuffer(const char *_nameinshaders, unsigned int size);
 			~UniformBuffer();
 

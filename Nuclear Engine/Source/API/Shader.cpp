@@ -27,6 +27,10 @@ namespace NuclearEngine {
 			return;
 		}
 
+		Shader::Shader()
+		{
+
+		}
 		Shader::Shader(const char *name, BinaryShaderBlob* VertexShader, BinaryShaderBlob* PixelShader, BinaryShaderBlob* GeometryShader)
 		{
 			Log->Info("[Shader] Initializing Shader: ");
@@ -45,9 +49,12 @@ namespace NuclearEngine {
 
 		Shader::~Shader()
 		{
-			shader->Delete();
-
-			delete shader;
+			if (shader != nullptr)
+			{
+				shader->Delete();
+				delete shader;
+				shader = nullptr;
+			}
 		}
 
 		void Shader::SetUniformBuffer(UniformBuffer* cbuffer, unsigned int slot, ShaderType type)
@@ -135,78 +142,9 @@ namespace NuclearEngine {
 					TranslateHLSLFromMem((const char*)blob.hlslsourcecode, HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT,
 						LANG_330, &extensions, &deps, samplerPrecisions, reflectionCallbacks, &glshader);
 
-					blob.glslsourcecode = glshader.sourceCode;
-
-					for (unsigned int i = 0; i < glshader.reflection.psResourceBindings.size(); i++)
-					{
-						if (glshader.reflection.psResourceBindings.at(i).eType == RTYPE_TEXTURE)
-						{
-							ReflectedTextureDesc tex;
-							tex.Name = glshader.reflection.psResourceBindings.at(i).name.c_str();
-
-							switch (glshader.reflection.psResourceBindings.at(i).eDimension)
-							{
-							case REFLECT_RESOURCE_DIMENSION_TEXTURE1D:
-								tex.type = ReflectedTextureType::Texture1D;
-								break;
-							case REFLECT_RESOURCE_DIMENSION_TEXTURE2D:
-								tex.type = ReflectedTextureType::Texture2D;
-								break;
-							case REFLECT_RESOURCE_DIMENSION_TEXTURE3D:
-								tex.type = ReflectedTextureType::Texture3D;
-								break;
-							case REFLECT_RESOURCE_DIMENSION_TEXTURECUBE:
-								tex.type = ReflectedTextureType::TextureCube;
-								break;
-							}
-
-							blob.reflection.textures.push_back(tex);
-						}
-					}
-
+					blob.glslsourcecode = glshader.sourceCode;				
 					blob.Language = ShaderLanguage::GLSL;
-				}
-				else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-				{
-					// We are using HLSLCC as reflection engine as we can't get texture names by ourselves through Dx reflection
-					GlExtensions extensions;
-					GLSLCrossDependencyData deps;
-					extensions.ARB_shading_language_420pack = false;
-					HLSLccSamplerPrecisionInfo samplerPrecisions;
-					HLSLccReflection reflectionCallbacks;
-					GLSLShader glshader;
-					
-					TranslateHLSLFromMem((const char*)blob.hlslsourcecode, HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT,
-						LANG_330, &extensions, &deps, samplerPrecisions, reflectionCallbacks, &glshader);
-
-					for (unsigned int i = 0; i < glshader.reflection.psResourceBindings.size(); i++)
-					{
-
-						if (glshader.reflection.psResourceBindings.at(i).eType == RTYPE_TEXTURE)
-						{
-							ReflectedTextureDesc tex;
-							tex.Name = glshader.reflection.psResourceBindings.at(i).name.c_str();
-
-							switch (glshader.reflection.psResourceBindings.at(i).eDimension)
-							{
-							case REFLECT_RESOURCE_DIMENSION_TEXTURE1D:
-								tex.type = ReflectedTextureType::Texture1D;
-								break;
-							case REFLECT_RESOURCE_DIMENSION_TEXTURE2D:
-								tex.type = ReflectedTextureType::Texture2D;
-								break;
-							case REFLECT_RESOURCE_DIMENSION_TEXTURE3D:
-								tex.type = ReflectedTextureType::Texture3D;
-								break;
-							case REFLECT_RESOURCE_DIMENSION_TEXTURECUBE:
-								tex.type = ReflectedTextureType::TextureCube;
-								break;
-							}
-			
-							blob.reflection.textures.push_back(tex);
-						}
-					}
-				}
+				}				
 			}	
 			else if (language == ShaderLanguage::GLSL)
 			{

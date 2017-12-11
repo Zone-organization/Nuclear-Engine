@@ -15,8 +15,8 @@ namespace NuclearEngine {
 
 		class NEAPI Shader
 		{
-		public:
-			//Now expects all shaders in HLSL!!
+		public:		
+			Shader();
 			Shader(const char *name, BinaryShaderBlob* VertexShader, BinaryShaderBlob* PixelShader, BinaryShaderBlob* GeometryShader = nullptr);
 			~Shader();
 

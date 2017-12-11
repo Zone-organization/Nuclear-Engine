@@ -4,6 +4,9 @@
 
 namespace NuclearEngine {
 	namespace API {
+		IndexBuffer::IndexBuffer()
+		{
+		}
 		IndexBuffer::IndexBuffer(void* indices, unsigned int count)
 		{
 			buf = Core::Context::ConstructIndexBuffer(buf);
@@ -12,9 +15,12 @@ namespace NuclearEngine {
 		}
 		IndexBuffer::~IndexBuffer()
 		{
-			buf->Delete();
-
-			delete buf;
+			if (buf != nullptr)
+			{
+				buf->Delete();
+				delete buf;
+				buf = nullptr;
+			}
 		}
 
 		void IndexBuffer::Bind()

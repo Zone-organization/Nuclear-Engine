@@ -14,8 +14,8 @@ namespace NuclearEngine {
 		class NEAPI Texture
 		{
 		public:
+			Texture();
 			Texture(const Texture_Data& TexData, const Texture_Desc& Desc);
-			//Create Texture Cube
 			Texture(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc);
 			~Texture();
 			

@@ -4,7 +4,9 @@
 
 namespace NuclearEngine {
 	namespace API {
-
+		DepthStencilState::DepthStencilState()
+		{
+		}
 		DepthStencilState::DepthStencilState(DepthStencilStateDesc type)
 		{
 			state = Core::Context::ConstructDepthStencilState(state);
@@ -13,9 +15,12 @@ namespace NuclearEngine {
 		}
 		DepthStencilState::~DepthStencilState()
 		{
-			state->Delete();
-
-			delete state;
+			if (state != nullptr)
+			{
+				state->Delete();
+				delete state;
+				state = nullptr;
+			}
 		}
 		void DepthStencilState::Bind()
 		{

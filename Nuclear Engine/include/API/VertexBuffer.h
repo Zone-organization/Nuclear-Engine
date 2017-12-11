@@ -22,6 +22,7 @@ namespace NuclearEngine {
 		class NEAPI VertexBuffer
 		{
 		public:
+			VertexBuffer();
 			VertexBuffer(const VertexBufferDesc& desc);
 			~VertexBuffer();
 

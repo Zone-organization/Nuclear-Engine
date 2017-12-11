@@ -12,6 +12,7 @@ namespace NuclearEngine {
 		class DepthStencilState
 		{
 		public:
+			DepthStencilState();
 			DepthStencilState(DepthStencilStateDesc type);
 			~DepthStencilState();
 

@@ -16,12 +16,11 @@ namespace NuclearEngine
 		class NEAPI Skybox
 		{
 		private:
-			API::Shader *shader;
-			API::VertexBuffer *vertexBuffer;
-			API::InputLayout *vertexBufferLayout;
-			API::Texture *texcube;
+			API::Shader shader;
+			API::VertexBuffer vertexBuffer;
+			API::Texture texcube;
 			Components::GenericCamera* _CameraCbuffer;
-			API::DepthStencilState* cubemapstate;
+			API::DepthStencilState cubemapstate;
 		public:
 			Skybox(Components::GenericCamera* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6>);
 			~Skybox();

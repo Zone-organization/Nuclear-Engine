@@ -6,6 +6,9 @@
 
 namespace NuclearEngine {
 	namespace API {
+		Texture::Texture()
+		{
+		}
 		Texture::Texture(const Texture_Data& TexData, const Texture_Desc& Desc)
 		{
 			tex = Core::Context::ConstructTexture(tex);
@@ -20,9 +23,12 @@ namespace NuclearEngine {
 		}
 		Texture::~Texture()
 		{
-			tex->Delete();
-
-			delete tex;
+			if (tex != nullptr)
+			{
+				tex->Delete();
+				delete tex;
+				tex = nullptr;
+			}
 		}	
 		void Texture::VSBind(unsigned int index)
 		{

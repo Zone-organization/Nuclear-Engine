@@ -361,8 +361,12 @@
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\NE_Exception.h" />
+    <ClInclude Include="include\Renderers\Renderer3D.h" />
     <ClInclude Include="include\ResourceManager\ResourceManager.h" />
     <ClInclude Include="include\Shading\Material.h" />
+    <ClInclude Include="include\Shading\Technique.h" />
+    <ClInclude Include="include\Shading\Techniques\NoLight.h" />
+    <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -390,8 +394,11 @@
     <ClCompile Include="Source\Core\Systems\AudioSystem.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
+    <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
     <ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
+    <ClCompile Include="Source\Shading\Technique.cpp" />
+    <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,6 +12,7 @@ namespace NuclearEngine {
 		class NEAPI IndexBuffer
 		{
 		public:
+			IndexBuffer();
 			IndexBuffer(void* indices, unsigned int count);
 			~IndexBuffer();
 
