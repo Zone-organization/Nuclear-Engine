@@ -1,13 +1,12 @@
 #pragma once
 #include "Common.h"
 
-class Demo4 : public Core::Game
+class Demo5 : public Core::Game
 {
 protected:
-	API::Shader *CubeShader;
 	API::Texture *WoodenBoxTex;
 	Components::FlyCamera *Camera;
-
+	Shading::Techniques::NoLight *LightShading;
 	Components::Cube *Cube;
 
 	float lastX = _Width_ / 2.0f;
@@ -15,19 +14,19 @@ protected:
 	bool firstMouse = true;
 
 public:
-	Demo4()
+	Demo5()
 	{
 	}
 	void Load()
 	{
-		CubeShader = new API::Shader("CubeShader",
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
-		
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		CubeShader->SetUniformBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
 
+		LightShading = new Shading::Techniques::NoLight();
+
+		Renderers::Renderer3D::Initialize(Camera);
+		Renderers::Renderer3D::SetTechnique(LightShading);
+		Renderers::Renderer3D::Reload();
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
 		Desc.Wrap = TextureWrap::Repeat;
@@ -35,11 +34,11 @@ public:
 		Desc.Type = TextureType::Texture2D;
 
 		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
-		
+
 		Shading::Material CubeMat;
 		CubeMat.Diffuse = WoodenBoxTex;
 		Cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
-
+		
 		Core::Context::EnableDepthBuffer(true);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -55,8 +54,8 @@ public:
 			Camera->ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
 		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::D))
 			Camera->ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
-		
-		Camera->Update();		
+
+		Camera->Update();
 	}
 
 	void MouseMovementCallback(double xpos, double ypos) override
@@ -86,19 +85,19 @@ public:
 		//Don't Forget to clear the depth buffer each frame
 		Core::Context::ClearDepthBuffer();
 
-	 	CubeShader->Bind();
+		Renderers::Renderer3D::GetShader()->Bind();
 
-		Cube->Draw(CubeShader);
+		Cube->Draw(Renderers::Renderer3D::GetShader());
 
-		CubeShader->Unbind();
+		Renderers::Renderer3D::GetShader()->Unbind();
 
 		Core::Context::End();
 	}
 	void ExitRendering()	// Exit Rendering
 	{
-		delete CubeShader;
+		delete LightShading;
 		delete Cube;
-	    delete Camera;
+		delete Camera;
 		delete WoodenBoxTex;
 	}
 };

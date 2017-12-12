@@ -5,7 +5,7 @@ namespace NuclearEngine {
 	namespace Shading {
 		namespace Techniques {
 
-			class NEAPI NoLight : Technique
+			class NEAPI NoLight : public Technique
 			{
 			public:
 				NoLight();

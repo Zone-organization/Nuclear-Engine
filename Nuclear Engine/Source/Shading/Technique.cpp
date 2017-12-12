@@ -10,9 +10,10 @@ namespace NuclearEngine {
 		{
 			return this->m_type;
 		}
-		std::string Technique::GetShader()
+
+		std::string Technique::GetShaderPath()
 		{
-			return m_shader;
+			return m_shaderpath;
 		}
 	}
 }

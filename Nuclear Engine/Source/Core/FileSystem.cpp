@@ -25,7 +25,7 @@ namespace NuclearEngine
 				return data;
 			}
 
-			std::string FileSystem::LoadShaderWithDefines(std::string Filepath, std::vector<std::string> defines)
+			std::string FileSystem::LoadShader(std::string Filepath, std::vector<std::string> defines, std::vector<std::string> includes)
 			{
 				std::ifstream file(Filepath, std::ios::in);
 				std::string data = "", line = "";
@@ -65,10 +65,35 @@ namespace NuclearEngine
 					for (unsigned int i = 0; i < MergedCode.size(); ++i)
 						str = str + MergedCode[i].c_str();
 
-					return str;
+					data = str;
+				}
+				if (includes.size() > 0)
+				{
+					std::vector<std::string> MergedCode;
+
+					std::string firstLine = data.substr(0, data.find("\n"));
+					//If GLSL
+					if (firstLine.find("#version") != std::string::npos)
+					{
+						data = data.substr(data.find("\n") + 1, data.length() - 1);
+						MergedCode.push_back(firstLine + "\n");
+					}
+					for (unsigned int i = 0; i < includes.size(); ++i)
+					{
+						std::string define = "#include \"" + includes[i] + "\"\n";
+						MergedCode.push_back(define);
+					}
+
+					MergedCode.push_back(data);
+					std::string str;
+					for (unsigned int i = 0; i < MergedCode.size(); ++i)
+						str = str + MergedCode[i].c_str();
+
+					data = str;
 				}
 				return data;
 			}
+
 
 			char* FileSystem::LoadBinaryFile(std::string Filepath, size_t* size)
 			{

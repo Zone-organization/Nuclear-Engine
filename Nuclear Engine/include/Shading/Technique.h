@@ -23,11 +23,11 @@ namespace NuclearEngine {
 			Technique();
 
 			virtual Technique_Type GetType();
-			virtual std::string GetShader();
+			virtual std::string GetShaderPath();
 
 		protected:
 			Technique_Type m_type = Technique_Type::Nothing;
-			std::string m_shader = "";
+			std::string m_shaderpath = "";
 		};
 	}
 }

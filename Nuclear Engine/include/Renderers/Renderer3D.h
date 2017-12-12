@@ -1,14 +1,18 @@
 #pragma once
 #include <Shading\Technique.h>
+#include <Components\GenericCamera.h>
 
 namespace NuclearEngine {
 	namespace Renderers {
 
 		class NEAPI Renderer3D 
 		{
-			static bool Initialize();
+		public:
+			static bool Initialize(Components::GenericCamera* camera);
 
-			static bool SetTechnique(Shading::Technique* Tech);
+			static void SetTechnique(Shading::Technique* Tech);
+
+			static API::Shader* GetShader();
 
 			static void Reload();
 

@@ -31,6 +31,9 @@
     <ClInclude Include="Demo4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Demo5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Demo1\Shaders\OpenGL\Font.fs" />

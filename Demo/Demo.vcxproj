@@ -168,6 +168,7 @@
     <ClInclude Include="Demo2.h" />
     <ClInclude Include="Demo3.h" />
     <ClInclude Include="Demo4.h" />
+    <ClInclude Include="Demo5.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Demo1\Shaders\OpenGL\Font.fs" />

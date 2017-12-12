@@ -8,7 +8,7 @@ namespace NuclearEngine {
 			{
 				this->m_type = Technique_Type::LightShading;
 
-				this->m_shader = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Techniques/NoLight.hlsl");
+				this->m_shaderpath = "Assets/NuclearEngine/Shaders/Techniques/NoLight.hlsl";
 			}
 		}
 	}

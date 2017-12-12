@@ -4,6 +4,7 @@
 #include "Demo2.h"
 #include "Demo3.h"
 #include "Demo4.h"
+#include "Demo5.h"
 
 void Start()
 {
@@ -30,34 +31,41 @@ void Start()
 int main(int argc, char* argv[])
 {
 	std::cout
-		<< "--Select Low Level API Demos:\n"
-		<< "A) Demo 1 - Introduction To Shaders & Vertex Buffers & Input Layouts\n"
-		<< "B) Demo 2 - Introduction To Index Buffers & Textures\n"
-		<< "C) Demo 3 - Introduction To Transformations & Constant Buffers\n"
+		<< "-----[Select the demo you want]-----"
+		<< "---Low level API demos:\n"
+		<< "1) Demo 1 - Colored Triangle - introduction to Shaders & Vertex Buffers & Input Layouts\n"
+		<< "2) Demo 2 - Textured Rectangle -  introduction to Index Buffers & Textures\n"
+		<< "3) Demo 3 - Static Textured Cube - introduction to Transformations & Constant Buffers\n"
 
-		<< "--Select High Level Engine Demos:\n"
-		<< "1) Demo 4 - Introduction To Camera & Input\n";
+		<< "---High level engine demos:\n"
+		<< "4) Demo 4 - Dynamic Textured Cube - introduction to Camera & Input & Components\n"
+		<< "5) Demo 5 - Lighted Scene - introduction to Lights & Renderer3D & Techniques\n";
 
 	char choice;
 	std::cin >> choice;
-	if (choice == 'a') {
+	if (choice == '1') {
 		Start();
 		Demo1 *demo = new Demo1();
 		Core::Engine::Run(demo);
 	}
-	else if (choice == 'b') {
+	else if (choice == '2') {
 		Start();
 		Demo2 demo;
 		Core::Engine::Run(&demo);	
 	}
-	else if (choice == 'c') {
+	else if (choice == '3') {
 		Start();
 		Demo3 demo;
 		Core::Engine::Run(&demo);
 	}
-	else if (choice == '1') {
+	else if (choice == '4') {
 		Start();
 		Demo4 demo;
+		Core::Engine::Run(&demo);
+	}
+	else if (choice == '5') {
+		Start();
+		Demo5 demo;
 		Core::Engine::Run(&demo);
 	}
 	else {

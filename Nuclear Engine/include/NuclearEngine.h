@@ -21,7 +21,14 @@ _____________/BOOOM\_____________
 //# Managers Headers
 #include <ResourceManager\ResourceManager.h>
 
+//# Renderers Headers
+#include <Renderers\Renderer3D.h>
+
+//# Shading Headers
 #include <Shading/Material.h>
+#include <Shading/Technique.h>
+#include <Shading/Techniques/NoLight.h>
+#include <Shading/Techniques/PhongShading.h>
 
 //# OneAPI Headers
 #include <API/VertexBuffer.h>
