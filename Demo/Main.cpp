@@ -5,6 +5,9 @@
 #include "Demo3.h"
 #include "Demo4.h"
 #include "Demo5.h"
+#include <NuclearPlatform\Clock.h>
+
+void Test();
 
 void Start()
 {
@@ -69,11 +72,153 @@ int main(int argc, char* argv[])
 		Core::Engine::Run(&demo);
 	}
 	else {
-		std::cout << "Wrong Choice\n";
+		std::cout << "Running Test...\n";
+		Test();
 		system("pause");
 		return 0;
 
 	}
 
 	return 0;
+}
+
+int z;
+void Foo1()
+{
+	z = 0;
+}
+void Foo2()
+{
+	z = 1;
+}
+void Foo3()
+{
+	z = 1;
+}void Foo4()
+{
+	z = 1;
+}void Foo5()
+{
+	z = 1;
+}
+
+int i = 0;
+
+void IFSTATEMENT()
+{
+	if (i == 0)
+	{
+		Foo1();
+	}
+	else if (i == 1)
+	{
+		Foo2();
+	}
+	else if (i == 2)
+	{
+		Foo3();
+	}
+	else if (i == 3)
+	{
+		Foo4();
+	}
+	else if (i == 4)
+	{
+		Foo5();
+	}
+	else
+	{
+		Foo1();
+	}
+}
+
+void SWITCHCASE()
+{
+	switch (i)
+	{
+	case 1:
+		Foo1();
+	case 2:
+		Foo2();
+	case 3:
+		Foo3();
+	case 4:
+		Foo4();
+	case 5:
+		Foo5();
+	}
+}
+
+class Base {
+public:
+	virtual void CallMe()
+	{
+		Foo1();
+	}
+};
+
+class Derived : public Base {
+public:
+	void CallMe() override
+	{
+		Foo2();
+	}
+};
+
+void Test()
+{
+	NuclearPlatform::Clock clock;
+	Base base;
+	Derived derived;
+	Base *base2 = new Derived();
+
+	std::cout << "Normal\n";
+	clock.Restart();
+	for (int i = 0; i < 10000000; i++)
+	{
+		Foo1();
+	}
+	std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
+	
+	std::cout << "Switch Statement\n";
+	clock.Restart();
+	for (int i = 0; i < 10000000; i++)
+	{
+		SWITCHCASE();
+	}
+	std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
+
+
+	std::cout << "If Statement\n";
+	clock.Restart();
+	for (int i = 0; i < 10000000; i++)
+	{
+		IFSTATEMENT();
+	}
+	std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
+	
+	std::cout << "Base\n";
+	clock.Restart();
+	for (int i = 0; i < 10000000; i++)
+	{
+		base.CallMe();
+	}
+	std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
+
+	std::cout << "Derived\n";
+	clock.Restart();
+	for (int i = 0; i < 10000000; i++)
+	{
+		derived.CallMe();
+	}
+	std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
+
+	std::cout << "New Derived\n";
+	clock.Restart();
+	for (int i = 0; i < 10000000; i++)
+	{
+		base2->CallMe();
+	}
+	std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
+
 }

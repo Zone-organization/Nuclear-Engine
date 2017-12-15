@@ -1,19 +1,16 @@
 struct VertexInputType
 {
     float4 Position : POSITION0;
-#ifdef NE_USE_NORMALS
-	float4 Normal : NORMAL0;
-#endif
+	float3 Normal : NORMAL0;
 	float2 TexCoord : TEXCOORD0;
 };
 
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
-#ifdef NE_USE_NORMALS
-	float4 Normal : NORMAL0;
-#endif
+    float3 Normal : NORMAL0;
 	float2 TexCoord : TEXCOORD0;
+    float3 FragPos : POSITION1;
 };
 
 cbuffer NE_Camera : register(b0)
@@ -32,11 +29,11 @@ PixelInputType main(VertexInputType input)
     output.Position = mul(View, output.Position);
     output.Position = mul(Projection, output.Position);
 
+
 	// Store the input texture for the pixel shader to use.
     output.TexCoord = input.TexCoord;
-#ifdef NE_USE_NORMALS
-	output.Normal : input.Normal;
-#endif
+	output.Normal = input.Normal;
+    output.FragPos = mul(input.Position, Model).xyz;
 
     return output;
 }

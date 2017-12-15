@@ -1,22 +1,42 @@
 #pragma once
 #include <Shading\Technique.h>
 #include <Components\GenericCamera.h>
+#include <Components\Light.h>
 
 namespace NuclearEngine {
 	namespace Renderers {
 
+		enum class Renderer3DStatusFlag
+		{
+			Ready,
+			RequireBaking
+		};
+
 		class NEAPI Renderer3D 
 		{
 		public:
-			static bool Initialize(Components::GenericCamera* camera);
+			Renderer3D(Components::GenericCamera* camera);
+			~Renderer3D();
 
-			static void SetTechnique(Shading::Technique* Tech);
+			void SetTechnique(Shading::Technique* Tech);
 
-			static API::Shader* GetShader();
+			API::Shader* GetShader();
 
-			static void Reload();
+			void AddLight(Components::Light* light);
 
-			static void Render_Light();
+			void Bake();
+
+			void Render_Light();
+
+		private:
+			API::Shader *Shader;
+			API::UniformBuffer *NE_LightUBO;
+			size_t LightUBOSize;
+			Shading::Technique* Light_Rendering_Tech;
+			Components::GenericCamera* Camera;
+			std::vector<Components::Light*> Lights;
+			Renderer3DStatusFlag flag;
+
 		};
 	}
 }

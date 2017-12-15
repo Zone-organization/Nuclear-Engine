@@ -9,12 +9,17 @@ protected:
 	Shading::Techniques::NoLight *LightShading;
 	Components::Cube *Cube;
 
+	Components::Light *DirLight;
+	Components::Light PointLight1;
+
+	Renderers::Renderer3D* Renderer;
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
 
 public:
 	Demo5()
+		: PointLight1(Components::Light::Type::PointLight)
 	{
 	}
 	void Load()
@@ -22,22 +27,29 @@ public:
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
-		LightShading = new Shading::Techniques::NoLight();
+		Renderer = new Renderers::Renderer3D(Camera);
 
-		Renderers::Renderer3D::Initialize(Camera);
-		Renderers::Renderer3D::SetTechnique(LightShading);
-		Renderers::Renderer3D::Reload();
+		// directional light
+		DirLight = new Components::Light(Components::Light::Type::DirectionalLight);
+		DirLight->SetDirection((-0.2f, -1.0f, -0.3f));
+		DirLight->SetColor((0.5f, 0.5f, 0.5f));
+
+		PointLight1.SetPosition((1.2f, 1.0f, 2.0f));
+		PointLight1.SetColor((1.0f, 1.0f, 1.0f));
+		Renderer->AddLight(&PointLight1);
+		Renderer->Bake();
+
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
 		Desc.Wrap = TextureWrap::Repeat;
 		Desc.Format = TextureFormat::R8G8B8A8;
 		Desc.Type = TextureType::Texture2D;
 
-		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
+		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
 
 		Shading::Material CubeMat;
 		CubeMat.Diffuse = WoodenBoxTex;
-		Cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
+		Cube = new Components::Cube(Components::InputSignatures::Position_Normal_Texcoord, &CubeMat);
 		
 		Core::Context::EnableDepthBuffer(true);
 
@@ -85,11 +97,13 @@ public:
 		//Don't Forget to clear the depth buffer each frame
 		Core::Context::ClearDepthBuffer();
 
-		Renderers::Renderer3D::GetShader()->Bind();
+		Renderer->GetShader()->Bind();
 
-		Cube->Draw(Renderers::Renderer3D::GetShader());
+		Cube->Draw(Renderer->GetShader());
 
-		Renderers::Renderer3D::GetShader()->Unbind();
+		Renderer->GetShader()->Unbind();
+
+		Renderer->Render_Light();
 
 		Core::Context::End();
 	}

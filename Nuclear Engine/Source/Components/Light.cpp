@@ -16,7 +16,7 @@ namespace NuclearEngine {
 			data.Color = Math::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 			data.Position = Math::Vector4(0.0f,0.0f,0.0f, type);
 			data.Direction = Math::Vector4();
-			data.Attenuation_Intensity = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
+			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::ToRadians(12.5f)), cos(Math::ToRadians(15.0f)), 0.0f,0.0f);
 		}
 		Light::~Light()
@@ -42,15 +42,20 @@ namespace NuclearEngine {
 		}
 		void Light::SetIntensity(float intensity)
 		{
-			data.Attenuation_Intensity.w = intensity;
+			data.Intensity_Attenuation.x = intensity;
 		}
 		void Light::SetAttenuation(Math::Vector3 att)
 		{
-			data.Attenuation_Intensity = Math::Vector4(data.Attenuation_Intensity.z, att.x, att.y, att.z);
+			data.Intensity_Attenuation = Math::Vector4(data.Intensity_Attenuation.x, att.x ,att.y, att.z);
 		}
 		void Light::SetSpotlightCone(Math::Vector2 cutoff_outercutoff)
 		{
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cutoff_outercutoff.x, cutoff_outercutoff.y, 0.0f, 0.0f);
+		}
+
+		Internal::Shader_Light_Struct Light::GetInternalData()
+		{
+			return data;
 		}
 
 	}

@@ -1,61 +1,87 @@
 #include <Renderers\Renderer3D.h>
 #include <Core\FileSystem.h>
 #include <Shading\Techniques\NoLight.h>
+#include <API\UniformBuffer.h>
 
 namespace NuclearEngine {
 	namespace Renderers {
-		namespace Members
-		{
-			API::Shader *Shader;
-			Shading::Technique* Light_Rendering_Tech;
-			Components::GenericCamera* Camera;
-			bool Init = false;
-			bool Reload_Notif = false;
-		}
 
-		bool Renderer3D::Initialize(Components::GenericCamera* camera)
+		Renderer3D::Renderer3D(Components::GenericCamera * camera)
 		{
-			Members::Camera = camera;
-			Members::Light_Rendering_Tech = nullptr;
-			Members::Init = true;
-			return Members::Init;
+			this->Camera = camera;
+			this->Light_Rendering_Tech = nullptr;
 		}
+		Renderer3D::~Renderer3D()
+		{
+		}
+	
 		void Renderer3D::SetTechnique(Shading::Technique * Tech)
 		{
 			switch (Tech->GetType())
 			{
 			case Shading::Technique_Type::LightShading:
-				Members::Light_Rendering_Tech = Tech;
+				this->Light_Rendering_Tech = Tech;
 			}
 
-			Members::Reload_Notif = true;
+			this->flag = Renderer3DStatusFlag::RequireBaking;
 		}
 		API::Shader * Renderer3D::GetShader()
 		{
-			return Members::Shader;
+			return this->Shader;
 		}
-		void Renderer3D::Reload()
+		void Renderer3D::AddLight(Components::Light* light)
+		{
+			this->Lights.push_back(light);
+		}
+		void Renderer3D::Bake()
 		{
 			std::vector<std::string> includes, defines;
 			includes.push_back("Assets/NuclearEngine/Shaders/Renderer/Renderer3D_Textures.hlsl");
 
-			if (Members::Light_Rendering_Tech != nullptr)
+			if (this->Light_Rendering_Tech != nullptr)
 			{
 				defines.push_back("NE_LIGHT_SHADING_TECH\n");
-				includes.push_back(Members::Light_Rendering_Tech->GetShaderPath());
+				includes.push_back(this->Light_Rendering_Tech->GetShaderPath());
 			}
 
-			Members::Shader = new API::Shader("Renderer3D_Shader",
+			if (this->Lights.size() > 0)
+			{
+				defines.push_back("NE_LIGHTS_NUM " + std::to_string(Lights.size()));
+			}
+
+			this->Shader = new API::Shader("Renderer3D_Shader",
 				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 			
-			std::cout << Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes);
+			
+			if (this->Lights.size() > 0)
+			{
+				this->LightUBOSize = sizeof(Math::Vector4) + (this->Lights.size() * sizeof(Components::Internal::Shader_Light_Struct));
+			}
 
-			Members::Shader->SetUniformBuffer(Members::Camera->GetCBuffer(), Members::Shader->GetUniformBufferSlot(Members::Camera->GetCBuffer(),ShaderType::Vertex), ShaderType::Vertex);
+			this->NE_LightUBO = new API::UniformBuffer("NE_Light_CB", this->LightUBOSize);
 
+			this->Shader->SetUniformBuffer(this->Camera->GetCBuffer(), ShaderType::Vertex);
+			this->Shader->SetUniformBuffer(this->NE_LightUBO, ShaderType::Pixel);
 		}
+
 		void Renderer3D::Render_Light()
 		{
+			std::vector<Math::Vector4> UBOBuffer;
+			
+			UBOBuffer.push_back(Math::Vector4(this->Camera->GetPosition(), 32.0f));
+					
+
+			for (uint i = 0; i < this->Lights.size(); i++)
+			{
+				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Position);
+				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Direction);
+				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Intensity_Attenuation);
+				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().InnerCutOf_OuterCutoff);
+				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Color);
+			}
+				
+			this->NE_LightUBO->Update(UBOBuffer.data(), this->LightUBOSize);
 		}
 	}
 }

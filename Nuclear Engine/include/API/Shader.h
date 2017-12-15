@@ -21,6 +21,7 @@ namespace NuclearEngine {
 			~Shader();
 
 			void SetUniformBuffer(UniformBuffer* cbuffer, unsigned int slot , ShaderType type);
+			void SetUniformBuffer(UniformBuffer* cbuffer, ShaderType type);
 			unsigned int GetUniformBufferSlot(UniformBuffer* cbuffer, ShaderType type);
 			void Bind();
 			void Unbind();

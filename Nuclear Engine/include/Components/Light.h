@@ -13,7 +13,7 @@ namespace NuclearEngine {
 			{
 				Math::Vector4 Position;
 				Math::Vector4 Direction;
-				Math::Vector4 Attenuation_Intensity;
+				Math::Vector4 Intensity_Attenuation;
 				Math::Vector4 InnerCutOf_OuterCutoff;
 				Math::Vector4 Color;
 			};
@@ -45,6 +45,8 @@ namespace NuclearEngine {
 			void SetAttenuation(Math::Vector3 att);
 
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
+
+			Internal::Shader_Light_Struct GetInternalData();
 
 		protected:
 			Internal::Shader_Light_Struct data;

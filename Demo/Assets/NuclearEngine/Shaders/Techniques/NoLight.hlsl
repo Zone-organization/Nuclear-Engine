@@ -1,5 +1,5 @@
 
-float4 DoLighting(float2 TexCoords)
+float4 DoLighting(float4 Normal, float4 DiffuseColor)
 {
-	return NE_Diffuse_Tex.Sample(NE_Diffuse_Sampler, TexCoords);
+    return DiffuseColor;
 }

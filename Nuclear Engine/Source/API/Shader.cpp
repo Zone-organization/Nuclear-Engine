@@ -61,6 +61,10 @@ namespace NuclearEngine {
 		{
 			shader->SetUniformBuffer(cbuffer->GetBase(), slot, type);
 		}
+		void Shader::SetUniformBuffer(UniformBuffer * cbuffer, ShaderType type)
+		{
+			shader->SetUniformBuffer(cbuffer->GetBase(), shader->GetUniformBufferSlot(cbuffer->GetBase(), type), type);
+		}
 		unsigned int Shader::GetUniformBufferSlot(UniformBuffer * cbuffer, ShaderType type)
 		{
 			return shader->GetUniformBufferSlot(cbuffer->GetBase(), type);
