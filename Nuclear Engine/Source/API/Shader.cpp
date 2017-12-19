@@ -1,3 +1,4 @@
+#include "..\..\..\Nuclear Renderer Base\include\NuclearRendererBase\NRBShader.h"
 #include <API\Shader.h>
 #include <Core\Context.h>
 #include <NuclearRendererBase/NRBShader.h>

@@ -172,6 +172,8 @@ void Test()
 	Derived derived;
 	Base *base2 = new Derived();
 
+	std::cin >> i;
+
 	std::cout << "Normal\n";
 	clock.Restart();
 	for (int i = 0; i < 10000000; i++)

@@ -11,6 +11,8 @@ namespace NuclearEngine {
 		public:
 			
 			API::Texture *Diffuse;
+			API::Texture *Specular;
+
 		};
 	}
 }

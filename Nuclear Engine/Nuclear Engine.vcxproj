@@ -332,20 +332,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
+    <ClInclude Include="include\API\IndexBuffer.h" />
+    <ClInclude Include="include\API\InputLayout.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
+    <ClInclude Include="include\API\Shader.h" />
+    <ClInclude Include="include\API\Texture.h" />
+    <ClInclude Include="include\API\UniformBuffer.h" />
+    <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\Components\Models\Cube.h" />
+    <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Core\Context.h" />
     <ClInclude Include="include\Core\ContextDesc.h" />
-    <ClInclude Include="include\API\UniformBuffer.h" />
-    <ClInclude Include="include\API\Texture.h" />
-    <ClInclude Include="include\API\VertexBuffer.h" />
-    <ClInclude Include="include\API\InputLayout.h" />
-    <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\CompilerConfig.h" />
-    <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\Components\FlyCamera.h" />
     <ClInclude Include="include\Components\GenericCamera.h" />
     <ClInclude Include="include\Components\Skybox.h" />
@@ -358,7 +360,6 @@
     <ClInclude Include="include\Core\Systems\AudioSystem.h" />
     <ClInclude Include="include\Core\Parsers\INIParserClass.h" />
     <ClInclude Include="include\Core\Parsers\INIFile.h" />
-    <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\Renderers\Renderer3D.h" />
@@ -372,11 +373,17 @@
   <ItemGroup>
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\API\DepthStencilState.cpp" />
+    <ClCompile Include="Source\API\IndexBuffer.cpp" />
+    <ClCompile Include="Source\API\InputLayout.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
+    <ClCompile Include="Source\API\Shader.cpp" />
+    <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\UniformBuffer.cpp" />
+    <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
+    <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Core\Context.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
@@ -384,12 +391,7 @@
     <ClCompile Include="Source\Components\FlyCamera.cpp" />
     <ClCompile Include="Source\Components\GenericCamera.cpp" />
     <ClCompile Include="Source\Components\Skybox.cpp" />
-    <ClCompile Include="Source\API\IndexBuffer.cpp" />
-    <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\Core\Game.cpp" />
-    <ClCompile Include="Source\API\Shader.cpp" />
-    <ClCompile Include="Source\API\VertexBuffer.cpp" />
-    <ClCompile Include="Source\API\InputLayout.cpp" />
     <ClCompile Include="Source\Core\FileSystem.cpp" />
     <ClCompile Include="Source\Core\Systems\AudioSystem.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />

@@ -180,14 +180,25 @@ namespace NuclearEngine {
 
 		Cube::Cube(InputSignatures Signature, Shading::Material * mat)
 		{
-			MaterialTexture _tex;
-			_tex.tex = mat->Diffuse;
-			_tex.type = MaterialTextureType::Diffuse;
-			
-
 			std::vector<MaterialTexture> texturebuf;
-			texturebuf.push_back(_tex);
 
+			if (mat != nullptr)
+			{
+				MaterialTexture _tex;
+				_tex.tex = mat->Diffuse;
+				_tex.type = MaterialTextureType::Diffuse;
+
+				texturebuf.push_back(_tex);
+
+				if (mat->Specular != nullptr)
+				{
+					MaterialTexture __tex;
+					__tex.tex = mat->Specular;
+					__tex.type = MaterialTextureType::Specular;
+					texturebuf.push_back(__tex);
+				}
+
+			}
 			cube = Mesh_NoIndices(ParseInputSignatureForCube(Signature), texturebuf, Signature);
 		}
 		void Cube::Draw(API::Shader* shader)

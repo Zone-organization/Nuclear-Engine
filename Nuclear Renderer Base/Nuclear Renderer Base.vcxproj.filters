@@ -21,9 +21,6 @@
     <ClInclude Include="include\NuclearRendererBase\NRBVertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NuclearRendererBase\NRBShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NuclearRendererBase\NRBInputLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -40,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NuclearRendererBase\NRBDepthStencilState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NuclearRendererBase\NRBShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
