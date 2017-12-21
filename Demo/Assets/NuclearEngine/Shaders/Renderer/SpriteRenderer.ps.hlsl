@@ -14,5 +14,5 @@ SamplerState SpriteTexture_Sampler : register(s0);
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-    return Color * SpriteTexture.Sample(SpriteTexture_Sampler, input.TexCoord);
+    return Color *  SpriteTexture.Sample(SpriteTexture_Sampler, input.TexCoord);
 }

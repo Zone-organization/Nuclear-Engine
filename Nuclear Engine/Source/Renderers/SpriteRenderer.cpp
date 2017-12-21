@@ -18,6 +18,7 @@ namespace NuclearEngine {
 		}
 		void SpriteRenderer::DrawSprite(API::Texture * texture, Math::Vector2 position, Math::Vector2 size, float rotate, API::Color color)
 		{    
+			std::cout << color;
 			// Prepare transformations
 			this->shader->Bind();
 			Math::Matrix4 model;
@@ -33,7 +34,7 @@ namespace NuclearEngine {
 
 			camera->SetModelMatrix(model);
 
-			texture->PSBind(0);
+			texture->PSBind("SpriteTexture",shader,0);
 			vbo->Bind();
 			Core::Context::Draw(6);
 			vbo->Unbind();		

@@ -64,7 +64,7 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.1f, 0.1f, 0.1f, 1.0f));
 		
-		Renderer->DrawSprite(WoodenBoxTex, Math::Vector2(200.0f, 200.0f), (300, 400));
+		Renderer->DrawSprite(WoodenBoxTex, Math::Vector2(200.0f, 200.0f), (300, 400) ,0.0f,API::Color(0.0f,1.0f,0.0f,1.0f));
 
 		Core::Context::End();
 	}
