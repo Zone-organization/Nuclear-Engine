@@ -1,13 +1,13 @@
 #pragma once
 #include <NuclearRendererDX11\DX11Common.h>
-#include <NuclearRendererBase/NRBUniformBuffer.h>
+#include <NuclearRendererBase/NRBConstantBuffer.h>
 
 namespace NuclearRenderer {
 	
-	class NRDX11API DX11UniformBuffer : public NRBUniformBuffer
+	class NRDX11API DX11ConstantBuffer : public NRBConstantBuffer
 	{
 	public:
-		DX11UniformBuffer();
+		DX11ConstantBuffer();
 
 		void Create(const char *Nameinshader, unsigned int size) override;
 		void Update(const void* data, unsigned int size) override;

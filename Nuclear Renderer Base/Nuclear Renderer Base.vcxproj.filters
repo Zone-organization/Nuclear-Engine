@@ -27,9 +27,6 @@
     <ClInclude Include="include\NuclearRendererBase\NRBIndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NuclearRendererBase\NRBUniformBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NuclearRendererBase\NRBRenderTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -40,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NuclearRendererBase\NRBShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NuclearRendererBase\NRBConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

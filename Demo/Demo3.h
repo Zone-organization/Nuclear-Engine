@@ -12,7 +12,7 @@ class Demo3 : public Core::Game
 protected:
 	API::Shader *CubeShader;
 	API::VertexBuffer *CubeVB;
-	API::UniformBuffer *CubeCB;
+	API::ConstantBuffer *CubeCB;
 	API::InputLayout *CubeIL;
 	API::Texture *WoodenBoxTex;
 public:
@@ -83,8 +83,8 @@ public:
 
 		CubeVB->SetInputLayout(CubeIL, CubeShader);
 		
-		CubeCB = new API::UniformBuffer("NE_Camera", sizeof(Shader_Uniforms));
-		CubeShader->SetUniformBuffer(CubeCB, 0, ShaderType::Vertex);
+		CubeCB = new API::ConstantBuffer("NE_Camera", sizeof(Shader_Uniforms));
+		CubeShader->SetConstantBuffer(CubeCB, 0, ShaderType::Vertex);
 	
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;

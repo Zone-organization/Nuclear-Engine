@@ -962,7 +962,7 @@ void ToGLSL::TranslateVariableNameWithMask(bstring glsl, const Operand* psOperan
 
 					if ((psContext->flags & HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT_WITH_INSTANCE_NAME) && psCBuf)
 					{
-						std::string instanceName = UniformBufferInstanceName(psContext, psCBuf->name);
+						std::string instanceName = ConstantBufferInstanceName(psContext, psCBuf->name);
 						bformata(glsl, "%s.", instanceName.c_str());
 					}
 
@@ -989,7 +989,7 @@ void ToGLSL::TranslateVariableNameWithMask(bstring glsl, const Operand* psOperan
 					std::string instanceNamePrefix;
 					if ((psContext->flags & HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT_WITH_INSTANCE_NAME) && psCBuf)
 					{
-						std::string instanceName = UniformBufferInstanceName(psContext, psCBuf->name);
+						std::string instanceName = ConstantBufferInstanceName(psContext, psCBuf->name);
 						instanceNamePrefix = instanceName + ".";
 					}
 
@@ -1638,7 +1638,7 @@ void ConcatTextureSamplerName(bstring str, ShaderInfo* psShaderInfo, const uint3
 }
 
 // Take an uniform buffer name and generate an instance name.
-std::string UniformBufferInstanceName(HLSLCrossCompilerContext* psContext, const std::string& name)
+std::string ConstantBufferInstanceName(HLSLCrossCompilerContext* psContext, const std::string& name)
 {
 	if (name == "$Globals")
 	{

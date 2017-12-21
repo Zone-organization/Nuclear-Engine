@@ -7,14 +7,14 @@ namespace NuclearEngine {
 }
 
 namespace NuclearRenderer {
-	class NRBUniformBuffer;
+	class NRBConstantBuffer;
 	class NRBShader
 	{
 	public:
 		virtual bool Create(NuclearEngine::BinaryShaderBlob* VertexShaderCode, NuclearEngine::BinaryShaderBlob* PixelShaderCode, NuclearEngine::BinaryShaderBlob* GeometryShaderCode) = 0;
 
-		virtual void SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) = 0;
-		virtual unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) = 0;
+		virtual void SetConstantBuffer(NRBConstantBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) = 0;
+		virtual unsigned int GetConstantBufferSlot(NRBConstantBuffer* ubuffer, NuclearEngine::ShaderType type) = 0;
 
 		virtual void Delete() = 0;
 		virtual void Bind() = 0;

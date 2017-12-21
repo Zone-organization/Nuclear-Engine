@@ -9,7 +9,7 @@ namespace NuclearRenderer
 {
 	class NRBVertexBuffer;
 	class NRBIndexBuffer;
-	class NRBUniformBuffer;
+	class NRBConstantBuffer;
 	class NRBRenderTarget;
 	class NRBDepthStencilState;
 	class NRBTexture;
@@ -43,7 +43,7 @@ namespace NuclearRenderer
 
 		virtual NRBVertexBuffer* ConstructVertexBuffer(NRBVertexBuffer* param) = 0;
 		virtual NRBIndexBuffer* ConstructIndexBuffer(NRBIndexBuffer* param) = 0;
-		virtual NRBUniformBuffer* ConstructUniformBuffer(NRBUniformBuffer* param) = 0;
+		virtual NRBConstantBuffer* ConstructConstantBuffer(NRBConstantBuffer* param) = 0;
 		virtual NRBRenderTarget* ConstructRenderTarget(NRBRenderTarget* param) = 0;		
 		virtual NRBDepthStencilState* ConstructDepthStencilState(NRBDepthStencilState* param) = 0;
 		virtual NRBTexture* ConstructTexture(NRBTexture* param) = 0;

@@ -164,6 +164,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game_Breakout.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Demo1.h" />
     <ClInclude Include="Demo2.h" />

@@ -1,7 +1,7 @@
 #include "NuclearRendererOGL3\GLContext.h"
 #include <NuclearRendererOGL3\GLVertexBuffer.h>
 #include <NuclearRendererOGL3\GLIndexBuffer.h>
-#include <NuclearRendererOGL3\GLUniformBuffer.h>
+#include <NuclearRendererOGL3\GLConstantBuffer.h>
 #include <NuclearRendererOGL3\GLRenderTarget.h>
 #include <NuclearRendererOGL3\GLDepthStencilState.h>
 #include <NuclearRendererOGL3\GLTexture.h>
@@ -124,9 +124,9 @@ namespace NuclearRenderer
 		return param;
 	}
 
-	NRBUniformBuffer * GLContext::ConstructUniformBuffer(NRBUniformBuffer * param)
+	NRBConstantBuffer * GLContext::ConstructConstantBuffer(NRBConstantBuffer * param)
 	{
-		param = new NuclearRenderer::GLUniformBuffer();
+		param = new NuclearRenderer::GLConstantBuffer();
 
 		return param;
 	}

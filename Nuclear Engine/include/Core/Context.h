@@ -11,7 +11,7 @@ namespace NuclearRenderer
 	class NRBContext;
 	class NRBVertexBuffer;
 	class NRBIndexBuffer;
-	class NRBUniformBuffer;
+	class NRBConstantBuffer;
 	class NRBTexture;
 	class NRBTextureCube;
 	class NRBDepthStencilState;
@@ -65,7 +65,7 @@ namespace NuclearEngine
 			
 			static NuclearRenderer::NRBVertexBuffer* ConstructVertexBuffer(NuclearRenderer::NRBVertexBuffer* param);
 			static NuclearRenderer::NRBIndexBuffer* ConstructIndexBuffer(NuclearRenderer::NRBIndexBuffer* param);
-			static NuclearRenderer::NRBUniformBuffer* ConstructUniformBuffer(NuclearRenderer::NRBUniformBuffer* param);
+			static NuclearRenderer::NRBConstantBuffer* ConstructConstantBuffer(NuclearRenderer::NRBConstantBuffer* param);
 			static NuclearRenderer::NRBTexture* ConstructTexture(NuclearRenderer::NRBTexture* param);
 			static NuclearRenderer::NRBDepthStencilState* ConstructDepthStencilState(NuclearRenderer::NRBDepthStencilState* param);
 			static NuclearRenderer::NRBTextureCube* ConstructTextureCube(NuclearRenderer::NRBTextureCube* param);

@@ -1,12 +1,12 @@
-#include <NuclearRendererOGL3\GLUniformBuffer.h>
+#include <NuclearRendererOGL3\GLConstantBuffer.h>
 static int ubosBindingindex = 0;
 
 namespace NuclearRenderer
 {
-	GLUniformBuffer::GLUniformBuffer()
+	GLConstantBuffer::GLConstantBuffer()
 	{
 	}	
-	void GLUniformBuffer::Create(const char * Nameinshader, unsigned int size)
+	void GLConstantBuffer::Create(const char * Nameinshader, unsigned int size)
 	{
 		this->name = Nameinshader;
 		this->m_Bindingindex = ubosBindingindex;
@@ -23,28 +23,28 @@ namespace NuclearRenderer
 
 	}
 
-	void GLUniformBuffer::Update(const void* data, unsigned int size)
+	void GLConstantBuffer::Update(const void* data, unsigned int size)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	void GLUniformBuffer::Delete()
+	void GLConstantBuffer::Delete()
 	{
 		glDeleteBuffers(1, &buffer);
 	}
 
-	unsigned int GLUniformBuffer::GetBindingIndex()
+	unsigned int GLConstantBuffer::GetBindingIndex()
 	{
 		return m_Bindingindex;
 	}
 
-	const char * GLUniformBuffer::GetName()
+	const char * GLConstantBuffer::GetName()
 	{
 		return name;
 	}
-	ID3D11Buffer * const * GLUniformBuffer::GetDXBuffer()
+	ID3D11Buffer * const * GLConstantBuffer::GetDXBuffer()
 	{
 		return nullptr;
 	}

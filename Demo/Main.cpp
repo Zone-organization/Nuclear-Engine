@@ -5,6 +5,7 @@
 #include "Demo3.h"
 #include "Demo4.h"
 #include "Demo5.h"
+#include "Game_Breakout.h"
 #include <NuclearPlatform\Clock.h>
 
 void Test();
@@ -34,7 +35,7 @@ void Start()
 int main(int argc, char* argv[])
 {
 	std::cout
-		<< "-----[Select the demo you want]-----"
+		<< "-----[Select the demo you want]-----\n"
 		<< "---Low level API demos:\n"
 		<< "1) Demo 1 - Colored Triangle - introduction to Shaders & Vertex Buffers & Input Layouts\n"
 		<< "2) Demo 2 - Textured Rectangle -  introduction to Index Buffers & Textures\n"
@@ -42,7 +43,10 @@ int main(int argc, char* argv[])
 
 		<< "---High level engine demos:\n"
 		<< "4) Demo 4 - Dynamic Textured Cube - introduction to Camera & Input & Components\n"
-		<< "5) Demo 5 - Lighted Scene - introduction to Lights & Renderer3D & Techniques\n";
+		<< "5) Demo 5 - Lighted Scene - introduction to Lights & Renderer3D & Techniques\n"
+
+		<< "---Game demos:\n"
+		<< "a) Breakout - 2D\n";
 
 	char choice;
 	std::cin >> choice;
@@ -70,6 +74,11 @@ int main(int argc, char* argv[])
 		Start();
 		Demo5 demo;
 		Core::Engine::Run(&demo);
+	}
+	else if (choice == 'a') {
+		Start();
+		BreakOut game;
+		Core::Engine::Run(&game);
 	}
 	else {
 		std::cout << "Running Test...\n";

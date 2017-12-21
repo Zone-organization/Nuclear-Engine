@@ -26,7 +26,7 @@ public:
 		
 		Camera = new Components::FlyCamera();
 		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		CubeShader->SetUniformBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
+		CubeShader->SetConstantBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;

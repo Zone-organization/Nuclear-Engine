@@ -21,6 +21,6 @@ std::string ResourceName(HLSLCrossCompilerContext* psContext, ResourceGroup grou
 std::string TextureSamplerName(ShaderInfo* psShaderInfo, const uint32_t ui32TextureRegisterNumber, const uint32_t ui32SamplerRegisterNumber, const int bZCompare);
 void ConcatTextureSamplerName(bstring str, ShaderInfo* psShaderInfo, const uint32_t ui32TextureRegisterNumber, const uint32_t ui32SamplerRegisterNumber, const int bZCompare);
 
-std::string UniformBufferInstanceName(HLSLCrossCompilerContext* psContext, const std::string& name);
+std::string ConstantBufferInstanceName(HLSLCrossCompilerContext* psContext, const std::string& name);
 
 #endif

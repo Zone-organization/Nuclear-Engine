@@ -3,7 +3,7 @@
 #include <NuclearRendererBase\NRBContext.h>
 #include <NuclearRendererBase\NRBVertexBuffer.h>
 #include <NuclearRendererBase\NRBIndexBuffer.h>
-#include <NuclearRendererBase\NRBUniformBuffer.h>
+#include <NuclearRendererBase\NRBConstantBuffer.h>
 #include <NuclearRendererBase\NRBTexture.h>
 #include <NuclearRendererBase\NRBShader.h>
 #include <NuclearRendererOGL3\GLContext.h>
@@ -108,9 +108,9 @@ namespace NuclearEngine
 			return ctx->ConstructIndexBuffer(param);
 		}
 
-		NRBUniformBuffer * Context::ConstructUniformBuffer(NRBUniformBuffer * param)
+		NRBConstantBuffer * Context::ConstructConstantBuffer(NRBConstantBuffer * param)
 		{
-			return ctx->ConstructUniformBuffer(param);
+			return ctx->ConstructConstantBuffer(param);
 		}
 
 		NRBTexture * Context::ConstructTexture(NRBTexture * param)

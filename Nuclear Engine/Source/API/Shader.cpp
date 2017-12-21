@@ -58,17 +58,17 @@ namespace NuclearEngine {
 			}
 		}
 
-		void Shader::SetUniformBuffer(UniformBuffer* cbuffer, unsigned int slot, ShaderType type)
+		void Shader::SetConstantBuffer(ConstantBuffer* cbuffer, unsigned int slot, ShaderType type)
 		{
-			shader->SetUniformBuffer(cbuffer->GetBase(), slot, type);
+			shader->SetConstantBuffer(cbuffer->GetBase(), slot, type);
 		}
-		void Shader::SetUniformBuffer(UniformBuffer * cbuffer, ShaderType type)
+		void Shader::SetConstantBuffer(ConstantBuffer * cbuffer, ShaderType type)
 		{
-			shader->SetUniformBuffer(cbuffer->GetBase(), shader->GetUniformBufferSlot(cbuffer->GetBase(), type), type);
+			shader->SetConstantBuffer(cbuffer->GetBase(), shader->GetConstantBufferSlot(cbuffer->GetBase(), type), type);
 		}
-		unsigned int Shader::GetUniformBufferSlot(UniformBuffer * cbuffer, ShaderType type)
+		unsigned int Shader::GetConstantBufferSlot(ConstantBuffer * cbuffer, ShaderType type)
 		{
-			return shader->GetUniformBufferSlot(cbuffer->GetBase(), type);
+			return shader->GetConstantBufferSlot(cbuffer->GetBase(), type);
 		}
 		void Shader::Bind()
 		{

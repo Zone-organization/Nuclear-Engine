@@ -33,13 +33,13 @@
     <ClInclude Include="include\NuclearRendererDX11\DX11Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NuclearRendererDX11\DX11UniformBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NuclearRendererDX11\DX11Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NuclearRendererDX11\DX11DepthStencilState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NuclearRendererDX11\DX11ConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,9 +53,6 @@
     <ClCompile Include="source\DX11Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\DX11UniformBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\DX11VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\DX11DepthStencilState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DX11ConstantBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

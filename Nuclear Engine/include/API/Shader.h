@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <API\UniformBuffer.h>
+#include <API\ConstantBuffer.h>
 #include <NuclearCommon\Common_API_Types.h>
 
 namespace NuclearRenderer
@@ -20,9 +20,9 @@ namespace NuclearEngine {
 			Shader(const char *name, BinaryShaderBlob* VertexShader, BinaryShaderBlob* PixelShader, BinaryShaderBlob* GeometryShader = nullptr);
 			~Shader();
 
-			void SetUniformBuffer(UniformBuffer* cbuffer, unsigned int slot , ShaderType type);
-			void SetUniformBuffer(UniformBuffer* cbuffer, ShaderType type);
-			unsigned int GetUniformBufferSlot(UniformBuffer* cbuffer, ShaderType type);
+			void SetConstantBuffer(ConstantBuffer* cbuffer, unsigned int slot , ShaderType type);
+			void SetConstantBuffer(ConstantBuffer* cbuffer, ShaderType type);
+			unsigned int GetConstantBufferSlot(ConstantBuffer* cbuffer, ShaderType type);
 			void Bind();
 			void Unbind();
 

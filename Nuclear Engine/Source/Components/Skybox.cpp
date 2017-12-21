@@ -60,8 +60,8 @@ namespace NuclearEngine
 
 			_CameraCbuffer = CameraCbuffer;
 
-			unsigned int slot = shader.GetUniformBufferSlot(CameraCbuffer->GetCBuffer(), ShaderType::Vertex);
-			shader.SetUniformBuffer(CameraCbuffer->GetCBuffer(), slot, ShaderType::Vertex);
+			unsigned int slot = shader.GetConstantBufferSlot(CameraCbuffer->GetCBuffer(), ShaderType::Vertex);
+			shader.SetConstantBuffer(CameraCbuffer->GetCBuffer(), slot, ShaderType::Vertex);
 
 			API::VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;

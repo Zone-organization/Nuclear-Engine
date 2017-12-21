@@ -158,7 +158,7 @@
     <ClInclude Include="include\NuclearRendererOGL3\GLRenderTarget.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLShader.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLTexture.h" />
-    <ClInclude Include="include\NuclearRendererOGL3\GLUniformBuffer.h" />
+    <ClInclude Include="include\NuclearRendererOGL3\GLConstantBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLVertexBuffer.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GL_Common.h" />
     <ClInclude Include="include\NuclearRendererOGL3\GLContext.h" />
@@ -169,7 +169,7 @@
     <ClCompile Include="source\GLDepthStencilState.cpp" />
     <ClCompile Include="source\GLRenderTarget.cpp" />
     <ClCompile Include="source\GLTexture.cpp" />
-    <ClCompile Include="source\GLUniformBuffer.cpp" />
+    <ClCompile Include="source\GLConstantBuffer.cpp" />
     <ClCompile Include="source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="source\GLContext.cpp" />
     <ClCompile Include="source\GLShader.cpp" />

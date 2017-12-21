@@ -1,5 +1,5 @@
 #include <NuclearRendererOGL3\GLShader.h>
-#include <NuclearRendererBase\NRBUniformBuffer.h>
+#include <NuclearRendererBase\NRBConstantBuffer.h>
 #include <NuclearCommon\Utilities\Logger.h>
 #include <NuclearCommon\Common_API_Types.h>
 #include <iostream>
@@ -154,12 +154,12 @@ namespace NuclearRenderer
 
 	}
 
-	void GLShader::SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
+	void GLShader::SetConstantBuffer(NRBConstantBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
 	{
 		glUniformBlockBinding(GetGLShaderID(), slot, ubuffer->GetBindingIndex());		
 	}
 
-	unsigned int GLShader::GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type)
+	unsigned int GLShader::GetConstantBufferSlot(NRBConstantBuffer* ubuffer, NuclearEngine::ShaderType type)
 	{
 		return glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());;
 	}

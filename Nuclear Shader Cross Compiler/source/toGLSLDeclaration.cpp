@@ -883,7 +883,7 @@ static void DeclareUBOConstants(HLSLCrossCompilerContext* psContext, const uint3
 
 	if (psContext->flags & HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT_WITH_INSTANCE_NAME)
 	{
-		std::string instanceName = UniformBufferInstanceName(psContext, psCBuf->name);
+		std::string instanceName = ConstantBufferInstanceName(psContext, psCBuf->name);
 		bformata(glsl, "} %s;\n", instanceName.c_str());
 	}
 	else

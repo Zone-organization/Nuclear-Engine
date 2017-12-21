@@ -158,7 +158,7 @@
     <ClInclude Include="include\NuclearRendererDX11\DX11DepthStencilState.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Shader.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Texture.h" />
-    <ClInclude Include="include\NuclearRendererDX11\DX11UniformBuffer.h" />
+    <ClInclude Include="include\NuclearRendererDX11\DX11ConstantBuffer.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11VertexBuffer.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11Common.h" />
     <ClInclude Include="include\NuclearRendererDX11\DX11_PrivateCommon.h" />
@@ -169,7 +169,7 @@
     <ClCompile Include="source\DX11DepthStencilState.cpp" />
     <ClCompile Include="source\DX11Shader.cpp" />
     <ClCompile Include="source\DX11Texture.cpp" />
-    <ClCompile Include="source\DX11UniformBuffer.cpp" />
+    <ClCompile Include="source\DX11ConstantBuffer.cpp" />
     <ClCompile Include="source\DX11VertexBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

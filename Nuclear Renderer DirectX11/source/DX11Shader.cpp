@@ -1,5 +1,5 @@
 #include <NuclearRendererDX11\DX11Context.h>
-#include <NuclearRendererBase\NRBUniformBuffer.h>
+#include <NuclearRendererBase\NRBConstantBuffer.h>
 #include <NuclearRendererDX11\DX11Shader.h>
 #include <NuclearCommon\Utilities\Logger.h>
 #include <d3dcompiler.h>
@@ -91,7 +91,7 @@ namespace NuclearRenderer {
 		}
 	}
 
-	void DX11Shader::SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
+	void DX11Shader::SetConstantBuffer(NRBConstantBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
 	{
 		if (type == ShaderType::Vertex)
 		{
@@ -113,7 +113,7 @@ namespace NuclearRenderer {
 	}
 
 
-	unsigned int DX11Shader::GetUniformBufferSlot(NRBUniformBuffer * ubuffer, NuclearEngine::ShaderType type)
+	unsigned int DX11Shader::GetConstantBufferSlot(NRBConstantBuffer * ubuffer, NuclearEngine::ShaderType type)
 	{
 		ID3D11ShaderReflection* pReflector = NULL;
 		D3D11_SHADER_INPUT_BIND_DESC Desc;
@@ -162,7 +162,7 @@ namespace NuclearRenderer {
 			}
 		}
 		
-		Log->Warning(std::string("[DirectX] GetUniformBufferSlot for: \"" + std::string(ubuffer->GetName()) + "\" failed, Returning 0 as default.\n"));
+		Log->Warning(std::string("[DirectX] GetConstantBufferSlot for: \"" + std::string(ubuffer->GetName()) + "\" failed, Returning 0 as default.\n"));
 		return 0;
 	}
 

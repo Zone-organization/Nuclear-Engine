@@ -11,8 +11,8 @@ namespace NuclearRenderer {
 
 		bool Create(NuclearEngine::BinaryShaderBlob* VertexShaderCode, NuclearEngine::BinaryShaderBlob* PixelShaderCode, NuclearEngine::BinaryShaderBlob* GeometryShaderCode) override;
 
-		void SetUniformBuffer(NRBUniformBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) override;
-		unsigned int GetUniformBufferSlot(NRBUniformBuffer* ubuffer, NuclearEngine::ShaderType type) override;
+		void SetConstantBuffer(NRBConstantBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type) override;
+		unsigned int GetConstantBufferSlot(NRBConstantBuffer* ubuffer, NuclearEngine::ShaderType type) override;
 
 		void Bind() override;
 		void Unbind() override;

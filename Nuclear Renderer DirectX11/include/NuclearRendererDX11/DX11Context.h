@@ -24,7 +24,7 @@ namespace NuclearRenderer
 
 		NRBVertexBuffer* ConstructVertexBuffer(NRBVertexBuffer* param) override;
 		NRBIndexBuffer* ConstructIndexBuffer(NRBIndexBuffer* param) override;
-		NRBUniformBuffer* ConstructUniformBuffer(NRBUniformBuffer* param) override;
+		NRBConstantBuffer* ConstructConstantBuffer(NRBConstantBuffer* param) override;
 		NRBRenderTarget* ConstructRenderTarget(NRBRenderTarget* param) override;
 		NRBDepthStencilState* ConstructDepthStencilState(NRBDepthStencilState* param) override;
 		NRBTexture* ConstructTexture(NRBTexture* param) override;

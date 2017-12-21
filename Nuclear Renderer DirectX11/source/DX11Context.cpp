@@ -3,7 +3,7 @@
 #include <NuclearCommon\Utilities\Logger.h>
 #include <NuclearRendererDX11\DX11VertexBuffer.h>
 #include <NuclearRendererDX11\DX11IndexBuffer.h>
-#include <NuclearRendererDX11\DX11UniformBuffer.h>
+#include <NuclearRendererDX11\DX11ConstantBuffer.h>
 #include <NuclearRendererDX11\DX11DepthStencilState.h>
 #include <NuclearRendererDX11\DX11Texture.h>
 #include <NuclearRendererDX11\DX11Shader.h>
@@ -469,9 +469,9 @@ namespace NuclearRenderer {
 		return param;
 	}
 
-	NRBUniformBuffer * DX11Context::ConstructUniformBuffer(NRBUniformBuffer * param)
+	NRBConstantBuffer * DX11Context::ConstructConstantBuffer(NRBConstantBuffer * param)
 	{
-		param = new NuclearRenderer::DX11UniformBuffer();
+		param = new NuclearRenderer::DX11ConstantBuffer();
 
 		return param;
 	}

@@ -23,6 +23,7 @@ _____________/BOOOM\_____________
 
 //# Renderers Headers
 #include <Renderers\Renderer3D.h>
+#include <Renderers\SpriteRenderer.h>
 
 //# Shading Headers
 #include <Shading/Material.h>
@@ -33,7 +34,7 @@ _____________/BOOOM\_____________
 //# OneAPI Headers
 #include <API/VertexBuffer.h>
 #include <API/IndexBuffer.h>
-#include <API/UniformBuffer.h>
+#include <API/ConstantBuffer.h>
 #include <API/InputLayout.h>
 #include <API/Texture.h>
 #include <API/DepthStencilState.h>

@@ -1,7 +1,7 @@
 #include <Renderers\Renderer3D.h>
 #include <Core\FileSystem.h>
 #include <Shading\Techniques\NoLight.h>
-#include <API\UniformBuffer.h>
+#include <API\ConstantBuffer.h>
 
 namespace NuclearEngine {
 	namespace Renderers {
@@ -59,10 +59,10 @@ namespace NuclearEngine {
 				this->LightUBOSize = sizeof(Math::Vector4) + (this->Lights.size() * sizeof(Components::Internal::Shader_Light_Struct));
 			}
 
-			this->NE_LightUBO = new API::UniformBuffer("NE_Light_CB", this->LightUBOSize);
+			this->NE_LightUBO = new API::ConstantBuffer("NE_Light_CB", this->LightUBOSize);
 
-			this->Shader->SetUniformBuffer(this->Camera->GetCBuffer(), ShaderType::Vertex);
-			this->Shader->SetUniformBuffer(this->NE_LightUBO, ShaderType::Pixel);
+			this->Shader->SetConstantBuffer(this->Camera->GetCBuffer(), ShaderType::Vertex);
+			this->Shader->SetConstantBuffer(this->NE_LightUBO, ShaderType::Pixel);
 		}
 
 		void Renderer3D::Render_Light()

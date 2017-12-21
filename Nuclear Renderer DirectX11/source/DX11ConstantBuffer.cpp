@@ -1,13 +1,13 @@
 #include <NuclearRendererDX11\DX11Context.h>
-#include <NuclearRendererDX11\DX11UniformBuffer.h>
+#include <NuclearRendererDX11\DX11ConstantBuffer.h>
 #include <NuclearCommon\Common_API_Types.h>
 
 namespace NuclearRenderer {
 
-	DX11UniformBuffer::DX11UniformBuffer()
+	DX11ConstantBuffer::DX11ConstantBuffer()
 	{
 	}
-	void DX11UniformBuffer::Create(const char * Nameinshader, unsigned int size)
+	void DX11ConstantBuffer::Create(const char * Nameinshader, unsigned int size)
 	{
 		//TODO: I suppose not necessry??
 		this->name = Nameinshader;
@@ -24,23 +24,23 @@ namespace NuclearRenderer {
 		DX11Context::GetDevice()->CreateBuffer(&bufferDesc, NULL, &buffer);
 	}
 
-	void DX11UniformBuffer::Update(const void * data, unsigned int size)
+	void DX11ConstantBuffer::Update(const void * data, unsigned int size)
 	{
 		DX11Context::GetContext()->UpdateSubresource(buffer, 0, NULL, data, 0, 0);
 	}
-	void DX11UniformBuffer::Delete()
+	void DX11ConstantBuffer::Delete()
 	{
 		buffer->Release();
 	}
-	unsigned int DX11UniformBuffer::GetBindingIndex()
+	unsigned int DX11ConstantBuffer::GetBindingIndex()
 	{
 		return m_Bindingindex;
 	}
-	const char * DX11UniformBuffer::GetName()
+	const char * DX11ConstantBuffer::GetName()
 	{
 		return name;
 	}
-	ID3D11Buffer * const * DX11UniformBuffer::GetDXBuffer()
+	ID3D11Buffer * const * DX11ConstantBuffer::GetDXBuffer()
 	{
 		return &buffer;
 	}

@@ -30,7 +30,7 @@ namespace NuclearEngine {
 
 		private:
 			API::Shader *Shader;
-			API::UniformBuffer *NE_LightUBO;
+			API::ConstantBuffer *NE_LightUBO;
 			size_t LightUBOSize;
 			Shading::Technique* Light_Rendering_Tech;
 			Components::GenericCamera* Camera;

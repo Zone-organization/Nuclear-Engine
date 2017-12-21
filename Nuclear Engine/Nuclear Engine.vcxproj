@@ -339,7 +339,7 @@
     <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\Texture.h" />
-    <ClInclude Include="include\API\UniformBuffer.h" />
+    <ClInclude Include="include\API\ConstantBuffer.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
@@ -363,6 +363,7 @@
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\Renderers\Renderer3D.h" />
+    <ClInclude Include="include\Renderers\SpriteRenderer.h" />
     <ClInclude Include="include\ResourceManager\ResourceManager.h" />
     <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="include\Shading\Technique.h" />
@@ -378,7 +379,7 @@
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
-    <ClCompile Include="Source\API\UniformBuffer.cpp" />
+    <ClCompile Include="Source\API\ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
@@ -397,6 +398,7 @@
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
+    <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />
     <ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Shading\Technique.cpp" />
