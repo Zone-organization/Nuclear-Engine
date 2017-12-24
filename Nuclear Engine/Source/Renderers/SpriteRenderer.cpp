@@ -18,7 +18,6 @@ namespace NuclearEngine {
 		}
 		void SpriteRenderer::DrawSprite(API::Texture * texture, Math::Vector2 position, Math::Vector2 size, float rotate, API::Color color)
 		{    
-			std::cout << color;
 			// Prepare transformations
 			this->shader->Bind();
 			Math::Matrix4 model;
@@ -38,6 +37,10 @@ namespace NuclearEngine {
 			vbo->Bind();
 			Core::Context::Draw(6);
 			vbo->Unbind();		
+		}
+		void SpriteRenderer::DrawSprite(Components::Sprite * Sprite)
+		{
+			this->DrawSprite(Sprite->Texture, Sprite->Position, Sprite->Size, Sprite->Rotation, Sprite->Color);
 		}
 		void SpriteRenderer::Init()
 		{ 

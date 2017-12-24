@@ -4,11 +4,12 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		Sprite::Sprite(API::Texture *texture, Math::Vector2 position, Math::Vector2 size)
+		Sprite::Sprite(API::Texture * texture, Math::Vector2 position, Math::Vector2 size, API::Color color, Math::Vector2 velocity)
 		{
-			this->m_texture = texture;
-			this->m_position = position;
-			this->m_size = size;
+			Position = position;
+			Size = size;
+			Velocity = velocity;
+			Texture = texture;
 		}
 	}
 }

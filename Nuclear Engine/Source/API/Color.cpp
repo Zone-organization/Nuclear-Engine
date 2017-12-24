@@ -55,6 +55,15 @@ namespace NuclearEngine {
 			return Color(left.r / right.r, left.g / right.g, left.b / right.b, left.a / right.a);
 		}
 
+		Color & Color::operator=(const Color & right)
+		{
+			this->r = right.r;
+			this->g = right.g;
+			this->b = right.b;
+			this->a = right.a;
+			return *this;
+		}
+
 		Color& Color::operator+=(const Color& right)
 		{
 			this->r += right.r;
