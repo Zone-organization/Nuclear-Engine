@@ -91,7 +91,7 @@ public:
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.1f, 0.1f, 0.1f, 1.0f));
-		Renderer->DrawSprite(sprite);
+		//Renderer->DrawSprite(sprite);
 		//Renderer->DrawSprite(block_solid, Math::Vector2(200.0f, 200.0f), (300, 400) ,0.0f,API::Color(0.0f,1.0f,0.0f,1.0f));
 		lvl.Draw(Renderer);
 		Core::Context::End();

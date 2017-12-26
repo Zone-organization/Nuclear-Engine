@@ -8,8 +8,13 @@ namespace NuclearEngine
 		{
 			Position = position;
 			Size = size;
+			Color = color;
 			Velocity = velocity;
 			Texture = texture;
+			Rotation = 0.0f;
+			IsSolid = true;
+			Destroyed = false;
+			
 		}
 	}
 }
