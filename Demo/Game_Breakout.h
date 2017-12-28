@@ -33,6 +33,9 @@ protected:
 	API::Shader *RendererShader;
 	Renderers::SpriteRenderer *Renderer;
 	Components::Sprite* sprite;
+
+	API::Texture *background;
+
 	GameLevel lvl;
 	Components::FlyCamera *Camera;
 public:
@@ -65,7 +68,7 @@ public:
 		TexDesc.Type = TextureType::Texture2D;
 		block_solid = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block_solid.png", TexDesc), TexDesc);
 		block = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block.png", TexDesc), TexDesc);
-
+		background = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/background.jpg", TexDesc), TexDesc);
 		lvl.Load("Assets/Breakout/Levels/lvl1.lvl",_Width_,_Height_ * 0.5);
 		sprite = new Components::Sprite(block_solid, Math::Vector2(200.0f, 200.0f), (300, 400),  API::Color(0.0f, 1.0f, 0.0f, 1.0f));
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -92,7 +95,7 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.1f, 0.1f, 0.1f, 1.0f));
 		//Renderer->DrawSprite(sprite);
-		//Renderer->DrawSprite(block_solid, Math::Vector2(200.0f, 200.0f), (300, 400) ,0.0f,API::Color(0.0f,1.0f,0.0f,1.0f));
+		Renderer->DrawSprite(background, Math::Vector2(0.0f, 0.0f), (_Width_, _Height_));
 		lvl.Draw(Renderer);
 		Core::Context::End();
 	}

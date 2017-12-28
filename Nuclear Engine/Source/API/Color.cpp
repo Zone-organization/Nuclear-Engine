@@ -15,10 +15,10 @@ namespace NuclearEngine {
 
 		Color::Color(int Red, int Green, int Blue, int Alpha)
 		{
-			r = Red / 255.0;
-			g = Green / 255.0;
-			b = Blue / 255.0;
-			a = Alpha / 255.0;
+			r = Red / 255.0f;
+			g = Green / 255.0f;
+			b = Blue / 255.0f;
+			a = Alpha / 255.0f;
 		}
 
 		Color::Color(float r, float g, float b, float a) :

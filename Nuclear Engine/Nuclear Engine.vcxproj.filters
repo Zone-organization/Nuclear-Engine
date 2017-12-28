@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="include\CompilerConfig.h" />
     <ClInclude Include="include\Core\Systems\AudioSystem.h" />
     <ClInclude Include="include\Core\Parsers\INIParserClass.h" />
     <ClInclude Include="include\Core\Parsers\INIFile.h" />
@@ -39,6 +38,29 @@
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Renderers\SpriteRenderer.h" />
     <ClInclude Include="include\API\ConstantBuffer.h" />
+    <ClInclude Include="include\Math\Math.h" />
+    <ClInclude Include="include\Math\Matrix.h" />
+    <ClInclude Include="include\Math\Operation.h" />
+    <ClInclude Include="include\Math\Transformation.h" />
+    <ClInclude Include="include\Math\Vector.h" />
+    <ClInclude Include="include\Utilities\Logger.h" />
+    <ClInclude Include="include\Platform\Win32\Win32_Clock.h" />
+    <ClInclude Include="include\Platform\Win32\Win32_Window.h" />
+    <ClInclude Include="include\Platform\Clock.h" />
+    <ClInclude Include="include\Platform\Input.h" />
+    <ClInclude Include="include\Platform\Timer.h" />
+    <ClInclude Include="include\Core\Application.h" />
+    <ClInclude Include="include\BuildConfig.h" />
+    <ClInclude Include="include\API\OpenGL\GLCommon.h" />
+    <ClInclude Include="include\API\OpenGL\GLConstantBuffer.h" />
+    <ClInclude Include="include\API\OpenGL\GLContext.h" />
+    <ClInclude Include="include\API\OpenGL\GLDepthStencilState.h" />
+    <ClInclude Include="include\API\OpenGL\GLIndexBuffer.h" />
+    <ClInclude Include="include\API\OpenGL\GLShader.h" />
+    <ClInclude Include="include\API\OpenGL\GLTexture.h" />
+    <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
+    <ClInclude Include="include\API\API_Types.h" />
+    <ClInclude Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Systems\AudioSystem.cpp" />
@@ -72,5 +94,23 @@
     <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />
+    <ClCompile Include="Source\Utilities\Logger.cpp" />
+    <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
+    <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
+    <ClCompile Include="Source\Platform\Win32\Win32_Window.cpp" />
+    <ClCompile Include="Source\Platform\Clock.cpp" />
+    <ClCompile Include="Source\Platform\Input.cpp" />
+    <ClCompile Include="Source\Platform\Timer.cpp" />
+    <ClCompile Include="Source\Core\Application.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLConstantBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLContext.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLIndexBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLRenderTarget.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLDepthStencilState.cpp" />
+    <ClCompile Include="Source\API\OpenGL\Platform\Win32\dllmain.cpp" />
+    <ClCompile Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.cpp" />
   </ItemGroup>
 </Project>

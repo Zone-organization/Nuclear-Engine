@@ -3,11 +3,15 @@
 #include <NuclearCommon\Common_API_Types.h>
 #include <vector>
 
-namespace NuclearRenderer {
-	class NRBInputLayout;
-}
+
 namespace NuclearEngine {
 	namespace API {
+		struct ILElement
+		{
+			int index = 0;
+			const char* name = "";
+			NuclearEngine::DataType dataType;
+		};
 
 		class NEAPI InputLayout
 		{
@@ -16,10 +20,11 @@ namespace NuclearEngine {
 			~InputLayout();
 
 			void Push(const char* SemanticName, int SemanticIndex, DataType dataType);
+			
+			std::vector<ILElement> GetBufferElement();
 
-			NuclearRenderer::NRBInputLayout *GetBase();
 		protected:
-			NuclearRenderer::NRBInputLayout *layout;
+			std::vector<ILElement> Elements;
 		};
 	}
 }	

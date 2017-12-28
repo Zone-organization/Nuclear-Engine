@@ -332,6 +332,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\API\API_Types.h" />
     <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
     <ClInclude Include="include\API\IndexBuffer.h" />
@@ -347,12 +348,17 @@
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Core\Context.h" />
     <ClInclude Include="include\Core\ContextDesc.h" />
-    <ClInclude Include="include\CompilerConfig.h" />
+    <ClInclude Include="include\BuildConfig.h" />
     <ClInclude Include="include\Components\FlyCamera.h" />
     <ClInclude Include="include\Components\GenericCamera.h" />
     <ClInclude Include="include\Components\Skybox.h" />
     <ClInclude Include="include\Core\Game.h" />
     <ClInclude Include="include\Components\Light.h" />
+    <ClInclude Include="include\Math\Math.h" />
+    <ClInclude Include="include\Math\Matrix.h" />
+    <ClInclude Include="include\Math\Operation.h" />
+    <ClInclude Include="include\Math\Transformation.h" />
+    <ClInclude Include="include\Math\Vector.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\NE_Common.h" />
     <ClInclude Include="include\NE_PrivateCommon.h" />
@@ -362,6 +368,20 @@
     <ClInclude Include="include\Core\Parsers\INIFile.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\NE_Exception.h" />
+    <ClInclude Include="include\Core\Application.h" />
+    <ClInclude Include="include\Platform\Clock.h" />
+    <ClInclude Include="include\Platform\Input.h" />
+    <ClInclude Include="include\Platform\Timer.h" />
+    <ClInclude Include="include\Platform\Win32\Win32_Clock.h" />
+    <ClInclude Include="include\Platform\Win32\Win32_Window.h" />
+    <ClInclude Include="include\API\OpenGL\GLConstantBuffer.h" />
+    <ClInclude Include="include\API\OpenGL\GLContext.h" />
+    <ClInclude Include="include\API\OpenGL\GLDepthStencilState.h" />
+    <ClInclude Include="include\API\OpenGL\GLIndexBuffer.h" />
+    <ClInclude Include="include\API\OpenGL\GLShader.h" />
+    <ClInclude Include="include\API\OpenGL\GLTexture.h" />
+    <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
+    <ClInclude Include="include\API\OpenGL\GLCommon.h" />
     <ClInclude Include="include\Renderers\Renderer3D.h" />
     <ClInclude Include="include\Renderers\SpriteRenderer.h" />
     <ClInclude Include="include\ResourceManager\ResourceManager.h" />
@@ -369,6 +389,8 @@
     <ClInclude Include="include\Shading\Technique.h" />
     <ClInclude Include="include\Shading\Techniques\NoLight.h" />
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
+    <ClInclude Include="include\Utilities\Logger.h" />
+    <ClInclude Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -376,6 +398,16 @@
     <ClCompile Include="Source\API\DepthStencilState.cpp" />
     <ClCompile Include="Source\API\IndexBuffer.cpp" />
     <ClCompile Include="Source\API\InputLayout.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLConstantBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLContext.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLDepthStencilState.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLIndexBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLRenderTarget.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\Platform\Win32\dllmain.cpp" />
+    <ClCompile Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
@@ -397,12 +429,20 @@
     <ClCompile Include="Source\Core\Systems\AudioSystem.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
+    <ClCompile Include="Source\Core\Application.cpp" />
+    <ClCompile Include="Source\Platform\Clock.cpp" />
+    <ClCompile Include="Source\Platform\Input.cpp" />
+    <ClCompile Include="Source\Platform\Timer.cpp" />
+    <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
+    <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
+    <ClCompile Include="Source\Platform\Win32\Win32_Window.cpp" />
     <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
     <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />
     <ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Shading\Technique.cpp" />
     <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
+    <ClCompile Include="Source\Utilities\Logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

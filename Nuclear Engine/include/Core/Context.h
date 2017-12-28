@@ -2,7 +2,7 @@
 #include <NE_Common.h>
 #include <API\Color.h>
 
-namespace NuclearPlatform
+namespace Platform
 {
 	class Window;
 }

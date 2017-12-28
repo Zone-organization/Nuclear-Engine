@@ -4,5 +4,5 @@
 
 using namespace NuclearEngine;
 using namespace NuclearPlatform;
-int _Width_ = 1024;
-int _Height_ = 768;
+const int _Width_ = 800;
+const int _Height_ = 600;

@@ -1,8 +1,7 @@
 #include <Core\Engine.h>
 #include <NE_Common.h>
-#include <NuclearPlatform\Application.h>
-#include <NuclearPlatform\Input.h>
-using namespace NuclearPlatform;
+#include <Core\Application.h>
+#include <Platform\Input.h>
 /*
 	      .-.               
           |N|          
@@ -18,6 +17,8 @@ using namespace NuclearPlatform;
        |ZLIXINE| 
 */
 namespace NuclearEngine {
+	using namespace Platform;
+
 	namespace Core {
 
 		static bool HasBeenInitialized;
@@ -165,7 +166,7 @@ namespace NuclearEngine {
 			_state = Engine::State::Rendering;
 			Log->Info("[Engine] Starting Game Rendering!\n");
 
-			NuclearPlatform::Clock clock;
+			Platform::Clock clock;
 			//Main Game Loop
 			while (Core::Engine::ShouldClose() != true)
 			{

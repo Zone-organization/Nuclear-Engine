@@ -25,7 +25,7 @@ PixelInputType main(VertexInputType input)
     output.Position = mul(Projection, output.Position);
 
 	// Store the input texture for the pixel shader to use.
-    output.TexCoord = input.Position.zw;
+    output.TexCoord = float2(input.Position.z, 1.0f - input.Position.w);
     
     return output;
 }
