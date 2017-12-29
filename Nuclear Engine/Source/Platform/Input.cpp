@@ -5,7 +5,7 @@
 #endif
 
 namespace NuclearEngine {
-
+	using namespace Core;
 	namespace Platform {
 		namespace Input {
 			bool Mouse::buttons[NUCLEAR_PLATFORM_MAX_MOUSE_KEYS];

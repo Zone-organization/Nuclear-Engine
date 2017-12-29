@@ -1,8 +1,8 @@
 #include <Core\Application.h>
 #include <iostream>
 namespace NuclearEngine {
-
-	namespace Platform {
+	using namespace Platform;
+	namespace Core {
 		static Clock *windowclock;
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
 		static Internals::Win32_Window* WinType;

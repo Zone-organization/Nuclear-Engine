@@ -17,14 +17,14 @@ namespace NuclearEngine
 	
 		void GenericCamera::Initialize(Math::Matrix4 projectionMatrix)
 		{
-			ConstantBuffer = new API::ConstantBuffer("NE_Camera", sizeof(_CameraBuffer));
+			API::ConstantBuffer::Create(&ConstantBuffer,"NE_Camera", sizeof(_CameraBuffer));
 
 			_CameraBuffer.projectionMatrix = projectionMatrix;
 		}
 
 		void GenericCamera::Update()
 		{
-			ConstantBuffer->Update(&_CameraBuffer, sizeof(_CameraBuffer));
+			ConstantBuffer.Update(&_CameraBuffer, sizeof(_CameraBuffer));
 
 		}
 		void GenericCamera::SetModelMatrix(Math::Matrix4 modelMatrix)
@@ -64,7 +64,7 @@ namespace NuclearEngine
 		{
 			return position;
 		}
-		API::ConstantBuffer* GenericCamera::GetCBuffer()
+		API::ConstantBuffer GenericCamera::GetCBuffer()
 		{
 			return ConstantBuffer;
 		}

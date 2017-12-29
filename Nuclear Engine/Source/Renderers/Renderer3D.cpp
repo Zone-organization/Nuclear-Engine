@@ -2,6 +2,7 @@
 #include <Core\FileSystem.h>
 #include <Shading\Techniques\NoLight.h>
 #include <API\ConstantBuffer.h>
+#include <API\ShaderCompiler.h>
 
 namespace NuclearEngine {
 	namespace Renderers {
@@ -25,7 +26,7 @@ namespace NuclearEngine {
 
 			this->flag = Renderer3DStatusFlag::RequireBaking;
 		}
-		API::Shader * Renderer3D::GetShader()
+		API::Shader Renderer3D::GetShader()
 		{
 			return this->Shader;
 		}
@@ -49,7 +50,7 @@ namespace NuclearEngine {
 				defines.push_back("NE_LIGHTS_NUM " + std::to_string(Lights.size()));
 			}
 
-			this->Shader = new API::Shader("Renderer3D_Shader",
+			API::Shader::Create(&Shader,
 				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 			
@@ -59,10 +60,10 @@ namespace NuclearEngine {
 				this->LightUBOSize = sizeof(Math::Vector4) + (this->Lights.size() * sizeof(Components::Internal::Shader_Light_Struct));
 			}
 
-			this->NE_LightUBO = new API::ConstantBuffer("NE_Light_CB", this->LightUBOSize);
+			API::ConstantBuffer::Create(&NE_LightUBO,"NE_Light_CB", this->LightUBOSize);
 
-			this->Shader->SetConstantBuffer(this->Camera->GetCBuffer(), ShaderType::Vertex);
-			this->Shader->SetConstantBuffer(this->NE_LightUBO, ShaderType::Pixel);
+			this->Shader.SetConstantBuffer(&this->Camera->GetCBuffer(), ShaderType::Vertex);
+			this->Shader.SetConstantBuffer(&this->NE_LightUBO, ShaderType::Pixel);
 		}
 
 		void Renderer3D::Render_Light()
@@ -81,7 +82,7 @@ namespace NuclearEngine {
 				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Color);
 			}
 				
-			this->NE_LightUBO->Update(UBOBuffer.data(), this->LightUBOSize);
+			this->NE_LightUBO.Update(UBOBuffer.data(), this->LightUBOSize);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 #include <API\ConstantBuffer.h>
+#ifdef NE_USE_RUNTIME_RENDERER
 #include <Core\Context.h>
-#include <NuclearRendererBase\NRBConstantBuffer.h>
 
 namespace NuclearEngine {
 	namespace API {
@@ -8,35 +8,35 @@ namespace NuclearEngine {
 		{
 
 		}
-		ConstantBuffer::ConstantBuffer(const char *_nameinshaders, unsigned int size)
-		{
-			buf = Core::Context::ConstructConstantBuffer(buf);
-
-			//Align the buffer to be a multiple of 16
-			int remainder = size % 16;
-			if (remainder != 0)
-			{
-				Log->Warning("[ConstantBuffer] The size of buffer isn't a multiple of 16 which can cause many unexpected problems! \n");
-			}
-
-			buf->Create(_nameinshaders, size);
-		}
+		
 		ConstantBuffer::~ConstantBuffer()
 		{
-			if (buf != nullptr)
+			
+		}
+		void ConstantBuffer::Create(ConstantBuffer* result,const char * _nameinshaders, unsigned int size)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				buf->Delete();
-				delete buf;
-				buf = nullptr;
+				OpenGL::GLConstantBuffer::Create(&result->GLObject,_nameinshaders,size);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DirectX::DX11ConstantBuffer::Create(&result->DXObject, _nameinshaders, size);
 			}
 		}
 		void ConstantBuffer::Update(const void* data, unsigned int size)
 		{
-			buf->Update(data, size);
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Update(data, size);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Update(data, size);
+			}
+
 		}
-		NuclearRenderer::NRBConstantBuffer * ConstantBuffer::GetBase()
-		{
-			return buf;
-		}
+		
 	}
 }
+#endif

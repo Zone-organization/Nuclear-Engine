@@ -2,37 +2,34 @@
 #include <API\OpenGL\GLCommon.h>
 
 #ifdef NE_COMPILE_OPENGL3_3
+#include <API\OpenGL\GLTexture.h>
+
 namespace NuclearEngine
 {
 	struct BinaryShaderBlob;
 	enum class ShaderType;
-	class GLConstantBuffer;
 	namespace API
 	{
 		namespace OpenGL
 		{
+			class GLConstantBuffer;
+
 			class NEAPI GLShader
 			{
+				friend class GLTexture;
 			public:
 				GLShader();
 				~GLShader();
 
-				static GLShader Create(
+				static void Create(GLShader* shader,
 					NuclearEngine::BinaryShaderBlob* VertexShaderCode,
 					NuclearEngine::BinaryShaderBlob* PixelShaderCode,
-					NuclearEngine::BinaryShaderBlob* GeometryShaderCode);
+					NuclearEngine::BinaryShaderBlob* GeometryShaderCode = nullptr);
 				
 				void SetConstantBuffer(GLConstantBuffer* ubuffer, NuclearEngine::ShaderType type);
 				
 				void Bind();
 				void Unbind();
-
-				//OpenGL Specific
-				unsigned int GetGLShaderID();
-
-				//DirectX 11 Specific  Note: Do Nothing here!!
-				void * GetDXBufferPointer();
-				unsigned long GetDXBufferSize();
 
 			private:
 				GLuint _ProgramID;

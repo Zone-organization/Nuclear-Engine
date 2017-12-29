@@ -31,7 +31,7 @@ namespace NuclearEngine
 			Math::Vector3 GetPosition();
 
 			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
-			API::ConstantBuffer* GetCBuffer();
+			API::ConstantBuffer GetCBuffer();
 
 		protected:
 
@@ -42,7 +42,7 @@ namespace NuclearEngine
 				Math::Matrix4 projectionMatrix;
 			}_CameraBuffer;
 
-			API::ConstantBuffer *ConstantBuffer;
+			API::ConstantBuffer ConstantBuffer;
 
 			Math::Vector3 position, direction;
 		};

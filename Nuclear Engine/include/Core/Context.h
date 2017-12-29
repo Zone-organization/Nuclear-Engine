@@ -2,21 +2,6 @@
 #include <NE_Common.h>
 #include <API\Color.h>
 
-namespace Platform
-{
-	class Window;
-}
-namespace NuclearRenderer
-{
-	class NRBContext;
-	class NRBVertexBuffer;
-	class NRBIndexBuffer;
-	class NRBConstantBuffer;
-	class NRBTexture;
-	class NRBTextureCube;
-	class NRBDepthStencilState;
-	class NRBShader;
-}
 namespace NuclearEngine
 {
 	enum PrimitiveType 
@@ -41,7 +26,6 @@ namespace NuclearEngine
 		class NEAPI Context
 		{
 		public:
-			static bool Initialize(NuclearRenderer::NRBContext *context );
 			static bool Initialize(const RenderAPI& renderer);
 
 			static RenderAPI GetRenderAPI();
@@ -63,13 +47,6 @@ namespace NuclearEngine
 
 			static void SetViewPort(int x, int y, int width, int height);
 			
-			static NuclearRenderer::NRBVertexBuffer* ConstructVertexBuffer(NuclearRenderer::NRBVertexBuffer* param);
-			static NuclearRenderer::NRBIndexBuffer* ConstructIndexBuffer(NuclearRenderer::NRBIndexBuffer* param);
-			static NuclearRenderer::NRBConstantBuffer* ConstructConstantBuffer(NuclearRenderer::NRBConstantBuffer* param);
-			static NuclearRenderer::NRBTexture* ConstructTexture(NuclearRenderer::NRBTexture* param);
-			static NuclearRenderer::NRBDepthStencilState* ConstructDepthStencilState(NuclearRenderer::NRBDepthStencilState* param);
-			static NuclearRenderer::NRBTextureCube* ConstructTextureCube(NuclearRenderer::NRBTextureCube* param);
-			static NuclearRenderer::NRBShader* ConstructShader(NuclearRenderer::NRBShader* param);
 		};
 	}
 }

@@ -4,9 +4,8 @@
 class Demo1 : public Core::Game
 {
 protected:
-	API::Shader *TriangleShader;
-	API::VertexBuffer *TriangleVB;
-	API::InputLayout *TriangleIL;
+	API::Shader TriangleShader;
+	API::VertexBuffer TriangleVB;
 
 	float vertices[18] = 
 	{
@@ -24,25 +23,25 @@ public:
 	void Load() override
 	{
 		//Load The Shader
-		TriangleShader = new API::Shader("TriangleShader",
+		API::Shader::Create(&TriangleShader,
 				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 		
-		API::VertexBufferDesc Desc;
+		VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
 		Desc.usage = BufferGPUUsage::Dynamic;
-		Desc.accessflag = BufferCPUAccess::Default;
+		Desc.access = BufferCPUAccess::Default;
 
 		//Create the vertex Buffer
-		TriangleVB = new API::VertexBuffer(Desc);
+		API::VertexBuffer::Create(&TriangleVB,&Desc);
 
-		TriangleIL = new API::InputLayout();
-		TriangleIL->Push("POSITION", 0, DataType::Float3);
-		TriangleIL->Push("COLOR" , 0 , DataType::Float3);
+		API::InputLayout TriangleIL;
+		TriangleIL.Push("POSITION", 0, DataType::Float3);
+		TriangleIL.Push("COLOR" , 0 , DataType::Float3);
 
-		TriangleVB->SetInputLayout(TriangleIL, TriangleShader);
+		TriangleVB.SetInputLayout(&TriangleIL, &TriangleShader);
 
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -55,22 +54,13 @@ public:
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
-		//Don't Forget to clear the depth buffer each frame
-		Core::Context::ClearDepthBuffer();
 
-		// Render Triangle!
-		TriangleShader->Bind();
-		TriangleVB->Bind();
+		TriangleShader.Bind();
+		TriangleVB.Bind();
 		Core::Context::Draw(3);
-		TriangleVB->Unbind();
-		TriangleShader->Unbind();
+		TriangleVB.Unbind();
+		TriangleShader.Unbind();
 
 		Core::Context::End();
-	}
-	void ExitRendering() override	// Exit Rendering
-	{
-		delete TriangleShader;
-		delete TriangleVB;
-		delete TriangleIL;
 	}
 };

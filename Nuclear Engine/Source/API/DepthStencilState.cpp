@@ -1,34 +1,51 @@
-#include <NuclearRendererBase\NRBDepthStencilState.h>
-#include <Core\Context.h>
 #include <API\DepthStencilState.h>
+#ifdef NE_USE_RUNTIME_RENDERER
+#include <Core\Context.h>
 
 namespace NuclearEngine {
 	namespace API {
 		DepthStencilState::DepthStencilState()
 		{
 		}
-		DepthStencilState::DepthStencilState(DepthStencilStateDesc type)
-		{
-			state = Core::Context::ConstructDepthStencilState(state);
 
-			state->Create(type);
-		}
 		DepthStencilState::~DepthStencilState()
 		{
-			if (state != nullptr)
+		
+		}
+		void DepthStencilState::Create(DepthStencilState* result,DepthStencilStateDesc* type)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				state->Delete();
-				delete state;
-				state = nullptr;
+				OpenGL::GLDepthStencilState::Create(&result->GLObject, type);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DirectX::DX11DepthStencilState::Create(&result->DXObject, type);
 			}
 		}
 		void DepthStencilState::Bind()
 		{
-			state->Bind();
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Bind();
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Bind();
+			}
 		}
 		void DepthStencilState::Unbind()
 		{
-			state->Unbind();
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Unbind();
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Unbind();
+			}
 		}
 	}
 }
+
+#endif

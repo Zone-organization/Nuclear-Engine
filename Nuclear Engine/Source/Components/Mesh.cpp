@@ -24,7 +24,7 @@ namespace NuclearEngine {
 			Mesh_NoIndices::Mesh_NoIndices(_vertices, _textures, Signature);
 
 			this->indices = _indices;
-			IBO = new API::IndexBuffer(indices.data(), indices.size() * 4);			
+			API::IndexBuffer::Create(&IBO, indices.data(), indices.size() * 4);
 		}
 		void Mesh::Draw(API::Shader* _shader)
 		{
@@ -42,7 +42,7 @@ namespace NuclearEngine {
 					layout.Push("NORMAL", 0, DataType::Float3);
 					layout.Push("TEXCOORD", 0, DataType::Float2);
 				}
-				VBO->SetInputLayout(&layout, _shader);
+				VBO.SetInputLayout(&layout, _shader);
 
 				RenderInit = true;
 			}
@@ -54,11 +54,11 @@ namespace NuclearEngine {
 
 
 			// draw mesh
-			VBO->Bind();
-			IBO->Bind();
+			VBO.Bind();
+			IBO.Bind();
 			Core::Context::DrawIndexed(indices.size());
-			IBO->Unbind();
-			VBO->Unbind();
+			IBO.Unbind();
+			VBO.Unbind();
 		}
 
 		// render the mesh
@@ -97,13 +97,13 @@ namespace NuclearEngine {
 
 			this->signature = Signature;
 
-			API::VertexBufferDesc desc;
+			VertexBufferDesc desc;
 			desc.data = vertices.data();
 			desc.size = (unsigned int)vertices.size() * sizeof(float);
 			desc.usage = BufferGPUUsage::Dynamic;
-			desc.accessflag = BufferCPUAccess::Default;
+			desc.access = BufferCPUAccess::Default;
 			
-			VBO = new API::VertexBuffer(desc);
+			API::VertexBuffer::Create(&VBO,&desc);
 
 			PreCalculate_TextureBindings();
 
@@ -127,7 +127,7 @@ namespace NuclearEngine {
 					layout.Push("NORMAL", 0, DataType::Float3);
 					layout.Push("TEXCOORD", 0, DataType::Float2);
 				}
-				VBO->SetInputLayout(&layout, shader);
+				VBO.SetInputLayout(&layout, shader);
 
 				RenderInit = true;
 			}
@@ -138,9 +138,9 @@ namespace NuclearEngine {
 			}
 
 			// draw mesh
-			VBO->Bind();
+			VBO.Bind();
 			Core::Context::Draw(vertices.size());
-			VBO->Unbind();
+			VBO.Unbind();
 
 		}
 		

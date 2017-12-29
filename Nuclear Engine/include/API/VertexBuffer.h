@@ -1,30 +1,22 @@
 #pragma once
 #include <NE_Common.h>
-#include <API\Shader.h>
-#include <NuclearCommon\Common_API_Types.h>
 
-namespace NuclearRenderer
-{
-	class NRBVertexBuffer;
-}
+#ifdef NE_USE_RUNTIME_RENDERER
+#include <API\Shader.h>
+#include <API\OpenGL\GLVertexBuffer.h>
+#include <API\DirectX\DX11VertexBuffer.h>
 
 namespace NuclearEngine {
 	namespace API {
 		class InputLayout;
 
-		struct VertexBufferDesc {
-			const void* data;
-			unsigned int size;
-			BufferGPUUsage usage = BufferGPUUsage::Default;
-			BufferCPUAccess accessflag = BufferCPUAccess::Default;
-		};
-
 		class NEAPI VertexBuffer
 		{
 		public:
 			VertexBuffer();
-			VertexBuffer(const VertexBufferDesc& desc);
 			~VertexBuffer();
+
+			static void Create(VertexBuffer* buffer, VertexBufferDesc* desc);
 
 			void Update(const void* data, unsigned int size);
 
@@ -33,7 +25,31 @@ namespace NuclearEngine {
 			void Bind();
 			void Unbind();
 		protected:
-			NuclearRenderer::NRBVertexBuffer *buf;
+			OpenGL::GLVertexBuffer GLObject;
+			DirectX::DX11VertexBuffer DXObject;
 		};
 	}
 }
+
+#else
+#ifdef NE_USE_OPENGL3_3
+#include <API\OpenGL\GLVertexBuffer.h>
+namespace NuclearEngine
+{
+	namespace API
+	{
+		typedef OpenGL::GLVertexBuffer VertexBuffer;
+	}
+}
+#endif
+#ifdef NE_USE_DIRECTX11
+#include <API\DirectX\DX11VertexBuffer.h>
+namespace NuclearEngine
+{
+	namespace API
+	{
+		typedef DirectX::DX11VertexBuffer VertexBuffer;
+	}
+}
+#endif
+#endif

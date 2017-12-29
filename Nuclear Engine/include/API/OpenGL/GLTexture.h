@@ -1,6 +1,5 @@
 #pragma once
 #include <API\OpenGL\GLCommon.h>
-#include <API\OpenGL\GLShader.h>
 #include <API\API_Types.h>
 #include <array>
 
@@ -11,14 +10,15 @@ namespace NuclearEngine
 	{
 		namespace OpenGL
 		{
+			class GLShader;
 			class NEAPI GLTexture
 			{
 			public:
 				GLTexture();
 				~GLTexture();
 
-				static GLTexture Create(Texture_Data *TexData, Texture_Desc *Desc);
-				static GLTexture Create(const std::array<Texture_Data, 6>& data, Texture_Desc *Desc);
+				static void Create(GLTexture* texture, Texture_Data *TexData, Texture_Desc *Desc);
+				static void Create(GLTexture* texture, const std::array<Texture_Data*, 6>& data, Texture_Desc *Desc);
 				void VSBind(unsigned int index);
 				void VSBind(const char *samplerName, GLShader *shader, unsigned int index);
 				void GSBind(unsigned int index);

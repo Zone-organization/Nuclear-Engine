@@ -1,41 +1,56 @@
-#include "API\IndexBuffer.h"
+#include <API\IndexBuffer.h>
+
+#ifdef NE_USE_RUNTIME_RENDERER
 #include <Core\Context.h>
-#include <NuclearRendererBase\NRBIndexBuffer.h>
 
 namespace NuclearEngine {
 	namespace API {
 		IndexBuffer::IndexBuffer()
 		{
 		}
-		IndexBuffer::IndexBuffer(void* indices, unsigned int count)
-		{
-			buf = Core::Context::ConstructIndexBuffer(buf);
 
-			buf->Create(indices, count);
-		}
 		IndexBuffer::~IndexBuffer()
 		{
-			if (buf != nullptr)
+			
+		}
+
+		void IndexBuffer::Create(IndexBuffer* result,void * indices, unsigned int count)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				buf->Delete();
-				delete buf;
-				buf = nullptr;
+				OpenGL::GLIndexBuffer::Create(&result->GLObject,indices,count);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DirectX::DX11IndexBuffer::Create(&result->DXObject,indices, count);
 			}
 		}
 
 		void IndexBuffer::Bind()
 		{
-			buf->Bind();
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Bind();
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Bind();
+			}
 		}
 		void IndexBuffer::Unbind()
 		{
-			buf->Unbind();
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Unbind();
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Unbind();
+			}
 		}
-
-		NuclearRenderer::NRBIndexBuffer * IndexBuffer::GetBase()
-		{
-			return buf;
-		}
+		
 
 	}
 }
+
+#endif

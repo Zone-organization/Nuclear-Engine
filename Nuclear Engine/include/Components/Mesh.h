@@ -74,7 +74,7 @@ namespace NuclearEngine {
 		protected:
 			void PreCalculate_TextureBindings();
 
-			API::VertexBuffer *VBO;
+			API::VertexBuffer VBO;
 			std::vector<float> vertices;
 			std::vector<MaterialTexture> textures;		
 			std::vector<const char*> TextureBindings;
@@ -97,7 +97,7 @@ namespace NuclearEngine {
 			virtual void Draw(API::Shader* shader) override;
 
 		private:
-			API::IndexBuffer *IBO;
+			API::IndexBuffer IBO;
 			std::vector<unsigned int> indices;
 		};
 	}

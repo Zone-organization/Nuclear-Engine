@@ -10,11 +10,10 @@ struct Shader_Uniforms_t {
 class Demo3 : public Core::Game
 {
 protected:
-	API::Shader *CubeShader;
-	API::VertexBuffer *CubeVB;
-	API::ConstantBuffer *CubeCB;
-	API::InputLayout *CubeIL;
-	API::Texture *WoodenBoxTex;
+	API::Shader CubeShader;
+	API::VertexBuffer CubeVB;
+	API::ConstantBuffer CubeCB;
+	API::Texture WoodenBoxTex;
 public:
 	Demo3()
 	{
@@ -22,7 +21,7 @@ public:
 	void Load()
 	{
 
-		CubeShader = new API::Shader("CubeShader",
+		API::Shader::Create(&CubeShader,
 		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
@@ -70,21 +69,21 @@ public:
 			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 		};
 
-		API::VertexBufferDesc vDesc;
+		VertexBufferDesc vDesc;
 		vDesc.data = vertices;
 		vDesc.size = sizeof(vertices);
 		vDesc.usage = BufferGPUUsage::Dynamic;
-		vDesc.accessflag = BufferCPUAccess::Default;
-		CubeVB = new API::VertexBuffer(vDesc);
+		vDesc.access = BufferCPUAccess::Default;
+		API::VertexBuffer::Create(&CubeVB, &vDesc);
 
-		CubeIL = new API::InputLayout();
-		CubeIL->Push("POSITION", 0, DataType::Float3);
-		CubeIL->Push("TEXCOORD", 0, DataType::Float2);
+		API::InputLayout CubeIL;
+		CubeIL.Push("POSITION", 0, DataType::Float3);
+		CubeIL.Push("TEXCOORD", 0, DataType::Float2);
 
-		CubeVB->SetInputLayout(CubeIL, CubeShader);
+		CubeVB.SetInputLayout(&CubeIL, &CubeShader);
 		
-		CubeCB = new API::ConstantBuffer("NE_Camera", sizeof(Shader_Uniforms));
-		CubeShader->SetConstantBuffer(CubeCB, 0, ShaderType::Vertex);
+		API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
+		CubeShader.SetConstantBuffer(&CubeCB, ShaderType::Vertex);
 	
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
@@ -92,7 +91,7 @@ public:
 		Desc.Format = TextureFormat::R8G8B8A8;
 		Desc.Type = TextureType::Texture2D;
 
-		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
+		API::Texture::Create(&WoodenBoxTex,&ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), &Desc);
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -107,28 +106,21 @@ public:
 		//Don't Forget to clear the depth buffer each frame
 		Core::Context::ClearDepthBuffer();
 
-		WoodenBoxTex->PSBind(0);
-		CubeShader->Bind();
-		CubeVB->Bind();
+		WoodenBoxTex.PSBind(0);
+		CubeShader.Bind();
+		CubeVB.Bind();
 
 		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f),5.0f);
 		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
 		Shader_Uniforms.Projection = Math::Perspective(45.0f, (float)800 / (float)600, 0.1f, 100.0f);
 
-		CubeCB->Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
+		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 
 		Core::Context::Draw(36);
-		CubeVB->Unbind();
-		CubeShader->Unbind();
+		CubeVB.Unbind();
+		CubeShader.Unbind();
 
 		Core::Context::End();
 	}
-	void ExitRendering()	// Exit Rendering
-	{
-		delete CubeShader;
-		delete CubeVB;
-		delete CubeCB;
-		delete CubeIL;
-		delete WoodenBoxTex;
-	}
+
 };

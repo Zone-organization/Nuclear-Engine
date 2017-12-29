@@ -106,12 +106,7 @@ namespace NuclearEngine {
 		int height;
 	};
 
-	struct VertexBufferDesc {
-		const void* data;
-		unsigned int size;
-		BufferGPUUsage usage = BufferGPUUsage::Default;
-		BufferCPUAccess accessflag = BufferCPUAccess::Default;
-	};
+
 
 	struct Texture_Data {
 		int width;
@@ -132,7 +127,12 @@ namespace NuclearEngine {
 		ReadOnly,
 		WriteOnly
 	};
-
+	struct VertexBufferDesc {
+		const void* data;
+		unsigned int size;
+		BufferGPUUsage usage = BufferGPUUsage::Default;
+		BufferCPUAccess access = BufferCPUAccess::Default;
+	};
 	enum class Format
 	{
 		R8,

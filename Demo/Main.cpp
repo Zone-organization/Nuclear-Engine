@@ -1,12 +1,12 @@
-﻿#include "Common.h"
-#define PTE_IMPLEMENTATION
+﻿#define NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
+#include "Common.h"
 #include "Demo1.h"
 #include "Demo2.h"
 #include "Demo3.h"
 #include "Demo4.h"
-#include "Demo5.h"
+//#include "Demo5.h"
 #include "Game_Breakout.h"
-#include <NuclearPlatform\Clock.h>
+#include <iostream>
 
 void Test();
 
@@ -70,11 +70,11 @@ int main(int argc, char* argv[])
 		Demo4 demo;
 		Core::Engine::Run(&demo);
 	}
-	else if (choice == '5') {
+	/*else if (choice == '5') {
 		Start();
 		Demo5 demo;
 		Core::Engine::Run(&demo);
-	}
+	}*/
 	else if (choice == 'a') {
 		Start();
 		BreakOut game;
@@ -176,7 +176,7 @@ public:
 
 void Test()
 {
-	NuclearPlatform::Clock clock;
+	NuclearEngine::Platform::Clock clock;
 	Base base;
 	Derived derived;
 	Base *base2 = new Derived();

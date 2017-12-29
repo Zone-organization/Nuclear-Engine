@@ -1,47 +1,77 @@
 #include <API\VertexBuffer.h>
 #include <API\InputLayout.h>
+#ifdef NE_USE_RUNTIME_RENDERER
 #include <Core\Context.h>
-#include <NuclearRendererBase\NRBVertexBuffer.h>
 
 namespace NuclearEngine {
 	namespace API {
 		VertexBuffer::VertexBuffer()
 		{
 		}
-		VertexBuffer::VertexBuffer(const VertexBufferDesc & desc)
-		{
-			buf = Core::Context::ConstructVertexBuffer(buf);
-			buf->Create(desc.data, desc.size, desc.usage, desc.accessflag);
-		}
-
+	
 		VertexBuffer::~VertexBuffer()
 		{
-			if (buf != nullptr)
+		}
+
+		void VertexBuffer::Create(VertexBuffer * buffer, VertexBufferDesc * desc)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				buf->Delete();
-				delete buf;
-				buf = nullptr;
+				OpenGL::GLVertexBuffer::Create(&buffer->GLObject,desc);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DirectX::DX11VertexBuffer::Create(&buffer->DXObject,desc);
 			}
 		}
 
 		void VertexBuffer::Update(const void * data, unsigned int size)
 		{
-			buf->Update(data, size);
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Update(data,size);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Update(data,size);
+			}
 		}
 
 		void VertexBuffer::SetInputLayout(InputLayout* layout, Shader* shader)
 		{
-			buf->SetInputLayout(layout->GetBase(), shader->GetBase());
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.SetInputLayout(layout,&shader->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.SetInputLayout(layout,&shader->DXObject);
+			}
 		}
 
 		void VertexBuffer::Bind()
 		{
-			buf->Bind();
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Bind();
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Bind();
+			}
 		}
 		void VertexBuffer::Unbind()
 		{
-			buf->Unbind();
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.Unbind();
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				DXObject.Unbind();
+			}
 		}
 		
 	}
 }
+#endif

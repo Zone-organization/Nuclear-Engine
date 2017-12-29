@@ -1,5 +1,5 @@
 #include "API\InputLayout.h"
-#include <NuclearRendererBase\NRBInputLayout.h>
+#include "..\..\include\API\InputLayout.h"
 
 namespace NuclearEngine
 {
@@ -7,22 +7,25 @@ namespace NuclearEngine
 		{
 			InputLayout::InputLayout()
 			{
-				layout = new NuclearRenderer::NRBInputLayout();
 			}
 
 			InputLayout::~InputLayout()
 			{
-				delete layout;
 			}
 
 			void InputLayout::Push(const char* SemanticName, int SemanticIndex, DataType dataType)
 			{
-				return layout->Push(SemanticName, SemanticIndex, dataType);
+				ILElement Block;
+
+				Block.index = SemanticIndex;
+				Block.name = SemanticName;
+				Block.dataType = dataType;
+				Elements.push_back(Block);
 			}
 
-			NuclearRenderer::NRBInputLayout * InputLayout::GetBase()
+			std::vector<ILElement> InputLayout::GetBufferElement()
 			{
-				return layout;
+				return Elements;
 			}
 				
 		}

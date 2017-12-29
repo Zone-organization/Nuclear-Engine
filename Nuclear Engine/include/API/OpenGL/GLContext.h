@@ -1,34 +1,35 @@
 #pragma once
-#include <NuclearRendererBase\NRBContext.h>
-#include <NuclearRendererOGL3\GL_Common.h>
-namespace NuclearRenderer
+#include <API\OpenGL\GLCommon.h>
+
+#ifdef NE_COMPILE_OPENGL3_3
+namespace NuclearEngine
 {
-	class NROGL3API GLContext : public NRBContext
+	namespace API 
 	{
-	public:
-		bool Initialize() override;
-		void SetPrimitiveType(int primitivetype) override;
-		void ClearColor(float Red, float Green, float Blue, float Alpha) override;
-		void ClearDepthBuffer() override;
-		void ClearStencilBuffer() override;
+		namespace OpenGL 
+		{
+			
+			class NEAPI GLContext
+			{
+			public:
+				bool Initialize();
+				void SetPrimitiveType(int primitivetype);
+				void ClearColor(float Red, float Green, float Blue, float Alpha);				
+				void ClearDepthBuffer();
+				void ClearStencilBuffer();
 
-		void EnableDepthBuffer(bool state) override;
+				void EnableDepthBuffer(bool state);
 
-		void SwapBuffers() override;
-		void Shutdown() override;
+				void SwapBuffers();
+				void Shutdown();
 
-		void Draw(unsigned int count) override;
-		void DrawIndexed(unsigned int vertexCount) override;
+				void Draw(unsigned int count);
+				void DrawIndexed(unsigned int vertexCount);
 
-		void SetViewPort(int x, int y, int width, int height) override;
-
-		NRBVertexBuffer* ConstructVertexBuffer(NRBVertexBuffer* param) override;
-		NRBIndexBuffer* ConstructIndexBuffer(NRBIndexBuffer* param) override;
-		NRBConstantBuffer* ConstructConstantBuffer(NRBConstantBuffer* param) override;
-		NRBRenderTarget* ConstructRenderTarget(NRBRenderTarget* param) override;
-		NRBDepthStencilState* ConstructDepthStencilState(NRBDepthStencilState* param) override;
-		NRBTexture* ConstructTexture(NRBTexture* param) override;
-		NRBShader* ConstructShader(NRBShader* param) override;
-
-	};
+				void SetViewPort(int x, int y, int width, int height);
+			};
+		}
+	}
 }
+
+#endif

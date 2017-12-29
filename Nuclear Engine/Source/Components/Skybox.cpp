@@ -1,5 +1,6 @@
 #include "Components\Skybox.h"
 #include <Core\Context.h>
+#include <API\ShaderCompiler.h>
 
 namespace NuclearEngine
 {
@@ -52,24 +53,23 @@ namespace NuclearEngine
 		};
 
 
-		Skybox::Skybox(Components::GenericCamera* CameraCbuffer, std::array<NuclearEngine::Texture_Data, 6> data)
+		Skybox::Skybox(Components::GenericCamera* CameraCbuffer, std::array<NuclearEngine::Texture_Data*, 6> data)
 		{
-			shader = API::Shader("Skybox",
+			API::Shader::Create(&shader,
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 			_CameraCbuffer = CameraCbuffer;
 
-			unsigned int slot = shader.GetConstantBufferSlot(CameraCbuffer->GetCBuffer(), ShaderType::Vertex);
-			shader.SetConstantBuffer(CameraCbuffer->GetCBuffer(), slot, ShaderType::Vertex);
+			shader.SetConstantBuffer(&_CameraCbuffer->GetCBuffer(), ShaderType::Vertex);
 
-			API::VertexBufferDesc VDesc;
+			VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;
 			VDesc.size = sizeof(skyboxVertices);
 			VDesc.usage = BufferGPUUsage::Static;
-			VDesc.accessflag = BufferCPUAccess::Default;
+			VDesc.access = BufferCPUAccess::Default;
 
-			vertexBuffer = API::VertexBuffer(VDesc);
+			 API::VertexBuffer::Create(&vertexBuffer,&VDesc);
 
 			API::InputLayout vertexBufferLayout;
 			vertexBufferLayout.Push("POSITION",0 , DataType::Float3);
@@ -79,13 +79,13 @@ namespace NuclearEngine
 			Desc.Format = TextureFormat::R8G8B8A8;
 			Desc.Wrap = TextureWrap::ClampToEdge;
 			Desc.Filter = TextureFilter::Linear2D;
-			texcube = API::Texture(data, Desc);
+			API::Texture::Create(&texcube,data, &Desc);
 
 			DepthStencilStateDesc DS_State;
 			DS_State.DepthStencilEnabled = true;
 			DS_State.DepthFunc = Comparison_Func::LESS_EQUAL;
 
-			cubemapstate = API::DepthStencilState(DS_State);
+			API::DepthStencilState::Create(&cubemapstate, &DS_State);
 		}
 		Skybox::~Skybox()
 		{

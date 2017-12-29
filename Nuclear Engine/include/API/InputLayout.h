@@ -1,8 +1,7 @@
 #pragma once
 #include <NE_Common.h>
-#include <NuclearCommon\Common_API_Types.h>
+#include <API\API_Types.h>
 #include <vector>
-
 
 namespace NuclearEngine {
 	namespace API {
@@ -10,7 +9,7 @@ namespace NuclearEngine {
 		{
 			int index = 0;
 			const char* name = "";
-			NuclearEngine::DataType dataType;
+			DataType dataType;
 		};
 
 		class NEAPI InputLayout

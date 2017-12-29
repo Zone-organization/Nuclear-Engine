@@ -1,11 +1,9 @@
 #pragma once
-#include <NE_PrivateCommon.h>
+#include <NE_Common.h>
 
-namespace NuclearRenderer
-{
-	class NRBIndexBuffer;
-}
-
+#ifdef NE_USE_RUNTIME_RENDERER
+#include <API\OpenGL\GLIndexBuffer.h>
+#include <API\DirectX\DX11IndexBuffer.h>
 namespace NuclearEngine {
 	namespace API {
 
@@ -13,15 +11,37 @@ namespace NuclearEngine {
 		{
 		public:
 			IndexBuffer();
-			IndexBuffer(void* indices, unsigned int count);
 			~IndexBuffer();
+
+			static void Create(IndexBuffer *buffer,void* indices, unsigned int count);
 
 			void Bind();
 			void Unbind();
-
-			NuclearRenderer::NRBIndexBuffer *GetBase();
-		protected:
-			NuclearRenderer::NRBIndexBuffer *buf;
+		private:
+			OpenGL::GLIndexBuffer GLObject;
+			DirectX::DX11IndexBuffer DXObject;
 		};
 	}
 }
+#else
+#ifdef NE_USE_OPENGL3_3
+#include <API\OpenGL\GLIndexBuffer.h>
+namespace NuclearEngine
+{
+	namespace API
+	{
+		typedef OpenGL::GLIndexBuffer IndexBuffer;
+	}
+}
+#endif
+#ifdef NE_USE_DIRECTX11
+#include <API\DirectX\DX11IndexBuffer.h>
+namespace NuclearEngine
+{
+	namespace API
+	{
+		typedef DirectX::DX11IndexBuffer IndexBuffer;
+	}
+}
+#endif
+#endif

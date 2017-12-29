@@ -1,337 +1,344 @@
-#include <NuclearRendererOGL3\GLTexture.h>
-#include <NuclearRendererOGL3\GLShader.h>
-#include <NuclearRendererBase\NRBContext.h>
-#include <NuclearCommon\Common_API_Types.h>
-using namespace NuclearEngine;
+#include <API\OpenGL\GLTexture.h>
+#include <API\OpenGL\GLShader.h>
+#include <API\API_Types.h>
 
-namespace NuclearRenderer {
+#ifdef NE_COMPILE_OPENGL3_3
 
-	int GetGLTextureFormat(TextureFormat format);
-	int GetGLTextureWrap(TextureWrap textureWrap);
-	int GetRTPrecision(RenderTargetPrecision precision);
-	template<class T>
-	const T& _min(const T& a, const T& b)
+namespace NuclearEngine
+{
+	namespace API
 	{
-		return (b < a) ? b : a;
-	}
-
-	GLTexture::GLTexture() : textureID(0)
-	{
-	}
-
-	void GLTexture::Create(Texture_Data Data, Texture_Desc Desc)
-	{
-		if (Desc.Type == TextureType::Texture1D)
+		namespace OpenGL
 		{
-			type = GL_TEXTURE_1D;
-		}
-		else if (Desc.Type == TextureType::Texture2D)
-		{
-			type = GL_TEXTURE_2D;
-		}
-		else if (Desc.Type == TextureType::Texture3D)
-		{
-			type = GL_TEXTURE_3D;
-		}
 
-		glGenTextures(1, &textureID);
-		glBindTexture(type, textureID);
-
-		if (Desc.Format == TextureFormat::R8)
-		{
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		}
-				
-
-			if (Desc.Type == TextureType::Texture1D)
+			int GetGLTextureFormat(TextureFormat format);
+			int GetGLTextureWrap(TextureWrap textureWrap);
+			template<class T>
+			const T& _min(const T& a, const T& b)
 			{
-				glTexImage1D(type,
-					0,
-					GetGLTextureFormat(Desc.Format),
-					Data.width,
-					0,
-					GetGLTextureFormat(Desc.Format),
-					GL_UNSIGNED_BYTE,
-					Data.databuf);
+				return (b < a) ? b : a;
 			}
-			else if (Desc.Type == TextureType::Texture2D)
+
+			GLTexture::GLTexture() : textureID(0) , type(0)
 			{
-				glTexImage2D(type,
-					0,
-					GetGLTextureFormat(Desc.Format),
-					Data.width,
-					Data.height,
-					0,
-					GetGLTextureFormat(Desc.Format),
-					GL_UNSIGNED_BYTE,
-					Data.databuf);
 			}
-			else if (Desc.Type == TextureType::Texture3D)
+
+			GLTexture::~GLTexture()
 			{
-				glTexImage3D(type,
-					0,
-					GetGLTextureFormat(Desc.Format),
-					Data.width,
-					Data.height,
-					Data.depth,
-					0,
-					GetGLTextureFormat(Desc.Format),
-					GL_UNSIGNED_BYTE,
-					Data.databuf);
+				if (textureID != 0)
+				{
+					glDeleteTextures(1, &textureID);
+				}
+
+				textureID = 0;
+				type = 0;
 			}
-		glTexParameteri(type, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap));
-		glTexParameteri(type, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc.Wrap));
 
-		switch (Desc.Filter)
-		{
-		case TextureFilter::Point2D:
-		{
-			glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			break;
-		}
-		case TextureFilter::Linear2D:
-		{
-			glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		}
-		case TextureFilter::Point:
-		{
-			glGenerateMipmap(type);
-			glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			break;
-		}
-		case TextureFilter::Bilinear:
-		{
-			glGenerateMipmap(type);
-			glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		}
-		case TextureFilter::Trilinear:
-		{
-			glGenerateMipmap(type);
-			glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			break;
-		}
-				
-		default:
-			break;
-		}
-
-		if (ContextDesc::SupportAnisotropic == true)
-		{
-			switch (Desc.AnisoFilter)
+			void GLTexture::Create(GLTexture* result,Texture_Data *Data, Texture_Desc *Desc)
 			{
-			case AnisotropicFilter::AnisotropicX2:
+				if (Desc->Type == TextureType::Texture1D)
+				{
+					result->type = GL_TEXTURE_1D;
+				}
+				else if (Desc->Type == TextureType::Texture2D)
+				{
+					result->type = GL_TEXTURE_2D;
+				}
+				else if (Desc->Type == TextureType::Texture3D)
+				{
+					result->type = GL_TEXTURE_3D;
+				}
+
+				glGenTextures(1, &result->textureID);
+				glBindTexture(result->type, result->textureID);
+
+				if (Desc->Format == TextureFormat::R8)
+				{
+					glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+				}
+
+
+				if (Desc->Type == TextureType::Texture1D)
+				{
+					glTexImage1D(result->type,
+						0,
+						GetGLTextureFormat(Desc->Format),
+						Data->width,
+						0,
+						GetGLTextureFormat(Desc->Format),
+						GL_UNSIGNED_BYTE,
+						Data->databuf);
+				}
+				else if (Desc->Type == TextureType::Texture2D)
+				{
+					glTexImage2D(result->type,
+						0,
+						GetGLTextureFormat(Desc->Format),
+						Data->width,
+						Data->height,
+						0,
+						GetGLTextureFormat(Desc->Format),
+						GL_UNSIGNED_BYTE,
+						Data->databuf);
+				}
+				else if (Desc->Type == TextureType::Texture3D)
+				{
+					glTexImage3D(result->type,
+						0,
+						GetGLTextureFormat(Desc->Format),
+						Data->width,
+						Data->height,
+						Data->depth,
+						0,
+						GetGLTextureFormat(Desc->Format),
+						GL_UNSIGNED_BYTE,
+						Data->databuf);
+				}
+				glTexParameteri(result->type, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc->Wrap));
+				glTexParameteri(result->type, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc->Wrap));
+
+				switch (Desc->Filter)
+				{
+				case TextureFilter::Point2D:
+				{
+					glTexParameteri(result->type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+					glTexParameteri(result->type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+					break;
+				}
+				case TextureFilter::Linear2D:
+				{
+					glTexParameteri(result->type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(result->type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					break;
+				}
+				case TextureFilter::Point:
+				{
+					glGenerateMipmap(result->type);
+					glTexParameteri(result->type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+					glTexParameteri(result->type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+					break;
+				}
+				case TextureFilter::Bilinear:
+				{
+					glGenerateMipmap(result->type);
+					glTexParameteri(result->type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(result->type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					break;
+				}
+				case TextureFilter::Trilinear:
+				{
+					glGenerateMipmap(result->type);
+					glTexParameteri(result->type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(result->type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+					break;
+				}
+
+				default:
+					break;
+				}
+
+				/*if (ContextDesc::SupportAnisotropic == true)
+				{
+					switch (Desc->AnisoFilter)
+					{
+					case AnisotropicFilter::AnisotropicX2:
+					{
+						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(2.0f, ContextDesc::MaxAnisotropicLevel));
+
+						break;
+					}
+					case AnisotropicFilter::AnisotropicX4:
+					{
+						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(4.0f, ContextDesc::MaxAnisotropicLevel));
+						break;
+					}
+					case AnisotropicFilter::AnisotropicX8:
+					{
+						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(8.0f, ContextDesc::MaxAnisotropicLevel));
+						break;
+					}
+					case AnisotropicFilter::AnisotropicX16:
+					{
+						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(16.0f, ContextDesc::MaxAnisotropicLevel));
+						//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -10.4f);
+						break;
+					}
+					default:
+						break;
+					}
+				}
+				*/
+				glBindTexture(result->type, 0);
+			}
+
+			void GLTexture::Create(GLTexture * result,const std::array<NuclearEngine::Texture_Data*, 6>& data, NuclearEngine::Texture_Desc* Desc)
 			{
-				glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(2.0f, ContextDesc::MaxAnisotropicLevel));
+				glGenTextures(1, &result->textureID);
+				result->type = GL_TEXTURE_CUBE_MAP;
 
-				break;
+				glBindTexture(GL_TEXTURE_CUBE_MAP, result->textureID);
+
+				for (GLuint i = 0; i < data.size(); i++)
+				{
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+						GetGLTextureFormat(Desc->Format),
+						data[i]->width,
+						data[i]->height,
+						0,
+						GetGLTextureFormat(Desc->Format),
+						GL_UNSIGNED_BYTE,
+						data[i]->databuf);
+				}
+				switch (Desc->Filter)
+				{
+				case TextureFilter::Point2D:
+				{
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+					break;
+				}
+				case TextureFilter::Linear2D:
+				{
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					break;
+				}
+				case TextureFilter::Point:
+				{
+					glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+					break;
+				}
+				case TextureFilter::Bilinear:
+				{
+					glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					break;
+				}
+				case TextureFilter::Trilinear:
+				{
+					glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+					break;
+				}
+
+				default:
+					break;
+				}
+
+
+				//Todo refix anisotropic filter
+				/*if (ContextDesc::SupportAnisotropic == true)
+				{
+					switch (Desc->AnisoFilter)
+					{
+					case AnisotropicFilter::AnisotropicX2:
+					{
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(2.0f, ContextDesc::MaxAnisotropicLevel));
+
+						break;
+					}
+					case AnisotropicFilter::AnisotropicX4:
+					{
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(4.0f, ContextDesc::MaxAnisotropicLevel));
+						break;
+					}
+					case AnisotropicFilter::AnisotropicX8:
+					{
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(8.0f, ContextDesc::MaxAnisotropicLevel));
+						break;
+					}
+					case AnisotropicFilter::AnisotropicX16:
+					{
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(16.0f, ContextDesc::MaxAnisotropicLevel));
+						//glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, -10.4f);
+						break;
+					}
+					default:
+						break;
+					}
+				}
+				*/
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc->Wrap));
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc->Wrap));
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc->Wrap));
+
+				glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 			}
-			case AnisotropicFilter::AnisotropicX4:
+
+			void GLTexture::VSBind(unsigned int index)
 			{
-				glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(4.0f, ContextDesc::MaxAnisotropicLevel));
-				break;
+				glActiveTexture(GL_TEXTURE0 + index);
+				glBindTexture(type, textureID);
 			}
-			case AnisotropicFilter::AnisotropicX8:
+
+			void GLTexture::VSBind(const char * samplerName, GLShader * shader, unsigned int index)
 			{
-				glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(8.0f, ContextDesc::MaxAnisotropicLevel));
-				break;
+				glActiveTexture(GL_TEXTURE0 + index);
+				glBindTexture(type, textureID);
+				glUniform1i(glGetUniformLocation(shader->_ProgramID, samplerName), index);
 			}
-			case AnisotropicFilter::AnisotropicX16:
+			void GLTexture::PSBind(unsigned int index)
 			{
-				glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(16.0f, ContextDesc::MaxAnisotropicLevel));
-				//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -10.4f);
-				break;
+				glActiveTexture(GL_TEXTURE0 + index);
+				glBindTexture(type, textureID);
 			}
-			default:
-				break;
-			}
-		}
 
-		glBindTexture(type, 0);
-	}
-
-	void GLTexture::Create(const std::array<NuclearEngine::Texture_Data, 6>& data, NuclearEngine::Texture_Desc Desc)
-	{
-		glGenTextures(1, &textureID);
-		type = GL_TEXTURE_CUBE_MAP;
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-		for (GLuint i = 0; i < data.size(); i++)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-				GetGLTextureFormat(Desc.Format),
-				data[i].width,
-				data[i].height,
-				0,
-				GetGLTextureFormat(Desc.Format),
-				GL_UNSIGNED_BYTE,
-				data[i].databuf);
-		}
-		switch (Desc.Filter)
-		{
-		case TextureFilter::Point2D:
-		{
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			break;
-		}
-		case TextureFilter::Linear2D:
-		{
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		}
-		case TextureFilter::Point:
-		{
-			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			break;
-		}
-		case TextureFilter::Bilinear:
-		{
-			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		}
-		case TextureFilter::Trilinear:
-		{
-			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			break;
-		}
-
-		default:
-			break;
-		}
-
-		if (ContextDesc::SupportAnisotropic == true)
-		{
-			switch (Desc.AnisoFilter)
+			void GLTexture::PSBind(const char * samplerName, GLShader * shader, unsigned int index)
 			{
-			case AnisotropicFilter::AnisotropicX2:
+				glActiveTexture(GL_TEXTURE0 + index);
+				glBindTexture(type, textureID);
+				glUniform1i(glGetUniformLocation(shader->_ProgramID, samplerName), index);
+			}
+			void GLTexture::GSBind(unsigned int index)
 			{
-				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(2.0f, ContextDesc::MaxAnisotropicLevel));
-
-				break;
+				glActiveTexture(GL_TEXTURE0 + index);
+				glBindTexture(type, textureID);
 			}
-			case AnisotropicFilter::AnisotropicX4:
+
+			void GLTexture::GSBind(const char * samplerName, GLShader * shader, unsigned int index)
 			{
-				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(4.0f, ContextDesc::MaxAnisotropicLevel));
-				break;
+				glActiveTexture(GL_TEXTURE0 + index);
+				glBindTexture(type, textureID);
+				glUniform1i(glGetUniformLocation(shader->_ProgramID, samplerName), index);
 			}
-			case AnisotropicFilter::AnisotropicX8:
+
+			unsigned int GLTexture::GLGetTextureID()
 			{
-				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(8.0f, ContextDesc::MaxAnisotropicLevel));
-				break;
+				return textureID;
 			}
-			case AnisotropicFilter::AnisotropicX16:
+			int GetGLTextureFormat(TextureFormat format)
 			{
-				glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(16.0f, ContextDesc::MaxAnisotropicLevel));
-				//glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, -10.4f);
-				break;
+				switch (format)
+				{
+				case  TextureFormat::R8: return GL_RED;
+				case  TextureFormat::R8G8: return GL_RG;
+				case  TextureFormat::R8G8B8: return GL_RGB;
+				case  TextureFormat::R8G8B8A8: return GL_RGBA;
+				default: return GL_RGBA;
+				}
+
 			}
-			default:
-				break;
+
+			int GetGLTextureWrap(TextureWrap textureWrap)
+			{
+				switch (textureWrap)
+				{
+				case TextureWrap::Repeat: return GL_REPEAT;
+				case TextureWrap::MirroredReapeat: return GL_MIRRORED_REPEAT;
+				case TextureWrap::ClampToEdge: return GL_CLAMP_TO_EDGE;
+				case TextureWrap::ClampToBorder: return GL_CLAMP_TO_BORDER;
+				default: return GL_REPEAT;
+				}
+
 			}
-		}
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap));
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc.Wrap));
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc.Wrap));
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-	}
-
-	void GLTexture::Delete()
-	{
-		glDeleteTextures(1, &textureID);
-	}
-
-	void GLTexture::VSBind(unsigned int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(type, textureID);
-	}
-
-	void GLTexture::VSBind(const char * samplerName, NRBShader * shader, unsigned int index)
-	{		
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(type, textureID);
-		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);		
-	}
-	void GLTexture::PSBind(unsigned int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(type, textureID);
-	}
-
-	void GLTexture::PSBind(const char * samplerName, NRBShader * shader, unsigned int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(type, textureID);
-		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);
-	}
-	void GLTexture::GSBind(unsigned int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(type, textureID);
-	}
-
-	void GLTexture::GSBind(const char * samplerName, NRBShader * shader, unsigned int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(type, textureID);
-		glUniform1i(glGetUniformLocation(shader->GetGLShaderID(), samplerName), index);
-	}
-
-	unsigned int GLTexture::GLGetTextureID()
-	{
-		return textureID;
-	}
-	int GetGLTextureFormat(TextureFormat format)
-	{
-		switch (format)
-		{
-		case  TextureFormat::R8: return GL_RED;
-		case  TextureFormat::R8G8: return GL_RG;
-		case  TextureFormat::R8G8B8: return GL_RGB;
-		case  TextureFormat::R8G8B8A8: return GL_RGBA;
-		default: return GL_RGBA;
-		}
-
-	}
-
-	int GetGLTextureWrap(TextureWrap textureWrap)
-	{
-		switch (textureWrap)
-		{
-		case TextureWrap::Repeat: return GL_REPEAT;
-		case TextureWrap::MirroredReapeat: return GL_MIRRORED_REPEAT;
-		case TextureWrap::ClampToEdge: return GL_CLAMP_TO_EDGE;
-		case TextureWrap::ClampToBorder: return GL_CLAMP_TO_BORDER;
-		default: return GL_REPEAT;
-		}
-
-	}
-	int GetRTPrecision(RenderTargetPrecision precision)
-	{
-		switch (precision)
-		{
-		case RenderTargetPrecision::Float: return GL_FLOAT;
-		case RenderTargetPrecision::Half_Float: return GL_HALF_FLOAT;
-		case RenderTargetPrecision::Unsigned_Int: return GL_UNSIGNED_INT;
-		default: return GL_FLOAT;
 		}
 	}
 }
+
+#endif

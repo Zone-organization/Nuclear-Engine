@@ -14,7 +14,7 @@ namespace NuclearEngine
 				GLIndexBuffer();
 				~GLIndexBuffer();
 
-				static GLIndexBuffer Create(const void* indices, unsigned int count);
+				static void Create(GLIndexBuffer* buffer,const void* indices, unsigned int count);
 
 				void Bind();
 				void Unbind();

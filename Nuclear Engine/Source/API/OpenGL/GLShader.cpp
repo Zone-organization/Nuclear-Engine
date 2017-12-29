@@ -1,192 +1,171 @@
-#include <NuclearRendererOGL3\GLShader.h>
-#include <NuclearRendererBase\NRBConstantBuffer.h>
-#include <NuclearCommon\Utilities\Logger.h>
-#include <NuclearCommon\Common_API_Types.h>
-#include <iostream>
-using namespace NuclearEngine;
-using namespace NuclearCommon;
+#include <API\OpenGL\GLShader.h>
 
-namespace NuclearRenderer
+#ifdef NE_COMPILE_OPENGL3_3
+
+#include <API\OpenGL\GLConstantBuffer.h>
+#include <API\API_Types.h>
+
+namespace NuclearEngine
 {
-	GLShader::GLShader()
+	namespace API
 	{
-	}
-
-	bool CheckShaderErrors(GLuint shader, const char* type)
-	{
-		GLint success;
-		char infoLog[1024];
-		if (type != "Program")
+		namespace OpenGL
 		{
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-			if (!success)
+
+			GLShader::GLShader()
 			{
-				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-				Log->Info("[GLShader] Compiling Error -- In ");
-				Log->Info(type);
-				Log->Info(" Shader - Info : \n");
-				Log->Info(infoLog);
-				Log->Info("\n");
-			}
-		}
-		else
-		{
-			glGetProgramiv(shader, GL_LINK_STATUS, &success);
-			if (!success)
-			{
-				glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-				Log->Info("[GLShader] Linking Error - Info : ");
-				Log->Info(infoLog);
-				Log->Info("\n");
-			}
-		}
-
-		if (!success)
-		{
-			return false;
-		}
-		return true;
-	}
-
-	bool GLShader::Create(BinaryShaderBlob* VertexShaderCode, BinaryShaderBlob* PixelShaderCode, BinaryShaderBlob* GeometryShaderCode)
-	{
-		bool result = true;
-		if (VertexShaderCode != nullptr)
-		{
-			if (VertexShaderCode->Language != ShaderLanguage::GLSL)
-			{
-				Log->Error("[GLShader] OpenGL Renderer Backend expects all -Vertex- shaders in GLSL language!\n");
-
-				result = false;
-			}
-		}
-		if (PixelShaderCode != nullptr)
-		{
-			if (PixelShaderCode->Language != ShaderLanguage::GLSL)
-			{
-				Log->Error("[GLShader] OpenGL Renderer Backend expects all -Pixel- shaders in GLSL language!\n");
-
-				result = false;
-			}
-		}
-		if (GeometryShaderCode != nullptr)
-		{
-			if (GeometryShaderCode->Language != ShaderLanguage::GLSL)
-			{
-				Log->Error("[GLShader] OpenGL Renderer Backend expects all -Geometry- shaders in GLSL language!\n");
-
-				result = false;
-			}
-		}
-
-		if (result == false)
-		{
-			return false;
-		}
-		GLuint vertex, fragment, geometry;
-		bool vsuccess, fsuccess, gsuccess, lsuccess;
-		char infoLog[1024];
-
-		// Vertex Shader
-		const char* vscode= VertexShaderCode->glslsourcecode.c_str();
-		vertex = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertex, 1, &vscode, NULL);
-		glCompileShader(vertex);
-		vsuccess = CheckShaderErrors(vertex, "Vertex");
-
-		const char* fscode = PixelShaderCode->glslsourcecode.c_str();
-		// Fragment Shader
-		fragment = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragment, 1, &fscode, NULL);
-		glCompileShader(fragment);
-		fsuccess = CheckShaderErrors(fragment, "Fragment (Pixel)");
-
-		if (GeometryShaderCode != nullptr)
-		{
-			const char* gscode = GeometryShaderCode->glslsourcecode.c_str();
-			geometry = glCreateShader(GL_GEOMETRY_SHADER);
-			glShaderSource(geometry, 1, &gscode, NULL);
-			glCompileShader(geometry);
-			gsuccess = CheckShaderErrors(geometry, "Geometry");
-
-		}
-		if (GeometryShaderCode == nullptr)
-		{
-			// No geo shader provided so gsuccess is true to prevent  Run-Time Check Failure
-			gsuccess = true;
-		}
-
-		if (vsuccess != false && fsuccess != false && gsuccess != false)
-		{
-			// Shader Program
-			this->_ProgramID = glCreateProgram();
-			glAttachShader(this->_ProgramID, vertex);
-			glAttachShader(this->_ProgramID, fragment);
-			if (GeometryShaderCode != nullptr)
-			{
-				glAttachShader(this->_ProgramID, geometry);
-			}
-			glLinkProgram(this->_ProgramID);
-
-			lsuccess = CheckShaderErrors(_ProgramID, "Program");
-
-			glDeleteShader(vertex);
-			glDeleteShader(fragment);
-			if (GeometryShaderCode != nullptr)
-			{
-				glDeleteShader(geometry);
+				_ProgramID = 0;
 			}
 
-			if (lsuccess)
+			GLShader::~GLShader()
+			{
+				if (_ProgramID != 0)
+				{
+					glDeleteProgram(_ProgramID);
+				}
+				_ProgramID = 0;
+			}
+
+			bool CheckShaderErrors(GLuint shader, const char* type)
+			{
+				GLint success;
+				char infoLog[1024];
+				if (type != "Program")
+				{
+					glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+					if (!success)
+					{
+						glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+						Log->Info("[GLShader] Compiling Error -- In ");
+						Log->Info(type);
+						Log->Info(" Shader - Info : \n");
+						Log->Info(infoLog);
+						Log->Info("\n");
+					}
+				}
+				else
+				{
+					glGetProgramiv(shader, GL_LINK_STATUS, &success);
+					if (!success)
+					{
+						glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+						Log->Info("[GLShader] Linking Error - Info : ");
+						Log->Info(infoLog);
+						Log->Info("\n");
+					}
+				}
+
+				if (!success)
+				{
+					return false;
+				}
 				return true;
-			else
-				return false;
+			}
+
+			void GLShader::Create(GLShader* result, BinaryShaderBlob* VertexShaderCode, BinaryShaderBlob* PixelShaderCode, BinaryShaderBlob* GeometryShaderCode)
+			{
+				if (VertexShaderCode != nullptr)
+				{
+					if (VertexShaderCode->Language != ShaderLanguage::GLSL)
+					{
+						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Vertex- shaders in GLSL language!\n");
+					}
+				}
+				if (PixelShaderCode != nullptr)
+				{
+					if (PixelShaderCode->Language != ShaderLanguage::GLSL)
+					{
+						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Pixel- shaders in GLSL language!\n");
+					}
+				}
+				if (GeometryShaderCode != nullptr)
+				{
+					if (GeometryShaderCode->Language != ShaderLanguage::GLSL)
+					{
+						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Geometry- shaders in GLSL language!\n");
+
+					}
+				}
+							
+				GLuint vertex, fragment, geometry;
+				bool vsuccess, fsuccess, gsuccess, lsuccess;
+				char infoLog[1024];
+
+				// Vertex Shader
+				const char* vscode = VertexShaderCode->glslsourcecode.c_str();
+				vertex = glCreateShader(GL_VERTEX_SHADER);
+				glShaderSource(vertex, 1, &vscode, NULL);
+				glCompileShader(vertex);
+				vsuccess = CheckShaderErrors(vertex, "Vertex");
+
+				const char* fscode = PixelShaderCode->glslsourcecode.c_str();
+				// Fragment Shader
+				fragment = glCreateShader(GL_FRAGMENT_SHADER);
+				glShaderSource(fragment, 1, &fscode, NULL);
+				glCompileShader(fragment);
+				fsuccess = CheckShaderErrors(fragment, "Fragment (Pixel)");
+
+				if (GeometryShaderCode != nullptr)
+				{
+					const char* gscode = GeometryShaderCode->glslsourcecode.c_str();
+					geometry = glCreateShader(GL_GEOMETRY_SHADER);
+					glShaderSource(geometry, 1, &gscode, NULL);
+					glCompileShader(geometry);
+					gsuccess = CheckShaderErrors(geometry, "Geometry");
+
+				}
+				if (GeometryShaderCode == nullptr)
+				{
+					// No geo shader provided so gsuccess is true to prevent  Run-Time Check Failure
+					gsuccess = true;
+				}
+
+				if (vsuccess != false && fsuccess != false && gsuccess != false)
+				{
+					// Shader Program
+					result->_ProgramID = glCreateProgram();
+					glAttachShader(result->_ProgramID, vertex);
+					glAttachShader(result->_ProgramID, fragment);
+					if (GeometryShaderCode != nullptr)
+					{
+						glAttachShader(result->_ProgramID, geometry);
+					}
+					glLinkProgram(result->_ProgramID);
+
+					lsuccess = CheckShaderErrors(result->_ProgramID, "Program");
+
+					glDeleteShader(vertex);
+					glDeleteShader(fragment);
+					if (GeometryShaderCode != nullptr)
+					{
+						glDeleteShader(geometry);
+					}						
+				}
+
+				glDeleteShader(vertex);
+				glDeleteShader(fragment);
+				if (GeometryShaderCode != nullptr)
+				{
+					glDeleteShader(geometry);
+				}
+			}
+
+			void GLShader::SetConstantBuffer(GLConstantBuffer* ubuffer, NuclearEngine::ShaderType type)
+			{
+				glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
+			}
+
+			void GLShader::Bind()
+			{
+				glUseProgram(this->_ProgramID);
+			}
+
+			void GLShader::Unbind()
+			{
+				glUseProgram(0);
+			}
+
 		}
-
-		glDeleteShader(vertex);
-		glDeleteShader(fragment);
-		if (GeometryShaderCode != nullptr)
-		{
-			glDeleteShader(geometry);
-		}
-
-		return false;
-
-	}
-
-	void GLShader::SetConstantBuffer(NRBConstantBuffer* ubuffer, unsigned int slot, NuclearEngine::ShaderType type)
-	{
-		glUniformBlockBinding(GetGLShaderID(), slot, ubuffer->GetBindingIndex());		
-	}
-
-	unsigned int GLShader::GetConstantBufferSlot(NRBConstantBuffer* ubuffer, NuclearEngine::ShaderType type)
-	{
-		return glGetUniformBlockIndex(GetGLShaderID(), ubuffer->GetName());;
-	}
-
-	void GLShader::Bind()
-	{
-		glUseProgram(this->_ProgramID);
-	}
-
-	void GLShader::Unbind()
-	{
-		glUseProgram(0);
-	}
-	void GLShader::Delete()
-	{
-		glDeleteProgram(_ProgramID);
-	}
-	unsigned int GLShader::GetGLShaderID()
-	{
-		return _ProgramID;
-	}
-	void * GLShader::GetDXBufferPointer()
-	{
-		return nullptr;
-	}
-	unsigned long GLShader::GetDXBufferSize()
-	{
-		return 0;
 	}
 }
+#endif

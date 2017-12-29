@@ -20,7 +20,7 @@ namespace NuclearEngine {
 
 			void SetTechnique(Shading::Technique* Tech);
 
-			API::Shader* GetShader();
+			API::Shader GetShader();
 
 			void AddLight(Components::Light* light);
 
@@ -29,8 +29,8 @@ namespace NuclearEngine {
 			void Render_Light();
 
 		private:
-			API::Shader *Shader;
-			API::ConstantBuffer *NE_LightUBO;
+			API::Shader Shader;
+			API::ConstantBuffer NE_LightUBO;
 			size_t LightUBOSize;
 			Shading::Technique* Light_Rendering_Tech;
 			Components::GenericCamera* Camera;

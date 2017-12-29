@@ -1,26 +1,49 @@
 #pragma once
-#include <NE_PrivateCommon.h>
-#include <NuclearCommon\Common_API_Types.h>
+#include <NE_Common.h>
 
-namespace NuclearRenderer {
-	class NRBConstantBuffer;
-}
+#ifdef NE_USE_RUNTIME_RENDERER
+#include <API\OpenGL\GLConstantBuffer.h>
+#include <API\DirectX\DX11ConstantBuffer.h>
+#include <API\Shader.h>
 
 namespace NuclearEngine {
 	namespace API {
 
 		class NEAPI ConstantBuffer
 		{
+			friend class Shader;
 		public:
 			ConstantBuffer();
-			ConstantBuffer(const char *_nameinshaders, unsigned int size);
 			~ConstantBuffer();
+			static void Create(ConstantBuffer* buffer, const char *_nameinshaders, unsigned int size);
 
 			void Update(const void* data, unsigned int size);
-	
-			NuclearRenderer::NRBConstantBuffer* GetBase();
-		protected:
-			NuclearRenderer::NRBConstantBuffer *buf;
+		private:
+			OpenGL::GLConstantBuffer GLObject;
+			DirectX::DX11ConstantBuffer DXObject;
 		};
 	}
 }
+
+#else
+#ifdef NE_USE_OPENGL3_3
+#include <API\OpenGL\GLConstantBuffer.h>
+namespace NuclearEngine
+{
+	namespace API
+	{
+		typedef OpenGL::GLConstantBuffer ConstantBuffer;
+	}
+}
+#endif
+#ifdef NE_USE_DIRECTX11
+#include <API\DirectX\DX11ConstantBuffer.h>
+namespace NuclearEngine
+{
+	namespace API
+	{
+		typedef DirectX::DX11ConstantBuffer ConstantBuffer;
+	}
+}
+#endif
+#endif

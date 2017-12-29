@@ -4,9 +4,9 @@
 class Demo4 : public Core::Game
 {
 protected:
-	API::Shader *CubeShader;
-	API::Texture *WoodenBoxTex;
-	Components::FlyCamera *Camera;
+	API::Shader CubeShader;
+	API::Texture WoodenBoxTex;
+	Components::FlyCamera Camera;
 
 	Components::Cube *Cube;
 
@@ -20,13 +20,12 @@ public:
 	}
 	void Load()
 	{
-		CubeShader = new API::Shader("CubeShader",
+		API::Shader::Create(&CubeShader,
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
-		
-		Camera = new Components::FlyCamera();
-		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		CubeShader->SetConstantBuffer(Camera->GetCBuffer() ,0, ShaderType::Vertex);
+
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() , ShaderType::Vertex);
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
@@ -34,10 +33,10 @@ public:
 		Desc.Format = TextureFormat::R8G8B8A8;
 		Desc.Type = TextureType::Texture2D;
 
-		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), Desc);
-		
+		API::Texture::Create(&WoodenBoxTex, &ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), &Desc);
+
 		Shading::Material CubeMat;
-		CubeMat.Diffuse = WoodenBoxTex;
+		CubeMat.Diffuse = &WoodenBoxTex;
 		Cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
 
 		Core::Context::EnableDepthBuffer(true);
@@ -47,16 +46,16 @@ public:
 
 	void PreRender(float deltatime) override
 	{
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::W))
-			Camera->ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::A))
-			Camera->ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::S))
-			Camera->ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Input::Keyboard::IsKeyPressed(Input::Keyboard::Key::D))
-			Camera->ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
+			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::A))
+			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::S))
+			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::D))
+			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 		
-		Camera->Update();		
+		Camera.Update();		
 	}
 
 	void MouseMovementCallback(double xpos, double ypos) override
@@ -74,7 +73,7 @@ public:
 		lastX = xpos;
 		lastY = ypos;
 
-		Camera->ProcessEye(xoffset, yoffset);
+		Camera.ProcessEye(xoffset, yoffset);
 	}
 
 	void Render()
@@ -86,19 +85,16 @@ public:
 		//Don't Forget to clear the depth buffer each frame
 		Core::Context::ClearDepthBuffer();
 
-	 	CubeShader->Bind();
+	 	CubeShader.Bind();
 
-		Cube->Draw(CubeShader);
+		Cube->Draw(&CubeShader);
 
-		CubeShader->Unbind();
+		CubeShader.Unbind();
 
 		Core::Context::End();
 	}
 	void ExitRendering()	// Exit Rendering
 	{
-		delete CubeShader;
 		delete Cube;
-	    delete Camera;
-		delete WoodenBoxTex;
 	}
 };

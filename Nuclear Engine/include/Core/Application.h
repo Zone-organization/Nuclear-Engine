@@ -6,7 +6,7 @@
 #endif
 #include <string>
 namespace NuclearEngine {
-	namespace Platform {
+	namespace Core {
 
 		class NEAPI Application
 		{
@@ -36,7 +36,7 @@ namespace NuclearEngine {
 			static void SetMouseMovementCallback(void(*Callback)(double, double));
 
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
-			static Internals::Win32_Window* GetInternalWindow();
+			static Platform::Internals::Win32_Window* GetInternalWindow();
 #endif
 
 		};

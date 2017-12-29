@@ -4,10 +4,10 @@
 class Demo5 : public Core::Game
 {
 protected:
-	API::Texture *DiffuseTex;
-	API::Texture *SpecularTex;
+	API::Texture DiffuseTex;
+	API::Texture SpecularTex;
 
-	Components::FlyCamera *Camera;
+	Components::FlyCamera Camera;
 	Shading::Techniques::NoLight *LightShading;
 	Components::Cube *Cube;
 	Components::Cube *Lamp;
@@ -58,8 +58,7 @@ public:
 	}
 	void Load()
 	{
-		Camera = new Components::FlyCamera();
-		Camera->Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
 		Renderer = new Renderers::Renderer3D(Camera);
 

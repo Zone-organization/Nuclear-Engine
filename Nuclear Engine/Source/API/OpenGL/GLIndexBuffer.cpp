@@ -1,33 +1,47 @@
-#include "NuclearRendererOGL3\GLIndexBuffer.h"
-#include <iostream>
-namespace NuclearRenderer {
+#include <API\OpenGL\GLIndexBuffer.h>
 
-	GLIndexBuffer::GLIndexBuffer() : buffer(0)
+#ifdef NE_COMPILE_OPENGL3_3
+
+namespace NuclearEngine
+{
+	namespace API
 	{
-	}
-	void GLIndexBuffer::Delete()
-	{
-		glDeleteBuffers(1, &buffer);
-	}
+		namespace OpenGL
+		{
+			GLIndexBuffer::GLIndexBuffer() : buffer(0)
+			{
+			}
+			GLIndexBuffer::~GLIndexBuffer()
+			{
+				if (buffer != 0)
+				{
+					glDeleteBuffers(1, &buffer);
+				}
+				buffer = 0;
+			}
 
-	void GLIndexBuffer::Create(const void * indices, unsigned int count)
-	{
-		glGenBuffers(1, &buffer);
+			void GLIndexBuffer::Create(GLIndexBuffer* result, const void * indices, unsigned int count)
+			{
+				glGenBuffers(1, &result->buffer);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->buffer);
 
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			}
 
-	void GLIndexBuffer::Bind()
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-	}
-	void GLIndexBuffer::Unbind()
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			void GLIndexBuffer::Bind()
+			{
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+			}
+			void GLIndexBuffer::Unbind()
+			{
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+			}
+		}
 	}
 }
+
+#endif

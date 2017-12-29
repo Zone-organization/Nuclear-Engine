@@ -4,7 +4,7 @@
 
 #define NUCLEAR_PLATFORM_WINDOWS32
 
-#ifdef NE_IMPLEMENTATION
+#ifdef NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
 
 #include <Windows.h>
 
@@ -22,11 +22,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 //#define NE_USE_OPENGL3_3
 //#define NE_USE_DIRECTX11
 
+#ifdef NE_USE_OPENGL3_3
+#define NE_COMPILE_OPENGL3_3
+#endif
+
+#ifdef NE_USE_DIRECTX11
+#define NE_COMPILE_DIRECTX11
+#endif
+
 #define NE_USE_RUNTIME_RENDERER
 
 #ifdef NE_USE_RUNTIME_RENDERER
 
+#ifdef NE_USE_OPENGL3_3
+#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
+#endif
+
+#ifdef NE_USE_DIRECTX11
+#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
+#endif
+
 #define NE_COMPILE_OPENGL3_3
+#define NE_COMPILE_DIRECTX11
+
 
 #ifndef _DEBUG
 #warning "Nuclear Engine: Usage of runtime chosable renderer slows down performance!"

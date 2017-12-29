@@ -16,7 +16,11 @@ _____________/BOOOM\_____________
 #include <Core/Context.h>
 #include <Core/Game.h>
 #include <Core/FileSystem.h>
-#include <Core/Systems/AudioSystem.h>
+
+//# Platform Abstraction Layer Headers
+#include <Platform\Clock.h>
+#include <Platform\Timer.h>
+#include <Platform\Input.h>
 
 //# Managers Headers
 #include <ResourceManager\ResourceManager.h>
@@ -39,6 +43,7 @@ _____________/BOOOM\_____________
 #include <API/Texture.h>
 #include <API/DepthStencilState.h>
 #include <API/Shader.h>
+#include <API/ShaderCompiler.h>
 #include <API/Color.h>
 
 //# Engine Components Headers

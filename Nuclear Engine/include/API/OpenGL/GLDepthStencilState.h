@@ -16,14 +16,12 @@ namespace NuclearEngine
 				GLDepthStencilState();
 				~GLDepthStencilState();
 
-				static GLDepthStencilState Create(DepthStencilStateDesc type);
+				static void Create(GLDepthStencilState *state,DepthStencilStateDesc* type);
 
 				void Bind();
 
 				void Unbind();
 			protected:
-				unsigned int count;
-
 				GLboolean depthmask = false;
 				GLenum depthfunc;
 

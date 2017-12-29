@@ -4,11 +4,10 @@
 class Demo2 : public Core::Game
 {
 protected:
-	API::Shader *RectangleShader;
-	API::VertexBuffer *RectangleVB;
-	API::IndexBuffer *RectangleIB;
-	API::InputLayout *RectangleIL;
-	API::Texture *WoodenBoxTex;
+	API::Shader RectangleShader;
+	API::VertexBuffer RectangleVB;
+	API::IndexBuffer RectangleIB;
+	API::Texture WoodenBoxTex;
 	float vertices[20] = {
 		// positions          // texture coords
 		0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
@@ -28,32 +27,33 @@ public:
 	void Load()
 	{
 
-		RectangleShader = new API::Shader("RectangleShader",
+		API::Shader::Create(&RectangleShader,
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
 
 
-		API::VertexBufferDesc Desc;
+
+		VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
 		Desc.usage = BufferGPUUsage::Dynamic;
-		Desc.accessflag = BufferCPUAccess::Default;
+		Desc.access = BufferCPUAccess::Default;
 
-		RectangleVB = new API::VertexBuffer(Desc);
+		API::VertexBuffer::Create(&RectangleVB, &Desc);
 
-		RectangleIL = new API::InputLayout();
-		RectangleIL->Push("POSITION", 0, DataType::Float3);
-		RectangleIL->Push("TEXCOORD", 0, DataType::Float2);
+		API::InputLayout RectangleIL;
+		RectangleIL.Push("POSITION", 0, DataType::Float3);
+		RectangleIL.Push("TEXCOORD", 0, DataType::Float2);
 
-		RectangleVB->SetInputLayout(RectangleIL, RectangleShader);
-		RectangleIB = new API::IndexBuffer(indices, sizeof(indices));
+		RectangleVB.SetInputLayout(&RectangleIL, &RectangleShader);
+		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
 
 		Texture_Desc TexDesc;
 		TexDesc.Filter = TextureFilter::Linear2D;
 		TexDesc.Wrap = TextureWrap::Repeat;
 		TexDesc.Format = TextureFormat::R8G8B8A8;
 		TexDesc.Type = TextureType::Texture2D;
-		WoodenBoxTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", TexDesc), TexDesc);
+		API::Texture::Create(&WoodenBoxTex, &ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", TexDesc), &TexDesc);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
@@ -64,27 +64,17 @@ public:
 
 		//Change Background Color to Black in RGBA format
 		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
-		//Don't Forget to clear the depth buffer each frame
-		Core::Context::ClearDepthBuffer();
-
-
-		WoodenBoxTex->PSBind(0);
-		RectangleShader->Bind();
-		RectangleVB->Bind();
-		RectangleIB->Bind();
+	
+		WoodenBoxTex.PSBind(0);
+		RectangleShader.Bind();
+		RectangleVB.Bind();
+		RectangleIB.Bind();
 		Core::Context::DrawIndexed(6);
-		RectangleIB->Unbind();
-		RectangleVB->Unbind();
-		RectangleShader->Unbind();
+		RectangleIB.Unbind();
+		RectangleVB.Unbind();
+		RectangleShader.Unbind();
 
 		Core::Context::End();
 	}
-	void ExitRendering()	// Exit Rendering
-	{
-		delete RectangleShader;
-		delete RectangleVB;
-		delete RectangleIB;
-		delete RectangleIL;
-		delete WoodenBoxTex;
-	}
+
 };

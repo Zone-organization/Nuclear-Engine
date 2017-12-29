@@ -1,39 +1,50 @@
 #include <Core\Context.h>
 #include <Core\Engine.h>
-#include <NuclearRendererBase\NRBContext.h>
-#include <NuclearRendererBase\NRBVertexBuffer.h>
-#include <NuclearRendererBase\NRBIndexBuffer.h>
-#include <NuclearRendererBase\NRBConstantBuffer.h>
-#include <NuclearRendererBase\NRBTexture.h>
-#include <NuclearRendererBase\NRBShader.h>
-#include <NuclearRendererOGL3\GLContext.h>
-#include <NuclearRendererDX11\DX11Context.h>
+
+#ifndef NE_USE_RUNTIME_RENDERER
+#ifdef NE_USE_OPENGL_3_3
+#include <API\OpenGL\GLContext.h>
+static NuclearEngine::API::OpenGL::GLContext ctx;
+#endif
+
+#ifdef NE_USE_DIRECTX11
+#include <API\DirectX\DX11Context.h>
+static NuclearEngine::API::DirectX::DX11Context ctx;
+#endif
+
+#else
+#include <API\OpenGL\GLContext.h>
+#include <API\DirectX\DX11Context.h>
+
+static NuclearEngine::API::OpenGL::GLContext glctx;
+static NuclearEngine::API::DirectX::DX11Context dxctx;
+
+#endif
+
 
 namespace NuclearEngine
 {
-	namespace Core 
+	namespace Core
 	{
-		static NuclearRenderer::NRBContext *ctx;
 		static RenderAPI _renderer;
-		bool Context::Initialize(NuclearRenderer::NRBContext * context)
-		{
-			ctx = context;
-			return ctx->Initialize();
-		}
 
 		bool Context::Initialize(const RenderAPI & renderer)
 		{
-			if (renderer == RenderAPI::OpenGL3)
-			{
-				ctx = new NuclearRenderer::GLContext();
-			}
-			else if (renderer == RenderAPI::DirectX11)
-			{
-				ctx = new NuclearRenderer::DX11Context();
-			}
-
 			_renderer = renderer;
-			return ctx->Initialize();
+
+#ifndef NE_USE_RUNTIME_RENDERER
+			return ctx.Initialize();
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.Initialize();
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.Initialize();
+			}
+#endif
+			return false;
 		}
 
 		RenderAPI Context::GetRenderAPI()
@@ -43,27 +54,82 @@ namespace NuclearEngine
 
 		void Context::SetPrimitiveType(PrimitiveType primitivetype)
 		{
-			ctx->SetPrimitiveType(primitivetype);
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.SetPrimitiveType(primitivetype);
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.SetPrimitiveType(primitivetype);
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.SetPrimitiveType(primitivetype);
+			}
+#endif
 		}
 
 		void Context::ClearColor(API::Color color)
 		{
-			ctx->ClearColor(color.r, color.g, color.b, color.a);
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.ClearColor(color.r, color.g, color.b, color.a);
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.ClearColor(color.r, color.g, color.b, color.a);
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.ClearColor(color.r, color.g, color.b, color.a);
+			}
+#endif
 		}
 
 		void Context::ClearDepthBuffer()
 		{
-			ctx->ClearDepthBuffer();
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.ClearDepthBuffer();
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.ClearDepthBuffer();
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.ClearDepthBuffer();
+			}
+#endif
 		}
 
 		void Context::ClearStencilBuffer()
 		{
-			ctx->ClearStencilBuffer();
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.ClearStencilBuffer();
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.ClearStencilBuffer();
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.ClearStencilBuffer();
+			}
+#endif
 		}
 
 		void Context::Shutdown()
 		{
-			ctx->Shutdown();
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.Shutdown();
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.Shutdown();
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.Shutdown();
+			}
+#endif
 		}
 
 		void Context::Begin()
@@ -73,60 +139,82 @@ namespace NuclearEngine
 
 		void Context::End()
 		{
-			ctx->SwapBuffers();
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.SwapBuffers();
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.SwapBuffers();
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.SwapBuffers();
+			}
+#endif
 		}
 
 		void Context::EnableDepthBuffer(bool state)
 		{
-			ctx->EnableDepthBuffer(state);
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.EnableDepthBuffer(state);
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.EnableDepthBuffer(state);
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.EnableDepthBuffer(state);
+			}
+#endif
 		}
 
 		void Context::Draw(unsigned int count)
 		{
-			ctx->Draw(count);
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.Draw(count);
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.Draw(count);
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.Draw(count);
+			}
+#endif
 		}
 
 		void Context::DrawIndexed(unsigned int vertexCount)
 		{
-			ctx->DrawIndexed(vertexCount);
-
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.DrawIndexed(vertexCount);
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.DrawIndexed(vertexCount);
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.DrawIndexed(vertexCount);
+			}
+#endif
 		}
 
 		void Context::SetViewPort(int x, int y, int width, int height)
 		{
-			ctx->SetViewPort(x, y, width, height);
+#ifndef NE_USE_RUNTIME_RENDERER
+			ctx.SetViewPort(x, y, width, height);
+#else
+			if (_renderer == RenderAPI::OpenGL3)
+			{
+				return glctx.SetViewPort(x, y, width, height);
+			}
+			else if (_renderer == RenderAPI::DirectX11)
+			{
+				return dxctx.SetViewPort(x, y, width, height);
+			}
+#endif
 		}
-		using namespace NuclearRenderer;
-
-		NRBVertexBuffer * Context::ConstructVertexBuffer(NRBVertexBuffer * param)
-		{
-			return ctx->ConstructVertexBuffer(param);
-		}
-
-		NRBIndexBuffer * Context::ConstructIndexBuffer(NRBIndexBuffer * param)
-		{
-			return ctx->ConstructIndexBuffer(param);
-		}
-
-		NRBConstantBuffer * Context::ConstructConstantBuffer(NRBConstantBuffer * param)
-		{
-			return ctx->ConstructConstantBuffer(param);
-		}
-
-		NRBTexture * Context::ConstructTexture(NRBTexture * param)
-		{
-			return ctx->ConstructTexture(param);
-		}
-
-		NuclearRenderer::NRBDepthStencilState * Context::ConstructDepthStencilState(NuclearRenderer::NRBDepthStencilState * param)
-		{
-			return ctx->ConstructDepthStencilState(param);
-		}
-
-		NRBShader* Context::ConstructShader(NRBShader * param)
-		{
-			return ctx->ConstructShader(param);
-		}
-
 	}
 }

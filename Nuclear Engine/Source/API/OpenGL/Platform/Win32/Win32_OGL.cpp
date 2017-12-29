@@ -1,18 +1,20 @@
 #include "Win32_OGL.h"
-#include <NuclearPlatform\Application.h>
-#include <NuclearCommon\Utilities\Logger.h>
-#include <NuclearRendererBase\NRBContext.h>
+#include <Core\Application.h>
 
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
-using namespace NuclearCommon;
-using namespace NuclearPlatform;
 
 #pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "glu32.lib")
 #pragma comment (lib, "glew32s.lib")
 
-namespace NuclearRenderer {
-	namespace Internals {
+
+namespace NuclearEngine
+{
+	namespace API
+	{
+		namespace OpenGL
+		{
+			namespace Internals {
 
 		static HDC hDC = NULL;
 
@@ -120,7 +122,7 @@ namespace NuclearRenderer {
 			Log->Info("[Engine] Initializing OpenGL On Windows (WGL)...\n");
 
 			InitGLEW();
-			hDC = GetDC(Application::GetInternalWindow()->GetHandle());
+			hDC = GetDC(Core::Application::GetInternalWindow()->GetHandle());
 
 			PIXELFORMATDESCRIPTOR pfd;
 			memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
@@ -188,7 +190,7 @@ namespace NuclearRenderer {
 			Log->Info("\n");
 
 
-			if (glewIsSupported("GL_EXT_texture_filter_anisotropic") || GLEW_EXT_texture_filter_anisotropic)
+			/*if (glewIsSupported("GL_EXT_texture_filter_anisotropic") || GLEW_EXT_texture_filter_anisotropic)
 			{
 				ContextDesc::SupportAnisotropic = true;
 
@@ -200,7 +202,7 @@ namespace NuclearRenderer {
 
 				Log->Warning("[OpenGL] Anisotropic filtering is not supported on this hardware. The engine will fall back to Trilinear filtering.\n");
 			}
-
+*/
 			return true;										// Initialization Went OK
 
 		}
@@ -214,4 +216,8 @@ namespace NuclearRenderer {
 		}
 	}
 }
+
+}
+
+}  //FIXME
 #endif
