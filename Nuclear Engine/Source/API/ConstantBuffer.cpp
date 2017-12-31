@@ -19,7 +19,7 @@ namespace NuclearEngine {
 			{
 				OpenGL::GLConstantBuffer::Create(&result->GLObject,_nameinshaders,size);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DirectX::DX11ConstantBuffer::Create(&result->DXObject, _nameinshaders, size);
 			}
@@ -30,7 +30,7 @@ namespace NuclearEngine {
 			{
 				GLObject.Update(data, size);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.Update(data, size);
 			}

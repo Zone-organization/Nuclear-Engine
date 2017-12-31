@@ -17,7 +17,6 @@ namespace NuclearEngine
 			{
 				VAO = 0;
 				VBO = 0;
-				donotkill = false;
 			}
 
 			GLVertexBuffer::~GLVertexBuffer()
@@ -29,8 +28,7 @@ namespace NuclearEngine
 				}
 
 				VAO = 0;
-				VBO = 0;
-				
+				VBO = 0;				
 			}
 
 			void GLVertexBuffer::Create(GLVertexBuffer * buffer, VertexBufferDesc * desc)

@@ -20,7 +20,7 @@ namespace NuclearEngine {
 			{
 				OpenGL::GLIndexBuffer::Create(&result->GLObject,indices,count);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DirectX::DX11IndexBuffer::Create(&result->DXObject,indices, count);
 			}
@@ -32,7 +32,7 @@ namespace NuclearEngine {
 			{
 				GLObject.Bind();
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.Bind();
 			}
@@ -43,7 +43,7 @@ namespace NuclearEngine {
 			{
 				GLObject.Unbind();
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.Unbind();
 			}

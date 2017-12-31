@@ -29,8 +29,6 @@ namespace NuclearEngine
 			private:
 				GLuint VAO;
 				GLuint VBO;
-
-				bool donotkill;
 			};
 		}
 	}

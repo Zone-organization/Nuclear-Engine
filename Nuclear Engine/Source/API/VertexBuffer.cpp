@@ -19,7 +19,7 @@ namespace NuclearEngine {
 			{
 				OpenGL::GLVertexBuffer::Create(&buffer->GLObject,desc);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DirectX::DX11VertexBuffer::Create(&buffer->DXObject,desc);
 			}
@@ -31,7 +31,7 @@ namespace NuclearEngine {
 			{
 				GLObject.Update(data,size);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.Update(data,size);
 			}
@@ -43,7 +43,7 @@ namespace NuclearEngine {
 			{
 				GLObject.SetInputLayout(layout,&shader->GLObject);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.SetInputLayout(layout,&shader->DXObject);
 			}
@@ -55,7 +55,7 @@ namespace NuclearEngine {
 			{
 				GLObject.Bind();
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.Bind();
 			}
@@ -66,7 +66,7 @@ namespace NuclearEngine {
 			{
 				GLObject.Unbind();
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.Unbind();
 			}

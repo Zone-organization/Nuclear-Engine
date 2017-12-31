@@ -17,7 +17,7 @@ namespace NuclearEngine {
 			{
 				OpenGL::GLTexture::Create(&result->GLObject,TexData,Desc);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DirectX::DX11Texture::Create(&result->DXObject, TexData, Desc);
 			}
@@ -29,7 +29,7 @@ namespace NuclearEngine {
 			{
 				OpenGL::GLTexture::Create(&result->GLObject,data, Desc);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DirectX::DX11Texture::Create(&result->DXObject, data, Desc);
 			}
@@ -41,7 +41,7 @@ namespace NuclearEngine {
 			{
 				GLObject.VSBind(index);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.VSBind(index);
 			}
@@ -52,7 +52,7 @@ namespace NuclearEngine {
 			{
 				GLObject.VSBind(samplerName,&shader->GLObject,index);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.VSBind(samplerName, &shader->DXObject, index);
 			}
@@ -63,7 +63,7 @@ namespace NuclearEngine {
 			{
 				GLObject.PSBind(index);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.PSBind(index);
 			}
@@ -74,7 +74,7 @@ namespace NuclearEngine {
 			{
 				GLObject.PSBind(samplerName, &shader->GLObject, index);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.PSBind(samplerName, &shader->DXObject, index);
 			}
@@ -85,7 +85,7 @@ namespace NuclearEngine {
 			{
 				GLObject.GSBind(index);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.GSBind(index);
 			}
@@ -96,7 +96,7 @@ namespace NuclearEngine {
 			{
 				GLObject.GSBind(samplerName, &shader->GLObject, index);
 			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.GSBind(samplerName, &shader->DXObject, index);
 			}
