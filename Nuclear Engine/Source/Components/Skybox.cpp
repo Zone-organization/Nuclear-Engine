@@ -98,9 +98,7 @@ namespace NuclearEngine
 			shader.Bind();
 			texcube.PSBind("NE_SkyboxTexture",&shader,0);
 			Core::Context::Draw(36);
-			shader.Unbind();
 			cubemapstate.Unbind();
-			vertexBuffer.Unbind();
 		}
 	}
 }

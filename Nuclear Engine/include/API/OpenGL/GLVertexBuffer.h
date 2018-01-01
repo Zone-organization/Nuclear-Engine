@@ -24,7 +24,6 @@ namespace NuclearEngine
 				void SetInputLayout(InputLayout * layout, GLShader *shader);
 
 				void Bind();
-				void Unbind();
 
 			private:
 				GLuint VAO;

@@ -36,7 +36,6 @@ namespace NuclearEngine {
 			texture->PSBind("SpriteTexture",shader,0);
 			vbo.Bind();
 			Core::Context::Draw(6);
-			vbo.Unbind();		
 		}
 		void SpriteRenderer::DrawSprite(Components::Sprite * Sprite)
 		{

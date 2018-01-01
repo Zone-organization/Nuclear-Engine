@@ -24,7 +24,6 @@ namespace NuclearEngine
 				void SetInputLayout(InputLayout * layout, DX11Shader *shader);
 
 				void Bind();
-				void Unbind();
 			private:
 				ID3D11Buffer* VertexBuffer;
 				ID3D11InputLayout* inputLayout;

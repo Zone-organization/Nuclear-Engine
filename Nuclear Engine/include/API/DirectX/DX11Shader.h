@@ -30,8 +30,6 @@ namespace NuclearEngine
 				void SetConstantBuffer(DX11ConstantBuffer* ubuffer, ShaderType type);
 
 				void Bind();
-				void Unbind();
-
 			private:
 
 				void CheckShaderErrors(ID3D10Blob* Shader);

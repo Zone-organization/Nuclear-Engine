@@ -81,12 +81,6 @@ namespace NuclearEngine
 				DX11Context::GetContext()->IASetInputLayout(inputLayout);
 				DX11Context::GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
 			}
-
-			void DX11VertexBuffer::Unbind()
-			{
-				return;
-			}
-
 			DXGI_FORMAT GetDXDataType(DataType dataType)
 			{
 				switch (dataType)

@@ -16,7 +16,6 @@ namespace NuclearEngine {
 			static void Create(IndexBuffer *buffer,void* indices, unsigned int count);
 
 			void Bind();
-			void Unbind();
 		private:
 			OpenGL::GLIndexBuffer GLObject;
 			DirectX::DX11IndexBuffer DXObject;

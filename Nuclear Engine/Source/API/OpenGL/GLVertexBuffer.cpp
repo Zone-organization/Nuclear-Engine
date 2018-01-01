@@ -97,11 +97,6 @@ namespace NuclearEngine
 				glBindVertexArray(VAO);
 			}
 
-			void GLVertexBuffer::Unbind()
-			{
-				glBindVertexArray(0);
-			}
-
 			GLenum GetGLDataType(DataType dataType)
 			{
 

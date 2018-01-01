@@ -2,6 +2,9 @@
 #include <API\OpenGL\GLCommon.h>
 
 #ifdef NE_COMPILE_OPENGL3_3
+#include <API\Color.h>
+#include <API\API_Types.h>
+
 namespace NuclearEngine
 {
 	namespace API 
@@ -14,9 +17,8 @@ namespace NuclearEngine
 			public:
 				bool Initialize();
 				void SetPrimitiveType(int primitivetype);
-				void ClearColor(float Red, float Green, float Blue, float Alpha);				
-				void ClearDepthBuffer();
-				void ClearStencilBuffer();
+
+				void Clear(API::Color color, ClearFlags flags, float depth = 1.0f, float stencil = 0.0f);
 
 				void EnableDepthBuffer(bool state);
 

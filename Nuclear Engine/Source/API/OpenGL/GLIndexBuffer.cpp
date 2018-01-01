@@ -35,11 +35,6 @@ namespace NuclearEngine
 			{
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 			}
-			void GLIndexBuffer::Unbind()
-			{
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-			}
 		}
 	}
 }

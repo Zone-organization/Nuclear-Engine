@@ -102,9 +102,7 @@ public:
 		Core::Context::Begin();
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
-		//Don't Forget to clear the depth buffer each frame
-		Core::Context::ClearDepthBuffer();
+		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearFlags::Depth);
 
 		WoodenBoxTex.PSBind(0);
 		CubeShader.Bind();
@@ -117,8 +115,6 @@ public:
 		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 
 		Core::Context::Draw(36);
-		CubeVB.Unbind();
-		CubeShader.Unbind();
 
 		Core::Context::End();
 	}

@@ -54,11 +54,10 @@ namespace NuclearEngine {
 
 
 			// draw mesh
+			_shader->Bind();
 			VBO.Bind();
 			IBO.Bind();
 			Core::Context::DrawIndexed(indices.size());
-			IBO.Unbind();
-			VBO.Unbind();
 		}
 
 		// render the mesh
@@ -132,16 +131,15 @@ namespace NuclearEngine {
 				RenderInit = true;
 			}
 
-		/*	for (unsigned int i = 0; i < textures.size(); i++)
+			for (unsigned int i = 0; i < textures.size(); i++)
 			{
 				textures[i].tex->PSBind(TextureBindings[i], shader, i);
-			}*/
+			}
 
 			// draw mesh
+			shader->Bind();
 			VBO.Bind();
 			Core::Context::Draw(vertices.size());
-			VBO.Unbind();
-
 		}
 		
 	}

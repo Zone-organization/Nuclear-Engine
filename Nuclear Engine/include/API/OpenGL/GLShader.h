@@ -29,8 +29,6 @@ namespace NuclearEngine
 				void SetConstantBuffer(GLConstantBuffer* ubuffer, NuclearEngine::ShaderType type);
 				
 				void Bind();
-				void Unbind();
-
 			private:
 				GLuint _ProgramID;
 			};

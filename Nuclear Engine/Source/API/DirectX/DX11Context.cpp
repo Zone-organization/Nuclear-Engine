@@ -335,23 +335,34 @@ namespace NuclearEngine
 				return true;
 			}
 
-			void DX11Context::ClearColor(float Red, float Green, float Blue, float Alpha)
+			uint GetClearFlags(ClearFlags flags)
+			{
+				switch (flags)
+				{
+				case ClearFlags::Depth:
+					return D3D11_CLEAR_DEPTH;
+				case ClearFlags::Stencil:
+					return D3D11_CLEAR_STENCIL;
+				case ClearFlags::Depth_Stencil:
+					return (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
+				}
+
+				return 0;
+			}
+
+			void DX11Context::Clear(API::Color color, ClearFlags flags, float depth, float stencil)
 			{
 				float Colors[4] = {
-					Red,Green,Blue,Alpha
+					color.r,color.g,color.b,color.a
 				};
 
 				Context->ClearRenderTargetView(RenderTarget, Colors);
-			}
 
-			void DX11Context::ClearDepthBuffer()
-			{
-				Context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-			}
-
-			void DX11Context::ClearStencilBuffer()
-			{
-				Context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_STENCIL, 1.0f, 0);
+				if (flags != ClearFlags::None)
+				{
+					Context->ClearDepthStencilView(m_depthStencilView, GetClearFlags(flags), depth, stencil);
+				}
+				return;
 			}
 
 			void DX11Context::EnableDepthBuffer(bool state)

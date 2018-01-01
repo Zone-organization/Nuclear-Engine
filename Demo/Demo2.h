@@ -63,16 +63,13 @@ public:
 		Core::Context::Begin();
 
 		//Change Background Color to Black in RGBA format
-		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
-	
+		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearFlags::Depth);
+
 		WoodenBoxTex.PSBind(0);
 		RectangleShader.Bind();
 		RectangleVB.Bind();
 		RectangleIB.Bind();
 		Core::Context::DrawIndexed(6);
-		RectangleIB.Unbind();
-		RectangleVB.Unbind();
-		RectangleShader.Unbind();
 
 		Core::Context::End();
 	}

@@ -50,18 +50,6 @@ namespace NuclearEngine {
 				DXObject.Bind();
 			}
 		}
-		void Shader::Unbind()
-		{
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				GLObject.Unbind();
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				DXObject.Unbind();
-			}
-		}
-
 	}
 }
 #endif

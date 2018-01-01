@@ -81,7 +81,8 @@ public:
 		Core::Context::Begin();
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::ClearColor(API::Color(0.1f, 0.1f, 0.1f, 1.0f));
+		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearFlags::Depth);
+
 		//Renderer->DrawSprite(sprite);
 		Renderer.DrawSprite(&background, Math::Vector2(0.0f, 0.0f), (_Width_, _Height_));
 		lvl.Draw(&Renderer);

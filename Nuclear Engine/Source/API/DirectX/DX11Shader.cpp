@@ -201,12 +201,6 @@ namespace NuclearEngine
 				}
 			}
 
-			void DX11Shader::Unbind()
-			{
-
-			}
-						
-
 			void DX11Shader::CheckShaderErrors(ID3D10Blob* Shader)
 			{
 				char* compileErrors;

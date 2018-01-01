@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <API\Color.h>
-
+#include <API\API_Types.h>
 namespace NuclearEngine
 {
 	enum PrimitiveType 
@@ -23,6 +23,7 @@ namespace NuclearEngine
 			OpenGL3,
 			DirectX11
 		};
+
 		class NEAPI Context
 		{
 		public:
@@ -31,9 +32,8 @@ namespace NuclearEngine
 			static RenderAPI GetRenderAPI();
 
 			static void SetPrimitiveType(PrimitiveType primitivetype);
-			static void ClearColor(API::Color color);
-			static void ClearDepthBuffer();
-			static void ClearStencilBuffer();
+
+			static void Clear(API::Color color, ClearFlags flags, float depth = 1.0f, float stencil = 0.0f);
 
 			static void Shutdown();
 

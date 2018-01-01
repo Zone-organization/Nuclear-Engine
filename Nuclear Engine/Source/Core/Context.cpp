@@ -15,6 +15,7 @@ static NuclearEngine::API::DirectX::DX11Context ctx;
 #else
 #include <API\OpenGL\GLContext.h>
 #include <API\DirectX\DX11Context.h>
+#include "..\..\include\Core\Context.h"
 
 static NuclearEngine::API::OpenGL::GLContext glctx;
 static NuclearEngine::API::DirectX::DX11Context dxctx;
@@ -68,50 +69,18 @@ namespace NuclearEngine
 #endif
 		}
 
-		void Context::ClearColor(API::Color color)
+		void Context::Clear(API::Color color, ClearFlags flags, float depth, float stencil)
 		{
 #ifndef NE_USE_RUNTIME_RENDERER
-			ctx.ClearColor(color.r, color.g, color.b, color.a);
+			ctx.Clear(color, flags, depth, stencil);
 #else
 			if (_renderer == RenderAPI::OpenGL3)
 			{
-				return glctx.ClearColor(color.r, color.g, color.b, color.a);
+				return glctx.Clear(color , flags, depth , stencil);
 			}
 			else if (_renderer == RenderAPI::DirectX11)
 			{
-				return dxctx.ClearColor(color.r, color.g, color.b, color.a);
-			}
-#endif
-		}
-
-		void Context::ClearDepthBuffer()
-		{
-#ifndef NE_USE_RUNTIME_RENDERER
-			ctx.ClearDepthBuffer();
-#else
-			if (_renderer == RenderAPI::OpenGL3)
-			{
-				return glctx.ClearDepthBuffer();
-			}
-			else if (_renderer == RenderAPI::DirectX11)
-			{
-				return dxctx.ClearDepthBuffer();
-			}
-#endif
-		}
-
-		void Context::ClearStencilBuffer()
-		{
-#ifndef NE_USE_RUNTIME_RENDERER
-			ctx.ClearStencilBuffer();
-#else
-			if (_renderer == RenderAPI::OpenGL3)
-			{
-				return glctx.ClearStencilBuffer();
-			}
-			else if (_renderer == RenderAPI::DirectX11)
-			{
-				return dxctx.ClearStencilBuffer();
+				return dxctx.Clear(color, flags, depth, stencil);
 			}
 #endif
 		}

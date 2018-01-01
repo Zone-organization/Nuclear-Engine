@@ -26,7 +26,6 @@ namespace NuclearEngine {
 			static void	Create(Shader* shader,BinaryShaderBlob* VertexShader, BinaryShaderBlob* PixelShader, BinaryShaderBlob* GeometryShader = nullptr);
 			void SetConstantBuffer(ConstantBuffer* cbuffer, ShaderType type);
 			void Bind();
-			void Unbind();
 
 		private:
 			OpenGL::GLShader GLObject;

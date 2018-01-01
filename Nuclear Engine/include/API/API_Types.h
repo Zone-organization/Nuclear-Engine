@@ -46,6 +46,15 @@ namespace NuclearEngine {
 		Stencil_Face_Desc StencilBackFace;
 	};
 
+
+	enum class NEAPI ClearFlags
+	{
+		None,
+		Depth,
+		Stencil,
+		Depth_Stencil
+	};
+
 	enum class ShaderLanguage {
 		HLSL,
 		DXBC,

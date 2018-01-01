@@ -89,7 +89,6 @@ namespace NuclearEngine
 							
 				GLuint vertex, fragment, geometry;
 				bool vsuccess, fsuccess, gsuccess, lsuccess;
-				char infoLog[1024];
 
 				// Vertex Shader
 				const char* vscode = VertexShaderCode->glslsourcecode.c_str();
@@ -159,12 +158,6 @@ namespace NuclearEngine
 			{
 				glUseProgram(this->_ProgramID);
 			}
-
-			void GLShader::Unbind()
-			{
-				glUseProgram(0);
-			}
-
 		}
 	}
 }

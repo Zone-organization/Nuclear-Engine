@@ -53,14 +53,11 @@ public:
 		Core::Context::Begin();
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::ClearColor(API::Color(0.2f, 0.3f, 0.3f, 1.0f));
+		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearFlags::Depth);
 
 		TriangleShader.Bind();
 		TriangleVB.Bind();
 		Core::Context::Draw(3);
-		TriangleVB.Unbind();
-		TriangleShader.Unbind();
-
 		Core::Context::End();
 	}
 };

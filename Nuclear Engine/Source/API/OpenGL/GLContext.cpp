@@ -55,21 +55,29 @@ namespace NuclearEngine
 				}
 			}
 
-			void GLContext::ClearColor(float Red, float Green, float Blue, float Alpha)
+			GLbitfield GL_GetClearFlags(ClearFlags flags)
 			{
-				glClearColor(Red, Green, Blue, Alpha);
+				switch (flags)
+				{
+				case ClearFlags::None:
+					return GL_COLOR_BUFFER_BIT;
+				case ClearFlags::Depth:
+					return (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				case ClearFlags::Stencil:
+					return(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+				case ClearFlags::Depth_Stencil:
+					return (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+				}
 
-				glClear(GL_COLOR_BUFFER_BIT);
+				return GL_COLOR_BUFFER_BIT;
 			}
 
-			void GLContext::ClearDepthBuffer()
+			void GLContext::Clear(API::Color color, ClearFlags flags, float depth, float stencil)
 			{
-				glClear(GL_DEPTH_BUFFER_BIT);
-			}
-
-			void GLContext::ClearStencilBuffer()
-			{
-				glClear(GL_STENCIL_BUFFER_BIT);
+				glClearColor(color.r, color.g, color.b, color.a);
+				glClear(GL_GetClearFlags(flags));
+				glClearDepth(depth);
+				glClearStencil(stencil);
 			}
 
 			void GLContext::EnableDepthBuffer(bool state)
@@ -77,7 +85,6 @@ namespace NuclearEngine
 				if (state)
 				{
 					glEnable(GL_DEPTH_TEST);
-					glClearDepth(1.0);
 				}
 				else
 				{

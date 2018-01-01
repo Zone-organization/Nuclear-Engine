@@ -50,11 +50,6 @@ namespace NuclearEngine
 			{
 				DX11Context::GetContext()->IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT, 0);
 			}
-
-			void DX11IndexBuffer::Unbind()
-			{
-			}
-
 		}
 	}
 }

@@ -23,7 +23,6 @@ namespace NuclearEngine {
 			void SetInputLayout(InputLayout* layout, Shader* shader);
 
 			void Bind();
-			void Unbind();
 		protected:
 			OpenGL::GLVertexBuffer GLObject;
 			DirectX::DX11VertexBuffer DXObject;
