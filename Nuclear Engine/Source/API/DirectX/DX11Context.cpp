@@ -17,14 +17,11 @@ namespace NuclearEngine
 	{
 		namespace DirectX
 		{
-			static ComPtr<ID3D11Device1> Device;
-			static ComPtr<ID3D11DeviceContext1> Context;
-			static ComPtr<IDXGISwapChain1> SwapChain;
+			static ComPtr<ID3D11Device> Device;
+			static ComPtr<ID3D11DeviceContext> Context;
+			static ComPtr<IDXGISwapChain> SwapChain;
 			static D3D_PRIMITIVE_TOPOLOGY D3DPrimitiveType;
 			static ID3D11RenderTargetView* RenderTarget;
-			static ComPtr<ID3D11Device> _Device;
-			static ComPtr<ID3D11DeviceContext> _Context;
-			static ComPtr<IDXGISwapChain> _SwapChain;
 			static ID3D11Texture2D *depthBuffer;
 			static ID3D11DepthStencilState* m_depthStencilState;
 			static ID3D11DepthStencilView* m_depthStencilView;
@@ -98,7 +95,6 @@ namespace NuclearEngine
 					return false;
 				}
 
-
 				// Convert the name of the video card to a character array and store it
 				if (wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128) != 0)
 				{
@@ -152,16 +148,10 @@ namespace NuclearEngine
 					1,
 					D3D11_SDK_VERSION,
 					&SwapChainDesc,
-					&_SwapChain,
-					&_Device,
+					&SwapChain,
+					&Device,
 					NULL,
-					&_Context);
-
-				if (SUCCEEDED(_Device.As(&Device)))
-				{
-					(void)_Context.As(&Context);
-					(void)_SwapChain.As(&SwapChain);
-				}
+					&Context);
 
 				if (FAILED(result))
 				{
@@ -320,14 +310,8 @@ namespace NuclearEngine
 				D3D11_FEATURE_DATA_D3D11_OPTIONS fl;
 				Device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &fl, sizeof(fl));
 
-				//if (fl.ConstantBufferPartialUpdate != TRUE || fl.ConstantBufferOffsetting != TRUE)
-				//{
-				//	Log->FatalError("[DirectX] Your GPU doesn't support constant buffer Partial update which is required to run the Nuclear Engine, Please Update your Drivers.\n");
-				//	return false;
-				//}
-
 				Log->Info("[DirectX] Successfully Initialized\n");
-				Log->Info("[DirectX] Version: 11.1\n");
+				Log->Info("[DirectX] Version: 11\n");
 				Log->Info("[DirectX] Vendor: ");
 				Log->Info(m_videoCardDescription);
 				Log->Info("\n");
@@ -440,12 +424,12 @@ namespace NuclearEngine
 				Context->IASetPrimitiveTopology(D3DPrimitiveType);
 			}
 
-			ID3D11Device1* DX11Context::GetDevice()
+			ID3D11Device* DX11Context::GetDevice()
 			{
 				return Device.Get();
 			}
 
-			ID3D11DeviceContext1* DX11Context::GetContext()
+			ID3D11DeviceContext* DX11Context::GetContext()
 			{
 				return Context.Get();
 			}

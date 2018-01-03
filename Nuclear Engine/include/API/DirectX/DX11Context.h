@@ -29,8 +29,8 @@ namespace NuclearEngine
 
 				void SetViewPort(int x, int y, int width, int height);
 
-				static ID3D11Device1* GetDevice();
-				static ID3D11DeviceContext1* GetContext();
+				static ID3D11Device* GetDevice();
+				static ID3D11DeviceContext* GetContext();
 			};
 		}
 	}
