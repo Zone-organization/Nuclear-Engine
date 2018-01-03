@@ -22,8 +22,8 @@ public:
 	{
 
 		API::Shader::Create(&CubeShader,
-		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
+		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -83,7 +83,7 @@ public:
 		CubeVB.SetInputLayout(&CubeIL, &CubeShader);
 		
 		API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
-		CubeShader.SetConstantBuffer(&CubeCB, ShaderType::Vertex);
+		CubeShader.SetConstantBuffer(&CubeCB,API::ShaderType::Vertex);
 	
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;

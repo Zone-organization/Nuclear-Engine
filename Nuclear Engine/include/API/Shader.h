@@ -24,7 +24,7 @@ namespace NuclearEngine {
 			~Shader();
 
 			static void	Create(Shader* shader,BinaryShaderBlob* VertexShader, BinaryShaderBlob* PixelShader, BinaryShaderBlob* GeometryShader = nullptr);
-			void SetConstantBuffer(ConstantBuffer* cbuffer, ShaderType type);
+			void SetConstantBuffer(ConstantBuffer* cbuffer,API::ShaderType type);
 			void Bind();
 
 		private:

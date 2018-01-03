@@ -4,7 +4,6 @@
 #include <API\DirectX\DX11Context.h>
 #include <API\DirectX\DX11ConstantBuffer.h>
 #include <d3dcompiler.h>
-#include <API\Shader_Types.h>
 
 namespace NuclearEngine
 {
@@ -50,7 +49,7 @@ namespace NuclearEngine
 			{	
 				if (VertexShaderCode != nullptr)
 				{
-					if (VertexShaderCode->Language != ShaderLanguage::DXBC)
+					if (VertexShaderCode->Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Vertex- shaders in DirectX Bytecode \"DXBC\" language!\n");
 
@@ -59,7 +58,7 @@ namespace NuclearEngine
 				}
 				if (PixelShaderCode != nullptr)
 				{
-					if (PixelShaderCode->Language != ShaderLanguage::DXBC)
+					if (PixelShaderCode->Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Pixel- shaders in DirectX Bytecode \"DXBC\" language!\n");
 
@@ -68,7 +67,7 @@ namespace NuclearEngine
 				}
 				if (GeometryShaderCode != nullptr)
 				{
-					if (GeometryShaderCode->Language != ShaderLanguage::DXBC)
+					if (GeometryShaderCode->Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Geometry- shaders in DirectX Bytecode \"DXBC\" language!\n");
 
@@ -110,12 +109,12 @@ namespace NuclearEngine
 				}
 				return;
 			}
-			unsigned int DX11Shader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer, ShaderType type)
+			unsigned int DX11Shader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer,API::ShaderType type)
 			{
 				ID3D11ShaderReflection* pReflector = NULL;
 				D3D11_SHADER_INPUT_BIND_DESC Desc;
 
-				if (type == ShaderType::Vertex)
+				if (type ==API::ShaderType::Vertex)
 				{
 					if (m_VSBL != nullptr)
 					{
@@ -130,7 +129,7 @@ namespace NuclearEngine
 						}
 					}
 				}
-				else if (type == ShaderType::Pixel)
+				else if (type ==API::ShaderType::Pixel)
 				{
 					if (m_PSBL != nullptr)
 					{
@@ -144,7 +143,7 @@ namespace NuclearEngine
 						}
 					}
 				}
-				else if (type == ShaderType::Geometry)
+				else if (type ==API::ShaderType::Geometry)
 				{
 					if (m_PSBL != nullptr)
 					{
@@ -163,19 +162,19 @@ namespace NuclearEngine
 				return 0;
 			}
 
-			void DX11Shader::SetConstantBuffer(DX11ConstantBuffer* ubuffer, ShaderType type)
+			void DX11Shader::SetConstantBuffer(DX11ConstantBuffer* ubuffer,API::ShaderType type)
 			{
-				if (type == ShaderType::Vertex)
+				if (type ==API::ShaderType::Vertex)
 				{
 					DX11Context::GetContext()->VSSetShader(m_vertexShader, 0, 0);
 					DX11Context::GetContext()->VSSetConstantBuffers(this->GetConstantBufferSlot(ubuffer,type), 1, &ubuffer->buffer);
 				}
-				else if (type == ShaderType::Pixel)
+				else if (type ==API::ShaderType::Pixel)
 				{
 					DX11Context::GetContext()->PSSetShader(m_pixelShader, 0, 0);
 					DX11Context::GetContext()->PSSetConstantBuffers(this->GetConstantBufferSlot(ubuffer, type), 1, &ubuffer->buffer);
 				}
-				else if (type == ShaderType::Geometry)
+				else if (type ==API::ShaderType::Geometry)
 				{
 					DX11Context::GetContext()->GSSetShader(m_geometryShader, 0, 0);
 					DX11Context::GetContext()->GSSetConstantBuffers(this->GetConstantBufferSlot(ubuffer, type), 1, &ubuffer->buffer);

@@ -21,11 +21,11 @@ public:
 	void Load()
 	{
 		API::Shader::Create(&CubeShader,
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
-		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() , ShaderType::Vertex);
+		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() ,API::ShaderType::Vertex);
 
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;

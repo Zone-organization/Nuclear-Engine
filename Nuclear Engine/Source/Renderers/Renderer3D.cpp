@@ -51,8 +51,8 @@ namespace NuclearEngine {
 			}
 
 			API::Shader::Create(&Shader,
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes).c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
+				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes).c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 			
 			
 			if (this->Lights.size() > 0)
@@ -62,8 +62,8 @@ namespace NuclearEngine {
 
 			API::ConstantBuffer::Create(&NE_LightUBO,"NE_Light_CB", this->LightUBOSize);
 
-			this->Shader.SetConstantBuffer(&this->Camera->GetCBuffer(), ShaderType::Vertex);
-			this->Shader.SetConstantBuffer(&this->NE_LightUBO, ShaderType::Pixel);
+			this->Shader.SetConstantBuffer(&this->Camera->GetCBuffer(),API::ShaderType::Vertex);
+			this->Shader.SetConstantBuffer(&this->NE_LightUBO,API::ShaderType::Pixel);
 		}
 
 		void Renderer3D::Render_Light()

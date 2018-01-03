@@ -169,7 +169,7 @@
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Build\;..\Deps\GLEW\Libs;..\..\Nuclear-Deps\Build\X86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclear.Common.lib;Nuclear.Platform.lib;Nuclear.Renderer.DirectX11.lib;Nuclear.Renderer.OpenGL3.lib;Nuclear.Shader.Cross.Compiler.lib;winmm.lib;Freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;XShaderCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>

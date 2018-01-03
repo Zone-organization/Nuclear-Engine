@@ -24,8 +24,8 @@ public:
 	{
 		//Load The Shader
 		API::Shader::Create(&TriangleShader,
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 
 		
 		VertexBufferDesc Desc;

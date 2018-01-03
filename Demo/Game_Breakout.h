@@ -53,8 +53,8 @@ public:
 		Camera.Initialize(Math::Orthographic(0.0f, static_cast<float>(_Width_),static_cast<float>(_Height_), 0.0f, -1.0f, 1.0f));
 		
 		API::Shader::Create(&RendererShader,
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/SpriteRenderer.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/SpriteRenderer.ps.hlsl").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/SpriteRenderer.vs.hlsl").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/SpriteRenderer.ps.hlsl").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 		
 		Renderer.Initialize(&RendererShader,&Camera);
 		

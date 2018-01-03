@@ -9,7 +9,7 @@ namespace NuclearEngine
 		enum class ShaderType;
 		enum class ShaderLanguage;
 
-		NEAPI BinaryShaderBlob CompileShader(std::string SourceCode, ShaderType type, ShaderLanguage language);
+		NEAPI BinaryShaderBlob CompileShader(std::string SourceCode,API::ShaderType type,API::ShaderLanguage language);
 
 	}
 }

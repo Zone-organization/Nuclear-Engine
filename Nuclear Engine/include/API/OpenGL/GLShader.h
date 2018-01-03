@@ -3,14 +3,12 @@
 
 #ifdef NE_COMPILE_OPENGL3_3
 #include <API\OpenGL\GLTexture.h>
+#include <API\Shader_Types.h>
 
 namespace NuclearEngine
 {
 	namespace API
-	{
-		struct BinaryShaderBlob;
-		enum class ShaderType;
-
+	{		
 		namespace OpenGL
 		{
 			class GLConstantBuffer;
@@ -27,7 +25,7 @@ namespace NuclearEngine
 					BinaryShaderBlob* PixelShaderCode,
 					BinaryShaderBlob* GeometryShaderCode = nullptr);
 				
-				void SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type);
+				void SetConstantBuffer(GLConstantBuffer* ubuffer,API::ShaderType type);
 				
 				void Bind();
 			private:

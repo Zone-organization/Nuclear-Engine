@@ -92,42 +92,6 @@ namespace NuclearEngine
 					data = str;
 				}
 				return data;
-			}
-
-
-			char* FileSystem::LoadBinaryFile(std::string Filepath, size_t* size)
-			{
-				std::ifstream stream;
-				char* data;
-
-				stream.open(Filepath, std::ifstream::in | std::ifstream::binary);
-				if (stream.good())
-				{
-					stream.seekg(0, std::ios::end);
-					*size = size_t(stream.tellg());
-					data = new char[*size];
-					stream.seekg(0, std::ios::beg);
-					stream.read(&data[0], *size);
-					stream.close();
-				}
-				else
-				{
-					Log->Error("[FileSystem] Couldn't Read File: " + Filepath);
-					throw std::runtime_error(std::string("[FileSystem] Couldn't Read File: ") + Filepath);
-				}
-
-				return data;
-			}
-
-			void * BinaryBlob::GetBufferPointer()
-			{
-				return buffer;
-			}
-
-			size_t BinaryBlob::GetBufferSize()
-			{
-				return size;
-			}
-
+			}		
 	}
 }

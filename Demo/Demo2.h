@@ -28,8 +28,8 @@ public:
 	{
 
 		API::Shader::Create(&RectangleShader,
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.vs").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.ps").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 
 
 

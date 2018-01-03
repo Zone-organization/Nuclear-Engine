@@ -27,7 +27,7 @@ namespace NuclearEngine {
 			}
 		}
 
-		void Shader::SetConstantBuffer(ConstantBuffer * cbuffer, ShaderType type)
+		void Shader::SetConstantBuffer(ConstantBuffer * cbuffer,API::ShaderType type)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{

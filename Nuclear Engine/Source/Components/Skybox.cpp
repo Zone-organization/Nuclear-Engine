@@ -56,12 +56,12 @@ namespace NuclearEngine
 		Skybox::Skybox(Components::GenericCamera* CameraCbuffer, std::array<NuclearEngine::Texture_Data*, 6> data)
 		{
 			API::Shader::Create(&shader,
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), ShaderType::Vertex, ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), ShaderType::Pixel, ShaderLanguage::HLSL));
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
+			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 
 			_CameraCbuffer = CameraCbuffer;
 
-			shader.SetConstantBuffer(&_CameraCbuffer->GetCBuffer(), ShaderType::Vertex);
+			shader.SetConstantBuffer(&_CameraCbuffer->GetCBuffer(),API::ShaderType::Vertex);
 
 			VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;

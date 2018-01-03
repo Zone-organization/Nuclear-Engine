@@ -3,7 +3,6 @@
 #ifdef NE_COMPILE_OPENGL3_3
 
 #include <API\OpenGL\GLConstantBuffer.h>
-#include <API\Shader_Types.h>
 
 namespace NuclearEngine
 {
@@ -66,21 +65,21 @@ namespace NuclearEngine
 			{
 				if (VertexShaderCode != nullptr)
 				{
-					if (VertexShaderCode->Language != ShaderLanguage::GLSL)
+					if (VertexShaderCode->Language !=API::ShaderLanguage::GLSL)
 					{
 						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Vertex- shaders in GLSL language!\n");
 					}
 				}
 				if (PixelShaderCode != nullptr)
 				{
-					if (PixelShaderCode->Language != ShaderLanguage::GLSL)
+					if (PixelShaderCode->Language !=API::ShaderLanguage::GLSL)
 					{
 						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Pixel- shaders in GLSL language!\n");
 					}
 				}
 				if (GeometryShaderCode != nullptr)
 				{
-					if (GeometryShaderCode->Language != ShaderLanguage::GLSL)
+					if (GeometryShaderCode->Language !=API::ShaderLanguage::GLSL)
 					{
 						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Geometry- shaders in GLSL language!\n");
 
@@ -149,7 +148,7 @@ namespace NuclearEngine
 				}
 			}
 
-			void GLShader::SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type)
+			void GLShader::SetConstantBuffer(GLConstantBuffer* ubuffer,API::ShaderType type)
 			{
 				glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
 			}
