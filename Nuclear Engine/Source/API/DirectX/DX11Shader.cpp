@@ -4,7 +4,7 @@
 #include <API\DirectX\DX11Context.h>
 #include <API\DirectX\DX11ConstantBuffer.h>
 #include <d3dcompiler.h>
-#include <API\API_Types.h>
+#include <API\Shader_Types.h>
 
 namespace NuclearEngine
 {
@@ -82,8 +82,8 @@ namespace NuclearEngine
 								
 				if (result->m_VSBL != nullptr)
 				{	// encapsulate both shaders into shader Components
-					if (FAILED(DX11Context::GetDevice()->CreateVertexShader(result->m_VSBL->GetBufferPointer(),
-						result->m_VSBL->GetBufferSize(), 0, &result->m_vertexShader)))
+					if (FAILED(DX11Context::GetDevice()->CreateVertexShader(result->m_VSBL->DXBC_SourceCode->GetBufferPointer(),
+						result->m_VSBL->DXBC_SourceCode->GetBufferSize(), 0, &result->m_vertexShader)))
 					{
 						Log->Info("[DX11Shader] Vertex Shader Creation Failed!\n");
 						return;
@@ -92,8 +92,8 @@ namespace NuclearEngine
 				}
 				if (result->m_PSBL != nullptr)
 				{
-					if (FAILED(DX11Context::GetDevice()->CreatePixelShader(result->m_PSBL->GetBufferPointer(),
-						result->m_PSBL->GetBufferSize(), 0, &result->m_pixelShader)))
+					if (FAILED(DX11Context::GetDevice()->CreatePixelShader(result->m_PSBL->DXBC_SourceCode->GetBufferPointer(),
+						result->m_PSBL->DXBC_SourceCode->GetBufferSize(), 0, &result->m_pixelShader)))
 					{
 						Log->Info("[DX11Shader] Pixel Shader Creation Failed!\n");
 						return;
@@ -101,8 +101,8 @@ namespace NuclearEngine
 				}
 				if (result->m_GSBL != nullptr)
 				{
-					if (FAILED(DX11Context::GetDevice()->CreateGeometryShader(result->m_GSBL->GetBufferPointer(),
-						result->m_GSBL->GetBufferSize(), 0, &result->m_geometryShader)))
+					if (FAILED(DX11Context::GetDevice()->CreateGeometryShader(result->m_GSBL->DXBC_SourceCode->GetBufferPointer(),
+						result->m_GSBL->DXBC_SourceCode->GetBufferSize(), 0, &result->m_geometryShader)))
 					{
 						Log->Info("[DX11Shader] Geometry Shader Creation Failed!\n");
 						return;
@@ -110,7 +110,7 @@ namespace NuclearEngine
 				}
 				return;
 			}
-			unsigned int DX11Shader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer, NuclearEngine::ShaderType type)
+			unsigned int DX11Shader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer, ShaderType type)
 			{
 				ID3D11ShaderReflection* pReflector = NULL;
 				D3D11_SHADER_INPUT_BIND_DESC Desc;
@@ -119,8 +119,8 @@ namespace NuclearEngine
 				{
 					if (m_VSBL != nullptr)
 					{
-						D3DReflect(m_VSBL->GetBufferPointer(),
-							m_VSBL->GetBufferSize(),
+						D3DReflect(m_VSBL->DXBC_SourceCode->GetBufferPointer(),
+							m_VSBL->DXBC_SourceCode->GetBufferSize(),
 							IID_ID3D11ShaderReflection, (void**)&pReflector);
 
 						if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->name, &Desc)))
@@ -134,8 +134,8 @@ namespace NuclearEngine
 				{
 					if (m_PSBL != nullptr)
 					{
-						D3DReflect(m_PSBL->GetBufferPointer(),
-							m_PSBL->GetBufferSize(),
+						D3DReflect(m_PSBL->DXBC_SourceCode->GetBufferPointer(),
+							m_PSBL->DXBC_SourceCode->GetBufferSize(),
 							IID_ID3D11ShaderReflection, (void**)&pReflector);
 
 						if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->name, &Desc)))
@@ -148,8 +148,8 @@ namespace NuclearEngine
 				{
 					if (m_PSBL != nullptr)
 					{
-						D3DReflect(m_GSBL->GetBufferPointer(),
-							m_GSBL->GetBufferSize(),
+						D3DReflect(m_GSBL->DXBC_SourceCode->GetBufferPointer(),
+							m_GSBL->DXBC_SourceCode->GetBufferSize(),
 							IID_ID3D11ShaderReflection, (void**)&pReflector);
 
 						if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->name, &Desc)))
@@ -163,7 +163,7 @@ namespace NuclearEngine
 				return 0;
 			}
 
-			void DX11Shader::SetConstantBuffer(DX11ConstantBuffer* ubuffer, NuclearEngine::ShaderType type)
+			void DX11Shader::SetConstantBuffer(DX11ConstantBuffer* ubuffer, ShaderType type)
 			{
 				if (type == ShaderType::Vertex)
 				{
@@ -199,22 +199,6 @@ namespace NuclearEngine
 				{
 					DX11Context::GetContext()->GSSetShader(m_geometryShader, 0, 0);
 				}
-			}
-
-			void DX11Shader::CheckShaderErrors(ID3D10Blob* Shader)
-			{
-				char* compileErrors;
-
-				// Get a pointer to the error message text Buffer.
-				compileErrors = (char*)(Shader->GetBufferPointer());
-
-				Log->Info(compileErrors);
-
-				// Release the error message.
-				Shader->Release();
-				Shader = 0;
-
-				return;
 			}
 		}
 	}

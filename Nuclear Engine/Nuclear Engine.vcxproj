@@ -160,7 +160,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Nuclear Shader Cross Compiler\include;..\Nuclear Renderer OpenGL3\include;..\Nuclear Renderer DirectX11\include;..\Nuclear Renderer Base\include;..\Nuclear Platform\include;..\Nuclear Common\include;..\Deps\FreetypeLib;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Nuclear-Deps\XShaderCompiler\inc;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -168,7 +168,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Build\;..\Deps\assimp\Libs;..\Deps\OpenAL\libs;..\Deps\GLEW\Libs;..\Deps\FreetypeLib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Build\;..\Deps\GLEW\Libs;..\..\Nuclear-Deps\Build\X86</AdditionalLibraryDirectories>
       <AdditionalDependencies>Nuclear.Common.lib;Nuclear.Platform.lib;Nuclear.Renderer.DirectX11.lib;Nuclear.Renderer.OpenGL3.lib;Nuclear.Shader.Cross.Compiler.lib;winmm.lib;Freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
@@ -346,6 +346,7 @@
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\API\InputLayout.h" />
     <ClInclude Include="include\API\Shader.h" />
+    <ClInclude Include="include\API\Shader_Types.h" />
     <ClInclude Include="include\API\Texture.h" />
     <ClInclude Include="include\API\ConstantBuffer.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />

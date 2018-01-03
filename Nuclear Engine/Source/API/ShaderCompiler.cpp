@@ -1,11 +1,15 @@
 #include <API\ShaderCompiler.h>
-#include <API\API_Types.h>
+#include <API\Shader_Types.h>
 #include <Core\Context.h>
 
-#include <hlslcc.h>
-#include <d3dcompiler.h>
+#ifdef NE_COMPILE_XSHADERCOMPILER
+#include <Xsc\Xsc.h>
+#endif
 
+#ifdef NE_COMPILE_D3DCOMPILER
+#include <d3dcompiler.h>
 #pragma comment(lib,"D3DCompiler.lib")
+#endif
 
 namespace NuclearEngine {
 
@@ -27,7 +31,7 @@ namespace NuclearEngine {
 			return;
 		}
 
-		BinaryShaderBlob CompileShader(const char * SourceCode, ShaderType type, ShaderLanguage language)
+		BinaryShaderBlob CompileShader(std::string SourceCode, ShaderType type, ShaderLanguage language)
 		{
 			BinaryShaderBlob blob;
 
@@ -48,33 +52,39 @@ namespace NuclearEngine {
 			if (language == ShaderLanguage::HLSL)
 			{
 				ID3D10Blob* ERRMSG = nullptr;
-				ID3DBlob* hlslblob;
 
-				if (FAILED(D3DCompile(SourceCode, lstrlenA(SourceCode) + 1, 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &hlslblob, &ERRMSG)))
+				if (FAILED(D3DCompile(SourceCode.c_str(), SourceCode.size(), 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &blob.DXBC_SourceCode, &ERRMSG)))
 				{
 					Log->Info("[ShaderCompiler] Compiling Error -- \nInfo: ");
 					CheckShaderErrors(ERRMSG);
 
 					return blob;
 				}
-				blob.hlslsourcecode = hlslblob->GetBufferPointer();
-				blob.hlslsize = hlslblob->GetBufferSize();
+
 				blob.Language = ShaderLanguage::DXBC;
 
 				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 				{
-					GlExtensions extensions;
-					GLSLCrossDependencyData deps;
-					extensions.ARB_shading_language_420pack = false;
-					HLSLccSamplerPrecisionInfo samplerPrecisions;
-					HLSLccReflection reflectionCallbacks;
-					GLSLShader glshader;
+					// Initialize shader input descriptor structure
+					Xsc::ShaderInput inputDesc;
+					{
+						//inputDesc.sourceCode = SourceCode;
+						inputDesc.shaderVersion = Xsc::InputShaderVersion::HLSL4;
+						inputDesc.entryPoint = "main";
+						inputDesc.shaderTarget = Xsc::ShaderTarget::VertexShader;
+					}
 
-					TranslateHLSLFromMem((const char*)blob.hlslsourcecode, HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT,
-						LANG_330, &extensions, &deps, samplerPrecisions, reflectionCallbacks, &glshader);
+					// Initialize shader output descriptor structure
+					Xsc::ShaderOutput outputDesc;
+					{
+						//outputDesc.sourceCode = &outputStream;
+						outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;
+					}
 
-					blob.glslsourcecode = glshader.sourceCode;
-					blob.Language = ShaderLanguage::GLSL;
+					// Compile HLSL code into GLSL
+					Xsc::StdLog log;
+					bool result = Xsc::CompileShader(inputDesc, outputDesc, &log);
+
 				}
 			}
 			else if (language == ShaderLanguage::GLSL)

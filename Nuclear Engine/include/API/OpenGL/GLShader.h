@@ -6,10 +6,11 @@
 
 namespace NuclearEngine
 {
-	struct BinaryShaderBlob;
-	enum class ShaderType;
 	namespace API
 	{
+		struct BinaryShaderBlob;
+		enum class ShaderType;
+
 		namespace OpenGL
 		{
 			class GLConstantBuffer;
@@ -22,11 +23,11 @@ namespace NuclearEngine
 				~GLShader();
 
 				static void Create(GLShader* shader,
-					NuclearEngine::BinaryShaderBlob* VertexShaderCode,
-					NuclearEngine::BinaryShaderBlob* PixelShaderCode,
-					NuclearEngine::BinaryShaderBlob* GeometryShaderCode = nullptr);
+					BinaryShaderBlob* VertexShaderCode,
+					BinaryShaderBlob* PixelShaderCode,
+					BinaryShaderBlob* GeometryShaderCode = nullptr);
 				
-				void SetConstantBuffer(GLConstantBuffer* ubuffer, NuclearEngine::ShaderType type);
+				void SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type);
 				
 				void Bind();
 			private:

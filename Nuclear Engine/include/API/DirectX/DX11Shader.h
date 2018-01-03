@@ -5,11 +5,11 @@
 #include <API\DirectX\DX11VertexBuffer.h>
 namespace NuclearEngine
 {
-	struct BinaryShaderBlob;
-	enum class ShaderType;
-
 	namespace API
 	{
+		struct BinaryShaderBlob;
+		enum class ShaderType;
+
 		namespace DirectX
 		{
 			class DX11ConstantBuffer;
@@ -23,25 +23,23 @@ namespace NuclearEngine
 				~DX11Shader();
 
 				static void Create(DX11Shader *shader,
-					NuclearEngine::BinaryShaderBlob* VertexShaderCode,
-					NuclearEngine::BinaryShaderBlob* PixelShaderCode,
-					NuclearEngine::BinaryShaderBlob* GeometryShaderCode = nullptr);
+					BinaryShaderBlob* VertexShaderCode,
+					BinaryShaderBlob* PixelShaderCode,
+					BinaryShaderBlob* GeometryShaderCode = nullptr);
 
 				void SetConstantBuffer(DX11ConstantBuffer* ubuffer, ShaderType type);
 
 				void Bind();
 			private:
-
-				void CheckShaderErrors(ID3D10Blob* Shader);
 				unsigned int GetConstantBufferSlot(DX11ConstantBuffer * ubuffer, ShaderType type);
 
 				ID3D11VertexShader* m_vertexShader;
 				ID3D11PixelShader* m_pixelShader;
 				ID3D11GeometryShader* m_geometryShader;
 
-				NuclearEngine::BinaryShaderBlob* m_VSBL;
-				NuclearEngine::BinaryShaderBlob* m_PSBL;
-				NuclearEngine::BinaryShaderBlob* m_GSBL;
+				BinaryShaderBlob* m_VSBL;
+				BinaryShaderBlob* m_PSBL;
+				BinaryShaderBlob* m_GSBL;
 			};
 		}
 	}

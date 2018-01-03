@@ -19,7 +19,7 @@ cbuffer NE_Camera
 PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
-	
+
 	// Calculate the position of the vertex against the world, view, and projection matrices.
     output.Position = mul(Model, float4(input.Position.xy, 0.0f, 1.0f));
     output.Position = mul(Projection, output.Position);

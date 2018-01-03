@@ -3,7 +3,7 @@
 #ifdef NE_COMPILE_OPENGL3_3
 
 #include <API\OpenGL\GLConstantBuffer.h>
-#include <API\API_Types.h>
+#include <API\Shader_Types.h>
 
 namespace NuclearEngine
 {
@@ -91,13 +91,13 @@ namespace NuclearEngine
 				bool vsuccess, fsuccess, gsuccess, lsuccess;
 
 				// Vertex Shader
-				const char* vscode = VertexShaderCode->glslsourcecode.c_str();
+				const char* vscode = VertexShaderCode->GLSL_SourceCode.c_str();
 				vertex = glCreateShader(GL_VERTEX_SHADER);
 				glShaderSource(vertex, 1, &vscode, NULL);
 				glCompileShader(vertex);
 				vsuccess = CheckShaderErrors(vertex, "Vertex");
 
-				const char* fscode = PixelShaderCode->glslsourcecode.c_str();
+				const char* fscode = PixelShaderCode->GLSL_SourceCode.c_str();
 				// Fragment Shader
 				fragment = glCreateShader(GL_FRAGMENT_SHADER);
 				glShaderSource(fragment, 1, &fscode, NULL);
@@ -106,7 +106,7 @@ namespace NuclearEngine
 
 				if (GeometryShaderCode != nullptr)
 				{
-					const char* gscode = GeometryShaderCode->glslsourcecode.c_str();
+					const char* gscode = GeometryShaderCode->GLSL_SourceCode.c_str();
 					geometry = glCreateShader(GL_GEOMETRY_SHADER);
 					glShaderSource(geometry, 1, &gscode, NULL);
 					glCompileShader(geometry);
@@ -149,7 +149,7 @@ namespace NuclearEngine
 				}
 			}
 
-			void GLShader::SetConstantBuffer(GLConstantBuffer* ubuffer, NuclearEngine::ShaderType type)
+			void GLShader::SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type)
 			{
 				glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
 			}

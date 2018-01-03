@@ -67,6 +67,7 @@
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\Texture.h" />
+    <ClInclude Include="include\API\Shader_Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

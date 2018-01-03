@@ -19,15 +19,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 
 #endif
 
-//#define NE_USE_OPENGL3_3
-//#define NE_USE_DIRECTX11
-
 #ifdef NE_USE_OPENGL3_3
 #define NE_COMPILE_OPENGL3_3
+#define NE_COMPILE_XSHADERCOMPILER
 #endif
 
 #ifdef NE_USE_DIRECTX11
 #define NE_COMPILE_DIRECTX11
+#define NE_COMPILE_D3DCOMPILER
 #endif
 
 #define NE_USE_RUNTIME_RENDERER
@@ -44,7 +43,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 
 #define NE_COMPILE_OPENGL3_3
 #define NE_COMPILE_DIRECTX11
-
+#define NE_COMPILE_D3DCOMPILER
+#define NE_COMPILE_XSHADERCOMPILER
 
 #ifndef _DEBUG
 #warning "Nuclear Engine: Usage of runtime chosable renderer slows down performance!"
