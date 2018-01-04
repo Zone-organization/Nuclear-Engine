@@ -5,9 +5,10 @@
 #include <Core\Context.h>
 
 #ifdef NE_COMPILE_XSHADERCOMPILER
-#include <Xsc\Xsc.h>
+#include <XShaderCompiler\inc\Xsc\Xsc.h>
 #include <sstream>
 #include <iostream>
+#pragma comment(lib,"XShaderCompiler.lib")
 #endif
 
 #ifdef NE_COMPILE_D3DCOMPILER

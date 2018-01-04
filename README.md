@@ -4,7 +4,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 
 ## Features:-
 - __Core__
-  - Crossplatform ready
+  - Cross platform ready
   - Modern Fast code using C++
   
 - __ResourceManager__
@@ -26,26 +26,27 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Correctly Implement Model Loading with Assimp.
   - Implement Phong-Lighting.
 
-## Roadmap
+## Road-map
   - Support Android & Linux & UWP Platforms.
   - Support PhysX or Bullet Physics Library.
   - Support A Uber Shader instead of GLSL , HLSL.
-  - Support Text Renderering With immediate mode GUI.
+  - Support Text Rendering With immediate mode GUI.
   - There are more but these are the most important...
   
   
 ### Building
-Currently Visual Studio 2017 15.5.5 to build it and look at Deps section
+Currently I am using Visual Studio 2017 15.5.5 to build it.
+For Dependencies please see https://github.com/Zone-organization/Nuclear-Deps
 
 ### Architecture
 Features:
   - All frequently called API functions and classes are 100% allocated on the Stack.
-  - Design allows you to take advantage of its flexability and define your own renderers!
+  - Design allows you to take advantage of its flexibility and define your own renderers!
   - No Dynamic Inheritance or slow Function Pointers in any API call!
   
 Summary:
 Designed for Speed & Med-End Machines unlike other engine such as unreal engine that requires high end system
-requirements or amazon lamburyard that takes whole your HDD Space.
+requirements or amazon lumberyard that takes whole your HDD Space.
 
 Detailed Description:
 It is designed to support multiple renderers such as OpenGL3 And DirectX11, where on some platforms as windows
@@ -54,11 +55,3 @@ is build to avoid Heap Allocations and Bad Core design as dynamic inheritance (w
 behind the scene), Most of the RenderAPI calls are usually designed in a way that lets you choose the renderer
 in debug so you can check that your game works on all renderers and at build time the engine chooses the best
 renderer for your platform to remove the entire API calling overhead. 
-
-
-### Required Deps
-  - Glew
-  - Windows 32 API (SDK) (Which has DirectX & XAudio)
-
-  
-  

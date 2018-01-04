@@ -1,9 +1,6 @@
 #pragma once
 #include <API\OpenGL\GLCommon.h>
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
-#define GLEW_STATIC
-#include <GLEW\include\glew.h>
-#include <GLEW\include\wglew.h>
 #include <gl\gl.h>
 #include <gl\glu.h>
 

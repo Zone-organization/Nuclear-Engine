@@ -1,8 +1,9 @@
 #include <API\OpenGL\GLTexture.h>
-#include <API\OpenGL\GLShader.h>
-#include <API\API_Types.h>
 
 #ifdef NE_COMPILE_OPENGL3_3
+#include <API\OpenGL\GLShader.h>
+#include <API\API_Types.h>
+#include <Core\Context.h>
 
 namespace NuclearEngine
 {
@@ -13,12 +14,7 @@ namespace NuclearEngine
 
 			int GetGLTextureFormat(TextureFormat format);
 			int GetGLTextureWrap(TextureWrap textureWrap);
-			template<class T>
-			const T& _min(const T& a, const T& b)
-			{
-				return (b < a) ? b : a;
-			}
-
+			
 			GLTexture::GLTexture() : textureID(0) , type(0)
 			{
 			}
@@ -137,37 +133,35 @@ namespace NuclearEngine
 					break;
 				}
 
-				/*if (ContextDesc::SupportAnisotropic == true)
+				if (Core::ContextDesc::SupportAnisotropic == true)
 				{
 					switch (Desc->AnisoFilter)
 					{
 					case AnisotropicFilter::AnisotropicX2:
 					{
-						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(2.0f, ContextDesc::MaxAnisotropicLevel));
-
+						glTexParameterf(result->type, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(2.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					case AnisotropicFilter::AnisotropicX4:
 					{
-						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(4.0f, ContextDesc::MaxAnisotropicLevel));
+						glTexParameterf(result->type, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(4.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					case AnisotropicFilter::AnisotropicX8:
 					{
-						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(8.0f, ContextDesc::MaxAnisotropicLevel));
+						glTexParameterf(result->type, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(8.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					case AnisotropicFilter::AnisotropicX16:
 					{
-						glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(16.0f, ContextDesc::MaxAnisotropicLevel));
-						//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -10.4f);
+						glTexParameterf(result->type, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(16.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					default:
 						break;
 					}
 				}
-				*/
+				
 				glBindTexture(result->type, 0);
 			}
 
@@ -230,38 +224,35 @@ namespace NuclearEngine
 				}
 
 
-				//Todo refix anisotropic filter
-				/*if (ContextDesc::SupportAnisotropic == true)
+				if (Core::ContextDesc::SupportAnisotropic == true)
 				{
 					switch (Desc->AnisoFilter)
 					{
 					case AnisotropicFilter::AnisotropicX2:
 					{
-						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(2.0f, ContextDesc::MaxAnisotropicLevel));
-
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(2.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					case AnisotropicFilter::AnisotropicX4:
 					{
-						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(4.0f, ContextDesc::MaxAnisotropicLevel));
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(4.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					case AnisotropicFilter::AnisotropicX8:
 					{
-						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(8.0f, ContextDesc::MaxAnisotropicLevel));
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(8.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					case AnisotropicFilter::AnisotropicX16:
 					{
-						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, _min(16.0f, ContextDesc::MaxAnisotropicLevel));
-						//glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, -10.4f);
+						glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(16.0f, Core::ContextDesc::MaxAnisotropicLevel));
 						break;
 					}
 					default:
 						break;
 					}
 				}
-				*/
+
 				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc->Wrap));
 				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc->Wrap));
 				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc->Wrap));
