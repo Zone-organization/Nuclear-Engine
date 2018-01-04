@@ -1,10 +1,11 @@
 #pragma once
 #include "Common.h"
 
+static API::Shader CubeShader;
+
 class Demo4 : public Core::Game
 {
 protected:
-	API::Shader CubeShader;
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
 
@@ -76,13 +77,15 @@ public:
 		Camera.ProcessEye(xoffset, yoffset);
 	}
 
-	void Render()
+	void Render() override
 	{
 		Core::Context::Begin();
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearFlags::Depth);
 
+		CubeShader.Bind();
+			
 		Cube->Draw(&CubeShader);
 
 		Core::Context::End();

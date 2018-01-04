@@ -13,7 +13,7 @@ namespace NuclearEngine {
 			virtual void Draw(API::Shader* shader);
 
 		protected:
-			Mesh_NoIndices cube;
+			Mesh_NoIndices* cube;
 		};
 	}
 }

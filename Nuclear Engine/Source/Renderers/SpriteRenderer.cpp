@@ -66,6 +66,7 @@ namespace NuclearEngine {
 			vbo.SetInputLayout(&layout, shader);
 
 			API::ConstantBuffer::Create(&SpriteColorBuffer, "SpriteColor", sizeof(API::Color));
+			shader->SetConstantBuffer(&camera->GetCBuffer(), API::ShaderType::Vertex);
 			shader->SetConstantBuffer(&SpriteColorBuffer,API::ShaderType::Pixel);
 		}
 	}

@@ -33,13 +33,13 @@ namespace NuclearEngine
 			private:
 				unsigned int GetConstantBufferSlot(DX11ConstantBuffer * ubuffer,API::ShaderType type);
 
-				ID3D11VertexShader* m_vertexShader;
-				ID3D11PixelShader* m_pixelShader;
-				ID3D11GeometryShader* m_geometryShader;
-
-				BinaryShaderBlob* m_VSBL;
-				BinaryShaderBlob* m_PSBL;
-				BinaryShaderBlob* m_GSBL;
+				ID3D11VertexShader* VertexShader;
+				ID3D11PixelShader* PixelShader;
+				ID3D11GeometryShader* GeometryShader;
+				
+				DXBC_BLOB VSBLOB;
+				DXBC_BLOB PSBLOB;
+				DXBC_BLOB GSBLOB;
 			};
 		}
 	}

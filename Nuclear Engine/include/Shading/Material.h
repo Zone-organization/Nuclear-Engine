@@ -10,8 +10,8 @@ namespace NuclearEngine {
 		class NEAPI Material {
 		public:
 			
-			API::Texture *Diffuse;
-			API::Texture *Specular;
+			API::Texture *Diffuse = nullptr;
+			API::Texture *Specular = nullptr;
 
 		};
 	}

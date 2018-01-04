@@ -57,14 +57,17 @@ namespace NuclearEngine {
 			if (language ==API::ShaderLanguage::HLSL)
 			{
 				ID3D10Blob* ERRMSG = nullptr;
+				ID3D10Blob* m_blob;
 
-				if (FAILED(D3DCompile(SourceCode.c_str(), SourceCode.size(), 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &blob.DXBC_SourceCode, &ERRMSG)))
+				if (FAILED(D3DCompile(SourceCode.c_str(), SourceCode.size(), 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &m_blob, &ERRMSG)))
 				{
 					Log->Info("[ShaderCompiler] Compiling Error -- \nInfo: ");
 					CheckShaderErrors(ERRMSG);
 
 					return blob;
 				}
+				blob.DXBC_SourceCode.Buffer = m_blob->GetBufferPointer();
+				blob.DXBC_SourceCode.Size = m_blob->GetBufferSize();
 
 				blob.Language =API::ShaderLanguage::DXBC;
 
@@ -80,7 +83,6 @@ namespace NuclearEngine {
 					inputDesc.sourceCode = input;
 					inputDesc.shaderVersion = Xsc::InputShaderVersion::HLSL4;
 					inputDesc.entryPoint = "main";
-
 					switch (type)
 					{
 					case ShaderType::Vertex:
@@ -100,14 +102,14 @@ namespace NuclearEngine {
 					Xsc::ShaderOutput outputDesc;
 					std::ostringstream stream;
 					outputDesc.sourceCode = &stream;
-					outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;					
-
+					outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;
 					// Compile HLSL code into GLSL
 					Xsc::StdLog log;
 					bool result = Xsc::CompileShader(inputDesc, outputDesc, &log);
 
 					if (result == true)
 					{
+						std::cout << stream.str();
 						blob.GLSL_SourceCode = stream.str();
 					}
 

@@ -199,11 +199,11 @@ namespace NuclearEngine {
 				}
 
 			}
-			cube = Mesh_NoIndices(ParseInputSignatureForCube(Signature), texturebuf, Signature);
+			cube = new Mesh_NoIndices(ParseInputSignatureForCube(Signature), texturebuf, Signature);
 		}
 		void Cube::Draw(API::Shader* shader)
 		{
-			cube.Draw(shader);
+			cube->Draw(shader);
 		}
 	}
 }
