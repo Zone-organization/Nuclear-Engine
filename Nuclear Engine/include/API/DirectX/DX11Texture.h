@@ -3,7 +3,7 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <API\DirectX\DX11Shader.h>
-#include <API\API_Types.h>
+#include <API\Texture_Types.h>
 #include <array>
 
 namespace NuclearEngine
@@ -33,7 +33,7 @@ namespace NuclearEngine
 				static void Create1D(DX11Texture* texture, Texture_Data* Data, Texture_Desc* Desc);
 				static void Create2D(DX11Texture* texture, Texture_Data* Data, Texture_Desc* Desc);
 				static void Create3D(DX11Texture* texture, Texture_Data* Data, Texture_Desc* Desc);
-				static void CreateCube(DX11Texture* texture, const std::array<Texture_Data*, 6>& data, NuclearEngine::Texture_Desc* Desc);
+				static void CreateCube(DX11Texture* texture, const std::array<Texture_Data*, 6>& data, Texture_Desc* Desc);
 
 				ID3D11Texture1D* tex1D;
 				ID3D11Texture2D* tex2D;

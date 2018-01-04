@@ -343,12 +343,14 @@
     <ClInclude Include="include\API\DirectX\DX11Shader.h" />
     <ClInclude Include="include\API\DirectX\DX11Texture.h" />
     <ClInclude Include="include\API\DirectX\DX11VertexBuffer.h" />
+    <ClInclude Include="include\API\Format.h" />
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\API\InputLayout.h" />
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
     <ClInclude Include="include\API\Texture.h" />
     <ClInclude Include="include\API\ConstantBuffer.h" />
+    <ClInclude Include="include\API\Texture_Types.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\ShaderCompiler.h" />
     <ClInclude Include="include\Components\Mesh.h" />

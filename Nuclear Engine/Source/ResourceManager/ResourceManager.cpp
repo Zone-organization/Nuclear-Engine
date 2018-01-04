@@ -3,30 +3,30 @@
 #include "..\Thirdparty\stb_image.h"
 
 namespace NuclearEngine {
-	Texture_Data ResourceManager::LoadTextureFromFile(const char * filename, const Texture_Desc & Desc)
+	API::Texture_Data ResourceManager::LoadTextureFromFile(const char * filename, const API::Texture_Desc & Desc)
 	{
 		
 		int req_c;
 		switch (Desc.Format)   //Correctly Set The Required Componenets for stb_image
 		{
-		case TextureFormat::R8:
+		case API::Format::R8:
 			req_c = 1;
-		case TextureFormat::R8G8:
+		case API::Format::R8G8:
 			req_c = 2;
-		case TextureFormat::R8G8B8:
+		case API::Format::R8G8B8:
 			req_c = 3;
-		case TextureFormat::R8G8B8A8:
+		case API::Format::R8G8B8A8:
 			req_c = 4;
 		default:
 			req_c = 4;
 		}
 
-		Texture_Data Data;
+		API::Texture_Data Data;
 
 		stbi_set_flip_vertically_on_load(true); // Note:FLip Texture in Y - axis while loading
-		Data.databuf = stbi_load(filename, &Data.width, &Data.height, &Data.no_of_components, req_c);
+		Data.Img_Data_Buf = stbi_load(filename, &Data.Width, &Data.Height, &Data.Components_Number, req_c);
 
-		if (Data.databuf == NULL)
+		if (Data.Img_Data_Buf == NULL)
 		{
 			Log->Error(std::string("[ResourceManager] Failed To Load Texture: " + std::string(filename) + '\n'));
 
@@ -37,28 +37,29 @@ namespace NuclearEngine {
 		return Data;
 	}
 
-	Texture_Data LoadTextureFromFile_NoFlip(const char * filename, const Texture_Desc & Desc)
+	API::Texture_Data LoadTextureFromFile_NoFlip(const char * filename, const API::Texture_Desc & Desc)
 	{
 		
+
 		int req_c;
 		switch (Desc.Format)   //Correctly Set The Required Componenets for stb_image
 		{
-		case TextureFormat::R8:
+		case API::Format::R8:
 			req_c = 1;
-		case TextureFormat::R8G8:
+		case API::Format::R8G8:
 			req_c = 2;
-		case TextureFormat::R8G8B8:
+		case API::Format::R8G8B8:
 			req_c = 3;
-		case TextureFormat::R8G8B8A8:
+		case API::Format::R8G8B8A8:
 			req_c = 4;
 		default:
 			req_c = 4;
 		}
 
-		Texture_Data Data;
+		API::Texture_Data Data;
 
-		Data.databuf = stbi_load(filename, &Data.width, &Data.height, &Data.no_of_components, req_c);
-		if (Data.databuf == NULL)
+		Data.Img_Data_Buf = stbi_load(filename, &Data.Width, &Data.Height, &Data.Components_Number, req_c);
+		if (Data.Img_Data_Buf == NULL)
 		{
 			Log->Error(std::string("[ResourceManager] Failed To Load Texture: " + std::string(filename) + '\n'));
 
@@ -68,9 +69,9 @@ namespace NuclearEngine {
 
 		return Data;
 	}
-	std::array<NuclearEngine::Texture_Data, 6> ResourceManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& filenames, const Texture_Desc& Desc)
+	std::array<API::Texture_Data, 6> ResourceManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& filenames, const API::Texture_Desc& Desc)
 	{
-		Texture_Data data1, data2, data3, data4, data5, data6;
+		API::Texture_Data data1, data2, data3, data4, data5, data6;
 
 		//URGENT FIX SKYBOX VERTICES
 		data1 = LoadTextureFromFile_NoFlip(filenames.at(0).c_str(), Desc);
@@ -80,36 +81,8 @@ namespace NuclearEngine {
 		data5 = LoadTextureFromFile_NoFlip(filenames.at(4).c_str(), Desc);
 		data6 = LoadTextureFromFile_NoFlip(filenames.at(5).c_str(), Desc);
 
-		std::array<NuclearEngine::Texture_Data, 6> result = { data1, data2, data3, data4, data5, data6 };
+		std::array<API::Texture_Data, 6> result = { data1, data2, data3, data4, data5, data6 };
 
 		return result;
-	}
-
-	Texture_Data ResourceManager::FillWithColor(API::Color color, int width, int height, const Texture_Desc & Desc)
-	{
-		Exceptions::NotImplementedException();
-		int req_c;
-		switch (Desc.Format)   //Correctly Set The Required Componenets for stb_image
-		{
-		case TextureFormat::R8:
-			req_c = 1;
-		case TextureFormat::R8G8:
-			req_c = 2;
-		case TextureFormat::R8G8B8:
-			req_c = 3;
-		case TextureFormat::R8G8B8A8:
-			req_c = 4;
-		default:
-			req_c = 4;
-		}
-
-		Texture_Data Data;
-
-	/*	std::fill(
-			Data.databuf,
-			Data.databuf,
-			color);*/
-
-		return Data;
 	}
 }

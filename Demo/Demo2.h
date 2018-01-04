@@ -48,11 +48,11 @@ public:
 		RectangleVB.SetInputLayout(&RectangleIL, &RectangleShader);
 		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
 
-		Texture_Desc TexDesc;
-		TexDesc.Filter = TextureFilter::Linear2D;
-		TexDesc.Wrap = TextureWrap::Repeat;
-		TexDesc.Format = TextureFormat::R8G8B8A8;
-		TexDesc.Type = TextureType::Texture2D;
+		API::Texture_Desc TexDesc;
+		TexDesc.Filter = API::TextureFilter::Linear2D;
+		TexDesc.Wrap = API::TextureWrap::Repeat;
+		TexDesc.Format = API::Format::R8G8B8A8;
+		TexDesc.Type = API::TextureType::Texture2D;
 		API::Texture::Create(&WoodenBoxTex, &ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", TexDesc), &TexDesc);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

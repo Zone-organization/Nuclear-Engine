@@ -28,11 +28,11 @@ public:
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() ,API::ShaderType::Vertex);
 
-		Texture_Desc Desc;
-		Desc.Filter = TextureFilter::Trilinear;
-		Desc.Wrap = TextureWrap::Repeat;
-		Desc.Format = TextureFormat::R8G8B8A8;
-		Desc.Type = TextureType::Texture2D;
+		API::Texture_Desc Desc;
+		Desc.Filter = API::TextureFilter::Trilinear;
+		Desc.Wrap = API::TextureWrap::Repeat;
+		Desc.Format = API::Format::R8G8B8A8;
+		Desc.Type = API::TextureType::Texture2D;
 
 		API::Texture::Create(&WoodenBoxTex, &ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), &Desc);
 

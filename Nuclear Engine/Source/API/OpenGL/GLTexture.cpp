@@ -12,7 +12,7 @@ namespace NuclearEngine
 		namespace OpenGL
 		{
 
-			int GetGLTextureFormat(TextureFormat format);
+			int GetGLFormat(Format format);
 			int GetGLTextureWrap(TextureWrap textureWrap);
 			
 			GLTexture::GLTexture() : textureID(0) , type(0)
@@ -48,7 +48,7 @@ namespace NuclearEngine
 				glGenTextures(1, &result->textureID);
 				glBindTexture(result->type, result->textureID);
 
-				if (Desc->Format == TextureFormat::R8)
+				if (Desc->Format == Format::R8)
 				{
 					glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 				}
@@ -58,37 +58,37 @@ namespace NuclearEngine
 				{
 					glTexImage1D(result->type,
 						0,
-						GetGLTextureFormat(Desc->Format),
-						Data->width,
+						GetGLFormat(Desc->Format),
+						Data->Width,
 						0,
-						GetGLTextureFormat(Desc->Format),
+						GetGLFormat(Desc->Format),
 						GL_UNSIGNED_BYTE,
-						Data->databuf);
+						Data->Img_Data_Buf);
 				}
 				else if (Desc->Type == TextureType::Texture2D)
 				{
 					glTexImage2D(result->type,
 						0,
-						GetGLTextureFormat(Desc->Format),
-						Data->width,
-						Data->height,
+						GetGLFormat(Desc->Format),
+						Data->Width,
+						Data->Height,
 						0,
-						GetGLTextureFormat(Desc->Format),
+						GetGLFormat(Desc->Format),
 						GL_UNSIGNED_BYTE,
-						Data->databuf);
+						Data->Img_Data_Buf);
 				}
 				else if (Desc->Type == TextureType::Texture3D)
 				{
 					glTexImage3D(result->type,
 						0,
-						GetGLTextureFormat(Desc->Format),
-						Data->width,
-						Data->height,
-						Data->depth,
+						GetGLFormat(Desc->Format),
+						Data->Width,
+						Data->Height,
+						Data->Depth,
 						0,
-						GetGLTextureFormat(Desc->Format),
+						GetGLFormat(Desc->Format),
 						GL_UNSIGNED_BYTE,
-						Data->databuf);
+						Data->Img_Data_Buf);
 				}
 				glTexParameteri(result->type, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc->Wrap));
 				glTexParameteri(result->type, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc->Wrap));
@@ -165,7 +165,7 @@ namespace NuclearEngine
 				glBindTexture(result->type, 0);
 			}
 
-			void GLTexture::Create(GLTexture * result,const std::array<NuclearEngine::Texture_Data*, 6>& data, NuclearEngine::Texture_Desc* Desc)
+			void GLTexture::Create(GLTexture * result,const std::array<API::Texture_Data*, 6>& data, API::Texture_Desc* Desc)
 			{
 				glGenTextures(1, &result->textureID);
 				result->type = GL_TEXTURE_CUBE_MAP;
@@ -175,13 +175,13 @@ namespace NuclearEngine
 				for (GLuint i = 0; i < data.size(); i++)
 				{
 					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-						GetGLTextureFormat(Desc->Format),
-						data[i]->width,
-						data[i]->height,
+						GetGLFormat(Desc->Format),
+						data[i]->Width,
+						data[i]->Height,
 						0,
-						GetGLTextureFormat(Desc->Format),
+						GetGLFormat(Desc->Format),
 						GL_UNSIGNED_BYTE,
-						data[i]->databuf);
+						data[i]->Img_Data_Buf);
 				}
 				switch (Desc->Filter)
 				{
@@ -302,14 +302,14 @@ namespace NuclearEngine
 			{
 				return textureID;
 			}
-			int GetGLTextureFormat(TextureFormat format)
+			int GetGLFormat(Format format)
 			{
 				switch (format)
 				{
-				case  TextureFormat::R8: return GL_RED;
-				case  TextureFormat::R8G8: return GL_RG;
-				case  TextureFormat::R8G8B8: return GL_RGB;
-				case  TextureFormat::R8G8B8A8: return GL_RGBA;
+				case  Format::R8: return GL_RED;
+				case  Format::R8G8: return GL_RG;
+				case  Format::R8G8B8: return GL_RGB;
+				case  Format::R8G8B8A8: return GL_RGBA;
 				default: return GL_RGBA;
 				}
 

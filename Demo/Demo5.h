@@ -92,7 +92,7 @@ public:
 		Texture_Desc Desc;
 		Desc.Filter = TextureFilter::Trilinear;
 		Desc.Wrap = TextureWrap::Repeat;
-		Desc.Format = TextureFormat::R8G8B8A8;
+		Desc.Format = Format::R8G8B8A8;
 		Desc.Type = TextureType::Texture2D;
 
 		DiffuseTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);

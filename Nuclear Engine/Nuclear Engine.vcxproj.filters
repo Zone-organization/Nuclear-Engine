@@ -68,6 +68,8 @@
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\Texture.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
+    <ClInclude Include="include\API\Texture_Types.h" />
+    <ClInclude Include="include\API\Format.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

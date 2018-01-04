@@ -23,7 +23,7 @@ namespace NuclearEngine {
 			}
 		}
 
-		void Texture::Create(Texture* result, const std::array<NuclearEngine::Texture_Data*, 6>& data, NuclearEngine::Texture_Desc * Desc)
+		void Texture::Create(Texture* result, const std::array<Texture_Data*, 6>& data, Texture_Desc * Desc)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{

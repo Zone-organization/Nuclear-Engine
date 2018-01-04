@@ -85,11 +85,11 @@ public:
 		API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
 		CubeShader.SetConstantBuffer(&CubeCB,API::ShaderType::Vertex);
 	
-		Texture_Desc Desc;
-		Desc.Filter = TextureFilter::Trilinear;
-		Desc.Wrap = TextureWrap::Repeat;
-		Desc.Format = TextureFormat::R8G8B8A8;
-		Desc.Type = TextureType::Texture2D;
+		API::Texture_Desc Desc;
+		Desc.Filter = API::TextureFilter::Trilinear;
+		Desc.Wrap = API::TextureWrap::Repeat;
+		Desc.Format = API::Format::R8G8B8A8;
+		Desc.Type = API::TextureType::Texture2D;
 
 		API::Texture::Create(&WoodenBoxTex,&ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), &Desc);
 

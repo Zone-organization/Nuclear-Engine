@@ -9,7 +9,7 @@ namespace NuclearEngine
 	{
 		namespace DirectX
 		{
-			DXGI_FORMAT GetDXTextureFormat(TextureFormat format);
+			DXGI_FORMAT GetDXFormat(Format format);
 			D3D11_TEXTURE_ADDRESS_MODE GetDXTextureWrap(TextureWrap textureWrap);
 			D3D11_FILTER GetDXTextureFilter(TextureFilter textureFilter);
 
@@ -63,7 +63,7 @@ namespace NuclearEngine
 				}
 			}
 
-			void DX11Texture::Create(DX11Texture* texture, const std::array<NuclearEngine::Texture_Data*, 6>& data, NuclearEngine::Texture_Desc* Desc)
+			void DX11Texture::Create(DX11Texture* texture, const std::array<API::Texture_Data*, 6>& data, API::Texture_Desc* Desc)
 			{
 				return DX11Texture::CreateCube(texture, data, Desc);
 			}
@@ -104,8 +104,8 @@ namespace NuclearEngine
 				D3D11_TEXTURE1D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE1D_DESC));
 
-				texDesc.Width = Data->width;
-				texDesc.Format = GetDXTextureFormat(Desc->Format);
+				texDesc.Width = Data->Width;
+				texDesc.Format = GetDXFormat(Desc->Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.CPUAccessFlags = 0;
 				texDesc.ArraySize = 1;
@@ -127,8 +127,8 @@ namespace NuclearEngine
 				ZeroMemory(&subData, sizeof(D3D11_SUBRESOURCE_DATA));
 
 
-				subData.pSysMem = Data->databuf;
-				subData.SysMemPitch = Data->width * 4;
+				subData.pSysMem = Data->Img_Data_Buf;
+				subData.SysMemPitch = Data->Width * 4;
 				subData.SysMemSlicePitch = 0;
 
 				if (Desc->Filter == TextureFilter::Point2D || Desc->Filter == TextureFilter::Linear2D)
@@ -181,9 +181,9 @@ namespace NuclearEngine
 				D3D11_TEXTURE2D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-				texDesc.Width = Data->width;
-				texDesc.Height = Data->height;
-				texDesc.Format = GetDXTextureFormat(Desc->Format);
+				texDesc.Width = Data->Width;
+				texDesc.Height = Data->Height;
+				texDesc.Format = GetDXFormat(Desc->Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.SampleDesc.Count = 1;
 				texDesc.SampleDesc.Quality = 0;
@@ -208,8 +208,8 @@ namespace NuclearEngine
 				ZeroMemory(&subData, sizeof(D3D11_SUBRESOURCE_DATA));
 
 
-				subData.pSysMem = Data->databuf;
-				subData.SysMemPitch = Data->width * 4;
+				subData.pSysMem = Data->Img_Data_Buf;
+				subData.SysMemPitch = Data->Width * 4;
 				subData.SysMemSlicePitch = 0;
 
 				if (Desc->Filter == TextureFilter::Point2D || Desc->Filter == TextureFilter::Linear2D)
@@ -294,12 +294,12 @@ namespace NuclearEngine
 				//TODO
 				return;
 			}
-			void DX11Texture::CreateCube(DX11Texture* result, const std::array<Texture_Data*, 6>& data, NuclearEngine::Texture_Desc* Desc)
+			void DX11Texture::CreateCube(DX11Texture* result, const std::array<Texture_Data*, 6>& data, API::Texture_Desc* Desc)
 			{
 				D3D11_TEXTURE2D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-				texDesc.Format = GetDXTextureFormat(Desc->Format);
+				texDesc.Format = GetDXFormat(Desc->Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.SampleDesc.Count = 1;
 				texDesc.SampleDesc.Quality = 0;
@@ -322,10 +322,10 @@ namespace NuclearEngine
 				D3D11_SUBRESOURCE_DATA subData[6];
 				for (unsigned int i = 0; i < data.size(); i++)
 				{
-					texDesc.Width = data[i]->width;
-					texDesc.Height = data[i]->height;
-					subData[i].pSysMem = data[i]->databuf;
-					subData[i].SysMemPitch = data[i]->width * 4;
+					texDesc.Width = data[i]->Width;
+					texDesc.Height = data[i]->Height;
+					subData[i].pSysMem = data[i]->Img_Data_Buf;
+					subData[i].SysMemPitch = data[i]->Width * 4;
 					subData[i].SysMemSlicePitch = 0;
 				}
 
@@ -341,14 +341,14 @@ namespace NuclearEngine
 
 				DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, &srvDesc, &result->resourceView);
 			}
-			DXGI_FORMAT GetDXTextureFormat(TextureFormat format)
+			DXGI_FORMAT GetDXFormat(Format format)
 			{
 				switch (format)
 				{
-				case TextureFormat::R8: return DXGI_FORMAT_R8_UNORM;
-				case TextureFormat::R8G8: return DXGI_FORMAT_R8G8_UNORM;
-				case TextureFormat::R8G8B8: return DXGI_FORMAT_R8G8B8A8_UNORM;
-				case TextureFormat::R8G8B8A8: return DXGI_FORMAT_R8G8B8A8_UNORM;
+				case Format::R8: return DXGI_FORMAT_R8_UNORM;
+				case Format::R8G8: return DXGI_FORMAT_R8G8_UNORM;
+				case Format::R8G8B8: return DXGI_FORMAT_R8G8B8A8_UNORM;
+				case Format::R8G8B8A8: return DXGI_FORMAT_R8G8B8A8_UNORM;
 				default: return DXGI_FORMAT_R8G8B8A8_UNORM;
 				}
 			}

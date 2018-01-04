@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 #include <BuildConfig.h>
-
+#include <map>
+#include <API\Texture_Types.h>
 namespace NuclearEngine 
 {
 	namespace API 
@@ -21,6 +22,24 @@ namespace NuclearEngine
 			Vertex_Geometry,
 			Vertex_Pixel_Geometry
 		};
+
+
+		struct Reflected_Constantbuffer
+		{
+			unsigned int BindingSlot = 0;
+		};
+		struct Reflected_Texture
+		{
+			unsigned int BindingSlot = 0;
+			TextureType Type;
+		};
+
+		struct ShaderReflection
+		{
+			std::map<std::string, Reflected_Constantbuffer> ConstantBuffers;
+			std::map<std::string, Reflected_Texture> Textures;
+		};
+
 #ifdef NE_COMPILE_D3DCOMPILER
 		struct DXBC_BLOB
 		{
@@ -37,12 +56,10 @@ namespace NuclearEngine
 #ifdef NE_COMPILE_OPENGL3_3
 			std::string GLSL_SourceCode;
 #endif
+			ShaderReflection Reflection;
 			ShaderLanguage Language;
 		};
 
-		struct ShaderReflection {
-
-		};
 
 	}
 }

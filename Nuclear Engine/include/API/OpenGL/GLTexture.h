@@ -1,6 +1,6 @@
 #pragma once
 #include <API\OpenGL\GLCommon.h>
-#include <API\API_Types.h>
+#include <API\Texture_Types.h>
 #include <array>
 
 #ifdef NE_COMPILE_OPENGL3_3

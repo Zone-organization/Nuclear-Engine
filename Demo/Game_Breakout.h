@@ -58,11 +58,11 @@ public:
 		
 		Renderer.Initialize(&RendererShader,&Camera);
 		
-		Texture_Desc TexDesc;
-		TexDesc.Filter = TextureFilter::Linear2D;
-		TexDesc.Wrap = TextureWrap::Repeat;
-		TexDesc.Format = TextureFormat::R8G8B8A8;
-		TexDesc.Type = TextureType::Texture2D;
+		API::Texture_Desc TexDesc;
+		TexDesc.Filter = API::TextureFilter::Linear2D;
+		TexDesc.Wrap = API::TextureWrap::Repeat;
+		TexDesc.Format = API::Format::R8G8B8A8;
+		TexDesc.Type = API::TextureType::Texture2D;
 		API::Texture::Create(&block_solid,&ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block_solid.png", TexDesc), &TexDesc);
 		API::Texture::Create(&block, &ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block.png", TexDesc), &TexDesc);
 		API::Texture::Create(&background, &ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/background.jpg", TexDesc), &TexDesc);

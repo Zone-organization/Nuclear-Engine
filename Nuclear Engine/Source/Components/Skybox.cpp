@@ -53,7 +53,7 @@ namespace NuclearEngine
 		};
 
 
-		Skybox::Skybox(Components::GenericCamera* CameraCbuffer, std::array<NuclearEngine::Texture_Data*, 6> data)
+		Skybox::Skybox(Components::GenericCamera* CameraCbuffer, std::array<API::Texture_Data*, 6> data)
 		{
 			API::Shader::Create(&shader,
 			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
@@ -75,10 +75,10 @@ namespace NuclearEngine
 			vertexBufferLayout.Push("POSITION",0 , DataType::Float3);
 			vertexBuffer.SetInputLayout(&vertexBufferLayout, &shader);
 
-			Texture_Desc Desc;
-			Desc.Format = TextureFormat::R8G8B8A8;
-			Desc.Wrap = TextureWrap::ClampToEdge;
-			Desc.Filter = TextureFilter::Linear2D;
+			API::Texture_Desc Desc;
+			Desc.Format = API::Format::R8G8B8A8;
+			Desc.Wrap = API::TextureWrap::ClampToEdge;
+			Desc.Filter = API::TextureFilter::Linear2D;
 			API::Texture::Create(&texcube,data, &Desc);
 
 			DepthStencilStateDesc DS_State;
