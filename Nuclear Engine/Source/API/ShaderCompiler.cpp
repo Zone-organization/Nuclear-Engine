@@ -6,6 +6,7 @@
 
 #ifdef NE_COMPILE_XSHADERCOMPILER
 #include <XShaderCompiler\inc\Xsc\Xsc.h>
+#include <API\OpenGL\GLCommon.h>
 #include <sstream>
 #include <iostream>
 #include <vector>
@@ -77,7 +78,35 @@ namespace NuclearEngine {
 			std::vector<Xsc::Report> Errors;
 		};
 
-		void CompileHLSL2DXBC(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language)
+		void Reflect_DXBC(BinaryShaderBlob *result)
+		{
+			ID3D11ShaderReflection* pReflector = NULL;
+			
+			D3DReflect(result->DXBC_SourceCode.Buffer,
+				result->DXBC_SourceCode.Size,
+				IID_ID3D11ShaderReflection, (void**)&pReflector);
+
+			D3D11_SHADER_DESC shaderDesc;
+			pReflector->GetDesc(&shaderDesc);
+
+
+			for (uint i = 0; i < shaderDesc.ConstantBuffers; i++)
+			{
+				ID3D11ShaderReflectionConstantBuffer* reflectedcb = nullptr;
+				reflectedcb = pReflector->GetConstantBufferByIndex(i);
+
+				Reflected_Constantbuffer Constbuf;
+				D3D11_SHADER_BUFFER_DESC Desc;
+				reflectedcb->GetDesc(&Desc);
+				Constbuf.BindingSlot = i;
+				Constbuf.Size = Desc.Size;
+				result->Reflection.ConstantBuffers[Desc.Name] = Constbuf;
+			}
+
+			return;
+		}
+
+		void CompileHLSL2DXBC(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool reflect_p)
 		{
 			const char* shadermodel;
 			if (type == API::ShaderType::Vertex)
@@ -108,9 +137,14 @@ namespace NuclearEngine {
 			result->DXBC_SourceCode.Buffer = m_blob->GetBufferPointer();
 			result->DXBC_SourceCode.Size = m_blob->GetBufferSize();
 			result->Language = API::ShaderLanguage::DXBC;
+			
+			if (reflect_p == true)
+			{
+				Reflect_DXBC(result);
+			}			
 			return;
 		}
-		void CompileDXBC2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language)
+		void CompileDXBC2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool reflect_p)
 		{
 			// Initialize shader input descriptor structure
 			auto input = std::make_shared<std::stringstream>();
@@ -146,31 +180,30 @@ namespace NuclearEngine {
 
 			if (!Xsc::CompileShader(inputDesc, outputDesc, &log))
 			{
-				//Failure
 				Log->Error("[ShaderCompiler] CompileDXBC2GLSL Failed!\n");
 			}
 			log.Get_Whole_Log();
 
-			//std::cout << stream.str();
 			result->GLSL_SourceCode = stream.str();
 			result->Language = API::ShaderLanguage::GLSL;
 			result->DXBC_SourceCode = DXBC_BLOB();
 		}
 
-		BinaryShaderBlob CompileShader(std::string SourceCode,API::ShaderType type,API::ShaderLanguage language)
+		BinaryShaderBlob CompileShader(std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p)
 		{
 			BinaryShaderBlob blob;
 
-			if (language ==API::ShaderLanguage::HLSL)
+			if (language == API::ShaderLanguage::HLSL)
 			{
-				CompileHLSL2DXBC(&blob, SourceCode, type, language);
+				CompileHLSL2DXBC(&blob, SourceCode, type, language, reflect_p);
 
 				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 				{
-					CompileDXBC2GLSL(&blob, SourceCode, type, language);
+					blob.Converted = true;
+					CompileDXBC2GLSL(&blob, SourceCode, type, language, reflect_p);
 				}
 			}
-			else if (language ==API::ShaderLanguage::GLSL)
+			else if (language == API::ShaderLanguage::GLSL)
 			{
 				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 				{

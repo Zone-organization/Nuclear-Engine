@@ -3,6 +3,7 @@
 #include <BuildConfig.h>
 #include <map>
 #include <API\Texture_Types.h>
+
 namespace NuclearEngine 
 {
 	namespace API 
@@ -27,6 +28,7 @@ namespace NuclearEngine
 		struct Reflected_Constantbuffer
 		{
 			unsigned int BindingSlot = 0;
+			unsigned int Size = 0;
 		};
 		struct Reflected_Texture
 		{
@@ -58,8 +60,18 @@ namespace NuclearEngine
 #endif
 			ShaderReflection Reflection;
 			ShaderLanguage Language;
+
+			//If this blob is crosscompiled (as HLSL 2 GLSL)
+			bool Converted = false;
 		};
 
+		struct ShaderDesc
+		{
+			std::string Name = "NoString";
+			BinaryShaderBlob* VertexShaderCode = nullptr;
+			BinaryShaderBlob* PixelShaderCode = nullptr;
+			BinaryShaderBlob* GeometryShaderCode = nullptr;
+		};
 
 	}
 }

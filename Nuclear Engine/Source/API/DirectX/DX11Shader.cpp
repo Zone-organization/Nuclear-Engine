@@ -3,7 +3,7 @@
 #ifdef NE_COMPILE_DIRECTX11
 #include <API\DirectX\DX11Context.h>
 #include <API\DirectX\DX11ConstantBuffer.h>
-#include <d3dcompiler.h>
+#include <API\Shader_Types.h>
 
 namespace NuclearEngine
 {
@@ -37,29 +37,29 @@ namespace NuclearEngine
 				GeometryShader = nullptr;
 			}
 
-			void DX11Shader::Create(DX11Shader* result, BinaryShaderBlob* VertexShaderCode, BinaryShaderBlob* PixelShaderCode, BinaryShaderBlob* GeometryShaderCode)
+			void DX11Shader::Create(DX11Shader* result, ShaderDesc* sdesc)
 			{	
-				if (VertexShaderCode != nullptr)
+				if (sdesc->VertexShaderCode != nullptr)
 				{
-					if (VertexShaderCode->Language !=API::ShaderLanguage::DXBC)
+					if (sdesc->VertexShaderCode->Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Vertex- shaders in DirectX Bytecode \"DXBC\" language!\n");
 
 						return;
 					}
 				}
-				if (PixelShaderCode != nullptr)
+				if (sdesc->PixelShaderCode != nullptr)
 				{
-					if (PixelShaderCode->Language !=API::ShaderLanguage::DXBC)
+					if (sdesc->PixelShaderCode->Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Pixel- shaders in DirectX Bytecode \"DXBC\" language!\n");
 
 						return;
 					}
 				}
-				if (GeometryShaderCode != nullptr)
+				if (sdesc->GeometryShaderCode != nullptr)
 				{
-					if (GeometryShaderCode->Language !=API::ShaderLanguage::DXBC)
+					if (sdesc->GeometryShaderCode->Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Geometry- shaders in DirectX Bytecode \"DXBC\" language!\n");
 
@@ -68,32 +68,32 @@ namespace NuclearEngine
 				}
 
 								
-				if (VertexShaderCode != nullptr)
+				if (sdesc->VertexShaderCode != nullptr)
 				{	
-					result->VSBLOB = VertexShaderCode->DXBC_SourceCode;
+					result->VS_Buffer = sdesc->VertexShaderCode->DXBC_SourceCode.Buffer;
+					result->VS_Size = sdesc->VertexShaderCode->DXBC_SourceCode.Size;
+
 					// encapsulate both shaders into shader Components
-					if (FAILED(DX11Context::GetDevice()->CreateVertexShader(result->VSBLOB.Buffer,
-						result->VSBLOB.Size, 0, &result->VertexShader)))
+					if (FAILED(DX11Context::GetDevice()->CreateVertexShader(sdesc->VertexShaderCode->DXBC_SourceCode.Buffer,
+						sdesc->VertexShaderCode->DXBC_SourceCode.Size, 0, &result->VertexShader)))
 					{
 						Log->Info("[DX11Shader] Vertex Shader Creation Failed!\n");
 						return;
 					}
 				}
-				if (PixelShaderCode != nullptr)
+				if (sdesc->PixelShaderCode != nullptr)
 				{
-					result->PSBLOB = PixelShaderCode->DXBC_SourceCode;
-					if (FAILED(DX11Context::GetDevice()->CreatePixelShader(result->PSBLOB.Buffer,
-						result->PSBLOB.Size, 0, &result->PixelShader)))
+					if (FAILED(DX11Context::GetDevice()->CreatePixelShader(sdesc->PixelShaderCode->DXBC_SourceCode.Buffer,
+						sdesc->PixelShaderCode->DXBC_SourceCode.Size, 0, &result->PixelShader)))
 					{
 						Log->Info("[DX11Shader] Pixel Shader Creation Failed!\n");
 						return;
 					}
 				}
-				if (GeometryShaderCode != nullptr)
+				if (sdesc->GeometryShaderCode != nullptr)
 				{
-					result->GSBLOB = GeometryShaderCode->DXBC_SourceCode;
-					if (FAILED(DX11Context::GetDevice()->CreateGeometryShader(result->GSBLOB.Buffer,
-						result->GSBLOB.Size, 0, &result->GeometryShader)))
+					if (FAILED(DX11Context::GetDevice()->CreateGeometryShader(sdesc->GeometryShaderCode->DXBC_SourceCode.Buffer,
+						sdesc->GeometryShaderCode->DXBC_SourceCode.Size, 0, &result->GeometryShader)))
 					{
 						Log->Info("[DX11Shader] Geometry Shader Creation Failed!\n");
 						return;
@@ -103,47 +103,7 @@ namespace NuclearEngine
 			}
 			unsigned int DX11Shader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer,API::ShaderType type)
 			{
-				ID3D11ShaderReflection* pReflector = NULL;
-				D3D11_SHADER_INPUT_BIND_DESC Desc;
-
-				if (type == API::ShaderType::Vertex)
-				{
-					D3DReflect(VSBLOB.Buffer,
-						VSBLOB.Size,
-						IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-					if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->name, &Desc)))
-					{
-						pReflector->Release();
-						return Desc.BindPoint;
-					}
-
-				}
-				else if (type == API::ShaderType::Pixel)
-				{
-					D3DReflect(PSBLOB.Buffer,
-						PSBLOB.Size,
-						IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-					if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->name, &Desc)))
-					{
-						return Desc.BindPoint;
-					}
-
-				}
-				else if (type == API::ShaderType::Geometry)
-				{
-					D3DReflect(GSBLOB.Buffer,
-						GSBLOB.Size,
-						IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-					if (SUCCEEDED(pReflector->GetResourceBindingDescByName(ubuffer->name, &Desc)))
-					{
-						return Desc.BindPoint;
-					}
-				}
-
-				Log->Warning(std::string("[DirectX] GetConstantBufferSlot for: \"" + std::string(ubuffer->name) + "\" failed, Returning 0 as default.\n"));
+				
 				return 0;
 			}
 

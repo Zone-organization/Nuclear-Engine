@@ -2,17 +2,17 @@
 #include <API\OpenGL\GLCommon.h>
 
 #ifdef NE_COMPILE_OPENGL3_3
-#include <API\OpenGL\GLTexture.h>
-#include <API\Shader_Types.h>
 
 namespace NuclearEngine
 {
 	namespace API
 	{		
+		struct ShaderDesc;
+		enum class ShaderType;
 		namespace OpenGL
 		{
 			class GLConstantBuffer;
-
+			class GLTexture;
 			class NEAPI GLShader
 			{
 				friend class GLTexture;
@@ -20,12 +20,9 @@ namespace NuclearEngine
 				GLShader();
 				~GLShader();
 
-				static void Create(GLShader* shader,
-					BinaryShaderBlob* VertexShaderCode,
-					BinaryShaderBlob* PixelShaderCode,
-					BinaryShaderBlob* GeometryShaderCode = nullptr);
+				static void Create(GLShader* shader, ShaderDesc* Desc);
 				
-				void SetConstantBuffer(GLConstantBuffer* ubuffer,API::ShaderType type);
+				void SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type);
 				
 				void Bind();
 			private:

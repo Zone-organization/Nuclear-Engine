@@ -5,14 +5,14 @@
 #include <API\OpenGL\GLShader.h>
 #include <API\DirectX\DX11Shader.h>
 
-#include <API\Texture.h>
-#include <API\VertexBuffer.h>
-
-
 namespace NuclearEngine {
 	namespace API {
 
 		class ConstantBuffer;
+		struct ShaderDesc;
+		enum class ShaderType;
+		class Texture;
+		class VertexBuffer;
 
 		class NEAPI Shader
 		{
@@ -23,8 +23,8 @@ namespace NuclearEngine {
 			Shader();
 			~Shader();
 
-			static void	Create(Shader* shader,BinaryShaderBlob* VertexShader, BinaryShaderBlob* PixelShader, BinaryShaderBlob* GeometryShader = nullptr);
-			void SetConstantBuffer(ConstantBuffer* cbuffer,API::ShaderType type);
+			static void	Create(Shader* shader, ShaderDesc* Desc);
+			void SetConstantBuffer(ConstantBuffer* cbuffer,ShaderType type);
 			void Bind();
 
 		private:
