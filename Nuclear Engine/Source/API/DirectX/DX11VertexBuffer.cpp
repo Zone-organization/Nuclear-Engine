@@ -160,8 +160,8 @@ namespace NuclearEngine
 
 				DX11Context::GetDevice()->CreateInputLayout(inputElementDesc,
 					(unsigned int)layout->GetBufferElement().size(),
-					shader->VSBLOB.Buffer,
-					shader->VSBLOB.Size,
+					shader->VS_Buffer,
+					shader->VS_Size,
 					&inputLayout);
 
 				delete[] inputElementDesc;

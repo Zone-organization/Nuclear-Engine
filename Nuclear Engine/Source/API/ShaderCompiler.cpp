@@ -187,6 +187,7 @@ namespace NuclearEngine {
 			result->GLSL_SourceCode = stream.str();
 			result->Language = API::ShaderLanguage::GLSL;
 			result->DXBC_SourceCode = DXBC_BLOB();
+			result->Converted = true;
 		}
 
 		BinaryShaderBlob CompileShader(std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p)

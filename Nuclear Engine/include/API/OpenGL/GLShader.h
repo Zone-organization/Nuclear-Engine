@@ -9,6 +9,7 @@ namespace NuclearEngine
 	{		
 		struct ShaderDesc;
 		enum class ShaderType;
+		struct BinaryShaderBlob;
 		namespace OpenGL
 		{
 			class GLConstantBuffer;
@@ -27,6 +28,7 @@ namespace NuclearEngine
 				void Bind();
 			private:
 				GLuint _ProgramID;
+				static void Fix_Reflected_ConstantBuffer_Slot(GLShader* result, BinaryShaderBlob* blob);
 			};
 		}
 	}

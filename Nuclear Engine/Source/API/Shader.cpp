@@ -15,15 +15,15 @@ namespace NuclearEngine {
 		
 		}
 
-		void Shader::Create(Shader* result,BinaryShaderBlob * VertexShader, BinaryShaderBlob * PixelShader, BinaryShaderBlob * GeometryShader)
+		void Shader::Create(Shader* result, ShaderDesc* Desc)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				OpenGL::GLShader::Create(&result->GLObject, VertexShader, PixelShader, GeometryShader);
+				OpenGL::GLShader::Create(&result->GLObject, Desc);
 			}
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
-				DirectX::DX11Shader::Create(&result->DXObject, VertexShader, PixelShader, GeometryShader);
+				DirectX::DX11Shader::Create(&result->DXObject, Desc);
 			}
 		}
 

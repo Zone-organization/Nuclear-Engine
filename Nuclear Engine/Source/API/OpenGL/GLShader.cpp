@@ -1,7 +1,7 @@
 #include <API\OpenGL\GLShader.h>
 
 #ifdef NE_COMPILE_OPENGL3_3
-
+#include <API\Shader_Types.h>
 #include <API\OpenGL\GLConstantBuffer.h>
 
 namespace NuclearEngine
@@ -10,6 +10,15 @@ namespace NuclearEngine
 	{
 		namespace OpenGL
 		{
+
+			void GLShader::Fix_Reflected_ConstantBuffer_Slot(GLShader* result, BinaryShaderBlob* blob)
+			{
+				std::map<std::string, Reflected_Constantbuffer>::iterator it;
+				for (it = blob->Reflection.ConstantBuffers.begin(); it != blob->Reflection.ConstantBuffers.end(); it++)
+				{
+					it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str());
+				}
+			}
 
 			GLShader::GLShader()
 			{
@@ -61,25 +70,25 @@ namespace NuclearEngine
 				return true;
 			}
 
-			void GLShader::Create(GLShader* result, BinaryShaderBlob* VertexShaderCode, BinaryShaderBlob* PixelShaderCode, BinaryShaderBlob* GeometryShaderCode)
+			void GLShader::Create(GLShader* result, ShaderDesc* desc)
 			{
-				if (VertexShaderCode != nullptr)
+				if (desc->VertexShaderCode != nullptr)
 				{
-					if (VertexShaderCode->Language !=API::ShaderLanguage::GLSL)
+					if (desc->VertexShaderCode->Language !=API::ShaderLanguage::GLSL)
 					{
 						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Vertex- shaders in GLSL language!\n");
 					}
 				}
-				if (PixelShaderCode != nullptr)
+				if (desc->PixelShaderCode != nullptr)
 				{
-					if (PixelShaderCode->Language !=API::ShaderLanguage::GLSL)
+					if (desc->PixelShaderCode->Language !=API::ShaderLanguage::GLSL)
 					{
 						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Pixel- shaders in GLSL language!\n");
 					}
 				}
-				if (GeometryShaderCode != nullptr)
+				if (desc->GeometryShaderCode != nullptr)
 				{
-					if (GeometryShaderCode->Language !=API::ShaderLanguage::GLSL)
+					if (desc->GeometryShaderCode->Language !=API::ShaderLanguage::GLSL)
 					{
 						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Geometry- shaders in GLSL language!\n");
 
@@ -90,29 +99,29 @@ namespace NuclearEngine
 				bool vsuccess, fsuccess, gsuccess, lsuccess;
 
 				// Vertex Shader
-				const char* vscode = VertexShaderCode->GLSL_SourceCode.c_str();
+				const char* vscode = desc->VertexShaderCode->GLSL_SourceCode.c_str();
 				vertex = glCreateShader(GL_VERTEX_SHADER);
 				glShaderSource(vertex, 1, &vscode, NULL);
 				glCompileShader(vertex);
 				vsuccess = CheckShaderErrors(vertex, "Vertex");
 
-				const char* fscode = PixelShaderCode->GLSL_SourceCode.c_str();
+				const char* fscode = desc->PixelShaderCode->GLSL_SourceCode.c_str();
 				// Fragment Shader
 				fragment = glCreateShader(GL_FRAGMENT_SHADER);
 				glShaderSource(fragment, 1, &fscode, NULL);
 				glCompileShader(fragment);
 				fsuccess = CheckShaderErrors(fragment, "Fragment (Pixel)");
 
-				if (GeometryShaderCode != nullptr)
+				if (desc->GeometryShaderCode != nullptr)
 				{
-					const char* gscode = GeometryShaderCode->GLSL_SourceCode.c_str();
+					const char* gscode = desc->GeometryShaderCode->GLSL_SourceCode.c_str();
 					geometry = glCreateShader(GL_GEOMETRY_SHADER);
 					glShaderSource(geometry, 1, &gscode, NULL);
 					glCompileShader(geometry);
 					gsuccess = CheckShaderErrors(geometry, "Geometry");
 
 				}
-				if (GeometryShaderCode == nullptr)
+				if (desc->GeometryShaderCode == nullptr)
 				{
 					// No geo shader provided so gsuccess is true to prevent  Run-Time Check Failure
 					gsuccess = true;
@@ -124,7 +133,7 @@ namespace NuclearEngine
 					result->_ProgramID = glCreateProgram();
 					glAttachShader(result->_ProgramID, vertex);
 					glAttachShader(result->_ProgramID, fragment);
-					if (GeometryShaderCode != nullptr)
+					if (desc->GeometryShaderCode != nullptr)
 					{
 						glAttachShader(result->_ProgramID, geometry);
 					}
@@ -134,7 +143,7 @@ namespace NuclearEngine
 
 					glDeleteShader(vertex);
 					glDeleteShader(fragment);
-					if (GeometryShaderCode != nullptr)
+					if (desc->GeometryShaderCode != nullptr)
 					{
 						glDeleteShader(geometry);
 					}						
@@ -142,7 +151,7 @@ namespace NuclearEngine
 
 				glDeleteShader(vertex);
 				glDeleteShader(fragment);
-				if (GeometryShaderCode != nullptr)
+				if (desc->GeometryShaderCode != nullptr)
 				{
 					glDeleteShader(geometry);
 				}
