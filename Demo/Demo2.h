@@ -26,12 +26,13 @@ public:
 	}
 	void Load()
 	{
+		API::ShaderDesc desc;
+		desc.Name = "Demo2";
+		API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.vs").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.ps").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
-		API::Shader::Create(&RectangleShader,
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo2/Shaders/RectangleShader.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
 
-
+		API::Shader::Create(&RectangleShader, &desc);
 
 		VertexBufferDesc Desc;
 		Desc.data = vertices;

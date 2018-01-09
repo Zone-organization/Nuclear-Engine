@@ -1,6 +1,7 @@
 #include <Renderers\SpriteRenderer.h>
 #include <API\InputLayout.h>
 #include <Core\Context.h>
+#include <API\Shader_Types.h>
 
 namespace NuclearEngine {
 	namespace Renderers {

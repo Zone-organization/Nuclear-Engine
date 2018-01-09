@@ -21,10 +21,13 @@ public:
 	}
 	void Load()
 	{
-		API::Shader::Create(&CubeShader,
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
-			&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
+		API::ShaderDesc desc;
+		desc.Name = "Demo4";
+		API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
+		API::Shader::Create(&CubeShader, &desc);
+	
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() ,API::ShaderType::Vertex);
 

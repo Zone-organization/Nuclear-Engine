@@ -39,61 +39,54 @@ namespace NuclearEngine
 
 			void DX11Shader::Create(DX11Shader* result, ShaderDesc* sdesc)
 			{	
-				if (sdesc->VertexShaderCode != nullptr)
+				if (sdesc->VertexShaderCode.Finished)
 				{
-					if (sdesc->VertexShaderCode->Language !=API::ShaderLanguage::DXBC)
+					if (sdesc->VertexShaderCode.Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Vertex- shaders in DirectX Bytecode \"DXBC\" language!\n");
-
-						return;
 					}
 				}
-				if (sdesc->PixelShaderCode != nullptr)
+				if (sdesc->PixelShaderCode.Finished)
 				{
-					if (sdesc->PixelShaderCode->Language !=API::ShaderLanguage::DXBC)
+					if (sdesc->PixelShaderCode.Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Pixel- shaders in DirectX Bytecode \"DXBC\" language!\n");
-
-						return;
 					}
 				}
-				if (sdesc->GeometryShaderCode != nullptr)
+				if (sdesc->GeometryShaderCode.Finished)
 				{
-					if (sdesc->GeometryShaderCode->Language !=API::ShaderLanguage::DXBC)
+					if (sdesc->GeometryShaderCode.Language !=API::ShaderLanguage::DXBC)
 					{
 						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Geometry- shaders in DirectX Bytecode \"DXBC\" language!\n");
-
-						return;
 					}
 				}
-
-								
-				if (sdesc->VertexShaderCode != nullptr)
+												
+				if (sdesc->VertexShaderCode.Finished)
 				{	
-					result->VS_Buffer = sdesc->VertexShaderCode->DXBC_SourceCode.Buffer;
-					result->VS_Size = sdesc->VertexShaderCode->DXBC_SourceCode.Size;
+					result->VS_Buffer = sdesc->VertexShaderCode.DXBC_SourceCode.Buffer;
+					result->VS_Size = sdesc->VertexShaderCode.DXBC_SourceCode.Size;
 
 					// encapsulate both shaders into shader Components
-					if (FAILED(DX11Context::GetDevice()->CreateVertexShader(sdesc->VertexShaderCode->DXBC_SourceCode.Buffer,
-						sdesc->VertexShaderCode->DXBC_SourceCode.Size, 0, &result->VertexShader)))
+					if (FAILED(DX11Context::GetDevice()->CreateVertexShader(sdesc->VertexShaderCode.DXBC_SourceCode.Buffer,
+						sdesc->VertexShaderCode.DXBC_SourceCode.Size, 0, &result->VertexShader)))
 					{
 						Log->Info("[DX11Shader] Vertex Shader Creation Failed!\n");
 						return;
 					}
 				}
-				if (sdesc->PixelShaderCode != nullptr)
+				if (sdesc->PixelShaderCode.Finished)
 				{
-					if (FAILED(DX11Context::GetDevice()->CreatePixelShader(sdesc->PixelShaderCode->DXBC_SourceCode.Buffer,
-						sdesc->PixelShaderCode->DXBC_SourceCode.Size, 0, &result->PixelShader)))
+					if (FAILED(DX11Context::GetDevice()->CreatePixelShader(sdesc->PixelShaderCode.DXBC_SourceCode.Buffer,
+						sdesc->PixelShaderCode.DXBC_SourceCode.Size, 0, &result->PixelShader)))
 					{
 						Log->Info("[DX11Shader] Pixel Shader Creation Failed!\n");
 						return;
 					}
 				}
-				if (sdesc->GeometryShaderCode != nullptr)
+				if (sdesc->GeometryShaderCode.Finished)
 				{
-					if (FAILED(DX11Context::GetDevice()->CreateGeometryShader(sdesc->GeometryShaderCode->DXBC_SourceCode.Buffer,
-						sdesc->GeometryShaderCode->DXBC_SourceCode.Size, 0, &result->GeometryShader)))
+					if (FAILED(DX11Context::GetDevice()->CreateGeometryShader(sdesc->GeometryShaderCode.DXBC_SourceCode.Buffer,
+						sdesc->GeometryShaderCode.DXBC_SourceCode.Size, 0, &result->GeometryShader)))
 					{
 						Log->Info("[DX11Shader] Geometry Shader Creation Failed!\n");
 						return;

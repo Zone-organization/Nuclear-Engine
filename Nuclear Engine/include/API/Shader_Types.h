@@ -63,14 +63,17 @@ namespace NuclearEngine
 
 			//If this blob is crosscompiled (as HLSL 2 GLSL)
 			bool Converted = false;
+
+			//A usable shader??
+			bool Finished = false;
 		};
 
 		struct ShaderDesc
 		{
 			std::string Name = "NoString";
-			BinaryShaderBlob* VertexShaderCode = nullptr;
-			BinaryShaderBlob* PixelShaderCode = nullptr;
-			BinaryShaderBlob* GeometryShaderCode = nullptr;
+			BinaryShaderBlob VertexShaderCode;
+			BinaryShaderBlob PixelShaderCode;
+			BinaryShaderBlob GeometryShaderCode;
 		};
 
 	}

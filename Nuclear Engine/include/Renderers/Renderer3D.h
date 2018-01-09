@@ -2,7 +2,7 @@
 #include <Shading\Technique.h>
 #include <Components\GenericCamera.h>
 #include <Components\Light.h>
-
+#include <vector>
 namespace NuclearEngine {
 	namespace Renderers {
 

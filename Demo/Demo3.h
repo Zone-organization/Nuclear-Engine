@@ -21,10 +21,13 @@ public:
 	void Load()
 	{
 
-		API::Shader::Create(&CubeShader,
-		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
-		&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
+		API::ShaderDesc desc;
+		desc.Name = "Demo3";
+		API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.vs").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.ps").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
+		API::Shader::Create(&CubeShader, &desc);
+	
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 			0.5f, -0.5f, -0.5f,  1.0f, 0.0f,

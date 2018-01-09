@@ -49,10 +49,12 @@ namespace NuclearEngine {
 			{
 				defines.push_back("NE_LIGHTS_NUM " + std::to_string(Lights.size()));
 			}
+			API::ShaderDesc desc;
+			desc.Name = "Renderer3D";
+			API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+			API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
-			API::Shader::Create(&Shader,
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
-				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes).c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
+			API::Shader::Create(&Shader, &desc);
 			
 			
 			if (this->Lights.size() > 0)

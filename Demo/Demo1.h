@@ -23,10 +23,13 @@ public:
 	void Load() override
 	{
 		//Load The Shader
-		API::Shader::Create(&TriangleShader,
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.vs").c_str(),API::ShaderType::Vertex,API::ShaderLanguage::HLSL),
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.ps").c_str(),API::ShaderType::Pixel,API::ShaderLanguage::HLSL));
+		API::ShaderDesc desc;
+		desc.Name = "Demo1";	
+		API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.vs").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo1/Shaders/Triangle.ps").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
+		API::Shader::Create(&TriangleShader, &desc);
+		
 		
 		VertexBufferDesc Desc;
 		Desc.data = vertices;

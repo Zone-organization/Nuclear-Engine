@@ -125,7 +125,7 @@ namespace NuclearEngine {
 			ID3D10Blob* ERRMSG = nullptr;
 			ID3D10Blob* m_blob;
 
-			if (FAILED(D3DCompile(SourceCode.c_str(), SourceCode.size(), 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &m_blob, &ERRMSG)))
+			if (FAILED(D3DCompile(SourceCode.c_str(), SourceCode.length(), 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &m_blob, &ERRMSG)))
 			{
 				Log->Error("[ShaderCompiler] CompileHLSL2DXBC Failed\n");
 
@@ -138,10 +138,10 @@ namespace NuclearEngine {
 			result->DXBC_SourceCode.Size = m_blob->GetBufferSize();
 			result->Language = API::ShaderLanguage::DXBC;
 			
-			if (reflect_p == true)
+		/*	if (reflect_p == true)
 			{
 				Reflect_DXBC(result);
-			}			
+			}	*/		
 			return;
 		}
 		void CompileDXBC2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool reflect_p)
@@ -190,33 +190,31 @@ namespace NuclearEngine {
 			result->Converted = true;
 		}
 
-		BinaryShaderBlob CompileShader(std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p)
+		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p)
 		{
-			BinaryShaderBlob blob;
-
 			if (language == API::ShaderLanguage::HLSL)
 			{
-				CompileHLSL2DXBC(&blob, SourceCode, type, language, reflect_p);
+				CompileHLSL2DXBC(blob, SourceCode, type, language, reflect_p);
 
 				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 				{
-					blob.Converted = true;
-					CompileDXBC2GLSL(&blob, SourceCode, type, language, reflect_p);
+					CompileDXBC2GLSL(blob, SourceCode, type, language, reflect_p);
 				}
 			}
 			else if (language == API::ShaderLanguage::GLSL)
 			{
 				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 				{
-					blob.GLSL_SourceCode = SourceCode;
-					blob.Language = API::ShaderLanguage::GLSL;
+					blob->GLSL_SourceCode = SourceCode;
+					blob->Language = API::ShaderLanguage::GLSL;
 				}
 				else 
 				{
 					Exceptions::NotImplementedException();
 				}
 			}
-			return blob;
+			blob->Finished = true;
+			return true;
 		}
 
 	}
