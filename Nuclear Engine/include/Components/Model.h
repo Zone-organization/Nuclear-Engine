@@ -2,21 +2,16 @@
 #include <Components\Mesh.h>
 #include <string>
 #include <vector>
+#include <Shading\Material.h>
 
 namespace NuclearEngine {
 	namespace Components {
-
-		struct Model_MaterialTex
-		{
-			MaterialTexture tex;
-			const char* path;
-		};
 
 		class NEAPI Model
 		{
 		public:			
 			Model();
-
+			static void CreateCube(Model* model, Shading::Material* mat, float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
 			virtual void Draw(API::Shader* shader);
 		private:
 			std::vector<Mesh> meshes;

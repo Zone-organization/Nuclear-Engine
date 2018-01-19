@@ -54,11 +54,13 @@ namespace NuclearEngine
 				{
 					VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 				}
-				else
+				else if (desc->access == BufferCPUAccess::WriteOnly)
 				{
 					VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 				}
-
+				else {
+					VertexBufferDesc.CPUAccessFlags = 0;
+				}
 				VertexBufferDesc.MiscFlags = 0;
 				VertexBufferDesc.StructureByteStride = 0;
 
@@ -79,7 +81,7 @@ namespace NuclearEngine
 			void DX11VertexBuffer::Bind()
 			{
 				DX11Context::GetContext()->IASetInputLayout(inputLayout);
-				DX11Context::GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
+				DX11Context::GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer,&stride, &offset);
 			}
 			DXGI_FORMAT GetDXDataType(DataType dataType)
 			{
@@ -163,7 +165,7 @@ namespace NuclearEngine
 					shader->VS_Buffer,
 					shader->VS_Size,
 					&inputLayout);
-
+				offset = 0;
 				delete[] inputElementDesc;
 			}
 		}

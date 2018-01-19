@@ -39,7 +39,10 @@ int main(int argc, char* argv[])
 		<< "2) Sample 2 - Lighted Scene - introduction to Lights & Renderer3D & Techniques\n"
 
 		<< "---Game demos:\n"
-		<< "a) Breakout - 2D\n";
+		<< "a) Breakout - 2D\n"
+
+		<< "z) Tests\n";
+
 
 	char choice;
 	std::cin >> choice;
@@ -52,6 +55,14 @@ int main(int argc, char* argv[])
 		Start();
 		BreakOut game;
 		Core::Engine::Run(&game);
+	}
+	else if (choice == 'z')
+	{
+		Start();
+		std::cout << "Enter The test number: ";
+		uint testno;
+		std::cin >> testno;
+		Core::Engine::Run(testno);
 	}
 	else {
 		std::cout << "Running Test...\n";

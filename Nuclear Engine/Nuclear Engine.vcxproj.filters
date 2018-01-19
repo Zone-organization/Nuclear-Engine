@@ -17,7 +17,6 @@
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
-    <ClInclude Include="include\Components\Models\Cube.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="include\Shading\Technique.h" />
@@ -90,7 +89,6 @@
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
-    <ClCompile Include="Source\Components\Models\Cube.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Shading\Technique.cpp" />
     <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />

@@ -7,7 +7,7 @@ protected:
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
 	API::Shader CubeShader;
-	Components::Cube *Cube;
+	Components::Model Model;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -20,7 +20,7 @@ public:
 	void Load()
 	{
 		API::ShaderDesc desc;
-		desc.Name = "Demo4";
+		desc.Name = "Sample1";
 		API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
 		API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
@@ -39,7 +39,7 @@ public:
 
 		Shading::Material CubeMat;
 		CubeMat.Diffuse = &WoodenBoxTex;
-		Cube = new Components::Cube(Components::InputSignatures::Position_Texcoord, &CubeMat);
+		Components::Model::CreateCube(&Model, &CubeMat);
 
 		Core::Context::EnableDepthBuffer(true);
 
@@ -84,15 +84,10 @@ public:
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearFlags::Depth);
-
 		CubeShader.Bind();
-			
-		Cube->Draw(&CubeShader);
+		Model.Draw(&CubeShader);
 
 		Core::Context::End();
 	}
-	void ExitRendering()	// Exit Rendering
-	{
-		delete Cube;
-	}
+	
 };

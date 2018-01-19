@@ -52,5 +52,3 @@ _____________/BOOOM\_____________
 #include <Components\Skybox.h>
 #include <Components\Light.h>
 #include <Components\Model.h>
-#include <Components\Models\Cube.h>
-
