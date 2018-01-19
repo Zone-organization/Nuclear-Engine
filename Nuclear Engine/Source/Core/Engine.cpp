@@ -2,6 +2,10 @@
 #include <NE_Common.h>
 #include <Core\Application.h>
 #include <Platform\Input.h>
+#include <..\Source\Tests\Test1.h>
+#include <..\Source\Tests\Test2.h>
+#include <..\Source\Tests\Test3.h>
+
 /*
 	      .-.               
           |N|          
@@ -129,6 +133,25 @@ namespace NuclearEngine {
 			Engine::Game_Render();
 			Engine::Game_ExitRender();
 			Engine::Game_Shutdown();
+		}
+
+		void Engine::Run(unsigned int TestNumber)
+		{
+			if (TestNumber == 1)
+			{
+				Test1 test;
+				Engine::Run(&test);
+			}
+			else if (TestNumber == 2)
+			{
+				Test2 test;
+				Engine::Run(&test);
+			}
+			else if (TestNumber == 3)
+			{
+				Test3 test;
+				Engine::Run(&test);
+			}
 		}
 
 		bool Engine::ShouldClose()

@@ -16,6 +16,8 @@ namespace NuclearEngine {
 
 				static void Run(Game *YourGame);
 
+				static void Run(unsigned int TestNumber);
+
 				static void ProcessEvents();
 
 				static void SetWindowTitle(std::wstring WindowTitle);

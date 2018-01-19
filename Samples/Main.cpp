@@ -1,9 +1,6 @@
 ﻿#define NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
 #include "Common.h"
-#include "Demo1.h"
-#include "Demo2.h"
-#include "Demo3.h"
-#include "Demo4.h"
+#include "Sample1.h"
 //#include "Demo5.h"
 #include "Game_Breakout.h"
 #include <iostream>
@@ -35,15 +32,11 @@ void Start()
 int main(int argc, char* argv[])
 {
 	std::cout
-		<< "-----[Select the demo you want]-----\n"
-		<< "---Low level API demos:\n"
-		<< "1) Demo 1 - Colored Triangle - introduction to Shaders & Vertex Buffers & Input Layouts\n"
-		<< "2) Demo 2 - Textured Rectangle -  introduction to Index Buffers & Textures\n"
-		<< "3) Demo 3 - Static Textured Cube - introduction to Transformations & Constant Buffers\n"
+		<< "-----[Select the sample you want]-----\n"
 
 		<< "---High level engine demos:\n"
-		<< "4) Demo 4 - Dynamic Textured Cube - introduction to Camera & Input & Components\n"
-		<< "5) Demo 5 - Lighted Scene - introduction to Lights & Renderer3D & Techniques\n"
+		<< "1) Sample 1 - Dynamic Textured Cube - introduction to Camera & Input & Components\n"
+		<< "2) Sample 2 - Lighted Scene - introduction to Lights & Renderer3D & Techniques\n"
 
 		<< "---Game demos:\n"
 		<< "a) Breakout - 2D\n";
@@ -52,29 +45,9 @@ int main(int argc, char* argv[])
 	std::cin >> choice;
 	if (choice == '1') {
 		Start();
-		Demo1 *demo = new Demo1();
-		Core::Engine::Run(demo);
-	}
-	else if (choice == '2') {
-		Start();
-		Demo2 demo;
-		Core::Engine::Run(&demo);	
-	}
-	else if (choice == '3') {
-		Start();
-		Demo3 demo;
+		Sample1 demo;
 		Core::Engine::Run(&demo);
 	}
-	else if (choice == '4') {
-		Start();
-		Demo4 demo;
-		Core::Engine::Run(&demo);
-	}
-	/*else if (choice == '5') {
-		Start();
-		Demo5 demo;
-		Core::Engine::Run(&demo);
-	}*/
 	else if (choice == 'a') {
 		Start();
 		BreakOut game;

@@ -1,14 +1,12 @@
 #pragma once
 #include "Common.h"
 
-static API::Shader CubeShader;
-
-class Demo4 : public Core::Game
+class Sample1 : public Core::Game
 {
 protected:
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
-
+	API::Shader CubeShader;
 	Components::Cube *Cube;
 
 	float lastX = _Width_ / 2.0f;
@@ -16,7 +14,7 @@ protected:
 	bool firstMouse = true;
 
 public:
-	Demo4()
+	Sample1()
 	{
 	}
 	void Load()

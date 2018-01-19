@@ -400,6 +400,10 @@
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.h" />
+    <ClInclude Include="Source\Tests\TestCommon.h" />
+    <ClInclude Include="Source\Tests\Test1.h" />
+    <ClInclude Include="Source\Tests\Test2.h" />
+    <ClInclude Include="Source\Tests\Test3.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-#include "Common.h"
+#include "TestCommon.h"
 
 struct Shader_Uniforms_t {
 	Math::Matrix4 Model;
@@ -7,24 +7,75 @@ struct Shader_Uniforms_t {
 	Math::Matrix4 Projection;
 }Shader_Uniforms;
 
-class Demo3 : public Core::Game
+
+class Test3 : public Core::Game
 {
 protected:
 	API::Shader CubeShader;
 	API::VertexBuffer CubeVB;
 	API::ConstantBuffer CubeCB;
 	API::Texture WoodenBoxTex;
+
+	std::string VertexShader = R"(struct VertexInputType
+{
+    float4 position : POSITION;
+	float2 tex : TEXCOORD;
+};
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+	float2 tex : TEXCOORD;
+};
+
+cbuffer NE_Camera : register(b0)
+{
+	matrix Model;
+	matrix View;
+	matrix Projection;
+};
+
+PixelInputType main(VertexInputType input)
+{
+    PixelInputType output;
+	
+	// Calculate the position of the vertex against the world, view, and projection matrices.
+	output.position = mul(Model, input.position);
+	output.position = mul(View, output.position);
+	output.position = mul(Projection, output.position);
+
+	// Store the input texture for the pixel shader to use.
+    output.tex = input.tex;
+    
+    return output;
+})";
+
+	std::string PixelShader = R"(
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+	float2 tex : TEXCOORD;
+};
+
+Texture2D shaderTexture : register(t0);
+SamplerState SampleType : register(s0);
+
+float4 main(PixelInputType input) : SV_TARGET
+{
+    return shaderTexture.Sample(SampleType, input.tex);
+}
+)";
 public:
-	Demo3()
+	Test3()
 	{
 	}
 	void Load()
 	{
 
 		API::ShaderDesc desc;
-		desc.Name = "Demo3";
-		API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.vs").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-		API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo3/Shaders/CubeShader.ps").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
+		desc.Name = "Test3";
+		API::CompileShader(&desc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&desc.PixelShaderCode, PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
 		API::Shader::Create(&CubeShader, &desc);
 	

@@ -70,6 +70,10 @@
     <ClInclude Include="include\API\Shader_Types.h" />
     <ClInclude Include="include\API\Texture_Types.h" />
     <ClInclude Include="include\API\Format.h" />
+    <ClInclude Include="Source\Tests\Test1.h" />
+    <ClInclude Include="Source\Tests\Test3.h" />
+    <ClInclude Include="Source\Tests\Test2.h" />
+    <ClInclude Include="Source\Tests\TestCommon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
