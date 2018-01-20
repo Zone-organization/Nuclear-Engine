@@ -18,9 +18,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 #endif
 
 #endif
+/*
+Building Configs for the whole engine goes here.
 
-#ifdef NE_USE_OPENGL3_3
-#define NE_COMPILE_OPENGL3_3
+Building options:
+-NE_USE_CORE_OPENGL
+	-Builds whole engine in OpenGL Render API (Defines NE_COMPILE_CORE_OPENGL)
+	-Also uses XShaderCompiler to cross-compile HLSL to GLSL (Defines NE_COMPILE_XSHADERCOMPILER)
+-NE_USE_DIRECTX11
+	-Builds whole engine in DirectX Render API (Defines NE_COMPILE_DIRECTX11)
+	-Also uses DirectX HLSL Compiler to compile HLSL to DXBC (Defines NE_COMPILE_D3DCOMPILER)
+-NE_USE_RUNTIME_RENDER_API
+	-Builds the engine to use both DirectX11 and OpenGL 3 render APIs, (May have impact on performance so not recommended for release)
+-NE_USE_RENDER_API_DEBUG_LAYER
+	-Enable the Render-API debug layer to trace and detect errors
+*/
+
+
+
+#ifdef NE_USE_CORE_OPENGL
+#define NE_COMPILE_CORE_OPENGL
 #define NE_COMPILE_XSHADERCOMPILER
 #endif
 
@@ -29,11 +46,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 #define NE_COMPILE_D3DCOMPILER
 #endif
 
-#define NE_USE_RUNTIME_RENDERER
+#define NE_USE_RUNTIME_RENDER_API
+#define NE_USE_RENDER_API_DEBUG_LAYER
+#ifdef NE_USE_RUNTIME_RENDER_API
 
-#ifdef NE_USE_RUNTIME_RENDERER
-
-#ifdef NE_USE_OPENGL3_3
+#ifdef NE_USE_CORE_OPENGL
 #error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
 #endif
 
@@ -41,13 +58,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 #error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
 #endif
 
-#define NE_COMPILE_OPENGL3_3
+#define NE_COMPILE_CORE_OPENGL
 #define NE_COMPILE_DIRECTX11
 #define NE_COMPILE_D3DCOMPILER
 #define NE_COMPILE_XSHADERCOMPILER
 
 #ifndef _DEBUG
-#warning "Nuclear Engine: Usage of runtime chosable renderer slows down performance!"
+#warning "Nuclear Engine: Usage of runtime chosable render API slows down performance!"
 #endif
 
 #else 

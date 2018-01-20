@@ -1,6 +1,6 @@
 #include <API\OpenGL\GLConstantBuffer.h>
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 static int ubosBindingindex = 0;
 
 namespace NuclearEngine

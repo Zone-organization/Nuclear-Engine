@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 
-#ifdef NE_USE_RUNTIME_RENDERER
+#ifdef NE_USE_RUNTIME_RENDER_API
 #include <API\OpenGL\GLIndexBuffer.h>
 #include <API\DirectX\DX11IndexBuffer.h>
 namespace NuclearEngine {
@@ -23,7 +23,7 @@ namespace NuclearEngine {
 	}
 }
 #else
-#ifdef NE_USE_OPENGL3_3
+#ifdef NE_USE_CORE_OPENGL
 #include <API\OpenGL\GLIndexBuffer.h>
 namespace NuclearEngine
 {

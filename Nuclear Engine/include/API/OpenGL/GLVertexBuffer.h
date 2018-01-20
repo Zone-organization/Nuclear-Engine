@@ -1,7 +1,7 @@
 #pragma once
 #include <API\OpenGL\GLCommon.h>
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 #include <API\OpenGL\GLShader.h>
 #include <API\InputLayout.h>
 

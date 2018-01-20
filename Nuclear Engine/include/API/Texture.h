@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 
-#ifdef NE_USE_RUNTIME_RENDERER
+#ifdef NE_USE_RUNTIME_RENDER_API
 #include <API\OpenGL\GLTexture.h>
 #include <API\DirectX\DX11Texture.h>
 
@@ -33,7 +33,7 @@ namespace NuclearEngine {
 }
 
 #else
-#ifdef NE_USE_OPENGL3_3
+#ifdef NE_USE_CORE_OPENGL
 #include <API\OpenGL\GLTexture.h>
 namespace NuclearEngine
 {

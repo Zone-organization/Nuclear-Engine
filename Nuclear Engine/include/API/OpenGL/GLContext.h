@@ -1,7 +1,7 @@
 #pragma once
 #include <API\OpenGL\GLCommon.h>
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 #include <API\Color.h>
 #include <API\API_Types.h>
 
@@ -15,20 +15,20 @@ namespace NuclearEngine
 			class NEAPI GLContext
 			{
 			public:
-				bool Initialize();
-				void SetPrimitiveType(int primitivetype);
+				static bool Initialize();
+				static void SetPrimitiveType(int primitivetype);
 
-				void Clear(API::Color color, ClearFlags flags, float depth = 1.0f, float stencil = 0.0f);
+				static void Clear(API::Color color, uint flags, float depth = 1.0f, float stencil = 0.0f);
 
-				void EnableDepthBuffer(bool state);
+				static void EnableDepthBuffer(bool state);
 
-				void SwapBuffers();
-				void Shutdown();
+				static void SwapBuffers();
+				static void Shutdown();
 
-				void Draw(unsigned int count);
-				void DrawIndexed(unsigned int vertexCount);
+				static void Draw(unsigned int count);
+				static void DrawIndexed(unsigned int vertexCount);
 
-				void SetViewPort(int x, int y, int width, int height);
+				static void SetViewPort(int x, int y, int width, int height);
 			};
 		}
 	}

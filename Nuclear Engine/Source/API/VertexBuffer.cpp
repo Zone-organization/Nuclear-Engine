@@ -1,6 +1,6 @@
 #include <API\VertexBuffer.h>
 #include <API\InputLayout.h>
-#ifdef NE_USE_RUNTIME_RENDERER
+#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Core\Context.h>
 
 namespace NuclearEngine {

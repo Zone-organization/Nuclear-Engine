@@ -38,10 +38,10 @@ namespace NuclearEngine {
 				DrewBefore = true;
 			}
 
-			for (unsigned int i = 0; i < textures.size(); i++)
+		/*	for (unsigned int i = 0; i < textures.size(); i++)
 			{
 				textures[i].tex->PSBind(TextureBindings[i], _shader, i);
-			}
+			}*/
 			
 			// draw mesh
 			VBO.Bind();

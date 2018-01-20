@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 
-#ifdef NE_USE_RUNTIME_RENDERER
+#ifdef NE_USE_RUNTIME_RENDER_API
 #include <API\OpenGL\GLDepthStencilState.h>
 #include <API\DirectX\DX11DepthStencilState.h>
 
@@ -25,7 +25,7 @@ namespace NuclearEngine {
 	}
 }
 #else
-#ifdef NE_USE_OPENGL3_3
+#ifdef NE_USE_CORE_OPENGL
 #include <API\OpenGL\GLDepthStencilState.h>
 namespace NuclearEngine
 {

@@ -1,6 +1,6 @@
 #include <API\OpenGL\GLTexture.h>
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 #include <API\OpenGL\GLShader.h>
 #include <API\API_Types.h>
 #include <Core\Context.h>
@@ -133,7 +133,7 @@ namespace NuclearEngine
 					break;
 				}
 
-				if (Core::ContextDesc::SupportAnisotropic == true)
+				if (Core::ContextDesc::MaxAnisotropicLevel != 0.0f)
 				{
 					switch (Desc->AnisoFilter)
 					{
@@ -224,7 +224,7 @@ namespace NuclearEngine
 				}
 
 
-				if (Core::ContextDesc::SupportAnisotropic == true)
+				if (Core::ContextDesc::MaxAnisotropicLevel != 0.0f)
 				{
 					switch (Desc->AnisoFilter)
 					{

@@ -83,7 +83,7 @@ public:
 		Core::Context::Begin();
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearFlags::Depth);
+		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		CubeShader.Bind();
 		Model.Draw(&CubeShader);
 

@@ -55,7 +55,7 @@ namespace NuclearEngine
 #ifdef NE_COMPILE_D3DCOMPILER
 			DXBC_BLOB DXBC_SourceCode;
 #endif
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 			std::string GLSL_SourceCode;
 #endif
 			ShaderReflection Reflection;

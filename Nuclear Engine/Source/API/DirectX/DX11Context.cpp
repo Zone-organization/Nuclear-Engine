@@ -304,12 +304,6 @@ namespace NuclearEngine
 				viewPort.MaxDepth = 1.0f;
 				Context->RSSetViewports(1, &viewPort);
 
-				//TODO Redo the dwrite backend for renderering fonts
-				//GUI::Internals::InitializeD2DResources();
-
-				D3D11_FEATURE_DATA_D3D11_OPTIONS fl;
-				Device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, &fl, sizeof(fl));
-
 				Log->Info("[DirectX] Successfully Initialized\n");
 				Log->Info("[DirectX] Version: 11\n");
 				Log->Info("[DirectX] Vendor: ");
@@ -319,33 +313,26 @@ namespace NuclearEngine
 				return true;
 			}
 
-			uint GetClearFlags(ClearFlags flags)
-			{
-				switch (flags)
+			void DX11Context::Clear(API::Color color, uint flags, float depth, float stencil)
+			{				
+				unsigned int dxflag = 0;
+				//Color buffer
+				if (!CHECK_BIT(flags, 1))
 				{
-				case ClearFlags::Depth:
-					return D3D11_CLEAR_DEPTH;
-				case ClearFlags::Stencil:
-					return D3D11_CLEAR_STENCIL;
-				case ClearFlags::Depth_Stencil:
-					return (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
+					float Colors[4] = { color.r,color.g,color.b,color.a	};
+					Context->ClearRenderTargetView(RenderTarget, Colors);
 				}
-
-				return 0;
-			}
-
-			void DX11Context::Clear(API::Color color, ClearFlags flags, float depth, float stencil)
-			{
-				float Colors[4] = {
-					color.r,color.g,color.b,color.a
-				};
-
-				Context->ClearRenderTargetView(RenderTarget, Colors);
-
-				if (flags != ClearFlags::None)
+				//Depth Buffer
+				if (!CHECK_BIT(flags, 2))
 				{
-					Context->ClearDepthStencilView(m_depthStencilView, GetClearFlags(flags), depth, stencil);
+					dxflag = dxflag | D3D11_CLEAR_DEPTH;
 				}
+				//Stencil Buffer
+				if (!CHECK_BIT(flags, 3))
+				{
+					dxflag = dxflag | D3D11_CLEAR_STENCIL;
+				}				
+				Context->ClearDepthStencilView(m_depthStencilView, dxflag, depth, stencil);
 				return;
 			}
 

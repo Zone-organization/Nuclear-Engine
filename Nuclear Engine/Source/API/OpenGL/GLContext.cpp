@@ -1,7 +1,7 @@
 #include <API\OpenGL\GLContext.h>
 
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 static GLuint GL_PRIMITIVE_TYPE;
 
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
@@ -54,30 +54,29 @@ namespace NuclearEngine
 					break;
 				}
 			}
-
-			GLbitfield GL_GetClearFlags(ClearFlags flags)
+						
+			void GLContext::Clear(API::Color color, uint flags, float depth, float stencil)
 			{
-				switch (flags)
+				GLbitfield flaggl = 0;
+				//Color buffer
+				if (!CHECK_BIT(flags, 1))
 				{
-				case ClearFlags::None:
-					return GL_COLOR_BUFFER_BIT;
-				case ClearFlags::Depth:
-					return (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				case ClearFlags::Stencil:
-					return(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-				case ClearFlags::Depth_Stencil:
-					return (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+					glClearColor(color.r, color.g, color.b, color.a);
+					flaggl = flaggl | GL_COLOR_BUFFER_BIT;
 				}
-
-				return GL_COLOR_BUFFER_BIT;
-			}
-
-			void GLContext::Clear(API::Color color, ClearFlags flags, float depth, float stencil)
-			{
-				glClearColor(color.r, color.g, color.b, color.a);
-				glClear(GL_GetClearFlags(flags));
-				glClearDepth(depth);
-				glClearStencil(stencil);
+				//Depth Buffer
+				if (!CHECK_BIT(flags, 2))
+				{
+					glClearDepth(depth);
+					flaggl = flaggl | GL_DEPTH_BUFFER_BIT;
+				}
+				//Stencil Buffer
+				if (!CHECK_BIT(flags, 3))
+				{
+					glClearStencil(stencil);
+					flaggl = flaggl | GL_STENCIL_BUFFER_BIT;
+				}
+				glClear(flaggl);
 			}
 
 			void GLContext::EnableDepthBuffer(bool state)

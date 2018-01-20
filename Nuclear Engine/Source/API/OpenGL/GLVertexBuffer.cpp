@@ -1,6 +1,6 @@
 #include <API\OpenGL\GLVertexBuffer.h>
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 
 namespace NuclearEngine
 {

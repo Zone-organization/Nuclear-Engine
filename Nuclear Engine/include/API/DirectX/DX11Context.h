@@ -13,21 +13,21 @@ namespace NuclearEngine
 			class NEAPI DX11Context
 			{
 			public:
-				bool Initialize();
-				void Shutdown();
+				static bool Initialize();
+				static void Shutdown();
 
-				void SetPrimitiveType(int primitivetype);
+				static void SetPrimitiveType(int primitivetype);
 
-				void Clear(API::Color color, ClearFlags flags, float depth = 1.0f, float stencil = 0.0f);
+				static void Clear(API::Color color, uint flags, float depth = 1.0f, float stencil = 0.0f);
 
-				void EnableDepthBuffer(bool state);
+				static void EnableDepthBuffer(bool state);
 
-				void SwapBuffers();
+				static void SwapBuffers();
 
-				void Draw(unsigned int count);
-				void DrawIndexed(unsigned int vertexCount);
+				static void Draw(unsigned int count);
+				static void DrawIndexed(unsigned int vertexCount);
 
-				void SetViewPort(int x, int y, int width, int height);
+				static void SetViewPort(int x, int y, int width, int height);
 
 				static ID3D11Device* GetDevice();
 				static ID3D11DeviceContext* GetContext();

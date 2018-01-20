@@ -3,7 +3,7 @@
 #include <API\Texture_Types.h>
 #include <array>
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 namespace NuclearEngine
 {
 	namespace API

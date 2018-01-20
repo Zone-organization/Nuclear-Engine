@@ -47,13 +47,9 @@ namespace NuclearEngine {
 	};
 
 
-	enum class NEAPI ClearFlags
-	{
-		None,
-		Depth,
-		Stencil,
-		Depth_Stencil
-	};
+	#define	ClearColorBuffer 0x00000001
+	#define	ClearDepthBuffer 0x00000010
+	#define	ClearStencilBuffer 0x00000100
 
 	enum class BufferGPUUsage {
 		Default,

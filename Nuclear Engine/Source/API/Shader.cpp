@@ -1,5 +1,5 @@
 #include <API\Shader.h>
-#ifdef NE_USE_RUNTIME_RENDERER
+#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Core\Context.h>
 #include <API\ConstantBuffer.h>
 namespace NuclearEngine {

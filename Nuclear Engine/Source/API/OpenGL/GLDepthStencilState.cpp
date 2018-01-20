@@ -1,7 +1,7 @@
 #include <API\OpenGL\GLDepthStencilState.h>
 #include <API\API_Types.h>
 
-#ifdef NE_COMPILE_OPENGL3_3
+#ifdef NE_COMPILE_CORE_OPENGL
 
 namespace NuclearEngine
 {
