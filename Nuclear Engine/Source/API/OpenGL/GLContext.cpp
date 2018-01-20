@@ -59,19 +59,19 @@ namespace NuclearEngine
 			{
 				GLbitfield flaggl = 0;
 				//Color buffer
-				if (!CHECK_BIT(flags, 1))
+				if (CHECK_BIT(flags, 0))
 				{
 					glClearColor(color.r, color.g, color.b, color.a);
 					flaggl = flaggl | GL_COLOR_BUFFER_BIT;
 				}
 				//Depth Buffer
-				if (!CHECK_BIT(flags, 2))
+				if (CHECK_BIT(flags, 1))
 				{
 					glClearDepth(depth);
 					flaggl = flaggl | GL_DEPTH_BUFFER_BIT;
 				}
 				//Stencil Buffer
-				if (!CHECK_BIT(flags, 3))
+				if (CHECK_BIT(flags, 2))
 				{
 					glClearStencil(stencil);
 					flaggl = flaggl | GL_STENCIL_BUFFER_BIT;

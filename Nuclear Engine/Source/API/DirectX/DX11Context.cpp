@@ -2,7 +2,6 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <Core\Application.h>
-
 #include <wrl.h>
 template <typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -316,19 +315,20 @@ namespace NuclearEngine
 			void DX11Context::Clear(API::Color color, uint flags, float depth, float stencil)
 			{				
 				unsigned int dxflag = 0;
+
 				//Color buffer
-				if (!CHECK_BIT(flags, 1))
+				if (CHECK_BIT(flags , 0))
 				{
 					float Colors[4] = { color.r,color.g,color.b,color.a	};
 					Context->ClearRenderTargetView(RenderTarget, Colors);
 				}
 				//Depth Buffer
-				if (!CHECK_BIT(flags, 2))
+				if (CHECK_BIT(flags, 1))
 				{
 					dxflag = dxflag | D3D11_CLEAR_DEPTH;
 				}
 				//Stencil Buffer
-				if (!CHECK_BIT(flags, 3))
+				if (CHECK_BIT(flags, 2))
 				{
 					dxflag = dxflag | D3D11_CLEAR_STENCIL;
 				}				

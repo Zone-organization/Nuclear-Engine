@@ -1,6 +1,6 @@
 #pragma once
 #include "TestCommon.h"
-
+#include <iostream>
 struct Shader_Uniforms_t {
 	Math::Matrix4 Model;
 	Math::Matrix4 View;
@@ -154,7 +154,7 @@ public:
 	void Render()
 	{
 		Core::Context::Begin();
-
+		std::cout << ClearColorBuffer << std::endl << ClearDepthBuffer << std::endl << (ClearColorBuffer | ClearDepthBuffer);
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 

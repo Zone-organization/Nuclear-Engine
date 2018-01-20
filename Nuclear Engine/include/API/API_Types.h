@@ -47,9 +47,9 @@ namespace NuclearEngine {
 	};
 
 
-	#define	ClearColorBuffer 0x00000001
-	#define	ClearDepthBuffer 0x00000010
-	#define	ClearStencilBuffer 0x00000100
+	#define	ClearColorBuffer 1
+	#define	ClearDepthBuffer 2
+	#define	ClearStencilBuffer 4
 
 	enum class BufferGPUUsage {
 		Default,
