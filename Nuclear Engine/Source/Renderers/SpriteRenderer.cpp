@@ -59,7 +59,7 @@ namespace NuclearEngine {
 			VertexBufferDesc Desc;
 			Desc.data = vertices;
 			Desc.size = sizeof(vertices);
-			Desc.usage = BufferGPUUsage::Dynamic;
+			Desc.usage = BufferUsage::Dynamic;
 			API::InputLayout layout;
 			layout.Push("POSITION", 0, DataType::Float4);
 

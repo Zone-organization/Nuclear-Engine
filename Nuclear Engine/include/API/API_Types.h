@@ -51,23 +51,15 @@ namespace NuclearEngine {
 	#define	ClearDepthBuffer 2
 	#define	ClearStencilBuffer 4
 
-	enum class BufferGPUUsage {
+	enum class BufferUsage {
 		Default,
 		Static,
 		Dynamic
 	};
 
-	enum class BufferCPUAccess {
-		Default,
-		ReadOnly,
-		WriteOnly
-	};
 	struct VertexBufferDesc {
 		const void* data;
 		unsigned int size;
-		BufferGPUUsage usage = BufferGPUUsage::Default;
-		BufferCPUAccess access = BufferCPUAccess::Default;
+		BufferUsage usage = BufferUsage::Default;
 	};
-
-
 }

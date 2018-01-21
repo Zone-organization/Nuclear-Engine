@@ -35,40 +35,32 @@ namespace NuclearEngine
 			{
 				D3D11_BUFFER_DESC VertexBufferDesc;
 
-				if (desc->usage == BufferGPUUsage::Static) {
+				if (desc->usage == BufferUsage::Static) {
 					VertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+					VertexBufferDesc.CPUAccessFlags = 0;
 				}
-				else if (desc->usage == BufferGPUUsage::Dynamic)
+				else if (desc->usage == BufferUsage::Dynamic)
 				{
 					VertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+					VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 				}
 				else
 				{
 					VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+					VertexBufferDesc.CPUAccessFlags = 0;
 				}
 
 				VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-				VertexBufferDesc.ByteWidth = desc->size;
-
-				if (desc->access == BufferCPUAccess::ReadOnly)
-				{
-					VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-				}
-				else if (desc->access == BufferCPUAccess::WriteOnly)
-				{
-					VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-				}
-				else {
-					VertexBufferDesc.CPUAccessFlags = 0;
-				}
+				VertexBufferDesc.ByteWidth = desc->size;				
 				VertexBufferDesc.MiscFlags = 0;
 				VertexBufferDesc.StructureByteStride = 0;
 
 				D3D11_SUBRESOURCE_DATA InitialData;
 				InitialData.pSysMem = desc->data;
-				InitialData.SysMemPitch = sizeof(desc->data);
-				InitialData.SysMemSlicePitch = sizeof(desc->data);
+				InitialData.SysMemPitch = 0;
+				InitialData.SysMemSlicePitch = 0;
 
+				buffer->offset = 0;
 
 				DX11Context::GetDevice()->CreateBuffer(&VertexBufferDesc, &InitialData, &buffer->VertexBuffer);
 			}
@@ -165,7 +157,6 @@ namespace NuclearEngine
 					shader->VS_Buffer,
 					shader->VS_Size,
 					&inputLayout);
-				offset = 0;
 				delete[] inputElementDesc;
 			}
 		}

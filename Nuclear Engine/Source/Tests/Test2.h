@@ -79,8 +79,7 @@ public:
 		VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = BufferGPUUsage::Dynamic;
-		Desc.access = BufferCPUAccess::Default;
+		Desc.usage = BufferUsage::Dynamic;
 
 		API::VertexBuffer::Create(&RectangleVB, &Desc);
 

@@ -13,16 +13,27 @@ namespace NuclearEngine {
 			this->textures = _textures;
 			this->indices = _indices;
 			DrewBefore = false;
+		}
 
+		Mesh::Mesh(const Mesh& obj)
+		{
+			this->vertices = obj.vertices;
+			this->textures = obj.textures;
+			this->indices = obj.indices;
+			this->Initialize();				
+		}
+
+		void Mesh::Initialize()
+		{
 			VertexBufferDesc desc;
 			desc.data = vertices.data();
 			desc.size = (unsigned int)vertices.size() * sizeof(Vertex);
-			desc.usage = BufferGPUUsage::Static;
-			desc.access = BufferCPUAccess::Default;
+			desc.usage = BufferUsage::Static;
 
 			PreCalculate_TextureBindings();
+
 			API::VertexBuffer::Create(&VBO, &desc);
-			API::IndexBuffer::Create(&IBO, indices.data(), indices.size() * 4);
+			API::IndexBuffer::Create(&IBO, indices.data(), indices.size() * sizeof(unsigned int));		
 		}
 		void Mesh::Draw(API::Shader* _shader)
 		{
@@ -38,14 +49,14 @@ namespace NuclearEngine {
 				DrewBefore = true;
 			}
 
-		/*	for (unsigned int i = 0; i < textures.size(); i++)
+			for (unsigned int i = 0; i < textures.size(); i++)
 			{
 				textures[i].tex->PSBind(TextureBindings[i], _shader, i);
-			}*/
+			}
 			
 			// draw mesh
-			VBO.Bind();
 			IBO.Bind();
+			VBO.Bind();
 			Core::Context::DrawIndexed(indices.size());
 		}
 

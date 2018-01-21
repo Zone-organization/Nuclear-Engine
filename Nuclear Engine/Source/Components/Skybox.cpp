@@ -70,8 +70,7 @@ namespace NuclearEngine
 			VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;
 			VDesc.size = sizeof(skyboxVertices);
-			VDesc.usage = BufferGPUUsage::Static;
-			VDesc.access = BufferCPUAccess::Default;
+			VDesc.usage = BufferUsage::Static;
 
 			 API::VertexBuffer::Create(&vertexBuffer,&VDesc);
 

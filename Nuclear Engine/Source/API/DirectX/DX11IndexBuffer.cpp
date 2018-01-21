@@ -30,7 +30,7 @@ namespace NuclearEngine
 				D3D11_BUFFER_DESC bufferDesc;
 				ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 
-				bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 				bufferDesc.ByteWidth = count;
 				bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0;

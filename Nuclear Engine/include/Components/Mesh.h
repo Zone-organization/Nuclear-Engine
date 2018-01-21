@@ -53,9 +53,11 @@ namespace NuclearEngine {
 
 			/*  Mesh Data  */
 			Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MaterialTexture> textures);
+			Mesh(const Mesh& obj);
 
+			void Initialize();
 			// render the mesh
-			virtual void Draw(API::Shader* shader);
+			void Draw(API::Shader* shader);
 
 		private:
 			//Calculate Texture binding slots and store them for faster drawing
@@ -72,8 +74,8 @@ namespace NuclearEngine {
 			std::vector<MaterialTexture> textures;
 			
 			// bind appropriate textures
-			unsigned int diffuseNr = 1;
-			unsigned int specularNr = 1;
+			unsigned int diffuseNr = 0;
+			unsigned int specularNr = 0;
 
 			bool DrewBefore = false;
 		};

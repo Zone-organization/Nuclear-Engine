@@ -126,8 +126,7 @@ public:
 		VertexBufferDesc vDesc;
 		vDesc.data = vertices;
 		vDesc.size = sizeof(vertices);
-		vDesc.usage = BufferGPUUsage::Static;
-		vDesc.access = BufferCPUAccess::Default;
+		vDesc.usage = BufferUsage::Static;
 		API::VertexBuffer::Create(&CubeVB, &vDesc);
 
 		API::InputLayout CubeIL;

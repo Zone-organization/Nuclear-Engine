@@ -38,7 +38,7 @@ namespace NuclearEngine
 
 				glGenBuffers(1, &buffer->VBO);
 				glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
-				if (desc->usage == NuclearEngine::BufferGPUUsage::Static)
+				if (desc->usage == NuclearEngine::BufferUsage::Static)
 				{
 					glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_STATIC_DRAW);
 				}
