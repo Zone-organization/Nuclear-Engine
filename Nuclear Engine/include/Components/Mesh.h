@@ -67,6 +67,8 @@ namespace NuclearEngine {
 			Mesh(MeshData data);
 			Mesh(const Mesh& obj);
 
+			void Initialize();
+
 			// render the mesh
 			void Draw(API::Shader* shader);
 
@@ -83,9 +85,7 @@ namespace NuclearEngine {
 			//Buffers
 			API::IndexBuffer IBO;
 			API::VertexBuffer VBO;
-
-			void Initialize();
-
+			bool Init = false;
 			bool DrewBefore = false;
 		};
 	}

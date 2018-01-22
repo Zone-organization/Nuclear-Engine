@@ -7,6 +7,8 @@ protected:
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
 	API::Shader CubeShader;
+	API::VertexBuffer CubeVB;
+
 	Components::Model Model;
 
 	float lastX = _Width_ / 2.0f;
@@ -26,7 +28,7 @@ public:
 
 		API::Shader::Create(&CubeShader, &desc);
 	
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatio(), 0.1f, 100.0f));
 		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() ,API::ShaderType::Vertex);
 
 		API::Texture_Desc Desc;

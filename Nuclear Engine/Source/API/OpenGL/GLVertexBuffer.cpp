@@ -1,6 +1,7 @@
 #include <API\OpenGL\GLVertexBuffer.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
+#include <API\OpenGL\GLError.h>
 
 namespace NuclearEngine
 {
@@ -23,8 +24,8 @@ namespace NuclearEngine
 			{
 				if (VAO != 0 && VBO != 0)
 				{
-					glDeleteBuffers(1, &VBO);
-					glDeleteBuffers(1, &VAO);
+					GLCall(glDeleteBuffers(1, &VBO));
+					GLCall(glDeleteBuffers(1, &VAO));
 				}
 
 				VAO = 0;
@@ -33,27 +34,27 @@ namespace NuclearEngine
 
 			void GLVertexBuffer::Create(GLVertexBuffer * buffer, VertexBufferDesc * desc)
 			{
-				glGenVertexArrays(1, &buffer->VAO);
-				glBindVertexArray(0);
+				GLCall(glGenVertexArrays(1, &buffer->VAO));
+				GLCall(glBindVertexArray(0));
 
-				glGenBuffers(1, &buffer->VBO);
-				glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
+				GLCall(glGenBuffers(1, &buffer->VBO));
+				GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO));
 				if (desc->usage == NuclearEngine::BufferUsage::Static)
 				{
-					glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_STATIC_DRAW);
+					GLCall(glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_STATIC_DRAW));
 				}
 				else
 				{
-					glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_DYNAMIC_DRAW);
+					GLCall(glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_DYNAMIC_DRAW));
 				}
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 			}
 
 			void GLVertexBuffer::Update(const void * data, unsigned int size)
 			{
-				glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				GLCall(glBindBuffer(GL_ARRAY_BUFFER, this->VBO));
+				GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
+				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 			}
 
 			void GLVertexBuffer::SetInputLayout(InputLayout * layout, GLShader * shader)
@@ -62,8 +63,8 @@ namespace NuclearEngine
 				//https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetVertexAttrib.xhtml
 
 				unsigned int index = 0;
-				glBindVertexArray(VAO);
-				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+				GLCall(glBindVertexArray(VAO));
+				GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO));
 
 				//Calculate Stride & Offset
 				unsigned int stride = 0;
@@ -76,25 +77,25 @@ namespace NuclearEngine
 
 				for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
 				{
-					glEnableVertexAttribArray(index);
-					glVertexAttribPointer(index,
+					GLCall(glEnableVertexAttribArray(index));
+					GLCall(glVertexAttribPointer(index,
 						GetComponentCount(layout->GetBufferElement()[i].dataType),
 						GetGLDataType(layout->GetBufferElement()[i].dataType),
 						GL_FALSE, stride,
-						(GLvoid*)offset);
+						(GLvoid*)offset));
 
 					index++;
 
 					offset = offset + GetDataTypeSizeInBytes(layout->GetBufferElement()[i].dataType);
 				}
 
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				glBindVertexArray(0);
+				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+				GLCall(glBindVertexArray(0));
 			}
 
 			void GLVertexBuffer::Bind()
 			{
-				glBindVertexArray(VAO);
+				GLCall(glBindVertexArray(VAO));
 			}
 
 			GLenum GetGLDataType(DataType dataType)

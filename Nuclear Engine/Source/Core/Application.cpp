@@ -61,7 +61,7 @@ namespace NuclearEngine {
 
 		float Application::GetAspectRatio()
 		{
-			return (float)GetWidth() / (float)GetHeight();
+			return static_cast<float>(GetWidth()) / static_cast<float>(GetHeight());
 		}
 
 		bool Application::ShouldClose()

@@ -10,7 +10,7 @@ namespace NuclearEngine {
 		Mesh::Mesh(MeshData _data)
 			: data(_data)
 		{
-			Initialize();
+
 		}
 
 		Mesh::Mesh(const Mesh& obj)
@@ -29,11 +29,17 @@ namespace NuclearEngine {
 
 			API::VertexBuffer::Create(&VBO, &desc);
 			API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size() * sizeof(unsigned int));
+			Init = true;
 		}
 		void Mesh::Draw(API::Shader* _shader)
 		{
 			if (this->DrewBefore == false)
 			{
+				if (Init != true)
+				{
+					Initialize();
+				}
+
 				API::InputLayout layout;
 				layout.Push("POSITION", 0, DataType::Float3);
 				layout.Push("NORMAL", 0, DataType::Float3);
@@ -41,7 +47,6 @@ namespace NuclearEngine {
 
 				VBO.SetInputLayout(&layout, _shader);
 
-				Initialize();
 				DrewBefore = true;
 			}
 

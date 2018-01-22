@@ -13,6 +13,7 @@ _____________/BOOOM\_____________
 
 //# Core Engine Headers
 #include <Core/Engine.h>
+#include <Core/Application.h>
 #include <Core/Context.h>
 #include <Core/Game.h>
 #include <Core/FileSystem.h>

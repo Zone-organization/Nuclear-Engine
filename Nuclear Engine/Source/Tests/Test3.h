@@ -46,7 +46,6 @@ PixelInputType main(VertexInputType input)
 
 	// Store the input texture for the pixel shader to use.
     output.tex = input.tex;
-    
     return output;
 })";
 
@@ -57,12 +56,12 @@ struct PixelInputType
 	float2 tex : TEXCOORD;
 };
 
-Texture2D shaderTexture : register(t0);
-SamplerState SampleType : register(s0);
+Texture2D NE_Tex_Diffuse : register(t0);
+SamplerState NE_Tex_Diffuse_Sampler : register(s0);
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-    return shaderTexture.Sample(SampleType, input.tex);
+    return NE_Tex_Diffuse.Sample(NE_Tex_Diffuse_Sampler, input.tex);
 }
 )";
 public:
@@ -163,7 +162,7 @@ public:
 
 		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f),5.0f);
 		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
-		Shader_Uniforms.Projection = Math::Perspective(45.0f, (float)800 / (float)600, 0.1f, 100.0f);
+		Shader_Uniforms.Projection = Math::Perspective(45.0f, Core::Application::GetAspectRatio(), 0.1f, 100.0f);
 
 		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 

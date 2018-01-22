@@ -1,6 +1,7 @@
 #include <API\OpenGL\GLIndexBuffer.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
+#include <API\OpenGL\GLError.h>
 
 namespace NuclearEngine
 {
@@ -15,25 +16,25 @@ namespace NuclearEngine
 			{
 				if (buffer != 0)
 				{
-					glDeleteBuffers(1, &buffer);
+					GLCall(glDeleteBuffers(1, &buffer));
 				}
 				buffer = 0;
 			}
 
 			void GLIndexBuffer::Create(GLIndexBuffer* result, const void * indices, unsigned int count)
 			{
-				glGenBuffers(1, &result->buffer);
+				GLCall(glGenBuffers(1, &result->buffer));
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->buffer);
+				GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->buffer));
 
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+				GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+				GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 			}
 
 			void GLIndexBuffer::Bind()
 			{
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+				GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer));
 			}
 		}
 	}
