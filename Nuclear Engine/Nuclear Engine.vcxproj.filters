@@ -73,6 +73,7 @@
     <ClInclude Include="Source\Tests\Test3.h" />
     <ClInclude Include="Source\Tests\Test2.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
+    <ClInclude Include="include\API\OpenGL\GLError.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -127,5 +128,6 @@
     <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
   </ItemGroup>
 </Project>

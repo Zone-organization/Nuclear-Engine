@@ -101,8 +101,7 @@ namespace NuclearEngine {
 			std::vector<unsigned int> indices;
 			indices.assign(&i[0], &i[36]);
 
-			Mesh mesh(vertices, indices, texturebuf);
-			model->meshes.push_back(mesh);
+			model->meshes.push_back(MeshData(vertices, indices, texturebuf));
 		}
 
 		void Model::Draw(API::Shader* shader)

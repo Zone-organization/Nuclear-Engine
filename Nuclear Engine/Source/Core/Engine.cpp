@@ -34,7 +34,8 @@ namespace NuclearEngine {
 		static float deltaTime = 0.0f;	// time between current frame and last frame
 		static float lastFrame = 0.0f;
 
-		static Game * YourGame;
+		static Game * GamePtr;
+		static Game Defaultgame;
 
 		static Engine::State _state;
 		bool Engine::Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool Debug, bool DisableLog)
@@ -98,6 +99,7 @@ namespace NuclearEngine {
 				Log->FatalError("[Engine] Engine Has Been Already Initialized!\n");
 				return false;
 			}
+			GamePtr = &Defaultgame;
 			return true;
 		}
 
@@ -107,24 +109,17 @@ namespace NuclearEngine {
 			Application::Delete();
 		}
 
-		void Mousecb(double X, double Y)
-		{
-			YourGame->MouseMovementCallback(X, Y);
-		}
-
 		void Engine::Run(Game * _YourGame)
 		{
-			YourGame = _YourGame;
+			GamePtr = _YourGame;
 			Log->Info("[Engine] Running Game.\n");
 
-			if (YourGame->GetInfo() != nullptr)
+			if (GamePtr->GetInfo() != nullptr)
 			{
-				Log->Info(std::string("[Engine] Game Name: " + std::string(YourGame->GetInfo()->Name) + "\n"));
-				Log->Info(std::string("[Engine] Game Version: " + std::string(YourGame->GetInfo()->Version) + "\n"));
-				Log->Info(std::string("[Engine] Game Developer: " + std::string(YourGame->GetInfo()->Developer) + "\n"));
+				Log->Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetInfo()->Name) + "\n"));
+				Log->Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetInfo()->Version) + "\n"));
+				Log->Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetInfo()->Developer) + "\n"));
 			}
-
-			Application::SetMouseMovementCallback(Mousecb);
 
 			Engine::Game_Initialize();
 			Application::Display();
@@ -161,27 +156,27 @@ namespace NuclearEngine {
 
 		Game * Engine::GetGame()
 		{
-			return YourGame;
+			return GamePtr;
 		}
 
 		void Engine::Game_Initialize()
 		{
 			_state = Engine::State::Initializing;
 
-			YourGame->Initialize();
+			GamePtr->Initialize();
 		}
 
 		void Engine::Game_StartupLoad()
 		{
 			_state = Engine::State::StartupLoad;
-			YourGame->StartupLoad();
+			GamePtr->StartupLoad();
 		}
 
 		void Engine::Game_Load()
 		{
 			_state = Engine::State::Loading;
 
-			YourGame->Load();
+			GamePtr->Load();
 		}
 
 		void Engine::Game_Render()
@@ -199,22 +194,22 @@ namespace NuclearEngine {
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
 
-				YourGame->PreRender(deltaTime);
-				YourGame->Render();
-				YourGame->PostRender();
+				GamePtr->PreRender(deltaTime);
+				GamePtr->Render();
+				GamePtr->PostRender();
 			}
 		}
 
 		void Engine::Game_ExitRender()
 		{
 			_state = Engine::State::ExitingRendering;
-			YourGame->ExitRendering();
+			GamePtr->ExitRendering();
 		}
 
 		void Engine::Game_Shutdown()
 		{
 			_state = Engine::State::Shuttingdown;
-			YourGame->Shutdown();
+			GamePtr->Shutdown();
 		}
 
 		void Engine::ProcessEvents()

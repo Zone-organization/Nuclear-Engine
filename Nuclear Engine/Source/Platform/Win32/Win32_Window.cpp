@@ -2,7 +2,7 @@
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
 #include <windowsx.h>
 #include <Platform\Input.h>
-#include <Core\Application.h>
+#include <Core\Engine.h>
 #include <iostream>
 
 namespace NuclearEngine {
@@ -16,16 +16,9 @@ namespace NuclearEngine {
 			static int virtualx;
 			static int virtualy;
 
-			static void(*MouseMoveCB)(double, double);
-
 			Win32_Window::Win32_Window()
 			{
 
-			}
-
-			void firstmousecb(double, double)
-			{
-				return;
 			}
 
 			Win32_Window::Win32_Window(HANDLE handle)
@@ -50,8 +43,6 @@ namespace NuclearEngine {
 
 				Width = width;
 				Height = height;
-
-				MouseMoveCB = firstmousecb;
 
 				if (this->InitWindow() == FALSE)
 				{
@@ -88,11 +79,6 @@ namespace NuclearEngine {
 				{
 					ClipCursor(NULL);
 				}
-			}
-
-			void Win32_Window::SetMouseMovementCallback(void(*MVCB)(double, double))
-			{
-				MouseMoveCB = MVCB;
 			}
 
 			HWND Win32_Window::GetHandle()
@@ -374,18 +360,23 @@ namespace NuclearEngine {
 						int dy = y - lasty;
 
 						// get mouse coordinates from Windows
-						MouseMoveCB(virtualx + dx, virtualy + dy);
+						Core::Engine::GetGame()->OnMouseMovement(virtualx + dx, virtualy + dy);
 					}
 					else
 					{
-						MouseMoveCB(x, y);
+						Core::Engine::GetGame()->OnMouseMovement(x,y);
 					}
 					lastx = x;
 					lasty = y;
 
 					return 0;								// Jump Back
 				}
+				case WM_SIZE:
+				{
+					Core::Engine::GetGame()->OnWindowResize(LOWORD(lParam), HIWORD(lParam));
 
+					return 0;
+				}
 				/*	case WM_SETCURSOR:
 					{
 						if (LOWORD(lParam) == HTCLIENT)

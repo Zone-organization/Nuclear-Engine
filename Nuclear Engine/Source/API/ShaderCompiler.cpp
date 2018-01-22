@@ -184,6 +184,7 @@ namespace NuclearEngine {
 			}
 			log.Get_Whole_Log();
 
+			//std::cout << stream.str();
 			result->GLSL_SourceCode = stream.str();
 			result->Language = API::ShaderLanguage::GLSL;
 			result->DXBC_SourceCode = DXBC_BLOB();

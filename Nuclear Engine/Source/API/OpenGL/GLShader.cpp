@@ -3,7 +3,7 @@
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <API\Shader_Types.h>
 #include <API\OpenGL\GLConstantBuffer.h>
-
+#include <API\OpenGL\GLError.h>
 namespace NuclearEngine
 {
 	namespace API
@@ -17,6 +17,7 @@ namespace NuclearEngine
 				for (it = blob->Reflection.ConstantBuffers.begin(); it != blob->Reflection.ConstantBuffers.end(); it++)
 				{
 					it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str());
+					GLCheckError();
 				}
 			}
 
@@ -29,7 +30,7 @@ namespace NuclearEngine
 			{
 				if (_ProgramID != 0)
 				{
-					glDeleteProgram(_ProgramID);
+					GLCall(glDeleteProgram(_ProgramID));
 				}
 				_ProgramID = 0;
 			}
@@ -40,10 +41,10 @@ namespace NuclearEngine
 				char infoLog[1024];
 				if (type != "Program")
 				{
-					glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+					GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
 					if (!success)
 					{
-						glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+						GLCall(glGetShaderInfoLog(shader, 1024, NULL, infoLog));
 						Log->Info("[GLShader] Compiling Error -- In ");
 						Log->Info(type);
 						Log->Info(" Shader - Info : \n");
@@ -53,10 +54,10 @@ namespace NuclearEngine
 				}
 				else
 				{
-					glGetProgramiv(shader, GL_LINK_STATUS, &success);
+					GLCall(glGetProgramiv(shader, GL_LINK_STATUS, &success));
 					if (!success)
 					{
-						glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+						GLCall(glGetProgramInfoLog(shader, 1024, NULL, infoLog));
 						Log->Info("[GLShader] Linking Error - Info : ");
 						Log->Info(infoLog);
 						Log->Info("\n");
@@ -96,8 +97,9 @@ namespace NuclearEngine
 
 				const char* code = sourcecode.c_str();
 				ShaderID = glCreateShader(s_type);
-				glShaderSource(ShaderID, 1, &code, NULL);
-				glCompileShader(ShaderID);
+				GLCheckError();
+				GLCall(glShaderSource(ShaderID, 1, &code, NULL));
+				GLCall(glCompileShader(ShaderID));
 				return CheckShaderErrors(ShaderID, m_type.c_str());
 			}
 			
@@ -145,35 +147,35 @@ namespace NuclearEngine
 				{
 					// Shader Program
 					result->_ProgramID = glCreateProgram();
-
+					GLCheckError();
 					if (desc->VertexShaderCode.Finished)
 					{
-						glAttachShader(result->_ProgramID, vertex);
+						GLCall(glAttachShader(result->_ProgramID, vertex));
 					}
 					if (desc->PixelShaderCode.Finished)
 					{
-						glAttachShader(result->_ProgramID, fragment);
+						GLCall(glAttachShader(result->_ProgramID, fragment));
 					}
 					if (desc->GeometryShaderCode.Finished)
 					{
-						glAttachShader(result->_ProgramID, geometry);
+						GLCall(glAttachShader(result->_ProgramID, geometry));
 					}
 					
-					glLinkProgram(result->_ProgramID);
+					GLCall(glLinkProgram(result->_ProgramID));
 
 					lsuccess = CheckShaderErrors(result->_ProgramID, "Program");
 
 					if (desc->VertexShaderCode.Finished)
 					{
-						glDeleteShader(vertex);
+						GLCall(glDeleteShader(vertex));
 					}
 					if (desc->PixelShaderCode.Finished)
 					{
-						glDeleteShader(fragment);
+						GLCall(glDeleteShader(fragment));
 					}
 					if (desc->GeometryShaderCode.Finished)
 					{
-						glDeleteShader(geometry);
+						GLCall(glDeleteShader(geometry));
 					}
 											
 				}
@@ -181,12 +183,12 @@ namespace NuclearEngine
 
 			void GLShader::SetConstantBuffer(GLConstantBuffer* ubuffer,API::ShaderType type)
 			{
-				glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
+				GLCall(glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex()));
 			}
 
 			void GLShader::Bind()
 			{
-				glUseProgram(this->_ProgramID);
+				GLCall(glUseProgram(this->_ProgramID));
 			}
 		}
 	}

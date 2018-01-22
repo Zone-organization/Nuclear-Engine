@@ -30,7 +30,8 @@ namespace NuclearEngine {
 			virtual void ExitRendering(); // Exit Rendering
 			virtual void Shutdown();      // At Shutdown
 
-			virtual void MouseMovementCallback(double xpos, double ypos);
+			virtual void OnMouseMovement(double xpos, double ypos);
+			virtual void OnWindowResize(int width, int height);
 		protected:
 			GameInfo *gameinfo;
 		};

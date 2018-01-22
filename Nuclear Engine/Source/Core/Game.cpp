@@ -42,8 +42,13 @@ namespace NuclearEngine {
 		void Game::Shutdown()
 		{
 		}
-		void Game::MouseMovementCallback(double xpos, double ypos)
+		void Game::OnMouseMovement(double xpos, double ypos)
 		{
 		}
+
+		void Game::OnWindowResize(int width, int height)
+		{
+		}
+	
 	}
 }

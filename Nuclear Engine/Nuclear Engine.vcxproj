@@ -346,6 +346,7 @@
     <ClInclude Include="include\API\Format.h" />
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\API\InputLayout.h" />
+    <ClInclude Include="include\API\OpenGL\GLError.h" />
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
     <ClInclude Include="include\API\Texture.h" />
@@ -420,6 +421,7 @@
     <ClCompile Include="Source\API\OpenGL\GLConstantBuffer.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLContext.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLDepthStencilState.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLIndexBuffer.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />

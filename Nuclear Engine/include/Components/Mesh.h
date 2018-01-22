@@ -10,7 +10,7 @@ namespace NuclearEngine {
 
 	namespace Components {
 
-		struct Vertex 
+		struct NEAPI Vertex
 		{
 			Vertex()
 			{
@@ -37,25 +37,36 @@ namespace NuclearEngine {
 			Math::Vector2 TexCoords;
 		};
 
-		enum class MaterialTextureType 
+		enum class NEAPI MaterialTextureType
 		{
 			Diffuse,
 			Specular
 		};
 
-		struct MaterialTexture {
+		struct NEAPI MaterialTexture {
 			API::Texture *tex;
 			MaterialTextureType type;
 		};
+		struct NEAPI MeshData
+		{
+			MeshData(std::vector<Vertex> _vertices,
+			std::vector<unsigned int> _indices,
+			std::vector<MaterialTexture> _textures)
+				:vertices(_vertices), indices(_indices), textures(_textures)
+			{}
 
+			//Data containers
+			std::vector<Vertex> vertices;
+			std::vector<unsigned int> indices;
+			std::vector<MaterialTexture> textures;
+		};
 		class NEAPI Mesh {
 		public:
 
 			/*  Mesh Data  */
-			Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MaterialTexture> textures);
+			Mesh(MeshData data);
 			Mesh(const Mesh& obj);
 
-			void Initialize();
 			// render the mesh
 			void Draw(API::Shader* shader);
 
@@ -63,19 +74,17 @@ namespace NuclearEngine {
 			//Calculate Texture binding slots and store them for faster drawing
 			void PreCalculate_TextureBindings();
 			std::vector<const char*> TextureBindings;
+			// bind appropriate textures
+			unsigned int diffuseNr = 1;
+			unsigned int specularNr = 1;
+
+			MeshData data;
 
 			//Buffers
 			API::IndexBuffer IBO;
 			API::VertexBuffer VBO;
 
-			//Data containers
-			std::vector<Vertex> vertices;
-			std::vector<unsigned int> indices;
-			std::vector<MaterialTexture> textures;
-			
-			// bind appropriate textures
-			unsigned int diffuseNr = 0;
-			unsigned int specularNr = 0;
+			void Initialize();
 
 			bool DrewBefore = false;
 		};

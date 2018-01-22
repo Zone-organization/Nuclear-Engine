@@ -14,6 +14,7 @@ namespace NuclearEngine
 	{
 		namespace OpenGL
 		{
+			
 			bool GLContext::Initialize()
 			{
 #ifdef NUCLEAR_PLATFORM_WINDOWS32

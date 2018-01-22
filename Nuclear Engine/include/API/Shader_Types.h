@@ -53,7 +53,7 @@ namespace NuclearEngine
 		struct BinaryShaderBlob 
 		{			
 #ifdef NE_COMPILE_D3DCOMPILER
-			DXBC_BLOB DXBC_SourceCode;
+			DXBC_BLOB DXBC_SourceCode = DXBC_BLOB();
 #endif
 #ifdef NE_COMPILE_CORE_OPENGL
 			std::string GLSL_SourceCode;
@@ -71,9 +71,9 @@ namespace NuclearEngine
 		struct ShaderDesc
 		{
 			std::string Name = "NoString";
-			BinaryShaderBlob VertexShaderCode;
-			BinaryShaderBlob PixelShaderCode;
-			BinaryShaderBlob GeometryShaderCode;
+			BinaryShaderBlob VertexShaderCode = BinaryShaderBlob();
+			BinaryShaderBlob PixelShaderCode = BinaryShaderBlob();
+			BinaryShaderBlob GeometryShaderCode = BinaryShaderBlob();
 		};
 
 	}

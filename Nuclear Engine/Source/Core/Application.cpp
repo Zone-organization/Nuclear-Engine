@@ -74,11 +74,6 @@ namespace NuclearEngine {
 			return windowclock->GetElapsedTime().AsSeconds();
 		}
 
-		void Application::SetMouseMovementCallback(void(*Callback)(double, double))
-		{
-			WinType->SetMouseMovementCallback(Callback);
-		}
-
 		Internals::Win32_Window * Application::GetInternalWindow()
 		{
 			return WinType;

@@ -60,7 +60,7 @@ public:
 		Camera.Update();		
 	}
 
-	void MouseMovementCallback(double xpos, double ypos) override
+	void OnMouseMovement(double xpos, double ypos) override
 	{
 		if (firstMouse)
 		{

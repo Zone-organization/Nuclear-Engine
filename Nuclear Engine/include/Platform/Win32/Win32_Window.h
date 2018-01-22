@@ -37,8 +37,6 @@ namespace NuclearEngine {
 
 				void UpdateRectClip(bool flag);
 
-				void SetMouseMovementCallback(void(*MVCB)(double, double));
-
 				HWND GetHandle();
 
 				HINSTANCE GetInstance();		// Holds The Instance Of The Application
@@ -68,8 +66,7 @@ namespace NuclearEngine {
 				DWORD		dwStyle;				// Window Style
 				RECT		WindowRect;				// Grabs Rectangle Upper Left / Lower Right Values
 				POINT mousePosition;
-
-
+				
 				static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 			};

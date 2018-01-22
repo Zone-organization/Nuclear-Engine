@@ -33,8 +33,6 @@ namespace NuclearEngine {
 
 			static double GetTime();
 
-			static void SetMouseMovementCallback(void(*Callback)(double, double));
-
 #ifdef NUCLEAR_PLATFORM_WINDOWS32
 			static Platform::Internals::Win32_Window* GetInternalWindow();
 #endif
