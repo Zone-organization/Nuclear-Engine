@@ -295,10 +295,10 @@ namespace NuclearEngine
 				D3D11_VIEWPORT viewPort;
 				ZeroMemory(&viewPort, sizeof(viewPort));
 
-				viewPort.TopLeftX = 0;
-				viewPort.TopLeftY = 0;
-				viewPort.Width = Core::Application::GetInternalWindow()->GetWidth();
-				viewPort.Height = Core::Application::GetInternalWindow()->GetHeight();
+				viewPort.TopLeftX = 0.0f;
+				viewPort.TopLeftY = 0.0f;
+				viewPort.Width = static_cast<float>(Core::Application::GetInternalWindow()->GetWidth());
+				viewPort.Height = static_cast<float>(Core::Application::GetInternalWindow()->GetHeight());
 				viewPort.MinDepth = 0.0f;
 				viewPort.MaxDepth = 1.0f;
 				Context->RSSetViewports(1, &viewPort);
@@ -312,7 +312,7 @@ namespace NuclearEngine
 				return true;
 			}
 
-			void DX11Context::Clear(API::Color color, uint flags, float depth, float stencil)
+			void DX11Context::Clear(API::Color color, uint flags, float depth, unsigned int stencil)
 			{				
 				unsigned int dxflag = 0;
 
@@ -426,10 +426,10 @@ namespace NuclearEngine
 				D3D11_VIEWPORT viewPort;
 				ZeroMemory(&viewPort, sizeof(viewPort));
 
-				viewPort.TopLeftX = x;
-				viewPort.TopLeftY = y;
-				viewPort.Width = width;
-				viewPort.Height = height;
+				viewPort.TopLeftX = static_cast<float>(x);
+				viewPort.TopLeftY = static_cast<float>(y);
+				viewPort.Width = static_cast<float>(width);
+				viewPort.Height = static_cast<float>(height);
 				viewPort.MinDepth = 0.0f;
 				viewPort.MaxDepth = 1.0f;
 				Context->RSSetViewports(1, &viewPort);

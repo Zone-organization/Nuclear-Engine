@@ -162,7 +162,7 @@ namespace NuclearEngine {
 		{
 			Matrix<4, 4, T> result;
 
-			float top = near_plane * tan(fov / 2.0);
+			float top = near_plane * tan(fov / 2.0f);
 			float bottom = -top;
 			float right = top * aspect;
 			float left = -top * aspect;

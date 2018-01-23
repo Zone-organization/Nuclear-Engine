@@ -5,7 +5,7 @@
 static GLuint GL_PRIMITIVE_TYPE;
 #include <API\OpenGL\GLError.h>
 
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include "Platform\Win32\Win32_OGL.h"
 #endif
 
@@ -18,7 +18,7 @@ namespace NuclearEngine
 			
 			bool GLContext::Initialize()
 			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 				return Internals::Win32_OGL::Initialize();
 #endif
 			}
@@ -57,7 +57,7 @@ namespace NuclearEngine
 				}
 			}
 						
-			void GLContext::Clear(API::Color color, uint flags, float depth, float stencil)
+			void GLContext::Clear(API::Color color, uint flags, float depth, unsigned int stencil)
 			{
 				GLbitfield flaggl = 0;
 				//Color buffer
@@ -95,14 +95,14 @@ namespace NuclearEngine
 
 			void GLContext::SwapBuffers()
 			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 				return Internals::Win32_OGL::SwapBuffer();
 #endif
 			}
 
 			void GLContext::Shutdown()
 			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 				return Internals::Win32_OGL::Shutdown();
 #endif
 			}

@@ -37,13 +37,13 @@ namespace NuclearEngine {
 		static Game * GamePtr;
 		static Game Defaultgame;
 
-		static Engine::State _state;
-		bool Engine::Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool Debug, bool DisableLog)
+		static Engine::State Engine_State;
+		bool Engine::Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool fullscreen, bool DisableLog)
 		{
 
 			if (HasBeenInitialized != true)
 			{
-				Application::Create(WindowTitle, width, height, false);
+				Application::Create(WindowTitle, width, height, fullscreen);
 				Log->Info("-------------------------- -Nuclear Engine- --------------------------\n");
 				Log->Info("[Engine] Starting Engine...\n");
 				Log->Info("[Engine] Version: ");
@@ -56,39 +56,33 @@ namespace NuclearEngine {
 				Log->Info(__TIME__);
 				Log->EndLine();
 
-				Log->Info("[Engine] Built On: ");
+				Log->Info("[Engine] Built For: ");
 
-#ifdef 	_WIN32                           //Windows Platform 32 bit Macro
-#define _BUILTONWINDOWS32_
-				Log->Info("Windows 32 Bit\n");
+#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
+				Log->Info("Windows-PC 32 Bit\n");
 #endif
 
-#ifdef 	_WIN64                           //Windows Platform 64 bit Macro
-#define _BUILTONWINDOWS64_
-				Log->Info("Windows 64 bit\n");
-#endif
-
-#ifdef 	__gnu_linux__                  //Linux Platform Macro
-#define _BUILTONLINUXOS_
-				Log->Info("Linux Operating System\n");
-#endif
-
-#ifndef __gnu_linux__
-#ifdef 		__linux__                     //Linux Kernel Macro
-#define _BUILTONLINUXBASEDSYSTEM_
-				Log->Info("Linux-Based Operating System\n");
-#endif
+#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
+				Log->Info("Windows-PC 64 bit\n");
 #endif
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)
 #endif
+				Log->Info("[Engine] Built With Renderer: ");
 
-#ifndef _WIN32  || _WIN64  || _gnu_linux__ ||  __linux__
-#define _BUILTONUNKNOWN_
-				Log->Info("Unknown Operating System\n");
+
+#ifdef 	NE_USE_CORE_OPENGL
+				Log->Info("OpenGL 3.3 Core\n");
 #endif
 
+#ifdef 	NE_USE_DIRECTX11
+				Log->Info("DirectX 11\n");
+#endif
+
+#ifdef 	NE_USE_RUNTIME_RENDER_API
+				Log->Info("OpenGL 3.3 Core & DirectX 11\n");
+#endif
 				Input::Mouse::SetInputMode(Input::Mouse::InputMode::Normal);
 
 				HasBeenInitialized = true;
@@ -121,13 +115,15 @@ namespace NuclearEngine {
 				Log->Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetInfo()->Developer) + "\n"));
 			}
 
-			Engine::Game_Initialize();
-			Application::Display();
-			Engine::Game_StartupLoad();
-			Engine::Game_Load();
-			Engine::Game_Render();
-			Engine::Game_ExitRender();
-			Engine::Game_Shutdown();
+			SetState(Engine::State::Initializing);
+			GamePtr->Initialize();
+			SetState(Engine::State::Loading);
+			GamePtr->Load();			
+			Engine::Game_Loop_Render();
+			SetState(Engine::State::ExitingRendering);
+			GamePtr->ExitRendering();
+			SetState(Engine::State::Shuttingdown);
+			GamePtr->Shutdown();
 		}
 
 		void Engine::Run(unsigned int TestNumber)
@@ -147,6 +143,10 @@ namespace NuclearEngine {
 				Test3 test;
 				Engine::Run(&test);
 			}
+			else {
+				Test3 test;
+				Engine::Run(&test);
+			}
 		}
 
 		bool Engine::ShouldClose()
@@ -159,67 +159,51 @@ namespace NuclearEngine {
 			return GamePtr;
 		}
 
-		void Engine::Game_Initialize()
+		void Engine::Game_Loop_Render()
 		{
-			_state = Engine::State::Initializing;
-
-			GamePtr->Initialize();
-		}
-
-		void Engine::Game_StartupLoad()
-		{
-			_state = Engine::State::StartupLoad;
-			GamePtr->StartupLoad();
-		}
-
-		void Engine::Game_Load()
-		{
-			_state = Engine::State::Loading;
-
-			GamePtr->Load();
-		}
-
-		void Engine::Game_Render()
-		{
-			_state = Engine::State::Rendering;
-			Log->Info("[Engine] Starting Game Rendering!\n");
+			SetState(Engine::State::Rendering);
 
 			Platform::Clock clock;
 			//Main Game Loop
 			while (Core::Engine::ShouldClose() != true)
 			{
 				// per-frame time logic (ensure speed is constant through all platforms)
-				// --------------------
 				float currentFrame = clock.GetElapsedTime().AsSeconds();
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
 
-				GamePtr->PreRender(deltaTime);
-				GamePtr->Render();
-				GamePtr->PostRender();
+				GamePtr->Update(deltaTime);
+				GamePtr->Render(deltaTime);
 			}
 		}
 
-		void Engine::Game_ExitRender()
+		void Engine::SetState(const State & state)
 		{
-			_state = Engine::State::ExitingRendering;
-			GamePtr->ExitRendering();
-		}
+			Engine_State = state;
+			std::string name;
+			switch (Engine_State)
+			{
+				case Engine::State::Initializing:
+					name = "Initializing";
+					break;
+				case Engine::State::Loading:
+					name = "Loading";
+					break;
+				case Engine::State::Rendering:
+					name = "Rendering";
+					break;
+				case Engine::State::ExitingRendering:
+					name = "Exiting Rendering";
+					break;
+				case Engine::State::Shuttingdown:
+					name = "Shutting down";
+					break;
+				default:
+					name = "Unknown";
+					break;
+			}
 
-		void Engine::Game_Shutdown()
-		{
-			_state = Engine::State::Shuttingdown;
-			GamePtr->Shutdown();
-		}
-
-		void Engine::ProcessEvents()
-		{
-			return Application::ProcessEvents();
-		}
-
-		void Engine::SetWindowTitle(std::wstring WindowTitle)
-		{
-			return Application::SetTitle(WindowTitle);
+			Log->Info("[Engine] Game state changed to " + name + "\n");
 		}
 	}
 }

@@ -78,11 +78,11 @@ public:
 
 		TriangleVB.SetInputLayout(&TriangleIL, &TriangleShader);
 
+		Core::Application::Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
-	float lastTime = 0;
 
-	void Render() override		// Render The Game
+	void Render(float) override		// Render The Game
 	{
 		Core::Context::Begin();
 

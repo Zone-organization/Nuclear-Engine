@@ -96,11 +96,11 @@ public:
 		TexDesc.Format = API::Format::R8G8B8A8;
 		TexDesc.Type = API::TextureType::Texture2D;
 		API::Texture::Create(&WoodenBoxTex, &ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", TexDesc), &TexDesc);
-
+		Core::Application::Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
-	void Render()
+	void Render(float)
 	{
 		Core::Context::Begin();
 

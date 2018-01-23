@@ -14,7 +14,7 @@ namespace NuclearEngine {
 		Light::Light(Type type)
 		{
 			data.Color = Math::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-			data.Position = Math::Vector4(0.0f,0.0f,0.0f, type);
+			data.Position = Math::Vector4(0.0f,0.0f,0.0f, static_cast<float>(type));
 			data.Direction = Math::Vector4();
 			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::ToRadians(12.5f)), cos(Math::ToRadians(15.0f)), 0.0f,0.0f);
@@ -25,7 +25,7 @@ namespace NuclearEngine {
 
 		void Light::SetType(Type type)
 		{
-			data.Position = Math::Vector4(data.Position.xyz, type);
+			data.Position = Math::Vector4(data.Position.xyz, static_cast<float>(type));
 		}
 
 		void Light::SetColor(API::Color color)

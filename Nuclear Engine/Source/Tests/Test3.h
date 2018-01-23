@@ -144,12 +144,18 @@ public:
 		Desc.Type = API::TextureType::Texture2D;
 
 		API::Texture::Create(&WoodenBoxTex,&ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), &Desc);
+		
+		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f), 5.0f);
+		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
+		Shader_Uniforms.Projection = Math::Perspective(45.0f, Core::Application::GetAspectRatio(), 0.1f, 100.0f);
+
+		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
-	void Render()
+	void Render(float)
 	{
 		Core::Context::Begin();
 
@@ -159,12 +165,6 @@ public:
 		WoodenBoxTex.PSBind(0);
 		CubeShader.Bind();
 		CubeVB.Bind();
-
-		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f),5.0f);
-		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
-		Shader_Uniforms.Projection = Math::Perspective(45.0f, Core::Application::GetAspectRatio(), 0.1f, 100.0f);
-
-		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 
 		Core::Context::Draw(36);
 

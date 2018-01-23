@@ -22,15 +22,13 @@ namespace NuclearEngine {
 
 			// Arranged function.
 			virtual void Initialize();	 // At Startup
-			virtual void StartupLoad();   // Called After Initializing can be used for GUI and Main Menu of game
 			virtual void Load();          // Loading Assets
-			virtual void PreRender(float tick_deltatime);		  // Update Some Values Before Rendering
-			virtual void PostRender();        // Update Some Values After Rendering
-			virtual void Render();        // Render The Game
+			virtual void Update(float Deltatime);        // Render The Game
+			virtual void Render(float Deltatime);        // Render The Game
 			virtual void ExitRendering(); // Exit Rendering
 			virtual void Shutdown();      // At Shutdown
 
-			virtual void OnMouseMovement(double xpos, double ypos);
+			virtual void OnMouseMovement(float xpos, float ypos);
 			virtual void OnWindowResize(int width, int height);
 		protected:
 			GameInfo *gameinfo;

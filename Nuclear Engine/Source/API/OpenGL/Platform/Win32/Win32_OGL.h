@@ -1,6 +1,6 @@
 #pragma once
 #include <API\OpenGL\GLCommon.h>
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <gl\gl.h>
 #include <gl\glu.h>
 

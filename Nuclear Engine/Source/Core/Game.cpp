@@ -21,19 +21,15 @@ namespace NuclearEngine {
 		void Game::Initialize()
 		{
 		}
-		void Game::StartupLoad()
-		{
-		}
+		
 		void Game::Load()
 		{
 		}
-		void Game::PreRender(float tick_deltatime)
+		void Game::Update(float Deltatime)
 		{
 		}
-		void Game::PostRender()
-		{
-		}
-		void Game::Render()
+
+		void Game::Render(float Deltatime)
 		{
 		}
 		void Game::ExitRendering()
@@ -42,7 +38,7 @@ namespace NuclearEngine {
 		void Game::Shutdown()
 		{
 		}
-		void Game::OnMouseMovement(double xpos, double ypos)
+		void Game::OnMouseMovement(float xpos, float ypos)
 		{
 		}
 

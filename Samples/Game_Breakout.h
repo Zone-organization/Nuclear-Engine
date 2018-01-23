@@ -69,22 +69,19 @@ public:
 		API::Texture::Create(&block_solid,&ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block_solid.png", TexDesc), &TexDesc);
 		API::Texture::Create(&block, &ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block.png", TexDesc), &TexDesc);
 		API::Texture::Create(&background, &ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/background.jpg", TexDesc), &TexDesc);
-		lvl.Load("Assets/Breakout/Levels/lvl1.lvl",_Width_,_Height_ * 0.5);
-		sprite = new Components::Sprite(&block_solid, Math::Vector2(200.0f, 200.0f), (300, 400),  API::Color(0.0f, 1.0f, 0.0f, 1.0f));
+		lvl.Load("Assets/Breakout/Levels/lvl1.lvl",_Width_,_Height_ * static_cast<unsigned int>(0.5));
+		sprite = new Components::Sprite(&block_solid, Math::Vector2(200.0f, 200.0f), (300.0f, 400.0f),  API::Color(0.0f, 1.0f, 0.0f, 1.0f));
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
-	void PreRender(float deltatime) override
-	{
-		Camera.Update();
-	}
-
-	void Render()
+	void Render(float deltatime)
 	{
 		Core::Context::Begin();
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+
+		Camera.Update();
 
 		Renderer.DrawSprite(sprite);
 		//Renderer.DrawSprite(&background, Math::Vector2(0.0f, 0.0f), (_Width_, _Height_));
@@ -138,7 +135,7 @@ void GameLevel::init(std::vector<std::vector<uint>> tileData, uint levelWidth, u
 {  // Calculate dimensions
 	uint height = tileData.size();
 	uint width = tileData[0].size(); // Note we can index vector at [0] since this function is only called if height > 0
-	float unit_width = levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
+	float unit_width = static_cast<float>(levelWidth) / static_cast<float>(width), unit_height = static_cast<float>(levelHeight) / static_cast<float>(height);
 	// Initialize level tiles based on tileData		
 	for (uint y = 0; y < height; ++y)
 	{

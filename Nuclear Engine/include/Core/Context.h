@@ -18,7 +18,6 @@ namespace NuclearEngine
 		{
 			//IF 0 then Ansiotrpopic isnot supported
 			static float MaxAnisotropicLevel = 0.0f;
-			static bool SupprtDebugLayer = false;
 		}
 		enum class NEAPI RenderAPI {
 			OpenGL3,
@@ -34,7 +33,7 @@ namespace NuclearEngine
 
 			static void SetPrimitiveType(PrimitiveType primitivetype);
 
-			static void Clear(API::Color color, uint flags, float depth = 1.0f, float stencil = 0.0f);
+			static void Clear(API::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
 
 			static void Shutdown();
 

@@ -1,5 +1,5 @@
 #include <Platform\\Win32\Win32_Clock.h>
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 
 #include <windows.h>
 namespace NuclearEngine {

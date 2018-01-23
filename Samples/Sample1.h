@@ -29,7 +29,7 @@ public:
 		API::Shader::Create(&CubeShader, &desc);
 	
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatio(), 0.1f, 100.0f));
-		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() ,API::ShaderType::Vertex);
+		CubeShader.SetConstantBuffer(Camera.GetCBuffer() ,API::ShaderType::Vertex);
 
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
@@ -43,26 +43,13 @@ public:
 		CubeMat.Diffuse = &WoodenBoxTex;
 		Components::Model::CreateCube(&Model, &CubeMat);
 
-		Core::Context::EnableDepthBuffer(true);
+		Core::Application::Display();
 
+		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
-	void PreRender(float deltatime) override
-	{
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
-			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::A))
-			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::S))
-			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::D))
-			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
-		
-		Camera.Update();		
-	}
-
-	void OnMouseMovement(double xpos, double ypos) override
+	void OnMouseMovement(float xpos, float ypos) override
 	{
 		if (firstMouse)
 		{
@@ -79,13 +66,25 @@ public:
 
 		Camera.ProcessEye(xoffset, yoffset);
 	}
+	void Update(float deltatime) override
+	{
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
+			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::A))
+			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::S))
+			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::D))
+			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
-	void Render() override
+		Camera.Update();
+
+	}
+	void Render(float deltatime) override
 	{
 		Core::Context::Begin();
-
-		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+
 		CubeShader.Bind();
 		Model.Draw(&CubeShader);
 

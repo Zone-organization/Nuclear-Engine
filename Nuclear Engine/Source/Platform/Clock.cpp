@@ -1,6 +1,6 @@
 #include <Platform\Clock.h>
 
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <Platform\Win32\Win32_Clock.h>
 typedef NuclearEngine::Platform::Internals::Win32_Clock ClockImpl;
 #endif

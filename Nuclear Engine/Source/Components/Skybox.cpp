@@ -65,7 +65,7 @@ namespace NuclearEngine
 
 			_CameraCbuffer = CameraCbuffer;
 
-			shader.SetConstantBuffer(&_CameraCbuffer->GetCBuffer(),API::ShaderType::Vertex);
+			shader.SetConstantBuffer(_CameraCbuffer->GetCBuffer(),API::ShaderType::Vertex);
 
 			VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;

@@ -2,7 +2,13 @@
 
 #ifdef _WIN32
 
-#define NUCLEAR_PLATFORM_WINDOWS32
+#ifdef _WIN64
+#define NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
+#else
+#define NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
+#endif
+
+#define NUCLEAR_PLATFORM_WINDOWS_PC
 
 #ifdef NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
 
@@ -17,6 +23,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 
 #endif
 
+#endif
+
+#ifdef _DEBUG
+#define NUCLEAR_CONFIG_DEBUG
+#else
+#define NUCLEAR_CONFIG_RELEASE
 #endif
 /*
 Building Configs for the whole engine goes here.

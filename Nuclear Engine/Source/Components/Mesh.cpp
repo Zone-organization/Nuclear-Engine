@@ -56,7 +56,6 @@ namespace NuclearEngine {
 			}
 			
 			// draw mesh
-
 			IBO.Bind();
 			VBO.Bind();
 			Core::Context::DrawIndexed(data.indices.size());

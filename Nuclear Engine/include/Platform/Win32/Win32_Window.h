@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <string>
 #include <Windows.h>
 

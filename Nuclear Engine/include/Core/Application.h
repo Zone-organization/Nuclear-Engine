@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Platform\Clock.h>
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <Platform\Win32\Win32_Window.h>
 #endif
 #include <string>
@@ -33,7 +33,7 @@ namespace NuclearEngine {
 
 			static double GetTime();
 
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 			static Platform::Internals::Win32_Window* GetInternalWindow();
 #endif
 

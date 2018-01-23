@@ -1,6 +1,6 @@
 #include <Platform\Input.h>
 #include <Core\Application.h>
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <windows.h>
 #endif
 
@@ -130,7 +130,7 @@ namespace NuclearEngine {
 
 			void Mouse::SetPosition(int x, int y)
 			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 				POINT point;
 				point.x = x;
 				point.y = y;
@@ -142,7 +142,7 @@ namespace NuclearEngine {
 
 			void Mouse::GetPosition(int& x, int& y)
 			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 				POINT pos;
 
 				if (GetCursorPos(&pos))
@@ -177,7 +177,7 @@ namespace NuclearEngine {
 
 			void Mouse::ShowMouseCursor(bool value)
 			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 				ShowCursor(value);
 #endif
 			}

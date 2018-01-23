@@ -8,30 +8,24 @@ namespace NuclearEngine {
 			class NEAPI Engine
 			{
 			public:
-				enum class State { Initializing, StartupLoad, Loading, Rendering, ExitingRendering, Shuttingdown };
+				enum class State { Initializing, Loading, Rendering, ExitingRendering, Shuttingdown };
 
-				static bool Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool Debug = true, bool DisableLog = false);
+				static bool Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool fullscreen = false, bool DisableLog = false);
 
 				static void ShutDown();
 
 				static void Run(Game *YourGame);
 
 				static void Run(unsigned int TestNumber);
-
-				static void ProcessEvents();
-
-				static void SetWindowTitle(std::wstring WindowTitle);
 				
+				static void SetState(const State& state);
+
 				static bool ShouldClose();
 
 				static Game *GetGame();
 
-				static void Game_Initialize();
-				static void Game_StartupLoad();
-				static void Game_Load();
-				static void Game_Render();
-				static void Game_ExitRender();
-				static void Game_Shutdown();			
+			private:
+				static void Game_Loop_Render();		
 			};
 
 		}

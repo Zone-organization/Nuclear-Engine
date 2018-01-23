@@ -4,13 +4,13 @@ namespace NuclearEngine {
 	using namespace Platform;
 	namespace Core {
 		static Clock *windowclock;
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 		static Internals::Win32_Window* WinType;
 #endif
 
 		bool Application::Create(std::wstring Title, int Width, int Height, bool fullscreen)
 		{
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 			WinType = new Internals::Win32_Window();
 #endif
 			windowclock = new Clock();

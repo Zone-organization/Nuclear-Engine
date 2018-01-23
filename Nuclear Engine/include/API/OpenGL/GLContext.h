@@ -18,7 +18,7 @@ namespace NuclearEngine
 				static bool Initialize();
 				static void SetPrimitiveType(int primitivetype);
 
-				static void Clear(API::Color color, uint flags, float depth = 1.0f, float stencil = 0.0f);
+				static void Clear(API::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
 
 				static void EnableDepthBuffer(bool state);
 

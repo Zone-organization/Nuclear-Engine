@@ -1,5 +1,5 @@
 #include <Platform\Win32\Win32_Window.h>
-#ifdef NUCLEAR_PLATFORM_WINDOWS32
+#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <windowsx.h>
 #include <Platform\Input.h>
 #include <Core\Engine.h>

@@ -1,5 +1,6 @@
 #include <Core\Context.h>
 #include <Core\Engine.h>
+#include <Core\Application.h>
 
 #ifndef NE_USE_RUNTIME_RENDER_API
 #ifdef NE_USE_OPENGL_3_3
@@ -66,7 +67,7 @@ namespace NuclearEngine
 #endif
 		}
 
-		void Context::Clear(API::Color color, uint flags, float depth, float stencil)
+		void Context::Clear(API::Color color, uint flags, float depth, unsigned int stencil)
 		{
 #ifndef NE_USE_RUNTIME_RENDER_API
 			ctx.Clear(color, flags, depth, stencil);
@@ -100,7 +101,7 @@ namespace NuclearEngine
 
 		void Context::Begin()
 		{
-			Core::Engine::ProcessEvents();
+			Core::Application::ProcessEvents();
 		}
 
 		void Context::End()
