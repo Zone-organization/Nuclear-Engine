@@ -100,6 +100,7 @@ namespace NuclearEngine {
 		void Engine::ShutDown()
 		{
 			Log->Info("[Engine] Shutting Down Engine.\n");
+			Context::Shutdown();
 			Application::Delete();
 		}
 
@@ -124,6 +125,7 @@ namespace NuclearEngine {
 			GamePtr->ExitRendering();
 			SetState(Engine::State::Shuttingdown);
 			GamePtr->Shutdown();
+			Engine::ShutDown();
 		}
 
 		void Engine::Run(unsigned int TestNumber)

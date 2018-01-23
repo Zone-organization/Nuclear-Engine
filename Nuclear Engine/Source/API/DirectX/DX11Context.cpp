@@ -354,7 +354,6 @@ namespace NuclearEngine
 
 			void DX11Context::Shutdown()
 			{
-				//GUI::Internals::ShutdownDWrite();
 				depthBuffer->Release();
 				m_depthStencilState->Release();
 				m_depthStencilView->Release();
