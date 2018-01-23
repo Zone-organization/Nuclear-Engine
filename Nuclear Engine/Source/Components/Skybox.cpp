@@ -82,7 +82,7 @@ namespace NuclearEngine
 			Desc.Format = API::Format::R8G8B8A8;
 			Desc.Wrap = API::TextureWrap::ClampToEdge;
 			Desc.Filter = API::TextureFilter::Linear2D;
-			API::Texture::Create(&texcube,data, &Desc);
+			API::Texture::Create(&texcube,data, Desc);
 
 			DepthStencilStateDesc DS_State;
 			DS_State.DepthStencilEnabled = true;

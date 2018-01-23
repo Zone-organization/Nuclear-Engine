@@ -37,11 +37,13 @@ public:
 		Desc.Format = API::Format::R8G8B8A8;
 		Desc.Type = API::TextureType::Texture2D;
 
-		API::Texture::Create(&WoodenBoxTex, &ResourceManager::LoadTextureFromFile("Assets/Common/Textures/woodenbox.jpg", Desc), &Desc);
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
 		Shading::Material CubeMat;
 		CubeMat.Diffuse = &WoodenBoxTex;
 		Components::Model::CreateCube(&Model, &CubeMat);
+
+		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Model);
 
 		Core::Application::Display();
 

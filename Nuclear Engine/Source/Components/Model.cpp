@@ -1,5 +1,5 @@
 #include "Components\Model.h"
-#include <ResourceManager/ResourceManager.h>
+#include <AssetManager/AssetManager.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>

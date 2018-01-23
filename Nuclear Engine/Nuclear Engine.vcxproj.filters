@@ -13,7 +13,6 @@
     <ClInclude Include="include\NE_PrivateCommon.h" />
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\NuclearEngine.h" />
-    <ClInclude Include="include\ResourceManager\ResourceManager.h" />
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
@@ -74,6 +73,7 @@
     <ClInclude Include="Source\Tests\Test2.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
     <ClInclude Include="include\API\OpenGL\GLError.h" />
+    <ClInclude Include="include\AssetManager\AssetManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -86,7 +86,6 @@
     <ClCompile Include="Source\Components\Skybox.cpp" />
     <ClCompile Include="Source\Core\Context.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
-    <ClCompile Include="Source\ResourceManager\ResourceManager.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
@@ -129,5 +128,6 @@
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
+    <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
   </ItemGroup>
 </Project>

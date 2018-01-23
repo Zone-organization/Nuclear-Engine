@@ -66,9 +66,11 @@ public:
 		TexDesc.Wrap = API::TextureWrap::Repeat;
 		TexDesc.Format = API::Format::R8G8B8A8;
 		TexDesc.Type = API::TextureType::Texture2D;
-		API::Texture::Create(&block_solid,&ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block_solid.png", TexDesc), &TexDesc);
-		API::Texture::Create(&block, &ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/block.png", TexDesc), &TexDesc);
-		API::Texture::Create(&background, &ResourceManager::LoadTextureFromFile("Assets/Breakout/Textures/background.jpg", TexDesc), &TexDesc);
+
+		AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/block_solid.png", &block_solid, TexDesc);
+		AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/block.png", &block, TexDesc);
+		AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/background.png", &background, TexDesc);
+
 		lvl.Load("Assets/Breakout/Levels/lvl1.lvl",_Width_,_Height_ * static_cast<unsigned int>(0.5));
 		sprite = new Components::Sprite(&block_solid, Math::Vector2(200.0f, 200.0f), (300.0f, 400.0f),  API::Color(0.0f, 1.0f, 0.0f, 1.0f));
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

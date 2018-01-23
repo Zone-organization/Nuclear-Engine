@@ -31,17 +31,17 @@ namespace NuclearEngine
 				type = 0;
 			}
 
-			void GLTexture::Create(GLTexture* result,Texture_Data *Data, Texture_Desc *Desc)
+			void GLTexture::Create(GLTexture* result,Texture_Data *Data, const Texture_Desc& Desc)
 			{
-				if (Desc->Type == TextureType::Texture1D)
+				if (Desc.Type == TextureType::Texture1D)
 				{
 					result->type = GL_TEXTURE_1D;
 				}
-				else if (Desc->Type == TextureType::Texture2D)
+				else if (Desc.Type == TextureType::Texture2D)
 				{
 					result->type = GL_TEXTURE_2D;
 				}
-				else if (Desc->Type == TextureType::Texture3D)
+				else if (Desc.Type == TextureType::Texture3D)
 				{
 					result->type = GL_TEXTURE_3D;
 				}
@@ -49,52 +49,52 @@ namespace NuclearEngine
 				GLCall(glGenTextures(1, &result->textureID));
 				GLCall(glBindTexture(result->type, result->textureID));
 
-				if (Desc->Format == Format::R8)
+				if (Desc.Format == Format::R8)
 				{
 					GLCall(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
 				}
 
 
-				if (Desc->Type == TextureType::Texture1D)
+				if (Desc.Type == TextureType::Texture1D)
 				{
 					GLCall(glTexImage1D(result->type,
 						0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						Data->Width,
 						0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
 						Data->Img_Data_Buf));
 				}
-				else if (Desc->Type == TextureType::Texture2D)
+				else if (Desc.Type == TextureType::Texture2D)
 				{
 					GLCall(glTexImage2D(result->type,
 						0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						Data->Width,
 						Data->Height,
 						0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
 						Data->Img_Data_Buf));
 				}
-				else if (Desc->Type == TextureType::Texture3D)
+				else if (Desc.Type == TextureType::Texture3D)
 				{
 					GLCall(glTexImage3D(result->type,
 						0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						Data->Width,
 						Data->Height,
 						Data->Depth,
 						0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
 						Data->Img_Data_Buf));
 				}
-				GLCall(glTexParameteri(result->type, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc->Wrap)));
-				GLCall(glTexParameteri(result->type, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc->Wrap)));
+				GLCall(glTexParameteri(result->type, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap)));
+				GLCall(glTexParameteri(result->type, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc.Wrap)));
 
-				switch (Desc->Filter)
+				switch (Desc.Filter)
 				{
 				case TextureFilter::Point2D:
 				{
@@ -136,7 +136,7 @@ namespace NuclearEngine
 
 				if (Core::ContextDesc::MaxAnisotropicLevel != 0.0f)
 				{
-					switch (Desc->AnisoFilter)
+					switch (Desc.AnisoFilter)
 					{
 					case AnisotropicFilter::AnisotropicX2:
 					{
@@ -166,7 +166,7 @@ namespace NuclearEngine
 				GLCall(glBindTexture(result->type, 0));
 			}
 
-			void GLTexture::Create(GLTexture * result,const std::array<API::Texture_Data*, 6>& data, API::Texture_Desc* Desc)
+			void GLTexture::Create(GLTexture * result,const std::array<API::Texture_Data*, 6>& data, const Texture_Desc& Desc)
 			{
 				GLCall(glGenTextures(1, &result->textureID));
 				result->type = GL_TEXTURE_CUBE_MAP;
@@ -176,15 +176,15 @@ namespace NuclearEngine
 				for (GLuint i = 0; i < data.size(); i++)
 				{
 					GLCall(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						data[i]->Width,
 						data[i]->Height,
 						0,
-						GetGLFormat(Desc->Format),
+						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
 						data[i]->Img_Data_Buf));
 				}
-				switch (Desc->Filter)
+				switch (Desc.Filter)
 				{
 				case TextureFilter::Point2D:
 				{
@@ -227,7 +227,7 @@ namespace NuclearEngine
 
 				if (Core::ContextDesc::MaxAnisotropicLevel != 0.0f)
 				{
-					switch (Desc->AnisoFilter)
+					switch (Desc.AnisoFilter)
 					{
 					case AnisotropicFilter::AnisotropicX2:
 					{
@@ -254,8 +254,8 @@ namespace NuclearEngine
 					}
 				}
 
-				GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc->Wrap)));
-				GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc->Wrap)));
+				GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap)));
+				GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc.Wrap)));
 
 				GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 

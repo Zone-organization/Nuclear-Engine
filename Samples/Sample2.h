@@ -9,8 +9,8 @@
 //
 //	Components::FlyCamera Camera;
 //	Shading::Techniques::NoLight *LightShading;
-//	Components::Cube *Cube;
-//	Components::Cube *Lamp;
+//	Components::Model Cube;
+//	Components::Model Lamp;
 //
 //	Components::Light dirlight;
 //	Components::Light pointlight1;
@@ -95,8 +95,8 @@
 //		Desc.Format = Format::R8G8B8A8;
 //		Desc.Type = TextureType::Texture2D;
 //
-//		DiffuseTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
-//		SpecularTex = new API::Texture(ResourceManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
+//		DiffuseTex = new API::Texture(AssetManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
+//		SpecularTex = new API::Texture(AssetManager::LoadTextureFromFile("Assets/Common/Textures/crate_diffuse.png", Desc), Desc);
 //
 //		Shading::Material CubeMat;
 //		CubeMat.Diffuse = DiffuseTex;
@@ -166,11 +166,5 @@
 //		Renderer->Render_Light();
 //
 //		Core::Context::End();
-//	}
-//	void ExitRendering()	// Exit Rendering
-//	{
-////		delete LightShading;
-//		delete Cube;
-//		delete Camera;
 //	}
 //};

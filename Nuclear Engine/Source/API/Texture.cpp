@@ -11,7 +11,7 @@ namespace NuclearEngine {
 		Texture::~Texture()
 		{
 		}
-		void Texture::Create(Texture *result,Texture_Data * TexData, Texture_Desc * Desc)
+		void Texture::Create(Texture *result,Texture_Data * TexData,const Texture_Desc& Desc)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
@@ -23,7 +23,7 @@ namespace NuclearEngine {
 			}
 		}
 
-		void Texture::Create(Texture* result, const std::array<Texture_Data*, 6>& data, Texture_Desc * Desc)
+		void Texture::Create(Texture* result, const std::array<Texture_Data*, 6>& data,const Texture_Desc & Desc)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{

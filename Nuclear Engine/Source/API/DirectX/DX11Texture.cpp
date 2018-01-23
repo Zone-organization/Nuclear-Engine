@@ -47,23 +47,23 @@ namespace NuclearEngine
 				samplerState = nullptr;
 			}
 
-			void DX11Texture::Create(DX11Texture* texture,Texture_Data *Data, Texture_Desc *Desc)
+			void DX11Texture::Create(DX11Texture* texture,Texture_Data *Data, const Texture_Desc& Desc)
 			{
-				if (Desc->Type == TextureType::Texture1D)
+				if (Desc.Type == TextureType::Texture1D)
 				{
 					return DX11Texture::Create1D(texture, Data, Desc);
 				}
-				else if (Desc->Type == TextureType::Texture2D)
+				else if (Desc.Type == TextureType::Texture2D)
 				{
 					return DX11Texture::Create2D(texture, Data, Desc);
 				}
-				else if (Desc->Type == TextureType::Texture3D)
+				else if (Desc.Type == TextureType::Texture3D)
 				{
 					return DX11Texture::Create2D(texture, Data, Desc);
 				}
 			}
 
-			void DX11Texture::Create(DX11Texture* texture, const std::array<API::Texture_Data*, 6>& data, API::Texture_Desc* Desc)
+			void DX11Texture::Create(DX11Texture* texture, const std::array<API::Texture_Data*, 6>& data, const Texture_Desc& Desc)
 			{
 				return DX11Texture::CreateCube(texture, data, Desc);
 			}
@@ -99,18 +99,18 @@ namespace NuclearEngine
 				DX11Context::GetContext()->GSSetSamplers(index, 1, &samplerState);
 			}
 	
-			void DX11Texture::Create1D(DX11Texture* result, Texture_Data* Data, Texture_Desc* Desc)
+			void DX11Texture::Create1D(DX11Texture* result, Texture_Data* Data, const Texture_Desc& Desc)
 			{
 				D3D11_TEXTURE1D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE1D_DESC));
 
 				texDesc.Width = Data->Width;
-				texDesc.Format = GetDXFormat(Desc->Format);
+				texDesc.Format = GetDXFormat(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.CPUAccessFlags = 0;
 				texDesc.ArraySize = 1;
 
-				if (Desc->Filter == TextureFilter::Point2D || Desc->Filter == TextureFilter::Linear2D)
+				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
 				{
 					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 					texDesc.MiscFlags = 0;
@@ -131,7 +131,7 @@ namespace NuclearEngine
 				subData.SysMemPitch = Data->Width * 4;
 				subData.SysMemSlicePitch = 0;
 
-				if (Desc->Filter == TextureFilter::Point2D || Desc->Filter == TextureFilter::Linear2D)
+				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture1D(&texDesc, &subData, &result->tex1D)))
 					{
@@ -161,10 +161,10 @@ namespace NuclearEngine
 				D3D11_SAMPLER_DESC samplerDesc;
 				ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
 
-				samplerDesc.Filter = GetDXTextureFilter(Desc->Filter);
-				samplerDesc.AddressU = GetDXTextureWrap(Desc->Wrap);
-				samplerDesc.AddressV = GetDXTextureWrap(Desc->Wrap);
-				samplerDesc.AddressW = GetDXTextureWrap(Desc->Wrap);
+				samplerDesc.Filter = GetDXTextureFilter(Desc.Filter);
+				samplerDesc.AddressU = GetDXTextureWrap(Desc.Wrap);
+				samplerDesc.AddressV = GetDXTextureWrap(Desc.Wrap);
+				samplerDesc.AddressW = GetDXTextureWrap(Desc.Wrap);
 				samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 				samplerDesc.MinLOD = 0;
 				samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
@@ -176,14 +176,14 @@ namespace NuclearEngine
 					Log->Error("[DirectX] SamplerState Creation Failed for Texture1D!\n");
 				}
 			}
-			void DX11Texture::Create2D(DX11Texture* result,Texture_Data* Data, Texture_Desc* Desc)
+			void DX11Texture::Create2D(DX11Texture* result,Texture_Data* Data, const Texture_Desc& Desc)
 			{
 				D3D11_TEXTURE2D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
 				texDesc.Width = Data->Width;
 				texDesc.Height = Data->Height;
-				texDesc.Format = GetDXFormat(Desc->Format);
+				texDesc.Format = GetDXFormat(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.SampleDesc.Count = 1;
 				texDesc.SampleDesc.Quality = 0;
@@ -191,7 +191,7 @@ namespace NuclearEngine
 				texDesc.ArraySize = 1;
 
 
-				if (Desc->Filter == TextureFilter::Point2D || Desc->Filter == TextureFilter::Linear2D)
+				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
 				{
 					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 					texDesc.MiscFlags = 0;
@@ -212,7 +212,7 @@ namespace NuclearEngine
 				subData.SysMemPitch = Data->Width * 4;
 				subData.SysMemSlicePitch = 0;
 
-				if (Desc->Filter == TextureFilter::Point2D || Desc->Filter == TextureFilter::Linear2D)
+				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, &subData, &result->tex2D)))
 					{
@@ -242,22 +242,22 @@ namespace NuclearEngine
 				D3D11_SAMPLER_DESC samplerDesc;
 				ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
 
-				if (Desc->AnisoFilter == AnisotropicFilter::None)
+				if (Desc.AnisoFilter == AnisotropicFilter::None)
 				{
-					samplerDesc.Filter = GetDXTextureFilter(Desc->Filter);
+					samplerDesc.Filter = GetDXTextureFilter(Desc.Filter);
 				}
 				else
 				{
 					samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 				}
-				samplerDesc.AddressU = GetDXTextureWrap(Desc->Wrap);
-				samplerDesc.AddressV = GetDXTextureWrap(Desc->Wrap);
-				samplerDesc.AddressW = GetDXTextureWrap(Desc->Wrap);
+				samplerDesc.AddressU = GetDXTextureWrap(Desc.Wrap);
+				samplerDesc.AddressV = GetDXTextureWrap(Desc.Wrap);
+				samplerDesc.AddressW = GetDXTextureWrap(Desc.Wrap);
 				samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 				samplerDesc.MinLOD = 0;
 				samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-				switch (Desc->AnisoFilter)
+				switch (Desc.AnisoFilter)
 				{
 				case AnisotropicFilter::AnisotropicX2:
 				{
@@ -289,17 +289,17 @@ namespace NuclearEngine
 				}
 
 			}
-			void DX11Texture::Create3D(DX11Texture* result,Texture_Data* Data, Texture_Desc* Desc)
+			void DX11Texture::Create3D(DX11Texture* result,Texture_Data* Data, const Texture_Desc& Desc)
 			{
 				//TODO
 				return;
 			}
-			void DX11Texture::CreateCube(DX11Texture* result, const std::array<Texture_Data*, 6>& data, API::Texture_Desc* Desc)
+			void DX11Texture::CreateCube(DX11Texture* result, const std::array<Texture_Data*, 6>& data, const Texture_Desc& Desc)
 			{
 				D3D11_TEXTURE2D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-				texDesc.Format = GetDXFormat(Desc->Format);
+				texDesc.Format = GetDXFormat(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.SampleDesc.Count = 1;
 				texDesc.SampleDesc.Quality = 0;
@@ -308,7 +308,7 @@ namespace NuclearEngine
 				texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 				texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-				if (Desc->Filter == TextureFilter::Point2D || Desc->Filter == TextureFilter::Linear2D)
+				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
 				{
 					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 					texDesc.MipLevels = 1;
