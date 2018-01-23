@@ -31,6 +31,7 @@ namespace NuclearEngine {
 			API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size() * sizeof(unsigned int));
 			Init = true;
 		}
+
 		void Mesh::Draw(API::Shader* _shader)
 		{
 			if (this->DrewBefore == false)
@@ -56,8 +57,8 @@ namespace NuclearEngine {
 			}
 			
 			// draw mesh
-			IBO.Bind();
 			VBO.Bind();
+			IBO.Bind();
 			Core::Context::DrawIndexed(data.indices.size());
 		}
 

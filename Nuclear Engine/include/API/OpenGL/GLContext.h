@@ -29,6 +29,8 @@ namespace NuclearEngine
 				static void DrawIndexed(unsigned int vertexCount);
 
 				static void SetViewPort(int x, int y, int width, int height);
+
+				static void Query_VAO_EBO_State();
 			};
 		}
 	}

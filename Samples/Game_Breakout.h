@@ -72,6 +72,8 @@ public:
 		lvl.Load("Assets/Breakout/Levels/lvl1.lvl",_Width_,_Height_ * static_cast<unsigned int>(0.5));
 		sprite = new Components::Sprite(&block_solid, Math::Vector2(200.0f, 200.0f), (300.0f, 400.0f),  API::Color(0.0f, 1.0f, 0.0f, 1.0f));
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+
+		Core::Application::Display();
 	}
 
 	void Render(float deltatime)
@@ -83,8 +85,6 @@ public:
 
 		Camera.Update();
 
-		Renderer.DrawSprite(sprite);
-		//Renderer.DrawSprite(&background, Math::Vector2(0.0f, 0.0f), (_Width_, _Height_));
 		lvl.Draw(&Renderer);
 		Core::Context::End();
 	}

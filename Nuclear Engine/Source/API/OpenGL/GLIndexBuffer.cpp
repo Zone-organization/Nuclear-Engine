@@ -14,11 +14,11 @@ namespace NuclearEngine
 			}
 			GLIndexBuffer::~GLIndexBuffer()
 			{
-				if (buffer != 0)
-				{
-					GLCall(glDeleteBuffers(1, &buffer));
-				}
-				buffer = 0;
+				//if (buffer != 0)
+				//{
+				//	GLCall(glDeleteBuffers(1, &buffer));
+				//}
+				//buffer = 0;
 			}
 
 			void GLIndexBuffer::Create(GLIndexBuffer* result, const void * indices, unsigned int count)

@@ -22,6 +22,7 @@ namespace NuclearEngine
 				static HWND hWndFake;
 				static HGLRC hRCFake;
 				static HDC hDCFake;
+				static HGLRC hRC = NULL;
 				LRESULT CALLBACK MsgHandlerSimpleOpenGLClass(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 				{
 					PAINTSTRUCT ps;
@@ -186,7 +187,7 @@ namespace NuclearEngine
 					if (!SetPixelFormat(hDC, iPixelFormat, &pfd))
 						return false;
 
-					HGLRC hRC = wglCreateContextAttribsARB(hDC, 0, iContextAttribs);
+					hRC = wglCreateContextAttribsARB(hDC, 0, iContextAttribs);
 					// If everything went OK
 					if (hRC) wglMakeCurrent(hDC, hRC);
 		
@@ -218,8 +219,13 @@ namespace NuclearEngine
 					return true;										// Initialization Went OK
 				}
 				void Win32_OGL::Shutdown()
-				{
+				{/*
 					wglMakeCurrent(NULL, NULL);
+					wglDeleteContext(hRC);
+
+					DeleteDC(hDC);
+					hDC = NULL;
+					hRC = NULL;*/
 				}
 				void Win32_OGL::SwapBuffer()
 				{

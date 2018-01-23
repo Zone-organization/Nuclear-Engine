@@ -124,6 +124,31 @@ namespace NuclearEngine
 				GLCall(glViewport(x, y, width, height));
 			}
 
+			void GLContext::Query_VAO_EBO_State()
+			{
+				std::string baseMessage;
+				Log->Info("[OpenGL] Querying VAO state:");
+				int vab, eabb, eabbs, mva, isOn(1), vaabb;
+				glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vab);
+				glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &eabb);
+				glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &eabbs);
+
+				baseMessage.append("  VAO: " + std::to_string(vab) + "\n");
+				baseMessage.append("  IBO: " + std::to_string(eabb) + ", size=" + std::to_string(eabbs) + "\n");
+
+				glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &mva);
+				for (unsigned i = 0; i < mva; ++i)
+				{
+					glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &isOn);
+					if (isOn)
+					{
+						glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &vaabb);
+						baseMessage.append("  attrib #" + std::to_string(i) + ": VBO=" + std::to_string(vaabb) + "\n");
+					}
+				}
+				Log->Info(baseMessage);
+			}
+
 		}
 	}
 

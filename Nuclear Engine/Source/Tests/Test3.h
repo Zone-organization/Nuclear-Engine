@@ -150,12 +150,13 @@ public:
 		Shader_Uniforms.Projection = Math::Perspective(45.0f, Core::Application::GetAspectRatio(), 0.1f, 100.0f);
 
 		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
+		Core::Application::Display();
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
-	void Render(float)
+	void Render(float) override
 	{
 		Core::Context::Begin();
 

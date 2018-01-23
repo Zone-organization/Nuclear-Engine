@@ -22,20 +22,23 @@ namespace NuclearEngine
 
 			GLVertexBuffer::~GLVertexBuffer()
 			{
-				if (VAO != 0 && VBO != 0)
+				if (VAO != 0)
+				{
+					GLCall(glDeleteBuffers(1, &VAO));
+				}
+				if (VBO != 0)
 				{
 					GLCall(glDeleteBuffers(1, &VBO));
-					GLCall(glDeleteBuffers(1, &VAO));
 				}
 
 				VAO = 0;
-				VBO = 0;				
+				VBO = 0;		
 			}
 
 			void GLVertexBuffer::Create(GLVertexBuffer * buffer, VertexBufferDesc * desc)
 			{
 				GLCall(glGenVertexArrays(1, &buffer->VAO));
-				GLCall(glBindVertexArray(0));
+				GLCall(glBindVertexArray(buffer->VAO));
 
 				GLCall(glGenBuffers(1, &buffer->VBO));
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO));
@@ -48,6 +51,8 @@ namespace NuclearEngine
 					GLCall(glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_DYNAMIC_DRAW));
 				}
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+				GLCall(glBindVertexArray(0));
+
 			}
 
 			void GLVertexBuffer::Update(const void * data, unsigned int size)
