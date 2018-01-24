@@ -39,9 +39,9 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
-		Shading::Material CubeMat;
+		/*Shading::Material CubeMat;
 		CubeMat.Diffuse = &WoodenBoxTex;
-		Components::Model::CreateCube(&Model, &CubeMat);
+		Components::Model::CreateCube(&Model, &CubeMat);*/
 
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Model);
 
@@ -87,7 +87,6 @@ public:
 		Core::Context::Begin();
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		CubeShader.Bind();
 		Model.Draw(&CubeShader);
 
 		Core::Context::End();

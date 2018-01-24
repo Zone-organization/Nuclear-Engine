@@ -1,5 +1,4 @@
 #pragma once
-#include <NE_Common.h>
 #include <API\Texture.h>
 #include <API\Color.h>
 #include <array>
@@ -10,7 +9,7 @@ namespace NuclearEngine {
 	}
 	class NEAPI AssetManager {
 	public:
-		static bool LoadModel(std::string Path, Components::Model* Desc);
+		static bool LoadModel(std::string Path, Components::Model* model);
 
 		static API::Texture_Data LoadTextureFromFile(std::string Path, const API::Texture_Desc& Desc);
 		static void CreateTextureFromFile(std::string Path, API::Texture* texture, const API::Texture_Desc& Desc);

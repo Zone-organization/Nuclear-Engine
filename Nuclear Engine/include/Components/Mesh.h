@@ -37,34 +37,35 @@ namespace NuclearEngine {
 			Math::Vector2 TexCoords;
 		};
 
-		enum class NEAPI MaterialTextureType
+		enum class NEAPI MeshTextureType
 		{
 			Diffuse,
 			Specular
 		};
 
-		struct NEAPI MaterialTexture {
+		struct NEAPI MeshTexture {
 			API::Texture *tex;
-			MaterialTextureType type;
+			MeshTextureType type;
 		};
 		struct NEAPI MeshData
 		{
 			MeshData(std::vector<Vertex> _vertices,
 			std::vector<unsigned int> _indices,
-			std::vector<MaterialTexture> _textures)
+			std::vector<MeshTexture> _textures)
 				:vertices(_vertices), indices(_indices), textures(_textures)
 			{}
+			MeshData(){}
 
 			//Data containers
 			std::vector<Vertex> vertices;
 			std::vector<unsigned int> indices;
-			std::vector<MaterialTexture> textures;
+			std::vector<MeshTexture> textures;
 		};
 		class NEAPI Mesh {
 		public:
 
 			/*  Mesh Data  */
-			Mesh(MeshData data);
+			Mesh(MeshData data, bool Initialize = false);
 			Mesh(const Mesh& obj);
 
 			void Initialize();

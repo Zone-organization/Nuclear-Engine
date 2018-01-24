@@ -7,14 +7,15 @@ namespace NuclearEngine {
 
 	namespace Components {
 		
-		Mesh::Mesh(MeshData _data)
-			: data(_data)
+		Mesh::Mesh(MeshData _data, bool Initialize_) : data(_data)
 		{
-
+			if (Initialize_ == true)
+			{
+				this->Initialize();
+			}
 		}
 
-		Mesh::Mesh(const Mesh& obj)
-			: data(obj.data)
+		Mesh::Mesh(const Mesh& obj) : data(obj.data)
 		{
 		}
 
@@ -70,12 +71,12 @@ namespace NuclearEngine {
 				std::string number;
 				std::string name;
 
-				if (data.textures[i].type == MaterialTextureType::Diffuse)
+				if (data.textures[i].type == MeshTextureType::Diffuse)
 				{
 					name = "NE_Tex_Diffuse";
 					number = std::to_string(diffuseNr++);
 				}
-				else if (data.textures[i].type == MaterialTextureType::Specular)
+				else if (data.textures[i].type == MeshTextureType::Specular)
 				{
 					name = "NE_Tex_Specular";
 					number = std::to_string(specularNr++); // transfer unsigned int to stream

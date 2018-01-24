@@ -74,6 +74,7 @@
     <ClInclude Include="Source\Tests\TestCommon.h" />
     <ClInclude Include="include\API\OpenGL\GLError.h" />
     <ClInclude Include="include\AssetManager\AssetManager.h" />
+    <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -129,5 +130,6 @@
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
+    <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
   </ItemGroup>
 </Project>
