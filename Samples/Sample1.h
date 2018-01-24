@@ -8,7 +8,8 @@ protected:
 	Components::FlyCamera Camera;
 	API::Shader CubeShader;
 
-	Components::Model Model;
+	Components::Model Nanosuit;
+	Components::Model Cube;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -38,11 +39,11 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
-		/*Shading::Material CubeMat;
+		Shading::Material CubeMat;
 		CubeMat.Diffuse = WoodenBoxTex;
-		Components::Model::CreateCube(&Model, &CubeMat);
-		*/
-		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Model);
+		Components::Model::CreateCube(&Cube, &CubeMat);
+		
+		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
 		Core::Application::Display();
 
@@ -86,11 +87,16 @@ public:
 		Core::Context::Begin();
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		Math::Matrix4 model;
-		model = Math::Translate(model, Math::Vector3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-		model = Math::Scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
-		Camera.SetModelMatrix(model);
-		Model.Draw(&CubeShader);
+		Math::Matrix4 CubeMatrix;
+		CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		Camera.SetModelMatrix(CubeMatrix);
+		Cube.Draw(&CubeShader);
+
+		Math::Matrix4 NanosuitMatrix;
+		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+		Camera.SetModelMatrix(NanosuitMatrix);
+		Nanosuit.Draw(&CubeShader);
 
 		Core::Context::End();
 	}
