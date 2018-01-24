@@ -210,7 +210,7 @@ namespace NuclearEngine
 				{
 					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 					texDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
-					texDesc.MipLevels = 10;
+					texDesc.MipLevels = 0;
 				}
 
 				D3D11_SUBRESOURCE_DATA subData;
@@ -240,7 +240,7 @@ namespace NuclearEngine
 					D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 					srvDesc.Format = texDesc.Format;
 					srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-					srvDesc.Texture2D.MipLevels = 10;
+					srvDesc.Texture2D.MipLevels = -1;
 					srvDesc.Texture2DArray.MostDetailedMip = 0;
 					DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, &srvDesc, &result->resourceView);
 					DX11Context::GetContext()->UpdateSubresource(result->tex2D, 0, 0, subData.pSysMem, subData.SysMemPitch, 0);

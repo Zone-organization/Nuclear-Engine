@@ -26,7 +26,7 @@ namespace NuclearEngine
 				ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 
 				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-				bufferDesc.ByteWidth = count;
+				bufferDesc.ByteWidth = count * sizeof(unsigned int);
 				bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0;
 				bufferDesc.MiscFlags = 0;

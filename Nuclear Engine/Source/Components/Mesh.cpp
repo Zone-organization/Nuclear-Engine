@@ -1,6 +1,8 @@
 #include "Components\Mesh.h"
 #include "Core\Context.h"
 #include <API\InputLayout.h>
+#include <API\OpenGL\GLContext.h>
+
 #include <iostream>
 
 namespace NuclearEngine {
@@ -19,6 +21,17 @@ namespace NuclearEngine {
 		{
 		}
 
+		Mesh::~Mesh()
+		{
+			API::VertexBuffer::Delete(&VBO);
+			API::IndexBuffer::Delete(&IBO);
+			/*for (size_t i = 0; i < data.textures.size(); i++)
+			{
+				API::Texture::Delete(&data.textures.at(i).Texture);
+			}
+			data.textures.clear();*/
+		}
+
 		void Mesh::Initialize()
 		{
 			VertexBufferDesc desc;
@@ -29,7 +42,12 @@ namespace NuclearEngine {
 			PreCalculate_TextureBindings();
 
 			API::VertexBuffer::Create(&VBO, &desc);
-			API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size() * sizeof(unsigned int));
+			API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size());
+
+			IndicesCount = data.indices.size();
+			data.vertices.clear();
+			data.indices.clear();
+			
 			Init = true;
 		}
 
@@ -54,13 +72,13 @@ namespace NuclearEngine {
 
 			for (unsigned int i = 0; i < data.textures.size(); i++)
 			{
-				data.textures[i].tex->PSBind(TextureBindings[i], _shader, i);
+				data.textures[i].Texture.PSBind(TextureBindings[i].c_str(), _shader, i);
 			}
 			
 			// draw mesh
 			VBO.Bind();
 			IBO.Bind();
-			Core::Context::DrawIndexed(data.indices.size());
+			Core::Context::DrawIndexed(IndicesCount);
 		}
 
 		void Mesh::PreCalculate_TextureBindings()
@@ -82,7 +100,7 @@ namespace NuclearEngine {
 					number = std::to_string(specularNr++); // transfer unsigned int to stream
 				}
 				
-				TextureBindings.push_back((name + number).c_str());
+				TextureBindings.push_back(name + number);
 			}
 		}
 		

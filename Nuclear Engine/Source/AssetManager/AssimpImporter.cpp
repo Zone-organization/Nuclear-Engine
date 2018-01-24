@@ -4,9 +4,10 @@
 
 namespace NuclearEngine {
 	namespace Internal {
-		bool AssimpImporter::Load(std::string Path, Components::Model * model)
+		bool AssimpImporter::Load(std::string Path, Components::Model * _model)
 		{
-			return false;
+			this->model = _model;
+			return LoadModel(Path);
 		}
 	
 		std::vector<Components::MeshTexture> AssimpImporter::LoadMeshTextures(std::vector<Imported_Texture> textures)
@@ -18,19 +19,21 @@ namespace NuclearEngine {
 			Desc.Wrap = API::TextureWrap::Repeat;
 			Desc.Format = API::Format::R8G8B8A8;
 			Desc.Type = API::TextureType::Texture2D;
-
+			
 			for (size_t i = 0; i < textures.size(); i++)
 			{
 				Components::MeshTexture mesh_tex;
 				API::Texture gpu_tex;
-				AssetManager::CreateTextureFromFile(textures.at(i).path, &gpu_tex, Desc);
+				std::string filename = std::string(textures.at(i).path);
+				filename = directory + '/' + filename;
+				AssetManager::CreateTextureFromFile(filename, &gpu_tex, Desc);
 				model->Textures.push_back(gpu_tex);
-				mesh_tex.tex = &gpu_tex;
+				mesh_tex.Texture = gpu_tex;
 				mesh_tex.type = textures.at(i).type;
 				result.push_back(mesh_tex);
 			}
 
-			return std::vector<Components::MeshTexture>();
+			return result;
 		}
 
 		bool AssimpImporter::LoadModel(std::string path)
@@ -41,11 +44,18 @@ namespace NuclearEngine {
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
-				Log->Error("[Assimp] Failed to load model Info: " + std::string(importer.GetErrorString()) + "\n");
+				Log->Error("[AssetManager] Failed to load model: " + path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
 				return false;
 			}
 			directory = path.substr(0, path.find_last_of('/'));
 			ProcessNode(scene->mRootNode, scene);
+
+			for (unsigned int i = 0; i < meshes_loaded.size(); i++)
+			{
+				model->Meshes.push_back(Components::Mesh(meshes_loaded.at(i)));
+			}
+
+			Log->Info("[AssetManager] Loaded Model: " + path + "\n");
 			return true;
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
@@ -104,11 +114,10 @@ namespace NuclearEngine {
 			// process materials
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
-
-
-			//textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-
-
+			
+			std::vector<Components::MeshTexture> DiffuseMaps = LoadMeshTextures(diffuseMaps);
+			result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
+			
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}

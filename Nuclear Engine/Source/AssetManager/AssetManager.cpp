@@ -2,19 +2,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "..\Thirdparty\stb_image.h"
 #include <Components\Model.h>
-
-#include <assimp\Importer.hpp>
-#include <assimp\scene.h>
-#include <assimp\postprocess.h>
-#pragma comment(lib,"assimp-vc140-mt.lib")
+#include "AssimpImporter.h"
 
 namespace NuclearEngine {
 	
 	bool AssetManager::LoadModel(std::string Path, Components::Model * model)
 	{
-		//ModelImporter importer;
-		return true;
-		//return importer.load(Path, model);
+		Internal::AssimpImporter importer;
+		return importer.Load(Path, model);
 	}
 	API::Texture_Data AssetManager::LoadTextureFromFile(std::string Path, const API::Texture_Desc & Desc)
 	{

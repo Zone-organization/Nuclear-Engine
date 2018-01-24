@@ -21,22 +21,22 @@ namespace NuclearEngine {
 
 			if (mat != nullptr)
 			{
-				if (mat->Diffuse != nullptr)
-				{
+				//if (mat->Diffuse != nullptr)
+				//{
 					MeshTexture Diffuse;
-					Diffuse.tex = mat->Diffuse;
+					Diffuse.Texture = mat->Diffuse;
 					Diffuse.type = MeshTextureType::Diffuse;
 
 					texturebuf.push_back(Diffuse);
-				}			
+				/*}			
 
 				if (mat->Specular != nullptr)
 				{
 					MeshTexture Specular;
-					Specular.tex = mat->Specular;
+					Specular.Texture = mat->Specular;
 					Specular.type = MeshTextureType::Specular;
 					texturebuf.push_back(Specular);
-				}
+				}*/
 			}
 			// Create the vertices.
 			Vertex v[24];

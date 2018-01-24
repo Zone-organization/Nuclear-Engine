@@ -44,7 +44,7 @@ namespace NuclearEngine {
 		};
 
 		struct NEAPI MeshTexture {
-			API::Texture *tex;
+			API::Texture Texture;
 			MeshTextureType type;
 		};
 		struct NEAPI MeshData
@@ -67,7 +67,7 @@ namespace NuclearEngine {
 			/*  Mesh Data  */
 			Mesh(MeshData data, bool Initialize = false);
 			Mesh(const Mesh& obj);
-
+			~Mesh();
 			void Initialize();
 
 			// render the mesh
@@ -76,13 +76,13 @@ namespace NuclearEngine {
 		private:
 			//Calculate Texture binding slots and store them for faster drawing
 			void PreCalculate_TextureBindings();
-			std::vector<const char*> TextureBindings;
+			std::vector<std::string> TextureBindings;
 			// bind appropriate textures
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
 
 			MeshData data;
-
+			unsigned int IndicesCount = 0;
 			//Buffers
 			API::IndexBuffer IBO;
 			API::VertexBuffer VBO;
