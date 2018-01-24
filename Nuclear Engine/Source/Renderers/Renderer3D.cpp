@@ -64,7 +64,7 @@ namespace NuclearEngine {
 
 			API::ConstantBuffer::Create(&NE_LightUBO,"NE_Light_CB", this->LightUBOSize);
 
-			this->Shader.SetConstantBuffer(this->Camera->GetCBuffer(),API::ShaderType::Vertex);
+			this->Shader.SetConstantBuffer(&this->Camera->GetCBuffer(),API::ShaderType::Vertex);
 			this->Shader.SetConstantBuffer(&this->NE_LightUBO,API::ShaderType::Pixel);
 		}
 

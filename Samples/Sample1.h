@@ -28,7 +28,7 @@ public:
 		API::Shader::Create(&CubeShader, &desc);
 	
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatio(), 0.1f, 100.0f));
-		CubeShader.SetConstantBuffer(Camera.GetCBuffer() ,API::ShaderType::Vertex);
+		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() ,API::ShaderType::Vertex);
 
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
