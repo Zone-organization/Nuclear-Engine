@@ -19,19 +19,7 @@ namespace NuclearEngine
 			}
 
 			DX11Shader::~DX11Shader()
-			{
-				if (VertexShader != nullptr)
-				{
-					VertexShader->Release();
-				}
-				if (GeometryShader != nullptr)
-				{
-					GeometryShader->Release();
-				}
-				if (PixelShader != nullptr)
-				{
-					PixelShader->Release();
-				}
+			{				
 				VertexShader = nullptr;
 				PixelShader = nullptr;
 				GeometryShader = nullptr;
@@ -93,6 +81,24 @@ namespace NuclearEngine
 												
 			
 				return;
+			}
+			void DX11Shader::Delete(DX11Shader * shader)
+			{
+				if (shader->VertexShader != nullptr)
+				{
+					shader->VertexShader->Release();
+				}
+				if (shader->GeometryShader != nullptr)
+				{
+					shader->GeometryShader->Release();
+				}
+				if (shader->PixelShader != nullptr)
+				{
+					shader->PixelShader->Release();
+				}
+				shader->VertexShader = nullptr;
+				shader->PixelShader = nullptr;
+				shader->GeometryShader = nullptr;
 			}
 			unsigned int DX11Shader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer,API::ShaderType type)
 			{

@@ -15,6 +15,7 @@ namespace NuclearEngine
 				~DX11IndexBuffer();
 
 				static void Create(DX11IndexBuffer* buffer,const void* data, unsigned int size);
+				static void Delete(DX11IndexBuffer* buffer);
 
 				void Bind();
 			protected:

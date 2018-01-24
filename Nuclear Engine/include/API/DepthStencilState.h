@@ -14,6 +14,7 @@ namespace NuclearEngine {
 			~DepthStencilState();
 
 			static void Create(DepthStencilState* state, DepthStencilStateDesc* type);
+			static void Delete(DepthStencilState* state);
 
 			void Bind();
 

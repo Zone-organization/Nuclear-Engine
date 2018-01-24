@@ -15,6 +15,8 @@ namespace NuclearEngine
 				~GLConstantBuffer();
 
 				static void Create(GLConstantBuffer* buffer,const char *Nameinshader, unsigned int size);
+				static void Delete(GLConstantBuffer* cbuffer);
+
 				void Update(const void* data, unsigned int size);
 				unsigned int GetBindingIndex();
 				const char * GetName();

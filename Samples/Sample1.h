@@ -7,7 +7,6 @@ protected:
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
 	API::Shader CubeShader;
-	API::VertexBuffer CubeVB;
 
 	Components::Model Model;
 
@@ -39,11 +38,11 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
-		/*Shading::Material CubeMat;
+		Shading::Material CubeMat;
 		CubeMat.Diffuse = &WoodenBoxTex;
-		Components::Model::CreateCube(&Model, &CubeMat);*/
+		Components::Model::CreateCube(&Model, &CubeMat);
 
-		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Model);
+		//AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Model);
 
 		Core::Application::Display();
 
@@ -91,5 +90,9 @@ public:
 
 		Core::Context::End();
 	}
-	
+	void Shutdown() override 
+	{
+		API::Texture::Delete(&WoodenBoxTex);
+		API::Shader::Delete(&CubeShader);
+	}
 };

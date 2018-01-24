@@ -17,6 +17,7 @@ namespace NuclearEngine {
 			~VertexBuffer();
 
 			static void Create(VertexBuffer* buffer, VertexBufferDesc* desc);
+			static void Delete(VertexBuffer* buffer);
 
 			void Update(const void* data, unsigned int size);
 

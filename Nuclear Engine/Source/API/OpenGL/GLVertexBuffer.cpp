@@ -21,16 +21,7 @@ namespace NuclearEngine
 			}
 
 			GLVertexBuffer::~GLVertexBuffer()
-			{
-				if (VAO != 0)
-				{
-					GLCall(glDeleteBuffers(1, &VAO));
-				}
-				if (VBO != 0)
-				{
-					GLCall(glDeleteBuffers(1, &VBO));
-				}
-
+			{				
 				VAO = 0;
 				VBO = 0;		
 			}
@@ -53,6 +44,21 @@ namespace NuclearEngine
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 				GLCall(glBindVertexArray(0));
 
+			}
+
+			void GLVertexBuffer::Delete(GLVertexBuffer * buffer)
+			{
+				if (buffer->VAO != 0)
+				{
+					GLCall(glDeleteBuffers(1, &buffer->VAO));
+				}
+				if (buffer->VBO != 0)
+				{
+					GLCall(glDeleteBuffers(1, &buffer->VBO));
+				}
+
+				buffer->VAO = 0;
+				buffer->VBO = 0;
 			}
 
 			void GLVertexBuffer::Update(const void * data, unsigned int size)

@@ -106,7 +106,7 @@ namespace NuclearEngine {
 			std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
 
 
-			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+			//textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
 
 			// return a mesh object created from the extracted mesh data

@@ -23,6 +23,17 @@ namespace NuclearEngine {
 				DirectX::DX11DepthStencilState::Create(&result->DXObject, type);
 			}
 		}
+		void DepthStencilState::Delete(DepthStencilState * state)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				OpenGL::GLDepthStencilState::Delete(&state->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DirectX::DX11DepthStencilState::Delete(&state->DXObject);
+			}
+		}
 		void DepthStencilState::Bind()
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)

@@ -22,7 +22,8 @@ namespace NuclearEngine
 				~GLShader();
 
 				static void Create(GLShader* shader, ShaderDesc* Desc);
-				
+				static void Delete(GLShader* shader);
+
 				void SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type);
 				
 				void Bind();

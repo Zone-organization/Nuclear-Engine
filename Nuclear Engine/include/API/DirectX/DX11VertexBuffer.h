@@ -18,6 +18,7 @@ namespace NuclearEngine
 				~DX11VertexBuffer();
 
 				static void Create(DX11VertexBuffer* buffer,VertexBufferDesc* desc);
+				static void Delete(DX11VertexBuffer* buffer);
 
 				void Update(const void* data, unsigned int size);
 

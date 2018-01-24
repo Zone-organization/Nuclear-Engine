@@ -24,6 +24,8 @@ namespace NuclearEngine {
 			~Shader();
 
 			static void	Create(Shader* shader, ShaderDesc* Desc);
+			static void	Delete(Shader* shader);
+
 			void SetConstantBuffer(ConstantBuffer* cbuffer,ShaderType type);
 			void Bind();
 

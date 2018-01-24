@@ -50,6 +50,9 @@ namespace NuclearEngine
 
 				}
 			}
+			void GLDepthStencilState::Delete(GLDepthStencilState * state)
+			{
+			}
 			void GLDepthStencilState::Bind()
 			{
 				//glDepthMask(depthmask);

@@ -16,12 +16,7 @@ namespace NuclearEngine
 				buffer = nullptr;
 			}
 			DX11ConstantBuffer::~DX11ConstantBuffer()
-			{
-				if (buffer != nullptr)
-				{
-					buffer->Release();
-				}
-
+			{				
 				buffer = nullptr;
 			}
 			void DX11ConstantBuffer::Create(DX11ConstantBuffer* result, const char * Nameinshader, unsigned int size)
@@ -44,6 +39,16 @@ namespace NuclearEngine
 				bufferDesc.MiscFlags = 0;
 
 				DX11Context::GetDevice()->CreateBuffer(&bufferDesc, NULL, &result->buffer);
+			}
+
+			void DX11ConstantBuffer::Delete(DX11ConstantBuffer * cbuffer)
+			{
+				if (cbuffer->buffer != nullptr)
+				{
+					cbuffer->buffer->Release();
+				}
+
+				cbuffer->buffer = nullptr;
 			}
 
 			void DX11ConstantBuffer::Update(const void * data, unsigned int size)

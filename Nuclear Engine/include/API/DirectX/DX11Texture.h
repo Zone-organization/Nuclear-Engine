@@ -21,6 +21,7 @@ namespace NuclearEngine
 
 				static void Create(DX11Texture* texture, Texture_Data* TexData, const Texture_Desc& Desc);
 				static void Create(DX11Texture* texture, const std::array<Texture_Data*, 6>& data, const Texture_Desc& Desc);
+				static void Delete(DX11Texture* texture);
 
 				void VSBind(unsigned int index);
 				void VSBind(const char *samplerName, DX11Shader *shader, unsigned int index);

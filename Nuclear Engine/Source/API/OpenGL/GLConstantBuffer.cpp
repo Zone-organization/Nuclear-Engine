@@ -16,11 +16,6 @@ namespace NuclearEngine
 			}
 			GLConstantBuffer::~GLConstantBuffer()
 			{
-				if (this->buffer != 0)
-				{
-					GLCall(glDeleteBuffers(1, &buffer));
-				}
-
 				this->buffer = 0;
 			}
 			void GLConstantBuffer::Create(GLConstantBuffer* result, const char * Nameinshader, unsigned int size)
@@ -43,6 +38,16 @@ namespace NuclearEngine
 				//Increment the binding index
 				ubosBindingindex++;
 				GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+			}
+
+			void GLConstantBuffer::Delete(GLConstantBuffer * cbuffer)
+			{
+				if (cbuffer->buffer != 0)
+				{
+					GLCall(glDeleteBuffers(1, &cbuffer->buffer));
+				}
+
+				cbuffer->buffer = 0;
 			}
 
 			void GLConstantBuffer::Update(const void* data, unsigned int size)

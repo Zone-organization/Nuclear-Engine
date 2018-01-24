@@ -171,5 +171,12 @@ public:
 
 		Core::Context::End();
 	}
+	void Shutdown() override
+	{
+		API::Shader::Delete(&CubeShader);
+		API::VertexBuffer::Delete(&CubeVB);
+		API::Texture::Delete(&WoodenBoxTex);
+		API::ConstantBuffer::Delete(&CubeCB);
 
+	}
 };

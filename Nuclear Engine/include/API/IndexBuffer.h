@@ -14,6 +14,7 @@ namespace NuclearEngine {
 			~IndexBuffer();
 
 			static void Create(IndexBuffer *buffer,void* indices, unsigned int count);
+			static void Delete(IndexBuffer *buffer);
 
 			void Bind();
 		private:

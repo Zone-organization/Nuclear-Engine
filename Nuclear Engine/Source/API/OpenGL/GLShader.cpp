@@ -28,10 +28,6 @@ namespace NuclearEngine
 
 			GLShader::~GLShader()
 			{
-				if (_ProgramID != 0)
-				{
-					GLCall(glDeleteProgram(_ProgramID));
-				}
 				_ProgramID = 0;
 			}
 
@@ -179,6 +175,15 @@ namespace NuclearEngine
 					}
 											
 				}
+			}
+
+			void GLShader::Delete(GLShader * shader)
+			{
+				if (shader->_ProgramID != 0)
+				{
+					GLCall(glDeleteProgram(shader->_ProgramID));
+				}
+				shader->_ProgramID = 0;
 			}
 
 			void GLShader::SetConstantBuffer(GLConstantBuffer* ubuffer,API::ShaderType type)

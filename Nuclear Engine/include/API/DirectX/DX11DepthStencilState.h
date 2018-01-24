@@ -17,6 +17,7 @@ namespace NuclearEngine
 				~DX11DepthStencilState();
 
 				static void Create(DX11DepthStencilState *state,DepthStencilStateDesc *type);
+				static void Delete(DX11DepthStencilState *state);
 
 				void Bind();
 

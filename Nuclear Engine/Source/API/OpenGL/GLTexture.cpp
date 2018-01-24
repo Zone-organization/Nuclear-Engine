@@ -22,11 +22,6 @@ namespace NuclearEngine
 
 			GLTexture::~GLTexture()
 			{
-				if (textureID != 0)
-				{
-					GLCall(glDeleteTextures(1, &textureID));
-				}
-
 				textureID = 0;
 				type = 0;
 			}
@@ -259,6 +254,17 @@ namespace NuclearEngine
 
 				GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 
+			}
+
+			void GLTexture::Delete(GLTexture * texture)
+			{
+				if (texture->textureID != 0)
+				{
+					GLCall(glDeleteTextures(1, &texture->textureID));
+				}
+
+				texture->textureID = 0;
+				texture->type = 0;
 			}
 
 			void GLTexture::VSBind(unsigned int index)

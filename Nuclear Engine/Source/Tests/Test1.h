@@ -94,4 +94,10 @@ public:
 		Core::Context::Draw(3);
 		Core::Context::End();
 	}
+
+	void Shutdown() override 
+	{
+		API::Shader::Delete(&TriangleShader);
+		API::VertexBuffer::Delete(&TriangleVB);
+	}
 };

@@ -26,6 +26,18 @@ namespace NuclearEngine {
 			}
 		}
 
+		void IndexBuffer::Delete(IndexBuffer * buffer)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				OpenGL::GLIndexBuffer::Delete(&buffer->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DirectX::DX11IndexBuffer::Delete(&buffer->DXObject);
+			}
+		}
+
 		void IndexBuffer::Bind()
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)

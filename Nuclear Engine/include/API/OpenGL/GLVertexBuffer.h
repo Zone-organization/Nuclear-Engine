@@ -18,6 +18,7 @@ namespace NuclearEngine
 				~GLVertexBuffer();
 
 				static void Create(GLVertexBuffer* buffer, VertexBufferDesc* desc);
+				static void Delete(GLVertexBuffer* buffer);
 
 				void Update(const void* data, unsigned int size);
 

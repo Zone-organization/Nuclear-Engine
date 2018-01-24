@@ -35,6 +35,18 @@ namespace NuclearEngine {
 			}
 		}
 
+		void Texture::Delete(Texture * result)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				OpenGL::GLTexture::Delete(&result->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DirectX::DX11Texture::Delete(&result->DXObject);
+			}
+		}
+
 		void Texture::VSBind(unsigned int index)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)

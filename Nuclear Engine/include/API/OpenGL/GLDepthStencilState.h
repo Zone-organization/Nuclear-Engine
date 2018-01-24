@@ -17,6 +17,7 @@ namespace NuclearEngine
 				~GLDepthStencilState();
 
 				static void Create(GLDepthStencilState *state,DepthStencilStateDesc* type);
+				static void Delete(GLDepthStencilState *state);
 
 				void Bind();
 

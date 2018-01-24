@@ -5,11 +5,11 @@ struct PixelInputType
 	float2 tex : TEXCOORD;
 };
 
-/*Texture2D NE_Tex_Diffuse : register(t0);
-SamplerState NE_Tex_Diffuse_Sampler : register(s0);*/
+Texture2D NE_Tex_Diffuse : register(t0);
+SamplerState NE_Tex_Diffuse_Sampler : register(s0);
 
 float4 main(PixelInputType input) : SV_TARGET
 { 
-	return float4(1.0f,1.0f,1.0f,1.0f);
-	//return NE_Tex_Diffuse.Sample(NE_Tex_Diffuse_Sampler, input.tex);
+	//return float4(1.0f,1.0f,1.0f,1.0f);
+	return NE_Tex_Diffuse.Sample(NE_Tex_Diffuse_Sampler, input.tex);
 }

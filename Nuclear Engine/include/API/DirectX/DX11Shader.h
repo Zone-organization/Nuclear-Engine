@@ -22,6 +22,7 @@ namespace NuclearEngine
 				~DX11Shader();
 
 				static void Create(DX11Shader *shader, ShaderDesc* desc);
+				static void Delete(DX11Shader *shader);
 
 				void SetConstantBuffer(DX11ConstantBuffer* ubuffer,API::ShaderType type);
 

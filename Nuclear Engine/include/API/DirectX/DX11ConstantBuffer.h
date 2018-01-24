@@ -18,6 +18,8 @@ namespace NuclearEngine
 				~DX11ConstantBuffer();
 				
 				static void Create(DX11ConstantBuffer *buffer,const char *Nameinshader, unsigned int size);
+				static void Delete(DX11ConstantBuffer *cbuffer);
+
 				void Update(const void* data, unsigned int size);
 
 			protected:

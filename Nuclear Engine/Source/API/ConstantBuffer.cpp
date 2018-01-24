@@ -24,6 +24,17 @@ namespace NuclearEngine {
 				DirectX::DX11ConstantBuffer::Create(&result->DXObject, _nameinshaders, size);
 			}
 		}
+		void ConstantBuffer::Delete(ConstantBuffer * buffer)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				OpenGL::GLConstantBuffer::Delete(&buffer->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DirectX::DX11ConstantBuffer::Delete(&buffer->DXObject);
+			}
+		}
 		void ConstantBuffer::Update(const void* data, unsigned int size)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)

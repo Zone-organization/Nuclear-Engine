@@ -102,7 +102,7 @@ public:
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
-	void Render(float)
+	void Render(float) override
 	{
 		Core::Context::Begin();
 
@@ -117,5 +117,11 @@ public:
 
 		Core::Context::End();
 	}
-
+	void Shutdown() override 
+	{
+		API::Shader::Delete(&RectangleShader);
+		API::VertexBuffer::Delete(&RectangleVB);
+		API::IndexBuffer::Delete(&RectangleIB);
+		API::Texture::Delete(&WoodenBoxTex);
+	}
 };

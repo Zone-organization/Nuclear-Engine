@@ -25,6 +25,18 @@ namespace NuclearEngine {
 			}
 		}
 
+		void VertexBuffer::Delete(VertexBuffer * buffer)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				OpenGL::GLVertexBuffer::Delete(&buffer->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DirectX::DX11VertexBuffer::Delete(&buffer->DXObject);
+			}
+		}
+
 		void VertexBuffer::Update(const void * data, unsigned int size)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)

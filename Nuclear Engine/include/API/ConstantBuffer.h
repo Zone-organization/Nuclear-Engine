@@ -16,6 +16,7 @@ namespace NuclearEngine {
 			ConstantBuffer();
 			~ConstantBuffer();
 			static void Create(ConstantBuffer* buffer, const char *_nameinshaders, unsigned int size);
+			static void Delete(ConstantBuffer* buffer);
 
 			void Update(const void* data, unsigned int size);
 		private:

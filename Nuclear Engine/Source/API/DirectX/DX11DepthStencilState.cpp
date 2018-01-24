@@ -51,11 +51,6 @@ namespace NuclearEngine
 
 			DX11DepthStencilState::~DX11DepthStencilState()
 			{
-				if (DS_State != nullptr)
-				{
-					DS_State->Release();
-				}
-
 				DS_State = nullptr;
 			}
 
@@ -83,6 +78,16 @@ namespace NuclearEngine
 
 					DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &result->DS_State);
 				
+			}
+
+			void DX11DepthStencilState::Delete(DX11DepthStencilState * state)
+			{
+				if (state->DS_State != nullptr)
+				{
+					state->DS_State->Release();
+				}
+
+				state->DS_State = nullptr;
 			}
 
 			void DX11DepthStencilState::Bind()

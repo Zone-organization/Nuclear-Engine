@@ -17,11 +17,6 @@ namespace NuclearEngine
 			}
 			DX11IndexBuffer::~DX11IndexBuffer()
 			{
-				if (buffer != nullptr)
-				{
-					buffer->Release();
-				}
-
 				buffer = nullptr;
 			}
 
@@ -44,6 +39,16 @@ namespace NuclearEngine
 				subData.SysMemSlicePitch = 0;
 
 				DX11Context::GetDevice()->CreateBuffer(&bufferDesc, &subData, &result->buffer);
+			}
+
+			void DX11IndexBuffer::Delete(DX11IndexBuffer * ibuffer)
+			{
+				if (ibuffer->buffer != nullptr)
+				{
+					ibuffer->buffer->Release();
+				}
+
+				ibuffer->buffer = nullptr;
 			}
 
 			void DX11IndexBuffer::Bind()

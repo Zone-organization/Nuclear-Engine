@@ -27,6 +27,18 @@ namespace NuclearEngine {
 			}
 		}
 
+		void Shader::Delete(Shader * result)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				OpenGL::GLShader::Delete(&result->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DirectX::DX11Shader::Delete(&result->DXObject);
+			}
+		}
+
 		void Shader::SetConstantBuffer(ConstantBuffer * cbuffer,API::ShaderType type)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)

@@ -14,10 +14,6 @@ namespace NuclearEngine
 			}
 			GLIndexBuffer::~GLIndexBuffer()
 			{
-				if (buffer != 0)
-				{
-					GLCall(glDeleteBuffers(1, &buffer));
-				}
 				buffer = 0;
 			}
 
@@ -30,6 +26,15 @@ namespace NuclearEngine
 				GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
 				GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+			}
+
+			void GLIndexBuffer::Delete(GLIndexBuffer * ibuffer)
+			{
+				if (ibuffer->buffer != 0)
+				{
+					GLCall(glDeleteBuffers(1, &ibuffer->buffer));
+				}
+				ibuffer->buffer = 0;
 			}
 
 			void GLIndexBuffer::Bind()

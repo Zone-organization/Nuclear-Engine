@@ -20,26 +20,6 @@ namespace NuclearEngine
 
 			DX11Texture::~DX11Texture()
 			{
-				if (tex1D != nullptr)
-				{
-					tex1D->Release();
-				}
-				if (tex2D != nullptr)
-				{
-					tex2D->Release();
-				}
-				if (tex3D != nullptr)
-				{
-					tex3D->Release();
-				}
-				if (resourceView != nullptr)
-				{
-					resourceView->Release();
-				}
-				if (samplerState != nullptr)
-				{
-					samplerState->Release();
-				}
 				tex1D = nullptr;
 				tex2D = nullptr;
 				tex3D = nullptr;
@@ -66,6 +46,35 @@ namespace NuclearEngine
 			void DX11Texture::Create(DX11Texture* texture, const std::array<API::Texture_Data*, 6>& data, const Texture_Desc& Desc)
 			{
 				return DX11Texture::CreateCube(texture, data, Desc);
+			}
+
+			void DX11Texture::Delete(DX11Texture * texture)
+			{
+				if (texture->tex1D != nullptr)
+				{
+					texture->tex1D->Release();
+				}
+				if (texture->tex2D != nullptr)
+				{
+					texture->tex2D->Release();
+				}
+				if (texture->tex3D != nullptr)
+				{
+					texture->tex3D->Release();
+				}
+				if (texture->resourceView != nullptr)
+				{
+					texture->resourceView->Release();
+				}
+				if (texture->samplerState != nullptr)
+				{
+					texture->samplerState->Release();
+				}
+				texture->tex1D = nullptr;
+				texture->tex2D = nullptr;
+				texture->tex3D = nullptr;
+				texture->resourceView = nullptr;
+				texture->samplerState = nullptr;
 			}
 
 			void DX11Texture::PSBind(unsigned int index)

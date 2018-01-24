@@ -16,17 +16,7 @@ namespace NuclearEngine
 			}
 
 			DX11VertexBuffer::~DX11VertexBuffer()
-			{
-				if (VertexBuffer != nullptr)
-				{
-					VertexBuffer->Release();
-				}
-
-				if (inputLayout != nullptr)
-				{
-					inputLayout->Release();					
-				}
-
+			{				
 				VertexBuffer = nullptr;
 				inputLayout = nullptr;
 			}
@@ -63,6 +53,22 @@ namespace NuclearEngine
 				buffer->offset = 0;
 
 				DX11Context::GetDevice()->CreateBuffer(&VertexBufferDesc, &InitialData, &buffer->VertexBuffer);
+			}
+
+			void DX11VertexBuffer::Delete(DX11VertexBuffer * buffer)
+			{
+				if (buffer->VertexBuffer != nullptr)
+				{
+					buffer->VertexBuffer->Release();
+				}
+
+				if (buffer->inputLayout != nullptr)
+				{
+					buffer->inputLayout->Release();
+				}
+
+				buffer->VertexBuffer = nullptr;
+				buffer->inputLayout = nullptr;
 			}
 
 			void DX11VertexBuffer::Update(const void* data, unsigned int size)
