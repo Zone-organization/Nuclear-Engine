@@ -14,8 +14,8 @@ namespace NuclearEngine {
 			Texture();			
 			~Texture();
 			
-			static void Create(Texture* texture, Texture_Data* TexData,const Texture_Desc& Desc);
-			static void Create(Texture* texture, const std::array<Texture_Data*, 6>& data, const Texture_Desc& Desc);
+			static void Create(Texture* texture, const Texture_Data& TexData,const Texture_Desc& Desc);
+			static void Create(Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 			static void Delete(Texture* texture);
 
 			void VSBind(unsigned int index);

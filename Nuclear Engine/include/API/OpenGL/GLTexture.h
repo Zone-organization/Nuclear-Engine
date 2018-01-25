@@ -17,8 +17,8 @@ namespace NuclearEngine
 				GLTexture();
 				~GLTexture();
 
-				static void Create(GLTexture* texture, Texture_Data *TexData, const Texture_Desc& Desc);
-				static void Create(GLTexture* texture, const std::array<Texture_Data*, 6>& data,const Texture_Desc& Desc);
+				static void Create(GLTexture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
+				static void Create(GLTexture* texture, const std::array<Texture_Data, 6>& data,const Texture_Desc& Desc);
 				static void Delete(GLTexture* texture);
 
 				void VSBind(unsigned int index);

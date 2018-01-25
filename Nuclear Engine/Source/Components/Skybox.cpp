@@ -1,7 +1,7 @@
 #include "Components\Skybox.h"
 #include <Core\Context.h>
 #include <API\ShaderCompiler.h>
-
+#include <AssetManager\AssetManager.h>
 namespace NuclearEngine
 {
 	namespace Components
@@ -53,7 +53,14 @@ namespace NuclearEngine
 		};
 
 
-		Skybox::Skybox(Components::GenericCamera* CameraCbuffer, std::array<API::Texture_Data*, 6> data)
+		Skybox::Skybox()
+		{
+		}
+		Skybox::~Skybox()
+		{
+		}
+
+		void Skybox::Create(Components::GenericCamera * CameraCbuffer,const std::array<API::Texture_Data, 6>& data)
 		{
 			API::ShaderDesc desc;
 			desc.Name = "SkyBox";
@@ -61,28 +68,29 @@ namespace NuclearEngine
 			API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
 
-			API::Shader::Create(&shader,&desc);
+			API::Shader::Create(&shader, &desc);
 
 			_CameraCbuffer = CameraCbuffer;
 
-			shader.SetConstantBuffer(&_CameraCbuffer->GetCBuffer(),API::ShaderType::Vertex);
+			shader.SetConstantBuffer(&_CameraCbuffer->GetCBuffer(), API::ShaderType::Vertex);
 
 			VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;
 			VDesc.size = sizeof(skyboxVertices);
 			VDesc.usage = BufferUsage::Static;
 
-			 API::VertexBuffer::Create(&vertexBuffer,&VDesc);
+			API::VertexBuffer::Create(&vertexBuffer, &VDesc);
 
 			API::InputLayout vertexBufferLayout;
-			vertexBufferLayout.Push("POSITION",0 , DataType::Float3);
+			vertexBufferLayout.Push("POSITION", 0, DataType::Float3);
 			vertexBuffer.SetInputLayout(&vertexBufferLayout, &shader);
 
 			API::Texture_Desc Desc;
 			Desc.Format = API::Format::R8G8B8A8;
 			Desc.Wrap = API::TextureWrap::ClampToEdge;
 			Desc.Filter = API::TextureFilter::Linear2D;
-			API::Texture::Create(&texcube,data, Desc);
+			Desc.Type = API::TextureType::TextureCube;
+			API::Texture::Create(&texcube, data, Desc);
 
 			DepthStencilStateDesc DS_State;
 			DS_State.DepthStencilEnabled = true;
@@ -90,8 +98,15 @@ namespace NuclearEngine
 
 			API::DepthStencilState::Create(&cubemapstate, &DS_State);
 		}
-		Skybox::~Skybox()
+
+		void Skybox::Create(Components::GenericCamera * CameraCbuffer, const std::array<std::string, 6>& paths)
 		{
+			API::Texture_Desc Desc;
+			Desc.Format = API::Format::R8G8B8A8;
+			Desc.Wrap = API::TextureWrap::ClampToEdge;
+			Desc.Filter = API::TextureFilter::Linear2D;
+			Desc.Type = API::TextureType::Texture2D;
+			this->Create(CameraCbuffer, AssetManager::LoadTextureCubeFromFile(paths, Desc));
 		}
 
 		void Skybox::Render()

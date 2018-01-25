@@ -27,7 +27,7 @@ namespace NuclearEngine
 				samplerState = nullptr;
 			}
 
-			void DX11Texture::Create(DX11Texture* texture,Texture_Data *Data, const Texture_Desc& Desc)
+			void DX11Texture::Create(DX11Texture* texture,const Texture_Data&Data, const Texture_Desc& Desc)
 			{
 				if (Desc.Type == TextureType::Texture1D)
 				{
@@ -43,7 +43,7 @@ namespace NuclearEngine
 				}
 			}
 
-			void DX11Texture::Create(DX11Texture* texture, const std::array<API::Texture_Data*, 6>& data, const Texture_Desc& Desc)
+			void DX11Texture::Create(DX11Texture* texture, const std::array<API::Texture_Data, 6>& data, const Texture_Desc& Desc)
 			{
 				return DX11Texture::CreateCube(texture, data, Desc);
 			}
@@ -108,12 +108,12 @@ namespace NuclearEngine
 				DX11Context::GetContext()->GSSetSamplers(index, 1, &samplerState);
 			}
 	
-			void DX11Texture::Create1D(DX11Texture* result, Texture_Data* Data, const Texture_Desc& Desc)
+			void DX11Texture::Create1D(DX11Texture* result, const Texture_Data& Data, const Texture_Desc& Desc)
 			{
 				D3D11_TEXTURE1D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE1D_DESC));
 
-				texDesc.Width = Data->Width;
+				texDesc.Width = Data.Width;
 				texDesc.Format = GetDXFormat(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.CPUAccessFlags = 0;
@@ -136,8 +136,8 @@ namespace NuclearEngine
 				ZeroMemory(&subData, sizeof(D3D11_SUBRESOURCE_DATA));
 
 
-				subData.pSysMem = Data->Img_Data_Buf;
-				subData.SysMemPitch = Data->Width * 4;
+				subData.pSysMem = Data.Img_Data_Buf;
+				subData.SysMemPitch = Data.Width * 4;
 				subData.SysMemSlicePitch = 0;
 
 				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
@@ -185,13 +185,13 @@ namespace NuclearEngine
 					Log->Error("[DirectX] SamplerState Creation Failed for Texture1D!\n");
 				}
 			}
-			void DX11Texture::Create2D(DX11Texture* result,Texture_Data* Data, const Texture_Desc& Desc)
+			void DX11Texture::Create2D(DX11Texture* result,const Texture_Data& Data, const Texture_Desc& Desc)
 			{
 				D3D11_TEXTURE2D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-				texDesc.Width = Data->Width;
-				texDesc.Height = Data->Height;
+				texDesc.Width = Data.Width;
+				texDesc.Height = Data.Height;
 				texDesc.Format = GetDXFormat(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.SampleDesc.Count = 1;
@@ -217,8 +217,8 @@ namespace NuclearEngine
 				ZeroMemory(&subData, sizeof(D3D11_SUBRESOURCE_DATA));
 
 
-				subData.pSysMem = Data->Img_Data_Buf;
-				subData.SysMemPitch = Data->Width * 4;
+				subData.pSysMem = Data.Img_Data_Buf;
+				subData.SysMemPitch = Data.Width * 4;
 				subData.SysMemSlicePitch = 0;
 
 				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
@@ -298,12 +298,12 @@ namespace NuclearEngine
 				}
 
 			}
-			void DX11Texture::Create3D(DX11Texture* result,Texture_Data* Data, const Texture_Desc& Desc)
+			void DX11Texture::Create3D(DX11Texture* result,const Texture_Data& Data, const Texture_Desc& Desc)
 			{
 				//TODO
 				return;
 			}
-			void DX11Texture::CreateCube(DX11Texture* result, const std::array<Texture_Data*, 6>& data, const Texture_Desc& Desc)
+			void DX11Texture::CreateCube(DX11Texture* result, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc)
 			{
 				D3D11_TEXTURE2D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -325,16 +325,16 @@ namespace NuclearEngine
 				else
 				{
 					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-					texDesc.MipLevels = 10;
+					texDesc.MipLevels = 0;
 				}
 
 				D3D11_SUBRESOURCE_DATA subData[6];
 				for (unsigned int i = 0; i < data.size(); i++)
 				{
-					texDesc.Width = data[i]->Width;
-					texDesc.Height = data[i]->Height;
-					subData[i].pSysMem = data[i]->Img_Data_Buf;
-					subData[i].SysMemPitch = data[i]->Width * 4;
+					texDesc.Width = data[i].Width;
+					texDesc.Height = data[i].Height;
+					subData[i].pSysMem = data[i].Img_Data_Buf;
+					subData[i].SysMemPitch = data[i].Width * 4;
 					subData[i].SysMemSlicePitch = 0;
 				}
 

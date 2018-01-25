@@ -54,7 +54,7 @@ public:
 	}
 	void Load()
 	{
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatio(), 0.1f, 100.0f));
 
 		Renderer.SetCamera(&Camera);
 		Renderer.AddLight(&spotLight);

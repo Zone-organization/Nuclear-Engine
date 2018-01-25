@@ -19,8 +19,8 @@ namespace NuclearEngine
 				DX11Texture();
 				~DX11Texture();
 
-				static void Create(DX11Texture* texture, Texture_Data* TexData, const Texture_Desc& Desc);
-				static void Create(DX11Texture* texture, const std::array<Texture_Data*, 6>& data, const Texture_Desc& Desc);
+				static void Create(DX11Texture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
+				static void Create(DX11Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 				static void Delete(DX11Texture* texture);
 
 				void VSBind(unsigned int index);
@@ -31,10 +31,10 @@ namespace NuclearEngine
 				void PSBind(const char *samplerName, DX11Shader *shader, unsigned int index);
 
 			protected:
-				static void Create1D(DX11Texture* texture, Texture_Data* Data, const Texture_Desc& Desc);
-				static void Create2D(DX11Texture* texture, Texture_Data* Data, const Texture_Desc& Desc);
-				static void Create3D(DX11Texture* texture, Texture_Data* Data, const Texture_Desc& Desc);
-				static void CreateCube(DX11Texture* texture, const std::array<Texture_Data*, 6>& data, const Texture_Desc& Desc);
+				static void Create1D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
+				static void Create2D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
+				static void Create3D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
+				static void CreateCube(DX11Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 
 				ID3D11Texture1D* tex1D;
 				ID3D11Texture2D* tex2D;

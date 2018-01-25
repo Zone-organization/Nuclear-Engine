@@ -26,7 +26,7 @@ namespace NuclearEngine
 				type = 0;
 			}
 
-			void GLTexture::Create(GLTexture* result,Texture_Data *Data, const Texture_Desc& Desc)
+			void GLTexture::Create(GLTexture* result,const Texture_Data& Data, const Texture_Desc& Desc)
 			{
 				if (Desc.Type == TextureType::Texture1D)
 				{
@@ -55,36 +55,36 @@ namespace NuclearEngine
 					GLCall(glTexImage1D(result->type,
 						0,
 						GetGLFormat(Desc.Format),
-						Data->Width,
+						Data.Width,
 						0,
 						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
-						Data->Img_Data_Buf));
+						Data.Img_Data_Buf));
 				}
 				else if (Desc.Type == TextureType::Texture2D)
 				{
 					GLCall(glTexImage2D(result->type,
 						0,
 						GetGLFormat(Desc.Format),
-						Data->Width,
-						Data->Height,
+						Data.Width,
+						Data.Height,
 						0,
 						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
-						Data->Img_Data_Buf));
+						Data.Img_Data_Buf));
 				}
 				else if (Desc.Type == TextureType::Texture3D)
 				{
 					GLCall(glTexImage3D(result->type,
 						0,
 						GetGLFormat(Desc.Format),
-						Data->Width,
-						Data->Height,
-						Data->Depth,
+						Data.Width,
+						Data.Height,
+						Data.Depth,
 						0,
 						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
-						Data->Img_Data_Buf));
+						Data.Img_Data_Buf));
 				}
 				GLCall(glTexParameteri(result->type, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap)));
 				GLCall(glTexParameteri(result->type, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc.Wrap)));
@@ -161,7 +161,7 @@ namespace NuclearEngine
 				GLCall(glBindTexture(result->type, 0));
 			}
 
-			void GLTexture::Create(GLTexture * result,const std::array<API::Texture_Data*, 6>& data, const Texture_Desc& Desc)
+			void GLTexture::Create(GLTexture * result,const std::array<API::Texture_Data, 6>& data, const Texture_Desc& Desc)
 			{
 				GLCall(glGenTextures(1, &result->textureID));
 				result->type = GL_TEXTURE_CUBE_MAP;
@@ -172,12 +172,12 @@ namespace NuclearEngine
 				{
 					GLCall(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
 						GetGLFormat(Desc.Format),
-						data[i]->Width,
-						data[i]->Height,
+						data[i].Width,
+						data[i].Height,
 						0,
 						GetGLFormat(Desc.Format),
 						GL_UNSIGNED_BYTE,
-						data[i]->Img_Data_Buf));
+						data[i].Img_Data_Buf));
 				}
 				switch (Desc.Filter)
 				{

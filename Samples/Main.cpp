@@ -2,6 +2,7 @@
 #include "Common.h"
 #include "Sample1.h"
 #include "Sample2.h"
+#include "Sample3.h"
 #include "Game_Breakout.h"
 #include <iostream>
 
@@ -37,6 +38,7 @@ int main(int argc, char* argv[])
 		<< "---High level engine demos:\n"
 		<< "1) Sample 1 - Dynamic Textured Cube & Nanosuit - introduction to Camera & Input & Renderer3D\n"
 		<< "2) Sample 2 - Lighted Scene - introduction to Lights & Techniques\n"
+		<< "3) Sample 2 - Scene With Skybox- introduction to Scene & entities & Skyboxes.\n"
 
 		<< "---Game demos:\n"
 		<< "a) Breakout - 2D\n"
@@ -54,6 +56,11 @@ int main(int argc, char* argv[])
 	else if (choice == '2') {
 		Start();
 		Sample2 demo;
+		Core::Engine::Run(&demo);
+	}
+	else if (choice == '3') {
+		Start();
+		Sample3 demo;
 		Core::Engine::Run(&demo);
 	}
 	else if (choice == 'a') {

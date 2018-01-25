@@ -41,7 +41,7 @@ namespace NuclearEngine {
 
 	void AssetManager::CreateTextureFromFile(std::string Path, API::Texture * texture, const API::Texture_Desc & Desc)
 	{
-		API::Texture::Create(texture, &AssetManager::LoadTextureFromFile(Path, Desc), Desc);
+		API::Texture::Create(texture, AssetManager::LoadTextureFromFile(Path, Desc), Desc);
 	}
 
 	API::Texture_Data LoadTextureFromFile_NoFlip(std::string Path, const API::Texture_Desc & Desc)

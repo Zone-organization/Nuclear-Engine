@@ -22,9 +22,10 @@ namespace NuclearEngine
 			Components::GenericCamera* _CameraCbuffer;
 			API::DepthStencilState cubemapstate;
 		public:
-			Skybox(Components::GenericCamera* CameraCbuffer, std::array<API::Texture_Data*, 6>);
+			Skybox();
 			~Skybox();
-
+			void Create(Components::GenericCamera* CameraCbuffer, const std::array<API::Texture_Data, 6>& data);
+			void Create(Components::GenericCamera* CameraCbuffer, const std::array<std::string, 6>& paths);
 			void Render();
 		};
 	}
