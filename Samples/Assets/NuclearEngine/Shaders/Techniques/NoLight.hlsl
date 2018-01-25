@@ -1,5 +1,6 @@
 
-float4 DoLighting(float4 Normal, float4 DiffuseColor)
-{
-    return DiffuseColor;
-}
+
+//float4 DoLighting()
+//{
+//    return NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, input.tex);
+//}

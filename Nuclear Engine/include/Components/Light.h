@@ -7,9 +7,21 @@ namespace NuclearEngine {
 
 	namespace Components {
 
-		namespace Internal {
+		namespace Internal 
+		{
 
-			struct NEAPI Shader_Light_Struct
+			struct NEAPI Shader_DirLight_Struct
+			{
+				Math::Vector4 Direction;
+				Math::Vector4 Color;
+			};
+			struct NEAPI Shader_PointLight_Struct
+			{
+				Math::Vector4 Position;
+				Math::Vector4 Intensity_Attenuation;
+				Math::Vector4 Color;
+			};
+			struct NEAPI Shader_SpotLight_Struct
 			{
 				Math::Vector4 Position;
 				Math::Vector4 Direction;
@@ -19,20 +31,47 @@ namespace NuclearEngine {
 			};
 		}
 
-		struct NEAPI Light
+		struct NEAPI DirectionalLight
 		{
 		public:
-			enum Type
-			{
-				DirectionalLight = 0,
-				PointLight = 1,
-				SpotLight = 2
-			};
+			DirectionalLight();
+			~DirectionalLight();
 
-			Light(Type type);
-			~Light();
+			void SetColor(API::Color color);
 
-			void SetType(Type type);
+			void SetDirection(Math::Vector3 dir);
+
+			Internal::Shader_DirLight_Struct GetInternalData();
+
+		protected:
+			Internal::Shader_DirLight_Struct data;
+		};
+
+		struct NEAPI PointLight
+		{
+		public:
+			PointLight();
+			~PointLight();
+
+			void SetColor(API::Color color);
+
+			void SetPosition(Math::Vector3 pos);
+
+			void SetIntensity(float intensity);
+
+			void SetAttenuation(Math::Vector3 att);
+
+			Internal::Shader_PointLight_Struct GetInternalData();
+
+		protected:
+			Internal::Shader_PointLight_Struct data;
+		};
+
+		struct NEAPI SpotLight
+		{
+		public:
+			SpotLight();
+			~SpotLight();
 
 			void SetColor(API::Color color);
 
@@ -46,10 +85,9 @@ namespace NuclearEngine {
 
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
 
-			Internal::Shader_Light_Struct GetInternalData();
-
+			Internal::Shader_SpotLight_Struct GetInternalData();
 		protected:
-			Internal::Shader_Light_Struct data;
+			Internal::Shader_SpotLight_Struct data;
 		};
 	}
 }

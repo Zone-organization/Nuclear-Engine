@@ -15,5 +15,9 @@ namespace NuclearEngine {
 		{
 			return m_shaderpath;
 		}
+		std::vector<std::string> Technique::GetDefines()
+		{
+			return defines;
+		}
 	}
 }

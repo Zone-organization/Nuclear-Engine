@@ -12,31 +12,38 @@ namespace NuclearEngine {
 			RequireBaking
 		};
 
-		class NEAPI Renderer3D 
+		class NEAPI Renderer3D
 		{
 		public:
-			Renderer3D(Components::GenericCamera* camera);
+			Renderer3D();
 			~Renderer3D();
 
+			void SetCamera(Components::GenericCamera* camera);
 			void SetTechnique(Shading::Technique* Tech);
 
 			API::Shader GetShader();
 
-			void AddLight(Components::Light* light);
+			void AddLight(Components::DirectionalLight* light);
+			void AddLight(Components::PointLight* light);
+			void AddLight(Components::SpotLight* light);
 
 			void Bake();
 
 			void Render_Light();
 
 		private:
+			void Calculate_Light_CB_Size();
+
 			API::Shader Shader;
-			API::ConstantBuffer NE_LightUBO;
-			size_t LightUBOSize;
+			API::ConstantBuffer NE_Light_CB;
+			size_t NE_Light_CB_Size;
 			Shading::Technique* Light_Rendering_Tech;
 			Components::GenericCamera* Camera;
-			std::vector<Components::Light*> Lights;
-			Renderer3DStatusFlag flag;
+			std::vector<Components::DirectionalLight*> DirLights;
+			std::vector<Components::PointLight*> PointLights;
+			std::vector<Components::SpotLight*> SpotLights;
 
+			Renderer3DStatusFlag flag;
 		};
 	}
 }

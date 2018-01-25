@@ -7,15 +7,19 @@
 namespace NuclearEngine {
 	namespace Renderers {
 
-		Renderer3D::Renderer3D(Components::GenericCamera * camera)
+		Renderer3D::Renderer3D()
 		{
-			this->Camera = camera;
 			this->Light_Rendering_Tech = nullptr;
 		}
 		Renderer3D::~Renderer3D()
 		{
 		}
 	
+		void Renderer3D::SetCamera(Components::GenericCamera * camera)
+		{
+			this->Camera = camera;
+		}
+
 		void Renderer3D::SetTechnique(Shading::Technique * Tech)
 		{
 			switch (Tech->GetType())
@@ -30,61 +34,85 @@ namespace NuclearEngine {
 		{
 			return this->Shader;
 		}
-		void Renderer3D::AddLight(Components::Light* light)
+		void Renderer3D::AddLight(Components::DirectionalLight * light)
 		{
-			this->Lights.push_back(light);
+			DirLights.push_back(light);
 		}
+		void Renderer3D::AddLight(Components::PointLight * light)
+		{
+			PointLights.push_back(light);
+		}
+		void Renderer3D::AddLight(Components::SpotLight * light)
+		{
+			SpotLights.push_back(light);
+		}
+
 		void Renderer3D::Bake()
 		{
 			std::vector<std::string> includes, defines;
-			includes.push_back("Assets/NuclearEngine/Shaders/Renderer/Renderer3D_Textures.hlsl");
+			includes.push_back("Assets/NuclearEngine/Shaders/Renderer/Renderer3D_Header.hlsl");
 
 			if (this->Light_Rendering_Tech != nullptr)
 			{
 				defines.push_back("NE_LIGHT_SHADING_TECH\n");
 				includes.push_back(this->Light_Rendering_Tech->GetShaderPath());
+
+				for (size_t i = 0; i < this->Light_Rendering_Tech->GetDefines().size(); i++)
+				{
+					defines.push_back(Light_Rendering_Tech->GetDefines().at(i));
+				}
+
 			}
 
-			if (this->Lights.size() > 0)
-			{
-				defines.push_back("NE_LIGHTS_NUM " + std::to_string(Lights.size()));
-			}
+			if (this->DirLights.size() > 0)	{	defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size()));	}
+			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size())); }
+			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
+
+			std::string SHIT = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes);
 			API::ShaderDesc desc;
 			desc.Name = "Renderer3D";
 			API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-			API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
+			API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl",defines, includes).c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
 			API::Shader::Create(&Shader, &desc);
-			
-			
-			if (this->Lights.size() > 0)
+
+			Calculate_Light_CB_Size();
+
+			API::ConstantBuffer::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
+
+			if (this->Camera != nullptr)
 			{
-				this->LightUBOSize = sizeof(Math::Vector4) + (this->Lights.size() * sizeof(Components::Internal::Shader_Light_Struct));
+				this->Shader.SetConstantBuffer(&this->Camera->GetCBuffer(), API::ShaderType::Vertex);
 			}
-
-			API::ConstantBuffer::Create(&NE_LightUBO,"NE_Light_CB", this->LightUBOSize);
-
-			this->Shader.SetConstantBuffer(&this->Camera->GetCBuffer(),API::ShaderType::Vertex);
-			this->Shader.SetConstantBuffer(&this->NE_LightUBO,API::ShaderType::Pixel);
+			else 
+			{
+				Log->Warning("[Renderer3D] Baking the renderer without an active camera!\n");
+			}
+			//this->Shader.SetConstantBuffer(&this->NE_Light_CB,API::ShaderType::Pixel);
 		}
 
 		void Renderer3D::Render_Light()
 		{
-			std::vector<Math::Vector4> UBOBuffer;
 			
-			UBOBuffer.push_back(Math::Vector4(this->Camera->GetPosition(), 32.0f));
-					
-
-			for (uint i = 0; i < this->Lights.size(); i++)
-			{
-				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Position);
-				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Direction);
-				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Intensity_Attenuation);
-				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().InnerCutOf_OuterCutoff);
-				UBOBuffer.push_back(this->Lights.at(i)->GetInternalData().Color);
-			}
+			
 				
-			this->NE_LightUBO.Update(UBOBuffer.data(), this->LightUBOSize);
+			//this->NE_LightUBO.Update( this->LightUBOSize);
+		}
+		void Renderer3D::Calculate_Light_CB_Size()
+		{
+			NE_Light_CB_Size = sizeof(Math::Vector4);
+			if (this->DirLights.size() > 0)
+			{
+				NE_Light_CB_Size = NE_Light_CB_Size + (this->DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
+			}
+			if (this->PointLights.size() > 0)
+			{
+				NE_Light_CB_Size = NE_Light_CB_Size + (this->PointLights.size() * sizeof(Components::Internal::Shader_PointLight_Struct));
+			}
+			if (this->SpotLights.size() > 0)
+			{
+				NE_Light_CB_Size = NE_Light_CB_Size + (this->SpotLights.size() * sizeof(Components::Internal::Shader_SpotLight_Struct));
+			}
 		}
 	}
 }

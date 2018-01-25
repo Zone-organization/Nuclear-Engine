@@ -1,14 +1,14 @@
 #pragma once
 #include <API\Shader.h>
-
-namespace NuclearEngine {
-	namespace Shading {
+#include <vector>
+namespace NuclearEngine 
+{
+	namespace Shading
+	{
 
 		enum class NEAPI Technique_Type 
 		{
-			// Totally Ignored
 			Nothing,
-			// Main Entry Point float4 DoLighting(float2 TexCoords);
 			LightShading
 		};
 
@@ -24,10 +24,11 @@ namespace NuclearEngine {
 
 			virtual Technique_Type GetType();
 			virtual std::string GetShaderPath();
-
+			virtual std::vector<std::string> GetDefines();
 		protected:
 			Technique_Type m_type = Technique_Type::Nothing;
 			std::string m_shaderpath = "";
+			std::vector<std::string> defines;
 		};
 	}
 }

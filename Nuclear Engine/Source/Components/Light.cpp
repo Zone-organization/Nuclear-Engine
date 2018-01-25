@@ -2,61 +2,84 @@
 #include <Math\Math.h>
 namespace NuclearEngine {
 	namespace Components {
-		struct NEAPI Shader_Light_Struct
-		{
-			Math::Vector4 Position;
-			Math::Vector4 Direction;
-			Math::Vector4 Attenuation_Intensity;
-			Math::Vector4 InnerCutOf_OuterCutoff;
-			Math::Vector4 Color;
-		};
-
-		Light::Light(Type type)
-		{
-			data.Color = Math::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-			data.Position = Math::Vector4(0.0f,0.0f,0.0f, static_cast<float>(type));
-			data.Direction = Math::Vector4();
-			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
-			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::ToRadians(12.5f)), cos(Math::ToRadians(15.0f)), 0.0f,0.0f);
-		}
-		Light::~Light()
+		DirectionalLight::DirectionalLight()
 		{
 		}
-
-		void Light::SetType(Type type)
+		DirectionalLight::~DirectionalLight()
 		{
-			data.Position = Math::Vector4(data.Position.xyz, static_cast<float>(type));
 		}
-
-		void Light::SetColor(API::Color color)
+		void DirectionalLight::SetColor(API::Color color)
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
 		}
-		void Light::SetPosition(Math::Vector3 pos)
+		void DirectionalLight::SetDirection(Math::Vector3 dir)
 		{
-			data.Position = Math::Vector4(pos, data.Position.w);
+			data.Direction = Math::Vector4(dir,1.0f);
 		}
-		void Light::SetDirection(Math::Vector3 dir)
-		{
-			data.Direction = Math::Vector4(dir, 1.0f);
-		}
-		void Light::SetIntensity(float intensity)
-		{
-			data.Intensity_Attenuation.x = intensity;
-		}
-		void Light::SetAttenuation(Math::Vector3 att)
-		{
-			data.Intensity_Attenuation = Math::Vector4(data.Intensity_Attenuation.x, att.x ,att.y, att.z);
-		}
-		void Light::SetSpotlightCone(Math::Vector2 cutoff_outercutoff)
-		{
-			data.InnerCutOf_OuterCutoff = Math::Vector4(cutoff_outercutoff.x, cutoff_outercutoff.y, 0.0f, 0.0f);
-		}
-
-		Internal::Shader_Light_Struct Light::GetInternalData()
+		Internal::Shader_DirLight_Struct DirectionalLight::GetInternalData()
 		{
 			return data;
 		}
+		PointLight::PointLight()
+		{
+		}
+		PointLight::~PointLight()
+		{
+		}
+		void PointLight::SetColor(API::Color color)
+		{
+			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
+		}
+		void PointLight::SetPosition(Math::Vector3 pos)
+		{
+			data.Position = Math::Vector4(pos, 1.0f);
+		}
+		void PointLight::SetIntensity(float intensity)
+		{
+			data.Intensity_Attenuation.x = intensity;
+		}
+		void PointLight::SetAttenuation(Math::Vector3 att)
+		{
+			data.Intensity_Attenuation = Math::Vector4(data.Intensity_Attenuation.x, att.x, att.y, att.z);
+		}
+		Internal::Shader_PointLight_Struct PointLight::GetInternalData()
+		{
+			return data;
+		}
+		SpotLight::SpotLight()
+		{
+		}
+		SpotLight::~SpotLight()
+		{
+		}
+		void SpotLight::SetColor(API::Color color)
+		{
+			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
+		}
+		void SpotLight::SetPosition(Math::Vector3 pos)
+		{
+			data.Position = Math::Vector4(pos, 1.0f);
+		}
+		void SpotLight::SetDirection(Math::Vector3 dir)
+		{
+			data.Direction = Math::Vector4(dir, 1.0f);
+		}
+		void SpotLight::SetIntensity(float intensity)
+		{
+			data.Intensity_Attenuation.x = intensity;
+		}
+		void SpotLight::SetAttenuation(Math::Vector3 att)
+		{
+			data.Intensity_Attenuation = Math::Vector4(data.Intensity_Attenuation.x, att.x, att.y, att.z);
+		}
+		void SpotLight::SetSpotlightCone(Math::Vector2 cutoff_outercutoff)
+		{
+			data.InnerCutOf_OuterCutoff = Math::Vector4(cutoff_outercutoff.x, cutoff_outercutoff.y,0.0f,0.0f);
 
+		}
+		Internal::Shader_SpotLight_Struct SpotLight::GetInternalData()
+		{
+			return data;
+		}
 	}
 }

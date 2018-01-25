@@ -7,7 +7,6 @@ namespace NuclearEngine {
 			NoLight::NoLight()
 			{
 				this->m_type = Technique_Type::LightShading;
-
 				this->m_shaderpath = "Assets/NuclearEngine/Shaders/Techniques/NoLight.hlsl";
 			}
 		}

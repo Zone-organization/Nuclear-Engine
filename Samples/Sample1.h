@@ -6,10 +6,11 @@ class Sample1 : public Core::Game
 protected:
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
-	API::Shader CubeShader;
 
 	Components::Model Nanosuit;
 	Components::Model Cube;
+	Shading::Techniques::NoLight LightTech;
+	Renderers::Renderer3D Renderer;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -21,15 +22,11 @@ public:
 	}
 	void Load()
 	{
-		API::ShaderDesc desc;
-		desc.Name = "Sample1";
-		API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.vs").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-		API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/Demo4/Shaders/CubeShader.ps").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
-
-		API::Shader::Create(&CubeShader, &desc);
-	
+		
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatio(), 0.1f, 100.0f));
-		CubeShader.SetConstantBuffer(&Camera.GetCBuffer() ,API::ShaderType::Vertex);
+		Renderer.SetCamera(&Camera);
+		Renderer.SetTechnique(&LightTech);
+		Renderer.Bake();
 
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
@@ -88,21 +85,20 @@ public:
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		Math::Matrix4 CubeMatrix;
-		CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeMatrix);
-		Cube.Draw(&CubeShader);
+		Cube.Draw(&Renderer.GetShader());
 
 		Math::Matrix4 NanosuitMatrix;
-		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.75f, 0.0f));
+		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));
 		Camera.SetModelMatrix(NanosuitMatrix);
-		Nanosuit.Draw(&CubeShader);
+		Nanosuit.Draw(&Renderer.GetShader());
 
 		Core::Context::End();
 	}
 	void Shutdown() override 
 	{
 		API::Texture::Delete(&WoodenBoxTex);
-		API::Shader::Delete(&CubeShader);
 	}
 };

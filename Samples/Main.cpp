@@ -35,8 +35,8 @@ int main(int argc, char* argv[])
 		<< "-----[Select the sample you want]-----\n"
 
 		<< "---High level engine demos:\n"
-		<< "1) Sample 1 - Dynamic Textured Cube - introduction to Camera & Input & Components\n"
-		<< "2) Sample 2 - Lighted Scene - introduction to Lights & Renderer3D & Techniques\n"
+		<< "1) Sample 1 - Dynamic Textured Cube & Nanosuit - introduction to Camera & Input & Renderer3D\n"
+		<< "2) Sample 2 - Lighted Scene - introduction to Lights & Techniques\n"
 
 		<< "---Game demos:\n"
 		<< "a) Breakout - 2D\n"
