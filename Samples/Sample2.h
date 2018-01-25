@@ -167,7 +167,7 @@ public:
 
 
 		Math::Matrix4 NanosuitMatrix;
-		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(7.0f, -1.75f, 0.0f));
+		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));
 		Camera.SetModelMatrix(NanosuitMatrix);
 		Nanosuit.Draw(&Renderer.GetShader());
