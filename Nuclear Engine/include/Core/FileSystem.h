@@ -11,7 +11,7 @@ namespace NuclearEngine
 			public:
 				static std::string LoadFileToString(std::string Filepath);
 
-				static std::string LoadShader(std::string Filepath, std::vector<std::string> defines, std::vector<std::string> includes);
+				static std::string LoadShader(std::string Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder =false);
 			};
 
 	}

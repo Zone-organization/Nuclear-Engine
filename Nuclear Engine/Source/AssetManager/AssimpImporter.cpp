@@ -114,10 +114,12 @@ namespace NuclearEngine {
 			// process materials
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
-			
+			std::vector<Imported_Texture> specularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
+
 			std::vector<Components::MeshTexture> DiffuseMaps = LoadMeshTextures(diffuseMaps);
 			result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-			
+			std::vector<Components::MeshTexture> SpecularMaps = LoadMeshTextures(specularMaps);
+			result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
@@ -128,6 +130,8 @@ namespace NuclearEngine {
 			{
 			case aiTextureType_DIFFUSE:
 				return Components::MeshTextureType::Diffuse;
+			case aiTextureType_SPECULAR:
+				return Components::MeshTextureType::Specular;
 			}
 		}
 

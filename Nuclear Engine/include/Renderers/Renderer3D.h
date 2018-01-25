@@ -37,12 +37,12 @@ namespace NuclearEngine {
 			API::Shader Shader;
 			API::ConstantBuffer NE_Light_CB;
 			size_t NE_Light_CB_Size;
+			size_t NUM_OF_LIGHT_VECS;
 			Shading::Technique* Light_Rendering_Tech;
 			Components::GenericCamera* Camera;
 			std::vector<Components::DirectionalLight*> DirLights;
 			std::vector<Components::PointLight*> PointLights;
 			std::vector<Components::SpotLight*> SpotLights;
-
 			Renderer3DStatusFlag flag;
 		};
 	}

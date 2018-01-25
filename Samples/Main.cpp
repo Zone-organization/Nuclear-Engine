@@ -1,7 +1,7 @@
 ﻿#define NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
 #include "Common.h"
 #include "Sample1.h"
-//#include "Demo5.h"
+#include "Sample2.h"
 #include "Game_Breakout.h"
 #include <iostream>
 
@@ -49,6 +49,11 @@ int main(int argc, char* argv[])
 	if (choice == '1') {
 		Start();
 		Sample1 demo;
+		Core::Engine::Run(&demo);
+	}
+	else if (choice == '2') {
+		Start();
+		Sample2 demo;
 		Core::Engine::Run(&demo);
 	}
 	else if (choice == 'a') {

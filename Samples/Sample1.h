@@ -36,9 +36,12 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
-		Shading::Material CubeMat;
-		CubeMat.Diffuse = WoodenBoxTex;
-		Components::Model::CreateCube(&Cube, &CubeMat);
+		std::vector<Components::MeshTexture> Textures;
+		Components::MeshTexture DiffuseTex;
+		DiffuseTex.Texture = WoodenBoxTex;
+		DiffuseTex.type = Components::MeshTextureType::Diffuse;
+		Textures.push_back(DiffuseTex);
+		Components::Model::CreateCube(&Cube, Textures);
 		
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 

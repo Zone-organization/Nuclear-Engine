@@ -1,12 +1,10 @@
 
-
 float4 main(PixelInputType input) : SV_TARGET
 { 
-    float4 result = float4(0, 0, 0, 0);
-
+    float4 result = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     #ifdef NE_LIGHT_SHADING_TECH
-    	result =  NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, input.TexCoord);
+        result = DoLighting(input.Normal, input.FragPos, ViewPos, input.TexCoord);
     #endif
     
     return result;

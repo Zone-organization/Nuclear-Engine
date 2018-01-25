@@ -15,30 +15,8 @@ namespace NuclearEngine {
 		
 		}
 
-		void Model::CreateCube(Model* model, Shading::Material * mat, float width , float height , float depth)
+		void Model::CreateCube(Model* model, std::vector<MeshTexture> Textures, float width , float height , float depth)
 		{
-			std::vector<MeshTexture> texturebuf;
-
-			if (mat != nullptr)
-			{
-				//if (mat->Diffuse != nullptr)
-				//{
-					MeshTexture Diffuse;
-					Diffuse.Texture = mat->Diffuse;
-					Diffuse.type = MeshTextureType::Diffuse;
-
-					texturebuf.push_back(Diffuse);
-				/*}			
-
-				if (mat->Specular != nullptr)
-				{
-					MeshTexture Specular;
-					Specular.Texture = mat->Specular;
-					Specular.type = MeshTextureType::Specular;
-					texturebuf.push_back(Specular);
-				}*/
-			}
-			// Create the vertices.
 			Vertex v[24];
 
 			float w2 = 0.5f*width;
@@ -103,7 +81,7 @@ namespace NuclearEngine {
 			std::vector<unsigned int> indices;
 			indices.assign(&i[0], &i[36]);
 
-			model->Meshes.push_back(MeshData(vertices, indices, texturebuf));
+			model->Meshes.push_back(MeshData(vertices, indices, Textures));
 		}
 
 		void Model::Draw(API::Shader* shader)

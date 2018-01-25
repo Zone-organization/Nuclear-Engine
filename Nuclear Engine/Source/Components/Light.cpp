@@ -4,6 +4,8 @@ namespace NuclearEngine {
 	namespace Components {
 		DirectionalLight::DirectionalLight()
 		{
+			data.Direction = Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f);
+			data.Color = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		}
 		DirectionalLight::~DirectionalLight()
 		{
@@ -22,6 +24,9 @@ namespace NuclearEngine {
 		}
 		PointLight::PointLight()
 		{
+			data.Position = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
+			data.Color = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		}
 		PointLight::~PointLight()
 		{
@@ -48,6 +53,11 @@ namespace NuclearEngine {
 		}
 		SpotLight::SpotLight()
 		{
+			data.Position = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+			data.Direction = Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f);
+			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
+			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::ToRadians(12.5f)), cos(Math::ToRadians(15.0f)), 1.0f, 1.0f);
+			data.Color = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		}
 		SpotLight::~SpotLight()
 		{

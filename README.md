@@ -11,12 +11,15 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using stb_image library).
   - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
 
-  - __OneAPI__
+- __OneAPI__
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
   - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
   - Support for HLSL Shader which can be Cross Compiled to GLSL.
   - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build
   
+- __Renderer__
+  - Support for Hybrid Lighting system which allows you to implement more lighting techniques.
+  - Support for Phong-Shading.
 ## Current Platforms
   - Windows 7+     
 
@@ -24,7 +27,6 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Improve the OneAPI:
     - Finish DepthStencilState class.
     - Implement RenderTarget & RasterizerState & BlendingState classes.
-  - Implement Phong-Lighting.
 
 ## Road-map
   - Support Android & Linux & UWP Platforms.

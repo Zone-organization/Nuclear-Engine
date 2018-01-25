@@ -18,6 +18,8 @@ protected:
 	Components::PointLight pointlight2;
 	Components::PointLight pointlight3;
 	Components::PointLight pointlight4;
+	Components::SpotLight spotLight;
+	Components::Model Nanosuit;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] = 
@@ -55,12 +57,13 @@ public:
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f));
 
 		Renderer.SetCamera(&Camera);
-
+		Renderer.AddLight(&spotLight);
 		Renderer.AddLight(&pointlight1);
 		Renderer.AddLight(&pointlight2);
 		Renderer.AddLight(&pointlight3);
 		Renderer.AddLight(&pointlight4);
 		Renderer.AddLight(&dirlight);
+		Renderer.SetTechnique(&LightShading);
 		Renderer.Bake();
 
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -88,18 +91,28 @@ public:
 		Desc.Format = API::Format::R8G8B8A8;
 		Desc.Type = API::TextureType::Texture2D;
 
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.jpg", &DiffuseTex, Desc);
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_specular.jpg", &SpecularTex, Desc);
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &DiffuseTex, Desc);
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_specular.png", &SpecularTex, Desc);
 
-		Shading::Material CubeMat;
-		CubeMat.Diffuse = DiffuseTex;
-		//CubeMat.Specular = SpecularTex;
-		//Cube = new Components::Cube(Components::InputSignatures::Position_Normal_Texcoord, &CubeMat);
-		//Lamp = new Components::Cube(Components::InputSignatures::Position, &CubeMat);
+		std::vector<Components::MeshTexture> Textures;
+		Components::MeshTexture DiffuseCTex;
+		DiffuseCTex.Texture = DiffuseTex;
+		DiffuseCTex.type = Components::MeshTextureType::Diffuse;
+
+		Components::MeshTexture SpecularCTex;
+		SpecularCTex.Texture = SpecularTex;
+		SpecularCTex.type = Components::MeshTextureType::Specular;
+
+		Textures.push_back(DiffuseCTex);
+		Textures.push_back(SpecularCTex);
+
+		Components::Model::CreateCube(&Cube, Textures);
+		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
 		Core::Context::EnableDepthBuffer(true);
-
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+
+		Core::Application::Display();
 	}
 
 	void Update(float deltatime) override
@@ -134,7 +147,7 @@ public:
 		Camera.ProcessEye(xoffset, yoffset);
 	}
 
-	void Render()
+	void Render(float) override
 	{
 		Core::Context::Begin();
 
@@ -151,7 +164,16 @@ public:
 
 			Cube.Draw(&Renderer.GetShader());
 		}
+
+
+		Math::Matrix4 NanosuitMatrix;
+		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(7.0f, -1.75f, 0.0f));
+		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));
+		Camera.SetModelMatrix(NanosuitMatrix);
+		Nanosuit.Draw(&Renderer.GetShader());
 		
+		spotLight.SetPosition(Camera.GetPosition());
+		spotLight.SetDirection(Camera.GetFrontView());
 
 		Renderer.Render_Light();
 

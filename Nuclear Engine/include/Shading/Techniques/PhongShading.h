@@ -5,7 +5,7 @@ namespace NuclearEngine {
 	namespace Shading {
 		namespace Techniques {
 
-			class NEAPI PhongShading : Technique
+			class NEAPI PhongShading : public Technique
 			{
 			public:
 				PhongShading()

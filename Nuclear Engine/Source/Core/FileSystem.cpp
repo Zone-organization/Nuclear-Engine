@@ -25,7 +25,7 @@ namespace NuclearEngine
 				return data;
 			}
 
-			std::string FileSystem::LoadShader(std::string Filepath, std::vector<std::string> defines, std::vector<std::string> includes)
+			std::string FileSystem::LoadShader(std::string Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder)
 			{
 				std::ifstream file(Filepath, std::ios::in);
 				std::string data = "", line = "";
@@ -42,54 +42,106 @@ namespace NuclearEngine
 					Log->Error("[FileSystem] Couldn't Read File: " + Filepath);
 					return std::string("NoString");
 				}
-
-				if (defines.size() > 0)
+				if (reverseorder = false)
 				{
-					std::vector<std::string> MergedCode;
-
-					std::string firstLine = data.substr(0, data.find("\n"));
-					//If GLSL
-					if (firstLine.find("#version") != std::string::npos)
+					if (defines.size() > 0)
 					{
-						data = data.substr(data.find("\n") + 1, data.length() - 1);
-						MergedCode.push_back(firstLine + "\n");
+						std::vector<std::string> MergedCode;
+
+						std::string firstLine = data.substr(0, data.find("\n"));
+						//If GLSL
+						if (firstLine.find("#version") != std::string::npos)
+						{
+							data = data.substr(data.find("\n") + 1, data.length() - 1);
+							MergedCode.push_back(firstLine + "\n");
+						}
+						for (unsigned int i = 0; i < defines.size(); ++i)
+						{
+							std::string define = "#define " + defines[i] + "\n";
+							MergedCode.push_back(define);
+						}
+
+						MergedCode.push_back(data);
+						std::string str;
+						for (unsigned int i = 0; i < MergedCode.size(); ++i)
+							str = str + MergedCode[i].c_str();
+
+						data = str;
 					}
-					for (unsigned int i = 0; i < defines.size(); ++i)
+					if (includes.size() > 0)
 					{
-						std::string define = "#define " + defines[i] + "\n";
-						MergedCode.push_back(define);
+						std::vector<std::string> MergedCode;
+
+						std::string firstLine = data.substr(0, data.find("\n"));
+						//If GLSL
+						if (firstLine.find("#version") != std::string::npos)
+						{
+							data = data.substr(data.find("\n") + 1, data.length() - 1);
+							MergedCode.push_back(firstLine + "\n");
+						}
+						for (unsigned int i = 0; i < includes.size(); ++i)
+						{
+							std::string define = "#include \"" + includes[i] + "\"\n";
+							MergedCode.push_back(define);
+						}
+
+						MergedCode.push_back(data);
+						std::string str;
+						for (unsigned int i = 0; i < MergedCode.size(); ++i)
+							str = str + MergedCode[i].c_str();
+
+						data = str;
 					}
-
-					MergedCode.push_back(data);
-					std::string str;
-					for (unsigned int i = 0; i < MergedCode.size(); ++i)
-						str = str + MergedCode[i].c_str();
-
-					data = str;
 				}
-				if (includes.size() > 0)
-				{
-					std::vector<std::string> MergedCode;
-
-					std::string firstLine = data.substr(0, data.find("\n"));
-					//If GLSL
-					if (firstLine.find("#version") != std::string::npos)
+				else {
+					if (includes.size() > 0)
 					{
-						data = data.substr(data.find("\n") + 1, data.length() - 1);
-						MergedCode.push_back(firstLine + "\n");
+						std::vector<std::string> MergedCode;
+
+						std::string firstLine = data.substr(0, data.find("\n"));
+						//If GLSL
+						if (firstLine.find("#version") != std::string::npos)
+						{
+							data = data.substr(data.find("\n") + 1, data.length() - 1);
+							MergedCode.push_back(firstLine + "\n");
+						}
+						for (unsigned int i = 0; i < includes.size(); ++i)
+						{
+							std::string define = "#include \"" + includes[i] + "\"\n";
+							MergedCode.push_back(define);
+						}
+
+						MergedCode.push_back(data);
+						std::string str;
+						for (unsigned int i = 0; i < MergedCode.size(); ++i)
+							str = str + MergedCode[i].c_str();
+
+						data = str;
 					}
-					for (unsigned int i = 0; i < includes.size(); ++i)
+					if (defines.size() > 0)
 					{
-						std::string define = "#include \"" + includes[i] + "\"\n";
-						MergedCode.push_back(define);
+						std::vector<std::string> MergedCode;
+
+						std::string firstLine = data.substr(0, data.find("\n"));
+						//If GLSL
+						if (firstLine.find("#version") != std::string::npos)
+						{
+							data = data.substr(data.find("\n") + 1, data.length() - 1);
+							MergedCode.push_back(firstLine + "\n");
+						}
+						for (unsigned int i = 0; i < defines.size(); ++i)
+						{
+							std::string define = "#define " + defines[i] + "\n";
+							MergedCode.push_back(define);
+						}
+
+						MergedCode.push_back(data);
+						std::string str;
+						for (unsigned int i = 0; i < MergedCode.size(); ++i)
+							str = str + MergedCode[i].c_str();
+
+						data = str;
 					}
-
-					MergedCode.push_back(data);
-					std::string str;
-					for (unsigned int i = 0; i < MergedCode.size(); ++i)
-						str = str + MergedCode[i].c_str();
-
-					data = str;
 				}
 				return data;
 			}		

@@ -7,7 +7,7 @@ namespace NuclearEngine {
 
 	namespace Components {
 
-		namespace Internal 
+		namespace Internal
 		{
 
 			struct NEAPI Shader_DirLight_Struct

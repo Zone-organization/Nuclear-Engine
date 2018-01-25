@@ -11,7 +11,7 @@ namespace NuclearEngine {
 		{
 		public:			
 			Model();
-			static void CreateCube(Model* model, Shading::Material* mat, float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
+			static void CreateCube(Model* model, std::vector<MeshTexture> Textures, float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
 			virtual void Draw(API::Shader* shader);
 
 			std::vector<Mesh> Meshes;
