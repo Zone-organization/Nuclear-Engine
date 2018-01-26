@@ -93,6 +93,85 @@ namespace NuclearEngine {
 			model->Meshes.push_back(MeshData(vertices, indices, Textures));
 		}
 
+		void Model::CreateSphere(Model * model, std::vector<MeshTexture> Textures, float radius, unsigned int sliceCount, unsigned int stackCount)
+		{
+			MeshData meshData;
+
+			Vertex topVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 0.0f, 0.0f);
+			Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
+
+			meshData.vertices.push_back(topVertex);
+
+			float phiStep = MathPI / stackCount;
+			float thetaStep = 2.0f * MathPI / sliceCount;
+
+			// Compute vertices for each stack ring (do not count the poles as rings).
+			for (UINT i = 1; i <= stackCount - 1; ++i)
+			{
+				float phi = i * phiStep;
+
+				// Vertices of ring.
+				for (UINT j = 0; j <= sliceCount; ++j)
+				{
+					float theta = j * thetaStep;
+
+					Vertex v;
+
+					// spherical to cartesian
+					v.Position.x = radius * sinf(phi)*cosf(theta);
+					v.Position.y = radius * cosf(phi);
+					v.Position.z = radius * sinf(phi)*sinf(theta);
+
+					Math::Vector3 p = v.Position;
+					v.Normal = Math::Normalize(p);
+
+					v.TexCoords.x = theta / (2 * MathPI);
+					v.TexCoords.y = phi / MathPI;
+
+					meshData.vertices.push_back(v);
+				}
+			}
+
+			meshData.vertices.push_back(bottomVertex);
+
+			for (UINT i = 1; i <= sliceCount; ++i)
+			{
+				meshData.indices.push_back(0);
+				meshData.indices.push_back(i + 1);
+				meshData.indices.push_back(i);
+			}
+			UINT baseIndex = 1;
+			UINT ringVertexCount = sliceCount + 1;
+			for (UINT i = 0; i < stackCount - 2; ++i)
+			{
+				for (UINT j = 0; j < sliceCount; ++j)
+				{
+					meshData.indices.push_back(baseIndex + i * ringVertexCount + j);
+					meshData.indices.push_back(baseIndex + i * ringVertexCount + j + 1);
+					meshData.indices.push_back(baseIndex + (i + 1)*ringVertexCount + j);
+
+					meshData.indices.push_back(baseIndex + (i + 1)*ringVertexCount + j);
+					meshData.indices.push_back(baseIndex + i * ringVertexCount + j + 1);
+					meshData.indices.push_back(baseIndex + (i + 1)*ringVertexCount + j + 1);
+				}
+			}
+
+			UINT southPoleIndex = (UINT)meshData.vertices.size() - 1;
+
+			// Offset the indices to the index of the first vertex in the last ring.
+			baseIndex = southPoleIndex - ringVertexCount;
+
+			for (UINT i = 0; i < sliceCount; ++i)
+			{
+				meshData.indices.push_back(southPoleIndex);
+				meshData.indices.push_back(baseIndex + i);
+				meshData.indices.push_back(baseIndex + i + 1);
+			}
+			meshData.textures = Textures;
+
+			model->Meshes.push_back(meshData);
+		}
+
 		void Model::Draw(API::Shader* shader)
 		{
 			shader->Bind();

@@ -6,6 +6,7 @@ class Sample2 : public Core::Game
 protected:
 	API::Texture DiffuseTex;
 	API::Texture SpecularTex;
+	API::Texture WhiteTex;
 
 	Components::FlyCamera Camera;
 	Shading::Techniques::PhongShading LightShading;
@@ -20,6 +21,10 @@ protected:
 	Components::PointLight pointlight4;
 	Components::PointLight pointlight5;
 	Components::PointLight pointlight6;
+	Components::PointLight pointlight7;
+	Components::PointLight pointlight8;
+	Components::PointLight pointlight9;
+
 	Components::SpotLight spotLight;
 	Components::Model Nanosuit;
 
@@ -39,14 +44,17 @@ protected:
 	};
 
 	// positions of the point lights
-	Math::Vector3 pointLightPositions[6] =
+	Math::Vector3 pointLightPositions[9] =
 	{
 		Math::Vector3(0.7f,  0.2f,  2.0f),
 		Math::Vector3(2.3f, -3.3f, -4.0f),
 		Math::Vector3(-4.0f,  2.0f, -12.0f),
 		Math::Vector3(0.0f,  0.0f, -3.0f),
 		Math::Vector3(4.0f,  3.0f, -2.0f),
-		Math::Vector3(6.0f, 0.0f, 0.0f)
+		Math::Vector3(6.2f, 2.0f, 0.0f),
+		Math::Vector3(6.2f, -2.0f, 0.0f),
+		Math::Vector3(-6.2f, 2.0f, 0.0f),
+		Math::Vector3(-6.2f, -2.0f, 0.0f)
 	};
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -67,6 +75,9 @@ public:
 		Renderer.AddLight(&pointlight4);
 		Renderer.AddLight(&pointlight5);
 		Renderer.AddLight(&pointlight6);
+		Renderer.AddLight(&pointlight7);
+		Renderer.AddLight(&pointlight8);
+		Renderer.AddLight(&pointlight9);
 
 		Renderer.AddLight(&dirlight);
 		Renderer.SetTechnique(&LightShading);
@@ -75,28 +86,36 @@ public:
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		dirlight.SetColor(API::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		// point light 1
 		pointlight1.SetPosition(pointLightPositions[0]);
 		pointlight1.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
 
-		//point light 2
 		pointlight2.SetPosition(pointLightPositions[1]);
 		pointlight2.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
-		// point light 3
 		pointlight3.SetPosition(pointLightPositions[2]);
 		pointlight3.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
-		// point light 4
 		pointlight4.SetPosition(pointLightPositions[3]);
 		pointlight4.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
 		
-
 		pointlight5.SetPosition(pointLightPositions[4]);
 		pointlight5.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight6.SetPosition(pointLightPositions[5]);
 		pointlight6.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight6.SetIntensity(2.0f);
+
+		pointlight7.SetPosition(pointLightPositions[6]);
+		pointlight7.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight7.SetIntensity(2.0f);
+
+		pointlight8.SetPosition(pointLightPositions[7]);
+		pointlight8.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight8.SetIntensity(2.0f);
+
+		pointlight9.SetPosition(pointLightPositions[8]);
+		pointlight9.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight9.SetIntensity(2.0f);
 
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
@@ -106,6 +125,7 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &DiffuseTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_specular.png", &SpecularTex, Desc);
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 
 		std::vector<Components::MeshTexture> Textures;
 		Components::MeshTexture DiffuseCTex;
@@ -120,6 +140,11 @@ public:
 		Textures.push_back(SpecularCTex);
 
 		Components::Model::CreateCube(&Cube, Textures);
+
+		Components::MeshTexture WhiteCTex;
+		WhiteCTex.Texture = WhiteTex;
+		WhiteCTex.type = Components::MeshTextureType::Specular;
+		Components::Model::CreateSphere(&Lamp, std::vector<Components::MeshTexture>{WhiteCTex});
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
 		Core::Context::EnableDepthBuffer(true);
@@ -179,20 +204,23 @@ public:
 
 			Cube.Draw(&Renderer.GetShader());
 		}
-
+		for (unsigned int i = 0; i < 9; i++)
+		{
+			Math::Matrix4 model;
+			model = Math::Translate(model, pointLightPositions[i]);
+			model = Math::Scale(model, Math::Vector3(0.25f)); // Make it a smaller cube
+			Camera.SetModelMatrix(model);
+			Lamp.Draw(&Renderer.GetShader());
+		}
 
 		Math::Matrix4 NanosuitMatrix;
 		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f, 0.25f, 0.25f));
+		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
 		Camera.SetModelMatrix(NanosuitMatrix);
 		Nanosuit.Draw(&Renderer.GetShader());
 		
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::U))
-		{
-			pointlight6.SetIntensity(2.0f);
-		}
 	
 		Renderer.Render_Light();
 
