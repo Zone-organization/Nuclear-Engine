@@ -347,6 +347,7 @@
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\API\InputLayout.h" />
     <ClInclude Include="include\API\OpenGL\GLError.h" />
+    <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
     <ClInclude Include="include\API\Texture.h" />
@@ -401,6 +402,7 @@
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.h" />
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
+    <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
     <ClInclude Include="Source\Tests\Test1.h" />
     <ClInclude Include="Source\Tests\Test2.h" />

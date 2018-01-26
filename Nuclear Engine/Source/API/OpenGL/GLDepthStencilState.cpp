@@ -1,7 +1,7 @@
 #include <API\OpenGL\GLDepthStencilState.h>
-#include <API\API_Types.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
+#include <API\RenderStates_Types.h>
 
 namespace NuclearEngine
 {
@@ -29,44 +29,42 @@ namespace NuclearEngine
 
 			GLDepthStencilState::GLDepthStencilState()
 			{
-				GLboolean depthmask = false;
-				GLenum depthfunc = GL_LESS;
-
-				GLubyte facesmask;
+				
 			}
 			GLDepthStencilState::~GLDepthStencilState()
 			{
-				GLboolean depthmask = false;
-				GLenum depthfunc;
-
-				GLubyte facesmask;
 			}
-			void GLDepthStencilState::Create(GLDepthStencilState* result,DepthStencilStateDesc* type)
+			void GLDepthStencilState::Create(GLDepthStencilState* result, const DepthStencilStateDesc& type)
 			{
-				if (type->DepthStencilEnabled == true)
+				if (type.DepthEnabled == true)
 				{
-					result->depthmask = type->DepthMaskEnabled;
-					result->depthfunc = GetGLComparisonFunc(type->DepthFunc);
-
+					result->depthmask = type.DepthMaskEnabled;
+					result->depthfunc = GetGLComparisonFunc(type.DepthFunc);
+					result->depthenabled = true;
 				}
 			}
-			void GLDepthStencilState::Delete(GLDepthStencilState * state)
+			void GLDepthStencilState::Delete(GLDepthStencilState * result)
 			{
+				result->depthmask = false;
+				result->depthfunc = GL_LESS;
+				result->depthenabled = false;
 			}
 			void GLDepthStencilState::Bind()
 			{
-				//glDepthMask(depthmask);
-				glDepthFunc(depthfunc);
-
-				//glEnable(GL_STENCIL_TEST);
-				//glStencilMask(facesmask);
+				if (depthenabled)
+				{
+					glEnable(GL_DEPTH_TEST);
+					glDepthMask(depthmask);
+					glDepthFunc(depthfunc);
+				}
 
 			}
-			void GLDepthStencilState::Unbind()
+			void GLDepthStencilState::Bind_Default()
 			{
-				//glDepthMask(GL_FALSE);
+				glEnable(GL_DEPTH_TEST);
+				glDepthMask(GL_TRUE);
 				glDepthFunc(GL_LESS);
-			}
+			}			
 		}
 	}
 }

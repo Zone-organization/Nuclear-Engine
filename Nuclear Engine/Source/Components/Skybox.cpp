@@ -2,6 +2,8 @@
 #include <Core\Context.h>
 #include <API\ShaderCompiler.h>
 #include <AssetManager\AssetManager.h>
+#include <API\RenderStates_Types.h>
+
 namespace NuclearEngine
 {
 	namespace Components
@@ -92,11 +94,11 @@ namespace NuclearEngine
 			Desc.Type = API::TextureType::TextureCube;
 			API::Texture::Create(&texcube, data, Desc);
 
-			DepthStencilStateDesc DS_State;
-			DS_State.DepthStencilEnabled = true;
-			DS_State.DepthFunc = Comparison_Func::LESS_EQUAL;
-
-			API::DepthStencilState::Create(&cubemapstate, &DS_State);
+			API::DepthStencilStateDesc DS_State;
+			DS_State.DepthEnabled = true;
+			DS_State.DepthFunc = API::Comparison_Func::LESS_EQUAL;
+			DS_State.DepthMaskEnabled = true;
+			API::DepthStencilState::Create(&cubemapstate, DS_State);
 		}
 
 		void Skybox::Create(Components::GenericCamera * CameraCbuffer, const std::array<std::string, 6>& paths)
@@ -116,7 +118,7 @@ namespace NuclearEngine
 			shader.Bind();
 			texcube.PSBind("NE_SkyboxTexture",&shader,0);
 			Core::Context::Draw(36);
-			cubemapstate.Unbind();
+			API::DepthStencilState::Bind_Default();
 		}
 	}
 }

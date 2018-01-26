@@ -12,7 +12,7 @@ namespace NuclearEngine {
 		{
 		
 		}
-		void DepthStencilState::Create(DepthStencilState* result,DepthStencilStateDesc* type)
+		void DepthStencilState::Create(DepthStencilState* result, const DepthStencilStateDesc& type)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
@@ -45,15 +45,15 @@ namespace NuclearEngine {
 				DXObject.Bind();
 			}
 		}
-		void DepthStencilState::Unbind()
+		void DepthStencilState::Bind_Default()
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				GLObject.Unbind();
+				OpenGL::GLDepthStencilState::Bind_Default();
 			}
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
-				DXObject.Unbind();
+				DirectX::DX11DepthStencilState::Bind_Default();
 			}
 		}
 	}

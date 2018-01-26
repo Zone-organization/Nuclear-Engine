@@ -1,7 +1,7 @@
 #include <API\DirectX\DX11DepthStencilState.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-#include <API\API_Types.h>
+#include <API\RenderStates_Types.h>
 #include <API\DirectX\DX11Context.h>
 
 namespace NuclearEngine
@@ -54,28 +54,30 @@ namespace NuclearEngine
 				DS_State = nullptr;
 			}
 
-			void DX11DepthStencilState::Create(DX11DepthStencilState* result, DepthStencilStateDesc* type)
+			void DX11DepthStencilState::Create(DX11DepthStencilState* result, const DepthStencilStateDesc& type)
 			{
 				
 					D3D11_DEPTH_STENCIL_DESC DSDesc;
 					ZeroMemory(&DSDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 
-					DSDesc.DepthEnable = true;
-					if (type->DepthMaskEnabled == true)
+					DSDesc.DepthEnable = type.DepthEnabled;
+					if (type.DepthEnabled)
 					{
-						DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+						if (type.DepthMaskEnabled == true)
+						{
+							DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+						}
+						else
+						{
+							DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+						}
+
+						DSDesc.DepthFunc = GetDXComparisonFunc(type.DepthFunc);
 					}
-					else
-					{
-						DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-					}
-
-					DSDesc.DepthFunc = GetDXComparisonFunc(type->DepthFunc);
-
-					DSDesc.StencilEnable = true;
-					DSDesc.StencilReadMask = type->StencilReadMask;
-					DSDesc.StencilWriteMask = type->StencilWriteMask;
-
+					DSDesc.StencilEnable = false;
+					/*DSDesc.StencilReadMask = type.StencilReadMask;
+					DSDesc.StencilWriteMask = type.StencilWriteMask;
+					*/
 					DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &result->DS_State);
 				
 			}
@@ -94,7 +96,7 @@ namespace NuclearEngine
 			{
 				DX11Context::GetContext()->OMSetDepthStencilState(DS_State, 0);
 			}
-			void DX11DepthStencilState::Unbind()
+			void DX11DepthStencilState::Bind_Default()
 			{
 				DX11Context::GetContext()->OMSetDepthStencilState(NULL, 0);
 			}

@@ -4,10 +4,9 @@
 #ifdef NE_COMPILE_CORE_OPENGL
 namespace NuclearEngine
 {
-	struct DepthStencilStateDesc;
-
 	namespace API
 	{
+		struct DepthStencilStateDesc;
 		namespace OpenGL
 		{
 			class NEAPI GLDepthStencilState
@@ -16,17 +15,16 @@ namespace NuclearEngine
 				GLDepthStencilState();
 				~GLDepthStencilState();
 
-				static void Create(GLDepthStencilState *state,DepthStencilStateDesc* type);
+				static void Create(GLDepthStencilState *state, const DepthStencilStateDesc& type);
 				static void Delete(GLDepthStencilState *state);
 
 				void Bind();
 
-				void Unbind();
+				static void Bind_Default();
 			protected:
-				GLboolean depthmask = false;
+				GLboolean depthmask;
 				GLenum depthfunc;
-
-				GLubyte facesmask;
+				bool depthenabled;
 
 			};
 		}

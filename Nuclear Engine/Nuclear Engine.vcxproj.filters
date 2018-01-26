@@ -75,6 +75,8 @@
     <ClInclude Include="include\API\OpenGL\GLError.h" />
     <ClInclude Include="include\AssetManager\AssetManager.h" />
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
+    <ClInclude Include="Source\Tests\Test4.h" />
+    <ClInclude Include="include\API\RenderStates_Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

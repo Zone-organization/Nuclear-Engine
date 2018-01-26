@@ -13,12 +13,12 @@ namespace NuclearEngine {
 			DepthStencilState();
 			~DepthStencilState();
 
-			static void Create(DepthStencilState* state, DepthStencilStateDesc* type);
+			static void Create(DepthStencilState* state,const DepthStencilStateDesc& type);
 			static void Delete(DepthStencilState* state);
 
 			void Bind();
 
-			void Unbind();
+			static void Bind_Default();
 		private:
 			OpenGL::GLDepthStencilState GLObject;
 			DirectX::DX11DepthStencilState DXObject;

@@ -5,6 +5,7 @@
 #include <..\Source\Tests\Test1.h>
 #include <..\Source\Tests\Test2.h>
 #include <..\Source\Tests\Test3.h>
+#include <..\Source\Tests\Test4.h>
 
 /*
 	      .-.               
@@ -144,6 +145,11 @@ namespace NuclearEngine {
 			else if (TestNumber == 3)
 			{
 				Test3 test;
+				Engine::Run(&test);
+			}
+			else if (TestNumber == 4)
+			{
+				Test4 test;
 				Engine::Run(&test);
 			}
 			else {

@@ -43,6 +43,7 @@ _____________/BOOOM\_____________
 #include <API/InputLayout.h>
 #include <API/Texture.h>
 #include <API/DepthStencilState.h>
+#include <API/RenderStates_Types.h>
 #include <API/Shader.h>
 #include <API/ShaderCompiler.h>
 #include <API/Color.h>
