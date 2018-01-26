@@ -9,6 +9,16 @@ namespace NuclearEngine
 		struct DepthStencilStateDesc;
 		namespace OpenGL
 		{
+			namespace Internals
+			{
+				struct Stencil_Face_Desc {
+					GLenum StencilFailOp;
+					GLenum StencilDepthFailOp;
+					GLenum StencilPassOp;
+					GLenum StencilFunc;
+				};
+			}
+
 			class NEAPI GLDepthStencilState
 			{
 			public:
@@ -25,6 +35,10 @@ namespace NuclearEngine
 				GLboolean depthmask;
 				GLenum depthfunc;
 				bool depthenabled;
+
+				bool stencilenabled;
+				GLuint stencilwritemask;
+				GLuint stencilreadmask;
 
 			};
 		}

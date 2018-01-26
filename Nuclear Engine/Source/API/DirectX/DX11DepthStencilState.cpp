@@ -74,10 +74,12 @@ namespace NuclearEngine
 
 						DSDesc.DepthFunc = GetDXComparisonFunc(type.DepthFunc);
 					}
-					DSDesc.StencilEnable = false;
-					/*DSDesc.StencilReadMask = type.StencilReadMask;
-					DSDesc.StencilWriteMask = type.StencilWriteMask;
-					*/
+					if (type.StencilEnabled == true)
+					{
+						DSDesc.StencilEnable = false;
+						DSDesc.StencilReadMask = type.StencilReadMask;
+						DSDesc.StencilWriteMask = type.StencilWriteMask;
+					}
 					DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &result->DS_State);
 				
 			}

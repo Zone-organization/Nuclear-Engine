@@ -42,6 +42,13 @@ namespace NuclearEngine
 					result->depthfunc = GetGLComparisonFunc(type.DepthFunc);
 					result->depthenabled = true;
 				}
+				if (type.StencilEnabled == true)
+				{
+					result->stencilenabled = true;
+					result->stencilwritemask = type.StencilWriteMask;
+					result->stencilreadmask = type.StencilReadMask;
+
+				}
 			}
 			void GLDepthStencilState::Delete(GLDepthStencilState * result)
 			{
@@ -57,6 +64,13 @@ namespace NuclearEngine
 					glDepthMask(depthmask);
 					glDepthFunc(depthfunc);
 				}
+				if (stencilenabled)
+				{
+					glEnable(GL_STENCIL_TEST);    
+					
+
+				}
+
 
 			}
 			void GLDepthStencilState::Bind_Default()

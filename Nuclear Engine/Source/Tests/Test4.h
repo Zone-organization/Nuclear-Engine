@@ -76,12 +76,21 @@ struct PixelInputType
 
 Texture2D NE_Tex_Diffuse : register(t0);
 SamplerState NE_Tex_Diffuse_Sampler : register(s0);
- float Depth : SV_Depth;
-float4 main(PixelInputType input) : SV_TARGET
-{             
-    return float4(float3(Depth,Depth,Depth), 1.0f);
-}
 
+static const float far = 100.0f; 
+static const float near = 0.1f;  
+
+float LinearizeDepth(float depth) 
+{
+	
+    float z = depth * 2.0f - 1.0f; // back to NDC 
+    return (2.0 * near * far) / (far + near - z * (far - near));	
+}
+float4 main(PixelInputType input) : SV_TARGET
+{    
+	float depth = LinearizeDepth(input.position.z) / 50.0f; // divide for demonstration
+    return float4(float3(depth,depth,depth), 1.0f);
+}
 )";
 	API::DepthStencilState DS_State;
 
@@ -93,11 +102,18 @@ public:
 	{
 
 		API::ShaderDesc desc;
-		desc.Name = "Test4";
+		desc.Name = "TestShader";
 		API::CompileShader(&desc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
 		API::CompileShader(&desc.PixelShaderCode, PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
-
+		
 		API::Shader::Create(&TestShader, &desc);
+
+		API::ShaderDesc depthdesc;
+		depthdesc.Name = "DepthShader";
+		API::CompileShader(&depthdesc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&depthdesc.PixelShaderCode, DepthPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
+
+		API::Shader::Create(&DepthShader, &depthdesc);
 
 		float cubevertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -231,14 +247,26 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		DS_State.Bind();
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::U))
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
+		{
+			DS_State.Bind();
+		}
+		else 
 		{
 			API::DepthStencilState::Bind_Default();
 		}
 
-		TestShader.Bind();
-		CubeTex.PSBind("NE_Tex_Diffuse",&TestShader,0);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
+		{
+			DepthShader.Bind();
+		}
+		else 
+		{
+			TestShader.Bind();
+			CubeTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+		}
+
+
 		CubeVB.Bind();
 
 		// cube 1
@@ -253,7 +281,11 @@ public:
 		Core::Context::Draw(36);
 		
 		// floor
-		PlaneTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+		if (!Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
+		{
+			PlaneTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+		}
+	
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
 		Core::Context::Draw(6);

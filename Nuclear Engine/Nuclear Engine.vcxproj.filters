@@ -77,6 +77,8 @@
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="include\API\RenderStates_Types.h" />
+    <ClInclude Include="include\Components\GUI\Font.h" />
+    <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -133,5 +135,6 @@
     <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
+    <ClCompile Include="Source\Components\GUI\Font.cpp" />
   </ItemGroup>
 </Project>

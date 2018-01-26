@@ -45,7 +45,7 @@ public:
 		Textures.push_back(DiffuseTex);
 		Components::Model::CreateCube(&Cube, Textures);
 
-		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
+		//AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
 
 		//Create The skybox
@@ -107,14 +107,14 @@ public:
 		CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeMatrix);
 		Cube.Draw(&Renderer.GetShader());
-
+		/*
 		Math::Matrix4 NanosuitMatrix;
 		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.75f, 0.0f));
 		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));
 		Camera.SetModelMatrix(NanosuitMatrix);
 		Nanosuit.Draw(&Renderer.GetShader());
-
-		Skybox.Render();
+		*/
+		//Skybox.Render();
 
 		Core::Context::End();
 	}
