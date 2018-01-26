@@ -1,5 +1,5 @@
 
-#define Shininess 32.0f
+#define Shininess 64.0f
 // calculates the color when using a directional light.
 float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float2 TexCoords)
 {

@@ -11,11 +11,11 @@ namespace NuclearEngine {
 		{
 		public:			
 			Model();
+			~Model();
 			static void CreateCube(Model* model, std::vector<MeshTexture> Textures, float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
 			virtual void Draw(API::Shader* shader);
 
 			std::vector<Mesh> Meshes;
-			std::vector<API::Texture> Textures;
 		};
 
 	}

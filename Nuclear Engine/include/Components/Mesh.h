@@ -69,7 +69,7 @@ namespace NuclearEngine {
 			Mesh(const Mesh& obj);
 			~Mesh();
 			void Initialize();
-
+			void Release();
 			// render the mesh
 			void Draw(API::Shader* shader);
 

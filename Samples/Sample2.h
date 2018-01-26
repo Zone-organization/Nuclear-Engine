@@ -18,6 +18,8 @@ protected:
 	Components::PointLight pointlight2;
 	Components::PointLight pointlight3;
 	Components::PointLight pointlight4;
+	Components::PointLight pointlight5;
+	Components::PointLight pointlight6;
 	Components::SpotLight spotLight;
 	Components::Model Nanosuit;
 
@@ -37,14 +39,15 @@ protected:
 	};
 
 	// positions of the point lights
-	Math::Vector3 pointLightPositions[4] =
+	Math::Vector3 pointLightPositions[6] =
 	{
 		Math::Vector3(0.7f,  0.2f,  2.0f),
 		Math::Vector3(2.3f, -3.3f, -4.0f),
 		Math::Vector3(-4.0f,  2.0f, -12.0f),
-		Math::Vector3(0.0f,  0.0f, -3.0f)
+		Math::Vector3(0.0f,  0.0f, -3.0f),
+		Math::Vector3(4.0f,  3.0f, -2.0f),
+		Math::Vector3(6.0f, 0.0f, 0.0f)
 	};
-
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -62,6 +65,9 @@ public:
 		Renderer.AddLight(&pointlight2);
 		Renderer.AddLight(&pointlight3);
 		Renderer.AddLight(&pointlight4);
+		Renderer.AddLight(&pointlight5);
+		Renderer.AddLight(&pointlight6);
+
 		Renderer.AddLight(&dirlight);
 		Renderer.SetTechnique(&LightShading);
 		Renderer.Bake();
@@ -85,6 +91,13 @@ public:
 		pointlight4.SetPosition(pointLightPositions[3]);
 		pointlight4.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
 		
+
+		pointlight5.SetPosition(pointLightPositions[4]);
+		pointlight5.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight6.SetPosition(pointLightPositions[5]);
+		pointlight6.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
 		Desc.Wrap = API::TextureWrap::Repeat;
@@ -146,7 +159,6 @@ public:
 
 		Camera.ProcessEye(xoffset, yoffset);
 	}
-
 	void Render(float) override
 	{
 		Core::Context::Begin();
@@ -168,13 +180,17 @@ public:
 
 		Math::Matrix4 NanosuitMatrix;
 		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));
+		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f, 0.25f, 0.25f));
 		Camera.SetModelMatrix(NanosuitMatrix);
 		Nanosuit.Draw(&Renderer.GetShader());
 		
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
-
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::U))
+		{
+			pointlight6.SetIntensity(2.0f);
+		}
+	
 		Renderer.Render_Light();
 
 		Core::Context::End();

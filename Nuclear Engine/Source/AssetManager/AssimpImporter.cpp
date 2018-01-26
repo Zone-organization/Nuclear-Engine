@@ -9,35 +9,9 @@ namespace NuclearEngine {
 			this->model = _model;
 			return LoadModel(Path);
 		}
-	
-		std::vector<Components::MeshTexture> AssimpImporter::LoadMeshTextures(std::vector<Imported_Texture> textures)
-		{
-			std::vector<Components::MeshTexture> result;
-
-			API::Texture_Desc Desc;
-			Desc.Filter = API::TextureFilter::Trilinear;
-			Desc.Wrap = API::TextureWrap::Repeat;
-			Desc.Format = API::Format::R8G8B8A8;
-			Desc.Type = API::TextureType::Texture2D;
-			
-			for (size_t i = 0; i < textures.size(); i++)
-			{
-				Components::MeshTexture mesh_tex;
-				API::Texture gpu_tex;
-				std::string filename = std::string(textures.at(i).path);
-				filename = directory + '/' + filename;
-				AssetManager::CreateTextureFromFile(filename, &gpu_tex, Desc);
-				model->Textures.push_back(gpu_tex);
-				mesh_tex.Texture = gpu_tex;
-				mesh_tex.type = textures.at(i).type;
-				result.push_back(mesh_tex);
-			}
-
-			return result;
-		}
 
 		bool AssimpImporter::LoadModel(std::string path)
-		{  
+		{
 			Assimp::Importer importer;
 			const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
 
@@ -98,7 +72,7 @@ namespace NuclearEngine {
 				else
 				{
 					vertex.TexCoords = Math::Vector2(0.0f, 0.0f);
-				}	
+				}
 
 				result.vertices.push_back(vertex);
 			}
@@ -115,15 +89,26 @@ namespace NuclearEngine {
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
 			std::vector<Imported_Texture> specularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
+					
 
-			std::vector<Components::MeshTexture> DiffuseMaps = LoadMeshTextures(diffuseMaps);
+			std::vector<Components::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
+			std::vector<Components::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
+
 			result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-			std::vector<Components::MeshTexture> SpecularMaps = LoadMeshTextures(specularMaps);
 			result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
+
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
-	
+		std::vector<Components::MeshTexture> AssimpImporter::Imported2MeshTexture(std::vector<Imported_Texture> textures)
+		{
+			std::vector<Components::MeshTexture> result;
+			for (size_t i = 0; i < textures.size(); i++)
+			{
+				result.push_back(textures.at(i).Texture);
+			}
+			return result;
+		}
 		Components::MeshTextureType GetMeshTextureType(aiTextureType type)
 		{
 			switch (type)
@@ -134,7 +119,6 @@ namespace NuclearEngine {
 				return Components::MeshTextureType::Specular;
 			}
 		}
-
 		std::vector<Imported_Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{
 			std::vector<Imported_Texture> textures;
@@ -157,8 +141,19 @@ namespace NuclearEngine {
 				{
 					// if texture hasn't been loaded already, load it
 					Imported_Texture texture;
-					texture.type = GetMeshTextureType(type);
 					texture.path = str.C_Str();
+					texture.Texture.type = GetMeshTextureType(type);
+
+					API::Texture_Desc Desc;
+					Desc.Filter = API::TextureFilter::Trilinear;
+					Desc.Wrap = API::TextureWrap::Repeat;
+					Desc.Format = API::Format::R8G8B8A8;
+					Desc.Type = API::TextureType::Texture2D;
+
+					std::string filename = texture.path;
+					filename = directory + '/' + filename;
+					AssetManager::CreateTextureFromFile(filename, &texture.Texture.Texture, Desc);
+
 					textures.push_back(texture);
 					textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 
@@ -166,5 +161,6 @@ namespace NuclearEngine {
 			}
 			return textures;
 		}
+		
 	}
 }

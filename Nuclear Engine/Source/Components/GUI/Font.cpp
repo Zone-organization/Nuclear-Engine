@@ -75,6 +75,7 @@ namespace NuclearEngine
 				API::InputLayout Inputlayout;
 				Inputlayout.Push("POSITION", 0, DataType::Float4);
 				Font_VB.SetInputLayout(&Inputlayout, nullptr);
+				return true;
 			}
 			void Font::InitializeTextRenderer(std::string VSPath, std::string PSPATH)
 			{
