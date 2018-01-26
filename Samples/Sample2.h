@@ -128,20 +128,6 @@ public:
 		Core::Application::Display();
 	}
 
-	void Update(float deltatime) override
-	{
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
-			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::A))
-			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::S))
-			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::D))
-			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
-
-		Camera.Update();
-	}
-
 	void OnMouseMovement(float xpos, float ypos) override
 	{
 		if (firstMouse)
@@ -159,6 +145,23 @@ public:
 
 		Camera.ProcessEye(xoffset, yoffset);
 	}
+
+	void Update(float deltatime) override
+	{
+		Core::Application::SetTitle(L"Nuclear Engine FPS: " + std::to_wstring(FPS) + L" FrameTime: " + std::to_wstring(FrameTime));
+
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
+			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::A))
+			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::S))
+			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::D))
+			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
+
+		Camera.Update();
+	}
+
 	void Render(float) override
 	{
 		Core::Context::Begin();

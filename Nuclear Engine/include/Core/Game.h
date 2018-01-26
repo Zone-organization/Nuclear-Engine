@@ -30,6 +30,8 @@ namespace NuclearEngine {
 
 			virtual void OnMouseMovement(float xpos, float ypos);
 			virtual void OnWindowResize(int width, int height);
+
+			float FPS, FrameTime;
 		protected:
 			GameInfo *gameinfo;
 		};

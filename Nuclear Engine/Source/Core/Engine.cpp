@@ -181,6 +181,9 @@ namespace NuclearEngine {
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
 
+				GamePtr->FrameTime = 1000.0f / deltaTime;
+				GamePtr->FPS = 1.0f / deltaTime;
+
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);
 			}
