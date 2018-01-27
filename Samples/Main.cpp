@@ -15,7 +15,7 @@ void Start()
 	std::cin >> choice;
 
 	//Initialize Engine
-	Core::Engine::Initialize(L"Nuclear Engine", _Width_, _Height_);
+	Core::Engine::Initialize(Platform::WindowDesc());
 
 	if (choice == 'a') {
 		Core::Context::Initialize(Core::RenderAPI::OpenGL3);

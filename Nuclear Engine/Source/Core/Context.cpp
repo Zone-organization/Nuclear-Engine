@@ -1,6 +1,5 @@
 #include <Core\Context.h>
 #include <Core\Engine.h>
-#include <Core\Application.h>
 
 #ifndef NE_USE_RUNTIME_RENDER_API
 #ifdef NE_USE_OPENGL_3_3
@@ -101,7 +100,7 @@ namespace NuclearEngine
 
 		void Context::Begin()
 		{
-			Core::Application::ProcessEvents();
+			Core::Engine::GetWindow().ProcessEvents();
 		}
 
 		void Context::End()

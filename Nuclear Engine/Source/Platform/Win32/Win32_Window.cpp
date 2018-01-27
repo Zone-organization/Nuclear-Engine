@@ -11,11 +11,7 @@ namespace NuclearEngine {
 		using namespace Input;
 
 		namespace Internals {
-			static int lastx;
-			static int lasty;
-			static int virtualx;
-			static int virtualy;
-
+	
 			Win32_Window::Win32_Window()
 			{
 
@@ -30,137 +26,15 @@ namespace NuclearEngine {
 			{
 			}
 
-			bool Win32_Window::Create(std::wstring title, int width, int height, bool fullscreenflag)
+			bool Win32_Window::Create(const WindowDesc& Desc)
 			{
+				RECT WindowRect;
 				WindowRect.left = (long)0;			// Set Left Value To 0
-				WindowRect.right = (long)width;		// Set Right Value To Requested Width
+				WindowRect.right = (long)Desc.width;		// Set Right Value To Requested Width
 				WindowRect.top = (long)0;				// Set Top Value To 0
-				WindowRect.bottom = (long)height;		// Set Bottom Value To Requested Height
+				WindowRect.bottom = (long)Desc.height;		// Set Bottom Value To Requested Height
 
-				fullscreen = false;			// Set The Global Fullscreen Flag
-
-				Title = title.c_str();
-
-				Width = width;
-				Height = height;
-
-				if (this->InitWindow() == FALSE)
-				{
-					return false;
-				}
-				return true;
-			}
-
-			void Win32_Window::Display()
-			{
-				// display the window on the screen
-				ShowWindow(m_Handle, SW_SHOW);
-			}
-
-			void Win32_Window::SetTitle(std::wstring _title)
-			{
-				this->Title = _title.c_str();
-
-				SetWindowText(m_Handle, Title);
-				return;
-			}
-
-			void Win32_Window::UpdateRectClip(bool flag)
-			{
-				if (flag)
-				{
-					RECT clipRect;
-					GetClientRect(m_Handle, &clipRect);
-					ClientToScreen(m_Handle, (POINT*)&clipRect.left);
-					ClientToScreen(m_Handle, (POINT*)&clipRect.right);
-					ClipCursor(&clipRect);
-				}
-				else
-				{
-					ClipCursor(NULL);
-				}
-			}
-
-			HWND Win32_Window::GetHandle()
-			{
-				return this->m_Handle;
-			}
-
-			HINSTANCE Win32_Window::GetInstance()
-			{
-				return hInstance;
-			}
-
-			void Win32_Window::ProcessEvents()
-			{
-				MSG msg;
-
-				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-				{
-					if (msg.message == WM_QUIT)
-					{
-						ShouldClose = true;
-					}
-					else
-					{
-						TranslateMessage(&msg);
-						DispatchMessage(&msg);
-					}
-				}
-
-				if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
-				{
-					if (lastx != Width / 2 || lasty != Height / 2)
-					{
-						Input::Mouse::SetPosition(Width / 2, Height / 2);
-					}
-				}
-			}
-
-			void Win32_Window::KillWindow()								// Properly Kill The Window
-			{
-				if (fullscreen)										// Are We In Fullscreen Mode?
-				{
-					ChangeDisplaySettings(NULL, 0);					// If So Switch Back To The Desktop
-					ShowCursor(TRUE);								// Show Mouse Pointer
-				}
-
-				CleanWindow();
-
-			}
-
-			unsigned int Win32_Window::GetWidth()
-			{
-				return this->Width;
-			}
-
-			unsigned int Win32_Window::GetHeight()
-			{
-				return this->Height;
-			}
-
-			const wchar_t* Win32_Window::GetTitle()
-			{
-				return this->Title;
-			}
-
-			void Win32_Window::updateCursorImage()
-			{
-				//if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Normal)
-				//{
-				//	/*if (window->cursor)
-				//		SetCursor(window->cursor->win32.handle);
-				//	else*/
-				//		SetCursor(LoadCursorW(NULL, IDC_ARROW));
-				//}
-				//else
-				//{
-				//	SetCursor(NULL);
-				//}
-			}
-
-			BOOL Win32_Window::InitWindow()
-			{
+				fullscreen = Desc.fullscreen;			// Set The Global Fullscreen Flag
 
 				hInstance = GetModuleHandle(NULL);				// Grab An Instance For Our Window
 				wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC | CS_DBLCLKS;	// Redraw On Size, And Own DC For Window.
@@ -186,8 +60,8 @@ namespace NuclearEngine {
 					DEVMODE dmScreenSettings;								// Device Mode
 					memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));	// Makes Sure Memory's Cleared
 					dmScreenSettings.dmSize = sizeof(dmScreenSettings);		// Size Of The Devmode Structure
-					dmScreenSettings.dmPelsWidth = Width;				// Selected Screen Width
-					dmScreenSettings.dmPelsHeight = Height;				// Selected Screen Height
+					dmScreenSettings.dmPelsWidth = Desc.width;				// Selected Screen Width
+					dmScreenSettings.dmPelsHeight = Desc.height;				// Selected Screen Height
 					dmScreenSettings.dmBitsPerPel = 32;					// Selected Bits Per Pixel
 					dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -224,7 +98,7 @@ namespace NuclearEngine {
 																				// Create The Window
 				if (!(m_Handle = CreateWindowEx(dwExStyle,							// Extended Style For The Window
 					L"Platform",							// Class Name
-					Title,								// Window Title
+					Desc.title.c_str(),								// Window Title
 					dwStyle |							// Defined Window Style
 					WS_CLIPSIBLINGS |					// Required Window Style
 					WS_CLIPCHILDREN,					// Required Window Style
@@ -236,7 +110,7 @@ namespace NuclearEngine {
 					hInstance,							// Instance
 					NULL)))								// Dont Pass Anything To WM_CREATE
 				{
-					KillWindow();								// Reset The Display
+					Destroy();								// Reset The Display
 					MessageBox(NULL, L"Window Creation Error.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 					return FALSE;								// Return FALSE
 				}
@@ -245,8 +119,98 @@ namespace NuclearEngine {
 				return TRUE;									// Success
 			}
 
-			BOOL Win32_Window::CleanWindow()
+			void Win32_Window::Display()
 			{
+				// display the window on the screen
+				ShowWindow(m_Handle, SW_SHOW);
+			}
+
+			void Win32_Window::SetTitle(std::wstring _title)
+			{
+				SetWindowText(m_Handle, _title.c_str());
+				return;
+			}
+
+			bool Win32_Window::ShouldClose()
+			{
+				return shouldClose;
+			}
+
+			void Win32_Window::UpdateRectClip(bool flag)
+			{
+				if (flag)
+				{
+					RECT clipRect;
+					GetClientRect(m_Handle, &clipRect);
+					ClientToScreen(m_Handle, (POINT*)&clipRect.left);
+					ClientToScreen(m_Handle, (POINT*)&clipRect.right);
+					ClipCursor(&clipRect);
+				}
+				else
+				{
+					ClipCursor(NULL);
+				}
+			}
+			uint Win32_Window::GetAspectRatioi()
+			{
+				uint width, height;
+				GetSize(width, height);
+				return width / height;
+			}
+
+			float Win32_Window::GetAspectRatiof()
+			{
+				uint width, height;
+				GetSize(width, height);
+				return static_cast<float>(width) / static_cast<float>(height);
+			}
+
+			HWND Win32_Window::GetHandle()
+			{
+				return this->m_Handle;
+			}
+
+			HINSTANCE Win32_Window::GetInstance()
+			{
+				return hInstance;
+			}
+
+			void Win32_Window::ProcessEvents()
+			{
+				MSG msg;
+
+				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+				{
+					if (msg.message == WM_QUIT)
+					{
+						shouldClose = true;
+					}
+					else
+					{
+						TranslateMessage(&msg);
+						DispatchMessage(&msg);
+					}
+				}
+
+				if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+				{
+					uint width, height;
+					GetSize(width, height);
+					if (lastx != width / 2 || lasty != height / 2)
+					{
+						Input::Mouse::SetPosition(width / 2, height / 2);
+					}
+				}
+			}
+
+			void Win32_Window::Destroy()								// Properly Kill The Window
+			{
+				if (fullscreen)										// Are We In Fullscreen Mode?
+				{
+					ChangeDisplaySettings(NULL, 0);					// If So Switch Back To The Desktop
+					ShowCursor(TRUE);								// Show Mouse Pointer
+				}
+
 				if (m_Handle && !DestroyWindow(m_Handle))					// Are We Able To Destroy The Window?
 				{
 					m_Handle = NULL;										// Set hWnd To NULL
@@ -257,7 +221,48 @@ namespace NuclearEngine {
 					hInstance = NULL;									// Set hInstance To NULL
 				}
 
-				return TRUE;
+				return;
+			}
+
+			void Win32_Window::SetSize(uint width, uint height)
+			{
+				RECT rect = { 0, 0, width, height };
+				//AdjustWindowRectEx(&rect, getWindowStyle(window), FALSE, getWindowExStyle(window));
+				SetWindowPos(this->m_Handle, HWND_TOP,
+					0, 0, rect.right - rect.left, rect.bottom - rect.top,
+					SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOZORDER);
+			}
+
+			void Win32_Window::GetSize(uint & width, uint & height)
+			{
+				RECT area;
+				GetClientRect(this->m_Handle, &area);				
+				width = area.right;				
+				height = area.bottom;
+			}
+					
+			std::wstring Win32_Window::GetTitle()
+			{
+				LPWSTR title;
+				GetWindowText(this->m_Handle, title, 265);
+				return std::wstring(title);
+			}
+
+			
+
+			void Win32_Window::UpdateCursorImage()
+			{
+				//if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Normal)
+				//{
+				//	/*if (window->cursor)
+				//		SetCursor(window->cursor->win32.handle);
+				//	else*/
+				//		SetCursor(LoadCursorW(NULL, IDC_ARROW));
+				//}
+				//else
+				//{
+				//	SetCursor(NULL);
+				//}
 			}
 
 			LRESULT CALLBACK Win32_Window::WndProc(HWND	hWnd, UINT	uMsg, WPARAM	wParam, LPARAM	lParam)
@@ -284,7 +289,7 @@ namespace NuclearEngine {
 
 				case WM_CLOSE:								// Did We Receive A Close Message?
 				{
-					window.ShouldClose = TRUE;
+					window.shouldClose = TRUE;
 					PostQuitMessage(0);						// Send A Quit Message
 					return 0;								// Jump Back
 				}
@@ -356,18 +361,18 @@ namespace NuclearEngine {
 
 					if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
 					{
-						int dx = x - lastx;
-						int dy = y - lasty;
+						int dx = x - window.lastx;
+						int dy = y - window.lasty;
 
 						// get mouse coordinates from Windows
-						Core::Engine::GetGame()->OnMouseMovement(virtualx + dx, virtualy + dy);
+						Core::Engine::GetGame()->OnMouseMovement(window.virtualx + dx, window.virtualy + dy);
 					}
 					else
 					{
 						Core::Engine::GetGame()->OnMouseMovement(x,y);
 					}
-					lastx = x;
-					lasty = y;
+					window.lastx = x;
+					window.lasty = y;
 
 					return 0;								// Jump Back
 				}

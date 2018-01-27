@@ -1,8 +1,7 @@
 #include "Win32_OGL.h"
-#include <Core\Application.h>
 #ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <Core\Context.h>
-
+#include <Core\Engine.h>
 #include <GLEXT\glext.h>
 #include <GLEXT\wglext.h>
 
@@ -134,7 +133,7 @@ namespace NuclearEngine
 					}
 					DestroyDummyGLWindow();
 
-					hDC = GetDC(Core::Application::GetInternalWindow()->GetHandle());
+					hDC = GetDC(Core::Engine::GetWindow().GetHandle());
 
 					PIXELFORMATDESCRIPTOR pfd;
 					memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));

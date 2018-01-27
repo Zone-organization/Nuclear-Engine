@@ -1,7 +1,8 @@
 #include <API\DirectX\DX11Context.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-#include <Core\Application.h>
+#include <Core\Engine.h>
+
 #include <wrl.h>
 template <typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -75,13 +76,16 @@ namespace NuclearEngine
 					return false;
 				}
 
+				uint windowwidth, windowheight;
+				Core::Engine::GetWindow().GetSize(windowwidth, windowheight);
+
 				// Now go through all the display modes and find the one that matches the screen width and height.
 				// When a match is found store the numerator and denominator of the refresh rate for that monitor.
 				for (i = 0; i < numModes; i++)
 				{
-					if (displayModeList[i].Width == (unsigned int)Core::Application::GetWidth())
+					if (displayModeList[i].Width == windowwidth)
 					{
-						if (displayModeList[i].Height == (unsigned int)Core::Application::GetHeight())
+						if (displayModeList[i].Height == windowheight)
 						{
 							numerator = displayModeList[i].RefreshRate.Numerator;
 							denominator = displayModeList[i].RefreshRate.Denominator;
@@ -112,7 +116,7 @@ namespace NuclearEngine
 				SwapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
 
 				SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-				SwapChainDesc.OutputWindow = Core::Application::GetInternalWindow()->GetHandle();
+				SwapChainDesc.OutputWindow = Core::Engine::GetWindow().GetHandle();
 				SwapChainDesc.SampleDesc.Count = 1;                               // how many multisamples
 				SwapChainDesc.SampleDesc.Quality = 0;                             // multisample quality level
 				SwapChainDesc.Windowed = TRUE;
@@ -192,8 +196,8 @@ namespace NuclearEngine
 				ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
 				// Set up the description of the depth buffer.
-				depthBufferDesc.Width = Core::Application::GetInternalWindow()->GetWidth();
-				depthBufferDesc.Height = Core::Application::GetInternalWindow()->GetHeight();
+				depthBufferDesc.Width = windowwidth;
+				depthBufferDesc.Height = windowheight;
 				depthBufferDesc.MipLevels = 1;
 				depthBufferDesc.ArraySize = 1;
 				depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -297,8 +301,8 @@ namespace NuclearEngine
 
 				viewPort.TopLeftX = 0.0f;
 				viewPort.TopLeftY = 0.0f;
-				viewPort.Width = static_cast<float>(Core::Application::GetInternalWindow()->GetWidth());
-				viewPort.Height = static_cast<float>(Core::Application::GetInternalWindow()->GetHeight());
+				viewPort.Width = static_cast<float>(windowwidth);
+				viewPort.Height = static_cast<float>(windowheight);
 				viewPort.MinDepth = 0.0f;
 				viewPort.MaxDepth = 1.0f;
 				Context->RSSetViewports(1, &viewPort);

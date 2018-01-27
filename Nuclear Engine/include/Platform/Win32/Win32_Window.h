@@ -6,8 +6,8 @@
 
 namespace NuclearEngine {
 	namespace Platform {
+		struct WindowDesc;
 		namespace Internals {
-
 			class NEAPI Win32_Window
 			{
 			public:
@@ -15,60 +15,47 @@ namespace NuclearEngine {
 				Win32_Window(HANDLE handle);
 				~Win32_Window();
 
-				bool Create(std::wstring title, int width, int height, bool fullscreenflag);
+				bool Create(const WindowDesc& Desc);
+				void Destroy();
 
 				void Display();
 
 				void ProcessEvents();
 
-				void KillWindow();
-
-				bool ShouldClose = false;
-
-				unsigned int GetWidth();
-
-				unsigned int GetHeight();
-
-				const wchar_t* GetTitle();
-
-				void updateCursorImage();
-
+				void SetSize(uint width, uint height);
 				void SetTitle(std::wstring _title);
 
+				bool ShouldClose();
+
+				void GetSize(uint& width, uint& height);
+				std::wstring GetTitle();
+				uint GetAspectRatioi();			
+				float GetAspectRatiof();
+				HWND GetHandle();
+				HINSTANCE GetInstance();
+			private:
+				void UpdateCursorImage();
 				void UpdateRectClip(bool flag);
 
-				HWND GetHandle();
+				bool active = true;	
+				bool shouldClose = false;
+				bool fullscreen = false;
 
-				HINSTANCE GetInstance();		// Holds The Instance Of The Application
-
-			private:
-				BOOL InitWindow();
-
-				BOOL CleanWindow();
+				//mouse
+				int lastx;
+				int lasty;
+				int virtualx;
+				int virtualy;
 
 				HANDLE WindPropHandle;
-
-				HWND m_Handle = NULL;		// Holds Our Window Handle
-
-				unsigned int Width;
-				unsigned int Height;
-
-				LPCWSTR Title;
-
-				HINSTANCE	hInstance;		// Holds The Instance Of The Application
-
-				bool	active = TRUE;		// Window Active Flag Set To TRUE By Default
-
-				bool	fullscreen = FALSE;	// Fullscreen Flag Set To Fullscreen Mode By Default
-
-				WNDCLASS	wc;						// Windows Class Structure
-				DWORD		dwExStyle;				// Window Extended Style
-				DWORD		dwStyle;				// Window Style
-				RECT		WindowRect;				// Grabs Rectangle Upper Left / Lower Right Values
+				HWND m_Handle = NULL;
+				HINSTANCE hInstance;
+				WNDCLASS wc;	
+				DWORD dwExStyle;
+				DWORD dwStyle;
 				POINT mousePosition;
-				
-				static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
+				static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 			};
 		}
 	}

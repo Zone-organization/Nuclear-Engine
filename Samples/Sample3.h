@@ -24,7 +24,7 @@ public:
 	void Load()
 	{
 
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatio(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Engine::GetWindow().GetAspectRatiof(), 0.1f, 100.0f));
 		Renderer.SetCamera(&Camera);
 		Renderer.SetTechnique(&LightTech);
 		Renderer.Bake();
@@ -61,7 +61,7 @@ public:
 
 		Skybox.Create(&Camera, SkyBoxTexturePaths);
 
-		Core::Application::Display();
+		Core::Engine::GetWindow().Display();
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

@@ -1,6 +1,5 @@
 #include <Core\Engine.h>
 #include <NE_Common.h>
-#include <Core\Application.h>
 #include <Platform\Input.h>
 #include <..\Source\Tests\Test1.h>
 #include <..\Source\Tests\Test2.h>
@@ -38,15 +37,17 @@ namespace NuclearEngine {
 		static Game * GamePtr;
 		static Game Defaultgame;
 
+		static Platform::Window MainWindow;
+
 		static Engine::State Engine_State;
-		bool Engine::Initialize(std::wstring WindowTitle, unsigned int width, unsigned int height, bool fullscreen, bool DisableLog)
+		bool Engine::Initialize(const Platform::WindowDesc& windowdesc)
 		{
 
 			if (HasBeenInitialized != true)
 			{
-				Application::Create(WindowTitle, width, height, fullscreen);
 				Log->Info("-------------------------- -Nuclear Engine- --------------------------\n");
 				Log->Info("[Engine] Starting Engine...\n");
+				MainWindow.Create(windowdesc);
 				Log->Info("[Engine] Version: ");
 				Log->Info(MajorVersion);
 				Log->Info(".");
@@ -103,7 +104,7 @@ namespace NuclearEngine {
 			Log->Info("[Engine] Shutting Down Engine.\n");
 			GamePtr = &Defaultgame;
 			Context::Shutdown();
-			Application::Delete();
+			MainWindow.Destroy();
 		}
 
 		void Engine::Run(Game * _YourGame)
@@ -160,12 +161,17 @@ namespace NuclearEngine {
 
 		bool Engine::ShouldClose()
 		{
-			return Application::ShouldClose();
+			return MainWindow.ShouldClose();
 		}
 
 		Game * Engine::GetGame()
 		{
 			return GamePtr;
+		}
+
+		Platform::Window Engine::GetWindow()
+		{
+			return MainWindow;
 		}
 
 		void Engine::Game_Loop_Render()

@@ -186,7 +186,7 @@ public:
 		CubeVB.SetInputLayout(&ShaderIL, &TestShader);
 		PlaneVB.SetInputLayout(&ShaderIL, &TestShader);
 
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatio(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Engine::GetWindow().GetAspectRatiof(), 0.1f, 100.0f));
 
 		TestShader.SetConstantBuffer(&Camera.GetCBuffer(), API::ShaderType::Vertex);
 
@@ -204,7 +204,7 @@ public:
 		DS_Desc.DepthFunc = API::Comparison_Func::ALWAYS;
 		API::DepthStencilState::Create(&DS_State, DS_Desc);
 
-		Core::Application::Display();
+		Core::Engine::GetWindow().Display();
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

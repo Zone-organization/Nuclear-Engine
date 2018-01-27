@@ -78,7 +78,7 @@ public:
 
 		TriangleVB.SetInputLayout(&TriangleIL, &TriangleShader);
 
-		Core::Application::Display();
+		Core::Engine::GetWindow().Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 

@@ -98,7 +98,7 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
 
-		Core::Application::Display();
+		Core::Engine::GetWindow().Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 

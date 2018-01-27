@@ -75,7 +75,7 @@ public:
 		sprite = new Components::Sprite(&block_solid, Math::Vector2(200.0f, 200.0f), (300.0f, 400.0f),  API::Color(0.0f, 1.0f, 0.0f, 1.0f));
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
-		Core::Application::Display();
+		Core::Engine::GetWindow().Display();
 	}
 
 	void Render(float deltatime)

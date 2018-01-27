@@ -1,11 +1,10 @@
 #include <Platform\Input.h>
-#include <Core\Application.h>
 #ifdef NUCLEAR_PLATFORM_WINDOWS_PC
+#include <Core\Engine.h>
 #include <windows.h>
 #endif
 
 namespace NuclearEngine {
-	using namespace Core;
 	namespace Platform {
 		namespace Input {
 			bool Mouse::buttons[NUCLEAR_PLATFORM_MAX_MOUSE_KEYS];
@@ -135,7 +134,7 @@ namespace NuclearEngine {
 				point.x = x;
 				point.y = y;
 
-				ClientToScreen(Application::GetInternalWindow()->GetHandle(), &point);
+				ClientToScreen(Core::Engine::GetWindow().GetHandle(), &point);
 				SetCursorPos(point.x, point.y);
 #endif
 			}
@@ -147,7 +146,7 @@ namespace NuclearEngine {
 
 				if (GetCursorPos(&pos))
 				{
-					ScreenToClient(Application::GetInternalWindow()->GetHandle(), &pos);
+					ScreenToClient(Core::Engine::GetWindow().GetHandle(), &pos);
 					x = pos.x;
 					y = pos.y;
 				}
@@ -158,14 +157,14 @@ namespace NuclearEngine {
 			{
 				_mode = mode;
 
-				if (_mode == Mouse::InputMode::Virtual)
+				/*if (_mode == Mouse::InputMode::Virtual)
 				{
 					GetPosition(restoreCursorPosX, restoreCursorPosY);
 
 					Application::GetInternalWindow()->UpdateRectClip(true);
 					SetPosition(Application::GetWidth() / 2, Application::GetHeight() / 2);
 				}
-				/*	else if (_mode == Mouse::InputMode::Virtual) {
+					else if (_mode == Mouse::InputMode::Virtual) {
 						SetPosition(restoreCursorPosX, restoreCursorPosY);
 					}*/
 			}

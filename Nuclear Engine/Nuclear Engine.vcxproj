@@ -393,6 +393,7 @@
     <ClInclude Include="include\API\OpenGL\GLTexture.h" />
     <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
     <ClInclude Include="include\API\OpenGL\GLCommon.h" />
+    <ClInclude Include="include\Platform\Window.h" />
     <ClInclude Include="include\Renderers\Renderer3D.h" />
     <ClInclude Include="include\Renderers\SpriteRenderer.h" />
     <ClInclude Include="include\AssetManager\AssetManager.h" />
@@ -453,13 +454,13 @@
     <ClCompile Include="Source\Core\FileSystem.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
-    <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Platform\Clock.cpp" />
     <ClCompile Include="Source\Platform\Input.cpp" />
     <ClCompile Include="Source\Platform\Timer.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Window.cpp" />
+    <ClCompile Include="Source\Platform\Window.cpp" />
     <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
     <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
