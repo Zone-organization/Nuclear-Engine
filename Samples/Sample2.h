@@ -28,6 +28,8 @@ protected:
 	Components::SpotLight spotLight;
 	Components::Model Nanosuit;
 
+	Components::Skybox Skybox;
+
 	// positions all containers
 	Math::Vector3 cubePositions[10] = 
 	{
@@ -147,6 +149,20 @@ public:
 		Components::Model::CreateSphere(&Lamp, std::vector<Components::MeshTexture>{WhiteCTex});
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
+		//Create The skybox
+		std::array<std::string, 6> SkyBoxTexturePaths
+		{
+			std::string("Assets/Common/Skybox/right.jpg"),
+			std::string("Assets/Common/Skybox/left.jpg"),
+			std::string("Assets/Common/Skybox/top.jpg"),
+			std::string("Assets/Common/Skybox/bottom.jpg"),
+			std::string("Assets/Common/Skybox/front.jpg"),
+			std::string("Assets/Common/Skybox/back.jpg")
+		};
+
+		Skybox.Create(&Camera, SkyBoxTexturePaths);
+
+
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
@@ -198,8 +214,8 @@ public:
 			// calculate the model matrix for each object and pass it to shader before drawing
 			Math::Matrix4 model;
 			model = Math::Translate(model, cubePositions[i]);
-			//float angle = 20.0f * i;
-			//model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
+			float angle = 20.0f * i;
+			model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
 			Camera.SetModelMatrix(model);
 
 			Cube.Draw(&Renderer.GetShader());
@@ -223,6 +239,8 @@ public:
 		spotLight.SetDirection(Camera.GetFrontView());
 	
 		Renderer.Render_Light();
+
+		Skybox.Render();
 
 		Core::Context::End();
 	}

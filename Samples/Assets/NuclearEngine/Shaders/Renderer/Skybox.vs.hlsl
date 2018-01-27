@@ -1,6 +1,6 @@
 struct VertexInputType
 {
-	float3 Position : POSITION;
+    float4 Position : POSITION;
 };
 
 struct PixelInputType
@@ -32,7 +32,7 @@ PixelInputType main(VertexInputType input)
 	float4 MVP = mul(Projection, mul(float4(input.Position.xyz, 1.0f), aview));
 
 	//Set Pos to xyww instead of xyzw, so that z will always be 1 (furthest from camera)
-	output.Position = MVP;    
+	output.Position = MVP.xyww;    
     return output;
 }
 

@@ -49,6 +49,12 @@ namespace NuclearEngine {
 					Vector<m, T> col[n];
 				};
 			};
+			//Don't initialize the matrix!
+			Matrix(bool)
+			{
+				
+			}
+			
 			// --------------------------------------------------------------------------------------------
 			// consturctor0: default initializes Matrix to identity Matrix 
 			Matrix()

@@ -250,8 +250,9 @@ namespace NuclearEngine
 				}
 
 				GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GetGLTextureWrap(Desc.Wrap)));
+				GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GetGLTextureWrap(Desc.Wrap)));
 				GLCall(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GetGLTextureWrap(Desc.Wrap)));
-
+		
 				GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 
 			}

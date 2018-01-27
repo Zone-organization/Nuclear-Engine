@@ -55,8 +55,8 @@ public:
 			std::string("Assets/Common/Skybox/left.jpg"),
 			std::string("Assets/Common/Skybox/top.jpg"),
 			std::string("Assets/Common/Skybox/bottom.jpg"),
-			std::string("Assets/Common/Skybox/back.jpg"),
-			std::string("Assets/Common/Skybox/front.jpg")
+			std::string("Assets/Common/Skybox/front.jpg"),
+			std::string("Assets/Common/Skybox/back.jpg")
 		};
 
 		Skybox.Create(&Camera, SkyBoxTexturePaths);
@@ -114,7 +114,7 @@ public:
 		Camera.SetModelMatrix(NanosuitMatrix);
 		Nanosuit.Draw(&Renderer.GetShader());
 		*/
-		//Skybox.Render();
+		Skybox.Render();
 
 		Core::Context::End();
 	}

@@ -79,11 +79,34 @@ namespace NuclearEngine {
 		}
 
 		template <typename T>
-		Matrix<4, 4, T>& Rotate(Matrix<4, 4, T> &result, const Vector<3, T>& axis, const T& angle)
+		Matrix<4, 4, T> Rotate(Matrix<4, 4, T> &m, const Vector<3, T>& v, const T& angle)
 		{
-			Matrix<4, 4, T> rot = Rotate(axis, angle);
-			result = result * rot;
-			return result;
+			T const a = angle;
+			T const c = cos(a);
+			T const s = sin(a);
+
+			Vector<3, T> axis(Normalize(v));
+			Vector<3, T> temp((T(1) - c) * axis);
+
+			Matrix<4, 4, T> rotate(true);
+			rotate[0][0] = c + temp.x * axis.x;
+			rotate[0][1] = 0 + temp.x * axis.y + s * axis.z;
+			rotate[0][2] = 0 + temp.x * axis.z - s * axis.y;
+
+			rotate[1][0] = 0 + temp.y * axis.x - s * axis.z;
+			rotate[1][1] = c + temp.y * axis.y;
+			rotate[1][2] = 0 + temp.y * axis.z + s * axis.x;
+
+			rotate[2][0] = 0 + temp.z * axis.x + s * axis.y;
+			rotate[2][1] = 0 + temp.z * axis.y - s * axis.x;
+			rotate[2][2] = c + temp.z * axis.z;
+
+			Matrix<4, 4, T> Result(false);
+			Result[0] = m[0] * rotate[0][0] + m[1] * rotate[0][1] + m[2] * rotate[0][2];
+			Result[1] = m[0] * rotate[1][0] + m[1] * rotate[1][1] + m[2] * rotate[1][2];
+			Result[2] = m[0] * rotate[2][0] + m[1] * rotate[2][1] + m[2] * rotate[2][2];
+			Result[3] = m[3];
+			return Result;
 		}
 
 
