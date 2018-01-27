@@ -136,6 +136,49 @@ namespace NuclearEngine {
 				return shouldClose;
 			}
 
+			void Win32_Window::SetMousePosition(int x, int y)
+			{
+				POINT point;
+				point.x = x;
+				point.y = y;
+
+				ClientToScreen(GetHandle(), &point);
+				SetCursorPos(point.x, point.y);
+			}
+
+			void Win32_Window::GetMousePosition(int & x, int & y)
+			{
+				POINT pos;
+
+				ScreenToClient(GetHandle(), &pos);
+				x = pos.x;
+				y = pos.y;
+			}
+
+			void Win32_Window::SetMouseInputMode(Input::Mouse::InputMode mode)
+			{
+				mouse_mode = mode;
+
+				if (mouse_mode == Mouse::InputMode::Virtual)
+				{
+					GetMousePosition(restoreCursorPosX, restoreCursorPosY);
+					UpdateRectClip(true);
+					uint width, height;
+					GetSize(width, height);
+					SetMousePosition(width / 2, height / 2);
+				}
+				else
+				{
+					UpdateRectClip(false);
+					SetMousePosition(restoreCursorPosX, restoreCursorPosY);
+				}
+			}
+
+			Input::Mouse::InputMode Win32_Window::GetMouseInputMode()
+			{
+				return Input::Mouse::InputMode();
+			}
+
 			void Win32_Window::UpdateRectClip(bool flag)
 			{
 				if (flag)
@@ -192,13 +235,13 @@ namespace NuclearEngine {
 					}
 				}
 
-				if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+				if (mouse_mode == Input::Mouse::InputMode::Virtual)
 				{
 					uint width, height;
 					GetSize(width, height);
 					if (lastx != width / 2 || lasty != height / 2)
 					{
-						Input::Mouse::SetPosition(width / 2, height / 2);
+						SetMousePosition(width / 2, height / 2);
 					}
 				}
 			}
@@ -359,7 +402,7 @@ namespace NuclearEngine {
 					int x = GET_X_LPARAM(lParam);
 					int y = GET_Y_LPARAM(lParam);
 
-					if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
 					{
 						int dx = x - window.lastx;
 						int dy = y - window.lasty;
@@ -395,25 +438,25 @@ namespace NuclearEngine {
 
 				case WM_SETFOCUS:
 				{
-					if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
 					{
-						Input::Mouse::SetInputMode(Input::Mouse::InputMode::Virtual);
+						window.SetMouseInputMode(Input::Mouse::InputMode::Virtual);
 					}
 					return 0;
 				}
 
 				case WM_KILLFOCUS:
 				{
-					if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
 					{
-						Input::Mouse::SetInputMode(Input::Mouse::InputMode::Normal);
+						window.SetMouseInputMode(Input::Mouse::InputMode::Normal);
 					}
 					return 0;
 				}
 
 				case WM_MOVE:
 				{
-					if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Virtual)
+					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
 					{
 						window.UpdateRectClip(true);
 					}

@@ -85,7 +85,7 @@ namespace NuclearEngine {
 #ifdef 	NE_USE_RUNTIME_RENDER_API
 				Log->Info("OpenGL 3.3 Core & DirectX 11\n");
 #endif
-				Input::Mouse::SetInputMode(Input::Mouse::InputMode::Normal);
+				MainWindow.SetMouseInputMode(Input::Mouse::InputMode::Normal);
 
 				HasBeenInitialized = true;
 				return true;

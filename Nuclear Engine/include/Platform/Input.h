@@ -136,11 +136,6 @@ namespace NuclearEngine {
 				enum class InputMode { Virtual, Normal, Hidden };
 
 				static bool IsButtonPressed(Button button);
-				static void SetPosition(int x, int y);
-				static void GetPosition(int& x, int& y);
-
-				static void SetInputMode(InputMode mode);
-				static InputMode GetInputMode();
 
 				static void ShowMouseCursor(bool value);
 			};

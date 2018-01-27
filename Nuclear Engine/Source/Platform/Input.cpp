@@ -1,6 +1,5 @@
 #include <Platform\Input.h>
 #ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-#include <Core\Engine.h>
 #include <windows.h>
 #endif
 
@@ -126,53 +125,7 @@ namespace NuclearEngine {
 			{
 				return buttons[(unsigned char)button];
 			}
-
-			void Mouse::SetPosition(int x, int y)
-			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-				POINT point;
-				point.x = x;
-				point.y = y;
-
-				ClientToScreen(Core::Engine::GetWindow().GetHandle(), &point);
-				SetCursorPos(point.x, point.y);
-#endif
-			}
-
-			void Mouse::GetPosition(int& x, int& y)
-			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-				POINT pos;
-
-				if (GetCursorPos(&pos))
-				{
-					ScreenToClient(Core::Engine::GetWindow().GetHandle(), &pos);
-					x = pos.x;
-					y = pos.y;
-				}
-#endif
-			}
-
-			void Mouse::SetInputMode(InputMode mode)
-			{
-				_mode = mode;
-
-				/*if (_mode == Mouse::InputMode::Virtual)
-				{
-					GetPosition(restoreCursorPosX, restoreCursorPosY);
-
-					Application::GetInternalWindow()->UpdateRectClip(true);
-					SetPosition(Application::GetWidth() / 2, Application::GetHeight() / 2);
-				}
-					else if (_mode == Mouse::InputMode::Virtual) {
-						SetPosition(restoreCursorPosX, restoreCursorPosY);
-					}*/
-			}
-
-			Mouse::InputMode Mouse::GetInputMode()
-			{
-				return _mode;
-			}
+				
 
 			void Mouse::ShowMouseCursor(bool value)
 			{

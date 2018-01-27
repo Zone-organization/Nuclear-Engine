@@ -3,6 +3,7 @@
 #ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <string>
 #include <Windows.h>
+#include <Platform\Input.h>
 
 namespace NuclearEngine {
 	namespace Platform {
@@ -26,6 +27,11 @@ namespace NuclearEngine {
 				void SetTitle(std::wstring _title);
 
 				bool ShouldClose();
+
+				void SetMousePosition(int x, int y);
+				void GetMousePosition(int& x, int& y);
+				void SetMouseInputMode(Input::Mouse::InputMode mode);
+				Input::Mouse::InputMode GetMouseInputMode();
 
 				void GetSize(uint& width, uint& height);
 				std::wstring GetTitle();
@@ -54,6 +60,9 @@ namespace NuclearEngine {
 				DWORD dwExStyle;
 				DWORD dwStyle;
 				POINT mousePosition;
+
+				Input::Mouse::InputMode mouse_mode;
+				int restoreCursorPosX, restoreCursorPosY;
 
 				static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 			};
