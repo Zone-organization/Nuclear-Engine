@@ -35,8 +35,6 @@ namespace NuclearEngine
 
 			static void Clear(API::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
 
-			static void Shutdown();
-
 			static void Begin();
 			static void End();
 

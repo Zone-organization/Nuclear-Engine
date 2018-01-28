@@ -82,22 +82,6 @@ namespace NuclearEngine
 #endif
 		}
 
-		void Context::Shutdown()
-		{
-#ifndef NE_USE_RUNTIME_RENDER_API
-			ctx.Shutdown();
-#else
-			if (_renderer == RenderAPI::OpenGL3)
-			{
-				return API::OpenGL::GLContext::Shutdown();
-			}
-			else if (_renderer == RenderAPI::DirectX11)
-			{
-				return API::DirectX::DX11Context::Shutdown();
-			}
-#endif
-		}
-
 		void Context::Begin()
 		{
 			Core::Engine::GetWindow().ProcessEvents();
@@ -105,18 +89,7 @@ namespace NuclearEngine
 
 		void Context::End()
 		{
-#ifndef NE_USE_RUNTIME_RENDER_API
-			ctx.SwapBuffers();
-#else
-			if (_renderer == RenderAPI::OpenGL3)
-			{
-				return API::OpenGL::GLContext::SwapBuffers();
-			}
-			else if (_renderer == RenderAPI::DirectX11)
-			{
-				return API::DirectX::DX11Context::SwapBuffers();
-			}
-#endif
+			Core::Engine::GetWindow().SwapBuffers();
 		}
 
 		void Context::EnableDepthBuffer(bool state)

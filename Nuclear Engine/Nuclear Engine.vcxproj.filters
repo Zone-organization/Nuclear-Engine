@@ -32,7 +32,6 @@
     <ClInclude Include="include\Math\Vector.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\Platform\Win32\Win32_Clock.h" />
-    <ClInclude Include="include\Platform\Win32\Win32_Window.h" />
     <ClInclude Include="include\Platform\Clock.h" />
     <ClInclude Include="include\Platform\Input.h" />
     <ClInclude Include="include\Platform\Timer.h" />
@@ -47,7 +46,6 @@
     <ClInclude Include="include\API\OpenGL\GLTexture.h" />
     <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
     <ClInclude Include="include\API\API_Types.h" />
-    <ClInclude Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.h" />
     <ClInclude Include="include\API\DirectX\DX11Common.h" />
     <ClInclude Include="include\API\DirectX\DX11ConstantBuffer.h" />
     <ClInclude Include="include\API\DirectX\DX11Context.h" />
@@ -106,7 +104,6 @@
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
-    <ClCompile Include="Source\Platform\Win32\Win32_Window.cpp" />
     <ClCompile Include="Source\Platform\Clock.cpp" />
     <ClCompile Include="Source\Platform\Input.cpp" />
     <ClCompile Include="Source\Platform\Timer.cpp" />
@@ -117,7 +114,6 @@
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLDepthStencilState.cpp" />
-    <ClCompile Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Context.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11DepthStencilState.cpp" />

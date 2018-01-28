@@ -6,8 +6,6 @@
 namespace NuclearEngine {
 	namespace Platform {
 		namespace Input {
-			bool Mouse::buttons[NUCLEAR_PLATFORM_MAX_MOUSE_KEYS];
-			static Mouse::InputMode _mode;
 			bool Keyboard::IsKeyPressed(Key::Code key)
 			{
 				int vkey = 0;
@@ -121,18 +119,7 @@ namespace NuclearEngine {
 			}
 			static int restoreCursorPosX, restoreCursorPosY;
 
-			bool Mouse::IsButtonPressed(Button button)
-			{
-				return buttons[(unsigned char)button];
-			}
-				
 
-			void Mouse::ShowMouseCursor(bool value)
-			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-				ShowCursor(value);
-#endif
-			}
 
 		}
 	}

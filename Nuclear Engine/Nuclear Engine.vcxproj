@@ -384,7 +384,6 @@
     <ClInclude Include="include\Platform\Input.h" />
     <ClInclude Include="include\Platform\Timer.h" />
     <ClInclude Include="include\Platform\Win32\Win32_Clock.h" />
-    <ClInclude Include="include\Platform\Win32\Win32_Window.h" />
     <ClInclude Include="include\API\OpenGL\GLConstantBuffer.h" />
     <ClInclude Include="include\API\OpenGL\GLContext.h" />
     <ClInclude Include="include\API\OpenGL\GLDepthStencilState.h" />
@@ -402,7 +401,6 @@
     <ClInclude Include="include\Shading\Techniques\NoLight.h" />
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
-    <ClInclude Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.h" />
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
@@ -432,7 +430,6 @@
     <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
-    <ClCompile Include="Source\API\OpenGL\Platform\Win32\Win32_OGL.cpp" />
     <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />
@@ -459,7 +456,6 @@
     <ClCompile Include="Source\Platform\Timer.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
-    <ClCompile Include="Source\Platform\Win32\Win32_Window.cpp" />
     <ClCompile Include="Source\Platform\Window.cpp" />
     <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
     <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />

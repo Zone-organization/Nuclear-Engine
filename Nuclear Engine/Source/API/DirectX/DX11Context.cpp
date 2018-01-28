@@ -1,7 +1,9 @@
 #include <API\DirectX\DX11Context.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-#include <Core\Engine.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW\include\glfw3.h>
+#include <GLFW\include\glfw3native.h>
 
 #include <wrl.h>
 template <typename T>
@@ -28,7 +30,7 @@ namespace NuclearEngine
 			static ID3D11RasterizerState* m_rasterState;
 			static bool vsync;
 
-			bool DX11Context::Initialize()
+			bool DX11Context::Initialize(GLFWwindow* window)
 			{
 				Log->Info("[Engine] Initializing DirectX 11 Renderer.\n");
 				IDXGIFactory1* factory;
@@ -77,7 +79,7 @@ namespace NuclearEngine
 				}
 
 				uint windowwidth, windowheight;
-				Core::Engine::GetWindow().GetSize(windowwidth, windowheight);
+				glfwSetWindowSize(window, windowwidth, windowheight);
 
 				// Now go through all the display modes and find the one that matches the screen width and height.
 				// When a match is found store the numerator and denominator of the refresh rate for that monitor.
@@ -116,7 +118,8 @@ namespace NuclearEngine
 				SwapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
 
 				SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-				SwapChainDesc.OutputWindow = Core::Engine::GetWindow().GetHandle();
+
+				SwapChainDesc.OutputWindow = glfwGetWin32Window(window);
 				SwapChainDesc.SampleDesc.Count = 1;                               // how many multisamples
 				SwapChainDesc.SampleDesc.Quality = 0;                             // multisample quality level
 				SwapChainDesc.Windowed = TRUE;

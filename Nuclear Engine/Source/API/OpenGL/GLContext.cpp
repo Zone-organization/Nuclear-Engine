@@ -5,24 +5,12 @@
 static GLuint GL_PRIMITIVE_TYPE;
 #include <API\OpenGL\GLError.h>
 
-#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-#include "Platform\Win32\Win32_OGL.h"
-#endif
-
 namespace NuclearEngine
 {
 	namespace API
 	{
 		namespace OpenGL
-		{
-			
-			bool GLContext::Initialize()
-			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-				return Internals::Win32_OGL::Initialize();
-#endif
-			}
-
+		{		
 			void GLContext::SetPrimitiveType(int primitivetype)
 			{
 				switch (primitivetype)
@@ -92,20 +80,7 @@ namespace NuclearEngine
 					GLCall(glDisable(GL_DEPTH_TEST));
 				}
 			}
-
-			void GLContext::SwapBuffers()
-			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-				return Internals::Win32_OGL::SwapBuffer();
-#endif
-			}
-
-			void GLContext::Shutdown()
-			{
-#ifdef NUCLEAR_PLATFORM_WINDOWS_PC
-				return Internals::Win32_OGL::Shutdown();
-#endif
-			}
+				
 
 			void GLContext::Draw(unsigned int count)
 			{

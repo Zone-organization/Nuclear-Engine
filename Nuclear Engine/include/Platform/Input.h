@@ -124,21 +124,6 @@ namespace NuclearEngine {
 
 				static bool Keyboard::IsKeyPressed(Key::Code key);
 			};
-
-			class NEAPI Mouse
-			{
-			public:
-
-				static bool buttons[NUCLEAR_PLATFORM_MAX_MOUSE_KEYS];
-
-				enum class Button { Left, Right, Middle, X1, X2 };
-
-				enum class InputMode { Virtual = 0, Normal = 1, Hidden  =2 };
-
-				static bool IsButtonPressed(Button button);
-
-				static void ShowMouseCursor(bool value);
-			};
 		}
 	}
 }
