@@ -31,7 +31,6 @@ namespace NuclearEngine {
 				void SetMousePosition(int x, int y);
 				void GetMousePosition(int& x, int& y);
 				void SetMouseInputMode(Input::Mouse::InputMode mode);
-				Input::Mouse::InputMode GetMouseInputMode();
 
 				void GetSize(uint& width, uint& height);
 				std::wstring GetTitle();
@@ -46,7 +45,7 @@ namespace NuclearEngine {
 				bool active = true;	
 				bool shouldClose = false;
 				bool fullscreen = false;
-
+				bool mouse_virtual = false;
 				//mouse
 				int lastx;
 				int lasty;
@@ -61,7 +60,6 @@ namespace NuclearEngine {
 				DWORD dwStyle;
 				POINT mousePosition;
 
-				Input::Mouse::InputMode mouse_mode;
 				int restoreCursorPosX, restoreCursorPosY;
 
 				static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

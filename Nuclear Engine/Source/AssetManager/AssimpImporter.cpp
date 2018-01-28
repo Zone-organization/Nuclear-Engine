@@ -4,8 +4,9 @@
 
 namespace NuclearEngine {
 	namespace Internal {
-		bool AssimpImporter::Load(std::string Path, Components::Model * _model)
+		bool AssimpImporter::Load(std::string Path, Components::Model * _model, const ModelLoadingDesc& desc)
 		{
+			loaddesc = desc;
 			this->model = _model;
 			return LoadModel(Path);
 		}
@@ -87,16 +88,18 @@ namespace NuclearEngine {
 			}
 			// process materials
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
-			std::vector<Imported_Texture> specularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
-					
-
-			std::vector<Components::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
-			std::vector<Components::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
-
-			result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-			result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
-
+			if (loaddesc.LoadDiffuseTextures)
+			{
+				std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
+				std::vector<Components::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
+				result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
+			}
+			if (loaddesc.LoadSpecularTextures)
+			{
+				std::vector<Imported_Texture> specularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
+				std::vector<Components::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
+				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
+			}
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}

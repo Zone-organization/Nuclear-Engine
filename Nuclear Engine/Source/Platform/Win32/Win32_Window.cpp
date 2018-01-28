@@ -157,10 +157,9 @@ namespace NuclearEngine {
 
 			void Win32_Window::SetMouseInputMode(Input::Mouse::InputMode mode)
 			{
-				mouse_mode = mode;
-
-				if (mouse_mode == Mouse::InputMode::Virtual)
+				if (mode == Mouse::InputMode::Virtual)
 				{
+					mouse_virtual = true;
 					GetMousePosition(restoreCursorPosX, restoreCursorPosY);
 					UpdateRectClip(true);
 					uint width, height;
@@ -169,15 +168,12 @@ namespace NuclearEngine {
 				}
 				else
 				{
+					mouse_virtual = false;
 					UpdateRectClip(false);
 					SetMousePosition(restoreCursorPosX, restoreCursorPosY);
 				}
 			}
-
-			Input::Mouse::InputMode Win32_Window::GetMouseInputMode()
-			{
-				return Input::Mouse::InputMode();
-			}
+		
 
 			void Win32_Window::UpdateRectClip(bool flag)
 			{
@@ -235,7 +231,7 @@ namespace NuclearEngine {
 					}
 				}
 
-				if (mouse_mode == Input::Mouse::InputMode::Virtual)
+				if (mouse_virtual)
 				{
 					uint width, height;
 					GetSize(width, height);
@@ -269,7 +265,7 @@ namespace NuclearEngine {
 
 			void Win32_Window::SetSize(uint width, uint height)
 			{
-				RECT rect = { 0, 0, width, height };
+				RECT rect = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
 				//AdjustWindowRectEx(&rect, getWindowStyle(window), FALSE, getWindowExStyle(window));
 				SetWindowPos(this->m_Handle, HWND_TOP,
 					0, 0, rect.right - rect.left, rect.bottom - rect.top,
@@ -289,23 +285,21 @@ namespace NuclearEngine {
 				LPWSTR title;
 				GetWindowText(this->m_Handle, title, 265);
 				return std::wstring(title);
-			}
-
-			
+			}						
 
 			void Win32_Window::UpdateCursorImage()
 			{
-				//if (Input::Mouse::GetInputMode() == Input::Mouse::InputMode::Normal)
-				//{
-				//	/*if (window->cursor)
-				//		SetCursor(window->cursor->win32.handle);
-				//	else*/
-				//		SetCursor(LoadCursorW(NULL, IDC_ARROW));
-				//}
-				//else
-				//{
-				//	SetCursor(NULL);
-				//}
+				if (mouse_virtual)
+				{
+					/*if (window->cursor)
+						SetCursor(window->cursor->win32.handle);
+					else*/
+						SetCursor(LoadCursorW(NULL, IDC_ARROW));
+				}
+				else
+				{
+					SetCursor(NULL);
+				}
 			}
 
 			LRESULT CALLBACK Win32_Window::WndProc(HWND	hWnd, UINT	uMsg, WPARAM	wParam, LPARAM	lParam)
@@ -402,13 +396,13 @@ namespace NuclearEngine {
 					int x = GET_X_LPARAM(lParam);
 					int y = GET_Y_LPARAM(lParam);
 
-					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
+					if (window.mouse_virtual)
 					{
 						int dx = x - window.lastx;
 						int dy = y - window.lasty;
 
 						// get mouse coordinates from Windows
-						Core::Engine::GetGame()->OnMouseMovement(window.virtualx + dx, window.virtualy + dy);
+						Core::Engine::GetGame()->OnMouseMovement(static_cast<float>(window.virtualx + dx), static_cast<float>(window.virtualy + dy));
 					}
 					else
 					{
@@ -422,7 +416,10 @@ namespace NuclearEngine {
 				case WM_SIZE:
 				{
 					Core::Engine::GetGame()->OnWindowResize(LOWORD(lParam), HIWORD(lParam));
-
+					if (window.mouse_virtual)
+					{
+						window.UpdateRectClip(true);
+					}
 					return 0;
 				}
 				/*	case WM_SETCURSOR:
@@ -437,26 +434,26 @@ namespace NuclearEngine {
 					}*/
 
 				case WM_SETFOCUS:
-				{
-					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
+				{/*
+					if (window.mouse_virtual)
 					{
 						window.SetMouseInputMode(Input::Mouse::InputMode::Virtual);
-					}
+					}*/
 					return 0;
 				}
 
 				case WM_KILLFOCUS:
 				{
-					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
+					/*if (window.mouse_virtual)
 					{
 						window.SetMouseInputMode(Input::Mouse::InputMode::Normal);
-					}
+					}*/
 					return 0;
 				}
 
 				case WM_MOVE:
 				{
-					if (window.GetMouseInputMode() == Input::Mouse::InputMode::Virtual)
+					if (window.mouse_virtual)
 					{
 						window.UpdateRectClip(true);
 					}

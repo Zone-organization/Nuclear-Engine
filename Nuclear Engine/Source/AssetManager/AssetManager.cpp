@@ -6,10 +6,10 @@
 
 namespace NuclearEngine {
 	
-	bool AssetManager::LoadModel(std::string Path, Components::Model * model)
+	bool AssetManager::LoadModel(std::string Path, Components::Model * model, const ModelLoadingDesc& desc)
 	{
 		Internal::AssimpImporter importer;
-		return importer.Load(Path, model);
+		return importer.Load(Path, model,desc);
 	}
 	API::Texture_Data AssetManager::LoadTextureFromFile(std::string Path, const API::Texture_Desc & Desc)
 	{

@@ -105,19 +105,15 @@ public:
 
 		pointlight6.SetPosition(pointLightPositions[5]);
 		pointlight6.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-		pointlight6.SetIntensity(2.0f);
 
 		pointlight7.SetPosition(pointLightPositions[6]);
 		pointlight7.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-		pointlight7.SetIntensity(2.0f);
 
 		pointlight8.SetPosition(pointLightPositions[7]);
 		pointlight8.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-		pointlight8.SetIntensity(2.0f);
 
 		pointlight9.SetPosition(pointLightPositions[8]);
 		pointlight9.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-		pointlight9.SetIntensity(2.0f);
 
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
@@ -147,7 +143,11 @@ public:
 		WhiteCTex.Texture = WhiteTex;
 		WhiteCTex.type = Components::MeshTextureType::Specular;
 		Components::Model::CreateSphere(&Lamp, std::vector<Components::MeshTexture>{WhiteCTex});
-		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
+
+		ModelLoadingDesc ModelDesc;
+		ModelDesc.LoadDiffuseTextures = true;
+		ModelDesc.LoadSpecularTextures = true;
+		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit, ModelDesc);
 
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
@@ -224,7 +224,7 @@ public:
 		{
 			Math::Matrix4 model;
 			model = Math::Translate(model, pointLightPositions[i]);
-			model = Math::Scale(model, Math::Vector3(0.25f)); // Make it a smaller cube
+			model = Math::Scale(model, Math::Vector3(0.25f));
 			Camera.SetModelMatrix(model);
 			Lamp.Draw(&Renderer.GetShader());
 		}

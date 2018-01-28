@@ -133,7 +133,7 @@ namespace NuclearEngine {
 
 				enum class Button { Left, Right, Middle, X1, X2 };
 
-				enum class InputMode { Virtual, Normal, Hidden };
+				enum class InputMode { Virtual = 0, Normal = 1, Hidden  =2 };
 
 				static bool IsButtonPressed(Button button);
 

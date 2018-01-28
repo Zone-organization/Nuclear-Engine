@@ -45,6 +45,7 @@ public:
 		
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
+		//Core::Engine::GetWindow().SetMouseInputMode(Platform::Input::Mouse::InputMode::Virtual);
 		Core::Engine::GetWindow().Display();
 
 		Core::Context::EnableDepthBuffer(true);
