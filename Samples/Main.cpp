@@ -14,20 +14,19 @@ void Start()
 	std::cout << "--Choose A Renderer: \nA) OpenGL 3 \nB) DirectX 11\n";
 	std::cin >> choice;
 
-	//Initialize Engine
-	Core::Engine::Initialize(Platform::WindowDesc());
-
+	Core::ApplicationDesc desc;
 	if (choice == 'a') {
-		Core::Context::Initialize(Core::RenderAPI::OpenGL3);
+		desc.renderer =	 Core::RenderAPI::OpenGL3;
 	}
 	else if (choice == 'b')
 	{
-		Core::Context::Initialize(Core::RenderAPI::DirectX11);
+		desc.renderer = Core::RenderAPI::DirectX11;
 	}
 	else {
-		std::cout << "Wrong Choice Setting to OpenGL As Default\n";
-		Core::Context::Initialize(Core::RenderAPI::OpenGL3);
+		std::cout << "Wrong choice thus setting to DirectX 11 as default on window.\n";
+		desc.renderer = Core::RenderAPI::DirectX11;
 	}
+	Core::Engine::Initialize(desc);
 }
 
 int main(int argc, char* argv[])

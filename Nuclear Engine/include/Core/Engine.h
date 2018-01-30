@@ -1,6 +1,6 @@
 #pragma once
 #include <Core\Game.h>
-#include <Platform\Window.h>
+#include <Core\Application.h>
 namespace NuclearEngine
 {
 	namespace Core
@@ -11,7 +11,7 @@ namespace NuclearEngine
 		public:
 			enum class State { Initializing, Loading, Rendering, ExitingRendering, Shuttingdown };
 
-			static bool Initialize(const Platform::WindowDesc& windowdesc);
+			static bool Initialize(const ApplicationDesc& windowdesc);
 
 			static void ShutDown();
 
@@ -25,7 +25,6 @@ namespace NuclearEngine
 
 			static Game *GetGame();
 
-			static Platform::Window GetWindow();
 		private:
 			static void Game_Loop_Render();
 		};

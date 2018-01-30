@@ -23,7 +23,7 @@ public:
 	void Load()
 	{
 		
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Engine::GetWindow().GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 		Renderer.SetCamera(&Camera);
 		Renderer.SetTechnique(&LightTech);
 		Renderer.Bake();
@@ -45,14 +45,14 @@ public:
 		
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
-		//Core::Engine::GetWindow().SetMouseInputMode(Platform::Input::Mouse::InputMode::Virtual);
-		Core::Engine::GetWindow().Display();
+		//Core::Application::SetMouseInputMode(Platform::Input::Mouse::InputMode::Virtual);
+		Core::Application::Display();
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
-	void OnMouseMovement(float xpos, float ypos) override
+	void OnMouseMovement(double xpos, double ypos) override
 	{
 		if (firstMouse)
 		{

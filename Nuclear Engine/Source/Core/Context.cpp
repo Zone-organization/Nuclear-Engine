@@ -25,26 +25,7 @@ namespace NuclearEngine
 	namespace Core
 	{
 		static RenderAPI _renderer;
-
-		bool Context::Initialize(const RenderAPI & renderer)
-		{
-			_renderer = renderer;
-
-#ifndef NE_USE_RUNTIME_RENDER_API
-			return ctx.Initialize();
-#else
-			if (_renderer == RenderAPI::OpenGL3)
-			{
-				return API::OpenGL::GLContext::Initialize();
-			}
-			else if (_renderer == RenderAPI::DirectX11)
-			{
-				return API::DirectX::DX11Context::Initialize();
-			}
-#endif
-			return false;
-		}
-
+		
 		RenderAPI Context::GetRenderAPI()
 		{
 			return _renderer;
@@ -84,12 +65,12 @@ namespace NuclearEngine
 
 		void Context::Begin()
 		{
-			Core::Engine::GetWindow().ProcessEvents();
+			Core::Application::ProcessEvents();
 		}
 
 		void Context::End()
 		{
-			Core::Engine::GetWindow().SwapBuffers();
+			Core::Application::SwapBuffers();
 		}
 
 		void Context::EnableDepthBuffer(bool state)
@@ -154,6 +135,10 @@ namespace NuclearEngine
 				return API::DirectX::DX11Context::SetViewPort(x, y, width, height);
 			}
 #endif
+		}
+		void Context::SetRenderAPI(const RenderAPI & renderer)
+		{
+			_renderer = renderer;
 		}
 	}
 }

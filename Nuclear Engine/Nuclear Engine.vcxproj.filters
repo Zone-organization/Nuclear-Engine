@@ -77,7 +77,7 @@
     <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="include\Components\GUI\Font.h" />
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
-    <ClInclude Include="include\Platform\Window.h" />
+    <ClInclude Include="include\Core\Application.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -132,6 +132,6 @@
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
     <ClCompile Include="Source\Components\GUI\Font.cpp" />
-    <ClCompile Include="Source\Platform\Window.cpp" />
+    <ClCompile Include="Source\Core\Application.cpp" />
   </ItemGroup>
 </Project>

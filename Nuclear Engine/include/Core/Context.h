@@ -2,6 +2,7 @@
 #include <NE_Common.h>
 #include <API\Color.h>
 #include <API\API_Types.h>
+#include <Core\Application.h>
 namespace NuclearEngine
 {
 	enum PrimitiveType 
@@ -19,16 +20,11 @@ namespace NuclearEngine
 			//IF 0 then Ansiotrpopic isnot supported
 			static float MaxAnisotropicLevel = 0.0f;
 		}
-		enum class NEAPI RenderAPI {
-			OpenGL3,
-			DirectX11
-		};
-
+	
 		class NEAPI Context
 		{
+			friend class Application;
 		public:
-			static bool Initialize(const RenderAPI& renderer);
-
 			static RenderAPI GetRenderAPI();
 
 			static void SetPrimitiveType(PrimitiveType primitivetype);
@@ -45,6 +41,8 @@ namespace NuclearEngine
 
 			static void SetViewPort(int x, int y, int width, int height);
 			
+		private:
+			static void SetRenderAPI(const RenderAPI & renderer);
 		};
 	}
 }

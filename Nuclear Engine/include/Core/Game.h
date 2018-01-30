@@ -28,7 +28,8 @@ namespace NuclearEngine {
 			virtual void ExitRendering(); // Exit Rendering
 			virtual void Shutdown();      // At Shutdown
 
-			virtual void OnMouseMovement(float xpos, float ypos);
+			virtual void OnMouseScroll(double xpos, double ypos);
+			virtual void OnMouseMovement(double xpos, double ypos);
 			virtual void OnWindowResize(int width, int height);
 
 			float FPS, FrameTime;

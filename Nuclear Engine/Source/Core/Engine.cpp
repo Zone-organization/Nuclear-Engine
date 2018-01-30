@@ -37,17 +37,14 @@ namespace NuclearEngine {
 		static Game * GamePtr;
 		static Game Defaultgame;
 
-		static Platform::Window MainWindow;
-
 		static Engine::State Engine_State;
-		bool Engine::Initialize(const Platform::WindowDesc& windowdesc)
+		bool Engine::Initialize(const ApplicationDesc& windowdesc)
 		{
 
 			if (HasBeenInitialized != true)
 			{
 				Log->Info("-------------------------- -Nuclear Engine- --------------------------\n");
 				Log->Info("[Engine] Starting Engine...\n");
-				MainWindow.Create(windowdesc);
 				Log->Info("[Engine] Version: ");
 				Log->Info(MajorVersion);
 				Log->Info(".");
@@ -85,7 +82,9 @@ namespace NuclearEngine {
 #ifdef 	NE_USE_RUNTIME_RENDER_API
 				Log->Info("OpenGL 3.3 Core & DirectX 11\n");
 #endif
-				MainWindow.SetMouseInputMode(Input::Mouse::InputMode::Normal);
+
+				Application::Create(windowdesc);
+				Application::SetMouseInputMode(MouseInputMode::Normal);
 
 				HasBeenInitialized = true;
 				return true;
@@ -103,8 +102,7 @@ namespace NuclearEngine {
 		{
 			Log->Info("[Engine] Shutting Down Engine.\n");
 			GamePtr = &Defaultgame;
-			Context::Shutdown();
-			MainWindow.Destroy();
+			Core::Application::Shutdown();
 		}
 
 		void Engine::Run(Game * _YourGame)
@@ -161,17 +159,12 @@ namespace NuclearEngine {
 
 		bool Engine::ShouldClose()
 		{
-			return MainWindow.ShouldClose();
+			return Core::Application::ShouldClose();
 		}
 
 		Game * Engine::GetGame()
 		{
 			return GamePtr;
-		}
-
-		Platform::Window Engine::GetWindow()
-		{
-			return MainWindow;
 		}
 
 		void Engine::Game_Loop_Render()

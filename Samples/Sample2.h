@@ -67,7 +67,7 @@ public:
 	}
 	void Load()
 	{
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Engine::GetWindow().GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer.SetCamera(&Camera);
 		Renderer.AddLight(&spotLight);
@@ -166,10 +166,10 @@ public:
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
-		Core::Engine::GetWindow().Display();
+		Core::Application::Display();
 	}
 
-	void OnMouseMovement(float xpos, float ypos) override
+	void OnMouseMovement(double xpos, double ypos) override
 	{
 		if (firstMouse)
 		{
@@ -189,7 +189,7 @@ public:
 
 	void Update(float deltatime) override
 	{
-		Core::Engine::GetWindow().SetTitle(L"Nuclear Engine FPS: " + std::to_wstring(FPS) + L" FrameTime: " + std::to_wstring(FrameTime));
+		Core::Application::SetTitle("Nuclear Engine FPS: " + std::to_string(FPS) + " FrameTime: " + std::to_string(FrameTime));
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);

@@ -38,7 +38,10 @@ namespace NuclearEngine {
 		void Game::Shutdown()
 		{
 		}
-		void Game::OnMouseMovement(float xpos, float ypos)
+		void Game::OnMouseScroll(double val1, double val2)
+		{
+		}
+		void Game::OnMouseMovement(double xpos, double ypos)
 		{
 		}
 
