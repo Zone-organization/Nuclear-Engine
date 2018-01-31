@@ -49,6 +49,7 @@ namespace NuclearEngine
 				Log->Error("[Application] Failed to create GLFW window: " + Desc.title + "\n");
 				return false;
 			}
+			glfwHideWindow(window);
 			if (Desc.renderer == RenderAPI::OpenGL3)
 			{
 				glfwMakeContextCurrent(window);
@@ -73,7 +74,8 @@ namespace NuclearEngine
 			glfwSetScrollCallback(window, scroll_callback);
 
 			Core::Context::SetRenderAPI(Desc.renderer);
-			Log->Info("[Application] Created Application: " + Desc.title + "Size: " +  std::to_string(Desc.width) + "," + std::to_string(Desc.height) + " \n");
+
+			Log->Info("[Application] Created Application: " + Desc.title + " Width: " +  std::to_string(Desc.width) + " Height: " + std::to_string(Desc.height) + " \n");
 			return true;
 		}
 		void Application::Shutdown()
@@ -138,7 +140,7 @@ namespace NuclearEngine
 		}
 		float Application::GetAspectRatiof()
 		{
-			int width, height;
+			int width= 600, height = 600;
 			GetSize(&width, &height);
 			return static_cast<float>(width) / static_cast<float>(height);
 		}

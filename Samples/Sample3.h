@@ -61,10 +61,13 @@ public:
 
 		Skybox.Create(&Camera, SkyBoxTexturePaths);
 
-		Core::Application::Display();
-
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+
+
+		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
+		Core::Application::Display();
+
 	}
 
 	void OnMouseMovement(double xpos, double ypos) override
