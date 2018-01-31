@@ -48,14 +48,9 @@ namespace NuclearEngine
 
 			void GLVertexBuffer::Delete(GLVertexBuffer * buffer)
 			{
-				if (buffer->VAO != 0)
-				{
-					GLCall(glDeleteBuffers(1, &buffer->VAO));
-				}
-				if (buffer->VBO != 0)
-				{
-					GLCall(glDeleteBuffers(1, &buffer->VBO));
-				}
+			
+				GLCall(glDeleteBuffers(1, &buffer->VAO));	
+				GLCall(glDeleteBuffers(1, &buffer->VBO));
 
 				buffer->VAO = 0;
 				buffer->VBO = 0;

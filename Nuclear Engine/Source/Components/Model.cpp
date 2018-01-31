@@ -17,11 +17,11 @@ namespace NuclearEngine {
 
 		Model::~Model()
 		{
-			for (unsigned int i = 0; i < Meshes.size(); i++)
+			/*for (unsigned int i = 0; i < Meshes.size(); i++)
 			{
 				Meshes.at(i).Release();
 			}
-			Meshes.clear();
+			Meshes.clear();*/
 		}
 
 		void Model::CreateCube(Model* model, std::vector<MeshTexture> Textures, float width , float height , float depth)
