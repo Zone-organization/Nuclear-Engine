@@ -80,7 +80,7 @@ namespace NuclearEngine
 
 				int windowwidth = 800;
 				int windowheight = 600;
-				glfwSetWindowSize(window, windowwidth, windowheight);
+				glfwGetWindowSize(window, &windowwidth, &windowheight);
 
 				// Now go through all the display modes and find the one that matches the screen width and height.
 				// When a match is found store the numerator and denominator of the refresh rate for that monitor.
