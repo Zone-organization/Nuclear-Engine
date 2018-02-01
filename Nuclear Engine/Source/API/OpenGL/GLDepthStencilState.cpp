@@ -67,7 +67,8 @@ namespace NuclearEngine
 				if (stencilenabled)
 				{
 					glEnable(GL_STENCIL_TEST);    
-					
+				//	glStencilMaskSeparate(0xFF); // each bit is written to the stencil buffer as is
+				//	glStencilMaskSeparate(0x00); // each bit ends up as 0 in the stencil buffer (disabling writes)
 
 				}
 

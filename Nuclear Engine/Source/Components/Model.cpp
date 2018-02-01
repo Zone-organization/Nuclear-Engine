@@ -102,8 +102,8 @@ namespace NuclearEngine {
 
 			meshData.vertices.push_back(topVertex);
 
-			float phiStep = MathPI / stackCount;
-			float thetaStep = 2.0f * MathPI / sliceCount;
+			float phiStep = static_cast<float>(MathPI) / stackCount;
+			float thetaStep = 2.0f * static_cast<float>(MathPI) / sliceCount;
 
 			// Compute vertices for each stack ring (do not count the poles as rings).
 			for (UINT i = 1; i <= stackCount - 1; ++i)
@@ -125,8 +125,8 @@ namespace NuclearEngine {
 					Math::Vector3 p = v.Position;
 					v.Normal = Math::Normalize(p);
 
-					v.TexCoords.x = theta / (2 * MathPI);
-					v.TexCoords.y = phi / MathPI;
+					v.TexCoords.x = theta / (2 * static_cast<float>(MathPI));
+					v.TexCoords.y = phi / static_cast<float>(MathPI);
 
 					meshData.vertices.push_back(v);
 				}

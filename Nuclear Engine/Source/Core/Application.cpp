@@ -140,7 +140,7 @@ namespace NuclearEngine
 		}
 		float Application::GetAspectRatiof()
 		{
-			int width= 600, height = 600;
+			int width= 800, height = 600;
 			GetSize(&width, &height);
 			return static_cast<float>(width) / static_cast<float>(height);
 		}

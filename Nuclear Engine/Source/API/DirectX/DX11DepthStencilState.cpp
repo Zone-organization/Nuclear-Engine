@@ -60,9 +60,10 @@ namespace NuclearEngine
 					D3D11_DEPTH_STENCIL_DESC DSDesc;
 					ZeroMemory(&DSDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 
-					DSDesc.DepthEnable = type.DepthEnabled;
-					if (type.DepthEnabled)
+					if (type.DepthEnabled == true)
 					{
+						DSDesc.DepthEnable = true;
+
 						if (type.DepthMaskEnabled == true)
 						{
 							DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
@@ -76,9 +77,20 @@ namespace NuclearEngine
 					}
 					if (type.StencilEnabled == true)
 					{
-						DSDesc.StencilEnable = false;
+						DSDesc.StencilEnable = true;
 						DSDesc.StencilReadMask = type.StencilReadMask;
 						DSDesc.StencilWriteMask = type.StencilWriteMask;
+
+						DSDesc.FrontFace.StencilFunc = GetDXComparisonFunc(type.StencilFrontFace.StencilFunc);
+						DSDesc.FrontFace.StencilPassOp = GetDXStencilOP(type.StencilFrontFace.StencilPassOp);
+						DSDesc.FrontFace.StencilDepthFailOp = GetDXStencilOP(type.StencilFrontFace.StencilDepthFailOp);
+						DSDesc.FrontFace.StencilFailOp = GetDXStencilOP(type.StencilFrontFace.StencilFailOp);
+
+						DSDesc.BackFace.StencilFunc = GetDXComparisonFunc(type.StencilBackFace.StencilFunc);
+						DSDesc.BackFace.StencilPassOp = GetDXStencilOP(type.StencilBackFace.StencilPassOp);
+						DSDesc.BackFace.StencilDepthFailOp = GetDXStencilOP(type.StencilBackFace.StencilDepthFailOp);
+						DSDesc.BackFace.StencilFailOp = GetDXStencilOP(type.StencilBackFace.StencilFailOp);
+
 					}
 					DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &result->DS_State);
 				

@@ -70,8 +70,11 @@ public:
 
 	}
 
-	void OnMouseMovement(double xpos, double ypos) override
+	void OnMouseMovement(double xpos_a, double ypos_a) override
 	{
+		float xpos = static_cast<float>(xpos_a);
+		float ypos = static_cast<float>(ypos_a);
+
 		if (firstMouse)
 		{
 			lastX = xpos;

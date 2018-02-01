@@ -121,6 +121,9 @@ namespace NuclearEngine {
 			case aiTextureType_SPECULAR:
 				return Components::MeshTextureType::Specular;
 			}
+
+			//Unsupported types treated as diffuse
+			return Components::MeshTextureType::Diffuse;
 		}
 		std::vector<Imported_Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{
