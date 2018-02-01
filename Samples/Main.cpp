@@ -83,6 +83,8 @@ int main(int argc, char* argv[])
 
 	}
 
+	Core::Engine::ShutDown();
+
 	return 0;
 }
 

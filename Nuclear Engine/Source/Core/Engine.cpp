@@ -126,7 +126,6 @@ namespace NuclearEngine {
 			GamePtr->ExitRendering();
 			SetState(Engine::State::Shuttingdown);
 			GamePtr->Shutdown();
-			Engine::ShutDown();
 		}
 
 		void Engine::Run(unsigned int TestNumber)

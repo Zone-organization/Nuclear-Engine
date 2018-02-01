@@ -20,7 +20,11 @@ namespace NuclearEngine
 
 			DX11Texture::~DX11Texture()
 			{
-
+				tex1D = nullptr;
+				tex2D = nullptr;
+				tex3D = nullptr;
+				resourceView = nullptr;
+				samplerState = nullptr;
 			}
 
 			void DX11Texture::Create(DX11Texture* texture,const Texture_Data&Data, const Texture_Desc& Desc)

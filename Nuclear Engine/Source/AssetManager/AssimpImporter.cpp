@@ -13,6 +13,7 @@ namespace NuclearEngine {
 
 		bool AssimpImporter::LoadModel(std::string path)
 		{
+			Log->Info("[AssetManager] Loading Model: " + path + "\n");
 			Assimp::Importer importer;
 			const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
 

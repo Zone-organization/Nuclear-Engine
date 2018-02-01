@@ -49,10 +49,10 @@ namespace NuclearEngine {
 		{
 			API::VertexBuffer::Delete(&VBO);
 			API::IndexBuffer::Delete(&IBO);
-			/*for (size_t i = 0; i < data.textures.size(); i++)
+			for (size_t i = 0; i < data.textures.size(); i++)
 			{
 				API::Texture::Delete(&data.textures.at(i).Texture);
-			}*/
+			}
 			data.textures.clear();
 		}
 
