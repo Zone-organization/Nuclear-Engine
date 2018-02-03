@@ -109,7 +109,7 @@ protected:
 
 	API::Texture background;
 
-	GameLevel lvl;
+	GameLevel *lvl;
 	Components::FlyCamera Camera;
 public:
 	BreakOut()
@@ -144,7 +144,8 @@ public:
 		AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/block.png", &block, TexDesc);
 		AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/background.jpg", &background, TexDesc);
 
-		lvl.Load("Assets/Breakout/Levels/lvl1.lvl",_Width_,_Height_ * static_cast<unsigned int>(0.5));
+		lvl = new GameLevel();
+		lvl->Load("Assets/Breakout/Levels/lvl1.lvl",_Width_,_Height_ * static_cast<unsigned int>(0.5));
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
@@ -161,8 +162,14 @@ public:
 		Camera.Update();
 		// Draw background
 		Renderer.DrawSprite(&background, Math::Vector2(0, 0), Math::Vector2(static_cast<float>(_Width_), static_cast<float>(_Height_)));
-		lvl.Draw(&Renderer);
-
+		//lvl->Draw(&Renderer);
+		for (Components::Sprite &tile : lvl->Bricks)
+		{
+			if (!tile.Destroyed)
+			{
+				Renderer.DrawSprite(&tile);
+			}
+		}
 		Core::Context::End();
 	}
 

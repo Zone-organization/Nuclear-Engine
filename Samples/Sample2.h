@@ -8,6 +8,8 @@ protected:
 	API::Texture SpecularTex;
 	API::Texture WhiteTex;
 
+	API::RasterizerState rs_state;
+
 	Components::FlyCamera Camera;
 	Shading::Techniques::PhongShading LightShading;
 	Components::Model Cube;
@@ -161,7 +163,10 @@ public:
 		};
 
 		Skybox.Create(&Camera, SkyBoxTexturePaths);
+		API::RasterizerStateDesc rasterizerdesc;
+		rasterizerdesc.FillMode = API::FillMode::Wireframe;
 
+		API::RasterizerState::Create(&rs_state, rasterizerdesc);
 
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -213,6 +218,14 @@ public:
 
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::R))
+		{
+			rs_state.Bind();
+		}
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::T))
+		{
+			rs_state.Bind_Default();
+		}
 		for (unsigned int i = 0; i < 10; i++)
 		{
 			// calculate the model matrix for each object and pass it to shader before drawing

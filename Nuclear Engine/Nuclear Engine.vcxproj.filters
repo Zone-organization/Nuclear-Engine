@@ -78,6 +78,9 @@
     <ClInclude Include="include\Components\GUI\Font.h" />
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
     <ClInclude Include="include\Core\Application.h" />
+    <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
+    <ClInclude Include="include\API\OpenGL\GLRasterizerState.h" />
+    <ClInclude Include="include\API\RasterizerState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -133,5 +136,8 @@
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
     <ClCompile Include="Source\Components\GUI\Font.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11RasterizerState.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
+    <ClCompile Include="Source\API\RasterizerState.cpp" />
   </ItemGroup>
 </Project>

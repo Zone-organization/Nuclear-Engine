@@ -7,7 +7,7 @@
 
 namespace NuclearEngine {
 	namespace API {
-		class DepthStencilState
+		class NEAPI DepthStencilState
 		{
 		public:
 			DepthStencilState();

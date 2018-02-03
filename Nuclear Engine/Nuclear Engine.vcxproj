@@ -347,6 +347,8 @@
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\API\InputLayout.h" />
     <ClInclude Include="include\API\OpenGL\GLError.h" />
+    <ClInclude Include="include\API\OpenGL\GLRasterizerState.h" />
+    <ClInclude Include="include\API\RasterizerState.h" />
     <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
@@ -400,6 +402,7 @@
     <ClInclude Include="include\Shading\Techniques\NoLight.h" />
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
+    <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
@@ -416,6 +419,7 @@
     <ClCompile Include="Source\API\DirectX\DX11Context.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11DepthStencilState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11IndexBuffer.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11RasterizerState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Shader.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Texture.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11VertexBuffer.cpp" />
@@ -426,9 +430,11 @@
     <ClCompile Include="Source\API\OpenGL\GLDepthStencilState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLIndexBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
+    <ClCompile Include="Source\API\RasterizerState.cpp" />
     <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />

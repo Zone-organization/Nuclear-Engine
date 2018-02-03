@@ -43,5 +43,26 @@ namespace NuclearEngine {
 			Stencil_Face_Desc StencilFrontFace;
 			Stencil_Face_Desc StencilBackFace;
 		};
+		enum class CullMode {
+			None = 1,
+			Front = 2,
+			Back = 3
+		};
+		enum class FillMode {
+			Wireframe = 2,
+			Solid = 3
+		};
+		struct RasterizerStateDesc {
+			FillMode FillMode = FillMode::Solid;
+			CullMode CullMode = CullMode::None;
+			bool FrontCounterClockwise = false;
+			int DepthBias = 0;
+			float DepthBiasClamp = 0.0f;
+			float SlopeScaledDepthBias = 0.0f;
+			bool DepthClipEnable = true;
+			bool ScissorEnable = false;
+			bool MultisampleEnable = false;
+			bool AntialiasedLineEnable = false;
+		};
 	}
 }

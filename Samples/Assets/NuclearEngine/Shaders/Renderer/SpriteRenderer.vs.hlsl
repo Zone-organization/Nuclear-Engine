@@ -21,7 +21,8 @@ PixelInputType main(VertexInputType input)
     PixelInputType output;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-    output.Position = mul(mul(float4(input.Position.xy, 0.0f, 1.0f), Model), Projection);
+    output.Position = mul(Model, float4(input.Position.xy, 0.0f, 1.0f));
+    output.Position = mul(Projection, output.Position);
 
 	// Store the input texture for the pixel shader to use.
     output.TexCoord = float2(input.Position.z, input.Position.w);
