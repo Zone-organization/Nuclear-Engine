@@ -47,7 +47,7 @@ namespace NuclearEngine
 			}
 			void DX11RasterizerState::Bind_Default()
 			{
-				DX11Context::GetContext()->RSSetState(NULL);
+				DX11Context::Bind_Default_Rasterizer_State();
 			}
 		}
 	}

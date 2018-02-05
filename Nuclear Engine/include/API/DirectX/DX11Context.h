@@ -27,8 +27,11 @@ namespace NuclearEngine
 
 				static void SetViewPort(int x, int y, int width, int height);
 
+				//DX11 Specific
 				static ID3D11Device* GetDevice();
 				static ID3D11DeviceContext* GetContext();
+
+				static void Bind_Default_Rasterizer_State();
 			private:
 				static bool Initialize(GLFWwindow* window);
 				static void Shutdown();

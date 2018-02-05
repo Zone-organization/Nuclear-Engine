@@ -335,6 +335,7 @@
     <ClInclude Include="include\API\API_Types.h" />
     <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
+    <ClInclude Include="include\API\DirectX\DX11BlendState.h" />
     <ClInclude Include="include\API\DirectX\DX11Common.h" />
     <ClInclude Include="include\API\DirectX\DX11ConstantBuffer.h" />
     <ClInclude Include="include\API\DirectX\DX11Context.h" />
@@ -346,6 +347,7 @@
     <ClInclude Include="include\API\Format.h" />
     <ClInclude Include="include\API\IndexBuffer.h" />
     <ClInclude Include="include\API\InputLayout.h" />
+    <ClInclude Include="include\API\OpenGL\GLBlendState.h" />
     <ClInclude Include="include\API\OpenGL\GLError.h" />
     <ClInclude Include="include\API\OpenGL\GLRasterizerState.h" />
     <ClInclude Include="include\API\RasterizerState.h" />
@@ -415,6 +417,7 @@
   <ItemGroup>
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\API\DepthStencilState.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11BlendState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Context.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11DepthStencilState.cpp" />

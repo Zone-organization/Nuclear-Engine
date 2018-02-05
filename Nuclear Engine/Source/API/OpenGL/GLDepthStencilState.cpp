@@ -42,6 +42,7 @@ namespace NuclearEngine
 					result->depthfunc = GetGLComparisonFunc(type.DepthFunc);
 					result->depthenabled = true;
 				}
+				//URGENT: NOT FINSIHED!
 				if (type.StencilEnabled == true)
 				{
 					result->stencilenabled = true;

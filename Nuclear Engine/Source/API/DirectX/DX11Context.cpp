@@ -428,6 +428,11 @@ namespace NuclearEngine
 				return Context.Get();
 			}
 
+			void DX11Context::Bind_Default_Rasterizer_State()
+			{
+				Context->RSSetState(m_rasterState);
+			}
+
 			void DX11Context::SetViewPort(int x, int y, int width, int height)
 			{
 				D3D11_VIEWPORT viewPort;

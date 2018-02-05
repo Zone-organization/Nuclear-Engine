@@ -17,6 +17,8 @@ namespace NuclearEngine
 			GLRasterizerState::~GLRasterizerState()
 			{
 			}
+
+			//URGENT: NOT FINSIHED!
 			void GLRasterizerState::Create(GLRasterizerState* result, const RasterizerStateDesc& type)
 			{
 				if (type.CullMode != CullMode::None)
@@ -63,9 +65,7 @@ namespace NuclearEngine
 			}
 			void GLRasterizerState::Bind_Default()
 			{
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_BACK);
-				glFrontFace(GL_CCW);
+				glDisable(GL_CULL_FACE);
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			}
 		}

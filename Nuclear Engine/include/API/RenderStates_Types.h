@@ -64,5 +64,65 @@ namespace NuclearEngine {
 			bool MultisampleEnable = false;
 			bool AntialiasedLineEnable = false;
 		};
+		
+		enum class BLEND
+		{
+			ZERO = 1,
+			ONE = 2,
+			SRC_COLOR = 3,
+			INV_SRC_COLOR = 4,
+			SRC_ALPHA = 5,
+			INV_SRC_ALPHA = 6,
+			DEST_ALPHA = 7,
+			INV_DEST_ALPHA = 8,
+			DEST_COLOR = 9,
+			INV_DEST_COLOR = 10,
+			SRC_ALPHA_SAT = 11,
+			BLEND_FACTOR = 14,
+			INV_BLEND_FACTOR = 15,
+			SRC1_COLOR = 16,
+			INV_SRC1_COLOR = 17,
+			SRC1_ALPHA = 18,
+			INV_SRC1_ALPHA = 19
+		};
+
+		
+		enum class BLEND_OP
+		{
+			OP_ADD = 1,
+			OP_SUBTRACT = 2,
+			OP_REV_SUBTRACT = 3,
+			OP_MIN = 4,
+			OP_MAX = 5
+		};
+
+		enum class COLOR_WRITE_ENABLE
+		{
+			COLOR_WRITE_ENABLE_RED = 1,
+			COLOR_WRITE_ENABLE_GREEN = 2,
+			COLOR_WRITE_ENABLE_BLUE = 4,
+			COLOR_WRITE_ENABLE_ALPHA = 8,
+			COLOR_WRITE_ENABLE_ALL = (((COLOR_WRITE_ENABLE_RED | COLOR_WRITE_ENABLE_GREEN) | COLOR_WRITE_ENABLE_BLUE) | COLOR_WRITE_ENABLE_ALPHA)
+		};
+
+		typedef struct RENDER_TARGET_BLEND_DESC
+		{
+			bool BlendEnable;
+			BLEND SrcBlend;
+			BLEND DestBlend;
+			BLEND_OP BlendOp;
+			BLEND SrcBlendAlpha;
+			BLEND DestBlendAlpha;
+			BLEND_OP BlendOpAlpha;
+			unsigned char RenderTargetWriteMask;
+		} 	RENDER_TARGET_BLEND_DESC;
+
+		struct BlendStateDesc
+		{
+			bool AlphaToCoverageEnable;
+			bool IndependentBlendEnable;
+			RENDER_TARGET_BLEND_DESC RenderTarget[8];
+		};
+
 	}
 }

@@ -81,6 +81,8 @@
     <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="include\API\OpenGL\GLRasterizerState.h" />
     <ClInclude Include="include\API\RasterizerState.h" />
+    <ClInclude Include="include\API\DirectX\DX11BlendState.h" />
+    <ClInclude Include="include\API\OpenGL\GLBlendState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -139,5 +141,6 @@
     <ClCompile Include="Source\API\DirectX\DX11RasterizerState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
     <ClCompile Include="Source\API\RasterizerState.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11BlendState.cpp" />
   </ItemGroup>
 </Project>
