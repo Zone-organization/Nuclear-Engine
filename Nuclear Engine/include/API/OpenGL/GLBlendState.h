@@ -7,6 +7,19 @@ namespace NuclearEngine
 	namespace API
 	{
 		struct BlendStateDesc;
+
+		struct OpenGL_RT_Blend
+		{
+			bool BlendEnable;
+			GLenum SrcBlend;
+			GLenum DestBlend;
+			GLenum BlendOp;
+			GLenum SrcBlendAlpha;
+			GLenum DestBlendAlpha;
+			GLenum BlendOpAlpha;
+			unsigned char RenderTargetWriteMask;
+		} ;
+
 		namespace OpenGL
 		{
 			class NEAPI GLBlendState
@@ -22,7 +35,8 @@ namespace NuclearEngine
 
 				static void Bind_Default();
 			protected:
-			
+				bool IndependentBlendEnable;
+				OpenGL_RT_Blend targets[8];
 			};
 		}
 	}

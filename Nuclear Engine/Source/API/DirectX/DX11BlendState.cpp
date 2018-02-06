@@ -35,11 +35,6 @@ namespace NuclearEngine
 					BSDesc.RenderTarget[i].DestBlendAlpha = (D3D11_BLEND)type.RenderTarget[i].DestBlendAlpha;
 					BSDesc.RenderTarget[i].BlendOpAlpha = (D3D11_BLEND_OP)type.RenderTarget[i].BlendOpAlpha;
 					BSDesc.RenderTarget[i].RenderTargetWriteMask = type.RenderTarget[i].RenderTargetWriteMask;
-
-					if (type.IndependentBlendEnable == true)
-					{
-						i = 8;
-					}
 				}
 				DX11Context::GetDevice()->CreateBlendState(&BSDesc, &state->Stateobj);
 			}

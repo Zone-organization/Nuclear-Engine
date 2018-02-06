@@ -142,5 +142,6 @@
     <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
     <ClCompile Include="Source\API\RasterizerState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11BlendState.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLBlendState.cpp" />
   </ItemGroup>
 </Project>

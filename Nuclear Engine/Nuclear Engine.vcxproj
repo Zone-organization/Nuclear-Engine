@@ -426,6 +426,7 @@
     <ClCompile Include="Source\API\DirectX\DX11Shader.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Texture.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11VertexBuffer.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLBlendState.cpp" />
     <ClCompile Include="Source\API\IndexBuffer.cpp" />
     <ClCompile Include="Source\API\InputLayout.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLConstantBuffer.cpp" />
