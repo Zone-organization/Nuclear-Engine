@@ -333,6 +333,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\API\API_Types.h" />
+    <ClInclude Include="include\API\BlendState.h" />
     <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
     <ClInclude Include="include\API\DirectX\DX11BlendState.h" />
@@ -415,6 +416,7 @@
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\API\BlendState.cpp" />
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\API\DepthStencilState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11BlendState.cpp" />

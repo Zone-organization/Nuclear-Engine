@@ -96,7 +96,7 @@ namespace NuclearEngine {
 			OP_MAX = 5
 		};
 
-		enum class COLOR_WRITE_ENABLE
+		enum COLOR_WRITE_ENABLE
 		{
 			COLOR_WRITE_ENABLE_RED = 1,
 			COLOR_WRITE_ENABLE_GREEN = 2,
@@ -107,20 +107,20 @@ namespace NuclearEngine {
 
 		typedef struct RENDER_TARGET_BLEND_DESC
 		{
-			bool BlendEnable;
-			BLEND SrcBlend;
-			BLEND DestBlend;
-			BLEND_OP BlendOp;
-			BLEND SrcBlendAlpha;
-			BLEND DestBlendAlpha;
-			BLEND_OP BlendOpAlpha;
-			unsigned char RenderTargetWriteMask;
+			bool BlendEnable = false;
+			BLEND SrcBlend = BLEND::ONE;
+			BLEND DestBlend= BLEND::ZERO;
+			BLEND_OP BlendOp = BLEND_OP::OP_ADD;
+			BLEND SrcBlendAlpha = BLEND::ONE;
+			BLEND DestBlendAlpha = BLEND::ZERO;
+			BLEND_OP BlendOpAlpha = BLEND_OP::OP_ADD;
+			unsigned char RenderTargetWriteMask = COLOR_WRITE_ENABLE_ALL;
 		} 	RENDER_TARGET_BLEND_DESC;
 
 		struct BlendStateDesc
 		{
-			bool AlphaToCoverageEnable;
-			bool IndependentBlendEnable;
+			bool AlphaToCoverageEnable = false;
+			bool IndependentBlendEnable = false;
 			RENDER_TARGET_BLEND_DESC RenderTarget[8];
 		};
 

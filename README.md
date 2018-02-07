@@ -28,9 +28,8 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 
 ## Current Milestones
   - Improve the OneAPI:
-    - Finish DepthStencilState class.
-    - Implement RenderTarget & RasterizerState & BlendingState classes.
-
+    - Implement RenderTarget classes.
+	- Implement Text Rendering.
 ## Road-map
   - Support Android & Linux & UWP Platforms.
   - Support PhysX or Bullet Physics Library.

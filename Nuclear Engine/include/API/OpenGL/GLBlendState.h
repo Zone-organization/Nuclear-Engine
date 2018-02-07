@@ -2,6 +2,8 @@
 #include <API\OpenGL\GLCommon.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
+#include <API\Color.h>
+
 namespace NuclearEngine
 {
 	namespace API
@@ -31,7 +33,7 @@ namespace NuclearEngine
 				static void Create(GLBlendState *state, const BlendStateDesc& type);
 				static void Delete(GLBlendState *state);
 
-				void Bind();
+				void Bind(API::Color blendfactor = API::Color(0.0f), unsigned int samplemask = 0xffffffff);
 
 				static void Bind_Default();
 			protected:

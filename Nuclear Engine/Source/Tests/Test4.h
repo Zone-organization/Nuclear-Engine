@@ -13,6 +13,7 @@ protected:
 	API::Texture PlaneTex;
 	API::Texture CubeTex;
 
+	bool Depthshaderenabled;
 
 	Components::FlyCamera Camera;
 	float lastX = _Width_ / 2.0f;
@@ -93,6 +94,8 @@ float4 main(PixelInputType input) : SV_TARGET
 }
 )";
 	API::DepthStencilState DS_State;
+	API::RasterizerState R_State;
+	API::BlendState B_State;
 
 public:
 	Test4()
@@ -204,13 +207,31 @@ public:
 		DS_Desc.DepthFunc = API::Comparison_Func::ALWAYS;
 		API::DepthStencilState::Create(&DS_State, DS_Desc);
 
-		Core::Application::Display();
+		API::RasterizerStateDesc rasterizerdesc;
+		rasterizerdesc.FillMode = API::FillMode::Wireframe;
 
-		Core::Context::EnableDepthBuffer(true);
+		API::RasterizerState::Create(&R_State, rasterizerdesc);
+
+		API::BlendStateDesc blenddesc;
+		blenddesc.RenderTarget[0].SrcBlend = API::BLEND::SRC_COLOR;
+		blenddesc.RenderTarget[0].DestBlend = API::BLEND::BLEND_FACTOR;
+		blenddesc.RenderTarget[0].SrcBlendAlpha = API::BLEND::ONE;
+		blenddesc.RenderTarget[0].DestBlendAlpha = API::BLEND::ZERO;
+		blenddesc.RenderTarget[0].RenderTargetWriteMask = API::COLOR_WRITE_ENABLE_ALL;
+		API::BlendState::Create(&B_State, blenddesc);
+		
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Core::Context::EnableDepthBuffer(true);
+
+		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);			
+		Core::Application::Display();
 	}
-	void OnMouseMovement(double xpos, double ypos) override
+
+	void OnMouseMovement(double xpos_a, double ypos_a) override
 	{
+		float xpos = static_cast<float>(xpos_a);
+		float ypos = static_cast<float>(ypos_a);
+
 		if (firstMouse)
 		{
 			lastX = xpos;
@@ -226,6 +247,7 @@ public:
 
 		Camera.ProcessEye(xoffset, yoffset);
 	}
+
 	void Update(float deltatime) override
 	{
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
@@ -240,6 +262,25 @@ public:
 		Camera.Update();
 
 	}
+	
+	/*
+	Controls:
+	0 - Visualize Depth Buffer
+	1 - Enable Depth state
+	2 - Restore Default Depth State
+	3 - Enable Rasterizer State
+	4 - Restore Default Rasterizer State
+	5 - Enable Blending State
+	6 - Restore Default Blending State
+	
+	W - Move Camera Forward
+	A - Move Camera Left
+	S - Move Camera Backward
+	D - Move Camera Right
+
+	Mouse - Make Camera look around
+	*/
+
 	void Render(float) override
 	{
 		Core::Context::Begin();
@@ -247,25 +288,46 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
+		TestShader.Bind();
+		CubeTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+		
+		
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num0))
+		{
+			DepthShader.Bind();
+			Depthshaderenabled = true;
+		}
+		else {
+			Depthshaderenabled = false;
+		}
+
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
 		{
 			DS_State.Bind();
 		}
-		else 
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2)) 
 		{
 			API::DepthStencilState::Bind_Default();
+			
 		}
 
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num3))
 		{
-			DepthShader.Bind();
+			R_State.Bind();
 		}
-		else 
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num4))
 		{
-			TestShader.Bind();
-			CubeTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+			R_State.Bind_Default();
 		}
 
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num5))
+		{
+			B_State.Bind(API::Color(0.75f));
+		}
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num6))
+		{
+			B_State.Bind_Default();
+		}
 
 		CubeVB.Bind();
 
@@ -281,7 +343,7 @@ public:
 		Core::Context::Draw(36);
 		
 		// floor
-		if (!Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
+		if (!Depthshaderenabled)
 		{
 			PlaneTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
 		}

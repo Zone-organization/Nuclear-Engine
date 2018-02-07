@@ -40,6 +40,8 @@ namespace NuclearEngine
 				case BLEND::SRC1_ALPHA: return GL_SRC1_ALPHA; //18,
 				case BLEND::INV_SRC1_ALPHA: return GL_ONE_MINUS_SRC1_ALPHA; //19
 				}
+
+				return GL_ONE;
 			}
 			GLenum BlendOP2_GLenumBlendOP(BLEND_OP blend)
 			{
@@ -51,6 +53,7 @@ namespace NuclearEngine
 				case BLEND_OP::OP_MIN: return GL_MIN; //4,
 				case BLEND_OP::OP_MAX: return GL_MAX; //5,
 				}
+				return GL_FUNC_ADD;
 			}
 			//URGENT: NOT FINSIHED!
 			void GLBlendState::Create(GLBlendState* result, const BlendStateDesc& type)
@@ -73,16 +76,19 @@ namespace NuclearEngine
 			{
 			
 			}
-			void GLBlendState::Bind()
+			void GLBlendState::Bind(API::Color blendfactor, unsigned int samplemask)
 			{
 				if (IndependentBlendEnable == false)
 				{
 					if (targets[0].BlendEnable)
 					{
 						glEnable(GL_BLEND);
+						glBlendFuncSeparate(targets[0].SrcBlend, targets[0].DestBlend,targets[0].SrcBlendAlpha,targets[0].DestBlendAlpha);
+						glBlendEquationSeparate(targets[0].BlendOp, targets[0].BlendOpAlpha);
+						glBlendColor(blendfactor.r, blendfactor.g, blendfactor.b, blendfactor.a);
 					}
 					else 
-					{
+					{ 
 						glDisable(GL_BLEND);
 					}
 				}
@@ -90,7 +96,7 @@ namespace NuclearEngine
 			}
 			void GLBlendState::Bind_Default()
 			{
-
+				glDisable(GL_BLEND);
 			}
 		}
 	}
