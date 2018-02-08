@@ -102,7 +102,7 @@ namespace NuclearEngine
 			void GLContext::Query_VAO_EBO_State()
 			{
 				std::string baseMessage;
-				Log->Info("[OpenGL] Querying VAO state:");
+				Log.Info("[OpenGL] Querying VAO state:");
 				int vab, eabb, eabbs, mva, isOn(1), vaabb;
 				glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vab);
 				glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &eabb);
@@ -121,7 +121,7 @@ namespace NuclearEngine
 						baseMessage.append("  attrib #" + std::to_string(i) + ": VBO=" + std::to_string(vaabb) + "\n");
 					}
 				}
-				Log->Info(baseMessage);
+				Log.Info(baseMessage);
 			}
 
 		}

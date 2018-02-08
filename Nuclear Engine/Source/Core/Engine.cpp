@@ -43,44 +43,44 @@ namespace NuclearEngine {
 
 			if (HasBeenInitialized != true)
 			{
-				Log->Info("-------------------------- -Nuclear Engine- --------------------------\n");
-				Log->Info("[Engine] Starting Engine...\n");
-				Log->Info("[Engine] Version: ");
-				Log->Info(MajorVersion);
-				Log->Info(".");
-				Log->Info(MinorVersion);
-				Log->Info("\n[Engine] Built On: ");
-				Log->Info(__DATE__);
-				Log->Info("  At: ");
-				Log->Info(__TIME__);
-				Log->EndLine();
+				Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
+				Log.Info("[Engine] Starting Engine...\n");
+				Log.Info("[Engine] Version: ");
+				Log.Info(MajorVersion);
+				Log.Info(".");
+				Log.Info(MinorVersion);
+				Log.Info("\n[Engine] Built On: ");
+				Log.Info(__DATE__);
+				Log.Info("  At: ");
+				Log.Info(__TIME__);
+				Log.EndLine();
 
-				Log->Info("[Engine] Built For: ");
+				Log.Info("[Engine] Built For: ");
 
 #ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
-				Log->Info("Windows-PC 32 Bit\n");
+				Log.Info("Windows-PC 32 Bit\n");
 #endif
 
 #ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
-				Log->Info("Windows-PC 64 bit\n");
+				Log.Info("Windows-PC 64 bit\n");
 #endif
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)
 #endif
-				Log->Info("[Engine] Built With Renderer: ");
+				Log.Info("[Engine] Built With Renderer: ");
 
 
 #ifdef 	NE_USE_CORE_OPENGL
-				Log->Info("OpenGL 3.3 Core\n");
+				Log.Info("OpenGL 3.3 Core\n");
 #endif
 
 #ifdef 	NE_USE_DIRECTX11
-				Log->Info("DirectX 11\n");
+				Log.Info("DirectX 11\n");
 #endif
 
 #ifdef 	NE_USE_RUNTIME_RENDER_API
-				Log->Info("OpenGL 3.3 Core & DirectX 11\n");
+				Log.Info("OpenGL 3.3 Core & DirectX 11\n");
 #endif
 
 				Application::Create(windowdesc);
@@ -91,7 +91,7 @@ namespace NuclearEngine {
 			}
 			else if (HasBeenInitialized == true) 
 			{
-				Log->FatalError("[Engine] Engine Has Been Already Initialized!\n");
+				Log.FatalError("[Engine] Engine Has Been Already Initialized!\n");
 				return false;
 			}
 			GamePtr = &Defaultgame;
@@ -100,7 +100,7 @@ namespace NuclearEngine {
 
 		void Engine::ShutDown()
 		{
-			Log->Info("[Engine] Shutting Down Engine.\n");
+			Log.Info("[Engine] Shutting Down Engine.\n");
 			GamePtr = &Defaultgame;
 			Core::Application::Shutdown();
 		}
@@ -108,13 +108,13 @@ namespace NuclearEngine {
 		void Engine::Run(Game * _YourGame)
 		{
 			GamePtr = _YourGame;
-			Log->Info("[Engine] Running Game.\n");
+			Log.Info("[Engine] Running Game.\n");
 
 			if (GamePtr->GetInfo() != nullptr)
 			{
-				Log->Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetInfo()->Name) + "\n"));
-				Log->Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetInfo()->Version) + "\n"));
-				Log->Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetInfo()->Developer) + "\n"));
+				Log.Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetInfo()->Name) + "\n"));
+				Log.Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetInfo()->Version) + "\n"));
+				Log.Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetInfo()->Developer) + "\n"));
 			}
 
 			SetState(Engine::State::Initializing);
@@ -213,7 +213,7 @@ namespace NuclearEngine {
 					break;
 			}
 
-			Log->Info("[Engine] Game state changed to " + name + "\n");
+			Log.Info("[Engine] Game state changed to " + name + "\n");
 		}
 	}
 }

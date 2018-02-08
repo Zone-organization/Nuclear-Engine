@@ -144,7 +144,7 @@ namespace NuclearEngine
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture1D(&texDesc, &subData, &result->tex1D)))
 					{
-						Log->Error("[DirectX] Texture1D Creation Failed for Subdata filled Texture1D!\n");
+						Log.Error("[DirectX] Texture1D Creation Failed for Subdata filled Texture1D!\n");
 					}
 
 					DX11Context::GetDevice()->CreateShaderResourceView(result->tex1D, 0, &result->resourceView);
@@ -153,7 +153,7 @@ namespace NuclearEngine
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture1D(&texDesc, nullptr, &result->tex1D)))
 					{
-						Log->Error("[DirectX] Texture1D Creation Failed for nullptr Subdata Texture1D!\n");
+						Log.Error("[DirectX] Texture1D Creation Failed for nullptr Subdata Texture1D!\n");
 
 					}
 					D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -182,7 +182,7 @@ namespace NuclearEngine
 
 				if (FAILED(DX11Context::GetDevice()->CreateSamplerState(&samplerDesc, &result->samplerState)))
 				{
-					Log->Error("[DirectX] SamplerState Creation Failed for Texture1D!\n");
+					Log.Error("[DirectX] SamplerState Creation Failed for Texture1D!\n");
 				}
 			}
 			void DX11Texture::Create2D(DX11Texture* result,const Texture_Data& Data, const Texture_Desc& Desc)
@@ -225,7 +225,7 @@ namespace NuclearEngine
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, &subData, &result->tex2D)))
 					{
-						Log->Error("[DirectX] Texture2D Creation Failed for Subdata filled Texture2D!\n");
+						Log.Error("[DirectX] Texture2D Creation Failed for Subdata filled Texture2D!\n");
 					}
 
 					DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, 0, &result->resourceView);
@@ -234,7 +234,7 @@ namespace NuclearEngine
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, nullptr, &result->tex2D)))
 					{
-						Log->Error("[DirectX] Texture2D Creation Failed for nullptr Subdata Texture2D!\n");
+						Log.Error("[DirectX] Texture2D Creation Failed for nullptr Subdata Texture2D!\n");
 
 					}
 					D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -294,7 +294,7 @@ namespace NuclearEngine
 
 				if (FAILED(DX11Context::GetDevice()->CreateSamplerState(&samplerDesc, &result->samplerState)))
 				{
-					Log->Error("[DirectX] SamplerState Creation Failed for Texture2D!\n");
+					Log.Error("[DirectX] SamplerState Creation Failed for Texture2D!\n");
 				}
 
 			}
@@ -340,7 +340,7 @@ namespace NuclearEngine
 
 				if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, &subData[0], &result->tex2D)))
 				{
-					Log->Error("[DirectX] TextureCube Creation Failed!\n");
+					Log.Error("[DirectX] TextureCube Creation Failed!\n");
 				}
 				D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 				srvDesc.Format = texDesc.Format;

@@ -23,7 +23,7 @@ namespace NuclearEngine
 				int remainder = size % 16;
 				if (remainder != 0)
 				{
-					Log->Warning("[GLConstantBuffer] The size of buffer isn't a multiple of 16 which can cause many unexpected problems! \n");
+					Log.Warning("[GLConstantBuffer] The size of buffer isn't a multiple of 16 which can cause many unexpected problems! \n");
 				}
 
 				result->name = Nameinshader;

@@ -46,7 +46,7 @@ namespace NuclearEngine
 			window = glfwCreateWindow(Desc.width, Desc.height, Desc.title.c_str(), NULL, NULL);
 			if (window == NULL)
 			{
-				Log->Error("[Application] Failed to create GLFW window: " + Desc.title + "\n");
+				Log.Error("[Application] Failed to create GLFW window: " + Desc.title + "\n");
 				return false;
 			}
 			glfwHideWindow(window);
@@ -55,7 +55,7 @@ namespace NuclearEngine
 				glfwMakeContextCurrent(window);
 				if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 				{
-					Log->Error("[Application] Failed to initialize GLAD in window: " + Desc.title + "\n");
+					Log.Error("[Application] Failed to initialize GLAD in window: " + Desc.title + "\n");
 					return false;
 				}
 			}
@@ -64,7 +64,7 @@ namespace NuclearEngine
 			{
 				if (!API::DirectX::DX11Context::Initialize(window))
 				{
-					Log->Error("[Application] Failed to initialize DirectX11 in window: " + Desc.title + "\n");
+					Log.Error("[Application] Failed to initialize DirectX11 in window: " + Desc.title + "\n");
 					return false;
 				}
 			}
@@ -75,7 +75,7 @@ namespace NuclearEngine
 
 			Core::Context::SetRenderAPI(Desc.renderer);
 
-			Log->Info("[Application] Created Application: " + Desc.title + " Width: " +  std::to_string(Desc.width) + " Height: " + std::to_string(Desc.height) + " \n");
+			Log.Info("[Application] Created Application: " + Desc.title + " Width: " +  std::to_string(Desc.width) + " Height: " + std::to_string(Desc.height) + " \n");
 			return true;
 		}
 		void Application::Shutdown()

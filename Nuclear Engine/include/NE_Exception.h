@@ -18,7 +18,7 @@ namespace NuclearEngine {
 			NotImplementedException(const char * error = "Function not Implemented Yet!\n")
 			{
 				errorMessage = error;
-				/*Log->Error(errorMessage);*/
+				/*Log.Error(errorMessage);*/
 			}
 
 			// Provided for compatibility with std::exception.

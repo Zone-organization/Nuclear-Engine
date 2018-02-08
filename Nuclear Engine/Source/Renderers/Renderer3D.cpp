@@ -88,7 +88,7 @@ namespace NuclearEngine {
 			}
 			else 
 			{
-				Log->Warning("[Renderer3D] Baking the renderer without an active camera!\n");
+				Log.Warning("[Renderer3D] Baking the renderer without an active camera!\n");
 			}
 			if (LightingEnabled == 1)
 			{

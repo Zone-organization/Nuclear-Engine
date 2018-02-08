@@ -31,7 +31,7 @@ namespace NuclearEngine
 				{
 					if (sdesc->VertexShaderCode.Language !=API::ShaderLanguage::DXBC)
 					{
-						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Vertex- shaders in DirectX Bytecode \"DXBC\" language!\n");
+						Log.Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Vertex- shaders in DirectX Bytecode \"DXBC\" language!\n");
 					}
 					else {
 						result->VS_Buffer = sdesc->VertexShaderCode.DXBC_SourceCode.Buffer;
@@ -41,7 +41,7 @@ namespace NuclearEngine
 						if (FAILED(DX11Context::GetDevice()->CreateVertexShader(sdesc->VertexShaderCode.DXBC_SourceCode.Buffer,
 							sdesc->VertexShaderCode.DXBC_SourceCode.Size, 0, &result->VertexShader)))
 						{
-							Log->Info("[DX11Shader] Vertex Shader Creation Failed!\n");
+							Log.Info("[DX11Shader] Vertex Shader Creation Failed!\n");
 							return;
 						}
 					}
@@ -50,14 +50,14 @@ namespace NuclearEngine
 				{
 					if (sdesc->PixelShaderCode.Language !=API::ShaderLanguage::DXBC)
 					{
-						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Pixel- shaders in DirectX Bytecode \"DXBC\" language!\n");
+						Log.Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Pixel- shaders in DirectX Bytecode \"DXBC\" language!\n");
 					}
 					else
 					{
 						if (FAILED(DX11Context::GetDevice()->CreatePixelShader(sdesc->PixelShaderCode.DXBC_SourceCode.Buffer,
 							sdesc->PixelShaderCode.DXBC_SourceCode.Size, 0, &result->PixelShader)))
 						{
-							Log->Info("[DX11Shader] Pixel Shader Creation Failed!\n");
+							Log.Info("[DX11Shader] Pixel Shader Creation Failed!\n");
 							return;
 						}
 					}					
@@ -66,14 +66,14 @@ namespace NuclearEngine
 				{
 					if (sdesc->GeometryShaderCode.Language !=API::ShaderLanguage::DXBC)
 					{
-						Log->Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Geometry- shaders in DirectX Bytecode \"DXBC\" language!\n");
+						Log.Error("[DX11Shader] DirectX 11 Renderer Backend expects all -Geometry- shaders in DirectX Bytecode \"DXBC\" language!\n");
 					}
 					else
 					{
 						if (FAILED(DX11Context::GetDevice()->CreateGeometryShader(sdesc->GeometryShaderCode.DXBC_SourceCode.Buffer,
 							sdesc->GeometryShaderCode.DXBC_SourceCode.Size, 0, &result->GeometryShader)))
 						{
-							Log->Info("[DX11Shader] Geometry Shader Creation Failed!\n");
+							Log.Info("[DX11Shader] Geometry Shader Creation Failed!\n");
 							return;
 						}
 					}

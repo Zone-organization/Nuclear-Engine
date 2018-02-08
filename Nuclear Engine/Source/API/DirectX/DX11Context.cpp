@@ -32,7 +32,7 @@ namespace NuclearEngine
 
 			bool DX11Context::Initialize(GLFWwindow* window)
 			{
-				Log->Info("[Engine] Initializing DirectX 11 Renderer.\n");
+				Log.Info("[Engine] Initializing DirectX 11 Renderer.\n");
 				IDXGIFactory1* factory;
 				IDXGIAdapter1* adapter;
 				IDXGIOutput* adapterOutput;
@@ -163,7 +163,7 @@ namespace NuclearEngine
 				if (FAILED(result))
 				{
 
-					Log->FatalError("[DirectX] Create Device And Swap Chain Failed!!\n");
+					Log.FatalError("[DirectX] Create Device And Swap Chain Failed!!\n");
 					//Release the Adapter interface
 					adapter->Release();
 					return false;
@@ -185,7 +185,7 @@ namespace NuclearEngine
 				if (FAILED(Device->CreateRenderTargetView(backBuffer, NULL, &RenderTarget)))
 				{
 					backBuffer->Release();
-					Log->FatalError("[DirectX] Create BackBuffer Failed!!.\n");
+					Log.FatalError("[DirectX] Create BackBuffer Failed!!.\n");
 					return false;
 
 				}
@@ -216,7 +216,7 @@ namespace NuclearEngine
 				result = Device->CreateTexture2D(&depthBufferDesc, NULL, &depthBuffer);
 				if (FAILED(result))
 				{
-					Log->FatalError("[DirectX] Create Depth Buffer Failed!!\n");
+					Log.FatalError("[DirectX] Create Depth Buffer Failed!!\n");
 
 					return false;
 				}
@@ -249,7 +249,7 @@ namespace NuclearEngine
 				result = Device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
 				if (FAILED(result))
 				{
-					Log->FatalError("[DirectX] Create Depth Stencil State Failed!!.\n");
+					Log.FatalError("[DirectX] Create Depth Stencil State Failed!!.\n");
 
 					return false;
 				}
@@ -269,7 +269,7 @@ namespace NuclearEngine
 				result = Device->CreateDepthStencilView(depthBuffer, &depthStencilViewDesc, &m_depthStencilView);
 				if (FAILED(result))
 				{
-					Log->FatalError("[DirectX] Create Depth Stencil View Failed!!.\n");
+					Log.FatalError("[DirectX] Create Depth Stencil View Failed!!.\n");
 
 					return false;
 				}
@@ -292,7 +292,7 @@ namespace NuclearEngine
 				result = Device->CreateRasterizerState(&rasterDesc, &m_rasterState);
 				if (FAILED(result))
 				{
-					Log->FatalError("[DirectX] Create Rasterizer State Failed!!.\n");
+					Log.FatalError("[DirectX] Create Rasterizer State Failed!!.\n");
 
 					return false;
 				}
@@ -311,11 +311,11 @@ namespace NuclearEngine
 				viewPort.MaxDepth = 1.0f;
 				Context->RSSetViewports(1, &viewPort);
 
-				Log->Info("[DirectX] Successfully Initialized\n");
-				Log->Info("[DirectX] Version: 11\n");
-				Log->Info("[DirectX] Vendor: ");
-				Log->Info(m_videoCardDescription);
-				Log->Info("\n");
+				Log.Info("[DirectX] Successfully Initialized\n");
+				Log.Info("[DirectX] Version: 11\n");
+				Log.Info("[DirectX] Vendor: ");
+				Log.Info(m_videoCardDescription);
+				Log.Info("\n");
 
 				return true;
 			}

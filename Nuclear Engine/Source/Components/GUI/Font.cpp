@@ -19,7 +19,7 @@ namespace NuclearEngine
 			}
 			bool Font::Create(std::string path, unsigned int size)
 			{ 
-				Log->Info("[Font] Loading Font: " + path + "\n");
+				Log.Info("[Font] Loading Font: " + path + "\n");
 				
 
 			

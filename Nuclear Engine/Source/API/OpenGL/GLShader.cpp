@@ -41,11 +41,11 @@ namespace NuclearEngine
 					if (!success)
 					{
 						GLCall(glGetShaderInfoLog(shader, 1024, NULL, infoLog));
-						Log->Info("[GLShader] Compiling Error -- In ");
-						Log->Info(type);
-						Log->Info(" Shader - Info : \n");
-						Log->Info(infoLog);
-						Log->Info("\n");
+						Log.Info("[GLShader] Compiling Error -- In ");
+						Log.Info(type);
+						Log.Info(" Shader - Info : \n");
+						Log.Info(infoLog);
+						Log.Info("\n");
 					}
 				}
 				else
@@ -54,9 +54,9 @@ namespace NuclearEngine
 					if (!success)
 					{
 						GLCall(glGetProgramInfoLog(shader, 1024, NULL, infoLog));
-						Log->Info("[GLShader] Linking Error - Info : ");
-						Log->Info(infoLog);
-						Log->Info("\n");
+						Log.Info("[GLShader] Linking Error - Info : ");
+						Log.Info(infoLog);
+						Log.Info("\n");
 					}
 				}
 
@@ -101,7 +101,7 @@ namespace NuclearEngine
 			
 			void GLShader::Create(GLShader* result, ShaderDesc* desc)
 			{
-				Log->Info("[GLShader] Creating Shader: " + desc->Name + "\n");
+				Log.Info("[GLShader] Creating Shader: " + desc->Name + "\n");
 			
 				GLuint vertex = 0, fragment = 0, geometry = 0;
 				bool vsuccess = true, fsuccess = true, gsuccess = true;
@@ -109,7 +109,7 @@ namespace NuclearEngine
 				{
 					if (desc->VertexShaderCode.Language != API::ShaderLanguage::GLSL)
 					{
-						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Vertex- shaders in GLSL language!\n");
+						Log.Error("[GLShader] OpenGL Renderer Backend expects all -Vertex- shaders in GLSL language!\n");
 					}
 					else 
 					{
@@ -120,7 +120,7 @@ namespace NuclearEngine
 				{
 					if (desc->PixelShaderCode.Language != API::ShaderLanguage::GLSL)
 					{
-						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Pixel- shaders in GLSL language!\n");
+						Log.Error("[GLShader] OpenGL Renderer Backend expects all -Pixel- shaders in GLSL language!\n");
 					}
 					else {
 						fsuccess = CreateShaderID(desc->PixelShaderCode.GLSL_SourceCode, ShaderType::Pixel, fragment);
@@ -130,7 +130,7 @@ namespace NuclearEngine
 				{
 					if (desc->GeometryShaderCode.Language != API::ShaderLanguage::GLSL)
 					{
-						Log->Error("[GLShader] OpenGL Renderer Backend expects all -Geometry- shaders in GLSL language!\n");
+						Log.Error("[GLShader] OpenGL Renderer Backend expects all -Geometry- shaders in GLSL language!\n");
 
 					}
 					else {

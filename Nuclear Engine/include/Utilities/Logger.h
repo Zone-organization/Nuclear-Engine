@@ -25,19 +25,10 @@ namespace NuclearEngine {
 
 			void Info(std::string format, ...);
 
-			void Error(const char* format, ...);
-
-			void FatalError(const char* format, ...);
-
-			void Warning(const char* format, ...);
-
-			void Info(const char* format, ...);
-
 		private:
 			void Write(std::string TextString);
 		};
 
 	}
-	static Utilities::Logger *Log = new Utilities::Logger();
-
+	static Utilities::Logger Log;
 }

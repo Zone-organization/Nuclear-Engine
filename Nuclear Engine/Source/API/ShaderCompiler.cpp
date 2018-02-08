@@ -29,7 +29,7 @@ namespace NuclearEngine {
 			// Get a pointer to the error message text Buffer.
 			compileErrors = (char*)(Shader->GetBufferPointer());
 
-			Log->Error("[D3DCompiler]" + std::string(compileErrors));
+			Log.Error("[D3DCompiler]" + std::string(compileErrors));
 
 			// Release the error message.
 			Shader->Release();
@@ -60,15 +60,15 @@ namespace NuclearEngine {
 			{
 				for (uint i = 0; i < Infos.size(); i++)
 				{
-					NuclearEngine::Log->Info("[XShaderCompiler] " + Infos.at(i).Message() + '\n');
+					NuclearEngine::Log.Info("[XShaderCompiler] " + Infos.at(i).Message() + '\n');
 				}
 				for (uint i = 0; i < Warnings.size(); i++)
 				{
-					NuclearEngine::Log->Warning("[XShaderCompiler] " + Warnings.at(i).Message() + '\n');
+					NuclearEngine::Log.Warning("[XShaderCompiler] " + Warnings.at(i).Message() + '\n');
 				}
 				for (uint i = 0; i < Errors.size(); i++)
 				{
-					NuclearEngine::Log->Error("[XShaderCompiler] " + Errors.at(i).Message() + '\n');
+					NuclearEngine::Log.Error("[XShaderCompiler] " + Errors.at(i).Message() + '\n');
 				}
 			}
 
@@ -127,7 +127,7 @@ namespace NuclearEngine {
 
 			if (FAILED(D3DCompile(SourceCode.c_str(), SourceCode.length(), 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &m_blob, &ERRMSG)))
 			{
-				Log->Error("[ShaderCompiler] CompileHLSL2DXBC Failed\n");
+				Log.Error("[ShaderCompiler] CompileHLSL2DXBC Failed\n");
 
 				Check_D3DCompile_Errors(ERRMSG);
 
@@ -180,7 +180,7 @@ namespace NuclearEngine {
 
 			if (!Xsc::CompileShader(inputDesc, outputDesc, &log))
 			{
-				Log->Error("[ShaderCompiler] CompileDXBC2GLSL Failed!\n");
+				Log.Error("[ShaderCompiler] CompileDXBC2GLSL Failed!\n");
 			}
 			log.Get_Whole_Log();
 

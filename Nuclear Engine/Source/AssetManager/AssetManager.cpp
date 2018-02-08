@@ -30,11 +30,11 @@ namespace NuclearEngine {
 
 		if (Data.Img_Data_Buf == NULL)
 		{
-			Log->Error(std::string("[AssetManager] Failed To Load Texture: " + Path + '\n'));
+			Log.Error(std::string("[AssetManager] Failed To Load Texture: " + Path + '\n'));
 
 		}
 
-		Log->Info(std::string("[AssetManager] Loaded Texture: " + Path + '\n'));
+		Log.Info(std::string("[AssetManager] Loaded Texture: " + Path + '\n'));
 
 		return Data;
 	}
@@ -63,11 +63,11 @@ namespace NuclearEngine {
 		Data.Img_Data_Buf = stbi_load(Path.c_str(), &Data.Width, &Data.Height, &Data.Components_Number, req_c);
 		if (Data.Img_Data_Buf == NULL)
 		{
-			Log->Error(std::string("[AssetManager] Failed To Load Texture: " + Path + '\n'));
+			Log.Error(std::string("[AssetManager] Failed To Load Texture: " + Path + '\n'));
 
 		}
 
-		Log->Info(std::string("[AssetManager] Loaded Texture: " + Path + '\n'));
+		Log.Info(std::string("[AssetManager] Loaded Texture: " + Path + '\n'));
 
 		return Data;
 	}

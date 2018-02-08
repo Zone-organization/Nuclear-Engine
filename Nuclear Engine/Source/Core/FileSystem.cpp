@@ -18,7 +18,7 @@ namespace NuclearEngine
 				}
 				else
 				{
-					Log->Error("[FileSystem] Couldn't Read File: " + Filepath + "\n");
+					Log.Error("[FileSystem] Couldn't Read File: " + Filepath + "\n");
 					return std::string("NoString");
 					//throw std::runtime_error(std::string("[FileSystem] Couldn't Read File: ") + Filepath);
 				}
@@ -39,7 +39,7 @@ namespace NuclearEngine
 				}
 				else
 				{
-					Log->Error("[FileSystem] Couldn't Read File: " + Filepath);
+					Log.Error("[FileSystem] Couldn't Read File: " + Filepath);
 					return std::string("NoString");
 				}
 				if (reverseorder = false)
