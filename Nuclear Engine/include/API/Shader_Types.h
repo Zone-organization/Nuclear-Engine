@@ -57,6 +57,7 @@ namespace NuclearEngine
 #endif
 #ifdef NE_COMPILE_CORE_OPENGL
 			std::string GLSL_SourceCode;
+			bool convertedshaderrowmajor = false;
 #endif
 			ShaderReflection Reflection;
 			ShaderLanguage Language;

@@ -157,7 +157,10 @@ namespace NuclearEngine
 						break;
 					}
 				}
-				
+				if (Desc.Format == Format::R8)
+				{
+					GLCall(glPixelStorei(GL_PACK_ALIGNMENT, 1));
+				}
 				GLCall(glBindTexture(result->type, 0));
 			}
 

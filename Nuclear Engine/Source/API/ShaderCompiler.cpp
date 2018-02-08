@@ -175,6 +175,11 @@ namespace NuclearEngine {
 			std::ostringstream stream;
 			outputDesc.sourceCode = &stream;
 			outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;
+			if (result->convertedshaderrowmajor == true)
+			{
+				outputDesc.options.rowMajorAlignment = true;
+			}
+
 			// Compile HLSL code into GLSL
 			XSC_ERROR_LOG log;
 

@@ -31,10 +31,6 @@
     <ClInclude Include="include\Math\Transformation.h" />
     <ClInclude Include="include\Math\Vector.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
-    <ClInclude Include="include\Platform\Win32\Win32_Clock.h" />
-    <ClInclude Include="include\Platform\Clock.h" />
-    <ClInclude Include="include\Platform\Input.h" />
-    <ClInclude Include="include\Platform\Timer.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\BuildConfig.h" />
     <ClInclude Include="include\API\OpenGL\GLCommon.h" />
@@ -84,6 +80,10 @@
     <ClInclude Include="include\API\DirectX\DX11BlendState.h" />
     <ClInclude Include="include\API\OpenGL\GLBlendState.h" />
     <ClInclude Include="include\API\BlendState.h" />
+    <ClInclude Include="include\Platform\Win32\Win32_Clock.h" />
+    <ClInclude Include="include\Platform\Clock.h" />
+    <ClInclude Include="include\Platform\Input.h" />
+    <ClInclude Include="include\Platform\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

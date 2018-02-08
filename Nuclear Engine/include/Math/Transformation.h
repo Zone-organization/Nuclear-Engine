@@ -162,24 +162,31 @@ namespace NuclearEngine {
 		// Note: projection
 		// ----------------------
 		template <typename T>
-		Matrix<4, 4, T> Orthographic(T left, T right, T top, T bottom, T near_plane, T far_plane)
+		Matrix<4, 4, T> Orthographic(T left, T right, T top, T bottom, T zNear, T zFar)
 		{
 			Matrix<4, 4, T> result;
 
-			result[0][0] = 2.0f / (right - left);
-
-			result[1][1] = 2.0f / (top - bottom);
-
-			result[2][2] = -2.0f / (far_plane - near_plane);
-
+			result[0][0] = static_cast<T>(2) / (right - left);
+			result[1][1] = static_cast<T>(2) / (top - bottom);
+			result[2][2] = -static_cast<T>(2) / (zFar - zNear);
 			result[3][0] = -(right + left) / (right - left);
 			result[3][1] = -(top + bottom) / (top - bottom);
-			result[3][2] = -(far_plane + near_plane) / (far_plane - near_plane);
-			result[3][3] = 1.0f;
+			result[3][2] = -(zFar + zNear) / (zFar - zNear);
+			return result;
+		}
+		template <typename T>
+		Matrix<4, 4, T> Orthographic(T left, T right, T top, T bottom)
+		{
+			Matrix<4, 4, T> result;
+
+			result[0][0] = static_cast<T>(2) / (right - left);
+			result[1][1] = static_cast<T>(2) / (top - bottom);
+			result[2][2] = -static_cast<T>(1);
+			result[3][0] = -(right + left) / (right - left);
+			result[3][1] = -(top + bottom) / (top - bottom);
 
 			return result;
 		}
-
 		template <typename T>
 		Matrix<4, 4, T> Perspective(T fov, T aspect, T near_plane, T far_plane)
 		{

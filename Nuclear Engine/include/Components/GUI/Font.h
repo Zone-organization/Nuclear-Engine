@@ -4,6 +4,8 @@
 #include <API\Texture.h>
 #include <API\VertexBuffer.h>
 #include <API\Color.h>
+#include <API/ConstantBuffer.h>
+#include <API/BlendState.h>
 #include <map>
 namespace NuclearEngine
 {
@@ -19,18 +21,22 @@ namespace NuclearEngine
 				unsigned int Advance;    // Horizontal offset to advance to next glyph
 			};
 
-			class Font {
+			class NEAPI Font {
 			public:
 				Font();
 				~Font();
 
-				bool Create(std::string path, unsigned int size);
+				bool Create(std::string path, unsigned int size, std::string VertexShaderPath = "Assets/NuclearEngine/Shaders/TextShader.vs.hlsl", std::string PixelShaderPATH = "Assets/NuclearEngine/Shaders/TextShader.ps.hlsl");
 
-				static void InitializeTextRenderer(std::string VSPath, std::string PSPATH);
+				void SetProjectionMatrix(Math::Matrix4 projection);
 				void RenderText(std::string text, float x, float y, float scale, API::Color color);
 			private:
 				std::map<char, Character> Characters;
 				API::VertexBuffer Font_VB;
+				API::Shader TextShader;
+				API::ConstantBuffer TextColorCB;
+				API::ConstantBuffer TextProjectionCB;
+				API::BlendState Blending_State;
 			};
 		}
 	}

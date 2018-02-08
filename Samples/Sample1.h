@@ -7,7 +7,8 @@ protected:
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
 
-	Components::Model Nanosuit;
+	Components::GUI::Font arial;
+	//Components::Model Nanosuit;
 	Components::Model Cube;
 	Shading::Techniques::NoLight LightTech;
 	Renderers::Renderer3D Renderer;
@@ -43,8 +44,10 @@ public:
 		Textures.push_back(DiffuseTex);
 		Components::Model::CreateCube(&Cube, Textures);
 		
-		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
+		//AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
 
+		arial.Create("Assets/Common/Fonts/arial.ttf", 24);
+		arial.SetProjectionMatrix(Math::Orthographic(0.0f, static_cast<float>(_Width_), 0.0f, static_cast<float>(_Height_)));
 		Core::Context::EnableDepthBuffer(true);
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
@@ -96,11 +99,12 @@ public:
 		Camera.SetModelMatrix(CubeMatrix);
 		Cube.Draw(&Renderer.GetShader());
 
-		Math::Matrix4 NanosuitMatrix;
-		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.75f, 0.0f));
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));
-		Camera.SetModelMatrix(NanosuitMatrix);
-		Nanosuit.Draw(&Renderer.GetShader());
+		arial.RenderText("Thisissampletext", 25.0f, 25.0f, 1.0f, API::Color(0.5f, 0.8f, 0.2f,1.0f));
+		//Math::Matrix4 NanosuitMatrix;
+		//NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.75f, 0.0f));
+		//NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.2f, 0.2f, 0.2f));
+		//Camera.SetModelMatrix(NanosuitMatrix);
+		//Nanosuit.Draw(&Renderer.GetShader());
 
 		Core::Context::End();
 	}
