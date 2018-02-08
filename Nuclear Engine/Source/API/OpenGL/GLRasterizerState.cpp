@@ -12,7 +12,7 @@ namespace NuclearEngine
 
 			GLRasterizerState::GLRasterizerState()
 			{
-
+				Cullenabled = false;
 			}
 			GLRasterizerState::~GLRasterizerState()
 			{
@@ -60,8 +60,9 @@ namespace NuclearEngine
 					glEnable(GL_CULL_FACE);
 					glCullFace(Cullfacemode);
 					glFrontFace(Frontfaceorientation);
-					glPolygonMode(GL_FRONT_AND_BACK, Fillmode);
 				}
+				glPolygonMode(GL_FRONT_AND_BACK, Fillmode);
+
 			}
 			void GLRasterizerState::Bind_Default()
 			{
