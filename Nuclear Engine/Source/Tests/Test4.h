@@ -10,8 +10,11 @@ protected:
 
 	API::VertexBuffer CubeVB;
 	API::VertexBuffer PlaneVB;
+	API::VertexBuffer WindowVB;
+
 	API::Texture PlaneTex;
 	API::Texture CubeTex;
+	API::Texture WindowTex;
 
 	bool Depthshaderenabled;
 
@@ -19,6 +22,16 @@ protected:
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
+
+
+	Math::Vector3 windows[5] = 
+	{
+		Math::Vector3(-1.5f, 0.0f, -0.48f),
+		Math::Vector3(1.5f, 0.0f, 0.51f),
+		Math::Vector3(0.0f, 0.0f, 0.7f),
+		Math::Vector3(-0.3f, 0.0f, -2.3f),
+		Math::Vector3(0.5f, 0.0f, -0.6f)
+	};
 
 	std::string VertexShader = R"(struct VertexInputType
 {
@@ -171,6 +184,16 @@ public:
 			-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
 			5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 		};
+		float windowVertices[] = {
+			// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+			0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+			0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+			1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+			0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+			1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+			1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+		};
 
 		VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;
@@ -181,6 +204,10 @@ public:
 		vDesc.data = planeVertices;
 		vDesc.size = sizeof(planeVertices);
 		API::VertexBuffer::Create(&PlaneVB, &vDesc);
+		
+		vDesc.data = windowVertices;
+		vDesc.size = sizeof(windowVertices);
+		API::VertexBuffer::Create(&WindowVB, &vDesc);
 
 		API::InputLayout ShaderIL;
 		ShaderIL.Push("POSITION", 0, DataType::Float3);
@@ -188,6 +215,7 @@ public:
 
 		CubeVB.SetInputLayout(&ShaderIL, &TestShader);
 		PlaneVB.SetInputLayout(&ShaderIL, &TestShader);
+		WindowVB.SetInputLayout(&ShaderIL, &TestShader);
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
@@ -201,7 +229,8 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
-				
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/window.png", &WindowTex, Desc);
+
 		API::DepthStencilStateDesc DS_Desc;
 		DS_Desc.DepthEnabled = true;
 		DS_Desc.DepthFunc = API::Comparison_Func::ALWAYS;
@@ -213,10 +242,11 @@ public:
 		API::RasterizerState::Create(&R_State, rasterizerdesc);
 
 		API::BlendStateDesc blenddesc;
-		blenddesc.RenderTarget[0].SrcBlend = API::BLEND::SRC_COLOR;
-		blenddesc.RenderTarget[0].DestBlend = API::BLEND::BLEND_FACTOR;
-		blenddesc.RenderTarget[0].SrcBlendAlpha = API::BLEND::ONE;
-		blenddesc.RenderTarget[0].DestBlendAlpha = API::BLEND::ZERO;
+		blenddesc.RenderTarget[0].BlendEnable = true;
+		blenddesc.RenderTarget[0].SrcBlend = API::BLEND::SRC_ALPHA;
+		blenddesc.RenderTarget[0].DestBlend = API::BLEND::INV_SRC_ALPHA;
+		blenddesc.RenderTarget[0].SrcBlendAlpha = API::BLEND::SRC_ALPHA;
+		blenddesc.RenderTarget[0].DestBlendAlpha = API::BLEND::INV_SRC_ALPHA;
 		blenddesc.RenderTarget[0].RenderTargetWriteMask = API::COLOR_WRITE_ENABLE_ALL;
 		API::BlendState::Create(&B_State, blenddesc);
 		
@@ -320,15 +350,6 @@ public:
 			R_State.Bind_Default();
 		}
 
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num5))
-		{
-			B_State.Bind(API::Color(0.75f));
-		}
-		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num6))
-		{
-			B_State.Bind_Default();
-		}
-
 		CubeVB.Bind();
 
 		// cube 1
@@ -351,6 +372,35 @@ public:
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
 		Core::Context::Draw(6);
+
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num5))
+		{
+			B_State.Bind(API::Color(0.75f));
+		}
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num6))
+		{
+			B_State.Bind_Default();
+		}
+
+		if (!Depthshaderenabled)
+		{
+			WindowTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+		}
+
+		WindowVB.Bind();
+		std::map<float, Math::Vector3> sorted;
+		for (unsigned int i = 0; i < 5; i++)
+		{
+			float distance = Math::Length(Camera.GetPosition() - windows[i]);
+			sorted[distance] = windows[i];
+		}
+		for (std::map<float, Math::Vector3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+		{
+			Math::Matrix4 model;
+			model = Math::Translate(model, it->second);
+			Camera.SetModelMatrix(model);
+			Core::Context::Draw(6);
+		}		
 
 		Core::Context::End();
 	}
