@@ -71,7 +71,6 @@
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="include\API\RenderStates_Types.h" />
-    <ClInclude Include="include\Components\GUI\Font.h" />
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
@@ -84,6 +83,15 @@
     <ClInclude Include="include\Platform\Clock.h" />
     <ClInclude Include="include\Platform\Input.h" />
     <ClInclude Include="include\Platform\Timer.h" />
+    <ClInclude Include="include\Components\GUI\imconfig.h" />
+    <ClInclude Include="include\Components\GUI\imgui.h" />
+    <ClInclude Include="Source\Components\GUI\imgui_internal.h" />
+    <ClInclude Include="Source\Components\GUI\stb_rect_pack.h" />
+    <ClInclude Include="Source\Components\GUI\stb_textedit.h" />
+    <ClInclude Include="Source\Components\GUI\stb_truetype.h" />
+    <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
+    <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
+    <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -137,7 +145,6 @@
     <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
-    <ClCompile Include="Source\Components\GUI\Font.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11RasterizerState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
@@ -145,5 +152,10 @@
     <ClCompile Include="Source\API\DirectX\DX11BlendState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLBlendState.cpp" />
     <ClCompile Include="Source\API\BlendState.cpp" />
+    <ClCompile Include="Source\Components\GUI\imgui.cpp" />
+    <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
+    <ClCompile Include="Source\Core\imgui_impl\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Source\Core\imgui_impl\imgui_impl.cpp" />
+    <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
   </ItemGroup>
 </Project>

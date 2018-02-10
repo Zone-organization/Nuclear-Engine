@@ -5,6 +5,8 @@
 #include <GLFW\include\glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW\include\glfw3native.h>
+#include "imgui_impl\imgui_impl.h"
+
 #include <API\DirectX\DX11Context.h>
 #include <Core\Engine.h>
 
@@ -27,11 +29,40 @@ namespace NuclearEngine
 		}
 		void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 		{
+			Imgui_Scroll_Callback(yoffset);
 			Engine::GetGame()->OnMouseScroll(xoffset, yoffset);
+		}
+
+		void mouse_button_callback(GLFWwindow*, int button, int action, int mods)
+		{
+			Imgui_mouse_button_callback(button, action);
+		}
+		void key_callback(GLFWwindow*, int key, int, int action, int mods)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			if (action == GLFW_PRESS)
+				io.KeysDown[key] = true;
+			if (action == GLFW_RELEASE)
+				io.KeysDown[key] = false;
+
+			(void)mods; // Modifiers are not reliable across systems
+			io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+			io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+			io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+			io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+		}
+
+		void char_callback(GLFWwindow*, unsigned int c)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			if (c > 0 && c < 0x10000)
+				io.AddInputCharacter((unsigned short)c);
 		}
 
 		bool Application::Create(const ApplicationDesc & Desc)
 		{
+			Core::Context::SetRenderAPI(Desc.renderer);
+
 			glfwInit();
 
 			if (Desc.renderer != RenderAPI::OpenGL3)
@@ -58,6 +89,7 @@ namespace NuclearEngine
 					Log.Error("[Application] Failed to initialize GLAD in window: " + Desc.title + "\n");
 					return false;
 				}
+
 			}
 
 			if (Desc.renderer == RenderAPI::DirectX11)
@@ -68,12 +100,25 @@ namespace NuclearEngine
 					return false;
 				}
 			}
+			ImGui_Impl_Init(window);
 
+			if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
+			{
+				ImGui_ImplGL3_Init();
+			}
+			else if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
+			{
+				ImGui_ImplDX11_Init(API::DirectX::DX11Context::GetDevice(), API::DirectX::DX11Context::GetContext());
+			}
+
+			ImGui_Impl_CreateDeviceObjects();
+			//Install Callbacks
 			glfwSetWindowSizeCallback(window, window_size_callback);
 			glfwSetCursorPosCallback(window, mouse_callback);
 			glfwSetScrollCallback(window, scroll_callback);
-
-			Core::Context::SetRenderAPI(Desc.renderer);
+			glfwSetMouseButtonCallback(window, mouse_button_callback);
+			glfwSetKeyCallback(window, key_callback);
+			glfwSetCharCallback(window, char_callback);
 
 			Log.Info("[Application] Created Application: " + Desc.title + " Width: " +  std::to_string(Desc.width) + " Height: " + std::to_string(Desc.height) + " \n");
 			return true;

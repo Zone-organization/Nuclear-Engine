@@ -5,6 +5,8 @@
 #include <..\Source\Tests\Test2.h>
 #include <..\Source\Tests\Test3.h>
 #include <..\Source\Tests\Test4.h>
+#include <Components\GUI\imgui.h>
+#include "..\Core\imgui_impl\imgui_impl.h"
 
 /*
 	      .-.               
@@ -178,9 +180,9 @@ namespace NuclearEngine {
 				float currentFrame = clock.GetElapsedTime().AsSeconds();
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
-
-				GamePtr->FrameTime = 1000.0f / deltaTime;
-				GamePtr->FPS = 1.0f / deltaTime;
+				ImGui_Impl_NewFrame();
+				GamePtr->FrameTime = 1000.0f / ImGui::GetIO().Framerate;
+				GamePtr->FPS = ImGui::GetIO().Framerate;
 
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);

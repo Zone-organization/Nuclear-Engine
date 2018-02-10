@@ -23,13 +23,15 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 - __Renderer__
   - Support for Hybrid Lighting system which allows you to implement more lighting techniques.
   - Support for Phong-Shading.
+  - Support for IMGUI.
+  
 ## Current Platforms
   - Windows 7+     
 
 ## Current Milestones
   - Improve the OneAPI:
     - Implement RenderTarget classes.
-	- Implement Text Rendering.
+
 ## Road-map
   - Support Android & Linux & UWP Platforms.
   - Support PhysX or Bullet Physics Library.
