@@ -89,6 +89,7 @@ public:
 
 		RectangleVB.SetInputLayout(&RectangleIL, &RectangleShader);
 		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
+		Components::GUI::Font::Load_TTF_Font(nullptr, "Assets/Common/Fonts/arial.ttf", 32.0f);
 
 		API::Texture_Desc TexDesc;
 		TexDesc.Filter = API::TextureFilter::Linear2D;
@@ -96,7 +97,7 @@ public:
 		TexDesc.Format = API::Format::R8G8B8A8;
 		TexDesc.Type = API::TextureType::Texture2D;
 
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
+		//AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
 
 		Core::Application::Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -108,13 +109,13 @@ public:
 
 		//Change Background Color to Black in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-
-		WoodenBoxTex.PSBind(0);
+		Components::GUI::Font::Bind();
+		//WoodenBoxTex.PSBind(0);
 		RectangleShader.Bind();
 		RectangleVB.Bind();
 		RectangleIB.Bind();
 		Core::Context::DrawIndexed(6);
-
+		ImGui::Render();
 		Core::Context::End();
 	}
 	void Shutdown() override 

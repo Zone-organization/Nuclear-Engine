@@ -360,6 +360,7 @@
     <ClInclude Include="include\API\Texture_Types.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\ShaderCompiler.h" />
+    <ClInclude Include="include\Components\GUI\Font.h" />
     <ClInclude Include="include\Components\GUI\imconfig.h" />
     <ClInclude Include="include\Components\GUI\imgui.h" />
     <ClInclude Include="include\Components\Mesh.h" />
@@ -455,6 +456,7 @@
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
+    <ClCompile Include="Source\Components\GUI\Font.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />

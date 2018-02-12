@@ -92,6 +92,7 @@
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
+    <ClInclude Include="include\Components\GUI\Font.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -157,5 +158,6 @@
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl_dx11.cpp" />
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl.cpp" />
     <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
+    <ClCompile Include="Source\Components\GUI\Font.cpp" />
   </ItemGroup>
 </Project>
