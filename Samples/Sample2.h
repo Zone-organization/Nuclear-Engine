@@ -4,6 +4,10 @@
 class Sample2 : public Core::Game
 {
 protected:
+	bool renderboxes = true;
+	bool renderspheres = true;
+	bool renderskybox = true;
+	bool rendernanosuit = true;
 	API::Texture DiffuseTex;
 	API::Texture SpecularTex;
 	API::Texture WhiteTex;
@@ -232,39 +236,53 @@ public:
 		Core::Context::Begin();
 
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-
-		for (unsigned int i = 0; i < 10; i++)
+		if (renderboxes)
 		{
-			// calculate the model matrix for each object and pass it to shader before drawing
-			Math::Matrix4 model;
-			model = Math::Translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
-			model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
-			Camera.SetModelMatrix(model);
+			for (unsigned int i = 0; i < 10; i++)
+			{
+				// calculate the model matrix for each object and pass it to shader before drawing
+				Math::Matrix4 model;
+				model = Math::Translate(model, cubePositions[i]);
+				float angle = 20.0f * i;
+				model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
+				Camera.SetModelMatrix(model);
 
-			Cube.Draw(&Renderer.GetShader());
+				Cube.Draw(&Renderer.GetShader());
+			}
 		}
-		for (unsigned int i = 0; i < 9; i++)
+		if (renderspheres)
 		{
-			Math::Matrix4 model;
-			model = Math::Translate(model, pointLightPositions[i]);
-			model = Math::Scale(model, Math::Vector3(0.25f));
-			Camera.SetModelMatrix(model);
-			Lamp.Draw(&Renderer.GetShader());
+			for (unsigned int i = 0; i < 9; i++)
+			{
+				Math::Matrix4 model;
+				model = Math::Translate(model, pointLightPositions[i]);
+				model = Math::Scale(model, Math::Vector3(0.25f));
+				Camera.SetModelMatrix(model);
+				Lamp.Draw(&Renderer.GetShader());
+			}
 		}
-
-		Math::Matrix4 NanosuitMatrix;
-		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
-		Camera.SetModelMatrix(NanosuitMatrix);
-		Nanosuit.Draw(&Renderer.GetShader());
-		
+		if (rendernanosuit)
+		{
+			Math::Matrix4 NanosuitMatrix;
+			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
+			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
+			Camera.SetModelMatrix(NanosuitMatrix);
+			Nanosuit.Draw(&Renderer.GetShader());
+		}
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
 	
 		Renderer.Render_Light();
 
-		Skybox.Render();
+		if (renderskybox)
+		{
+			Skybox.Render();
+		}
+
+		ImGui::Checkbox("Render Boxes", &renderboxes);
+		ImGui::Checkbox("Render Lamps Spheres", &renderspheres);
+		ImGui::Checkbox("Render Nanosuit", &rendernanosuit);
+		ImGui::Checkbox("Render Skybox", &renderskybox);
 
 		ShowOverlay(true);
 
