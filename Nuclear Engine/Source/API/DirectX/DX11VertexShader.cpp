@@ -1,0 +1,73 @@
+#include <API\DirectX\DX11VertexShader.h>
+
+#ifdef NE_COMPILE_DIRECTX11
+#include <API\DirectX\DX11Context.h>
+#include <API\DirectX\DX11ConstantBuffer.h>
+#include <API\Shader_Types.h>
+
+namespace NuclearEngine
+{
+	namespace API
+	{
+		namespace DirectX
+		{
+			DX11VertexShader::DX11VertexShader()
+			{
+				VertexShader = nullptr;
+			}
+
+			DX11VertexShader::~DX11VertexShader()
+			{
+				VertexShader = nullptr;
+			}
+
+			void DX11VertexShader::Create(DX11VertexShader* result, BinaryShaderBlob* sdesc)
+			{
+				if (sdesc->Finished)
+				{
+					if (sdesc->Language != API::ShaderLanguage::DXBC)
+					{
+						Log.Error("[DX11VertexShader] DirectX 11 Renderer Backend expects all Vertex shaders in DirectX Bytecode \"DXBC\" language!\n");
+					}
+					else {
+						result->VS_Buffer = sdesc->DXBC_SourceCode.Buffer;
+						result->VS_Size = sdesc->DXBC_SourceCode.Size;
+
+						// encapsulate both shaders into shader Components
+						if (FAILED(DX11Context::GetDevice()->CreateVertexShader(sdesc->DXBC_SourceCode.Buffer,	sdesc->DXBC_SourceCode.Size, 0, &result->VertexShader)))
+						{
+							Log.Info("[DX11VertexShader] Vertex Shader Creation Failed!\n");
+							return;
+						}
+					}
+				}	
+				return;
+			}
+			void DX11VertexShader::Delete(DX11VertexShader * shader)
+			{
+				if (shader->VertexShader != nullptr)
+				{
+					shader->VertexShader->Release();
+				}
+				shader->VertexShader = nullptr;
+			}
+			unsigned int DX11VertexShader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer, API::ShaderType type)
+			{
+				return 0;
+			}
+
+			void DX11VertexShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer, API::ShaderType type)
+			{
+				DX11Context::GetContext()->VSSetShader(VertexShader, 0, 0);
+				DX11Context::GetContext()->VSSetConstantBuffers(this->GetConstantBufferSlot(ubuffer, type), 1, ubuffer->GetBufferPtr());
+			}
+
+			void DX11VertexShader::Bind()
+			{
+				DX11Context::GetContext()->VSSetShader(VertexShader, 0, 0);		
+			}
+		}
+	}
+}
+
+#endif

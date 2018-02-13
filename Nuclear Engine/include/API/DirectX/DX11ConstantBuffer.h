@@ -22,9 +22,9 @@ namespace NuclearEngine
 
 				void Update(const void* data, unsigned int size);
 
+				ID3D11Buffer ** GetBufferPtr();
 			protected:
 				ID3D11Buffer * buffer;
-
 				const char* name;
 			};
 		}

@@ -15,6 +15,7 @@ namespace NuclearEngine
 			class NEAPI GLContext
 			{
 			public:
+				static void Initialize();
 				static void SetPrimitiveType(int primitivetype);
 
 				static void Clear(API::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
@@ -26,7 +27,9 @@ namespace NuclearEngine
 
 				static void SetViewPort(int x, int y, int width, int height);
 
+				//OpenGL only!
 				static void Query_VAO_EBO_State();
+				//static GLuint pipelineid;
 			};
 		}
 	}

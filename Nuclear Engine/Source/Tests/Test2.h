@@ -1,8 +1,6 @@
 #pragma once
 #include "TestCommon.h"
 
-
-
 class Test2 : public Core::Game
 {
 protected:
@@ -89,7 +87,6 @@ public:
 
 		RectangleVB.SetInputLayout(&RectangleIL, &RectangleShader);
 		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
-		Components::GUI::Font::Load_TTF_Font(nullptr, "Assets/Common/Fonts/arial.ttf", 32.0f);
 
 		API::Texture_Desc TexDesc;
 		TexDesc.Filter = API::TextureFilter::Linear2D;
@@ -109,8 +106,7 @@ public:
 
 		//Change Background Color to Black in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		Components::GUI::Font::Bind();
-		//WoodenBoxTex.PSBind(0);
+		WoodenBoxTex.PSBind(0);
 		RectangleShader.Bind();
 		RectangleVB.Bind();
 		RectangleIB.Bind();

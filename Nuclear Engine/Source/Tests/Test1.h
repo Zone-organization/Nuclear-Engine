@@ -92,6 +92,8 @@ public:
 		TriangleShader.Bind();
 		TriangleVB.Bind();
 		Core::Context::Draw(3);
+
+		ImGui::Render();
 		Core::Context::End();
 	}
 

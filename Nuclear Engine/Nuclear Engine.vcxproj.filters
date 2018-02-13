@@ -92,7 +92,11 @@
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
-    <ClInclude Include="include\Components\GUI\Font.h" />
+    <ClInclude Include="include\API\VertexShader.h" />
+    <ClInclude Include="include\API\DirectX\DX11VertexShader.h" />
+    <ClInclude Include="include\API\DirectX\DX11PixelShader.h" />
+    <ClInclude Include="include\API\OpenGL\GLVertexShader.h" />
+    <ClInclude Include="include\API\OpenGL\GLPixelShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -158,6 +162,9 @@
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl_dx11.cpp" />
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl.cpp" />
     <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
-    <ClCompile Include="Source\Components\GUI\Font.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11VertexShader.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11PixelShader.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLVertexShader.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLPixelShader.cpp" />
   </ItemGroup>
 </Project>
