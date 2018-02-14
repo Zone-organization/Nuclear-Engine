@@ -11,10 +11,7 @@ namespace NuclearEngine
 	{
 		namespace OpenGL
 		{
-			void GLContext::Initialize()
-			{
-				//glGenProgramPipelines(1, &pipelineid);
-			}
+	
 			void GLContext::SetPrimitiveType(int primitivetype)
 			{
 				switch (primitivetype)

@@ -2,6 +2,9 @@
 #ifdef NE_USE_RUNTIME_RENDER_API
 #include <Core\Context.h>
 #include <API\Shader.h>
+#include <API\VertexShader.h>
+#include <API\PixelShader.h>
+
 namespace NuclearEngine {
 	namespace API {
 		Texture::Texture()
@@ -44,6 +47,30 @@ namespace NuclearEngine {
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DirectX::DX11Texture::Delete(&result->DXObject);
+			}
+		}
+
+		void Texture::SetInShader(const char * samplerName, VertexShader * shader, unsigned int index)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.SetInShader(samplerName, &shader->GLObject, index);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DXObject.SetInShader(samplerName, &shader->DXObject, index);
+			}
+		}
+
+		void Texture::SetInShader(const char * samplerName, PixelShader * shader, unsigned int index)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.SetInShader(samplerName, &shader->GLObject, index);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DXObject.SetInShader(samplerName, &shader->DXObject, index);
 			}
 		}
 

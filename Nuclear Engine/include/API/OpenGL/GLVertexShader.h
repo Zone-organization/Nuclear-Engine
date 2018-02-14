@@ -23,9 +23,12 @@ namespace NuclearEngine
 				static void Create(GLVertexShader* shader, BinaryShaderBlob* Desc);
 				static void Delete(GLVertexShader* shader);
 
-				void SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type);
+				void SetConstantBuffer(GLConstantBuffer* ubuffer);
 
 				void Bind();
+
+				//OpenGL only!
+				static GLuint GetPipelineID();
 			private:
 				GLuint _ProgramID;
 				static void Fix_Reflected_ConstantBuffer_Slot(GLVertexShader* result, BinaryShaderBlob* blob);

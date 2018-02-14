@@ -97,6 +97,9 @@
     <ClInclude Include="include\API\DirectX\DX11PixelShader.h" />
     <ClInclude Include="include\API\OpenGL\GLVertexShader.h" />
     <ClInclude Include="include\API\OpenGL\GLPixelShader.h" />
+    <ClInclude Include="Source\Tests\OpenGLTests.h" />
+    <ClInclude Include="include\API\PixelShader.h" />
+    <ClInclude Include="Source\API\VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -166,5 +169,6 @@
     <ClCompile Include="Source\API\DirectX\DX11PixelShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLPixelShader.cpp" />
+    <ClCompile Include="Source\API\PixelShader.cpp" />
   </ItemGroup>
 </Project>

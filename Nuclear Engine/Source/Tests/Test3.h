@@ -168,7 +168,7 @@ public:
 		CubeVB.Bind();
 
 		Core::Context::Draw(36);
-		ImGui::Render();
+
 		Core::Context::End();
 	}
 	void Shutdown() override

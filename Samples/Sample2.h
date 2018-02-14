@@ -234,6 +234,7 @@ public:
 	void Render(float) override
 	{
 		Core::Context::Begin();
+		ImGui::NE_NewFrame();
 
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		if (renderboxes)

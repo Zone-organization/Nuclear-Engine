@@ -355,6 +355,7 @@
     <ClInclude Include="include\API\OpenGL\GLPixelShader.h" />
     <ClInclude Include="include\API\OpenGL\GLRasterizerState.h" />
     <ClInclude Include="include\API\OpenGL\GLVertexShader.h" />
+    <ClInclude Include="include\API\PixelShader.h" />
     <ClInclude Include="include\API\RasterizerState.h" />
     <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="include\API\Shader.h" />
@@ -412,6 +413,9 @@
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
+    <ClInclude Include="Source\API\VertexShader.cpp">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
     <ClInclude Include="Source\Components\GUI\imgui_internal.h" />
     <ClInclude Include="Source\Components\GUI\stb_rect_pack.h" />
@@ -420,6 +424,7 @@
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
+    <ClInclude Include="Source\Tests\OpenGLTests.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
     <ClInclude Include="Source\Tests\Test1.h" />
@@ -457,6 +462,7 @@
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexShader.cpp" />
+    <ClCompile Include="Source\API\PixelShader.cpp" />
     <ClCompile Include="Source\API\RasterizerState.cpp" />
     <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />

@@ -3,7 +3,7 @@
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <API\Shader_Types.h>
 #include <API\OpenGL\GLConstantBuffer.h>
-#include <API\OpenGL\GLContext.h>
+#include <API\OpenGL\GLVertexShader.h>
 
 #include <API\OpenGL\GLError.h>
 namespace NuclearEngine
@@ -12,7 +12,6 @@ namespace NuclearEngine
 	{
 		namespace OpenGL
 		{
-			static GLuint boundpshader = 0;
 			void GLPixelShader::Fix_Reflected_ConstantBuffer_Slot(GLPixelShader* result, BinaryShaderBlob* blob)
 			{
 				std::map<std::string, Reflected_Constantbuffer>::iterator it;
@@ -32,7 +31,45 @@ namespace NuclearEngine
 			{
 				_ProgramID = 0;
 			}
+			void CompileFragmentshader(GLuint& shader, std::string source)
+			{
+				shader = glCreateShader(GL_FRAGMENT_SHADER);
+				if (shader) {
+					const GLchar* strings = source.c_str();
+					GLCall(glShaderSource(shader, 1, &strings, NULL));
+					GLCall(glCompileShader(shader));
+					const GLuint program = glCreateProgram();
+					GLCheckError();
+					if (program) {
+						GLint compiled = GL_FALSE;
+						GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled));
+						GLCall(glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE));
 
+						//Check for error begin
+						GLint success;
+						char infoLog[1024];
+						GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
+						if (!success)
+						{
+							GLCall(glGetShaderInfoLog(shader, 1024, NULL, infoLog));
+							Log.Error("[GLPixelShader] Compiling Error -- Info: " + std::string(infoLog) + "\n");
+
+						}
+						// check for error end
+
+						if (compiled) {
+							GLCall(glAttachShader(program, shader));
+							GLCall(glLinkProgram(program));
+							GLCall(glDetachShader(program, shader));
+						}
+					}
+					GLCall(glDeleteShader(shader));
+					shader = program;
+				}
+				else {
+					shader = 0;
+				}
+			}
 		
 			void GLPixelShader::Create(GLPixelShader* result, BinaryShaderBlob* desc)
 			{
@@ -44,11 +81,7 @@ namespace NuclearEngine
 					}
 					else
 					{
-						const char* code = desc->GLSL_SourceCode.c_str();
-
-						result->_ProgramID = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &code);
-						GLCheckError();
-						//CheckShaderErrors(result->_ProgramID);
+						CompileFragmentshader(result->_ProgramID,desc->GLSL_SourceCode);
 					}
 				}
 
@@ -63,18 +96,14 @@ namespace NuclearEngine
 				shader->_ProgramID = 0;
 			}
 
-			void GLPixelShader::SetConstantBuffer(GLConstantBuffer* ubuffer, API::ShaderType type)
+			void GLPixelShader::SetConstantBuffer(GLConstantBuffer* ubuffer)
 			{
 				GLCall(glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex()));
 			}
 
 			void GLPixelShader::Bind()
 			{
-				if (boundpshader != _ProgramID)
-				{
-					//GLCall(glUseProgramStages(GLContext::pipelineid, GL_FRAGMENT_SHADER_BIT, _ProgramID));
-					boundpshader = _ProgramID;
-				}
+				GLCall(glUseProgramStages(GLVertexShader::GetPipelineID(), GL_FRAGMENT_SHADER_BIT, _ProgramID));
 			}
 		}
 	}

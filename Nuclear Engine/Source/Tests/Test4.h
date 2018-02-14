@@ -401,7 +401,7 @@ public:
 			Camera.SetModelMatrix(model);
 			Core::Context::Draw(6);
 		}		
-		ImGui::Render();
+
 		Core::Context::End();
 	}
 	void Shutdown() override

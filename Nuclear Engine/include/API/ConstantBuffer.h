@@ -5,6 +5,8 @@
 #include <API\OpenGL\GLConstantBuffer.h>
 #include <API\DirectX\DX11ConstantBuffer.h>
 #include <API\Shader.h>
+#include <API\VertexShader.h>
+#include <API\PixelShader.h>
 
 namespace NuclearEngine {
 	namespace API {
@@ -12,6 +14,9 @@ namespace NuclearEngine {
 		class NEAPI ConstantBuffer
 		{
 			friend class Shader;
+			friend class VertexShader;
+			friend class PixelShader;
+
 		public:
 			ConstantBuffer();
 			~ConstantBuffer();

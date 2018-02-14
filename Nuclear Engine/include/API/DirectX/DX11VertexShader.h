@@ -2,13 +2,11 @@
 #include <API\DirectX\DX11Common.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-
+#include <API\Shader_Types.h>
 namespace NuclearEngine
 {
 	namespace API
 	{
-		struct BinaryShaderBlob;
-		enum class ShaderType;
 		namespace DirectX
 		{
 			class DX11ConstantBuffer;
@@ -24,13 +22,13 @@ namespace NuclearEngine
 				static void Create(DX11VertexShader *shader, BinaryShaderBlob* desc);
 				static void Delete(DX11VertexShader *shader);
 
-				void SetConstantBuffer(DX11ConstantBuffer* ubuffer, API::ShaderType type);
+				void SetConstantBuffer(DX11ConstantBuffer* ubuffer);
 
 				void Bind();
 			private:
-				unsigned int GetConstantBufferSlot(DX11ConstantBuffer * ubuffer, API::ShaderType type);
 
 				ID3D11VertexShader* VertexShader;
+				ShaderReflection Reflection;
 
 				/*Used for InputLayouts*/
 				void* VS_Buffer;

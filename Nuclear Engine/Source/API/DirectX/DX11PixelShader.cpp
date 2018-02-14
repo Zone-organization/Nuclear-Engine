@@ -31,6 +31,7 @@ namespace NuclearEngine
 					}
 					else
 					{
+						result->Reflection = sdesc->Reflection;
 						if (FAILED(DX11Context::GetDevice()->CreatePixelShader(sdesc->DXBC_SourceCode.Buffer, sdesc->DXBC_SourceCode.Size, 0, &result->PixelShader)))
 						{
 							Log.Info("[DX11PixelShader] Pixel Shader Creation Failed!\n");
@@ -48,15 +49,10 @@ namespace NuclearEngine
 				}
 				shader->PixelShader = nullptr;
 			}
-			unsigned int DX11PixelShader::GetConstantBufferSlot(DX11ConstantBuffer * ubuffer, API::ShaderType type)
-			{
-				return 0;
-			}
-
-			void DX11PixelShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer, API::ShaderType type)
+			void DX11PixelShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer)
 			{
 				DX11Context::GetContext()->PSSetShader(PixelShader, 0, 0);
-				DX11Context::GetContext()->PSSetConstantBuffers(this->GetConstantBufferSlot(ubuffer, type), 1, ubuffer->GetBufferPtr());
+				DX11Context::GetContext()->PSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->GetName()].BindingSlot, 1, ubuffer->GetBufferPtr());
 			}
 
 			void DX11PixelShader::Bind()

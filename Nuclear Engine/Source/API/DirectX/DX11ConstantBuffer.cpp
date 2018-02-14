@@ -56,6 +56,11 @@ namespace NuclearEngine
 				DX11Context::GetContext()->UpdateSubresource(buffer, 0, NULL, data, 0, 0);
 			}
 
+			const char * DX11ConstantBuffer::GetName()
+			{
+				return name;
+			}
+
 			ID3D11Buffer ** DX11ConstantBuffer::GetBufferPtr()
 			{
 				return &buffer;

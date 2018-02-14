@@ -180,6 +180,9 @@ namespace NuclearEngine {
 				outputDesc.options.rowMajorAlignment = true;
 			}
 
+			//Seperate shaders requirements
+			outputDesc.options.autoBinding = true;
+			//outputDesc.options.separateShaders = true;
 			// Compile HLSL code into GLSL
 			XSC_ERROR_LOG log;
 

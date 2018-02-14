@@ -126,6 +126,8 @@ struct ImVec4
 // In a namespace so that user can add extra functions in a separate file (e.g. Value() helpers for your vector or common types)
 namespace ImGui
 {
+	IMGUI_API void NE_NewFrame();
+
     // Main
     IMGUI_API ImGuiIO&      GetIO();
     IMGUI_API ImGuiStyle&   GetStyle();

@@ -23,7 +23,7 @@ namespace NuclearEngine
 				static void Create(GLPixelShader* shader, BinaryShaderBlob* Desc);
 				static void Delete(GLPixelShader* shader);
 
-				void SetConstantBuffer(GLConstantBuffer* ubuffer, ShaderType type);
+				void SetConstantBuffer(GLConstantBuffer* ubuffer);
 
 				void Bind();
 			private:

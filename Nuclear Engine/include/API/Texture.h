@@ -8,6 +8,9 @@
 namespace NuclearEngine {
 	namespace API {
 		class Shader;
+		class VertexShader;
+		class PixelShader;
+
 		class NEAPI Texture
 		{
 		public:
@@ -17,6 +20,9 @@ namespace NuclearEngine {
 			static void Create(Texture* texture, const Texture_Data& TexData,const Texture_Desc& Desc);
 			static void Create(Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 			static void Delete(Texture* texture);
+
+			void SetInShader(const char *samplerName, VertexShader *shader, unsigned int index);
+			void SetInShader(const char *samplerName, PixelShader *shader, unsigned int index);
 
 			void VSBind(unsigned int index);
 			void VSBind(const char *samplerName, Shader *shader, unsigned int index);

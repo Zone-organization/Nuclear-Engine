@@ -104,6 +104,7 @@ public:
 	void Render(float deltatime) override
 	{
 		Core::Context::Begin();
+		ImGui::NE_NewFrame();
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		Math::Matrix4 CubeMatrix;

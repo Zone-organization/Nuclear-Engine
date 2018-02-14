@@ -2,7 +2,6 @@
 #include <API\DirectX\DX11Common.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-#include <API\DirectX\DX11Shader.h>
 #include <API\Texture_Types.h>
 #include <array>
 
@@ -12,6 +11,9 @@ namespace NuclearEngine
 	{
 		namespace DirectX
 		{
+			class DX11Shader;
+			class DX11VertexShader;
+			class DX11PixelShader;
 
 			class NEAPI DX11Texture
 			{
@@ -22,6 +24,9 @@ namespace NuclearEngine
 				static void Create(DX11Texture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
 				static void Create(DX11Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 				static void Delete(DX11Texture* texture);
+
+				void SetInShader(const char *samplerName, DX11VertexShader *shader, unsigned int index);
+				void SetInShader(const char *samplerName, DX11PixelShader *shader, unsigned int index);
 
 				void VSBind(unsigned int index);
 				void VSBind(const char *samplerName, DX11Shader *shader, unsigned int index);

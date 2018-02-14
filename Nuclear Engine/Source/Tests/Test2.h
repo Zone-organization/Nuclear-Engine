@@ -111,7 +111,7 @@ public:
 		RectangleVB.Bind();
 		RectangleIB.Bind();
 		Core::Context::DrawIndexed(6);
-		ImGui::Render();
+
 		Core::Context::End();
 	}
 	void Shutdown() override 

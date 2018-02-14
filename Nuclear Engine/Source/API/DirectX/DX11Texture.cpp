@@ -2,6 +2,9 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <API\DirectX\DX11Context.h>
+#include <API\DirectX\DX11Shader.h>
+#include <API\DirectX\DX11VertexShader.h>
+#include <API\DirectX\DX11PixelShader.h>
 
 namespace NuclearEngine
 {
@@ -75,6 +78,18 @@ namespace NuclearEngine
 				texture->tex3D = nullptr;
 				texture->resourceView = nullptr;
 				texture->samplerState = nullptr;
+			}
+
+			void DX11Texture::SetInShader(const char * samplerName, DX11VertexShader * shader, unsigned int index)
+			{
+				DX11Context::GetContext()->VSSetShaderResources(index, 1, &resourceView);
+				DX11Context::GetContext()->VSSetSamplers(index, 1, &samplerState);
+			}
+
+			void DX11Texture::SetInShader(const char * samplerName, DX11PixelShader * shader, unsigned int index)
+			{
+				DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
+				DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
 			}
 
 			void DX11Texture::PSBind(unsigned int index)

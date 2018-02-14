@@ -2,6 +2,9 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <API\OpenGL\GLShader.h>
+#include <API\OpenGL\GLVertexShader.h>
+#include <API\OpenGL\GLPixelShader.h>
+
 #include <API\API_Types.h>
 #include <Core\Context.h>
 #include <API\OpenGL\GLError.h>
@@ -269,6 +272,22 @@ namespace NuclearEngine
 
 				texture->textureID = 0;
 				texture->type = 0;
+			}
+
+			void GLTexture::SetInShader(const char * samplerName, GLVertexShader * shader, unsigned int index)
+			{
+				GLCall(glActiveTexture(GL_TEXTURE0 + index));
+				GLCall(glBindTexture(type, textureID));
+				GLCall(glActiveShaderProgram(GLVertexShader::GetPipelineID(),shader->_ProgramID));
+				GLCall(glUniform1i(glGetUniformLocation(shader->_ProgramID, samplerName), index));
+			}
+
+			void GLTexture::SetInShader(const char * samplerName, GLPixelShader * shader, unsigned int index)
+			{
+				GLCall(glActiveTexture(GL_TEXTURE0 + index));
+				GLCall(glBindTexture(type, textureID));
+				GLCall(glActiveShaderProgram(GLVertexShader::GetPipelineID(), shader->_ProgramID));
+				GLCall(glUniform1i(glGetUniformLocation(shader->_ProgramID, samplerName), index));
 			}
 
 			void GLTexture::VSBind(unsigned int index)

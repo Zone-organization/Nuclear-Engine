@@ -1,6 +1,7 @@
 #include <Core\Engine.h>
 #include <NE_Common.h>
 #include <Platform\Input.h>
+#include <..\Source\Tests\OpenGLTests.h>
 #include <..\Source\Tests\Test1.h>
 #include <..\Source\Tests\Test2.h>
 #include <..\Source\Tests\Test3.h>
@@ -152,6 +153,11 @@ namespace NuclearEngine {
 				Test4 test;
 				Engine::Run(&test);
 			}
+			else if (TestNumber == 99)
+			{
+				OpenGLTests test;
+				Engine::Run(&test);
+			}			
 			else {
 				Test3 test;
 				Engine::Run(&test);
@@ -180,7 +186,7 @@ namespace NuclearEngine {
 				float currentFrame = clock.GetElapsedTime().AsSeconds();
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
-				ImGui_Impl_NewFrame();
+
 				GamePtr->FrameTime = 1000.0f / ImGui::GetIO().Framerate;
 				GamePtr->FPS = ImGui::GetIO().Framerate;
 

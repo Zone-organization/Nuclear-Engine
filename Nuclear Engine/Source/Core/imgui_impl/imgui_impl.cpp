@@ -85,6 +85,12 @@ void ImGui_Impl_Shutdown()
 	}
 }
 
+
+void ImGui::NE_NewFrame()
+{
+	return ImGui_Impl_NewFrame();
+}
+
 void ImGui_Impl_NewFrame()
 {
 	ImGuiIO& io = ImGui::GetIO();

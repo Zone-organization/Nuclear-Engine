@@ -11,6 +11,9 @@ namespace NuclearEngine
 		namespace OpenGL
 		{
 			class GLShader;
+			class GLVertexShader;
+			class GLPixelShader;
+
 			class NEAPI GLTexture
 			{
 			public:
@@ -20,6 +23,9 @@ namespace NuclearEngine
 				static void Create(GLTexture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
 				static void Create(GLTexture* texture, const std::array<Texture_Data, 6>& data,const Texture_Desc& Desc);
 				static void Delete(GLTexture* texture);
+
+				void SetInShader(const char *samplerName, GLVertexShader *shader, unsigned int index);
+				void SetInShader(const char *samplerName, GLPixelShader *shader, unsigned int index);
 
 				void VSBind(unsigned int index);
 				void VSBind(const char *samplerName, GLShader *shader, unsigned int index);
