@@ -9,12 +9,13 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Requirements
 - __OpenGL__
   - OpenGL 3.3 Core capable GPU with the required extensions (all became core in later versions):
-    - GL_ARB_shading_language_420pack
-	- GL_ARB_separate_shader_objects
+    - Required for Separate Shaders only:	
+	  - GL_ARB_shading_language_420pack
+	  - GL_ARB_separate_shader_objects
 
 - __DirectX__
   - DirectX 10.1 capable GPU.
-  - DirectX 11 runtime dlls.
+  - DirectX 11 runtime DLLS.
 
 ## Features:-
 - __Core__
@@ -29,7 +30,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
   - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
   - Support for HLSL Shader which can be Cross Compiled to GLSL.
-  - Support for Separate Shader or even faster Unified Shader.
+  - Support for Separate Shaders (excellent for debugging and fast  or even faster Unified Shader.
   - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build
   
 - __Renderer__
@@ -48,13 +49,17 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Support Android & Linux & UWP Platforms.
   - Support PhysX or Bullet Physics Library.
   - Support A Uber Shader instead of GLSL , HLSL.
-  - Support Text Rendering With immediate mode GUI.
   - There are more but these are the most important...
   
   
 ### Building
 Currently I am using Visual Studio 2017 15.5.5 to build it.
-For Dependencies please see https://github.com/Zone-organization/Nuclear-Deps
+  - Dependencies
+    - Assimp
+	- GLFW
+    - XShaderCompiler
+	- GLAD
+	- GLEXT
 
 ### Architecture
 Features:
