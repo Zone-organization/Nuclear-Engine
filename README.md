@@ -3,7 +3,8 @@
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
 
 # Preview
-![Alt text](http://media.indiedb.com/cache/images/engines/1/1/764/thumb_620x2000/Untitled.png)
+![Alt text](http://media.indiedb.com/cache/images/engines/1/1/764/thumb_620x2000/Untitled.1.png)
+![Alt text](http://media.indiedb.com/cache/images/engines/1/1/764/thumb_620x2000/Blending_Demo.png)
 
 ## Requirements
 - __OpenGL__
