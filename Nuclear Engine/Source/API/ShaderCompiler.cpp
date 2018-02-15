@@ -178,7 +178,7 @@ namespace NuclearEngine {
 			outputDesc.sourceCode = &stream;
 			outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;
 			outputDesc.options.allowExtensions = true;
-			outputDesc.options.autoBinding = true;
+		
 
 			if (result->convertedshaderrowmajor == true)
 			{
@@ -188,6 +188,7 @@ namespace NuclearEngine {
 			//Seperate shaders requirements
 			if (SeperateShader)
 			{
+				outputDesc.options.autoBinding = true;
 				outputDesc.options.separateShaders = SeperateShader;
 			}
 			// Compile HLSL code into GLSL
