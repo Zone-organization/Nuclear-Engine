@@ -152,19 +152,19 @@ public:
 		}
 		std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
 
-		VertexBufferDesc Desc;
+		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = BufferUsage::Dynamic;
+		Desc.usage = API::BufferUsage::Dynamic;
 
 		//Create the vertex Buffer
-		API::VertexBuffer::Create(&TriangleVB, &Desc);
+		API::VertexBuffer::Create(&TriangleVB, Desc);
 
 		API::InputLayout TriangleIL;
-		TriangleIL.Push("POSITION", 0, DataType::Float3);
-		TriangleIL.Push("COLOR", 0, DataType::Float3);
+		TriangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
+		TriangleIL.AppendAttribute("COLOR", 0, API::DataType::Float3);
 
-		TriangleVB.SetInputLayout(&TriangleIL, nullptr);
+		TriangleVB.SetInputLayout(&TriangleIL, &API::VertexShader());
 
 		Core::Application::Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);

@@ -122,15 +122,15 @@ public:
 			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 		};
 
-		VertexBufferDesc vDesc;
+		API::VertexBufferDesc vDesc;
 		vDesc.data = vertices;
 		vDesc.size = sizeof(vertices);
-		vDesc.usage = BufferUsage::Static;
-		API::VertexBuffer::Create(&CubeVB, &vDesc);
+		vDesc.usage = API::BufferUsage::Static;
+		API::VertexBuffer::Create(&CubeVB, vDesc);
 
 		API::InputLayout CubeIL;
-		CubeIL.Push("POSITION", 0, DataType::Float3);
-		CubeIL.Push("TEXCOORD", 0, DataType::Float2);
+		CubeIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
+		CubeIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
 		CubeVB.SetInputLayout(&CubeIL, &CubeShader);
 		

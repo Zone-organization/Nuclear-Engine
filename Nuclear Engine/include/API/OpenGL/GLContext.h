@@ -3,7 +3,6 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <API\Color.h>
-#include <API\API_Types.h>
 
 namespace NuclearEngine
 {

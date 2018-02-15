@@ -28,14 +28,14 @@ namespace NuclearEngine {
 
 		void Mesh::Initialize()
 		{
-			VertexBufferDesc desc;
+			API::VertexBufferDesc desc;
 			desc.data = data.vertices.data();
 			desc.size = (unsigned int)data.vertices.size() * sizeof(Vertex);
-			desc.usage = BufferUsage::Static;
+			desc.usage = API::BufferUsage::Static;
 
 			PreCalculate_TextureBindings();
 
-			API::VertexBuffer::Create(&VBO, &desc);
+			API::VertexBuffer::Create(&VBO, desc);
 			API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size());
 
 			IndicesCount = data.indices.size();
@@ -66,9 +66,9 @@ namespace NuclearEngine {
 				}
 
 				API::InputLayout layout;
-				layout.Push("POSITION", 0, DataType::Float3);
-				layout.Push("NORMAL", 0, DataType::Float3);
-				layout.Push("TEXCOORD", 0, DataType::Float2);
+				layout.AppendAttribute("POSITION", 0, API::DataType::Float3);
+				layout.AppendAttribute("NORMAL", 0, API::DataType::Float3);
+				layout.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
 				VBO.SetInputLayout(&layout, _shader);
 

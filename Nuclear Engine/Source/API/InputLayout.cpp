@@ -13,7 +13,7 @@ namespace NuclearEngine
 			{
 			}
 
-			void InputLayout::Push(const char* SemanticName, int SemanticIndex, DataType dataType)
+			void InputLayout::AppendAttribute(const char* SemanticName, int SemanticIndex, DataType dataType)
 			{
 				ILElement Block;
 

@@ -5,7 +5,6 @@
 #include <API\OpenGL\GLVertexShader.h>
 #include <API\OpenGL\GLPixelShader.h>
 
-#include <API\API_Types.h>
 #include <Core\Context.h>
 #include <API\OpenGL\GLError.h>
 

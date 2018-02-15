@@ -2,7 +2,8 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <API\OpenGL\GLError.h>
-
+#include <API\OpenGL\GLShader.h>
+#include <API\InputLayout.h>
 namespace NuclearEngine
 {
 	namespace API
@@ -26,20 +27,20 @@ namespace NuclearEngine
 				VBO = 0;		
 			}
 
-			void GLVertexBuffer::Create(GLVertexBuffer * buffer, VertexBufferDesc * desc)
+			void GLVertexBuffer::Create(GLVertexBuffer * buffer, const VertexBufferDesc& desc)
 			{
 				GLCall(glGenVertexArrays(1, &buffer->VAO));
 				GLCall(glBindVertexArray(buffer->VAO));
 
 				GLCall(glGenBuffers(1, &buffer->VBO));
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO));
-				if (desc->usage == NuclearEngine::BufferUsage::Static)
+				if (desc.usage == API::BufferUsage::Static)
 				{
-					GLCall(glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_STATIC_DRAW));
+					GLCall(glBufferData(GL_ARRAY_BUFFER, desc.size, desc.data, GL_STATIC_DRAW));
 				}
 				else
 				{
-					GLCall(glBufferData(GL_ARRAY_BUFFER, desc->size, desc->data, GL_DYNAMIC_DRAW));
+					GLCall(glBufferData(GL_ARRAY_BUFFER, desc.size, desc.data, GL_DYNAMIC_DRAW));
 				}
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 				GLCall(glBindVertexArray(0));
@@ -65,9 +66,6 @@ namespace NuclearEngine
 
 			void GLVertexBuffer::SetInputLayout(InputLayout * layout, GLShader * shader)
 			{
-				//TODO: See https://www.khronos.org/opengl/wiki/GLAPI/glGetVertexAttrib
-				//https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetVertexAttrib.xhtml
-
 				unsigned int index = 0;
 				GLCall(glBindVertexArray(VAO));
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO));
@@ -97,6 +95,11 @@ namespace NuclearEngine
 
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 				GLCall(glBindVertexArray(0));
+			}
+
+			void GLVertexBuffer::SetInputLayout(InputLayout * layout, GLVertexShader * shader)
+			{
+				return this->SetInputLayout(layout, &GLShader());
 			}
 
 			void GLVertexBuffer::Bind()

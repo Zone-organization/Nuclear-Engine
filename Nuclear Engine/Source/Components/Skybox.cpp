@@ -74,15 +74,15 @@ namespace NuclearEngine
 
 			shader.SetConstantBuffer(&_CameraCbuffer->GetCBuffer(), API::ShaderType::Vertex);
 
-			VertexBufferDesc VDesc;
+			API::VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;
 			VDesc.size = sizeof(skyboxVertices);
-			VDesc.usage = BufferUsage::Static;
+			VDesc.usage = API::BufferUsage::Static;
 
-			API::VertexBuffer::Create(&vertexBuffer, &VDesc);
+			API::VertexBuffer::Create(&vertexBuffer, VDesc);
 
 			API::InputLayout vertexBufferLayout;
-			vertexBufferLayout.Push("POSITION", 0, DataType::Float3);
+			vertexBufferLayout.AppendAttribute("POSITION", 0, API::DataType::Float3);
 			vertexBuffer.SetInputLayout(&vertexBufferLayout, &shader);
 
 			API::Texture_Desc Desc;

@@ -35,19 +35,30 @@ _____________/BOOOM\_____________
 #include <Shading/Techniques/NoLight.h>
 #include <Shading/Techniques/PhongShading.h>
 
-//# OneAPI Headers
+//# OneAPI Headers Begin
+//---Buffers
+#include <API/ConstantBuffer.h>
 #include <API/VertexBuffer.h>
 #include <API/IndexBuffer.h>
-#include <API/ConstantBuffer.h>
 #include <API/InputLayout.h>
+//---Textures
 #include <API/Texture.h>
-#include <API/DepthStencilState.h>
-#include <API/RasterizerState.h>
+#include <API/Texture_Types.h>
+//---RenderStates
 #include <API/BlendState.h>
+#include <API/RasterizerState.h>
+#include <API/DepthStencilState.h>
 #include <API/RenderStates_Types.h>
-#include <API/Shader.h>
+//---Shaders
 #include <API/ShaderCompiler.h>
+#include <API/Shader.h>
+#include <API/VertexShader.h>
+#include <API/PixelShader.h>
+//---Other
 #include <API/Color.h>
+#include <API/Format.h>
+//# OneAPI Headers End
+
 
 //# Engine Components Headers
 #include <Components\GenericCamera.h>

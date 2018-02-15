@@ -332,8 +332,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\API\API_Types.h" />
     <ClInclude Include="include\API\BlendState.h" />
+    <ClInclude Include="include\API\Buffer_Types.h" />
     <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
     <ClInclude Include="include\API\DirectX\DX11BlendState.h" />
@@ -413,9 +413,6 @@
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
-    <ClInclude Include="Source\API\VertexShader.cpp">
-      <FileType>CppCode</FileType>
-    </ClInclude>
     <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
     <ClInclude Include="Source\Components\GUI\imgui_internal.h" />
     <ClInclude Include="Source\Components\GUI\stb_rect_pack.h" />
@@ -469,6 +466,7 @@
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\ShaderCompiler.cpp" />
+    <ClCompile Include="Source\API\VertexShader.cpp" />
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />

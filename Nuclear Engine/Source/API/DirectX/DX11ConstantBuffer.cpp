@@ -2,7 +2,6 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <API\DirectX\DX11Context.h>
-#include <API\API_Types.h>
 
 namespace NuclearEngine
 {

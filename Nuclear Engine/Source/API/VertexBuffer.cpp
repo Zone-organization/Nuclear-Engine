@@ -1,7 +1,9 @@
 #include <API\VertexBuffer.h>
-#include <API\InputLayout.h>
 #ifdef NE_USE_RUNTIME_RENDER_API
 #include <Core\Context.h>
+#include <API\InputLayout.h>
+#include <API\Shader.h>
+#include <API\VertexShader.h>
 
 namespace NuclearEngine {
 	namespace API {
@@ -13,7 +15,7 @@ namespace NuclearEngine {
 		{
 		}
 
-		void VertexBuffer::Create(VertexBuffer * buffer, VertexBufferDesc * desc)
+		void VertexBuffer::Create(VertexBuffer * buffer, const VertexBufferDesc& desc)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
@@ -58,6 +60,18 @@ namespace NuclearEngine {
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
 				DXObject.SetInputLayout(layout,&shader->DXObject);
+			}
+		}
+
+		void VertexBuffer::SetInputLayout(InputLayout * layout, VertexShader * shader)
+		{
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				GLObject.SetInputLayout(layout, &shader->GLObject);
+			}
+			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				DXObject.SetInputLayout(layout, &shader->DXObject);
 			}
 		}
 

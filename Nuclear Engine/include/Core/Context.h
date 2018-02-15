@@ -1,8 +1,12 @@
 #pragma once
 #include <NE_Common.h>
 #include <API\Color.h>
-#include <API\API_Types.h>
 #include <Core\Application.h>
+
+#define	ClearColorBuffer 1
+#define	ClearDepthBuffer 2
+#define	ClearStencilBuffer 4
+
 namespace NuclearEngine
 {
 	enum PrimitiveType 

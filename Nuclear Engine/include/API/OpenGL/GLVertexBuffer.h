@@ -2,27 +2,30 @@
 #include <API\OpenGL\GLCommon.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
-#include <API\OpenGL\GLShader.h>
-#include <API\InputLayout.h>
-
 namespace NuclearEngine
 {
 	namespace API
 	{
+		class InputLayout;
+		struct VertexBufferDesc;
+
 		namespace OpenGL
 		{
+			class GLShader;
+			class GLVertexShader;
 			class NEAPI GLVertexBuffer 
 			{
 			public:
 				GLVertexBuffer();
 				~GLVertexBuffer();
 
-				static void Create(GLVertexBuffer* buffer, VertexBufferDesc* desc);
+				static void Create(GLVertexBuffer* buffer, const VertexBufferDesc& desc);
 				static void Delete(GLVertexBuffer* buffer);
 
 				void Update(const void* data, unsigned int size);
 
 				void SetInputLayout(InputLayout * layout, GLShader *shader);
+				void SetInputLayout(InputLayout * layout, GLVertexShader *shader);
 
 				void Bind();
 

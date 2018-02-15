@@ -56,20 +56,22 @@ namespace NuclearEngine {
 					break;
 				}
 			}
-			void Get_Whole_Log()
+			std::string Get_Whole_Log()
 			{
+				std::string result;
 				for (uint i = 0; i < Infos.size(); i++)
 				{
-					NuclearEngine::Log.Info("[XShaderCompiler] " + Infos.at(i).Message() + '\n');
+					result += std::string("[XShaderCompiler] " + Infos.at(i).Message() + '\n');
 				}
 				for (uint i = 0; i < Warnings.size(); i++)
 				{
-					NuclearEngine::Log.Warning("[XShaderCompiler] " + Warnings.at(i).Message() + '\n');
+					result += std::string("[XShaderCompiler] " + Warnings.at(i).Message() + '\n');
 				}
 				for (uint i = 0; i < Errors.size(); i++)
 				{
-					NuclearEngine::Log.Error("[XShaderCompiler] " + Errors.at(i).Message() + '\n');
+					result += std::string("[XShaderCompiler] " + Errors.at(i).Message() + '\n');
 				}
+				return result;
 			}
 
 		private:						
@@ -138,13 +140,13 @@ namespace NuclearEngine {
 			result->DXBC_SourceCode.Size = m_blob->GetBufferSize();
 			result->Language = API::ShaderLanguage::DXBC;
 			
-		/*	if (reflect_p == true)
+			if (reflect_p == true)
 			{
 				Reflect_DXBC(result);
-			}	*/		
+			}	
 			return;
 		}
-		void CompileDXBC2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool reflect_p)
+		void CompileDXBC2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool reflect_p, bool SeperateShader)
 		{
 			// Initialize shader input descriptor structure
 			auto input = std::make_shared<std::stringstream>();
@@ -175,31 +177,51 @@ namespace NuclearEngine {
 			std::ostringstream stream;
 			outputDesc.sourceCode = &stream;
 			outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;
+			outputDesc.options.allowExtensions = true;
+			outputDesc.options.autoBinding = true;
+
 			if (result->convertedshaderrowmajor == true)
 			{
 				outputDesc.options.rowMajorAlignment = true;
 			}
 
 			//Seperate shaders requirements
-			outputDesc.options.autoBinding = true;
-			//outputDesc.options.separateShaders = true;
+			if (SeperateShader)
+			{
+				outputDesc.options.separateShaders = SeperateShader;
+			}
 			// Compile HLSL code into GLSL
 			XSC_ERROR_LOG log;
 
 			if (!Xsc::CompileShader(inputDesc, outputDesc, &log))
 			{
-				Log.Error("[ShaderCompiler] CompileDXBC2GLSL Failed!\n");
-			}
-			log.Get_Whole_Log();
+				Log.Error("[ShaderCompiler] CompileDXBC2GLSL Failed! Info: \n" + log.Get_Whole_Log());
 
-			//std::cout << stream.str();
+			}
 			result->GLSL_SourceCode = stream.str();
+			
+			//XSC doesn't play nicely with separate shaders extension so we have to include it ourselves			
+			if (SeperateShader)
+			{
+				std::vector<std::string> MergedCode;
+				std::string firstLine = result->GLSL_SourceCode.substr(85, result->GLSL_SourceCode.find("\n"));
+
+				MergedCode.push_back(std::string("#version 330\n #extension GL_ARB_separate_shader_objects : enable\n"));
+
+				MergedCode.push_back(result->GLSL_SourceCode.substr(99));
+				std::string str;
+				for (unsigned int i = 0; i < MergedCode.size(); ++i)
+					str = str + MergedCode[i].c_str();
+
+				result->GLSL_SourceCode = str;
+			}
+
 			result->Language = API::ShaderLanguage::GLSL;
 			result->DXBC_SourceCode = DXBC_BLOB();
 			result->Converted = true;
 		}
 
-		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p)
+		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p, bool SeperateShader)
 		{
 			if (language == API::ShaderLanguage::HLSL)
 			{
@@ -207,7 +229,7 @@ namespace NuclearEngine {
 
 				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 				{
-					CompileDXBC2GLSL(blob, SourceCode, type, language, reflect_p);
+					CompileDXBC2GLSL(blob, SourceCode, type, language, reflect_p, SeperateShader);
 				}
 			}
 			else if (language == API::ShaderLanguage::GLSL)
@@ -224,6 +246,13 @@ namespace NuclearEngine {
 			}
 			blob->Finished = true;
 			return true;
+		}
+
+		BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool Reflect, bool SeperateShader)
+		{
+			BinaryShaderBlob result;
+			CompileShader(&result, SourceCode, type,language, Reflect, SeperateShader);
+			return result;
 		}
 
 	}

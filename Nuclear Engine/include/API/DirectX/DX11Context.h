@@ -2,7 +2,6 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <API\Color.h>
-#include <API\API_Types.h>
 #include <Core\Application.h>
 
 namespace NuclearEngine

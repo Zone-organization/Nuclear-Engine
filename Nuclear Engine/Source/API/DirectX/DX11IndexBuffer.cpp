@@ -1,7 +1,6 @@
 #include <API\DirectX\DX11IndexBuffer.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-#include <API\API_Types.h>
 #include <API\DirectX\DX11Context.h>
 
 namespace NuclearEngine

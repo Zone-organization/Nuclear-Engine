@@ -5,6 +5,16 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 # Preview
 ![Alt text](http://media.indiedb.com/cache/images/engines/1/1/764/thumb_620x2000/Untitled.png)
 
+## Requirements
+- __OpenGL__
+  - OpenGL 3.3 Core capable GPU with the required extensions (all became core in later versions):
+    - GL_ARB_shading_language_420pack
+	- GL_ARB_separate_shader_objects
+
+- __DirectX__
+  - DirectX 10.1 capable GPU.
+  - DirectX 11 runtime dlls.
+
 ## Features:-
 - __Core__
   - Cross platform ready
@@ -18,6 +28,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
   - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
   - Support for HLSL Shader which can be Cross Compiled to GLSL.
+  - Support for Separate Shader or even faster Unified Shader.
   - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build
   
 - __Renderer__

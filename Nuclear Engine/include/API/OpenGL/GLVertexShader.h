@@ -7,7 +7,6 @@ namespace NuclearEngine
 {
 	namespace API
 	{
-		enum class ShaderType;
 		struct BinaryShaderBlob;
 		namespace OpenGL
 		{

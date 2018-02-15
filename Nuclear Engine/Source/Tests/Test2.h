@@ -74,16 +74,16 @@ public:
 
 		API::Shader::Create(&RectangleShader, &desc);
 
-		VertexBufferDesc Desc;
+		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = BufferUsage::Dynamic;
+		Desc.usage = API::BufferUsage::Dynamic;
 
-		API::VertexBuffer::Create(&RectangleVB, &Desc);
+		API::VertexBuffer::Create(&RectangleVB, Desc);
 
 		API::InputLayout RectangleIL;
-		RectangleIL.Push("POSITION", 0, DataType::Float3);
-		RectangleIL.Push("TEXCOORD", 0, DataType::Float2);
+		RectangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
+		RectangleIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
 		RectangleVB.SetInputLayout(&RectangleIL, &RectangleShader);
 		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));

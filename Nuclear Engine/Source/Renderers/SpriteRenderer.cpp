@@ -56,14 +56,15 @@ namespace NuclearEngine {
 				1.0f, 0.0f, 1.0f, 0.0f
 			};
 
-			VertexBufferDesc Desc;
+			API::VertexBufferDesc Desc;
 			Desc.data = vertices;
 			Desc.size = sizeof(vertices);
-			Desc.usage = BufferUsage::Dynamic;
-			API::InputLayout layout;
-			layout.Push("POSITION", 0, DataType::Float4);
+			Desc.usage = API::BufferUsage::Dynamic;
 
-			API::VertexBuffer::Create(&vbo,&Desc);
+			API::InputLayout layout;
+			layout.AppendAttribute("POSITION", 0, API::DataType::Float4);
+
+			API::VertexBuffer::Create(&vbo,Desc);
 			vbo.SetInputLayout(&layout, shader);
 
 			API::ConstantBuffer::Create(&SpriteColorBuffer, "SpriteColor", sizeof(API::Color));

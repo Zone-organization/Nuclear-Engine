@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <API\API_Types.h>
+#include <API\Buffer_Types.h>
 #include <vector>
 
 namespace NuclearEngine {
@@ -18,7 +18,7 @@ namespace NuclearEngine {
 			InputLayout();
 			~InputLayout();
 
-			void Push(const char* SemanticName, int SemanticIndex, DataType dataType);
+			void AppendAttribute(const char* SemanticName, int SemanticIndex, DataType dataType);
 			
 			std::vector<ILElement> GetBufferElement();
 

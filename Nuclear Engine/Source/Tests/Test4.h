@@ -5,8 +5,9 @@
 class Test4 : public Core::Game
 {
 protected:
-	API::Shader TestShader;
-	API::Shader DepthShader;
+	API::VertexShader Vertexshader;
+	API::PixelShader Pixelshader;
+	API::PixelShader Depthpixelshader;
 
 	API::VertexBuffer CubeVB;
 	API::VertexBuffer PlaneVB;
@@ -16,13 +17,12 @@ protected:
 	API::Texture CubeTex;
 	API::Texture WindowTex;
 
-	bool Depthshaderenabled;
+	bool Depthshaderenabled = false;
 
 	Components::FlyCamera Camera;
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
-
 
 	Math::Vector3 windows[5] = 
 	{
@@ -116,20 +116,9 @@ public:
 	}
 	void Load()
 	{
-
-		API::ShaderDesc desc;
-		desc.Name = "TestShader";
-		API::CompileShader(&desc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-		API::CompileShader(&desc.PixelShaderCode, PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
-		
-		API::Shader::Create(&TestShader, &desc);
-
-		API::ShaderDesc depthdesc;
-		depthdesc.Name = "DepthShader";
-		API::CompileShader(&depthdesc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-		API::CompileShader(&depthdesc.PixelShaderCode, DepthPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
-
-		API::Shader::Create(&DepthShader, &depthdesc);
+		API::VertexShader::Create(&Vertexshader, &API::CompileShader(VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL,true,true));
+		API::PixelShader::Create(&Pixelshader, &API::CompileShader(PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true, true));
+		API::PixelShader::Create(&Depthpixelshader, &API::CompileShader(DepthPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true, true));
 
 		float cubevertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -195,31 +184,31 @@ public:
 			1.0f,  0.5f,  0.0f,  1.0f,  0.0f
 		};
 
-		VertexBufferDesc vDesc;
+		API::VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;
 		vDesc.size = sizeof(cubevertices);
-		vDesc.usage = BufferUsage::Static;
-		API::VertexBuffer::Create(&CubeVB, &vDesc);
+		vDesc.usage = API::BufferUsage::Static;
+		API::VertexBuffer::Create(&CubeVB, vDesc);
 
 		vDesc.data = planeVertices;
 		vDesc.size = sizeof(planeVertices);
-		API::VertexBuffer::Create(&PlaneVB, &vDesc);
+		API::VertexBuffer::Create(&PlaneVB, vDesc);
 		
 		vDesc.data = windowVertices;
 		vDesc.size = sizeof(windowVertices);
-		API::VertexBuffer::Create(&WindowVB, &vDesc);
+		API::VertexBuffer::Create(&WindowVB, vDesc);
 
 		API::InputLayout ShaderIL;
-		ShaderIL.Push("POSITION", 0, DataType::Float3);
-		ShaderIL.Push("TEXCOORD", 0, DataType::Float2);
+		ShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
+		ShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
-		CubeVB.SetInputLayout(&ShaderIL, &TestShader);
-		PlaneVB.SetInputLayout(&ShaderIL, &TestShader);
-		WindowVB.SetInputLayout(&ShaderIL, &TestShader);
+		CubeVB.SetInputLayout(&ShaderIL, &Vertexshader);
+		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
+		WindowVB.SetInputLayout(&ShaderIL, &Vertexshader);
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
-		TestShader.SetConstantBuffer(&Camera.GetCBuffer(), API::ShaderType::Vertex);
+		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
@@ -318,16 +307,17 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		TestShader.Bind();
-		CubeTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
-		
+		Vertexshader.Bind();		
 		
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num0))
 		{
-			DepthShader.Bind();
+			Depthpixelshader.Bind();
 			Depthshaderenabled = true;
 		}
-		else {
+		else
+		{
+			Pixelshader.Bind();
+			CubeTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
 			Depthshaderenabled = false;
 		}
 
@@ -366,7 +356,7 @@ public:
 		// floor
 		if (!Depthshaderenabled)
 		{
-			PlaneTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+			PlaneTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
 		}
 	
 		PlaneVB.Bind();
@@ -384,7 +374,7 @@ public:
 
 		if (!Depthshaderenabled)
 		{
-			WindowTex.PSBind("NE_Tex_Diffuse", &TestShader, 0);
+			WindowTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
 		}
 
 		WindowVB.Bind();
@@ -406,7 +396,7 @@ public:
 	}
 	void Shutdown() override
 	{
-		API::Shader::Delete(&TestShader);
+		//API::Shader::Delete(&TestShader);
 		API::VertexBuffer::Delete(&CubeVB);
 		API::VertexBuffer::Delete(&PlaneVB);
 		API::Texture::Delete(&CubeTex);
