@@ -34,11 +34,14 @@ namespace NuclearEngine
 				void PSBind(unsigned int index);
 				void PSBind(const char *samplerName, GLShader *shader, unsigned int index);
 
+				Texture_Desc GetTextureDesc();
+
+				//OpenGL only
 				unsigned int GLGetTextureID();
-
 			private:
-				GLuint textureID;
+				Texture_Desc desc;
 
+				GLuint textureID;
 				GLenum type;
 			};
 		}

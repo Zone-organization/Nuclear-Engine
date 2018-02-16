@@ -86,7 +86,7 @@ namespace NuclearEngine
 			vertexBuffer.SetInputLayout(&vertexBufferLayout, &shader);
 
 			API::Texture_Desc Desc;
-			Desc.Format = API::Format::R8G8B8A8;
+			Desc.Format = API::Format::R8G8B8A8_UNORM;
 			Desc.Wrap = API::TextureWrap::ClampToEdge;
 			Desc.Filter = API::TextureFilter::Linear2D;
 			Desc.Type = API::TextureType::TextureCube;
@@ -102,7 +102,7 @@ namespace NuclearEngine
 		void Skybox::Create(Components::GenericCamera * CameraCbuffer, const std::array<std::string, 6>& paths)
 		{
 			API::Texture_Desc Desc;
-			Desc.Format = API::Format::R8G8B8A8;
+			Desc.Format = API::Format::R8G8B8A8_UNORM;
 			Desc.Wrap = API::TextureWrap::ClampToEdge;
 			Desc.Filter = API::TextureFilter::Linear2D;
 			Desc.Type = API::TextureType::Texture2D;

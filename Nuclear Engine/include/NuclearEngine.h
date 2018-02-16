@@ -44,6 +44,7 @@ _____________/BOOOM\_____________
 //---Textures
 #include <API/Texture.h>
 #include <API/Texture_Types.h>
+#include <API/RenderTarget.h>
 //---RenderStates
 #include <API/BlendState.h>
 #include <API/RasterizerState.h>

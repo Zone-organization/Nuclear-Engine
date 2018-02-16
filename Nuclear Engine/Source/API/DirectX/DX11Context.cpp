@@ -5,6 +5,8 @@
 #include <GLFW\include\glfw3.h>
 #include <GLFW\include\glfw3native.h>
 
+#include <API\DirectX\DX11RenderTarget.h>
+
 #include <wrl.h>
 template <typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -29,6 +31,9 @@ namespace NuclearEngine
 			static ID3D11DepthStencilView* m_depthStencilView;
 			static ID3D11RasterizerState* m_rasterState;
 			static bool vsync;
+
+			static DX11RenderTarget* ActiveRT = nullptr;
+			static DX11RenderTarget DefaultRT;
 
 			bool DX11Context::Initialize(GLFWwindow* window)
 			{
@@ -274,6 +279,8 @@ namespace NuclearEngine
 					return false;
 				}
 
+				DefaultRT.rendertargetviews.push_back(RenderTarget);
+				DefaultRT.depthstencilview = m_depthStencilView;
 				// Bind the render target view and depth stencil buffer to the output render pipeline.
 				Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
 
@@ -321,43 +328,70 @@ namespace NuclearEngine
 			}
 
 			void DX11Context::Clear(API::Color color, uint flags, float depth, unsigned int stencil)
-			{				
+			{
 				unsigned int dxflag = 0;
 
 				//Color buffer
 				if (CHECK_BIT(flags , 0))
 				{
 					float Colors[4] = { color.r,color.g,color.b,color.a	};
-					Context->ClearRenderTargetView(RenderTarget, Colors);
+					
+					for (auto rtv : ActiveRT->rendertargetviews)
+					{
+						Context->ClearRenderTargetView(rtv, Colors);
+					}
 				}
-				//Depth Buffer
-				if (CHECK_BIT(flags, 1))
+				if (ActiveRT->depthstencilview != NULL)
 				{
-					dxflag = dxflag | D3D11_CLEAR_DEPTH;
+					//Depth Buffer
+					if (CHECK_BIT(flags, 1))
+					{
+						dxflag = dxflag | D3D11_CLEAR_DEPTH;
+					}
+					//Stencil Buffer
+					if (CHECK_BIT(flags, 2))
+					{
+						dxflag = dxflag | D3D11_CLEAR_STENCIL;
+					}
+					Context->ClearDepthStencilView(m_depthStencilView, dxflag, depth, stencil);
 				}
-				//Stencil Buffer
-				if (CHECK_BIT(flags, 2))
-				{
-					dxflag = dxflag | D3D11_CLEAR_STENCIL;
-				}				
-				Context->ClearDepthStencilView(m_depthStencilView, dxflag, depth, stencil);
 				return;
 			}
 
+			//URGENT TODO: this function doesnt do what is it supposed to do
 			void DX11Context::EnableDepthBuffer(bool state)
 			{
-				if (state)
+			/*	if (state)
+				{
 					Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
+				}
 				else
+				{	
 					Context->OMSetRenderTargets(1, &RenderTarget, 0);
+				}*/
+			}
+
+			void DX11Context::Bind_RenderTarget(DX11RenderTarget * rt)
+			{
+				Context->OMSetRenderTargets(static_cast<UINT>(rt->rendertargetviews.size()), rt->rendertargetviews.data(), rt->depthstencilview);
+				ActiveRT = rt;
+			}
+			void DX11Context::Bind_Default_RenderTarget()
+			{
+				Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
+				ActiveRT = &DefaultRT;
 			}
 
 			void DX11Context::SwapBuffers()
 			{
 				if (vsync)
+				{
 					SwapChain->Present(1, 0);
+				}
 				else
+				{
 					SwapChain->Present(0, 0);
+				}
 			}
 
 			void DX11Context::Shutdown()
@@ -428,10 +462,13 @@ namespace NuclearEngine
 				return Context.Get();
 			}
 
+		
 			void DX11Context::Bind_Default_Rasterizer_State()
 			{
 				Context->RSSetState(m_rasterState);
 			}
+
+			
 
 			void DX11Context::SetViewPort(int x, int y, int width, int height)
 			{

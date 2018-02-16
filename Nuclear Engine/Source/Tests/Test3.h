@@ -140,7 +140,7 @@ public:
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
 		Desc.Wrap = API::TextureWrap::Repeat;
-		Desc.Format = API::Format::R8G8B8A8;
+		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);

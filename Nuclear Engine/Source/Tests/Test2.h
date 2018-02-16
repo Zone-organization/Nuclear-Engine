@@ -91,7 +91,7 @@ public:
 		API::Texture_Desc TexDesc;
 		TexDesc.Filter = API::TextureFilter::Linear2D;
 		TexDesc.Wrap = API::TextureWrap::Repeat;
-		TexDesc.Format = API::Format::R8G8B8A8;
+		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
 		TexDesc.Type = API::TextureType::Texture2D;
 
 		//AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);

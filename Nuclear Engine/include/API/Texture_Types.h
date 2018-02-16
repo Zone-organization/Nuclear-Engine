@@ -20,10 +20,11 @@ namespace NuclearEngine
 		struct Texture_Desc
 		{
 			TextureType Type = TextureType::Texture2D;
-			Format Format = Format::R8G8B8A8;
+			Format Format = Format::R8G8B8A8_UNORM;
 			TextureWrap Wrap = TextureWrap::ClampToEdge;
 			TextureFilter Filter = TextureFilter::Point;
 			AnisotropicFilter AnisoFilter = AnisotropicFilter::None;
+			bool RenderTarget = false;
 		};
 	}
 }

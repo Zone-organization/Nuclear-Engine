@@ -32,6 +32,7 @@ namespace NuclearEngine
 
 			void DX11Texture::Create(DX11Texture* texture,const Texture_Data&Data, const Texture_Desc& Desc)
 			{
+				texture->desc = Desc;
 				if (Desc.Type == TextureType::Texture1D)
 				{
 					return DX11Texture::Create1D(texture, Data, Desc);
@@ -48,6 +49,7 @@ namespace NuclearEngine
 
 			void DX11Texture::Create(DX11Texture* texture, const std::array<API::Texture_Data, 6>& data, const Texture_Desc& Desc)
 			{
+				texture->desc = Desc;
 				return DX11Texture::CreateCube(texture, data, Desc);
 			}
 
@@ -101,6 +103,10 @@ namespace NuclearEngine
 			{
 				DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
 				DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
+			}
+			Texture_Desc DX11Texture::GetTextureDesc()
+			{
+				return desc;
 			}
 			void DX11Texture::VSBind(unsigned int index)
 			{
@@ -217,7 +223,15 @@ namespace NuclearEngine
 
 				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
 				{
-					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+					if (Desc.RenderTarget == true)
+					{
+						texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+
+					}
+					else
+					{
+						texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+					}
 					texDesc.MiscFlags = 0;
 					texDesc.MipLevels = 1;
 				}
@@ -229,9 +243,9 @@ namespace NuclearEngine
 				}
 
 				//Check if null texture
-				if (Data.Width == 0 && Data.Height == 0 && Data.Img_Data_Buf == NULL)
+				if (Data.Img_Data_Buf == NULL)
 				{
-					if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, nullptr, &result->tex2D)))
+					if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, NULL, &result->tex2D)))
 					{
 						Log.Error("[DirectX] Texture2D Creation Failed for Null-ed Texture2D!\n");
 						return;
@@ -400,14 +414,22 @@ namespace NuclearEngine
 
 				DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, &srvDesc, &result->resourceView);
 			}
-			DXGI_FORMAT GetDXFormat(Format format)
+			DXGI_FORMAT DX11Texture::GetDXFormat(Format format)
 			{
 				switch (format)
 				{
-				case Format::R8: return DXGI_FORMAT_R8_UNORM;
-				case Format::R8G8: return DXGI_FORMAT_R8G8_UNORM;
-				case Format::R8G8B8: return DXGI_FORMAT_R8G8B8A8_UNORM;
-				case Format::R8G8B8A8: return DXGI_FORMAT_R8G8B8A8_UNORM;
+				case Format::R8_UNORM: return DXGI_FORMAT_R8_UNORM;
+				case Format::R8G8_UNORM: return DXGI_FORMAT_R8G8_UNORM;
+				case Format::R8G8B8_UNORM: return DXGI_FORMAT_R8G8B8A8_UNORM;
+				case Format::R8G8B8A8_UNORM: return DXGI_FORMAT_R8G8B8A8_UNORM;
+				case Format::R16_FLOAT: return DXGI_FORMAT_R16_FLOAT;
+				case Format::R16G16_FLOAT: return DXGI_FORMAT_R16G16_FLOAT;
+				case Format::R16G16B16_FLOAT: return DXGI_FORMAT_R16G16B16A16_FLOAT;
+				case Format::R16G16B16A16_FLOAT: return DXGI_FORMAT_R16G16B16A16_FLOAT;
+				case Format::R32_FLOAT: return DXGI_FORMAT_R32_FLOAT;
+				case Format::R32G32_FLOAT: return DXGI_FORMAT_R32G32_FLOAT;
+				case Format::R32G32B32_FLOAT: return DXGI_FORMAT_R32G32B32A32_FLOAT;
+				case Format::R32G32B32A32_FLOAT: return DXGI_FORMAT_R32G32B32A32_FLOAT;
 				default: return DXGI_FORMAT_R8G8B8A8_UNORM;
 				}
 			}

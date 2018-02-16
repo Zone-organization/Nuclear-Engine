@@ -14,9 +14,10 @@ namespace NuclearEngine
 			class DX11Shader;
 			class DX11VertexShader;
 			class DX11PixelShader;
-
+			class DX11RenderTarget;
 			class NEAPI DX11Texture
 			{
+				friend class DX11RenderTarget;
 			public:
 				DX11Texture();
 				~DX11Texture();
@@ -35,7 +36,13 @@ namespace NuclearEngine
 				void PSBind(unsigned int index);
 				void PSBind(const char *samplerName, DX11Shader *shader, unsigned int index);
 
+				Texture_Desc GetTextureDesc();
+
+				//Todo: move this function to utilities or whatever as it is going to be used again
+				static DXGI_FORMAT GetDXFormat(Format format);
 			protected:
+				Texture_Desc desc;
+
 				static void Create1D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
 				static void Create2D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
 				static void Create3D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);

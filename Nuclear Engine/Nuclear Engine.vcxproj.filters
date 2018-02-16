@@ -99,6 +99,10 @@
     <ClInclude Include="Source\Tests\OpenGLTests.h" />
     <ClInclude Include="include\API\PixelShader.h" />
     <ClInclude Include="include\API\Buffer_Types.h" />
+    <ClInclude Include="include\API\RenderTarget.h" />
+    <ClInclude Include="include\API\OpenGL\GLRenderTarget.h" />
+    <ClInclude Include="include\API\DirectX\DX11RenderTarget.h" />
+    <ClInclude Include="Source\Tests\Test5.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -170,5 +174,8 @@
     <ClCompile Include="Source\API\OpenGL\GLPixelShader.cpp" />
     <ClCompile Include="Source\API\PixelShader.cpp" />
     <ClCompile Include="Source\API\VertexShader.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLRenderTarget.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11RenderTarget.cpp" />
+    <ClCompile Include="Source\API\RenderTarget.cpp" />
   </ItemGroup>
 </Project>

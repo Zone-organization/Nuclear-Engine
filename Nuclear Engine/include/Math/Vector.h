@@ -358,6 +358,9 @@ namespace NuclearEngine {
 		typedef Vector<2, int>    Vector2i;
 		typedef Vector<3, int>    Vector3i;
 		typedef Vector<4, int>    Vector4i;
+		typedef Vector<2, unsigned int>    Vector2ui;
+		typedef Vector<3, unsigned int>    Vector3ui;
+		typedef Vector<4, unsigned int>    Vector4ui;
 		typedef Vector<2, double> Vector2d;
 		typedef Vector<3, double> Vector3d;
 		typedef Vector<4, double> Vector4d;

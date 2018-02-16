@@ -10,9 +10,10 @@ namespace NuclearEngine {
 		class Shader;
 		class VertexShader;
 		class PixelShader;
-
+		class RenderTarget;
 		class NEAPI Texture
 		{
+			friend class RenderTarget;
 		public:
 			Texture();			
 			~Texture();

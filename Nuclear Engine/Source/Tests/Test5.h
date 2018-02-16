@@ -2,36 +2,29 @@
 #include "TestCommon.h"
 #include <iostream>
 
-class Test4 : public Core::Game
+class Test5 : public Core::Game
 {
 protected:
 	API::VertexShader Vertexshader;
 	API::PixelShader Pixelshader;
-	API::PixelShader Depthpixelshader;
+	API::VertexShader ScreenVertexshader;
+	API::PixelShader ScreenPixelshader;
 
 	API::VertexBuffer CubeVB;
 	API::VertexBuffer PlaneVB;
-	API::VertexBuffer WindowVB;
+	API::VertexBuffer ScreenQuadVB;
 
 	API::Texture PlaneTex;
 	API::Texture CubeTex;
-	API::Texture WindowTex;
+	API::Texture ScreenTex;
 
-	bool Depthshaderenabled = false;
+	API::RenderTarget RT;
 
 	Components::FlyCamera Camera;
+
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
-
-	Math::Vector3 windows[5] = 
-	{
-		Math::Vector3(-1.5f, 0.0f, -0.48f),
-		Math::Vector3(1.5f, 0.0f, 0.51f),
-		Math::Vector3(0.0f, 0.0f, 0.7f),
-		Math::Vector3(-0.3f, 0.0f, -2.3f),
-		Math::Vector3(0.5f, 0.0f, -0.6f)
-	};
 
 	std::string VertexShader = R"(struct VertexInputType
 {
@@ -81,44 +74,57 @@ float4 main(PixelInputType input) : SV_TARGET
     return NE_Tex_Diffuse.Sample(NE_Tex_Diffuse_Sampler, input.tex);
 }
 )";
-	std::string DepthPixelShader = R"(
+	std::string ScreenVertexShader = R"(struct VertexInputType
+{
+    float2 position : POSITION;
+	float2 tex : TEXCOORD;
+};
+
 struct PixelInputType
 {
     float4 position : SV_POSITION;
 	float2 tex : TEXCOORD;
 };
 
-Texture2D NE_Tex_Diffuse : register(t0);
-SamplerState NE_Tex_Diffuse_Sampler : register(s0);
 
-static const float far = 100.0f; 
-static const float near = 0.1f;  
-
-float LinearizeDepth(float depth) 
+PixelInputType main(VertexInputType input)
 {
+    PixelInputType output;
 	
-    float z = depth * 2.0f - 1.0f; // back to NDC 
-    return (2.0 * near * far) / (far + near - z * (far - near));	
-}
+	// CalcSulate the position of the vertex against the world, view, and projection matrices.
+	output.position = float4(input.position.x,input.position.y,0.0f,1.0f);
+	// Store the input texture for the pixel shader to use.
+    output.tex = input.tex;
+    return output;
+})";
+
+	std::string ScreenPixelShader = R"(
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+	float2 tex : TEXCOORD;
+};
+
+Texture2D ScreenTexture : register(t0);
+SamplerState ScreenTexture_Sampler : register(s0);
+
 float4 main(PixelInputType input) : SV_TARGET
-{    
-	float depth = LinearizeDepth(input.position.z) / 50.0f; // divide for demonstration
-    return float4(float3(depth,depth,depth), 1.0f);
+{
+    return float4(ScreenTexture.Sample(ScreenTexture_Sampler, input.tex).rgb, 1.0f);
 }
 )";
-	API::DepthStencilState DS_State;
-	API::RasterizerState R_State;
-	API::BlendState B_State;
 
+	API::RasterizerState R_State;
 public:
-	Test4()
+	Test5()
 	{
 	}
 	void Load()
 	{
-		API::VertexShader::Create(&Vertexshader, &API::CompileShader(VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL,true,true));
+		API::VertexShader::Create(&Vertexshader, &API::CompileShader(VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL, true, true));
 		API::PixelShader::Create(&Pixelshader, &API::CompileShader(PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true, true));
-		API::PixelShader::Create(&Depthpixelshader, &API::CompileShader(DepthPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true, true));
+		API::VertexShader::Create(&ScreenVertexshader, &API::CompileShader(ScreenVertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL, true, true));
+		API::PixelShader::Create(&ScreenPixelshader, &API::CompileShader(ScreenPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true, true));
 
 		float cubevertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -173,15 +179,16 @@ public:
 			-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
 			5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 		};
-		float windowVertices[] = {
-			// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
-			0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-			0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
-			1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+	
+		float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+								 // positions   // texCoords
+			-1.0f,  1.0f,  0.0f, 1.0f,
+			-1.0f, -1.0f,  0.0f, 0.0f,
+			1.0f, -1.0f,  1.0f, 0.0f,
 
-			0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-			1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
-			1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+			-1.0f,  1.0f,  0.0f, 1.0f,
+			1.0f, -1.0f,  1.0f, 0.0f,
+			1.0f,  1.0f,  1.0f, 1.0f
 		};
 
 		API::VertexBufferDesc vDesc;
@@ -193,10 +200,10 @@ public:
 		vDesc.data = planeVertices;
 		vDesc.size = sizeof(planeVertices);
 		API::VertexBuffer::Create(&PlaneVB, vDesc);
-		
-		vDesc.data = windowVertices;
-		vDesc.size = sizeof(windowVertices);
-		API::VertexBuffer::Create(&WindowVB, vDesc);
+
+		vDesc.data = quadVertices;
+		vDesc.size = sizeof(quadVertices);
+		API::VertexBuffer::Create(&ScreenQuadVB, vDesc);
 
 		API::InputLayout ShaderIL;
 		ShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
@@ -204,7 +211,35 @@ public:
 
 		CubeVB.SetInputLayout(&ShaderIL, &Vertexshader);
 		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
-		WindowVB.SetInputLayout(&ShaderIL, &Vertexshader);
+
+		API::InputLayout ScreenShaderIL;
+		ScreenShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float2);
+		ScreenShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+
+		ScreenQuadVB.SetInputLayout(&ScreenShaderIL, &ScreenVertexshader);
+
+
+		int windowwidth, windowheight;
+		Core::Application::GetSize(&windowwidth, &windowheight);
+
+
+		API::Texture_Desc ScreenTexDesc;
+		ScreenTexDesc.Filter = API::TextureFilter::Linear2D;
+		ScreenTexDesc.Wrap = API::TextureWrap::Repeat;
+		ScreenTexDesc.Format = API::Format::R8G8B8A8_UNORM;
+		ScreenTexDesc.Type = API::TextureType::Texture2D;
+		ScreenTexDesc.RenderTarget = true;
+
+		API::Texture_Data Data;
+		Data.Img_Data_Buf = NULL;
+		Data.Width = windowwidth;
+		Data.Height = windowheight;
+		API::Texture::Create(&ScreenTex, Data, ScreenTexDesc);
+
+		//RT
+		API::RenderTarget::Create(&RT);
+		RT.AttachTexture(&ScreenTex);
+		RT.AttachDepthStencilBuffer((windowwidth, windowheight));
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
@@ -218,31 +253,17 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/window.png", &WindowTex, Desc);
 
-		API::DepthStencilStateDesc DS_Desc;
-		DS_Desc.DepthEnabled = true;
-		DS_Desc.DepthFunc = API::Comparison_Func::ALWAYS;
-		API::DepthStencilState::Create(&DS_State, DS_Desc);
-
+	
 		API::RasterizerStateDesc rasterizerdesc;
 		rasterizerdesc.FillMode = API::FillMode::Wireframe;
 
 		API::RasterizerState::Create(&R_State, rasterizerdesc);
 
-		API::BlendStateDesc blenddesc;
-		blenddesc.RenderTarget[0].BlendEnable = true;
-		blenddesc.RenderTarget[0].SrcBlend = API::BLEND::SRC_ALPHA;
-		blenddesc.RenderTarget[0].DestBlend = API::BLEND::INV_SRC_ALPHA;
-		blenddesc.RenderTarget[0].SrcBlendAlpha = API::BLEND::SRC_ALPHA;
-		blenddesc.RenderTarget[0].DestBlendAlpha = API::BLEND::INV_SRC_ALPHA;
-		blenddesc.RenderTarget[0].RenderTargetWriteMask = API::COLOR_WRITE_ENABLE_ALL;
-		API::BlendState::Create(&B_State, blenddesc);
-		
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 		Core::Context::EnableDepthBuffer(true);
 
-		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);			
+		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
 	}
 
@@ -281,17 +302,12 @@ public:
 		Camera.Update();
 
 	}
-	
+
 	/*
 	Controls:
-	0 - Visualize Depth Buffer
-	1 - Enable Depth state
-	2 - Restore Default Depth State
-	3 - Enable Rasterizer State
-	4 - Restore Default Rasterizer State
-	5 - Enable Blending State
-	6 - Restore Default Blending State
-	
+	1 - Enable Rasterizer State
+	2 - Restore Default Rasterizer State
+
 	W - Move Camera Forward
 	A - Move Camera Left
 	S - Move Camera Backward
@@ -304,38 +320,25 @@ public:
 	{
 		Core::Context::Begin();
 
-		//Change Background Color to Blue in RGBA format
+		//Bind The RenderTarget
+		RT.Bind();
+
+		//Enable Depth Test
+		Core::Context::EnableDepthBuffer(true);
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		Vertexshader.Bind();		
+
+		Vertexshader.Bind();
+
+		Pixelshader.Bind();
+		CubeTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
 		
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num0))
-		{
-			Depthpixelshader.Bind();
-			Depthshaderenabled = true;
-		}
-		else
-		{
-			Pixelshader.Bind();
-			CubeTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
-			Depthshaderenabled = false;
-		}
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
 		{
-			DS_State.Bind();
-		}
-		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2)) 
-		{
-			API::DepthStencilState::Bind_Default();
-			
-		}
-
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num3))
-		{
 			R_State.Bind();
 		}
-		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num4))
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
 		{
 			R_State.Bind_Default();
 		}
@@ -352,45 +355,34 @@ public:
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModel);
 		Core::Context::Draw(36);
-		
+
 		// floor
-		if (!Depthshaderenabled)
-		{
-			PlaneTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
-		}
-	
+		PlaneTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);		
+
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
+		Core::Context::Draw(6);		
+
+		//Bind default RenderTarget
+		RT.Bind();
+		Core::Context::EnableDepthBuffer(false);
+		Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
+		{
+			R_State.Bind();
+		}
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
+		{
+			R_State.Bind_Default();
+		}
+
+		ScreenVertexshader.Bind();
+		ScreenPixelshader.Bind();
+		ScreenQuadVB.Bind();
+		ScreenTex.SetInShader("ScreenTexture", &ScreenPixelshader, 0);
 		Core::Context::Draw(6);
 
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num5))
-		{
-			B_State.Bind(API::Color(0.75f));
-		}
-		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num6))
-		{
-			B_State.Bind_Default();
-		}
-
-		if (!Depthshaderenabled)
-		{
-			WindowTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
-		}
-
-		WindowVB.Bind();
-		std::map<float, Math::Vector3> sorted;
-		for (unsigned int i = 0; i < 5; i++)
-		{
-			float distance = Math::Length(Camera.GetPosition() - windows[i]);
-			sorted[distance] = windows[i];
-		}
-		for (std::map<float, Math::Vector3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
-		{
-			Math::Matrix4 model;
-			model = Math::Translate(model, it->second);
-			Camera.SetModelMatrix(model);
-			Core::Context::Draw(6);
-		}		
 
 		Core::Context::End();
 	}

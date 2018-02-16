@@ -6,6 +6,7 @@
 #include <..\Source\Tests\Test2.h>
 #include <..\Source\Tests\Test3.h>
 #include <..\Source\Tests\Test4.h>
+#include <..\Source\Tests\Test5.h>
 #include <Components\GUI\imgui.h>
 #include "..\Core\imgui_impl\imgui_impl.h"
 
@@ -151,6 +152,11 @@ namespace NuclearEngine {
 			else if (TestNumber == 4)
 			{
 				Test4 test;
+				Engine::Run(&test);
+			}
+			else if (TestNumber == 5)
+			{
+				Test5 test;
 				Engine::Run(&test);
 			}
 			else if (TestNumber == 99)

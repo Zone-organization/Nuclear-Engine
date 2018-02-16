@@ -10,6 +10,7 @@ namespace NuclearEngine
 	{
 		namespace DirectX
 		{
+			class DX11RenderTarget;
 			class NEAPI DX11Context
 			{
 				friend Core::Application;
@@ -30,7 +31,9 @@ namespace NuclearEngine
 				static ID3D11Device* GetDevice();
 				static ID3D11DeviceContext* GetContext();
 
+				static void Bind_RenderTarget(DX11RenderTarget* rt);
 				static void Bind_Default_Rasterizer_State();
+				static void Bind_Default_RenderTarget();
 			private:
 				static bool Initialize(GLFWwindow* window);
 				static void Shutdown();
