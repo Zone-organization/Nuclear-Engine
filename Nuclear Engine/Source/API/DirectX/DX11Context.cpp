@@ -281,6 +281,7 @@ namespace NuclearEngine
 
 				DefaultRT.rendertargetviews.push_back(RenderTarget);
 				DefaultRT.depthstencilview = m_depthStencilView;
+				ActiveRT = &DefaultRT;
 				// Bind the render target view and depth stencil buffer to the output render pipeline.
 				Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
 
