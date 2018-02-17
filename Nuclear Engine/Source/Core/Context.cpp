@@ -73,22 +73,6 @@ namespace NuclearEngine
 			Core::Application::SwapBuffers();
 		}
 
-		void Context::EnableDepthBuffer(bool state)
-		{
-#ifndef NE_USE_RUNTIME_RENDER_API
-			ctx.EnableDepthBuffer(state);
-#else
-			if (_renderer == RenderAPI::OpenGL3)
-			{
-				return API::OpenGL::GLContext::EnableDepthBuffer(state);
-			}
-			else if (_renderer == RenderAPI::DirectX11)
-			{
-				return API::DirectX::DX11Context::EnableDepthBuffer(state);
-			}
-#endif
-		}
-
 		void Context::Draw(unsigned int count)
 		{
 #ifndef NE_USE_RUNTIME_RENDER_API

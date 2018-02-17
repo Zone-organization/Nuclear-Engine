@@ -94,10 +94,6 @@ namespace NuclearEngine
 				}
 
 			}
-			void GLBlendState::Bind_Default()
-			{
-				glDisable(GL_BLEND);
-			}
 		}
 	}
 }

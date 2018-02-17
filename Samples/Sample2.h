@@ -170,7 +170,7 @@ public:
 
 		ImGui::StyleColorsDark();
 
-		Core::Context::EnableDepthBuffer(true);
+		API::EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);

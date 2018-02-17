@@ -22,7 +22,6 @@ namespace NuclearEngine
 
 				void Bind(API::Color blendfactor = API::Color(0.0f), unsigned int samplemask = 0xffffffff);
 
-				static void Bind_Default();
 			protected:
 				ID3D11BlendState * Stateobj;
 			};

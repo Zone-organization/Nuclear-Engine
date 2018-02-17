@@ -65,6 +65,9 @@ namespace NuclearEngine
 					glDepthMask(depthmask);
 					glDepthFunc(depthfunc);
 				}
+				else {
+					glDisable(GL_DEPTH_TEST);
+				}
 				if (stencilenabled)
 				{
 					glEnable(GL_STENCIL_TEST);    
@@ -72,15 +75,12 @@ namespace NuclearEngine
 				//	glStencilMaskSeparate(0x00); // each bit ends up as 0 in the stencil buffer (disabling writes)
 
 				}
+				else {
+					glDisable(GL_STENCIL_TEST);
 
+				}
 
-			}
-			void GLDepthStencilState::Bind_Default()
-			{
-				glEnable(GL_DEPTH_TEST);
-				glDepthMask(GL_TRUE);
-				glDepthFunc(GL_LESS);
-			}			
+			}		
 		}
 	}
 }

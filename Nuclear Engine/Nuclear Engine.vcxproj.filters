@@ -103,6 +103,7 @@
     <ClInclude Include="include\API\OpenGL\GLRenderTarget.h" />
     <ClInclude Include="include\API\DirectX\DX11RenderTarget.h" />
     <ClInclude Include="Source\Tests\Test5.h" />
+    <ClInclude Include="include\API\CommonStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

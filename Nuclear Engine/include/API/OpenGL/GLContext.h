@@ -18,8 +18,6 @@ namespace NuclearEngine
 
 				static void Clear(API::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
 
-				static void EnableDepthBuffer(bool state);
-
 				static void Draw(unsigned int count);
 				static void DrawIndexed(unsigned int vertexCount);
 

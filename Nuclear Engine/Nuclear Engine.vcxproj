@@ -335,6 +335,7 @@
     <ClInclude Include="include\API\BlendState.h" />
     <ClInclude Include="include\API\Buffer_Types.h" />
     <ClInclude Include="include\API\Color.h" />
+    <ClInclude Include="include\API\CommonStates.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
     <ClInclude Include="include\API\DirectX\DX11BlendState.h" />
     <ClInclude Include="include\API\DirectX\DX11Common.h" />

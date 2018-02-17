@@ -17,8 +17,6 @@ namespace NuclearEngine {
 			static void Delete(BlendState* state);
 
 			void Bind(API::Color blendfactor = API::Color(0.0f), unsigned int samplemask = 0xffffffff);
-
-			static void Bind_Default();
 		private:
 			OpenGL::GLBlendState GLObject;
 			DirectX::DX11BlendState DXObject;

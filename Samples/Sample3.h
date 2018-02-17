@@ -61,7 +61,7 @@ public:
 
 		Skybox.Create(&Camera, SkyBoxTexturePaths);
 
-		Core::Context::EnableDepthBuffer(true);
+		API::EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
 

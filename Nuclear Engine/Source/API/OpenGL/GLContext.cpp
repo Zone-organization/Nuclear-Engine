@@ -70,19 +70,6 @@ namespace NuclearEngine
 				GLCall(glClear(flaggl));
 			}
 
-			void GLContext::EnableDepthBuffer(bool state)
-			{
-				if (state)
-				{
-					GLCall(glEnable(GL_DEPTH_TEST));
-				}
-				else
-				{
-					GLCall(glDisable(GL_DEPTH_TEST));
-				}
-			}
-				
-
 			void GLContext::Draw(unsigned int count)
 			{
 				GLCall(glDrawArrays(GL_PRIMITIVE_TYPE, 0, count));

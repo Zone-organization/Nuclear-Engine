@@ -17,8 +17,6 @@ namespace NuclearEngine {
 			static void Delete(RasterizerState* state);
 
 			void Bind();
-
-			static void Bind_Default();
 		private:
 			OpenGL::GLRasterizerState GLObject;
 			DirectX::DX11RasterizerState DXObject;

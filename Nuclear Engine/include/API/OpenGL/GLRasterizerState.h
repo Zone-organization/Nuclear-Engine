@@ -19,8 +19,6 @@ namespace NuclearEngine
 				static void Delete(GLRasterizerState *state);
 
 				void Bind();
-
-				static void Bind_Default();
 			protected:
 				bool Cullenabled;
 				GLenum Cullfacemode;

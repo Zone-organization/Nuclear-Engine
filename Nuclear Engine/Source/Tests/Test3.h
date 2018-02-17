@@ -152,7 +152,7 @@ public:
 		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 		Core::Application::Display();
 
-		Core::Context::EnableDepthBuffer(true);
+		API::EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 

@@ -45,17 +45,7 @@ namespace NuclearEngine {
 				DXObject.Bind();
 			}
 		}
-		void DepthStencilState::Bind_Default()
-		{
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				OpenGL::GLDepthStencilState::Bind_Default();
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				DirectX::DX11DepthStencilState::Bind_Default();
-			}
-		}
+
 	}
 }
 

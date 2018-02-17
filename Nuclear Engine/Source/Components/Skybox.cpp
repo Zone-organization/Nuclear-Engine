@@ -3,6 +3,7 @@
 #include <API\ShaderCompiler.h>
 #include <AssetManager\AssetManager.h>
 #include <API\RenderStates_Types.h>
+#include <API\CommonStates.h>
 
 namespace NuclearEngine
 {
@@ -116,7 +117,7 @@ namespace NuclearEngine
 			shader.Bind();
 			texcube.PSBind("NE_SkyboxTexture",&shader,0);
 			Core::Context::Draw(36);
-			API::DepthStencilState::Bind_Default();
+			API::DefaultDepthStencil.Bind();
 		}
 	}
 }

@@ -48,11 +48,6 @@ namespace NuclearEngine
 
 				DX11Context::GetContext()->OMSetBlendState(Stateobj, blendFactor, samplemas);
 			}
-			static float defblendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-			void DX11BlendState::Bind_Default()
-			{
-				DX11Context::GetContext()->OMSetBlendState(0, defblendFactor, 0xffffffff);
-			}
 		}
 	}
 }

@@ -43,7 +43,7 @@ public:
 		Components::Model::CreateCube(&Cube, Textures);
 		ImGui::StyleColorsDark();
 		//AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
-		Core::Context::EnableDepthBuffer(true);
+		API::EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();

@@ -38,8 +38,6 @@ namespace NuclearEngine
 			static void Begin();
 			static void End();
 
-			static void EnableDepthBuffer(bool state);
-
 			static void Draw(unsigned int count);
 			static void DrawIndexed(unsigned int vertexCount);
 

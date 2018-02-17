@@ -240,7 +240,7 @@ public:
 		API::BlendState::Create(&B_State, blenddesc);
 		
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
-		Core::Context::EnableDepthBuffer(true);
+		API::EnabledDepth_DisabledStencil.Bind();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);			
 		Core::Application::Display();
@@ -327,8 +327,7 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2)) 
 		{
-			API::DepthStencilState::Bind_Default();
-			
+			API::DefaultDepthStencil.Bind();
 		}
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num3))
@@ -337,7 +336,7 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num4))
 		{
-			R_State.Bind_Default();
+			API::DefaultRasterizer.Bind();
 		}
 
 		CubeVB.Bind();
@@ -369,7 +368,7 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num6))
 		{
-			B_State.Bind_Default();
+			API::DefaultBlendState.Bind();
 		}
 
 		if (!Depthshaderenabled)

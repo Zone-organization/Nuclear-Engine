@@ -358,27 +358,19 @@ namespace NuclearEngine
 				}
 				return;
 			}
-
-			//URGENT TODO: this function doesnt do what is it supposed to do
-			void DX11Context::EnableDepthBuffer(bool state)
-			{
-			/*	if (state)
-				{
-					Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
-				}
-				else
-				{	
-					Context->OMSetRenderTargets(1, &RenderTarget, 0);
-				}*/
-			}
-
+			static ID3D11RenderTargetView* nullRTV = nullptr;
 			void DX11Context::Bind_RenderTarget(DX11RenderTarget * rt)
 			{
+				Context->OMSetRenderTargets(1, &nullRTV, nullptr);
+
 				Context->OMSetRenderTargets(static_cast<UINT>(rt->rendertargetviews.size()), rt->rendertargetviews.data(), rt->depthstencilview);
 				ActiveRT = rt;
 			}
 			void DX11Context::Bind_Default_RenderTarget()
 			{
+				//Unbind the previouse
+				//Context->OMSetRenderTargets(1,&nullRTV, nullptr);
+
 				Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
 				ActiveRT = &DefaultRT;
 			}

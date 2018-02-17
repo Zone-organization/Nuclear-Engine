@@ -17,8 +17,6 @@ namespace NuclearEngine {
 			static void Delete(DepthStencilState* state);
 
 			void Bind();
-
-			static void Bind_Default();
 		private:
 			OpenGL::GLDepthStencilState GLObject;
 			DirectX::DX11DepthStencilState DXObject;

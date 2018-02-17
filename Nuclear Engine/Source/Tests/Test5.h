@@ -5,10 +5,8 @@
 class Test5 : public Core::Game
 {
 protected:
-	API::VertexShader Vertexshader;
-	API::PixelShader Pixelshader;
-	API::VertexShader ScreenVertexshader;
-	API::PixelShader ScreenPixelshader;
+	API::Shader SceneShader;
+	API::Shader ScreenShader;
 
 	API::VertexBuffer CubeVB;
 	API::VertexBuffer PlaneVB;
@@ -121,11 +119,20 @@ public:
 	}
 	void Load()
 	{
-		API::VertexShader::Create(&Vertexshader, &API::CompileShader(VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL, true, true));
-		API::PixelShader::Create(&Pixelshader, &API::CompileShader(PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true, true));
-		API::VertexShader::Create(&ScreenVertexshader, &API::CompileShader(ScreenVertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL, true, true));
-		API::PixelShader::Create(&ScreenPixelshader, &API::CompileShader(ScreenPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true, true));
+		API::ShaderDesc sceneshaderdesc;
+		sceneshaderdesc.Name = "Test5";
+		API::CompileShader(&sceneshaderdesc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&sceneshaderdesc.PixelShaderCode, PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
+		API::Shader::Create(&SceneShader, &sceneshaderdesc);
+
+		API::ShaderDesc screenshaderdesc;
+		screenshaderdesc.Name = "ScreenShader";
+		API::CompileShader(&screenshaderdesc.VertexShaderCode, ScreenVertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
+		API::CompileShader(&screenshaderdesc.PixelShaderCode, ScreenPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
+
+		API::Shader::Create(&ScreenShader, &screenshaderdesc);
+	
 		float cubevertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 			0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -209,14 +216,14 @@ public:
 		ShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
 		ShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
-		CubeVB.SetInputLayout(&ShaderIL, &Vertexshader);
-		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
+		CubeVB.SetInputLayout(&ShaderIL, &SceneShader);
+		PlaneVB.SetInputLayout(&ShaderIL, &SceneShader);
 
 		API::InputLayout ScreenShaderIL;
 		ScreenShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float2);
 		ScreenShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
-		ScreenQuadVB.SetInputLayout(&ScreenShaderIL, &ScreenVertexshader);
+		ScreenQuadVB.SetInputLayout(&ScreenShaderIL, &ScreenShader);
 
 
 		int windowwidth, windowheight;
@@ -226,7 +233,7 @@ public:
 		API::Texture_Desc ScreenTexDesc;
 		ScreenTexDesc.Filter = API::TextureFilter::Linear2D;
 		ScreenTexDesc.Wrap = API::TextureWrap::Repeat;
-		ScreenTexDesc.Format = API::Format::R8G8B8A8_UNORM;
+		ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
 		ScreenTexDesc.Type = API::TextureType::Texture2D;
 		ScreenTexDesc.RenderTarget = true;
 
@@ -239,11 +246,11 @@ public:
 		//RT
 		API::RenderTarget::Create(&RT);
 		RT.AttachTexture(&ScreenTex);
-		RT.AttachDepthStencilBuffer((windowwidth, windowheight));
+		RT.AttachDepthStencilBuffer(Math::Vector2ui(windowwidth, windowheight));
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
-		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
+		SceneShader.SetConstantBuffer(&Camera.GetCBuffer(),API::ShaderType::Vertex);
 
 		API::Texture_Desc Desc;
 		Desc.Filter = API::TextureFilter::Trilinear;
@@ -261,7 +268,7 @@ public:
 		API::RasterizerState::Create(&R_State, rasterizerdesc);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
-		Core::Context::EnableDepthBuffer(true);
+		API::EnabledDepth_DisabledStencil.Bind();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -324,24 +331,13 @@ public:
 		RT.Bind();
 
 		//Enable Depth Test
-		Core::Context::EnableDepthBuffer(true);
+		API::EnabledDepth_DisabledStencil.Bind();
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 
-		Vertexshader.Bind();
+		SceneShader.Bind();
 
-		Pixelshader.Bind();
-		CubeTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
-		
-
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
-		{
-			R_State.Bind();
-		}
-		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
-		{
-			R_State.Bind_Default();
-		}
+		CubeTex.PSBind("NE_Tex_Diffuse", &SceneShader, 0);
 
 		CubeVB.Bind();
 
@@ -357,16 +353,16 @@ public:
 		Core::Context::Draw(36);
 
 		// floor
-		PlaneTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);		
+		PlaneTex.PSBind("NE_Tex_Diffuse", &SceneShader, 0);
 
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
 		Core::Context::Draw(6);		
 
 		//Bind default RenderTarget
-		RT.Bind();
-		Core::Context::EnableDepthBuffer(false);
-		Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		RT.Bind_Default();
+		API::DisabledDepthStencil.Bind();
+		Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer);
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
 		{
@@ -374,13 +370,12 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
 		{
-			R_State.Bind_Default();
+			API::DefaultRasterizer.Bind();
 		}
 
-		ScreenVertexshader.Bind();
-		ScreenPixelshader.Bind();
+		ScreenShader.Bind();
 		ScreenQuadVB.Bind();
-		ScreenTex.SetInShader("ScreenTexture", &ScreenPixelshader, 0);
+		ScreenTex.PSBind("ScreenTexture", &ScreenShader, 0);
 		Core::Context::Draw(6);
 
 

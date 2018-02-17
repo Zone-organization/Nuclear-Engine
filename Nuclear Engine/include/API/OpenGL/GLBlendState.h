@@ -34,8 +34,6 @@ namespace NuclearEngine
 				static void Delete(GLBlendState *state);
 
 				void Bind(API::Color blendfactor = API::Color(0.0f), unsigned int samplemask = 0xffffffff);
-
-				static void Bind_Default();
 			protected:
 				bool IndependentBlendEnable;
 				OpenGL_RT_Blend targets[8];

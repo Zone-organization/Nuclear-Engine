@@ -64,11 +64,6 @@ namespace NuclearEngine
 				glPolygonMode(GL_FRONT_AND_BACK, Fillmode);
 
 			}
-			void GLRasterizerState::Bind_Default()
-			{
-				glDisable(GL_CULL_FACE);
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			}
 		}
 	}
 }

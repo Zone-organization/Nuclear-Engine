@@ -29,8 +29,6 @@ namespace NuclearEngine
 				static void Delete(GLDepthStencilState *state);
 
 				void Bind();
-
-				static void Bind_Default();
 			protected:
 				GLboolean depthmask;
 				GLenum depthfunc;
