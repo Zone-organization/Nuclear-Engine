@@ -8,6 +8,8 @@ protected:
 	API::VertexBuffer RectangleVB;
 	API::IndexBuffer RectangleIB;
 	API::Texture WoodenBoxTex;
+	API::Sampler WoodenBoxSampler;
+
 	float vertices[20] = {
 		// positions          // texture coords
 		0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
@@ -88,13 +90,17 @@ public:
 		RectangleVB.SetInputLayout(&RectangleIL, &RectangleShader);
 		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
 
+		//Create Texture Resource
 		API::Texture_Desc TexDesc;
-		TexDesc.Filter = API::TextureFilter::Linear2D;
-		TexDesc.Wrap = API::TextureWrap::Repeat;
 		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
 		TexDesc.Type = API::TextureType::Texture2D;
+		TexDesc.GenerateMipMaps = false;
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
 
-		//AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
+		//Create Sampler
+		API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = API::TextureFilter::Linear2D;
+		API::Sampler::Create(&WoodenBoxSampler, Samplerdesc);
 
 		Core::Application::Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -106,8 +112,10 @@ public:
 
 		//Change Background Color to Black in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		WoodenBoxTex.PSBind(0);
+
 		RectangleShader.Bind();
+		WoodenBoxTex.PSBind(0);
+		WoodenBoxSampler.PSBind(0);
 		RectangleVB.Bind();
 		RectangleIB.Bind();
 		Core::Context::DrawIndexed(6);

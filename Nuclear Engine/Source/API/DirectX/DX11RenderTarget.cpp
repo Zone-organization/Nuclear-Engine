@@ -3,6 +3,7 @@
 #ifdef NE_COMPILE_DIRECTX11
 #include <API\DirectX\DX11Texture.h>
 #include <API\DirectX\DX11Context.h>
+#include <API\DirectX\DX11Types.h>
 
 namespace NuclearEngine
 {
@@ -64,7 +65,7 @@ namespace NuclearEngine
 			{
 				D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
 				ZeroMemory(&renderTargetViewDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
-				renderTargetViewDesc.Format = DX11Texture::GetDXFormat(texture->GetTextureDesc().Format);
+				renderTargetViewDesc.Format = DXTypeMap(texture->GetTextureDesc().Format);
 
 				switch (texture->GetTextureDesc().Type)
 				{

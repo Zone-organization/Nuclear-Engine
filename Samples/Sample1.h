@@ -6,7 +6,7 @@ class Sample1 : public Core::Game
 protected:
 	API::Texture WoodenBoxTex;
 	Components::FlyCamera Camera;
-	//Components::Model Nanosuit;
+	API::CommonStates states;
 	Components::Model Cube;
 	Shading::Techniques::NoLight LightTech;
 	Renderers::Renderer3D Renderer;
@@ -28,8 +28,8 @@ public:
 		Renderer.Bake();
 
 		API::Texture_Desc Desc;
-		Desc.Filter = API::TextureFilter::Trilinear;
-		Desc.Wrap = API::TextureWrap::Repeat;
+		//Desc.Filter = API::TextureFilter::Trilinear;
+		//Desc.Wrap = API::TextureWrap::Repeat;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
@@ -43,7 +43,7 @@ public:
 		Components::Model::CreateCube(&Cube, Textures);
 		ImGui::StyleColorsDark();
 		//AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
-		API::EnabledDepth_DisabledStencil.Bind();
+		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -110,6 +110,7 @@ public:
 		Math::Matrix4 CubeMatrix;
 		CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeMatrix);
+		Renderer.GetShader().Bind();
 		Cube.Draw(&Renderer.GetShader());
 
 		ShowOverlay(true);

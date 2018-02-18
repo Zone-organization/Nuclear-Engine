@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <map>
+#include "API\CommonStates.h"
 
 using namespace std;
 namespace NuclearEngine {
@@ -174,7 +175,7 @@ namespace NuclearEngine {
 
 		void Model::Draw(API::Shader* shader)
 		{
-			shader->Bind();
+
 			for (unsigned int i = 0; i < Meshes.size(); i++)
 			{
 				Meshes[i].Draw(shader);

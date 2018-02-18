@@ -354,23 +354,20 @@ namespace NuclearEngine
 					{
 						dxflag = dxflag | D3D11_CLEAR_STENCIL;
 					}
-					Context->ClearDepthStencilView(m_depthStencilView, dxflag, depth, stencil);
+					if (dxflag != 0)
+					{
+						Context->ClearDepthStencilView(m_depthStencilView, dxflag, depth, stencil);
+					}
 				}
 				return;
 			}
-			static ID3D11RenderTargetView* nullRTV = nullptr;
 			void DX11Context::Bind_RenderTarget(DX11RenderTarget * rt)
 			{
-				Context->OMSetRenderTargets(1, &nullRTV, nullptr);
-
 				Context->OMSetRenderTargets(static_cast<UINT>(rt->rendertargetviews.size()), rt->rendertargetviews.data(), rt->depthstencilview);
 				ActiveRT = rt;
 			}
 			void DX11Context::Bind_Default_RenderTarget()
 			{
-				//Unbind the previouse
-				//Context->OMSetRenderTargets(1,&nullRTV, nullptr);
-
 				Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
 				ActiveRT = &DefaultRT;
 			}

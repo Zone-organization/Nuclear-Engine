@@ -74,9 +74,6 @@ namespace NuclearEngine {
 			void Draw(API::Shader* shader);
 
 		private:
-			//Calculate Texture binding slots and store them for faster drawing
-			void PreCalculate_TextureBindings();
-			std::vector<std::string> TextureBindings;
 			// bind appropriate textures
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;

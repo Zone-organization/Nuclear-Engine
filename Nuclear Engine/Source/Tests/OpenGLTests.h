@@ -6,14 +6,17 @@ class OpenGLTests : public Core::Game
 {
 protected:
 	API::VertexBuffer TriangleVB;
-	GLuint vertProg, fragProg, fragProg1, pipeline;
+	GLuint vertProg, fragProg, pipeline;
+	API::Sampler LinearSampler;
+	API::Texture texture2;
+	API::Texture texture1;
 
 	float vertices[18] =
 	{
 		// positions         // colors
-		0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-		0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  // bottom left
+		0.0f,  0.5f, 0.0f,   0.0f, 1.0f    // top 
 
 	};
 
@@ -25,40 +28,30 @@ out gl_PerVertex
 };
 
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 color;
+layout (location = 1) in vec2 TexCoord;
 
-out vec3 xsv_COLOR0;
+out vec2 oTexCoord;
 
 void main()
 {
     gl_Position = vec4(position, 1.0f);
-    xsv_COLOR0 = color;
+    oTexCoord = TexCoord;
 }
 )";
 
 	std::string PixelShader = R"(
 #version 330
+#extension GL_ARB_shading_language_420pack : enable
 
-in vec3 xsv_COLOR0;
-
-out vec4 SV_Target0;
-
-void main()
-{
-    SV_Target0 = vec4(xsv_COLOR0, 1);
-}
-)";
-
-	std::string PixelShader1 = R"(
-#version 330
-
-in vec3 xsv_COLOR0;
+in vec2 TexCoord;
 
 out vec4 SV_Target0;
+layout(binding = 1) uniform sampler2D texture1;
+layout(binding = 0) uniform sampler2D texture2;
 
 void main()
-{
-    SV_Target0 = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+{	
+	SV_Target0 = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);
 }
 )";
 
@@ -122,35 +115,10 @@ public:
 		//Load The Shader
 		compile(vertProg, GL_VERTEX_SHADER, VertexShader);
 		compile(fragProg, GL_FRAGMENT_SHADER, PixelShader);
-		compile(fragProg1, GL_FRAGMENT_SHADER, PixelShader1);
 
 		glGenProgramPipelines(1, &pipeline);
 		glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, vertProg);
-
-		NuclearEngine::Platform::Clock clock;
 		glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, fragProg);
-
-		clock.Restart();
-		int active = 0;
-		for (uint i = 0; i < 30; i++)
-		{
-			if (active != 1)
-			{
-				glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, fragProg);
-				active = 1;
-			}
-			if (active != 2)
-			{
-				glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, fragProg1);
-				active = 2;
-			}
-			if (active != 3)
-			{
-				glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, 0);
-				active = 3;
-			}
-		}
-		std::cout << clock.GetElapsedTime().AsMicroseconds() << std::endl;
 
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
@@ -162,9 +130,21 @@ public:
 
 		API::InputLayout TriangleIL;
 		TriangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		TriangleIL.AppendAttribute("COLOR", 0, API::DataType::Float3);
+		TriangleIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
 		TriangleVB.SetInputLayout(&TriangleIL, &API::VertexShader());
+
+		API::Texture_Desc TexDesc;
+		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
+		TexDesc.Type = API::TextureType::Texture2D;
+		TexDesc.GenerateMipMaps = true;
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &texture1, TexDesc);
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &texture2, TexDesc);
+
+		//Create sampler
+		API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = API::TextureFilter::Trilinear;
+		API::Sampler::Create(&LinearSampler, Samplerdesc);
 
 		Core::Application::Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -177,23 +157,20 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		//TriangleShader.Bind();
-		//glUseProgramStages(0, GL_VERTEX_SHADER_BIT, vertProg);
-		//glUseProgramStages(0, GL_FRAGMENT_SHADER_BIT, fragProg);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
-		{
-			glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, fragProg);
-		}
-		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
-		{
-			glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, fragProg1);
-		}
-		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num3))
-		{
-			glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, 0);
-		}
 		glBindProgramPipeline(pipeline);
 		API::OpenGL::GLCheckError();
+
+		LinearSampler.PSBind(0);
+		LinearSampler.PSBind(1);
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
+		{
+			texture1.PSBind(0);
+			texture2.PSBind(1);
+		}
+		else {
+			texture1.PSBind(1);
+			texture2.PSBind(0);
+		}
 
 		TriangleVB.Bind();
 		Core::Context::Draw(3);

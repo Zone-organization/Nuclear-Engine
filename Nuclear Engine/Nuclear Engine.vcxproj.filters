@@ -104,6 +104,10 @@
     <ClInclude Include="include\API\DirectX\DX11RenderTarget.h" />
     <ClInclude Include="Source\Tests\Test5.h" />
     <ClInclude Include="include\API\CommonStates.h" />
+    <ClInclude Include="include\API\DirectX\DX11Sampler.h" />
+    <ClInclude Include="include\API\DirectX\DX11Types.h" />
+    <ClInclude Include="include\API\OpenGL\GLSampler.h" />
+    <ClInclude Include="include\API\Sampler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -178,5 +182,9 @@
     <ClCompile Include="Source\API\OpenGL\GLRenderTarget.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11RenderTarget.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11Sampler.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11Types.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLSampler.cpp" />
+    <ClCompile Include="Source\API\Sampler.cpp" />
   </ItemGroup>
 </Project>

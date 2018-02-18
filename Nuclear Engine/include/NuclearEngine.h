@@ -43,6 +43,7 @@ _____________/BOOOM\_____________
 #include <API/InputLayout.h>
 //---Textures
 #include <API/Texture.h>
+#include <API/Sampler.h>
 #include <API/Texture_Types.h>
 #include <API/RenderTarget.h>
 //---RenderStates

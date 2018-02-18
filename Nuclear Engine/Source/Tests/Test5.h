@@ -12,13 +12,19 @@ protected:
 	API::VertexBuffer PlaneVB;
 	API::VertexBuffer ScreenQuadVB;
 
+	API::Sampler LinearSampler;
 	API::Texture PlaneTex;
 	API::Texture CubeTex;
+
+	API::Sampler ScreenSampler;
 	API::Texture ScreenTex;
 
 	API::RenderTarget RT;
 
 	Components::FlyCamera Camera;
+
+	//Default states
+	API::CommonStates states;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -231,8 +237,6 @@ public:
 
 
 		API::Texture_Desc ScreenTexDesc;
-		ScreenTexDesc.Filter = API::TextureFilter::Linear2D;
-		ScreenTexDesc.Wrap = API::TextureWrap::Repeat;
 		ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
 		ScreenTexDesc.Type = API::TextureType::Texture2D;
 		ScreenTexDesc.RenderTarget = true;
@@ -242,6 +246,11 @@ public:
 		Data.Width = windowwidth;
 		Data.Height = windowheight;
 		API::Texture::Create(&ScreenTex, Data, ScreenTexDesc);
+
+		//Create sampler
+		API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = API::TextureFilter::Point2D;
+		API::Sampler::Create(&ScreenSampler, Samplerdesc);
 
 		//RT
 		API::RenderTarget::Create(&RT);
@@ -253,14 +262,15 @@ public:
 		SceneShader.SetConstantBuffer(&Camera.GetCBuffer(),API::ShaderType::Vertex);
 
 		API::Texture_Desc Desc;
-		Desc.Filter = API::TextureFilter::Trilinear;
-		Desc.Wrap = API::TextureWrap::Repeat;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
 
+		//Create sampler
+		Samplerdesc.Filter = API::TextureFilter::Trilinear;
+		API::Sampler::Create(&LinearSampler, Samplerdesc);
 	
 		API::RasterizerStateDesc rasterizerdesc;
 		rasterizerdesc.FillMode = API::FillMode::Wireframe;
@@ -268,7 +278,7 @@ public:
 		API::RasterizerState::Create(&R_State, rasterizerdesc);
 
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
-		API::EnabledDepth_DisabledStencil.Bind();
+		states.EnabledDepth_DisabledStencil.Bind();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -331,13 +341,13 @@ public:
 		RT.Bind();
 
 		//Enable Depth Test
-		API::EnabledDepth_DisabledStencil.Bind();
+		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 
 		SceneShader.Bind();
-
-		CubeTex.PSBind("NE_Tex_Diffuse", &SceneShader, 0);
+		LinearSampler.PSBind(0);
+		CubeTex.PSBind(0);
 
 		CubeVB.Bind();
 
@@ -353,7 +363,7 @@ public:
 		Core::Context::Draw(36);
 
 		// floor
-		PlaneTex.PSBind("NE_Tex_Diffuse", &SceneShader, 0);
+		PlaneTex.PSBind(0);
 
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
@@ -361,7 +371,7 @@ public:
 
 		//Bind default RenderTarget
 		RT.Bind_Default();
-		API::DisabledDepthStencil.Bind();
+		states.DisabledDepthStencil.Bind();
 		Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer);
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
@@ -370,15 +380,17 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
 		{
-			API::DefaultRasterizer.Bind();
+			states.DefaultRasterizer.Bind();
 		}
 
 		ScreenShader.Bind();
 		ScreenQuadVB.Bind();
-		ScreenTex.PSBind("ScreenTexture", &ScreenShader, 0);
+		ScreenSampler.PSBind(0);
+		ScreenTex.PSBind(0);
 		Core::Context::Draw(6);
+		PlaneTex.PSBind(0);
 
-
+		
 		Core::Context::End();
 	}
 	void Shutdown() override

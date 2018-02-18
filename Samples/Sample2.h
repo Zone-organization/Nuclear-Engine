@@ -12,6 +12,9 @@ protected:
 	API::Texture SpecularTex;
 	API::Texture WhiteTex;
 
+	//Default states
+	API::CommonStates states;
+
 	Components::FlyCamera Camera;
 	Shading::Techniques::PhongShading LightShading;
 	Components::Model Cube;
@@ -120,8 +123,8 @@ public:
 		pointlight9.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		API::Texture_Desc Desc;
-		Desc.Filter = API::TextureFilter::Trilinear;
-		Desc.Wrap = API::TextureWrap::Repeat;
+		//Desc.Filter = API::TextureFilter::Trilinear;
+		//Desc.Wrap = API::TextureWrap::Repeat;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
@@ -170,7 +173,7 @@ public:
 
 		ImGui::StyleColorsDark();
 
-		API::EnabledDepth_DisabledStencil.Bind();
+		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
@@ -237,6 +240,9 @@ public:
 		ImGui::NE_NewFrame();
 
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Renderer.GetShader().Bind();
+		states.DefaultSampler.PSBind(0);
+		states.DefaultSampler.PSBind(1);
 		if (renderboxes)
 		{
 			for (unsigned int i = 0; i < 10; i++)
@@ -279,6 +285,7 @@ public:
 		{
 			Skybox.Render();
 		}
+		states.EnabledDepth_DisabledStencil.Bind();
 
 		ImGui::Checkbox("Render Boxes", &renderboxes);
 		ImGui::Checkbox("Render Lamps Spheres", &renderspheres);

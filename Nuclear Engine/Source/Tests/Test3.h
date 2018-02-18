@@ -1,6 +1,6 @@
 #pragma once
 #include "TestCommon.h"
-#include <iostream>
+
 struct Shader_Uniforms_t {
 	Math::Matrix4 Model;
 	Math::Matrix4 View;
@@ -15,7 +15,8 @@ protected:
 	API::VertexBuffer CubeVB;
 	API::ConstantBuffer CubeCB;
 	API::Texture WoodenBoxTex;
-
+	API::Sampler WoodenBoxSampler;
+	API::CommonStates states;
 	std::string VertexShader = R"(struct VertexInputType
 {
     float4 position : POSITION;
@@ -137,13 +138,16 @@ public:
 		API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
 		CubeShader.SetConstantBuffer(&CubeCB,API::ShaderType::Vertex);
 	
-		API::Texture_Desc Desc;
-		Desc.Filter = API::TextureFilter::Trilinear;
-		Desc.Wrap = API::TextureWrap::Repeat;
-		Desc.Format = API::Format::R8G8B8A8_UNORM;
-		Desc.Type = API::TextureType::Texture2D;
+		API::Texture_Desc TexDesc;
+		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
+		TexDesc.Type = API::TextureType::Texture2D;
+		TexDesc.GenerateMipMaps = true;
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
 
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
+		//Create Sampler
+		API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = API::TextureFilter::Trilinear;
+		API::Sampler::Create(&WoodenBoxSampler, Samplerdesc);
 
 		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f), 5.0f);
 		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
@@ -152,7 +156,7 @@ public:
 		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 		Core::Application::Display();
 
-		API::EnabledDepth_DisabledStencil.Bind();
+		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 	}
 
@@ -163,8 +167,9 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		WoodenBoxTex.PSBind(0);
 		CubeShader.Bind();
+		WoodenBoxTex.PSBind(0);
+		WoodenBoxSampler.PSBind(0);
 		CubeVB.Bind();
 
 		Core::Context::Draw(36);

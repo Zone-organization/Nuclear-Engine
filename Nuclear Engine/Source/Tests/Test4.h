@@ -13,6 +13,7 @@ protected:
 	API::VertexBuffer PlaneVB;
 	API::VertexBuffer WindowVB;
 
+	API::Sampler LinearSampler;
 	API::Texture PlaneTex;
 	API::Texture CubeTex;
 	API::Texture WindowTex;
@@ -23,6 +24,10 @@ protected:
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
+
+	//Default states
+	API::CommonStates states;
+
 
 	Math::Vector3 windows[5] = 
 	{
@@ -211,14 +216,17 @@ public:
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 
 		API::Texture_Desc Desc;
-		Desc.Filter = API::TextureFilter::Trilinear;
-		Desc.Wrap = API::TextureWrap::Repeat;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
-
+		Desc.GenerateMipMaps = true;
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/window.png", &WindowTex, Desc);
+
+		//Create sampler
+		API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = API::TextureFilter::Trilinear;
+		API::Sampler::Create(&LinearSampler, Samplerdesc);
 
 		API::DepthStencilStateDesc DS_Desc;
 		DS_Desc.DepthEnabled = true;
@@ -240,7 +248,7 @@ public:
 		API::BlendState::Create(&B_State, blenddesc);
 		
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
-		API::EnabledDepth_DisabledStencil.Bind();
+		states.EnabledDepth_DisabledStencil.Bind();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);			
 		Core::Application::Display();
@@ -317,7 +325,8 @@ public:
 		else
 		{
 			Pixelshader.Bind();
-			CubeTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
+			LinearSampler.PSBind(0);
+			CubeTex.PSBind(0);
 			Depthshaderenabled = false;
 		}
 
@@ -327,7 +336,7 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2)) 
 		{
-			API::DefaultDepthStencil.Bind();
+			states.DefaultDepthStencil.Bind();
 		}
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num3))
@@ -336,7 +345,7 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num4))
 		{
-			API::DefaultRasterizer.Bind();
+			states.DefaultRasterizer.Bind();
 		}
 
 		CubeVB.Bind();
@@ -355,7 +364,7 @@ public:
 		// floor
 		if (!Depthshaderenabled)
 		{
-			PlaneTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
+			PlaneTex.PSBind(0);
 		}
 	
 		PlaneVB.Bind();
@@ -368,12 +377,12 @@ public:
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num6))
 		{
-			API::DefaultBlendState.Bind();
+			states.DefaultBlendState.Bind();
 		}
 
 		if (!Depthshaderenabled)
 		{
-			WindowTex.SetInShader("NE_Tex_Diffuse", &Pixelshader, 0);
+			WindowTex.PSBind(0);
 		}
 
 		WindowVB.Bind();

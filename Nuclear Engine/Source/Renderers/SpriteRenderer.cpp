@@ -34,7 +34,7 @@ namespace NuclearEngine {
 
 			camera->SetModelMatrix(model);
 
-			texture->PSBind("SpriteTexture",shader,0);
+			texture->PSBind(0);
 			vbo.Bind();
 			Core::Context::Draw(6);
 		}

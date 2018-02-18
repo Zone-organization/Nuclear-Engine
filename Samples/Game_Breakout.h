@@ -135,8 +135,8 @@ public:
 		Renderer.Initialize(&RendererShader,&Camera);
 		
 		API::Texture_Desc TexDesc;
-		TexDesc.Filter = API::TextureFilter::Linear2D;
-		TexDesc.Wrap = API::TextureWrap::Repeat;
+		//TexDesc.Filter = API::TextureFilter::Linear2D;
+		//TexDesc.Wrap = API::TextureWrap::Repeat;
 		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
 		TexDesc.Type = API::TextureType::Texture2D;
 

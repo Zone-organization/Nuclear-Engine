@@ -3,6 +3,7 @@
 #include <API/VertexBuffer.h>
 #include <API/IndexBuffer.h>
 #include <API/Texture.h>
+#include <API/Sampler.h>
 #include <API/InputLayout.h>
 #include <API/DepthStencilState.h>
 #include <Core/FileSystem.h>
@@ -19,6 +20,7 @@ namespace NuclearEngine
 			API::Shader shader;
 			API::VertexBuffer vertexBuffer;
 			API::Texture texcube;
+			API::Sampler mSampler;
 			Components::GenericCamera* _CameraCbuffer;
 			API::DepthStencilState cubemapstate;
 		public:

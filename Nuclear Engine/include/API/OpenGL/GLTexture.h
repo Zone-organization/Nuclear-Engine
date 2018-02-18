@@ -24,15 +24,9 @@ namespace NuclearEngine
 				static void Create(GLTexture* texture, const std::array<Texture_Data, 6>& data,const Texture_Desc& Desc);
 				static void Delete(GLTexture* texture);
 
-				void SetInShader(const char *samplerName, GLVertexShader *shader, unsigned int index);
-				void SetInShader(const char *samplerName, GLPixelShader *shader, unsigned int index);
-
-				void VSBind(unsigned int index);
-				void VSBind(const char *samplerName, GLShader *shader, unsigned int index);
-				void GSBind(unsigned int index);
-				void GSBind(const char *samplerName, GLShader *shader, unsigned int index);
-				void PSBind(unsigned int index);
-				void PSBind(const char *samplerName, GLShader *shader, unsigned int index);
+				void VSBind(unsigned int slot);
+				void GSBind(unsigned int slot);
+				void PSBind(unsigned int slot);
 
 				Texture_Desc GetTextureDesc();
 

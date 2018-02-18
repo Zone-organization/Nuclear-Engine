@@ -9,7 +9,6 @@
 #include <..\Source\Tests\Test5.h>
 #include <Components\GUI\imgui.h>
 #include "..\Core\imgui_impl\imgui_impl.h"
-#include "API\CommonStates.h"
 
 /*
 	      .-.               
@@ -43,6 +42,7 @@ namespace NuclearEngine {
 		static Game Defaultgame;
 
 		static Engine::State Engine_State;
+
 		bool Engine::Initialize(const ApplicationDesc& windowdesc)
 		{
 
@@ -91,28 +91,6 @@ namespace NuclearEngine {
 				Application::Create(windowdesc);
 				Application::SetMouseInputMode(MouseInputMode::Normal);
 
-				//Create Common States
-				API::DepthStencilStateDesc DS_Desc;
-				DS_Desc.DepthEnabled = true;
-				DS_Desc.StencilEnabled = false;
-				DS_Desc.DepthMaskEnabled = true;
-				API::DepthStencilState::Create(&API::EnabledDepth_DisabledStencil, DS_Desc);
-				API::DepthStencilState::Create(&API::DefaultDepthStencil, DS_Desc);
-				DS_Desc.DepthEnabled = true;
-				DS_Desc.StencilEnabled = true;
-				API::DepthStencilState::Create(&API::EnabledDepthStencil, DS_Desc);
-				DS_Desc.DepthEnabled = false;
-				DS_Desc.StencilEnabled = false;
-				API::DepthStencilState::Create(&API::DisabledDepthStencil, DS_Desc);
-				DS_Desc.DepthEnabled = false;
-				DS_Desc.StencilEnabled = true;
-				API::DepthStencilState::Create(&API::DisabledDepth_EnabledStencil, DS_Desc);
-
-				API::RasterizerStateDesc RS_Desc;
-				API::RasterizerState::Create(&API::DefaultRasterizer, RS_Desc);
-				API::BlendStateDesc BS_Desc;
-				API::BlendState::Create(&API::DefaultBlendState, BS_Desc);
-
 				HasBeenInitialized = true;
 				return true;
 			}
@@ -128,12 +106,6 @@ namespace NuclearEngine {
 		void Engine::ShutDown()
 		{
 			Log.Info("[Engine] Shutting Down Engine.\n");
-			API::DepthStencilState::Delete(&API::EnabledDepth_DisabledStencil);
-			API::DepthStencilState::Delete(&API::EnabledDepthStencil);
-			API::DepthStencilState::Delete(&API::DisabledDepthStencil);
-			API::DepthStencilState::Delete(&API::DisabledDepth_EnabledStencil);
-			API::RasterizerState::Delete(&API::DefaultRasterizer);
-			API::BlendState::Delete(&API::DefaultBlendState);
 
 			GamePtr = &Defaultgame;
 			Core::Application::Shutdown();

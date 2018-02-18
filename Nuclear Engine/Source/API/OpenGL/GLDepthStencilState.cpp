@@ -68,7 +68,7 @@ namespace NuclearEngine
 				else {
 					glDisable(GL_DEPTH_TEST);
 				}
-				if (stencilenabled)
+			/*	if (stencilenabled)
 				{
 					glEnable(GL_STENCIL_TEST);    
 				//	glStencilMaskSeparate(0xFF); // each bit is written to the stencil buffer as is
@@ -78,7 +78,7 @@ namespace NuclearEngine
 				else {
 					glDisable(GL_STENCIL_TEST);
 
-				}
+				}*/
 
 			}		
 		}

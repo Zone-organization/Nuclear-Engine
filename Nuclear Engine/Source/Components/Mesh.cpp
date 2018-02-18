@@ -33,8 +33,6 @@ namespace NuclearEngine {
 			desc.size = (unsigned int)data.vertices.size() * sizeof(Vertex);
 			desc.usage = API::BufferUsage::Static;
 
-			PreCalculate_TextureBindings();
-
 			API::VertexBuffer::Create(&VBO, desc);
 			API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size());
 
@@ -77,7 +75,14 @@ namespace NuclearEngine {
 
 			for (unsigned int i = 0; i < data.textures.size(); i++)
 			{
-				data.textures[i].Texture.PSBind(TextureBindings[i].c_str(), _shader, i);
+				if (data.textures[i].type == MeshTextureType::Diffuse)
+				{
+					data.textures[i].Texture.PSBind(0);
+				}
+				else if (data.textures[i].type == MeshTextureType::Specular)
+				{
+					data.textures[i].Texture.PSBind(1);
+				}
 			}
 			
 			// draw mesh
@@ -85,29 +90,5 @@ namespace NuclearEngine {
 			IBO.Bind();
 			Core::Context::DrawIndexed(IndicesCount);
 		}
-
-		void Mesh::PreCalculate_TextureBindings()
-		{	
-			for (unsigned int i = 0; i < data.textures.size(); i++)
-			{
-
-				std::string number;
-				std::string name;
-
-				if (data.textures[i].type == MeshTextureType::Diffuse)
-				{
-					name = "NE_Tex_Diffuse";
-					number = std::to_string(diffuseNr++);
-				}
-				else if (data.textures[i].type == MeshTextureType::Specular)
-				{
-					name = "NE_Tex_Specular";
-					number = std::to_string(specularNr++); // transfer unsigned int to stream
-				}
-				
-				TextureBindings.push_back(name + number);
-			}
-		}
-		
 	}
 }

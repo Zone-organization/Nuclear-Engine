@@ -3,7 +3,6 @@
 #include <API\ShaderCompiler.h>
 #include <AssetManager\AssetManager.h>
 #include <API\RenderStates_Types.h>
-#include <API\CommonStates.h>
 
 namespace NuclearEngine
 {
@@ -88,10 +87,17 @@ namespace NuclearEngine
 
 			API::Texture_Desc Desc;
 			Desc.Format = API::Format::R8G8B8A8_UNORM;
-			Desc.Wrap = API::TextureWrap::ClampToEdge;
-			Desc.Filter = API::TextureFilter::Linear2D;
 			Desc.Type = API::TextureType::TextureCube;
+			Desc.GenerateMipMaps = false;
 			API::Texture::Create(&texcube, data, Desc);
+
+			API::SamplerDesc Samplerdesc;
+			Samplerdesc.Filter = API::TextureFilter::Linear2D;
+			Samplerdesc.WrapU = API::TextureWrap::ClampToEdge;
+			Samplerdesc.WrapV = API::TextureWrap::ClampToEdge;
+			Samplerdesc.WrapW = API::TextureWrap::ClampToEdge;
+
+			API::Sampler::Create(&mSampler, Samplerdesc);
 
 			API::DepthStencilStateDesc DS_State;
 			DS_State.DepthEnabled = true;
@@ -104,8 +110,6 @@ namespace NuclearEngine
 		{
 			API::Texture_Desc Desc;
 			Desc.Format = API::Format::R8G8B8A8_UNORM;
-			Desc.Wrap = API::TextureWrap::ClampToEdge;
-			Desc.Filter = API::TextureFilter::Linear2D;
 			Desc.Type = API::TextureType::Texture2D;
 			this->Create(CameraCbuffer, AssetManager::LoadTextureCubeFromFile(paths, Desc));
 		}
@@ -115,9 +119,9 @@ namespace NuclearEngine
 			vertexBuffer.Bind();
 			cubemapstate.Bind();
 			shader.Bind();
-			texcube.PSBind("NE_SkyboxTexture",&shader,0);
+			texcube.PSBind(0);
+			mSampler.PSBind(0);
 			Core::Context::Draw(36);
-			API::DefaultDepthStencil.Bind();
 		}
 	}
 }

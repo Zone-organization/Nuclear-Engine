@@ -26,20 +26,12 @@ namespace NuclearEngine
 				static void Create(DX11Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 				static void Delete(DX11Texture* texture);
 
-				void SetInShader(const char *samplerName, DX11VertexShader *shader, unsigned int index);
-				void SetInShader(const char *samplerName, DX11PixelShader *shader, unsigned int index);
-
-				void VSBind(unsigned int index);
-				void VSBind(const char *samplerName, DX11Shader *shader, unsigned int index);
-				void GSBind(unsigned int index);
-				void GSBind(const char *samplerName, DX11Shader *shader, unsigned int index);
-				void PSBind(unsigned int index);
-				void PSBind(const char *samplerName, DX11Shader *shader, unsigned int index);
+				void VSBind(unsigned int slot);
+				void GSBind(unsigned int slot);
+				void PSBind(unsigned int slot);
 
 				Texture_Desc GetTextureDesc();
 
-				//Todo: move this function to utilities or whatever as it is going to be used again
-				static DXGI_FORMAT GetDXFormat(Format format);
 			protected:
 				Texture_Desc desc;
 
@@ -52,7 +44,6 @@ namespace NuclearEngine
 				ID3D11Texture2D* tex2D;
 				ID3D11Texture3D* tex3D;
 				ID3D11ShaderResourceView* resourceView;
-				ID3D11SamplerState* samplerState;
 			};
 		}
 	}

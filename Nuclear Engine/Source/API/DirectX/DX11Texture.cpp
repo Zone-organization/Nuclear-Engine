@@ -5,6 +5,7 @@
 #include <API\DirectX\DX11Shader.h>
 #include <API\DirectX\DX11VertexShader.h>
 #include <API\DirectX\DX11PixelShader.h>
+#include <API\DirectX\DX11Types.h>
 
 namespace NuclearEngine
 {
@@ -12,12 +13,8 @@ namespace NuclearEngine
 	{
 		namespace DirectX
 		{
-			DXGI_FORMAT GetDXFormat(Format format);
-			D3D11_TEXTURE_ADDRESS_MODE GetDXTextureWrap(TextureWrap textureWrap);
-			D3D11_FILTER GetDXTextureFilter(TextureFilter textureFilter);
-
 			DX11Texture::DX11Texture() :
-				tex1D(nullptr), tex2D(nullptr), tex3D(nullptr), resourceView(nullptr), samplerState(nullptr)
+				tex1D(nullptr), tex2D(nullptr), tex3D(nullptr), resourceView(nullptr)
 			{
 			}
 
@@ -27,7 +24,6 @@ namespace NuclearEngine
 				tex2D = nullptr;
 				tex3D = nullptr;
 				resourceView = nullptr;
-				samplerState = nullptr;
 			}
 
 			void DX11Texture::Create(DX11Texture* texture,const Texture_Data&Data, const Texture_Desc& Desc)
@@ -71,76 +67,45 @@ namespace NuclearEngine
 				{
 					texture->resourceView->Release();
 				}
-				if (texture->samplerState != nullptr)
-				{
-					texture->samplerState->Release();
-				}
+
 				texture->tex1D = nullptr;
 				texture->tex2D = nullptr;
 				texture->tex3D = nullptr;
 				texture->resourceView = nullptr;
-				texture->samplerState = nullptr;
 			}
 
-			void DX11Texture::SetInShader(const char * samplerName, DX11VertexShader * shader, unsigned int index)
+			void DX11Texture::PSBind(unsigned int slot)
 			{
-				DX11Context::GetContext()->VSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->VSSetSamplers(index, 1, &samplerState);
+				DX11Context::GetContext()->PSSetShaderResources(slot, 1, &resourceView);
 			}
-
-			void DX11Texture::SetInShader(const char * samplerName, DX11PixelShader * shader, unsigned int index)
+		
+			void DX11Texture::VSBind(unsigned int slot)
 			{
-				DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
+				DX11Context::GetContext()->VSSetShaderResources(slot, 1, &resourceView);
 			}
-
-			void DX11Texture::PSBind(unsigned int index)
+	
+			void DX11Texture::GSBind(unsigned int slot)
 			{
-				DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
+				DX11Context::GetContext()->GSSetShaderResources(slot, 1, &resourceView);
 			}
-			void DX11Texture::PSBind(const char * samplerName, DX11Shader * shader, unsigned int index)
-			{
-				DX11Context::GetContext()->PSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->PSSetSamplers(index, 1, &samplerState);
-			}
+	
 			Texture_Desc DX11Texture::GetTextureDesc()
 			{
 				return desc;
 			}
-			void DX11Texture::VSBind(unsigned int index)
-			{
-				DX11Context::GetContext()->VSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->VSSetSamplers(index, 1, &samplerState);
-			}
-			void DX11Texture::VSBind(const char * samplerName, DX11Shader * shader, unsigned int index)
-			{
-				DX11Context::GetContext()->VSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->VSSetSamplers(index, 1, &samplerState);
-			}
-			void DX11Texture::GSBind(const char * samplerName, DX11Shader * shader, unsigned int index)
-			{
-				DX11Context::GetContext()->GSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->GSSetSamplers(index, 1, &samplerState);
-			}
-			void DX11Texture::GSBind(unsigned int index)
-			{
-				DX11Context::GetContext()->GSSetShaderResources(index, 1, &resourceView);
-				DX11Context::GetContext()->GSSetSamplers(index, 1, &samplerState);
-			}
-	
+
 			void DX11Texture::Create1D(DX11Texture* result, const Texture_Data& Data, const Texture_Desc& Desc)
 			{
 				D3D11_TEXTURE1D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE1D_DESC));
 
 				texDesc.Width = Data.Width;
-				texDesc.Format = GetDXFormat(Desc.Format);
+				texDesc.Format = DXTypeMap(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.CPUAccessFlags = 0;
 				texDesc.ArraySize = 1;
 
-				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
+				if (Desc.GenerateMipMaps == false)
 				{
 					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 					texDesc.MiscFlags = 0;
@@ -161,7 +126,7 @@ namespace NuclearEngine
 				subData.SysMemPitch = Data.Width * 4;
 				subData.SysMemSlicePitch = 0;
 
-				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
+				if (Desc.GenerateMipMaps == false)
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture1D(&texDesc, &subData, &result->tex1D)))
 					{
@@ -180,30 +145,12 @@ namespace NuclearEngine
 					D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 					srvDesc.Format = texDesc.Format;
 					srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
-					srvDesc.Texture1D.MipLevels = 10;
+					srvDesc.Texture1D.MipLevels = -1;
 					srvDesc.Texture1DArray.MostDetailedMip = 0;
 					DX11Context::GetDevice()->CreateShaderResourceView(result->tex1D, &srvDesc, &result->resourceView);
 					DX11Context::GetContext()->UpdateSubresource(result->tex1D, 0, 0, subData.pSysMem, subData.SysMemPitch, 0);
 					DX11Context::GetContext()->GenerateMips(result->resourceView);
 
-				}
-
-				D3D11_SAMPLER_DESC samplerDesc;
-				ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
-
-				samplerDesc.Filter = GetDXTextureFilter(Desc.Filter);
-				samplerDesc.AddressU = GetDXTextureWrap(Desc.Wrap);
-				samplerDesc.AddressV = GetDXTextureWrap(Desc.Wrap);
-				samplerDesc.AddressW = GetDXTextureWrap(Desc.Wrap);
-				samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-				samplerDesc.MinLOD = 0;
-				samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-				samplerDesc.MaxAnisotropy = 0;
-
-
-				if (FAILED(DX11Context::GetDevice()->CreateSamplerState(&samplerDesc, &result->samplerState)))
-				{
-					Log.Error("[DirectX] SamplerState Creation Failed for Texture1D!\n");
 				}
 			}
 			void DX11Texture::Create2D(DX11Texture* result,const Texture_Data& Data, const Texture_Desc& Desc)
@@ -213,7 +160,7 @@ namespace NuclearEngine
 
 				texDesc.Width = Data.Width;
 				texDesc.Height = Data.Height;
-				texDesc.Format = GetDXFormat(Desc.Format);
+				texDesc.Format = DXTypeMap(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.SampleDesc.Count = 1;
 				texDesc.SampleDesc.Quality = 0;
@@ -221,7 +168,7 @@ namespace NuclearEngine
 				texDesc.ArraySize = 1;
 
 
-				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
+				if (Desc.GenerateMipMaps == false)
 				{
 					if (Desc.RenderTarget == true)
 					{
@@ -250,28 +197,14 @@ namespace NuclearEngine
 						Log.Error("[DirectX] Texture2D Creation Failed for Null-ed Texture2D!\n");
 						return;
 					}
-					DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, 0, &result->resourceView);
+					D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+					srvDesc.Format = texDesc.Format;
+					srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+					srvDesc.Texture2D.MostDetailedMip = 0;
+					srvDesc.Texture2D.MipLevels = 1;
 
-					D3D11_SAMPLER_DESC samplerDesc;
-					ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
+					DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, &srvDesc, &result->resourceView);
 
-					
-					samplerDesc.Filter = GetDXTextureFilter(Desc.Filter);
-					
-				
-					samplerDesc.AddressU = GetDXTextureWrap(Desc.Wrap);
-					samplerDesc.AddressV = GetDXTextureWrap(Desc.Wrap);
-					samplerDesc.AddressW = GetDXTextureWrap(Desc.Wrap);
-					samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-					samplerDesc.MinLOD = 0;
-					samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;					
-					samplerDesc.MaxAnisotropy = 0;				
-
-					if (FAILED(DX11Context::GetDevice()->CreateSamplerState(&samplerDesc, &result->samplerState)))
-					{
-						Log.Error("[DirectX] SamplerState Creation Failed for Null-ed Texture2D!\n");
-						return;
-					}
 					return;
 				}
 				D3D11_SUBRESOURCE_DATA subData;
@@ -281,15 +214,20 @@ namespace NuclearEngine
 				subData.SysMemPitch = Data.Width * 4;
 				subData.SysMemSlicePitch = 0;
 
-				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
+				if (Desc.GenerateMipMaps == false)
 				{
 					if (FAILED(DX11Context::GetDevice()->CreateTexture2D(&texDesc, &subData, &result->tex2D)))
 					{
 						Log.Error("[DirectX] Texture2D Creation Failed for Subdata filled Texture2D!\n");
 						return;
 					}
+					D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+					srvDesc.Format = texDesc.Format;
+					srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+					srvDesc.Texture2D.MostDetailedMip = 0;
+					srvDesc.Texture2D.MipLevels = 1;
 
-					DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, 0, &result->resourceView);
+					DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, &srvDesc, &result->resourceView);
 				}
 				else
 				{
@@ -310,56 +248,7 @@ namespace NuclearEngine
 
 				}
 
-				D3D11_SAMPLER_DESC samplerDesc;
-				ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
-
-				if (Desc.AnisoFilter == AnisotropicFilter::None)
-				{
-					samplerDesc.Filter = GetDXTextureFilter(Desc.Filter);
-				}
-				else
-				{
-					samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-				}
-				samplerDesc.AddressU = GetDXTextureWrap(Desc.Wrap);
-				samplerDesc.AddressV = GetDXTextureWrap(Desc.Wrap);
-				samplerDesc.AddressW = GetDXTextureWrap(Desc.Wrap);
-				samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-				samplerDesc.MinLOD = 0;
-				samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-				switch (Desc.AnisoFilter)
-				{
-				case AnisotropicFilter::AnisotropicX2:
-				{
-					samplerDesc.MaxAnisotropy = 2;
-				}
-				case AnisotropicFilter::AnisotropicX4:
-				{
-					samplerDesc.MaxAnisotropy = 4;
-
-				}
-				case AnisotropicFilter::AnisotropicX8:
-				{
-					samplerDesc.MaxAnisotropy = 8;
-
-				}
-				case AnisotropicFilter::AnisotropicX16:
-				{
-					samplerDesc.MaxAnisotropy = 16;
-				}
-
-				default:
-					samplerDesc.MaxAnisotropy = 0;
-					break;
-				}
-
-				if (FAILED(DX11Context::GetDevice()->CreateSamplerState(&samplerDesc, &result->samplerState)))
-				{
-					Log.Error("[DirectX] SamplerState Creation Failed for Texture2D!\n");
-					return;
-
-				}
+				
 				return;
 			}
 			void DX11Texture::Create3D(DX11Texture* result,const Texture_Data& Data, const Texture_Desc& Desc)
@@ -372,7 +261,7 @@ namespace NuclearEngine
 				D3D11_TEXTURE2D_DESC texDesc;
 				ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-				texDesc.Format = GetDXFormat(Desc.Format);
+				texDesc.Format = DXTypeMap(Desc.Format);
 				texDesc.Usage = D3D11_USAGE_DEFAULT;
 				texDesc.SampleDesc.Count = 1;
 				texDesc.SampleDesc.Quality = 0;
@@ -381,7 +270,7 @@ namespace NuclearEngine
 				texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 				texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-				if (Desc.Filter == TextureFilter::Point2D || Desc.Filter == TextureFilter::Linear2D)
+				if (Desc.GenerateMipMaps == false)
 				{
 					texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 					texDesc.MipLevels = 1;
@@ -413,48 +302,6 @@ namespace NuclearEngine
 				srvDesc.TextureCube.MostDetailedMip = 0;
 
 				DX11Context::GetDevice()->CreateShaderResourceView(result->tex2D, &srvDesc, &result->resourceView);
-			}
-			DXGI_FORMAT DX11Texture::GetDXFormat(Format format)
-			{
-				switch (format)
-				{
-				case Format::R8_UNORM: return DXGI_FORMAT_R8_UNORM;
-				case Format::R8G8_UNORM: return DXGI_FORMAT_R8G8_UNORM;
-				case Format::R8G8B8_UNORM: return DXGI_FORMAT_R8G8B8A8_UNORM;
-				case Format::R8G8B8A8_UNORM: return DXGI_FORMAT_R8G8B8A8_UNORM;
-				case Format::R16_FLOAT: return DXGI_FORMAT_R16_FLOAT;
-				case Format::R16G16_FLOAT: return DXGI_FORMAT_R16G16_FLOAT;
-				case Format::R16G16B16_FLOAT: return DXGI_FORMAT_R16G16B16A16_FLOAT;
-				case Format::R16G16B16A16_FLOAT: return DXGI_FORMAT_R16G16B16A16_FLOAT;
-				case Format::R32_FLOAT: return DXGI_FORMAT_R32_FLOAT;
-				case Format::R32G32_FLOAT: return DXGI_FORMAT_R32G32_FLOAT;
-				case Format::R32G32B32_FLOAT: return DXGI_FORMAT_R32G32B32A32_FLOAT;
-				case Format::R32G32B32A32_FLOAT: return DXGI_FORMAT_R32G32B32A32_FLOAT;
-				default: return DXGI_FORMAT_R8G8B8A8_UNORM;
-				}
-			}
-			D3D11_TEXTURE_ADDRESS_MODE GetDXTextureWrap(TextureWrap textureWrap)
-			{
-				switch (textureWrap)
-				{
-				case TextureWrap::Repeat: return D3D11_TEXTURE_ADDRESS_WRAP;
-				case TextureWrap::MirroredReapeat: return D3D11_TEXTURE_ADDRESS_MIRROR;
-				case TextureWrap::ClampToEdge: return D3D11_TEXTURE_ADDRESS_CLAMP;
-				case TextureWrap::ClampToBorder: return D3D11_TEXTURE_ADDRESS_BORDER;
-				default: return D3D11_TEXTURE_ADDRESS_WRAP;
-				}
-			}
-			D3D11_FILTER GetDXTextureFilter(TextureFilter textureFilter)
-			{
-				switch (textureFilter)
-				{
-				case TextureFilter::Point: return D3D11_FILTER_MIN_MAG_MIP_POINT;
-				case TextureFilter::Bilinear: return D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-				case TextureFilter::Trilinear: return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-
-				default: return D3D11_FILTER_MIN_MAG_MIP_POINT;
-				}
-
 			}
 		}
 	}

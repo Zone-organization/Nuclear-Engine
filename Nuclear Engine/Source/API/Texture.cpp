@@ -50,97 +50,40 @@ namespace NuclearEngine {
 			}
 		}
 
-		void Texture::SetInShader(const char * samplerName, VertexShader * shader, unsigned int index)
+		void Texture::VSBind(unsigned int slot)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				GLObject.SetInShader(samplerName, &shader->GLObject, index);
+				GLObject.VSBind(slot);
 			}
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
-				DXObject.SetInShader(samplerName, &shader->DXObject, index);
+				DXObject.VSBind(slot);
 			}
 		}
-
-		void Texture::SetInShader(const char * samplerName, PixelShader * shader, unsigned int index)
+		
+		void Texture::PSBind(unsigned int slot)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				GLObject.SetInShader(samplerName, &shader->GLObject, index);
+				GLObject.PSBind(slot);
 			}
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
-				DXObject.SetInShader(samplerName, &shader->DXObject, index);
+				DXObject.PSBind(slot);
 			}
 		}
-
-		void Texture::VSBind(unsigned int index)
+		void Texture::GSBind(unsigned int slot)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				GLObject.VSBind(index);
+				GLObject.GSBind(slot);
 			}
 			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
 			{
-				DXObject.VSBind(index);
+				DXObject.GSBind(slot);
 			}
 		}
-		void Texture::VSBind(const char * samplerName, API::Shader* shader, unsigned int index)
-		{
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				GLObject.VSBind(samplerName,&shader->GLObject,index);
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				DXObject.VSBind(samplerName, &shader->DXObject, index);
-			}
-		}
-		void Texture::PSBind(unsigned int index)
-		{
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				GLObject.PSBind(index);
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				DXObject.PSBind(index);
-			}
-		}
-		void Texture::PSBind(const char * samplerName, API::Shader* shader, unsigned int index)
-		{
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				GLObject.PSBind(samplerName, &shader->GLObject, index);
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				DXObject.PSBind(samplerName, &shader->DXObject, index);
-			}
-		}	
-		void Texture::GSBind(unsigned int index)
-		{
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				GLObject.GSBind(index);
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				DXObject.GSBind(index);
-			}
-		}
-		void Texture::GSBind(const char * samplerName, API::Shader* shader, unsigned int index)
-		{
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-			{
-				GLObject.GSBind(samplerName, &shader->GLObject, index);
-			}
-			else if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
-			{
-				DXObject.GSBind(samplerName, &shader->DXObject, index);
-			}
-		}
-
 	}
 }
 #endif

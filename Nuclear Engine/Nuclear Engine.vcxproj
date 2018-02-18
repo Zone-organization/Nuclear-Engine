@@ -345,8 +345,10 @@
     <ClInclude Include="include\API\DirectX\DX11IndexBuffer.h" />
     <ClInclude Include="include\API\DirectX\DX11PixelShader.h" />
     <ClInclude Include="include\API\DirectX\DX11RenderTarget.h" />
+    <ClInclude Include="include\API\DirectX\DX11Sampler.h" />
     <ClInclude Include="include\API\DirectX\DX11Shader.h" />
     <ClInclude Include="include\API\DirectX\DX11Texture.h" />
+    <ClInclude Include="include\API\DirectX\DX11Types.h" />
     <ClInclude Include="include\API\DirectX\DX11VertexBuffer.h" />
     <ClInclude Include="include\API\DirectX\DX11VertexShader.h" />
     <ClInclude Include="include\API\Format.h" />
@@ -357,11 +359,13 @@
     <ClInclude Include="include\API\OpenGL\GLPixelShader.h" />
     <ClInclude Include="include\API\OpenGL\GLRasterizerState.h" />
     <ClInclude Include="include\API\OpenGL\GLRenderTarget.h" />
+    <ClInclude Include="include\API\OpenGL\GLSampler.h" />
     <ClInclude Include="include\API\OpenGL\GLVertexShader.h" />
     <ClInclude Include="include\API\PixelShader.h" />
     <ClInclude Include="include\API\RasterizerState.h" />
     <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
+    <ClInclude Include="include\API\Sampler.h" />
     <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
     <ClInclude Include="include\API\Texture.h" />
@@ -447,8 +451,10 @@
     <ClCompile Include="Source\API\DirectX\DX11PixelShader.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11RasterizerState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11RenderTarget.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11Sampler.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Shader.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Texture.cpp" />
+    <ClCompile Include="Source\API\DirectX\DX11Types.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11VertexBuffer.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11VertexShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLBlendState.cpp" />
@@ -462,6 +468,7 @@
     <ClCompile Include="Source\API\OpenGL\GLPixelShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLRenderTarget.cpp" />
+    <ClCompile Include="Source\API\OpenGL\GLSampler.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
@@ -469,6 +476,7 @@
     <ClCompile Include="Source\API\PixelShader.cpp" />
     <ClCompile Include="Source\API\RasterizerState.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
+    <ClCompile Include="Source\API\Sampler.cpp" />
     <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />
