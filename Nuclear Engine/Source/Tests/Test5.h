@@ -191,10 +191,16 @@ public:
 			5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
 			-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
 			5.0f, -0.5f, -5.0f,  2.0f, 2.0f
+		};	
+		
+		int windowwidth, windowheight;
+		Core::Application::GetSize(&windowwidth, &windowheight);
+		float vertices[20] = {
+			
 		};
-	
-		float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-								 // positions   // texCoords
+
+		float quadVertices[] = {
+			// positions   // texCoords
 			-1.0f,  1.0f,  0.0f, 1.0f,
 			-1.0f, -1.0f,  0.0f, 0.0f,
 			1.0f, -1.0f,  1.0f, 0.0f,
@@ -232,8 +238,11 @@ public:
 		ScreenQuadVB.SetInputLayout(&ScreenShaderIL, &ScreenShader);
 
 
-		int windowwidth, windowheight;
-		Core::Application::GetSize(&windowwidth, &windowheight);
+		//Create sampler
+		API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = API::TextureFilter::Point2D;
+		API::Sampler::Create(&ScreenSampler, Samplerdesc);
+
 
 
 		API::Texture_Desc ScreenTexDesc;
@@ -246,12 +255,7 @@ public:
 		Data.Width = windowwidth;
 		Data.Height = windowheight;
 		API::Texture::Create(&ScreenTex, Data, ScreenTexDesc);
-
-		//Create sampler
-		API::SamplerDesc Samplerdesc;
-		Samplerdesc.Filter = API::TextureFilter::Point2D;
-		API::Sampler::Create(&ScreenSampler, Samplerdesc);
-
+		
 		//RT
 		API::RenderTarget::Create(&RT);
 		RT.AttachTexture(&ScreenTex);
@@ -320,31 +324,10 @@ public:
 
 	}
 
-	/*
-	Controls:
-	1 - Enable Rasterizer State
-	2 - Restore Default Rasterizer State
-
-	W - Move Camera Forward
-	A - Move Camera Left
-	S - Move Camera Backward
-	D - Move Camera Right
-
-	Mouse - Make Camera look around
-	*/
-
-	void Render(float) override
+	void mRenderscene()
 	{
-		Core::Context::Begin();
-
-		//Bind The RenderTarget
-		RT.Bind();
-
-		//Enable Depth Test
-		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-
-
+		
 		SceneShader.Bind();
 		LinearSampler.PSBind(0);
 		CubeTex.PSBind(0);
@@ -367,12 +350,42 @@ public:
 
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
-		Core::Context::Draw(6);		
+		Core::Context::Draw(6);
+	}
+
+	/*
+	Controls:
+	1 - Enable Rasterizer State
+	2 - Restore Default Rasterizer State
+
+	W - Move Camera Forward
+	A - Move Camera Left
+	S - Move Camera Backward
+	D - Move Camera Right
+
+	Mouse - Make Camera look around
+	*/
+	
+	void Render(float) override
+	{
+		Core::Context::Begin();
+
+		//Bind The RenderTarget
+		RT.Bind();
+
+		//Enable Depth Test
+		states.EnabledDepth_DisabledStencil.Bind();
+		
+		//Render to render-target
+		mRenderscene();
 
 		//Bind default RenderTarget
 		RT.Bind_Default();
-		states.DisabledDepthStencil.Bind();
+
 		Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer);
+		
+		//Render RT Texture (color buffer) content
+		states.DisabledDepthStencil.Bind();
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
 		{

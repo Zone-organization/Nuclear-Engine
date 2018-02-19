@@ -2,6 +2,7 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <API\RenderStates_Types.h>
+#include <API\OpenGL\GLError.h>
 
 namespace NuclearEngine
 {
@@ -29,13 +30,20 @@ namespace NuclearEngine
 
 			GLDepthStencilState::GLDepthStencilState()
 			{
-				
+				depthenabled = false;
+				stencilenabled = false;
+
 			}
 			GLDepthStencilState::~GLDepthStencilState()
 			{
+				depthenabled = false;
+				stencilenabled = false;
 			}
 			void GLDepthStencilState::Create(GLDepthStencilState* result, const DepthStencilStateDesc& type)
 			{
+				result->depthenabled = type.DepthEnabled;
+				result->stencilenabled = type.StencilEnabled;
+
 				if (type.DepthEnabled == true)
 				{
 					result->depthmask = type.DepthMaskEnabled;
@@ -61,12 +69,12 @@ namespace NuclearEngine
 			{
 				if (depthenabled)
 				{
-					glEnable(GL_DEPTH_TEST);
-					glDepthMask(depthmask);
-					glDepthFunc(depthfunc);
+					GLCall(glEnable(GL_DEPTH_TEST));
+					GLCall(glDepthMask(depthmask));
+					GLCall(glDepthFunc(depthfunc));
 				}
 				else {
-					glDisable(GL_DEPTH_TEST);
+					GLCall(glDisable(GL_DEPTH_TEST));
 				}
 			/*	if (stencilenabled)
 				{
