@@ -28,8 +28,6 @@ public:
 		Renderer.Bake();
 
 		API::Texture_Desc Desc;
-		//Desc.Filter = API::TextureFilter::Trilinear;
-		//Desc.Wrap = API::TextureWrap::Repeat;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
@@ -41,8 +39,9 @@ public:
 		DiffuseTex.type = Components::MeshTextureType::Diffuse;
 		Textures.push_back(DiffuseTex);
 		Components::Model::CreateCube(&Cube, Textures);
+		Cube.Initialize(&Renderer.GetShader());
 		ImGui::StyleColorsDark();
-		//AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit);
+
 		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
@@ -111,7 +110,7 @@ public:
 		CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeMatrix);
 		Renderer.GetShader().Bind();
-		Cube.Draw(&Renderer.GetShader());
+		Cube.Draw();
 
 		ShowOverlay(true);
 

@@ -9,12 +9,8 @@ namespace NuclearEngine {
 
 	namespace Components {
 		
-		Mesh::Mesh(MeshData _data, bool Initialize_) : data(_data)
+		Mesh::Mesh(MeshData _data) : data(_data)
 		{
-			if (Initialize_ == true)
-			{
-				this->Initialize();
-			}
 		}
 
 		Mesh::Mesh(const Mesh& obj) : data(obj.data)
@@ -26,7 +22,7 @@ namespace NuclearEngine {
 			
 		}
 
-		void Mesh::Initialize()
+		void Mesh::Initialize(API::Shader* _shader)
 		{
 			API::VertexBufferDesc desc;
 			desc.data = data.vertices.data();
@@ -38,8 +34,15 @@ namespace NuclearEngine {
 
 			IndicesCount = data.indices.size();
 			data.vertices.clear();
-			data.indices.clear();
-			
+			data.indices.clear();			
+
+			API::InputLayout layout;
+			layout.AppendAttribute("POSITION", 0, API::DataType::Float3);
+			layout.AppendAttribute("NORMAL", 0, API::DataType::Float3);
+			layout.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+
+			VBO.SetInputLayout(&layout, _shader);
+
 			Init = true;
 		}
 
@@ -54,24 +57,18 @@ namespace NuclearEngine {
 			data.textures.clear();
 		}
 
-		void Mesh::Draw(API::Shader* _shader)
+		void Mesh::Draw()
 		{
-			if (this->DrewBefore == false)
+#ifdef _DEBUG
+			if (Init != true)
 			{
-				if (Init != true)
-				{
-					Initialize();
-				}
-
-				API::InputLayout layout;
-				layout.AppendAttribute("POSITION", 0, API::DataType::Float3);
-				layout.AppendAttribute("NORMAL", 0, API::DataType::Float3);
-				layout.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
-
-				VBO.SetInputLayout(&layout, _shader);
-
-				DrewBefore = true;
+				Log.Error("[Mesh] Drawing a mesh without being initialized leads to a crash,"
+					" since this is a debug build we check it for you to prevent crashes but"
+					" checking has performance penality, so auto-check is disabled in release,"
+					" be sure to fix this issue in before release!\n");
+				return;
 			}
+#endif
 			bool diffusebound = false;
 			bool specularbound = false;
 			for (unsigned int i = 0; i < data.textures.size(); i++)

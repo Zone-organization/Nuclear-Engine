@@ -18,12 +18,21 @@ namespace NuclearEngine {
 
 		Model::~Model()
 		{
-			/*for (unsigned int i = 0; i < Meshes.size(); i++)
+			for (unsigned int i = 0; i < Meshes.size(); i++)
 			{
 				Meshes.at(i).Release();
 			}
-			Meshes.clear();*/
+			Meshes.clear();
 		}
+
+		void Model::Initialize(API::Shader* _shader)
+		{
+			for (unsigned int i = 0; i < Meshes.size(); i++)
+			{
+				Meshes.at(i).Initialize(_shader);
+			}
+		}
+
 
 		void Model::CreateCube(Model* model, std::vector<MeshTexture> Textures, float width , float height , float depth)
 		{
@@ -173,12 +182,11 @@ namespace NuclearEngine {
 			model->Meshes.push_back(meshData);
 		}
 
-		void Model::Draw(API::Shader* shader)
+		void Model::Draw()
 		{
-
 			for (unsigned int i = 0; i < Meshes.size(); i++)
 			{
-				Meshes[i].Draw(shader);
+				Meshes[i].Draw();
 			}
 		}
 

@@ -145,6 +145,7 @@ public:
 		Textures.push_back(SpecularCTex);
 
 		Components::Model::CreateCube(&Cube, Textures);
+		Cube.Initialize(&Renderer.GetShader());
 
 		Components::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
@@ -155,12 +156,13 @@ public:
 		spheretextures.push_back(WhiteCTex);
 
 		Components::Model::CreateSphere(&Lamp, spheretextures);
+		Lamp.Initialize(&Renderer.GetShader());
 
 		ModelLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit, ModelDesc);
-
+		Nanosuit.Initialize(&Renderer.GetShader());
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
 		{
@@ -259,7 +261,7 @@ public:
 				model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
 				Camera.SetModelMatrix(model);
 
-				Cube.Draw(&Renderer.GetShader());
+				Cube.Draw();
 			}
 		}
 		if (renderspheres)
@@ -270,7 +272,7 @@ public:
 				model = Math::Translate(model, pointLightPositions[i]);
 				model = Math::Scale(model, Math::Vector3(0.25f));
 				Camera.SetModelMatrix(model);
-				Lamp.Draw(&Renderer.GetShader());
+				Lamp.Draw();
 			}
 		}
 		if (rendernanosuit)
@@ -279,7 +281,7 @@ public:
 			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
 			Camera.SetModelMatrix(NanosuitMatrix);
-			Nanosuit.Draw(&Renderer.GetShader());
+			Nanosuit.Draw();
 		}
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());

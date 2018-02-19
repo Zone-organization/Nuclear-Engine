@@ -65,13 +65,13 @@ namespace NuclearEngine {
 		public:
 
 			/*  Mesh Data  */
-			Mesh(MeshData data, bool Initialize = false);
+			Mesh(MeshData data);
 			Mesh(const Mesh& obj);
 			~Mesh();
-			void Initialize();
+			void Initialize(API::Shader* _shader);
 			void Release();
 			// render the mesh
-			void Draw(API::Shader* shader);
+			void Draw();
 
 		private:
 			// bind appropriate textures
