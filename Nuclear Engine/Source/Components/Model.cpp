@@ -31,6 +31,7 @@ namespace NuclearEngine {
 			{
 				Meshes.at(i).Initialize(_shader);
 			}
+			init = true;
 		}
 
 
@@ -184,6 +185,17 @@ namespace NuclearEngine {
 
 		void Model::Draw()
 		{
+#ifdef _DEBUG
+			if (init != true)
+			{
+				Log.Error("[Model] Drawing a Model (mesh no: " + std::to_string(Meshes.size()) +
+					") without being initialized leads to a crash,"
+					" since this is a debug build we check it for you to prevent crashes but"
+					" checking has performance penality, so auto-check is disabled in release,"
+					" be sure to fix this issue in before release!\n");
+				return;
+			}
+#endif
 			for (unsigned int i = 0; i < Meshes.size(); i++)
 			{
 				Meshes[i].Draw();

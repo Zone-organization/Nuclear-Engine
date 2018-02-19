@@ -23,6 +23,8 @@ namespace NuclearEngine {
 			virtual void Draw();
 
 			std::vector<Mesh> Meshes;
+		private:
+			bool init;
 		};
 
 	}

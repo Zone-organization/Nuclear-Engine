@@ -59,16 +59,6 @@ namespace NuclearEngine {
 
 		void Mesh::Draw()
 		{
-#ifdef _DEBUG
-			if (Init != true)
-			{
-				Log.Error("[Mesh] Drawing a mesh without being initialized leads to a crash,"
-					" since this is a debug build we check it for you to prevent crashes but"
-					" checking has performance penality, so auto-check is disabled in release,"
-					" be sure to fix this issue in before release!\n");
-				return;
-			}
-#endif
 			bool diffusebound = false;
 			bool specularbound = false;
 			for (unsigned int i = 0; i < data.textures.size(); i++)
