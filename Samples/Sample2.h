@@ -148,8 +148,13 @@ public:
 
 		Components::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
+		WhiteCTex.type = Components::MeshTextureType::Diffuse;
+		std::vector<Components::MeshTexture> spheretextures;
+		spheretextures.push_back(WhiteCTex);
 		WhiteCTex.type = Components::MeshTextureType::Specular;
-		Components::Model::CreateSphere(&Lamp, std::vector<Components::MeshTexture>{WhiteCTex});
+		spheretextures.push_back(WhiteCTex);
+
+		Components::Model::CreateSphere(&Lamp, spheretextures);
 
 		ModelLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;

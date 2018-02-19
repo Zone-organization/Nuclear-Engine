@@ -72,16 +72,26 @@ namespace NuclearEngine {
 
 				DrewBefore = true;
 			}
-
+			bool diffusebound = false;
+			bool specularbound = false;
 			for (unsigned int i = 0; i < data.textures.size(); i++)
 			{
+
 				if (data.textures[i].type == MeshTextureType::Diffuse)
 				{
-					data.textures[i].Texture.PSBind(0);
+					if (diffusebound != true)
+					{
+						data.textures[i].Texture.PSBind(0);
+						diffusebound = true;
+					}
 				}
 				else if (data.textures[i].type == MeshTextureType::Specular)
 				{
-					data.textures[i].Texture.PSBind(1);
+					if (specularbound != true)
+					{
+						data.textures[i].Texture.PSBind(1);
+						specularbound = true;
+					}
 				}
 			}
 			
