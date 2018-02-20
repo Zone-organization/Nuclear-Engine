@@ -2,6 +2,7 @@
 #include "Common.h"
 #include "Sample1.h"
 #include "Sample2.h"
+#include "Playground.h"
 #include "Game_Breakout.h"
 #include <iostream>
 
@@ -40,6 +41,7 @@ int main(int argc, char* argv[])
 		<< "---Game demos:\n"
 		<< "a) Breakout - 2D\n"
 
+		<< "x) Playground - Sandbox for testing new stuff\n"
 		<< "z) Tests\n";
 
 
@@ -60,6 +62,12 @@ int main(int argc, char* argv[])
 		BreakOut game;
 		Core::Engine::Run(&game);
 	}
+	else if (choice == 'x') {
+		Start();
+		Playground game;
+		Core::Engine::Run(&game);
+	}
+
 	else if (choice == 'z')
 	{
 		Start();

@@ -108,6 +108,10 @@
     <ClInclude Include="include\API\DirectX\DX11Types.h" />
     <ClInclude Include="include\API\OpenGL\GLSampler.h" />
     <ClInclude Include="include\API\Sampler.h" />
+    <ClInclude Include="include\Scene\Scene.h" />
+    <ClInclude Include="include\Scene\SceneNode.h" />
+    <ClInclude Include="include\Components\Transform.h" />
+    <ClInclude Include="include\Scene\GameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -186,5 +190,9 @@
     <ClCompile Include="Source\API\DirectX\DX11Types.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLSampler.cpp" />
     <ClCompile Include="Source\API\Sampler.cpp" />
+    <ClCompile Include="Source\Components\Transform.cpp" />
+    <ClCompile Include="Source\Scene\SceneNode.cpp" />
+    <ClCompile Include="Source\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Scene\GameObject.cpp" />
   </ItemGroup>
 </Project>

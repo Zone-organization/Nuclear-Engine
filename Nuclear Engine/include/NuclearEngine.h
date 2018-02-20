@@ -70,3 +70,8 @@ _____________/BOOOM\_____________
 #include <Components\Light.h>
 #include <Components\Model.h>
 #include <Components\GUI\imgui.h>
+
+//# Scene Graph Headers
+#include <Scene\SceneNode.h>
+#include <Scene\Scene.h>
+#include <Scene\GameObject.h>
