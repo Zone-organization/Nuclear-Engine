@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <BuildConfig.h>
-#include <map>
+#include <unordered_map>
 #include <API\Texture_Types.h>
 
 namespace NuclearEngine 
@@ -24,11 +24,32 @@ namespace NuclearEngine
 			Vertex_Pixel_Geometry
 		};
 
-
+		enum class ShaderVariableType
+		{
+			Unknown,
+			Bool,
+			Int1,
+			Int2,
+			Int3,
+			Int4,
+			Float1,
+			Float2,	//Vector2
+			Float3, //Vector3
+			Float4, //Vector4
+			Matrix2x2,
+			Matrix3x3,
+			Matrix4x4
+		};
+		struct ShaderVariable
+		{
+			unsigned int Size;           // Size of variable (in bytes)
+			ShaderVariableType Type;
+		};
 		struct Reflected_Constantbuffer
 		{
 			unsigned int BindingSlot = 0;
 			unsigned int Size = 0;
+			std::unordered_map<std::string, ShaderVariable> Variables;
 		};
 		struct Reflected_Texture
 		{
@@ -38,8 +59,8 @@ namespace NuclearEngine
 
 		struct ShaderReflection
 		{
-			std::map<std::string, Reflected_Constantbuffer> ConstantBuffers;
-			std::map<std::string, Reflected_Texture> Textures;
+			std::unordered_map<std::string, Reflected_Constantbuffer> ConstantBuffers;
+			std::unordered_map<std::string, Reflected_Texture> Textures;
 		};
 
 #ifdef NE_COMPILE_D3DCOMPILER

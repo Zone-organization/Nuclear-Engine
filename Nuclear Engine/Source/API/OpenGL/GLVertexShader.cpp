@@ -14,7 +14,7 @@ namespace NuclearEngine
 			static GLuint pipelineid = 0;
 			void GLVertexShader::Fix_Reflected_ConstantBuffer_Slot(GLVertexShader* result, BinaryShaderBlob* blob)
 			{
-				std::map<std::string, Reflected_Constantbuffer>::iterator it;
+				std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
 				for (it = blob->Reflection.ConstantBuffers.begin(); it != blob->Reflection.ConstantBuffers.end(); it++)
 				{
 					it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str());
