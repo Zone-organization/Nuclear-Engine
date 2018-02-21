@@ -21,18 +21,22 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 - __Core__
   - Cross platform ready
   - Modern Fast code using C++
-  
-- __ResourceManager__
+  - Fast Robust Entity Component System "ECS" using EntityX.
+  - Cross-platform Application creation through GLFW.
+- __AssetManager__
   - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using stb_image library).
   - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
-
+  - Multi-Thread loading (Soon™)
+  
 - __OneAPI__
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
   - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
   - Support for HLSL Shader which can be Cross Compiled to GLSL.
-  - Support for Separate Shaders (excellent for debugging and fast  or even faster Unified Shader.
-  - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build
-  
+  - Support for Fast Unified Shader.
+  - Support for Separate Shaders (excellent for debugging and testing features).
+  - Support for Separate Samplers and Textures.
+  - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build.
+
 - __Renderer__
   - Support for Hybrid Lighting system which allows you to implement more lighting techniques.
   - Support for Phong-Shading.
@@ -49,7 +53,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Support Android & Linux & UWP Platforms.
   - Support PhysX or Bullet Physics Library.
   - Support A Uber Shader instead of GLSL , HLSL.
-  - There are more but these are the most important...
+  - There are more but these are the most important... (look at the soon features...)
   
   
 ### Building

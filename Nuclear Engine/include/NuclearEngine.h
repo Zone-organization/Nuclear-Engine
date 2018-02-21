@@ -16,6 +16,10 @@ _____________/BOOOM\_____________
 #include <Core/Context.h>
 #include <Core/Game.h>
 #include <Core/FileSystem.h>
+//--Entity Component System Headers
+#include <Core/Event.h>
+#include <Core/Entity.h>
+#include <Core/System.h>
 
 //# Platform Abstraction Layer Headers
 #include <Platform\Clock.h>
@@ -70,8 +74,3 @@ _____________/BOOOM\_____________
 #include <Components\Light.h>
 #include <Components\Model.h>
 #include <Components\GUI\imgui.h>
-
-//# Scene Graph Headers
-#include <Scene\SceneNode.h>
-#include <Scene\Scene.h>
-#include <Scene\GameObject.h>

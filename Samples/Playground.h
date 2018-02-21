@@ -1,18 +1,46 @@
 #pragma once
 #include "Common.h"
 
+class GameObject
+{
+public:
+	GameObject() {}
+	Components::Model *model;
+};
+
+class RenderSystem : public Core::System<RenderSystem> {
+public:
+
+	void update(Core::EntityManager &es, Core::EventManager &events,Core::TimeDelta dt) override
+	{
+		es.each<GameObject>([this](Core::Entity entity, GameObject& obj)
+		{
+			obj.model->Draw();
+		});
+	}
+};
+
 class Playground : public Core::Game
 {
 protected:
 
+	Core::EventManager events;
+	Core::EntityManager entities;
+	Core::SystemManager systems;
+
 	API::Texture WoodenBoxTex;
+	API::Texture WhiteTex;
+
 	Components::FlyCamera Camera;
 	API::CommonStates states;
 	Components::Model Cube;
+	Components::Model Crate;
+
 	Shading::Techniques::NoLight LightTech;
 	Renderers::Renderer3D Renderer;
 
 	GameObject object;
+	GameObject child;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -20,10 +48,13 @@ protected:
 
 public:
 	Playground()
+		: entities(events), systems(entities, events)
 	{
 	}
 	void Load()
 	{
+		systems.add<RenderSystem>();
+		systems.configure();
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 		Renderer.SetCamera(&Camera);
@@ -41,11 +72,28 @@ public:
 		DiffuseTex.Texture = WoodenBoxTex;
 		DiffuseTex.type = Components::MeshTextureType::Diffuse;
 		Textures.push_back(DiffuseTex);
+
 		Components::Model::CreateCube(&Cube, Textures);
 		Cube.Initialize(&Renderer.GetShader());
-		ImGui::StyleColorsDark();
 
-		object.SetModel(&Cube);
+		AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
+
+		Textures.clear();
+		DiffuseTex.Texture = WhiteTex;
+		Textures.push_back(DiffuseTex);
+
+		Components::Model::CreateSphere(&Crate, Textures);
+		Crate.Initialize(&Renderer.GetShader());
+
+		object.model = &Cube;	
+
+		Core::Entity entity = entities.create();
+		entity.assign<GameObject>(object);
+
+		//child.SetModel(&Crate);
+		//object.AddChild(&child);
+		
+		ImGui::StyleColorsDark();
 
 		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -119,7 +167,9 @@ public:
 		Renderer.GetShader().Bind();
 		states.DefaultSampler.PSBind(0);
 
-		object.Render();
+		systems.update_all(deltatime);
+
+		//object.Render();
 		//Cube.Draw();
 
 		ShowOverlay(true);

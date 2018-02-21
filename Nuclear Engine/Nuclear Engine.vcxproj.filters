@@ -108,10 +108,14 @@
     <ClInclude Include="include\API\DirectX\DX11Types.h" />
     <ClInclude Include="include\API\OpenGL\GLSampler.h" />
     <ClInclude Include="include\API\Sampler.h" />
-    <ClInclude Include="include\Scene\Scene.h" />
-    <ClInclude Include="include\Scene\SceneNode.h" />
     <ClInclude Include="include\Components\Transform.h" />
-    <ClInclude Include="include\Scene\GameObject.h" />
+    <ClInclude Include="include\Core\ECSConfig.h" />
+    <ClInclude Include="include\Core\Event.h" />
+    <ClInclude Include="include\Core\Entity.h" />
+    <ClInclude Include="include\Core\System.h" />
+    <ClInclude Include="include\Utilities\NonCopyable.h" />
+    <ClInclude Include="include\Utilities\Signal.h" />
+    <ClInclude Include="include\Utilities\Pool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -191,8 +195,5 @@
     <ClCompile Include="Source\API\OpenGL\GLSampler.cpp" />
     <ClCompile Include="Source\API\Sampler.cpp" />
     <ClCompile Include="Source\Components\Transform.cpp" />
-    <ClCompile Include="Source\Scene\SceneNode.cpp" />
-    <ClCompile Include="Source\Scene\Scene.cpp" />
-    <ClCompile Include="Source\Scene\GameObject.cpp" />
   </ItemGroup>
 </Project>
