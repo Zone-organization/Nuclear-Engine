@@ -1,25 +1,6 @@
 #pragma once
 #include "Common.h"
 
-class GameObject
-{
-public:
-	GameObject() {}
-	Components::Model *model;
-};
-
-class RenderSystem : public Core::System<RenderSystem> {
-public:
-
-	void update(Core::EntityManager &es, Core::EventManager &events,Core::TimeDelta dt) override
-	{
-		es.each<GameObject>([this](Core::Entity entity, GameObject& obj)
-		{
-			obj.model->Draw();
-		});
-	}
-};
-
 class Playground : public Core::Game
 {
 protected:
@@ -33,14 +14,14 @@ protected:
 
 	Components::FlyCamera Camera;
 	API::CommonStates states;
+
 	Components::Model Cube;
-	Components::Model Crate;
+	Components::Model lamp;
 
-	Shading::Techniques::NoLight LightTech;
-	Renderers::Renderer3D Renderer;
+	Systems::RenderSystem* Renderer;
 
-	GameObject object;
-	GameObject child;
+	Components::GameObject object;
+	Components::GameObject child;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -53,13 +34,15 @@ public:
 	}
 	void Load()
 	{
-		systems.add<RenderSystem>();
-		systems.configure();
+		Systems::RenderSystemDesc desc;
+		desc.Light_Rendering_Tech = &Shading::Techniques::NoLight();
+		systems.Add<Systems::RenderSystem>(desc);
+		systems.Configure();
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
-		Renderer.SetCamera(&Camera);
-		Renderer.SetTechnique(&LightTech);
-		Renderer.Bake();
+
+		Renderer->SetCamera(&Camera);
+		Renderer->Bake();
 
 		API::Texture_Desc Desc;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
@@ -74,7 +57,7 @@ public:
 		Textures.push_back(DiffuseTex);
 
 		Components::Model::CreateCube(&Cube, Textures);
-		Cube.Initialize(&Renderer.GetShader());
+		Cube.Initialize(&Renderer->GetShader());
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 
@@ -82,17 +65,16 @@ public:
 		DiffuseTex.Texture = WhiteTex;
 		Textures.push_back(DiffuseTex);
 
-		Components::Model::CreateSphere(&Crate, Textures);
-		Crate.Initialize(&Renderer.GetShader());
+		Components::Model::CreateSphere(&lamp, Textures);
+		lamp.Initialize(&Renderer->GetShader());
 
-		object.model = &Cube;	
+		object.SetModel(&Cube);	
+		child.SetModel(&lamp);
 
-		Core::Entity entity = entities.create();
-		entity.assign<GameObject>(object);
+		Core::Entity entity = entities.Create();
 
-		//child.SetModel(&Crate);
-		//object.AddChild(&child);
-		
+		entity.Assign<Components::GameObject*>(&object);
+		object.SetModel(&lamp);
 		ImGui::StyleColorsDark();
 
 		states.EnabledDepth_DisabledStencil.Bind();
@@ -158,16 +140,15 @@ public:
 		Core::Context::Begin();
 		ImGui::NE_NewFrame();
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-
-
+		
 
 		Math::Matrix4 CubeMatrix;
 		//CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f));
 		//Camera.SetModelMatrix(CubeMatrix);
-		Renderer.GetShader().Bind();
+		Renderer->GetShader().Bind();
 		states.DefaultSampler.PSBind(0);
 
-		systems.update_all(deltatime);
+		systems.Update_All(deltatime);
 
 		//object.Render();
 		//Cube.Draw();

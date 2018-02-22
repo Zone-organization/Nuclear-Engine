@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <memory>
 #include <utility>
+#include <NE_Common.h>
 #include "Core/ECSConfig.h"
 #include "Utilities/Signal.h"
 #include "Utilities/NonCopyable.h"
@@ -26,16 +27,15 @@ namespace NuclearEngine {
 
 	namespace Core {
 		/// Used internally by the EventManager.
-		class BaseEvent {
+		class NEAPI BaseEvent {
 		public:
 			typedef std::size_t Family;
 
-			virtual ~BaseEvent() {	}
+			virtual ~BaseEvent();
 
 		protected:
 			static Family family_counter_;
 		};
-		BaseEvent::Family BaseEvent::family_counter_ = 0;
 
 		typedef Utilities::Signal<void(const void*)> EventSignal;
 		typedef std::shared_ptr<EventSignal> EventSignalPtr;
@@ -99,12 +99,12 @@ namespace NuclearEngine {
 		/**
 		 * Handles event subscription and delivery.
 		 *
-		 * Subscriptions are automatically removed when receivers are destroyed..
+		 * Subscriptions are automatically Removed when receivers are destroyed..
 		 */
-		class EventManager : Utilities::NonCopyable {
+		class NEAPI EventManager : Utilities::NonCopyable {
 		public:
-			EventManager() {}
-			virtual ~EventManager() {}
+			EventManager();
+			virtual ~EventManager();
 
 			/**
 			 * Subscribe an object to receive events of type E.
@@ -119,10 +119,10 @@ namespace NuclearEngine {
 			 *     };
 			 *
 			 *     ExplosionReceiver receiver;
-			 *     em.subscribe<Explosion>(receiver);
+			 *     em.Subscribe<Explosion>(receiver);
 			 */
 			template <typename E, typename Receiver>
-			void subscribe(Receiver &receiver) {
+			void Subscribe(Receiver &receiver) {
 				void (Receiver::*receive)(const E &) = &Receiver::receive;
 				auto sig = signal_for(Event<E>::family());
 				auto wrapper = EventCallbackWrapper<E>(std::bind(receive, &receiver, std::placeholders::_1));
@@ -132,15 +132,15 @@ namespace NuclearEngine {
 			}
 
 			/**
-			 * Unsubscribe an object in order to not receive events of type E anymore.
+			 * UnSubscribe an object in order to not receive events of type E anymore.
 			 *
-			 * Receivers must have subscribed for event E before unsubscribing from event E.
+			 * Receivers must have Subscribed for event E before unsubscribing from event E.
 			 *
 			 */
 			template <typename E, typename Receiver>
-			void unsubscribe(Receiver &receiver) {
+			void UnSubscribe(Receiver &receiver) {
 				BaseReceiver &base = receiver;
-				// Assert that it has been subscribed before
+				// Assert that it has been Subscribed before
 				assert(base.connections_.find(Event<E>::family()) != base.connections_.end());
 				auto pair = base.connections_[Event<E>::family()];
 				auto connection = pair.second;
@@ -152,18 +152,18 @@ namespace NuclearEngine {
 			}
 
 			template <typename E>
-			void emit(const E &event) {
+			void Emit(const E &event) {
 				auto sig = signal_for(Event<E>::family());
-				sig->emit(&event);
+				sig->Emit(&event);
 			}
 
 			/**
 			 * Emit an already constructed event.
 			 */
 			template <typename E>
-			void emit(std::unique_ptr<E> event) {
+			void Emit(std::unique_ptr<E> event) {
 				auto sig = signal_for(Event<E>::family());
-				sig->emit(event.get());
+				sig->Emit(event.Get());
 			}
 
 			/**
@@ -174,11 +174,11 @@ namespace NuclearEngine {
 			 * eg.
 			 *
 			 * std::shared_ptr<EventManager> em = new EventManager();
-			 * em->emit<Explosion>(10);
+			 * em->Emit<Explosion>(10);
 			 *
 			 */
 			template <typename E, typename ... Args>
-			void emit(Args && ... args) {
+			void Emit(Args && ... args) {
 				// Using 'E event(std::forward...)' causes VS to fail with an internal error. Hack around it.
 				E event = E(std::forward<Args>(args) ...);
 				auto sig = signal_for(std::size_t(Event<E>::family()));

@@ -374,6 +374,7 @@
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\ShaderCompiler.h" />
     <ClInclude Include="include\API\VertexShader.h" />
+    <ClInclude Include="include\Components\GameObject.h" />
     <ClInclude Include="include\Components\GUI\imconfig.h" />
     <ClInclude Include="include\Components\GUI\imgui.h" />
     <ClInclude Include="include\Components\Mesh.h" />
@@ -390,6 +391,7 @@
     <ClInclude Include="include\Core\Event.h" />
     <ClInclude Include="include\Core\Game.h" />
     <ClInclude Include="include\Components\Light.h" />
+    <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Core\System.h" />
     <ClInclude Include="include\Math\Math.h" />
     <ClInclude Include="include\Math\Matrix.h" />
@@ -424,6 +426,7 @@
     <ClInclude Include="include\Shading\Technique.h" />
     <ClInclude Include="include\Shading\Techniques\NoLight.h" />
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
+    <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
@@ -492,6 +495,7 @@
     <ClCompile Include="Source\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\API\VertexShader.cpp" />
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
+    <ClCompile Include="Source\Components\GameObject.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Components\Mesh.cpp" />
@@ -501,6 +505,8 @@
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Core\Context.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
+    <ClCompile Include="Source\Core\Entity.cpp" />
+    <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl.cpp" />
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl_dx11.cpp" />
     <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
@@ -512,6 +518,7 @@
     <ClCompile Include="Source\Core\Game.cpp" />
     <ClCompile Include="Source\Core\FileSystem.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
+    <ClCompile Include="Source\Core\System.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Platform\Clock.cpp" />
     <ClCompile Include="Source\Platform\Input.cpp" />
@@ -524,6 +531,7 @@
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Shading\Technique.cpp" />
     <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
+    <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

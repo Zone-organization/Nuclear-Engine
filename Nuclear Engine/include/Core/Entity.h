@@ -27,8 +27,8 @@
 #include <utility>
 #include <vector>
 #include <type_traits>
- #include <functional>
-
+#include <functional>
+#include <NE_Common.h>
 #include "Utilities/Pool.h"
 #include "Core/ECSConfig.h"
 #include "Core/Event.h"
@@ -50,14 +50,14 @@ namespace NuclearEngine {
 
 		/** A convenience handle around an Entity::Id.
 		 *
-		 * If an entity is destroyed, any copies will be invalidated. Use valid() to
-		 * check for validity before using.
+		 * If an entity is Destroyed, any copies will be InValidated. Use Valid() to
+		 * check for Validity before using.
 		 *
 		 * Create entities with `EntityManager`:
 		 *
-		 *     Entity entity = entity_manager->create();
+		 *     Entity entity = entity_manager->Create();
 		 */
-		class Entity {
+		class NEAPI Entity {
 		public:
 			struct Id {
 				Id() : id_(0) {}
@@ -81,7 +81,7 @@ namespace NuclearEngine {
 
 
 			/**
-			 * Id of an invalid Entity.
+			 * Id of an inValid Entity.
 			 */
 			static const Id INVALID;
 
@@ -91,10 +91,10 @@ namespace NuclearEngine {
 			Entity &operator = (const Entity &other) = default;
 
 			/**
-			 * Check if Entity handle is invalid.
+			 * Check if Entity handle is inValid.
 			 */
 			operator bool() const {
-				return valid();
+				return Valid();
 			}
 
 			bool operator == (const Entity &other) const {
@@ -110,36 +110,36 @@ namespace NuclearEngine {
 			}
 
 			/**
-			 * Is this Entity handle valid?
+			 * Is this Entity handle Valid?
 			 *
 			 * In older versions of EntityX, there were no guarantees around entity
-			 * validity if a previously allocated entity slot was reassigned. That is no
-			 * longer the case: if a slot is reassigned, old Entity::Id's will be
-			 * invalid.
+			 * Validity if a previously allocated entity slot was reAssigned. That is no
+			 * longer the case: if a slot is reAssigned, old Entity::Id's will be
+			 * inValid.
 			 */
-			bool valid() const;
+			bool Valid() const;
 
 			/**
-			 * Invalidate Entity handle, disassociating it from an EntityManager and invalidating its ID.
+			 * InValidate Entity handle, disassociating it from an EntityManager and inValidating its ID.
 			 *
 			 * Note that this does *not* affect the underlying entity and its
-			 * components. Use destroy() to destroy the associated Entity and components.
+			 * components. Use Destroy() to Destroy the associated Entity and components.
 			 */
-			void invalidate();
+			void InValidate();
 
 			Id id() const { return id_; }
 
 			template <typename C, typename ... Args>
-			ComponentHandle<C> assign(Args && ... args);
+			ComponentHandle<C> Assign(Args && ... args);
 
 			template <typename C>
-			ComponentHandle<C> assign_from_copy(const C &component);
+			ComponentHandle<C> Assign_from_copy(const C &component);
 
 			template <typename C, typename ... Args>
-			ComponentHandle<C> replace(Args && ... args);
+			ComponentHandle<C> Replace(Args && ... args);
 
 			template <typename C>
-			void remove();
+			void Remove();
 
 			template <typename C, typename = typename std::enable_if<!std::is_const<C>::value>::type>
 			ComponentHandle<C> component();
@@ -154,15 +154,15 @@ namespace NuclearEngine {
 			std::tuple<ComponentHandle<const Components, const EntityManager>...> components() const;
 
 			template <typename C>
-			bool has_component() const;
+			bool HasComponent() const;
 
 			template <typename A, typename ... Args>
 			void unpack(ComponentHandle<A> &a, ComponentHandle<Args> & ... args);
 
 			/**
-			 * Destroy and invalidate this Entity.
+			 * Destroy and InValidate this Entity.
 			 */
-			void destroy();
+			void Destroy();
 
 			std::bitset<MAX_COMPONENTS> component_mask() const;
 
@@ -175,11 +175,11 @@ namespace NuclearEngine {
 		/**
 		 * A ComponentHandle<C> is a wrapper around an instance of a component.
 		 *
-		 * It provides safe access to components. The handle will be invalidated under
+		 * It provides safe access to components. The handle will be InValidated under
 		 * the following conditions:
 		 *
-		 * - If a component is removed from its host entity.
-		 * - If its host entity is destroyed.
+		 * - If a component is Removed from its host entity.
+		 * - If its host entity is Destroyed.
 		 */
 		template <typename C, typename EM>
 		class ComponentHandle {
@@ -188,7 +188,7 @@ namespace NuclearEngine {
 
 			ComponentHandle() : manager_(nullptr) {}
 
-			bool valid() const;
+			bool Valid() const;
 			operator bool() const;
 
 			C *operator -> ();
@@ -197,13 +197,13 @@ namespace NuclearEngine {
 			C &operator * ();
 			const C &operator * () const;
 
-			C *get();
-			const C *get() const;
+			C *Get();
+			const C *Get() const;
 
 			/**
-			 * Remove the component from its entity and destroy it.
+			 * Remove the component from its entity and Destroy it.
 			 */
-			void remove();
+			void Remove();
 
 			/**
 			 * Returns the Entity associated with the component
@@ -234,12 +234,12 @@ namespace NuclearEngine {
 		 *
 		 * Family is used for registration.
 		 */
-		struct BaseComponent {
+		struct NEAPI BaseComponent {
 		public:
 			typedef size_t Family;
 
 			// NOTE: Component memory is *always* managed by the EntityManager.
-			// Use Entity::destroy() instead.
+			// Use Entity::Destroy() instead.
 			void operator delete(void *p) { fail(); }
 			void operator delete[](void *p) { fail(); }
 
@@ -261,7 +261,7 @@ namespace NuclearEngine {
 		 * Component implementations should inherit from this.
 		 *
 		 * Components MUST provide a no-argument constructor.
-		 * Components SHOULD provide convenience constructors for initializing on assignment to an Entity::Id.
+		 * Components SHOULD provide convenience constructors for initializing on Assignment to an Entity::Id.
 		 *
 		 * This is a struct to imply that components should be data-only.
 		 *
@@ -289,29 +289,29 @@ namespace NuclearEngine {
 
 
 		/**
-		 * Emitted when an entity is added to the system.
+		 * Emitted when an entity is Added to the system.
 		 */
 		struct EntityCreatedEvent : public Event<EntityCreatedEvent> {
 			explicit EntityCreatedEvent(Entity entity) : entity(entity) {}
-			virtual ~EntityCreatedEvent();
+			virtual ~EntityCreatedEvent(){}
 
 			Entity entity;
 		};
 
 
 		/**
-		 * Called just prior to an entity being destroyed.
+		 * Called just prior to an entity being Destroyed.
 		 */
 		struct EntityDestroyedEvent : public Event<EntityDestroyedEvent> {
 			explicit EntityDestroyedEvent(Entity entity) : entity(entity) {}
-			virtual ~EntityDestroyedEvent();
+			virtual ~EntityDestroyedEvent(){}
 
 			Entity entity;
 		};
 
 
 		/**
-		 * Emitted when any component is added to an entity.
+		 * Emitted when any component is Added to an entity.
 		 */
 		template <typename C>
 		struct ComponentAddedEvent : public Event<ComponentAddedEvent<C>> {
@@ -323,7 +323,7 @@ namespace NuclearEngine {
 		};
 
 		/**
-		 * Emitted when any component is removed from an entity.
+		 * Emitted when any component is Removed from an entity.
 		 */
 		template <typename C>
 		struct ComponentRemovedEvent : public Event<ComponentRemovedEvent<C>> {
@@ -340,25 +340,25 @@ namespace NuclearEngine {
 		class BaseComponentHelper {
 		public:
 			virtual ~BaseComponentHelper() {}
-			virtual void remove_component(Entity e) = 0;
-			virtual void copy_component_to(Entity source, Entity target) = 0;
+			virtual void Remove_component(Entity e) = 0;
+			virtual void copy_component_to(Entity source, Entity tarGet) = 0;
 		};
 
 		template <typename C>
 		class ComponentHelper : public BaseComponentHelper {
 		public:
-			void remove_component(Entity e) override {
-				e.remove<C>();
+			void Remove_component(Entity e) override {
+				e.Remove<C>();
 			}
-			void copy_component_to(Entity source, Entity target) override {
-				target.assign_from_copy<C>(*(source.component<C>().get()));
+			void copy_component_to(Entity source, Entity tarGet) override {
+				tarGet.Assign_from_copy<C>(*(source.component<C>().Get()));
 			}
 		};
 
 		/**
-		 * Manages Entity::Id creation and component assignment.
+		 * Manages Entity::Id creation and component Assignment.
 		 */
-		class EntityManager : Utilities::NonCopyable {
+		class NEAPI EntityManager : Utilities::NonCopyable {
 		public:
 			typedef std::bitset<MAX_COMPONENTS> ComponentMask;
 
@@ -366,7 +366,7 @@ namespace NuclearEngine {
 			virtual ~EntityManager();
 
 			/// An iterator over a view of the entities in an EntityManager.
-			/// If All is true it will iterate over all valid entities and will ignore the entity mask.
+			/// If All is true it will iterate over all Valid entities and will ignore the entity mask.
 			template <class Delegate, bool All = false>
 			class ViewIterator : public std::iterator<std::input_iterator_tag, Entity::Id> {
 			public:
@@ -377,8 +377,8 @@ namespace NuclearEngine {
 				}
 				bool operator == (const Delegate& rhs) const { return i_ == rhs.i_; }
 				bool operator != (const Delegate& rhs) const { return i_ != rhs.i_; }
-				Entity operator * () { return Entity(manager_, manager_->create_id(i_)); }
-				const Entity operator * () const { return Entity(manager_, manager_->create_id(i_)); }
+				Entity operator * () { return Entity(manager_, manager_->Create_id(i_)); }
+				const Entity operator * () const { return Entity(manager_, manager_->Create_id(i_)); }
 
 			protected:
 				ViewIterator(EntityManager *manager, uint32_t index)
@@ -402,16 +402,16 @@ namespace NuclearEngine {
 					}
 
 					if (i_ < capacity_) {
-						Entity entity = manager_->get(manager_->create_id(i_));
+						Entity entity = manager_->Get(manager_->Create_id(i_));
 						static_cast<Delegate*>(this)->next_entity(entity);
 					}
 				}
 
 				inline bool predicate() {
-					return (All && valid_entity()) || (manager_->entity_component_mask_[i_] & mask_) == mask_;
+					return (All && Valid_entity()) || (manager_->entity_component_mask_[i_] & mask_) == mask_;
 				}
 
-				inline bool valid_entity() {
+				inline bool Valid_entity() {
 					const std::vector<uint32_t> &free_list = manager_->free_list_;
 					if (free_cursor_ < free_list.size() && free_list[free_cursor_] == i_) {
 						++free_cursor_;
@@ -464,7 +464,7 @@ namespace NuclearEngine {
 
 				void each(typename identity<std::function<void(Entity entity, Components&...)>>::type f) {
 					for (auto it : *this)
-						f(it, *(it.template component<Components>().get())...);
+						f(it, *(it.template component<Components>().Get())...);
 				}
 
 			private:
@@ -492,12 +492,12 @@ namespace NuclearEngine {
 				private:
 					template <int N, typename C>
 					void unpack_(Entity &entity) const {
-						std::get<N>(handles) = entity.component<C>();
+						std::Get<N>(handles) = entity.component<C>();
 					}
 
 					template <int N, typename C0, typename C1, typename ... Cn>
 					void unpack_(Entity &entity) const {
-						std::get<N>(handles) = entity.component<C0>();
+						std::Get<N>(handles) = entity.component<C0>();
 						unpack_<N + 1, C1, Cn...>(entity);
 					}
 
@@ -551,9 +551,9 @@ namespace NuclearEngine {
 			size_t capacity() const { return entity_component_mask_.size(); }
 
 			/**
-			 * Return true if the given entity ID is still valid.
+			 * Return true if the given entity ID is still Valid.
 			 */
-			bool valid(Entity::Id id) const {
+			bool Valid(Entity::Id id) const {
 				return id.index() < entity_version_.size() && entity_version_[id.index()] == id.version();
 			}
 
@@ -562,7 +562,7 @@ namespace NuclearEngine {
 			 *
 			 * Emits EntityCreatedEvent.
 			 */
-			Entity create() {
+			Entity Create() {
 				uint32_t index, version;
 				if (free_list_.empty()) {
 					index = index_counter_++;
@@ -575,7 +575,7 @@ namespace NuclearEngine {
 					version = entity_version_[index];
 				}
 				Entity entity(this, Entity::Id(index, version));
-				event_manager_.emit<EntityCreatedEvent>(entity);
+				event_manager_.Emit<EntityCreatedEvent>(entity);
 				return entity;
 			}
 
@@ -584,9 +584,9 @@ namespace NuclearEngine {
 			 *
 			 * Emits EntityCreatedEvent.
 			 */
-			Entity create_from_copy(Entity original) {
-				assert(original.valid());
-				auto clone = create();
+			Entity Create_from_copy(Entity original) {
+				assert(original.Valid());
+				auto clone = Create();
 				auto mask = original.component_mask();
 				for (size_t i = 0; i < component_helpers_.size(); i++) {
 					BaseComponentHelper *helper = component_helpers_[i];
@@ -602,46 +602,46 @@ namespace NuclearEngine {
 			 *
 			 * Emits EntityDestroyedEvent.
 			 */
-			void destroy(Entity::Id entity) {
-				assert_valid(entity);
+			void Destroy(Entity::Id entity) {
+				assert_Valid(entity);
 				uint32_t index = entity.index();
 				auto mask = entity_component_mask_[index];
 				for (size_t i = 0; i < component_helpers_.size(); i++) {
 					BaseComponentHelper *helper = component_helpers_[i];
 					if (helper && mask.test(i))
-						helper->remove_component(Entity(this, entity));
+						helper->Remove_component(Entity(this, entity));
 				}
-				event_manager_.emit<EntityDestroyedEvent>(Entity(this, entity));
+				event_manager_.Emit<EntityDestroyedEvent>(Entity(this, entity));
 				entity_component_mask_[index].reset();
 				entity_version_[index]++;
 				free_list_.push_back(index);
 			}
 
-			Entity get(Entity::Id id) {
-				assert_valid(id);
+			Entity Get(Entity::Id id) {
+				assert_Valid(id);
 				return Entity(this, id);
 			}
 
 			/**
 			 * Create an Entity::Id for a slot.
 			 *
-			 * NOTE: Does *not* check for validity, but the Entity::Id constructor will
-			 * fail if the ID is invalid.
+			 * NOTE: Does *not* check for Validity, but the Entity::Id constructor will
+			 * fail if the ID is inValid.
 			 */
-			Entity::Id create_id(uint32_t index) const {
+			Entity::Id Create_id(uint32_t index) const {
 				return Entity::Id(index, entity_version_[index]);
 			}
 
 			/**
 			 * Assign a Component to an Entity::Id, passing through Component constructor arguments.
 			 *
-			 *     Position &position = em.assign<Position>(e, x, y);
+			 *     Position &position = em.Assign<Position>(e, x, y);
 			 *
-			 * @returns Smart pointer to newly created component.
+			 * @returns Smart pointer to newly Created component.
 			 */
 			template <typename C, typename ... Args>
-			ComponentHandle<C> assign(Entity::Id id, Args && ... args) {
-				assert_valid(id);
+			ComponentHandle<C> Assign(Entity::Id id, Args && ... args) {
+				assert_Valid(id);
 				const BaseComponent::Family family = component_family<C>();
 				assert(!entity_component_mask_[id.index()].test(family));
 
@@ -654,7 +654,7 @@ namespace NuclearEngine {
 
 				// Create and return handle.
 				ComponentHandle<C> component(this, id);
-				event_manager_.emit<ComponentAddedEvent<C>>(Entity(this, id), component);
+				event_manager_.Emit<ComponentAddedEvent<C>>(Entity(this, id), component);
 				return component;
 			}
 
@@ -664,15 +664,15 @@ namespace NuclearEngine {
 			 * Emits a ComponentRemovedEvent<C> event.
 			 */
 			template <typename C>
-			void remove(Entity::Id id) {
-				assert_valid(id);
+			void Remove(Entity::Id id) {
+				assert_Valid(id);
 				const BaseComponent::Family family = component_family<C>();
 				const uint32_t index = id.index();
 
 				// Find the pool for this component family.
 				Utilities::BasePool *pool = component_pools_[family];
 				ComponentHandle<C> component(this, id);
-				event_manager_.emit<ComponentRemovedEvent<C>>(Entity(this, id), component);
+				event_manager_.Emit<ComponentRemovedEvent<C>>(Entity(this, id), component);
 
 				// Remove component bit.
 				entity_component_mask_[id.index()].reset(family);
@@ -685,8 +685,8 @@ namespace NuclearEngine {
 			 * Check if an Entity has a component.
 			 */
 			template <typename C>
-			bool has_component(Entity::Id id) const {
-				assert_valid(id);
+			bool HasComponent(Entity::Id id) const {
+				assert_Valid(id);
 				size_t family = component_family<C>();
 				// We don't bother checking the component mask, as we return a nullptr anyway.
 				if (family >= component_pools_.size())
@@ -698,13 +698,13 @@ namespace NuclearEngine {
 			}
 
 			/**
-			 * Retrieve a Component assigned to an Entity::Id.
+			 * Retrieve a Component Assigned to an Entity::Id.
 			 *
 			 * @returns Pointer to an instance of C, or nullptr if the Entity::Id does not have that Component.
 			 */
 			template <typename C, typename = typename std::enable_if<!std::is_const<C>::value>::type>
 			ComponentHandle<C> component(Entity::Id id) {
-				assert_valid(id);
+				assert_Valid(id);
 				size_t family = component_family<C>();
 				// We don't bother checking the component mask, as we return a nullptr anyway.
 				if (family >= component_pools_.size())
@@ -716,13 +716,13 @@ namespace NuclearEngine {
 			}
 
 			/**
-			 * Retrieve a Component assigned to an Entity::Id.
+			 * Retrieve a Component Assigned to an Entity::Id.
 			 *
 			 * @returns Component instance, or nullptr if the Entity::Id does not have that Component.
 			 */
 			template <typename C, typename = typename std::enable_if<std::is_const<C>::value>::type>
 			const ComponentHandle<C, const EntityManager> component(Entity::Id id) const {
-				assert_valid(id);
+				assert_Valid(id);
 				size_t family = component_family<C>();
 				// We don't bother checking the component mask, as we return a nullptr anyway.
 				if (family >= component_pools_.size())
@@ -769,7 +769,7 @@ namespace NuclearEngine {
 			}
 
 			/**
-			 * Find Entities that have all of the specified Components and assign them
+			 * Find Entities that have all of the specified Components and Assign them
 			 * to the given parameters.
 			 *
 			 * @code
@@ -787,13 +787,13 @@ namespace NuclearEngine {
 			}
 
 			/**
-			 * Iterate over all *valid* entities (ie. not in the free list). Not fast,
+			 * Iterate over all *Valid* entities (ie. not in the free list). Not fast,
 			 * so should only be used for debugging.
 			 *
 			 * @code
 			 * for (Entity entity : entity_manager.entities_for_debugging()) {}
 			 *
-			 * @return An iterator view over all valid entities.
+			 * @return An iterator view over all Valid entities.
 			 */
 			DebugView entities_for_debugging() {
 				return DebugView(this);
@@ -801,7 +801,7 @@ namespace NuclearEngine {
 
 			template <typename C>
 			void unpack(Entity::Id id, ComponentHandle<C> &a) {
-				assert_valid(id);
+				assert_Valid(id);
 				a = component<C>(id);
 			}
 
@@ -818,7 +818,7 @@ namespace NuclearEngine {
 			 */
 			template <typename A, typename ... Args>
 			void unpack(Entity::Id id, ComponentHandle<A> &a, ComponentHandle<Args> & ... args) {
-				assert_valid(id);
+				assert_Valid(id);
 				a = component<A>(id);
 				unpack<Args ...>(id, args ...);
 			}
@@ -840,29 +840,29 @@ namespace NuclearEngine {
 			friend class ComponentHandle;
 
 
-			inline void assert_valid(Entity::Id id) const {
+			inline void assert_Valid(Entity::Id id) const {
 				assert(id.index() < entity_component_mask_.size() && "Entity::Id ID outside entity vector range");
 				assert(entity_version_[id.index()] == id.version() && "Attempt to access Entity via a stale Entity::Id");
 			}
 
 			template <typename C>
-			C *get_component_ptr(Entity::Id id) {
-				assert(valid(id));
+			C *Get_component_ptr(Entity::Id id) {
+				assert(Valid(id));
 				Utilities::BasePool *pool = component_pools_[component_family<C>()];
 				assert(pool);
 				return static_cast<C*>(pool->get(id.index()));
 			}
 
 			template <typename C>
-			const C *get_component_ptr(Entity::Id id) const {
-				assert_valid(id);
+			const C *Get_component_ptr(Entity::Id id) const {
+				assert_Valid(id);
 				Utilities::BasePool *pool = component_pools_[component_family<C>()];
 				assert(pool);
 				return static_cast<const C*>(pool->get(id.index()));
 			}
 
 			ComponentMask component_mask(Entity::Id id) {
-				assert_valid(id);
+				assert_Valid(id);
 				return entity_component_mask_.at(id.index());
 			}
 
@@ -930,7 +930,7 @@ namespace NuclearEngine {
 			std::vector<BaseComponentHelper*> component_helpers_;
 			// Bitmask of components associated with each entity. Index into the vector is the Entity::Id.
 			std::vector<ComponentMask> entity_component_mask_;
-			// Vector of entity version numbers. Incremented each time an entity is destroyed
+			// Vector of entity version numbers. Incremented each time an entity is Destroyed
 			std::vector<uint32_t> entity_version_;
 			// List of available entity slots.
 			std::vector<uint32_t> free_list_;
@@ -946,75 +946,75 @@ namespace NuclearEngine {
 
 
 		template <typename C, typename ... Args>
-		ComponentHandle<C> Entity::assign(Args && ... args) {
-			assert(valid());
-			return manager_->assign<C>(id_, std::forward<Args>(args) ...);
+		ComponentHandle<C> Entity::Assign(Args && ... args) {
+			assert(Valid());
+			return manager_->Assign<C>(id_, std::forward<Args>(args) ...);
 		}
 
 		template <typename C>
-		ComponentHandle<C> Entity::assign_from_copy(const C &component) {
-			assert(valid());
-			return manager_->assign<C>(id_, std::forward<const C &>(component));
+		ComponentHandle<C> Entity::Assign_from_copy(const C &component) {
+			assert(Valid());
+			return manager_->Assign<C>(id_, std::forward<const C &>(component));
 		}
 
 		template <typename C, typename ... Args>
-		ComponentHandle<C> Entity::replace(Args && ... args) {
-			assert(valid());
+		ComponentHandle<C> Entity::Replace(Args && ... args) {
+			assert(Valid());
 			auto handle = component<C>();
 			if (handle) {
-				*(handle.get()) = C(std::forward<Args>(args) ...);
+				*(handle.Get()) = C(std::forward<Args>(args) ...);
 			}
 			else {
-				handle = manager_->assign<C>(id_, std::forward<Args>(args) ...);
+				handle = manager_->Assign<C>(id_, std::forward<Args>(args) ...);
 			}
 			return handle;
 		}
 
 		template <typename C>
-		void Entity::remove() {
-			assert(valid() && has_component<C>());
-			manager_->remove<C>(id_);
+		void Entity::Remove() {
+			assert(Valid() && HasComponent<C>());
+			manager_->Remove<C>(id_);
 		}
 
 		template <typename C, typename>
 		ComponentHandle<C> Entity::component() {
-			assert(valid());
+			assert(Valid());
 			return manager_->component<C>(id_);
 		}
 
 		template <typename C, typename>
 		const ComponentHandle<C, const EntityManager> Entity::component() const {
-			assert(valid());
+			assert(Valid());
 			return const_cast<const EntityManager*>(manager_)->component<const C>(id_);
 		}
 
 		template <typename ... Components>
 		std::tuple<ComponentHandle<Components>...> Entity::components() {
-			assert(valid());
+			assert(Valid());
 			return manager_->components<Components...>(id_);
 		}
 
 		template <typename ... Components>
 		std::tuple<ComponentHandle<const Components, const EntityManager>...> Entity::components() const {
-			assert(valid());
+			assert(Valid());
 			return const_cast<const EntityManager*>(manager_)->components<const Components...>(id_);
 		}
 
 
 		template <typename C>
-		bool Entity::has_component() const {
-			assert(valid());
-			return manager_->has_component<C>(id_);
+		bool Entity::HasComponent() const {
+			assert(Valid());
+			return manager_->HasComponent<C>(id_);
 		}
 
 		template <typename A, typename ... Args>
 		void Entity::unpack(ComponentHandle<A> &a, ComponentHandle<Args> & ... args) {
-			assert(valid());
+			assert(Valid());
 			manager_->unpack(id_, a, args ...);
 		}
 
-		inline bool Entity::valid() const {
-			return manager_ && manager_->valid(id_);
+		inline bool Entity::Valid() const {
+			return manager_ && manager_->Valid(id_);
 		}
 
 		inline std::ostream &operator << (std::ostream &out, const Entity::Id &id) {
@@ -1031,107 +1031,61 @@ namespace NuclearEngine {
 
 		template <typename C, typename EM>
 		inline ComponentHandle<C, EM>::operator bool() const {
-			return valid();
+			return Valid();
 		}
 
 		template <typename C, typename EM>
-		inline bool ComponentHandle<C, EM>::valid() const {
-			return manager_ && manager_->valid(id_) && manager_->template has_component<C>(id_);
+		inline bool ComponentHandle<C, EM>::Valid() const {
+			return manager_ && manager_->Valid(id_) && manager_->template HasComponent<C>(id_);
 		}
 
 		template <typename C, typename EM>
 		inline C *ComponentHandle<C, EM>::operator -> () {
-			assert(valid());
-			return manager_->template get_component_ptr<C>(id_);
+			assert(Valid());
+			return manager_->template Get_component_ptr<C>(id_);
 		}
 
 		template <typename C, typename EM>
 		inline const C *ComponentHandle<C, EM>::operator -> () const {
-			assert(valid());
-			return manager_->template get_component_ptr<C>(id_);
+			assert(Valid());
+			return manager_->template Get_component_ptr<C>(id_);
 		}
 
 		template <typename C, typename EM>
 		inline C &ComponentHandle<C, EM>::operator * () {
-			assert(valid());
-			return *manager_->template get_component_ptr<C>(id_);
+			assert(Valid());
+			return *manager_->template Get_component_ptr<C>(id_);
 		}
 
 		template <typename C, typename EM>
 		inline const C &ComponentHandle<C, EM>::operator * () const {
-			assert(valid());
-			return *manager_->template get_component_ptr<C>(id_);
+			assert(Valid());
+			return *manager_->template Get_component_ptr<C>(id_);
 		}
 
 		template <typename C, typename EM>
-		inline C *ComponentHandle<C, EM>::get() {
-			assert(valid());
-			return manager_->template get_component_ptr<C>(id_);
+		inline C *ComponentHandle<C, EM>::Get() {
+			assert(Valid());
+			return manager_->template Get_component_ptr<C>(id_);
 		}
 
 		template <typename C, typename EM>
-		inline const C *ComponentHandle<C, EM>::get() const {
-			assert(valid());
-			return manager_->template get_component_ptr<C>(id_);
+		inline const C *ComponentHandle<C, EM>::Get() const {
+			assert(Valid());
+			return manager_->template Get_component_ptr<C>(id_);
 		}
 
 		template <typename C, typename EM>
-		inline void ComponentHandle<C, EM>::remove() {
-			assert(valid());
-			manager_->template remove<C>(id_);
+		inline void ComponentHandle<C, EM>::Remove() {
+			assert(Valid());
+			manager_->template Remove<C>(id_);
 		}
 
 		template <typename C, typename EM>
 		inline Entity ComponentHandle<C, EM>::entity() {
-			assert(valid());
-			return manager_->get(id_);
+			assert(Valid());
+			return manager_->Get(id_);
 		}
-
-
-		const Entity::Id Entity::INVALID;
-		BaseComponent::Family BaseComponent::family_counter_ = 0;
-
-		void Entity::invalidate() {
-			id_ = INVALID;
-			manager_ = nullptr;
-		}
-
-		void Entity::destroy() {
-			assert(valid());
-			manager_->destroy(id_);
-			invalidate();
-		}
-
-		std::bitset<MAX_COMPONENTS> Entity::component_mask() const {
-			return manager_->component_mask(id_);
-		}
-
-		EntityManager::EntityManager(EventManager &event_manager) : event_manager_(event_manager) {
-		}
-
-		EntityManager::~EntityManager() {
-			reset();
-		}
-
-		void EntityManager::reset() {
-			for (Entity entity : entities_for_debugging()) entity.destroy();
-			for (Utilities::BasePool *pool : component_pools_) {
-				if (pool) delete pool;
-			}
-			for (BaseComponentHelper *helper : component_helpers_) {
-				if (helper) delete helper;
-			}
-			component_pools_.clear();
-			component_helpers_.clear();
-			entity_component_mask_.clear();
-			entity_version_.clear();
-			free_list_.clear();
-			index_counter_ = 0;
-		}
-
-		EntityCreatedEvent::~EntityCreatedEvent() {}
-		EntityDestroyedEvent::~EntityDestroyedEvent() {}
-
 	} 
 }
 namespace std {

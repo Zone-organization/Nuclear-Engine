@@ -10,7 +10,7 @@
 */
 
 #pragma once
-
+#include <NE_Common.h>
 #include <cstddef>
 #include <cassert>
 #include <vector>
@@ -27,11 +27,17 @@ namespace NuclearEngine {
 		* Lookups are O(1).
 		* Appends are amortized O(1).
 		*/
-		class BasePool {
+		class NEAPI BasePool {
 		public:
 			explicit BasePool(std::size_t element_size, std::size_t chunk_size = 8192)
 				: element_size_(element_size), chunk_size_(chunk_size), capacity_(0) {}
-			virtual ~BasePool();
+			virtual ~BasePool()
+			{
+				for (char *ptr : blocks_) {
+					delete[] ptr;
+				}
+			}
+			
 
 			std::size_t size() const { return size_; }
 			std::size_t capacity() const { return capacity_; }
@@ -92,10 +98,5 @@ namespace NuclearEngine {
 				ptr->~T();
 			}
 		};
-		BasePool::~BasePool() {
-			for (char *ptr : blocks_) {
-				delete[] ptr;
-			}
-		}
-	} 
+	}
 }
