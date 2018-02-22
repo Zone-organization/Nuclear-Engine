@@ -119,6 +119,19 @@ namespace NuclearEngine
 			}
 			NE_Light_CB.Update(LightsBuffer.data(), NE_Light_CB_Size);
 		}
+
+		void RenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)
+		{
+			es.each<Components::GameObject>([dt](Core::Entity entity, Components::GameObject& obj)
+			{
+				obj.GetModel()->Draw();
+			});
+
+			es.each<Components::Model>([dt](Core::Entity entity, Components::Model& obj)
+			{
+				obj.Draw();
+			});
+		}
 		void RenderSystem::Calculate_Light_CB_Size()
 		{
 			NE_Light_CB_Size = sizeof(Math::Vector4);

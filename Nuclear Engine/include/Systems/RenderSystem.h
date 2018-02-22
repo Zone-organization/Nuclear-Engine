@@ -43,13 +43,7 @@ namespace NuclearEngine
 			void Render_Light();
 
 			//Updating the render system is rendering it
-			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override
-			{
-				es.each<Components::GameObject*>([this](Core::Entity entity, Components::GameObject* obj)
-				{
-					obj->GetModel()->Draw();
-				});
-			}
+			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;
 		private:
 			void Calculate_Light_CB_Size();
 

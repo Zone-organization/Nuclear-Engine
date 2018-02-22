@@ -142,16 +142,16 @@ namespace NuclearEngine {
 			void Remove();
 
 			template <typename C, typename = typename std::enable_if<!std::is_const<C>::value>::type>
-			ComponentHandle<C> component();
+			ComponentHandle<C> GetComponent();
 
 			template <typename C, typename = typename std::enable_if<std::is_const<C>::value>::type>
-			const ComponentHandle<C, const EntityManager> component() const;
+			const ComponentHandle<C, const EntityManager> GetComponent() const;
 
 			template <typename ... Components>
-			std::tuple<ComponentHandle<Components>...> components();
+			std::tuple<ComponentHandle<Components>...> GetComponents();
 
 			template <typename ... Components>
-			std::tuple<ComponentHandle<const Components, const EntityManager>...> components() const;
+			std::tuple<ComponentHandle<const Components, const EntityManager>...> GetComponents() const;
 
 			template <typename C>
 			bool HasComponent() const;
@@ -208,7 +208,7 @@ namespace NuclearEngine {
 			/**
 			 * Returns the Entity associated with the component
 			 */
-			Entity entity();
+			Entity GetEntity();
 
 			bool operator == (const ComponentHandle<C> &other) const {
 				return manager_ == other.manager_ && id_ == other.id_;
@@ -351,7 +351,7 @@ namespace NuclearEngine {
 				e.Remove<C>();
 			}
 			void copy_component_to(Entity source, Entity tarGet) override {
-				tarGet.Assign_from_copy<C>(*(source.component<C>().Get()));
+				tarGet.Assign_from_copy<C>(*(source.GetComponent<C>().Get()));
 			}
 		};
 
@@ -464,7 +464,7 @@ namespace NuclearEngine {
 
 				void each(typename identity<std::function<void(Entity entity, Components&...)>>::type f) {
 					for (auto it : *this)
-						f(it, *(it.template component<Components>().Get())...);
+						f(it, *(it.template GetComponent<Components>().Get())...);
 				}
 
 			private:
@@ -492,12 +492,12 @@ namespace NuclearEngine {
 				private:
 					template <int N, typename C>
 					void unpack_(Entity &entity) const {
-						std::Get<N>(handles) = entity.component<C>();
+						std::get<N>(handles) = entity.GetComponent<C>();
 					}
 
 					template <int N, typename C0, typename C1, typename ... Cn>
 					void unpack_(Entity &entity) const {
-						std::Get<N>(handles) = entity.component<C0>();
+						std::get<N>(handles) = entity.GetComponent<C0>();
 						unpack_<N + 1, C1, Cn...>(entity);
 					}
 
@@ -703,7 +703,7 @@ namespace NuclearEngine {
 			 * @returns Pointer to an instance of C, or nullptr if the Entity::Id does not have that Component.
 			 */
 			template <typename C, typename = typename std::enable_if<!std::is_const<C>::value>::type>
-			ComponentHandle<C> component(Entity::Id id) {
+			ComponentHandle<C> GetComponent(Entity::Id id) {
 				assert_Valid(id);
 				size_t family = component_family<C>();
 				// We don't bother checking the component mask, as we return a nullptr anyway.
@@ -721,7 +721,7 @@ namespace NuclearEngine {
 			 * @returns Component instance, or nullptr if the Entity::Id does not have that Component.
 			 */
 			template <typename C, typename = typename std::enable_if<std::is_const<C>::value>::type>
-			const ComponentHandle<C, const EntityManager> component(Entity::Id id) const {
+			const ComponentHandle<C, const EntityManager> GetComponent(Entity::Id id) const {
 				assert_Valid(id);
 				size_t family = component_family<C>();
 				// We don't bother checking the component mask, as we return a nullptr anyway.
@@ -734,13 +734,13 @@ namespace NuclearEngine {
 			}
 
 			template <typename ... Components>
-			std::tuple<ComponentHandle<Components>...> components(Entity::Id id) {
-				return std::make_tuple(component<Components>(id)...);
+			std::tuple<ComponentHandle<Components>...> GetComponents(Entity::Id id) {
+				return std::make_tuple(GetComponent<Components>(id)...);
 			}
 
 			template <typename ... Components>
-			std::tuple<ComponentHandle<const Components, const EntityManager>...> components(Entity::Id id) const {
-				return std::make_tuple(component<const Components>(id)...);
+			std::tuple<ComponentHandle<const Components, const EntityManager>...> GetComponents(Entity::Id id) const {
+				return std::make_tuple(GetComponent<const Components>(id)...);
 			}
 
 			/**
@@ -748,8 +748,8 @@ namespace NuclearEngine {
 			 *
 			 * @code
 			 * for (Entity entity : entity_manager.entities_with_components<Position, Direction>()) {
-			 *   ComponentHandle<Position> position = entity.component<Position>();
-			 *   ComponentHandle<Direction> direction = entity.component<Direction>();
+			 *   ComponentHandle<Position> position = entity.GetComponent<Position>();
+			 *   ComponentHandle<Direction> direction = entity.GetComponent<Direction>();
 			 *
 			 *   ...
 			 * }
@@ -977,27 +977,27 @@ namespace NuclearEngine {
 		}
 
 		template <typename C, typename>
-		ComponentHandle<C> Entity::component() {
+		ComponentHandle<C> Entity::GetComponent() {
 			assert(Valid());
-			return manager_->component<C>(id_);
+			return manager_->GetComponent<C>(id_);
 		}
 
 		template <typename C, typename>
-		const ComponentHandle<C, const EntityManager> Entity::component() const {
+		const ComponentHandle<C, const EntityManager> Entity::GetComponent() const {
 			assert(Valid());
-			return const_cast<const EntityManager*>(manager_)->component<const C>(id_);
+			return const_cast<const EntityManager*>(manager_)->GetComponent<const C>(id_);
 		}
 
 		template <typename ... Components>
-		std::tuple<ComponentHandle<Components>...> Entity::components() {
+		std::tuple<ComponentHandle<Components>...> Entity::GetComponents() {
 			assert(Valid());
-			return manager_->components<Components...>(id_);
+			return manager_->GetComponents<Components...>(id_);
 		}
 
 		template <typename ... Components>
-		std::tuple<ComponentHandle<const Components, const EntityManager>...> Entity::components() const {
+		std::tuple<ComponentHandle<const Components, const EntityManager>...> Entity::GetComponents() const {
 			assert(Valid());
-			return const_cast<const EntityManager*>(manager_)->components<const Components...>(id_);
+			return const_cast<const EntityManager*>(manager_)->GetComponents<const Components...>(id_);
 		}
 
 
@@ -1082,7 +1082,7 @@ namespace NuclearEngine {
 		}
 
 		template <typename C, typename EM>
-		inline Entity ComponentHandle<C, EM>::entity() {
+		inline Entity ComponentHandle<C, EM>::GetEntity() {
 			assert(Valid());
 			return manager_->Get(id_);
 		}

@@ -14,7 +14,7 @@
 namespace NuclearEngine {
 
 	namespace Core {
-		BaseSystem::Family BaseSystem::family_counter_;
+		BaseSystem::Family BaseSystem::family_counter_ = 0;
 
 		BaseSystem::~BaseSystem() {
 		}

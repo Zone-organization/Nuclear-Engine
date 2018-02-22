@@ -1,6 +1,14 @@
 #pragma once
 #include "Common.h"
 
+
+struct EventComponentReciever : public Core::Receiver<EventComponentReciever> {
+	void receive(const Core::ComponentAddedEvent<Components::GameObject> &shit)
+	{
+		std::cout << "Working.\n";
+	}
+
+};
 class Playground : public Core::Game
 {
 protected:
@@ -14,16 +22,19 @@ protected:
 
 	Components::FlyCamera Camera;
 	API::CommonStates states;
-
+	Core::Entity entity;
 	Components::Model Cube;
 	Components::Model lamp;
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	Components::GameObject object;
 	Components::GameObject child;
+	Components::GameObject object;
+
 	Shading::Techniques::NoLight lighttech;
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
+
+	EventComponentReciever reciever;
 
 public:
 	Playground()
@@ -48,6 +59,7 @@ public:
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
+
 		std::vector<Components::MeshTexture> Textures;
 		Components::MeshTexture DiffuseTex;
 		DiffuseTex.Texture = WoodenBoxTex;
@@ -69,10 +81,15 @@ public:
 		object.SetModel(&Cube);	
 		child.SetModel(&lamp);
 
-		Core::Entity entity = entities.Create();
+		events.Subscribe<Core::ComponentAddedEvent<Components::GameObject>>(reciever);
 
-		entity.Assign<Components::GameObject*>(&object);
-		object.SetModel(&lamp);
+
+		entity = entities.Create();
+
+		entity.Assign<Components::GameObject>(object);
+		entity.Assign<Components::Model>(lamp);
+
+		//object.SetModel(&lamp);
 		ImGui::StyleColorsDark();
 
 		states.EnabledDepth_DisabledStencil.Bind();
