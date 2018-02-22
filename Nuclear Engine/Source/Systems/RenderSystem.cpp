@@ -12,11 +12,7 @@ namespace NuclearEngine
 		{
 			Light_Rendering_Tech = nullptr;
 			Camera = nullptr;
-			switch (desc.Light_Rendering_Tech->GetType())
-			{
-			case Shading::Technique_Type::LightShading:
-				this->Light_Rendering_Tech = desc.Light_Rendering_Tech;
-			}
+			this->Light_Rendering_Tech = desc.Light_Rendering_Tech;			
 
 			this->status = RenderSystemStatus::RequireBaking;
 		}

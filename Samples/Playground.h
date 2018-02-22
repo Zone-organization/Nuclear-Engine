@@ -17,12 +17,10 @@ protected:
 
 	Components::Model Cube;
 	Components::Model lamp;
-
-	Systems::RenderSystem* Renderer;
-
+	std::shared_ptr<Systems::RenderSystem> Renderer;
 	Components::GameObject object;
 	Components::GameObject child;
-
+	Shading::Techniques::NoLight lighttech;
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -35,10 +33,10 @@ public:
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-		desc.Light_Rendering_Tech = &Shading::Techniques::NoLight();
-		systems.Add<Systems::RenderSystem>(desc);
+		desc.Light_Rendering_Tech = &lighttech;
+		Renderer = systems.Add<Systems::RenderSystem>(desc);
 		systems.Configure();
-
+		
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);

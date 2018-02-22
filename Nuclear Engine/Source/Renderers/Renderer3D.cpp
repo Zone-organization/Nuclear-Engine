@@ -23,11 +23,11 @@ namespace NuclearEngine {
 
 		void Renderer3D::SetTechnique(Shading::Technique * Tech)
 		{
-			switch (Tech->GetType())
-			{
-			case Shading::Technique_Type::LightShading:
+			//switch (Tech->GetType())
+			//{
+			//case Shading::Technique_Type::LightShading:
 				this->Light_Rendering_Tech = Tech;
-			}
+			//}
 
 			this->flag = Renderer3DStatusFlag::RequireBaking;
 		}
