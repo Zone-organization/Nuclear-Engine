@@ -427,6 +427,7 @@
     <ClInclude Include="include\Shading\Techniques\NoLight.h" />
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
+    <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
@@ -531,7 +532,6 @@
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Shading\Technique.cpp" />
     <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
-    <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

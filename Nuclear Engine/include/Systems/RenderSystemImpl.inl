@@ -1,4 +1,4 @@
-#include <Systems\RenderSystem.h>
+#ifdef RenderSystemImpl
 #include <Core\FileSystem.h>
 #include <Shading\Techniques\NoLight.h>
 #include <API\ConstantBuffer.h>
@@ -12,7 +12,7 @@ namespace NuclearEngine
 		{
 			Light_Rendering_Tech = nullptr;
 			Camera = nullptr;
-			this->Light_Rendering_Tech = desc.Light_Rendering_Tech;			
+			this->Light_Rendering_Tech = desc.Light_Rendering_Tech;
 
 			this->status = RenderSystemStatus::RequireBaking;
 		}
@@ -154,3 +154,4 @@ namespace NuclearEngine
 		}
 	}
 }
+#endif

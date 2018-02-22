@@ -25,7 +25,7 @@ namespace NuclearEngine
 
 		};
 
-		class NEAPI RenderSystem : public Core::System<RenderSystem> {
+		class RenderSystem : public Core::System<RenderSystem> {
 		public:
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc());
 			~RenderSystem();
@@ -61,3 +61,8 @@ namespace NuclearEngine
 
 	}
 }
+
+//Implementation (Required since EntityX and C++ Templates doesn't play nicely with DLL Export)
+#define RenderSystemImpl
+#include "RenderSystemImpl.inl"
+#undef RenderSystemImpl

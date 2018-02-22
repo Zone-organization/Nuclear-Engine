@@ -1,7 +1,6 @@
 #pragma once
 #include "Common.h"
 
-
 struct EventComponentReciever : public Core::Receiver<EventComponentReciever> {
 	void receive(const Core::ComponentAddedEvent<Components::GameObject> &shit)
 	{
@@ -46,6 +45,7 @@ public:
 		Systems::RenderSystemDesc desc;
 		desc.Light_Rendering_Tech = &lighttech;
 		Renderer = systems.Add<Systems::RenderSystem>(desc);
+		
 		systems.Configure();
 		
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
@@ -78,7 +78,7 @@ public:
 		Components::Model::CreateSphere(&lamp, Textures);
 		lamp.Initialize(&Renderer->GetShader());
 
-		object.SetModel(&Cube);	
+		object.SetModel(&lamp);
 		child.SetModel(&lamp);
 
 		events.Subscribe<Core::ComponentAddedEvent<Components::GameObject>>(reciever);
@@ -87,7 +87,7 @@ public:
 		entity = entities.Create();
 
 		entity.Assign<Components::GameObject>(object);
-		entity.Assign<Components::Model>(lamp);
+		systems.Update_All(0.0f);
 
 		//object.SetModel(&lamp);
 		ImGui::StyleColorsDark();
@@ -163,6 +163,7 @@ public:
 		Renderer->GetShader().Bind();
 		states.DefaultSampler.PSBind(0);
 
+		//object.GetModel()->Draw();
 		systems.Update_All(deltatime);
 
 		//object.Render();
