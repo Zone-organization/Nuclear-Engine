@@ -21,12 +21,12 @@ protected:
 
 	Components::FlyCamera Camera;
 	API::CommonStates states;
-	Core::Entity entity;
+	Core::Entity ECube;
+	Core::Entity ELamp;
+
 	Components::Model Cube;
 	Components::Model lamp;
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	Components::GameObject child;
-	Components::GameObject object;
 
 	Shading::Techniques::NoLight lighttech;
 	float lastX = _Width_ / 2.0f;
@@ -78,15 +78,23 @@ public:
 		Components::Model::CreateSphere(&lamp, Textures);
 		lamp.Initialize(&Renderer->GetShader());
 
-		object.SetModel(&lamp);
-		child.SetModel(&lamp);
+		Components::GameObject GOCube;
+		Components::GameObject GOLamp;
+
+		//Configure the "3D" GameObject
+		GOCube.SetModel(&Cube);
+		GOLamp.SetModel(&lamp);
+		GOCube.GetTransformComponent()->SetPosition(Math::Vector3(-1.5f, -2.2f, -2.5f));
+		GOLamp.GetTransformComponent()->SetPosition(Math::Vector3(2.4f, -0.4f, -3.5f));
 
 		events.Subscribe<Core::ComponentAddedEvent<Components::GameObject>>(reciever);
+		
+		ECube = entities.Create();
+		ECube.Assign<Components::GameObject>(GOCube);
 
+		ELamp = entities.Create();
+		ELamp.Assign<Components::GameObject>(GOLamp);
 
-		entity = entities.Create();
-
-		entity.Assign<Components::GameObject>(object);
 		systems.Update_All(0.0f);
 
 		//object.SetModel(&lamp);
@@ -158,17 +166,12 @@ public:
 		
 
 		Math::Matrix4 CubeMatrix;
-		//CubeMatrix = Math::Translate(CubeMatrix, Math::Vector3(3.0f, 0.0f, 0.0f));
-		//Camera.SetModelMatrix(CubeMatrix);
+
 		Renderer->GetShader().Bind();
 		states.DefaultSampler.PSBind(0);
 
-		//object.GetModel()->Draw();
 		systems.Update_All(deltatime);
-
-		//object.Render();
-		//Cube.Draw();
-
+		
 		ShowOverlay(true);
 
 		ImGui::Render();

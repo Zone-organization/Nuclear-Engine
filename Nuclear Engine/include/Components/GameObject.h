@@ -2,20 +2,20 @@
 #include <NE_Common.h>
 #include <Components\Model.h>
 #include <Components\Transform.h>
-
+#include <Core\Entity.h>
 namespace NuclearEngine
 {
 	namespace Components
 	{
-		class NEAPI GameObject
+		class NEAPI GameObject : public Core::Component<GameObject>
 		{
 		public:
-			GameObject() {}
-			~GameObject() {}
+			void SetModel(Components::Model *model);
+			Components::Model *GetModel();
+			void SetTransform(Transform transform);
 
-			void SetModel(Components::Model *m_model);
-			Components::Model * GetModel();
-			Transform* GetTransform();
+			Transform* GetTransformComponent();
+
 		private:
 			Components::Model *m_model;
 			Transform m_transform;

@@ -9,7 +9,6 @@
 namespace NuclearEngine {
 
 	namespace Components {
-
 		struct NEAPI Vertex
 		{
 			Vertex()
@@ -70,13 +69,9 @@ namespace NuclearEngine {
 			~Mesh();
 			void Initialize(API::Shader* _shader);
 			void Release();
+
 			// render the mesh
 			void Draw();
-
-		private:
-			// bind appropriate textures
-			unsigned int diffuseNr = 1;
-			unsigned int specularNr = 1;
 
 			MeshData data;
 			unsigned int IndicesCount = 0;
@@ -84,7 +79,6 @@ namespace NuclearEngine {
 			API::IndexBuffer IBO;
 			API::VertexBuffer VBO;
 			bool Init = false;
-			bool DrewBefore = false;
 		};
 	}
 }

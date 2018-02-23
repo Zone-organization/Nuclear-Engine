@@ -40,10 +40,16 @@ namespace NuclearEngine
 
 			void Bake();
 
-			void Render_Light();
+			//Main Rendering Function
+			void Render();
+			// Render A GameObject Component instantly
+			void InstantRender(Components::GameObject* object); 
+			// Render A Mesh Component instantly
+			void InstantRender(Components::Mesh* mesh);
 
-			//Updating the render system is rendering it
+			//Update Functions
 			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;
+			void Update_Light();
 		private:
 			void Calculate_Light_CB_Size();
 
@@ -52,7 +58,7 @@ namespace NuclearEngine
 			size_t NE_Light_CB_Size;
 			size_t NUM_OF_LIGHT_VECS;
 			Shading::Technique* Light_Rendering_Tech;
-			Components::GenericCamera* Camera;
+			Components::GenericCamera* ActiveCamera;
 			std::vector<Components::DirectionalLight*> DirLights;
 			std::vector<Components::PointLight*> PointLights;
 			std::vector<Components::SpotLight*> SpotLights;

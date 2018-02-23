@@ -1,9 +1,11 @@
-#ifdef RenderSystemImpl
+#ifndef RenderSystemImpl
+#include <Systems\RenderSystem.h>
+#else
 #include <Core\FileSystem.h>
 #include <Shading\Techniques\NoLight.h>
 #include <API\ConstantBuffer.h>
 #include <API\ShaderCompiler.h>
-
+#include <Core\Context.h>
 namespace NuclearEngine
 {
 	namespace Systems
@@ -11,7 +13,7 @@ namespace NuclearEngine
 		RenderSystem::RenderSystem(const RenderSystemDesc & desc)
 		{
 			Light_Rendering_Tech = nullptr;
-			Camera = nullptr;
+			ActiveCamera = &Components::GenericCamera();
 			this->Light_Rendering_Tech = desc.Light_Rendering_Tech;
 
 			this->status = RenderSystemStatus::RequireBaking;
@@ -19,11 +21,11 @@ namespace NuclearEngine
 		RenderSystem::~RenderSystem()
 		{
 			Light_Rendering_Tech = nullptr;
-			Camera = nullptr;
+			ActiveCamera = nullptr;
 		}
 		void RenderSystem::SetCamera(Components::GenericCamera * camera)
 		{
-			this->Camera = camera;
+			this->ActiveCamera = camera;
 		}
 		API::Shader RenderSystem::GetShader()
 		{
@@ -76,9 +78,9 @@ namespace NuclearEngine
 
 			API::ConstantBuffer::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
 
-			if (this->Camera != nullptr)
+			if (this->ActiveCamera != nullptr)
 			{
-				this->Shader.SetConstantBuffer(&this->Camera->GetCBuffer(), API::ShaderType::Vertex);
+				this->Shader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer(), API::ShaderType::Vertex);
 			}
 			else
 			{
@@ -90,12 +92,12 @@ namespace NuclearEngine
 			}
 		}
 
-		void RenderSystem::Render_Light()
+		void RenderSystem::Update_Light()
 		{
 			std::vector<Math::Vector4> LightsBuffer;
 			//LightsBuffer.reserve(NUM_OF_LIGHT_VECS);
 
-			LightsBuffer.push_back(Math::Vector4(Camera->GetPosition(), 1.0f));
+			LightsBuffer.push_back(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
 
 			for (size_t i = 0; i < DirLights.size(); i++)
 			{
@@ -120,17 +122,52 @@ namespace NuclearEngine
 			NE_Light_CB.Update(LightsBuffer.data(), NE_Light_CB_Size);
 		}
 
+		void RenderSystem::InstantRender(Components::GameObject * object)
+		{
+			object->GetTransformComponent()->Update();
+			ActiveCamera->SetModelMatrix(object->GetTransformComponent()->GetTransform());
+			for (size_t i = 0; i< object->GetModel()->Meshes.size(); i++)
+			{	
+				InstantRender(&object->GetModel()->Meshes.at(i));
+			}
+		}
+		 void RenderSystem::InstantRender(Components::Mesh * mesh)
+		{
+			//Lil hack to ensure only one rendering texture is bound
+			//TODO: Support Multi-Texture Models
+			bool diffusebound = false;
+			bool specularbound = false;
+			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
+			{
+
+				if (mesh->data.textures[i].type == Components::MeshTextureType::Diffuse)
+				{
+					if (diffusebound != true)
+					{
+						mesh->data.textures[i].Texture.PSBind(0);
+						diffusebound = true;
+					}
+				}
+				else if (mesh->data.textures[i].type == Components::MeshTextureType::Specular)
+				{
+					if (specularbound != true)
+					{
+						mesh->data.textures[i].Texture.PSBind(1);
+						specularbound = true;
+					}
+				}
+			}
+			mesh->VBO.Bind();
+			mesh->IBO.Bind();
+			Core::Context::DrawIndexed(mesh->IndicesCount);
+		}
 		void RenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)
 		{
-			es.each<Components::GameObject>([dt](Core::Entity entity, Components::GameObject& obj)
+			Core::ComponentHandle<Components::GameObject> ModelObject;
+			for (Core::Entity entity : es.entities_with_components(ModelObject))
 			{
-				obj.GetModel()->Draw();
-			});
-
-			es.each<Components::Model>([dt](Core::Entity entity, Components::Model& obj)
-			{
-				obj.Draw();
-			});
+				InstantRender(ModelObject.Get());
+			}
 		}
 		void RenderSystem::Calculate_Light_CB_Size()
 		{

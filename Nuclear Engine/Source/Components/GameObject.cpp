@@ -3,17 +3,21 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		void GameObject::SetModel(Components::Model * model)
-		{
-			m_model = model;
-		}
-		Components::Model * GameObject::GetModel()
+		inline Components::Model * GameObject::GetModel()
 		{
 			return m_model;
 		}
-		Transform * GameObject::GetTransform()
+		inline void GameObject::SetTransform(Transform transform)
+		{
+			m_transform = transform;
+		}
+		inline Transform * GameObject::GetTransformComponent()
 		{
 			return &m_transform;
+		}
+		inline void GameObject::SetModel(Components::Model * model)
+		{
+			m_model = model;
 		}
 	}
 }
