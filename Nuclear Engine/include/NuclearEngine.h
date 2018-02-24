@@ -17,6 +17,7 @@ _____________/BOOOM\_____________
 #include <Core/Game.h>
 #include <Core/FileSystem.h>
 //--Entity Component System Headers
+#include <Core/Scene.h>
 #include <Core/Event.h>
 #include <Core/Entity.h>
 #include <Core/System.h>

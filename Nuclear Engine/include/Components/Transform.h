@@ -33,7 +33,7 @@ namespace NuclearEngine
 		private:
 			Math::Matrix4 m_Transform;
 			Math::Vector3 m_Position = Math::Vector3(0.0f);
-			Math::Vector4 m_Rotation; // axis-angle for now; test w/ quaternions soon!
+			Math::Vector4 m_Rotation = Math::Vector4(0.0f, 0.0f, 0.0f,1.0f); // axis-angle for now; test w/ quaternions soon!
 			Math::Vector3 m_Scale = Math::Vector3(1.0f);
 			bool m_dirty;
 		};

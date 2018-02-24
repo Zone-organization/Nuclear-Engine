@@ -3,6 +3,7 @@
 #include <Components\Model.h>
 #include <Components\Transform.h>
 #include <Core\Entity.h>
+#include <Components\ModelRendererDesc.h>
 namespace NuclearEngine
 {
 	namespace Components

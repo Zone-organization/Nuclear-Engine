@@ -10,8 +10,8 @@ namespace NuclearEngine
 	{
 		class NEAPI Scene {
 		public:
-
-
+			Scene();
+			~Scene();
 
 			//ECS impl.
 			EventManager Events;

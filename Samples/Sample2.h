@@ -4,6 +4,9 @@
 class Sample2 : public Core::Game
 {
 protected:
+	std::shared_ptr<Systems::RenderSystem> Renderer;
+
+
 	bool renderboxes = true;
 	bool renderspheres = true;
 	bool renderskybox = true;
@@ -17,10 +20,9 @@ protected:
 
 	Components::FlyCamera Camera;
 	Shading::Techniques::PhongShading LightShading;
-	Components::Model Cube;
-	Components::Model Lamp;
+	Components::Model CubeModel;
+	Components::Model LampModel;
 
-	Renderers::Renderer3D Renderer;
 	Components::DirectionalLight dirlight;
 	Components::PointLight pointlight1;
 	Components::PointLight pointlight2;
@@ -36,6 +38,14 @@ protected:
 	Components::Model Nanosuit;
 
 	Components::Skybox Skybox;
+
+	//ECS
+	Core::Scene SampleScene;
+	Core::Entity ECube;
+	Core::Entity ELamp;
+
+	Components::GameObject GOCube;
+	Components::GameObject GOLamp;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] = 
@@ -72,26 +82,9 @@ public:
 	Sample2()
 	{
 	}
-	void Load()
+
+	void SetupLights()
 	{
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
-
-		Renderer.SetCamera(&Camera);
-		Renderer.AddLight(&spotLight);
-		Renderer.AddLight(&pointlight1);
-		Renderer.AddLight(&pointlight2);
-		Renderer.AddLight(&pointlight3);
-		Renderer.AddLight(&pointlight4);
-		Renderer.AddLight(&pointlight5);
-		Renderer.AddLight(&pointlight6);
-		Renderer.AddLight(&pointlight7);
-		Renderer.AddLight(&pointlight8);
-		Renderer.AddLight(&pointlight9);
-
-		Renderer.AddLight(&dirlight);
-		Renderer.SetTechnique(&LightShading);
-		Renderer.Bake();
-
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		dirlight.SetColor(API::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
@@ -106,7 +99,7 @@ public:
 
 		pointlight4.SetPosition(pointLightPositions[3]);
 		pointlight4.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-		
+
 		pointlight5.SetPosition(pointLightPositions[4]);
 		pointlight5.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
@@ -121,16 +114,20 @@ public:
 
 		pointlight9.SetPosition(pointLightPositions[8]);
 		pointlight9.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
+	}
+	void SetupTextures()
+	{
 		API::Texture_Desc Desc;
-		//Desc.Filter = API::TextureFilter::Trilinear;
-		//Desc.Wrap = API::TextureWrap::Repeat;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &DiffuseTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_specular.png", &SpecularTex, Desc);
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
+	}
+	void SetupAssets()
+	{
+		SetupTextures();
 
 		std::vector<Components::MeshTexture> Textures;
 		Components::MeshTexture DiffuseCTex;
@@ -144,8 +141,8 @@ public:
 		Textures.push_back(DiffuseCTex);
 		Textures.push_back(SpecularCTex);
 
-		Components::Model::CreateCube(&Cube, Textures);
-		Cube.Initialize(&Renderer.GetShader());
+		Components::Model::CreateCube(&CubeModel, Textures);
+		CubeModel.Initialize(&Renderer->GetShader());
 
 		Components::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
@@ -155,14 +152,15 @@ public:
 		WhiteCTex.type = Components::MeshTextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 
-		Components::Model::CreateSphere(&Lamp, spheretextures);
-		Lamp.Initialize(&Renderer.GetShader());
+		Components::Model::CreateSphere(&LampModel, spheretextures);
+		LampModel.Initialize(&Renderer->GetShader());
 
 		ModelLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &Nanosuit, ModelDesc);
-		Nanosuit.Initialize(&Renderer.GetShader());
+		Nanosuit.Initialize(&Renderer->GetShader());
+
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
 		{
@@ -175,8 +173,50 @@ public:
 		};
 
 		Skybox.Create(&Camera, SkyBoxTexturePaths);
+	}
+	void SetupEntities()
+	{
+		GOCube.SetModel(&CubeModel);
+		ECube = SampleScene.Entities.Create();
+		ECube.Assign<Components::GameObject>(GOCube);
+		GOLamp.SetModel(&LampModel);
+		ELamp = SampleScene.Entities.Create();
+		ELamp.Assign<Components::GameObject>(GOLamp);
+	}
+	void Load()
+	{
+		Systems::RenderSystemDesc desc;
+		desc.Light_Rendering_Tech = &LightShading;
+		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
+		SampleScene.Systems.Configure();
+
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+
+		Renderer->SetCamera(&Camera);
+		Renderer->AddLight(&spotLight);
+		Renderer->AddLight(&pointlight1);
+		Renderer->AddLight(&pointlight2);
+		Renderer->AddLight(&pointlight3);
+		Renderer->AddLight(&pointlight4);
+		Renderer->AddLight(&pointlight5);
+		Renderer->AddLight(&pointlight6);
+		Renderer->AddLight(&pointlight7);
+		Renderer->AddLight(&pointlight8);
+		Renderer->AddLight(&pointlight9);
+		Renderer->AddLight(&dirlight);
+		Renderer->Bake();
+
+		SetupLights();
+
+		SetupAssets();
+	
+		SetupEntities();
+
+
 		ImGuiIO& io = ImGui::GetIO();
 		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 16.0f);
+
+		SampleScene.Entities;
 
 		ImGui::StyleColorsDark();
 
@@ -247,7 +287,7 @@ public:
 		ImGui::NE_NewFrame();
 
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		Renderer.GetShader().Bind();
+		Renderer->GetShader().Bind();
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
 		if (renderboxes)
@@ -261,7 +301,7 @@ public:
 				model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
 				Camera.SetModelMatrix(model);
 
-				Cube.Draw();
+				Renderer->InstantRender(&GOCube);
 			}
 		}
 		if (renderspheres)
@@ -272,7 +312,7 @@ public:
 				model = Math::Translate(model, pointLightPositions[i]);
 				model = Math::Scale(model, Math::Vector3(0.25f));
 				Camera.SetModelMatrix(model);
-				Lamp.Draw();
+				//Lamp.Draw();
 			}
 		}
 		if (rendernanosuit)
@@ -286,7 +326,7 @@ public:
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
 	
-		Renderer.Render_Light();
+		Renderer->Update_Light();
 
 		if (renderskybox)
 		{

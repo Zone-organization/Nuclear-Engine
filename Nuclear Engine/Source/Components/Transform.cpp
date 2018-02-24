@@ -76,7 +76,7 @@ namespace NuclearEngine
 			{
 				// first scale, then rotate, then translation
 				m_Transform = Math::Translate(m_Position);
-				//m_Transform = Math::Scale(m_Transform, m_Scale); // TODO: order is off here for some reason, figure out why
+				m_Transform = Math::Scale(m_Transform, m_Scale);
 				//m_Transform = Math::Rotate(m_Transform, m_Rotation.xyz, m_Rotation.w);
 
 				m_dirty = false;

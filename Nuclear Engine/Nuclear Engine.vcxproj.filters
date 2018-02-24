@@ -117,9 +117,11 @@
     <ClInclude Include="include\Utilities\Signal.h" />
     <ClInclude Include="include\Utilities\Pool.h" />
     <ClInclude Include="include\Core\Scene.h" />
-    <ClInclude Include="include\Components\GameObject.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
+    <ClInclude Include="include\Components\GameObject.h" />
+    <ClInclude Include="include\Components\ModelRendererDesc.h" />
+    <ClInclude Include="include\Core\ComponentDependency.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -203,5 +205,6 @@
     <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\Entity.cpp" />
     <ClCompile Include="Source\Components\GameObject.cpp" />
+    <ClCompile Include="Source\Core\Scene.cpp" />
   </ItemGroup>
 </Project>
