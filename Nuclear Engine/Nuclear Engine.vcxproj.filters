@@ -14,14 +14,12 @@
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\Components\Light.h" />
-    <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="include\Shading\Technique.h" />
     <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
     <ClInclude Include="include\Shading\Techniques\NoLight.h" />
-    <ClInclude Include="include\Renderers\Renderer3D.h" />
     <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Renderers\SpriteRenderer.h" />
@@ -119,9 +117,9 @@
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
-    <ClInclude Include="include\Components\GameObject.h" />
-    <ClInclude Include="include\Components\ModelRendererDesc.h" />
     <ClInclude Include="include\Core\ComponentDependency.h" />
+    <ClInclude Include="include\Components\ModelRenderDesc.h" />
+    <ClInclude Include="include\AssetManager\ModelAsset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -135,12 +133,10 @@
     <ClCompile Include="Source\Core\Context.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
-    <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Shading\Technique.cpp" />
     <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
-    <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\API\InputLayout.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
@@ -204,7 +200,7 @@
     <ClCompile Include="Source\Core\System.cpp" />
     <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\Entity.cpp" />
-    <ClCompile Include="Source\Components\GameObject.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
+    <ClCompile Include="Source\AssetManager\ModelAsset.cpp" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include <API\ConstantBuffer.h>
 #include <API\ShaderCompiler.h>
 #include <Core\Context.h>
+#include <Components\Transform.h>
 namespace NuclearEngine
 {
 	namespace Systems
@@ -122,16 +123,15 @@ namespace NuclearEngine
 			NE_Light_CB.Update(LightsBuffer.data(), NE_Light_CB_Size);
 		}
 
-		void RenderSystem::InstantRender(Components::GameObject * object)
+		void RenderSystem::InstantRender(Components::Model * object)
 		{
-			object->GetTransformComponent()->Update();
-			ActiveCamera->SetModelMatrix(object->GetTransformComponent()->GetTransform());
-			for (size_t i = 0; i< object->GetModel()->Meshes.size(); i++)
+			
+			for (size_t i = 0; i< object->GetAsset()->Meshes.size(); i++)
 			{	
-				InstantRender(&object->GetModel()->Meshes.at(i));
+				InstantRender(&object->GetAsset()->Meshes.at(i));
 			}
 		}
-		 void RenderSystem::InstantRender(Components::Mesh * mesh)
+		 void RenderSystem::InstantRender(Assets::Mesh * mesh)
 		{
 			//Lil hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
@@ -140,7 +140,7 @@ namespace NuclearEngine
 			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
-				if (mesh->data.textures[i].type == Components::MeshTextureType::Diffuse)
+				if (mesh->data.textures[i].type == Assets::MeshTextureType::Diffuse)
 				{
 					if (diffusebound != true)
 					{
@@ -148,7 +148,7 @@ namespace NuclearEngine
 						diffusebound = true;
 					}
 				}
-				else if (mesh->data.textures[i].type == Components::MeshTextureType::Specular)
+				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Specular)
 				{
 					if (specularbound != true)
 					{
@@ -163,9 +163,17 @@ namespace NuclearEngine
 		}
 		void RenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)
 		{
-			Core::ComponentHandle<Components::GameObject> ModelObject;
+			Core::ComponentHandle<Components::Model> ModelObject;
 			for (Core::Entity entity : es.entities_with_components(ModelObject))
 			{
+				auto transform = entity.GetComponent<Components::Transform>();
+					
+				if (transform)
+				{
+					transform.Get()->Update();
+					ActiveCamera->SetModelMatrix(transform.Get()->GetTransform());
+				}
+
 				InstantRender(ModelObject.Get());
 			}
 		}

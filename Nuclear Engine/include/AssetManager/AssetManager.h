@@ -4,8 +4,8 @@
 #include <array>
 #include <string>
 namespace NuclearEngine {
-	namespace Components {
-		class Model;
+	namespace Assets {
+		class ModelAsset;
 	}
 
 	struct ModelLoadingDesc 
@@ -18,7 +18,7 @@ namespace NuclearEngine {
 	public:
 
 
-		static bool LoadModel(std::string Path, Components::Model* model, const ModelLoadingDesc& = ModelLoadingDesc());
+		static bool LoadModel(std::string Path, Assets::ModelAsset* model, const ModelLoadingDesc& = ModelLoadingDesc());
 
 		static API::Texture_Data LoadTextureFromFile(std::string Path, const API::Texture_Desc& Desc);
 		static void CreateTextureFromFile(std::string Path, API::Texture* texture, const API::Texture_Desc& Desc);

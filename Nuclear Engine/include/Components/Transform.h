@@ -1,13 +1,14 @@
 #pragma once
 #include <NE_Common.h>
 #include <Math\Math.h>
+#include <Core\Entity.h>
 
 namespace NuclearEngine
 {
 	namespace Components
 	{			
 		// scene node transform
-		class NEAPI Transform
+		class NEAPI Transform : public Core::Component<Transform>
 		{
 		public:
 			Transform();

@@ -3,7 +3,7 @@
 #include <Core/Entity.h>
 #include "Core/Event.h"
 #include "Core/System.h"
-#include <Components\GameObject.h>
+#include <Components\Model.h>
 #include <Shading\Technique.h>
 #include <Components\GenericCamera.h>
 #include <Components\Light.h>
@@ -42,10 +42,10 @@ namespace NuclearEngine
 
 			//Main Rendering Function
 			void Render();
-			// Render A GameObject Component instantly
-			void InstantRender(Components::GameObject* object); 
+			// Render A Model Component instantly
+			void InstantRender(Components::Model* object);
 			// Render A Mesh Component instantly
-			void InstantRender(Components::Mesh* mesh);
+			void InstantRender(Assets::Mesh* mesh);
 
 			//Update Functions
 			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;

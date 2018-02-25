@@ -1,7 +1,6 @@
 ﻿#define NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
 #include "Common.h"
 #include "Sample1.h"
-#include "Sample2.h"
 #include "Playground.h"
 #include "Game_Breakout.h"
 #include <iostream>
@@ -35,8 +34,7 @@ int main(int argc, char* argv[])
 		<< "-----[Select the sample you want]-----\n"
 
 		<< "---High level engine demos:\n"
-		<< "1) Sample 1 - Dynamic Textured Cube & Nanosuit - introduction to Camera & Input & Renderer3D\n"
-		<< "2) Sample 2 - Lighted Scene - introduction to Lights & Techniques\n"
+		<< "1) Sample 1 - Lighted Scene - introduction to Camera & Input & ECS & RenderSystem\n"
 
 		<< "---Game demos:\n"
 		<< "a) Breakout - 2D\n"
@@ -50,11 +48,6 @@ int main(int argc, char* argv[])
 	if (choice == '1') {
 		Start();
 		Sample1 demo;
-		Core::Engine::Run(&demo);
-	}
-	else if (choice == '2') {
-		Start();
-		Sample2 demo;
 		Core::Engine::Run(&demo);
 	}
 	else if (choice == 'a') {

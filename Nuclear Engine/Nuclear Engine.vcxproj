@@ -374,12 +374,11 @@
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\ShaderCompiler.h" />
     <ClInclude Include="include\API\VertexShader.h" />
-    <ClInclude Include="include\Components\GameObject.h" />
+    <ClInclude Include="include\AssetManager\ModelAsset.h" />
     <ClInclude Include="include\Components\GUI\imconfig.h" />
     <ClInclude Include="include\Components\GUI\imgui.h" />
-    <ClInclude Include="include\Components\Mesh.h" />
     <ClInclude Include="include\Components\Model.h" />
-    <ClInclude Include="include\Components\ModelRendererDesc.h" />
+    <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\Core\ComponentDependency.h" />
@@ -421,7 +420,6 @@
     <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
     <ClInclude Include="include\API\OpenGL\GLCommon.h" />
     <ClInclude Include="include\Core\Application.h" />
-    <ClInclude Include="include\Renderers\Renderer3D.h" />
     <ClInclude Include="include\Renderers\SpriteRenderer.h" />
     <ClInclude Include="include\AssetManager\AssetManager.h" />
     <ClInclude Include="include\Shading\Material.h" />
@@ -498,10 +496,9 @@
     <ClCompile Include="Source\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\API\VertexShader.cpp" />
     <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
-    <ClCompile Include="Source\Components\GameObject.cpp" />
+    <ClCompile Include="Source\AssetManager\ModelAsset.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
-    <ClCompile Include="Source\Components\Mesh.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Components\Transform.cpp" />
@@ -529,7 +526,6 @@
     <ClCompile Include="Source\Platform\Timer.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
-    <ClCompile Include="Source\Renderers\Renderer3D.cpp" />
     <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />

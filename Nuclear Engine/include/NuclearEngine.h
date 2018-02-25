@@ -27,11 +27,11 @@ _____________/BOOOM\_____________
 #include <Platform\Timer.h>
 #include <Platform\Input.h>
 
-//# Managers Headers
+//# Assets & their managers Headers
 #include <AssetManager\AssetManager.h>
+#include <AssetManager\ModelAsset.h>
 
 //# Renderers Headers
-#include <Renderers\Renderer3D.h>
 #include <Renderers\SpriteRenderer.h>
 
 //# Shading Headers
@@ -69,7 +69,6 @@ _____________/BOOOM\_____________
 
 
 //# Engine Components Headers (Can be used as Components or Entities!)
-#include <Components\GameObject.h>
 #include <Components\GenericCamera.h>
 #include <Components\FlyCamera.h>
 #include <Components\Skybox.h>

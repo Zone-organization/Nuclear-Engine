@@ -2,10 +2,10 @@
 #include "Common.h"
 
 struct EventComponentReciever : public Core::Receiver<EventComponentReciever> {
-	void receive(const Core::ComponentAddedEvent<Components::GameObject> &shit)
-	{
-		std::cout << "Working.\n";
-	}
+	//void receive(const Core::ComponentAddedEvent<Components::GameObject> &shit)
+	//{
+	//	std::cout << "Working.\n";
+	//}
 
 };
 class Playground : public Core::Game
@@ -60,14 +60,14 @@ public:
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
 
-		std::vector<Components::MeshTexture> Textures;
-		Components::MeshTexture DiffuseTex;
+		std::vector<Assets::MeshTexture> Textures;
+		Assets::MeshTexture DiffuseTex;
 		DiffuseTex.Texture = WoodenBoxTex;
-		DiffuseTex.type = Components::MeshTextureType::Diffuse;
+		DiffuseTex.type = Assets::MeshTextureType::Diffuse;
 		Textures.push_back(DiffuseTex);
 
-		Components::Model::CreateCube(&Cube, Textures);
-		Cube.Initialize(&Renderer->GetShader());
+		//Assets::ModelAsset::CreateCube(&Cube, Textures);
+		//Cube.Initialize(&Renderer->GetShader());
 
 		AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 
@@ -75,25 +75,25 @@ public:
 		DiffuseTex.Texture = WhiteTex;
 		Textures.push_back(DiffuseTex);
 
-		Components::Model::CreateSphere(&lamp, Textures);
-		lamp.Initialize(&Renderer->GetShader());
+		//Assets::ModelAsset::CreateSphere(&lamp, Textures);
+		//lamp.Initialize(&Renderer->GetShader());
 
-		Components::GameObject GOCube;
-		Components::GameObject GOLamp;
+		//Components::GameObject GOCube;
+		//Components::GameObject GOLamp;
 
 		//Configure the "3D" GameObject
-		GOCube.SetModel(&Cube);
-		GOLamp.SetModel(&lamp);
-		GOCube.GetTransformComponent()->SetPosition(Math::Vector3(-1.5f, -2.2f, -2.5f));
-		GOLamp.GetTransformComponent()->SetPosition(Math::Vector3(2.4f, -0.4f, -3.5f));
+		//GOCube.SetModel(&Cube);
+		//GOLamp.SetModel(&lamp);
+		//GOCube.GetTransformComponent()->SetPosition(Math::Vector3(-1.5f, -2.2f, -2.5f));
+		//GOLamp.GetTransformComponent()->SetPosition(Math::Vector3(2.4f, -0.4f, -3.5f));
 
-		events.Subscribe<Core::ComponentAddedEvent<Components::GameObject>>(reciever);
+		//events.Subscribe<Core::ComponentAddedEvent<Components::GameObject>>(reciever);
 		
 		ECube = entities.Create();
-		ECube.Assign<Components::GameObject>(GOCube);
+		//ECube.Assign<Components::GameObject>(GOCube);
 
-		ELamp = entities.Create();
-		ELamp.Assign<Components::GameObject>(GOLamp);
+		//ELamp = entities.Create();
+		//ELamp.Assign<Components::GameObject>(GOLamp);
 
 		systems.Update_All(0.0f);
 
