@@ -6,7 +6,7 @@ class Sample1 : public Core::Game
 protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-
+	bool rendersystem = true;
 	bool renderboxes = true;
 	bool renderspheres = true;
 	bool renderskybox = true;
@@ -45,6 +45,7 @@ protected:
 
 	//ECS
 	Core::Scene SampleScene;
+	Core::Entity ESkybox;
 	Core::Entity ECube;
 	Core::Entity ELamp;
 	Core::Entity ENanosuit;
@@ -177,20 +178,22 @@ public:
 			std::string("Assets/Common/Skybox/front.jpg"),
 			std::string("Assets/Common/Skybox/back.jpg")
 		};
-
-		Skybox.Create(&Camera, SkyBoxTexturePaths);
+		
+		Skybox.Create(&Skybox, &Camera, SkyBoxTexturePaths);
 	}
 	void SetupEntities()
 	{
 		CubeModel.SetAsset(&CubeAsset);
-		ECube = SampleScene.Entities.Create();
-		ECube.Assign<Components::Model>(CubeModel);
+		//ECube = SampleScene.Entities.Create();
+		//ECube.Assign<Components::Model>(CubeModel);
 		LampModel.SetAsset(&SphereAsset);
-		ELamp = SampleScene.Entities.Create();
-		ELamp.Assign<Components::Model>(LampModel);
+		//ELamp = SampleScene.Entities.Create();
+		//ELamp.Assign<Components::Model>(LampModel);
 		NanosuitModel.SetAsset(&NanosuitAsset);
-		ENanosuit = SampleScene.Entities.Create();
-		ENanosuit.Assign<Components::Model>(NanosuitModel);
+		//ENanosuit = SampleScene.Entities.Create();
+		//ENanosuit.Assign<Components::Model>(NanosuitModel);
+		ESkybox = SampleScene.Entities.Create();
+		ESkybox.Assign<Components::Skybox>(Skybox);
 	}
 	void Load()
 	{
@@ -290,7 +293,7 @@ public:
 		}
 		ImGui::PopStyleColor();
 	}
-	void Render(float) override
+	void Render(float dt) override
 	{
 		Core::Context::Begin();
 		ImGui::NE_NewFrame();
@@ -299,53 +302,60 @@ public:
 		Renderer->GetShader().Bind();
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
-		if (renderboxes)
-		{
-			for (unsigned int i = 0; i < 10; i++)
+		//if (!rendersystem)
+		//{
+			if (renderboxes)
 			{
-				// calculate the model matrix for each object and pass it to shader before drawing
-				Math::Matrix4 model;
-				model = Math::Translate(model, cubePositions[i]);
-				float angle = 20.0f * i;
-				model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
-				Camera.SetModelMatrix(model);
+				for (unsigned int i = 0; i < 10; i++)
+				{
+					// calculate the model matrix for each object and pass it to shader before drawing
+					Math::Matrix4 model;
+					model = Math::Translate(model, cubePositions[i]);
+					float angle = 20.0f * i;
+					model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
+					Camera.SetModelMatrix(model);
 
-				Renderer->InstantRender(&CubeModel);
+					Renderer->InstantRender(&CubeModel);
+				}
 			}
-		}
-		if (renderspheres)
-		{
-			for (unsigned int i = 0; i < 9; i++)
+			if (renderspheres)
 			{
-				Math::Matrix4 model;
-				model = Math::Translate(model, pointLightPositions[i]);
-				model = Math::Scale(model, Math::Vector3(0.25f));
-				Camera.SetModelMatrix(model);
-				Renderer->InstantRender(&LampModel);
-				//Lamp.Draw();
+				for (unsigned int i = 0; i < 9; i++)
+				{
+					Math::Matrix4 model;
+					model = Math::Translate(model, pointLightPositions[i]);
+					model = Math::Scale(model, Math::Vector3(0.25f));
+					Camera.SetModelMatrix(model);
+					Renderer->InstantRender(&LampModel);
+					//Lamp.Draw();
+				}
 			}
-		}
-		if (rendernanosuit)
-		{
-			Math::Matrix4 NanosuitMatrix;
-			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
-			Camera.SetModelMatrix(NanosuitMatrix);
-			Renderer->InstantRender(&NanosuitModel);
+			if (rendernanosuit)
+			{
+				Math::Matrix4 NanosuitMatrix;
+				NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
+				NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
+				Camera.SetModelMatrix(NanosuitMatrix);
+				Renderer->InstantRender(&NanosuitModel);
 
-			//Nanosuit.Draw();
-		}
-		spotLight.SetPosition(Camera.GetPosition());
-		spotLight.SetDirection(Camera.GetFrontView());
-	
-		Renderer->Update_Light();
+				//Nanosuit.Draw();
+			}
+			spotLight.SetPosition(Camera.GetPosition());
+			spotLight.SetDirection(Camera.GetFrontView());
 
-		if (renderskybox)
-		{
-			Skybox.Render();
-		}
+			Renderer->Update_Light();
+
+			if (renderskybox)
+			{
+				//Skybox.Render();
+			}
+		//}
+		//else {
+			SampleScene.Systems.Update_All(dt);
+		//}
 		states.EnabledDepth_DisabledStencil.Bind();
 
+		ImGui::Checkbox("System Render", &rendersystem);
 		ImGui::Checkbox("Render Boxes", &renderboxes);
 		ImGui::Checkbox("Render Lamps Spheres", &renderspheres);
 		ImGui::Checkbox("Render Nanosuit", &rendernanosuit);

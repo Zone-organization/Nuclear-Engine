@@ -7,6 +7,8 @@
 #include <API\ShaderCompiler.h>
 #include <Core\Context.h>
 #include <Components\Transform.h>
+#include <Components\Skybox.h>
+
 namespace NuclearEngine
 {
 	namespace Systems
@@ -175,6 +177,17 @@ namespace NuclearEngine
 				}
 
 				InstantRender(ModelObject.Get());
+			}
+
+			Core::ComponentHandle<Components::Skybox> skybox;
+			for (Core::Entity entity : es.entities_with_components(skybox))
+			{				
+				skybox.Get()->m_vb.Bind();
+				skybox.Get()->m_ds_state.Bind();
+				skybox.Get()->m_shader.Bind();
+				skybox.Get()->m_texcube.PSBind(0);
+				skybox.Get()->m_sampler.PSBind(0);
+				Core::Context::Draw(36);
 			}
 		}
 		void RenderSystem::Calculate_Light_CB_Size()
