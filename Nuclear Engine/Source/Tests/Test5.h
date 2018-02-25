@@ -249,6 +249,7 @@ public:
 		ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
 		ScreenTexDesc.Type = API::TextureType::Texture2D;
 		ScreenTexDesc.RenderTarget = true;
+		ScreenTexDesc.GenerateMipMaps = false;
 
 		API::Texture_Data Data;
 		Data.Img_Data_Buf = NULL;
