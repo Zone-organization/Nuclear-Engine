@@ -166,19 +166,10 @@ namespace NuclearEngine
 				texDesc.SampleDesc.Quality = 0;
 				texDesc.CPUAccessFlags = 0;
 				texDesc.ArraySize = 1;
-
+				texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 
 				if (Desc.GenerateMipMaps == false)
 				{
-					if (Desc.RenderTarget == true)
-					{
-						texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-
-					}
-					else
-					{
-						texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-					}
 					texDesc.MiscFlags = 0;
 					texDesc.MipLevels = 1;
 				}

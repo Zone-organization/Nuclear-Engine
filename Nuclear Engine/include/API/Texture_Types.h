@@ -24,7 +24,6 @@ namespace NuclearEngine
 			TextureType Type = TextureType::Texture2D;
 			Format Format = Format::R8G8B8A8_UNORM;
 			bool GenerateMipMaps = true;
-			bool RenderTarget = false;
 		};
 
 		struct SamplerDesc
