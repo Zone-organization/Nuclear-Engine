@@ -31,9 +31,6 @@ _____________/BOOOM\_____________
 #include <AssetManager\AssetManager.h>
 #include <AssetManager\ModelAsset.h>
 
-//# Renderers Headers
-#include <Renderers\SpriteRenderer.h>
-
 //# Shading Headers
 #include <Shading/Material.h>
 #include <Shading/Technique.h>
@@ -58,7 +55,6 @@ _____________/BOOOM\_____________
 #include <API/RenderStates_Types.h>
 //---Shaders
 #include <API/ShaderCompiler.h>
-#include <API/Shader.h>
 #include <API/VertexShader.h>
 #include <API/PixelShader.h>
 //---Other

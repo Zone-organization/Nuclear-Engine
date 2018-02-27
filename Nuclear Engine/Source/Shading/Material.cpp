@@ -2,11 +2,11 @@
 
 namespace NuclearEngine {
 	namespace Shading {
-		void Material::SetShader(API::Shader * shader)
+		/*void Material::SetShader(API::Shader * shader)
 		{
 			m_Shader = shader;
 
-		}
+		}*/
 		void Material::SetBool(std::string name, bool value)
 		{
 		}

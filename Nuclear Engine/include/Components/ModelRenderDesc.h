@@ -11,7 +11,7 @@ namespace NuclearEngine
 		Describes how the render system should treat and render a '3D' model
 		Essential for rendering the model
 		*/
-		class NEAPI ModelRenderDesc : public Core::Component<ModelRendererDesc>
+		class NEAPI ModelRenderDesc : public Core::Component<ModelRenderDesc>
 		{
 		public:
 	

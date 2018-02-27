@@ -2,7 +2,6 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <API\DirectX\DX11Context.h>
-#include <API\DirectX\DX11Shader.h>
 #include <API\DirectX\DX11VertexShader.h>
 #include <API\InputLayout.h>
 
@@ -144,30 +143,6 @@ namespace NuclearEngine
 				}
 			}
 
-			void DX11VertexBuffer::SetInputLayout(InputLayout * layout, DX11Shader *shader)
-			{
-				D3D11_INPUT_ELEMENT_DESC* inputElementDesc = new D3D11_INPUT_ELEMENT_DESC[layout->GetBufferElement().size()];
-
-				for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
-				{
-					inputElementDesc[i].SemanticName = layout->GetBufferElement()[i].name;
-					inputElementDesc[i].SemanticIndex = layout->GetBufferElement()[i].index;
-					inputElementDesc[i].Format = GetDXDataType(layout->GetBufferElement()[i].dataType);
-					inputElementDesc[i].InputSlot = 0;
-					inputElementDesc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-					inputElementDesc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-					inputElementDesc[i].InstanceDataStepRate = 0;
-
-					stride = stride + GetDXDataTypeSizeInBytes(layout->GetBufferElement()[i].dataType);
-				}
-
-				DX11Context::GetDevice()->CreateInputLayout(inputElementDesc,
-					(unsigned int)layout->GetBufferElement().size(),
-					shader->VS_Buffer,
-					shader->VS_Size,
-					&inputLayout);
-				delete[] inputElementDesc;
-			}
 			void DX11VertexBuffer::SetInputLayout(InputLayout * layout, DX11VertexShader * shader)
 			{
 				D3D11_INPUT_ELEMENT_DESC* inputElementDesc = new D3D11_INPUT_ELEMENT_DESC[layout->GetBufferElement().size()];

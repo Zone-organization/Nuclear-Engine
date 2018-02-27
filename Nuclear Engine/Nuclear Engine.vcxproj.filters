@@ -22,7 +22,6 @@
     <ClInclude Include="include\Shading\Techniques\NoLight.h" />
     <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\Components\Sprite.h" />
-    <ClInclude Include="include\Renderers\SpriteRenderer.h" />
     <ClInclude Include="include\Math\Math.h" />
     <ClInclude Include="include\Math\Matrix.h" />
     <ClInclude Include="include\Math\Operation.h" />
@@ -36,7 +35,6 @@
     <ClInclude Include="include\API\OpenGL\GLContext.h" />
     <ClInclude Include="include\API\OpenGL\GLDepthStencilState.h" />
     <ClInclude Include="include\API\OpenGL\GLIndexBuffer.h" />
-    <ClInclude Include="include\API\OpenGL\GLShader.h" />
     <ClInclude Include="include\API\OpenGL\GLTexture.h" />
     <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
     <ClInclude Include="include\API\DirectX\DX11Common.h" />
@@ -44,7 +42,6 @@
     <ClInclude Include="include\API\DirectX\DX11Context.h" />
     <ClInclude Include="include\API\DirectX\DX11DepthStencilState.h" />
     <ClInclude Include="include\API\DirectX\DX11IndexBuffer.h" />
-    <ClInclude Include="include\API\DirectX\DX11Shader.h" />
     <ClInclude Include="include\API\DirectX\DX11Texture.h" />
     <ClInclude Include="include\API\DirectX\DX11VertexBuffer.h" />
     <ClInclude Include="include\API\ShaderCompiler.h" />
@@ -53,7 +50,6 @@
     <ClInclude Include="include\API\ConstantBuffer.h" />
     <ClInclude Include="include\API\DepthStencilState.h" />
     <ClInclude Include="include\API\IndexBuffer.h" />
-    <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\Texture.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
@@ -120,6 +116,7 @@
     <ClInclude Include="include\Core\ComponentDependency.h" />
     <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="include\AssetManager\ModelAsset.h" />
+    <ClInclude Include="Source\Tests\DirectX11Tests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -140,7 +137,6 @@
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\API\InputLayout.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
-    <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
@@ -152,20 +148,17 @@
     <ClCompile Include="Source\API\OpenGL\GLIndexBuffer.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
-    <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLDepthStencilState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Context.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11DepthStencilState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11IndexBuffer.cpp" />
-    <ClCompile Include="Source\API\DirectX\DX11Shader.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Texture.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11VertexBuffer.cpp" />
     <ClCompile Include="Source\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\DepthStencilState.cpp" />
     <ClCompile Include="Source\API\IndexBuffer.cpp" />
-    <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLError.cpp" />

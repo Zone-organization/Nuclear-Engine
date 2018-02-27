@@ -2,8 +2,6 @@
 #include <NE_Common.h>
 #include <Math\Math.h>
 #include <API\ConstantBuffer.h>
-#include <API\Shader.h>
-//#include <Components\Component.h>
 
 namespace NuclearEngine
 {

@@ -4,7 +4,9 @@
 class Test1 : public Core::Game
 {
 protected:
-	API::Shader TriangleShader;
+	API::VertexShader VShader;
+	API::PixelShader PShader;
+
 	API::VertexBuffer TriangleVB;
 
 	float vertices[18] = 
@@ -56,13 +58,17 @@ public:
 	void Load() override
 	{
 		//Load The Shader
-		API::ShaderDesc desc;
-		desc.Name = "Test1";	
-		API::CompileShader(&desc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-		API::CompileShader(&desc.PixelShaderCode, PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
+		API::VertexShader::Create(
+			&VShader,
+			&API::CompileShader(VertexShader,
+			API::ShaderType::Vertex,
+			API::ShaderLanguage::HLSL));
 
-		API::Shader::Create(&TriangleShader, &desc);
-		
+		API::PixelShader::Create(
+			&PShader,
+			&API::CompileShader(PixelShader,
+			API::ShaderType::Pixel,
+			API::ShaderLanguage::HLSL));
 		
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
@@ -76,7 +82,7 @@ public:
 		TriangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
 		TriangleIL.AppendAttribute("COLOR" , 0 , API::DataType::Float3);
 
-		TriangleVB.SetInputLayout(&TriangleIL, &TriangleShader);
+		TriangleVB.SetInputLayout(&TriangleIL, &VShader);
 
 		Core::Application::Display();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
@@ -89,7 +95,8 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		TriangleShader.Bind();
+		VShader.Bind();
+		PShader.Bind();
 		TriangleVB.Bind();
 		Core::Context::Draw(3);
 
@@ -98,7 +105,8 @@ public:
 
 	void Shutdown() override 
 	{
-		API::Shader::Delete(&TriangleShader);
+		API::VertexShader::Delete(&VShader);
+		API::PixelShader::Delete(&PShader);
 		API::VertexBuffer::Delete(&TriangleVB);
 	}
 };

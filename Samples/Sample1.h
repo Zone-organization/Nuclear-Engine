@@ -149,7 +149,7 @@ public:
 		Textures.push_back(SpecularCTex);
 
 		Assets::ModelAsset::CreateCube(&CubeAsset, Textures);
-		CubeAsset.Initialize(&Renderer->GetShader());
+		CubeAsset.Initialize(&Renderer->GetVertexShader());
 
 		Assets::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
@@ -160,13 +160,13 @@ public:
 		spheretextures.push_back(WhiteCTex);
 
 		Assets::ModelAsset::CreateSphere(&SphereAsset, spheretextures);
-		SphereAsset.Initialize(&Renderer->GetShader());
+		SphereAsset.Initialize(&Renderer->GetVertexShader());
 
 		ModelLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &NanosuitAsset, ModelDesc);
-		NanosuitAsset.Initialize(&Renderer->GetShader());
+		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
 
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
@@ -299,7 +299,9 @@ public:
 		ImGui::NE_NewFrame();
 
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		Renderer->GetShader().Bind();
+		Renderer->GetVertexShader().Bind();
+		Renderer->GetPixelShader().Bind();
+
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
 		//if (!rendersystem)

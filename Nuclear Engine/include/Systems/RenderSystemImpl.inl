@@ -30,9 +30,13 @@ namespace NuclearEngine
 		{
 			this->ActiveCamera = camera;
 		}
-		API::Shader RenderSystem::GetShader()
+		API::VertexShader RenderSystem::GetVertexShader()
 		{
-			return this->Shader;
+			return this->VShader;
+		}
+		API::PixelShader RenderSystem::GetPixelShader()
+		{
+			return this->PShader;
 		}
 		void RenderSystem::AddLight(Components::DirectionalLight * light)
 		{
@@ -70,12 +74,18 @@ namespace NuclearEngine
 			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  LightingEnabled = 1; }
 
 			std::string SHIT = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes, true);
-			API::ShaderDesc desc;
-			desc.Name = "RenderSystem";
-			API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-			API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes, true).c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
 
-			API::Shader::Create(&Shader, &desc);
+			API::VertexShader::Create(
+				&VShader,
+				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(),
+				API::ShaderType::Vertex, 
+				API::ShaderLanguage::HLSL));
+
+			API::PixelShader::Create(
+				&PShader,
+				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes, true).c_str(),
+				API::ShaderType::Pixel,
+				API::ShaderLanguage::HLSL));
 
 			Calculate_Light_CB_Size();
 
@@ -83,15 +93,15 @@ namespace NuclearEngine
 
 			if (this->ActiveCamera != nullptr)
 			{
-				this->Shader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer(), API::ShaderType::Vertex);
+				this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
 			}
 			else
 			{
 				Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
 			}
-			if (LightingEnabled == 1)
+			if (LightingEnabled == true)
 			{
-				this->Shader.SetConstantBuffer(&this->NE_Light_CB, API::ShaderType::Pixel);
+				this->PShader.SetConstantBuffer(&this->NE_Light_CB);
 			}
 		}
 
@@ -184,7 +194,8 @@ namespace NuclearEngine
 			{				
 				skybox.Get()->m_vb.Bind();
 				skybox.Get()->m_ds_state.Bind();
-				skybox.Get()->m_shader.Bind();
+				skybox.Get()->v_shader.Bind();
+				skybox.Get()->p_shader.Bind();
 				skybox.Get()->m_texcube.PSBind(0);
 				skybox.Get()->m_sampler.PSBind(0);
 				Core::Context::Draw(36);

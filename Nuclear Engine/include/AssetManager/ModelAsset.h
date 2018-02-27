@@ -35,7 +35,7 @@ namespace NuclearEngine {
 			Mesh(MeshData data);
 			Mesh(const Mesh& obj);
 			~Mesh();
-			void Initialize(API::Shader* _shader);
+			void Initialize(API::VertexShader* _shader);
 			void Delete();
 
 			MeshData data;
@@ -54,7 +54,7 @@ namespace NuclearEngine {
 			Note:
 				We only require shader to validate the input layout but you are free to render the model with any shader you want.
 			*/
-			void Initialize(API::Shader* _shader);
+			void Initialize(API::VertexShader* _shader);
 			void Delete();
 
 			static void CreateCube(ModelAsset* model, std::vector<MeshTexture> Textures, float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);

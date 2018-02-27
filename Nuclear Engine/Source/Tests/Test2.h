@@ -4,7 +4,8 @@
 class Test2 : public Core::Game
 {
 protected:
-	API::Shader RectangleShader;
+	API::VertexShader VShader;
+	API::PixelShader PShader;
 	API::VertexBuffer RectangleVB;
 	API::IndexBuffer RectangleIB;
 	API::Texture WoodenBoxTex;
@@ -68,13 +69,18 @@ public:
 	}
 	void Load()
 	{
-		API::ShaderDesc desc;
-		desc.Name = "Test2";
-		API::CompileShader(&desc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-		API::CompileShader(&desc.PixelShaderCode, PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
+		//Load The Shader
+		API::VertexShader::Create(
+			&VShader,
+			&API::CompileShader(VertexShader,
+				API::ShaderType::Vertex,
+				API::ShaderLanguage::HLSL));
 
-
-		API::Shader::Create(&RectangleShader, &desc);
+		API::PixelShader::Create(
+			&PShader,
+			&API::CompileShader(PixelShader,
+				API::ShaderType::Pixel,
+				API::ShaderLanguage::HLSL));
 
 		API::VertexBufferDesc Desc;
 		Desc.data = vertices;
@@ -87,7 +93,7 @@ public:
 		RectangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
 		RectangleIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
-		RectangleVB.SetInputLayout(&RectangleIL, &RectangleShader);
+		RectangleVB.SetInputLayout(&RectangleIL, &VShader);
 		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
 
 		//Create Texture Resource
@@ -113,7 +119,8 @@ public:
 		//Change Background Color to Black in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		RectangleShader.Bind();
+		VShader.Bind();
+		PShader.Bind();
 		WoodenBoxTex.PSBind(0);
 		WoodenBoxSampler.PSBind(0);
 		RectangleVB.Bind();
@@ -124,7 +131,8 @@ public:
 	}
 	void Shutdown() override 
 	{
-		API::Shader::Delete(&RectangleShader);
+		API::VertexShader::Delete(&VShader);
+		API::PixelShader::Delete(&PShader);
 		API::VertexBuffer::Delete(&RectangleVB);
 		API::IndexBuffer::Delete(&RectangleIB);
 		API::Texture::Delete(&WoodenBoxTex);

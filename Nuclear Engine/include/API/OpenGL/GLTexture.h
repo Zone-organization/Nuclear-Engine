@@ -10,7 +10,6 @@ namespace NuclearEngine
 	{
 		namespace OpenGL
 		{
-			class GLShader;
 			class GLVertexShader;
 			class GLPixelShader;
 

@@ -1,7 +1,6 @@
 #include <API\Texture.h>
 #ifdef NE_USE_RUNTIME_RENDER_API
 #include <Core\Context.h>
-#include <API\Shader.h>
 #include <API\VertexShader.h>
 #include <API\PixelShader.h>
 

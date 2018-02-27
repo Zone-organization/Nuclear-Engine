@@ -10,7 +10,6 @@ namespace NuclearEngine
 
 		namespace DirectX
 		{
-			class DX11Shader;
 			class DX11VertexShader;
 
 			class NEAPI DX11VertexBuffer
@@ -24,7 +23,6 @@ namespace NuclearEngine
 
 				void Update(const void* data, unsigned int size);
 
-				void SetInputLayout(InputLayout * layout, DX11Shader *shader);
 				void SetInputLayout(InputLayout * layout, DX11VertexShader *shader);
 
 				void Bind();

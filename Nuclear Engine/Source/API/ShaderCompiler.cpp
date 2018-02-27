@@ -341,7 +341,7 @@ namespace NuclearEngine {
 			}	
 			return;
 		}
-		void CompileDXBC2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool reflect_p, bool SeperateShader)
+		void CompileDXBC2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool reflect_p)
 		{
 			// Initialize shader input descriptor structure
 			auto input = std::make_shared<std::stringstream>();
@@ -373,7 +373,7 @@ namespace NuclearEngine {
 			outputDesc.sourceCode = &stream;
 			outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;
 			outputDesc.options.allowExtensions = true;
-		
+
 
 			if (result->convertedshaderrowmajor == true)
 			{
@@ -381,11 +381,9 @@ namespace NuclearEngine {
 			}
 
 			//Seperate shaders requirements
-			if (SeperateShader)
-			{
-				outputDesc.options.autoBinding = true;
-				outputDesc.options.separateShaders = SeperateShader;
-			}
+			outputDesc.options.autoBinding = true;
+			outputDesc.options.separateShaders = true;
+
 			// Compile HLSL code into GLSL
 			XSC_ERROR_LOG log;
 
@@ -395,29 +393,28 @@ namespace NuclearEngine {
 
 			}
 			result->GLSL_SourceCode = stream.str();
-			
+
 			//XSC doesn't play nicely with separate shaders extension so we have to include it ourselves			
-			if (SeperateShader)
-			{
-				std::vector<std::string> MergedCode;
-				std::string firstLine = result->GLSL_SourceCode.substr(85, result->GLSL_SourceCode.find("\n"));
 
-				MergedCode.push_back(std::string("#version 330\n #extension GL_ARB_separate_shader_objects : enable\n"));
+			std::vector<std::string> MergedCode;
+			std::string firstLine = result->GLSL_SourceCode.substr(85, result->GLSL_SourceCode.find("\n"));
 
-				MergedCode.push_back(result->GLSL_SourceCode.substr(99));
-				std::string str;
-				for (unsigned int i = 0; i < MergedCode.size(); ++i)
-					str = str + MergedCode[i].c_str();
+			MergedCode.push_back(std::string("#version 330\n #extension GL_ARB_separate_shader_objects : enable\n"));
 
-				result->GLSL_SourceCode = str;
-			}
+			MergedCode.push_back(result->GLSL_SourceCode.substr(99));
+			std::string str;
+			for (unsigned int i = 0; i < MergedCode.size(); ++i)
+				str = str + MergedCode[i].c_str();
+
+			result->GLSL_SourceCode = str;
+
 
 			result->Language = API::ShaderLanguage::GLSL;
 			result->DXBC_SourceCode = DXBC_BLOB();
 			result->Converted = true;
 		}
 
-		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p, bool SeperateShader)
+		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode,API::ShaderType type,API::ShaderLanguage language, bool reflect_p)
 		{
 			if (language == API::ShaderLanguage::HLSL)
 			{
@@ -425,7 +422,7 @@ namespace NuclearEngine {
 
 				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 				{
-					CompileDXBC2GLSL(blob, SourceCode, type, language, reflect_p, SeperateShader);
+					CompileDXBC2GLSL(blob, SourceCode, type, language, reflect_p);
 				}
 			}
 			else if (language == API::ShaderLanguage::GLSL)
@@ -444,10 +441,10 @@ namespace NuclearEngine {
 			return true;
 		}
 
-		BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool Reflect, bool SeperateShader)
+		BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type, API::ShaderLanguage language, bool Reflect)
 		{
 			BinaryShaderBlob result;
-			CompileShader(&result, SourceCode, type,language, Reflect, SeperateShader);
+			CompileShader(&result, SourceCode, type,language, Reflect);
 			return result;
 		}
 

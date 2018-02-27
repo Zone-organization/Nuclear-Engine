@@ -2,7 +2,6 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <API\OpenGL\GLError.h>
-#include <API\OpenGL\GLShader.h>
 #include <API\InputLayout.h>
 namespace NuclearEngine
 {
@@ -64,7 +63,7 @@ namespace NuclearEngine
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 			}
 
-			void GLVertexBuffer::SetInputLayout(InputLayout * layout, GLShader * shader)
+			void GLVertexBuffer::SetInputLayout(InputLayout * layout, GLVertexShader * shader)
 			{
 				unsigned int index = 0;
 				GLCall(glBindVertexArray(VAO));
@@ -95,11 +94,6 @@ namespace NuclearEngine
 
 				GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 				GLCall(glBindVertexArray(0));
-			}
-
-			void GLVertexBuffer::SetInputLayout(InputLayout * layout, GLVertexShader * shader)
-			{
-				return this->SetInputLayout(layout, &GLShader());
 			}
 
 			void GLVertexBuffer::Bind()

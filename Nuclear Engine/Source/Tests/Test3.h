@@ -11,7 +11,9 @@ struct Shader_Uniforms_t {
 class Test3 : public Core::Game
 {
 protected:
-	API::Shader CubeShader;
+	API::VertexShader VShader;
+	API::PixelShader PShader;
+
 	API::VertexBuffer CubeVB;
 	API::ConstantBuffer CubeCB;
 	API::Texture WoodenBoxTex;
@@ -72,12 +74,18 @@ public:
 	void Load()
 	{
 
-		API::ShaderDesc desc;
-		desc.Name = "Test3";
-		API::CompileShader(&desc.VertexShaderCode, VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-		API::CompileShader(&desc.PixelShaderCode, PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
+		//Load The Shader
+		API::VertexShader::Create(
+			&VShader,
+			&API::CompileShader(VertexShader,
+				API::ShaderType::Vertex,
+				API::ShaderLanguage::HLSL));
 
-		API::Shader::Create(&CubeShader, &desc);
+		API::PixelShader::Create(
+			&PShader,
+			&API::CompileShader(PixelShader,
+				API::ShaderType::Pixel,
+				API::ShaderLanguage::HLSL));
 	
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -133,10 +141,10 @@ public:
 		CubeIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
 		CubeIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
 
-		CubeVB.SetInputLayout(&CubeIL, &CubeShader);
+		CubeVB.SetInputLayout(&CubeIL, &VShader);
 		
 		API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
-		CubeShader.SetConstantBuffer(&CubeCB,API::ShaderType::Vertex);
+		VShader.SetConstantBuffer(&CubeCB);
 	
 		API::Texture_Desc TexDesc;
 		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
@@ -167,7 +175,8 @@ public:
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		CubeShader.Bind();
+		VShader.Bind();
+		PShader.Bind();
 		WoodenBoxTex.PSBind(0);
 		WoodenBoxSampler.PSBind(0);
 		CubeVB.Bind();
@@ -178,7 +187,8 @@ public:
 	}
 	void Shutdown() override
 	{
-		API::Shader::Delete(&CubeShader);
+		API::VertexShader::Delete(&VShader);
+		API::PixelShader::Delete(&PShader);
 		API::VertexBuffer::Delete(&CubeVB);
 		API::Texture::Delete(&WoodenBoxTex);
 		API::ConstantBuffer::Delete(&CubeCB);

@@ -24,7 +24,8 @@ namespace NuclearEngine
 			static void Create(Skybox* skybox, Components::GenericCamera* CameraCbuffer, const std::array<API::Texture_Data, 6>& data);
 			static void Create(Skybox* skybox, Components::GenericCamera* CameraCbuffer, const std::array<std::string, 6>& paths);
 
-			API::Shader m_shader;
+			API::VertexShader v_shader;
+			API::PixelShader p_shader;
 			API::VertexBuffer m_vb;
 			API::Texture m_texcube;
 			API::Sampler m_sampler;

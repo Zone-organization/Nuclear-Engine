@@ -8,7 +8,6 @@
 namespace NuclearEngine {
 	namespace API {
 		class InputLayout;
-		class Shader;
 		class VertexShader;
 		struct VertexBufferDesc;
 		class NEAPI VertexBuffer
@@ -22,7 +21,6 @@ namespace NuclearEngine {
 
 			void Update(const void* data, unsigned int size);
 
-			void SetInputLayout(InputLayout* layout, Shader* shader);
 			void SetInputLayout(InputLayout* layout, VertexShader* shader);
 
 			void Bind();

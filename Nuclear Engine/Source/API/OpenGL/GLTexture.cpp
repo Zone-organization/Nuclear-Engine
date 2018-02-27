@@ -1,7 +1,6 @@
 #include <API\OpenGL\GLTexture.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
-#include <API\OpenGL\GLShader.h>
 #include <API\OpenGL\GLVertexShader.h>
 #include <API\OpenGL\GLPixelShader.h>
 

@@ -65,17 +65,12 @@ namespace NuclearEngine
 
 		void Skybox::Create(Skybox* skybox,Components::GenericCamera * CameraCbuffer,const std::array<API::Texture_Data, 6>& data)
 		{
-			API::ShaderDesc desc;
-			desc.Name = "SkyBox";
-			API::CompileShader(&desc.VertexShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL);
-			API::CompileShader(&desc.PixelShaderCode, Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL);
-
-
-			API::Shader::Create(&skybox->m_shader, &desc);
+			API::VertexShader::Create(&skybox->v_shader, &API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL));
+			API::PixelShader::Create(&skybox->p_shader, &API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL));
 
 			skybox->m_camera = CameraCbuffer;
 
-			skybox->m_shader.SetConstantBuffer(&skybox->m_camera->GetCBuffer(), API::ShaderType::Vertex);
+			skybox->v_shader.SetConstantBuffer(&skybox->m_camera->GetCBuffer());
 
 			API::VertexBufferDesc VDesc;
 			VDesc.data = skyboxVertices;
@@ -86,7 +81,7 @@ namespace NuclearEngine
 
 			API::InputLayout vertexBufferLayout;
 			vertexBufferLayout.AppendAttribute("POSITION", 0, API::DataType::Float3);
-			skybox->m_vb.SetInputLayout(&vertexBufferLayout, &skybox->m_shader);
+			skybox->m_vb.SetInputLayout(&vertexBufferLayout, &skybox->v_shader);
 
 			API::Texture_Desc Desc;
 			Desc.Format = API::Format::R8G8B8A8_UNORM;

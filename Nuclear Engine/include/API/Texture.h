@@ -7,7 +7,6 @@
 
 namespace NuclearEngine {
 	namespace API {
-		class Shader;
 		class VertexShader;
 		class PixelShader;
 		class RenderTarget;

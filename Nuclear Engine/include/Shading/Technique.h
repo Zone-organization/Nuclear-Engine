@@ -1,5 +1,5 @@
 #pragma once
-#include <API\Shader.h>
+#include <NE_Common.h>
 #include <vector>
 namespace NuclearEngine 
 {

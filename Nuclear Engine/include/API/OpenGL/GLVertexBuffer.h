@@ -11,7 +11,6 @@ namespace NuclearEngine
 
 		namespace OpenGL
 		{
-			class GLShader;
 			class GLVertexShader;
 			class NEAPI GLVertexBuffer 
 			{
@@ -24,7 +23,6 @@ namespace NuclearEngine
 
 				void Update(const void* data, unsigned int size);
 
-				void SetInputLayout(InputLayout * layout, GLShader *shader);
 				void SetInputLayout(InputLayout * layout, GLVertexShader *shader);
 
 				void Bind();

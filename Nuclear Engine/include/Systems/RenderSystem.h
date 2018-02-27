@@ -32,7 +32,8 @@ namespace NuclearEngine
 
 			void SetCamera(Components::GenericCamera* camera);
 
-			API::Shader GetShader();
+			API::VertexShader GetVertexShader();
+			API::PixelShader GetPixelShader();
 
 			void AddLight(Components::DirectionalLight* light);
 			void AddLight(Components::PointLight* light);
@@ -53,7 +54,9 @@ namespace NuclearEngine
 		private:
 			void Calculate_Light_CB_Size();
 
-			API::Shader Shader;
+			API::VertexShader VShader;
+			API::PixelShader PShader;
+
 			API::ConstantBuffer NE_Light_CB;
 			size_t NE_Light_CB_Size;
 			size_t NUM_OF_LIGHT_VECS;

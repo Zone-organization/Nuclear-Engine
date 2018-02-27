@@ -2,7 +2,6 @@
 #include <API\DirectX\DX11Common.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-#include <API\DirectX\DX11Shader.h>
 
 namespace NuclearEngine
 {

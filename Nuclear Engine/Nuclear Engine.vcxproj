@@ -346,7 +346,6 @@
     <ClInclude Include="include\API\DirectX\DX11PixelShader.h" />
     <ClInclude Include="include\API\DirectX\DX11RenderTarget.h" />
     <ClInclude Include="include\API\DirectX\DX11Sampler.h" />
-    <ClInclude Include="include\API\DirectX\DX11Shader.h" />
     <ClInclude Include="include\API\DirectX\DX11Texture.h" />
     <ClInclude Include="include\API\DirectX\DX11Types.h" />
     <ClInclude Include="include\API\DirectX\DX11VertexBuffer.h" />
@@ -366,7 +365,6 @@
     <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\API\Sampler.h" />
-    <ClInclude Include="include\API\Shader.h" />
     <ClInclude Include="include\API\Shader_Types.h" />
     <ClInclude Include="include\API\Texture.h" />
     <ClInclude Include="include\API\ConstantBuffer.h" />
@@ -415,12 +413,10 @@
     <ClInclude Include="include\API\OpenGL\GLContext.h" />
     <ClInclude Include="include\API\OpenGL\GLDepthStencilState.h" />
     <ClInclude Include="include\API\OpenGL\GLIndexBuffer.h" />
-    <ClInclude Include="include\API\OpenGL\GLShader.h" />
     <ClInclude Include="include\API\OpenGL\GLTexture.h" />
     <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
     <ClInclude Include="include\API\OpenGL\GLCommon.h" />
     <ClInclude Include="include\Core\Application.h" />
-    <ClInclude Include="include\Renderers\SpriteRenderer.h" />
     <ClInclude Include="include\AssetManager\AssetManager.h" />
     <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="include\Shading\Technique.h" />
@@ -441,6 +437,7 @@
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
+    <ClInclude Include="Source\Tests\DirectX11Tests.h" />
     <ClInclude Include="Source\Tests\OpenGLTests.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="Source\Tests\Test5.h" />
@@ -464,7 +461,6 @@
     <ClCompile Include="Source\API\DirectX\DX11RasterizerState.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11RenderTarget.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Sampler.cpp" />
-    <ClCompile Include="Source\API\DirectX\DX11Shader.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Texture.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11Types.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11VertexBuffer.cpp" />
@@ -481,7 +477,6 @@
     <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLRenderTarget.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLSampler.cpp" />
-    <ClCompile Include="Source\API\OpenGL\GLShader.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLTexture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexBuffer.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLVertexShader.cpp" />
@@ -489,7 +484,6 @@
     <ClCompile Include="Source\API\RasterizerState.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\API\Sampler.cpp" />
-    <ClCompile Include="Source\API\Shader.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
@@ -526,7 +520,6 @@
     <ClCompile Include="Source\Platform\Timer.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
-    <ClCompile Include="Source\Renderers\SpriteRenderer.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Shading\Technique.cpp" />

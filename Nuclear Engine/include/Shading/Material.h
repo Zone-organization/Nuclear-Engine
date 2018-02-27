@@ -1,7 +1,6 @@
 #pragma once
 #include <API\Texture.h>
 #include <API\Color.h>
-#include <API\Shader.h>
 #include <unordered_map>
 #include <Math\Math.h>
 namespace NuclearEngine {
@@ -10,7 +9,7 @@ namespace NuclearEngine {
 		class NEAPI Material {
 		public:
 
-			void SetShader(API::Shader *shader);
+			//void SetShader(API::Shader *shader);
 			void SetBool(std::string name, bool value);
 			void SetInt(std::string name, int value);
 			void SetFloat(std::string name, float value);
@@ -22,7 +21,7 @@ namespace NuclearEngine {
 			void SetMatrix(std::string name, Math::Matrix3 value);
 			void SetMatrix(std::string name, Math::Matrix4 value);
 		private:
-			API::Shader *m_Shader;
+			//API::Shader *m_Shader;
 //			std::unordered_map<std::string, UniformValue>        m_Uniforms;
 			//API::Reflected_Constantbuffer material_constbuf;
 		};

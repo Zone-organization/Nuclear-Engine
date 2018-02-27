@@ -9,7 +9,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Requirements
 - __OpenGL__
   - OpenGL 3.3 Core capable GPU with the required extensions (all became core in later versions):
-    - Required for Separate Shaders only:	
+    - Required for Separate Shaders:	
 	  - GL_ARB_shading_language_420pack
 	  - GL_ARB_separate_shader_objects
 
@@ -17,12 +17,14 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - DirectX 10.1 capable GPU.
   - DirectX 11 runtime DLLS.
 
-## Features:-
+## Features:-1
 - __Core__
   - Cross platform ready
   - Modern Fast code using C++
   - Fast Robust Entity Component System "ECS" using EntityX.
   - Cross-platform Application creation through GLFW.
+  - All of error prone calls (as Resource creation or loading) are being logged.
+  
 - __AssetManager__
   - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using stb_image library).
   - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
@@ -31,14 +33,12 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 - __OneAPI__
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
   - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
-  - Support for HLSL Shader which can be Cross Compiled to GLSL.
-  - Support for Fast Unified Shader.
-  - Support for Separate Shaders (excellent for debugging and testing features).
+  - Support for HLSL Shaders which can be Cross Compiled to GLSL.
+  - Support for Separate Shaders (Vertex & Pixel).
   - Support for Separate Samplers and Textures.
   - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build.
 
-- __Renderer__
-  - Support for Hybrid Lighting system which allows you to implement more lighting techniques.
+- __RenderSystem__
   - Support for Phong-Shading.
   - Support for IMGUI.
   
@@ -52,7 +52,8 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Road-map
   - Support Android & Linux & UWP Platforms.
   - Support PhysX or Bullet Physics Library.
-  - Support A Uber Shader instead of GLSL , HLSL.
+  - Support an Uber Shader instead of GLSL , HLSL.
+  - Support scripting using 'C#' mono-script or 'C++' AngelScript.
   - There are more but these are the most important... (look at the soon features...)
   
   

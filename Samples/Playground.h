@@ -167,7 +167,8 @@ public:
 
 		Math::Matrix4 CubeMatrix;
 
-		Renderer->GetShader().Bind();
+		Renderer->GetVertexShader().Bind();
+		Renderer->GetPixelShader().Bind();
 		states.DefaultSampler.PSBind(0);
 
 		systems.Update_All(deltatime);

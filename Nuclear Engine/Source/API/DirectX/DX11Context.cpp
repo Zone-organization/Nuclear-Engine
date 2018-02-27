@@ -146,8 +146,8 @@ namespace NuclearEngine
 					D3D_FEATURE_LEVEL_10_1,
 				};
 
-				UINT creationFlags = 0;
-
+				UINT creationFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+				
 #ifdef _DEBUG
 				creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -155,7 +155,7 @@ namespace NuclearEngine
 					adapter,
 					D3D_DRIVER_TYPE_UNKNOWN,
 					NULL,
-					creationFlags, // | D3D11_CREATE_DEVICE_BGRA_SUPPORT,   If there is an error please uncomment this  URGENT
+					creationFlags,
 					FeatureLevelsRequested,
 					1,
 					D3D11_SDK_VERSION,
@@ -173,10 +173,6 @@ namespace NuclearEngine
 					adapter->Release();
 					return false;
 				}
-
-
-				//TODO Redo the dwrite backend for renderering fonts
-				//GUI::Internals::InitializeDWrite(adapter);
 
 				//Release the Adapter interface
 				adapter->Release();

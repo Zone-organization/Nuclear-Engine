@@ -89,14 +89,5 @@ namespace NuclearEngine
 			//A usable shader??
 			bool Finished = false;
 		};
-
-		struct ShaderDesc
-		{
-			std::string Name = "NoString";
-			BinaryShaderBlob VertexShaderCode = BinaryShaderBlob();
-			BinaryShaderBlob PixelShaderCode = BinaryShaderBlob();
-			BinaryShaderBlob GeometryShaderCode = BinaryShaderBlob();
-		};
-
 	}
 }

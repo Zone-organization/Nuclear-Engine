@@ -19,10 +19,10 @@ namespace NuclearEngine {
 
 		}
 
-		void Mesh::Initialize(API::Shader* _shader)
+		void Mesh::Initialize(API::VertexShader* _shader)
 		{
 			std::vector<float> verticesdata;
-			for (int i = 0; i < data.Positions.size(); ++i)
+			for (unsigned int i = 0; i < data.Positions.size(); ++i)
 			{
 				verticesdata.push_back(data.Positions[i].x);
 				verticesdata.push_back(data.Positions[i].y);
@@ -93,7 +93,7 @@ namespace NuclearEngine {
 			Meshes.clear();
 		}
 
-		void ModelAsset::Initialize(API::Shader* _shader)
+		void ModelAsset::Initialize(API::VertexShader* _shader)
 		{
 			for (unsigned int i = 0; i < Meshes.size(); i++)
 			{
