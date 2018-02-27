@@ -2,7 +2,8 @@
 #include <NE_Common.h>
 #include <Components\Transform.h>
 #include <Core\Entity.h>
-#include <vector>
+#include <API/VertexShader.h>
+#include <API/PixelShader.h>
 namespace NuclearEngine
 {
 	namespace Components
@@ -14,7 +15,17 @@ namespace NuclearEngine
 		class NEAPI ModelRenderDesc : public Core::Component<ModelRenderDesc>
 		{
 		public:
-	
+			//ModelRenderDesc();
+
+			//void SetVertexShader()
+			//void SetVertexShader()
+
+			//if false the RenderSystem won't render the model
+			bool Render = true;
+
+		private:
+			API::VertexShader *VShader;
+			API::PixelShader *PShader;
 		};
 
 	}

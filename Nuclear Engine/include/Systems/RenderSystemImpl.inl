@@ -8,6 +8,7 @@
 #include <Core\Context.h>
 #include <Components\Transform.h>
 #include <Components\Skybox.h>
+#include <Components\ModelRenderDesc.h>
 
 namespace NuclearEngine
 {
@@ -191,14 +192,19 @@ namespace NuclearEngine
 
 			Core::ComponentHandle<Components::Skybox> skybox;
 			for (Core::Entity entity : es.entities_with_components(skybox))
-			{				
-				skybox.Get()->m_vb.Bind();
-				skybox.Get()->m_ds_state.Bind();
-				skybox.Get()->v_shader.Bind();
-				skybox.Get()->p_shader.Bind();
-				skybox.Get()->m_texcube.PSBind(0);
-				skybox.Get()->m_sampler.PSBind(0);
-				Core::Context::Draw(36);
+			{
+				auto renderdesc = entity.GetComponent<Components::ModelRenderDesc>();
+
+				if (renderdesc.Get()->Render == true)
+				{
+					skybox.Get()->m_vb.Bind();
+					skybox.Get()->m_ds_state.Bind();
+					skybox.Get()->v_shader.Bind();
+					skybox.Get()->p_shader.Bind();
+					skybox.Get()->m_texcube.PSBind(0);
+					skybox.Get()->m_sampler.PSBind(0);
+					Core::Context::Draw(36);
+				}
 			}
 		}
 		void RenderSystem::Calculate_Light_CB_Size()
