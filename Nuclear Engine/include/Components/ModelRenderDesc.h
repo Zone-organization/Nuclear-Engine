@@ -15,17 +15,13 @@ namespace NuclearEngine
 		class NEAPI ModelRenderDesc : public Core::Component<ModelRenderDesc>
 		{
 		public:
-			//ModelRenderDesc();
-
-			//void SetVertexShader()
-			//void SetVertexShader()
+			//Custom shaders to be rendered with
+			bool CustomShaders = false;
+			API::VertexShader VShader;
+			API::PixelShader PShader;
 
 			//if false the RenderSystem won't render the model
 			bool Render = true;
-
-		private:
-			API::VertexShader *VShader;
-			API::PixelShader *PShader;
 		};
 
 	}

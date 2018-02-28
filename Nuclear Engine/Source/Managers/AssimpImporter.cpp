@@ -1,10 +1,10 @@
 #include "AssimpImporter.h"
-#include <AssetManager\AssetManager.h>
+#include <Managers\AssetManager.h>
 #pragma comment(lib,"assimp-vc140-mt.lib")
 
 namespace NuclearEngine {
 	namespace Internal {
-		bool AssimpImporter::Load(std::string Path, Assets::ModelAsset * _model, const ModelLoadingDesc& desc)
+		bool AssimpImporter::Load(std::string Path, XAsset::ModelAsset * _model, const Managers::ModelLoadingDesc& desc)
 		{
 			loaddesc = desc;
 			this->model = _model;
@@ -28,7 +28,7 @@ namespace NuclearEngine {
 
 			for (unsigned int i = 0; i < meshes_loaded.size(); i++)
 			{
-				model->Meshes.push_back(Assets::Mesh(meshes_loaded.at(i)));
+				model->Meshes.push_back(XAsset::Mesh(meshes_loaded.at(i)));
 			}
 
 			Log.Info("[AssetManager] Loaded Model: " + path + "\n");
@@ -50,9 +50,9 @@ namespace NuclearEngine {
 				ProcessNode(node->mChildren[i], scene);
 			}
 		}
-		Assets::MeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
+		XAsset::MeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{
-			Assets::MeshData result;
+			XAsset::MeshData result;
 
 			// Walk through each of the mesh's vertices
 			for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -92,39 +92,39 @@ namespace NuclearEngine {
 			if (loaddesc.LoadDiffuseTextures)
 			{
 				std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
-				std::vector<Assets::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
+				std::vector<XAsset::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
 				result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
 			}
 			if (loaddesc.LoadSpecularTextures)
 			{
 				std::vector<Imported_Texture> specularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
-				std::vector<Assets::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
+				std::vector<XAsset::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
 				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
-		std::vector<Assets::MeshTexture> AssimpImporter::Imported2MeshTexture(std::vector<Imported_Texture> textures)
+		std::vector<XAsset::MeshTexture> AssimpImporter::Imported2MeshTexture(std::vector<Imported_Texture> textures)
 		{
-			std::vector<Assets::MeshTexture> result;
+			std::vector<XAsset::MeshTexture> result;
 			for (size_t i = 0; i < textures.size(); i++)
 			{
 				result.push_back(textures.at(i).Texture);
 			}
 			return result;
 		}
-		Assets::MeshTextureType GetMeshTextureType(aiTextureType type)
+		XAsset::MeshTextureType GetMeshTextureType(aiTextureType type)
 		{
 			switch (type)
 			{
 			case aiTextureType_DIFFUSE:
-				return Assets::MeshTextureType::Diffuse;
+				return XAsset::MeshTextureType::Diffuse;
 			case aiTextureType_SPECULAR:
-				return Assets::MeshTextureType::Specular;
+				return XAsset::MeshTextureType::Specular;
 			}
 
 			//Unsupported types treated as diffuse
-			return Assets::MeshTextureType::Diffuse;
+			return XAsset::MeshTextureType::Diffuse;
 		}
 		std::vector<Imported_Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{
@@ -159,7 +159,7 @@ namespace NuclearEngine {
 
 					std::string filename = texture.path;
 					filename = directory + '/' + filename;
-					AssetManager::CreateTextureFromFile(filename, &texture.Texture.Texture, Desc);
+					Managers::AssetManager::CreateTextureFromFile(filename, &texture.Texture.Texture, Desc);
 
 					textures.push_back(texture);
 					textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.

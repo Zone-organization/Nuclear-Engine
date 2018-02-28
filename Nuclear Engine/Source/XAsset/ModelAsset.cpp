@@ -1,10 +1,10 @@
-#include "AssetManager\ModelAsset.h"
+#include "XAsset\ModelAsset.h"
 #include "Core\Context.h"
 #include <API\InputLayout.h>
 
 namespace NuclearEngine {
 
-	namespace Assets {
+	namespace XAsset {
 
 		Mesh::Mesh(MeshData _data) : data(_data)
 		{

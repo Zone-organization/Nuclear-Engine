@@ -1,7 +1,7 @@
 #include "Components\Skybox.h"
 #include <Core\Context.h>
 #include <API\ShaderCompiler.h>
-#include <AssetManager\AssetManager.h>
+#include <Managers\AssetManager.h>
 #include <API\Buffer_Types.h>
 #include <API\RenderStates_Types.h>
 #include <API/InputLayout.h>
@@ -109,7 +109,7 @@ namespace NuclearEngine
 			API::Texture_Desc Desc;
 			Desc.Format = API::Format::R8G8B8A8_UNORM;
 			Desc.Type = API::TextureType::Texture2D;
-			Skybox::Create(skybox, CameraCbuffer, AssetManager::LoadTextureCubeFromFile(paths, Desc));
+			Skybox::Create(skybox, CameraCbuffer, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));
 		}
 	}
 }

@@ -28,7 +28,7 @@ protected:
 	Components::Model lamp;
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-	Shading::Techniques::NoLight lighttech;
+	//Shading::Techniques::NoLight lighttech;
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -43,8 +43,8 @@ public:
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-		desc.Light_Rendering_Tech = &lighttech;
-		Renderer = systems.Add<Systems::RenderSystem>(desc);
+	//	desc.Light_Rendering_Tech = &lighttech;
+		//Renderer = systems.Add<Systems::RenderSystem>(desc);
 		
 		systems.Configure();
 		
@@ -57,25 +57,25 @@ public:
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
 
 
-		std::vector<Assets::MeshTexture> Textures;
-		Assets::MeshTexture DiffuseTex;
+		std::vector<XAsset::MeshTexture> Textures;
+		XAsset::MeshTexture DiffuseTex;
 		DiffuseTex.Texture = WoodenBoxTex;
-		DiffuseTex.type = Assets::MeshTextureType::Diffuse;
+		DiffuseTex.type = XAsset::MeshTextureType::Diffuse;
 		Textures.push_back(DiffuseTex);
 
-		//Assets::ModelAsset::CreateCube(&Cube, Textures);
+		//XAsset::ModelAsset::CreateCube(&Cube, Textures);
 		//Cube.Initialize(&Renderer->GetShader());
 
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 
 		Textures.clear();
 		DiffuseTex.Texture = WhiteTex;
 		Textures.push_back(DiffuseTex);
 
-		//Assets::ModelAsset::CreateSphere(&lamp, Textures);
+		//XAsset::ModelAsset::CreateSphere(&lamp, Textures);
 		//lamp.Initialize(&Renderer->GetShader());
 
 		//Components::GameObject GOCube;

@@ -27,15 +27,16 @@ _____________/BOOOM\_____________
 #include <Platform\Timer.h>
 #include <Platform\Input.h>
 
-//# Assets & their managers Headers
-#include <AssetManager\AssetManager.h>
-#include <AssetManager\ModelAsset.h>
+//# XAsset & their managers Headers
+#include <Managers\AssetManager.h>
+#include <Managers\ShaderManager.h>
+
+//# Asset Classes (XXAsset)
+#include <XAsset\ModelAsset.h>
 
 //# Shading Headers
 #include <Shading/Material.h>
-#include <Shading/Technique.h>
-#include <Shading/Techniques/NoLight.h>
-#include <Shading/Techniques/PhongShading.h>
+
 
 //# OneAPI Headers Begin
 //---Buffers

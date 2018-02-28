@@ -7,7 +7,9 @@
 #include <string>
 
 namespace NuclearEngine {
-	namespace Assets {
+	//XAsset the X here stands for the asset class as "ModelAsset" or "FontAsset" 
+	//Basically, I didn't find a better name and avoid XAsset to prevent confusion since these aren't real assets
+	namespace XAsset {
 
 		enum class NEAPI MeshTextureType
 		{

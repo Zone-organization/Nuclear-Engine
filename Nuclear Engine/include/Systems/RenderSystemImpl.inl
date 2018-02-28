@@ -2,13 +2,14 @@
 #include <Systems\RenderSystem.h>
 #else
 #include <Core\FileSystem.h>
-#include <Shading\Techniques\NoLight.h>
 #include <API\ConstantBuffer.h>
 #include <API\ShaderCompiler.h>
 #include <Core\Context.h>
 #include <Components\Transform.h>
 #include <Components\Skybox.h>
 #include <Components\ModelRenderDesc.h>
+#include <Managers\ShaderManager.h>
+
 
 namespace NuclearEngine
 {
@@ -16,15 +17,12 @@ namespace NuclearEngine
 	{
 		RenderSystem::RenderSystem(const RenderSystemDesc & desc)
 		{
-			Light_Rendering_Tech = nullptr;
+			Desc = desc;
 			ActiveCamera = &Components::GenericCamera();
-			this->Light_Rendering_Tech = desc.Light_Rendering_Tech;
-
 			this->status = RenderSystemStatus::RequireBaking;
 		}
 		RenderSystem::~RenderSystem()
 		{
-			Light_Rendering_Tech = nullptr;
 			ActiveCamera = nullptr;
 		}
 		void RenderSystem::SetCamera(Components::GenericCamera * camera)
@@ -53,59 +51,63 @@ namespace NuclearEngine
 		}
 
 		void RenderSystem::Bake()
+		{	
+			BakeVertexShader();
+			BakePixelShader();
+		}
+		void RenderSystem::BakePixelShader()
 		{
-			std::vector<std::string> includes, defines;
-			includes.push_back("Assets/NuclearEngine/Shaders/Renderer/Renderer3D_Header.hlsl");
+			std::vector<std::string> defines;
 
-			if (this->Light_Rendering_Tech != nullptr)
+			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true;	}
+			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
+			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  PSDirty = true; }
+
+			if (PSDirty = true)
 			{
-				defines.push_back("NE_LIGHT_SHADING_TECH\n");
-				includes.push_back(this->Light_Rendering_Tech->GetShaderPath());
+				API::PixelShader::Delete(&PShader);
+				API::ConstantBuffer::Delete(&NE_Light_CB);
 
-				for (size_t i = 0; i < this->Light_Rendering_Tech->GetDefines().size(); i++)
-				{
-					defines.push_back(Light_Rendering_Tech->GetDefines().at(i));
-				}
+				API::PixelShader::Create(
+					&PShader,
+					&API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
+						API::ShaderType::Pixel,
+						API::ShaderLanguage::HLSL));
 
-			}
-			int LightingEnabled = 0;
+				Calculate_Light_CB_Size();
 
-			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); LightingEnabled = 1; }
-			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  LightingEnabled = 1; }
-			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  LightingEnabled = 1; }
+				API::ConstantBuffer::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
 
-			std::string SHIT = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes, true);
-
-			API::VertexShader::Create(
-				&VShader,
-				&API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.vs.hlsl").c_str(),
-				API::ShaderType::Vertex, 
-				API::ShaderLanguage::HLSL));
-
-			API::PixelShader::Create(
-				&PShader,
-				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Renderer/Renderer3D.ps.hlsl", defines, includes, true).c_str(),
-				API::ShaderType::Pixel,
-				API::ShaderLanguage::HLSL));
-
-			Calculate_Light_CB_Size();
-
-			API::ConstantBuffer::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
-
-			if (this->ActiveCamera != nullptr)
-			{
-				this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
-			}
-			else
-			{
-				Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
-			}
-			if (LightingEnabled == true)
-			{
 				this->PShader.SetConstantBuffer(&this->NE_Light_CB);
+				PSDirty = false;
 			}
 		}
+		void RenderSystem::BakeVertexShader()
+		{
+			if (VSDirty = true)
+			{
+				API::VertexShader::Delete(&VShader);
 
+				if (Desc.VShaderPath == "NE_Default")
+				{
+					VShader = Managers::ShaderManager::CreateAutoVertexShader(Managers::AutoVertexShaderDesc());
+				}
+				else {
+					API::VertexShader::Create(
+						&VShader,
+						&API::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
+							API::ShaderType::Vertex,
+							API::ShaderLanguage::HLSL));
+				}
+
+				if (this->ActiveCamera != nullptr)
+					this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
+				else
+					Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
+				
+				VSDirty = false;
+			}
+		}
 		void RenderSystem::Update_Light()
 		{
 			std::vector<Math::Vector4> LightsBuffer;
@@ -144,7 +146,7 @@ namespace NuclearEngine
 				InstantRender(&object->GetAsset()->Meshes.at(i));
 			}
 		}
-		 void RenderSystem::InstantRender(Assets::Mesh * mesh)
+		 void RenderSystem::InstantRender(XAsset::Mesh * mesh)
 		{
 			//Lil hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
@@ -153,7 +155,7 @@ namespace NuclearEngine
 			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
-				if (mesh->data.textures[i].type == Assets::MeshTextureType::Diffuse)
+				if (mesh->data.textures[i].type == XAsset::MeshTextureType::Diffuse)
 				{
 					if (diffusebound != true)
 					{
@@ -161,7 +163,7 @@ namespace NuclearEngine
 						diffusebound = true;
 					}
 				}
-				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Specular)
+				else if (mesh->data.textures[i].type == XAsset::MeshTextureType::Specular)
 				{
 					if (specularbound != true)
 					{
@@ -227,6 +229,7 @@ namespace NuclearEngine
 				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->SpotLights.size() * 5);
 			}
 		}
+
 	}
 }
 #endif

@@ -150,7 +150,7 @@ public:
 		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
 		TexDesc.Type = API::TextureType::Texture2D;
 		TexDesc.GenerateMipMaps = true;
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
 
 		//Create Sampler
 		API::SamplerDesc Samplerdesc;

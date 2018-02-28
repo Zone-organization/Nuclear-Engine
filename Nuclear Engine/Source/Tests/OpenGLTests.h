@@ -138,8 +138,8 @@ public:
 		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
 		TexDesc.Type = API::TextureType::Texture2D;
 		TexDesc.GenerateMipMaps = true;
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &texture1, TexDesc);
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &texture2, TexDesc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &texture1, TexDesc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &texture2, TexDesc);
 
 		//Create sampler
 		API::SamplerDesc Samplerdesc;

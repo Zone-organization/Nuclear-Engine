@@ -12,21 +12,19 @@ protected:
 	bool renderskyboxenabled = true;
 	bool rendernanosuit = true;
 
-	//Assets
+	//XAsset
 	API::Texture DiffuseTex;
 	API::Texture SpecularTex;
 	API::Texture WhiteTex;
 
-	Assets::ModelAsset CubeAsset;
-	Assets::ModelAsset SphereAsset;
-	Assets::ModelAsset NanosuitAsset;
+	XAsset::ModelAsset CubeAsset;
+	XAsset::ModelAsset SphereAsset;
+	XAsset::ModelAsset NanosuitAsset;
 
 	//Default states
 	API::CommonStates states;
 
 	Components::FlyCamera Camera;
-	Shading::Techniques::PhongShading LightShading;
-
 
 	Components::DirectionalLight dirlight;
 	Components::PointLight pointlight1;
@@ -128,44 +126,44 @@ public:
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &DiffuseTex, Desc);
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_specular.png", &SpecularTex, Desc);
-		AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &DiffuseTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_specular.png", &SpecularTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 	}
-	void SetupAssets()
+	void SetupXAsset()
 	{
 		SetupTextures();
 
-		std::vector<Assets::MeshTexture> Textures;
-		Assets::MeshTexture DiffuseCTex;
+		std::vector<XAsset::MeshTexture> Textures;
+		XAsset::MeshTexture DiffuseCTex;
 		DiffuseCTex.Texture = DiffuseTex;
-		DiffuseCTex.type = Assets::MeshTextureType::Diffuse;
+		DiffuseCTex.type = XAsset::MeshTextureType::Diffuse;
 
-		Assets::MeshTexture SpecularCTex;
+		XAsset::MeshTexture SpecularCTex;
 		SpecularCTex.Texture = SpecularTex;
-		SpecularCTex.type = Assets::MeshTextureType::Specular;
+		SpecularCTex.type = XAsset::MeshTextureType::Specular;
 
 		Textures.push_back(DiffuseCTex);
 		Textures.push_back(SpecularCTex);
 
-		Assets::ModelAsset::CreateCube(&CubeAsset, Textures);
+		XAsset::ModelAsset::CreateCube(&CubeAsset, Textures);
 		CubeAsset.Initialize(&Renderer->GetVertexShader());
 
-		Assets::MeshTexture WhiteCTex;
+		XAsset::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = Assets::MeshTextureType::Diffuse;
-		std::vector<Assets::MeshTexture> spheretextures;
+		WhiteCTex.type = XAsset::MeshTextureType::Diffuse;
+		std::vector<XAsset::MeshTexture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = Assets::MeshTextureType::Specular;
+		WhiteCTex.type = XAsset::MeshTextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 
-		Assets::ModelAsset::CreateSphere(&SphereAsset, spheretextures);
+		XAsset::ModelAsset::CreateSphere(&SphereAsset, spheretextures);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
 
-		ModelLoadingDesc ModelDesc;
+		Managers::ModelLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
-		AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &NanosuitAsset, ModelDesc);
+		Managers::AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &NanosuitAsset, ModelDesc);
 		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
 
 		//Create The skybox
@@ -199,7 +197,6 @@ public:
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-		desc.Light_Rendering_Tech = &LightShading;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
@@ -221,7 +218,7 @@ public:
 
 		SetupLights();
 
-		SetupAssets();
+		SetupXAsset();
 	
 		SetupEntities();
 

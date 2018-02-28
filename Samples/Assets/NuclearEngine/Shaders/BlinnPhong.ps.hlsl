@@ -1,5 +1,74 @@
+struct VertexInputType
+{
+    float4 Position : POSITION0;
+    float3 Normal : NORMAL0;
+    float2 TexCoord : TEXCOORD0;
+};
 
+struct PixelInputType
+{
+    float4 Position : SV_POSITION;
+    float3 Normal : NORMAL0;
+    float2 TexCoord : TEXCOORD0;
+    float3 FragPos : TEXCOORD1;
+};
+
+Texture2D NE_Tex_Diffuse1 : register(t0);
+Texture2D NE_Tex_Specular1 : register(t1);
+
+SamplerState NE_Specular1_Sampler : register(s1);
+SamplerState NE_Diffuse1_Sampler : register(s0);
+
+struct DirLight
+{
+    float4 Direction;
+    float4 Color;
+};
+struct PointLight
+{
+    float4 Position;
+    float4 Intensity_Attenuation;
+    float4 Color;
+};
+struct SpotLight
+{
+    float4 Position;
+    float4 Direction;
+    float4 Intensity_Attenuation;
+    float4 InnerCutOf_OuterCutoff;
+    float4 Color;
+};
+cbuffer NE_Light_CB
+{  
+    float4 ViewPos;
+#ifdef NE_DIR_LIGHTS_NUM
+    DirLight DirLights[NE_DIR_LIGHTS_NUM];
+#endif
+#ifdef NE_POINT_LIGHTS_NUM
+    PointLight PointLights[NE_POINT_LIGHTS_NUM];
+#endif
+
+#ifdef NE_SPOT_LIGHTS_NUM
+    SpotLight SpotLights[NE_SPOT_LIGHTS_NUM];
+#endif
+
+};
+float4 DoLighting(float3 Normal, float3 FragPos, float3 viewpos, float2 TexCoords);
+
+float4 main(PixelInputType input) : SV_TARGET
+{
+    return DoLighting(input.Normal, input.FragPos, ViewPos.xyz, input.TexCoord);
+}
+
+//TODO: move to a global light modifier or some shit
 #define Shininess 64.0f
+
+float GetBlinnSpec(float3 normal, float3 lightDir, float3 viewDir)
+{
+    float3 halfwayDir = normalize(lightDir + viewDir);
+    return pow(max(dot(normal, halfwayDir), 0.0), Shininess);
+}
+
 // calculates the color when using a directional light.
 float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float2 TexCoords)
 {
@@ -7,8 +76,7 @@ float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float2 TexCoo
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
-    float3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Shininess);
+    float spec = GetBlinnSpec(normal, lightDir, viewDir);
     // combine results
     float3 ambient = 0.05f * float3(light.Color.xyz * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
     float3 diffuse = light.Color.xyz * diff * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
@@ -23,8 +91,7 @@ float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 vi
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
-    float3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Shininess);
+    float spec = GetBlinnSpec(normal, lightDir, viewDir);
     // attenuation
     float distance = length(light.Position.xyz - fragPos);
     float attenuation = light.Intensity_Attenuation.x / (light.Intensity_Attenuation.y + light.Intensity_Attenuation.z * distance + light.Intensity_Attenuation.w * (distance * distance));
@@ -46,8 +113,7 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
-    float3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Shininess);
+    float spec = GetBlinnSpec(normal, lightDir, viewDir);
     // attenuation
     float distance = length(light.Position.xyz - fragPos);
     float attenuation = light.Intensity_Attenuation.x / (light.Intensity_Attenuation.y + light.Intensity_Attenuation.z * distance + light.Intensity_Attenuation.w * (distance * distance));
@@ -55,6 +121,7 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     float theta = dot(lightDir, normalize(-light.Direction.xyz));
     float epsilon = light.InnerCutOf_OuterCutoff.x - light.InnerCutOf_OuterCutoff.y;
     float intensity = clamp((theta - light.InnerCutOf_OuterCutoff.y) / epsilon, 0.0, 1.0);
+
     // combine results
     float3 ambient = 0.05f * float3(light.Color.xyz * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
     float3 diffuse = light.Color.xyz * diff * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;

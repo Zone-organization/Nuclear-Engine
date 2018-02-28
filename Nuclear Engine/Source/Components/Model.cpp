@@ -12,11 +12,11 @@ namespace NuclearEngine
 		{
 			m_asset = nullptr;
 		}
-		void Model::SetAsset(Assets::ModelAsset * asset)
+		void Model::SetAsset(XAsset::ModelAsset * asset)
 		{
 			m_asset = asset;
 		}
-		Assets::ModelAsset * Model::GetAsset()
+		XAsset::ModelAsset * Model::GetAsset()
 		{
 			return m_asset;
 		}

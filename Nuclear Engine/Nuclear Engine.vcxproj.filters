@@ -17,9 +17,6 @@
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="include\Shading\Material.h" />
-    <ClInclude Include="include\Shading\Technique.h" />
-    <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
-    <ClInclude Include="include\Shading\Techniques\NoLight.h" />
     <ClInclude Include="include\API\Color.h" />
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Math\Math.h" />
@@ -60,8 +57,6 @@
     <ClInclude Include="Source\Tests\Test2.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
     <ClInclude Include="include\API\OpenGL\GLError.h" />
-    <ClInclude Include="include\AssetManager\AssetManager.h" />
-    <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
@@ -115,8 +110,11 @@
     <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
     <ClInclude Include="include\Core\ComponentDependency.h" />
     <ClInclude Include="include\Components\ModelRenderDesc.h" />
-    <ClInclude Include="include\AssetManager\ModelAsset.h" />
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
+    <ClInclude Include="include\Managers\AssetManager.h" />
+    <ClInclude Include="include\Managers\ShaderManager.h" />
+    <ClInclude Include="include\XAsset\ModelAsset.h" />
+    <ClInclude Include="Source\Managers\AssimpImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -132,8 +130,6 @@
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
-    <ClCompile Include="Source\Shading\Technique.cpp" />
-    <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
     <ClCompile Include="Source\API\Color.cpp" />
     <ClCompile Include="Source\API\InputLayout.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
@@ -162,8 +158,6 @@
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLError.cpp" />
-    <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
-    <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\API\DirectX\DX11RasterizerState.cpp" />
     <ClCompile Include="Source\API\OpenGL\GLRasterizerState.cpp" />
@@ -194,6 +188,9 @@
     <ClCompile Include="Source\Core\Event.cpp" />
     <ClCompile Include="Source\Core\Entity.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
-    <ClCompile Include="Source\AssetManager\ModelAsset.cpp" />
+    <ClCompile Include="Source\Managers\AssetManager.cpp" />
+    <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
+    <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
+    <ClCompile Include="Source\Managers\ShaderManager.cpp" />
   </ItemGroup>
 </Project>

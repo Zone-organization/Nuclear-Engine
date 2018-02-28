@@ -372,7 +372,7 @@
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\ShaderCompiler.h" />
     <ClInclude Include="include\API\VertexShader.h" />
-    <ClInclude Include="include\AssetManager\ModelAsset.h" />
+    <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="include\Components\GUI\imconfig.h" />
     <ClInclude Include="include\Components\GUI\imgui.h" />
     <ClInclude Include="include\Components\Model.h" />
@@ -417,11 +417,9 @@
     <ClInclude Include="include\API\OpenGL\GLVertexBuffer.h" />
     <ClInclude Include="include\API\OpenGL\GLCommon.h" />
     <ClInclude Include="include\Core\Application.h" />
-    <ClInclude Include="include\AssetManager\AssetManager.h" />
+    <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Shading\Material.h" />
-    <ClInclude Include="include\Shading\Technique.h" />
-    <ClInclude Include="include\Shading\Techniques\NoLight.h" />
-    <ClInclude Include="include\Shading\Techniques\PhongShading.h" />
+    <ClInclude Include="include\Managers\ShaderManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
     <ClInclude Include="include\Utilities\Logger.h" />
@@ -429,7 +427,7 @@
     <ClInclude Include="include\Utilities\NonCopyable.h" />
     <ClInclude Include="include\Utilities\Pool.h" />
     <ClInclude Include="include\Utilities\Signal.h" />
-    <ClInclude Include="Source\AssetManager\AssimpImporter.h" />
+    <ClInclude Include="Source\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Components\GUI\imgui_internal.h" />
     <ClInclude Include="Source\Components\GUI\stb_rect_pack.h" />
     <ClInclude Include="Source\Components\GUI\stb_textedit.h" />
@@ -489,8 +487,9 @@
     <ClCompile Include="Source\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\API\VertexShader.cpp" />
-    <ClCompile Include="Source\AssetManager\AssimpImporter.cpp" />
-    <ClCompile Include="Source\AssetManager\ModelAsset.cpp" />
+    <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
+    <ClCompile Include="Source\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
@@ -520,10 +519,8 @@
     <ClCompile Include="Source\Platform\Timer.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
-    <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
+    <ClCompile Include="Source\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
-    <ClCompile Include="Source\Shading\Technique.cpp" />
-    <ClCompile Include="Source\Shading\Techniques\NoLight.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

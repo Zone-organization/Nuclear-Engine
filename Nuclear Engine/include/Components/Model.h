@@ -3,7 +3,7 @@
 #include <Core\Entity.h>
 
 namespace NuclearEngine {
-	namespace Assets {
+	namespace XAsset {
 		class ModelAsset;
 	}
 	namespace Components {
@@ -14,11 +14,11 @@ namespace NuclearEngine {
 			Model();
 			~Model();
 
-			void SetAsset(Assets::ModelAsset *asset);
-			Assets::ModelAsset * GetAsset();
+			void SetAsset(XAsset::ModelAsset *asset);
+			XAsset::ModelAsset * GetAsset();
 
 		private:
-			Assets::ModelAsset * m_asset;
+			XAsset::ModelAsset * m_asset;
 		};
 
 	}
