@@ -1,15 +1,8 @@
-struct VertexInputType
-{
-    float4 Position : POSITION0;
-    float3 Normal : NORMAL0;
-    float2 TexCoord : TEXCOORD0;
-};
-
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
-    float3 Normal : NORMAL0;
     float2 TexCoord : TEXCOORD0;
+    float3 Normal : NORMAL0;
     float3 FragPos : TEXCOORD1;
 };
 
@@ -138,7 +131,6 @@ float4 DoLighting(float3 Normal, float3 FragPos, float3 viewpos, float2 TexCoord
     float3 norm = normalize(Normal);
     float3 viewDir = normalize(viewpos - FragPos);
     float3 result = float3(0.0f, 0.0f, 0.0f);
-
 #ifdef NE_DIR_LIGHTS_NUM
   // phase 1: directional lighting
     for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)

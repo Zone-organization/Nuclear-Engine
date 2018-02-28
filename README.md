@@ -30,6 +30,9 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
   - Multi-Thread loading (Soon™)
   
+- __ShaderManager__
+  - Support for automated shader creation instead of Re-Writing them
+  
 - __OneAPI__
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
   - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
@@ -39,7 +42,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build.
 
 - __RenderSystem__
-  - Support for Phong-Shading.
+  - Support for BlinnPhong Lighting.
   - Support for IMGUI.
   
 ## Current Platforms
