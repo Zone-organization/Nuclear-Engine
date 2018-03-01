@@ -16,6 +16,7 @@ namespace NuclearEngine
 		{
 		public:
 			//Custom shaders to be rendered with
+			//Note: You Must Provide all shaders in order to work
 			bool CustomShaders = false;
 			API::VertexShader VShader;
 			API::PixelShader PShader;
