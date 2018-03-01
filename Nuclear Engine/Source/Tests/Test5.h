@@ -14,7 +14,7 @@ protected:
 	API::VertexBuffer CubeVB;
 	API::VertexBuffer PlaneVB;
 
-	XAsset::ScreenQuadAsset ScreenQuad;
+	XAsset::ModelAsset ScreenQuad;
 
 	API::Sampler LinearSampler;
 	API::Texture PlaneTex;
@@ -233,6 +233,7 @@ public:
 		CubeVB.SetInputLayout(&ShaderIL, &VShader);
 		PlaneVB.SetInputLayout(&ShaderIL, &VShader);
 
+		XAsset::ModelAsset::CreateScreenQuad(&ScreenQuad);
 		ScreenQuad.Initialize(&ScreenVShader);
 		
 		//Create sampler
@@ -396,7 +397,10 @@ public:
 		ScreenPShader.Bind();
 		ScreenSampler.PSBind(0);
 		ScreenTex.PSBind(0);
-		ScreenQuad.Render();
+		ScreenQuad.Meshes.at(0).VBO.Bind();
+		ScreenQuad.Meshes.at(0).IBO.Bind();
+		Core::Context::DrawIndexed(ScreenQuad.Meshes.at(0).IndicesCount);
+		//ScreenQuad.Render();
 		PlaneTex.PSBind(0);
 
 		Core::Context::PresentFrame();

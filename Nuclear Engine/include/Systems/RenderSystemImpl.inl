@@ -47,15 +47,16 @@ namespace NuclearEngine
 			VertShaderDesc.InNormals = false;
 			VertShaderDesc.OutFragPos = false;
 
-			PostPrcoess_VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
-			PostProcessScreenQuad.Initialize(&PostPrcoess_VShader);
+			PostProcess_VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
+			XAsset::ModelAsset::CreateScreenQuad(&PostProcessScreenQuad);
+			PostProcessScreenQuad.Initialize(&PostProcess_VShader);
 			std::vector<std::string> defines;
 			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION"); }
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
 			API::PixelShader::Create(
-				&PostPrcoess_PShader,
-				&API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
+				&PostProcess_PShader,
+				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
 					API::ShaderType::Pixel,
 					API::ShaderLanguage::HLSL));
 		}
@@ -177,14 +178,20 @@ namespace NuclearEngine
 		}
 
 		void RenderSystem::InstantRender(Components::Model * object)
-		{
-			
+		{			
 			for (size_t i = 0; i< object->GetAsset()->Meshes.size(); i++)
 			{	
 				InstantRender(&object->GetAsset()->Meshes.at(i));
 			}
 		}
-		 void RenderSystem::InstantRender(XAsset::Mesh * mesh)
+		void RenderSystem::InstantRender(XAsset::ModelAsset * object)
+		{
+			for (size_t i = 0; i< object->Meshes.size(); i++)
+			{
+				InstantRender(&object->Meshes.at(i));
+			}
+		}
+		void RenderSystem::InstantRender(XAsset::Mesh * mesh)
 		{
 			//Lil hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
@@ -223,6 +230,20 @@ namespace NuclearEngine
 			mesh->VBO.Bind();
 			mesh->IBO.Bind();
 			Core::Context::DrawIndexed(mesh->IndicesCount);
+		}
+		void RenderSystem::RenderToPostProcessingRT()
+		{
+			PostProcessRT.Bind();
+			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		}
+		void RenderSystem::RenderPostProcessingContents()
+		{
+			PostProcessRT.Bind_Default();
+			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			PostProcess_VShader.Bind();
+			PostProcess_PShader.Bind();
+			PostProcessTexture.PSBind(0);
+			InstantRender(&PostProcessScreenQuad);
 		}
 		void RenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)
 		{

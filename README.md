@@ -49,7 +49,11 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Current Platforms
   - Windows 7+     
 
-## Current Milestones
+## Currently TODO
+  - PostProcessing Effects:
+    - Gamma Correction
+	- HDR
+	- Bloom
   - Normal Mapping (Bump mapping)
   - Improve the OneAPI:
     - Implement RenderTarget classes.

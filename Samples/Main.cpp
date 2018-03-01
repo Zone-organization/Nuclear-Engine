@@ -3,6 +3,7 @@
 #include "Sample1.h"
 #include "Sample2.h"
 #include "Playground.h"
+#include "Sandbox.h"
 #include <iostream>
 
 void Test();
@@ -59,7 +60,11 @@ int main(int argc, char* argv[])
 		Playground game;
 		Core::Engine::Run(&game);
 	}
-
+	else if (choice == 'y') {
+		Start();
+		Sandbox game;
+		Core::Engine::Run(&game);
+	}	
 	else if (choice == 'z')
 	{
 		Start();

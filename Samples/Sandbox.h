@@ -23,8 +23,6 @@ protected:
 	//ECS
 	Core::Scene SampleScene;
 
-	Components::Model CubeModel;
-
 	Math::Vector3 lightPositions[4] = {
 		Math::Vector3(-3.0f, 0.0f, 0.0f),
 		Math::Vector3(-1.0f, 0.0f, 0.0f),
@@ -37,6 +35,8 @@ protected:
 		API::Color(0.75),
 		API::Color(1.00)
 	};
+
+	XAsset::ModelAsset Cube;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -63,11 +63,10 @@ public:
 	void SetupTextures()
 	{
 		API::Texture_Desc Desc;
-		Desc.Format = API::Format::R8G8B8A8_UNORM;
+		Desc.Format = API::Format::R8G8B8A8_UNORM_SRGB;
 		Desc.Type = API::TextureType::Texture2D;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
-
 	}
 	void SetupXAsset()
 	{
@@ -83,19 +82,26 @@ public:
 		DTexture.type = XAsset::MeshTextureType::Specular;
 		textures.push_back(DTexture);
 
+		XAsset::ModelAsset::CreateCube(&Cube, textures);
+		Cube.Initialize(&Renderer->GetVertexShader());
 	}
 
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-
+		desc.GammaCorrection = true;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
+		Renderer->InitializePostProcessing();
 		Renderer->SetCamera(&Camera);
 		Renderer->AddLight(&pointlight1);
+		Renderer->AddLight(&pointlight2);
+		Renderer->AddLight(&pointlight3);
+		Renderer->AddLight(&pointlight4);
+
 		Renderer->Bake();
 
 		SetupLights();
@@ -146,17 +152,37 @@ public:
 
 	void Render(float dt) override
 	{
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Tab))
+		{
+			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
+			states.EnabledDepth_DisabledStencil.Bind();
+			Renderer->GetVertexShader().Bind();
+			Renderer->GetPixelShader().Bind();
 
-		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			states.DefaultSampler.PSBind(0);
+			states.DefaultSampler.PSBind(1);
+
+			Renderer->InstantRender(&Cube);
+
+			pointlight1.SetPosition(Camera.GetPosition());
+
+			Renderer->Update_Light();
+
+			SampleScene.Systems.Update_All(dt);
+
+			Core::Context::PresentFrame();
+			return;
+		}
+		Renderer->RenderToPostProcessingRT();
+		states.EnabledDepth_DisabledStencil.Bind();
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
 
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
-		states.DefaultSampler.PSBind(2);
 
-		Renderer->InstantRender(&CubeModel);
+		Renderer->InstantRender(&Cube);
 
 		pointlight1.SetPosition(Camera.GetPosition());
 
@@ -164,8 +190,9 @@ public:
 
 		SampleScene.Systems.Update_All(dt);
 
-		states.EnabledDepth_DisabledStencil.Bind();
-
+		states.DisabledDepthStencil.Bind();
+		Renderer->RenderPostProcessingContents();
+		SpecularTex.PSBind(0);
 		Core::Context::PresentFrame();
 	}
 };

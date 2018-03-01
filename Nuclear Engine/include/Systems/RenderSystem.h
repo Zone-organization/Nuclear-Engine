@@ -52,8 +52,13 @@ namespace NuclearEngine
 			void Render();
 			// Render A Model Component instantly
 			void InstantRender(Components::Model* object);
-			// Render A Mesh Component instantly
+			// Render A Model Asset instantly
+			void InstantRender(XAsset::ModelAsset* object);
+			// Render A Mesh Asset instantly
 			void InstantRender(XAsset::Mesh* mesh);
+
+			void RenderToPostProcessingRT();
+			void RenderPostProcessingContents();
 
 			//Update Functions
 			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;
@@ -86,9 +91,9 @@ namespace NuclearEngine
 			bool PostProcessingEnabled = false;
 			API::Texture PostProcessTexture;
 			API::RenderTarget PostProcessRT;
-			API::VertexShader PostPrcoess_VShader;
-			API::PixelShader PostPrcoess_PShader;
-			XAsset::ScreenQuadAsset PostProcessScreenQuad;
+			API::VertexShader PostProcess_VShader;
+			API::PixelShader PostProcess_PShader;
+			XAsset::ModelAsset PostProcessScreenQuad;
 		};
 
 	}

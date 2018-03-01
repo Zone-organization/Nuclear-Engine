@@ -80,7 +80,7 @@ public:
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-		desc.Normals = true;
+		//desc.Normals = true;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 

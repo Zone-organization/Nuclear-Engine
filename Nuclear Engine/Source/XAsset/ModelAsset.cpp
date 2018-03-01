@@ -178,19 +178,17 @@ namespace NuclearEngine {
 			std::vector<Vertex> vertices;
 			vertices.assign(&v[0], &v[24]);
 
-			std::vector<Math::Vector3> positions;
-			std::vector<Math::Vector2> uv;
-			std::vector<Math::Vector3> normals;
-			std::vector<Math::Vector3> tangents;
+			MeshData meshData;
+
 			for (Vertex vert : vertices)
 			{
-				positions.push_back(vert.Position);
-				if(desc.TexCoord == true)
-					uv.push_back(vert.UV);
+				meshData.Positions.push_back(vert.Position);
+				if (desc.TexCoord == true)
+					meshData.UV.push_back(vert.UV);
 				if (desc.Normals == true)
-					normals.push_back(vert.Normal);
+					meshData.Normals.push_back(vert.Normal);
 				if (desc.Tangents == true)
-					tangents.push_back(vert.Tangents);
+					meshData.Tangents.push_back(vert.Tangents);
 			}
 			// Create the indices.			
 			UINT i[36];
@@ -216,18 +214,13 @@ namespace NuclearEngine {
 			std::vector<unsigned int> indices;
 			indices.assign(&i[0], &i[36]);
 
-			MeshData meshdata;
-			meshdata.Positions = positions;
-			meshdata.UV = uv;
-			meshdata.Normals = normals;
-			meshdata.Tangents = tangents;
-			meshdata.indices = indices;
-			meshdata.textures = Textures;
+			meshData.indices = indices;
+			meshData.textures = Textures;
 
-			model->Meshes.push_back(meshdata);
+			model->Meshes.push_back(meshData);
 		}
 
-		void ModelAsset::CreateSphere(ModelAsset * model, std::vector<MeshTexture> Textures ,const ModelAssetVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
+		void ModelAsset::CreateSphere(ModelAsset * model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
 		{
 			MeshData meshData;
 
@@ -312,77 +305,158 @@ namespace NuclearEngine {
 			}
 			meshData.textures = Textures;
 
-			std::vector<Math::Vector3> positions;
-			std::vector<Math::Vector2> uv;
-			std::vector<Math::Vector3> normals;
-			std::vector<Math::Vector3> tangents;
-
 			for (Vertex vert : vertices)
 			{
-				positions.push_back(vert.Position);
+				meshData.Positions.push_back(vert.Position);
 				if (desc.TexCoord == true)
-					uv.push_back(vert.UV);
+					meshData.UV.push_back(vert.UV);
 				if (desc.Normals == true)
-					normals.push_back(vert.Normal);
+					meshData.Normals.push_back(vert.Normal);
 				if (desc.Tangents == true)
-					tangents.push_back(vert.Tangents);
+					meshData.Tangents.push_back(vert.Tangents);
 			}
-
-			meshData.Positions = positions;
-			meshData.UV = uv;
-			meshData.Normals = normals;
-			meshData.Tangents = tangents;
 			model->Meshes.push_back(meshData);
 		}
 
-		void ScreenQuadAsset::Initialize(API::VertexShader * _shader)
+		void ModelAsset::CreateGrid(ModelAsset * model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
 		{
-			API::VertexBufferDesc vDesc;
+			MeshData meshData;
+			std::vector<Vertex> Vertices;
+			std::vector<uint> Indices;
 
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			UINT vertexCount = m * n;
+			UINT faceCount = (m - 1)*(n - 1) * 2;
+
+			//
+			// Create the vertices.
+			//
+
+			float halfWidth = 0.5f*width;
+			float halfDepth = 0.5f*depth;
+
+			float dx = width / (n - 1);
+			float dz = depth / (m - 1);
+
+			float du = 1.0f / (n - 1);
+			float dv = 1.0f / (m - 1);
+
+			Vertices.resize(vertexCount);
+			for (UINT i = 0; i < m; ++i)
 			{
-				float dx11quadVertices[] = {
-					// positions        // texCoords
-					-1.0f,  1.0f, 0.0f,  0.0f, -1.0f,
-					-1.0f, -1.0f, 0.0f,  0.0f, 0.0f,
-					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+				float z = halfDepth - i * dz;
+				for (UINT j = 0; j < n; ++j)
+				{
+					float x = -halfWidth + j * dx;
 
-					-1.0f,  1.0f, 0.0f,  0.0f, -1.0f,
-					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
-					1.0f,  1.0f, 0.0f,  1.0f, -1.0f
-				};
-				vDesc.data = dx11quadVertices;
-				vDesc.size = sizeof(dx11quadVertices);
-			}
-			else {
-				float oglquadVertices[] = {
-					// positions         // texCoords
-					-1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
-					-1.0f, -1.0f, 0.0f,  0.0f, 0.0f,
-					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+					Vertices[i*n + j].Position = Math::Vector3(x, 0.0f, z);
+					Vertices[i*n + j].Normal = Math::Vector3(0.0f, 1.0f, 0.0f);
+					Vertices[i*n + j].Tangents = Math::Vector3(1.0f, 0.0f, 0.0f);
 
-					-1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
-					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
-					1.0f,  1.0f, 0.0f,  1.0f, 1.0f
-				};
-				vDesc.data = oglquadVertices;
-				vDesc.size = sizeof(oglquadVertices);
+					// Stretch texture over grid.
+					Vertices[i*n + j].UV.x = j * du;
+					Vertices[i*n + j].UV.y = i * dv;
+				}
 			}
 
-			vDesc.usage = API::BufferUsage::Static;		
-			API::VertexBuffer::Create(&ScreenQuadVB, vDesc);
+			//
+			// Create the indices.
+			//
 
-			API::InputLayout ScreenShaderIL;
-			ScreenShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-			ScreenShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+			Indices.resize(faceCount * 3); // 3 indices per face
 
-			ScreenQuadVB.SetInputLayout(&ScreenShaderIL, _shader);
+													// Iterate over each quad and compute indices.
+			UINT k = 0;
+			for (UINT i = 0; i < m - 1; ++i)
+			{
+				for (UINT j = 0; j < n - 1; ++j)
+				{
+					Indices[k] = i * n + j;
+					Indices[k + 1] = i * n + j + 1;
+					Indices[k + 2] = (i + 1)*n + j;
 
+					Indices[k + 3] = (i + 1)*n + j;
+					Indices[k + 4] = i * n + j + 1;
+					Indices[k + 5] = (i + 1)*n + j + 1;
+
+					k += 6; // next quad
+				}
+			}
+
+			for (Vertex vert : Vertices)
+			{
+				meshData.Positions.push_back(vert.Position);
+				if (desc.TexCoord == true)
+					meshData.UV.push_back(vert.UV);
+				if (desc.Normals == true)
+					meshData.Normals.push_back(vert.Normal);
+				if (desc.Tangents == true)
+					meshData.Tangents.push_back(vert.Tangents);
+			}
+			meshData.indices = Indices;
+
+			meshData.textures = Textures;
+
+			model->Meshes.push_back(meshData);
 		}
-		void ScreenQuadAsset::Render()
+
+		void ModelAsset::CreateScreenQuad(ModelAsset * model)
 		{
-			ScreenQuadVB.Bind();
-			Core::Context::Draw(6);
+			std::vector<Vertex> Vertices;
+			std::vector<uint> Indices;
+
+			MeshData meshData;
+
+			Vertices.resize(4);
+			Indices.resize(6);
+
+			float VTexCoord = +1.0f;
+
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			{
+				VTexCoord = -1.0f;
+			}
+			// Position coordinates specified in NDC space.
+			Vertices[0] = Vertex(
+				-1.0f, -1.0f, 0.0f,
+				0.0f, 0.0f, -1.0f,
+				1.0f, 0.0f, 0.0f,
+				0.0f, VTexCoord);
+
+			Vertices[1] = Vertex(
+				-1.0f, +1.0f, 0.0f,
+				0.0f, 0.0f, -1.0f,
+				1.0f, 0.0f, 0.0f,
+				0.0f, 0.0f);
+
+			Vertices[2] = Vertex(
+				+1.0f, +1.0f, 0.0f,
+				0.0f, 0.0f, -1.0f,
+				1.0f, 0.0f, 0.0f,
+				1.0f, 0.0f);
+
+			Vertices[3] = Vertex(
+				+1.0f, -1.0f, 0.0f,
+				0.0f, 0.0f, -1.0f,
+				1.0f, 0.0f, 0.0f,
+				1.0f, VTexCoord);
+
+			Indices[0] = 0;
+			Indices[1] = 1;
+			Indices[2] = 2;
+
+			Indices[3] = 0;
+			Indices[4] = 2;
+			Indices[5] = 3;
+
+			for (Vertex vert : Vertices)
+			{
+				meshData.Positions.push_back(vert.Position);
+				meshData.UV.push_back(vert.UV);
+			}
+			meshData.indices = Indices;
+
+			model->Meshes.push_back(meshData);
 		}
-}
+
+	}
 }
