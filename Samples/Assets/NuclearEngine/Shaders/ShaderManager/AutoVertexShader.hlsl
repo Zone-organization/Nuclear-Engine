@@ -7,11 +7,11 @@ Defines:
 #define NE_OUT_FRAG_POS
 
 */
-//#define NE_USE_UV
-//#define NE_USE_NORMALS
-//#define NE_USE_TANGENTS
-//#define NE_USE_DEF_CAMERA
-//#define NE_OUT_FRAG_POS
+#define NE_USE_UV
+#define NE_USE_NORMALS
+#define NE_USE_TANGENTS
+#define NE_USE_DEF_CAMERA
+#define NE_OUT_FRAG_POS
 
 struct VertexInputType
 {
@@ -21,6 +21,9 @@ struct VertexInputType
 #endif
 #ifdef NE_USE_NORMALS
     float3 Normal : NORMAL0;
+#endif
+#ifdef NE_USE_TANGENTS
+    float3 Tangents : TANGENT0;
 #endif
 };
 
@@ -35,6 +38,11 @@ struct PixelInputType
 #endif
 #ifdef NE_OUT_FRAG_POS
     float3 FragPos : TEXCOORD1;
+#endif
+#ifdef NE_USE_TANGENTS
+    float3 T : TANGENT0;
+    float3 N : TANGENT1;
+    float3 B : TANGENT2;
 #endif
 };
 
@@ -69,6 +77,16 @@ PixelInputType main(VertexInputType input)
 #ifdef NE_OUT_FRAG_POS
     output.FragPos = mul(Model, input.Position).xyz;
 #endif
+#ifdef NE_USE_TANGENTS
+    float3 T = normalize(mul(input.Tangents, input.Normal));
+    float3 N = normalize(input.Normal * input.Normal);
+    T = normalize(T - dot(T, N) * N);
+    float3 B = cross(N, T);
+    
+    output.T = T;
+    output.N = N;
+    output.B = B;
 
+#endif
     return output;
 }

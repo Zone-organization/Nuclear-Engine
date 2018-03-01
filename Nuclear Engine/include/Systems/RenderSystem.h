@@ -21,6 +21,7 @@ namespace NuclearEngine
 
 		struct NEAPI RenderSystemDesc
 		{			
+			bool Normals = false;
 			std::string VShaderPath = "NE_Default";
 			std::string PShaderPath = "Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl";
 		};

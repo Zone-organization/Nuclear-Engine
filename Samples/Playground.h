@@ -1,107 +1,102 @@
 #pragma once
 #include "Common.h"
 
-struct EventComponentReciever : public Core::Receiver<EventComponentReciever> {
-	//void receive(const Core::ComponentAddedEvent<Components::GameObject> &shit)
-	//{
-	//	std::cout << "Working.\n";
-	//}
-
-};
 class Playground : public Core::Game
 {
 protected:
-
-	Core::EventManager events;
-	Core::EntityManager entities;
-	Core::SystemManager systems;
-
-	API::Texture WoodenBoxTex;
-	API::Texture WhiteTex;
-
-	Components::FlyCamera Camera;
-	API::CommonStates states;
-	Core::Entity ECube;
-	Core::Entity ELamp;
-
-	Components::Model Cube;
-	Components::Model lamp;
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-	//Shading::Techniques::NoLight lighttech;
+	//XAsset
+	API::Texture DiffuseTex;
+	API::Texture SpecularTex;
+	API::Texture NormalTex;
+
+	XAsset::ModelAsset CubeAsset;
+
+	//Default states
+	API::CommonStates states;
+
+	Components::FlyCamera Camera;
+
+	Components::PointLight pointlight1;
+
+	//ECS
+	Core::Scene SampleScene;
+
+	Components::Model CubeModel;
+
+	// positions of the point lights
+	Math::Vector3 pointLightPositions[4] =
+	{
+		Math::Vector3(0.7f,  0.2f,  2.0f)
+	};
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
-
-	EventComponentReciever reciever;
-
 public:
 	Playground()
-		: entities(events), systems(entities, events)
 	{
 	}
-	void Load()
+
+	void SetupLights()
 	{
-		Systems::RenderSystemDesc desc;
-	//	desc.Light_Rendering_Tech = &lighttech;
-		//Renderer = systems.Add<Systems::RenderSystem>(desc);
-		
-		systems.Configure();
-		
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
-
-		Renderer->SetCamera(&Camera);
-		Renderer->Bake();
-
+		pointlight1.SetPosition(pointLightPositions[0]);
+		pointlight1.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
+	}
+	void SetupTextures()
+	{
 		API::Texture_Desc Desc;
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall_normal.jpg", &NormalTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
 
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, Desc);
+	}
+	void SetupXAsset()
+	{
+		SetupTextures();
 
+		std::vector<XAsset::MeshTexture> textures;
 
-		std::vector<XAsset::MeshTexture> Textures;
-		XAsset::MeshTexture DiffuseTex;
-		DiffuseTex.Texture = WoodenBoxTex;
-		DiffuseTex.type = XAsset::MeshTextureType::Diffuse;
-		Textures.push_back(DiffuseTex);
+		XAsset::MeshTexture DTexture;
+		DTexture.Texture = DiffuseTex;
+		DTexture.type = XAsset::MeshTextureType::Diffuse;
+		textures.push_back(DTexture);
+		DTexture.Texture = SpecularTex;
+		DTexture.type = XAsset::MeshTextureType::Specular;
+		textures.push_back(DTexture);
+		DTexture.Texture = NormalTex;
+		DTexture.type = XAsset::MeshTextureType::Normal;
+		textures.push_back(DTexture);
 
-		//XAsset::ModelAsset::CreateCube(&Cube, Textures);
-		//Cube.Initialize(&Renderer->GetShader());
+		XAsset::ModelAssetVertexDesc descm;
+		descm.Tangents = true;
+		XAsset::ModelAsset::CreateCube(&CubeAsset, textures, descm);
+		CubeAsset.Initialize(&Renderer->GetVertexShader());
+		CubeModel.SetAsset(&CubeAsset);
+	}
 
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
+	void Load()
+	{
+		Systems::RenderSystemDesc desc;
+		desc.Normals = true;
+		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
+		SampleScene.Systems.Configure();
 
-		Textures.clear();
-		DiffuseTex.Texture = WhiteTex;
-		Textures.push_back(DiffuseTex);
+		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
-		//XAsset::ModelAsset::CreateSphere(&lamp, Textures);
-		//lamp.Initialize(&Renderer->GetShader());
+		Renderer->SetCamera(&Camera);
+		Renderer->AddLight(&pointlight1);
+		Renderer->Bake();
 
-		//Components::GameObject GOCube;
-		//Components::GameObject GOLamp;
+		SetupLights();
 
-		//Configure the "3D" GameObject
-		//GOCube.SetModel(&Cube);
-		//GOLamp.SetModel(&lamp);
-		//GOCube.GetTransformComponent()->SetPosition(Math::Vector3(-1.5f, -2.2f, -2.5f));
-		//GOLamp.GetTransformComponent()->SetPosition(Math::Vector3(2.4f, -0.4f, -3.5f));
-
-		//events.Subscribe<Core::ComponentAddedEvent<Components::GameObject>>(reciever);
-		
-		ECube = entities.Create();
-		//ECube.Assign<Components::GameObject>(GOCube);
-
-		//ELamp = entities.Create();
-		//ELamp.Assign<Components::GameObject>(GOLamp);
-
-		systems.Update_All(0.0f);
-
-		//object.SetModel(&lamp);
-		ImGui::StyleColorsDark();
+		SetupXAsset();
 
 		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
 	}
@@ -119,13 +114,14 @@ public:
 		}
 
 		float xoffset = xpos - lastX;
-		float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+		float yoffset = lastY - ypos;
 
 		lastX = xpos;
 		lastY = ypos;
 
 		Camera.ProcessEye(xoffset, yoffset);
 	}
+
 	void Update(float deltatime) override
 	{
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
@@ -138,48 +134,30 @@ public:
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		Camera.Update();
-
 	}
-	void ShowOverlay(bool show)
-	{
-		const float DISTANCE = 10.0f;
-		static int corner = 0;
-		ImVec2 window_pos = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
-		ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
-		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.3f)); // Transparent background
-		if (ImGui::Begin("FPS Overlay", &show, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings))
-		{
-			ImGui::Text("FPS Overlay\n");
-			ImGui::Separator();
-			ImGui::Text(" %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
 
-		}
-		ImGui::PopStyleColor();
-	}
-	void Render(float deltatime) override
+	void Render(float dt) override
 	{
 		Core::Context::Begin();
-		ImGui::NE_NewFrame();
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		
 
-		Math::Matrix4 CubeMatrix;
-
+		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
+
 		states.DefaultSampler.PSBind(0);
+		states.DefaultSampler.PSBind(1);
+		states.DefaultSampler.PSBind(2);
 
-		systems.Update_All(deltatime);
+		Renderer->InstantRender(&CubeModel);
 		
-		ShowOverlay(true);
+		pointlight1.SetPosition(Camera.GetPosition());
 
-		ImGui::Render();
+		Renderer->Update_Light();
+
+		SampleScene.Systems.Update_All(dt);
+
+		states.EnabledDepth_DisabledStencil.Bind();
+
 		Core::Context::End();
-	}
-	void Shutdown() override
-	{
-		API::Texture::Delete(&WoodenBoxTex);
 	}
 };

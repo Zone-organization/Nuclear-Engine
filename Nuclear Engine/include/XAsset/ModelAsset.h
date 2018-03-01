@@ -14,7 +14,8 @@ namespace NuclearEngine {
 		enum class NEAPI MeshTextureType
 		{
 			Diffuse,
-			Specular
+			Specular,
+			Normal
 		};
 
 		struct NEAPI MeshTexture {
@@ -26,6 +27,7 @@ namespace NuclearEngine {
 			std::vector<Math::Vector3> Positions;
 			std::vector<Math::Vector2> UV;
 			std::vector<Math::Vector3> Normals;
+			std::vector<Math::Vector3> Tangents;
 
 			std::vector<unsigned int> indices;
 			std::vector<MeshTexture> textures;
@@ -46,7 +48,12 @@ namespace NuclearEngine {
 			API::IndexBuffer IBO;
 			API::VertexBuffer VBO;
 		};
-
+		struct ModelAssetVertexDesc
+		{
+			bool TexCoord = true;
+			bool Normals = true;
+			bool Tangents = false;
+		};
 		class NEAPI ModelAsset
 		{
 		public:			
@@ -59,8 +66,8 @@ namespace NuclearEngine {
 			void Initialize(API::VertexShader* _shader);
 			void Delete();
 
-			static void CreateCube(ModelAsset* model, std::vector<MeshTexture> Textures, float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
-			static void CreateSphere(ModelAsset* model, std::vector<MeshTexture> Textures, float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
+			static void CreateCube(ModelAsset* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc = ModelAssetVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
+			static void CreateSphere(ModelAsset* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc = ModelAssetVertexDesc(), float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
 
 			std::vector<Mesh> Meshes;
 		private:

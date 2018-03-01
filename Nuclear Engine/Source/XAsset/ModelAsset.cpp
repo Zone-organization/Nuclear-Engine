@@ -38,6 +38,12 @@ namespace NuclearEngine {
 					verticesdata.push_back(data.Normals[i].y);
 					verticesdata.push_back(data.Normals[i].z);
 				}
+				if (data.Tangents.size() > 0)
+				{
+					verticesdata.push_back(data.Tangents[i].x);
+					verticesdata.push_back(data.Tangents[i].y);
+					verticesdata.push_back(data.Tangents[i].z);
+				}
 			}
 			API::VertexBufferDesc desc;
 			desc.data = verticesdata.data();
@@ -59,12 +65,16 @@ namespace NuclearEngine {
 			{
 				layout.AppendAttribute("NORMAL", 0, API::DataType::Float3);
 			}
-
+			if (data.Tangents.size() > 0)
+			{
+				layout.AppendAttribute("TANGENT", 0, API::DataType::Float3);
+			}
 			VBO.SetInputLayout(&layout, _shader);
 
 			data.Positions.clear();
 			data.UV.clear();
 			data.Normals.clear();
+			data.Tangents.clear();
 			data.indices.clear();
 		}
 
@@ -103,32 +113,25 @@ namespace NuclearEngine {
 		}
 		struct Vertex
 		{
-			Vertex()
-			{
-			}
-			Vertex(Math::Vector3 pos, Math::Vector3 norm, Math::Vector2 uv)
-			{
-				Position = pos;
-				Normal = norm;
-				TexCoords = uv;
-			}
+			Vertex() {}
+			Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector2& uv)
+				: Position(p), Normal(n), Tangents(t), UV(uv) {}
 			Vertex(
 				float px, float py, float pz,
 				float nx, float ny, float nz,
+				float tx, float ty, float tz,
 				float u, float v)
-				: Position(px, py, pz), Normal(nx, ny, nz), TexCoords(u, v)
-			{
+				: Position(px, py, pz), Normal(nx, ny, nz),
+				Tangents(tx, ty, tz), UV(u, v) {}
 
-			}
-			// position
 			Math::Vector3 Position;
-			// normal
+			Math::Vector2 UV;
 			Math::Vector3 Normal;
-			// texCoords
-			Math::Vector2 TexCoords;
+			Math::Vector3 Tangents;
 		};
+
 		//Todo rework this since we do alot of unnecessery looping
-		void ModelAsset::CreateCube(ModelAsset* model, std::vector<MeshTexture> Textures, float width, float height, float depth)
+		void ModelAsset::CreateCube(ModelAsset* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc, float width, float height, float depth)
 		{
 			Vertex v[24];
 
@@ -137,35 +140,40 @@ namespace NuclearEngine {
 			float d2 = 0.5f*depth;
 
 			// Fill in the front face vertex data.
-			v[0] = Vertex(-w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-			v[1] = Vertex(-w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-			v[2] = Vertex(+w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
-			v[3] = Vertex(+w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+			v[0] = Vertex(-w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+			v[1] = Vertex(-w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+			v[2] = Vertex(+w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+			v[3] = Vertex(+w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
 			// Fill in the back face vertex data.
-			v[4] = Vertex(-w2, -h2, +d2, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-			v[5] = Vertex(+w2, -h2, +d2, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-			v[6] = Vertex(+w2, +h2, +d2, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-			v[7] = Vertex(-w2, +h2, +d2, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+			v[4] = Vertex(-w2, -h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+			v[5] = Vertex(+w2, -h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+			v[6] = Vertex(+w2, +h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+			v[7] = Vertex(-w2, +h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
 			// Fill in the top face vertex data.
-			v[8] = Vertex(-w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
-			v[9] = Vertex(-w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-			v[10] = Vertex(+w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
-			v[11] = Vertex(+w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
+			v[8] = Vertex(-w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+			v[9] = Vertex(-w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+			v[10] = Vertex(+w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+			v[11] = Vertex(+w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
 			// Fill in the bottom face vertex data.
-			v[12] = Vertex(-w2, -h2, -d2, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f);
-			v[13] = Vertex(+w2, -h2, -d2, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
-			v[14] = Vertex(+w2, -h2, +d2, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f);
-			v[15] = Vertex(-w2, -h2, +d2, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+			v[12] = Vertex(-w2, -h2, -d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+			v[13] = Vertex(+w2, -h2, -d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+			v[14] = Vertex(+w2, -h2, +d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+			v[15] = Vertex(-w2, -h2, +d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
 			// Fill in the left face vertex data.
-			v[16] = Vertex(-w2, -h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-			v[17] = Vertex(-w2, +h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-			v[18] = Vertex(-w2, +h2, -d2, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-			v[19] = Vertex(-w2, -h2, -d2, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+			v[16] = Vertex(-w2, -h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
+			v[17] = Vertex(-w2, +h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+			v[18] = Vertex(-w2, +h2, -d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+			v[19] = Vertex(-w2, -h2, -d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+
 			// Fill in the right face vertex data.
-			v[20] = Vertex(+w2, -h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-			v[21] = Vertex(+w2, +h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-			v[22] = Vertex(+w2, +h2, +d2, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-			v[23] = Vertex(+w2, -h2, +d2, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+			v[20] = Vertex(+w2, -h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+			v[21] = Vertex(+w2, +h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+			v[22] = Vertex(+w2, +h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+			v[23] = Vertex(+w2, -h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
 			std::vector<Vertex> vertices;
 			vertices.assign(&v[0], &v[24]);
@@ -173,12 +181,16 @@ namespace NuclearEngine {
 			std::vector<Math::Vector3> positions;
 			std::vector<Math::Vector2> uv;
 			std::vector<Math::Vector3> normals;
-
+			std::vector<Math::Vector3> tangents;
 			for (Vertex vert : vertices)
 			{
 				positions.push_back(vert.Position);
-				uv.push_back(vert.TexCoords);
-				normals.push_back(vert.Normal);
+				if(desc.TexCoord == true)
+					uv.push_back(vert.UV);
+				if (desc.Normals == true)
+					normals.push_back(vert.Normal);
+				if (desc.Tangents == true)
+					tangents.push_back(vert.Tangents);
 			}
 			// Create the indices.			
 			UINT i[36];
@@ -208,17 +220,19 @@ namespace NuclearEngine {
 			meshdata.Positions = positions;
 			meshdata.UV = uv;
 			meshdata.Normals = normals;
+			meshdata.Tangents = tangents;
 			meshdata.indices = indices;
 			meshdata.textures = Textures;
+
 			model->Meshes.push_back(meshdata);
 		}
 
-		void ModelAsset::CreateSphere(ModelAsset * model, std::vector<MeshTexture> Textures, float radius, unsigned int sliceCount, unsigned int stackCount)
+		void ModelAsset::CreateSphere(ModelAsset * model, std::vector<MeshTexture> Textures ,const ModelAssetVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
 		{
 			MeshData meshData;
 
-			Vertex topVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 0.0f, 0.0f);
-			Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
+			Vertex topVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+			Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 			std::vector<Vertex> vertices;
 
 			vertices.push_back(topVertex);
@@ -246,8 +260,16 @@ namespace NuclearEngine {
 					Math::Vector3 p = v.Position;
 					v.Normal = Math::Normalize(p);
 
-					v.TexCoords.x = theta / (2 * static_cast<float>(MathPI));
-					v.TexCoords.y = phi / static_cast<float>(MathPI);
+					// Partial derivative of P with respect to theta
+					v.Tangents.x = -radius * sinf(phi)*sinf(theta);
+					v.Tangents.y = 0.0f;
+					v.Tangents.z = +radius * sinf(phi)*cosf(theta);
+
+					Math::Vector3 T = v.Tangents;
+					v.Tangents = Math::Normalize(T);
+
+					v.UV.x = theta / (2 * static_cast<float>(MathPI));
+					v.UV.y = phi / static_cast<float>(MathPI);
 
 					vertices.push_back(v);
 				}
@@ -293,38 +315,24 @@ namespace NuclearEngine {
 			std::vector<Math::Vector3> positions;
 			std::vector<Math::Vector2> uv;
 			std::vector<Math::Vector3> normals;
+			std::vector<Math::Vector3> tangents;
 
 			for (Vertex vert : vertices)
 			{
 				positions.push_back(vert.Position);
-				uv.push_back(vert.TexCoords);
-				normals.push_back(vert.Normal);
+				if (desc.TexCoord == true)
+					uv.push_back(vert.UV);
+				if (desc.Normals == true)
+					normals.push_back(vert.Normal);
+				if (desc.Tangents == true)
+					tangents.push_back(vert.Tangents);
 			}
+
 			meshData.Positions = positions;
 			meshData.UV = uv;
 			meshData.Normals = normals;
-
+			meshData.Tangents = tangents;
 			model->Meshes.push_back(meshData);
 		}
-//
-//		void ModelAsset::Draw()
-//		{
-//#ifdef _DEBUG
-//			if (init != true)
-//			{
-//				Log.Error("[ModelAsset] Drawing a ModelAsset (mesh no: " + std::to_string(Meshes.size()) +
-//					") without being initialized leads to a crash,"
-//					" since this is a debug build we check it for you to prevent crashes but"
-//					" checking has performance penality, so auto-check is disabled in release,"
-//					" be sure to fix this issue in before release!\n");
-//				return;
-//			}
-//#endif
-//			for (unsigned int i = 0; i < Meshes.size(); i++)
-//			{
-//				Meshes[i].Draw();
-//			}
-//		}
-
 	}
 }

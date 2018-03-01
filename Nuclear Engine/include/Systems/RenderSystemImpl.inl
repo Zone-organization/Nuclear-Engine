@@ -62,7 +62,8 @@ namespace NuclearEngine
 			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true;	}
 			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
 			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  PSDirty = true; }
-
+			if (Desc.Normals == true) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+			
 			if (PSDirty = true)
 			{
 				API::PixelShader::Delete(&PShader);
@@ -90,6 +91,9 @@ namespace NuclearEngine
 
 				if (Desc.VShaderPath == "NE_Default")
 				{
+					Managers::AutoVertexShaderDesc descm;
+					if (Desc.Normals == true) { descm.InTangents = true; }
+
 					VShader = Managers::ShaderManager::CreateAutoVertexShader(Managers::AutoVertexShaderDesc());
 				}
 				else {
@@ -152,6 +156,8 @@ namespace NuclearEngine
 			//TODO: Support Multi-Texture Models
 			bool diffusebound = false;
 			bool specularbound = false;
+			bool normalbound = false;
+
 			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
@@ -169,6 +175,14 @@ namespace NuclearEngine
 					{
 						mesh->data.textures[i].Texture.PSBind(1);
 						specularbound = true;
+					}
+				}
+				else if (mesh->data.textures[i].type == XAsset::MeshTextureType::Normal)
+				{
+					if (normalbound != true)
+					{
+						mesh->data.textures[i].Texture.PSBind(2);
+						normalbound = true;
 					}
 				}
 			}
