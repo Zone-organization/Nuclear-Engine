@@ -16,10 +16,15 @@ namespace NuclearEngine {
 			int req_c;
 			switch (Desc.Format)
 			{
-			case API::Format::R8_UNORM:		req_c = 1; break;
-			case API::Format::R8G8_UNORM:		req_c = 2; break;
-			case API::Format::R8G8B8_UNORM:	req_c = 3; break;
-			case API::Format::R8G8B8A8_UNORM:	req_c = 4; break;
+			case API::Format::R8_UNORM:	
+				req_c = 1; break;
+			case API::Format::R8G8_UNORM:
+				req_c = 2; break;
+			case API::Format::R8G8B8_UNORM:
+				req_c = 3; break;
+			case API::Format::R8G8B8A8_UNORM:
+			case API::Format::R8G8B8A8_UNORM_SRGB:
+				req_c = 4; break;
 			default:					req_c = 4; break;
 			}
 
@@ -50,10 +55,15 @@ namespace NuclearEngine {
 			int req_c;
 			switch (Desc.Format)
 			{
-			case API::Format::R8_UNORM:		req_c = 1; break;
-			case API::Format::R8G8_UNORM:		req_c = 2; break;
-			case API::Format::R8G8B8_UNORM:	req_c = 3; break;
-			case API::Format::R8G8B8A8_UNORM:	req_c = 4; break;
+			case API::Format::R8_UNORM:	
+				req_c = 1; break;
+			case API::Format::R8G8_UNORM:
+				req_c = 2; break;
+			case API::Format::R8G8B8_UNORM:
+				req_c = 3; break;
+			case API::Format::R8G8B8A8_UNORM:
+			case API::Format::R8G8B8A8_UNORM_SRGB:
+				req_c = 4; break;
 			default:					req_c = 4; break;
 			}
 

@@ -35,5 +35,20 @@ namespace NuclearEngine
 
 			return result;
 		}
+		API::PixelShader ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
+		{
+			API::PixelShader result;
+			std::vector<std::string> defines;
+
+			if (desc.OutputTexture)
+				defines.push_back("NE_OUTPUT_TEXTURE");
+
+			API::PixelShader::Create(
+				&result,
+				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true).c_str(),
+					API::ShaderType::Pixel,
+					API::ShaderLanguage::HLSL));
+			return result;
+		}
 	}
 }

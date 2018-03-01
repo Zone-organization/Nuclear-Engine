@@ -7,6 +7,7 @@
 #include <Components\GenericCamera.h>
 #include <Components\Light.h>
 #include <XAsset\ModelAsset.h>
+#include <API\RenderTarget.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -21,9 +22,13 @@ namespace NuclearEngine
 
 		struct NEAPI RenderSystemDesc
 		{			
-			bool Normals = false;
+			bool NormalMaps = false;
 			std::string VShaderPath = "NE_Default";
 			std::string PShaderPath = "Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl";
+
+			//PostProcess Graphical Enchancements
+			bool GammaCorrection = false;
+			bool HDR = false;
 		};
 
 		class RenderSystem : public Core::System<RenderSystem> {
@@ -31,6 +36,7 @@ namespace NuclearEngine
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc());
 			~RenderSystem();
 
+			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::GenericCamera* camera);
 
 			API::VertexShader GetVertexShader();
@@ -59,19 +65,30 @@ namespace NuclearEngine
 
 			API::VertexShader VShader;
 			API::PixelShader PShader;
+			API::ConstantBuffer NE_Light_CB;
+
+			Components::GenericCamera* ActiveCamera;
 
 			bool VSDirty = true;
 			bool PSDirty = true;
 
-			API::ConstantBuffer NE_Light_CB;
 			size_t NE_Light_CB_Size;
 			size_t NUM_OF_LIGHT_VECS;
-			Components::GenericCamera* ActiveCamera;
+
 			std::vector<Components::DirectionalLight*> DirLights;
 			std::vector<Components::PointLight*> PointLights;
 			std::vector<Components::SpotLight*> SpotLights;
+
 			RenderSystemDesc Desc;
 			RenderSystemStatus status;
+
+			//PostProcess stuff
+			bool PostProcessingEnabled = false;
+			API::Texture PostProcessTexture;
+			API::RenderTarget PostProcessRT;
+			API::VertexShader PostPrcoess_VShader;
+			API::PixelShader PostPrcoess_PShader;
+			XAsset::ScreenQuadAsset PostProcessScreenQuad;
 		};
 
 	}

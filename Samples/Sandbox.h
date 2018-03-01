@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 
-class Playground : public Core::Game
+class Sandbox : public Core::Game
 {
 protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
@@ -9,9 +9,6 @@ protected:
 	//XAsset
 	API::Texture DiffuseTex;
 	API::Texture SpecularTex;
-	API::Texture NormalTex;
-
-	XAsset::ModelAsset CubeAsset;
 
 	//Default states
 	API::CommonStates states;
@@ -19,29 +16,49 @@ protected:
 	Components::FlyCamera Camera;
 
 	Components::PointLight pointlight1;
+	Components::PointLight pointlight2;
+	Components::PointLight pointlight3;
+	Components::PointLight pointlight4;
 
 	//ECS
 	Core::Scene SampleScene;
 
 	Components::Model CubeModel;
 
-	// positions of the point lights
-	Math::Vector3 pointLightPositions[4] =
-	{
-		Math::Vector3(0.7f,  0.2f,  2.0f)
+	Math::Vector3 lightPositions[4] = {
+		Math::Vector3(-3.0f, 0.0f, 0.0f),
+		Math::Vector3(-1.0f, 0.0f, 0.0f),
+		Math::Vector3(1.0f, 0.0f, 0.0f),
+		Math::Vector3(3.0f, 0.0f, 0.0f)
 	};
+	API::Color lightColors[4] = {
+		API::Color(0.25),
+		API::Color(0.50),
+		API::Color(0.75),
+		API::Color(1.00)
+	};
+
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
 public:
-	Playground()
+	Sandbox()
 	{
 	}
 
 	void SetupLights()
 	{
-		pointlight1.SetPosition(pointLightPositions[0]);
-		pointlight1.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		pointlight1.SetPosition(lightPositions[0]);
+		pointlight1.SetColor(lightColors[0]);
+
+		pointlight2.SetPosition(lightPositions[1]);
+		pointlight2.SetColor(lightColors[1]);
+
+		pointlight3.SetPosition(lightPositions[2]);
+		pointlight3.SetColor(lightColors[2]);
+
+		pointlight4.SetPosition(lightPositions[3]);
+		pointlight4.SetColor(lightColors[4]);
 	}
 	void SetupTextures()
 	{
@@ -49,7 +66,6 @@ public:
 		Desc.Format = API::Format::R8G8B8A8_UNORM;
 		Desc.Type = API::TextureType::Texture2D;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall_normal.jpg", &NormalTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
 
 	}
@@ -66,21 +82,13 @@ public:
 		DTexture.Texture = SpecularTex;
 		DTexture.type = XAsset::MeshTextureType::Specular;
 		textures.push_back(DTexture);
-		DTexture.Texture = NormalTex;
-		DTexture.type = XAsset::MeshTextureType::Normal;
-		textures.push_back(DTexture);
 
-		XAsset::ModelAssetVertexDesc descm;
-		descm.Tangents = true;
-		XAsset::ModelAsset::CreateCube(&CubeAsset, textures, descm);
-		CubeAsset.Initialize(&Renderer->GetVertexShader());
-		CubeModel.SetAsset(&CubeAsset);
 	}
 
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-		desc.Normals = true;
+
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
@@ -149,7 +157,7 @@ public:
 		states.DefaultSampler.PSBind(2);
 
 		Renderer->InstantRender(&CubeModel);
-		
+
 		pointlight1.SetPosition(Camera.GetPosition());
 
 		Renderer->Update_Light();

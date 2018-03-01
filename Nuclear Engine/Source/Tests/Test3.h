@@ -170,7 +170,7 @@ public:
 
 	void Render(float) override
 	{
-		Core::Context::Begin();
+
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
@@ -183,7 +183,7 @@ public:
 
 		Core::Context::Draw(36);
 
-		Core::Context::End();
+		Core::Context::PresentFrame();
 	}
 	void Shutdown() override
 	{

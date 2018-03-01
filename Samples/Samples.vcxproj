@@ -164,6 +164,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sandbox.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Playground.h" />
     <ClInclude Include="Sample1.h" />

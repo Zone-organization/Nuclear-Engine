@@ -464,7 +464,7 @@ public:
 
 	void Render(float) override
 	{
-		Core::Context::Begin();
+
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
 		{
@@ -509,7 +509,7 @@ public:
 			PlaneTex.PSBind(0);
 
 
-			Core::Context::End();
+			Core::Context::PresentFrame();
 		}
 	}
 	void Shutdown() override

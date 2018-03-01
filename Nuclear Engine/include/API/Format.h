@@ -10,6 +10,8 @@ namespace NuclearEngine
 			R8G8_UNORM,
 			R8G8B8_UNORM,
 			R8G8B8A8_UNORM,
+			//Gamma Corrected Texture
+			R8G8B8A8_UNORM_SRGB,
 
 			R16_FLOAT,
 			R16G16_FLOAT,

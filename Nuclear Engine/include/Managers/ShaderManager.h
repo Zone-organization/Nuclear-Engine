@@ -19,7 +19,7 @@ namespace NuclearEngine
 		};
 		struct AutoPixelShaderDesc
 		{
-
+			bool OutputTexture = true;
 		};
 
 		//This is very useful class, it automates the shader creation easily, control all their Input & output, may even store them in the future.

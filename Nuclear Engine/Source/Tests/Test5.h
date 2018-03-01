@@ -363,7 +363,7 @@ public:
 	
 	void Render(float) override
 	{
-		Core::Context::Begin();
+
 
 		//Bind The RenderTarget
 		RT.Bind();
@@ -399,7 +399,7 @@ public:
 		ScreenQuad.Render();
 		PlaneTex.PSBind(0);
 
-		Core::Context::End();
+		Core::Context::PresentFrame();
 
 	}
 	void Shutdown() override

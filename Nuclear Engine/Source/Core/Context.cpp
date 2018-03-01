@@ -63,14 +63,11 @@ namespace NuclearEngine
 #endif
 		}
 
-		void Context::Begin()
+		void Context::PresentFrame()
 		{
-			Core::Application::ProcessEvents();
-		}
-
-		void Context::End()
-		{
+			//First Render the frame then go check events
 			Core::Application::SwapBuffers();
+			Core::Application::ProcessEvents();
 		}
 
 		void Context::Draw(unsigned int count)

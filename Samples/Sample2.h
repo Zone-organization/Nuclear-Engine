@@ -203,7 +203,7 @@ public:
 	}
 	void Render(float dt) override
 	{
-		Core::Context::Begin();
+
 		//ImGui::NE_NewFrame();
 
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
@@ -263,6 +263,6 @@ public:
 		//ShowOverlay(true);
 
 		//ImGui::Render();
-		Core::Context::End();
+		Core::Context::PresentFrame();
 	}
 };

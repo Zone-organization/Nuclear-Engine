@@ -7,11 +7,11 @@ Defines:
 #define NE_OUT_FRAG_POS
 
 */
-#define NE_USE_UV
-#define NE_USE_NORMALS
-#define NE_USE_TANGENTS
-#define NE_USE_DEF_CAMERA
-#define NE_OUT_FRAG_POS
+//#define NE_USE_UV
+//#define NE_USE_NORMALS
+//#define NE_USE_TANGENTS
+//#define NE_USE_DEF_CAMERA
+//#define NE_OUT_FRAG_POS
 
 struct VertexInputType
 {

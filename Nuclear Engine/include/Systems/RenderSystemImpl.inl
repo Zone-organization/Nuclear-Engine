@@ -25,6 +25,40 @@ namespace NuclearEngine
 		{
 			ActiveCamera = nullptr;
 		}
+		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
+		{
+			API::Texture_Desc ScreenTexDesc;
+			ScreenTexDesc.Format = API::Format::R16G16B16A16_FLOAT;
+			ScreenTexDesc.Type = API::TextureType::Texture2D;
+			ScreenTexDesc.GenerateMipMaps = false;
+
+			API::Texture_Data Data;
+			Data.Img_Data_Buf = NULL;
+			Data.Width = WindowWidth;
+			Data.Height = WindowHeight;
+			API::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
+
+			API::RenderTarget::Create(&PostProcessRT);
+			PostProcessRT.AttachTexture(&PostProcessTexture);
+			PostProcessRT.AttachDepthStencilBuffer(Math::Vector2ui(WindowWidth, WindowHeight));
+
+			Managers::AutoVertexShaderDesc VertShaderDesc;
+			VertShaderDesc.Use_Camera = false;
+			VertShaderDesc.InNormals = false;
+			VertShaderDesc.OutFragPos = false;
+
+			PostPrcoess_VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
+			PostProcessScreenQuad.Initialize(&PostPrcoess_VShader);
+			std::vector<std::string> defines;
+			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION"); }
+			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
+
+			API::PixelShader::Create(
+				&PostPrcoess_PShader,
+				&API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
+					API::ShaderType::Pixel,
+					API::ShaderLanguage::HLSL));
+		}
 		void RenderSystem::SetCamera(Components::GenericCamera * camera)
 		{
 			this->ActiveCamera = camera;
@@ -62,8 +96,8 @@ namespace NuclearEngine
 			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true;	}
 			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
 			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  PSDirty = true; }
-			if (Desc.Normals == true) { defines.push_back("NE_USE_NORMAL_MAPS"); }
-			
+			if (Desc.NormalMaps == true) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+
 			if (PSDirty = true)
 			{
 				API::PixelShader::Delete(&PShader);
@@ -91,10 +125,10 @@ namespace NuclearEngine
 
 				if (Desc.VShaderPath == "NE_Default")
 				{
-					Managers::AutoVertexShaderDesc descm;
-					if (Desc.Normals == true) { descm.InTangents = true; }
+					Managers::AutoVertexShaderDesc VertShaderDesc;
+					if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
 
-					VShader = Managers::ShaderManager::CreateAutoVertexShader(Managers::AutoVertexShaderDesc());
+					VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
 				}
 				else {
 					API::VertexShader::Create(

@@ -90,7 +90,7 @@ public:
 
 	void Render(float) override		// Render The Game
 	{
-		Core::Context::Begin();
+
 
 		//Change Background Color to Blue in RGBA format
 		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
@@ -100,7 +100,7 @@ public:
 		TriangleVB.Bind();
 		Core::Context::Draw(3);
 
-		Core::Context::End();
+		Core::Context::PresentFrame();
 	}
 
 	void Shutdown() override 

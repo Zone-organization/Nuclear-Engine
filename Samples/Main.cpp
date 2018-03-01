@@ -37,7 +37,8 @@ int main(int argc, char* argv[])
 		<< "1) Sample 1 - Lighted Scene - introduction to Camera & Input & ECS & RenderSystem\n"
 		<< "2) Sample 2 - Sponza Scene - introduction to Advanced RenderSystem Graphical Techniques.\n"
 		<< "----------------[Other]---------------\n"
-		<< "x) Playground - Sandbox for testing new stuff\n"
+		<< "x) Playground - testing new stuff (Currently Normal Mapping)\n"
+		<< "y) Sandbox - testing new stuff (Currently PostProcessing GammaCorrection & HDR)\n"
 		<< "z) Tests\n";
 
 
