@@ -326,8 +326,6 @@ namespace NuclearEngine
 
 			void DX11Context::Clear(API::Color color, uint flags, float depth, unsigned int stencil)
 			{
-				unsigned int dxflag = 0;
-
 				//Color buffer
 				if (CHECK_BIT(flags , 0))
 				{
@@ -340,6 +338,8 @@ namespace NuclearEngine
 				}
 				if (ActiveRT->depthstencilview != NULL)
 				{
+					unsigned int dxflag = 0;
+
 					//Depth Buffer
 					if (CHECK_BIT(flags, 1))
 					{
@@ -352,7 +352,7 @@ namespace NuclearEngine
 					}
 					if (dxflag != 0)
 					{
-						Context->ClearDepthStencilView(m_depthStencilView, dxflag, depth, stencil);
+						Context->ClearDepthStencilView(ActiveRT->depthstencilview, dxflag, depth, stencil);
 					}
 				}
 				return;

@@ -339,8 +339,7 @@ public:
 
 	void mRenderscene()
 	{
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		
+	
 		VShader.Bind();
 		PShader.Bind();
 		LinearSampler.PSBind(0);
@@ -384,48 +383,41 @@ public:
 	{
 		Core::Context::Begin();
 
+		//Bind The RenderTarget
+		RT.Bind();
+		Core::Context::Clear(API::Color(0.0f, 0.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num3))
+		//Enable Depth Test
+		states.EnabledDepth_DisabledStencil.Bind();
+
+		//Render to render-target
+		mRenderscene();
+
+		//Bind default RenderTarget
+		RT.Bind_Default();
+
+		Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+
+		//Render RT Texture (color buffer) content
+		states.DisabledDepthStencil.Bind();
+
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
 		{
-			states.EnabledDepth_DisabledStencil.Bind();
-
-			mRenderscene();
+			R_State.Bind();
+		}
+		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
+		{
+			states.DefaultRasterizer.Bind();
 		}
 
-		else {//Bind The RenderTarget
-			RT.Bind();
+		ScreenVShader.Bind();
+		ScreenPShader.Bind();
+		ScreenQuadVB.Bind();
+		ScreenSampler.PSBind(0);
+		ScreenTex.PSBind(0);
+		Core::Context::Draw(6);
+		PlaneTex.PSBind(0);
 
-			//Enable Depth Test
-			states.EnabledDepth_DisabledStencil.Bind();
-
-			//Render to render-target
-			mRenderscene();
-
-			//Bind default RenderTarget
-			RT.Bind_Default();
-
-			Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-
-			//Render RT Texture (color buffer) content
-			states.DisabledDepthStencil.Bind();
-
-			if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
-			{
-				R_State.Bind();
-			}
-			else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num2))
-			{
-				states.DefaultRasterizer.Bind();
-			}
-
-			ScreenVShader.Bind();
-			ScreenPShader.Bind();
-			ScreenQuadVB.Bind();
-			ScreenSampler.PSBind(0);
-			ScreenTex.PSBind(0);
-			Core::Context::Draw(6);
-			PlaneTex.PSBind(0);
-		}
 		Core::Context::End();
 
 	}
