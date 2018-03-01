@@ -54,6 +54,16 @@ namespace NuclearEngine {
 			bool Normals = true;
 			bool Tangents = false;
 		};
+
+		class NEAPI ScreenQuadAsset {
+		public:
+			void Initialize(API::VertexShader* _shader);
+			void Render();
+
+		private:
+			API::VertexBuffer ScreenQuadVB;
+		};
+
 		class NEAPI ModelAsset
 		{
 		public:			

@@ -13,7 +13,8 @@ protected:
 
 	API::VertexBuffer CubeVB;
 	API::VertexBuffer PlaneVB;
-	API::VertexBuffer ScreenQuadVB;
+
+	XAsset::ScreenQuadAsset ScreenQuad;
 
 	API::Sampler LinearSampler;
 	API::Texture PlaneTex;
@@ -83,7 +84,7 @@ float4 main(PixelInputType input) : SV_TARGET
 )";
 	std::string ScreenVertexShader = R"(struct VertexInputType
 {
-    float2 position : POSITION;
+    float4 position : POSITION;
 	float2 tex : TEXCOORD;
 };
 
@@ -212,16 +213,6 @@ public:
 			
 		};
 
-		float quadVertices[] = {
-			// positions   // texCoords
-			-1.0f,  1.0f,  0.0f, 1.0f,
-			-1.0f, -1.0f,  0.0f, 0.0f,
-			1.0f, -1.0f,  1.0f, 0.0f,
-
-			-1.0f,  1.0f,  0.0f, 1.0f,
-			1.0f, -1.0f,  1.0f, 0.0f,
-			1.0f,  1.0f,  1.0f, 1.0f
-		};
 
 		API::VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;
@@ -233,9 +224,7 @@ public:
 		vDesc.size = sizeof(planeVertices);
 		API::VertexBuffer::Create(&PlaneVB, vDesc);
 
-		vDesc.data = quadVertices;
-		vDesc.size = sizeof(quadVertices);
-		API::VertexBuffer::Create(&ScreenQuadVB, vDesc);
+
 
 		API::InputLayout ShaderIL;
 		ShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
@@ -244,20 +233,13 @@ public:
 		CubeVB.SetInputLayout(&ShaderIL, &VShader);
 		PlaneVB.SetInputLayout(&ShaderIL, &VShader);
 
-		API::InputLayout ScreenShaderIL;
-		ScreenShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float2);
-		ScreenShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
-
-		ScreenQuadVB.SetInputLayout(&ScreenShaderIL, &ScreenVShader);
-
-
+		ScreenQuad.Initialize(&ScreenVShader);
+		
 		//Create sampler
 		API::SamplerDesc Samplerdesc;
 		Samplerdesc.Filter = API::TextureFilter::Point2D;
 		API::Sampler::Create(&ScreenSampler, Samplerdesc);
-
-
-
+		
 		API::Texture_Desc ScreenTexDesc;
 		ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
 		ScreenTexDesc.Type = API::TextureType::Texture2D;
@@ -412,10 +394,9 @@ public:
 
 		ScreenVShader.Bind();
 		ScreenPShader.Bind();
-		ScreenQuadVB.Bind();
 		ScreenSampler.PSBind(0);
 		ScreenTex.PSBind(0);
-		Core::Context::Draw(6);
+		ScreenQuad.Render();
 		PlaneTex.PSBind(0);
 
 		Core::Context::End();

@@ -334,5 +334,55 @@ namespace NuclearEngine {
 			meshData.Tangents = tangents;
 			model->Meshes.push_back(meshData);
 		}
-	}
+
+		void ScreenQuadAsset::Initialize(API::VertexShader * _shader)
+		{
+			API::VertexBufferDesc vDesc;
+
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+			{
+				float dx11quadVertices[] = {
+					// positions        // texCoords
+					-1.0f,  1.0f, 0.0f,  0.0f, -1.0f,
+					-1.0f, -1.0f, 0.0f,  0.0f, 0.0f,
+					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+
+					-1.0f,  1.0f, 0.0f,  0.0f, -1.0f,
+					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+					1.0f,  1.0f, 0.0f,  1.0f, -1.0f
+				};
+				vDesc.data = dx11quadVertices;
+				vDesc.size = sizeof(dx11quadVertices);
+			}
+			else {
+				float oglquadVertices[] = {
+					// positions         // texCoords
+					-1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
+					-1.0f, -1.0f, 0.0f,  0.0f, 0.0f,
+					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+
+					-1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
+					1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+					1.0f,  1.0f, 0.0f,  1.0f, 1.0f
+				};
+				vDesc.data = oglquadVertices;
+				vDesc.size = sizeof(oglquadVertices);
+			}
+
+			vDesc.usage = API::BufferUsage::Static;		
+			API::VertexBuffer::Create(&ScreenQuadVB, vDesc);
+
+			API::InputLayout ScreenShaderIL;
+			ScreenShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
+			ScreenShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+
+			ScreenQuadVB.SetInputLayout(&ScreenShaderIL, _shader);
+
+		}
+		void ScreenQuadAsset::Render()
+		{
+			ScreenQuadVB.Bind();
+			Core::Context::Draw(6);
+		}
+}
 }
