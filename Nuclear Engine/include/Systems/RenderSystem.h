@@ -8,6 +8,7 @@
 #include <Components\Light.h>
 #include <XAsset\ModelAsset.h>
 #include <API\RenderTarget.h>
+#include <API\Sampler.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -63,6 +64,7 @@ namespace NuclearEngine
 			//Update Functions
 			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;
 			void Update_Light();
+
 		private:
 			void Calculate_Light_CB_Size();
 			void BakePixelShader();
@@ -89,6 +91,7 @@ namespace NuclearEngine
 
 			//PostProcess stuff
 			bool PostProcessingEnabled = false;
+			API::Sampler ScreenSampler;
 			API::Texture PostProcessTexture;
 			API::RenderTarget PostProcessRT;
 			API::VertexShader PostProcess_VShader;

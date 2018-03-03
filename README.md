@@ -44,14 +44,14 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 
 - __RenderSystem__
   - Support for BlinnPhong Lighting.
+  - Support for PostProcessing Effects:
+	- Gamma Correction
   - Support for IMGUI.
-  
 ## Current Platforms
   - Windows 7+     
 
 ## Currently TODO
   - PostProcessing Effects:
-    - Gamma Correction
 	- HDR
 	- Bloom
   - Normal Mapping (Bump mapping)

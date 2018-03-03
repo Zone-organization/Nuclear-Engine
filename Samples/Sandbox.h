@@ -108,7 +108,6 @@ public:
 
 		SetupXAsset();
 
-		states.EnabledDepth_DisabledStencil.Bind();
 		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
@@ -150,31 +149,8 @@ public:
 		Camera.Update();
 	}
 
-	void Render(float dt) override
+	void mRenderscene(float dt)
 	{
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Tab))
-		{
-			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-
-			states.EnabledDepth_DisabledStencil.Bind();
-			Renderer->GetVertexShader().Bind();
-			Renderer->GetPixelShader().Bind();
-
-			states.DefaultSampler.PSBind(0);
-			states.DefaultSampler.PSBind(1);
-
-			Renderer->InstantRender(&Cube);
-
-			pointlight1.SetPosition(Camera.GetPosition());
-
-			Renderer->Update_Light();
-
-			SampleScene.Systems.Update_All(dt);
-
-			Core::Context::PresentFrame();
-			return;
-		}
-		Renderer->RenderToPostProcessingRT();
 		states.EnabledDepth_DisabledStencil.Bind();
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
@@ -189,9 +165,22 @@ public:
 		Renderer->Update_Light();
 
 		SampleScene.Systems.Update_All(dt);
+	}
+	void Render(float dt) override
+	{
+		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Tab))
+		{
+			Core::Context::Clear(API::Color(0.0f, 0.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			mRenderscene(dt);
+			Core::Context::PresentFrame();
+			return;
+		}
+		Renderer->RenderToPostProcessingRT();
+		mRenderscene(dt);		
 
 		states.DisabledDepthStencil.Bind();
 		Renderer->RenderPostProcessingContents();
+
 		SpecularTex.PSBind(0);
 		Core::Context::PresentFrame();
 	}

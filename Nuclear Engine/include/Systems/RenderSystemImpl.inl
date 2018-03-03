@@ -28,7 +28,7 @@ namespace NuclearEngine
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
 			API::Texture_Desc ScreenTexDesc;
-			ScreenTexDesc.Format = API::Format::R16G16B16A16_FLOAT;
+			ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
 			ScreenTexDesc.Type = API::TextureType::Texture2D;
 			ScreenTexDesc.GenerateMipMaps = false;
 
@@ -59,6 +59,11 @@ namespace NuclearEngine
 				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
 					API::ShaderType::Pixel,
 					API::ShaderLanguage::HLSL));
+
+
+			API::SamplerDesc Samplerdesc;
+			Samplerdesc.Filter = API::TextureFilter::Point2D;
+			API::Sampler::Create(&ScreenSampler, Samplerdesc);
 		}
 		void RenderSystem::SetCamera(Components::GenericCamera * camera)
 		{
@@ -242,6 +247,7 @@ namespace NuclearEngine
 			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			PostProcess_VShader.Bind();
 			PostProcess_PShader.Bind();
+			ScreenSampler.PSBind(0);
 			PostProcessTexture.PSBind(0);
 			InstantRender(&PostProcessScreenQuad);
 		}

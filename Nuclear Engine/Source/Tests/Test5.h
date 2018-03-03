@@ -209,9 +209,7 @@ public:
 		
 		int windowwidth, windowheight;
 		Core::Application::GetSize(&windowwidth, &windowheight);
-		float vertices[20] = {
-			
-		};
+
 
 
 		API::VertexBufferDesc vDesc;
