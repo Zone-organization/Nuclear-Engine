@@ -28,7 +28,14 @@ namespace NuclearEngine
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
 			API::Texture_Desc ScreenTexDesc;
-			ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
+			if (Desc.HDR == true)
+			{
+				ScreenTexDesc.Format = API::Format::R16G16B16A16_FLOAT;
+			}
+			else
+			{
+				ScreenTexDesc.Format = API::Format::R8G8B8A8_UNORM;
+			}
 			ScreenTexDesc.Type = API::TextureType::Texture2D;
 			ScreenTexDesc.GenerateMipMaps = false;
 
@@ -51,7 +58,7 @@ namespace NuclearEngine
 			XAsset::ModelAsset::CreateScreenQuad(&PostProcessScreenQuad);
 			PostProcessScreenQuad.Initialize(&PostProcess_VShader);
 			std::vector<std::string> defines;
-			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION"); }
+			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
 			API::PixelShader::Create(

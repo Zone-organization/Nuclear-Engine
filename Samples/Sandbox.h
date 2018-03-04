@@ -9,6 +9,7 @@ protected:
 	//XAsset
 	API::Texture DiffuseTex;
 	API::Texture SpecularTex;
+	API::Texture WhiteTex;
 
 	//Default states
 	API::CommonStates states;
@@ -37,6 +38,7 @@ protected:
 	};
 
 	XAsset::ModelAsset Cube;
+	XAsset::ModelAsset Lamp;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -67,6 +69,7 @@ public:
 		Desc.Type = API::TextureType::Texture2D;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 	}
 	void SetupXAsset()
 	{
@@ -84,12 +87,25 @@ public:
 
 		XAsset::ModelAsset::CreateCube(&Cube, textures);
 		Cube.Initialize(&Renderer->GetVertexShader());
+		
+		XAsset::MeshTexture WhiteCTex;
+		WhiteCTex.Texture = WhiteTex;
+		WhiteCTex.type = XAsset::MeshTextureType::Diffuse;
+		std::vector<XAsset::MeshTexture> spheretextures;
+		spheretextures.push_back(WhiteCTex);
+		WhiteCTex.type = XAsset::MeshTextureType::Specular;
+		spheretextures.push_back(WhiteCTex);
+
+		XAsset::ModelAsset::CreateSphere(&Lamp, spheretextures);
+		Lamp.Initialize(&Renderer->GetVertexShader());
+		
 	}
 
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
 		desc.GammaCorrection = true;
+		desc.HDR = true;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
@@ -158,9 +174,19 @@ public:
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
 
+		Math::Matrix4 CubeModelTrans;
+		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(0.5f, 1.0f, 0.0f), dt * Math::ToRadians(50.0f));
+		Camera.SetModelMatrix(CubeModelTrans);
 		Renderer->InstantRender(&Cube);
 
-		pointlight1.SetPosition(Camera.GetPosition());
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			Math::Matrix4 model;
+			model = Math::Translate(model, lightPositions[i]);
+			model = Math::Scale(model, Math::Vector3(0.25f));
+			Camera.SetModelMatrix(model);
+			Renderer->InstantRender(&Lamp);
+		}
 
 		Renderer->Update_Light();
 
@@ -170,7 +196,7 @@ public:
 	{
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Tab))
 		{
-			Core::Context::Clear(API::Color(0.0f, 0.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			mRenderscene(dt);
 			Core::Context::PresentFrame();
 			return;

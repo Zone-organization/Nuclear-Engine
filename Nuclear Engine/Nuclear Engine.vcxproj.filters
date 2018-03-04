@@ -115,6 +115,8 @@
     <ClInclude Include="include\Managers\ShaderManager.h" />
     <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="Source\Managers\AssimpImporter.h" />
+    <ClInclude Include="Source\API\ShaderCompiler\DXBC_Compiler.h" />
+    <ClInclude Include="Source\API\ShaderCompiler\XShaderCompiler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -192,5 +194,7 @@
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Source\API\ShaderCompiler\XShaderCompiler.cpp" />
+    <ClCompile Include="Source\API\ShaderCompiler\DXBC_Compiler.cpp" />
   </ItemGroup>
 </Project>

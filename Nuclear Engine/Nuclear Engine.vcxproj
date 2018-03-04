@@ -427,6 +427,8 @@
     <ClInclude Include="include\Utilities\NonCopyable.h" />
     <ClInclude Include="include\Utilities\Pool.h" />
     <ClInclude Include="include\Utilities\Signal.h" />
+    <ClInclude Include="Source\API\ShaderCompiler\DXBC_Compiler.h" />
+    <ClInclude Include="Source\API\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Components\GUI\imgui_internal.h" />
     <ClInclude Include="Source\Components\GUI\stb_rect_pack.h" />
@@ -482,6 +484,8 @@
     <ClCompile Include="Source\API\RasterizerState.cpp" />
     <ClCompile Include="Source\API\RenderTarget.cpp" />
     <ClCompile Include="Source\API\Sampler.cpp" />
+    <ClCompile Include="Source\API\ShaderCompiler\DXBC_Compiler.cpp" />
+    <ClCompile Include="Source\API\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\API\Texture.cpp" />
     <ClCompile Include="Source\API\ConstantBuffer.cpp" />
     <ClCompile Include="Source\API\VertexBuffer.cpp" />

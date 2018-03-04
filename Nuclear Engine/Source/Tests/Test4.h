@@ -121,9 +121,9 @@ public:
 	}
 	void Load()
 	{
-		API::VertexShader::Create(&Vertexshader, &API::CompileShader(VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL,true));
-		API::PixelShader::Create(&Pixelshader, &API::CompileShader(PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true));
-		API::PixelShader::Create(&Depthpixelshader, &API::CompileShader(DepthPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL, true));
+		API::VertexShader::Create(&Vertexshader, &API::CompileShader(VertexShader, API::ShaderType::Vertex, API::ShaderLanguage::HLSL));
+		API::PixelShader::Create(&Pixelshader, &API::CompileShader(PixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL));
+		API::PixelShader::Create(&Depthpixelshader, &API::CompileShader(DepthPixelShader, API::ShaderType::Pixel, API::ShaderLanguage::HLSL));
 
 		float cubevertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

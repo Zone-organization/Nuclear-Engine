@@ -42,8 +42,8 @@ namespace NuclearEngine
 		};
 		struct ShaderVariable
 		{
-			unsigned int Size;           // Size of variable (in bytes)
-			ShaderVariableType Type;
+			unsigned int Size = 4;           // Size of variable (in bytes)
+			ShaderVariableType Type = ShaderVariableType::Float1;
 		};
 		struct Reflected_Constantbuffer
 		{
@@ -54,7 +54,7 @@ namespace NuclearEngine
 		struct Reflected_Texture
 		{
 			unsigned int BindingSlot = 0;
-			TextureType Type;
+			TextureType Type = TextureType::Texture2D;
 		};
 
 		struct ShaderReflection
