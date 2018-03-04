@@ -8,20 +8,10 @@ namespace NuclearEngine
 {
 	namespace API 
 	{
-		enum class ShaderLanguage {
-			HLSL,
-			DXBC,
-			GLSL
-		};
-
 		enum class ShaderType {
 			Vertex,
-			Pixel,
 			Geometry,
-
-			Vertex_Pixel,
-			Vertex_Geometry,
-			Vertex_Pixel_Geometry
+			Pixel
 		};
 
 		enum class ShaderVariableType
@@ -38,7 +28,8 @@ namespace NuclearEngine
 			Float4, //Vector4
 			Matrix2x2,
 			Matrix3x3,
-			Matrix4x4
+			Matrix4x4,
+			Struct
 		};
 		struct ShaderVariable
 		{
@@ -61,13 +52,18 @@ namespace NuclearEngine
 		{
 			std::unordered_map<std::string, Reflected_Constantbuffer> ConstantBuffers;
 			std::unordered_map<std::string, Reflected_Texture> Textures;
+			//Let me clarify certain things here
+			//In OpenGL, XShaderCompiler changes HLSL 2 GLSL with limited reflection data as names and locations only!
+			//For materials we need to know the texture type and constant buffer contentsso we query these information when creating shaders at runtime 
+			//but in directx all these information are available at compile time
+			bool Usable = false;
 		};
 
 #ifdef NE_COMPILE_D3DCOMPILER
 		struct DXBC_BLOB
 		{
-			void* Buffer;
-			size_t Size;
+			void* Buffer = nullptr;
+			size_t Size = 0;
 		};
 #endif
 
@@ -81,7 +77,6 @@ namespace NuclearEngine
 			bool convertedshaderrowmajor = false;
 #endif
 			ShaderReflection Reflection;
-			ShaderLanguage Language;
 
 			//If this blob is crosscompiled (as HLSL 2 GLSL)
 			bool Converted = false;

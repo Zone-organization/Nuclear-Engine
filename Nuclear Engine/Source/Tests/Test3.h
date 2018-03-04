@@ -78,14 +78,12 @@ public:
 		API::VertexShader::Create(
 			&VShader,
 			&API::CompileShader(VertexShader,
-				API::ShaderType::Vertex,
-				API::ShaderLanguage::HLSL));
+				API::ShaderType::Vertex));
 
 		API::PixelShader::Create(
 			&PShader,
 			&API::CompileShader(PixelShader,
-				API::ShaderType::Pixel,
-				API::ShaderLanguage::HLSL));
+				API::ShaderType::Pixel));
 	
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

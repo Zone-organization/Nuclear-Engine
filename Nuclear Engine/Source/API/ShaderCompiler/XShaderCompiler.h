@@ -11,7 +11,7 @@ namespace NuclearEngine
 	{
 		namespace XShaderCompiler
 		{
-			void CompileHLSL2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language);
+			void CompileHLSL2GLSL(BinaryShaderBlob *result, std::string SourceCode, API::ShaderType type);
 		}
 	}
 }

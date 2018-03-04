@@ -11,39 +11,25 @@ namespace NuclearEngine {
 	namespace API {
 
 	
-		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode,API::ShaderType type,API::ShaderLanguage language)
+		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode, API::ShaderType type)
 		{
-			if (language == API::ShaderLanguage::HLSL)
+			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
-				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-				{
-					XShaderCompiler::CompileHLSL2GLSL(blob, SourceCode, type, language);
-				}
-				else
-				{
-					DXBC_Compiler::CompileHLSL2DXBC(blob, SourceCode, type, language);
-				}
+				XShaderCompiler::CompileHLSL2GLSL(blob, SourceCode, type);
 			}
-			else if (language == API::ShaderLanguage::GLSL)
+			else
 			{
-				if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
-				{
-					blob->GLSL_SourceCode = SourceCode;
-					blob->Language = API::ShaderLanguage::GLSL;
-				}
-				else 
-				{
-					Exceptions::NotImplementedException();
-				}
+				DXBC_Compiler::CompileHLSL2DXBC(blob, SourceCode, type);
 			}
+
 			blob->Finished = true;
 			return true;
 		}
 
-		BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type, API::ShaderLanguage language)
+		BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type)
 		{
 			BinaryShaderBlob result;
-			CompileShader(&result, SourceCode, type,language);
+			CompileShader(&result, SourceCode, type);
 			return result;
 		}
 

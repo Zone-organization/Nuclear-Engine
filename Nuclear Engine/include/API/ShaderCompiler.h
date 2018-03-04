@@ -7,8 +7,8 @@ namespace NuclearEngine
 	namespace API 
 	{
 		
-		NEAPI bool CompileShader(BinaryShaderBlob* result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language = API::ShaderLanguage::HLSL);
+		NEAPI bool CompileShader(BinaryShaderBlob* result, std::string SourceCode, API::ShaderType type);
 
-		NEAPI BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type, API::ShaderLanguage language = API::ShaderLanguage::HLSL);
+		NEAPI BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type);
 	}
 }

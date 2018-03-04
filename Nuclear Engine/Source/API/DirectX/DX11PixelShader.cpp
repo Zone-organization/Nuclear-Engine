@@ -25,9 +25,9 @@ namespace NuclearEngine
 			{
 				if (sdesc->Finished)
 				{
-					if (sdesc->Language != API::ShaderLanguage::DXBC)
+					if (sdesc->DXBC_SourceCode.Buffer == nullptr)
 					{
-						Log.Error("[DX11PixelShader] DirectX 11 Renderer Backend expects all Pixel shaders in DirectX Bytecode \"DXBC\" language!\n");
+						Log.Error("[DX11PixelShader] DirectX Bytecode \"DXBC\" Buffer is nullptr!\n");
 					}
 					else
 					{

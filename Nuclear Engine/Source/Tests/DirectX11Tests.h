@@ -133,26 +133,22 @@ public:
 		API::VertexShader::Create(
 			&VShader,
 			&API::CompileShader(VertexShader,
-				API::ShaderType::Vertex,
-				API::ShaderLanguage::HLSL));
+				API::ShaderType::Vertex));
 
 		API::PixelShader::Create(
 			&PShader,
 			&API::CompileShader(PixelShader,
-				API::ShaderType::Pixel,
-				API::ShaderLanguage::HLSL));
+				API::ShaderType::Pixel));
 
 		API::VertexShader::Create(
 			&ScreenVShader,
 			&API::CompileShader(ScreenVertexShader,
-				API::ShaderType::Vertex,
-				API::ShaderLanguage::HLSL));
+				API::ShaderType::Vertex));
 
 		API::PixelShader::Create(
 			&ScreenPShader,
 			&API::CompileShader(ScreenPixelShader,
-				API::ShaderType::Pixel,
-				API::ShaderLanguage::HLSL));
+				API::ShaderType::Pixel));
 
 
 		float cubevertices[] = {

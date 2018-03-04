@@ -81,9 +81,9 @@ namespace NuclearEngine
 
 				if (desc->Finished)
 				{
-					if (desc->Language != API::ShaderLanguage::GLSL)
+					if (desc->GLSL_SourceCode.size() == 0)
 					{
-						Log.Error("[GLVertexShader] OpenGL Renderer Backend expects all -Vertex- shaders in GLSL language!\n");
+						Log.Error("[GLVertexShader] GLSL Source Code is empty!\n");
 					}
 					else
 					{

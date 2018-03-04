@@ -64,8 +64,7 @@ namespace NuclearEngine
 			API::PixelShader::Create(
 				&PostProcess_PShader,
 				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
-					API::ShaderType::Pixel,
-					API::ShaderLanguage::HLSL));
+					API::ShaderType::Pixel));
 
 
 			API::SamplerDesc Samplerdesc;
@@ -119,8 +118,7 @@ namespace NuclearEngine
 				API::PixelShader::Create(
 					&PShader,
 					&API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
-						API::ShaderType::Pixel,
-						API::ShaderLanguage::HLSL));
+						API::ShaderType::Pixel));
 
 				Calculate_Light_CB_Size();
 
@@ -147,8 +145,7 @@ namespace NuclearEngine
 					API::VertexShader::Create(
 						&VShader,
 						&API::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
-							API::ShaderType::Vertex,
-							API::ShaderLanguage::HLSL));
+							API::ShaderType::Vertex));
 				}
 
 				if (this->ActiveCamera != nullptr)

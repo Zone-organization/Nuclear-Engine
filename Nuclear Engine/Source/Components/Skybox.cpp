@@ -65,8 +65,8 @@ namespace NuclearEngine
 
 		void Skybox::Create(Skybox* skybox,Components::GenericCamera * CameraCbuffer,const std::array<API::Texture_Data, 6>& data)
 		{
-			API::VertexShader::Create(&skybox->v_shader, &API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), API::ShaderType::Vertex, API::ShaderLanguage::HLSL));
-			API::PixelShader::Create(&skybox->p_shader, &API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), API::ShaderType::Pixel, API::ShaderLanguage::HLSL));
+			API::VertexShader::Create(&skybox->v_shader, &API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), API::ShaderType::Vertex));
+			API::PixelShader::Create(&skybox->p_shader, &API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), API::ShaderType::Pixel));
 
 			skybox->m_camera = CameraCbuffer;
 

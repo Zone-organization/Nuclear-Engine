@@ -143,8 +143,11 @@ namespace NuclearEngine
 								break;
 							}
 							break;
+						case D3D_SVC_STRUCT:
+							type = ShaderVariableType::Struct;
+							break;
 						default:
-							Log.Warning("[Reflect_DXBC] [ParseConstantBuffers] [ParseVariables] Using variable with unsupported type: " + std::to_string(VarTypeDesc.Type) + " \n");
+							Log.Warning("[Reflect_DXBC] [ParseConstantBuffers] [ParseVariables] Using variable with unsupported class: " + std::to_string(VarTypeDesc.Class) + " type: "+ std::to_string(VarTypeDesc.Type) +" \n");
 						}
 
 						ShaderVariable reflected_var;
@@ -247,7 +250,7 @@ namespace NuclearEngine
 
 				return;
 			}
-			void CompileHLSL2DXBC(BinaryShaderBlob * result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language)
+			void CompileHLSL2DXBC(BinaryShaderBlob * result, std::string SourceCode, API::ShaderType type)
 			{
 				const char* shadermodel;
 				if (type == API::ShaderType::Vertex)
@@ -277,7 +280,6 @@ namespace NuclearEngine
 
 				result->DXBC_SourceCode.Buffer = m_blob->GetBufferPointer();
 				result->DXBC_SourceCode.Size = m_blob->GetBufferSize();
-				result->Language = API::ShaderLanguage::DXBC;
 				Reflect_DXBC(result);
 
 				return;

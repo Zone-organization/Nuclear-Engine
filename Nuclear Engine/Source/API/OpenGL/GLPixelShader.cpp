@@ -75,9 +75,9 @@ namespace NuclearEngine
 			{
 				if (desc->Finished)
 				{
-					if (desc->Language != API::ShaderLanguage::GLSL)
+					if (desc->GLSL_SourceCode.size() == 0)
 					{
-						Log.Error("[GLPixelShader] OpenGL Renderer Backend expects all -Pixel- shaders in GLSL language!\n");
+						Log.Error("[GLPixelShader] GLSL Source Code is empty!\n");
 					}
 					else
 					{

@@ -82,7 +82,7 @@ namespace NuclearEngine
 			};
 
 
-			void CompileHLSL2GLSL(BinaryShaderBlob * result, std::string SourceCode, API::ShaderType type, API::ShaderLanguage language)
+			void CompileHLSL2GLSL(BinaryShaderBlob * result, std::string SourceCode, API::ShaderType type)
 			{
 				// Initialize shader input descriptor structure
 				auto input = std::make_shared<std::stringstream>();
@@ -149,8 +149,6 @@ namespace NuclearEngine
 
 				result->GLSL_SourceCode = str;
 
-				result->Language = API::ShaderLanguage::GLSL;
-				result->DXBC_SourceCode = DXBC_BLOB();
 				result->Converted = true;
 			}
 		}
