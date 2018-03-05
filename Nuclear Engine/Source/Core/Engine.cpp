@@ -195,7 +195,7 @@ namespace NuclearEngine {
 				float currentFrame = clock.GetElapsedTime().AsSeconds();
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
-
+				GamePtr->ClockTime = clock.GetElapsedTime().AsSeconds();
 				GamePtr->FrameTime = 1000.0f / ImGui::GetIO().Framerate;
 				GamePtr->FPS = ImGui::GetIO().Framerate;
 

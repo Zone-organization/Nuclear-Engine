@@ -310,7 +310,8 @@ public:
 				// calculate the model matrix for each object and pass it to shader before drawing
 				Math::Matrix4 model;
 				model = Math::Translate(model, cubePositions[i]);
-				float angle = 20.0f * i;
+				float angle = 20.0f * i * ClockTime;
+
 				model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
 				Camera.SetModelMatrix(model);
 
@@ -333,6 +334,7 @@ public:
 			Math::Matrix4 NanosuitMatrix;
 			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
+			NanosuitMatrix = Math::Rotate(NanosuitMatrix, Math::Vector3(0.0f, 1.0f, 0.0f),ClockTime);
 			Camera.SetModelMatrix(NanosuitMatrix);
 			Renderer->InstantRender(&NanosuitModel);
 		}

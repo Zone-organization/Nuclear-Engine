@@ -175,7 +175,7 @@ public:
 		states.DefaultSampler.PSBind(1);
 
 		Math::Matrix4 CubeModelTrans;
-		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(0.5f, 1.0f, 0.0f), dt * Math::ToRadians(50.0f));
+		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(0.5f, 1.0f, 0.0f), ClockTime);
 		Camera.SetModelMatrix(CubeModelTrans);
 		Renderer->InstantRender(&Cube);
 

@@ -1,7 +1,7 @@
 #include "XShaderCompiler.h"
 
 #ifdef NE_COMPILE_XSHADERCOMPILER
-#include <XShaderCompiler\inc\Xsc\Xsc.h>
+#include <..\..\XShaderCompiler\inc\Xsc\Xsc.h>
 #include <sstream>
 #include <iostream>
 #include <vector>
@@ -135,19 +135,6 @@ namespace NuclearEngine
 				}
 				result->GLSL_SourceCode = stream.str();
 				Reflect(&reflection, result);
-
-				//XSC doesn't play nicely with separate shaders extension so we have to include it ourselves			
-				std::vector<std::string> MergedCode;
-				std::string firstLine = result->GLSL_SourceCode.substr(85, result->GLSL_SourceCode.find("\n"));
-
-				MergedCode.push_back(std::string("#version 330\n #extension GL_ARB_separate_shader_objects : enable\n"));
-
-				MergedCode.push_back(result->GLSL_SourceCode.substr(99));
-				std::string str;
-				for (unsigned int i = 0; i < MergedCode.size(); ++i)
-					str = str + MergedCode[i].c_str();
-
-				result->GLSL_SourceCode = str;
 
 				result->Converted = true;
 			}
