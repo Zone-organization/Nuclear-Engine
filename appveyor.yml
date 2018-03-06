@@ -1,0 +1,4 @@
+before_build:
+
+build:
+  project: Nuclear Project.sln
