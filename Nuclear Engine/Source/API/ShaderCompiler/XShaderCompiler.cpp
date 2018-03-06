@@ -13,13 +13,45 @@ namespace NuclearEngine
 	{
 		namespace XShaderCompiler
 		{
-			void ParseConstantBuffers(const std::vector<Xsc::Reflection::BindingSlot>& cbuffers, BinaryShaderBlob * result)
+			ShaderVariableType Reflect_Vars(int foo)
 			{
-				for (Xsc::Reflection::BindingSlot cb : cbuffers)
+				switch (foo)
+				{
+				case (int)Xsc::Reflection::VarType::Bool:	return ShaderVariableType::Bool;
+				case (int)Xsc::Reflection::VarType::Int:	return ShaderVariableType::Int1;
+				case (int)Xsc::Reflection::VarType::Int2:	return ShaderVariableType::Int2;
+				case (int)Xsc::Reflection::VarType::Int3:	return ShaderVariableType::Int3;
+				case (int)Xsc::Reflection::VarType::Int4:	return ShaderVariableType::Int4;
+				case (int)Xsc::Reflection::VarType::Float:	return ShaderVariableType::Float1;
+				case (int)Xsc::Reflection::VarType::Float2:	return ShaderVariableType::Float2;
+				case (int)Xsc::Reflection::VarType::Float3:	return ShaderVariableType::Float3;
+				case (int)Xsc::Reflection::VarType::Float4:	return ShaderVariableType::Float4;
+				case (int)Xsc::Reflection::VarType::Float2x2:	return ShaderVariableType::Matrix2x2;
+				case (int)Xsc::Reflection::VarType::Float3x3:	return ShaderVariableType::Matrix3x3;
+				case (int)Xsc::Reflection::VarType::Float4x4:	return ShaderVariableType::Matrix4x4;
+				default:
+					Log.Warning("[XShaderCompiler] [Reflection] Using Unsupported Variable type: " + std::to_string(foo) + " \n");
+					return ShaderVariableType::Unknown;
+				}
+			}
+			void ParseConstantBuffers(const std::vector<Xsc::Reflection::ConstantBufferRefl>& cbuffers, BinaryShaderBlob * result)
+			{
+				for (auto cb : cbuffers)
 				{
 					Reflected_Constantbuffer refl_cb;
 					refl_cb.BindingSlot = cb.location;
 
+					for (auto member : cb.members)
+					{
+						ShaderVariable variable;
+						//special case
+						if (member.type == Xsc::Reflection::UniformType::Struct)
+							variable.Type = ShaderVariableType::Struct;
+						else
+							variable.Type = Reflect_Vars(member.baseType);
+						
+						refl_cb.Variables[member.ident] = variable;
+					}
 					result->Reflection.ConstantBuffers[cb.ident] = refl_cb;
 				}
 			}
