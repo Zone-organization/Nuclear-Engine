@@ -5,9 +5,22 @@
 #ifdef WIN32
 #include <Windows.h>
 #endif
+#include <NE_Common.h>
 namespace NuclearEngine {
 	namespace Utilities {
-
+		std::wstring String2WSTR(const std::string& s)
+		{
+#ifdef WIN32
+			int len;
+			int slength = (int)s.length() + 1;
+			len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+			wchar_t* buf = new wchar_t[len];
+			MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+			std::wstring r(buf);
+			delete[] buf;
+			return r;
+#endif
+		}
 		void SetConsoleColor(int colorCode)
 		{
 #ifdef WIN32
@@ -44,15 +57,18 @@ namespace NuclearEngine {
 		void Logger::FatalError(std::string format, ...)
 		{
 			SetConsoleColor(79);
-			Write(std::string("[Fatal Error] "));
+			std::string info("Nuclear Engine has encountred a fatal error, and have to exit, please inform the developers for more support.\nDetails: ");
+		
+			Write(std::string("[FATAL_ERROR] "));
 
 			va_list args;
 			va_start(args, format);
-			//MessageBox(NULL,String2WSTR(format).c_str(), L"[FATAL_ERROR]", MB_OK | MB_ICONERROR);
+			info = info + format;
 			Write(format);
 			va_end(args);
-
-			//Sleep(50000);
+#ifdef WIN32
+			MessageBox(NULL, String2WSTR(info).c_str(), L"[FATAL_ERROR]", MB_OK | MB_ICONERROR);
+#endif
 			exit(1);
 		}
 

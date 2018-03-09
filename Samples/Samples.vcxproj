@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2C26B9B9-5974-4E9E-BA97-7107056F82AC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Demo</RootNamespace>
+    <RootNamespace>Samples</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
     <ProjectName>Samples</ProjectName>
   </PropertyGroup>
