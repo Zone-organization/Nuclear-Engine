@@ -1,12 +1,12 @@
 #include "imgui_impl.h"
 
 #include <Core\Context.h>
-#include <GLFW\include\glfw3.h>
+#include <GLFW\include\GLFW\glfw3.h>
 #ifdef _WIN32
 #undef APIENTRY
 #define GLFW_EXPOSE_NATIVE_WIN32
 #define GLFW_EXPOSE_NATIVE_WGL
-#include <GLFW\include\glfw3native.h>
+#include <GLFW\include\GLFW\glfw3native.h>
 #endif
 
 static GLFWwindow*  g_Window = NULL;

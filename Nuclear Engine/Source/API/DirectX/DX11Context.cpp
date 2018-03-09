@@ -2,8 +2,8 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW\include\glfw3.h>
-#include <GLFW\include\glfw3native.h>
+#include <GLFW\include\GLFW\glfw3.h>
+#include <GLFW\include\GLFW\glfw3native.h>
 
 #include <API\DirectX\DX11RenderTarget.h>
 

@@ -1,9 +1,9 @@
 #pragma once
 #include <NE_Common.h>
 #include "XAsset\ModelAsset.h"
-#include <assimp\Importer.hpp>
-#include <assimp\scene.h>
-#include <assimp\postprocess.h>
+#include <Assimp\include\assimp\Importer.hpp>
+#include <Assimp\include\assimp\scene.h>
+#include <Assimp\include\assimp\postprocess.h>
 #include <Managers\AssetManager.h>
 namespace NuclearEngine {
 	namespace Internal {

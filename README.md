@@ -26,6 +26,11 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Cross-platform Application creation through GLFW.
   - All of error prone calls (as Resource creation or loading) are being logged.
   
+- __Architecture__
+  - All frequently called API functions and classes are 100% allocated on the Stack.
+  - Design allows you to take advantage of its flexibility and define your own RenderAPIs!
+  - No Dynamic Inheritance or slow Function Pointers in any API call!
+  
 - __AssetManager__
   - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using stb_image library).
   - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
@@ -69,30 +74,6 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   
 ### Building
 Currently I am using Visual Studio 2017 15.5.5 to build it.
-  - Dependencies
-    - Assimp
-	- GLFW
-    - XShaderCompiler
-	- GLAD
-	- GLEXT
-
-### Architecture
-Features:
-  - All frequently called API functions and classes are 100% allocated on the Stack.
-  - Design allows you to take advantage of its flexibility and define your own RenderAPIs!
-  - No Dynamic Inheritance or slow Function Pointers in any API call!
-  
-Summary:
-Designed for Speed & Med-End Machines unlike other engine such as unreal engine that requires high end system
-requirements or amazon lumberyard that takes whole your HDD Space.
-
-Detailed Description:
-It is designed to support multiple RenderAPIs such as OpenGL3 And DirectX11, where on some platforms as windows
-you can choose one of them at runtime, which will cost you the smallest amount of performance since the engine
-is build to avoid Heap Allocations and Bad Core design as dynamic inheritance (which uses slow function pointers
-behind the scene), Most of the RenderAPI calls are usually designed in a way that lets you choose the renderer
-in debug so you can check that your game works on all RenderAPIs and at build time the engine chooses the best
-renderer for your platform to remove the entire API calling overhead. 
 
 
 Tutorials & references used (thank y'all!):

@@ -1,7 +1,7 @@
 #include "XShaderCompiler.h"
 
 #ifdef NE_COMPILE_XSHADERCOMPILER
-#include <..\..\XShaderCompiler\inc\Xsc\Xsc.h>
+#include <XShaderCompiler\inc\Xsc\Xsc.h>
 #include <sstream>
 #include <iostream>
 #include <vector>

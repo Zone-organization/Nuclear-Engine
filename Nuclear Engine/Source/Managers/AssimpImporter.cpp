@@ -1,6 +1,6 @@
 #include "AssimpImporter.h"
 #include <Managers\AssetManager.h>
-#pragma comment(lib,"assimp-vc140-mt.lib")
+#pragma comment(lib,"assimp.lib")
 
 namespace NuclearEngine {
 	namespace Internal {

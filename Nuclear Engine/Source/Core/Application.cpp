@@ -2,9 +2,9 @@
 #include <Core\Application.h>
 #include <Core\Context.h>
 #include <GLAD\include\glad\glad.h>
-#include <GLFW\include\glfw3.h>
+#include <GLFW\include\GLFW\glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW\include\glfw3native.h>
+#include <GLFW\include\GLFW\glfw3native.h>
 #include "imgui_impl\imgui_impl.h"
 
 #include <API\DirectX\DX11Context.h>

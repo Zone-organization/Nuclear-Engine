@@ -22,3 +22,4 @@
 *.log
 *.xml
 /Samples/Assets/Common/Models/CrytekSponza
+/Bin/DebugX86
