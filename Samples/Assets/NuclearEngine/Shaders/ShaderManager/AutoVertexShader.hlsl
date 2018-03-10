@@ -78,9 +78,8 @@ PixelInputType main(VertexInputType input)
     output.FragPos = mul(Model, input.Position).xyz;
 #endif
 #ifdef NE_USE_TANGENTS
-    float3 T = normalize(mul(input.Tangents, input.Normal));
-    float3 N = normalize(input.Normal * input.Normal);
-    T = normalize(T - dot(T, N) * N);
+    float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
+    float3 N = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
     float3 B = cross(N, T);
     
     output.T = T;

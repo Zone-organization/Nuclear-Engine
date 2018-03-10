@@ -138,29 +138,7 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     specular *= attenuation * intensity;
     return (ambient + diffuse);
 }
-#ifdef NE_USE_NORMAL_MAPS
 
-float3 CalcPointLight_NormalMap(PointLight light,float3x3 TBN,float3 fragPos, float3 viewDir, float2 TexCoords)
-{ 
-    // obtain normal from normal map in range [0,1]
-    float3 normal = NE_Tex_Normal1.Sample(NE_Normal1_Sampler, TexCoords).xyz;
-    // transform normal vector to range [-1,1]
-    normal = normalize(normal * 2.0 - 1.0); // this normal is in tangent space
-   
-    //Reverse
-    float3 lightDir = normalize(mul(light.Position.xyz, TBN) - mul(fragPos, TBN));
-    // attenuation
-    float attenuation = DoQuadraticAttenuation(light.Intensity_Attenuation, light.Position.xyz, fragPos);
-    // combine results
-    float3 ambient = 0.05f * float3(light.Color.xyz * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NE_Tex_Specular1.Sample(NE_Specular1_Sampler, TexCoords).xyz;
-    ambient *= attenuation;
-    diffuse *= attenuation;
-    specular *= attenuation;
-    return (ambient + diffuse + specular);
-}
-#endif
 float4 DoLighting(PixelInputType input)
 {
     // properties
@@ -170,10 +148,10 @@ float4 DoLighting(PixelInputType input)
 
 
 #ifdef NE_USE_NORMAL_MAPS
-    float3x3 TBN = transpose(float3x3(input.T, input.B, input.N));
-
-    result = CalcPointLight_NormalMap(PointLights[0], TBN, input.FragPos, viewDir, input.TexCoords);
-    return float4(result, 1.0f);
+    float3x3 TBN = float3x3(input.T, input.B, input.N);
+    norm = NE_Tex_Normal1.Sample(NE_Normal1_Sampler, input.TexCoords).xyz;
+    norm = normalize(norm * 2.0 - 1.0);
+    norm = normalize(mul(norm, TBN));
 #endif
 
 #ifdef NE_DIR_LIGHTS_NUM

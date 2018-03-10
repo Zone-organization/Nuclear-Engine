@@ -19,6 +19,8 @@ protected:
 	Components::FlyCamera Camera;
 
 	Components::PointLight pointlight1;
+	Components::PointLight pointlight2;
+	Components::SpotLight spotLight;
 
 	//ECS
 	Core::Scene SampleScene;
@@ -26,9 +28,10 @@ protected:
 	Components::Model CubeModel;
 
 	// positions of the point lights
-	Math::Vector3 pointLightPositions[4] =
+	Math::Vector3 pointLightPositions[2] =
 	{
-		Math::Vector3(0.7f,  0.2f,  2.0f)
+		Math::Vector3(0.7f,  0.2f,  2.0f),
+		Math::Vector3(0.5f, 1.0f, 0.3f)		
 	};
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -42,6 +45,8 @@ public:
 	{
 		pointlight1.SetPosition(pointLightPositions[0]);
 		pointlight1.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		pointlight2.SetPosition(pointLightPositions[1]);
+		pointlight2.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
 	}
 	void SetupTextures()
 	{
@@ -80,14 +85,16 @@ public:
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-		//desc.Normals = true;
+		desc.NormalMaps = true;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
+		Renderer->AddLight(&spotLight);
 		Renderer->AddLight(&pointlight1);
+		Renderer->AddLight(&pointlight2);
 		Renderer->Bake();
 
 		SetupLights();
@@ -150,7 +157,8 @@ public:
 
 		Renderer->InstantRender(&CubeModel);
 		
-		pointlight1.SetPosition(Camera.GetPosition());
+		spotLight.SetPosition(Camera.GetPosition());
+		spotLight.SetDirection(Camera.GetFrontView());
 
 		Renderer->Update_Light();
 
