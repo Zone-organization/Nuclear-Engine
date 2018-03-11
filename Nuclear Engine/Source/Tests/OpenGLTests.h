@@ -1,5 +1,11 @@
 #pragma once
 #include "TestCommon.h"
+
+#ifndef _DEBUG
+class OpenGLTests : public Core::Game
+{
+};
+#else
 #include <API\OpenGL\GLError.h>
 #include <iostream>
 class OpenGLTests : public Core::Game
@@ -183,3 +189,5 @@ public:
 		API::VertexBuffer::Delete(&TriangleVB);
 	}
 };
+
+#endif

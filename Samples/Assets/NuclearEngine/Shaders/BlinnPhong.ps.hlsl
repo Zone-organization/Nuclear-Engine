@@ -1,6 +1,6 @@
 //Definitions:
 //NE_USE_NORMAL_MAPS
-#define NE_USE_NORMAL_MAPS
+//#define NE_USE_NORMAL_MAPS
 //#define NE_DIR_LIGHTS_NUM 1
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
@@ -149,7 +149,7 @@ float4 DoLighting(PixelInputType input)
 #ifdef NE_USE_NORMAL_MAPS
     norm = NE_Tex_Normal1.Sample(NE_Normal1_Sampler, input.TexCoords).xyz;
     norm = normalize(mul(norm, 2.0f) - 1.0f);
-    //norm = normalize(mul(norm, input.TBN));
+    norm = normalize(mul(norm, input.TBN));
 #endif
 
 #ifdef NE_DIR_LIGHTS_NUM

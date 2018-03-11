@@ -12,7 +12,7 @@ protected:
 	API::Texture NormalTex;
 	API::Texture WhiteTex;
 
-	XAsset::ModelAsset CubeAsset;
+	XAsset::ModelAsset GridAsset;
 	XAsset::ModelAsset SphereAsset;
 
 	//Default states
@@ -26,8 +26,6 @@ protected:
 
 	//ECS
 	Core::Scene SampleScene;
-
-	Components::Model CubeModel;
 
 	// positions of the point lights
 	Math::Vector3 pointLightPositions[2] =
@@ -82,9 +80,8 @@ public:
 
 		XAsset::ModelAssetVertexDesc descm;
 		descm.Tangents = true;
-		XAsset::ModelAsset::CreateCube(&CubeAsset, textures, descm);
-		CubeAsset.Initialize(&Renderer->GetVertexShader());
-		CubeModel.SetAsset(&CubeAsset);
+		XAsset::ModelAsset::CreateGrid(&GridAsset, textures, descm,5.0f,5.0f,5,5);
+		GridAsset.Initialize(&Renderer->GetVertexShader());
 
 		XAsset::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
@@ -172,9 +169,9 @@ public:
 		states.DefaultSampler.PSBind(2);
 
 		Math::Matrix4 CubeModelTrans;
-		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(0.5f, 1.0f, 0.0f), ClockTime * 0.5f);
+		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(1.0f, 0.0f, 1.0f),Math::ToRadians(ClockTime * -10.0f));
 		Camera.SetModelMatrix(CubeModelTrans);
-		Renderer->InstantRender(&CubeModel);
+		Renderer->InstantRender(&GridAsset);
 		
 		for (unsigned int i = 0; i < 2; i++)
 		{

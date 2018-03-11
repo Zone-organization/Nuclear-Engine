@@ -1,6 +1,12 @@
 #pragma once
 #include <API\DirectX\DX11Context.h>
 #include "TestCommon.h"
+
+#ifndef _DEBUG
+class DirectX11Tests : public Core::Game
+{
+};
+#else
 #include <iostream>
 class DirectX11Tests : public Core::Game
 {
@@ -516,3 +522,5 @@ public:
 		API::Texture::Delete(&CubeTex);
 	}
 };
+
+#endif
