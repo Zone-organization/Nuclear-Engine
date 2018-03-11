@@ -40,9 +40,7 @@ struct PixelInputType
     float3 FragPos : TEXCOORD1;
 #endif
 #ifdef NE_USE_TANGENTS
-    float3 T : TANGENT0;
-    float3 N : TANGENT1;
-    float3 B : TANGENT2;
+    float3x3 TBN : TANGENT0;
 #endif
 };
 
@@ -82,9 +80,7 @@ PixelInputType main(VertexInputType input)
     float3 N = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
     float3 B = cross(N, T);
     
-    output.T = T;
-    output.N = N;
-    output.B = B;
+    output.TBN = float3x3(T, B, N);
 
 #endif
     return output;

@@ -1,6 +1,6 @@
 //Definitions:
 //NE_USE_NORMAL_MAPS
-//#define NE_USE_NORMAL_MAPS
+#define NE_USE_NORMAL_MAPS
 //#define NE_DIR_LIGHTS_NUM 1
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
@@ -11,10 +11,9 @@ struct PixelInputType
     float2 TexCoords : TEXCOORD0;
     float3 Normal : NORMAL0;
     float3 FragPos : TEXCOORD1;
+
 #ifdef NE_USE_NORMAL_MAPS
-    float3 T : TANGENT0;
-    float3 N : TANGENT1;
-    float3 B : TANGENT2;
+    float3x3 TBN : TANGENT0;
 #endif
 };
 
@@ -72,7 +71,7 @@ float4 main(PixelInputType input) : SV_TARGET
 }
 
 //TODO: move to a global light modifier or some shit
-#define Shininess 64.0f
+#define Shininess 32.0f
 
 float DoBlinnSpecular(float3 normal, float3 lightDir, float3 viewDir)
 {
@@ -148,10 +147,9 @@ float4 DoLighting(PixelInputType input)
 
 
 #ifdef NE_USE_NORMAL_MAPS
-    float3x3 TBN = float3x3(input.T, input.B, input.N);
     norm = NE_Tex_Normal1.Sample(NE_Normal1_Sampler, input.TexCoords).xyz;
-    norm = normalize(norm * 2.0 - 1.0);
-    norm = normalize(mul(norm, TBN));
+    norm = normalize(mul(norm, 2.0f) - 1.0f);
+    //norm = normalize(mul(norm, input.TBN));
 #endif
 
 #ifdef NE_DIR_LIGHTS_NUM

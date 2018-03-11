@@ -10,8 +10,10 @@ protected:
 	API::Texture DiffuseTex;
 	API::Texture SpecularTex;
 	API::Texture NormalTex;
+	API::Texture WhiteTex;
 
 	XAsset::ModelAsset CubeAsset;
+	XAsset::ModelAsset SphereAsset;
 
 	//Default states
 	API::CommonStates states;
@@ -56,6 +58,9 @@ public:
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall_normal.jpg", &NormalTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
+		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
+
+
 
 	}
 	void SetupXAsset()
@@ -80,6 +85,17 @@ public:
 		XAsset::ModelAsset::CreateCube(&CubeAsset, textures, descm);
 		CubeAsset.Initialize(&Renderer->GetVertexShader());
 		CubeModel.SetAsset(&CubeAsset);
+
+		XAsset::MeshTexture WhiteCTex;
+		WhiteCTex.Texture = WhiteTex;
+		WhiteCTex.type = XAsset::MeshTextureType::Diffuse;
+		std::vector<XAsset::MeshTexture> spheretextures;
+		spheretextures.push_back(WhiteCTex);
+		WhiteCTex.type = XAsset::MeshTextureType::Specular;
+		spheretextures.push_back(WhiteCTex);
+
+		XAsset::ModelAsset::CreateSphere(&SphereAsset, spheretextures, descm);
+		SphereAsset.Initialize(&Renderer->GetVertexShader());
 	}
 
 	void Load()
@@ -92,9 +108,9 @@ public:
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
-		Renderer->AddLight(&spotLight);
+		//Renderer->AddLight(&spotLight);
 		Renderer->AddLight(&pointlight1);
-		Renderer->AddLight(&pointlight2);
+		//Renderer->AddLight(&pointlight2);
 		Renderer->Bake();
 
 		SetupLights();
@@ -155,8 +171,20 @@ public:
 		states.DefaultSampler.PSBind(1);
 		states.DefaultSampler.PSBind(2);
 
+		Math::Matrix4 CubeModelTrans;
+		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(0.5f, 1.0f, 0.0f), ClockTime * 0.5f);
+		Camera.SetModelMatrix(CubeModelTrans);
 		Renderer->InstantRender(&CubeModel);
 		
+		for (unsigned int i = 0; i < 2; i++)
+		{
+			Math::Matrix4 model;
+			model = Math::Translate(model, pointLightPositions[i]);
+			model = Math::Scale(model, Math::Vector3(0.25f));
+			Camera.SetModelMatrix(model);
+			Renderer->InstantRender(&SphereAsset);
+		}
+
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
 

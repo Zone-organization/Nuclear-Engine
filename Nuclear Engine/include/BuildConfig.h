@@ -75,10 +75,4 @@ Building options:
 #define NE_COMPILE_D3DCOMPILER
 #define NE_COMPILE_XSHADERCOMPILER
 
-#ifndef _DEBUG
-#warning "Nuclear Engine: Usage of runtime chosable render API slows down performance!"
-#endif
-
-#else 
-
 #endif
