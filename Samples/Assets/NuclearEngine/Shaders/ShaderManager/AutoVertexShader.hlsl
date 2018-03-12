@@ -20,7 +20,7 @@ struct VertexInputType
     float2 TexCoord : TEXCOORD0;
 #endif
 #ifdef NE_USE_NORMALS
-    float3 Normal : NORMAL0;
+    float3 Normals : NORMAL0;
 #endif
 #ifdef NE_USE_TANGENTS
     float3 Tangents : TANGENT0;
@@ -34,7 +34,7 @@ struct PixelInputType
     float2 TexCoord : TEXCOORD0;
 #endif
 #ifdef NE_USE_NORMALS
-    float3 Normal : NORMAL0;
+    float3 Normals : NORMAL0;
 #endif
 #ifdef NE_OUT_FRAG_POS
     float3 FragPos : TEXCOORD1;
@@ -70,14 +70,18 @@ PixelInputType main(VertexInputType input)
     output.TexCoord = input.TexCoord;
 #endif
 #ifdef NE_USE_NORMALS
-    output.Normal = input.Normal;
+    output.Normals = input.Normals;
 #endif
 #ifdef NE_OUT_FRAG_POS
     output.FragPos = mul(Model, input.Position).xyz;
 #endif
 #ifdef NE_USE_TANGENTS
     float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
-    float3 N = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
+    float3 N = normalize(mul(float4(input.Normals.xyz, 0.0f), Model).xyz);
+    //Gram-Schmidt process
+    // re-orthogonalize T with respect to N
+    T = normalize(T - dot(T, N) * N);
+    // then retrieve perpendicular vector B with the cross product of T and N
     float3 B = cross(N, T);
     
     output.TBN = float3x3(T, B, N);

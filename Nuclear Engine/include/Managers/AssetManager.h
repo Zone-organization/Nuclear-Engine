@@ -15,9 +15,10 @@ namespace NuclearEngine {
 		{
 			bool UseTexCoords = true;
 			bool UseNormals = true;
-			bool UseTangents = true;
+			bool UseTangents = false;
 			bool LoadDiffuseTextures = true;
 			bool LoadSpecularTextures = false;
+			bool LoadNormalTextures = false;
 		};
 
 		class NEAPI AssetManager {

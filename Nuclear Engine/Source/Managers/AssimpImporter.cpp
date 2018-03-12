@@ -71,11 +71,22 @@ namespace NuclearEngine {
 				{
 					result.UV.push_back(Math::Vector2(0.0f, 0.0f));
 				}
-
 				// normals
-				if (mesh->mNormals != NULL)
+				if (loaddesc.UseNormals == true)
 				{
-					result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
+					if (mesh->mNormals != NULL)
+						result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));			
+					else	
+						result.Normals.push_back(Math::Vector3(0.0f,0.0f,0.0f));
+				}
+
+				//tangents
+				if (loaddesc.UseTangents == true)
+				{
+					if (mesh->mTangents != NULL)
+						result.Tangents.push_back(Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z));
+					else
+						result.Tangents.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
 				}
 			}
 			// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
@@ -101,6 +112,12 @@ namespace NuclearEngine {
 				std::vector<XAsset::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
 				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
+			if (loaddesc.LoadNormalTextures)
+			{
+				std::vector<Imported_Texture> normalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
+				std::vector<XAsset::MeshTexture> NormalMaps = Imported2MeshTexture(normalMaps);
+				result.textures.insert(result.textures.end(), NormalMaps.begin(), NormalMaps.end());
+			}
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
@@ -121,6 +138,8 @@ namespace NuclearEngine {
 				return XAsset::MeshTextureType::Diffuse;
 			case aiTextureType_SPECULAR:
 				return XAsset::MeshTextureType::Specular;
+			case aiTextureType_DISPLACEMENT:
+				return XAsset::MeshTextureType::Normal;
 			}
 
 			//Unsupported types treated as diffuse

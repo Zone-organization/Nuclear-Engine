@@ -137,6 +137,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\Bin\ReleaseX86\</OutDir>
     <IntDir>Build\ReleaseX86\</IntDir>
+    <TargetName>Nuclear.Engine</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|Win32'">
     <LinkIncremental>true</LinkIncremental>
