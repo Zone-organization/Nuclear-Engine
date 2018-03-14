@@ -117,6 +117,9 @@
     <ClInclude Include="Source\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\API\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\API\ShaderCompiler\XShaderCompiler.h" />
+    <ClInclude Include="include\API\RenderAPI.h" />
+    <ClInclude Include="include\Graphics\SpriteBatch.h" />
+    <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -196,5 +199,8 @@
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\API\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\API\ShaderCompiler\DXBC_Compiler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Systems\SpriteRenderSystemImpl.inl" />
   </ItemGroup>
 </Project>

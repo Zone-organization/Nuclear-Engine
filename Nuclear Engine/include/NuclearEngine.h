@@ -31,41 +31,18 @@ _____________/BOOOM\_____________
 #include <Managers\AssetManager.h>
 #include <Managers\ShaderManager.h>
 
-//# Asset Classes (XXAsset)
+//# Asset Classes (XAsset)
 #include <XAsset\ModelAsset.h>
 
 //# Shading Headers
 #include <Shading/Material.h>
 
 
-//# OneAPI Headers Begin
-//---Buffers
-#include <API/ConstantBuffer.h>
-#include <API/VertexBuffer.h>
-#include <API/IndexBuffer.h>
-#include <API/InputLayout.h>
-//---Textures
-#include <API/Texture.h>
-#include <API/Sampler.h>
-#include <API/Texture_Types.h>
-#include <API/RenderTarget.h>
-//---RenderStates
-#include <API/BlendState.h>
-#include <API/RasterizerState.h>
-#include <API/DepthStencilState.h>
-#include <API/RenderStates_Types.h>
-//---Shaders
-#include <API/ShaderCompiler.h>
-#include <API/VertexShader.h>
-#include <API/PixelShader.h>
-//---Other
-#include <API/Color.h>
-#include <API/Format.h>
-#include <API/CommonStates.h>
-//# OneAPI Headers End
+//# OneAPI Headers
+#include <API/RenderAPI.h>
 
 
-//# Engine Components Headers (Can be used as Components or Entities!)
+//# Engine Components Headers
 #include <Components\GenericCamera.h>
 #include <Components\FlyCamera.h>
 #include <Components\Skybox.h>

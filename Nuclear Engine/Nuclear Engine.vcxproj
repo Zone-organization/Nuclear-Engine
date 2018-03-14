@@ -363,6 +363,7 @@
     <ClInclude Include="include\API\OpenGL\GLVertexShader.h" />
     <ClInclude Include="include\API\PixelShader.h" />
     <ClInclude Include="include\API\RasterizerState.h" />
+    <ClInclude Include="include\API\RenderAPI.h" />
     <ClInclude Include="include\API\RenderStates_Types.h" />
     <ClInclude Include="include\API\RenderTarget.h" />
     <ClInclude Include="include\API\Sampler.h" />
@@ -373,6 +374,8 @@
     <ClInclude Include="include\API\VertexBuffer.h" />
     <ClInclude Include="include\API\ShaderCompiler.h" />
     <ClInclude Include="include\API\VertexShader.h" />
+    <ClInclude Include="include\Graphics\SpriteBatch.h" />
+    <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="include\Components\GUI\imconfig.h" />
     <ClInclude Include="include\Components\GUI\imgui.h" />
@@ -527,6 +530,9 @@
     <ClCompile Include="Source\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Systems\SpriteRenderSystemImpl.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

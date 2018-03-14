@@ -1,6 +1,8 @@
 # Nuclear Engine
 ![Alt text](http://media.indiedb.com/images/engines/1/1/764/NELOgo.png)
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
+
+### Build Status
 [![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine)
 
 # Preview
@@ -62,8 +64,10 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - PostProcessing Effects:
 	- Bloom
   - Normal Mapping (Bump mapping)
-  - Improve the OneAPI:
-    - Implement RenderTarget classes.
+  - Finish 2D Renderering:
+    - Sprite
+	- SpriteRenderer
+  - Implement Retained-Mode GUI.
 
 ## Road-map
   - Support Android & Linux & UWP Platforms.
@@ -74,6 +78,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   
   
 ### Building
+Please See NuclearDeps Repo for dependencies.
 Currently I am using Visual Studio 2017 15.5.5 to build it.
 
 

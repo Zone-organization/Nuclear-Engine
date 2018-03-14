@@ -1,6 +1,6 @@
 #ifndef RenderSystemImpl
 #include <Systems\RenderSystem.h>
-#else
+#endif
 #include <Core\FileSystem.h>
 #include <API\ConstantBuffer.h>
 #include <API\ShaderCompiler.h>
@@ -311,4 +311,3 @@ namespace NuclearEngine
 
 	}
 }
-#endif

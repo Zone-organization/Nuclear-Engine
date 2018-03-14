@@ -12,9 +12,6 @@ protected:
 	API::Texture NormalTex;
 	API::Texture WhiteTex;
 
-	XAsset::ModelAsset SponzaAsset;
-
-
 	XAsset::ModelAsset GridAsset;
 	XAsset::ModelAsset SphereAsset;
 
@@ -25,24 +22,17 @@ protected:
 
 	Components::PointLight pointlight1;
 	Components::PointLight pointlight2;
-	Components::PointLight pointlight3;
-	Components::PointLight pointlight4;
 	Components::SpotLight spotLight;
-	Components::DirectionalLight dirlight;
 
 	//ECS
 	Core::Scene SampleScene;
 
-
 	// positions of the point lights
-	Math::Vector3 pointLightPositions[4] =
+	Math::Vector3 pointLightPositions[2] =
 	{
 		Math::Vector3(0.7f,  0.2f,  2.0f),
-		Math::Vector3(2.3f, -3.3f, -4.0f),
-		Math::Vector3(-4.0f,  2.0f, -12.0f),
-		Math::Vector3(0.0f,  0.0f, -3.0f)
+		Math::Vector3(0.5f, 1.0f, 0.3f)
 	};
-
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -53,20 +43,10 @@ public:
 
 	void SetupLights()
 	{
-		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		dirlight.SetColor(API::Color(0.4f, 0.4f, 0.4f, 0.0f));
-
 		pointlight1.SetPosition(pointLightPositions[0]);
 		pointlight1.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
-
 		pointlight2.SetPosition(pointLightPositions[1]);
-		pointlight2.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight3.SetPosition(pointLightPositions[2]);
-		pointlight3.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight4.SetPosition(pointLightPositions[3]);
-		pointlight4.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight2.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
 	}
 	void SetupTextures()
 	{
@@ -100,7 +80,7 @@ public:
 
 		XAsset::ModelAssetVertexDesc descm;
 		descm.Tangents = true;
-		XAsset::ModelAsset::CreateGrid(&GridAsset, textures, descm,2.0f,2.0f,2,2);
+		XAsset::ModelAsset::CreateGrid(&GridAsset, textures, descm,2.0f, 2.0f, 5, 5);
 		GridAsset.Initialize(&Renderer->GetVertexShader());
 
 		XAsset::MeshTexture WhiteCTex;
@@ -113,15 +93,6 @@ public:
 
 		XAsset::ModelAsset::CreateSphere(&SphereAsset, spheretextures, descm);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
-
-		Managers::ModelLoadingDesc ModelDesc;
-		ModelDesc.UseTangents = true;
-		ModelDesc.LoadDiffuseTextures = true;
-		ModelDesc.LoadSpecularTextures = true;
-		ModelDesc.LoadNormalTextures = true;
-		Managers::AssetManager::LoadModel("Assets/Common/Models/CrytekSponza/sponza.obj", &SponzaAsset, ModelDesc);
-		SponzaAsset.Initialize(&Renderer->GetVertexShader());
-
 	}
 
 	void Load()
@@ -134,12 +105,9 @@ public:
 		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
-		Renderer->AddLight(&spotLight);
+		//Renderer->AddLight(&spotLight);
 		Renderer->AddLight(&pointlight1);
 		Renderer->AddLight(&pointlight2);
-		Renderer->AddLight(&pointlight3);
-		Renderer->AddLight(&pointlight4);
-		Renderer->AddLight(&dirlight);
 		Renderer->Bake();
 
 		SetupLights();
@@ -200,14 +168,12 @@ public:
 		states.DefaultSampler.PSBind(1);
 		states.DefaultSampler.PSBind(2);
 
-		Math::Matrix4 NanosuitMatrix;
-		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.0f, 0.0f));
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.01f));
-		Camera.SetModelMatrix(NanosuitMatrix);
-		Renderer->InstantRender(&SponzaAsset);
+		Math::Matrix4 CubeModelTrans;
+		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(1.0f, 0.0f, 1.0f), Math::ToRadians(ClockTime * -10.0f));
+		Camera.SetModelMatrix(CubeModelTrans);
+		Renderer->InstantRender(&GridAsset);
 
-
-		for (unsigned int i = 0; i < 4; i++)
+		for (unsigned int i = 0; i < 2; i++)
 		{
 			Math::Matrix4 model;
 			model = Math::Translate(model, pointLightPositions[i]);
