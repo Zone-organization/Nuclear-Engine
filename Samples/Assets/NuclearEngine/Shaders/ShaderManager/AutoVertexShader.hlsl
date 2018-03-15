@@ -69,9 +69,15 @@ PixelInputType main(VertexInputType input)
 #ifdef NE_USE_UV
     output.TexCoord = input.TexCoord;
 #endif
-#ifdef NE_USE_NORMALS
+
+#if defined(NE_USE_NORMALS) && !defined(NE_USE_DEF_CAMERA)
     output.Normals = input.Normals;
 #endif
+
+#if defined(NE_USE_NORMALS) && defined(NE_USE_DEF_CAMERA)
+    output.Normals = mul((float3x3)Model, input.Normals);
+#endif
+
 #ifdef NE_OUT_FRAG_POS
     output.FragPos = mul(Model, input.Position).xyz;
 #endif

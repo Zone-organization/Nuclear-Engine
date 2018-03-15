@@ -52,12 +52,12 @@ int main(int argc, char* argv[])
 		Sample1 demo;
 		Core::Engine::Run(&demo);
 	}
-	if (choice == '2') {
+	else if (choice == '2') {
 		Start();
 		Sample2 demo;
 		Core::Engine::Run(&demo);
 	}
-	if (choice == '3') {
+	else if (choice == '3') {
 		Start();
 		Sample3 demo;
 		Core::Engine::Run(&demo);
