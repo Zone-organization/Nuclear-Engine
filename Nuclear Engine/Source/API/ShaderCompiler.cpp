@@ -1,17 +1,18 @@
-#define NOMINMAX
-
 #include <API\ShaderCompiler.h>
 #include <API\Shader_Types.h>
 #include <Core\Context.h>
+#include <Core\FileSystem.h>
 #include "ShaderCompiler\DXBC_Compiler.h"
 #include "ShaderCompiler\XShaderCompiler.h"
 
 namespace NuclearEngine {
 
 	namespace API {
-
-	
-		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode, API::ShaderType type)
+		NEAPI BinaryShaderBlob CompileShader(const ShaderLoadDesc& desc, const API::ShaderType& type)
+		{
+			return CompileShader(Core::FileSystem::LoadShader(desc.Path, desc.Defines, desc.Includes, desc.ReverseIncludeOrder), type);
+		}
+		bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode, const API::ShaderType& type)
 		{
 			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
@@ -26,7 +27,7 @@ namespace NuclearEngine {
 			return true;
 		}
 
-		BinaryShaderBlob CompileShader(std::string SourceCode, API::ShaderType type)
+		BinaryShaderBlob CompileShader(std::string SourceCode, const API::ShaderType& type)
 		{
 			BinaryShaderBlob result;
 			CompileShader(&result, SourceCode, type);

@@ -48,7 +48,9 @@ _____________/BOOOM\_____________
 #include <Components\Skybox.h>
 #include <Components\Light.h>
 #include <Components\Model.h>
+#include <Components\Sprite.h>
 #include <Components\GUI\imgui.h>
 
 //# Engine Systems Headers
 #include <Systems\RenderSystem.h>
+#include <Systems\SpriteRenderSystem.h>

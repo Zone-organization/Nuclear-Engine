@@ -212,7 +212,7 @@ public:
 		};
 
 		int windowwidth, windowheight;
-		Core::Application::GetSize(&windowwidth, &windowheight);
+		Core::Application::GetSize(windowwidth, windowheight);
 		float vertices[20] = {
 
 		};

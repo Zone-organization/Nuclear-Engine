@@ -179,14 +179,22 @@ namespace NuclearEngine
 				return glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 			}
 		}	
-		void Application::GetSize(int* width, int* height)
+		void Application::GetSize(Uint32& awidth, Uint32& aheight)
 		{
-			glfwGetWindowSize(window,width, height);
+			int width, height;
+
+			GetSize(width, height);
+			awidth = static_cast<Uint32>(width);
+			aheight = static_cast<Uint32>(height);
+		}
+		void Application::GetSize(int& width, int& height)
+		{
+			glfwGetWindowSize(window,&width, &height);
 		}
 		float Application::GetAspectRatiof()
 		{
 			int width= 800, height = 600;
-			GetSize(&width, &height);
+			GetSize(width, height);
 			return static_cast<float>(width) / static_cast<float>(height);
 		}
 		HWND Application::GetHandle()

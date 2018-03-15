@@ -1,6 +1,3 @@
-#ifndef SpriteRenderSystemImpl
-#include <Systems\SpriteRenderSystem.h>
-#endif
 #include <Core\Context.h>
 namespace NuclearEngine
 {
@@ -29,6 +26,9 @@ namespace NuclearEngine
 				1.0f, 1.0f, 0.0f, 1.0f, VTexCoord,
 				1.0f, 0.0f, 0.0f, 1.0f, 0.0f
 			};
+			
+			API::VertexShader::Create( &mVShader, &API::CompileShader(mDesc.VertexShaderPath, API::ShaderType::Vertex));
+			API::PixelShader::Create( &mPShader, &API::CompileShader(mDesc.PixelShaderPath, API::ShaderType::Pixel));
 
 			API::VertexBufferDesc VBDesc;
 			VBDesc.data = vertices;
@@ -45,7 +45,14 @@ namespace NuclearEngine
 
 			mPShader.SetConstantBuffer(&mSpriteColorBuffer);
 
-			SetActiveCamera(mDesc.InitialCamera);
+			if (mDesc.InitialCamera == nullptr)
+			{
+				Log.Warning("[SpriteRenderSystem] Initializing system without an active camera, besure to set it before rendering.\n");
+				return false;
+			}
+			else {
+				SetActiveCamera(mDesc.InitialCamera);
+			}
 			return true;
 		}
 
@@ -57,8 +64,39 @@ namespace NuclearEngine
 				return false;
 			}
 			mCamera = Camera;
-			mVShader->SetConstantBuffer(&mCamera->GetCBuffer());
+			mVShader.SetConstantBuffer(&mCamera->GetCBuffer());
 			return true;
+		}
+
+		void SpriteRenderSystem::BeginDirectRender()
+		{
+			mVShader.Bind();
+			mPShader.Bind();
+			mVertexBuffer.Bind();
+
+		}
+
+		void SpriteRenderSystem::DirectRender(Components::Sprite * sprite)
+		{
+			Math::Matrix4 model;
+			model = Math::Translate(model, Math::Vector3(sprite->Position, 0.0f));
+			/*
+			model = Math::Translate(model, Math::Vector3(0.5f * size.x, 0.5f * size.y, 0.0f));
+			model = Math::Rotate(model, Math::Vector3(0.0f, 0.0f, 1.0f), rotate);
+			model = Math::Translate(model, Math::Vector3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+
+			model = Math::Scale(model, Math::Vector3(size, 1.0f));
+			*/
+			mSpriteColorBuffer.Update(&sprite->Color, sizeof(sprite->Color));
+
+			mCamera->SetModelMatrix(model);
+
+			sprite->Texture->PSBind(0);
+			Core::Context::Draw(6);
+		}
+
+		void SpriteRenderSystem::EndDirectRender()
+		{
 		}
 		
 		void SpriteRenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)

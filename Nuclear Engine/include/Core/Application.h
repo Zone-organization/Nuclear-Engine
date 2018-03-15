@@ -43,7 +43,8 @@ namespace NuclearEngine {
 
 			static void SetMouseInputMode(const MouseInputMode& mode);
 
-			static void GetSize(int* width, int* height);
+			static void GetSize(Uint32& width, Uint32& height);
+			static void GetSize(int& width, int& height);
 			static float GetAspectRatiof();
 
 #ifdef APP_EXPOSE_WIN32

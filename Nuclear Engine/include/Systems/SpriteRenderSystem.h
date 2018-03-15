@@ -5,6 +5,7 @@
 #include "Core/System.h"
 #include <API\RenderAPI.h>
 #include <Components\GenericCamera.h>
+#include <Components\Sprite.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -16,8 +17,8 @@ namespace NuclearEngine
 			Uint32 Width = 800;
 			Uint32 Height = 600;
 
-			std::string VertexShaderPath = "Default";
-			std::string PixelShaderPath = "Default";
+			API::ShaderLoadDesc VertexShaderPath = API::ShaderLoadDesc("Assets/NuclearEngine/Shaders/SpriteRenderSystem.vs.hlsl");
+			API::ShaderLoadDesc PixelShaderPath = API::ShaderLoadDesc("Assets/NuclearEngine/Shaders/SpriteRenderSystem.ps.hlsl");
 			Components::GenericCamera* InitialCamera = nullptr;
 		};
 		//Renderer for 2D Components
@@ -28,6 +29,10 @@ namespace NuclearEngine
 			bool Initialize(const SpriteRenderSystemDesc& desc);
 
 			bool SetActiveCamera(Components::GenericCamera* Camera);
+
+			void BeginDirectRender();
+			void DirectRender(Components::Sprite* sprite);
+			void EndDirectRender();
 			//Update Functions
 			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;
 
