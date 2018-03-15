@@ -2,9 +2,9 @@
 #include "TestCommon.h"
 
 struct Shader_Uniforms_t {
-	Math::Matrix4 Model;
-	Math::Matrix4 View;
-	Math::Matrix4 Projection;
+	Math::Matrix4 Model = Math::Matrix4(1.0f);
+	Math::Matrix4 View = Math::Matrix4(1.0f);
+	Math::Matrix4 Projection = Math::Matrix4(1.0f);
 }Shader_Uniforms;
 
 

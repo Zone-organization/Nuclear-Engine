@@ -52,9 +52,11 @@ struct PixelInputType
 
 cbuffer NE_Camera : register(b0)
 {
-	matrix Model;
-	matrix View;
-	matrix Projection;
+    matrix Model;
+    matrix ModelInvTranspose;
+    matrix ModelViewProjection;
+    matrix View;
+    matrix Projection;
 };
 
 PixelInputType main(VertexInputType input)
@@ -62,9 +64,7 @@ PixelInputType main(VertexInputType input)
     PixelInputType output;
 	
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(Model, input.position);
-	output.position = mul(View, output.position);
-	output.position = mul(Projection, output.position);
+	output.position = mul(ModelViewProjection, input.position);
 
 	// Store the input texture for the pixel shader to use.
     output.tex = input.tex;
@@ -351,12 +351,12 @@ public:
 		CubeVB.Bind();
 
 		// cube 1
-		Math::Matrix4 CubeModel;
+		Math::Matrix4 CubeModel(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
 		Camera.SetModelMatrix(CubeModel);
 		Core::Context::Draw(36);
 		// cube 2
-		CubeModel = Math::Matrix4();
+		CubeModel = Math::Matrix4(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModel);
 		Core::Context::Draw(36);
@@ -368,7 +368,7 @@ public:
 		}
 	
 		PlaneVB.Bind();
-		Camera.SetModelMatrix(Math::Matrix4());
+		Camera.SetModelMatrix(Math::Matrix4((1.0f)));
 		Core::Context::Draw(6);
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num5))
@@ -394,7 +394,7 @@ public:
 		}
 		for (std::map<float, Math::Vector3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 		{
-			Math::Matrix4 model;
+			Math::Matrix4 model(1.0f);
 			model = Math::Translate(model, it->second);
 			Camera.SetModelMatrix(model);
 			Core::Context::Draw(6);

@@ -29,7 +29,7 @@ namespace NuclearEngine
 		}
 		void GenericCamera::UpdateMatricesOnly()
 		{
-			_CameraBuffer.ModelViewProjection = _CameraBuffer.Model * _CameraBuffer.View * _CameraBuffer.Projection;
+			_CameraBuffer.ModelViewProjection = _CameraBuffer.Projection * _CameraBuffer.View * _CameraBuffer.Model;
 			_CameraBuffer.ModelInvTranspose = Math::inverseTranspose(_CameraBuffer.Model);
 		}
 		void GenericCamera::SetModelMatrix(Math::Matrix4 modelMatrix)

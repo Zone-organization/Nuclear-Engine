@@ -174,14 +174,14 @@ public:
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
 
-		Math::Matrix4 CubeModelTrans;
+		Math::Matrix4 CubeModelTrans(1.0f);
 		CubeModelTrans = Math::Rotate(CubeModelTrans, ClockTime, Math::Vector3(0.5f, 1.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModelTrans);
 		Renderer->InstantRender(&Cube);
 
 		for (unsigned int i = 0; i < 4; i++)
 		{
-			Math::Matrix4 model;
+			Math::Matrix4 model(1.0f);
 			model = Math::Translate(model, lightPositions[i]);
 			model = Math::Scale(model, Math::Vector3(0.25f));
 			Camera.SetModelMatrix(model);

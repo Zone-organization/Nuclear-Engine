@@ -48,9 +48,11 @@ struct PixelInputType
 
 cbuffer NE_Camera : register(b0)
 {
-	matrix Model;
-	matrix View;
-	matrix Projection;
+    matrix Model;
+    matrix ModelInvTranspose;
+    matrix ModelViewProjection;
+    matrix View;
+    matrix Projection;
 };
 
 PixelInputType main(VertexInputType input)
@@ -58,10 +60,8 @@ PixelInputType main(VertexInputType input)
     PixelInputType output;
 	
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(Model, input.position);
-	output.position = mul(View, output.position);
-	output.position = mul(Projection, output.position);
-
+	output.position = mul(ModelViewProjection, input.position);
+	
 	// Store the input texture for the pixel shader to use.
     output.tex = input.tex;
     return output;
@@ -325,12 +325,12 @@ public:
 		CubeVB.Bind();
 
 		// cube 1
-		Math::Matrix4 CubeModel;
+		Math::Matrix4 CubeModel(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
 		Camera.SetModelMatrix(CubeModel);
 		Core::Context::Draw(36);
 		// cube 2
-		CubeModel = Math::Matrix4();
+		CubeModel = Math::Matrix4(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModel);
 		Core::Context::Draw(36);

@@ -308,7 +308,7 @@ public:
 			for (unsigned int i = 0; i < 10; i++)
 			{
 				// calculate the model matrix for each object and pass it to shader before drawing
-				Math::Matrix4 model;
+				Math::Matrix4 model(1.0f);
 				model = Math::Translate(model, cubePositions[i]);
 				float angle = 20.0f * i * ClockTime;
 
@@ -322,7 +322,7 @@ public:
 		{
 			for (unsigned int i = 0; i < 9; i++)
 			{
-				Math::Matrix4 model;
+				Math::Matrix4 model(1.0f);
 				model = Math::Translate(model, pointLightPositions[i]);
 				model = Math::Scale(model, Math::Vector3(0.25f));
 				Camera.SetModelMatrix(model);
@@ -331,7 +331,7 @@ public:
 		}
 		if (rendernanosuit)
 		{
-			Math::Matrix4 NanosuitMatrix;
+			Math::Matrix4 NanosuitMatrix(1.0f);
 			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
 			NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));

@@ -63,9 +63,7 @@ PixelInputType main(VertexInputType input)
 
 #ifdef NE_USE_DEF_CAMERA
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-    output.Position = mul(Model, input.Position);
-    output.Position = mul(View, output.Position);
-    output.Position = mul(Projection, output.Position);
+    output.Position = mul(ModelViewProjection, input.Position);
 #else
     output.Position = input.Position;
 #endif

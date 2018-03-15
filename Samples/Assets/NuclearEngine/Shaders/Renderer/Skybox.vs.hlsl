@@ -9,11 +9,15 @@ struct PixelInputType
 	float3 Tex : TEXCOORD;
 };
 
-cbuffer NE_Camera
+cbuffer NE_Camera : register(b0)
 {
-	float4x4 Model;
-	float4x4 View;
-	float4x4 Projection;
+    matrix Model;
+    matrix ModelInvTranspose;
+    matrix ModelViewProjection;
+
+    //Needed for some objects (as skybox & 2D Sprites & etc)
+    matrix View;
+    matrix Projection;
 };
 
 PixelInputType main(VertexInputType input)
@@ -29,11 +33,11 @@ PixelInputType main(VertexInputType input)
 			View._m30, View._m31, View._m32, 1.0f
 		);
 
-    float4 MVP;
-    MVP = mul(aview, input.Position);
-    MVP = mul(Projection, MVP);
+    float4 VP;
+    VP = mul(aview, input.Position);
+    VP = mul(Projection, VP);
 
 	//Set Pos to xyww instead of xyzw, so that z will always be 1 (furthest from camera)
-	output.Position = MVP.xyww;    
+	output.Position = VP.xyww;    
     return output;
 }

@@ -217,7 +217,7 @@ public:
 		{
 			for (unsigned int i = 0; i < 4; i++)
 			{
-				Math::Matrix4 model;
+				Math::Matrix4 model(1.0f);
 				model = Math::Translate(model, pointLightPositions[i]);
 				model = Math::Scale(model, Math::Vector3(0.25f));
 				Camera.SetModelMatrix(model);
@@ -226,10 +226,10 @@ public:
 		}
 		if (rendersponza)
 		{
-			Math::Matrix4 NanosuitMatrix;
-			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(0.0f, -1.0f, 0.0f));
-			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.01f));
-			Camera.SetModelMatrix(NanosuitMatrix);
+			Math::Matrix4 SponzaMatrix(1.0f);
+			SponzaMatrix = Math::Translate(SponzaMatrix, Math::Vector3(0.0f, -1.0f, 0.0f));
+			SponzaMatrix = Math::Scale(SponzaMatrix, Math::Vector3(0.01f));
+			Camera.SetModelMatrix(SponzaMatrix);
 			Renderer->InstantRender(&SponzaModel);
 		}
 		spotLight.SetPosition(Camera.GetPosition());

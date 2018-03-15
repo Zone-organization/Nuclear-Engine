@@ -37,13 +37,13 @@ namespace NuclearEngine
 
 			struct CameraBuffer
 			{
-				Math::Matrix4 Model;
-				Math::Matrix4 ModelInvTranspose;
-				Math::Matrix4 ModelViewProjection;
+				Math::Matrix4 Model = Math::Matrix4(1.0f);
+				Math::Matrix4 ModelInvTranspose = Math::Matrix4(1.0f);
+				Math::Matrix4 ModelViewProjection = Math::Matrix4(1.0f);
 
 				//Needed for some objects (as skybox & 2D Sprites & etc)
-				Math::Matrix4 View;
-				Math::Matrix4 Projection;
+				Math::Matrix4 View = Math::Matrix4(1.0f);
+				Math::Matrix4 Projection = Math::Matrix4(1.0f);
 			}_CameraBuffer;
 
 			API::ConstantBuffer ConstantBuffer;
