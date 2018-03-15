@@ -5,6 +5,7 @@
 namespace NuclearEngine {
 
 	namespace XAsset {
+#define MathPI 3.14159265358979323846f
 
 		Mesh::Mesh(MeshData _data) : data(_data)
 		{
@@ -230,8 +231,8 @@ namespace NuclearEngine {
 
 			vertices.push_back(topVertex);
 
-			float phiStep = static_cast<float>(MathPI) / stackCount;
-			float thetaStep = 2.0f * static_cast<float>(MathPI) / sliceCount;
+			float phiStep = MathPI / stackCount;
+			float thetaStep = 2.0f * MathPI / sliceCount;
 
 			// Compute vertices for each stack ring (do not count the poles as rings).
 			for (UINT i = 1; i <= stackCount - 1; ++i)
@@ -261,8 +262,8 @@ namespace NuclearEngine {
 					Math::Vector3 T = v.Tangents;
 					v.Tangents = Math::Normalize(T);
 
-					v.UV.x = theta / (2 * static_cast<float>(MathPI));
-					v.UV.y = phi / static_cast<float>(MathPI);
+					v.UV.x = theta / (2 * MathPI);
+					v.UV.y = phi / MathPI;
 
 					vertices.push_back(v);
 				}

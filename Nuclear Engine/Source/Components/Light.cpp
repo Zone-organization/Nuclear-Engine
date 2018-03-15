@@ -56,7 +56,7 @@ namespace NuclearEngine {
 			data.Position = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 			data.Direction = Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f);
 			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
-			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::ToRadians(12.5f)), cos(Math::ToRadians(15.0f)), 1.0f, 1.0f);
+			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::radians(12.5f)), cos(Math::radians(15.0f)), 1.0f, 1.0f);
 			data.Color = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		}
 		SpotLight::~SpotLight()

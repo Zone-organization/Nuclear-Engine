@@ -102,7 +102,7 @@ public:
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
 		//Renderer->AddLight(&spotLight);
@@ -169,7 +169,7 @@ public:
 		states.DefaultSampler.PSBind(2);
 
 		Math::Matrix4 CubeModelTrans;
-		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(1.0f, 0.0f, 1.0f), Math::ToRadians(ClockTime * -10.0f));
+		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::radians(ClockTime * -10.0f), Math::Vector3(1.0f, 0.0f, 1.0f));
 		Camera.SetModelMatrix(CubeModelTrans);
 		Renderer->InstantRender(&GridAsset);
 

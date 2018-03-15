@@ -155,8 +155,8 @@ public:
 		Samplerdesc.Filter = API::TextureFilter::Trilinear;
 		API::Sampler::Create(&WoodenBoxSampler, Samplerdesc);
 
-		Shader_Uniforms.Model = Math::Rotate(Math::Vector3(0.5f, 1.0f, 0.0f), 5.0f);
-		Shader_Uniforms.View = Math::Translate(Math::Vector3(0.0f, 0.0f, -3.0f));
+		Shader_Uniforms.Model = Math::Rotate(Shader_Uniforms.Model,5.0f, Math::Vector3(0.5f, 1.0f, 0.0f));
+		Shader_Uniforms.View = Math::Translate(Shader_Uniforms.View, Math::Vector3(0.0f, 0.0f, -3.0f));
 		Shader_Uniforms.Projection = Math::Perspective(45.0f, Core::Application::GetAspectRatiof(), 0.1f, 100.0f);
 
 		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));

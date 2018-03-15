@@ -109,7 +109,7 @@ public:
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->InitializePostProcessing();
 		Renderer->SetCamera(&Camera);
@@ -175,7 +175,7 @@ public:
 		states.DefaultSampler.PSBind(1);
 
 		Math::Matrix4 CubeModelTrans;
-		CubeModelTrans = Math::Rotate(CubeModelTrans, Math::Vector3(0.5f, 1.0f, 0.0f), ClockTime);
+		CubeModelTrans = Math::Rotate(CubeModelTrans, ClockTime, Math::Vector3(0.5f, 1.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModelTrans);
 		Renderer->InstantRender(&Cube);
 

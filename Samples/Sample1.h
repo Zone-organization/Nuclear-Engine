@@ -200,7 +200,7 @@ public:
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
 		Renderer->AddLight(&spotLight);
@@ -312,7 +312,7 @@ public:
 				model = Math::Translate(model, cubePositions[i]);
 				float angle = 20.0f * i * ClockTime;
 
-				model = Math::Rotate(model, Math::Vector3(1.0f, 0.3f, 0.5f), Math::ToRadians(angle));
+				model = Math::Rotate(model, Math::radians(angle), Math::Vector3(1.0f, 0.3f, 0.5f));
 				Camera.SetModelMatrix(model);
 
 				Renderer->InstantRender(&CubeModel);
@@ -334,7 +334,7 @@ public:
 			Math::Matrix4 NanosuitMatrix;
 			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
-			NanosuitMatrix = Math::Rotate(NanosuitMatrix, Math::Vector3(0.0f, 1.0f, 0.0f),ClockTime);
+			NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
 			Camera.SetModelMatrix(NanosuitMatrix);
 			Renderer->InstantRender(&NanosuitModel);
 		}

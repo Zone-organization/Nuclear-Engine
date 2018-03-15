@@ -1,6 +1,5 @@
 #include "Components\GenericCamera.h"
-
-
+#include "Math/gtc/matrix_inverse.hpp"
 namespace NuclearEngine
 {
 	namespace Components
@@ -19,29 +18,34 @@ namespace NuclearEngine
 	
 		void GenericCamera::Initialize(Math::Matrix4 projectionMatrix)
 		{
-			_CameraBuffer.projectionMatrix = projectionMatrix;
-
+			_CameraBuffer.Projection = projectionMatrix;
 			Update();
 		}
 
 		void GenericCamera::Update()
 		{
+			UpdateMatricesOnly();
 			ConstantBuffer.Update(&_CameraBuffer, sizeof(_CameraBuffer));
+		}
+		void GenericCamera::UpdateMatricesOnly()
+		{
+			_CameraBuffer.ModelViewProjection = _CameraBuffer.Model * _CameraBuffer.View * _CameraBuffer.Projection;
+			_CameraBuffer.ModelInvTranspose = Math::inverseTranspose(_CameraBuffer.Model);
 		}
 		void GenericCamera::SetModelMatrix(Math::Matrix4 modelMatrix)
 		{
-			_CameraBuffer.modelMatrix = modelMatrix;
+			_CameraBuffer.Model = modelMatrix;
 			Update();
 		}
 		void GenericCamera::SetViewMatrix(Math::Matrix4 viewMatrix)
 		{
-			_CameraBuffer.viewMatrix = viewMatrix;
+			_CameraBuffer.View = viewMatrix;
 			Update();
 
 		}
 		void GenericCamera::SetProjectionMatrix(Math::Matrix4 projectionMatrix)
 		{
-			_CameraBuffer.projectionMatrix = projectionMatrix;
+			_CameraBuffer.Projection = projectionMatrix;
 			Update();
 
 		}
@@ -51,15 +55,15 @@ namespace NuclearEngine
 		}
 		Math::Matrix4 GenericCamera::GetModelMatrix()
 		{
-			return _CameraBuffer.modelMatrix;
+			return _CameraBuffer.Model;
 		}
 		Math::Matrix4 GenericCamera::GetViewMatrix()
 		{
-			return this->_CameraBuffer.viewMatrix;
+			return this->_CameraBuffer.Model;
 		}
 		Math::Matrix4 GenericCamera::GetProjectionMatrix()
 		{
-			return _CameraBuffer.projectionMatrix;
+			return _CameraBuffer.Projection;
 		}
 		Math::Vector3 GenericCamera::GetPosition()
 		{

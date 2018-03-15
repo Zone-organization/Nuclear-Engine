@@ -62,15 +62,15 @@ namespace NuclearEngine
 		void FlyCamera::Update()
 		{
 			Vector3 front;
-			front.x = cos(ToRadians(Yaw)) * cos(ToRadians(Pitch));
-			front.y = sin(ToRadians(Pitch));
-			front.z = sin(ToRadians(Yaw)) * cos(ToRadians(Pitch));
+			front.x = cos(radians(Yaw)) * cos(radians(Pitch));
+			front.y = sin(radians(Pitch));
+			front.z = sin(radians(Yaw)) * cos(radians(Pitch));
 			Front = Normalize(front);
 			// Also re-calculate the Right and Up vector
 			Right = Normalize(Math::Cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 			Up = Normalize(Math::Cross(Right, Front));
 
-			_CameraBuffer.viewMatrix = Math::LookAt(position, position + Front, Up);
+			_CameraBuffer.View = Math::LookAt(position, position + Front, Up);
 			GenericCamera::Update();
 		}
 	}

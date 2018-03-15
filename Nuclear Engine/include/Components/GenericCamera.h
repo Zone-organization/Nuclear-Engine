@@ -17,6 +17,8 @@ namespace NuclearEngine
 
 			void Initialize(Math::Matrix4 projectionMatrix);
 			void Update();
+			//Note: Doesn't update the constant buffer, it calculates the ModelInvTranspose, ModelViewProjection
+			void UpdateMatricesOnly();
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
@@ -35,9 +37,13 @@ namespace NuclearEngine
 
 			struct CameraBuffer
 			{
-				Math::Matrix4 modelMatrix;
-				Math::Matrix4 viewMatrix;
-				Math::Matrix4 projectionMatrix;
+				Math::Matrix4 Model;
+				Math::Matrix4 ModelInvTranspose;
+				Math::Matrix4 ModelViewProjection;
+
+				//Needed for some objects (as skybox & 2D Sprites & etc)
+				Math::Matrix4 View;
+				Math::Matrix4 Projection;
 			}_CameraBuffer;
 
 			API::ConstantBuffer ConstantBuffer;

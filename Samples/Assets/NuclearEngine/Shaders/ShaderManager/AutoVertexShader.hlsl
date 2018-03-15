@@ -48,6 +48,10 @@ struct PixelInputType
 cbuffer NE_Camera : register(b0)
 {
     matrix Model;
+    matrix ModelInvTranspose;
+    matrix ModelViewProjection;
+
+    //Needed for some objects (as skybox & 2D Sprites & etc)
     matrix View;
     matrix Projection;
 };
@@ -75,7 +79,7 @@ PixelInputType main(VertexInputType input)
 #endif
 
 #if defined(NE_USE_NORMALS) && defined(NE_USE_DEF_CAMERA)
-    output.Normals = mul((float3x3)Model, input.Normals);
+    output.Normals = mul((float3x3)ModelInvTranspose, input.Normals);
 #endif
 
 #ifdef NE_OUT_FRAG_POS

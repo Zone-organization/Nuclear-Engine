@@ -79,7 +79,7 @@ namespace NuclearEngine
 				{
 					if (desc.AnisoFilter != AnisotropicFilter::None)
 					{
-						glSamplerParameterf(result->SamplerID, GL_TEXTURE_MAX_ANISOTROPY_EXT, std::min(static_cast<float>(desc.AnisoFilter), Core::ContextDesc::MaxAnisotropicLevel));
+						glSamplerParameterf(result->SamplerID, GL_TEXTURE_MAX_ANISOTROPY_EXT, Math::min(static_cast<float>(desc.AnisoFilter), Core::ContextDesc::MaxAnisotropicLevel));
 					}
 				}
 

@@ -57,7 +57,6 @@ namespace NuclearEngine {
 			// Walk through each of the mesh's vertices
 			for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 			{
-				Math::Vector3 vector;
 				// positions
 				result.Positions.push_back(Math::Vector3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z));
 				// texture coordinates

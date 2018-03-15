@@ -57,7 +57,7 @@ namespace NuclearEngine
 		{
 			Math::Matrix4 transform = GetTransform();
 			Math::Vector4 pos = transform * Math::Vector4(m_Position, 1.0f);
-			return pos.xyz;
+			return Math::Vector3(pos.x,pos.y,pos.z);
 		}
 
 		Math::Vector3 Transform::GetWorldScale()
@@ -75,7 +75,7 @@ namespace NuclearEngine
 			if (m_dirty)
 			{
 				// first scale, then rotate, then translation
-				m_Transform = Math::Translate(m_Position);
+				m_Transform = Math::Translate(m_Transform,m_Position);
 				m_Transform = Math::Scale(m_Transform, m_Scale);
 				//m_Transform = Math::Rotate(m_Transform, m_Rotation.xyz, m_Rotation.w);
 

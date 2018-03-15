@@ -357,7 +357,7 @@ public:
 		}
 
 
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		VShader.SetConstantBuffer(&Camera.GetCBuffer());
 

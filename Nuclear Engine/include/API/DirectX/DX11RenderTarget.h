@@ -2,7 +2,7 @@
 #include <API\DirectX\DX11Common.h>
 
 #ifdef NE_COMPILE_DIRECTX11
-#include <Math\Vector.h>
+#include <Math\Math.h>
 #include <vector>
 namespace NuclearEngine
 {

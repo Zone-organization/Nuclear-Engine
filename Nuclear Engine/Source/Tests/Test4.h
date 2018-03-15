@@ -211,7 +211,7 @@ public:
 		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
 		WindowVB.SetInputLayout(&ShaderIL, &Vertexshader);
 
-		Camera.Initialize(Math::Perspective(Math::ToRadians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 
@@ -389,7 +389,7 @@ public:
 		std::map<float, Math::Vector3> sorted;
 		for (unsigned int i = 0; i < 5; i++)
 		{
-			float distance = Math::Length(Camera.GetPosition() - windows[i]);
+			float distance = Math::length(Camera.GetPosition() - windows[i]);
 			sorted[distance] = windows[i];
 		}
 		for (std::map<float, Math::Vector3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)

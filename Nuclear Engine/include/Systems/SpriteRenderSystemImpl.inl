@@ -1,4 +1,5 @@
 #include <Core\Context.h>
+#include <Math\Math.h>
 namespace NuclearEngine
 {
 	namespace Systems

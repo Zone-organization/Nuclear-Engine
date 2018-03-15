@@ -2,7 +2,7 @@
 #include <API\OpenGL\GLCommon.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
-#include <Math\Vector.h>
+#include <Math\Math.h>
 namespace NuclearEngine
 {
 	namespace API
