@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 		<< "3) Sample 3 - 2D Scene - introduction to 2D Sprites & SpriteRenderSystem & GUI.\n"
 		<< "----------------[Other]---------------\n"
 		<< "x) Playground - testing new stuff (Currently Normal Mapping)\n"
-		<< "y) Sandbox - testing new stuff (Currently PostProcessing GammaCorrection & HDR)\n"
+		<< "y) Sandbox - testing new stuff (Currently Bloom)\n"
 		<< "z) Tests\n";
 
 

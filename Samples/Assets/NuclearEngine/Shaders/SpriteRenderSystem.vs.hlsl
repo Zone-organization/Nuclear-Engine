@@ -10,9 +10,13 @@ struct PixelInputType
     float2 TexCoord : TEXCOORD;
 };
 
-cbuffer NE_Camera
+cbuffer NE_Camera : register(b0)
 {
     matrix Model;
+    matrix ModelInvTranspose;
+    matrix ModelViewProjection;
+
+    //Needed for some objects (as skybox & 2D Sprites & etc)
     matrix View;
     matrix Projection;
 };
