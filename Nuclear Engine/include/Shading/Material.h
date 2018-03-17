@@ -21,9 +21,9 @@ namespace NuclearEngine {
 			void SetMatrix(std::string name, Math::Matrix3 value);
 			void SetMatrix(std::string name, Math::Matrix4 value);
 		private:
-			//API::Shader *m_Shader;
+			API::Shader *m_Shader;
 //			std::unordered_map<std::string, UniformValue>        m_Uniforms;
-			//API::Reflected_Constantbuffer material_constbuf;
+			API::Reflected_Constantbuffer material_constbuf;
 		};
 	}
 }
