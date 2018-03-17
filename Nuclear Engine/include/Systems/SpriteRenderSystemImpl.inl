@@ -79,15 +79,15 @@ namespace NuclearEngine
 
 		void SpriteRenderSystem::DirectRender(Components::Sprite * sprite)
 		{
-			Math::Matrix4 model;
+			Math::Matrix4 model(1.0f);
 			model = Math::Translate(model, Math::Vector3(sprite->Position, 0.0f));
-			/*
-			model = Math::Translate(model, Math::Vector3(0.5f * size.x, 0.5f * size.y, 0.0f));
-			model = Math::Rotate(model, Math::Vector3(0.0f, 0.0f, 1.0f), rotate);
-			model = Math::Translate(model, Math::Vector3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+			
+			model = Math::Translate(model, Math::Vector3(0.5f * sprite->Size.x, 0.5f * sprite->Size.y, 0.0f));
+			model = Math::Rotate(model, sprite->Rotation, Math::Vector3(0.0f, 0.0f, 1.0f));
+			model = Math::Translate(model, Math::Vector3(-0.5f * sprite->Size.x, -0.5f * sprite->Size.y, 0.0f));
 
-			model = Math::Scale(model, Math::Vector3(size, 1.0f));
-			*/
+			model = Math::Scale(model, Math::Vector3(sprite->Size, 1.0f));
+			
 			mSpriteColorBuffer.Update(&sprite->Color, sizeof(sprite->Color));
 
 			mCamera->SetModelMatrix(model);

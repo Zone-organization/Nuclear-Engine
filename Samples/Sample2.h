@@ -10,6 +10,8 @@ protected:
 	bool rendersponza = true;
 	bool renderimgui = true;
 
+	bool usenormalmaps = false;
+
 	//XAsset
 	API::Texture WhiteTex;
 
@@ -89,13 +91,27 @@ public:
 		spheretextures.push_back(WhiteCTex);
 		WhiteCTex.type = XAsset::MeshTextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
+		
+		XAsset::ModelAssetVertexDesc descsphere;
+		if (usenormalmaps)
+		{
+			WhiteCTex.type = XAsset::MeshTextureType::Normal;
+			spheretextures.push_back(WhiteCTex);
 
+			descsphere.Tangents = true;
+		}
 		XAsset::ModelAsset::CreateSphere(&SphereAsset, spheretextures);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
 
 		Managers::ModelLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
+
+		if (usenormalmaps)
+		{
+			ModelDesc.UseTangents = true;
+			ModelDesc.LoadNormalTextures = true;
+		}
 		Managers::AssetManager::LoadModel("Assets/Common/Models/CrytekSponza/sponza.obj", &SponzaAsset, ModelDesc);
 		SponzaAsset.Initialize(&Renderer->GetVertexShader());
 
@@ -103,15 +119,27 @@ public:
 	void SetupEntities()
 	{
 		LampModel.SetAsset(&SphereAsset);
-		//ELamp = SampleScene.Entities.Create();
-		//ELamp.Assign<Components::Model>(LampModel);
 		SponzaModel.SetAsset(&SponzaAsset);
-		//ENanosuit = SampleScene.Entities.Create();
-		//ENanosuit.Assign<Components::Model>(SponzaModel);
 	}
 	void Load()
 	{
+		std::cout << "Use Normal Maps (1 = True, else = False): ";
+		char i;
+		std::cin >> i;
+
+		if (i == '1')
+		{
+			usenormalmaps = true;
+		}
+		else
+		{
+			usenormalmaps = false;
+		}
+
 		Systems::RenderSystemDesc desc;
+		if (usenormalmaps)
+			desc.NormalMaps = true;
+
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
@@ -203,9 +231,6 @@ public:
 	}
 	void Render(float dt) override
 	{
-
-		//ImGui::NE_NewFrame();
-
 		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
@@ -241,28 +266,6 @@ public:
 
 		states.EnabledDepth_DisabledStencil.Bind();
 
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Tab))
-		{
-			if (renderimgui == true)
-			{
-			//	renderimgui = false;
-			//	Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
-			}
-			else
-			{
-			//	renderimgui = true;
-			//	Core::Application::SetMouseInputMode(Core::MouseInputMode::Normal);
-			}
-		}
-
-		if (renderimgui == true)
-		{
-		//	ImGui::Checkbox("Render Lamps Spheres", &renderspheres);
-		//	ImGui::Checkbox("Render Sponza", &rendersponza);
-		}
-		//ShowOverlay(true);
-
-		//ImGui::Render();
 		Core::Context::PresentFrame();
 	}
 };

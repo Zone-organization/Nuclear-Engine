@@ -25,7 +25,7 @@ public:
 		TexDesc.Type = API::TextureType::Texture2D;
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/block.png", &BlockTex, TexDesc);
-		Block = new Components::Sprite(&BlockTex, Math::Vector2(200.0f, 200.0f), Math::Vector2(300.0f, 400.0f));
+		Block = new Components::Sprite(&BlockTex, Math::vec2(200.0f, 200.0f), Math::vec2(300.0f, 400.0f), API::Color(0.0f, 1.0f, 0.0f));
 
 		Camera.Initialize(Math::Orthographic(0.0f, static_cast<float>(_Width_), static_cast<float>(_Height_), 0.0f, -1.0f, 1.0f));
 

@@ -1,7 +1,6 @@
 # Nuclear Engine
 ![Alt text](http://media.indiedb.com/images/engines/1/1/764/NELOgo.png)
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
-
 ### Build Status
 [![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine)
 
@@ -52,6 +51,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 
 - __RenderSystem__
   - Support for BlinnPhong Lighting.
+  - Support for Normal Mapping.
   - Support for PostProcessing Effects:
 	- Gamma Correction
 	- HDR 'Reinhard tone mapping'
@@ -63,7 +63,6 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Currently TODO
   - PostProcessing Effects:
 	- Bloom
-  - Normal Mapping (Bump mapping)
   - Finish 2D Renderering:
     - Sprite
 	- SpriteRenderer
