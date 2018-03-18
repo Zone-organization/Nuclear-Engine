@@ -1,9 +1,10 @@
 //Definitions:
+//NE_USE_NORMAL_MAPS
 //#define NE_USE_NORMAL_MAPS
 //#define NE_DIR_LIGHTS_NUM 1
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
-//#define NE_USE_EXPERIMENTAL_MATERIAL
+
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
@@ -62,15 +63,6 @@ cbuffer NE_Light_CB
 #endif
 
 };
-
-#ifdef NE_USE_EXPERIMENTAL_MATERIAL
-cbuffer Material
-{
-    float4 Color;
-    bool UseNormalMapping;
-};
-#endif
-
 float4 DoLighting(PixelInputType input);
 
 float4 main(PixelInputType input) : SV_TARGET
@@ -153,14 +145,6 @@ float4 DoLighting(PixelInputType input)
     float3 viewDir = normalize(ViewPos.xyz - input.FragPos);
     float3 result = float3(0.0f, 0.0f, 0.0f);
 
-#ifdef NE_USE_EXPERIMENTAL_MATERIAL
-    if (UseNormalMapping == true)
-    {
-        norm = NE_Tex_Normal1.Sample(NE_Normal1_Sampler, input.TexCoords).xyz;
-        norm = normalize(mul(norm, 2.0f) - 1.0f);
-        norm = normalize(mul(norm, input.TBN));
-    }
-#endif
 
 #ifdef NE_USE_NORMAL_MAPS
     norm = NE_Tex_Normal1.Sample(NE_Normal1_Sampler, input.TexCoords).xyz;
@@ -189,11 +173,6 @@ float4 DoLighting(PixelInputType input)
     
         result += CalcSpotLight(SpotLights[i2], norm, input.FragPos, viewDir, input.TexCoords);
     }
-#endif
-
-#ifdef NE_USE_EXPERIMENTAL_MATERIAL
-
-    return float4(result, 1.0f) * Color;
 #endif
 
     return float4(result, 1.0f);
