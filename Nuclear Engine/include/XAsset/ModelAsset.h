@@ -1,8 +1,8 @@
 #pragma once
 #include <Math\Math.h>
-#include <API\Texture.h>
-#include <API\VertexBuffer.h>
-#include <API\IndexBuffer.h>
+#include <Graphics/API/Texture.h>
+#include <Graphics/API/VertexBuffer.h>
+#include <Graphics/API/IndexBuffer.h>
 #include <vector>
 #include <string>
 
@@ -19,7 +19,7 @@ namespace NuclearEngine {
 		};
 
 		struct NEAPI MeshTexture {
-			API::Texture Texture;
+			Graphics::API::Texture Texture;
 			MeshTextureType type;
 		};
 		struct NEAPI MeshData
@@ -39,14 +39,14 @@ namespace NuclearEngine {
 			Mesh(MeshData data);
 			Mesh(const Mesh& obj);
 			~Mesh();
-			void Initialize(API::VertexShader* _shader);
+			void Initialize(Graphics::API::VertexShader* _shader);
 			void Delete();
 
 			MeshData data;
 			unsigned int IndicesCount = 0;
 			//Buffers
-			API::IndexBuffer IBO;
-			API::VertexBuffer VBO;
+			Graphics::API::IndexBuffer IBO;
+			Graphics::API::VertexBuffer VBO;
 		};
 		struct ModelAssetVertexDesc
 		{
@@ -64,7 +64,7 @@ namespace NuclearEngine {
 			Note:
 				We only require shader to validate the input layout but you are free to render the model with any shader you want.
 			*/
-			void Initialize(API::VertexShader* _shader);
+			void Initialize(Graphics::API::VertexShader* _shader);
 			void Delete();
 
 			static void CreateCube(ModelAsset* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc = ModelAssetVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);

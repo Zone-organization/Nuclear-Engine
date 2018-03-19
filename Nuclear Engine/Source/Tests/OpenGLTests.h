@@ -6,16 +6,16 @@ class OpenGLTests : public Core::Game
 {
 };
 #else
-#include <API\OpenGL\GLError.h>
+#include <Graphics/API/OpenGL\GLError.h>
 #include <iostream>
 class OpenGLTests : public Core::Game
 {
 protected:
-	API::VertexBuffer TriangleVB;
+	Graphics::API::VertexBuffer TriangleVB;
 	GLuint vertProg, fragProg, pipeline;
-	API::Sampler LinearSampler;
-	API::Texture texture2;
-	API::Texture texture1;
+	Graphics::API::Sampler LinearSampler;
+	Graphics::API::Texture texture2;
+	Graphics::API::Texture texture1;
 
 	float vertices[18] =
 	{
@@ -70,11 +70,11 @@ public:
 		GLint success;
 		char infoLog[1024];
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-		API::OpenGL::GLCheckError();
+		Graphics::API::OpenGL::GLCheckError();
 		if (!success)
 		{
 			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			API::OpenGL::GLCheckError();
+			Graphics::API::OpenGL::GLCheckError();
 			Log.Info("[GLShader] Compiling Error -- In ");
 			Log.Info(" VShader - Info : \n");
 			Log.Info(infoLog);
@@ -87,25 +87,25 @@ public:
 		if (shader) {
 			const GLchar* strings = source.c_str();
 			glShaderSource(shader, 1, &strings, NULL);
-			API::OpenGL::GLCheckError();
+			Graphics::API::OpenGL::GLCheckError();
 			glCompileShader(shader);
-			API::OpenGL::GLCheckError();
+			Graphics::API::OpenGL::GLCheckError();
 			const GLuint program = glCreateProgram();
-			API::OpenGL::GLCheckError();
+			Graphics::API::OpenGL::GLCheckError();
 			if (program) {
 				GLint compiled = GL_FALSE;
 				glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-				API::OpenGL::GLCheckError();
+				Graphics::API::OpenGL::GLCheckError();
 				glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
-				API::OpenGL::GLCheckError();
+				Graphics::API::OpenGL::GLCheckError();
 				checkshadererror(shader);
 				if (compiled) {
 					glAttachShader(program, shader);
-					API::OpenGL::GLCheckError();
+					Graphics::API::OpenGL::GLCheckError();
 					glLinkProgram(program);
-					API::OpenGL::GLCheckError();
+					Graphics::API::OpenGL::GLCheckError();
 					glDetachShader(program, shader);
-					API::OpenGL::GLCheckError();
+					Graphics::API::OpenGL::GLCheckError();
 				}
 				/* append-shader-info-log-to-program-info-log */
 			}
@@ -126,34 +126,34 @@ public:
 		glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, vertProg);
 		glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, fragProg);
 
-		API::VertexBufferDesc Desc;
+		Graphics::API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = API::BufferUsage::Dynamic;
+		Desc.usage = Graphics::API::BufferUsage::Dynamic;
 
 		//Create the vertex Buffer
-		API::VertexBuffer::Create(&TriangleVB, Desc);
+		Graphics::API::VertexBuffer::Create(&TriangleVB, Desc);
 
-		API::InputLayout TriangleIL;
-		TriangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		TriangleIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+		Graphics::API::InputLayout TriangleIL;
+		TriangleIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+		TriangleIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
-		TriangleVB.SetInputLayout(&TriangleIL, &API::VertexShader());
+		TriangleVB.SetInputLayout(&TriangleIL, &Graphics::API::VertexShader());
 
-		API::Texture_Desc TexDesc;
-		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
-		TexDesc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc TexDesc;
+		TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		TexDesc.Type = Graphics::API::TextureType::Texture2D;
 		TexDesc.GenerateMipMaps = true;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &texture1, TexDesc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &texture2, TexDesc);
 
 		//Create sampler
-		API::SamplerDesc Samplerdesc;
-		Samplerdesc.Filter = API::TextureFilter::Trilinear;
-		API::Sampler::Create(&LinearSampler, Samplerdesc);
+		Graphics::API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
+		Graphics::API::Sampler::Create(&LinearSampler, Samplerdesc);
 
 		Core::Application::Display();
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 	}
 
 	void Render(float) override		// Render The Game
@@ -161,10 +161,10 @@ public:
 
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		glBindProgramPipeline(pipeline);
-		API::OpenGL::GLCheckError();
+		Graphics::API::OpenGL::GLCheckError();
 
 		LinearSampler.PSBind(0);
 		LinearSampler.PSBind(1);
@@ -179,14 +179,14 @@ public:
 		}
 
 		TriangleVB.Bind();
-		Core::Context::Draw(3);
+		Graphics::API::Context::Draw(3);
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 
 	void Shutdown() override
 	{
-		API::VertexBuffer::Delete(&TriangleVB);
+		Graphics::API::VertexBuffer::Delete(&TriangleVB);
 	}
 };
 

@@ -1,6 +1,6 @@
 #include <Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
-#include <API\ShaderCompiler.h>
+#include <Graphics/API/ShaderCompiler.h>
 namespace NuclearEngine
 {
 	namespace Managers
@@ -11,9 +11,9 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		API::VertexShader ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
+		Graphics::API::VertexShader ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
 		{
-			API::VertexShader result;
+			Graphics::API::VertexShader result;
 			std::vector<std::string> defines;
 
 			if (desc.InTexCoords)
@@ -27,25 +27,25 @@ namespace NuclearEngine
 			if (desc.OutFragPos)
 				defines.push_back("NE_OUT_FRAG_POS");
 
-			API::VertexShader::Create(
+			Graphics::API::VertexShader::Create(
 				&result,
-				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
-					API::ShaderType::Vertex));
+				&Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
+					Graphics::API::ShaderType::Vertex));
 
 			return result;
 		}
-		API::PixelShader ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
+		Graphics::API::PixelShader ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
 		{
-			API::PixelShader result;
+			Graphics::API::PixelShader result;
 			std::vector<std::string> defines;
 
 			if (desc.OutputTexture)
 				defines.push_back("NE_OUTPUT_TEXTURE");
 
-			API::PixelShader::Create(
+			Graphics::API::PixelShader::Create(
 				&result,
-				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
-					API::ShaderType::Pixel));
+				&Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
+					Graphics::API::ShaderType::Pixel));
 			return result;
 		}
 	}

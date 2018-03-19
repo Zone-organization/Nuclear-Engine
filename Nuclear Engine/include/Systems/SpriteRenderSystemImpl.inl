@@ -1,4 +1,4 @@
-#include <Core\Context.h>
+#include <Graphics\API\Context.h>
 #include <Math\Math.h>
 namespace NuclearEngine
 {
@@ -12,7 +12,7 @@ namespace NuclearEngine
 		{
 			float VTexCoord = -1.0f;
 
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
 				VTexCoord = +1.0f;
 			}
@@ -28,21 +28,21 @@ namespace NuclearEngine
 				1.0f, 0.0f, 0.0f, 1.0f, 0.0f
 			};
 			
-			API::VertexShader::Create( &mVShader, &API::CompileShader(mDesc.VertexShaderPath, API::ShaderType::Vertex));
-			API::PixelShader::Create( &mPShader, &API::CompileShader(mDesc.PixelShaderPath, API::ShaderType::Pixel));
+			Graphics::API::VertexShader::Create( &mVShader, &Graphics::API::CompileShader(mDesc.VertexShaderPath, Graphics::API::ShaderType::Vertex));
+			Graphics::API::PixelShader::Create( &mPShader, &Graphics::API::CompileShader(mDesc.PixelShaderPath, Graphics::API::ShaderType::Pixel));
 
-			API::VertexBufferDesc VBDesc;
+			Graphics::API::VertexBufferDesc VBDesc;
 			VBDesc.data = vertices;
 			VBDesc.size = sizeof(vertices);
-			VBDesc.usage = API::BufferUsage::Dynamic;
-			API::InputLayout layout;
-			layout.AppendAttribute("POSITION", 0, API::DataType::Float3);
-			layout.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+			VBDesc.usage = Graphics::API::BufferUsage::Dynamic;
+			Graphics::API::InputLayout layout;
+			layout.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+			layout.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
-			API::VertexBuffer::Create(&mVertexBuffer, VBDesc);
+			Graphics::API::VertexBuffer::Create(&mVertexBuffer, VBDesc);
 			mVertexBuffer.SetInputLayout(&layout, &mVShader);
 
-			API::ConstantBuffer::Create(&mSpriteColorBuffer, "SpriteColor", sizeof(API::Color));
+			Graphics::API::ConstantBuffer::Create(&mSpriteColorBuffer, "SpriteColor", sizeof(Graphics::Color));
 
 			mPShader.SetConstantBuffer(&mSpriteColorBuffer);
 
@@ -93,7 +93,7 @@ namespace NuclearEngine
 			mCamera->SetModelMatrix(model);
 
 			sprite->Texture->PSBind(0);
-			Core::Context::Draw(6);
+			Graphics::API::Context::Draw(6);
 		}
 
 		void SpriteRenderSystem::EndDirectRender()

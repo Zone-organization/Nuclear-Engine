@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <API\Color.h>
+#include <Graphics/Color.h>
 #include <Math\Math.h>
 
 namespace NuclearEngine {
@@ -37,7 +37,7 @@ namespace NuclearEngine {
 			DirectionalLight();
 			~DirectionalLight();
 
-			void SetColor(API::Color color);
+			void SetColor(Graphics::Color color);
 
 			void SetDirection(Math::Vector3 dir);
 
@@ -53,7 +53,7 @@ namespace NuclearEngine {
 			PointLight();
 			~PointLight();
 
-			void SetColor(API::Color color);
+			void SetColor(Graphics::Color color);
 
 			void SetPosition(Math::Vector3 pos);
 
@@ -73,7 +73,7 @@ namespace NuclearEngine {
 			SpotLight();
 			~SpotLight();
 
-			void SetColor(API::Color color);
+			void SetColor(Graphics::Color color);
 
 			void SetPosition(Math::Vector3 pos);
 

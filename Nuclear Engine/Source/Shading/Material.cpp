@@ -2,7 +2,7 @@
 
 namespace NuclearEngine {
 	namespace Shading {
-		/*void Material::SetShader(API::Shader * shader)
+		/*void Material::SetShader(Graphics::API::Shader * shader)
 		{
 			m_Shader = shader;
 
@@ -16,7 +16,7 @@ namespace NuclearEngine {
 		void Material::SetFloat(std::string name, float value)
 		{
 		}
-		void Material::SetTexture(std::string name, API::Texture * value, unsigned int slot)
+		void Material::SetTexture(std::string name, Graphics::API::Texture * value, unsigned int slot)
 		{
 		}
 		void Material::SetVector(std::string name, Math::Vector2 value)

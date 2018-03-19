@@ -4,10 +4,10 @@
 class Test1 : public Core::Game
 {
 protected:
-	API::VertexShader VShader;
-	API::PixelShader PShader;
+	Graphics::API::VertexShader VShader;
+	Graphics::API::PixelShader PShader;
 
-	API::VertexBuffer TriangleVB;
+	Graphics::API::VertexBuffer TriangleVB;
 
 	float vertices[18] = 
 	{
@@ -58,32 +58,32 @@ public:
 	void Load() override
 	{
 		//Load The Shader
-		API::VertexShader::Create(
+		Graphics::API::VertexShader::Create(
 			&VShader,
-			&API::CompileShader(VertexShader,
-			API::ShaderType::Vertex));
+			&Graphics::API::CompileShader(VertexShader,
+			Graphics::API::ShaderType::Vertex));
 
-		API::PixelShader::Create(
+		Graphics::API::PixelShader::Create(
 			&PShader,
-			&API::CompileShader(PixelShader,
-			API::ShaderType::Pixel));
+			&Graphics::API::CompileShader(PixelShader,
+			Graphics::API::ShaderType::Pixel));
 		
-		API::VertexBufferDesc Desc;
+		Graphics::API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = API::BufferUsage::Dynamic;
+		Desc.usage = Graphics::API::BufferUsage::Dynamic;
 
 		//Create the vertex Buffer
-		API::VertexBuffer::Create(&TriangleVB,Desc);
+		Graphics::API::VertexBuffer::Create(&TriangleVB,Desc);
 
-		API::InputLayout TriangleIL;
-		TriangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		TriangleIL.AppendAttribute("COLOR" , 0 , API::DataType::Float3);
+		Graphics::API::InputLayout TriangleIL;
+		TriangleIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+		TriangleIL.AppendAttribute("COLOR" , 0 , Graphics::API::DataType::Float3);
 
 		TriangleVB.SetInputLayout(&TriangleIL, &VShader);
 
 		Core::Application::Display();
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 	}
 
 	void Render(float) override		// Render The Game
@@ -91,20 +91,20 @@ public:
 
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		VShader.Bind();
 		PShader.Bind();
 		TriangleVB.Bind();
-		Core::Context::Draw(3);
+		Graphics::API::Context::Draw(3);
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 
 	void Shutdown() override 
 	{
-		API::VertexShader::Delete(&VShader);
-		API::PixelShader::Delete(&PShader);
-		API::VertexBuffer::Delete(&TriangleVB);
+		Graphics::API::VertexShader::Delete(&VShader);
+		Graphics::API::PixelShader::Delete(&PShader);
+		Graphics::API::VertexBuffer::Delete(&TriangleVB);
 	}
 };

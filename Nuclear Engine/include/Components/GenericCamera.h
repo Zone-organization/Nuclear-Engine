@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Math\Math.h>
-#include <API\ConstantBuffer.h>
+#include <Graphics/API/ConstantBuffer.h>
 
 namespace NuclearEngine
 {
@@ -31,7 +31,7 @@ namespace NuclearEngine
 			Math::Vector3 GetPosition();
 
 			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
-			API::ConstantBuffer GetCBuffer();
+			Graphics::API::ConstantBuffer GetCBuffer();
 
 		protected:
 
@@ -46,7 +46,7 @@ namespace NuclearEngine
 				Math::Matrix4 Projection = Math::Matrix4(1.0f);
 			}_CameraBuffer;
 
-			API::ConstantBuffer ConstantBuffer;
+			Graphics::API::ConstantBuffer ConstantBuffer;
 
 			Math::Vector3 position, direction;
 		};

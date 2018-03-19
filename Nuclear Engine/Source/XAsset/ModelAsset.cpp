@@ -1,6 +1,6 @@
 #include "XAsset\ModelAsset.h"
-#include "Core\Context.h"
-#include <API\InputLayout.h>
+#include <Graphics\API\Context.h>
+#include <Graphics/API/InputLayout.h>
 
 namespace NuclearEngine {
 
@@ -20,7 +20,7 @@ namespace NuclearEngine {
 
 		}
 
-		void Mesh::Initialize(API::VertexShader* _shader)
+		void Mesh::Initialize(Graphics::API::VertexShader* _shader)
 		{
 			std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
@@ -46,29 +46,29 @@ namespace NuclearEngine {
 					verticesdata.push_back(data.Tangents[i].z);
 				}
 			}
-			API::VertexBufferDesc desc;
+			Graphics::API::VertexBufferDesc desc;
 			desc.data = verticesdata.data();
 			desc.size = (unsigned int)verticesdata.size() * sizeof(float);
-			desc.usage = API::BufferUsage::Static;
+			desc.usage = Graphics::API::BufferUsage::Static;
 
-			API::VertexBuffer::Create(&VBO, desc);
-			API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size());
+			Graphics::API::VertexBuffer::Create(&VBO, desc);
+			Graphics::API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size());
 
 			IndicesCount = data.indices.size();
 
-			API::InputLayout layout;
-			layout.AppendAttribute("POSITION", 0, API::DataType::Float3);
+			Graphics::API::InputLayout layout;
+			layout.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
 			if (data.UV.size() > 0)
 			{
-				layout.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+				layout.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 			}
 			if (data.Normals.size() > 0)
 			{
-				layout.AppendAttribute("NORMAL", 0, API::DataType::Float3);
+				layout.AppendAttribute("NORMAL", 0, Graphics::API::DataType::Float3);
 			}
 			if (data.Tangents.size() > 0)
 			{
-				layout.AppendAttribute("TANGENT", 0, API::DataType::Float3);
+				layout.AppendAttribute("TANGENT", 0, Graphics::API::DataType::Float3);
 			}
 			VBO.SetInputLayout(&layout, _shader);
 
@@ -81,11 +81,11 @@ namespace NuclearEngine {
 
 		void Mesh::Delete()
 		{
-			API::VertexBuffer::Delete(&VBO);
-			API::IndexBuffer::Delete(&IBO);
+			Graphics::API::VertexBuffer::Delete(&VBO);
+			Graphics::API::IndexBuffer::Delete(&IBO);
 			for (size_t i = 0; i < data.textures.size(); i++)
 			{
-				API::Texture::Delete(&data.textures.at(i).Texture);
+				Graphics::API::Texture::Delete(&data.textures.at(i).Texture);
 			}
 			data.textures.clear();
 		}
@@ -104,7 +104,7 @@ namespace NuclearEngine {
 			Meshes.clear();
 		}
 
-		void ModelAsset::Initialize(API::VertexShader* _shader)
+		void ModelAsset::Initialize(Graphics::API::VertexShader* _shader)
 		{
 			for (unsigned int i = 0; i < Meshes.size(); i++)
 			{
@@ -412,7 +412,7 @@ namespace NuclearEngine {
 
 			float VTexCoord = +1.0f;
 
-			if (Core::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
 			{
 				VTexCoord = -1.0f;
 			}

@@ -169,11 +169,11 @@ namespace NuclearEngine {
 					texture.path = str.C_Str();
 					texture.Texture.type = GetMeshTextureType(type);
 
-					API::Texture_Desc Desc;
-					//Desc.Filter = API::TextureFilter::Trilinear;
-					//Desc.Wrap = API::TextureWrap::Repeat;
-					Desc.Format = API::Format::R8G8B8A8_UNORM;
-					Desc.Type = API::TextureType::Texture2D;
+					Graphics::API::Texture_Desc Desc;
+					//Desc.Filter = Graphics::API::TextureFilter::Trilinear;
+					//Desc.Wrap = Graphics::API::TextureWrap::Repeat;
+					Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+					Desc.Type = Graphics::API::TextureType::Texture2D;
 
 					std::string filename = texture.path;
 					filename = directory + '/' + filename;

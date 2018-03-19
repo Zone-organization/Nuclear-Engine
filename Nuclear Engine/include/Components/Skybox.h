@@ -1,10 +1,10 @@
 #pragma once
-#include <API/VertexBuffer.h>
-#include <API/IndexBuffer.h>
-#include <API/Texture.h>
-#include <API/Sampler.h>
-//#include <API/InputLayout.h>
-#include <API/DepthStencilState.h>
+#include <Graphics/API/VertexBuffer.h>
+#include <Graphics/API/IndexBuffer.h>
+#include <Graphics/API/Texture.h>
+#include <Graphics/API/Sampler.h>
+//#include <Graphics/API/InputLayout.h>
+#include <Graphics/API/DepthStencilState.h>
 #include <Core/FileSystem.h>
 #include <Components\GenericCamera.h>
 #include <Core\Entity.h>
@@ -21,16 +21,16 @@ namespace NuclearEngine
 			Skybox();
 			~Skybox();
 			//TODO:move these functions from here as
-			static void Create(Skybox* skybox, Components::GenericCamera* CameraCbuffer, const std::array<API::Texture_Data, 6>& data);
+			static void Create(Skybox* skybox, Components::GenericCamera* CameraCbuffer, const std::array<Graphics::API::Texture_Data, 6>& data);
 			static void Create(Skybox* skybox, Components::GenericCamera* CameraCbuffer, const std::array<std::string, 6>& paths);
 
-			API::VertexShader v_shader;
-			API::PixelShader p_shader;
-			API::VertexBuffer m_vb;
-			API::Texture m_texcube;
-			API::Sampler m_sampler;
+			Graphics::API::VertexShader v_shader;
+			Graphics::API::PixelShader p_shader;
+			Graphics::API::VertexBuffer m_vb;
+			Graphics::API::Texture m_texcube;
+			Graphics::API::Sampler m_sampler;
 			Components::GenericCamera* m_camera;
-			API::DepthStencilState m_ds_state;
+			Graphics::API::DepthStencilState m_ds_state;
 		};
 	}
 }

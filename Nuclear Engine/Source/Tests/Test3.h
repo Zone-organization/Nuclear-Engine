@@ -11,14 +11,14 @@ struct Shader_Uniforms_t {
 class Test3 : public Core::Game
 {
 protected:
-	API::VertexShader VShader;
-	API::PixelShader PShader;
+	Graphics::API::VertexShader VShader;
+	Graphics::API::PixelShader PShader;
 
-	API::VertexBuffer CubeVB;
-	API::ConstantBuffer CubeCB;
-	API::Texture WoodenBoxTex;
-	API::Sampler WoodenBoxSampler;
-	API::CommonStates states;
+	Graphics::API::VertexBuffer CubeVB;
+	Graphics::API::ConstantBuffer CubeCB;
+	Graphics::API::Texture WoodenBoxTex;
+	Graphics::API::Sampler WoodenBoxSampler;
+	Graphics::API::CommonStates states;
 	std::string VertexShader = R"(struct VertexInputType
 {
     float4 position : POSITION;
@@ -75,15 +75,15 @@ public:
 	{
 
 		//Load The Shader
-		API::VertexShader::Create(
+		Graphics::API::VertexShader::Create(
 			&VShader,
-			&API::CompileShader(VertexShader,
-				API::ShaderType::Vertex));
+			&Graphics::API::CompileShader(VertexShader,
+				Graphics::API::ShaderType::Vertex));
 
-		API::PixelShader::Create(
+		Graphics::API::PixelShader::Create(
 			&PShader,
-			&API::CompileShader(PixelShader,
-				API::ShaderType::Pixel));
+			&Graphics::API::CompileShader(PixelShader,
+				Graphics::API::ShaderType::Pixel));
 	
 		float vertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -129,31 +129,31 @@ public:
 			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 		};
 
-		API::VertexBufferDesc vDesc;
+		Graphics::API::VertexBufferDesc vDesc;
 		vDesc.data = vertices;
 		vDesc.size = sizeof(vertices);
-		vDesc.usage = API::BufferUsage::Static;
-		API::VertexBuffer::Create(&CubeVB, vDesc);
+		vDesc.usage = Graphics::API::BufferUsage::Static;
+		Graphics::API::VertexBuffer::Create(&CubeVB, vDesc);
 
-		API::InputLayout CubeIL;
-		CubeIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		CubeIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+		Graphics::API::InputLayout CubeIL;
+		CubeIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+		CubeIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
 		CubeVB.SetInputLayout(&CubeIL, &VShader);
 		
-		API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
+		Graphics::API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
 		VShader.SetConstantBuffer(&CubeCB);
 	
-		API::Texture_Desc TexDesc;
-		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
-		TexDesc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc TexDesc;
+		TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		TexDesc.Type = Graphics::API::TextureType::Texture2D;
 		TexDesc.GenerateMipMaps = true;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
 
 		//Create Sampler
-		API::SamplerDesc Samplerdesc;
-		Samplerdesc.Filter = API::TextureFilter::Trilinear;
-		API::Sampler::Create(&WoodenBoxSampler, Samplerdesc);
+		Graphics::API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
+		Graphics::API::Sampler::Create(&WoodenBoxSampler, Samplerdesc);
 
 		Shader_Uniforms.Model = Math::Rotate(Shader_Uniforms.Model,5.0f, Math::Vector3(0.5f, 1.0f, 0.0f));
 		Shader_Uniforms.View = Math::Translate(Shader_Uniforms.View, Math::Vector3(0.0f, 0.0f, -3.0f));
@@ -163,7 +163,7 @@ public:
 		Core::Application::Display();
 
 		states.EnabledDepth_DisabledStencil.Bind();
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 	}
 
 	void Render(float) override
@@ -171,7 +171,7 @@ public:
 
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		VShader.Bind();
 		PShader.Bind();
@@ -179,17 +179,17 @@ public:
 		WoodenBoxSampler.PSBind(0);
 		CubeVB.Bind();
 
-		Core::Context::Draw(36);
+		Graphics::API::Context::Draw(36);
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 	void Shutdown() override
 	{
-		API::VertexShader::Delete(&VShader);
-		API::PixelShader::Delete(&PShader);
-		API::VertexBuffer::Delete(&CubeVB);
-		API::Texture::Delete(&WoodenBoxTex);
-		API::ConstantBuffer::Delete(&CubeCB);
+		Graphics::API::VertexShader::Delete(&VShader);
+		Graphics::API::PixelShader::Delete(&PShader);
+		Graphics::API::VertexBuffer::Delete(&CubeVB);
+		Graphics::API::Texture::Delete(&WoodenBoxTex);
+		Graphics::API::ConstantBuffer::Delete(&CubeCB);
 
 	}
 };

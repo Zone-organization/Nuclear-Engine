@@ -13,13 +13,13 @@ protected:
 	bool usenormalmaps = false;
 
 	//XAsset
-	API::Texture WhiteTex;
+	Graphics::API::Texture WhiteTex;
 
 	XAsset::ModelAsset SphereAsset;
 	XAsset::ModelAsset SponzaAsset;
 
 	//Default states
-	API::CommonStates states;
+	Graphics::API::CommonStates states;
 
 	Components::FlyCamera Camera;
 
@@ -57,26 +57,26 @@ public:
 	void SetupLights()
 	{
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		dirlight.SetColor(API::Color(0.4f, 0.4f, 0.4f, 0.0f));
+		dirlight.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
 		pointlight1.SetPosition(pointLightPositions[0]);
-		pointlight1.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 
 		pointlight2.SetPosition(pointLightPositions[1]);
-		pointlight2.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight2.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight3.SetPosition(pointLightPositions[2]);
-		pointlight3.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight3.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight4.SetPosition(pointLightPositions[3]);
-		pointlight4.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight4.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 	}
 	void SetupTextures()
 	{
-		API::Texture_Desc Desc;
-		Desc.Format = API::Format::R8G8B8A8_UNORM;
-		Desc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc Desc;
+		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		Desc.Type = Graphics::API::TextureType::Texture2D;
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 	}
@@ -169,7 +169,7 @@ public:
 		ImGui::StyleColorsDark();
 
 		states.EnabledDepth_DisabledStencil.Bind();
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -231,7 +231,7 @@ public:
 	}
 	void Render(float dt) override
 	{
-		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
 
@@ -266,6 +266,6 @@ public:
 
 		states.EnabledDepth_DisabledStencil.Bind();
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 };

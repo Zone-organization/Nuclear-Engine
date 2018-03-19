@@ -1,5 +1,5 @@
 #pragma once
-#include <API\DirectX\DX11Context.h>
+#include <Graphics/API/DirectX\DX11Context.h>
 #include "TestCommon.h"
 
 #ifndef _DEBUG
@@ -11,21 +11,21 @@ class DirectX11Tests : public Core::Game
 class DirectX11Tests : public Core::Game
 {
 protected:
-	API::VertexShader VShader;
-	API::PixelShader PShader;
+	Graphics::API::VertexShader VShader;
+	Graphics::API::PixelShader PShader;
 
-	API::VertexShader ScreenVShader;
-	API::PixelShader ScreenPShader;
+	Graphics::API::VertexShader ScreenVShader;
+	Graphics::API::PixelShader ScreenPShader;
 
-	API::VertexBuffer CubeVB;
-	API::VertexBuffer PlaneVB;
-	API::VertexBuffer ScreenQuadVB;
+	Graphics::API::VertexBuffer CubeVB;
+	Graphics::API::VertexBuffer PlaneVB;
+	Graphics::API::VertexBuffer ScreenQuadVB;
 
-	API::Sampler LinearSampler;
-	API::Texture PlaneTex;
-	API::Texture CubeTex;
+	Graphics::API::Sampler LinearSampler;
+	Graphics::API::Texture PlaneTex;
+	Graphics::API::Texture CubeTex;
 
-	API::Sampler ScreenSampler;
+	Graphics::API::Sampler ScreenSampler;
 	ID3D11Texture2D* m_renderTargetTexture;
 	ID3D11RenderTargetView* m_renderTargetView;
 	ID3D11ShaderResourceView* m_shaderResourceView;
@@ -35,7 +35,7 @@ protected:
 	Components::FlyCamera Camera;
 
 	//Default states
-	API::CommonStates states;
+	Graphics::API::CommonStates states;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -129,32 +129,32 @@ float4 main(PixelInputType input) : SV_TARGET
 }
 )";
 
-	API::RasterizerState R_State;
+	Graphics::API::RasterizerState R_State;
 public:
 	DirectX11Tests()
 	{
 	}
 	void Load()
 	{
-		API::VertexShader::Create(
+		Graphics::API::VertexShader::Create(
 			&VShader,
-			&API::CompileShader(VertexShader,
-				API::ShaderType::Vertex));
+			&Graphics::API::CompileShader(VertexShader,
+				Graphics::API::ShaderType::Vertex));
 
-		API::PixelShader::Create(
+		Graphics::API::PixelShader::Create(
 			&PShader,
-			&API::CompileShader(PixelShader,
-				API::ShaderType::Pixel));
+			&Graphics::API::CompileShader(PixelShader,
+				Graphics::API::ShaderType::Pixel));
 
-		API::VertexShader::Create(
+		Graphics::API::VertexShader::Create(
 			&ScreenVShader,
-			&API::CompileShader(ScreenVertexShader,
-				API::ShaderType::Vertex));
+			&Graphics::API::CompileShader(ScreenVertexShader,
+				Graphics::API::ShaderType::Vertex));
 
-		API::PixelShader::Create(
+		Graphics::API::PixelShader::Create(
 			&ScreenPShader,
-			&API::CompileShader(ScreenPixelShader,
-				API::ShaderType::Pixel));
+			&Graphics::API::CompileShader(ScreenPixelShader,
+				Graphics::API::ShaderType::Pixel));
 
 
 		float cubevertices[] = {
@@ -228,44 +228,44 @@ public:
 			1.0f,  1.0f,  1.0f, 1.0f
 		};
 
-		API::VertexBufferDesc vDesc;
+		Graphics::API::VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;
 		vDesc.size = sizeof(cubevertices);
-		vDesc.usage = API::BufferUsage::Static;
-		API::VertexBuffer::Create(&CubeVB, vDesc);
+		vDesc.usage = Graphics::API::BufferUsage::Static;
+		Graphics::API::VertexBuffer::Create(&CubeVB, vDesc);
 
 		vDesc.data = planeVertices;
 		vDesc.size = sizeof(planeVertices);
-		API::VertexBuffer::Create(&PlaneVB, vDesc);
+		Graphics::API::VertexBuffer::Create(&PlaneVB, vDesc);
 
 		vDesc.data = quadVertices;
 		vDesc.size = sizeof(quadVertices);
-		API::VertexBuffer::Create(&ScreenQuadVB, vDesc);
+		Graphics::API::VertexBuffer::Create(&ScreenQuadVB, vDesc);
 
-		API::InputLayout ShaderIL;
-		ShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		ShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+		Graphics::API::InputLayout ShaderIL;
+		ShaderIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+		ShaderIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
 		CubeVB.SetInputLayout(&ShaderIL, &VShader);
 		PlaneVB.SetInputLayout(&ShaderIL, &VShader);
 
-		API::InputLayout ScreenShaderIL;
-		ScreenShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float2);
-		ScreenShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+		Graphics::API::InputLayout ScreenShaderIL;
+		ScreenShaderIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float2);
+		ScreenShaderIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
 		ScreenQuadVB.SetInputLayout(&ScreenShaderIL, &ScreenVShader);
 
 
 		//Create sampler
-		API::SamplerDesc Samplerdesc;
-		Samplerdesc.Filter = API::TextureFilter::Point2D;
-		API::Sampler::Create(&ScreenSampler, Samplerdesc);
+		Graphics::API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Point2D;
+		Graphics::API::Sampler::Create(&ScreenSampler, Samplerdesc);
 
 
 
-		API::Texture_Desc ScreenTexDesc;
-		ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
-		ScreenTexDesc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc ScreenTexDesc;
+		ScreenTexDesc.Format = Graphics::API::Format::R8G8B8_UNORM;
+		ScreenTexDesc.Type = Graphics::API::TextureType::Texture2D;
 		ScreenTexDesc.GenerateMipMaps = false;
 
 		//RT
@@ -290,7 +290,7 @@ public:
 		textureDesc.MiscFlags = 0;
 
 		// Create the render target texture.
-		result = API::DirectX::DX11Context::GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
+		result = Graphics::API::DirectX::DX11Context::GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
 		if (FAILED(result))
 		{
 		}
@@ -301,7 +301,7 @@ public:
 		renderTargetViewDesc.Texture2D.MipSlice = 0;
 
 		// Create the render target view.
-		result = API::DirectX::DX11Context::GetDevice()->CreateRenderTargetView(m_renderTargetTexture, &renderTargetViewDesc, &m_renderTargetView);
+		result = Graphics::API::DirectX::DX11Context::GetDevice()->CreateRenderTargetView(m_renderTargetTexture, &renderTargetViewDesc, &m_renderTargetView);
 		if (FAILED(result))
 		{
 		}
@@ -313,7 +313,7 @@ public:
 		shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
 		// Create the shader resource view.
-		result = API::DirectX::DX11Context::GetDevice()->CreateShaderResourceView(m_renderTargetTexture, &shaderResourceViewDesc, &m_shaderResourceView);
+		result = Graphics::API::DirectX::DX11Context::GetDevice()->CreateShaderResourceView(m_renderTargetTexture, &shaderResourceViewDesc, &m_shaderResourceView);
 		if (FAILED(result))
 		{
 		}
@@ -335,7 +335,7 @@ public:
 		depthBufferDesc.MiscFlags = 0;
 
 		// Create the texture for the depth buffer using the filled out description.
-		result = API::DirectX::DX11Context::GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &depthBuffer);
+		result = Graphics::API::DirectX::DX11Context::GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &depthBuffer);
 		if (FAILED(result))
 		{
 	
@@ -351,7 +351,7 @@ public:
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 		// Create the depth stencil view.
-		result = API::DirectX::DX11Context::GetDevice()->CreateDepthStencilView(depthBuffer, &depthStencilViewDesc, &m_depthStencilView);
+		result = Graphics::API::DirectX::DX11Context::GetDevice()->CreateDepthStencilView(depthBuffer, &depthStencilViewDesc, &m_depthStencilView);
 		if (FAILED(result))
 		{
 		}
@@ -361,24 +361,24 @@ public:
 
 		VShader.SetConstantBuffer(&Camera.GetCBuffer());
 
-		API::Texture_Desc Desc;
-		Desc.Format = API::Format::R8G8B8A8_UNORM;
-		Desc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc Desc;
+		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		Desc.Type = Graphics::API::TextureType::Texture2D;
 
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
 
 		//Create sampler
-		Samplerdesc.Filter = API::TextureFilter::Trilinear;
-		API::Sampler::Create(&LinearSampler, Samplerdesc);
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
+		Graphics::API::Sampler::Create(&LinearSampler, Samplerdesc);
 
-		API::RasterizerStateDesc rasterizerdesc;
-		rasterizerdesc.FillMode = API::FillMode::Wireframe;
+		Graphics::API::RasterizerStateDesc rasterizerdesc;
+		rasterizerdesc.FillMode = Graphics::API::FillMode::Wireframe;
 
-		API::RasterizerState::Create(&R_State, rasterizerdesc);
+		Graphics::API::RasterizerState::Create(&R_State, rasterizerdesc);
 
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 		states.EnabledDepth_DisabledStencil.Bind();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
@@ -423,7 +423,7 @@ public:
 
 	void mRenderscene()
 	{
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		VShader.Bind();
 		PShader.Bind();
@@ -436,19 +436,19 @@ public:
 		Math::Matrix4 CubeModel;
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
 		Camera.SetModelMatrix(CubeModel);
-		Core::Context::Draw(36);
+		Graphics::API::Context::Draw(36);
 		// cube 2
 		CubeModel = Math::Matrix4();
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModel);
-		Core::Context::Draw(36);
+		Graphics::API::Context::Draw(36);
 
 		// floor
 		PlaneTex.PSBind(0);
 
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
-		Core::Context::Draw(6);
+		Graphics::API::Context::Draw(6);
 	}
 
 	/*
@@ -474,10 +474,10 @@ public:
 		}
 		
 		else {
-			API::DirectX::DX11Context::GetContext()->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+			Graphics::API::DirectX::DX11Context::GetContext()->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 			float color[4] = { 0.0f,0.0f,1.0f,1.0f };
-			API::DirectX::DX11Context::GetContext()->ClearRenderTargetView(m_renderTargetView, color);
-			API::DirectX::DX11Context::GetContext()->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+			Graphics::API::DirectX::DX11Context::GetContext()->ClearRenderTargetView(m_renderTargetView, color);
+			Graphics::API::DirectX::DX11Context::GetContext()->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 			//Enable Depth Test
 			states.EnabledDepth_DisabledStencil.Bind();
@@ -486,9 +486,9 @@ public:
 			mRenderscene();
 
 			//Bind default RenderTarget
-			API::DirectX::DX11RenderTarget::Bind_Default();
+			Graphics::API::DirectX::DX11RenderTarget::Bind_Default();
 
-			Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			Graphics::API::Context::Clear(Graphics::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 			//Render RT Texture (color buffer) content
 			states.DisabledDepthStencil.Bind();
@@ -506,20 +506,20 @@ public:
 			ScreenPShader.Bind();
 			ScreenQuadVB.Bind();
 			ScreenSampler.PSBind(0);
-			API::DirectX::DX11Context::GetContext()->PSSetShaderResources(0, 1, &m_shaderResourceView);
-			Core::Context::Draw(6);
+			Graphics::API::DirectX::DX11Context::GetContext()->PSSetShaderResources(0, 1, &m_shaderResourceView);
+			Graphics::API::Context::Draw(6);
 			PlaneTex.PSBind(0);
 
 
-			Core::Context::PresentFrame();
+			Graphics::API::Context::PresentFrame();
 		}
 	}
 	void Shutdown() override
 	{
-		//API::Shader::Delete(&TestShader);
-		API::VertexBuffer::Delete(&CubeVB);
-		API::VertexBuffer::Delete(&PlaneVB);
-		API::Texture::Delete(&CubeTex);
+		//Graphics::API::Shader::Delete(&TestShader);
+		Graphics::API::VertexBuffer::Delete(&CubeVB);
+		Graphics::API::VertexBuffer::Delete(&PlaneVB);
+		Graphics::API::Texture::Delete(&CubeTex);
 	}
 };
 

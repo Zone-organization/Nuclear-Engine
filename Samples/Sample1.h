@@ -13,16 +13,16 @@ protected:
 	bool rendernanosuit = true;
 
 	//XAsset
-	API::Texture DiffuseTex;
-	API::Texture SpecularTex;
-	API::Texture WhiteTex;
+	Graphics::API::Texture DiffuseTex;
+	Graphics::API::Texture SpecularTex;
+	Graphics::API::Texture WhiteTex;
 
 	XAsset::ModelAsset CubeAsset;
 	XAsset::ModelAsset SphereAsset;
 	XAsset::ModelAsset NanosuitAsset;
 
 	//Default states
-	API::CommonStates states;
+	Graphics::API::CommonStates states;
 
 	Components::FlyCamera Camera;
 
@@ -91,40 +91,40 @@ public:
 	void SetupLights()
 	{
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		dirlight.SetColor(API::Color(0.4f, 0.4f, 0.4f, 0.0f));
+		dirlight.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
 		pointlight1.SetPosition(pointLightPositions[0]);
-		pointlight1.SetColor(API::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 
 		pointlight2.SetPosition(pointLightPositions[1]);
-		pointlight2.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight2.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight3.SetPosition(pointLightPositions[2]);
-		pointlight3.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight3.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight4.SetPosition(pointLightPositions[3]);
-		pointlight4.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight4.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight5.SetPosition(pointLightPositions[4]);
-		pointlight5.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight5.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight6.SetPosition(pointLightPositions[5]);
-		pointlight6.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight6.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight7.SetPosition(pointLightPositions[6]);
-		pointlight7.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight7.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight8.SetPosition(pointLightPositions[7]);
-		pointlight8.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight8.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 
 		pointlight9.SetPosition(pointLightPositions[8]);
-		pointlight9.SetColor(API::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight9.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 	}
 	void SetupTextures()
 	{
-		API::Texture_Desc Desc;
-		Desc.Format = API::Format::R8G8B8A8_UNORM;
-		Desc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc Desc;
+		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		Desc.Type = Graphics::API::TextureType::Texture2D;
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &DiffuseTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_specular.png", &SpecularTex, Desc);
@@ -231,7 +231,7 @@ public:
 		ImGui::StyleColorsDark();
 
 		states.EnabledDepth_DisabledStencil.Bind();
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -296,7 +296,7 @@ public:
 
 		ImGui::NE_NewFrame();
 
-		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
 
@@ -373,6 +373,6 @@ public:
 		ShowOverlay(true);
 
 		ImGui::Render();
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 };

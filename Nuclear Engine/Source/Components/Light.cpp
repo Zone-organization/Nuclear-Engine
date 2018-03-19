@@ -10,7 +10,7 @@ namespace NuclearEngine {
 		DirectionalLight::~DirectionalLight()
 		{
 		}
-		void DirectionalLight::SetColor(API::Color color)
+		void DirectionalLight::SetColor(Graphics::Color color)
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
 		}
@@ -31,7 +31,7 @@ namespace NuclearEngine {
 		PointLight::~PointLight()
 		{
 		}
-		void PointLight::SetColor(API::Color color)
+		void PointLight::SetColor(Graphics::Color color)
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
 		}
@@ -62,7 +62,7 @@ namespace NuclearEngine {
 		SpotLight::~SpotLight()
 		{
 		}
-		void SpotLight::SetColor(API::Color color)
+		void SpotLight::SetColor(Graphics::Color color)
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
 		}

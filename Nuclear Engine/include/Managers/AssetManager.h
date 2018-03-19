@@ -1,6 +1,6 @@
 #pragma once
-#include <API\Texture.h>
-#include <API\Color.h>
+#include <Graphics/API/Texture.h>
+#include <Graphics/Color.h>
 #include <array>
 #include <string>
 namespace NuclearEngine {
@@ -27,8 +27,8 @@ namespace NuclearEngine {
 
 			static bool LoadModel(std::string Path, XAsset::ModelAsset* model, const ModelLoadingDesc& = ModelLoadingDesc());
 
-			static API::Texture_Data LoadTextureFromFile(std::string Path, const API::Texture_Desc& Desc);
-			static void CreateTextureFromFile(std::string Path, API::Texture* texture, const API::Texture_Desc& Desc);
+			static Graphics::API::Texture_Data LoadTextureFromFile(std::string Path, const Graphics::API::Texture_Desc& Desc);
+			static void CreateTextureFromFile(std::string Path, Graphics::API::Texture* texture, const Graphics::API::Texture_Desc& Desc);
 
 			/*
 			Order:
@@ -39,7 +39,7 @@ namespace NuclearEngine {
 			 +Z (front)
 			 -Z (back)
 			*/
-			static std::array<API::Texture_Data, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const API::Texture_Desc& Desc);
+			static std::array<Graphics::API::Texture_Data, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const Graphics::API::Texture_Desc& Desc);
 		};
 	}
 }

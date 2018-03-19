@@ -4,12 +4,12 @@
 class Test2 : public Core::Game
 {
 protected:
-	API::VertexShader VShader;
-	API::PixelShader PShader;
-	API::VertexBuffer RectangleVB;
-	API::IndexBuffer RectangleIB;
-	API::Texture WoodenBoxTex;
-	API::Sampler WoodenBoxSampler;
+	Graphics::API::VertexShader VShader;
+	Graphics::API::PixelShader PShader;
+	Graphics::API::VertexBuffer RectangleVB;
+	Graphics::API::IndexBuffer RectangleIB;
+	Graphics::API::Texture WoodenBoxTex;
+	Graphics::API::Sampler WoodenBoxSampler;
 
 	float vertices[20] = {
 		// positions          // texture coords
@@ -70,50 +70,50 @@ public:
 	void Load()
 	{
 		//Load The Shader
-		API::VertexShader::Create(
+		Graphics::API::VertexShader::Create(
 			&VShader,
-			&API::CompileShader(VertexShader,
-				API::ShaderType::Vertex));
+			&Graphics::API::CompileShader(VertexShader,
+				Graphics::API::ShaderType::Vertex));
 
-		API::PixelShader::Create(
+		Graphics::API::PixelShader::Create(
 			&PShader,
-			&API::CompileShader(PixelShader,
-				API::ShaderType::Pixel));
+			&Graphics::API::CompileShader(PixelShader,
+				Graphics::API::ShaderType::Pixel));
 
-		API::VertexBufferDesc Desc;
+		Graphics::API::VertexBufferDesc Desc;
 		Desc.data = vertices;
 		Desc.size = sizeof(vertices);
-		Desc.usage = API::BufferUsage::Dynamic;
+		Desc.usage = Graphics::API::BufferUsage::Dynamic;
 
-		API::VertexBuffer::Create(&RectangleVB, Desc);
+		Graphics::API::VertexBuffer::Create(&RectangleVB, Desc);
 
-		API::InputLayout RectangleIL;
-		RectangleIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		RectangleIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+		Graphics::API::InputLayout RectangleIL;
+		RectangleIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+		RectangleIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
 		RectangleVB.SetInputLayout(&RectangleIL, &VShader);
-		API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
+		Graphics::API::IndexBuffer::Create(&RectangleIB,indices, sizeof(indices));
 
 		//Create Texture Resource
-		API::Texture_Desc TexDesc;
-		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
-		TexDesc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc TexDesc;
+		TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		TexDesc.Type = Graphics::API::TextureType::Texture2D;
 		TexDesc.GenerateMipMaps = false;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
 
 		//Create Sampler
-		API::SamplerDesc Samplerdesc;
-		Samplerdesc.Filter = API::TextureFilter::Linear2D;
-		API::Sampler::Create(&WoodenBoxSampler, Samplerdesc);
+		Graphics::API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Linear2D;
+		Graphics::API::Sampler::Create(&WoodenBoxSampler, Samplerdesc);
 
 		Core::Application::Display();
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 	}
 
 	void Render(float) override
 	{
 		//Change Background Color to Black in RGBA format
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		VShader.Bind();
 		PShader.Bind();
@@ -121,16 +121,16 @@ public:
 		WoodenBoxSampler.PSBind(0);
 		RectangleVB.Bind();
 		RectangleIB.Bind();
-		Core::Context::DrawIndexed(6);
+		Graphics::API::Context::DrawIndexed(6);
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 	void Shutdown() override 
 	{
-		API::VertexShader::Delete(&VShader);
-		API::PixelShader::Delete(&PShader);
-		API::VertexBuffer::Delete(&RectangleVB);
-		API::IndexBuffer::Delete(&RectangleIB);
-		API::Texture::Delete(&WoodenBoxTex);
+		Graphics::API::VertexShader::Delete(&VShader);
+		Graphics::API::PixelShader::Delete(&PShader);
+		Graphics::API::VertexBuffer::Delete(&RectangleVB);
+		Graphics::API::IndexBuffer::Delete(&RectangleIB);
+		Graphics::API::Texture::Delete(&WoodenBoxTex);
 	}
 };

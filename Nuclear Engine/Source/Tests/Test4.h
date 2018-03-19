@@ -5,18 +5,18 @@
 class Test4 : public Core::Game
 {
 protected:
-	API::VertexShader Vertexshader;
-	API::PixelShader Pixelshader;
-	API::PixelShader Depthpixelshader;
+	Graphics::API::VertexShader Vertexshader;
+	Graphics::API::PixelShader Pixelshader;
+	Graphics::API::PixelShader Depthpixelshader;
 
-	API::VertexBuffer CubeVB;
-	API::VertexBuffer PlaneVB;
-	API::VertexBuffer WindowVB;
+	Graphics::API::VertexBuffer CubeVB;
+	Graphics::API::VertexBuffer PlaneVB;
+	Graphics::API::VertexBuffer WindowVB;
 
-	API::Sampler LinearSampler;
-	API::Texture PlaneTex;
-	API::Texture CubeTex;
-	API::Texture WindowTex;
+	Graphics::API::Sampler LinearSampler;
+	Graphics::API::Texture PlaneTex;
+	Graphics::API::Texture CubeTex;
+	Graphics::API::Texture WindowTex;
 
 	bool Depthshaderenabled = false;
 
@@ -26,7 +26,7 @@ protected:
 	bool firstMouse = true;
 
 	//Default states
-	API::CommonStates states;
+	Graphics::API::CommonStates states;
 
 
 	Math::Vector3 windows[5] = 
@@ -111,9 +111,9 @@ float4 main(PixelInputType input) : SV_TARGET
     return float4(float3(depth,depth,depth), 1.0f);
 }
 )";
-	API::DepthStencilState DS_State;
-	API::RasterizerState R_State;
-	API::BlendState B_State;
+	Graphics::API::DepthStencilState DS_State;
+	Graphics::API::RasterizerState R_State;
+	Graphics::API::BlendState B_State;
 
 public:
 	Test4()
@@ -121,9 +121,9 @@ public:
 	}
 	void Load()
 	{
-		API::VertexShader::Create(&Vertexshader, &API::CompileShader(VertexShader, API::ShaderType::Vertex));
-		API::PixelShader::Create(&Pixelshader, &API::CompileShader(PixelShader, API::ShaderType::Pixel));
-		API::PixelShader::Create(&Depthpixelshader, &API::CompileShader(DepthPixelShader, API::ShaderType::Pixel));
+		Graphics::API::VertexShader::Create(&Vertexshader, &Graphics::API::CompileShader(VertexShader, Graphics::API::ShaderType::Vertex));
+		Graphics::API::PixelShader::Create(&Pixelshader, &Graphics::API::CompileShader(PixelShader, Graphics::API::ShaderType::Pixel));
+		Graphics::API::PixelShader::Create(&Depthpixelshader, &Graphics::API::CompileShader(DepthPixelShader, Graphics::API::ShaderType::Pixel));
 
 		float cubevertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -189,23 +189,23 @@ public:
 			1.0f,  0.5f,  0.0f,  1.0f,  0.0f
 		};
 
-		API::VertexBufferDesc vDesc;
+		Graphics::API::VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;
 		vDesc.size = sizeof(cubevertices);
-		vDesc.usage = API::BufferUsage::Static;
-		API::VertexBuffer::Create(&CubeVB, vDesc);
+		vDesc.usage = Graphics::API::BufferUsage::Static;
+		Graphics::API::VertexBuffer::Create(&CubeVB, vDesc);
 
 		vDesc.data = planeVertices;
 		vDesc.size = sizeof(planeVertices);
-		API::VertexBuffer::Create(&PlaneVB, vDesc);
+		Graphics::API::VertexBuffer::Create(&PlaneVB, vDesc);
 		
 		vDesc.data = windowVertices;
 		vDesc.size = sizeof(windowVertices);
-		API::VertexBuffer::Create(&WindowVB, vDesc);
+		Graphics::API::VertexBuffer::Create(&WindowVB, vDesc);
 
-		API::InputLayout ShaderIL;
-		ShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		ShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+		Graphics::API::InputLayout ShaderIL;
+		ShaderIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+		ShaderIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
 		CubeVB.SetInputLayout(&ShaderIL, &Vertexshader);
 		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
@@ -215,39 +215,39 @@ public:
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 
-		API::Texture_Desc Desc;
-		Desc.Format = API::Format::R8G8B8A8_UNORM;
-		Desc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc Desc;
+		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		Desc.Type = Graphics::API::TextureType::Texture2D;
 		Desc.GenerateMipMaps = true;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/window.png", &WindowTex, Desc);
 
 		//Create sampler
-		API::SamplerDesc Samplerdesc;
-		Samplerdesc.Filter = API::TextureFilter::Trilinear;
-		API::Sampler::Create(&LinearSampler, Samplerdesc);
+		Graphics::API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
+		Graphics::API::Sampler::Create(&LinearSampler, Samplerdesc);
 
-		API::DepthStencilStateDesc DS_Desc;
+		Graphics::API::DepthStencilStateDesc DS_Desc;
 		DS_Desc.DepthEnabled = true;
-		DS_Desc.DepthFunc = API::Comparison_Func::ALWAYS;
-		API::DepthStencilState::Create(&DS_State, DS_Desc);
+		DS_Desc.DepthFunc = Graphics::API::Comparison_Func::ALWAYS;
+		Graphics::API::DepthStencilState::Create(&DS_State, DS_Desc);
 
-		API::RasterizerStateDesc rasterizerdesc;
-		rasterizerdesc.FillMode = API::FillMode::Wireframe;
+		Graphics::API::RasterizerStateDesc rasterizerdesc;
+		rasterizerdesc.FillMode = Graphics::API::FillMode::Wireframe;
 
-		API::RasterizerState::Create(&R_State, rasterizerdesc);
+		Graphics::API::RasterizerState::Create(&R_State, rasterizerdesc);
 
-		API::BlendStateDesc blenddesc;
+		Graphics::API::BlendStateDesc blenddesc;
 		blenddesc.RenderTarget[0].BlendEnable = true;
-		blenddesc.RenderTarget[0].SrcBlend = API::BLEND::SRC_ALPHA;
-		blenddesc.RenderTarget[0].DestBlend = API::BLEND::INV_SRC_ALPHA;
-		blenddesc.RenderTarget[0].SrcBlendAlpha = API::BLEND::SRC_ALPHA;
-		blenddesc.RenderTarget[0].DestBlendAlpha = API::BLEND::INV_SRC_ALPHA;
-		blenddesc.RenderTarget[0].RenderTargetWriteMask = API::COLOR_WRITE_ENABLE_ALL;
-		API::BlendState::Create(&B_State, blenddesc);
+		blenddesc.RenderTarget[0].SrcBlend = Graphics::API::BLEND::SRC_ALPHA;
+		blenddesc.RenderTarget[0].DestBlend = Graphics::API::BLEND::INV_SRC_ALPHA;
+		blenddesc.RenderTarget[0].SrcBlendAlpha = Graphics::API::BLEND::SRC_ALPHA;
+		blenddesc.RenderTarget[0].DestBlendAlpha = Graphics::API::BLEND::INV_SRC_ALPHA;
+		blenddesc.RenderTarget[0].RenderTargetWriteMask = Graphics::API::COLOR_WRITE_ENABLE_ALL;
+		Graphics::API::BlendState::Create(&B_State, blenddesc);
 		
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 		states.EnabledDepth_DisabledStencil.Bind();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);			
@@ -313,7 +313,7 @@ public:
 
 
 		//Change Background Color to Blue in RGBA format
-		Core::Context::Clear(API::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.2f, 0.3f, 0.3f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		Vertexshader.Bind();		
 		
@@ -354,12 +354,12 @@ public:
 		Math::Matrix4 CubeModel(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
 		Camera.SetModelMatrix(CubeModel);
-		Core::Context::Draw(36);
+		Graphics::API::Context::Draw(36);
 		// cube 2
 		CubeModel = Math::Matrix4(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModel);
-		Core::Context::Draw(36);
+		Graphics::API::Context::Draw(36);
 		
 		// floor
 		if (!Depthshaderenabled)
@@ -369,11 +369,11 @@ public:
 	
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4((1.0f)));
-		Core::Context::Draw(6);
+		Graphics::API::Context::Draw(6);
 
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num5))
 		{
-			B_State.Bind(API::Color(0.75f));
+			B_State.Bind(Graphics::Color(0.75f));
 		}
 		else if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num6))
 		{
@@ -397,16 +397,16 @@ public:
 			Math::Matrix4 model(1.0f);
 			model = Math::Translate(model, it->second);
 			Camera.SetModelMatrix(model);
-			Core::Context::Draw(6);
+			Graphics::API::Context::Draw(6);
 		}		
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 	void Shutdown() override
 	{
-		//API::Shader::Delete(&TestShader);
-		API::VertexBuffer::Delete(&CubeVB);
-		API::VertexBuffer::Delete(&PlaneVB);
-		API::Texture::Delete(&CubeTex);
+		//Graphics::API::Shader::Delete(&TestShader);
+		Graphics::API::VertexBuffer::Delete(&CubeVB);
+		Graphics::API::VertexBuffer::Delete(&PlaneVB);
+		Graphics::API::Texture::Delete(&CubeTex);
 	}
 };

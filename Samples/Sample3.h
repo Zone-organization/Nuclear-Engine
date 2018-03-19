@@ -5,13 +5,13 @@ class Sample3 : public Core::Game
 {
 protected:
 	//Assets
-	API::Texture BlockTex;
+	Graphics::API::Texture BlockTex;
 	Components::Sprite *Block;
 	Systems::SpriteRenderSystem Renderer;
 	Components::GenericCamera Camera;
 
 	//Default states
-	API::CommonStates states;
+	Graphics::API::CommonStates states;
 
 public:
 	Sample3()
@@ -20,12 +20,12 @@ public:
 
 	void Load()
 	{
-		API::Texture_Desc	TexDesc;
-		TexDesc.Format = API::Format::R8G8B8A8_UNORM;
-		TexDesc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc	TexDesc;
+		TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		TexDesc.Type = Graphics::API::TextureType::Texture2D;
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/block.png", &BlockTex, TexDesc);
-		Block = new Components::Sprite(&BlockTex, Math::vec2(200.0f, 200.0f), Math::vec2(300.0f, 400.0f), API::Color(0.0f, 1.0f, 0.0f));
+		Block = new Components::Sprite(&BlockTex, Math::vec2(200.0f, 200.0f), Math::vec2(300.0f, 400.0f), Graphics::Color(0.0f, 1.0f, 0.0f));
 
 		Camera.Initialize(Math::Orthographic(0.0f, static_cast<float>(_Width_), static_cast<float>(_Height_), 0.0f, -1.0f, 1.0f));
 
@@ -35,7 +35,7 @@ public:
 		Renderer.Initialize(Desc);
 
 		states.EnabledDepth_DisabledStencil.Bind();
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 
 		//Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -43,7 +43,7 @@ public:
 
 	void Render(float dt) override
 	{
-		Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer.BeginDirectRender();
 		states.DefaultSampler.PSBind(0);
 		Renderer.DirectRender(Block);
@@ -51,6 +51,6 @@ public:
 
 		Camera.Update();
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 };

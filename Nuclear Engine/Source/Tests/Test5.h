@@ -5,30 +5,30 @@
 class Test5 : public Core::Game
 {
 protected:
-	API::VertexShader VShader;
-	API::PixelShader PShader;
+	Graphics::API::VertexShader VShader;
+	Graphics::API::PixelShader PShader;
 
-	API::VertexShader ScreenVShader;
-	API::PixelShader ScreenPShader;
+	Graphics::API::VertexShader ScreenVShader;
+	Graphics::API::PixelShader ScreenPShader;
 
-	API::VertexBuffer CubeVB;
-	API::VertexBuffer PlaneVB;
+	Graphics::API::VertexBuffer CubeVB;
+	Graphics::API::VertexBuffer PlaneVB;
 
 	XAsset::ModelAsset ScreenQuad;
 
-	API::Sampler LinearSampler;
-	API::Texture PlaneTex;
-	API::Texture CubeTex;
+	Graphics::API::Sampler LinearSampler;
+	Graphics::API::Texture PlaneTex;
+	Graphics::API::Texture CubeTex;
 
-	API::Sampler ScreenSampler;
-	API::Texture ScreenTex;
+	Graphics::API::Sampler ScreenSampler;
+	Graphics::API::Texture ScreenTex;
 
-	API::RenderTarget RT;
+	Graphics::API::RenderTarget RT;
 
 	Components::FlyCamera Camera;
 
 	//Default states
-	API::CommonStates states;
+	Graphics::API::CommonStates states;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -122,32 +122,32 @@ float4 main(PixelInputType input) : SV_TARGET
 }
 )";
 
-	API::RasterizerState R_State;
+	Graphics::API::RasterizerState R_State;
 public:
 	Test5()
 	{
 	}
 	void Load()
 	{
-		API::VertexShader::Create(
+		Graphics::API::VertexShader::Create(
 			&VShader,
-			&API::CompileShader(VertexShader,
-				API::ShaderType::Vertex));
+			&Graphics::API::CompileShader(VertexShader,
+				Graphics::API::ShaderType::Vertex));
 
-		API::PixelShader::Create(
+		Graphics::API::PixelShader::Create(
 			&PShader,
-			&API::CompileShader(PixelShader,
-				API::ShaderType::Pixel));
+			&Graphics::API::CompileShader(PixelShader,
+				Graphics::API::ShaderType::Pixel));
 
-		API::VertexShader::Create(
+		Graphics::API::VertexShader::Create(
 			&ScreenVShader,
-			&API::CompileShader(ScreenVertexShader,
-				API::ShaderType::Vertex));
+			&Graphics::API::CompileShader(ScreenVertexShader,
+				Graphics::API::ShaderType::Vertex));
 
-		API::PixelShader::Create(
+		Graphics::API::PixelShader::Create(
 			&ScreenPShader,
-			&API::CompileShader(ScreenPixelShader,
-				API::ShaderType::Pixel));
+			&Graphics::API::CompileShader(ScreenPixelShader,
+				Graphics::API::ShaderType::Pixel));
 	
 		float cubevertices[] = {
 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -208,21 +208,21 @@ public:
 
 
 
-		API::VertexBufferDesc vDesc;
+		Graphics::API::VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;
 		vDesc.size = sizeof(cubevertices);
-		vDesc.usage = API::BufferUsage::Static;
-		API::VertexBuffer::Create(&CubeVB, vDesc);
+		vDesc.usage = Graphics::API::BufferUsage::Static;
+		Graphics::API::VertexBuffer::Create(&CubeVB, vDesc);
 
 		vDesc.data = planeVertices;
 		vDesc.size = sizeof(planeVertices);
-		API::VertexBuffer::Create(&PlaneVB, vDesc);
+		Graphics::API::VertexBuffer::Create(&PlaneVB, vDesc);
 
 
 
-		API::InputLayout ShaderIL;
-		ShaderIL.AppendAttribute("POSITION", 0, API::DataType::Float3);
-		ShaderIL.AppendAttribute("TEXCOORD", 0, API::DataType::Float2);
+		Graphics::API::InputLayout ShaderIL;
+		ShaderIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+		ShaderIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
 
 		CubeVB.SetInputLayout(&ShaderIL, &VShader);
 		PlaneVB.SetInputLayout(&ShaderIL, &VShader);
@@ -231,23 +231,23 @@ public:
 		ScreenQuad.Initialize(&ScreenVShader);
 		
 		//Create sampler
-		API::SamplerDesc Samplerdesc;
-		Samplerdesc.Filter = API::TextureFilter::Point2D;
-		API::Sampler::Create(&ScreenSampler, Samplerdesc);
+		Graphics::API::SamplerDesc Samplerdesc;
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Point2D;
+		Graphics::API::Sampler::Create(&ScreenSampler, Samplerdesc);
 		
-		API::Texture_Desc ScreenTexDesc;
-		ScreenTexDesc.Format = API::Format::R8G8B8_UNORM;
-		ScreenTexDesc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc ScreenTexDesc;
+		ScreenTexDesc.Format = Graphics::API::Format::R8G8B8_UNORM;
+		ScreenTexDesc.Type = Graphics::API::TextureType::Texture2D;
 		ScreenTexDesc.GenerateMipMaps = false;
 
-		API::Texture_Data Data;
+		Graphics::API::Texture_Data Data;
 		Data.Img_Data_Buf = NULL;
 		Data.Width = windowwidth;
 		Data.Height = windowheight;
-		API::Texture::Create(&ScreenTex, Data, ScreenTexDesc);
+		Graphics::API::Texture::Create(&ScreenTex, Data, ScreenTexDesc);
 		
 		//RT
-		API::RenderTarget::Create(&RT);
+		Graphics::API::RenderTarget::Create(&RT);
 		RT.AttachTexture(&ScreenTex);
 		RT.AttachDepthStencilBuffer(Math::Vector2ui(windowwidth, windowheight));
 
@@ -255,23 +255,23 @@ public:
 
 		VShader.SetConstantBuffer(&Camera.GetCBuffer());
 
-		API::Texture_Desc Desc;
-		Desc.Format = API::Format::R8G8B8A8_UNORM;
-		Desc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc Desc;
+		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+		Desc.Type = Graphics::API::TextureType::Texture2D;
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
 
 		//Create sampler
-		Samplerdesc.Filter = API::TextureFilter::Trilinear;
-		API::Sampler::Create(&LinearSampler, Samplerdesc);
+		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
+		Graphics::API::Sampler::Create(&LinearSampler, Samplerdesc);
 	
-		API::RasterizerStateDesc rasterizerdesc;
-		rasterizerdesc.FillMode = API::FillMode::Wireframe;
+		Graphics::API::RasterizerStateDesc rasterizerdesc;
+		rasterizerdesc.FillMode = Graphics::API::FillMode::Wireframe;
 
-		API::RasterizerState::Create(&R_State, rasterizerdesc);
+		Graphics::API::RasterizerState::Create(&R_State, rasterizerdesc);
 
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 		states.EnabledDepth_DisabledStencil.Bind();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
@@ -328,19 +328,19 @@ public:
 		Math::Matrix4 CubeModel(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
 		Camera.SetModelMatrix(CubeModel);
-		Core::Context::Draw(36);
+		Graphics::API::Context::Draw(36);
 		// cube 2
 		CubeModel = Math::Matrix4(1.0f);
 		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModel);
-		Core::Context::Draw(36);
+		Graphics::API::Context::Draw(36);
 
 		// floor
 		PlaneTex.PSBind(0);
 
 		PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4());
-		Core::Context::Draw(6);
+		Graphics::API::Context::Draw(6);
 	}
 
 	/*
@@ -362,7 +362,7 @@ public:
 
 		//Bind The RenderTarget
 		RT.Bind();
-		Core::Context::Clear(API::Color(0.0f, 0.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(0.0f, 0.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		//Enable Depth Test
 		states.EnabledDepth_DisabledStencil.Bind();
@@ -373,7 +373,7 @@ public:
 		//Bind default RenderTarget
 		RT.Bind_Default();
 
-		Core::Context::Clear(API::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+		Graphics::API::Context::Clear(Graphics::Color(1.0f, 1.0f, 1.0f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 
 		//Render RT Texture (color buffer) content
 		states.DisabledDepthStencil.Bind();
@@ -393,23 +393,23 @@ public:
 		ScreenTex.PSBind(0);
 		ScreenQuad.Meshes.at(0).VBO.Bind();
 		ScreenQuad.Meshes.at(0).IBO.Bind();
-		Core::Context::DrawIndexed(ScreenQuad.Meshes.at(0).IndicesCount);
+		Graphics::API::Context::DrawIndexed(ScreenQuad.Meshes.at(0).IndicesCount);
 		//ScreenQuad.Render();
 		PlaneTex.PSBind(0);
 
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 
 	}
 	void Shutdown() override
 	{
-		API::VertexShader::Delete(&VShader);
-		API::PixelShader::Delete(&PShader);
-		API::VertexShader::Delete(&ScreenVShader);
-		API::PixelShader::Delete(&ScreenPShader);
-		API::VertexBuffer::Delete(&CubeVB);
-		API::VertexBuffer::Delete(&PlaneVB);
-		API::Sampler::Delete(&ScreenSampler);
-		API::RenderTarget::Delete(&RT);
-		API::Texture::Delete(&CubeTex);
+		Graphics::API::VertexShader::Delete(&VShader);
+		Graphics::API::PixelShader::Delete(&PShader);
+		Graphics::API::VertexShader::Delete(&ScreenVShader);
+		Graphics::API::PixelShader::Delete(&ScreenPShader);
+		Graphics::API::VertexBuffer::Delete(&CubeVB);
+		Graphics::API::VertexBuffer::Delete(&PlaneVB);
+		Graphics::API::Sampler::Delete(&ScreenSampler);
+		Graphics::API::RenderTarget::Delete(&RT);
+		Graphics::API::Texture::Delete(&CubeTex);
 	}
 };

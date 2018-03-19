@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <API\RenderAPI.h>
+#include <Graphics/API/RenderAPI.h>
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -17,7 +17,7 @@ namespace NuclearEngine
 			void Render();
 		private:
 			
-			API::VertexBuffer VB;
+			Graphics::API::VertexBuffer VB;
 			unsigned int MaxVertices;
 		};
 	}

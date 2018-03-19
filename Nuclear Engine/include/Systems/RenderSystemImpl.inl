@@ -2,9 +2,9 @@
 #include <Systems\RenderSystem.h>
 #endif
 #include <Core\FileSystem.h>
-#include <API\ConstantBuffer.h>
-#include <API\ShaderCompiler.h>
-#include <Core\Context.h>
+#include <Graphics/API/ConstantBuffer.h>
+#include <Graphics/API/ShaderCompiler.h>
+#include <Graphics\API\Context.h>
 #include <Components\Transform.h>
 #include <Components\Skybox.h>
 #include <Components\ModelRenderDesc.h>
@@ -27,25 +27,25 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
-			API::Texture_Desc ScreenTexDesc;
+			Graphics::API::Texture_Desc ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
-				ScreenTexDesc.Format = API::Format::R16G16B16A16_FLOAT;
+				ScreenTexDesc.Format = Graphics::API::Format::R16G16B16A16_FLOAT;
 			}
 			else
 			{
-				ScreenTexDesc.Format = API::Format::R8G8B8A8_UNORM;
+				ScreenTexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
 			}
-			ScreenTexDesc.Type = API::TextureType::Texture2D;
+			ScreenTexDesc.Type = Graphics::API::TextureType::Texture2D;
 			ScreenTexDesc.GenerateMipMaps = false;
 
-			API::Texture_Data Data;
+			Graphics::API::Texture_Data Data;
 			Data.Img_Data_Buf = NULL;
 			Data.Width = WindowWidth;
 			Data.Height = WindowHeight;
-			API::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
+			Graphics::API::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
 
-			API::RenderTarget::Create(&PostProcessRT);
+			Graphics::API::RenderTarget::Create(&PostProcessRT);
 			PostProcessRT.AttachTexture(&PostProcessTexture);
 			PostProcessRT.AttachDepthStencilBuffer(Math::Vector2ui(WindowWidth, WindowHeight));
 
@@ -61,25 +61,25 @@ namespace NuclearEngine
 			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
-			API::PixelShader::Create(
+			Graphics::API::PixelShader::Create(
 				&PostProcess_PShader,
-				&API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
-					API::ShaderType::Pixel));
+				&Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
+					Graphics::API::ShaderType::Pixel));
 
 
-			API::SamplerDesc Samplerdesc;
-			Samplerdesc.Filter = API::TextureFilter::Point2D;
-			API::Sampler::Create(&ScreenSampler, Samplerdesc);
+			Graphics::API::SamplerDesc Samplerdesc;
+			Samplerdesc.Filter = Graphics::API::TextureFilter::Point2D;
+			Graphics::API::Sampler::Create(&ScreenSampler, Samplerdesc);
 		}
 		void RenderSystem::SetCamera(Components::GenericCamera * camera)
 		{
 			this->ActiveCamera = camera;
 		}
-		API::VertexShader RenderSystem::GetVertexShader()
+		Graphics::API::VertexShader RenderSystem::GetVertexShader()
 		{
 			return this->VShader;
 		}
-		API::PixelShader RenderSystem::GetPixelShader()
+		Graphics::API::PixelShader RenderSystem::GetPixelShader()
 		{
 			return this->PShader;
 		}
@@ -112,17 +112,17 @@ namespace NuclearEngine
 
 			if (PSDirty = true)
 			{
-				API::PixelShader::Delete(&PShader);
-				API::ConstantBuffer::Delete(&NE_Light_CB);
+				Graphics::API::PixelShader::Delete(&PShader);
+				Graphics::API::ConstantBuffer::Delete(&NE_Light_CB);
 
-				API::PixelShader::Create(
+				Graphics::API::PixelShader::Create(
 					&PShader,
-					&API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
-						API::ShaderType::Pixel));
+					&Graphics::API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
+						Graphics::API::ShaderType::Pixel));
 
 				Calculate_Light_CB_Size();
 
-				API::ConstantBuffer::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
+				Graphics::API::ConstantBuffer::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
 
 				this->PShader.SetConstantBuffer(&this->NE_Light_CB);
 				PSDirty = false;
@@ -132,7 +132,7 @@ namespace NuclearEngine
 		{
 			if (VSDirty = true)
 			{
-				API::VertexShader::Delete(&VShader);
+				Graphics::API::VertexShader::Delete(&VShader);
 
 				if (Desc.VShaderPath == "NE_Default")
 				{
@@ -142,10 +142,10 @@ namespace NuclearEngine
 					VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
 				}
 				else {
-					API::VertexShader::Create(
+					Graphics::API::VertexShader::Create(
 						&VShader,
-						&API::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
-							API::ShaderType::Vertex));
+						&Graphics::API::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
+							Graphics::API::ShaderType::Vertex));
 				}
 
 				if (this->ActiveCamera != nullptr)
@@ -238,17 +238,17 @@ namespace NuclearEngine
 			}
 			mesh->VBO.Bind();
 			mesh->IBO.Bind();
-			Core::Context::DrawIndexed(mesh->IndicesCount);
+			Graphics::API::Context::DrawIndexed(mesh->IndicesCount);
 		}
 		void RenderSystem::RenderToPostProcessingRT()
 		{
 			PostProcessRT.Bind();
-			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		}
 		void RenderSystem::RenderPostProcessingContents()
 		{
 			PostProcessRT.Bind_Default();
-			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			PostProcess_VShader.Bind();
 			PostProcess_PShader.Bind();
 			ScreenSampler.PSBind(0);
@@ -284,7 +284,7 @@ namespace NuclearEngine
 					skybox.Get()->p_shader.Bind();
 					skybox.Get()->m_texcube.PSBind(0);
 					skybox.Get()->m_sampler.PSBind(0);
-					Core::Context::Draw(36);
+					Graphics::API::Context::Draw(36);
 				}
 			}
 		}

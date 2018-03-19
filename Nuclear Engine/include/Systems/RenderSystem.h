@@ -7,8 +7,8 @@
 #include <Components\GenericCamera.h>
 #include <Components\Light.h>
 #include <XAsset\ModelAsset.h>
-#include <API\RenderTarget.h>
-#include <API\Sampler.h>
+#include <Graphics/API/RenderTarget.h>
+#include <Graphics/API/Sampler.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -40,8 +40,8 @@ namespace NuclearEngine
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::GenericCamera* camera);
 
-			API::VertexShader GetVertexShader();
-			API::PixelShader GetPixelShader();
+			Graphics::API::VertexShader GetVertexShader();
+			Graphics::API::PixelShader GetPixelShader();
 
 			void AddLight(Components::DirectionalLight* light);
 			void AddLight(Components::PointLight* light);
@@ -70,9 +70,9 @@ namespace NuclearEngine
 			void BakePixelShader();
 			void BakeVertexShader();
 
-			API::VertexShader VShader;
-			API::PixelShader PShader;
-			API::ConstantBuffer NE_Light_CB;
+			Graphics::API::VertexShader VShader;
+			Graphics::API::PixelShader PShader;
+			Graphics::API::ConstantBuffer NE_Light_CB;
 
 			Components::GenericCamera* ActiveCamera;
 
@@ -91,11 +91,11 @@ namespace NuclearEngine
 
 			//PostProcess stuff
 			bool PostProcessingEnabled = false;
-			API::Sampler ScreenSampler;
-			API::Texture PostProcessTexture;
-			API::RenderTarget PostProcessRT;
-			API::VertexShader PostProcess_VShader;
-			API::PixelShader PostProcess_PShader;
+			Graphics::API::Sampler ScreenSampler;
+			Graphics::API::Texture PostProcessTexture;
+			Graphics::API::RenderTarget PostProcessRT;
+			Graphics::API::VertexShader PostProcess_VShader;
+			Graphics::API::PixelShader PostProcess_PShader;
 			XAsset::ModelAsset PostProcessScreenQuad;
 		};
 

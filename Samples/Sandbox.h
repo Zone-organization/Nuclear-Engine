@@ -7,12 +7,12 @@ protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
 	//XAsset
-	API::Texture DiffuseTex;
-	API::Texture SpecularTex;
-	API::Texture WhiteTex;
+	Graphics::API::Texture DiffuseTex;
+	Graphics::API::Texture SpecularTex;
+	Graphics::API::Texture WhiteTex;
 
 	//Default states
-	API::CommonStates states;
+	Graphics::API::CommonStates states;
 
 	Components::FlyCamera Camera;
 
@@ -30,11 +30,11 @@ protected:
 		Math::Vector3(1.0f, 0.0f, 0.0f),
 		Math::Vector3(3.0f, 0.0f, 0.0f)
 	};
-	API::Color lightColors[4] = {
-		API::Color(0.25),
-		API::Color(0.50),
-		API::Color(0.75),
-		API::Color(1.00)
+	Graphics::Color lightColors[4] = {
+		Graphics::Color(0.25),
+		Graphics::Color(0.50),
+		Graphics::Color(0.75),
+		Graphics::Color(1.00)
 	};
 
 	XAsset::ModelAsset Cube;
@@ -64,9 +64,9 @@ public:
 	}
 	void SetupTextures()
 	{
-		API::Texture_Desc Desc;
-		Desc.Format = API::Format::R8G8B8A8_UNORM_SRGB;
-		Desc.Type = API::TextureType::Texture2D;
+		Graphics::API::Texture_Desc Desc;
+		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM_SRGB;
+		Desc.Type = Graphics::API::TextureType::Texture2D;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
@@ -124,7 +124,7 @@ public:
 
 		SetupXAsset();
 
-		Core::Context::SetPrimitiveType(PrimitiveType::TriangleList);
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -196,9 +196,9 @@ public:
 	{
 		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Tab))
 		{
-			Core::Context::Clear(API::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			mRenderscene(dt);
-			Core::Context::PresentFrame();
+			Graphics::API::Context::PresentFrame();
 			return;
 		}
 		Renderer->RenderToPostProcessingRT();
@@ -208,6 +208,6 @@ public:
 		Renderer->RenderPostProcessingContents();
 
 		SpecularTex.PSBind(0);
-		Core::Context::PresentFrame();
+		Graphics::API::Context::PresentFrame();
 	}
 };

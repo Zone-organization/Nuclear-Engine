@@ -1,6 +1,6 @@
 #include "imgui_impl.h"
 
-#include <Core\Context.h>
+#include <Graphics\API\Context.h>
 #include <GLFW\include\GLFW\glfw3.h>
 #ifdef _WIN32
 #undef APIENTRY
@@ -75,11 +75,11 @@ bool ImGui_Impl_Init(GLFWwindow * window)
 
 void ImGui_Impl_Shutdown()
 {
-	if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
+	if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
 	{
 		return ImGui_ImplGL3_Shutdown();
 	}
-	else if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
+	else if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
 	{
 		return ImGui_ImplDX11_Shutdown();
 	}
@@ -147,11 +147,11 @@ void ImGui_Impl_NewFrame()
 
 void ImGui_Impl_InvalidateDeviceObjects()
 {
-	if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
+	if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
 	{
 		return ImGui_ImplGL3_InvalidateDeviceObjects();
 	}
-	else if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
+	else if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
 	{
 		return ImGui_ImplDX11_InvalidateDeviceObjects();
 	}
@@ -159,11 +159,11 @@ void ImGui_Impl_InvalidateDeviceObjects()
 
 bool ImGui_Impl_CreateDeviceObjects()
 {
-	if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
+	if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
 	{
 		return ImGui_ImplGL3_CreateDeviceObjects();
 	}
-	else if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
+	else if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
 	{
 		return ImGui_ImplDX11_CreateDeviceObjects();
 	}

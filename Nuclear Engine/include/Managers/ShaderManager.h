@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
-#include <API\VertexShader.h>
-#include <API\PixelShader.h>
+#include <Graphics/API/VertexShader.h>
+#include <Graphics/API/PixelShader.h>
 
 namespace NuclearEngine 
 {
@@ -29,8 +29,8 @@ namespace NuclearEngine
 			ShaderManager();
 			~ShaderManager();
 
-			static API::VertexShader CreateAutoVertexShader(const AutoVertexShaderDesc& desc);
-			static API::PixelShader CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
+			static Graphics::API::VertexShader CreateAutoVertexShader(const AutoVertexShaderDesc& desc);
+			static Graphics::API::PixelShader CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
 		};
 	}
 }

@@ -1,13 +1,13 @@
 #define APP_EXPOSE_WIN32
 #include <Core\Application.h>
-#include <Core\Context.h>
+#include <Graphics\API\Context.h>
 #include <GLAD\include\glad\glad.h>
 #include <GLFW\include\GLFW\glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW\include\GLFW\glfw3native.h>
 #include "imgui_impl\imgui_impl.h"
 
-#include <API\DirectX\DX11Context.h>
+#include <Graphics/API/DirectX\DX11Context.h>
 #include <Core\Engine.h>
 
 #pragma comment (lib, "GLAD.lib")
@@ -61,7 +61,7 @@ namespace NuclearEngine
 
 		bool Application::Create(const ApplicationDesc & Desc)
 		{
-			Core::Context::SetRenderAPI(Desc.renderer);
+			Graphics::API::Context::SetRenderAPI(Desc.renderer);
 
 			glfwInit();
 
@@ -94,7 +94,7 @@ namespace NuclearEngine
 
 			if (Desc.renderer == RenderAPI::DirectX11)
 			{
-				if (!API::DirectX::DX11Context::Initialize(window))
+				if (!Graphics::API::DirectX::DX11Context::Initialize(window))
 				{
 					Log.Error("[Application] Failed to initialize DirectX11 in window: " + Desc.title + "\n");
 					return false;
@@ -102,13 +102,13 @@ namespace NuclearEngine
 			}
 			ImGui_Impl_Init(window);
 
-			if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
+			if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
 			{
 				ImGui_ImplGL3_Init();
 			}
-			else if (NuclearEngine::Core::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
+			else if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
 			{
-				ImGui_ImplDX11_Init(API::DirectX::DX11Context::GetDevice(), API::DirectX::DX11Context::GetContext());
+				ImGui_ImplDX11_Init(Graphics::API::DirectX::DX11Context::GetDevice(), Graphics::API::DirectX::DX11Context::GetContext());
 			}
 
 			ImGui_Impl_CreateDeviceObjects();
@@ -125,9 +125,9 @@ namespace NuclearEngine
 		}
 		void Application::Shutdown()
 		{
-			if (Context::GetRenderAPI() == RenderAPI::DirectX11)
+			if (Graphics::API::Context::GetRenderAPI() == RenderAPI::DirectX11)
 			{
-				API::DirectX::DX11Context::Shutdown();
+				Graphics::API::DirectX::DX11Context::Shutdown();
 			}
 			glfwDestroyWindow(window);
 			glfwTerminate();
@@ -142,13 +142,13 @@ namespace NuclearEngine
 		}
 		void Application::SwapBuffers()
 		{
-			if (Context::GetRenderAPI() == RenderAPI::OpenGL3)
+			if (Graphics::API::Context::GetRenderAPI() == RenderAPI::OpenGL3)
 			{
 				glfwSwapBuffers(window);
 			}
-			else if (Context::GetRenderAPI() == RenderAPI::DirectX11)
+			else if (Graphics::API::Context::GetRenderAPI() == RenderAPI::DirectX11)
 			{
-				API::DirectX::DX11Context::SwapBuffers();
+				Graphics::API::DirectX::DX11Context::SwapBuffers();
 			}
 		}
 		void Application::ProcessEvents()
