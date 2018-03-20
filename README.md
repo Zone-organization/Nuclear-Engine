@@ -41,21 +41,23 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 - __ShaderManager__
   - Support for automated shader creation instead of Re-Writing them
   
-- __OneAPI__
+- __Audio__
+  - Support for FMOD low level API.
+  
+- __Graphics__
   - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
   - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
   - Support for HLSL Shaders which can be Cross Compiled to GLSL.
   - Support for Separate Shaders (Vertex & Pixel).
   - Support for Separate Samplers and Textures.
   - Fastest Design Possible through If statements in debug build and direct RenderAPI calls in release build.
-
-- __RenderSystem__
-  - Support for BlinnPhong Lighting.
-  - Support for Normal Mapping.
-  - Support for PostProcessing Effects:
-	- Gamma Correction
-	- HDR 'Reinhard tone mapping'
-  - Support for IMGUI.
+  - ___RenderSystem___
+    - Support for BlinnPhong Lighting.
+    - Support for Normal Mapping.
+    - Support for PostProcessing Effects:
+	  - Gamma Correction
+	  - HDR 'Reinhard tone mapping'
+    - Support for IMGUI.
   
 ## Current Platforms
   - Windows 7+     

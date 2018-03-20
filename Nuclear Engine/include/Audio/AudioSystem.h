@@ -10,7 +10,7 @@ namespace NuclearEngine
 		class NEAPI AudioSystem
 		{
 		public:
-			static bool Initialize(unsigned int MaxChannels = 512);
+			static bool Initialize(unsigned int MaxChannels = 32);
 
 			static FMOD::System *GetSystem();
 

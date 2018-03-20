@@ -7,6 +7,7 @@ protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
 	Audio::Sound sound;
+	Audio::Channel channel;
 
 	//XAsset
 	Graphics::API::Texture DiffuseTex;
@@ -112,7 +113,7 @@ public:
 		SampleScene.Systems.Configure();
 
 		Audio::AudioSystem::Initialize();
-		sound.Create("Assets/Common/Sounds/Faded.mp3", SOUND_MODE_LOOP_NORMAL | SOUND_MODE_2D);
+		sound.Create("Assets/Common/Sounds/yurimaster.wav", SOUND_MODE_LOOP_NORMAL | SOUND_MODE_2D);
 		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->InitializePostProcessing();
@@ -206,14 +207,15 @@ public:
 			return;
 		}
 		Renderer->RenderToPostProcessingRT();
-		mRenderscene(dt);		
+		mRenderscene(dt);
 
 		states.DisabledDepthStencil.Bind();
 		Renderer->RenderPostProcessingContents();
 
 		SpecularTex.PSBind(0);
 
-		sound.Play();
+		sound.Play(&channel);
+		
 		Audio::AudioSystem::Update();
 		Graphics::API::Context::PresentFrame();
 	}
