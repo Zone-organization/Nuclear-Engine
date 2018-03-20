@@ -50,7 +50,7 @@ namespace NuclearEngine
 	namespace Audio
 	{
 
-		bool AudioSystem::Initialize(unsigned int MaxChannels = 512)
+		bool AudioSystem::Initialize(unsigned int MaxChannels)
 		{
 			Log.Error("[AudioSystem] Engine Was compiled without FMOD!\n");
 			return false;
