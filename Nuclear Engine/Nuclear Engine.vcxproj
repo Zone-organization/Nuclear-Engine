@@ -563,7 +563,6 @@
     <ClInclude Include="include\Graphics\API\OpenGL\GLCommon.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
-    <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="include\Managers\ShaderManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
@@ -668,7 +667,6 @@
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Platform\Win32\Win32_Clock.cpp" />
     <ClCompile Include="Source\Managers\AssetManager.cpp" />
-    <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>

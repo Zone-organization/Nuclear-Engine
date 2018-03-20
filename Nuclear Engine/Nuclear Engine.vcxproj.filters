@@ -16,7 +16,6 @@
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
-    <ClInclude Include="include\Shading\Material.h" />
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Math\Math.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
@@ -275,7 +274,6 @@
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
-    <ClCompile Include="Source\Shading\Material.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
