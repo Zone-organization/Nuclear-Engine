@@ -169,7 +169,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\DebugX86\;..\..\Nuclear-Deps\Bin\DebugX86\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX86\;..\..\Nuclear-Deps\Bin\DebugX86\</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
@@ -254,7 +254,7 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX86\;..\..\Nuclear-Deps\Bin\ReleaseX86\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX86\;..\..\Nuclear-Deps\;..\..\Nuclear-Deps\Bin\ReleaseX86\</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -333,6 +333,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Audio\AudioSystem.h" />
+    <ClInclude Include="include\Audio\Channel.h" />
+    <ClInclude Include="include\Audio\Sound.h" />
     <ClInclude Include="include\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Graphics\API\Buffer_Types.h" />
     <ClInclude Include="include\Graphics\Color.h" />
@@ -593,6 +596,9 @@
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Audio\AudioSystem.cpp" />
+    <ClCompile Include="Source\Audio\Channel.cpp" />
+    <ClCompile Include="Source\Audio\Sound.cpp" />
     <ClCompile Include="Source\Graphics\API\BlendState.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />
     <ClCompile Include="Source\Graphics\API\DepthStencilState.cpp" />

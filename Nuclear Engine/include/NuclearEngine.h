@@ -33,8 +33,10 @@ _____________/BOOOM\_____________
 //# Asset Classes (XAsset)
 #include <XAsset\ModelAsset.h>
 
-//# Shading Headers
-#include <Shading/Material.h>
+//# Audio SubSystem Headers
+#include <Audio/AudioSystem.h>
+#include <Audio/Sound.h>
+#include <Audio/Channel.h>
 
 
 //# OneAPI Headers

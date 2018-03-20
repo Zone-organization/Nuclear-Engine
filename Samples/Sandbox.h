@@ -6,6 +6,8 @@ class Sandbox : public Core::Game
 protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
+	Audio::Sound sound;
+
 	//XAsset
 	Graphics::API::Texture DiffuseTex;
 	Graphics::API::Texture SpecularTex;
@@ -109,6 +111,8 @@ public:
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
+		Audio::AudioSystem::Initialize();
+		sound.Create("Assets/Common/Sounds/Faded.mp3", SOUND_MODE_LOOP_NORMAL | SOUND_MODE_2D);
 		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->InitializePostProcessing();
@@ -208,6 +212,9 @@ public:
 		Renderer->RenderPostProcessingContents();
 
 		SpecularTex.PSBind(0);
+
+		sound.Play();
+		Audio::AudioSystem::Update();
 		Graphics::API::Context::PresentFrame();
 	}
 };
