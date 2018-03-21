@@ -8,7 +8,11 @@ namespace NuclearEngine
 {
 	namespace Audio
 	{
-		FMOD::Channel ** Channel::GetChannel()
+		FMOD::Channel* Channel::GetChannel()
+		{
+			return channel;
+		}
+		FMOD::Channel ** Channel::GetChannelPtr()
 		{
 			return &channel;
 		}
@@ -19,7 +23,11 @@ namespace NuclearEngine
 {
 	namespace Audio
 	{
-		FMOD::Channel ** Channel::GetChannel()
+		FMOD::Channel* Channel::GetChannel()
+		{
+			return nullptr;
+		}
+		FMOD::Channel ** Channel::GetChannelPtr()
 		{
 			return nullptr;
 		}

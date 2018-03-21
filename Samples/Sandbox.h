@@ -113,7 +113,7 @@ public:
 		SampleScene.Systems.Configure();
 
 		Audio::AudioSystem::Initialize();
-		sound.Create("Assets/Common/Sounds/yurimaster.wav", SOUND_MODE_LOOP_NORMAL | SOUND_MODE_2D);
+		sound.Create("Assets/Common/Sounds/yurimaster.wav", SOUND_MODE_LOOP_OFF | SOUND_MODE_2D);
 		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->InitializePostProcessing();
@@ -216,7 +216,7 @@ public:
 
 		sound.Play(&channel);
 		
-		Audio::AudioSystem::Update();
+		Audio::AudioSystem::Update(&channel);
 		Graphics::API::Context::PresentFrame();
 	}
 };

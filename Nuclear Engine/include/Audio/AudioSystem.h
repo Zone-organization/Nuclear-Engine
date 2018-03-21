@@ -7,6 +7,7 @@ namespace NuclearEngine
 {
 	namespace Audio
 	{
+		class Channel;
 		class NEAPI AudioSystem
 		{
 		public:
@@ -14,7 +15,7 @@ namespace NuclearEngine
 
 			static FMOD::System *GetSystem();
 
-			static void Update();
+			static void Update(Channel * ch);
 		};
 	}
 }

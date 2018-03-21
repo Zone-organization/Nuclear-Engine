@@ -5,6 +5,7 @@
 #include <FMOD\inc\fmod.hpp>
 #include <FMOD\inc\fmod_errors.h>
 #pragma comment (lib, "FMOD/lib/fmodL_vc.lib")
+#include <Audio\Channel.h>
 
 namespace NuclearEngine
 {
@@ -37,9 +38,24 @@ namespace NuclearEngine
 		{
 			return system;
 		}
-		void AudioSystem::Update()
+		void AudioSystem::Update(Channel * channel)
 		{
 			system->update();
+
+			if (channel)
+			{
+				bool         playing = 0;
+				auto result = channel->GetChannel()->isPlaying(&playing);
+				if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
+				{
+					if (result != FMOD_OK)
+					{
+						Log.Error("[AudioSystem] FMOD Error: " + std::string(FMOD_ErrorString(result)) + "\n");
+						return;
+					}
+				}
+
+			}
 		}
 	}
 }

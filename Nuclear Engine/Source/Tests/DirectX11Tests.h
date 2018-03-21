@@ -1,12 +1,10 @@
 #pragma once
-#include <Graphics/API/DirectX\DX11Context.h>
 #include "TestCommon.h"
 
-#ifndef _DEBUG
 class DirectX11Tests : public Core::Game
 {
 };
-#else
+#if 0
 #include <iostream>
 class DirectX11Tests : public Core::Game
 {

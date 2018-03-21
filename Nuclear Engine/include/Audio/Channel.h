@@ -9,8 +9,9 @@ namespace NuclearEngine
 		class NEAPI Channel
 		{
 		public:
+			FMOD::Channel *GetChannel();
 
-			FMOD::Channel **GetChannel();
+			FMOD::Channel **GetChannelPtr();
 		private:
 			FMOD::Channel *channel;
 		};

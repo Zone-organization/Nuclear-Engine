@@ -263,6 +263,7 @@
     <ClInclude Include="include\Audio\AudioSystem.h" />
     <ClInclude Include="include\Audio\Sound.h" />
     <ClInclude Include="include\Audio\Channel.h" />
+    <ClInclude Include="Source\Tests\FMODTests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

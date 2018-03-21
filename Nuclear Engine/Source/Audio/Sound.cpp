@@ -15,24 +15,26 @@ namespace NuclearEngine
 		{
 			FMOD_RESULT result;
 
-			result = AudioSystem::GetSystem()->createSound(path.c_str(), mode, 0, &sound);
+			result = AudioSystem::GetSystem()->createSound(path.c_str(), FMOD_DEFAULT, 0, &sound);
+			sound->setMode(FMOD_LOOP_OFF);    /* drumloop.wav has embedded loop points which automatically makes looping turn on, */
 
 			if (result != FMOD_OK)
 			{
 				Log.Error("[AudioSystem] Failed to create sound from: (" + path +") Info: " + std::string(FMOD_ErrorString(result)) + "\n");
 				return false;
 			}
+
 			return true;
 
 		}
 		void Sound::Play(Channel * channel, bool paused)
 		{
-			if (channel = nullptr)
+			if (channel == nullptr)
 			{
 				AudioSystem::GetSystem()->playSound(sound, 0, paused, nullptr);
 				return;
 			}
-			AudioSystem::GetSystem()->playSound(sound, 0, paused, channel->GetChannel());
+			AudioSystem::GetSystem()->playSound(sound, 0, paused, channel->GetChannelPtr());
 		}
 	}
 }

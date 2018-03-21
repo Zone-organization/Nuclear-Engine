@@ -585,6 +585,7 @@
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
+    <ClInclude Include="Source\Tests\FMODTests.h" />
     <ClInclude Include="Source\Tests\OpenGLTests.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="Source\Tests\Test5.h" />

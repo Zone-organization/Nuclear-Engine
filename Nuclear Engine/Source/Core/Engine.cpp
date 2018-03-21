@@ -1,6 +1,7 @@
 #include <Core\Engine.h>
 #include <NE_Common.h>
 #include <Platform\Input.h>
+#include <..\Source\Tests\FMODTests.h>
 #include <..\Source\Tests\DirectX11Tests.h>
 #include <..\Source\Tests\OpenGLTests.h>
 #include <..\Source\Tests\Test1.h>
@@ -166,9 +167,14 @@ namespace NuclearEngine {
 			{
 				OpenGLTests test;
 				Engine::Run(&test);
-			}					
-			else {
+			}	
+			else if (TestNumber == 999)
+			{
 				DirectX11Tests test;
+				Engine::Run(&test);
+			}
+			else {
+				FMODTests test;
 				Engine::Run(&test);
 			}
 		}
