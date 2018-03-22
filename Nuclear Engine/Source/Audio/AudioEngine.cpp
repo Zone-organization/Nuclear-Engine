@@ -77,7 +77,7 @@ namespace NuclearEngine
 			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
 			return nullptr;
 		}
-		void AudioEngine::Update()
+		void AudioEngine::Update(Channel * channel)
 		{
 			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
 		}
