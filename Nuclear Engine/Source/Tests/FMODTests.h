@@ -15,16 +15,15 @@ class FMODTests : public Core::Game
 #include <iostream>
 #include <FMOD\inc\fmod.hpp>
 #include <FMOD\inc\fmod_errors.h>
-void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line)
+void ERRCHECK_fnn(FMOD_RESULT result, const char *file, int line)
 {
 	if (result != FMOD_OK)
 	{
-		Log.Error("[AudioSystem] FMOD Error Info: " + std::string(FMOD_ErrorString(result)) + "\n");
+		Log.Error("[AudioEngine] FMOD Error Info: " + std::string(FMOD_ErrorString(result)) + "\n");
 	}
 }
 
-void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line);
-#define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
+#define ERRCHECK(_result) ERRCHECK_fnn(_result, __FILE__, __LINE__)
 
 class FMODTests : public Core::Game
 {

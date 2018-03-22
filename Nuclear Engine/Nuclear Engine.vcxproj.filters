@@ -260,10 +260,12 @@
     <ClInclude Include="include\Graphics\API\Context.h" />
     <ClInclude Include="Source\Graphics\API\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
-    <ClInclude Include="include\Audio\AudioSystem.h" />
     <ClInclude Include="include\Audio\Sound.h" />
     <ClInclude Include="include\Audio\Channel.h" />
     <ClInclude Include="Source\Tests\FMODTests.h" />
+    <ClInclude Include="Source\Audio\FMODError.h" />
+    <ClInclude Include="include\Audio\AudioEngine.h" />
+    <ClInclude Include="include\Graphics\GraphicsEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -341,9 +343,10 @@
     <ClCompile Include="Source\Graphics\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\API\VertexShader.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />
-    <ClCompile Include="Source\Audio\AudioSystem.cpp" />
     <ClCompile Include="Source\Audio\Sound.cpp" />
     <ClCompile Include="Source\Audio\Channel.cpp" />
+    <ClCompile Include="Source\Audio\AudioEngine.cpp" />
+    <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Systems\SpriteRenderSystemImpl.inl" />

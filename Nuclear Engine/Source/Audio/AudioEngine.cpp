@@ -1,9 +1,10 @@
-#include <Audio\AudioSystem.h>
+#include <Audio\AudioEngine.h>
 #include <FMOD\includer.h> 
 
 #ifndef FMOD_NOT_INCLUDED
 #include <FMOD\inc\fmod.hpp>
-#include <FMOD\inc\fmod_errors.h>
+#define FMOD_ERRCHK_IMPL
+#include "FMODError.h"
 #pragma comment (lib, "FMOD/lib/fmodL_vc.lib")
 #include <Audio\Channel.h>
 
@@ -13,14 +14,14 @@ namespace NuclearEngine
 	{
 		FMOD::System *system;
 	      
-		bool AudioSystem::Initialize(unsigned int MaxChannels)
+		bool AudioEngine::Initialize(unsigned int MaxChannels)
 		{
 			FMOD_RESULT result;
 			result = FMOD::System_Create(&system);
 
 			if (result != FMOD_OK)
 			{
-				Log.Error("[AudioSystem] Failed to create FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");
+				Log.Error("[AudioEngine] Failed to create FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");
 				return false;
 			}
 
@@ -28,17 +29,17 @@ namespace NuclearEngine
 			result = system->init(MaxChannels, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
 			if (result != FMOD_OK)
 			{
-				Log.Error("[AudioSystem] Failed to initialize FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");
+				Log.Error("[AudioEngine] Failed to initialize FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");
 				return false;
 			}
 
 			return true;
 		}
-		FMOD::System * AudioSystem::GetSystem()
+		FMOD::System * AudioEngine::GetSystem()
 		{
 			return system;
 		}
-		void AudioSystem::Update(Channel * channel)
+		void AudioEngine::Update(Channel * channel)
 		{
 			system->update();
 
@@ -50,7 +51,7 @@ namespace NuclearEngine
 				{
 					if (result != FMOD_OK)
 					{
-						Log.Error("[AudioSystem] FMOD Error: " + std::string(FMOD_ErrorString(result)) + "\n");
+						Log.Error("[AudioEngine] FMOD Error: " + std::string(FMOD_ErrorString(result)) + "\n");
 						return;
 					}
 				}
@@ -66,19 +67,19 @@ namespace NuclearEngine
 	namespace Audio
 	{
 
-		bool AudioSystem::Initialize(unsigned int MaxChannels)
+		bool AudioEngine::Initialize(unsigned int MaxChannels)
 		{
-			Log.Error("[AudioSystem] Engine Was compiled without FMOD!\n");
+			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
 			return false;
 		}
-		FMOD::System * AudioSystem::GetSystem()
+		FMOD::System * AudioEngine::GetSystem()
 		{
-			Log.Error("[AudioSystem] Engine Was compiled without FMOD!\n");
+			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
 			return nullptr;
 		}
-		void AudioSystem::Update()
+		void AudioEngine::Update()
 		{
-			Log.Error("[AudioSystem] Engine Was compiled without FMOD!\n");
+			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
 		}
 	}
 }

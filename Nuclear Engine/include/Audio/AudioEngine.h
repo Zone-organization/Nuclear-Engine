@@ -8,7 +8,7 @@ namespace NuclearEngine
 	namespace Audio
 	{
 		class Channel;
-		class NEAPI AudioSystem
+		class NEAPI AudioEngine
 		{
 		public:
 			static bool Initialize(unsigned int MaxChannels = 32);

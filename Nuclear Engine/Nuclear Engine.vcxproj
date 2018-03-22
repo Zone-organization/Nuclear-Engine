@@ -333,7 +333,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Audio\AudioSystem.h" />
+    <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Audio\Channel.h" />
     <ClInclude Include="include\Audio\Sound.h" />
     <ClInclude Include="include\Graphics\API\BlendState.h" />
@@ -377,6 +377,7 @@
     <ClInclude Include="include\Graphics\API\VertexBuffer.h" />
     <ClInclude Include="include\Graphics\API\ShaderCompiler.h" />
     <ClInclude Include="include\Graphics\API\VertexShader.h" />
+    <ClInclude Include="include\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Graphics\SpriteBatch.h" />
     <ClInclude Include="include\Math\common.hpp" />
     <ClInclude Include="include\Math\detail\compute_vector_relational.hpp" />
@@ -574,6 +575,7 @@
     <ClInclude Include="include\Utilities\NonCopyable.h" />
     <ClInclude Include="include\Utilities\Pool.h" />
     <ClInclude Include="include\Utilities\Signal.h" />
+    <ClInclude Include="Source\Audio\FMODError.h" />
     <ClInclude Include="Source\Graphics\API\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Managers\AssimpImporter.h" />
@@ -597,7 +599,7 @@
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Audio\AudioSystem.cpp" />
+    <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Audio\Channel.cpp" />
     <ClCompile Include="Source\Audio\Sound.cpp" />
     <ClCompile Include="Source\Graphics\API\BlendState.cpp" />
@@ -641,6 +643,7 @@
     <ClCompile Include="Source\Graphics\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Graphics\API\VertexShader.cpp" />
+    <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\XAsset\ModelAsset.cpp" />

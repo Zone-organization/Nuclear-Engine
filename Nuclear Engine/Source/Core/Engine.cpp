@@ -11,6 +11,9 @@
 #include <..\Source\Tests\Test5.h>
 #include <Components\GUI\imgui.h>
 #include "..\Core\imgui_impl\imgui_impl.h"
+#include <Audio\Sound.h>
+#include <Audio\AudioEngine.h>
+#include <Audio\Channel.h>
 
 /*
 	      .-.               
@@ -44,7 +47,8 @@ namespace NuclearEngine {
 		static Game Defaultgame;
 
 		static Engine::State Engine_State;
-
+		static Audio::Sound sound;
+		static Audio::Channel channel;
 		bool Engine::Initialize(const ApplicationDesc& windowdesc)
 		{
 
@@ -92,7 +96,8 @@ namespace NuclearEngine {
 
 				Application::Create(windowdesc);
 				Application::SetMouseInputMode(MouseInputMode::Normal);
-
+				Audio::AudioEngine::Initialize();
+				sound.Create("Assets/Common/Sounds/yurimaster.wav", SOUND_MODE_DEFAULT);
 				HasBeenInitialized = true;
 				return true;
 			}
@@ -188,25 +193,33 @@ namespace NuclearEngine {
 		{
 			return GamePtr;
 		}
+		void ProcessGame(Platform::Clock* clock)
+		{
+			// per-frame time logic (ensure speed is constant through all platforms)
+			float currentFrame = clock->GetElapsedTime().AsSeconds();
+			deltaTime = currentFrame - lastFrame;
+			lastFrame = currentFrame;
+			GamePtr->ClockTime = clock->GetElapsedTime().AsSeconds();
+			GamePtr->FrameTime = 1000.0f / ImGui::GetIO().Framerate;
+			GamePtr->FPS = ImGui::GetIO().Framerate;
 
+			GamePtr->Update(deltaTime);
+			GamePtr->Render(deltaTime);
+
+		}
 		void Engine::Game_Loop_Render()
 		{
 			SetState(Engine::State::Rendering);
 
 			Platform::Clock clock;
+
 			//Main Game Loop
 			while (Core::Engine::ShouldClose() != true)
 			{
-				// per-frame time logic (ensure speed is constant through all platforms)
-				float currentFrame = clock.GetElapsedTime().AsSeconds();
-				deltaTime = currentFrame - lastFrame;
-				lastFrame = currentFrame;
-				GamePtr->ClockTime = clock.GetElapsedTime().AsSeconds();
-				GamePtr->FrameTime = 1000.0f / ImGui::GetIO().Framerate;
-				GamePtr->FPS = ImGui::GetIO().Framerate;
+				ProcessGame(&clock);
 
-				GamePtr->Update(deltaTime);
-				GamePtr->Render(deltaTime);
+				sound.Play(&channel);
+				Audio::AudioEngine::Update(&channel);
 			}
 		}
 
