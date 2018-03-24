@@ -28,8 +28,8 @@ namespace NuclearEngine {
 		template <typename C, typename ... Deps>
 		class Dependency : public System<Dependency<C, Deps...>>, public Receiver<Dependency<C, Deps...>> {
 		public:
-			void receive(const ComponentAddedEvent<C> &event) {
-				Assign<Deps...>(event.entity);
+			void Receive(const ComponentAddedEvent<C> &event) {
+				this->Assign<Deps...>(event.entity);
 			}
 
 			void Configure(EventManager &events) override {
@@ -40,8 +40,9 @@ namespace NuclearEngine {
 
 		private:
 			template <typename D>
-			void Assign(Entity entity) {
-				if (!entity.GetComponent<D>()) entity.Assign<D>();
+			void Assign(Entity entity)  {
+				if (!entity.GetComponent<D>())
+					entity.Assign<D>();
 			}
 
 			template <typename D, typename D1, typename ... Ds>

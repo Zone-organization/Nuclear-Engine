@@ -107,14 +107,14 @@ namespace NuclearEngine {
 			virtual ~EventManager();
 
 			/**
-			 * Subscribe an object to receive events of type E.
+			 * Subscribe an object to Receive events of type E.
 			 *
-			 * Receivers must be subclasses of Receiver and must implement a receive() method accepting the given event type.
+			 * Receivers must be subclasses of Receiver and must implement a Receive() method accepting the given event type.
 			 *
 			 * eg.
 			 *
 			 *     struct ExplosionReceiver : public Receiver<ExplosionReceiver> {
-			 *       void receive(const Explosion &explosion) {
+			 *       void Receive(const Explosion &explosion) {
 			 *       }
 			 *     };
 			 *
@@ -123,16 +123,16 @@ namespace NuclearEngine {
 			 */
 			template <typename E, typename Receiver>
 			void Subscribe(Receiver &receiver) {
-				void (Receiver::*receive)(const E &) = &Receiver::receive;
+				void (Receiver::*Receive)(const E &) = &Receiver::Receive;
 				auto sig = signal_for(Event<E>::family());
-				auto wrapper = EventCallbackWrapper<E>(std::bind(receive, &receiver, std::placeholders::_1));
+				auto wrapper = EventCallbackWrapper<E>(std::bind(Receive, &receiver, std::placeholders::_1));
 				auto connection = sig->connect(wrapper);
 				BaseReceiver &base = receiver;
 				base.connections_.insert(std::make_pair(Event<E>::family(), std::make_pair(EventSignalWeakPtr(sig), connection)));
 			}
 
 			/**
-			 * UnSubscribe an object in order to not receive events of type E anymore.
+			 * UnSubscribe an object in order to not Receive events of type E anymore.
 			 *
 			 * Receivers must have Subscribed for event E before unsubscribing from event E.
 			 *

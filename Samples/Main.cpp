@@ -12,20 +12,19 @@ void Start()
 	char choice;
 	std::cout << "--Choose A Renderer: \nA) OpenGL 3 \nB) DirectX 11\n";
 	std::cin >> choice;
-
-	Core::ApplicationDesc desc;
+	Core::EngineStartupDesc desc;
 	if (choice == 'a') {
-		desc.renderer =	 Core::RenderAPI::OpenGL3;
+		desc.mAppdesc.renderer =	 Core::RenderAPI::OpenGL3;
 	}
 	else if (choice == 'b')
 	{
-		desc.renderer = Core::RenderAPI::DirectX11;
+		desc.mAppdesc.renderer = Core::RenderAPI::DirectX11;
 	}
 	else {
 		std::cout << "Wrong choice thus setting to DirectX 11 as default on window.\n";
-		desc.renderer = Core::RenderAPI::DirectX11;
+		desc.mAppdesc.renderer = Core::RenderAPI::DirectX11;
 	}
-	Core::Engine::Initialize(desc);
+	Core::Engine::Start(desc);
 }
 
 int main(int argc, char* argv[])
@@ -48,27 +47,27 @@ int main(int argc, char* argv[])
 	if (choice == '1') {
 		Start();
 		Sample1 demo;
-		Core::Engine::Run(&demo);
+		Core::Engine::RunGame(&demo);
 	}
 	else if (choice == '2') {
 		Start();
 		Sample2 demo;
-		Core::Engine::Run(&demo);
+		Core::Engine::RunGame(&demo);
 	}
 	else if (choice == '3') {
 		Start();
 		Sample3 demo;
-		Core::Engine::Run(&demo);
+		Core::Engine::RunGame(&demo);
 	}
 	else if (choice == 'x') {
 		Start();
 		Playground game;
-		Core::Engine::Run(&game);
+		Core::Engine::RunGame(&game);
 	}
 	else if (choice == 'y') {
 		Start();
 		Sandbox game;
-		Core::Engine::Run(&game);
+		Core::Engine::RunGame(&game);
 	}	
 	else if (choice == 'z')
 	{
@@ -76,10 +75,10 @@ int main(int argc, char* argv[])
 		std::cout << "Enter The test number: ";
 		uint testno;
 		std::cin >> testno;
-		Core::Engine::Run(testno);
+		Core::Engine::RunTest(testno);
 	}
 
-	Core::Engine::ShutDown();
+	Core::Engine::Shutdown();
 
 	return 0;
 }

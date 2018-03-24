@@ -13,6 +13,8 @@ namespace NuclearEngine
 		public:
 			static bool Initialize(unsigned int MaxChannels = 32);
 
+			static void Shutdown();
+
 			static FMOD::System *GetSystem();
 
 			static void Update(Channel * ch);

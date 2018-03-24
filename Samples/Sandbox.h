@@ -6,8 +6,8 @@ class Sandbox : public Core::Game
 protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-	Audio::Sound sound;
-	Audio::Channel channel;
+	//Audio::Sound sound;
+	//Audio::Channel channel;
 
 	//XAsset
 	Graphics::API::Texture DiffuseTex;
@@ -26,6 +26,8 @@ protected:
 
 	//ECS
 	Core::Scene SampleScene;
+	Core::Entity ECube;
+	Core::Entity ELamp;
 
 	Math::Vector3 lightPositions[4] = {
 		Math::Vector3(-3.0f, 0.0f, 0.0f),
@@ -103,18 +105,13 @@ public:
 		Lamp.Initialize(&Renderer->GetVertexShader());
 		
 	}
-
-	void Load()
+	void SetupRenderer()
 	{
 		Systems::RenderSystemDesc desc;
 		desc.GammaCorrection = true;
 		desc.HDR = true;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
-
-		Audio::AudioEngine::Initialize();
-		sound.Create("Assets/Common/Sounds/yurimaster.wav",SOUND_MODE_DEFAULT);
-		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Renderer->InitializePostProcessing();
 		Renderer->SetCamera(&Camera);
@@ -124,22 +121,17 @@ public:
 		Renderer->AddLight(&pointlight4);
 
 		Renderer->Bake();
+	}
+	void Load()
+	{
+	
+		//sound.Create("Assets/Common/Sounds/yurimaster.wav",SOUND_MODE_DEFAULT);
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+
 
 		SetupLights();
 
 		SetupXAsset();
-
-		for (bool i =false ; i =true;)
-		{
-			if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Escape))
-				i = true;
-
-
-			sound.Play(&channel);
-			Audio::AudioEngine::Update(&channel);
-
-		}
-
 
 		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 
@@ -226,9 +218,9 @@ public:
 
 		SpecularTex.PSBind(0);
 
-		sound.Play(&channel);
+		//sound.Play(&channel);
 		
-		Audio::AudioEngine::Update(&channel);
+		//Audio::AudioEngine::Update(&channel);
 		Graphics::API::Context::PresentFrame();
 	}
 };

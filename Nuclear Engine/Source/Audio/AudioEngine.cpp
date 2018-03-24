@@ -16,6 +16,7 @@ namespace NuclearEngine
 	      
 		bool AudioEngine::Initialize(unsigned int MaxChannels)
 		{
+			Log.Info("[AudioEngine] Initializing FMOD SoundSystem\n");
 			FMOD_RESULT result;
 			result = FMOD::System_Create(&system);
 
@@ -35,6 +36,11 @@ namespace NuclearEngine
 
 			return true;
 		}
+		void AudioEngine::Shutdown()
+		{
+			system->close();
+			system->release();
+		}
 		FMOD::System * AudioEngine::GetSystem()
 		{
 			return system;
@@ -45,7 +51,7 @@ namespace NuclearEngine
 
 			if (channel)
 			{
-				bool         playing = 0;
+				bool playing = 0;
 				auto result = channel->GetChannel()->isPlaying(&playing);
 				if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
 				{
@@ -74,12 +80,13 @@ namespace NuclearEngine
 		}
 		FMOD::System * AudioEngine::GetSystem()
 		{
-			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
 			return nullptr;
+		}
+		void AudioEngine::Shutdown()
+		{
 		}
 		void AudioEngine::Update(Channel * channel)
 		{
-			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
 		}
 	}
 }

@@ -71,7 +71,6 @@ namespace NuclearEngine
 		}
 		void Transform::Update()
 		{
-			// we only do this if the node itself or its parent is flagged as dirty
 			if (m_dirty)
 			{
 				// first scale, then rotate, then translation

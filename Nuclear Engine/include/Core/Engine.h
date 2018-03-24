@@ -5,19 +5,26 @@ namespace NuclearEngine
 {
 	namespace Core
 	{
+		struct EngineStartupDesc
+		{
+			ApplicationDesc mAppdesc;
+
+
+			bool InitAudioEngine = true;
+		};
 
 		class NEAPI Engine
 		{
 		public:
 			enum class State { Initializing, Loading, Rendering, ExitingRendering, Shuttingdown };
 
-			static bool Initialize(const ApplicationDesc& windowdesc);
+			static bool Start(const EngineStartupDesc& desc);
 
-			static void ShutDown();
+			static void Shutdown();
 
-			static void Run(Game *YourGame);
+			static void RunGame(Game *YourGame);
 
-			static void Run(unsigned int TestNumber);
+			static void RunTest(unsigned int TestNumber);
 
 			static void SetState(const State& state);
 
