@@ -63,16 +63,16 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Windows 7+     
 
 ## Currently TODO
+  - Implement PhysXEngine (Nvidia Physics)
   - PostProcessing Effects:
 	- Bloom
   - Finish 2D Renderering:
     - Sprite
 	- SpriteRenderer
   - Implement Retained-Mode GUI.
-
+  
 ## Road-map
   - Support Android & Linux & UWP Platforms.
-  - Support PhysX or Bullet Physics Library.
   - Support an Uber Shader instead of GLSL , HLSL.
   - Support scripting using 'C#' mono-script or 'C++' AngelScript.
   - There are more but these are the most important... (look at the soon features...)

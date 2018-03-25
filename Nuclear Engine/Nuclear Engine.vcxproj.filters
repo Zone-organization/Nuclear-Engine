@@ -266,6 +266,8 @@
     <ClInclude Include="Source\Audio\FMODError.h" />
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Graphics\GraphicsEngine.h" />
+    <ClInclude Include="Source\Tests\PhysXTests.h" />
+    <ClInclude Include="include\PhysX\PhysXEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -347,6 +349,7 @@
     <ClCompile Include="Source\Audio\Channel.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Source\PhysX\PhysXEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Systems\SpriteRenderSystemImpl.inl" />

@@ -58,6 +58,8 @@ public:
 
 	void Render(float) override
 	{
+		Graphics::API::Context::PresentFrame();
+
 		//if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Num1))
 		//{
 			result = system->playSound(sound1, 0, false, &channel);

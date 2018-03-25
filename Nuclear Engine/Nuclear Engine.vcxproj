@@ -161,7 +161,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\Include;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -524,6 +524,7 @@
     <ClInclude Include="include\Math\vec3.hpp" />
     <ClInclude Include="include\Math\vec4.hpp" />
     <ClInclude Include="include\Math\vector_relational.hpp" />
+    <ClInclude Include="include\PhysX\PhysXEngine.h" />
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="include\Components\GUI\imconfig.h" />
@@ -589,6 +590,7 @@
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
     <ClInclude Include="Source\Tests\FMODTests.h" />
     <ClInclude Include="Source\Tests\OpenGLTests.h" />
+    <ClInclude Include="Source\Tests\PhysXTests.h" />
     <ClInclude Include="Source\Tests\Test4.h" />
     <ClInclude Include="Source\Tests\Test5.h" />
     <ClInclude Include="Source\Tests\TestCommon.h" />
@@ -646,6 +648,7 @@
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Source\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
