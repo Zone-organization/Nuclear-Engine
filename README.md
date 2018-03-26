@@ -70,7 +70,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
     - Sprite
 	- SpriteRenderer
   - Implement Retained-Mode GUI.
-  
+  - Implement multithread AssetManager.
 ## Road-map
   - Support Android & Linux & UWP Platforms.
   - Support an Uber Shader instead of GLSL , HLSL.
