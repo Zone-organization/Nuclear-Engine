@@ -15,33 +15,33 @@ namespace NuclearEngine {
 			}
 			void BlendState::Create(BlendState* result, const BlendStateDesc& type)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLBlendState::Create(&result->GLObject, type);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11BlendState::Create(&result->DXObject, type);
 				}
 			}
 			void BlendState::Delete(BlendState * state)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLBlendState::Delete(&state->GLObject);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11BlendState::Delete(&state->DXObject);
 				}
 			}
 			void BlendState::Bind(Graphics::Color blendfactor, unsigned int samplemask)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.Bind(blendfactor, samplemask);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.Bind(blendfactor, samplemask);
 				}

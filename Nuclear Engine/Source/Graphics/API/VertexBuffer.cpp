@@ -17,11 +17,11 @@ namespace NuclearEngine {
 
 			void VertexBuffer::Create(VertexBuffer * buffer, const VertexBufferDesc& desc)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLVertexBuffer::Create(&buffer->GLObject, desc);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11VertexBuffer::Create(&buffer->DXObject, desc);
 				}
@@ -29,11 +29,11 @@ namespace NuclearEngine {
 
 			void VertexBuffer::Delete(VertexBuffer * buffer)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLVertexBuffer::Delete(&buffer->GLObject);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11VertexBuffer::Delete(&buffer->DXObject);
 				}
@@ -41,11 +41,11 @@ namespace NuclearEngine {
 
 			void VertexBuffer::Update(const void * data, unsigned int size)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.Update(data, size);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.Update(data, size);
 				}
@@ -53,11 +53,11 @@ namespace NuclearEngine {
 
 			void VertexBuffer::SetInputLayout(InputLayout * layout, VertexShader * shader)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.SetInputLayout(layout, &shader->GLObject);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.SetInputLayout(layout, &shader->DXObject);
 				}
@@ -65,11 +65,11 @@ namespace NuclearEngine {
 
 			void VertexBuffer::Bind()
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.Bind();
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.Bind();
 				}

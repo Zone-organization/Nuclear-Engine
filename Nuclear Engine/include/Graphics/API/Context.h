@@ -46,6 +46,9 @@ namespace NuclearEngine
 
 				static void SetViewPort(int x, int y, int width, int height);
 
+				static bool isOpenGL3RenderAPI();
+				static bool isDirectX11RenderAPI();
+
 			private:
 				static void SetRenderAPI(const Core::RenderAPI & renderer);
 			};

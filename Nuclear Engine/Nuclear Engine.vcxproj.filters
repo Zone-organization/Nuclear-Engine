@@ -278,7 +278,6 @@
     <ClCompile Include="Source\Components\FlyCamera.cpp" />
     <ClCompile Include="Source\Components\GenericCamera.cpp" />
     <ClCompile Include="Source\Components\Skybox.cpp" />
-    <ClCompile Include="Source\Core\Context.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
@@ -350,6 +349,7 @@
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\PhysX\PhysXEngine.cpp" />
+    <ClCompile Include="Source\Graphics\API\Context.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Systems\SpriteRenderSystemImpl.inl" />

@@ -17,11 +17,11 @@ namespace NuclearEngine {
 
 			void IndexBuffer::Create(IndexBuffer* result, void * indices, unsigned int count)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLIndexBuffer::Create(&result->GLObject, indices, count);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11IndexBuffer::Create(&result->DXObject, indices, count);
 				}
@@ -29,11 +29,11 @@ namespace NuclearEngine {
 
 			void IndexBuffer::Delete(IndexBuffer * buffer)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLIndexBuffer::Delete(&buffer->GLObject);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11IndexBuffer::Delete(&buffer->DXObject);
 				}
@@ -41,11 +41,11 @@ namespace NuclearEngine {
 
 			void IndexBuffer::Bind()
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.Bind();
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.Bind();
 				}

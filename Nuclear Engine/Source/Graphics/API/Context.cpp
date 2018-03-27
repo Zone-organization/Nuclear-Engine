@@ -26,7 +26,8 @@ namespace NuclearEngine
 	{
 		namespace API {
 			static RenderAPI _renderer;
-
+			static bool isOpengl3 = false;
+			static bool isDirectX11 = false;;
 			RenderAPI Context::GetRenderAPI()
 			{
 				return _renderer;
@@ -118,9 +119,28 @@ namespace NuclearEngine
 				}
 #endif
 			}
+			bool Context::isOpenGL3RenderAPI()
+			{
+				return isOpengl3;
+			}
+			bool Context::isDirectX11RenderAPI()
+			{
+				return isDirectX11;
+			}
 			void Context::SetRenderAPI(const RenderAPI & renderer)
 			{
 				_renderer = renderer;
+
+				if (_renderer == Core::RenderAPI::OpenGL3)
+				{
+					isOpengl3 = true;
+					isDirectX11 = false;
+				}
+				else if (_renderer == Core::RenderAPI::DirectX11)
+				{	
+					isOpengl3 = false;
+					isDirectX11 = true;
+				}
 			}
 		}
 	}

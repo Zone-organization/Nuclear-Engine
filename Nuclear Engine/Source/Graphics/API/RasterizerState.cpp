@@ -16,33 +16,33 @@ namespace NuclearEngine {
 			}
 			void RasterizerState::Create(RasterizerState* result, const RasterizerStateDesc& type)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLRasterizerState::Create(&result->GLObject, type);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11RasterizerState::Create(&result->DXObject, type);
 				}
 			}
 			void RasterizerState::Delete(RasterizerState * state)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLRasterizerState::Delete(&state->GLObject);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11RasterizerState::Delete(&state->DXObject);
 				}
 			}
 			void RasterizerState::Bind()
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.Bind();
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.Bind();
 				}

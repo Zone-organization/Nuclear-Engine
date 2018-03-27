@@ -412,7 +412,7 @@ namespace NuclearEngine {
 
 			float VTexCoord = +1.0f;
 
-			if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+			if (Graphics::API::Context::isOpenGL3RenderAPI())
 			{
 				VTexCoord = -1.0f;
 			}

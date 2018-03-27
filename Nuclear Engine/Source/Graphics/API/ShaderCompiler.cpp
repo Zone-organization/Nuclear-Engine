@@ -14,7 +14,7 @@ namespace NuclearEngine {
 			}
 			bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode, const Graphics::API::ShaderType& type)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					XShaderCompiler::CompileHLSL2GLSL(blob, SourceCode, type);
 				}

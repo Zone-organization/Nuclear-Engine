@@ -656,7 +656,7 @@
     <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Components\Transform.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Core\Context.cpp" />
+    <ClCompile Include="Source\Graphics\API\Context.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Entity.cpp" />
     <ClCompile Include="Source\Core\Event.cpp" />

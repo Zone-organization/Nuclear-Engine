@@ -1,27 +1,35 @@
 #include <PhysX\PhysXEngine.h>
 #include <PhysX\PhysXincluder.h>
 
-#if !defined(PHYSX_NOT_INCLUDED) && defined(NE_COMPILE_PHYSX)
+#if !defined(PHYSX_NOT_INCLUDED) && defined(NE_USE_PHYSXENGINE)
 #include <PhysX\Include\PxPhysicsAPI.h>
 using namespace physx;
 
-#pragma comment (lib, "PhysX/Lib/PhysX3DEBUG_x86.lib")
-#pragma comment (lib, "PhysX/Lib/PhysX3CommonDEBUG_x86.lib")
-#pragma comment (lib, "PhysX/Lib/PxFoundationDEBUG_x86.lib")
+#pragma comment (lib, "PhysX/Lib/PhysX3_x86.lib")
+#pragma comment (lib, "PhysX/Lib/PxFoundation_x86.lib")
+#pragma comment (lib, "PhysX/Lib/PxPvdSDK_x86.lib")
 
 namespace NuclearEngine
 {
 	namespace PhysX
 	{
-		static PxDefaultErrorCallback gDefaultErrorCallback;
 		static PxDefaultAllocator gDefaultAllocatorCallback;
 		static PxFoundation* gFoundation;
 		static PxPvd* gPVD;
 		static PxPhysics* gPhysics;
 
+		class PhysXErrorCallback : public PxErrorCallback
+		{
+		public:
+			virtual void reportError(PxErrorCode::Enum code, const char* message, const char* file,	int line)
+			{
+				Log.Error("[PhysX] " + std::string(message) + " in File: " +  std::string(file) + "  Line : " + std::to_string(line) + "\n");
+			}
+		};
+		static PhysXErrorCallback gErrorCallback;
 		bool PhysXEngine::Initialize()
 		{
-			gFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback,	gDefaultErrorCallback);
+			gFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback, gErrorCallback);
 			if (!gFoundation)
 			{
 				Log.FatalError("[PhysX] Initializing PhysXEngine Failed: PxCreateFoundation Failed...\n");

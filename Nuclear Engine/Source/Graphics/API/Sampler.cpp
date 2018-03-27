@@ -14,11 +14,11 @@ namespace NuclearEngine {
 			}
 			void Sampler::Create(Sampler *result, const SamplerDesc& Desc)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLSampler::Create(&result->GLObject, Desc);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11Sampler::Create(&result->DXObject, Desc);
 				}
@@ -26,22 +26,22 @@ namespace NuclearEngine {
 
 			void Sampler::Delete(Sampler * result)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					OpenGL::GLSampler::Delete(&result->GLObject);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DirectX::DX11Sampler::Delete(&result->DXObject);
 				}
 			}
 			void Sampler::VSBind(unsigned int index)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.VSBind(index);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.VSBind(index);
 				}
@@ -49,22 +49,22 @@ namespace NuclearEngine {
 
 			void Sampler::PSBind(unsigned int index)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.PSBind(index);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.PSBind(index);
 				}
 			}
 			void Sampler::GSBind(unsigned int index)
 			{
-				if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::OpenGL3)
+				if (Graphics::API::Context::isOpenGL3RenderAPI())
 				{
 					GLObject.GSBind(index);
 				}
-				else if (Graphics::API::Context::GetRenderAPI() == Core::RenderAPI::DirectX11)
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
 				{
 					DXObject.GSBind(index);
 				}
