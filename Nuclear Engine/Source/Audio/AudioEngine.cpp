@@ -16,7 +16,6 @@ namespace NuclearEngine
 	      
 		bool AudioEngine::Initialize(unsigned int MaxChannels)
 		{
-			Log.Info("[AudioEngine] Initializing FMOD SoundSystem\n");
 			FMOD_RESULT result;
 			result = FMOD::System_Create(&system);
 
@@ -33,7 +32,7 @@ namespace NuclearEngine
 				Log.Error("[AudioEngine] Failed to initialize FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");
 				return false;
 			}
-
+			Log.Info("[AudioEngine] Initialized FMOD SoundSystem.\n");
 			return true;
 		}
 		void AudioEngine::Shutdown()

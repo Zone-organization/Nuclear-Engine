@@ -1,6 +1,7 @@
 #include <Core\Engine.h>
 #include <NE_Common.h>
 #include <Platform\Input.h>
+#include <..\Source\Tests\PhysXTests.h>
 #include <..\Source\Tests\FMODTests.h>
 #include <..\Source\Tests\DirectX11Tests.h>
 #include <..\Source\Tests\OpenGLTests.h>
@@ -135,8 +136,13 @@ namespace NuclearEngine {
 				DirectX11Tests test;
 				Engine::RunGame(&test);
 			}
-			else {
+			else if (TestNumber == 9999)
+			{
 				FMODTests test;
+				Engine::RunGame(&test);
+			}			
+			else {
+				PhysXTests test;
 				Engine::RunGame(&test);
 			}
 		}

@@ -180,6 +180,9 @@ public:
 		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
 		Graphics::API::Sampler::Create(&LinearSampler, Samplerdesc);
 
+		//Physics
+		Physics3D::Physics3DEngine::Initialize();
+
 
 
 		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);

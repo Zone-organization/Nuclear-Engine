@@ -1,4 +1,4 @@
-#include <PhysX\PhysXEngine.h>
+#include <Physics3D\Physics3DEngine.h>
 #include <PhysX\PhysXincluder.h>
 
 #if !defined(PHYSX_NOT_INCLUDED) && defined(NE_USE_PHYSXENGINE)
@@ -11,7 +11,7 @@ using namespace physx;
 
 namespace NuclearEngine
 {
-	namespace PhysX
+	namespace Physics3D
 	{
 		static PxDefaultAllocator gDefaultAllocatorCallback;
 		static PxFoundation* gFoundation;
@@ -27,12 +27,12 @@ namespace NuclearEngine
 			}
 		};
 		static PhysXErrorCallback gErrorCallback;
-		bool PhysXEngine::Initialize()
+		bool Physics3DEngine::Initialize()
 		{
 			gFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback, gErrorCallback);
 			if (!gFoundation)
 			{
-				Log.FatalError("[PhysX] Initializing PhysXEngine Failed: PxCreateFoundation Failed...\n");
+				Log.FatalError("[Physics3DEngine] Initializing PhysX Failed: PxCreateFoundation Failed...\n");
 			}
 
 			bool recordMemoryAllocations = true;
@@ -45,11 +45,13 @@ namespace NuclearEngine
 			gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), recordMemoryAllocations, gPVD);
 			if (!gPhysics)
 			{
-				Log.FatalError("[PhysX] Initializing PhysXEngine Failed: PxCreatePhysics Failed...\n");
+				Log.FatalError("[Physics3DEngine] Initializing PhysX Failed: PxCreatePhysics Failed...\n");
 			}
+
+			Log.Info("[Physics3DEngine] Initialized PhysX.\n");
 			return false;
 		}
-		void PhysXEngine::Shutdown()
+		void Physics3DEngine::Shutdown()
 		{
 			gPhysics->release();
 			gPVD->release();
@@ -60,14 +62,14 @@ namespace NuclearEngine
 #else
 namespace NuclearEngine
 {
-	namespace PhysX
+	namespace Physics3D
 	{
 
-		bool PhysXEngine::Initialize()
+		bool Physics3DEngine::Initialize()
 		{
 			return false;
 		}
-		void PhysXEngine::Shutdown()
+		void Physics3DEngine::Shutdown()
 		{
 		}
 	}

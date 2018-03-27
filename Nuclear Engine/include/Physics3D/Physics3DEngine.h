@@ -3,10 +3,10 @@
 
 namespace NuclearEngine
 {
-	namespace PhysX
+	namespace Physics3D
 	{
 		//Nvidia PhysX is for 3D physics only!!
-		class NEAPI PhysXEngine
+		class NEAPI Physics3DEngine
 		{
 		public:
 			static bool Initialize();

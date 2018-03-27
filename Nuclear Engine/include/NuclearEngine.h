@@ -38,6 +38,8 @@ _____________/BOOOM\_____________
 #include <Audio/Sound.h>
 #include <Audio/Channel.h>
 
+//# Physics3D Headers
+#include <Physics3D/Physics3DEngine.h>
 
 //# OneAPI Headers
 #include <Graphics/API/RenderAPI.h>

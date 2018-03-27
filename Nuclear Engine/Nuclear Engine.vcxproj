@@ -524,7 +524,7 @@
     <ClInclude Include="include\Math\vec3.hpp" />
     <ClInclude Include="include\Math\vec4.hpp" />
     <ClInclude Include="include\Math\vector_relational.hpp" />
-    <ClInclude Include="include\PhysX\PhysXEngine.h" />
+    <ClInclude Include="include\Physics3D\Physics3DEngine.h" />
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="include\Components\GUI\imconfig.h" />
@@ -648,7 +648,7 @@
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
-    <ClCompile Include="Source\PhysX\PhysXEngine.cpp" />
+    <ClCompile Include="Source\Physics3D\Physics3DEngine.cpp" />
     <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui.cpp" />
     <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
