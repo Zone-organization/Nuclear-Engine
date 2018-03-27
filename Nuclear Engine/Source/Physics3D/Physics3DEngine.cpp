@@ -33,6 +33,7 @@ namespace NuclearEngine
 			if (!gFoundation)
 			{
 				Log.FatalError("[Physics3DEngine] Initializing PhysX Failed: PxCreateFoundation Failed...\n");
+				return false;
 			}
 
 			bool recordMemoryAllocations = true;
@@ -46,16 +47,21 @@ namespace NuclearEngine
 			if (!gPhysics)
 			{
 				Log.FatalError("[Physics3DEngine] Initializing PhysX Failed: PxCreatePhysics Failed...\n");
+				return false;
 			}
 
 			Log.Info("[Physics3DEngine] Initialized PhysX.\n");
-			return false;
+			return true;
 		}
 		void Physics3DEngine::Shutdown()
 		{
 			gPhysics->release();
 			gPVD->release();
 			gFoundation->release();
+		}
+		physx::PxPhysics * Physics3DEngine::GetContext()
+		{
+			return gPhysics;
 		}
 	}
 }
@@ -71,6 +77,10 @@ namespace NuclearEngine
 		}
 		void Physics3DEngine::Shutdown()
 		{
+		}
+		physx::PxPhysics * Physics3DEngine::GetContext()
+		{
+			return nullptr;
 		}
 	}
 }
