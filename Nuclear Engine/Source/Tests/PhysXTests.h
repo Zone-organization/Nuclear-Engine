@@ -26,6 +26,7 @@ protected:
 	Graphics::API::Texture PlaneTex;
 	Graphics::API::Texture CubeTex;
 
+	Physics3D::PhysicsScene scene;
 
 	Components::FlyCamera Camera;
 	float lastX = _Width_ / 2.0f;

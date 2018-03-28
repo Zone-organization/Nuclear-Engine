@@ -8,6 +8,7 @@ using namespace physx;
 #pragma comment (lib, "PhysX/Lib/PhysX3_x86.lib")
 #pragma comment (lib, "PhysX/Lib/PxFoundation_x86.lib")
 #pragma comment (lib, "PhysX/Lib/PxPvdSDK_x86.lib")
+#pragma comment (lib, "PhysX/Lib/PhysX3Extensions.lib")
 
 namespace NuclearEngine
 {

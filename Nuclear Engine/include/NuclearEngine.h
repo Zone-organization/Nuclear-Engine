@@ -40,6 +40,7 @@ _____________/BOOOM\_____________
 
 //# Physics3D Headers
 #include <Physics3D/Physics3DEngine.h>
+#include <Physics3D/PhysicsScene.h>
 
 //# OneAPI Headers
 #include <Graphics/API/RenderAPI.h>
