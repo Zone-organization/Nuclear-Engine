@@ -8,16 +8,16 @@ namespace NuclearEngine
 	namespace Physics3D
 	{
 
-		struct NEAPI PhysicalSceneDesc
+		struct NEAPI PhysicsSceneDesc
 		{
 			Math::Vector3 gravity = Math::Vector3(0.0f, 0.0f, 0.0f);
 		};
 
-		class NEAPI PhysicalScene
+		class NEAPI PhysicsScene
 		{
 		public:
-			static bool Create(PhysicalScene* scene,const PhysicalSceneDesc& desc);
-			static void Delete(PhysicalScene* scene);
+			static bool Create(PhysicsScene* scene,const PhysicsSceneDesc& desc);
+			static void Delete(PhysicsScene* scene);
 
 			physx::PxScene* GetBase();
 		private:

@@ -1,4 +1,4 @@
-#include <Physics3D\PhysicalScene.h>
+#include <Physics3D\PhysicsScene.h>
 #include <PhysX\PhysXincluder.h>
 
 #if !defined(PHYSX_NOT_INCLUDED) && defined(NE_USE_PHYSXENGINE)
@@ -11,7 +11,7 @@ namespace NuclearEngine
 {
 	namespace Physics3D
 	{
-		bool PhysicalScene::Create(PhysicalScene* scene, const PhysicalSceneDesc& desc)
+		bool PhysicsScene::Create(PhysicsScene* scene, const PhysicsSceneDesc& desc)
 		{
 			//Create the scene
 			PxSceneDesc sceneDesc(Physics3DEngine::GetContext()->getTolerancesScale());
@@ -24,7 +24,7 @@ namespace NuclearEngine
 				PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
 				if (!mCpuDispatcher)
 				{
-					Log.Error("[PhysicalScene] Failed to create PhysicalScene: PxDefaultCpuDispatcherCreate Failed!\n");
+					Log.Error("[PhysicsScene] Failed to create PhysicsScene: PxDefaultCpuDispatcherCreate Failed!\n");
 					return false;
 				}
 				sceneDesc.cpuDispatcher = mCpuDispatcher;
@@ -36,19 +36,19 @@ namespace NuclearEngine
 			scene->scene = Physics3DEngine::GetContext()->createScene(sceneDesc);
 			if (!scene->scene)
 			{
-				Log.Error("[PhysicalScene] PhysX failed to create PhysicalScene!\n");
+				Log.Error("[PhysicsScene] PhysX failed to create PhysicsScene!\n");
 				return false;
 			}
 			scene->scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
 			scene->scene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
 			return true;
 		}
-		void PhysicalScene::Delete(PhysicalScene* scene)
+		void PhysicsScene::Delete(PhysicsScene* scene)
 		{
 
 		}
 
-		physx::PxScene * PhysicalScene::GetBase()
+		physx::PxScene * PhysicsScene::GetBase()
 		{
 			return scene;
 		}
@@ -60,16 +60,16 @@ namespace NuclearEngine
 	namespace Physics3D
 	{
 
-		bool PhysicalScene::Create(PhysicalScene* scene)
+		bool PhysicsScene::Create(PhysicsScene* scene, const PhysicsSceneDesc& desc)
 		{
 
 			return false;
 		}
-		void PhysicalScene::Delete(PhysicalScene* scene)
+		void PhysicsScene::Delete(PhysicsScene* scene)
 		{
 
 		}
-		physx::PxScene * PhysicalScene::GetBase()
+		physx::PxScene * PhysicsScene::GetBase()
 		{
 			return nullptr;
 		}
