@@ -17,9 +17,9 @@ namespace NuclearEngine
 			PxSceneDesc sceneDesc(Physics3DEngine::GetContext()->getTolerancesScale());
 
 			sceneDesc.gravity = Convert(desc.gravity);
+			PxRigidActor;
 
-
-			if (!sceneDesc.cpuDispatcher) 
+			/*if (!sceneDesc.cpuDispatcher) 
 			{
 				PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
 				if (!mCpuDispatcher)
@@ -28,7 +28,7 @@ namespace NuclearEngine
 					return false;
 				}
 				sceneDesc.cpuDispatcher = mCpuDispatcher;
-			}
+			}*/
 			if (!sceneDesc.filterShader)
 			{
 				//sceneDesc.filterShader = gDefaultFilterShader;
