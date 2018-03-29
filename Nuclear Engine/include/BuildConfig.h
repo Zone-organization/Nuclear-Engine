@@ -9,20 +9,6 @@
 #endif
 
 #define NUCLEAR_PLATFORM_WINDOWS_PC
-
-#ifdef NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
-
-#include <Windows.h>
-
-extern int main(int argc, char* argv[]);
-
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
-{
-	return main(__argc, __argv);
-}
-
-#endif
-
 #endif
 
 #ifdef _DEBUG

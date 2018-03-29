@@ -1,5 +1,4 @@
-﻿#define NUCLEAR_ENGINE_MAIN_IMPLEMENTATION
-#include "Common.h"
+﻿#include "Common.h"
 #include "Sample1.h"
 #include "Sample2.h"
 #include "Sample3.h"
