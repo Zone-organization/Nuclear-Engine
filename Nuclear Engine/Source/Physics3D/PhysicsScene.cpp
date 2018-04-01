@@ -1,7 +1,6 @@
 #include <Physics3D\PhysicsScene.h>
-#include <PhysX\PhysXincluder.h>
 
-#if !defined(PHYSX_NOT_INCLUDED) && defined(NE_USE_PHYSXENGINE)
+#if defined (NE_USE_PHYSICS3DENGINE)
 #include <Physics3D\Physics3DEngine.h>
 #include <PhysX\Include\PxPhysicsAPI.h>
 #include "PhysXCommon.h"
@@ -51,27 +50,6 @@ namespace NuclearEngine
 		physx::PxScene * PhysicsScene::GetBase()
 		{
 			return scene;
-		}
-	}
-}
-#else
-namespace NuclearEngine
-{
-	namespace Physics3D
-	{
-
-		bool PhysicsScene::Create(PhysicsScene* scene, const PhysicsSceneDesc& desc)
-		{
-
-			return false;
-		}
-		void PhysicsScene::Delete(PhysicsScene* scene)
-		{
-
-		}
-		physx::PxScene * PhysicsScene::GetBase()
-		{
-			return nullptr;
 		}
 	}
 }

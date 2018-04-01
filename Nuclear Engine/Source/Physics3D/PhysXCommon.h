@@ -1,8 +1,6 @@
 #pragma once
 #include <Physics3D\Physics3DEngine.h>
-#include <PhysX\PhysXincluder.h>
-
-#if !defined(PHYSX_NOT_INCLUDED) && defined(NE_USE_PHYSXENGINE)
+#if defined (NE_USE_PHYSICS3DENGINE)
 #include <PhysX\Include\PxPhysicsAPI.h>
 #include <Math\Math.h>
 

@@ -30,12 +30,18 @@ Building options:
 	-Builds the engine to use both DirectX11 and OpenGL 3 render APIs, (May have impact on performance so not recommended for release)
 -NE_USE_RENDER_API_DEBUG_LAYER
 	-Enable the Render-API debug layer to trace and detect errors
--NE_USE_PHYSXENGINE
+-NE_USE_PHYSICS3DENGINE
 	-Enabled Nvidia PhysX Engine integration (not suitable for 2D).
 */
 
+#include <PhysX\PhysXincluder.h>
+#if !defined(PHYSX_NOT_INCLUDED)
+#define NE_USE_PHYSICS3DENGINE
+#endif
 
-#define NE_USE_PHYSXENGINE
+#if defined (NE_USE_PHYSICS3DENGINE) && defined(PHYSX_NOT_INCLUDED)
+#error PhysX isnot available
+#endif
 
 #ifdef NE_USE_CORE_OPENGL
 #define NE_COMPILE_CORE_OPENGL

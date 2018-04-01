@@ -1,7 +1,6 @@
 #include <Physics3D\Physics3DEngine.h>
-#include <PhysX\PhysXincluder.h>
 
-#if !defined(PHYSX_NOT_INCLUDED) && defined(NE_USE_PHYSXENGINE)
+#if defined (NE_USE_PHYSICS3DENGINE)
 #include <PhysX\Include\PxPhysicsAPI.h>
 using namespace physx;
 
@@ -62,25 +61,6 @@ namespace NuclearEngine
 		physx::PxPhysics * Physics3DEngine::GetContext()
 		{
 			return gPhysics;
-		}
-	}
-}
-#else
-namespace NuclearEngine
-{
-	namespace Physics3D
-	{
-
-		bool Physics3DEngine::Initialize()
-		{
-			return false;
-		}
-		void Physics3DEngine::Shutdown()
-		{
-		}
-		physx::PxPhysics * Physics3DEngine::GetContext()
-		{
-			return nullptr;
 		}
 	}
 }
