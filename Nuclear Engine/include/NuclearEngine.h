@@ -45,6 +45,8 @@ _____________/BOOOM\_____________
 //# OneAPI Headers
 #include <Graphics/API/RenderAPI.h>
 
+//# GUI Headers
+#include <GUI\IMGUI.h>
 
 //# Engine Components Headers
 #include <Components\GenericCamera.h>
@@ -53,7 +55,6 @@ _____________/BOOOM\_____________
 #include <Components\Light.h>
 #include <Components\Model.h>
 #include <Components\Sprite.h>
-#include <Components\GUI\imgui.h>
 
 //# Engine Systems Headers
 #include <Systems\RenderSystem.h>

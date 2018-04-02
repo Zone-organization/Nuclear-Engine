@@ -528,8 +528,8 @@
     <ClInclude Include="include\Physics3D\Physics3DEngine.h" />
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\XAsset\ModelAsset.h" />
-    <ClInclude Include="include\Components\GUI\imconfig.h" />
-    <ClInclude Include="include\Components\GUI\imgui.h" />
+    <ClInclude Include="include\GUI\imconfig.h" />
+    <ClInclude Include="include\GUI\IMGUI.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="include\Components\Sprite.h" />
@@ -581,10 +581,10 @@
     <ClInclude Include="Source\Graphics\API\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Managers\AssimpImporter.h" />
-    <ClInclude Include="Source\Components\GUI\imgui_internal.h" />
-    <ClInclude Include="Source\Components\GUI\stb_rect_pack.h" />
-    <ClInclude Include="Source\Components\GUI\stb_textedit.h" />
-    <ClInclude Include="Source\Components\GUI\stb_truetype.h" />
+    <ClInclude Include="Source\GUI\imgui_internal.h" />
+    <ClInclude Include="Source\GUI\stb_rect_pack.h" />
+    <ClInclude Include="Source\GUI\stb_textedit.h" />
+    <ClInclude Include="Source\GUI\stb_truetype.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
@@ -653,8 +653,8 @@
     <ClCompile Include="Source\Physics3D\PhysicsScene.cpp" />
     <ClCompile Include="Source\Physics3D\Physics3DEngine.cpp" />
     <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
-    <ClCompile Include="Source\Components\GUI\imgui.cpp" />
-    <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
+    <ClCompile Include="Source\GUI\imgui.cpp" />
+    <ClCompile Include="Source\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Components\Transform.cpp" />

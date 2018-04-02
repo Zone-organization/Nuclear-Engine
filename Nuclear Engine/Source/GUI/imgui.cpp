@@ -585,7 +585,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <Components\GUI\imgui.h>
+#include <GUI\IMGUI.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 

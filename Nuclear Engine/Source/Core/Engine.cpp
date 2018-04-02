@@ -10,7 +10,7 @@
 #include <..\Source\Tests\Test3.h>
 #include <..\Source\Tests\Test4.h>
 #include <..\Source\Tests\Test5.h>
-#include <Components\GUI\imgui.h>
+#include <GUI\imgui.h>
 #include "..\Core\imgui_impl\imgui_impl.h"
 #include <Graphics\GraphicsEngine.h>
 #include <Audio\AudioEngine.h>

@@ -32,12 +32,6 @@
     <ClInclude Include="include\Platform\Clock.h" />
     <ClInclude Include="include\Platform\Input.h" />
     <ClInclude Include="include\Platform\Timer.h" />
-    <ClInclude Include="include\Components\GUI\imconfig.h" />
-    <ClInclude Include="include\Components\GUI\imgui.h" />
-    <ClInclude Include="Source\Components\GUI\imgui_internal.h" />
-    <ClInclude Include="Source\Components\GUI\stb_rect_pack.h" />
-    <ClInclude Include="Source\Components\GUI\stb_textedit.h" />
-    <ClInclude Include="Source\Components\GUI\stb_truetype.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
     <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
@@ -270,6 +264,12 @@
     <ClInclude Include="include\Physics3D\Physics3DEngine.h" />
     <ClInclude Include="Source\Physics3D\PhysXCommon.h" />
     <ClInclude Include="include\Physics3D\PhysicsScene.h" />
+    <ClInclude Include="include\GUI\imconfig.h" />
+    <ClInclude Include="Source\GUI\imgui_internal.h" />
+    <ClInclude Include="Source\GUI\stb_rect_pack.h" />
+    <ClInclude Include="Source\GUI\stb_textedit.h" />
+    <ClInclude Include="Source\GUI\stb_truetype.h" />
+    <ClInclude Include="include\GUI\IMGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -291,8 +291,6 @@
     <ClCompile Include="Source\Platform\Input.cpp" />
     <ClCompile Include="Source\Platform\Timer.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Components\GUI\imgui.cpp" />
-    <ClCompile Include="Source\Components\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl_dx11.cpp" />
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl.cpp" />
     <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
@@ -353,6 +351,8 @@
     <ClCompile Include="Source\Graphics\API\Context.cpp" />
     <ClCompile Include="Source\Physics3D\Physics3DEngine.cpp" />
     <ClCompile Include="Source\Physics3D\PhysicsScene.cpp" />
+    <ClCompile Include="Source\GUI\imgui.cpp" />
+    <ClCompile Include="Source\GUI\imgui_draw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Systems\SpriteRenderSystemImpl.inl" />
