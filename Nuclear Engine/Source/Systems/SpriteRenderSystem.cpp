@@ -1,3 +1,4 @@
+#include <Systems\SpriteRenderSystem.h>
 #include <Graphics\API\Context.h>
 #include <Math\Math.h>
 namespace NuclearEngine
@@ -27,9 +28,9 @@ namespace NuclearEngine
 				1.0f, 1.0f, 0.0f, 1.0f, VTexCoord,
 				1.0f, 0.0f, 0.0f, 1.0f, 0.0f
 			};
-			
-			Graphics::API::VertexShader::Create( &mVShader, &Graphics::API::CompileShader(mDesc.VertexShaderPath, Graphics::API::ShaderType::Vertex));
-			Graphics::API::PixelShader::Create( &mPShader, &Graphics::API::CompileShader(mDesc.PixelShaderPath, Graphics::API::ShaderType::Pixel));
+
+			Graphics::API::VertexShader::Create(&mVShader, &Graphics::API::CompileShader(mDesc.VertexShaderPath, Graphics::API::ShaderType::Vertex));
+			Graphics::API::PixelShader::Create(&mPShader, &Graphics::API::CompileShader(mDesc.PixelShaderPath, Graphics::API::ShaderType::Pixel));
 
 			Graphics::API::VertexBufferDesc VBDesc;
 			VBDesc.data = vertices;
@@ -81,13 +82,13 @@ namespace NuclearEngine
 		{
 			Math::Matrix4 model(1.0f);
 			model = Math::Translate(model, Math::Vector3(sprite->Position, 0.0f));
-			
+
 			model = Math::Translate(model, Math::Vector3(0.5f * sprite->Size.x, 0.5f * sprite->Size.y, 0.0f));
 			model = Math::Rotate(model, sprite->Rotation, Math::Vector3(0.0f, 0.0f, 1.0f));
 			model = Math::Translate(model, Math::Vector3(-0.5f * sprite->Size.x, -0.5f * sprite->Size.y, 0.0f));
 
 			model = Math::Scale(model, Math::Vector3(sprite->Size, 1.0f));
-			
+
 			mSpriteColorBuffer.Update(&sprite->Color, sizeof(sprite->Color));
 
 			mCamera->SetModelMatrix(model);
@@ -99,7 +100,7 @@ namespace NuclearEngine
 		void SpriteRenderSystem::EndDirectRender()
 		{
 		}
-		
+
 		void SpriteRenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)
 		{
 		}

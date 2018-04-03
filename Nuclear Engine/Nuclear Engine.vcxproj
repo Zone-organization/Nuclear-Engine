@@ -572,7 +572,6 @@
     <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Managers\ShaderManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
-    <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\Graphics\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
@@ -653,6 +652,8 @@
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Physics3D\PhysicsScene.cpp" />
     <ClCompile Include="Source\Physics3D\Physics3DEngine.cpp" />
+    <ClCompile Include="Source\Systems\RenderSystem.cpp" />
+    <ClCompile Include="Source\Systems\SpriteRenderSystem.cpp" />
     <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
     <ClCompile Include="Source\GUI\imgui.cpp" />
     <ClCompile Include="Source\GUI\imgui_draw.cpp" />
@@ -803,7 +804,6 @@
     <None Include="include\Math\gtx\vector_angle.inl" />
     <None Include="include\Math\gtx\vector_query.inl" />
     <None Include="include\Math\gtx\wrap.inl" />
-    <None Include="include\Systems\SpriteRenderSystemImpl.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

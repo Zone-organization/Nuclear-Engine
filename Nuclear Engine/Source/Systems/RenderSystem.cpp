@@ -1,6 +1,4 @@
-#ifndef RenderSystemImpl
 #include <Systems\RenderSystem.h>
-#endif
 #include <Core\FileSystem.h>
 #include <Graphics/API/ConstantBuffer.h>
 #include <Graphics/API/ShaderCompiler.h>
@@ -97,7 +95,7 @@ namespace NuclearEngine
 		}
 
 		void RenderSystem::Bake()
-		{	
+		{
 			BakeVertexShader();
 			BakePixelShader();
 		}
@@ -105,7 +103,7 @@ namespace NuclearEngine
 		{
 			std::vector<std::string> defines;
 
-			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true;	}
+			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true; }
 			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
 			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  PSDirty = true; }
 			if (Desc.NormalMaps == true) { defines.push_back("NE_USE_NORMAL_MAPS"); }
@@ -152,7 +150,7 @@ namespace NuclearEngine
 					this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
 				else
 					Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
-				
+
 				VSDirty = false;
 			}
 		}
@@ -187,9 +185,9 @@ namespace NuclearEngine
 		}
 
 		void RenderSystem::InstantRender(Components::Model * object)
-		{			
+		{
 			for (size_t i = 0; i< object->GetAsset()->Meshes.size(); i++)
-			{	
+			{
 				InstantRender(&object->GetAsset()->Meshes.at(i));
 			}
 		}
@@ -261,7 +259,7 @@ namespace NuclearEngine
 			for (Core::Entity entity : es.entities_with_components(ModelObject))
 			{
 				auto transform = entity.GetComponent<Components::Transform>();
-					
+
 				if (transform)
 				{
 					transform.Get()->Update();

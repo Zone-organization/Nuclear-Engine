@@ -47,7 +47,6 @@
     <ClInclude Include="include\Utilities\Pool.h" />
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
-    <ClInclude Include="include\Systems\RenderSystemImpl.inl" />
     <ClInclude Include="include\Core\ComponentDependency.h" />
     <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
@@ -354,9 +353,10 @@
     <ClCompile Include="Source\Physics3D\PhysicsScene.cpp" />
     <ClCompile Include="Source\GUI\imgui.cpp" />
     <ClCompile Include="Source\GUI\imgui_draw.cpp" />
+    <ClCompile Include="Source\Systems\RenderSystem.cpp" />
+    <ClCompile Include="Source\Systems\SpriteRenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\Systems\SpriteRenderSystemImpl.inl" />
     <None Include="include\Math\detail\func_common.inl" />
     <None Include="include\Math\detail\func_common_simd.inl" />
     <None Include="include\Math\detail\func_exponential.inl" />

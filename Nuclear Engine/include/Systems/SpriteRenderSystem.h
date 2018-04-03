@@ -12,7 +12,7 @@ namespace NuclearEngine
 {
 	namespace Systems
 	{
-		struct SpriteRenderSystemDesc
+		struct NEAPI SpriteRenderSystemDesc
 		{
 			Uint32 Width = 800;
 			Uint32 Height = 600;
@@ -22,7 +22,7 @@ namespace NuclearEngine
 			Components::GenericCamera* InitialCamera = nullptr;
 		};
 		//Renderer for 2D Components
-		class SpriteRenderSystem : public Core::System<SpriteRenderSystem> {
+		class NEAPI SpriteRenderSystem : public Core::System<SpriteRenderSystem> {
 		public:
 			SpriteRenderSystem();
 	
@@ -46,8 +46,3 @@ namespace NuclearEngine
 
 	}
 }
-
-//Implementation (Required since EntityX and C++ Templates doesn't play nicely with DLL Export)
-#define SpriteRenderSystemImpl
-#include "SpriteRenderSystemImpl.inl"
-#undef SpriteRenderSystemImpl

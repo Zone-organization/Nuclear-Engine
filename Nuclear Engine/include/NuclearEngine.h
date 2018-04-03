@@ -55,6 +55,8 @@ _____________/BOOOM\_____________
 #include <Components\Light.h>
 #include <Components\Model.h>
 #include <Components\Sprite.h>
+#include <Components\Transform.h>
+#include <Components\ModelRenderDesc.h>
 
 //# Engine Systems Headers
 #include <Systems\RenderSystem.h>
