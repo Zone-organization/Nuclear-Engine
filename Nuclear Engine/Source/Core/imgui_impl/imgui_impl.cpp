@@ -8,7 +8,7 @@
 #define GLFW_EXPOSE_NATIVE_WGL
 #include <GLFW\include\GLFW\glfw3native.h>
 #endif
-
+using namespace NuclearEngine;
 static GLFWwindow*  g_Window = NULL;
 static double       g_Time = 0.0f;
 static bool         g_MouseJustPressed[3] = { false, false, false };

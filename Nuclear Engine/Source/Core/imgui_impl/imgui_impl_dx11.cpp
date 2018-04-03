@@ -8,12 +8,15 @@
 
 #include <GUI\imgui.h>
 #include "imgui_impl_dx11.h"
+#include <Graphics\API\Sampler.h>
+#include <Graphics\API\Texture.h>
 
 // DirectX
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
+using namespace NuclearEngine;
 
 // Data
 static ID3D11Device*            g_pd3dDevice = NULL;
@@ -26,8 +29,8 @@ static ID3D11InputLayout*       g_pInputLayout = NULL;
 static ID3D11Buffer*            g_pVertexConstantBuffer = NULL;
 static ID3D10Blob *             g_pPixelShaderBlob = NULL;
 static ID3D11PixelShader*       g_pPixelShader = NULL;
-static ID3D11SamplerState*      g_pFontSampler = NULL;
-static ID3D11ShaderResourceView*g_pFontTextureView = NULL;
+static Graphics::API::Sampler   g_pFontSampler;
+static Graphics::API::Texture   g_pFontTexture;
 static ID3D11RasterizerState*   g_pRasterizerState = NULL;
 static ID3D11BlendState*        g_pBlendState = NULL;
 static ID3D11DepthStencilState* g_pDepthStencilState = NULL;
@@ -176,7 +179,7 @@ void ImGui_ImplDX11_RenderDrawLists(ImDrawData* draw_data)
     ctx->VSSetShader(g_pVertexShader, NULL, 0);
     ctx->VSSetConstantBuffers(0, 1, &g_pVertexConstantBuffer);
     ctx->PSSetShader(g_pPixelShader, NULL, 0);
-    ctx->PSSetSamplers(0, 1, &g_pFontSampler);
+	g_pFontSampler.PSBind(0);
 
     // Setup render state
     const float blend_factor[4] = { 0.f, 0.f, 0.f, 0.f };
@@ -200,7 +203,7 @@ void ImGui_ImplDX11_RenderDrawLists(ImDrawData* draw_data)
             else
             {
                 const D3D11_RECT r = { (LONG)pcmd->ClipRect.x, (LONG)pcmd->ClipRect.y, (LONG)pcmd->ClipRect.z, (LONG)pcmd->ClipRect.w };
-                ctx->PSSetShaderResources(0, 1, (ID3D11ShaderResourceView**)&pcmd->TextureId);
+				pcmd->TextureId->PSBind(0);
                 ctx->RSSetScissorRects(1, &r);
                 ctx->DrawIndexed(pcmd->ElemCount, idx_offset, vtx_offset);
             }
@@ -245,62 +248,36 @@ static void ImGui_ImplDX11_CreateFontsTexture()
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 
-    // Upload texture to graphics system
-    {
-        D3D11_TEXTURE2D_DESC desc;
-        ZeroMemory(&desc, sizeof(desc));
-        desc.Width = width;
-        desc.Height = height;
-        desc.MipLevels = 1;
-        desc.ArraySize = 1;
-        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        desc.SampleDesc.Count = 1;
-        desc.Usage = D3D11_USAGE_DEFAULT;
-        desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-        desc.CPUAccessFlags = 0;
+	Graphics::API::Texture_Desc TexDesc;
+	TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+	TexDesc.Type = Graphics::API::TextureType::Texture2D;
+	TexDesc.GenerateMipMaps = false;
 
-        ID3D11Texture2D *pTexture = NULL;
-        D3D11_SUBRESOURCE_DATA subResource;
-        subResource.pSysMem = pixels;
-        subResource.SysMemPitch = desc.Width * 4;
-        subResource.SysMemSlicePitch = 0;
-        g_pd3dDevice->CreateTexture2D(&desc, &subResource, &pTexture);
+	Graphics::API::Texture_Data TexData;
+	TexData.Width = width;
+	TexData.Height = height;
+	TexData.Img_Data_Buf = pixels;
 
-        // Create texture view
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        ZeroMemory(&srvDesc, sizeof(srvDesc));
-        srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels = desc.MipLevels;
-        srvDesc.Texture2D.MostDetailedMip = 0;
-        g_pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, &g_pFontTextureView);
-        pTexture->Release();
-    }
+	Graphics::API::Texture::Create(&g_pFontTexture, TexData, TexDesc);
+
+	//Create Sampler
+	Graphics::API::SamplerDesc Samplerdesc;
+	Samplerdesc.Filter = Graphics::API::TextureFilter::Linear2D;
+	Samplerdesc.WrapU = Graphics::API::TextureWrap::Repeat;
+	Samplerdesc.WrapV = Graphics::API::TextureWrap::Repeat;
+	Samplerdesc.WrapW = Graphics::API::TextureWrap::Repeat;
+
+	Graphics::API::Sampler::Create(&g_pFontSampler, Samplerdesc);
 
     // Store our identifier
-    io.Fonts->TexID = (void *)g_pFontTextureView;
-
-    // Create texture sampler
-    {
-        D3D11_SAMPLER_DESC desc;
-        ZeroMemory(&desc, sizeof(desc));
-        desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-        desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-        desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-        desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-        desc.MipLODBias = 0.f;
-        desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-        desc.MinLOD = 0.f;
-        desc.MaxLOD = 0.f;
-        g_pd3dDevice->CreateSamplerState(&desc, &g_pFontSampler);
-    }
+    io.Fonts->TexID = &g_pFontTexture;
 }
 
 bool    ImGui_ImplDX11_CreateDeviceObjects()
 {
     if (!g_pd3dDevice)
         return false;
-    if (g_pFontSampler)
+   // if (g_pFontSampler)
         ImGui_ImplDX11_InvalidateDeviceObjects();
 
     // By using D3DCompile() from <d3dcompiler.h> / d3dcompiler.lib, we introduce a dependency to a given version of d3dcompiler_XX.dll (see D3DCOMPILER_DLL_A)
@@ -441,9 +418,11 @@ void    ImGui_ImplDX11_InvalidateDeviceObjects()
 {
     if (!g_pd3dDevice)
         return;
+	Graphics::API::Sampler::Delete(&g_pFontSampler);
+	Graphics::API::Texture::Delete(&g_pFontTexture);
+	
 
-    if (g_pFontSampler) { g_pFontSampler->Release(); g_pFontSampler = NULL; }
-    if (g_pFontTextureView) { g_pFontTextureView->Release(); g_pFontTextureView = NULL; ImGui::GetIO().Fonts->TexID = NULL; } // We copied g_pFontTextureView to io.Fonts->TexID so let's clear that as well.
+	ImGui::GetIO().Fonts->TexID = NULL; // We copied g_pFontTextureView to io.Fonts->TexID so let's clear that as well.
     if (g_pIB) { g_pIB->Release(); g_pIB = NULL; }
     if (g_pVB) { g_pVB->Release(); g_pVB = NULL; }
 

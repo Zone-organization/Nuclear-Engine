@@ -269,7 +269,8 @@
     <ClInclude Include="Source\GUI\stb_rect_pack.h" />
     <ClInclude Include="Source\GUI\stb_textedit.h" />
     <ClInclude Include="Source\GUI\stb_truetype.h" />
-    <ClInclude Include="include\GUI\IMGUI.h" />
+    <ClInclude Include="include\GUI\CGUI.h" />
+    <ClInclude Include="include\GUI\ImGui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

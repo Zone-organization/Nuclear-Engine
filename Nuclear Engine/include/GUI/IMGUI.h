@@ -8,6 +8,7 @@
 
 #pragma once
 #include <NE_PrivateCommon.h>
+#include <Graphics\API\Texture.h>
 #if !defined(IMGUI_DISABLE_INCLUDE_IMCONFIG_H) || defined(IMGUI_INCLUDE_IMCONFIG_H)
 #include "imconfig.h"       // User-editable configuration file
 #endif
@@ -45,6 +46,7 @@
 #pragma clang diagnostic ignored "-Wold-style-cast"
 #endif
 
+
 // Forward declarations
 struct ImDrawChannel;               // Temporary storage for outputting drawing commands out of order, used by ImDrawList::ChannelsSplit()
 struct ImDrawCmd;                   // A single draw command within a parent ImDrawList (generally maps to 1 GPU draw call)
@@ -72,7 +74,7 @@ struct ImGuiContext;                // ImGui context (opaque)
 typedef unsigned int ImU32;         // 32-bit unsigned integer (typically used to store packed colors)
 typedef unsigned int ImGuiID;       // unique ID used by widgets (typically hashed from a stack of string)
 typedef unsigned short ImWchar;     // character for keyboard input/display
-typedef void* ImTextureID;          // user data to identify a texture (this is whatever to you want it to be! read the FAQ about ImTextureID in imgui.cpp)
+typedef NuclearEngine::Graphics::API::Texture* ImTextureID;          // user data to identify a texture (this is whatever to you want it to be! read the FAQ about ImTextureID in imgui.cpp)
 typedef int ImGuiCol;               // enum: a color identifier for styling     // enum ImGuiCol_
 typedef int ImGuiCond;              // enum: a condition for Set*()             // enum ImGuiCond_
 typedef int ImGuiKey;               // enum: a key identifier (ImGui-side enum) // enum ImGuiKey_

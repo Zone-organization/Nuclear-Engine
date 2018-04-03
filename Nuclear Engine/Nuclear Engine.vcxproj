@@ -379,6 +379,7 @@
     <ClInclude Include="include\Graphics\API\VertexShader.h" />
     <ClInclude Include="include\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Graphics\SpriteBatch.h" />
+    <ClInclude Include="include\GUI\CGUI.h" />
     <ClInclude Include="include\Math\common.hpp" />
     <ClInclude Include="include\Math\detail\compute_vector_relational.hpp" />
     <ClInclude Include="include\Math\detail\qualifier.hpp" />
@@ -529,7 +530,7 @@
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="include\GUI\imconfig.h" />
-    <ClInclude Include="include\GUI\IMGUI.h" />
+    <ClInclude Include="include\GUI\ImGui.h" />
     <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="include\Components\Sprite.h" />

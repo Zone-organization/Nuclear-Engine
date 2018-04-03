@@ -9,12 +9,16 @@
 // https://github.com/ocornut/imgui
 
 #include "imgui_impl_gl3.h"
-
+using namespace NuclearEngine;
 // GLAD/GLFW
 #include <GLAD\include\glad\glad.h>
-// Data
+#include <Graphics\API\Sampler.h>
+#include <Graphics\API\Texture.h>
 
-static GLuint       g_FontTexture = 0;
+// Data
+static Graphics::API::Sampler   g_pFontSampler;
+static Graphics::API::Texture   g_pFontTexture;
+
 static int          g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
 static int          g_AttribLocationTex = 0, g_AttribLocationProjMtx = 0;
 static int          g_AttribLocationPosition = 0, g_AttribLocationUV = 0, g_AttribLocationColor = 0;
@@ -100,7 +104,7 @@ void ImGui_ImplGL3_RenderDrawLists(ImDrawData* draw_data)
             }
             else
             {
-                glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
+				pcmd->TextureId->PSBind(0);
                 glScissor((int)pcmd->ClipRect.x, (int)(fb_height - pcmd->ClipRect.w), (int)(pcmd->ClipRect.z - pcmd->ClipRect.x), (int)(pcmd->ClipRect.w - pcmd->ClipRect.y));
                 glDrawElements(GL_TRIANGLES, (GLsizei)pcmd->ElemCount, sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, idx_buffer_offset);
             }
@@ -136,19 +140,29 @@ bool ImGui_ImplGL3_CreateFontsTexture()
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);   // Load as RGBA 32-bits (75% of the memory is wasted, but default font is so small) because it is more likely to be compatible with user's existing shaders. If your ImTextureId represent a higher-level concept than just a GL texture id, consider calling GetTexDataAsAlpha8() instead to save on GPU memory.
 
     // Upload texture to graphics system
-    GLint last_texture;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-    glGenTextures(1, &g_FontTexture);
-    glBindTexture(GL_TEXTURE_2D, g_FontTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	Graphics::API::Texture_Desc TexDesc;
+	TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+	TexDesc.Type = Graphics::API::TextureType::Texture2D;
+	TexDesc.GenerateMipMaps = false;
 
-    // Store our identifier
-    io.Fonts->TexID = (void *)(intptr_t)g_FontTexture;
+	Graphics::API::Texture_Data TexData;
+	TexData.Width = width;
+	TexData.Height = height;
+	TexData.Img_Data_Buf = pixels;
 
-    // Restore state
-    glBindTexture(GL_TEXTURE_2D, last_texture);
+	Graphics::API::Texture::Create(&g_pFontTexture, TexData, TexDesc);
+
+	//Create Sampler
+	Graphics::API::SamplerDesc Samplerdesc;
+	Samplerdesc.Filter = Graphics::API::TextureFilter::Linear2D;
+	Samplerdesc.WrapU = Graphics::API::TextureWrap::Repeat;
+	Samplerdesc.WrapV = Graphics::API::TextureWrap::Repeat;
+	Samplerdesc.WrapW = Graphics::API::TextureWrap::Repeat;
+
+	Graphics::API::Sampler::Create(&g_pFontSampler, Samplerdesc);
+
+	// Store our identifier
+	io.Fonts->TexID = &g_pFontTexture;
 
     return true;
 }
@@ -248,12 +262,11 @@ void    ImGui_ImplGL3_InvalidateDeviceObjects()
     if (g_ShaderHandle) glDeleteProgram(g_ShaderHandle);
     g_ShaderHandle = 0;
 
-    if (g_FontTexture)
-    {
-        glDeleteTextures(1, &g_FontTexture);
-        ImGui::GetIO().Fonts->TexID = 0;
-        g_FontTexture = 0;
-    }
+	Graphics::API::Sampler::Delete(&g_pFontSampler);
+	Graphics::API::Texture::Delete(&g_pFontTexture);
+
+    ImGui::GetIO().Fonts->TexID = 0;
+ 
 }
 
 bool    ImGui_ImplGL3_Init()
@@ -273,8 +286,5 @@ void ImGui_ImplGL3_Shutdown()
 
 void ImGui_ImplGL3_NewFrame()
 {
-    if (!g_FontTexture)
-        ImGui_ImplGL3_CreateDeviceObjects();
 
- 
 }
