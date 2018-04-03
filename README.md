@@ -57,7 +57,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
     - Support for PostProcessing Effects:
 	  - Gamma Correction
 	  - HDR 'Reinhard tone mapping'
-    - Support for IMGUI.
+    - Support for Dear ImGui.
   
 ## Current Platforms
   - Windows 7+     
@@ -71,7 +71,9 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 	- SpriteRenderer
   - Implement Retained-Mode GUI.
   - Implement multithread AssetManager.
-  - Implement WYSIWYG Editor.
+  - Implement WYSIWYG Editor.
+  - Implement Class based GUI from ImGui.
+
 ## Road-map
   - Support Android & Linux & UWP Platforms.
   - Support an Uber Shader instead of GLSL , HLSL.

@@ -82,7 +82,8 @@ void ImGui_ImplGL3_RenderDrawLists(ImDrawData* draw_data)
     glUniform1i(g_AttribLocationTex, 0);
     glUniformMatrix4fv(g_AttribLocationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
     glBindVertexArray(g_VaoHandle);
-    glBindSampler(0, 0); // Rely on combined texture/sampler state.
+    //glBindSampler(0, 0); // Rely on combined texture/sampler state.
+	g_pFontSampler.PSBind(0);
 
     for (int n = 0; n < draw_data->CmdListsCount; n++)
     {

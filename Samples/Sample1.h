@@ -369,7 +369,7 @@ public:
 		ImGui::Checkbox("Render Lamps Spheres", &renderspheres);
 		ImGui::Checkbox("Render Nanosuit", &rendernanosuit);
 		ImGui::Checkbox("Render Skybox", &renderskybox);
-
+		ImGui::Image(&DiffuseTex,ImVec2(100.0f,100.0f));
 		ShowOverlay(true);
 
 		ImGui::Render();
