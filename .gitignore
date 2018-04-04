@@ -25,3 +25,5 @@
 /Bin/DebugX86
 /Samples/Assets/Common/Sounds/Faded.mp3
 /Samples/Assets/Common/Sounds
+*.user
+*.filters

@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Samples", "Samples\Samples.
 		{1E657253-3D76-4C77-A747-4D85EEFA91DA} = {1E657253-3D76-4C77-A747-4D85EEFA91DA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclear Studio", "Nuclear Studio\Nuclear Studio.vcxproj", "{458563CA-D4E2-4559-A73E-E8C519045439}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +36,14 @@ Global
 		{2C26B9B9-5974-4E9E-BA97-7107056F82AC}.Release|x64.Build.0 = Release|x64
 		{2C26B9B9-5974-4E9E-BA97-7107056F82AC}.Release|x86.ActiveCfg = Release|Win32
 		{2C26B9B9-5974-4E9E-BA97-7107056F82AC}.Release|x86.Build.0 = Release|Win32
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Debug|x64.ActiveCfg = Debug|x64
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Debug|x64.Build.0 = Debug|x64
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Debug|x86.ActiveCfg = Debug|Win32
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Debug|x86.Build.0 = Debug|Win32
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Release|x64.ActiveCfg = Release|x64
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Release|x64.Build.0 = Release|x64
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Release|x86.ActiveCfg = Release|Win32
+		{458563CA-D4E2-4559-A73E-E8C519045439}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
