@@ -271,6 +271,7 @@
     <ClInclude Include="include\GUI\CGUI.h" />
     <ClInclude Include="include\GUI\ImGui.h" />
     <ClInclude Include="include\Core\Editor.h" />
+    <ClInclude Include="include\Core\Parsers\XMLParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -357,6 +358,7 @@
     <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Systems\SpriteRenderSystem.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
+    <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />
