@@ -81,11 +81,11 @@ namespace NuclearEngine {
 			GamePtr = _YourGame;
 			Log.Info("[Engine] Running Game.\n");
 
-			if (GamePtr->GetInfo() != nullptr)
+			if (GamePtr->GetGameInfo() != nullptr)
 			{
-				Log.Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetInfo()->Name) + "\n"));
-				Log.Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetInfo()->Version) + "\n"));
-				Log.Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetInfo()->Developer) + "\n"));
+				Log.Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetGameInfo()->Name) + "\n"));
+				Log.Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetGameInfo()->Version) + "\n"));
+				Log.Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetGameInfo()->Developer) + "\n"));
 			}
 
 			SetState(Engine::State::Initializing);

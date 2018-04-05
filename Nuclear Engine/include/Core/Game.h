@@ -18,7 +18,7 @@ namespace NuclearEngine {
 			Game(GameInfo *yourinfo);
 			~Game();
 
-			GameInfo *GetInfo();
+			GameInfo *GetGameInfo();
 
 			// Arranged function.
 			virtual void Initialize();	 // At Startup

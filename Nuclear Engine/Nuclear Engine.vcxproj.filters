@@ -270,6 +270,7 @@
     <ClInclude Include="Source\GUI\stb_truetype.h" />
     <ClInclude Include="include\GUI\CGUI.h" />
     <ClInclude Include="include\GUI\ImGui.h" />
+    <ClInclude Include="include\Core\Editor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -355,6 +356,7 @@
     <ClCompile Include="Source\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Systems\SpriteRenderSystem.cpp" />
+    <ClCompile Include="Source\Core\Editor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

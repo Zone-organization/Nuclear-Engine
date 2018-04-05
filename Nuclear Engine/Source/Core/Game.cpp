@@ -14,7 +14,7 @@ namespace NuclearEngine {
 		Game::~Game()
 		{
 		}
-		GameInfo * Game::GetInfo()
+		GameInfo * Game::GetGameInfo()
 		{
 			return gameinfo;
 		}

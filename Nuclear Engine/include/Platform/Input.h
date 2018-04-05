@@ -122,7 +122,7 @@ namespace NuclearEngine {
 
 				static Key keys[NUCLEAR_PLATFORM_MAX_KEYBOARD_KEYS];
 
-				static bool Keyboard::IsKeyPressed(Key::Code key);
+				static bool IsKeyPressed(Key::Code key);
 			};
 		}
 	}

@@ -14,6 +14,7 @@ _____________/BOOOM\_____________
 //# Core Engine Headers
 #include <Core/Engine.h>
 #include <Core/Game.h>
+#include <Core/Editor.h>
 #include <Core/FileSystem.h>
 //--Entity Component System Headers
 #include <Core/Scene.h>

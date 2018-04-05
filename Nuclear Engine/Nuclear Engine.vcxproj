@@ -336,6 +336,7 @@
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Audio\Channel.h" />
     <ClInclude Include="include\Audio\Sound.h" />
+    <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Graphics\API\Buffer_Types.h" />
     <ClInclude Include="include\Graphics\Color.h" />
@@ -606,6 +607,7 @@
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Audio\Channel.cpp" />
     <ClCompile Include="Source\Audio\Sound.cpp" />
+    <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Graphics\API\BlendState.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />
     <ClCompile Include="Source\Graphics\API\DepthStencilState.cpp" />
