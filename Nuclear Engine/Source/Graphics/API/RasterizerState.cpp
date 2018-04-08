@@ -1,5 +1,4 @@
 #include <Graphics/API/RasterizerState.h>
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 
 namespace NuclearEngine {
@@ -14,41 +13,18 @@ namespace NuclearEngine {
 			{
 
 			}
-			void RasterizerState::Create(RasterizerState* result, const RasterizerStateDesc& type)
+			void RasterizerState::Create(RasterizerState* obj, const RasterizerStateDesc& Desc)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLRasterizerState::Create(&result->GLObject, type);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11RasterizerState::Create(&result->DXObject, type);
-				}
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create, Desc)
 			}
-			void RasterizerState::Delete(RasterizerState * state)
+			void RasterizerState::Delete(RasterizerState * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLRasterizerState::Delete(&state->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11RasterizerState::Delete(&state->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 			void RasterizerState::Bind()
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Bind();
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Bind();
-				}
+				BASE_API_FUNC_CALL(Bind)
 			}
 		}
 	}
 }
-
-#endif

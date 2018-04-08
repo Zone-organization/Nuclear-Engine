@@ -1,5 +1,4 @@
 #include <Graphics/API/VertexShader.h>
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 #include <Graphics/API/ConstantBuffer.h>
 namespace NuclearEngine {
@@ -16,54 +15,25 @@ namespace NuclearEngine {
 
 			}
 
-			void VertexShader::Create(VertexShader* result, BinaryShaderBlob* Desc)
+			void VertexShader::Create(VertexShader* obj, BinaryShaderBlob* Desc)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLVertexShader::Create(&result->GLObject, Desc);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11VertexShader::Create(&result->DXObject, Desc);
-				}
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create, Desc)
 			}
 
-			void VertexShader::Delete(VertexShader * result)
+			void VertexShader::Delete(VertexShader * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLVertexShader::Delete(&result->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11VertexShader::Delete(&result->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 
 			void VertexShader::SetConstantBuffer(ConstantBuffer * cbuffer)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.SetConstantBuffer(&cbuffer->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.SetConstantBuffer(&cbuffer->DXObject);
-				}
+				SPECIAL_BASE_API_FUNC_CALL(SetConstantBuffer, cbuffer)
 			}
 
 			void VertexShader::Bind()
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Bind();
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Bind();
-				}
+				BASE_API_FUNC_CALL(Bind)
 			}
 		}
 	}
 }
-#endif

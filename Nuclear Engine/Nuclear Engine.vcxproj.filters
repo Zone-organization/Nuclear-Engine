@@ -272,6 +272,7 @@
     <ClInclude Include="include\GUI\ImGui.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
+    <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

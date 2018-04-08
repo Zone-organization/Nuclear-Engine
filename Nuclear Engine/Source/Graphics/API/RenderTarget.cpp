@@ -1,5 +1,4 @@
 #include <Graphics/API/RenderTarget.h>
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 #include <Graphics/API/Texture.h>
 namespace NuclearEngine {
@@ -16,64 +15,29 @@ namespace NuclearEngine {
 
 			}
 
-			void RenderTarget::Create(RenderTarget* result)
+			void RenderTarget::Create(RenderTarget* obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLRenderTarget::Create(&result->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11RenderTarget::Create(&result->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Create)
 			}
 
-			void RenderTarget::Delete(RenderTarget * result)
+			void RenderTarget::Delete(RenderTarget * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLRenderTarget::Delete(&result->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11RenderTarget::Delete(&result->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 
 			void RenderTarget::AttachDepthStencilBuffer(const Math::Vector2ui & size)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.AttachDepthStencilBuffer(size);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.AttachDepthStencilBuffer(size);
-				}
+				BASE_API_FUNC_CALL_ARGS(AttachDepthStencilBuffer,size)
 			}
 
 			void RenderTarget::AttachTexture(Texture * texture)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.AttachTexture(&texture->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.AttachTexture(&texture->DXObject);
-				}
+				SPECIAL_BASE_API_FUNC_CALL(AttachTexture, texture)
 			}
 
 			void RenderTarget::Bind()
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Bind();
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Bind();
-				}
+				BASE_API_FUNC_CALL(Bind)
 			}
 			void RenderTarget::Bind_Default()
 			{
@@ -89,4 +53,3 @@ namespace NuclearEngine {
 		}
 	}
 }
-#endif

@@ -1,5 +1,4 @@
 #include <Graphics/API/VertexBuffer.h>
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 #include <Graphics/API/InputLayout.h>
 #include <Graphics/API/VertexShader.h>
@@ -15,40 +14,19 @@ namespace NuclearEngine {
 			{
 			}
 
-			void VertexBuffer::Create(VertexBuffer * buffer, const VertexBufferDesc& desc)
+			void VertexBuffer::Create(VertexBuffer * obj, const VertexBufferDesc& desc)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLVertexBuffer::Create(&buffer->GLObject, desc);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11VertexBuffer::Create(&buffer->DXObject, desc);
-				}
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create, desc)
 			}
 
-			void VertexBuffer::Delete(VertexBuffer * buffer)
+			void VertexBuffer::Delete(VertexBuffer * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLVertexBuffer::Delete(&buffer->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11VertexBuffer::Delete(&buffer->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 
 			void VertexBuffer::Update(const void * data, unsigned int size)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Update(data, size);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Update(data, size);
-				}
+				BASE_API_FUNC_CALL_ARGS(Update, data, size)
 			}
 
 			void VertexBuffer::SetInputLayout(InputLayout * layout, VertexShader * shader)
@@ -65,16 +43,8 @@ namespace NuclearEngine {
 
 			void VertexBuffer::Bind()
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Bind();
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Bind();
-				}
+				BASE_API_FUNC_CALL(Bind)
 			}
 		}
 	}
 }
-#endif

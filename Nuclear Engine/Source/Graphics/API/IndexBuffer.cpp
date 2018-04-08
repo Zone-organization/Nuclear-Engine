@@ -1,11 +1,10 @@
 #include <Graphics/API/IndexBuffer.h>
-
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 
 namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
+			
 			IndexBuffer::IndexBuffer()
 			{
 			}
@@ -15,43 +14,20 @@ namespace NuclearEngine {
 
 			}
 
-			void IndexBuffer::Create(IndexBuffer* result, void * indices, unsigned int count)
+			void IndexBuffer::Create(IndexBuffer* obj, void * indices, unsigned int count)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLIndexBuffer::Create(&result->GLObject, indices, count);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11IndexBuffer::Create(&result->DXObject, indices, count);
-				}
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create, indices, count)
 			}
 
-			void IndexBuffer::Delete(IndexBuffer * buffer)
+			void IndexBuffer::Delete(IndexBuffer * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLIndexBuffer::Delete(&buffer->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11IndexBuffer::Delete(&buffer->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 
 			void IndexBuffer::Bind()
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Bind();
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Bind();
-				}
+				BASE_API_FUNC_CALL(Bind)
 			}
 		}
 	}
 }
-
-#endif

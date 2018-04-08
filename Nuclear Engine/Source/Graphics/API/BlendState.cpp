@@ -1,5 +1,4 @@
 #include <Graphics/API/BlendState.h>
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 
 namespace NuclearEngine {
@@ -13,42 +12,19 @@ namespace NuclearEngine {
 			{
 
 			}
-			void BlendState::Create(BlendState* result, const BlendStateDesc& type)
+			void BlendState::Create(BlendState* obj, const BlendStateDesc& type)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLBlendState::Create(&result->GLObject, type);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11BlendState::Create(&result->DXObject, type);
-				}
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create,type)
 			}
-			void BlendState::Delete(BlendState * state)
+			void BlendState::Delete(BlendState * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLBlendState::Delete(&state->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11BlendState::Delete(&state->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 			void BlendState::Bind(Graphics::Color blendfactor, unsigned int samplemask)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Bind(blendfactor, samplemask);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Bind(blendfactor, samplemask);
-				}
+				BASE_API_FUNC_CALL_ARGS(Bind, blendfactor, samplemask)
 			}
 
 		}
 	}
 }
-
-#endif

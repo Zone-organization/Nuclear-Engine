@@ -1,7 +1,5 @@
 #pragma once
-#include <NE_Common.h>
-
-#ifdef NE_USE_RUNTIME_RENDER_API
+#include <Graphics/API/GraphicsAPICommon.h>
 #include <Graphics/API/OpenGL\GLRenderTarget.h>
 #include <Graphics/API/DirectX\DX11RenderTarget.h>
 
@@ -13,7 +11,7 @@ namespace NuclearEngine
 		namespace API
 		{
 			class Texture;
-			class NEAPI RenderTarget
+			class NEAPI RenderTarget : public CBaseAPI<OpenGL::GLRenderTarget, DirectX::DX11RenderTarget>
 			{
 			public:
 				RenderTarget();
@@ -27,40 +25,10 @@ namespace NuclearEngine
 				void AttachTexture(Texture* texture);
 
 				void Bind();
+
+				//TODO: MOVE!! TOO UGLY
 				static void Bind_Default();
-			private:
-				OpenGL::GLRenderTarget GLObject;
-				DirectX::DX11RenderTarget DXObject;
 			};
 		}
 	}
 }
-#else
-#ifdef NE_USE_CORE_OPENGL
-#include <Graphics/API/OpenGL\GLRenderTarget.h>
-namespace NuclearEngine
-{
-	namespace Graphics
-	{
-		namespace API
-		{
-			typedef OpenGL::GLRenderTarget RenderTarget;
-		}
-	}
-}
-#endif
-#ifdef NE_USE_DIRECTX11
-#include <Graphics/API/DirectX\DX11RenderTarget.h>
-namespace NuclearEngine
-{
-	namespace Graphics
-	{
-
-		namespace API
-		{
-			typedef DirectX::DX11RenderTarget RenderTarget;
-		}
-	}
-}
-#endif
-#endif

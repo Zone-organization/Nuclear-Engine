@@ -1,5 +1,4 @@
 #include <Graphics/API/ConstantBuffer.h>
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 
 namespace NuclearEngine {
@@ -14,41 +13,18 @@ namespace NuclearEngine {
 			{
 
 			}
-			void ConstantBuffer::Create(ConstantBuffer* result, const char * _nameinshaders, unsigned int size)
+			void ConstantBuffer::Create(ConstantBuffer* obj, const char * name, unsigned int size)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLConstantBuffer::Create(&result->GLObject, _nameinshaders, size);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11ConstantBuffer::Create(&result->DXObject, _nameinshaders, size);
-				}
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create, name,size)
 			}
-			void ConstantBuffer::Delete(ConstantBuffer * buffer)
+			void ConstantBuffer::Delete(ConstantBuffer * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLConstantBuffer::Delete(&buffer->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11ConstantBuffer::Delete(&buffer->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 			void ConstantBuffer::Update(const void* data, unsigned int size)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.Update(data, size);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.Update(data, size);
-				}
-
+				BASE_API_FUNC_CALL_ARGS(Update, data, size)
 			}
 		}
 	}
 }
-#endif

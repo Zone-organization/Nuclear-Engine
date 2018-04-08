@@ -1,5 +1,4 @@
 #include <Graphics/API/Sampler.h>
-#ifdef NE_USE_RUNTIME_RENDER_API
 #include <Graphics\API\Context.h>
 
 namespace NuclearEngine {
@@ -12,64 +11,31 @@ namespace NuclearEngine {
 			Sampler::~Sampler()
 			{
 			}
-			void Sampler::Create(Sampler *result, const SamplerDesc& Desc)
+			void Sampler::Create(Sampler *obj, const SamplerDesc& Desc)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLSampler::Create(&result->GLObject, Desc);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11Sampler::Create(&result->DXObject, Desc);
-				}
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create, Desc)
+
 			}
 
-			void Sampler::Delete(Sampler * result)
+			void Sampler::Delete(Sampler * obj)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLSampler::Delete(&result->GLObject);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11Sampler::Delete(&result->DXObject);
-				}
+				STATIC_BASE_API_FUNC_CALL(Delete)
+
 			}
 			void Sampler::VSBind(unsigned int index)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.VSBind(index);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.VSBind(index);
-				}
+				BASE_API_FUNC_CALL_ARGS(VSBind, index)
 			}
 
 			void Sampler::PSBind(unsigned int index)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.PSBind(index);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.PSBind(index);
-				}
+				BASE_API_FUNC_CALL_ARGS(PSBind, index)
+
 			}
 			void Sampler::GSBind(unsigned int index)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					GLObject.GSBind(index);
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DXObject.GSBind(index);
-				}
+				BASE_API_FUNC_CALL_ARGS(GSBind, index)
 			}
 		}
 	}
 }
-#endif

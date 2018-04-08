@@ -338,6 +338,7 @@
     <ClInclude Include="include\Audio\Sound.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
+    <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
     <ClInclude Include="include\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Graphics\API\Buffer_Types.h" />
     <ClInclude Include="include\Graphics\Color.h" />
