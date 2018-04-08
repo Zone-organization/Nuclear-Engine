@@ -32,6 +32,7 @@ namespace NuclearEngine
 			{
 				//sceneDesc.filterShader = gDefaultFilterShader;
 			}
+
 			scene->scene = Physics3DEngine::GetContext()->createScene(sceneDesc);
 			if (!scene->scene)
 			{
@@ -44,7 +45,12 @@ namespace NuclearEngine
 		}
 		void PhysicsScene::Delete(PhysicsScene* scene)
 		{
+			scene->scene->release();
+		}
 
+		void PhysicsScene::Update(float dt)
+		{
+			scene->simulate(dt);
 		}
 
 		physx::PxScene * PhysicsScene::GetBase()

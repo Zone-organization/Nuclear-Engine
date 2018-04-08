@@ -273,6 +273,8 @@
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
+    <ClInclude Include="include\Physics3D\PhysicsMaterial.h" />
+    <ClInclude Include="include\Physics3D\PhysicsActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -360,6 +362,7 @@
     <ClCompile Include="Source\Systems\SpriteRenderSystem.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
+    <ClCompile Include="Source\Physics3D\PhysicsMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

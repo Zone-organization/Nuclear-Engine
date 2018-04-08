@@ -19,6 +19,8 @@ namespace NuclearEngine
 			static bool Create(PhysicsScene* scene,const PhysicsSceneDesc& desc);
 			static void Delete(PhysicsScene* scene);
 
+			void Update(float dt);
+
 			physx::PxScene* GetBase();
 		private:
 			physx::PxScene* scene;

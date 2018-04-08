@@ -514,6 +514,7 @@
     <ClInclude Include="include\Math\matrix.hpp" />
     <ClInclude Include="include\Math\NETypes.h" />
     <ClInclude Include="include\Math\packing.hpp" />
+    <ClInclude Include="include\Physics3D\PhysicsActor.h" />
     <ClInclude Include="include\Math\simd\common.h" />
     <ClInclude Include="include\Math\simd\exponential.h" />
     <ClInclude Include="include\Math\simd\geometric.h" />
@@ -528,6 +529,7 @@
     <ClInclude Include="include\Math\vec3.hpp" />
     <ClInclude Include="include\Math\vec4.hpp" />
     <ClInclude Include="include\Math\vector_relational.hpp" />
+    <ClInclude Include="include\Physics3D\PhysicsMaterial.h" />
     <ClInclude Include="include\Physics3D\PhysicsScene.h" />
     <ClInclude Include="include\Physics3D\Physics3DEngine.h" />
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
@@ -655,6 +657,7 @@
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Source\Physics3D\PhysicsMaterial.cpp" />
     <ClCompile Include="Source\Physics3D\PhysicsScene.cpp" />
     <ClCompile Include="Source\Physics3D\Physics3DEngine.cpp" />
     <ClCompile Include="Source\Systems\RenderSystem.cpp" />
