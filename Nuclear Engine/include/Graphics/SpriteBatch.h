@@ -4,10 +4,11 @@
 #include <NE_Common.h>
 #include <Graphics/API\RenderAPI.h>
 #include <Components\Sprite.h>
+#include <Graphics\API\Texture.h>
+
 namespace NuclearEngine {
 	namespace Graphics {
-		class Sprite;
-		class Texture;
+
 		struct SpriteVertexData {
 			Math::Vector3 vertex;
 			Math::Vector2 uv;
@@ -24,7 +25,7 @@ namespace NuclearEngine {
 			
 			void Initialize();
 			void Begin();
-			void Submit(const Sprite &sprite);
+			void Submit(const Components::Sprite &sprite);
 			void End();
 			void Draw();
 
@@ -35,7 +36,7 @@ namespace NuclearEngine {
 			std::vector<Math::Matrix4> TransformationStack;
 			Math::Matrix4* TransformationBack;
 			uint IndexCount;
-			std::vector<Texture *> Textures;
+			std::vector<Graphics::API::Texture*> Textures;
 			bool TexturesBinded;
 		};
 	}
