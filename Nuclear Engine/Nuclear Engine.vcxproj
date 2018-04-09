@@ -336,6 +336,7 @@
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Audio\Channel.h" />
     <ClInclude Include="include\Audio\Sound.h" />
+    <ClInclude Include="include\Components\Renderable2D.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
@@ -611,6 +612,7 @@
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Audio\Channel.cpp" />
     <ClCompile Include="Source\Audio\Sound.cpp" />
+    <ClCompile Include="Source\Components\Renderable2D.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
     <ClCompile Include="Source\Graphics\API\BlendState.cpp" />

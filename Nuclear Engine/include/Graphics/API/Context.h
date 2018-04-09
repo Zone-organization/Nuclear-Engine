@@ -3,9 +3,9 @@
 #include <Graphics/Color.h>
 #include <Core\Application.h>
 
-#define	ClearColorBuffer 1
-#define	ClearDepthBuffer 2
-#define	ClearStencilBuffer 4
+#define	ClearColorBuffer 0b00000001
+#define	ClearDepthBuffer 0b00000010
+#define	ClearStencilBuffer 0b00000100
 
 namespace NuclearEngine
 {

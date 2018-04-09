@@ -15,6 +15,8 @@ namespace NuclearEngine {
 			}
 			void Texture::Create(Texture *obj, const Texture_Data& TexData, const Texture_Desc& Desc)
 			{
+				obj->Dimensions.x = TexData.Width;
+				obj->Dimensions.y = TexData.Height;
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
 			}
 
@@ -27,6 +29,21 @@ namespace NuclearEngine {
 			{
 				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
+
+			Math::Vector2ui Texture::GetDimensions()
+			{
+				return Dimensions;
+			}
+
+			unsigned int Texture::GetWidth()
+			{
+				return Dimensions.x;
+			}
+			unsigned int Texture::GetHeight()
+			{
+				return Dimensions.y;
+			}
+
 			void Texture::VSBind(unsigned int index)
 			{
 				BASE_API_FUNC_CALL_ARGS(VSBind, index)		
