@@ -28,7 +28,8 @@ namespace NuclearEngine
 					void SetInputLayout(InputLayout * layout, GLVertexShader *shader);
 
 					void Bind();
-
+					void* Map();
+					void Unmap();
 				private:
 					GLuint VAO;
 					GLuint VBO;

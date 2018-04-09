@@ -12,7 +12,7 @@ namespace NuclearEngine
 			class VertexShader;
 			class PixelShader;
 			class RenderTarget;
-			class NEAPI Texture : public CBaseAPI<OpenGL::GLTexture, DirectX::DX11Texture>
+			class NEAPI Texture //<OpenGL::GLTexture, DirectX::DX11Texture>
 			{
 				friend class RenderTarget;
 			public:
@@ -32,6 +32,7 @@ namespace NuclearEngine
 				void GSBind(unsigned int slot);
 				void PSBind(unsigned int slot);
 
+				BASE_API(Texture)
 			private:
 				Math::Vector2ui Dimensions;
 			};

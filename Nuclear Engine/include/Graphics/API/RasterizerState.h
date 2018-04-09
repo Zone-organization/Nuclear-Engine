@@ -7,7 +7,7 @@ namespace NuclearEngine {
 	namespace Graphics
 	{
 		namespace API {
-			class NEAPI RasterizerState : public CBaseAPI<OpenGL::GLRasterizerState, DirectX::DX11RasterizerState>
+			class NEAPI RasterizerState //<OpenGL::GLRasterizerState, DirectX::DX11RasterizerState>
 			{
 			public:
 				RasterizerState();
@@ -17,6 +17,8 @@ namespace NuclearEngine {
 				static void Delete(RasterizerState* state);
 
 				void Bind();
+				BASE_API(RasterizerState)
+
 			};
 		}
 	}

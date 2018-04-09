@@ -11,7 +11,7 @@ namespace NuclearEngine
 		namespace API
 		{
 			class Texture;
-			class NEAPI RenderTarget : public CBaseAPI<OpenGL::GLRenderTarget, DirectX::DX11RenderTarget>
+			class NEAPI RenderTarget //<OpenGL::GLRenderTarget, DirectX::DX11RenderTarget>
 			{
 			public:
 				RenderTarget();
@@ -28,6 +28,8 @@ namespace NuclearEngine
 
 				//TODO: MOVE!! TOO UGLY
 				static void Bind_Default();
+
+				BASE_API(RenderTarget)
 			};
 		}
 	}

@@ -10,7 +10,7 @@ namespace NuclearEngine {
 			class InputLayout;
 			class VertexShader;
 			struct VertexBufferDesc;
-			class NEAPI VertexBuffer : public CBaseAPI<OpenGL::GLVertexBuffer, DirectX::DX11VertexBuffer>
+			class NEAPI VertexBuffer //<OpenGL::GLVertexBuffer, DirectX::DX11VertexBuffer>
 			{
 			public:
 				VertexBuffer();
@@ -19,11 +19,13 @@ namespace NuclearEngine {
 				static void Create(VertexBuffer* buffer, const VertexBufferDesc& desc);
 				static void Delete(VertexBuffer* buffer);
 
-				void Update(const void* data, unsigned int size);
-
 				void SetInputLayout(InputLayout* layout, VertexShader* shader);
-
+				void Update(const void* data, unsigned int size);
 				void Bind();
+				void* Map();
+				void Unmap();
+
+				BASE_API(VertexBuffer)
 			};
 		}
 	}

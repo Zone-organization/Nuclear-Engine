@@ -1,24 +1,55 @@
 #pragma once
-#include <NE_Common.h>
-#include <Graphics/API/Texture.h>
-#include <Graphics/Color.h>
-#include <Math\Math.h>
-namespace NuclearEngine 
-{
-	namespace Components 
-	{
-		class NEAPI Sprite
-		{
-		public:
-			Sprite(Graphics::API::Texture *texture, Math::Vector2 position = Math::Vector2(1.0f, 1.0f), Math::Vector2 size = Math::Vector2(1.0f,1.0f), Graphics::Color color = Graphics::Color(1.0f, 1.0f, 1.0f, 1.0f), Math::Vector2 velocity = Math::Vector2(0.0f, 0.0f));
 
-			Graphics::API::Texture *Texture;
-			Math::Vector2 Position, Size, Velocity;
-			Graphics::Color Color;
-			float  Rotation;
-			bool   IsSolid;
-			bool   Destroyed;
+#include <Components\Renderable2D.h>
+#include <Graphics\SpriteSheet.h>
+#include <Graphics\Animator2D.h>
+#include <Graphics/API/Texture.h>
+#include <Math\Math.h>
+
+namespace NuclearEngine
+{
+	namespace Components
+	{
+
+		struct VertexData {
+			Math::Vector3 vertex;
+			Math::Vector2 uv;
+			float tid;
+			unsigned int color;
 		};
 
+		class Sprite : public Renderable2D {
+		public:
+			Graphics::Animator2D Animations;
+
+			Sprite(int x, int y, Graphics::API::Texture *texture, const std::vector<uint> &frames);
+			Sprite(int x, int y, Graphics::API::Texture *texture, uint frame = 0);
+			Sprite(int x, int y, int w, int h, Graphics::API::Texture *texture,
+				uint frame = 0);
+			~Sprite();
+
+			void Update();
+
+			// Getters
+			inline unsigned int GetColor() const { return Color; }
+			inline uint GetCurrentFrame() const { return Frame; }
+			inline Graphics::SpriteSheet GetSpriteSheet() const { return *Sprites; }
+			inline Math::Vector2 GetFrameCoords() const { return Sprites->GetUV(this->Frame); }
+
+			// Setters
+			void SetFrame(uint frame);
+			void SetDirectFrame(uint frame);
+			void SetColorRGB(int r, int g, int b);
+			void SetColorRGBA(unsigned int r, unsigned int g, unsigned int b, unsigned int a);
+			void SetAlpha(int a);
+			void Flip() { this->SetScale(Math::Vector2(-1.f, 0.f)); }
+
+		private:
+			//glm::vec4 Color;
+			unsigned int Color;
+			std::vector<uint> Frames;
+			uint Frame = 0, NumberOfFrames;
+			Graphics::SpriteSheet *Sprites;
+		};
 	}
 }

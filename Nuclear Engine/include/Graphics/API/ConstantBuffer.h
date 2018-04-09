@@ -9,7 +9,7 @@ namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
 
-			class NEAPI ConstantBuffer : public CBaseAPI<OpenGL::GLConstantBuffer, DirectX::DX11ConstantBuffer>
+			class NEAPI ConstantBuffer //<OpenGL::GLConstantBuffer, DirectX::DX11ConstantBuffer>
 			{
 				friend class VertexShader;
 				friend class PixelShader;
@@ -20,6 +20,8 @@ namespace NuclearEngine {
 				static void Delete(ConstantBuffer* buffer);
 
 				void Update(const void* data, unsigned int size);
+				BASE_API(ConstantBuffer)
+
 			};
 		}
 	}

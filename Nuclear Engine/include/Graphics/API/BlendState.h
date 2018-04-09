@@ -6,7 +6,7 @@
 namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
-			class NEAPI BlendState : public CBaseAPI<OpenGL::GLBlendState, DirectX::DX11BlendState>
+			class NEAPI BlendState //<OpenGL::GLBlendState, DirectX::DX11BlendState>
 			{
 			public:
 				BlendState();
@@ -16,6 +16,8 @@ namespace NuclearEngine {
 				static void Delete(BlendState* state);
 
 				void Bind(Graphics::Color blendfactor = Graphics::Color(0.0f), unsigned int samplemask = 0xffffffff);
+				BASE_API(BlendState)
+
 			};
 		}
 	}

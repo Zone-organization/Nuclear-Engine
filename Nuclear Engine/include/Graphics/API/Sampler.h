@@ -7,7 +7,7 @@ namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
 
-			class NEAPI Sampler : public CBaseAPI<OpenGL::GLSampler, DirectX::DX11Sampler>
+			class NEAPI Sampler //<OpenGL::GLSampler, DirectX::DX11Sampler>
 			{
 			public:
 				Sampler();
@@ -20,6 +20,8 @@ namespace NuclearEngine {
 				void VSBind(unsigned int slot);
 				void GSBind(unsigned int slot);
 				void PSBind(unsigned int slot);
+
+				BASE_API(Sampler)
 			};
 		}
 	}

@@ -103,6 +103,18 @@ namespace NuclearEngine
 					GLCall(glBindVertexArray(VAO));
 				}
 
+				void * GLVertexBuffer::Map()
+				{
+					GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+					GLCall(return glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+				}
+
+				void GLVertexBuffer::Unmap()
+				{
+					GLCall(glUnmapBuffer(GL_ARRAY_BUFFER));
+					GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+				}
+
 				GLenum GetGLDataType(DataType dataType)
 				{
 

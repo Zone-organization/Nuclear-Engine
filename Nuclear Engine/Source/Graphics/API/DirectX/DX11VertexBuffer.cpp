@@ -85,6 +85,18 @@ namespace NuclearEngine
 					DX11Context::GetContext()->IASetInputLayout(inputLayout);
 					DX11Context::GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
 				}
+				void * DX11VertexBuffer::Map()
+				{
+					D3D11_MAPPED_SUBRESOURCE mappedSubResource;
+					ZeroMemory(&mappedSubResource, sizeof(mappedSubResource));
+
+					DX11Context::GetContext()->Map(VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
+					return mappedSubResource.pData;
+				}
+				void DX11VertexBuffer::Unmap()
+				{
+					DX11Context::GetContext()->Unmap(VertexBuffer, 0);
+				}
 				DXGI_FORMAT GetDXDataType(DataType dataType)
 				{
 					switch (dataType)

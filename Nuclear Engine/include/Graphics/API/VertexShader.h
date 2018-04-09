@@ -7,7 +7,7 @@ namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
 			class ConstantBuffer;
-			class NEAPI VertexShader : public CBaseAPI<OpenGL::GLVertexShader, DirectX::DX11VertexShader>
+			class NEAPI VertexShader //<OpenGL::GLVertexShader, DirectX::DX11VertexShader>
 			{
 				friend class Texture;
 				friend class VertexBuffer;
@@ -20,6 +20,8 @@ namespace NuclearEngine {
 
 				void SetConstantBuffer(ConstantBuffer* cbuffer);
 				void Bind();
+				BASE_API(VertexShader)
+
 			};
 		}
 	}

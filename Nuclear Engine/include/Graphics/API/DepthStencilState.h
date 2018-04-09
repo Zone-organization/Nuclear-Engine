@@ -3,11 +3,13 @@
 #include <Graphics/API/OpenGL\GLDepthStencilState.h>
 #include <Graphics/API/DirectX\DX11DepthStencilState.h>
 
-namespace NuclearEngine {
+namespace NuclearEngine 
+{
 	namespace Graphics
 	{
-		namespace API {
-			class NEAPI DepthStencilState : public CBaseAPI<OpenGL::GLDepthStencilState, DirectX::DX11DepthStencilState>
+		namespace API 
+		{
+			class NEAPI DepthStencilState //<OpenGL::GLDepthStencilState, DirectX::DX11DepthStencilState>
 			{
 			public:
 				DepthStencilState();
@@ -17,6 +19,7 @@ namespace NuclearEngine {
 				static void Delete(DepthStencilState* state);
 
 				void Bind();
+				BASE_API(DepthStencilState)
 			};
 		}
 	}

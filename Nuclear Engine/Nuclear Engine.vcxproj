@@ -339,6 +339,7 @@
     <ClInclude Include="include\Components\Renderable2D.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
+    <ClInclude Include="include\Graphics\Animator2D.h" />
     <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
     <ClInclude Include="include\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Graphics\API\Buffer_Types.h" />
@@ -383,6 +384,7 @@
     <ClInclude Include="include\Graphics\API\VertexShader.h" />
     <ClInclude Include="include\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Graphics\SpriteBatch.h" />
+    <ClInclude Include="include\Graphics\SpriteSheet.h" />
     <ClInclude Include="include\GUI\CGUI.h" />
     <ClInclude Include="include\Math\common.hpp" />
     <ClInclude Include="include\Math\detail\compute_vector_relational.hpp" />
@@ -615,6 +617,7 @@
     <ClCompile Include="Source\Components\Renderable2D.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
+    <ClCompile Include="Source\Graphics\Animator2D.cpp" />
     <ClCompile Include="Source\Graphics\API\BlendState.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />
     <ClCompile Include="Source\Graphics\API\DepthStencilState.cpp" />
@@ -657,6 +660,7 @@
     <ClCompile Include="Source\Graphics\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Graphics\API\VertexShader.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Graphics\SpriteSheet.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Physics3D\PhysicsMaterial.cpp" />

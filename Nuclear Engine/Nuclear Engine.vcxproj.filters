@@ -54,7 +54,6 @@
     <ClInclude Include="include\Managers\ShaderManager.h" />
     <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="Source\Managers\AssimpImporter.h" />
-    <ClInclude Include="include\Graphics\SpriteBatch.h" />
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\Math\detail\_features.hpp" />
     <ClInclude Include="include\Math\detail\_fixes.hpp" />
@@ -276,6 +275,9 @@
     <ClInclude Include="include\Physics3D\PhysicsMaterial.h" />
     <ClInclude Include="include\Physics3D\PhysicsActor.h" />
     <ClInclude Include="include\Components\Renderable2D.h" />
+    <ClInclude Include="include\Graphics\SpriteSheet.h" />
+    <ClInclude Include="include\Graphics\Animator2D.h" />
+    <ClInclude Include="include\Graphics\SpriteBatch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -365,6 +367,8 @@
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
     <ClCompile Include="Source\Physics3D\PhysicsMaterial.cpp" />
     <ClCompile Include="Source\Components\Renderable2D.cpp" />
+    <ClCompile Include="Source\Graphics\Animator2D.cpp" />
+    <ClCompile Include="Source\Graphics\SpriteSheet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

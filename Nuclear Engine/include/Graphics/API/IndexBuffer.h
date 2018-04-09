@@ -10,7 +10,7 @@ namespace NuclearEngine
 		namespace API
 		{
 
-			class NEAPI IndexBuffer : public CBaseAPI<OpenGL::GLIndexBuffer, DirectX::DX11IndexBuffer>
+			class NEAPI IndexBuffer //<OpenGL::GLIndexBuffer, DirectX::DX11IndexBuffer>
 			{
 			public:
 				IndexBuffer();
@@ -20,6 +20,8 @@ namespace NuclearEngine
 				static void Delete(IndexBuffer *buffer);
 
 				void Bind();
+				BASE_API(IndexBuffer)
+
 			};
 		}
 	}
