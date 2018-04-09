@@ -21,49 +21,16 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - DirectX 11 runtime DLLS.
 
 ## Features:
-- __Core__
-  - Cross platform ready
-  - Modern Fast code using C++
-  - Fast Robust Entity Component System "ECS" using EntityX.
-  - Cross-platform Application creation through GLFW.
-  - All of error prone calls (as Resource creation or loading) are being logged.
-  - Support for XML & INI Parsers.
-  
-- __AssetManager__
-  - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using stb_image library).
-  - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
-  - Multi-Thread loading (Soon™)
-  
-- __ShaderManager__
-  - Support for automated shader creation instead of Re-Writing them
-  
-- __Audio__
-  - Support for FMOD.
+* [Features](https://github.com/Zone-organization/Nuclear-Engine/blob/master/FEATURES.md)
 
-- __Graphics__
-  - Support for DirectX 11 "Feature Level 10.1" and OpenGL 3.3 Core RenderAPIs.
-  - Support for Point, Bilinear, Tri-linear, Anisotropic "X2, X4, X8, X16", Filtering for Textures.
-  - Support for HLSL Shaders which can be Cross Compiled to GLSL.
-  - Support for Separate Shaders (Vertex & Pixel).
-  - Support for Separate Samplers and Textures.
-  - Support for Customized Dear-ImGui as a Default GUI Library.
-  
-  - ___RenderSystem___
-    - Support for BlinnPhong Lighting.
-    - Support for Normal Mapping.
-    - Support for PostProcessing Effects:
-	  - Gamma Correction
-	  - HDR 'Reinhard tone mapping'
   
 ## Current Platforms
   - Windows 7+     
 
 ## Currently TODO
   - Implement PhysXEngine (Nvidia Physics)
-  - Multi-thread crucial sub-systems.
-  - Implement WYSIWYG Editor.
   - Implement Class based GUI from ImGui.
-  
+  - Implement SpriteRenderSystem
 ### Building
 Please See NuclearDeps Repo for dependencies.
 Currently I am using Visual Studio 2017 to build it.
