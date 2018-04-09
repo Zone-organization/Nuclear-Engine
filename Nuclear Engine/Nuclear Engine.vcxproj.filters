@@ -369,6 +369,7 @@
     <ClCompile Include="Source\Components\Renderable2D.cpp" />
     <ClCompile Include="Source\Graphics\Animator2D.cpp" />
     <ClCompile Include="Source\Graphics\SpriteSheet.cpp" />
+    <ClCompile Include="Source\Graphics\SpriteBatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

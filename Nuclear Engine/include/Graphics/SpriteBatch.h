@@ -2,37 +2,41 @@
 #include <vector>
 #include <Math/Math.h>
 #include <NE_Common.h>
-#define MAX_SPRITES 10000
-#define VERTEX_SIZE sizeof(VertexData)
-#define SPRITE_SIZE 4 * VERTEX_SIZE
-#define BUFFER_SIZE MAX_SPRITES * SPRITE_SIZE
-#define INDICES_SIZE 6 * MAX_SPRITES
-
+#include <Graphics/API\RenderAPI.h>
+#include <Components\Sprite.h>
 namespace NuclearEngine {
 	namespace Graphics {
 		class Sprite;
 		class Texture;
-		struct VertexData;
+		struct SpriteVertexData {
+			Math::Vector3 vertex;
+			Math::Vector2 uv;
+			float tid;
+			unsigned int color;
+		};
+
+#define MAX_SPRITES 10000
 
 		class NEAPI SpriteBatch {
 		public:
-			SpriteBatch(unsigned int MaxSprites = MAX_SPRITES);
+			SpriteBatch();
 			~SpriteBatch();
+			
+			void Initialize();
 			void Begin();
 			void Submit(const Sprite &sprite);
 			void End();
 			void Draw();
 
 		private:
-			VertexData * VertexBuffer;
-			uint VAO, VBO, EBO;
-			//std::vector<glm::mat4> TransformationStack;
-			//glm::mat4* TransformationBack;
+			SpriteVertexData * mVertexBufferData;
+			API::VertexBuffer m_VB;
+			API::IndexBuffer m_IB;
+			std::vector<Math::Matrix4> TransformationStack;
+			Math::Matrix4* TransformationBack;
 			uint IndexCount;
 			std::vector<Texture *> Textures;
 			bool TexturesBinded;
-
-			void init();
 		};
-	} // namespace graphics
-} // namespace stella
+	}
+} 

@@ -660,6 +660,7 @@
     <ClCompile Include="Source\Graphics\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Graphics\API\VertexShader.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Graphics\SpriteBatch.cpp" />
     <ClCompile Include="Source\Graphics\SpriteSheet.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />

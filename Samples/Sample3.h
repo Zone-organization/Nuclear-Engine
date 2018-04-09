@@ -25,7 +25,7 @@ public:
 		TexDesc.Type = Graphics::API::TextureType::Texture2D;
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Breakout/Textures/block.png", &BlockTex, TexDesc);
-		Block = new Components::Sprite(&BlockTex, Math::vec2(200.0f, 200.0f), Math::vec2(300.0f, 400.0f), Graphics::Color(0.0f, 1.0f, 0.0f));
+		//Block = new Components::Sprite(&BlockTex, Math::vec2(200.0f, 200.0f), Math::vec2(300.0f, 400.0f), Graphics::Color(0.0f, 1.0f, 0.0f));
 
 		Camera.Initialize(Math::Orthographic(0.0f, static_cast<float>(_Width_), static_cast<float>(_Height_), 0.0f, -1.0f, 1.0f));
 
@@ -46,7 +46,7 @@ public:
 		Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer.BeginDirectRender();
 		states.DefaultSampler.PSBind(0);
-		Renderer.DirectRender(Block);
+		//Renderer.DirectRender(Block);
 
 
 		Camera.Update();

@@ -9,15 +9,7 @@
 namespace NuclearEngine
 {
 	namespace Components
-	{
-
-		struct VertexData {
-			Math::Vector3 vertex;
-			Math::Vector2 uv;
-			float tid;
-			unsigned int color;
-		};
-
+	{	
 		class Sprite : public Renderable2D {
 		public:
 			Graphics::Animator2D Animations;
