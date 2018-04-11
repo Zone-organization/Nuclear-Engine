@@ -14,6 +14,31 @@ namespace NuclearEngine
 		{
 			return PxVec3(convertable.x, convertable.y, convertable.z);
 		}
+
+		inline PxVec4 Convert(Math::Vector4 convertable)
+		{
+			return PxVec4(convertable.x, convertable.y, convertable.z, convertable.w);
+		}
+
+		inline PxQuat Convert(Math::Quaternion convertable)
+		{
+			return PxQuat(convertable.x, convertable.y, convertable.z, convertable.w);
+		}
+
+		inline Math::Vector3 ConvertFrom(PxVec3 convertable)
+		{
+			return Math::Vector3(convertable.x, convertable.y, convertable.z);
+		}
+
+		inline Math::Vector4 ConvertFrom(PxVec4 convertable)
+		{
+			return Math::Vector4(convertable.x, convertable.y, convertable.z, convertable.w);
+		}
+
+		inline Math::Quaternion ConvertFrom(PxQuat convertable)
+		{
+			return Math::Quaternion(convertable.x, convertable.y, convertable.z, convertable.w);
+		}
 	}
 }
 #endif

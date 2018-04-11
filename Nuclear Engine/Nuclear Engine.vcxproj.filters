@@ -273,11 +273,11 @@
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
     <ClInclude Include="include\Physics3D\PhysicsMaterial.h" />
-    <ClInclude Include="include\Physics3D\PhysicsActor.h" />
     <ClInclude Include="include\Components\Renderable2D.h" />
     <ClInclude Include="include\Graphics\SpriteSheet.h" />
     <ClInclude Include="include\Graphics\Animator2D.h" />
     <ClInclude Include="include\Graphics\SpriteBatch.h" />
+    <ClInclude Include="include\Physics3D\RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -370,6 +370,7 @@
     <ClCompile Include="Source\Graphics\Animator2D.cpp" />
     <ClCompile Include="Source\Graphics\SpriteSheet.cpp" />
     <ClCompile Include="Source\Graphics\SpriteBatch.cpp" />
+    <ClCompile Include="Source\Physics3D\RigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

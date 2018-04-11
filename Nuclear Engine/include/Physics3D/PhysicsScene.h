@@ -7,7 +7,7 @@ namespace NuclearEngine
 {
 	namespace Physics3D
 	{
-
+		class RigidBody;
 		struct NEAPI PhysicsSceneDesc
 		{
 			Math::Vector3 gravity = Math::Vector3(0.0f, 0.0f, 0.0f);
@@ -20,6 +20,7 @@ namespace NuclearEngine
 			static void Delete(PhysicsScene* scene);
 
 			void Update(float dt);
+			void AddActor(RigidBody* actor);
 
 			physx::PxScene* GetBase();
 		private:

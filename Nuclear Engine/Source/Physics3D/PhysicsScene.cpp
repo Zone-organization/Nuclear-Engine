@@ -3,6 +3,7 @@
 #if defined (NE_USE_PHYSICS3DENGINE)
 #include <Physics3D\Physics3DEngine.h>
 #include <PhysX\Include\PxPhysicsAPI.h>
+#include "Physics3D\RigidBody.h"
 #include "PhysXCommon.h"
 using namespace physx;
 
@@ -17,7 +18,7 @@ namespace NuclearEngine
 
 			sceneDesc.gravity = Convert(desc.gravity);
 			PxRigidActor;
-
+			PxRigidDynamic;
 			/*if (!sceneDesc.cpuDispatcher) 
 			{
 				PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
@@ -39,8 +40,7 @@ namespace NuclearEngine
 				Log.Error("[PhysicsScene] PhysX failed to create PhysicsScene!\n");
 				return false;
 			}
-			scene->scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
-			scene->scene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+
 			return true;
 		}
 		void PhysicsScene::Delete(PhysicsScene* scene)
@@ -51,6 +51,11 @@ namespace NuclearEngine
 		void PhysicsScene::Update(float dt)
 		{
 			scene->simulate(dt);
+		}
+
+		void PhysicsScene::AddActor(RigidBody * actor)
+		{
+			scene->addActor(*actor->GetBase());
 		}
 
 		physx::PxScene * PhysicsScene::GetBase()

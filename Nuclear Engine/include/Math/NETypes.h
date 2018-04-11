@@ -1,6 +1,7 @@
 #pragma once
 #include <Math\detail\type_vec.hpp>
 #include <Math\detail\type_mat.hpp>
+#include <Math/gtc/quaternion.hpp>
 
 namespace Math 
 {
@@ -23,4 +24,6 @@ namespace Math
 	typedef mat2 Matrix2;
 	typedef mat3 Matrix3;
 	typedef mat4 Matrix4;
+
+	typedef quat Quaternion;
 }
