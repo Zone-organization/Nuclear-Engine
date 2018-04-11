@@ -15,7 +15,7 @@
 #include "Entity.h"
 
 namespace NuclearEngine {
-	namespace Core {
+	namespace ECS {
 
 		/**
 		* An entityx::System for declaring component dependencies.

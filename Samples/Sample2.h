@@ -31,9 +31,9 @@ protected:
 	Components::SpotLight spotLight;
 
 	//ECS
-	Core::Scene SampleScene;
-	Core::Entity ELamp;
-	Core::Entity ENanosuit;
+	ECS::Scene SampleScene;
+	ECS::Entity ELamp;
+	ECS::Entity ENanosuit;
 
 	Components::Model LampModel;
 	Components::Model SponzaModel;

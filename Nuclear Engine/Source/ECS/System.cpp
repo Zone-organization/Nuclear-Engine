@@ -8,12 +8,12 @@
  * Author: Alec Thomas <alec@swapoff.org>
  */
 
-#include "Core/System.h"
+#include "ECS/System.h"
 
 
 namespace NuclearEngine {
 
-	namespace Core {
+	namespace ECS {
 		BaseSystem::Family BaseSystem::family_counter_;
 
 		BaseSystem::~BaseSystem() {

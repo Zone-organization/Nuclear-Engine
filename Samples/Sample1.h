@@ -42,11 +42,11 @@ protected:
 	Components::Skybox Skybox;
 
 	//ECS
-	Core::Scene SampleScene;
-	Core::Entity ESkybox;
-	Core::Entity ECube;
-	Core::Entity ELamp;
-	Core::Entity ENanosuit;
+	ECS::Scene SampleScene;
+	ECS::Entity ESkybox;
+	ECS::Entity ECube;
+	ECS::Entity ELamp;
+	ECS::Entity ENanosuit;
 
 	Components::Model CubeModel;
 	Components::Model LampModel;

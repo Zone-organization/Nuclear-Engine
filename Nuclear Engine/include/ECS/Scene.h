@@ -1,12 +1,12 @@
 #pragma once
 #include <NE_Common.h>
-#include <Core/Entity.h>
-#include "Core/Event.h"
-#include "Core/System.h"
+#include <ECS/Entity.h>
+#include "ECS/Event.h"
+#include "ECS/System.h"
 
 namespace NuclearEngine
 {
-	namespace Core
+	namespace ECS
 	{
 		class NEAPI Scene {
 		public:

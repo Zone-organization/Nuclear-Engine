@@ -29,13 +29,14 @@
 #include <type_traits>
 #include <functional>
 #include <NE_Common.h>
+#include "Transform/Transform.h"
 #include "Utilities/Pool.h"
-#include "Core/ECSConfig.h"
-#include "Core/Event.h"
+#include "ECSConfig.h"
+#include "Event.h"
 #include "Utilities/NonCopyable.h"
 
 namespace NuclearEngine {
-	namespace Core {
+	namespace ECS {
 
 		typedef std::uint32_t uint32_t;
 		typedef std::uint64_t uint64_t;
@@ -72,7 +73,7 @@ namespace NuclearEngine {
 
 				uint32_t index() const { return id_ & 0xffffffffUL; }
 				uint32_t version() const { return id_ >> 32; }
-
+				
 			private:
 				friend class EntityManager;
 
@@ -108,6 +109,9 @@ namespace NuclearEngine {
 			bool operator < (const Entity &other) const {
 				return other.id_ < id_;
 			}
+
+			Transform* GetTransform();
+			void SetTransform(const Transform& trans);
 
 			/**
 			 * Is this Entity handle Valid?
@@ -167,6 +171,8 @@ namespace NuclearEngine {
 			std::bitset<MAX_COMPONENTS> component_mask() const;
 
 		private:
+			Transform mTransform;
+
 			EntityManager * manager_ = nullptr;
 			Entity::Id id_ = INVALID;
 		};
@@ -1089,14 +1095,14 @@ namespace NuclearEngine {
 	} 
 }
 namespace std {
-template <> struct hash<NuclearEngine::Core::Entity> {
-  std::size_t operator () (const NuclearEngine::Core::Entity &entity) const {
+template <> struct hash<NuclearEngine::ECS::Entity> {
+  std::size_t operator () (const NuclearEngine::ECS::Entity &entity) const {
     return static_cast<std::size_t>(entity.id().index() ^ entity.id().version());
   }
 };
 
-template <> struct hash<const NuclearEngine::Core::Entity> {
-  std::size_t operator () (const NuclearEngine::Core::Entity &entity) const {
+template <> struct hash<const NuclearEngine::ECS::Entity> {
+  std::size_t operator () (const NuclearEngine::ECS::Entity &entity) const {
     return static_cast<std::size_t>(entity.id().index() ^ entity.id().version());
   }
 };

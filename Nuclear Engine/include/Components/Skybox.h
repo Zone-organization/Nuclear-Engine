@@ -7,7 +7,7 @@
 #include <Graphics/API/DepthStencilState.h>
 #include <Core/FileSystem.h>
 #include <Components\GenericCamera.h>
-#include <Core\Entity.h>
+#include <ECS\Entity.h>
 
 namespace NuclearEngine
 {
@@ -15,7 +15,7 @@ namespace NuclearEngine
 	{			
 		//TODO: Move the Vertexbuffer, sampler, state, shader to a global manager instead of recreating them at each object
 		// Move the create function to a manager since components shouldn't have any logic at all!!
-		class NEAPI Skybox : public Core::Component<Skybox>
+		class NEAPI Skybox : public ECS::Component<Skybox>
 		{
 		public:
 			Skybox();

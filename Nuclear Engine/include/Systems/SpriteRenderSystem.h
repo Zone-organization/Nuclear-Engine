@@ -1,8 +1,8 @@
 #pragma once
 #include <NE_Common.h>
-#include <Core/Entity.h>
-#include "Core/Event.h"
-#include "Core/System.h"
+#include <ECS/Entity.h>
+#include "ECS/Event.h"
+#include "ECS/System.h"
 #include <Graphics/API/RenderAPI.h>
 #include <Components\GenericCamera.h>
 #include <Components\Sprite.h>
@@ -22,7 +22,7 @@ namespace NuclearEngine
 			Components::GenericCamera* InitialCamera = nullptr;
 		};
 		//Renderer for 2D Components
-		class NEAPI SpriteRenderSystem : public Core::System<SpriteRenderSystem> {
+		class NEAPI SpriteRenderSystem : public ECS::System<SpriteRenderSystem> {
 		public:
 			SpriteRenderSystem();
 	
@@ -34,7 +34,7 @@ namespace NuclearEngine
 			void DirectRender(Components::Sprite* sprite);
 			void EndDirectRender();
 			//Update Functions
-			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;
+			void Update(ECS::EntityManager &es, ECS::EventManager &events, ECS::TimeDelta dt) override;
 
 		private:
 			Graphics::API::VertexShader mVShader;

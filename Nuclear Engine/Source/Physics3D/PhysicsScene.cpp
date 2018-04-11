@@ -17,23 +17,7 @@ namespace NuclearEngine
 			PxSceneDesc sceneDesc(Physics3DEngine::GetContext()->getTolerancesScale());
 
 			sceneDesc.gravity = Convert(desc.gravity);
-			PxRigidActor;
-			PxRigidDynamic;
-			/*if (!sceneDesc.cpuDispatcher) 
-			{
-				PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
-				if (!mCpuDispatcher)
-				{
-					Log.Error("[PhysicsScene] Failed to create PhysicsScene: PxDefaultCpuDispatcherCreate Failed!\n");
-					return false;
-				}
-				sceneDesc.cpuDispatcher = mCpuDispatcher;
-			}*/
-			if (!sceneDesc.filterShader)
-			{
-				//sceneDesc.filterShader = gDefaultFilterShader;
-			}
-
+		
 			scene->scene = Physics3DEngine::GetContext()->createScene(sceneDesc);
 			if (!scene->scene)
 			{

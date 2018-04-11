@@ -25,9 +25,9 @@ protected:
 	Components::PointLight pointlight4;
 
 	//ECS
-	Core::Scene SampleScene;
-	Core::Entity ECube;
-	Core::Entity ELamp;
+	ECS::Scene SampleScene;
+	ECS::Entity ECube;
+	ECS::Entity ELamp;
 
 	Math::Vector3 lightPositions[4] = {
 		Math::Vector3(-3.0f, 0.0f, 0.0f),

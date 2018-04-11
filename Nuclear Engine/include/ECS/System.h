@@ -16,13 +16,13 @@
 #include <utility>
 #include <cassert>
 #include <NE_Common.h>
-#include "Core/ECSConfig.h"
-#include "Core/Entity.h"
-#include "Core/Event.h"
+#include "ECS/ECSConfig.h"
+#include "ECS/Entity.h"
+#include "ECS/Event.h"
 #include "Utilities/NonCopyable.h"
 
 namespace NuclearEngine {
-	namespace Core {
+	namespace ECS {
 
 		class SystemManager;
 

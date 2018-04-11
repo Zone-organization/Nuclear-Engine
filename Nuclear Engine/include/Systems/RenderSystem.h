@@ -1,8 +1,8 @@
 #pragma once
 #include <NE_Common.h>
-#include <Core/Entity.h>
-#include "Core/Event.h"
-#include "Core/System.h"
+#include <ECS/Entity.h>
+#include "ECS/Event.h"
+#include "ECS/System.h"
 #include <Components\Model.h>
 #include <Components\GenericCamera.h>
 #include <Components\Light.h>
@@ -32,7 +32,7 @@ namespace NuclearEngine
 			bool HDR = false;
 		};
 
-		class NEAPI RenderSystem : public Core::System<RenderSystem> {
+		class NEAPI RenderSystem : public ECS::System<RenderSystem> {
 		public:
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc());
 			~RenderSystem();
@@ -62,7 +62,7 @@ namespace NuclearEngine
 			void RenderPostProcessingContents();
 
 			//Update Functions
-			void Update(Core::EntityManager &es, Core::EventManager &events, Core::TimeDelta dt) override;
+			void Update(ECS::EntityManager &es, ECS::EventManager &events, ECS::TimeDelta dt) override;
 			void Update_Light();
 
 		private:

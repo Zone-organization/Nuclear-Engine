@@ -37,17 +37,10 @@
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
     <ClInclude Include="Source\Tests\OpenGLTests.h" />
     <ClInclude Include="Source\Tests\Test5.h" />
-    <ClInclude Include="include\Components\Transform.h" />
-    <ClInclude Include="include\Core\ECSConfig.h" />
-    <ClInclude Include="include\Core\Event.h" />
-    <ClInclude Include="include\Core\Entity.h" />
-    <ClInclude Include="include\Core\System.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
     <ClInclude Include="include\Utilities\Signal.h" />
     <ClInclude Include="include\Utilities\Pool.h" />
-    <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
-    <ClInclude Include="include\Core\ComponentDependency.h" />
     <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
@@ -278,6 +271,13 @@
     <ClInclude Include="include\Graphics\Animator2D.h" />
     <ClInclude Include="include\Graphics\SpriteBatch.h" />
     <ClInclude Include="include\Physics3D\RigidBody.h" />
+    <ClInclude Include="include\ECS\Entity.h" />
+    <ClInclude Include="include\ECS\Event.h" />
+    <ClInclude Include="include\ECS\Scene.h" />
+    <ClInclude Include="include\ECS\System.h" />
+    <ClInclude Include="include\ECS\ECSConfig.h" />
+    <ClInclude Include="include\ECS\ComponentDependency.h" />
+    <ClInclude Include="include\Transform\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -302,11 +302,6 @@
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl_dx11.cpp" />
     <ClCompile Include="Source\Core\imgui_impl\imgui_impl.cpp" />
     <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
-    <ClCompile Include="Source\Components\Transform.cpp" />
-    <ClCompile Include="Source\Core\System.cpp" />
-    <ClCompile Include="Source\Core\Event.cpp" />
-    <ClCompile Include="Source\Core\Entity.cpp" />
-    <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
@@ -371,6 +366,11 @@
     <ClCompile Include="Source\Graphics\SpriteSheet.cpp" />
     <ClCompile Include="Source\Graphics\SpriteBatch.cpp" />
     <ClCompile Include="Source\Physics3D\RigidBody.cpp" />
+    <ClCompile Include="Source\ECS\System.cpp" />
+    <ClCompile Include="Source\ECS\Scene.cpp" />
+    <ClCompile Include="Source\ECS\Entity.cpp" />
+    <ClCompile Include="Source\ECS\Event.cpp" />
+    <ClCompile Include="Source\Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

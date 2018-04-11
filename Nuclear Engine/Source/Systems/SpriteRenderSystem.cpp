@@ -84,7 +84,7 @@ namespace NuclearEngine
 		{
 		}
 
-		void SpriteRenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)
+		void SpriteRenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
 		}
 	}

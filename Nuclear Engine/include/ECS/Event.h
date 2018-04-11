@@ -18,14 +18,14 @@
 #include <memory>
 #include <utility>
 #include <NE_Common.h>
-#include "Core/ECSConfig.h"
+#include "ECS/ECSConfig.h"
 #include "Utilities/Signal.h"
 #include "Utilities/NonCopyable.h"
 
 
 namespace NuclearEngine {
 
-	namespace Core {
+	namespace ECS {
 		/// Used internally by the EventManager.
 		class NEAPI BaseEvent {
 		public:

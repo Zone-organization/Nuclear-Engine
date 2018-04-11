@@ -25,7 +25,7 @@ protected:
 	Components::SpotLight spotLight;
 
 	//ECS
-	Core::Scene SampleScene;
+	ECS::Scene SampleScene;
 
 	// positions of the point lights
 	Math::Vector3 pointLightPositions[2] =

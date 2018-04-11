@@ -18,10 +18,12 @@ _____________/BOOOM\_____________
 #include <Core/FileSystem.h>
 #include <Core/Parsers/XMLParser.h>
 //--Entity Component System Headers
-#include <Core/Scene.h>
-#include <Core/Event.h>
-#include <Core/Entity.h>
-#include <Core/System.h>
+#include <ECS/Scene.h>
+#include <ECS/Event.h>
+#include <ECS/Entity.h>
+#include <ECS/System.h>
+
+#include <Transform\Transform.h>
 
 //# Platform Abstraction Layer Headers
 #include <Platform\Clock.h>
@@ -57,7 +59,6 @@ _____________/BOOOM\_____________
 #include <Components\Light.h>
 #include <Components\Model.h>
 #include <Components\Sprite.h>
-#include <Components\Transform.h>
 #include <Components\ModelRenderDesc.h>
 
 //# Engine Systems Headers

@@ -3,7 +3,7 @@
 #include <Graphics/API/ConstantBuffer.h>
 #include <Graphics/API/ShaderCompiler.h>
 #include <Graphics\API\Context.h>
-#include <Components\Transform.h>
+#include <Transform\Transform.h>
 #include <Components\Skybox.h>
 #include <Components\ModelRenderDesc.h>
 #include <Managers\ShaderManager.h>
@@ -253,24 +253,18 @@ namespace NuclearEngine
 			PostProcessTexture.PSBind(0);
 			InstantRender(&PostProcessScreenQuad);
 		}
-		void RenderSystem::Update(Core::EntityManager & es, Core::EventManager & events, Core::TimeDelta dt)
+		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
-			Core::ComponentHandle<Components::Model> ModelObject;
-			for (Core::Entity entity : es.entities_with_components(ModelObject))
+			ECS::ComponentHandle<Components::Model> ModelObject;
+			for (ECS::Entity entity : es.entities_with_components(ModelObject))
 			{
-				auto transform = entity.GetComponent<Components::Transform>();
-
-				if (transform)
-				{
-					transform.Get()->Update();
-					ActiveCamera->SetModelMatrix(transform.Get()->GetTransform());
-				}
-
+				entity.GetTransform()->Update();
+				ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransform());
 				InstantRender(ModelObject.Get());
 			}
 
-			Core::ComponentHandle<Components::Skybox> skybox;
-			for (Core::Entity entity : es.entities_with_components(skybox))
+			ECS::ComponentHandle<Components::Skybox> skybox;
+			for (ECS::Entity entity : es.entities_with_components(skybox))
 			{
 				auto renderdesc = entity.GetComponent<Components::ModelRenderDesc>();
 

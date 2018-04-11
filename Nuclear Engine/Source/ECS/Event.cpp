@@ -8,12 +8,12 @@
  * Author: Alec Thomas <alec@swapoff.org>
  */
 
-#include "Core/Event.h"
+#include "ECS/Event.h"
 
 
 namespace NuclearEngine {
 
-	namespace Core {
+	namespace ECS {
 		BaseEvent::Family BaseEvent::family_counter_ = 0;
 
 		BaseEvent::~BaseEvent() {

@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
-#include <Components\Transform.h>
-#include <Core\Entity.h>
+#include <Transform\Transform.h>
+#include <ECS\Entity.h>
 #include <Graphics/API/VertexShader.h>
 #include <Graphics/API/PixelShader.h>
 namespace NuclearEngine
@@ -12,7 +12,7 @@ namespace NuclearEngine
 		Describes how the render system should treat and render a '3D' model
 		Essential for rendering the model
 		*/
-		class NEAPI ModelRenderDesc : public Core::Component<ModelRenderDesc>
+		class NEAPI ModelRenderDesc : public ECS::Component<ModelRenderDesc>
 		{
 		public:
 			//Custom shaders to be rendered with

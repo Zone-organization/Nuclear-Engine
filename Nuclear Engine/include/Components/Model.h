@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Core\Entity.h>
+#include <ECS\Entity.h>
 
 namespace NuclearEngine {
 	namespace XAsset {
@@ -8,7 +8,7 @@ namespace NuclearEngine {
 	}
 	namespace Components {
 
-		class NEAPI Model : public Core::Component<Model>
+		class NEAPI Model : public ECS::Component<Model>
 		{
 		public:			
 			Model();
