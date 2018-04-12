@@ -259,7 +259,7 @@ namespace NuclearEngine
 			for (ECS::Entity entity : es.entities_with_components(ModelObject))
 			{
 				entity.GetTransform()->Update();
-				ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransform());
+				ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransformMatrix());
 				InstantRender(ModelObject.Get());
 			}
 

@@ -1,5 +1,6 @@
 #include "Transform/Transform.h"
-
+#define GLM_ENABLE_EXPERIMENTAL
+#include <Math/gtx/quaternion.hpp>
 namespace NuclearEngine
 {
 	Transform::Transform()
@@ -11,57 +12,62 @@ namespace NuclearEngine
 
 	void Transform::SetPosition(Math::Vector3 position)
 	{
-		m_Position = position;
-		m_dirty = true;
+		mPosition = position;
+		mDirty = true;
 	}
 
-	void Transform::SetRotation(Math::Vector4 rotation)
+	void Transform::SetRotation(Math::Quaternion rotation)
 	{
-		m_Rotation = rotation;
-		m_dirty = true;
+		mRotation = rotation;
+		mDirty = true;
 	}
 
 	void Transform::SetScale(Math::Vector3 scale)
 	{
-		m_Scale = scale;
-		m_dirty = true;
+		mScale = scale;
+		mDirty = true;
 	}
 
 	void Transform::SetScale(float scale)
 	{
-		m_Scale = Math::Vector3(scale);
-		m_dirty = true;
+		mScale = Math::Vector3(scale);
+		mDirty = true;
 	}
 
 	Math::Vector3 Transform::GetLocalPosition()
 	{
-		return m_Position;
+		return mPosition;
 	}
 
-	Math::Vector4 Transform::GetLocalRotation()
+	Math::Quaternion Transform::GetLocalRotation()
 	{
-		return m_Rotation;
+		return mRotation;
 	}
 
 	Math::Vector3 Transform::GetLocalScale()
 	{
-		return m_Scale;
+		return mScale;
 	}
 
-	Math::Matrix4 Transform::GetTransform()
+	Math::Matrix4 Transform::GetTransformMatrix()
 	{
-		return m_Transform;
+		return mTransform;
 	}
 	Math::Vector3 Transform::GetWorldPosition()
 	{
-		Math::Matrix4 transform = GetTransform();
-		Math::Vector4 pos = transform * Math::Vector4(m_Position, 1.0f);
+		Math::Matrix4 transform = GetTransformMatrix();
+		Math::Vector4 pos = transform * Math::Vector4(mPosition, 1.0f);
 		return Math::Vector3(pos.x, pos.y, pos.z);
+	}
+
+	Math::Quaternion Transform::GetWorldRotation()
+	{
+		return mWorldRotation;
 	}
 
 	Math::Vector3 Transform::GetWorldScale()
 	{
-		Math::Matrix4 transform = GetTransform();
+		Math::Matrix4 transform = GetTransformMatrix();
 		Math::Vector3 scale = Math::Vector3(transform[0][0], transform[1][1], transform[2][2]);
 		if (scale.x < 0.0f) scale.x *= -1.0f;
 		if (scale.y < 0.0f) scale.y *= -1.0f;
@@ -70,23 +76,22 @@ namespace NuclearEngine
 	}
 	void Transform::Update()
 	{
-		if (m_dirty)
+		if (mDirty)
 		{
 			// first scale, then rotate, then translation
-			m_Transform = Math::Translate(m_Transform, m_Position);
-			m_Transform = Math::Scale(m_Transform, m_Scale);
-			//m_Transform = Math::Rotate(m_Transform, m_Rotation.xyz, m_Rotation.w);
-
-			m_dirty = false;
+			mTransform = Math::Translate(mTransform, mPosition);
+			mTransform = Math::Scale(mTransform, mScale);
+			mTransform *= Math::toMat4(mRotation);
+			mDirty = false;
 		}
 	}
 	void Transform::Update(Math::Matrix4 parent)
 	{
 		//Todo: find a better way to update the transform since we double check if dirty!
 		Update();
-		if (m_dirty)
+		if (mDirty)
 		{
-			m_Transform = parent * m_Transform;
+			mTransform = parent * mTransform;
 		}
 	}
 }

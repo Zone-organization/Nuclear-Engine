@@ -12,16 +12,18 @@ namespace NuclearEngine
 		~Transform();
 
 		//Get the transform
-		Math::Matrix4 GetTransform();
+		Math::Matrix4 GetTransformMatrix();
 
 		void SetPosition(Math::Vector3 position);
-		void SetRotation(Math::Vector4 rotation);
+		void SetRotation(Math::Quaternion rotation);
 		void SetScale(Math::Vector3 scale);
 		void SetScale(float scale);
 		Math::Vector3 GetLocalPosition();
-		Math::Vector4 GetLocalRotation();
+		Math::Quaternion GetLocalRotation();
 		Math::Vector3 GetLocalScale();
+
 		Math::Vector3 GetWorldPosition();
+		Math::Quaternion GetWorldRotation();
 		Math::Vector3 GetWorldScale();
 
 		void Update();
@@ -29,10 +31,17 @@ namespace NuclearEngine
 		void Update(Math::Matrix4 parent);
 
 	private:
-		Math::Matrix4 m_Transform;
-		Math::Vector3 m_Position = Math::Vector3(0.0f);
-		Math::Vector4 m_Rotation = Math::Vector4(0.0f, 0.0f, 0.0f, 1.0f); // axis-angle for now; test w/ quaternions soon!
-		Math::Vector3 m_Scale = Math::Vector3(1.0f);
-		bool m_dirty;
+		Math::Matrix4 mTransform;
+	
+		Math::Vector3 mPosition = Math::Vector3(0.0f);
+		Math::Quaternion mRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Math::Vector3 mScale = Math::Vector3(.0f);
+
+		Math::Vector3 mWorldPosition = Math::Vector3(0.0f);
+		Math::Quaternion mWorldRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Math::Vector3 mWorldScale = Math::Vector3(0.0f);
+
+
+		bool mDirty;
 	};
 }
