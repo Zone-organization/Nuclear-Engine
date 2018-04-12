@@ -24,6 +24,11 @@ namespace NuclearEngine
 		{
 			return PxQuat(convertable.x, convertable.y, convertable.z, convertable.w);
 		}
+		
+		inline PxTransform Convert(Math::Vector3 avec, Math::Quaternion aquat)
+		{
+			return PxTransform(Convert(avec),Convert(aquat));
+		}
 
 		inline Math::Vector3 ConvertFrom(PxVec3 convertable)
 		{
@@ -39,6 +44,7 @@ namespace NuclearEngine
 		{
 			return Math::Quaternion(convertable.x, convertable.y, convertable.z, convertable.w);
 		}
+
 	}
 }
 #endif

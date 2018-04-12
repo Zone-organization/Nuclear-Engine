@@ -98,52 +98,85 @@ namespace NuclearEngine {
 			SetState(Engine::State::Shuttingdown);
 			GamePtr->Shutdown();
 		}
+		/*
+		Normal Tests:
+			From 1 to 10
+		Special Tests:
+			DirectX 11:  11
+			OpenGL3:	 22
+			Fmod:		 33
+			ECS:         44
+			Physics:     55
 
+		ELSE:
+			Runs 1st Test
+		*/
 		void Engine::RunTest(unsigned int TestNumber)
 		{
-			if (TestNumber == 1)
+			switch (TestNumber)
 			{
-				Test1 test;
-				Engine::RunGame(&test);
+			case 1:
+			{	Test1 test1;
+				Engine::RunGame(&test1);
+				break; 
 			}
-			else if (TestNumber == 2)
-			{
-				Test2 test;
-				Engine::RunGame(&test);
+			case 2:
+			{	Test2 test2;
+				Engine::RunGame(&test2);
+				break;
 			}
-			else if (TestNumber == 3)
+			case 3: 
 			{
-				Test3 test;
-				Engine::RunGame(&test);
+				Test3 test3;
+				Engine::RunGame(&test3);
+				break; 
 			}
-			else if (TestNumber == 4)
+			case 4:
 			{
-				Test4 test;
-				Engine::RunGame(&test);
+				Test4 test4;
+				Engine::RunGame(&test4);
+				break; 
 			}
-			else if (TestNumber == 5)
+			case 5:
 			{
-				Test5 test;
-				Engine::RunGame(&test);
+				Test5 test5;
+				Engine::RunGame(&test5);
+				break; 
 			}
-			else if (TestNumber == 99)
+			case 11:
 			{
-				OpenGLTests test;
-				Engine::RunGame(&test);
-			}	
-			else if (TestNumber == 999)
-			{
-				DirectX11Tests test;
-				Engine::RunGame(&test);
+				DirectX11Tests test11;
+				Engine::RunGame(&test11);
+				break;
 			}
-			else if (TestNumber == 9999)
+			case 22:
 			{
-				FMODTests test;
-				Engine::RunGame(&test);
-			}			
-			else {
-				PhysXTests test;
-				Engine::RunGame(&test);
+				OpenGLTests test22;
+				Engine::RunGame(&test22);
+				break;
+			}
+			case 33:
+			{
+				FMODTests test33;
+				Engine::RunGame(&test33);
+				break; 
+			}
+			case 44:
+			{
+				PhysXTests test44;
+				Engine::RunGame(&test44);
+				break; 
+			}
+			case 55:
+			{
+				PhysXTests test55;
+				Engine::RunGame(&test55);
+				break;
+			}
+			default:
+			{	Test1 test1;
+				Engine::RunGame(&test1);
+			}
 			}
 		}
 
