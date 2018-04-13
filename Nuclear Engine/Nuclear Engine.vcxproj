@@ -599,7 +599,7 @@
     <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
     <ClInclude Include="Source\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
-    <ClInclude Include="Source\Tests\ECSTest.h" />
+    <ClInclude Include="Source\Tests\ECSTests.h" />
     <ClInclude Include="Source\Tests\FMODTests.h" />
     <ClInclude Include="Source\Tests\OpenGLTests.h" />
     <ClInclude Include="Source\Tests\PhysXTests.h" />

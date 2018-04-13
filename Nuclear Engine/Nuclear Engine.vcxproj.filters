@@ -279,7 +279,7 @@
     <ClInclude Include="include\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Transform\Transform.h" />
     <ClInclude Include="include\Physics3D\Collider.h" />
-    <ClInclude Include="Source\Tests\ECSTest.h" />
+    <ClInclude Include="Source\Tests\ECSTests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

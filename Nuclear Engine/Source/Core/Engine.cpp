@@ -1,6 +1,7 @@
 #include <Core\Engine.h>
 #include <NE_Common.h>
 #include <Platform\Input.h>
+#include <..\Source\Tests\ECSTests.h>
 #include <..\Source\Tests\PhysXTests.h>
 #include <..\Source\Tests\FMODTests.h>
 #include <..\Source\Tests\DirectX11Tests.h>
@@ -163,7 +164,7 @@ namespace NuclearEngine {
 			}
 			case 44:
 			{
-				PhysXTests test44;
+				ECSTests test44;
 				Engine::RunGame(&test44);
 				break; 
 			}
