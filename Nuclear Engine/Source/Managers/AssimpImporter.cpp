@@ -4,7 +4,7 @@
 
 namespace NuclearEngine {
 	namespace Internal {
-		bool AssimpImporter::Load(std::string Path, XAsset::ModelAsset * _model, const Managers::ModelLoadingDesc& desc)
+		bool AssimpImporter::Load(std::string Path, Assets::Mesh * _model, const Managers::MeshLoadingDesc& desc)
 		{
 			loaddesc = desc;
 			this->model = _model;
@@ -28,7 +28,7 @@ namespace NuclearEngine {
 
 			for (unsigned int i = 0; i < meshes_loaded.size(); i++)
 			{
-				model->Meshes.push_back(XAsset::Mesh(meshes_loaded.at(i)));
+				model->SubMeshes.push_back(Assets::Mesh(meshes_loaded.at(i)));
 			}
 
 			Log.Info("[AssetManager] Loaded Model: " + path + "\n");
@@ -50,9 +50,9 @@ namespace NuclearEngine {
 				ProcessNode(node->mChildren[i], scene);
 			}
 		}
-		XAsset::MeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
+		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{
-			XAsset::MeshData result;
+			Assets::Mesh::SubMesh::SubMeshData result;
 
 			// Walk through each of the mesh's vertices
 			for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -102,47 +102,47 @@ namespace NuclearEngine {
 			if (loaddesc.LoadDiffuseTextures)
 			{
 				std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
-				std::vector<XAsset::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
+				std::vector<Assets::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
 				result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
 			}
 			if (loaddesc.LoadSpecularTextures)
 			{
 				std::vector<Imported_Texture> specularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
-				std::vector<XAsset::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
+				std::vector<Assets::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
 				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
 			if (loaddesc.LoadNormalTextures)
 			{
 				std::vector<Imported_Texture> normalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
-				std::vector<XAsset::MeshTexture> NormalMaps = Imported2MeshTexture(normalMaps);
+				std::vector<Assets::MeshTexture> NormalMaps = Imported2MeshTexture(normalMaps);
 				result.textures.insert(result.textures.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
-		std::vector<XAsset::MeshTexture> AssimpImporter::Imported2MeshTexture(std::vector<Imported_Texture> textures)
+		std::vector<Assets::MeshTexture> AssimpImporter::Imported2MeshTexture(std::vector<Imported_Texture> textures)
 		{
-			std::vector<XAsset::MeshTexture> result;
+			std::vector<Assets::MeshTexture> result;
 			for (size_t i = 0; i < textures.size(); i++)
 			{
 				result.push_back(textures.at(i).Texture);
 			}
 			return result;
 		}
-		XAsset::MeshTextureType GetMeshTextureType(aiTextureType type)
+		Assets::MeshTextureType GetMeshTextureType(aiTextureType type)
 		{
 			switch (type)
 			{
 			case aiTextureType_DIFFUSE:
-				return XAsset::MeshTextureType::Diffuse;
+				return Assets::MeshTextureType::Diffuse;
 			case aiTextureType_SPECULAR:
-				return XAsset::MeshTextureType::Specular;
+				return Assets::MeshTextureType::Specular;
 			case aiTextureType_DISPLACEMENT:
-				return XAsset::MeshTextureType::Normal;
+				return Assets::MeshTextureType::Normal;
 			}
 
 			//Unsupported types treated as diffuse
-			return XAsset::MeshTextureType::Diffuse;
+			return Assets::MeshTextureType::Diffuse;
 		}
 		std::vector<Imported_Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{

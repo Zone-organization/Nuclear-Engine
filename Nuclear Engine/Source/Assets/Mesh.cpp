@@ -1,26 +1,26 @@
-#include "XAsset\ModelAsset.h"
+#include <Assets/Mesh.h>
 #include <Graphics\API\Context.h>
 #include <Graphics/API/InputLayout.h>
 
 namespace NuclearEngine {
 
-	namespace XAsset {
+	namespace Assets {
 #define MathPI 3.14159265358979323846f
 
-		Mesh::Mesh(MeshData _data) : data(_data)
+		Mesh::SubMesh::SubMesh(SubMeshData _data) : data(_data)
 		{
 		}
 
-		Mesh::Mesh(const Mesh& obj) : data(obj.data)
+		Mesh::SubMesh::SubMesh(const SubMesh& obj) : data(obj.data)
 		{
 		}
 
-		Mesh::~Mesh()
+		Mesh::SubMesh::~SubMesh()
 		{
 
 		}
 
-		void Mesh::Initialize(Graphics::API::VertexShader* _shader)
+		void Mesh::SubMesh::Initialize(Graphics::API::VertexShader* _shader)
 		{
 			std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
@@ -79,7 +79,7 @@ namespace NuclearEngine {
 			data.indices.clear();
 		}
 
-		void Mesh::Delete()
+		void Mesh::SubMesh::Delete()
 		{
 			Graphics::API::VertexBuffer::Delete(&VBO);
 			Graphics::API::IndexBuffer::Delete(&IBO);
@@ -90,25 +90,25 @@ namespace NuclearEngine {
 			data.textures.clear();
 		}
 
-		ModelAsset::ModelAsset()
+		Mesh::Mesh()
 		{
 
 		}
 
-		ModelAsset::~ModelAsset()
+		Mesh::~Mesh()
 		{
-			for (unsigned int i = 0; i < Meshes.size(); i++)
+			for (unsigned int i = 0; i < SubMeshes.size(); i++)
 			{
-				Meshes.at(i).Delete();
+				SubMeshes.at(i).Delete();
 			}
-			Meshes.clear();
+			SubMeshes.clear();
 		}
 
-		void ModelAsset::Initialize(Graphics::API::VertexShader* _shader)
+		void Mesh::Initialize(Graphics::API::VertexShader* _shader)
 		{
-			for (unsigned int i = 0; i < Meshes.size(); i++)
+			for (unsigned int i = 0; i < SubMeshes.size(); i++)
 			{
-				Meshes.at(i).Initialize(_shader);
+				SubMeshes.at(i).Initialize(_shader);
 			}
 			init = true;
 		}
@@ -132,7 +132,7 @@ namespace NuclearEngine {
 		};
 
 		//Todo rework this since we do alot of unnecessery looping
-		void ModelAsset::CreateCube(ModelAsset* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc, float width, float height, float depth)
+		void Mesh::CreateCube(Mesh* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc, float width, float height, float depth)
 		{
 			Vertex v[24];
 
@@ -179,7 +179,7 @@ namespace NuclearEngine {
 			std::vector<Vertex> vertices;
 			vertices.assign(&v[0], &v[24]);
 
-			MeshData meshData;
+			SubMesh::SubMeshData meshData;
 
 			for (Vertex vert : vertices)
 			{
@@ -218,12 +218,12 @@ namespace NuclearEngine {
 			meshData.indices = indices;
 			meshData.textures = Textures;
 
-			model->Meshes.push_back(meshData);
+			model->SubMeshes.push_back(meshData);
 		}
 
-		void ModelAsset::CreateSphere(ModelAsset * model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
+		void Mesh::CreateSphere(Mesh * model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
 		{
-			MeshData meshData;
+			SubMesh::SubMeshData meshData;
 
 			Vertex topVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 			Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
@@ -316,12 +316,12 @@ namespace NuclearEngine {
 				if (desc.Tangents == true)
 					meshData.Tangents.push_back(vert.Tangents);
 			}
-			model->Meshes.push_back(meshData);
+			model->SubMeshes.push_back(meshData);
 		}
 
-		void ModelAsset::CreateGrid(ModelAsset * model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
+		void Mesh::CreateGrid(Mesh * model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
 		{
-			MeshData meshData;
+			SubMesh::SubMeshData meshData;
 			std::vector<Vertex> Vertices;
 			std::vector<uint> Indices;
 
@@ -397,15 +397,15 @@ namespace NuclearEngine {
 
 			meshData.textures = Textures;
 
-			model->Meshes.push_back(meshData);
+			model->SubMeshes.push_back(meshData);
 		}
 
-		void ModelAsset::CreateScreenQuad(ModelAsset * model)
+		void Mesh::CreateScreenQuad(Mesh * model)
 		{
 			std::vector<Vertex> Vertices;
 			std::vector<uint> Indices;
 
-			MeshData meshData;
+			SubMesh::SubMeshData meshData;
 
 			Vertices.resize(4);
 			Indices.resize(6);
@@ -456,7 +456,7 @@ namespace NuclearEngine {
 			}
 			meshData.indices = Indices;
 
-			model->Meshes.push_back(meshData);
+			model->SubMeshes.push_back(meshData);
 		}
 
 	}

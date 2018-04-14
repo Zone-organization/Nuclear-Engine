@@ -9,7 +9,7 @@ protected:
 	//Audio::Sound sound;
 	//Audio::Channel channel;
 
-	//XAsset
+	//Assets
 	Graphics::API::Texture DiffuseTex;
 	Graphics::API::Texture SpecularTex;
 	Graphics::API::Texture WhiteTex;
@@ -42,8 +42,8 @@ protected:
 		Graphics::Color(1.00)
 	};
 
-	XAsset::ModelAsset Cube;
-	XAsset::ModelAsset Lamp;
+	Assets::Mesh Cube;
+	Assets::Mesh Lamp;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -76,32 +76,32 @@ public:
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 	}
-	void SetupXAsset()
+	void SetupAssets()
 	{
 		SetupTextures();
 
-		std::vector<XAsset::MeshTexture> textures;
+		std::vector<Assets::MeshTexture> textures;
 
-		XAsset::MeshTexture DTexture;
+		Assets::MeshTexture DTexture;
 		DTexture.Texture = DiffuseTex;
-		DTexture.type = XAsset::MeshTextureType::Diffuse;
+		DTexture.type = Assets::MeshTextureType::Diffuse;
 		textures.push_back(DTexture);
 		DTexture.Texture = SpecularTex;
-		DTexture.type = XAsset::MeshTextureType::Specular;
+		DTexture.type = Assets::MeshTextureType::Specular;
 		textures.push_back(DTexture);
 
-		XAsset::ModelAsset::CreateCube(&Cube, textures);
+		Assets::Mesh::CreateCube(&Cube, textures);
 		Cube.Initialize(&Renderer->GetVertexShader());
 		
-		XAsset::MeshTexture WhiteCTex;
+		Assets::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = XAsset::MeshTextureType::Diffuse;
-		std::vector<XAsset::MeshTexture> spheretextures;
+		WhiteCTex.type = Assets::MeshTextureType::Diffuse;
+		std::vector<Assets::MeshTexture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = XAsset::MeshTextureType::Specular;
+		WhiteCTex.type = Assets::MeshTextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 
-		XAsset::ModelAsset::CreateSphere(&Lamp, spheretextures);
+		Assets::Mesh::CreateSphere(&Lamp, spheretextures);
 		Lamp.Initialize(&Renderer->GetVertexShader());
 		
 	}
@@ -131,7 +131,7 @@ public:
 
 		SetupLights();
 
-		SetupXAsset();
+		SetupAssets();
 
 		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 

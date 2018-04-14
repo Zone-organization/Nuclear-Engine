@@ -21,7 +21,7 @@ namespace NuclearEngine {
 			// Arranged functions.
 			virtual void Start();					 // At Startup
 			virtual void Initialize(Game * mGame);	 // after Startup
-			virtual void Load();				     // Loading XAssets
+			virtual void Load();				     // Loading Assetss
 			virtual void Update(float Deltatime);    // Update The Editor "Before Rendering"
 			virtual void Render(float Deltatime);    // Render The Editor
 			virtual void ExitRendering();			 // Exit Rendering

@@ -1,12 +1,12 @@
 #include "Managers\AssetManager.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "..\Thirdparty\stb_image.h"
-#include <XAsset\ModelAsset.h>
+#include <Assets\Mesh.h>
 #include "AssimpImporter.h"
 
 namespace NuclearEngine {
 	namespace Managers {
-		bool AssetManager::LoadModel(std::string Path, XAsset::ModelAsset * model, const ModelLoadingDesc& desc)
+		bool AssetManager::LoadModel(std::string Path, Assets::Mesh * model, const MeshLoadingDesc& desc)
 		{
 			Internal::AssimpImporter importer;
 			return importer.Load(Path, model, desc);

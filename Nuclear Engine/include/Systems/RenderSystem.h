@@ -6,7 +6,7 @@
 #include <Components\Model.h>
 #include <Components\GenericCamera.h>
 #include <Components\Light.h>
-#include <XAsset\ModelAsset.h>
+#include <Assets\ModelAsset.h>
 #include <Graphics/API/RenderTarget.h>
 #include <Graphics/API/Sampler.h>
 #include <vector>
@@ -54,9 +54,9 @@ namespace NuclearEngine
 			// Render A Model Component instantly
 			void InstantRender(Components::Model* object);
 			// Render A Model Asset instantly
-			void InstantRender(XAsset::ModelAsset* object);
+			void InstantRender(Assets::Mesh* object);
 			// Render A Mesh Asset instantly
-			void InstantRender(XAsset::Mesh* mesh);
+			void InstantRender(Assets::Mesh* mesh);
 
 			void RenderToPostProcessingRT();
 			void RenderPostProcessingContents();
@@ -96,7 +96,7 @@ namespace NuclearEngine
 			Graphics::API::RenderTarget PostProcessRT;
 			Graphics::API::VertexShader PostProcess_VShader;
 			Graphics::API::PixelShader PostProcess_PShader;
-			XAsset::ModelAsset PostProcessScreenQuad;
+			Assets::Mesh PostProcessScreenQuad;
 		};
 
 	}

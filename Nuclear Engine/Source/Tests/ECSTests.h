@@ -1,21 +1,22 @@
 #pragma once
-#pragma once
 #include "TestCommon.h"
 
 class ECSTests : public Core::Game
 {
 protected:
+	std::shared_ptr<Systems::RenderSystem> Renderer;
+
 	Graphics::API::VertexShader Vertexshader;
 	Graphics::API::PixelShader Pixelshader;
-
-	Graphics::API::VertexBuffer CubeVB;
-	Graphics::API::VertexBuffer PlaneVB;
 
 	Graphics::API::Sampler LinearSampler;
 	Graphics::API::Texture PlaneTex;
 	Graphics::API::Texture CubeTex;
 
-	Physics3D::PhysicsScene scene;
+	ECS::Scene Scene;
+	ECS::Entity EPlane;
+	ECS::Entity ECube1;
+	ECS::Entity ECube2;
 
 	Components::FlyCamera Camera;
 	float lastX = _Width_ / 2.0f;
@@ -83,76 +84,6 @@ public:
 		Graphics::API::VertexShader::Create(&Vertexshader, &Graphics::API::CompileShader(VertexShader, Graphics::API::ShaderType::Vertex));
 		Graphics::API::PixelShader::Create(&Pixelshader, &Graphics::API::CompileShader(PixelShader, Graphics::API::ShaderType::Pixel));
 
-		float cubevertices[] = {
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-			0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-		};
-		float planeVertices[] = {
-			// positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
-			5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-			-5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
-			-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-
-			5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-			-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-			5.0f, -0.5f, -5.0f,  2.0f, 2.0f
-		};
-
-		Graphics::API::VertexBufferDesc vDesc;
-		vDesc.data = cubevertices;
-		vDesc.size = sizeof(cubevertices);
-		vDesc.usage = Graphics::API::BufferUsage::Static;
-		Graphics::API::VertexBuffer::Create(&CubeVB, vDesc);
-
-		vDesc.data = planeVertices;
-		vDesc.size = sizeof(planeVertices);
-		Graphics::API::VertexBuffer::Create(&PlaneVB, vDesc);
-
-		Graphics::API::InputLayout ShaderIL;
-		ShaderIL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
-		ShaderIL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
-
-		CubeVB.SetInputLayout(&ShaderIL, &Vertexshader);
-		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
 
 		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
@@ -236,7 +167,7 @@ public:
 		LinearSampler.PSBind(0);
 		CubeTex.PSBind(0);
 
-		CubeVB.Bind();
+		//CubeVB.Bind();
 
 		// cube 1
 		Math::Matrix4 CubeModel(1.0f);
@@ -252,7 +183,7 @@ public:
 
 		// floor
 		PlaneTex.PSBind(0);
-		PlaneVB.Bind();
+		//PlaneVB.Bind();
 		Camera.SetModelMatrix(Math::Matrix4((1.0f)));
 		Graphics::API::Context::Draw(6);
 
@@ -260,8 +191,8 @@ public:
 	}
 	void Shutdown() override
 	{
-		Graphics::API::VertexBuffer::Delete(&CubeVB);
-		Graphics::API::VertexBuffer::Delete(&PlaneVB);
+		//Graphics::API::VertexBuffer::Delete(&CubeVB);
+		//::API::VertexBuffer::Delete(&PlaneVB);
 		Graphics::API::Texture::Delete(&CubeTex);
 	}
 };

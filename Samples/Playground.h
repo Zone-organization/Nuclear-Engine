@@ -6,14 +6,14 @@ class Playground : public Core::Game
 protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-	//XAsset
+	//Assets
 	Graphics::API::Texture DiffuseTex;
 	Graphics::API::Texture SpecularTex;
 	Graphics::API::Texture NormalTex;
 	Graphics::API::Texture WhiteTex;
 
-	XAsset::ModelAsset GridAsset;
-	XAsset::ModelAsset SphereAsset;
+	Assets::Mesh GridAsset;
+	Assets::Mesh SphereAsset;
 
 	//Default states
 	Graphics::API::CommonStates states;
@@ -61,37 +61,37 @@ public:
 
 
 	}
-	void SetupXAsset()
+	void SetupAssets()
 	{
 		SetupTextures();
 
-		std::vector<XAsset::MeshTexture> textures;
+		std::vector<Assets::MeshTexture> textures;
 
-		XAsset::MeshTexture DTexture;
+		Assets::MeshTexture DTexture;
 		DTexture.Texture = DiffuseTex;
-		DTexture.type = XAsset::MeshTextureType::Diffuse;
+		DTexture.type = Assets::MeshTextureType::Diffuse;
 		textures.push_back(DTexture);
 		DTexture.Texture = SpecularTex;
-		DTexture.type = XAsset::MeshTextureType::Specular;
+		DTexture.type = Assets::MeshTextureType::Specular;
 		textures.push_back(DTexture);
 		DTexture.Texture = NormalTex;
-		DTexture.type = XAsset::MeshTextureType::Normal;
+		DTexture.type = Assets::MeshTextureType::Normal;
 		textures.push_back(DTexture);
 
-		XAsset::ModelAssetVertexDesc descm;
+		Assets::MeshVertexDesc descm;
 		descm.Tangents = true;
-		XAsset::ModelAsset::CreateGrid(&GridAsset, textures, descm,2.0f, 2.0f, 5, 5);
+		Assets::Mesh::CreateGrid(&GridAsset, textures, descm,2.0f, 2.0f, 5, 5);
 		GridAsset.Initialize(&Renderer->GetVertexShader());
 
-		XAsset::MeshTexture WhiteCTex;
+		Assets::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = XAsset::MeshTextureType::Diffuse;
-		std::vector<XAsset::MeshTexture> spheretextures;
+		WhiteCTex.type = Assets::MeshTextureType::Diffuse;
+		std::vector<Assets::MeshTexture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = XAsset::MeshTextureType::Specular;
+		WhiteCTex.type = Assets::MeshTextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 
-		XAsset::ModelAsset::CreateSphere(&SphereAsset, spheretextures, descm);
+		Assets::Mesh::CreateSphere(&SphereAsset, spheretextures, descm);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
 	}
 
@@ -112,7 +112,7 @@ public:
 
 		SetupLights();
 
-		SetupXAsset();
+		SetupAssets();
 
 		states.EnabledDepth_DisabledStencil.Bind();
 		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);

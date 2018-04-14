@@ -45,7 +45,6 @@
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Managers\ShaderManager.h" />
-    <ClInclude Include="include\XAsset\ModelAsset.h" />
     <ClInclude Include="Source\Managers\AssimpImporter.h" />
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\Math\detail\_features.hpp" />
@@ -280,6 +279,7 @@
     <ClInclude Include="include\Transform\Transform.h" />
     <ClInclude Include="include\Physics3D\Collider.h" />
     <ClInclude Include="Source\Tests\ECSTests.h" />
+    <ClInclude Include="include\Assets\Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -306,7 +306,6 @@
     <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
     <ClCompile Include="Source\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
-    <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Graphics\API\DirectX\DX11BlendState.cpp" />
     <ClCompile Include="Source\Graphics\API\DirectX\DX11ConstantBuffer.cpp" />
@@ -374,6 +373,7 @@
     <ClCompile Include="Source\ECS\Event.cpp" />
     <ClCompile Include="Source\Transform\Transform.cpp" />
     <ClCompile Include="Source\Physics3D\Collider.cpp" />
+    <ClCompile Include="Source\Assets\Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

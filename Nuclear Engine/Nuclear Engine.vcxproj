@@ -537,7 +537,7 @@
     <ClInclude Include="include\Physics3D\Physics3DEngine.h" />
     <ClInclude Include="include\Physics3D\RigidBody.h" />
     <ClInclude Include="include\Systems\SpriteRenderSystem.h" />
-    <ClInclude Include="include\XAsset\ModelAsset.h" />
+    <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\GUI\imconfig.h" />
     <ClInclude Include="include\GUI\ImGui.h" />
     <ClInclude Include="include\Components\Model.h" />
@@ -673,7 +673,7 @@
     <ClCompile Include="Source\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Systems\SpriteRenderSystem.cpp" />
-    <ClCompile Include="Source\XAsset\ModelAsset.cpp" />
+    <ClCompile Include="Source\Assets\Mesh.cpp" />
     <ClCompile Include="Source\GUI\imgui.cpp" />
     <ClCompile Include="Source\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Components\Model.cpp" />

@@ -30,12 +30,12 @@ _____________/BOOOM\_____________
 #include <Platform\Timer.h>
 #include <Platform\Input.h>
 
-//# XAsset & their managers Headers
+//# Assets & their managers Headers
 #include <Managers\AssetManager.h>
 #include <Managers\ShaderManager.h>
 
-//# Asset Classes (XAsset)
-#include <XAsset\ModelAsset.h>
+//# Asset Classes
+#include <Assets\Mesh.h>
 
 //# Audio SubSystem Headers
 #include <Audio/AudioEngine.h>

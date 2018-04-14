@@ -53,7 +53,7 @@ namespace NuclearEngine
 			VertShaderDesc.OutFragPos = false;
 
 			PostProcess_VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
-			XAsset::ModelAsset::CreateScreenQuad(&PostProcessScreenQuad);
+			Assets::Mesh::CreateScreenQuad(&PostProcessScreenQuad);
 			PostProcessScreenQuad.Initialize(&PostProcess_VShader);
 			std::vector<std::string> defines;
 			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
@@ -191,14 +191,14 @@ namespace NuclearEngine
 				InstantRender(&object->GetAsset()->Meshes.at(i));
 			}
 		}
-		void RenderSystem::InstantRender(XAsset::ModelAsset * object)
+		void RenderSystem::InstantRender(Assets::Mesh * object)
 		{
 			for (size_t i = 0; i< object->Meshes.size(); i++)
 			{
 				InstantRender(&object->Meshes.at(i));
 			}
 		}
-		void RenderSystem::InstantRender(XAsset::Mesh * mesh)
+		void RenderSystem::InstantRender(Assets::Mesh * mesh)
 		{
 			//Lil hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
@@ -209,7 +209,7 @@ namespace NuclearEngine
 			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
-				if (mesh->data.textures[i].type == XAsset::MeshTextureType::Diffuse)
+				if (mesh->data.textures[i].type == Assets::MeshTextureType::Diffuse)
 				{
 					if (diffusebound != true)
 					{
@@ -217,7 +217,7 @@ namespace NuclearEngine
 						diffusebound = true;
 					}
 				}
-				else if (mesh->data.textures[i].type == XAsset::MeshTextureType::Specular)
+				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Specular)
 				{
 					if (specularbound != true)
 					{
@@ -225,7 +225,7 @@ namespace NuclearEngine
 						specularbound = true;
 					}
 				}
-				else if (mesh->data.textures[i].type == XAsset::MeshTextureType::Normal)
+				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Normal)
 				{
 					if (normalbound != true)
 					{

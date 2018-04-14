@@ -14,7 +14,7 @@ protected:
 	Graphics::API::VertexBuffer CubeVB;
 	Graphics::API::VertexBuffer PlaneVB;
 
-	XAsset::ModelAsset ScreenQuad;
+	Assets::Mesh ScreenQuad;
 
 	Graphics::API::Sampler LinearSampler;
 	Graphics::API::Texture PlaneTex;
@@ -227,7 +227,7 @@ public:
 		CubeVB.SetInputLayout(&ShaderIL, &VShader);
 		PlaneVB.SetInputLayout(&ShaderIL, &VShader);
 
-		XAsset::ModelAsset::CreateScreenQuad(&ScreenQuad);
+		Assets::Mesh::CreateScreenQuad(&ScreenQuad);
 		ScreenQuad.Initialize(&ScreenVShader);
 		
 		//Create sampler

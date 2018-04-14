@@ -4,14 +4,14 @@
 #include <array>
 #include <string>
 namespace NuclearEngine {
-	namespace XAsset 
+	namespace Assets
 	{
-		class ModelAsset;
+		class Mesh;
 	}
 	namespace Managers
 	{
 
-		struct ModelLoadingDesc
+		struct MeshLoadingDesc
 		{
 			bool UseTexCoords = true;
 			bool UseNormals = true;
@@ -25,7 +25,7 @@ namespace NuclearEngine {
 		public:
 
 
-			static bool LoadModel(std::string Path, XAsset::ModelAsset* model, const ModelLoadingDesc& = ModelLoadingDesc());
+			static bool LoadModel(std::string Path, Assets::Mesh* model, const MeshLoadingDesc& = MeshLoadingDesc());
 
 			static Graphics::API::Texture_Data LoadTextureFromFile(std::string Path, const Graphics::API::Texture_Desc& Desc);
 			static void CreateTextureFromFile(std::string Path, Graphics::API::Texture* texture, const Graphics::API::Texture_Desc& Desc);

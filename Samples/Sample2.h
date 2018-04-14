@@ -12,11 +12,11 @@ protected:
 
 	bool usenormalmaps = false;
 
-	//XAsset
+	//Assets
 	Graphics::API::Texture WhiteTex;
 
-	XAsset::ModelAsset SphereAsset;
-	XAsset::ModelAsset SponzaAsset;
+	Assets::Mesh SphereAsset;
+	Assets::Mesh SponzaAsset;
 
 	//Default states
 	Graphics::API::CommonStates states;
@@ -80,30 +80,30 @@ public:
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 	}
-	void SetupXAsset()
+	void SetupAssets()
 	{
 		SetupTextures();
 
-		XAsset::MeshTexture WhiteCTex;
+		Assets::MeshTexture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = XAsset::MeshTextureType::Diffuse;
-		std::vector<XAsset::MeshTexture> spheretextures;
+		WhiteCTex.type = Assets::MeshTextureType::Diffuse;
+		std::vector<Assets::MeshTexture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = XAsset::MeshTextureType::Specular;
+		WhiteCTex.type = Assets::MeshTextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 		
-		XAsset::ModelAssetVertexDesc descsphere;
+		Assets::MeshVertexDesc descsphere;
 		if (usenormalmaps)
 		{
-			WhiteCTex.type = XAsset::MeshTextureType::Normal;
+			WhiteCTex.type = Assets::MeshTextureType::Normal;
 			spheretextures.push_back(WhiteCTex);
 
 			descsphere.Tangents = true;
 		}
-		XAsset::ModelAsset::CreateSphere(&SphereAsset, spheretextures);
+		Assets::Mesh::CreateSphere(&SphereAsset, spheretextures);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
 
-		Managers::ModelLoadingDesc ModelDesc;
+		Managers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 
@@ -156,7 +156,7 @@ public:
 
 		SetupLights();
 
-		SetupXAsset();
+		SetupAssets();
 
 		SetupEntities();
 
