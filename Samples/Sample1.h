@@ -48,9 +48,9 @@ protected:
 	ECS::Entity ELamp;
 	ECS::Entity ENanosuit;
 
-	Components::Model CubeModel;
-	Components::Model LampModel;
-	Components::Model NanosuitModel;
+	Components::MeshComponent CubeModel;
+	Components::MeshComponent LampModel;
+	Components::MeshComponent NanosuitModel;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] = 
@@ -183,13 +183,13 @@ public:
 	{
 		CubeModel.SetAsset(&CubeAsset);
 		//ECube = SampleScene.Entities.Create();
-		//ECube.Assign<Components::Model>(CubeModel);
+		//ECube.Assign<Components::MeshComponent>(CubeModel);
 		LampModel.SetAsset(&SphereAsset);
 		//ELamp = SampleScene.Entities.Create();
-		//ELamp.Assign<Components::Model>(LampModel);
+		//ELamp.Assign<Components::MeshComponent>(LampModel);
 		NanosuitModel.SetAsset(&NanosuitAsset);
 		//ENanosuit = SampleScene.Entities.Create();
-		//ENanosuit.Assign<Components::Model>(NanosuitModel);
+		//ENanosuit.Assign<Components::MeshComponent>(NanosuitModel);
 		ESkybox = SampleScene.Entities.Create();
 		ESkybox.Assign<Components::Skybox>(Skybox);
 		ESkybox.Assign<Components::ModelRenderDesc>();

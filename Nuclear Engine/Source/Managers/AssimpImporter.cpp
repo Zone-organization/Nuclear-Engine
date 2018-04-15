@@ -13,14 +13,14 @@ namespace NuclearEngine {
 
 		bool AssimpImporter::LoadModel(std::string path)
 		{
-			Log.Info("[AssetManager] Loading Model: " + path + "\n");
+			Log.Info("[AssetManager] Loading Mesh: " + path + "\n");
 			Assimp::Importer importer;
 			const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
 
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
-				Log.Error("[AssetManager] Assimp Failed to load model: " + path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
+				Log.Error("[AssetManager] Assimp Failed to load mesh: " + path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
 				return false;
 			}
 			directory = path.substr(0, path.find_last_of('/'));
@@ -28,10 +28,10 @@ namespace NuclearEngine {
 
 			for (unsigned int i = 0; i < meshes_loaded.size(); i++)
 			{
-				model->SubMeshes.push_back(Assets::Mesh(meshes_loaded.at(i)));
+				model->SubMeshes.push_back(Assets::Mesh::SubMesh(meshes_loaded.at(i)));
 			}
 
-			Log.Info("[AssetManager] Loaded Model: " + path + "\n");
+			Log.Info("[AssetManager] Loaded Mesh: " + path + "\n");
 			return true;
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)

@@ -184,21 +184,21 @@ namespace NuclearEngine
 			NE_Light_CB.Update(LightsBuffer.data(), NE_Light_CB_Size);
 		}
 
-		void RenderSystem::InstantRender(Components::Model * object)
+		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{
-			for (size_t i = 0; i< object->GetAsset()->Meshes.size(); i++)
+			for (size_t i = 0; i< object->GetAsset()->SubMeshes.size(); i++)
 			{
-				InstantRender(&object->GetAsset()->Meshes.at(i));
+				InstantRender(&object->GetAsset()->SubMeshes.at(i));
 			}
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * object)
 		{
-			for (size_t i = 0; i< object->Meshes.size(); i++)
+			for (size_t i = 0; i< object->SubMeshes.size(); i++)
 			{
-				InstantRender(&object->Meshes.at(i));
+				InstantRender(&object->SubMeshes.at(i));
 			}
 		}
-		void RenderSystem::InstantRender(Assets::Mesh * mesh)
+		void RenderSystem::InstantRender(Assets::Mesh::SubMesh * mesh)
 		{
 			//Lil hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
@@ -255,7 +255,7 @@ namespace NuclearEngine
 		}
 		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
-			ECS::ComponentHandle<Components::Model> ModelObject;
+			ECS::ComponentHandle<Components::MeshComponent> ModelObject;
 			for (ECS::Entity entity : es.entities_with_components(ModelObject))
 			{
 				entity.GetTransform()->Update();

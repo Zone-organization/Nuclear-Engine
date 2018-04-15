@@ -3,10 +3,10 @@
 #include <ECS/Entity.h>
 #include "ECS/Event.h"
 #include "ECS/System.h"
-#include <Components\Model.h>
+#include <Components\MeshComponent.h>
 #include <Components\GenericCamera.h>
 #include <Components\Light.h>
-#include <Assets\ModelAsset.h>
+#include <Assets\Mesh.h>
 #include <Graphics/API/RenderTarget.h>
 #include <Graphics/API/Sampler.h>
 #include <vector>
@@ -51,11 +51,11 @@ namespace NuclearEngine
 
 			//Main Rendering Function
 			void Render();
-			// Render A Model Component instantly
-			void InstantRender(Components::Model* object);
-			// Render A Model Asset instantly
-			void InstantRender(Assets::Mesh* object);
-			// Render A Mesh Asset instantly
+			// Render A MeshComponent Component instantly
+			void InstantRender(Components::MeshComponent* object);
+			// Render A SubMesh instantly
+			void InstantRender(Assets::Mesh::SubMesh* submesh);
+			// Render A Mesh instantly
 			void InstantRender(Assets::Mesh* mesh);
 
 			void RenderToPostProcessingRT();

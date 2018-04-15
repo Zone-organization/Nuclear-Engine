@@ -540,7 +540,7 @@
     <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\GUI\imconfig.h" />
     <ClInclude Include="include\GUI\ImGui.h" />
-    <ClInclude Include="include\Components\Model.h" />
+    <ClInclude Include="include\Components\MeshComponent.h" />
     <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Transform\Transform.h" />
@@ -676,7 +676,7 @@
     <ClCompile Include="Source\Assets\Mesh.cpp" />
     <ClCompile Include="Source\GUI\imgui.cpp" />
     <ClCompile Include="Source\GUI\imgui_draw.cpp" />
-    <ClCompile Include="Source\Components\Model.cpp" />
+    <ClCompile Include="Source\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Transform\Transform.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />

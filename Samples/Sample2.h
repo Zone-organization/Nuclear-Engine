@@ -35,8 +35,8 @@ protected:
 	ECS::Entity ELamp;
 	ECS::Entity ENanosuit;
 
-	Components::Model LampModel;
-	Components::Model SponzaModel;
+	Components::MeshComponent LampModel;
+	Components::MeshComponent SponzaModel;
 
 	// positions of the point lights
 	Math::Vector3 pointLightPositions[4] =

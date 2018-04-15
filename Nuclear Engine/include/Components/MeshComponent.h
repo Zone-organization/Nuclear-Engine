@@ -4,15 +4,15 @@
 
 namespace NuclearEngine {
 	namespace Assets {
-		class ModelAsset;
+		class Mesh;
 	}
 	namespace Components {
 
-		class NEAPI Model : public ECS::Component<Model>
+		class NEAPI MeshComponent : public ECS::Component<MeshComponent>
 		{
 		public:			
-			Model();
-			~Model();
+			MeshComponent();
+			~MeshComponent();
 
 			void SetAsset(Assets::Mesh *asset);
 			Assets::Mesh * GetAsset();

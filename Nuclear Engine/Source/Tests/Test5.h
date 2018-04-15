@@ -48,7 +48,7 @@ struct PixelInputType
 
 cbuffer NE_Camera : register(b0)
 {
-    matrix Model;
+    matrix MeshComponent;
     matrix ModelInvTranspose;
     matrix ModelViewProjection;
     matrix View;
@@ -391,9 +391,9 @@ public:
 		ScreenPShader.Bind();
 		ScreenSampler.PSBind(0);
 		ScreenTex.PSBind(0);
-		ScreenQuad.Meshes.at(0).VBO.Bind();
-		ScreenQuad.Meshes.at(0).IBO.Bind();
-		Graphics::API::Context::DrawIndexed(ScreenQuad.Meshes.at(0).IndicesCount);
+		ScreenQuad.SubMeshes.at(0).VBO.Bind();
+		ScreenQuad.SubMeshes.at(0).IBO.Bind();
+		Graphics::API::Context::DrawIndexed(ScreenQuad.SubMeshes.at(0).IndicesCount);
 		//ScreenQuad.Render();
 		PlaneTex.PSBind(0);
 

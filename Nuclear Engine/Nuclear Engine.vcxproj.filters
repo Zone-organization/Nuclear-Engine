@@ -14,7 +14,6 @@
     <ClInclude Include="include\NE_Exception.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\Components\Light.h" />
-    <ClInclude Include="include\Components\Model.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Math\Math.h" />
@@ -280,6 +279,7 @@
     <ClInclude Include="include\Physics3D\Collider.h" />
     <ClInclude Include="Source\Tests\ECSTests.h" />
     <ClInclude Include="include\Assets\Mesh.h" />
+    <ClInclude Include="include\Components\MeshComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -292,7 +292,6 @@
     <ClCompile Include="Source\Components\Skybox.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />
-    <ClCompile Include="Source\Components\Model.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
@@ -374,6 +373,7 @@
     <ClCompile Include="Source\Transform\Transform.cpp" />
     <ClCompile Include="Source\Physics3D\Collider.cpp" />
     <ClCompile Include="Source\Assets\Mesh.cpp" />
+    <ClCompile Include="Source\Components\MeshComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

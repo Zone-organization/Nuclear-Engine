@@ -21,7 +21,7 @@ namespace NuclearEngine {
 			MeshTextureType type;
 		};
 		
-		struct ModelAssetVertexDesc
+		struct MeshVertexDesc
 		{
 			bool TexCoord = true;
 			bool Normals = true;
@@ -40,10 +40,10 @@ namespace NuclearEngine {
 			void Initialize(Graphics::API::VertexShader* _shader);
 			void Delete();
 
-			static void CreateCube(Mesh* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc = ModelAssetVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
-			static void CreateSphere(Mesh* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc = ModelAssetVertexDesc(), float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
-			static void CreatePlane(Mesh* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc = ModelAssetVertexDesc(), float width = 160.0f, float depth = 160.0f, unsigned int m = 50, unsigned int n = 50);
-			static void CreateGrid(Mesh* model, std::vector<MeshTexture> Textures, const ModelAssetVertexDesc& desc = ModelAssetVertexDesc(), float width = 10.0f, float depth = 10.0f, unsigned int m = 10, unsigned int n = 10);
+			static void CreateCube(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
+			static void CreateSphere(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
+			static void CreatePlane(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 160.0f, float depth = 160.0f, unsigned int m = 50, unsigned int n = 50);
+			static void CreateGrid(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 10.0f, float depth = 10.0f, unsigned int m = 10, unsigned int n = 10);
 			static void CreateScreenQuad(Mesh* model);
 
 			struct SubMesh {
@@ -60,7 +60,7 @@ namespace NuclearEngine {
 
 				/*  Mesh Data  */
 				SubMesh(SubMeshData data);
-				SubMesh(const Mesh& obj);
+				SubMesh(const SubMesh& obj);
 				~SubMesh();
 				void Initialize(Graphics::API::VertexShader* _shader);
 				void Delete();

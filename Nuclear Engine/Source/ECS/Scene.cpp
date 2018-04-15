@@ -1,6 +1,6 @@
 #include <ECS\Scene.h>
 #include <ECS\ComponentDependency.h>
-#include <Components\Model.h>
+#include <Components\MeshComponent.h>
 #include <Components\Skybox.h>
 #include <Components\ModelRenderDesc.h>
 
@@ -11,7 +11,7 @@ namespace NuclearEngine
 		Scene::Scene()
 			: Entities(Events),Systems(Entities, Events)
 		{
-			Systems.Add<Dependency<Components::Model, Components::ModelRenderDesc>>();
+			Systems.Add<Dependency<Components::MeshComponent, Components::ModelRenderDesc>>();
 			Systems.Add<Dependency<Components::Skybox, Components::ModelRenderDesc>>();
 
 		}

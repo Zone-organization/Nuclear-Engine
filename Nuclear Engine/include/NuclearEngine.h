@@ -57,7 +57,7 @@ _____________/BOOOM\_____________
 #include <Components\FlyCamera.h>
 #include <Components\Skybox.h>
 #include <Components\Light.h>
-#include <Components\Model.h>
+#include <Components\MeshComponent.h>
 #include <Components\Sprite.h>
 #include <Components\ModelRenderDesc.h>
 
