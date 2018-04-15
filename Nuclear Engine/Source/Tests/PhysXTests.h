@@ -50,7 +50,7 @@ struct PixelInputType
 
 cbuffer NE_Camera : register(b0)
 {
-    matrix MeshComponent;
+    matrix Model;
     matrix ModelInvTranspose;
     matrix ModelViewProjection;
     matrix View;

@@ -11,6 +11,7 @@ namespace NuclearEngine {
 		class NEAPI MeshComponent : public ECS::Component<MeshComponent>
 		{
 		public:			
+			MeshComponent(Assets::Mesh *asset);
 			MeshComponent();
 			~MeshComponent();
 

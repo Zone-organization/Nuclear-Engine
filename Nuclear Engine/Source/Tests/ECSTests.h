@@ -18,6 +18,9 @@ protected:
 	ECS::Entity ECube1;
 	ECS::Entity ECube2;
 
+	Assets::Mesh Cube;
+	Assets::Mesh Plane;
+
 	Components::FlyCamera Camera;
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -40,7 +43,7 @@ struct PixelInputType
 
 cbuffer NE_Camera : register(b0)
 {
-    matrix MeshComponent;
+    matrix Model;
     matrix ModelInvTranspose;
     matrix ModelViewProjection;
     matrix View;
@@ -81,10 +84,14 @@ public:
 	}
 	void Load()
 	{
+		Systems::RenderSystemDesc desc;
+		Renderer = Scene.Systems.Add<Systems::RenderSystem>(desc);
+		Scene.Systems.Configure();
+
+
 		Graphics::API::VertexShader::Create(&Vertexshader, &Graphics::API::CompileShader(VertexShader, Graphics::API::ShaderType::Vertex));
 		Graphics::API::PixelShader::Create(&Pixelshader, &Graphics::API::CompileShader(PixelShader, Graphics::API::ShaderType::Pixel));
-
-
+		
 		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
@@ -93,9 +100,27 @@ public:
 		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
 		Desc.Type = Graphics::API::TextureType::Texture2D;
 		Desc.GenerateMipMaps = true;
+
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
 
+		Assets::MeshTexture MTexture;
+		MTexture.type = Assets::MeshTextureType::Diffuse;
+		MTexture.Texture = CubeTex;
+
+		Assets::MeshVertexDesc vertexDesc;
+		vertexDesc.Normals = false;
+		vertexDesc.Tangents = false;
+		Assets::Mesh::CreateCube(&Cube, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 1.0f, 1.0f, 1.0f);
+
+		//MTexture.Texture = PlaneTex;
+		//Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 2.0f, 2.0f, 2.0f,2.0f);
+		//
+		//ECube1 = Scene.Entities.Create();
+		//ECube1.Assign<Components::MeshComponent>(Cube);
+		//ECube2 = Scene.Entities.Create();
+		//ECube2.Assign<Components::MeshComponent>(Cube);
+	
 		//Create sampler
 		Graphics::API::SamplerDesc Samplerdesc;
 		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
@@ -166,8 +191,6 @@ public:
 		Pixelshader.Bind();
 		LinearSampler.PSBind(0);
 		CubeTex.PSBind(0);
-
-		//CubeVB.Bind();
 
 		// cube 1
 		Math::Matrix4 CubeModel(1.0f);

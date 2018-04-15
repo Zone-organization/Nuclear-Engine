@@ -4,6 +4,10 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
+		MeshComponent::MeshComponent(Assets::Mesh * asset)
+		{
+			m_asset = asset;
+		}
 		MeshComponent::MeshComponent()
 		{
 			m_asset = nullptr;
