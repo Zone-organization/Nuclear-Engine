@@ -113,13 +113,13 @@ public:
 		vertexDesc.Tangents = false;
 		Assets::Mesh::CreateCube(&Cube, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 1.0f, 1.0f, 1.0f);
 
-		//MTexture.Texture = PlaneTex;
-		//Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 2.0f, 2.0f, 2.0f,2.0f);
-		//
-		//ECube1 = Scene.Entities.Create();
-		//ECube1.Assign<Components::MeshComponent>(Cube);
-		//ECube2 = Scene.Entities.Create();
-		//ECube2.Assign<Components::MeshComponent>(Cube);
+		MTexture.Texture = PlaneTex;
+		Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 2.0f, 2.0f, 2.0f,2.0f);
+		
+		ECube1 = Scene.Entities.Create();
+		ECube1.Assign<Components::MeshComponent>(&Cube);
+		ECube2 = Scene.Entities.Create();
+		ECube2.Assign<Components::MeshComponent>(&Cube);
 	
 		//Create sampler
 		Graphics::API::SamplerDesc Samplerdesc;

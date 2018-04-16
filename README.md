@@ -31,6 +31,8 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Implement PhysXEngine (Nvidia Physics)
   - Implement Class based GUI from ImGui.
   - Implement SpriteRenderSystem
+  - Depend 100% on ECS.
+  
 ### Building
 Please See NuclearDeps Repo for dependencies.
 Currently I am using Visual Studio 2017 to build it.

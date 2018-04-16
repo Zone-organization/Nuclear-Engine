@@ -319,6 +319,10 @@ namespace NuclearEngine {
 			model->SubMeshes.push_back(meshData);
 		}
 
+		void Mesh::CreatePlane(Mesh * model, std::vector<MeshTexture> Textures, const MeshVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
+		{
+		}
+
 		void Mesh::CreateGrid(Mesh * model, std::vector<MeshTexture> Textures, const MeshVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
 		{
 			SubMesh::SubMeshData meshData;
