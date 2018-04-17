@@ -42,7 +42,7 @@ namespace NuclearEngine {
 
 			static void CreateCube(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
 			static void CreateSphere(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
-			static void CreatePlane(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 160.0f, float depth = 160.0f, unsigned int m = 50, unsigned int n = 50);
+			static void CreatePlane(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float depth = 1.0f);
 			static void CreateGrid(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 10.0f, float depth = 10.0f, unsigned int m = 10, unsigned int n = 10);
 			static void CreateScreenQuad(Mesh* model);
 

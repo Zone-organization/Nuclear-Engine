@@ -118,8 +118,8 @@ public:
 	}
 	void SetupEntities()
 	{
-		LampModel.SetAsset(&SphereAsset);
-		SponzaModel.SetAsset(&SponzaAsset);
+		LampModel.mMesh = &SphereAsset;
+		SponzaModel.mMesh = &SponzaAsset;
 	}
 	void Load()
 	{

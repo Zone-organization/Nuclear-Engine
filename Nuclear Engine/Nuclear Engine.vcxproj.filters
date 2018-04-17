@@ -40,7 +40,6 @@
     <ClInclude Include="include\Utilities\Signal.h" />
     <ClInclude Include="include\Utilities\Pool.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
-    <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="Source\Tests\DirectX11Tests.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Managers\ShaderManager.h" />
@@ -280,6 +279,8 @@
     <ClInclude Include="Source\Tests\ECSTests.h" />
     <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
+    <ClInclude Include="include\Assets\Material.h" />
+    <ClInclude Include="include\Components\CameraComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

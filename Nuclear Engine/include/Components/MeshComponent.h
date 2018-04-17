@@ -3,23 +3,26 @@
 #include <ECS\Entity.h>
 
 namespace NuclearEngine {
-	namespace Assets {
+	namespace Assets 
+	{
 		class Mesh;
+		class Material;
 	}
-	namespace Components {
+	namespace Components 
+	{
 
 		class NEAPI MeshComponent : public ECS::Component<MeshComponent>
 		{
 		public:			
-			MeshComponent(Assets::Mesh *asset);
-			MeshComponent();
+			MeshComponent(Assets::Mesh *mesh = nullptr, Assets::Material * material = nullptr);
 			~MeshComponent();
 
-			void SetAsset(Assets::Mesh *asset);
-			Assets::Mesh * GetAsset();
+			//if false the RenderSystem won't render the model
+			bool Render = true;
 
-		private:
-			Assets::Mesh * m_asset;
+			Assets::Mesh * mMesh;
+			Assets::Material * mMaterial;
+
 		};
 
 	}

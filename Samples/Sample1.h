@@ -8,8 +8,6 @@ protected:
 
 	bool renderboxes = true;
 	bool renderspheres = true;
-	bool renderskybox = true;
-	bool renderskyboxenabled = true;
 	bool rendernanosuit = true;
 
 	//Assets
@@ -181,18 +179,17 @@ public:
 	}
 	void SetupEntities()
 	{
-		CubeModel.SetAsset(&CubeAsset);
+		CubeModel.mMesh = &CubeAsset;
 		//ECube = SampleScene.Entities.Create();
 		//ECube.Assign<Components::MeshComponent>(CubeModel);
-		LampModel.SetAsset(&SphereAsset);
+		LampModel.mMesh = &SphereAsset;
 		//ELamp = SampleScene.Entities.Create();
 		//ELamp.Assign<Components::MeshComponent>(LampModel);
-		NanosuitModel.SetAsset(&NanosuitAsset);
+		NanosuitModel.mMesh = &NanosuitAsset;
 		//ENanosuit = SampleScene.Entities.Create();
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitModel);
 		ESkybox = SampleScene.Entities.Create();
 		ESkybox.Assign<Components::Skybox>(Skybox);
-		ESkybox.Assign<Components::ModelRenderDesc>();
 	}
 	void Load()
 	{
@@ -344,31 +341,12 @@ public:
 		Renderer->Update_Light();
 
 		SampleScene.Systems.Update_All(dt);
-		
-		if (renderskybox == true)
-		{
-			if (renderskyboxenabled == false)
-			{
-				auto renderdesc = ESkybox.GetComponent<Components::ModelRenderDesc>();
-				renderdesc.Get()->Render = true;
-				renderskyboxenabled = true;
-			}
-		}
-		else
-		{
-			if (renderskyboxenabled == true)
-			{
-				auto renderdesc = ESkybox.GetComponent<Components::ModelRenderDesc>();
-				renderdesc.Get()->Render = false;
-				renderskyboxenabled = false;
-			}
-		}
+
 		states.EnabledDepth_DisabledStencil.Bind();
 
 		ImGui::Checkbox("Render Boxes", &renderboxes);
 		ImGui::Checkbox("Render Lamps Spheres", &renderspheres);
 		ImGui::Checkbox("Render Nanosuit", &rendernanosuit);
-		ImGui::Checkbox("Render Skybox", &renderskybox);
 		ImGui::Image(&DiffuseTex,ImVec2(100.0f,100.0f));
 		ShowOverlay(true);
 

@@ -333,9 +333,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Assets\Material.h" />
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Audio\Channel.h" />
     <ClInclude Include="include\Audio\Sound.h" />
+    <ClInclude Include="include\Components\CameraComponent.h" />
     <ClInclude Include="include\Components\Renderable2D.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
@@ -541,7 +543,6 @@
     <ClInclude Include="include\GUI\imconfig.h" />
     <ClInclude Include="include\GUI\ImGui.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
-    <ClInclude Include="include\Components\ModelRenderDesc.h" />
     <ClInclude Include="include\Components\Sprite.h" />
     <ClInclude Include="include\Transform\Transform.h" />
     <ClInclude Include="include\ECS\ComponentDependency.h" />

@@ -5,9 +5,8 @@
 #include <Graphics\API\Context.h>
 #include <Transform\Transform.h>
 #include <Components\Skybox.h>
-#include <Components\ModelRenderDesc.h>
 #include <Managers\ShaderManager.h>
-
+#include <Assets\Material.h>
 
 namespace NuclearEngine
 {
@@ -186,9 +185,12 @@ namespace NuclearEngine
 
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{
-			for (size_t i = 0; i< object->GetAsset()->SubMeshes.size(); i++)
+			if (object->mMesh)
 			{
-				InstantRender(&object->GetAsset()->SubMeshes.at(i));
+				for (size_t i = 0; i < object->mMesh->SubMeshes.size(); i++)
+				{
+					InstantRender(&object->mMesh->SubMeshes.at(i));
+				}
 			}
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * object)
@@ -200,7 +202,7 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh::SubMesh * mesh)
 		{
-			//Lil hack to ensure only one rendering texture is bound
+			//Lil and UGLY AND SLOW hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
 			bool diffusebound = false;
 			bool specularbound = false;
@@ -260,24 +262,31 @@ namespace NuclearEngine
 			{
 				entity.GetTransform()->Update();
 				ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransformMatrix());
+				if (ModelObject.Get()->mMaterial)
+				{
+					if (ModelObject.Get()->mMaterial->mVShader)
+						ModelObject.Get()->mMaterial->mVShader->Bind();
+					//else
+
+					if (ModelObject.Get()->mMaterial->mPShader)
+						ModelObject.Get()->mMaterial->mPShader->Bind();
+					//else
+				}
 				InstantRender(ModelObject.Get());
 			}
 
 			ECS::ComponentHandle<Components::Skybox> skybox;
 			for (ECS::Entity entity : es.entities_with_components(skybox))
 			{
-				auto renderdesc = entity.GetComponent<Components::ModelRenderDesc>();
 
-				if (renderdesc.Get()->Render == true)
-				{
-					skybox.Get()->m_vb.Bind();
-					skybox.Get()->m_ds_state.Bind();
-					skybox.Get()->v_shader.Bind();
-					skybox.Get()->p_shader.Bind();
-					skybox.Get()->m_texcube.PSBind(0);
-					skybox.Get()->m_sampler.PSBind(0);
-					Graphics::API::Context::Draw(36);
-				}
+				skybox.Get()->m_vb.Bind();
+				skybox.Get()->m_ds_state.Bind();
+				skybox.Get()->v_shader.Bind();
+				skybox.Get()->p_shader.Bind();
+				skybox.Get()->m_texcube.PSBind(0);
+				skybox.Get()->m_sampler.PSBind(0);
+				Graphics::API::Context::Draw(36);
+
 			}
 		}
 		void RenderSystem::Calculate_Light_CB_Size()

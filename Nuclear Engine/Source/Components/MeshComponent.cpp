@@ -4,25 +4,15 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		MeshComponent::MeshComponent(Assets::Mesh * asset)
+		MeshComponent::MeshComponent(Assets::Mesh *mesh , Assets::Material * material)
 		{
-			m_asset = asset;
-		}
-		MeshComponent::MeshComponent()
-		{
-			m_asset = nullptr;
+			mMesh = mesh;
+			mMaterial = material;
 		}
 		MeshComponent::~MeshComponent()
 		{
-			m_asset = nullptr;
-		}
-		void MeshComponent::SetAsset(Assets::Mesh * asset)
-		{
-			m_asset = asset;
-		}
-		Assets::Mesh * MeshComponent::GetAsset()
-		{
-			return m_asset;
+			mMesh = nullptr;
+			mMaterial = nullptr;
 		}
 	}
 }

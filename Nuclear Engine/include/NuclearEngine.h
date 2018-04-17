@@ -36,6 +36,7 @@ _____________/BOOOM\_____________
 
 //# Asset Classes
 #include <Assets\Mesh.h>
+#include <Assets\Material.h>
 
 //# Audio SubSystem Headers
 #include <Audio/AudioEngine.h>
@@ -59,7 +60,6 @@ _____________/BOOOM\_____________
 #include <Components\Light.h>
 #include <Components\MeshComponent.h>
 #include <Components\Sprite.h>
-#include <Components\ModelRenderDesc.h>
 
 //# Engine Systems Headers
 #include <Systems\RenderSystem.h>

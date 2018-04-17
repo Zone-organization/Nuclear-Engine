@@ -114,12 +114,12 @@ public:
 		Assets::Mesh::CreateCube(&Cube, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 1.0f, 1.0f, 1.0f);
 
 		MTexture.Texture = PlaneTex;
-		Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 2.0f, 2.0f, 2.0f,2.0f);
+		Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 1.0f, 1.0f);
 		
 		ECube1 = Scene.Entities.Create();
 		ECube1.Assign<Components::MeshComponent>(&Cube);
 		ECube2 = Scene.Entities.Create();
-		ECube2.Assign<Components::MeshComponent>(&Cube);
+		ECube2.Assign<Components::MeshComponent>(&Plane);
 	
 		//Create sampler
 		Graphics::API::SamplerDesc Samplerdesc;
@@ -181,7 +181,7 @@ public:
 	Mouse - Make Camera look around
 	*/
 
-	void Render(float) override
+	void Render(float dt) override
 	{
 
 		//Change Background Color to Blue in RGBA format
@@ -190,25 +190,27 @@ public:
 		Vertexshader.Bind();
 		Pixelshader.Bind();
 		LinearSampler.PSBind(0);
-		CubeTex.PSBind(0);
+		//CubeTex.PSBind(0);
 
-		// cube 1
-		Math::Matrix4 CubeModel(1.0f);
-		CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
-		Camera.SetModelMatrix(CubeModel);
-		Graphics::API::Context::Draw(36);
+		//// cube 1
+		//Math::Matrix4 CubeModel(1.0f);
+		//CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
+		//Camera.SetModelMatrix(CubeModel);
+		//Graphics::API::Context::Draw(36);
 
-		// cube 2
-		CubeModel = Math::Matrix4(1.0f);
-		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
-		Camera.SetModelMatrix(CubeModel);
-		Graphics::API::Context::Draw(36);
+		//// cube 2
+		//CubeModel = Math::Matrix4(1.0f);
+		//CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
+		//Camera.SetModelMatrix(CubeModel);
+		//Graphics::API::Context::Draw(36);
 
-		// floor
-		PlaneTex.PSBind(0);
-		//PlaneVB.Bind();
-		Camera.SetModelMatrix(Math::Matrix4((1.0f)));
-		Graphics::API::Context::Draw(6);
+		//// floor
+		//PlaneTex.PSBind(0);
+		////PlaneVB.Bind();
+		//Camera.SetModelMatrix(Math::Matrix4((1.0f)));
+		//Graphics::API::Context::Draw(6);
+
+		Scene.Systems.Update_All(dt);
 
 		Graphics::API::Context::PresentFrame();
 	}
