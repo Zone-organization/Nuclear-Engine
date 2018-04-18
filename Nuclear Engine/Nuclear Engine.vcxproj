@@ -548,8 +548,6 @@
     <ClInclude Include="include\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Graphics\API\Context.h" />
     <ClInclude Include="include\BuildConfig.h" />
-    <ClInclude Include="include\Components\FlyCamera.h" />
-    <ClInclude Include="include\Components\GenericCamera.h" />
     <ClInclude Include="include\Components\Skybox.h" />
     <ClInclude Include="include\ECS\ECSConfig.h" />
     <ClInclude Include="include\ECS\Entity.h" />
@@ -690,8 +688,7 @@
     <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
-    <ClCompile Include="Source\Components\FlyCamera.cpp" />
-    <ClCompile Include="Source\Components\GenericCamera.cpp" />
+    <ClCompile Include="Source\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Components\Skybox.cpp" />
     <ClCompile Include="Source\Core\Game.cpp" />
     <ClCompile Include="Source\Core\FileSystem.cpp" />

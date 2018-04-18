@@ -63,7 +63,7 @@ namespace NuclearEngine
 		
 		}
 
-		void Skybox::Create(Skybox* skybox,Components::GenericCamera * CameraCbuffer,const std::array<Graphics::API::Texture_Data, 6>& data)
+		void Skybox::Create(Skybox* skybox,Components::CameraComponent * CameraCbuffer,const std::array<Graphics::API::Texture_Data, 6>& data)
 		{
 			Graphics::API::VertexShader::Create(&skybox->v_shader, &Graphics::API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), Graphics::API::ShaderType::Vertex));
 			Graphics::API::PixelShader::Create(&skybox->p_shader, &Graphics::API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), Graphics::API::ShaderType::Pixel));
@@ -104,7 +104,7 @@ namespace NuclearEngine
 			Graphics::API::DepthStencilState::Create(&skybox->m_ds_state, DS_State);
 		}
 
-		void Skybox::Create(Skybox* skybox, Components::GenericCamera * CameraCbuffer, const std::array<std::string, 6>& paths)
+		void Skybox::Create(Skybox* skybox, Components::CameraComponent * CameraCbuffer, const std::array<std::string, 6>& paths)
 		{
 			Graphics::API::Texture_Desc Desc;
 			Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;

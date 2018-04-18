@@ -22,7 +22,7 @@ protected:
 	//Default states
 	Graphics::API::CommonStates states;
 
-	Components::FlyCamera Camera;
+	Components::CameraComponent Camera;
 
 	Components::DirectionalLight dirlight;
 	Components::PointLight pointlight1;

@@ -30,7 +30,7 @@ protected:
 	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11Texture2D *depthBuffer;
 
-	Components::FlyCamera Camera;
+	Components::CameraComponent Camera;
 
 	//Default states
 	Graphics::API::CommonStates states;

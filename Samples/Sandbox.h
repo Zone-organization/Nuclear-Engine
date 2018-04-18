@@ -17,7 +17,7 @@ protected:
 	//Default states
 	Graphics::API::CommonStates states;
 
-	Components::FlyCamera Camera;
+	Components::CameraComponent Camera;
 
 	Components::PointLight pointlight1;
 	Components::PointLight pointlight2;

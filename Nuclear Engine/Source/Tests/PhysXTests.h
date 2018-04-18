@@ -28,7 +28,7 @@ protected:
 
 	Physics3D::PhysicsScene scene;
 
-	Components::FlyCamera Camera;
+	Components::CameraComponent Camera;
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;

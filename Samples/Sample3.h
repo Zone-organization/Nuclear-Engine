@@ -8,7 +8,7 @@ protected:
 	Graphics::API::Texture BlockTex;
 	Components::Sprite *Block;
 	Systems::SpriteRenderSystem Renderer;
-	Components::GenericCamera Camera;
+	Components::CameraComponent Camera;
 
 	//Default states
 	Graphics::API::CommonStates states;

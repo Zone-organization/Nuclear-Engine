@@ -25,7 +25,7 @@ protected:
 
 	Graphics::API::RenderTarget RT;
 
-	Components::FlyCamera Camera;
+	Components::CameraComponent Camera;
 
 	//Default states
 	Graphics::API::CommonStates states;

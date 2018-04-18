@@ -6,7 +6,7 @@
 //#include <Graphics/API/InputLayout.h>
 #include <Graphics/API/DepthStencilState.h>
 #include <Core/FileSystem.h>
-#include <Components\GenericCamera.h>
+#include <Components\CameraComponent.h>
 #include <ECS\Entity.h>
 
 namespace NuclearEngine
@@ -21,15 +21,15 @@ namespace NuclearEngine
 			Skybox();
 			~Skybox();
 			//TODO:move these functions from here as
-			static void Create(Skybox* skybox, Components::GenericCamera* CameraCbuffer, const std::array<Graphics::API::Texture_Data, 6>& data);
-			static void Create(Skybox* skybox, Components::GenericCamera* CameraCbuffer, const std::array<std::string, 6>& paths);
+			static void Create(Skybox* skybox, Components::CameraComponent* CameraCbuffer, const std::array<Graphics::API::Texture_Data, 6>& data);
+			static void Create(Skybox* skybox, Components::CameraComponent* CameraCbuffer, const std::array<std::string, 6>& paths);
 
 			Graphics::API::VertexShader v_shader;
 			Graphics::API::PixelShader p_shader;
 			Graphics::API::VertexBuffer m_vb;
 			Graphics::API::Texture m_texcube;
 			Graphics::API::Sampler m_sampler;
-			Components::GenericCamera* m_camera;
+			Components::CameraComponent* m_camera;
 			Graphics::API::DepthStencilState m_ds_state;
 		};
 	}

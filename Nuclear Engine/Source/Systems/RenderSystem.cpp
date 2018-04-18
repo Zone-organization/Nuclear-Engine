@@ -15,7 +15,7 @@ namespace NuclearEngine
 		RenderSystem::RenderSystem(const RenderSystemDesc & desc)
 		{
 			Desc = desc;
-			ActiveCamera = &Components::GenericCamera();
+			ActiveCamera = &Components::CameraComponent();
 			this->status = RenderSystemStatus::RequireBaking;
 		}
 		RenderSystem::~RenderSystem()
@@ -68,7 +68,7 @@ namespace NuclearEngine
 			Samplerdesc.Filter = Graphics::API::TextureFilter::Point2D;
 			Graphics::API::Sampler::Create(&ScreenSampler, Samplerdesc);
 		}
-		void RenderSystem::SetCamera(Components::GenericCamera * camera)
+		void RenderSystem::SetCamera(Components::CameraComponent * camera)
 		{
 			this->ActiveCamera = camera;
 		}

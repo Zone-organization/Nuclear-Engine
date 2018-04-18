@@ -58,7 +58,7 @@ namespace NuclearEngine
 			return true;
 		}
 
-		bool SpriteRenderSystem::SetActiveCamera(Components::GenericCamera * Camera)
+		bool SpriteRenderSystem::SetActiveCamera(Components::CameraComponent * Camera)
 		{
 			if (Camera == nullptr)
 			{

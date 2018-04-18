@@ -54,8 +54,7 @@ _____________/BOOOM\_____________
 #include <GUI\IMGUI.h>
 
 //# Engine Components Headers
-#include <Components\GenericCamera.h>
-#include <Components\FlyCamera.h>
+#include <Components\CameraComponent.h>
 #include <Components\Skybox.h>
 #include <Components\Light.h>
 #include <Components\MeshComponent.h>

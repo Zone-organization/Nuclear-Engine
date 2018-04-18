@@ -4,7 +4,7 @@
 #include "ECS/Event.h"
 #include "ECS/System.h"
 #include <Components\MeshComponent.h>
-#include <Components\GenericCamera.h>
+#include <Components\CameraComponent.h>
 #include <Components\Light.h>
 #include <Assets\Mesh.h>
 #include <Graphics/API/RenderTarget.h>
@@ -38,7 +38,7 @@ namespace NuclearEngine
 			~RenderSystem();
 
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
-			void SetCamera(Components::GenericCamera* camera);
+			void SetCamera(Components::CameraComponent* camera);
 
 			Graphics::API::VertexShader GetVertexShader();
 			Graphics::API::PixelShader GetPixelShader();
@@ -74,7 +74,7 @@ namespace NuclearEngine
 			Graphics::API::PixelShader PShader;
 			Graphics::API::ConstantBuffer NE_Light_CB;
 
-			Components::GenericCamera* ActiveCamera;
+			Components::CameraComponent* ActiveCamera;
 
 			bool VSDirty = true;
 			bool PSDirty = true;
