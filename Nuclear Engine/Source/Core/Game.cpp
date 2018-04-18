@@ -48,6 +48,16 @@ namespace NuclearEngine {
 		void Game::OnWindowResize(int width, int height)
 		{
 		}
+
+		void Game::SetActiveScene(ECS::Scene * scene)
+		{
+			mScene = scene;
+		}
+
+		ECS::Scene * Game::GetActiveScene()
+		{
+			return mScene;
+		}
 	
 	}
 }

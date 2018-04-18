@@ -8,11 +8,19 @@ namespace NuclearEngine
 	namespace ECS
 	{
 		Scene::Scene()
-			: Entities(Events),Systems(Entities, Events)
+			: Entities(Events),Systems(Entities, Events), ActiveCamera(nullptr)
 		{
 		}
 		Scene::~Scene()
 		{
+		}
+		void Scene::SetActiveCamera(Components::CameraComponent * camera)
+		{
+			ActiveCamera = camera;
+		}
+		Components::CameraComponent * Scene::GetActiveCamera()
+		{
+			return ActiveCamera;
 		}
 	}
 }

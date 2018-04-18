@@ -2,6 +2,11 @@
 #include <NE_PrivateCommon.h>
 
 namespace NuclearEngine {
+	namespace ECS
+	{
+		class Scene;
+	}
+
 	namespace Core {
 
 		struct NEAPI GameInfo
@@ -32,9 +37,13 @@ namespace NuclearEngine {
 			virtual void OnMouseMovement(double xpos, double ypos);
 			virtual void OnWindowResize(int width, int height);
 
+			void SetActiveScene(ECS::Scene* scene);
+			ECS::Scene* GetActiveScene();
+
 			float FPS, FrameTime, ClockTime;
 		protected:
 			GameInfo *gameinfo;
+			ECS::Scene* mScene;
 		};
 
 	}

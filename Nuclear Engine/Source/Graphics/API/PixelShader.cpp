@@ -7,22 +7,26 @@ namespace NuclearEngine {
 
 			PixelShader::PixelShader()
 			{
-
+				isValid = false;
 			}
 
 			PixelShader::~PixelShader()
 			{
-
+				isValid = false;
 			}
 
 			void PixelShader::Create(PixelShader* obj, BinaryShaderBlob* Desc)
 			{
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, Desc)
+
+				obj->Reflection = Desc->Reflection;
+				obj->isValid = true;
 			}
 
 			void PixelShader::Delete(PixelShader * obj)
 			{
 				STATIC_BASE_API_FUNC_CALL(Delete)
+				obj->isValid = false;
 			}
 
 			void PixelShader::SetConstantBuffer(ConstantBuffer * cbuffer)

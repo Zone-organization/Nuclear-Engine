@@ -6,6 +6,7 @@
 
 namespace NuclearEngine
 {
+	namespace Components { class CameraComponent; }
 	namespace ECS
 	{
 		class NEAPI Scene {
@@ -13,10 +14,15 @@ namespace NuclearEngine
 			Scene();
 			~Scene();
 
-			//ECS impl.
+			void SetActiveCamera(Components::CameraComponent* camera);
+			Components::CameraComponent* GetActiveCamera();
+
 			EventManager Events;
 			EntityManager Entities;
 			SystemManager Systems;
+
+		private:
+			Components::CameraComponent *ActiveCamera;
 		};
 	}
 }

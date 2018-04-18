@@ -22,7 +22,7 @@ namespace NuclearEngine
 		const float SENSITIVTY = 0.05f;
 		const float ZOOM = 45.0f;
 
-		class NEAPI CameraComponent //: public ECS::Component<CameraComponent>
+		class NEAPI CameraComponent : public ECS::Component<CameraComponent>
 		{
 		public:
 			CameraComponent();
@@ -44,6 +44,8 @@ namespace NuclearEngine
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
 			void SetProjectionMatrix(Math::Matrix4 projectionMatrix);
 			void SetPosition(Math::Vector3 cameraposition);
+
+			void SetActive();
 
 			Math::Matrix4 GetModelMatrix();
 			Math::Matrix4 GetViewMatrix();

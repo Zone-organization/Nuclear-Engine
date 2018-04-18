@@ -20,6 +20,9 @@ namespace NuclearEngine {
 
 				void SetConstantBuffer(ConstantBuffer* cbuffer);
 				void Bind();
+
+				ShaderReflection Reflection;
+
 				BASE_API(VertexShader)
 
 			};

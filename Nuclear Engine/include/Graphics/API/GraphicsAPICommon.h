@@ -3,7 +3,8 @@
 
 #define BASE_API(BaseName) \
 OpenGL::GL##BaseName GLObject;\
-DirectX::DX11##BaseName DXObject;
+DirectX::DX11##BaseName DXObject;\
+bool isValid = false;
 
 #define BASE_API_FUNC_CALL(FuncName) \
 if (Graphics::API::Context::isOpenGL3RenderAPI()) {	GLObject.##FuncName(); } \

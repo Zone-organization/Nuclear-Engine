@@ -341,6 +341,7 @@
     <ClInclude Include="include\Components\Renderable2D.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
+    <ClInclude Include="include\ECS\ECS.h" />
     <ClInclude Include="include\Graphics\Animator2D.h" />
     <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
     <ClInclude Include="include\Graphics\API\BlendState.h" />
@@ -612,6 +613,7 @@
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Assets\Material.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Audio\Channel.cpp" />
     <ClCompile Include="Source\Audio\Sound.cpp" />

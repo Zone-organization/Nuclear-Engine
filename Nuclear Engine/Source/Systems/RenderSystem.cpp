@@ -264,12 +264,12 @@ namespace NuclearEngine
 				ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransformMatrix());
 				if (ModelObject.Get()->mMaterial)
 				{
-					if (ModelObject.Get()->mMaterial->mVShader)
-						ModelObject.Get()->mMaterial->mVShader->Bind();
+					if (ModelObject.Get()->mMaterial->mVShader.isValid)
+						ModelObject.Get()->mMaterial->mVShader.Bind();
 					//else
 
-					if (ModelObject.Get()->mMaterial->mPShader)
-						ModelObject.Get()->mMaterial->mPShader->Bind();
+					if (ModelObject.Get()->mMaterial->mPShader.isValid)
+						ModelObject.Get()->mMaterial->mPShader.Bind();
 					//else
 				}
 				InstantRender(ModelObject.Get());

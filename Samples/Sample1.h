@@ -213,12 +213,16 @@ public:
 		Renderer->AddLight(&dirlight);
 		Renderer->Bake();
 
+
+		Assets::Material mat;
+		mat.SetPixelShader(Renderer->GetPixelShader());
+
+
 		SetupLights();
 
 		SetupAssets();
 	
 		SetupEntities();
-
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 16.0f);

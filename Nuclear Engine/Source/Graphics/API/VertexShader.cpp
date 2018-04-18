@@ -7,22 +7,27 @@ namespace NuclearEngine {
 
 			VertexShader::VertexShader()
 			{
-
+				isValid = false;
 			}
 
 			VertexShader::~VertexShader()
 			{
-
+				isValid = false;
 			}
 
 			void VertexShader::Create(VertexShader* obj, BinaryShaderBlob* Desc)
 			{
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, Desc)
+
+				obj->Reflection = Desc->Reflection;
+				obj->isValid = true;
+
 			}
 
 			void VertexShader::Delete(VertexShader * obj)
 			{
 				STATIC_BASE_API_FUNC_CALL(Delete)
+					obj->isValid = false;
 			}
 
 			void VertexShader::SetConstantBuffer(ConstantBuffer * cbuffer)

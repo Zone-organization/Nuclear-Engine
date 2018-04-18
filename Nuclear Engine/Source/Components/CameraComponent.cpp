@@ -1,5 +1,8 @@
 #include "Components\CameraComponent.h"
 #include "Math/gtc/matrix_inverse.hpp"
+#include <Core\Engine.h>
+#include <ECS\Scene.h>
+
 namespace NuclearEngine
 {
 	using namespace Math;
@@ -70,6 +73,11 @@ namespace NuclearEngine
 		void CameraComponent::SetPosition(Math::Vector3 cameraposition)
 		{
 			this->position = cameraposition;
+		}
+		void CameraComponent::SetActive()
+		{
+			//Ugly hack prone to errors dont look
+			Core::Engine::GetGame()->GetActiveScene()->SetActiveCamera(this);
 		}
 		Math::Matrix4 CameraComponent::GetModelMatrix()
 		{
