@@ -15,10 +15,14 @@ namespace NuclearEngine
 				GLConstantBuffer::GLConstantBuffer()
 				{
 					this->buffer = 0;
+					this->name = "unset";
+					this->BindingIndex = 0;
 				}
 				GLConstantBuffer::~GLConstantBuffer()
 				{
 					this->buffer = 0;
+					this->name = "deleted";
+					this->BindingIndex = 0;
 				}
 				void GLConstantBuffer::Create(GLConstantBuffer* result, const char * Nameinshader, unsigned int size)
 				{

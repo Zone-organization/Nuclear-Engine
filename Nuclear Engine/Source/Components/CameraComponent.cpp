@@ -7,8 +7,8 @@ namespace NuclearEngine
 	namespace Components
 	{
 		CameraComponent::CameraComponent()
+			: CameraComponent(Math::Vector3(0.0f, 0.0f, 0.0f))
 		{
-			CameraComponent(Math::Vector3(0.0f, 0.0f, 0.0f));
 		}
 		CameraComponent::CameraComponent(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
 			: Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
@@ -20,7 +20,7 @@ namespace NuclearEngine
 	
 		CameraComponent::~CameraComponent()
 		{
-			//Graphics::API::ConstantBuffer::Delete(&ConstantBuffer);
+			Graphics::API::ConstantBuffer::Delete(&ConstantBuffer);
 		}
 	
 		void CameraComponent::Initialize(Math::Matrix4 projectionMatrix)
