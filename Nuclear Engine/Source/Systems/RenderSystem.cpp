@@ -4,7 +4,6 @@
 #include <Graphics/API/ShaderCompiler.h>
 #include <Graphics\API\Context.h>
 #include <Transform\Transform.h>
-#include <Components\Skybox.h>
 #include <Managers\ShaderManager.h>
 #include <Assets\Material.h>
 
@@ -273,20 +272,6 @@ namespace NuclearEngine
 					//else
 				}
 				InstantRender(ModelObject.Get());
-			}
-
-			ECS::ComponentHandle<Components::Skybox> skybox;
-			for (ECS::Entity entity : es.entities_with_components(skybox))
-			{
-
-				skybox.Get()->m_vb.Bind();
-				skybox.Get()->m_ds_state.Bind();
-				skybox.Get()->v_shader.Bind();
-				skybox.Get()->p_shader.Bind();
-				skybox.Get()->m_texcube.PSBind(0);
-				skybox.Get()->m_sampler.PSBind(0);
-				Graphics::API::Context::Draw(36);
-
 			}
 		}
 		void RenderSystem::Calculate_Light_CB_Size()

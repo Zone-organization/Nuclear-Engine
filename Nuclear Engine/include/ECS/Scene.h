@@ -3,6 +3,7 @@
 #include <ECS/Entity.h>
 #include "ECS/Event.h"
 #include "ECS/System.h"
+#include <Graphics\Background.h>
 
 namespace NuclearEngine
 {

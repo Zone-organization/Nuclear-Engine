@@ -37,7 +37,7 @@ protected:
 
 	Components::SpotLight spotLight;
 
-	Components::Skybox Skybox;
+	Graphics::Skybox Skybox;
 
 	//ECS
 	ECS::Scene SampleScene;
@@ -175,7 +175,7 @@ public:
 			std::string("Assets/Common/Skybox/back.jpg")
 		};
 
-		Skybox.Create(&Skybox, &Camera, SkyBoxTexturePaths);
+		//Skybox.Create(&Skybox, &Camera, SkyBoxTexturePaths);
 	}
 	void SetupEntities()
 	{
@@ -188,8 +188,8 @@ public:
 		NanosuitModel.mMesh = &NanosuitAsset;
 		//ENanosuit = SampleScene.Entities.Create();
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitModel);
-		ESkybox = SampleScene.Entities.Create();
-		ESkybox.Assign<Components::Skybox>(Skybox);
+		//ESkybox = SampleScene.Entities.Create();
+		//ESkybox.Assign<Components::Skybox>(Skybox);
 	}
 	void Load()
 	{

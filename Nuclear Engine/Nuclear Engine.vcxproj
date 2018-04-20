@@ -346,6 +346,7 @@
     <ClInclude Include="include\Graphics\API\GraphicsAPICommon.h" />
     <ClInclude Include="include\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Graphics\API\Buffer_Types.h" />
+    <ClInclude Include="include\Graphics\Background.h" />
     <ClInclude Include="include\Graphics\Color.h" />
     <ClInclude Include="include\Graphics\API\CommonStates.h" />
     <ClInclude Include="include\Graphics\API\DepthStencilState.h" />
@@ -549,7 +550,7 @@
     <ClInclude Include="include\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Graphics\API\Context.h" />
     <ClInclude Include="include\BuildConfig.h" />
-    <ClInclude Include="include\Components\Skybox.h" />
+    <ClInclude Include="include\Graphics\Skybox.h" />
     <ClInclude Include="include\ECS\ECSConfig.h" />
     <ClInclude Include="include\ECS\Entity.h" />
     <ClInclude Include="include\ECS\Event.h" />
@@ -622,6 +623,7 @@
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
     <ClCompile Include="Source\Graphics\Animator2D.cpp" />
     <ClCompile Include="Source\Graphics\API\BlendState.cpp" />
+    <ClCompile Include="Source\Graphics\Background.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />
     <ClCompile Include="Source\Graphics\API\DepthStencilState.cpp" />
     <ClCompile Include="Source\Graphics\API\DirectX\DX11BlendState.cpp" />
@@ -691,7 +693,7 @@
     <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
     <ClCompile Include="Source\Components\CameraComponent.cpp" />
-    <ClCompile Include="Source\Components\Skybox.cpp" />
+    <ClCompile Include="Source\Graphics\Skybox.cpp" />
     <ClCompile Include="Source\Core\Game.cpp" />
     <ClCompile Include="Source\Core\FileSystem.cpp" />
     <ClCompile Include="Source\Components\Light.cpp" />

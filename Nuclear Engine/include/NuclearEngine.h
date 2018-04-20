@@ -49,13 +49,14 @@ _____________/BOOOM\_____________
 
 //# OneAPI Headers
 #include <Graphics/API/RenderAPI.h>
+#include <Graphics\Skybox.h>
+#include <Graphics\Background.h>
 
 //# GUI Headers
 #include <GUI\IMGUI.h>
 
 //# Engine Components Headers
 #include <Components\CameraComponent.h>
-#include <Components\Skybox.h>
 #include <Components\Light.h>
 #include <Components\MeshComponent.h>
 #include <Components\Sprite.h>
