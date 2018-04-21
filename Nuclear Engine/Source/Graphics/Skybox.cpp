@@ -106,7 +106,7 @@ namespace NuclearEngine
 			Desc.Type = Graphics::API::TextureType::TextureCube;
 			Desc.GenerateMipMaps = false;
 			Graphics::API::Texture::Create(&mTexture, data, Desc);
-			return Initialize(Camera, data);
+			return Initialize(Camera, mTexture);
 		}
 		void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<std::string, 6>& paths)
 		{
@@ -114,7 +114,7 @@ namespace NuclearEngine
 			Graphics::API::Texture_Desc Desc;
 			Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
 			Desc.Type = Graphics::API::TextureType::Texture2D;
-			Initialize(Camera, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));
+			return Initialize(Camera, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));
 		}
 
 		void Skybox::Release()

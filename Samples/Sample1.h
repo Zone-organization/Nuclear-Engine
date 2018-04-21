@@ -175,7 +175,7 @@ public:
 			std::string("Assets/Common/Skybox/back.jpg")
 		};
 
-		//Skybox.Create(&Skybox, &Camera, SkyBoxTexturePaths);
+		Skybox.Initialize(&Camera, SkyBoxTexturePaths);
 	}
 	void SetupEntities()
 	{
@@ -188,8 +188,7 @@ public:
 		NanosuitModel.mMesh = &NanosuitAsset;
 		//ENanosuit = SampleScene.Entities.Create();
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitModel);
-		//ESkybox = SampleScene.Entities.Create();
-		//ESkybox.Assign<Components::Skybox>(Skybox);
+
 	}
 	void Load()
 	{
@@ -346,6 +345,8 @@ public:
 
 		SampleScene.Systems.Update_All(dt);
 
+
+		Skybox.Render();
 		states.EnabledDepth_DisabledStencil.Bind();
 
 		ImGui::Checkbox("Render Boxes", &renderboxes);
@@ -353,7 +354,7 @@ public:
 		ImGui::Checkbox("Render Nanosuit", &rendernanosuit);
 		ImGui::Image(&DiffuseTex,ImVec2(100.0f,100.0f));
 		ShowOverlay(true);
-
+		
 		ImGui::Render();
 		Graphics::API::Context::PresentFrame();
 	}
