@@ -1,4 +1,3 @@
-# Nuclear Engine
 ![Alt text](http://media.indiedb.com/images/engines/1/1/764/NELOgo.png)
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
 ### Build Status
@@ -31,9 +30,11 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 
 ## Currently TODO
   - Implement PhysXEngine (Nvidia Physics)
-  - Implement Class based GUI from ImGui.
-  - Implement SpriteRenderSystem
+  - Implement dynamic Material class.
   - Depend 100% on ECS.
+  
+##  Future Plans
+  - Support PBR with IBL.
   
 ### Building
 Please See NuclearDeps Repo for dependencies.
