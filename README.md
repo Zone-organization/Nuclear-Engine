@@ -14,8 +14,8 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 - __OpenGL__
   - OpenGL 3.3 Core capable GPU with the required extensions (all became core in later versions):
     - Required for Separate Shaders:	
-	  - GL_ARB_shading_language_420pack
-	  - GL_ARB_separate_shader_objects
+	  - GL_ARB_shading_language_420pack.
+	  - GL_ARB_separate_shader_objects.
 
 - __DirectX__
   - DirectX 10.1 capable GPU.
