@@ -127,7 +127,7 @@ namespace NuclearEngine
 			mBase->setLinearVelocity(Convert(velocity));
 		}
 
-		Math::Vector3 RigidBody::GetVelocity() const
+		Math::Vector3 RigidBody::GetVelocity()
 		{
 			return ConvertFrom(mBase->getLinearVelocity());
 		}

@@ -1,6 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Math\Math.h>
+#include <Utilities\Accessor.h>
 namespace physx { class PxRigidDynamic; }
 
 namespace NuclearEngine
@@ -33,8 +34,11 @@ namespace NuclearEngine
 			float GetSleepThreshold() const;
 			void SetUseGravity(bool gravity);
 			bool GetUseGravity() const;
-			void SetVelocity(const Math::Vector3& velocity);
-			Math::Vector3 GetVelocity() const;
+			ACCESSOR_DEC_REF(Math::Vector3, Velocity)
+
+
+			//void SetVelocity(const Math::Vector3& velocity);
+			//Math::Vector3 GetVelocity() const;
 			void SetAngularVelocity(const Math::Vector3& velocity);
 			Math::Vector3 GetAngularVelocity() const;
 			void SetDrag(float drag);

@@ -281,6 +281,7 @@
     <ClInclude Include="include\ECS\ECS.h" />
     <ClInclude Include="include\Graphics\Background.h" />
     <ClInclude Include="include\Graphics\Skybox.h" />
+    <ClInclude Include="include\Utilities\Accessor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

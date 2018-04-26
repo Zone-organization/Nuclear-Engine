@@ -582,6 +582,7 @@
     <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Managers\ShaderManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
+    <ClInclude Include="include\Utilities\Accessor.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\Graphics\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
