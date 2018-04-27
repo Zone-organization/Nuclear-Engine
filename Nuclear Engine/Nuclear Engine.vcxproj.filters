@@ -282,6 +282,7 @@
     <ClInclude Include="include\Graphics\Background.h" />
     <ClInclude Include="include\Graphics\Skybox.h" />
     <ClInclude Include="include\Utilities\Accessor.h" />
+    <ClInclude Include="include\Graphics\CameraPostProcess.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -377,6 +378,7 @@
     <ClCompile Include="Source\Assets\Material.cpp" />
     <ClCompile Include="Source\Graphics\Skybox.cpp" />
     <ClCompile Include="Source\Graphics\Background.cpp" />
+    <ClCompile Include="Source\Graphics\CameraPostProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />

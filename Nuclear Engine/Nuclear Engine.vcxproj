@@ -347,6 +347,7 @@
     <ClInclude Include="include\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Graphics\API\Buffer_Types.h" />
     <ClInclude Include="include\Graphics\Background.h" />
+    <ClInclude Include="include\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Graphics\Color.h" />
     <ClInclude Include="include\Graphics\API\CommonStates.h" />
     <ClInclude Include="include\Graphics\API\DepthStencilState.h" />
@@ -625,6 +626,7 @@
     <ClCompile Include="Source\Graphics\Animator2D.cpp" />
     <ClCompile Include="Source\Graphics\API\BlendState.cpp" />
     <ClCompile Include="Source\Graphics\Background.cpp" />
+    <ClCompile Include="Source\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />
     <ClCompile Include="Source\Graphics\API\DepthStencilState.cpp" />
     <ClCompile Include="Source\Graphics\API\DirectX\DX11BlendState.cpp" />
