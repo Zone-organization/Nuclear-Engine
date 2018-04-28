@@ -391,6 +391,7 @@
     <ClInclude Include="include\Graphics\SpriteBatch.h" />
     <ClInclude Include="include\Graphics\SpriteSheet.h" />
     <ClInclude Include="include\GUI\CGUI.h" />
+    <ClInclude Include="include\Managers\CameraManager.h" />
     <ClInclude Include="include\Math\common.hpp" />
     <ClInclude Include="include\Math\detail\compute_vector_relational.hpp" />
     <ClInclude Include="include\Math\detail\qualifier.hpp" />
@@ -584,6 +585,7 @@
     <ClInclude Include="include\Managers\ShaderManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Utilities\Accessor.h" />
+    <ClInclude Include="include\Utilities\Delegate.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\Graphics\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
@@ -671,6 +673,7 @@
     <ClCompile Include="Source\Graphics\SpriteBatch.cpp" />
     <ClCompile Include="Source\Graphics\SpriteSheet.cpp" />
     <ClCompile Include="Source\Managers\AssimpImporter.cpp" />
+    <ClCompile Include="Source\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Physics3D\Collider.cpp" />
     <ClCompile Include="Source\Physics3D\PhysicsMaterial.cpp" />

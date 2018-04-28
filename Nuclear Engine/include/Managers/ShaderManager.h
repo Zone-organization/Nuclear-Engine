@@ -2,6 +2,7 @@
 #include <NE_Common.h>
 #include <Graphics/API/VertexShader.h>
 #include <Graphics/API/PixelShader.h>
+#include <Utilities\Delegate.h>
 
 namespace NuclearEngine 
 {
@@ -31,6 +32,9 @@ namespace NuclearEngine
 
 			static Graphics::API::VertexShader CreateAutoVertexShader(const AutoVertexShaderDesc& desc);
 			static Graphics::API::PixelShader CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
+
+			//Utilities::Delegate<void(Graphics::API::VertexShader* shader, Graphics::API::BinaryShaderBlob* Desc)> VertexShaderCreationCallbacks();
+
 		};
 	}
 }
