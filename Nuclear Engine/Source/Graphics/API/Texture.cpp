@@ -2,6 +2,7 @@
 #include <Graphics\API\Context.h>
 #include <Graphics/API/VertexShader.h>
 #include <Graphics/API/PixelShader.h>
+#include <Graphics\GraphicsEngine.h>
 
 namespace NuclearEngine {
 	namespace Graphics {
@@ -18,6 +19,14 @@ namespace NuclearEngine {
 				obj->Dimensions.x = TexData.Width;
 				obj->Dimensions.y = TexData.Height;
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
+
+				obj->isValid = true;				
+				//GraphicsEngine::TextureCreationCallbacks.clear();
+				/*for (auto func : GraphicsEngine::TextureCreationCallbacks)
+				{
+					//if (!func.isNull())
+					//	func(obj, TexData, Desc);
+				}*/
 			}
 
 			void Texture::Create(Texture* obj, const std::array<Texture_Data, 6>& data, const Texture_Desc & Desc)

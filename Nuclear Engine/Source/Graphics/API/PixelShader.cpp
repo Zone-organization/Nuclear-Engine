@@ -1,6 +1,8 @@
 #include <Graphics/API/PixelShader.h>
 #include <Graphics\API\Context.h>
 #include <Graphics/API/ConstantBuffer.h>
+#include <Graphics\GraphicsEngine.h>
+
 namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
@@ -21,6 +23,11 @@ namespace NuclearEngine {
 
 				obj->Reflection = Desc->Reflection;
 				obj->isValid = true;
+				/*for (auto func : GraphicsEngine::PixelShaderCreationCallbacks)
+				{
+					if(!func.isNull())
+						func(obj, Desc);
+				}*/
 			}
 
 			void PixelShader::Delete(PixelShader * obj)
