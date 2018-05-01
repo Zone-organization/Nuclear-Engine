@@ -21,12 +21,11 @@ namespace NuclearEngine {
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
 
 				obj->isValid = true;				
-				//GraphicsEngine::TextureCreationCallbacks.clear();
-				/*for (auto func : GraphicsEngine::TextureCreationCallbacks)
+				for (auto func : *GraphicsEngine::GetTextureCreationCallbacks())
 				{
-					//if (!func.isNull())
-					//	func(obj, TexData, Desc);
-				}*/
+					if (!func.isNull())
+						func(obj, TexData, Desc);
+				}
 			}
 
 			void Texture::Create(Texture* obj, const std::array<Texture_Data, 6>& data, const Texture_Desc & Desc)

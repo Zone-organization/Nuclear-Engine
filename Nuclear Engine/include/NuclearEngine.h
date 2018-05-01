@@ -51,6 +51,7 @@ _____________/BOOOM\_____________
 #include <Graphics/API/RenderAPI.h>
 #include <Graphics\Skybox.h>
 #include <Graphics\Background.h>
+#include <Graphics\GraphicsEngine.h>
 
 //# GUI Headers
 #include <GUI\IMGUI.h>

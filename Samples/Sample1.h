@@ -1,6 +1,10 @@
 #pragma once
 #include "Common.h"
-
+void OnTexture(Graphics::API::Texture* texture, const Graphics::API::Texture_Data& TexData, const Graphics::API::Texture_Desc& Desc)
+{
+	//Not real warning just testing
+	Log.Warning("TextureCreated! \n");
+}
 class Sample1 : public Core::Game
 {
 protected:
@@ -192,6 +196,9 @@ public:
 	}
 	void Load()
 	{
+		auto OnTextureCB = Graphics::OnTextureCreation::create<OnTexture>();
+		Graphics::GraphicsEngine::GetTextureCreationCallbacks()->push_back(OnTextureCB);
+
 		Systems::RenderSystemDesc desc;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();

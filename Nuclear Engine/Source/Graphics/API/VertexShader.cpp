@@ -23,11 +23,11 @@ namespace NuclearEngine {
 
 				obj->Reflection = Desc->Reflection;
 				obj->isValid = true;
-				/*for (auto func : GraphicsEngine::VertexShaderCreationCallbacks)
+				for (auto func : *GraphicsEngine::GetVertexShaderCreationCallbacks())
 				{
 					if (!func.isNull())
 						func(obj, Desc);
-				}*/
+				}
 			}
 
 			void VertexShader::Delete(VertexShader * obj)

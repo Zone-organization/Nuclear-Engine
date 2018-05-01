@@ -23,11 +23,11 @@ namespace NuclearEngine {
 
 				obj->Reflection = Desc->Reflection;
 				obj->isValid = true;
-				/*for (auto func : GraphicsEngine::PixelShaderCreationCallbacks)
+				for (auto func : *GraphicsEngine::GetPixelShaderCreationCallbacks())
 				{
 					if(!func.isNull())
 						func(obj, Desc);
-				}*/
+				}
 			}
 
 			void PixelShader::Delete(PixelShader * obj)
