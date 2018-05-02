@@ -548,6 +548,7 @@
     <ClInclude Include="include\GUI\ImGui.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
     <ClInclude Include="include\Components\Sprite.h" />
+    <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="include\Transform\Transform.h" />
     <ClInclude Include="include\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Graphics\API\Context.h" />
@@ -586,6 +587,7 @@
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Utilities\Accessor.h" />
     <ClInclude Include="include\Utilities\Delegate.h" />
+    <ClInclude Include="include\Utilities\Hash.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\Graphics\API\DirectX\DX11RasterizerState.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
@@ -614,6 +616,15 @@
     <ClInclude Include="Source\Tests\Test1.h" />
     <ClInclude Include="Source\Tests\Test2.h" />
     <ClInclude Include="Source\Tests\Test3.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_arm64.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_arm64_linux_check.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_config.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_internal.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_prefetch.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_read_le.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_round_up.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_sse42.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_sse42_check.h" />
     <ClInclude Include="Source\Thirdparty\stb_image.h" />
     <ClInclude Include="Source\Thirdparty\stb_truetype.h" />
   </ItemGroup>
@@ -687,6 +698,10 @@
     <ClCompile Include="Source\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Components\Sprite.cpp" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c.cc" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c_arm64.cc" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c_portable.cc" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c_sse42.cc" />
     <ClCompile Include="Source\Transform\Transform.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Graphics\API\Context.cpp" />

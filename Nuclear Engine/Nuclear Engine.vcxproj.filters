@@ -285,6 +285,17 @@
     <ClInclude Include="include\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Managers\CameraManager.h" />
     <ClInclude Include="include\Utilities\Delegate.h" />
+    <ClInclude Include="include\ThirdParty\crc32c.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_arm64.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_arm64_linux_check.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_internal.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_prefetch.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_read_le.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_round_up.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_sse42.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_sse42_check.h" />
+    <ClInclude Include="Source\Thirdparty\crc32c\crc32c_config.h" />
+    <ClInclude Include="include\Utilities\Hash.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -382,6 +393,10 @@
     <ClCompile Include="Source\Graphics\Background.cpp" />
     <ClCompile Include="Source\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Managers\CameraManager.cpp" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c.cc" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c_arm64.cc" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c_portable.cc" />
+    <ClCompile Include="Source\Thirdparty\crc32c\crc32c_sse42.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\detail\func_common.inl" />
