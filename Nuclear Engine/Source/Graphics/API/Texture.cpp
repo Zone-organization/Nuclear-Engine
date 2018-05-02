@@ -3,6 +3,7 @@
 #include <Graphics/API/VertexShader.h>
 #include <Graphics/API/PixelShader.h>
 #include <Graphics\GraphicsEngine.h>
+#include <Utilities/Hash.h>
 
 namespace NuclearEngine {
 	namespace Graphics {
@@ -16,8 +17,8 @@ namespace NuclearEngine {
 			}
 			void Texture::Create(Texture *obj, const Texture_Data& TexData, const Texture_Desc& Desc)
 			{
-				obj->Dimensions.x = TexData.Width;
-				obj->Dimensions.y = TexData.Height;
+				obj->mDimensions.x = TexData.Width;
+				obj->mDimensions.y = TexData.Height;
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
 
 				obj->isValid = true;				
@@ -40,18 +41,46 @@ namespace NuclearEngine {
 
 			Math::Vector2ui Texture::GetDimensions()
 			{
-				return Dimensions;
+				return mDimensions;
 			}
 
 			unsigned int Texture::GetWidth()
 			{
-				return Dimensions.x;
+				return mDimensions.x;
 			}
 			unsigned int Texture::GetHeight()
 			{
-				return Dimensions.y;
+				return mDimensions.y;
 			}
 
+			Uint32 Texture::GetHashedName()
+			{
+				return mHashedName;
+			}
+
+			Uint8 Texture::GetUsageType()
+			{
+				return mUsageType;
+			}
+
+			void Texture::SetHashedName(Uint32 name)
+			{
+				mHashedName = name;
+			}
+
+			void Texture::SetName(const std::string & str)
+			{
+				mHashedName = Utilities::Hash(str);
+			}
+
+			void Texture::SetUsageType(Uint8 type)
+			{
+				mUsageType = type;
+			}
+			void Texture::SetUsageType(TextureUsageType type)
+			{
+				mUsageType = type;
+			}
 			void Texture::VSBind(unsigned int index)
 			{
 				BASE_API_FUNC_CALL_ARGS(VSBind, index)		
