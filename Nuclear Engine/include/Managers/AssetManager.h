@@ -24,7 +24,7 @@ namespace NuclearEngine {
 		class NEAPI AssetManager {
 		public:
 
-			static std::vector<Graphics::API::Texture> mLoadedTextures;
+			//static std::vector<Graphics::API::Texture> mLoadedTextures;
 
 			static bool LoadModel(std::string Path, Assets::Mesh* model, const MeshLoadingDesc& = MeshLoadingDesc());
 

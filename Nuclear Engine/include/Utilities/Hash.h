@@ -5,12 +5,12 @@ namespace NuclearEngine
 {
 	namespace Utilities
 	{
-		inline Uint32 Hash(const char* data, size_t count)
+		inline Uint32 NEAPI Hash(const char* data, size_t count)
 		{
 			return crc32c::Crc32c(data, count);
 		}
 
-		inline Uint32 Hash(const std::string& string)
+		inline Uint32 NEAPI Hash(const std::string& string)
 		{
 			return crc32c::Crc32c(string);
 		}

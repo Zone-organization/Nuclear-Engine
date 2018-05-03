@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 		<< "x) Playground - testing new stuff (Currently Normal Mapping)\n"
 		<< "y) Sandbox - testing new stuff (Currently Bloom)\n"
 		<< "z) Tests\n";
-
+	
 
 	char choice;
 	std::cin >> choice;
@@ -76,7 +76,26 @@ int main(int argc, char* argv[])
 		std::cin >> testno;
 		Core::Engine::RunTest(testno);
 	}
+	else if (choice == 'H')
+	{
+		std::string TexUp("Texture.png");
+		std::string TexDown("texture.png");
+		std::string TexPathed("Assets/Common/Textures/Texture.png");
 
+		Platform::Clock clock;
+		clock.Restart();
+		auto I0 = Utilities::Hash(TexUp);
+		std::cout << clock.GetElapsedTime().AsMicroseconds() << "\n";
+		clock.Restart();
+		auto I1 = Utilities::Hash(TexDown);
+		std::cout << clock.GetElapsedTime().AsMicroseconds() << "\n";
+		clock.Restart();
+
+		auto I2 = Utilities::Hash(TexPathed);
+		std::cout << clock.GetElapsedTime().AsMicroseconds() << "\n";
+		clock.Restart();
+
+	}
 	Core::Engine::Shutdown();
 
 	return 0;

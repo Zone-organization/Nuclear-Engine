@@ -25,6 +25,9 @@ _____________/BOOOM\_____________
 
 #include <Transform\Transform.h>
 
+#include <Utilities\Hash.h>
+
+
 //# Platform Abstraction Layer Headers
 #include <Platform\Clock.h>
 #include <Platform\Timer.h>
