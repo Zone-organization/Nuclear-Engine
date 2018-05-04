@@ -19,6 +19,7 @@ namespace NuclearEngine {
 			{
 				obj->mDimensions.x = TexData.Width;
 				obj->mDimensions.y = TexData.Height;
+				obj->mHashedName = TexData.HashedName;
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
 
 				obj->isValid = true;				

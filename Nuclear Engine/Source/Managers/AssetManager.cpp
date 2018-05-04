@@ -3,16 +3,44 @@
 #include "..\Thirdparty\stb_image.h"
 #include <Assets\Mesh.h>
 #include "AssimpImporter.h"
+#include <Utilities\Hash.h>
+#include <sstream>
+#include <iomanip>
 
 namespace NuclearEngine {
 	namespace Managers {
+		std::unordered_map<Uint32, Graphics::API::Texture> AssetManager::mLoadedTextures = std::unordered_map<Uint32, Graphics::API::Texture>();
+		std::unordered_map<Uint32, std::string> AssetManager::mHashedTexturesNames = std::unordered_map<Uint32, std::string>();
+		bool AssetManager::mSaveTextureNames = false;
+		void AssetManager::Initialize(bool SaveTextureNames)
+		{
+			mSaveTextureNames = SaveTextureNames;
+		}
+		void AssetManager::ReleaseAllTextures()
+		{
+			for (auto x : mLoadedTextures)
+			{
+				Graphics::API::Texture::Delete(&x.second);
+			}
+			mLoadedTextures.clear();
+			mHashedTexturesNames.clear();
+		}
 		bool AssetManager::LoadModel(std::string Path, Assets::Mesh * model, const MeshLoadingDesc& desc)
 		{
 			Internal::AssimpImporter importer;
 			return importer.Load(Path, model, desc);
 		}
-		Graphics::API::Texture_Data AssetManager::LoadTextureFromFile(std::string Path, const Graphics::API::Texture_Desc & Desc)
+		template< typename T >
+		std::string int_to_hex(T i)
 		{
+			std::stringstream stream;
+			stream << "0x"
+				<< std::setfill('0') << std::setw(sizeof(T) * 2)
+				<< std::hex << i;
+			return stream.str();
+		}
+		Graphics::API::Texture_Data AssetManager::LoadTextureFromFile(std::string Path, Uint32 Hashedname, const Graphics::API::Texture_Desc & Desc)
+		{	
 			int req_c;
 			switch (Desc.Format)
 			{
@@ -36,17 +64,42 @@ namespace NuclearEngine {
 			if (Data.Img_Data_Buf == NULL)
 			{
 				Log.Error(std::string("[AssetManager] Failed To Load Texture: " + Path + '\n'));
-
+				Data.Valid = false;
+				return Data;
 			}
 
-			Log.Info(std::string("[AssetManager] Loaded Texture: " + Path + '\n'));
+			Data.Valid = true;
+			Data.HashedName = Hashedname;
+	
+			if (mSaveTextureNames)
+			{
+				mHashedTexturesNames[Hashedname] = Path;
+			}
+			Log.Info(std::string("[AssetManager] Loaded Texture: " + Path + " Hash: " + int_to_hex<Uint32>(Hashedname) +'\n'));
 
 			return Data;
 		}
 
 		void AssetManager::CreateTextureFromFile(std::string Path, Graphics::API::Texture * texture, const Graphics::API::Texture_Desc & Desc)
 		{
-			Graphics::API::Texture::Create(texture, AssetManager::LoadTextureFromFile(Path, Desc), Desc);
+			//Check if Texture has been loaded before
+			auto hashedname = Utilities::Hash(Path);
+			auto it = mLoadedTextures.find(hashedname);
+			if (it != mLoadedTextures.end())
+			{
+				texture = &it->second;
+			}
+			else
+			{
+				Graphics::API::Texture::Create(texture, AssetManager::LoadTextureFromFile(Path, hashedname, Desc), Desc);
+			}
+		}
+
+		Graphics::API::Texture AssetManager::CreateTextureFromFile(std::string Path, const Graphics::API::Texture_Desc & Desc)
+		{
+			Graphics::API::Texture texture;
+			CreateTextureFromFile(Path,&texture,Desc);
+			return texture;
 		}
 
 		Graphics::API::Texture_Data LoadTextureFromFile_NoFlip(std::string Path, const Graphics::API::Texture_Desc & Desc)

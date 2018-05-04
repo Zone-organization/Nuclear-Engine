@@ -203,36 +203,36 @@ namespace NuclearEngine
 		{
 			//Lil and UGLY AND SLOW hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
-			bool diffusebound = false;
-			bool specularbound = false;
-			bool normalbound = false;
+		//	bool diffusebound = false;
+			//bool specularbound = false;
+			//bool normalbound = false;
 
 			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
 				if (mesh->data.textures[i].type == Assets::MeshTextureType::Diffuse)
 				{
-					if (diffusebound != true)
-					{
+					//if (diffusebound != true)
+					//{
 						mesh->data.textures[i].Texture.PSBind(0);
-						diffusebound = true;
-					}
+					//	diffusebound = true;
+					//}
 				}
 				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Specular)
 				{
-					if (specularbound != true)
-					{
+					//if (specularbound != true)
+					//{
 						mesh->data.textures[i].Texture.PSBind(1);
-						specularbound = true;
-					}
+					//	specularbound = true;
+					//}
 				}
 				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Normal)
 				{
-					if (normalbound != true)
-					{
+				//	if (normalbound != true)
+					//{
 						mesh->data.textures[i].Texture.PSBind(2);
-						normalbound = true;
-					}
+					//	normalbound = true;
+					//}
 				}
 			}
 			mesh->VBO.Bind();

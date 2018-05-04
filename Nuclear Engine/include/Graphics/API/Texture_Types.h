@@ -13,6 +13,8 @@ namespace NuclearEngine
 				int Height = 0;
 				int Depth = 0;
 				int Components_Number = 0;
+				bool Valid = false;
+				Uint32 HashedName = 0;
 				unsigned char *Img_Data_Buf = NULL;
 			};
 
