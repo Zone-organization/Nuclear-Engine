@@ -15,9 +15,10 @@ namespace NuclearEngine
 		{
 		public:
 			static bool Initialize();
-			static std::vector<OnVertexShaderCreation>* GetVertexShaderCreationCallbacks();
-			static std::vector<OnPixelShaderCreation>* GetPixelShaderCreationCallbacks();
-			static std::vector<OnTextureCreation>* GetTextureCreationCallbacks();
+			static std::vector<OnVertexShaderCreation> VertexShaderCreationCallbacks;
+			static std::vector<OnPixelShaderCreation> PixelShaderCreationCallbacks;
+			static std::vector<OnTextureCreation> TextureCreationCallbacks;
+
 		};
 	}
 }

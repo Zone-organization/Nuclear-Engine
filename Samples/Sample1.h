@@ -216,6 +216,7 @@ public:
 		Assets::Material mat;
 		mat.SetPixelShader(Renderer->GetPixelShader());
 
+		Managers::AssetManager::mSaveTextureNames = true;
 
 		SetupLights();
 
@@ -223,6 +224,10 @@ public:
 	
 		SetupEntities();
 
+		for (auto x : Managers::AssetManager::mHashedTexturesNames)
+		{
+			Log.Info("HASH: " + std::to_string(x.first) + " PATH: " + x.second + "\n");
+		}
 		ImGuiIO& io = ImGui::GetIO();
 		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 16.0f);
 

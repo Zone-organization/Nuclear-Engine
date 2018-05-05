@@ -80,7 +80,7 @@ namespace NuclearEngine {
 			return Data;
 		}
 
-		void AssetManager::CreateTextureFromFile(std::string Path, Graphics::API::Texture * texture, const Graphics::API::Texture_Desc & Desc)
+		bool AssetManager::CreateTextureFromFile(std::string Path, Graphics::API::Texture * texture, const Graphics::API::Texture_Desc & Desc)
 		{
 			//Check if Texture has been loaded before
 			auto hashedname = Utilities::Hash(Path);
@@ -88,10 +88,18 @@ namespace NuclearEngine {
 			if (it != mLoadedTextures.end())
 			{
 				texture = &it->second;
+				return true;
 			}
 			else
 			{
-				Graphics::API::Texture::Create(texture, AssetManager::LoadTextureFromFile(Path, hashedname, Desc), Desc);
+				auto data = AssetManager::LoadTextureFromFile(Path, hashedname, Desc);
+				Graphics::API::Texture::Create(texture, data, Desc);
+
+				if (data.Valid)
+				{
+					mLoadedTextures[hashedname] = *texture;
+				}
+				return data.Valid;
 			}
 		}
 

@@ -101,34 +101,23 @@ namespace NuclearEngine {
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			if (loaddesc.LoadDiffuseTextures)
 			{
-				std::vector<Imported_Texture> diffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
-				std::vector<Assets::MeshTexture> DiffuseMaps = Imported2MeshTexture(diffuseMaps);
+				std::vector<Assets::MeshTexture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
 				result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
 			}
 			if (loaddesc.LoadSpecularTextures)
 			{
-				std::vector<Imported_Texture> specularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
-				std::vector<Assets::MeshTexture> SpecularMaps = Imported2MeshTexture(specularMaps);
+				std::vector<Assets::MeshTexture> SpecularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
 				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
 			if (loaddesc.LoadNormalTextures)
 			{
-				std::vector<Imported_Texture> normalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
-				std::vector<Assets::MeshTexture> NormalMaps = Imported2MeshTexture(normalMaps);
+				std::vector<Assets::MeshTexture> NormalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
 				result.textures.insert(result.textures.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
-		std::vector<Assets::MeshTexture> AssimpImporter::Imported2MeshTexture(std::vector<Imported_Texture> textures)
-		{
-			std::vector<Assets::MeshTexture> result;
-			for (size_t i = 0; i < textures.size(); i++)
-			{
-				result.push_back(textures.at(i).Texture);
-			}
-			return result;
-		}
+	
 		Assets::MeshTextureType GetMeshTextureType(aiTextureType type)
 		{
 			switch (type)
@@ -144,45 +133,26 @@ namespace NuclearEngine {
 			//Unsupported types treated as diffuse
 			return Assets::MeshTextureType::Diffuse;
 		}
-		std::vector<Imported_Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
+		std::vector<Assets::MeshTexture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{
-			std::vector<Imported_Texture> textures;
+			std::vector<Assets::MeshTexture> textures;
 			for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 			{
 				aiString str;
 				mat->GetTexture(type, i, &str);
-				// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
-				bool skip = false;
-				for (unsigned int j = 0; j < textures_loaded.size(); j++)
-				{
-					if (std::strcmp(textures_loaded[j].path.c_str(), str.C_Str()) == 0)
-					{
-						textures.push_back(textures_loaded[j]);
-						skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
-						break;
-					}
-				}
-				if (!skip)
-				{
-					// if texture hasn't been loaded already, load it
-					Imported_Texture texture;
-					texture.path = str.C_Str();
-					texture.Texture.type = GetMeshTextureType(type);
 
-					Graphics::API::Texture_Desc Desc;
-					//Desc.Filter = Graphics::API::TextureFilter::Trilinear;
-					//Desc.Wrap = Graphics::API::TextureWrap::Repeat;
-					Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-					Desc.Type = Graphics::API::TextureType::Texture2D;
+				Assets::MeshTexture texture;
+				texture.type = GetMeshTextureType(type);
 
-					std::string filename = texture.path;
-					filename = directory + '/' + filename;
-					Managers::AssetManager::CreateTextureFromFile(filename, &texture.Texture.Texture, Desc);
+				Graphics::API::Texture_Desc Desc;
+				Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+				Desc.Type = Graphics::API::TextureType::Texture2D;
 
-					textures.push_back(texture);
-					textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+				std::string filename = str.C_Str();
+				filename = directory + '/' + filename;
+				Managers::AssetManager::CreateTextureFromFile(filename, &texture.Texture, Desc);
 
-				}
+				textures.push_back(texture);
 			}
 			return textures;
 		}

@@ -23,7 +23,7 @@ namespace NuclearEngine {
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
 
 				obj->isValid = true;				
-				for (auto func : *GraphicsEngine::GetTextureCreationCallbacks())
+				for (auto func : GraphicsEngine::TextureCreationCallbacks)
 				{
 					if (!func.isNull())
 						func(obj, TexData, Desc);

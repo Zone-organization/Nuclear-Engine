@@ -23,7 +23,7 @@ namespace NuclearEngine {
 
 				obj->Reflection = Desc->Reflection;
 				obj->isValid = true;
-				for (auto func : *GraphicsEngine::GetPixelShaderCreationCallbacks())
+				for (auto func : GraphicsEngine::PixelShaderCreationCallbacks)
 				{
 					if(!func.isNull())
 						func(obj, Desc);

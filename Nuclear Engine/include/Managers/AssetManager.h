@@ -36,7 +36,7 @@ namespace NuclearEngine {
 			static void Initialize(bool SaveTextureNames = false);
 			static void ReleaseAllTextures();
 			static bool LoadModel(std::string Path, Assets::Mesh *model, const MeshLoadingDesc& = MeshLoadingDesc());
-			static void CreateTextureFromFile(std::string Path, Graphics::API::Texture* texture, const Graphics::API::Texture_Desc& Desc);
+			static bool CreateTextureFromFile(std::string Path, Graphics::API::Texture* texture, const Graphics::API::Texture_Desc& Desc);
 			static Graphics::API::Texture CreateTextureFromFile(std::string Path, const Graphics::API::Texture_Desc& Desc);
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
