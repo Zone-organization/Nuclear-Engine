@@ -23,6 +23,10 @@ namespace NuclearEngine
 			Uint8 mSlot;
 		};
 
+		struct MaterialTextureSet
+		{
+			std::vector<MaterialTexture> mTextures;
+		};
 		
 		/*
 			Material class defines how should the rendering system render the mesh,
