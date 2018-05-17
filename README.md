@@ -3,8 +3,6 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ### Build Status
 [![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine)
 
-## Note: Development has been slowed down as I have exams which ends in 5/17.
-
 # Preview
 ![Alt text](http://media.indiedb.com/cache/images/engines/1/1/764/thumb_620x2000/Untitled.1.png)
 ![Alt text](http://media.indiedb.com/cache/images/engines/1/1/764/thumb_620x2000/cryteksponza_photo.png)
