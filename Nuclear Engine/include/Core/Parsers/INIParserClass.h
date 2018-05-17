@@ -1,6 +1,6 @@
 #pragma once
 #include <stdio.h>
-#include "NE_Common.h"
+#include <Base\NE_Common.h>
 
 namespace NuclearEngine {
 	namespace Utilities {

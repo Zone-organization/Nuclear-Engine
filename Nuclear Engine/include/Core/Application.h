@@ -1,5 +1,5 @@
 #pragma once
-#include <NE_Common.h>
+#include <Base\NE_Common.h>
 #ifdef APP_EXPOSE_WIN32
 #include <Windows.h>
 #endif

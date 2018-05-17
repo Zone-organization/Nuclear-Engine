@@ -1,4 +1,4 @@
-#include "NE_Common.h"
+#include <Base\NE_Common.h>
 #include <Windows.h>
 namespace NuclearEngine {
 	//

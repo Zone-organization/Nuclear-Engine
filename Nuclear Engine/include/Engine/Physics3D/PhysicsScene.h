@@ -1,0 +1,30 @@
+#pragma once
+#include <Base\NE_Common.h>
+#include <Base\Math\Math.h>
+namespace physx { class PxScene; }
+
+namespace NuclearEngine
+{
+	namespace Physics3D
+	{
+		class RigidBody;
+		struct NEAPI PhysicsSceneDesc
+		{
+			Math::Vector3 gravity = Math::Vector3(0.0f, 0.0f, 0.0f);
+		};
+
+		class NEAPI PhysicsScene
+		{
+		public:
+			static bool Create(PhysicsScene* scene,const PhysicsSceneDesc& desc);
+			static void Delete(PhysicsScene* scene);
+
+			void Update(float dt);
+			void AddActor(RigidBody* actor);
+
+			physx::PxScene* GetBase();
+		private:
+			physx::PxScene* scene;
+		};
+	}
+}

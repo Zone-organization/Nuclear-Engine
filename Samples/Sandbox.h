@@ -162,13 +162,13 @@ public:
 
 	void Update(float deltatime) override
 	{
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::A))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::A))
 			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::S))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::S))
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::D))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::D))
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		Camera.Update();
@@ -203,7 +203,7 @@ public:
 	}
 	void Render(float dt) override
 	{
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::Tab))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Tab))
 		{
 			Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			mRenderscene(dt);

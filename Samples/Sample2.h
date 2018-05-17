@@ -200,13 +200,13 @@ public:
 	{
 		//Core::Application::SetTitle("Nuclear Engine FPS: " + std::to_string(FPS) + " FrameTime: " + std::to_string(FrameTime));
 
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::W))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::A))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::A))
 			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::S))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::S))
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Platform::Input::Keyboard::IsKeyPressed(Platform::Input::Keyboard::Key::D))
+		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::D))
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		Camera.Update();

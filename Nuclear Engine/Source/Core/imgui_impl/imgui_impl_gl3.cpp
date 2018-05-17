@@ -12,8 +12,8 @@
 using namespace NuclearEngine;
 // GLAD/GLFW
 #include <GLAD\include\glad\glad.h>
-#include <Graphics\API\Sampler.h>
-#include <Graphics\API\Texture.h>
+#include <Engine\Graphics\API\Sampler.h>
+#include <Engine\Graphics\API\Texture.h>
 
 // Data
 static Graphics::API::Sampler   g_pFontSampler;

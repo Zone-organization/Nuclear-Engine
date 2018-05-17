@@ -1,5 +1,5 @@
 #pragma once
-#include <NE_PrivateCommon.h>
+#include <Base\NE_PrivateCommon.h>
 
 namespace NuclearEngine {
 	namespace ECS

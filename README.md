@@ -27,7 +27,7 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Windows 7+     
 
 ## Currently TODO
-  - Implement PhysXEngine (Nvidia Physics)
+  - Restructure the Engine.
   - Implement dynamic Material class.
   - Depend 100% on ECS.
   
@@ -35,5 +35,9 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
   - Support PBR with IBL.
   
 ### Building
-Please See NuclearDeps Repo for dependencies.
+Please See NuclearDeps Repo for external dependencies.
 Currently I am using Visual Studio 2017 to build it.
+
+Included ThirdParty Deps:
+1- Google CRC32c
+2- SFML (as Platform Abstraction Layer "PAL" only)

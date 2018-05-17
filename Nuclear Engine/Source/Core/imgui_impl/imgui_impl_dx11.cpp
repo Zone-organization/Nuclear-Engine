@@ -6,10 +6,10 @@
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 // https://github.com/ocornut/imgui
 
-#include <GUI\imgui.h>
+#include <Engine\GUI\imgui.h>
 #include "imgui_impl_dx11.h"
-#include <Graphics\API\Sampler.h>
-#include <Graphics\API\Texture.h>
+#include <Engine\Graphics\API\Sampler.h>
+#include <Engine\Graphics\API\Texture.h>
 
 // DirectX
 #include <d3d11.h>

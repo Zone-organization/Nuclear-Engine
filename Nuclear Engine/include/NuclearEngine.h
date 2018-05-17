@@ -18,53 +18,47 @@ _____________/BOOOM\_____________
 #include <Core/FileSystem.h>
 #include <Core/Parsers/XMLParser.h>
 //--Entity Component System Headers
-#include <ECS/Scene.h>
-#include <ECS/Event.h>
-#include <ECS/Entity.h>
-#include <ECS/System.h>
+#include <Engine/ECS/Scene.h>
+#include <Engine/ECS/Event.h>
+#include <Engine/ECS/Entity.h>
+#include <Engine/ECS/System.h>
 
-#include <Transform\Transform.h>
+#include <Engine/Transform\Transform.h>
 
-#include <Utilities\Hash.h>
-
-
-//# Platform Abstraction Layer Headers
-#include <Platform\Clock.h>
-#include <Platform\Timer.h>
-#include <Platform\Input.h>
+#include <Base\Utilities\Hash.h>
 
 //# Assets & their managers Headers
-#include <Managers\AssetManager.h>
-#include <Managers\ShaderManager.h>
+#include <Engine\Managers\AssetManager.h>
+#include <Engine\Managers\ShaderManager.h>
 
 //# Asset Classes
-#include <Assets\Mesh.h>
-#include <Assets\Material.h>
+#include <Engine\Assets\Mesh.h>
+#include <Engine\Assets\Material.h>
 
 //# Audio SubSystem Headers
-#include <Audio/AudioEngine.h>
-#include <Audio/Sound.h>
-#include <Audio/Channel.h>
+#include <Engine/Audio/AudioEngine.h>
+#include <Engine/Audio/Sound.h>
+#include <Engine/Audio/Channel.h>
 
 //# Physics3D Headers
-#include <Physics3D/Physics3DEngine.h>
-#include <Physics3D/PhysicsScene.h>
+#include <Engine/Physics3D/Physics3DEngine.h>
+#include <Engine/Physics3D/PhysicsScene.h>
 
 //# OneAPI Headers
-#include <Graphics/API/RenderAPI.h>
-#include <Graphics\Skybox.h>
-#include <Graphics\Background.h>
-#include <Graphics\GraphicsEngine.h>
+#include <Engine/Graphics/API/RenderAPI.h>
+#include <Engine\Graphics\Skybox.h>
+#include <Engine\Graphics\Background.h>
+#include <Engine\Graphics\GraphicsEngine.h>
 
 //# GUI Headers
-#include <GUI\IMGUI.h>
+#include <Engine\GUI\IMGUI.h>
 
 //# Engine Components Headers
-#include <Components\CameraComponent.h>
-#include <Components\Light.h>
-#include <Components\MeshComponent.h>
-#include <Components\Sprite.h>
+#include <Engine/Components\CameraComponent.h>
+#include <Engine/Components\Light.h>
+#include <Engine/Components\MeshComponent.h>
+#include <Engine/Components\Sprite.h>
 
 //# Engine Systems Headers
-#include <Systems\RenderSystem.h>
-#include <Systems\SpriteRenderSystem.h>
+#include <Engine/Systems\RenderSystem.h>
+#include <Engine/Systems\SpriteRenderSystem.h>

@@ -1,20 +1,21 @@
 #include <Core\Engine.h>
-#include <NE_Common.h>
-#include <Platform\Input.h>
-#include <..\Source\Tests\ECSTests.h>
-#include <..\Source\Tests\PhysXTests.h>
-#include <..\Source\Tests\FMODTests.h>
-#include <..\Source\Tests\DirectX11Tests.h>
-#include <..\Source\Tests\OpenGLTests.h>
-#include <..\Source\Tests\Test1.h>
-#include <..\Source\Tests\Test2.h>
-#include <..\Source\Tests\Test3.h>
-#include <..\Source\Tests\Test4.h>
-#include <..\Source\Tests\Test5.h>
-#include <GUI\imgui.h>
+#include <Base\NE_Common.h>
+#include <Base\Utilities\Timer.h>
+#include "Core\Input.h"
+#include <..\Source\Engine\Tests\ECSTests.h>
+#include <..\Source\Engine\Tests\PhysXTests.h>
+#include <..\Source\Engine\Tests\FMODTests.h>
+#include <..\Source\Engine\Tests\DirectX11Tests.h>
+#include <..\Source\Engine\Tests\OpenGLTests.h>
+#include <..\Source\Engine\Tests\Test1.h>
+#include <..\Source\Engine\Tests\Test2.h>
+#include <..\Source\Engine\Tests\Test3.h>
+#include <..\Source\Engine\Tests\Test4.h>
+#include <..\Source\Engine\Tests\Test5.h>
+#include <Engine\GUI\imgui.h>
 #include "..\Core\imgui_impl\imgui_impl.h"
-#include <Graphics\GraphicsEngine.h>
-#include <Audio\AudioEngine.h>
+#include <Engine\Graphics\GraphicsEngine.h>
+#include <Engine\Audio\AudioEngine.h>
 #include <FMOD\includer.h> 
 
 /*
@@ -32,8 +33,6 @@
        |ZLIXINE| 
 */
 namespace NuclearEngine {
-	using namespace Platform;
-
 	namespace Core {
 
 		static std::string MajorVersion = "0";
@@ -195,16 +194,16 @@ namespace NuclearEngine {
 		{
 			SetState(Engine::State::Rendering);
 
-			Platform::Clock clock;
+			Base::Utilities::Timer timer;
 
 			//Main Game Loop
 			while (Core::Engine::ShouldClose() != true)
 			{
 				// per-frame time logic (ensure speed is constant through all platforms)
-				float currentFrame = clock.GetElapsedTime().AsSeconds();
+				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
-				GamePtr->ClockTime = clock.GetElapsedTime().AsSeconds();
+				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
 				GamePtr->FrameTime = 1000.0f / ImGui::GetIO().Framerate;
 				GamePtr->FPS = ImGui::GetIO().Framerate;
 
