@@ -8,7 +8,7 @@
  * Author: Alec Thomas <alec@swapoff.org>
  */
 
-#include "ECS/System.h"
+#include "Engine/ECS/System.h"
 
 
 namespace NuclearEngine {

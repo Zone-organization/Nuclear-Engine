@@ -1,4 +1,4 @@
-#include <Audio\Channel.h>
+#include <Engine\Audio\Channel.h>
 #include <FMOD\includer.h> 
 
 #ifndef FMOD_NOT_INCLUDED

@@ -43,7 +43,7 @@
         #include <windows.h>
     #endif
 
-    #include <GL/gl.h>
+	#include <Engine/Graphics/API/OpenGL/GLCommon.h>
 
 #elif defined(SFML_SYSTEM_LINUX) || defined(SFML_SYSTEM_FREEBSD) || defined(SFML_SYSTEM_OPENBSD)
 

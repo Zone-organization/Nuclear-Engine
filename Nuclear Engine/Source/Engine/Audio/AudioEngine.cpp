@@ -1,4 +1,4 @@
-#include <Audio\AudioEngine.h>
+#include <Engine\Audio\AudioEngine.h>
 #include <FMOD\includer.h> 
 
 #ifndef FMOD_NOT_INCLUDED
@@ -6,7 +6,7 @@
 #define FMOD_ERRCHK_IMPL
 #include "FMODError.h"
 #pragma comment (lib, "FMOD/lib/fmodL_vc.lib")
-#include <Audio\Channel.h>
+#include <Engine\Audio\Channel.h>
 
 namespace NuclearEngine
 {

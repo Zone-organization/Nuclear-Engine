@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////////////
 #include <ThirdParty/SFML/Network/Win32/SocketImpl.hpp>
 #include <cstring>
-
+#pragma comment(lib, "Ws2_32.lib")
 
 namespace sf
 {

@@ -1,7 +1,7 @@
-#include "Components\CameraComponent.h"
-#include "Math/gtc/matrix_inverse.hpp"
+#include "Engine/Components\CameraComponent.h"
+#include "Base/Math/gtc/matrix_inverse.hpp"
 #include <Core\Engine.h>
-#include <ECS\Scene.h>
+#include <Engine/ECS\Scene.h>
 
 namespace NuclearEngine
 {

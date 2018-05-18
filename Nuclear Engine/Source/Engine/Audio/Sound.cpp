@@ -1,9 +1,9 @@
-#include <Audio\Sound.h>
+#include <Engine\Audio\Sound.h>
 #include <FMOD\includer.h> 
 
 #ifndef FMOD_NOT_INCLUDED
-#include <Audio\AudioEngine.h>
-#include <Audio\Channel.h>
+#include <Engine\Audio\AudioEngine.h>
+#include <Engine\Audio\Channel.h>
 #include <FMOD\inc\fmod.hpp>
 #include "FMODError.h"
 

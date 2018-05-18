@@ -17,6 +17,8 @@ _____________/BOOOM\_____________
 #include <Core/Editor.h>
 #include <Core/FileSystem.h>
 #include <Core/Parsers/XMLParser.h>
+#include <Core/Input.h>
+
 //--Entity Component System Headers
 #include <Engine/ECS/Scene.h>
 #include <Engine/ECS/Event.h>

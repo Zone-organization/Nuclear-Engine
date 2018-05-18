@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 	}
 	else if (choice == 'H')
 	{
-		std::string TexUp("Texture.png");
+		/*std::string TexUp("Texture.png");
 		std::string TexDown("texture.png");
 		std::string TexPathed("Assets/Common/Textures/Texture.png");
 
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
 		auto I2 = Utilities::Hash(TexPathed);
 		std::cout << clock.GetElapsedTime().AsMicroseconds() << "\n";
 		clock.Restart();
-
+		*/
 	}
 	Core::Engine::Shutdown();
 

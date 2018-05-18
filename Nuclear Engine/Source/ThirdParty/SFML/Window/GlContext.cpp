@@ -46,6 +46,8 @@
 
     #if defined(SFML_SYSTEM_WINDOWS)
 
+#pragma comment(lib,"opengl32.lib")
+
         #include <ThirdParty/SFML/Window/Win32/WglContext.hpp>
         typedef sf::priv::WglContext ContextType;
 

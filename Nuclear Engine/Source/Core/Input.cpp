@@ -1,10 +1,10 @@
-#include <Platform\Input.h>
+#include <Core\Input.h>
 #ifdef NUCLEAR_PLATFORM_WINDOWS_PC
 #include <windows.h>
 #endif
 
 namespace NuclearEngine {
-	namespace Platform {
+	namespace Core {
 		namespace Input {
 			bool Keyboard::IsKeyPressed(Key::Code key)
 			{

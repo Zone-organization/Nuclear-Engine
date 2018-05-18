@@ -39,15 +39,15 @@
 
 #ifdef SFML_SYSTEM_WINDOWS
 
-#include <windows.h>
+//#include <windows.h>
 
-extern int main(int argc, char* argv[]);
-
-////////////////////////////////////////////////////////////
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
-{
-    return main(__argc, __argv);
-}
+//extern int main(int argc, char* argv[]);
+//
+//////////////////////////////////////////////////////////////
+//int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
+//{
+//    return main(__argc, __argv);
+//}
 
 #endif // SFML_SYSTEM_WINDOWS
 
