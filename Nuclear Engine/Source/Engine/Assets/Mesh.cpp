@@ -132,7 +132,7 @@ namespace NuclearEngine {
 		};
 
 		//Todo rework this since we do alot of unnecessery looping
-		void Mesh::CreateCube(Mesh* model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc, float width, float height, float depth)
+		void Mesh::CreateCube(Mesh* model, std::vector<Assets::Texture> Textures, const MeshVertexDesc& desc, float width, float height, float depth)
 		{
 			Vertex v[24];
 
@@ -221,7 +221,7 @@ namespace NuclearEngine {
 			model->SubMeshes.push_back(meshData);
 		}
 
-		void Mesh::CreateSphere(Mesh * model, std::vector<MeshTexture> Textures, const MeshVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
+		void Mesh::CreateSphere(Mesh * model, std::vector<Assets::Texture> Textures, const MeshVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
 		{
 			SubMesh::SubMeshData meshData;
 
@@ -319,12 +319,12 @@ namespace NuclearEngine {
 			model->SubMeshes.push_back(meshData);
 		}
 
-		void Mesh::CreatePlane(Mesh * model, std::vector<MeshTexture> Textures, const MeshVertexDesc & desc, float width, float depth)
+		void Mesh::CreatePlane(Mesh * model, std::vector<Assets::Texture> Textures, const MeshVertexDesc & desc, float width, float depth)
 		{
 			return CreateGrid(model, Textures, desc, width, depth,2,2);
 		}
 
-		void Mesh::CreateGrid(Mesh * model, std::vector<MeshTexture> Textures, const MeshVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
+		void Mesh::CreateGrid(Mesh * model, std::vector<Assets::Texture> Textures, const MeshVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
 		{
 			SubMesh::SubMeshData meshData;
 			std::vector<Vertex> Vertices;

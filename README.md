@@ -39,5 +39,6 @@ Please See NuclearDeps Repo for external dependencies.
 Currently I am using Visual Studio 2017 to build it.
 
 Included ThirdParty Deps:
-1- Google CRC32c
-2- SFML (as Platform Abstraction Layer "PAL" only)
+  - Google CRC32c
+  - SFML (as Platform Abstraction Layer "PAL" only)
+  - STB_image

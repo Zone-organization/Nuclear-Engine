@@ -373,6 +373,7 @@
     <ClInclude Include="Source\ThirdParty\SFML\Window\VideoModeImpl.hpp" />
     <ClInclude Include="Source\ThirdParty\SFML\Window\WindowImpl.hpp" />
     <ClInclude Include="include\ThirdParty\SFML\OpenGL.hpp" />
+    <ClInclude Include="include\Engine\Assets\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -463,7 +464,6 @@
     <ClCompile Include="Source\Engine\Audio\Channel.cpp" />
     <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
-    <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Base\Utilities\Timer.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
@@ -523,6 +523,7 @@
     <ClCompile Include="Source\ThirdParty\SFML\Window\WindowImpl.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\mContext.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\mGLContext.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

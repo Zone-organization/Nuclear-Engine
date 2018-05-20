@@ -84,18 +84,18 @@ public:
 	{
 		SetupTextures();
 
-		Assets::MeshTexture WhiteCTex;
+		Assets::Texture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = Assets::MeshTextureType::Diffuse;
-		std::vector<Assets::MeshTexture> spheretextures;
+		WhiteCTex.type = Assets::TextureType::Diffuse;
+		std::vector<Assets::Texture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = Assets::MeshTextureType::Specular;
+		WhiteCTex.type = Assets::TextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 		
 		Assets::MeshVertexDesc descsphere;
 		if (usenormalmaps)
 		{
-			WhiteCTex.type = Assets::MeshTextureType::Normal;
+			WhiteCTex.type = Assets::TextureType::Normal;
 			spheretextures.push_back(WhiteCTex);
 
 			descsphere.Tangents = true;

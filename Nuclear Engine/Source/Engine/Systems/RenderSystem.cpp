@@ -210,7 +210,7 @@ namespace NuclearEngine
 			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
-				if (mesh->data.textures[i].type == Assets::MeshTextureType::Diffuse)
+				if (mesh->data.textures[i].type == Assets::TextureType::Diffuse)
 				{
 					//if (diffusebound != true)
 					//{
@@ -218,7 +218,7 @@ namespace NuclearEngine
 					//	diffusebound = true;
 					//}
 				}
-				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Specular)
+				else if (mesh->data.textures[i].type == Assets::TextureType::Specular)
 				{
 					//if (specularbound != true)
 					//{
@@ -226,7 +226,7 @@ namespace NuclearEngine
 					//	specularbound = true;
 					//}
 				}
-				else if (mesh->data.textures[i].type == Assets::MeshTextureType::Normal)
+				else if (mesh->data.textures[i].type == Assets::TextureType::Normal)
 				{
 				//	if (normalbound != true)
 					//{

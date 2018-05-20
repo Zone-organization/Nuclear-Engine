@@ -101,48 +101,48 @@ namespace NuclearEngine {
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			if (loaddesc.LoadDiffuseTextures)
 			{
-				std::vector<Assets::MeshTexture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
+				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
 				result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
 			}
 			if (loaddesc.LoadSpecularTextures)
 			{
-				std::vector<Assets::MeshTexture> SpecularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
+				std::vector<Assets::Texture> SpecularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
 				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
 			if (loaddesc.LoadNormalTextures)
 			{
-				std::vector<Assets::MeshTexture> NormalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
+				std::vector<Assets::Texture> NormalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
 				result.textures.insert(result.textures.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
 	
-		Assets::MeshTextureType GetMeshTextureType(aiTextureType type)
+		Assets::TextureType GetAssets::TextureType(aiTextureType type)
 		{
 			switch (type)
 			{
 			case aiTextureType_DIFFUSE:
-				return Assets::MeshTextureType::Diffuse;
+				return Assets::TextureType::Diffuse;
 			case aiTextureType_SPECULAR:
-				return Assets::MeshTextureType::Specular;
+				return Assets::TextureType::Specular;
 			case aiTextureType_DISPLACEMENT:
-				return Assets::MeshTextureType::Normal;
+				return Assets::TextureType::Normal;
 			}
 
 			//Unsupported types treated as diffuse
-			return Assets::MeshTextureType::Diffuse;
+			return Assets::TextureType::Diffuse;
 		}
-		std::vector<Assets::MeshTexture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
+		std::vector<Assets::Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{
-			std::vector<Assets::MeshTexture> textures;
+			std::vector<Assets::Texture> textures;
 			for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 			{
 				aiString str;
 				mat->GetTexture(type, i, &str);
 
-				Assets::MeshTexture texture;
-				texture.type = GetMeshTextureType(type);
+				Assets::Texture texture;
+				texture.type = GetAssets::TextureType(type);
 
 				Graphics::API::Texture_Desc Desc;
 				Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;

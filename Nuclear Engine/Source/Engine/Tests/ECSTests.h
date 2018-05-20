@@ -104,17 +104,17 @@ public:
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
 
-		Assets::MeshTexture MTexture;
-		MTexture.type = Assets::MeshTextureType::Diffuse;
+		Assets::Texture MTexture;
+		MTexture.type = Assets::TextureType::Diffuse;
 		MTexture.Texture = CubeTex;
 
 		Assets::MeshVertexDesc vertexDesc;
 		vertexDesc.Normals = false;
 		vertexDesc.Tangents = false;
-		Assets::Mesh::CreateCube(&Cube, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 1.0f, 1.0f, 1.0f);
+		Assets::Mesh::CreateCube(&Cube, std::vector<Assets::Texture>() = { MTexture }, vertexDesc, 1.0f, 1.0f, 1.0f);
 
 		MTexture.Texture = PlaneTex;
-		Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::MeshTexture>() = { MTexture }, vertexDesc, 1.0f, 1.0f);
+		Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::Texture>() = { MTexture }, vertexDesc, 1.0f, 1.0f);
 		
 		ECube1 = Scene.Entities.Create();
 		ECube1.Assign<Components::MeshComponent>(&Cube);

@@ -334,6 +334,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Engine\Assets\Material.h" />
+    <ClInclude Include="include\Engine\Assets\Texture.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
     <ClInclude Include="include\Engine\Audio\Channel.h" />
     <ClInclude Include="include\Engine\Audio\Sound.h" />
@@ -707,6 +708,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Audio\Channel.cpp" />
     <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
@@ -770,7 +772,6 @@
     <ClCompile Include="Source\Engine\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\SpriteRenderSystem.cpp" />
-    <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\GUI\imgui.cpp" />
     <ClCompile Include="Source\Engine\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />

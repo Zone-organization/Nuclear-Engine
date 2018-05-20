@@ -132,14 +132,14 @@ public:
 	{
 		SetupTextures();
 
-		std::vector<Assets::MeshTexture> Textures;
-		Assets::MeshTexture DiffuseCTex;
+		std::vector<Assets::Texture> Textures;
+		Assets::Texture DiffuseCTex;
 		DiffuseCTex.Texture = DiffuseTex;
-		DiffuseCTex.type = Assets::MeshTextureType::Diffuse;
+		DiffuseCTex.type = Assets::TextureType::Diffuse;
 
-		Assets::MeshTexture SpecularCTex;
+		Assets::Texture SpecularCTex;
 		SpecularCTex.Texture = SpecularTex;
-		SpecularCTex.type = Assets::MeshTextureType::Specular;
+		SpecularCTex.type = Assets::TextureType::Specular;
 
 		Textures.push_back(DiffuseCTex);
 		Textures.push_back(SpecularCTex);
@@ -147,12 +147,12 @@ public:
 		Assets::Mesh::CreateCube(&CubeAsset, Textures);
 		CubeAsset.Initialize(&Renderer->GetVertexShader());
 
-		Assets::MeshTexture WhiteCTex;
+		Assets::Texture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = Assets::MeshTextureType::Diffuse;
-		std::vector<Assets::MeshTexture> spheretextures;
+		WhiteCTex.type = Assets::TextureType::Diffuse;
+		std::vector<Assets::Texture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = Assets::MeshTextureType::Specular;
+		WhiteCTex.type = Assets::TextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 
 		Assets::Mesh::CreateSphere(&SphereAsset, spheretextures);

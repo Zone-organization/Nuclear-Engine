@@ -65,17 +65,17 @@ public:
 	{
 		SetupTextures();
 
-		std::vector<Assets::MeshTexture> textures;
+		std::vector<Assets::Texture> textures;
 
-		Assets::MeshTexture DTexture;
+		Assets::Texture DTexture;
 		DTexture.Texture = DiffuseTex;
-		DTexture.type = Assets::MeshTextureType::Diffuse;
+		DTexture.type = Assets::TextureType::Diffuse;
 		textures.push_back(DTexture);
 		DTexture.Texture = SpecularTex;
-		DTexture.type = Assets::MeshTextureType::Specular;
+		DTexture.type = Assets::TextureType::Specular;
 		textures.push_back(DTexture);
 		DTexture.Texture = NormalTex;
-		DTexture.type = Assets::MeshTextureType::Normal;
+		DTexture.type = Assets::TextureType::Normal;
 		textures.push_back(DTexture);
 
 		Assets::MeshVertexDesc descm;
@@ -83,12 +83,12 @@ public:
 		Assets::Mesh::CreateGrid(&GridAsset, textures, descm,2.0f, 2.0f, 5, 5);
 		GridAsset.Initialize(&Renderer->GetVertexShader());
 
-		Assets::MeshTexture WhiteCTex;
+		Assets::Texture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = Assets::MeshTextureType::Diffuse;
-		std::vector<Assets::MeshTexture> spheretextures;
+		WhiteCTex.type = Assets::TextureType::Diffuse;
+		std::vector<Assets::Texture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = Assets::MeshTextureType::Specular;
+		WhiteCTex.type = Assets::TextureType::Specular;
 		spheretextures.push_back(WhiteCTex);
 
 		Assets::Mesh::CreateSphere(&SphereAsset, spheretextures, descm);

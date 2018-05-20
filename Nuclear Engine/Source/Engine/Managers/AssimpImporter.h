@@ -15,7 +15,7 @@ namespace NuclearEngine {
 			bool LoadModel(std::string Path);
 			void ProcessNode(aiNode *node, const aiScene *scene);
 			Assets::Mesh::SubMesh::SubMeshData ProcessMesh(aiMesh *mesh, const aiScene *scene);
-			std::vector<Assets::MeshTexture> ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
+			std::vector<Assets::Texture> ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
 			
 			Assets::Mesh* model;
 			std::vector<Assets::Mesh::SubMesh::SubMeshData> meshes_loaded;
