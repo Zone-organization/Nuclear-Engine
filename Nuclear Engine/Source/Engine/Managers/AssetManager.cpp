@@ -11,27 +11,7 @@ namespace NuclearEngine {
 	namespace Managers {
 		std::unordered_map<Uint32,Assets::Texture> AssetManager::mImportedTextures = std::unordered_map<Uint32, Assets::Texture>();
 		std::unordered_map<Uint32, std::string> AssetManager::mHashedTexturesNames = std::unordered_map<Uint32, std::string>();
-		bool AssetManager::mSaveTextureNames = false;
-
-		Graphics::API::Texture_Data DefaultTextureImporter_STB(const std::string& Path, const Graphics::API::Texture_Desc & Desc);
-
-		void AssetManager::Initialize(bool SaveTextureNames)
-		{
-			mSaveTextureNames = SaveTextureNames;
-			DefaultTextureImporter = TextureImport::create(DefaultTextureImporter_STB);
-		}
-
-		void AssetManager::ShutDown()
-		{
-			for (auto x : mImportedTextures)
-			{
-				Graphics::API::Texture::Delete(&x.second.mTexture);
-			}
-			mImportedTextures.clear();
-			mHashedTexturesNames.clear();
-		}
-
-		Graphics::API::Texture_Data DefaultTextureImporter_STB(const std::string& Path, const Graphics::API::Texture_Desc & Desc)
+		Graphics::API::Texture_Data AssetManager::LoadTex_stb_image(const std::string& Path, const Graphics::API::Texture_Desc & Desc)
 		{
 			int req_c;
 			switch (Desc.Format)
@@ -53,18 +33,53 @@ namespace NuclearEngine {
 			Data.Img_Data_Buf = stbi_load(Path.c_str(), &Data.Width, &Data.Height, &Data.Components_Number, req_c);
 
 			if (Data.Img_Data_Buf == NULL)
-				Data.Valid = false;			
+				Data.Valid = false;
 			else
 				Data.Valid = true;
 
 			return Data;
 		}
+		TextureImport AssetManager::DefaultTextureImporter = TextureImport::create<&AssetManager::LoadTex_stb_image>();
+		bool AssetManager::mSaveTextureNames = false;
+
+		template< typename T >
+		std::string int_to_hex(T i)
+		{
+			std::stringstream stream;
+			stream << "0x"
+				<< std::setfill('0') << std::setw(sizeof(T) * 2)
+				<< std::hex << i;
+			return stream.str();
+		}
+		void AssetManager::Initialize(bool SaveTextureNames)
+		{
+			DefaultTextureImporter = TextureImport::create<&AssetManager::LoadTex_stb_image>();
+			mSaveTextureNames = SaveTextureNames;
+		}
+
+		void AssetManager::ShutDown()
+		{
+			for (auto x : mImportedTextures)
+			{
+				Graphics::API::Texture::Delete(&x.second.mTexture);
+			}
+			mImportedTextures.clear();
+			mHashedTexturesNames.clear();
+		}
+
+	
 		Assets::Mesh & AssetManager::Import(const std::string & Path, const MeshLoadingDesc &)
 		{
 			// TODO: insert return statement here
+			return Assets::Mesh();
 		}
 
 		Assets::Texture & AssetManager::Import(const std::string & Path, const Graphics::API::Texture_Desc & Desc)
+		{
+			return Import(Path, Assets::TextureUsageType::Unknown, Desc);
+		}
+
+		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type, const Graphics::API::Texture_Desc & Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
@@ -73,8 +88,6 @@ namespace NuclearEngine {
 			{
 				return it->second;
 			}
-
-			Graphics::API::Texture_Data Data;
 
 			auto Data = DefaultTextureImporter(Path, Desc);
 
@@ -92,9 +105,9 @@ namespace NuclearEngine {
 			}
 
 			Log.Info(std::string("[AssetManager] Loaded Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
-			
-			Assets::Texture Tex;
 
+			Assets::Texture Tex;
+			Tex.SetUsageType(type);
 			Graphics::API::Texture::Create(&Tex.mTexture, Data, Desc);
 
 			return mImportedTextures[hashedname] = Tex;
@@ -105,15 +118,7 @@ namespace NuclearEngine {
 			Internal::AssimpImporter importer;
 			return importer.Load(Path, model, desc);
 		}*/
-		template< typename T >
-		std::string int_to_hex(T i)
-		{
-			std::stringstream stream;
-			stream << "0x"
-				<< std::setfill('0') << std::setw(sizeof(T) * 2)
-				<< std::hex << i;
-			return stream.str();
-		}
+	
 		Graphics::API::Texture_Data AssetManager::TextureCube_Load(const std::string& Path, const Graphics::API::Texture_Desc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
@@ -144,10 +149,11 @@ namespace NuclearEngine {
 			texture = nullptr;
 			return false;
 		}
-		std::array<Graphics::API::Texture_Data, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const Graphics::API::Texture_Desc& Desc)
+		std::array<Graphics::API::Texture_Data, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const Graphics::API::Texture_Desc& desc)
 		{
 			Graphics::API::Texture_Data data1, data2, data3, data4, data5, data6;
-
+			Graphics::API::Texture_Desc Desc = desc;
+			Desc.FlipY_Axis = false;
 			data1 = TextureCube_Load(Paths.at(0), Desc);
 			data2 = TextureCube_Load(Paths.at(1), Desc);
 			data3 = TextureCube_Load(Paths.at(2), Desc);

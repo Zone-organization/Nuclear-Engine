@@ -17,8 +17,8 @@ protected:
 	Assets::Mesh ScreenQuad;
 
 	Graphics::API::Sampler LinearSampler;
-	Graphics::API::Texture PlaneTex;
-	Graphics::API::Texture CubeTex;
+	Assets::Texture PlaneTex;
+	Assets::Texture CubeTex;
 
 	Graphics::API::Sampler ScreenSampler;
 	Graphics::API::Texture ScreenTex;
@@ -255,12 +255,8 @@ public:
 
 		VShader.SetConstantBuffer(&Camera.GetCBuffer());
 
-		Graphics::API::Texture_Desc Desc;
-		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		Desc.Type = Graphics::API::TextureType::Texture2D;
-
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
+		PlaneTex = Managers::AssetManager::Import("Assets/Common/Textures/woodenbox.jpg");
+		CubeTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png");
 
 		//Create sampler
 		Samplerdesc.Filter = Graphics::API::TextureFilter::Trilinear;
@@ -410,6 +406,5 @@ public:
 		Graphics::API::VertexBuffer::Delete(&PlaneVB);
 		Graphics::API::Sampler::Delete(&ScreenSampler);
 		Graphics::API::RenderTarget::Delete(&RT);
-		Graphics::API::Texture::Delete(&CubeTex);
 	}
 };

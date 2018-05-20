@@ -17,7 +17,7 @@ protected:
 
 	Graphics::API::VertexBuffer CubeVB;
 	Graphics::API::ConstantBuffer CubeCB;
-	Graphics::API::Texture WoodenBoxTex;
+	Assets::Texture WoodenBoxTex;
 	Graphics::API::Sampler WoodenBoxSampler;
 	Graphics::API::CommonStates states;
 	std::string VertexShader = R"(struct VertexInputType
@@ -143,11 +143,8 @@ public:
 		Graphics::API::ConstantBuffer::Create(&CubeCB, "NE_Camera", sizeof(Shader_Uniforms));
 		VShader.SetConstantBuffer(&CubeCB);
 	
-		Graphics::API::Texture_Desc TexDesc;
-		TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		TexDesc.Type = Graphics::API::TextureType::Texture2D;
-		TexDesc.GenerateMipMaps = true;
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &WoodenBoxTex, TexDesc);
+
+		WoodenBoxTex = Managers::AssetManager::Import("Assets/Common/Textures/woodenbox.jpg");
 
 		//Create Sampler
 		Graphics::API::SamplerDesc Samplerdesc;
@@ -187,7 +184,6 @@ public:
 		Graphics::API::VertexShader::Delete(&VShader);
 		Graphics::API::PixelShader::Delete(&PShader);
 		Graphics::API::VertexBuffer::Delete(&CubeVB);
-		Graphics::API::Texture::Delete(&WoodenBoxTex);
 		Graphics::API::ConstantBuffer::Delete(&CubeCB);
 
 	}

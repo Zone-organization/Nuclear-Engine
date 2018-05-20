@@ -14,9 +14,9 @@ protected:
 	Graphics::API::VertexBuffer WindowVB;
 
 	Graphics::API::Sampler LinearSampler;
-	Graphics::API::Texture PlaneTex;
-	Graphics::API::Texture CubeTex;
-	Graphics::API::Texture WindowTex;
+	Assets::Texture PlaneTex;
+	Assets::Texture CubeTex;
+	Assets::Texture WindowTex;
 
 	bool Depthshaderenabled = false;
 
@@ -215,13 +215,9 @@ public:
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 
-		Graphics::API::Texture_Desc Desc;
-		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		Desc.Type = Graphics::API::TextureType::Texture2D;
-		Desc.GenerateMipMaps = true;
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/window.png", &WindowTex, Desc);
+		PlaneTex = Managers::AssetManager::Import("Assets/Common/Textures/woodenbox.jpg");
+		CubeTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png");
+		WindowTex= Managers::AssetManager::Import("Assets/Common/Textures/window.png");
 
 		//Create sampler
 		Graphics::API::SamplerDesc Samplerdesc;
@@ -407,6 +403,5 @@ public:
 		//Graphics::API::Shader::Delete(&TestShader);
 		Graphics::API::VertexBuffer::Delete(&CubeVB);
 		Graphics::API::VertexBuffer::Delete(&PlaneVB);
-		Graphics::API::Texture::Delete(&CubeTex);
 	}
 };

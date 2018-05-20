@@ -118,20 +118,20 @@ namespace NuclearEngine {
 			return result;
 		}
 	
-		Assets::TextureType GetAssets::TextureType(aiTextureType type)
+		Assets::TextureUsageType GetTextureType(aiTextureType type)
 		{
 			switch (type)
 			{
 			case aiTextureType_DIFFUSE:
-				return Assets::TextureType::Diffuse;
+				return Assets::TextureUsageType::Diffuse;
 			case aiTextureType_SPECULAR:
-				return Assets::TextureType::Specular;
+				return Assets::TextureUsageType::Specular;
 			case aiTextureType_DISPLACEMENT:
-				return Assets::TextureType::Normal;
+				return Assets::TextureUsageType::Normal;
 			}
 
 			//Unsupported types treated as diffuse
-			return Assets::TextureType::Diffuse;
+			return Assets::TextureUsageType::Diffuse;
 		}
 		std::vector<Assets::Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{
@@ -142,15 +142,11 @@ namespace NuclearEngine {
 				mat->GetTexture(type, i, &str);
 
 				Assets::Texture texture;
-				texture.type = GetAssets::TextureType(type);
-
-				Graphics::API::Texture_Desc Desc;
-				Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-				Desc.Type = Graphics::API::TextureType::Texture2D;
 
 				std::string filename = str.C_Str();
 				filename = directory + '/' + filename;
-				Managers::AssetManager::CreateTextureFromFile(filename, &texture.Texture, Desc);
+
+				texture = Managers::AssetManager::Import(filename, GetTextureType(type));
 
 				textures.push_back(texture);
 			}

@@ -8,7 +8,7 @@ protected:
 	Graphics::API::PixelShader PShader;
 	Graphics::API::VertexBuffer RectangleVB;
 	Graphics::API::IndexBuffer RectangleIB;
-	Graphics::API::Texture WoodenBoxTex;
+	Assets::Texture WoodenBoxTex;
 	Graphics::API::Sampler WoodenBoxSampler;
 
 	float vertices[20] = {
@@ -96,10 +96,8 @@ public:
 
 		//Create Texture Resource
 		Graphics::API::Texture_Desc TexDesc;
-		TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		TexDesc.Type = Graphics::API::TextureType::Texture2D;
 		TexDesc.GenerateMipMaps = false;
-		WoodenBoxTex = Managers::AssetManager::CreateTextureFromFile1("Assets/Common/Textures/woodenbox.jpg", TexDesc);
+		WoodenBoxTex = Managers::AssetManager::Import("Assets/Common/Textures/woodenbox.jpg", TexDesc);
 
 		//Create Sampler
 		Graphics::API::SamplerDesc Samplerdesc;
@@ -117,8 +115,7 @@ public:
 
 		VShader.Bind();
 		PShader.Bind();
-		WoodenBoxTex.PSBind(0);
-		WoodenBoxSampler.PSBind(0);
+		WoodenBoxTex.PSBind(0, WoodenBoxSampler);
 		RectangleVB.Bind();
 		RectangleIB.Bind();
 		Graphics::API::Context::DrawIndexed(6);
@@ -131,6 +128,5 @@ public:
 		Graphics::API::PixelShader::Delete(&PShader);
 		Graphics::API::VertexBuffer::Delete(&RectangleVB);
 		Graphics::API::IndexBuffer::Delete(&RectangleIB);
-		Graphics::API::Texture::Delete(&WoodenBoxTex);
 	}
 };

@@ -29,17 +29,11 @@ namespace NuclearEngine
 				static void Create(Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 				static void Delete(Texture* texture);
 
+				//TODO: Replace with "real" acessor that gets the dimensions of each mip map
 				Math::Vector2ui GetDimensions();
 				unsigned int GetWidth();
 				unsigned int GetHeight();
-				Uint32 GetHashedName();
-				Uint8 GetUsageType();
-
-				void SetHashedName(Uint32 name);
-				void SetName(const std::string& str);
-				void SetUsageType(Uint8 type);
-				void SetUsageType(TextureUsageType type);
-
+		
 				//TODO: Combine Sampler binding methods with these to ensure error-free bindings!
 				void VSBind(unsigned int slot);
 				void GSBind(unsigned int slot);
@@ -48,8 +42,6 @@ namespace NuclearEngine
 				BASE_API(Texture)
 			private:
 				Math::Vector2ui mDimensions;
-				Uint32 mHashedName;
-				Uint8 mUsageType;
 			};
 		}
 	}

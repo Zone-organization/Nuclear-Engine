@@ -19,7 +19,6 @@ namespace NuclearEngine {
 			{
 				obj->mDimensions.x = TexData.Width;
 				obj->mDimensions.y = TexData.Height;
-				obj->mHashedName = TexData.HashedName;
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
 
 				obj->isValid = true;				
@@ -54,34 +53,7 @@ namespace NuclearEngine {
 				return mDimensions.y;
 			}
 
-			Uint32 Texture::GetHashedName()
-			{
-				return mHashedName;
-			}
-
-			Uint8 Texture::GetUsageType()
-			{
-				return mUsageType;
-			}
-
-			void Texture::SetHashedName(Uint32 name)
-			{
-				mHashedName = name;
-			}
-
-			void Texture::SetName(const std::string & str)
-			{
-				mHashedName = Utilities::Hash(str);
-			}
-
-			void Texture::SetUsageType(Uint8 type)
-			{
-				mUsageType = type;
-			}
-			void Texture::SetUsageType(TextureUsageType type)
-			{
-				mUsageType = type;
-			}
+		
 			void Texture::VSBind(unsigned int index)
 			{
 				BASE_API_FUNC_CALL_ARGS(VSBind, index)		

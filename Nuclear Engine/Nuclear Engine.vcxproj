@@ -709,6 +709,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
+    <ClCompile Include="Source\Engine\Assets\TextureAsset.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Audio\Channel.cpp" />
     <ClCompile Include="Source\Engine\Audio\Sound.cpp" />

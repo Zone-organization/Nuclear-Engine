@@ -10,8 +10,8 @@ protected:
 	Graphics::API::PixelShader Pixelshader;
 
 	Graphics::API::Sampler LinearSampler;
-	Graphics::API::Texture PlaneTex;
-	Graphics::API::Texture CubeTex;
+	Assets::Texture PlaneTex;
+	Assets::Texture CubeTex;
 
 	ECS::Scene Scene;
 	ECS::Entity EPlane;
@@ -101,20 +101,15 @@ public:
 		Desc.Type = Graphics::API::TextureType::Texture2D;
 		Desc.GenerateMipMaps = true;
 
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
-
-		Assets::Texture MTexture;
-		MTexture.type = Assets::TextureType::Diffuse;
-		MTexture.Texture = CubeTex;
+		PlaneTex = Managers::AssetManager::Import("Assets/Common/Textures/woodenbox.jpg", Desc);
+		CubeTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse, Desc);
 
 		Assets::MeshVertexDesc vertexDesc;
 		vertexDesc.Normals = false;
 		vertexDesc.Tangents = false;
-		Assets::Mesh::CreateCube(&Cube, std::vector<Assets::Texture>() = { MTexture }, vertexDesc, 1.0f, 1.0f, 1.0f);
 
-		MTexture.Texture = PlaneTex;
-		Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::Texture>() = { MTexture }, vertexDesc, 1.0f, 1.0f);
+		Assets::Mesh::CreateCube(&Cube, std::vector<Assets::Texture>() = { CubeTex }, vertexDesc, 1.0f, 1.0f, 1.0f);
+		Assets::Mesh::CreatePlane(&Plane, std::vector<Assets::Texture>() = { PlaneTex }, vertexDesc, 1.0f, 1.0f);
 		
 		ECube1 = Scene.Entities.Create();
 		ECube1.Assign<Components::MeshComponent>(&Cube);
@@ -218,6 +213,6 @@ public:
 	{
 		//Graphics::API::VertexBuffer::Delete(&CubeVB);
 		//::API::VertexBuffer::Delete(&PlaneVB);
-		Graphics::API::Texture::Delete(&CubeTex);
+		//Graphics::API::Texture::Delete(&CubeTex);
 	}
 };

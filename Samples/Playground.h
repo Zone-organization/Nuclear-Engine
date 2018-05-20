@@ -7,10 +7,10 @@ protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
 	//Assets
-	Graphics::API::Texture DiffuseTex;
-	Graphics::API::Texture SpecularTex;
-	Graphics::API::Texture NormalTex;
-	Graphics::API::Texture WhiteTex;
+	Assets::Texture DiffuseTex;
+	Assets::Texture SpecularTex;
+	Assets::Texture NormalTex;
+	Assets::Texture WhiteTex;
 
 	Assets::Mesh GridAsset;
 	Assets::Mesh SphereAsset;
@@ -50,15 +50,11 @@ public:
 	}
 	void SetupTextures()
 	{
-		Graphics::API::Texture_Desc Desc;
-		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		Desc.Type = Graphics::API::TextureType::Texture2D;
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall_normal.jpg", &NormalTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
-
-
+	
+		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/brickwall.jpg");
+		NormalTex = Managers::AssetManager::Import("Assets/Common/Textures/brickwall_normal.jpg");
+		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/black.png");
+		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
 
 	}
 	void SetupAssets()
@@ -67,29 +63,23 @@ public:
 
 		std::vector<Assets::Texture> textures;
 
-		Assets::Texture DTexture;
-		DTexture.Texture = DiffuseTex;
-		DTexture.type = Assets::TextureType::Diffuse;
-		textures.push_back(DTexture);
-		DTexture.Texture = SpecularTex;
-		DTexture.type = Assets::TextureType::Specular;
-		textures.push_back(DTexture);
-		DTexture.Texture = NormalTex;
-		DTexture.type = Assets::TextureType::Normal;
-		textures.push_back(DTexture);
+		DiffuseTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		textures.push_back(DiffuseTex);
+		SpecularTex.SetUsageType(Assets::TextureUsageType::Specular);
+		textures.push_back(SpecularTex);
+		NormalTex.SetUsageType(Assets::TextureUsageType::Normal);
+		textures.push_back(NormalTex);
 
 		Assets::MeshVertexDesc descm;
 		descm.Tangents = true;
 		Assets::Mesh::CreateGrid(&GridAsset, textures, descm,2.0f, 2.0f, 5, 5);
 		GridAsset.Initialize(&Renderer->GetVertexShader());
 
-		Assets::Texture WhiteCTex;
-		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = Assets::TextureType::Diffuse;
+		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
 		std::vector<Assets::Texture> spheretextures;
-		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = Assets::TextureType::Specular;
-		spheretextures.push_back(WhiteCTex);
+		spheretextures.push_back(WhiteTex);
+		SpecularTex.SetUsageType(Assets::TextureUsageType::Specular);
+		spheretextures.push_back(SpecularTex);
 
 		Assets::Mesh::CreateSphere(&SphereAsset, spheretextures, descm);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());

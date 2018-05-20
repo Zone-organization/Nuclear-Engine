@@ -3,6 +3,16 @@
 
 class Sample2 : public Core::Game
 {
+
+};
+
+class Sample3 : public Core::Game
+{
+
+};
+/*
+class Sample2 : public Core::Game
+{
 protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
@@ -13,7 +23,7 @@ protected:
 	bool usenormalmaps = false;
 
 	//Assets
-	Graphics::API::Texture WhiteTex;
+	Assets::Texture WhiteTex;
 
 	Assets::Mesh SphereAsset;
 	Assets::Mesh SponzaAsset;
@@ -54,6 +64,7 @@ public:
 	{
 	}
 
+/*
 	void SetupLights()
 	{
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -74,9 +85,9 @@ public:
 	}
 	void SetupTextures()
 	{
-		Graphics::API::Texture_Desc Desc;
+		Assets::Texture_Desc Desc;
 		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		Desc.Type = Graphics::API::TextureType::Texture2D;
+		Desc.Type = Assets::TextureUsageType::Texture2D;
 
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
 	}
@@ -86,16 +97,16 @@ public:
 
 		Assets::Texture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = Assets::TextureType::Diffuse;
+		WhiteCTex.SetUsageType(Assets::TextureUsageType::Diffuse;
 		std::vector<Assets::Texture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = Assets::TextureType::Specular;
+		WhiteCTex.SetUsageType(Assets::TextureUsageType::Specular;
 		spheretextures.push_back(WhiteCTex);
 		
 		Assets::MeshVertexDesc descsphere;
 		if (usenormalmaps)
 		{
-			WhiteCTex.type = Assets::TextureType::Normal;
+			WhiteCTex.SetUsageType(Assets::TextureUsageType::Normal;
 			spheretextures.push_back(WhiteCTex);
 
 			descsphere.Tangents = true;
@@ -268,4 +279,5 @@ public:
 
 		Graphics::API::Context::PresentFrame();
 	}
-};
+
+};*/

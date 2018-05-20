@@ -14,8 +14,8 @@ protected:
 	Graphics::API::VertexBuffer TriangleVB;
 	GLuint vertProg, fragProg, pipeline;
 	Graphics::API::Sampler LinearSampler;
-	Graphics::API::Texture texture2;
-	Graphics::API::Texture texture1;
+	Assets::Texture texture2;
+	Assets::Texture texture1;
 
 	float vertices[18] =
 	{
@@ -140,12 +140,9 @@ public:
 
 		TriangleVB.SetInputLayout(&TriangleIL, &Graphics::API::VertexShader());
 
-		Graphics::API::Texture_Desc TexDesc;
-		TexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		TexDesc.Type = Graphics::API::TextureType::Texture2D;
-		TexDesc.GenerateMipMaps = true;
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &texture1, TexDesc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &texture2, TexDesc);
+
+	    texture1 = Managers::AssetManager::Import("Assets/Common/Textures/woodenbox.jpg");
+		texture2 = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png");
 
 		//Create sampler
 		Graphics::API::SamplerDesc Samplerdesc;

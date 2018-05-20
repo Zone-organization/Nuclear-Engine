@@ -10,9 +10,9 @@ protected:
 	//Audio::Channel channel;
 
 	//Assets
-	Graphics::API::Texture DiffuseTex;
-	Graphics::API::Texture SpecularTex;
-	Graphics::API::Texture WhiteTex;
+	Assets::Texture DiffuseTex;
+	Assets::Texture SpecularTex;
+	Assets::Texture WhiteTex;
 
 	//Default states
 	Graphics::API::CommonStates states;
@@ -52,7 +52,7 @@ public:
 	Sandbox()
 	{
 	}
-
+/*
 	void SetupLights()
 	{
 		pointlight1.SetPosition(lightPositions[0]);
@@ -69,9 +69,9 @@ public:
 	}
 	void SetupTextures()
 	{
-		Graphics::API::Texture_Desc Desc;
+		Assets::Texture_Desc Desc;
 		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM_SRGB;
-		Desc.Type = Graphics::API::TextureType::Texture2D;
+		Desc.Type = Assets::TextureUsageType::Texture2D;
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/brickwall.jpg", &DiffuseTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/black.png", &SpecularTex, Desc);
 		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/white.png", &WhiteTex, Desc);
@@ -84,10 +84,10 @@ public:
 
 		Assets::Texture DTexture;
 		DTexture.Texture = DiffuseTex;
-		DTexture.type = Assets::TextureType::Diffuse;
+		DTexture.SetUsageType(Assets::TextureUsageType::Diffuse;
 		textures.push_back(DTexture);
 		DTexture.Texture = SpecularTex;
-		DTexture.type = Assets::TextureType::Specular;
+		DTexture.SetUsageType(Assets::TextureUsageType::Specular);
 		textures.push_back(DTexture);
 
 		Assets::Mesh::CreateCube(&Cube, textures);
@@ -95,10 +95,10 @@ public:
 		
 		Assets::Texture WhiteCTex;
 		WhiteCTex.Texture = WhiteTex;
-		WhiteCTex.type = Assets::TextureType::Diffuse;
+		WhiteCTex.SetUsageType(Assets::TextureUsageType::Diffuse;
 		std::vector<Assets::Texture> spheretextures;
 		spheretextures.push_back(WhiteCTex);
-		WhiteCTex.type = Assets::TextureType::Specular;
+		WhiteCTex.SetUsageType(Assets::TextureUsageType::Specular_;
 		spheretextures.push_back(WhiteCTex);
 
 		Assets::Mesh::CreateSphere(&Lamp, spheretextures);
@@ -222,5 +222,5 @@ public:
 		
 		//Audio::AudioEngine::Update(&channel);
 		Graphics::API::Context::PresentFrame();
-	}
+	}*/
 };

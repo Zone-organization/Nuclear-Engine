@@ -85,7 +85,7 @@ namespace NuclearEngine {
 			Graphics::API::IndexBuffer::Delete(&IBO);
 			for (size_t i = 0; i < data.textures.size(); i++)
 			{
-				Graphics::API::Texture::Delete(&data.textures.at(i).Texture);
+				Graphics::API::Texture::Delete(&data.textures.at(i).mTexture);
 			}
 			data.textures.clear();
 		}

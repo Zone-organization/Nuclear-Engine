@@ -23,8 +23,8 @@ protected:
 	Graphics::API::VertexBuffer PlaneVB;
 
 	Graphics::API::Sampler LinearSampler;
-	Graphics::API::Texture PlaneTex;
-	Graphics::API::Texture CubeTex;
+	Assets::Texture PlaneTex;
+	Assets::Texture CubeTex;
 
 	Physics3D::PhysicsScene scene;
 
@@ -168,13 +168,9 @@ public:
 		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
-
-		Graphics::API::Texture_Desc Desc;
-		Desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
-		Desc.Type = Graphics::API::TextureType::Texture2D;
-		Desc.GenerateMipMaps = true;
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/woodenbox.jpg", &PlaneTex, Desc);
-		Managers::AssetManager::CreateTextureFromFile("Assets/Common/Textures/crate_diffuse.png", &CubeTex, Desc);
+		
+		PlaneTex = Managers::AssetManager::Import("Assets/Common/Textures/woodenbox.jpg");
+		CubeTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png");
 
 		//Create sampler
 		Graphics::API::SamplerDesc Samplerdesc;
@@ -183,8 +179,6 @@ public:
 
 		//Physics
 		Physics3D::Physics3DEngine::Initialize();
-
-
 
 		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 		states.EnabledDepth_DisabledStencil.Bind();
@@ -278,7 +272,6 @@ public:
 	{
 		Graphics::API::VertexBuffer::Delete(&CubeVB);
 		Graphics::API::VertexBuffer::Delete(&PlaneVB);
-		Graphics::API::Texture::Delete(&CubeTex);
 	}
 };
 #endif

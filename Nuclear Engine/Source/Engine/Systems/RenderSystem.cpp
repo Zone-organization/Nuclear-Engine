@@ -201,6 +201,9 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh::SubMesh * mesh)
 		{
+			///FIXME URGENT ERRROR BLA BLA
+
+
 			//Lil and UGLY AND SLOW hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
 		//	bool diffusebound = false;
@@ -210,27 +213,27 @@ namespace NuclearEngine
 			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
-				if (mesh->data.textures[i].type == Assets::TextureType::Diffuse)
+				if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Diffuse)
 				{
 					//if (diffusebound != true)
 					//{
-						mesh->data.textures[i].Texture.PSBind(0);
+						mesh->data.textures[i].PSBind(0);
 					//	diffusebound = true;
 					//}
 				}
-				else if (mesh->data.textures[i].type == Assets::TextureType::Specular)
+				else if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Specular)
 				{
 					//if (specularbound != true)
 					//{
-						mesh->data.textures[i].Texture.PSBind(1);
+						mesh->data.textures[i].PSBind(1);
 					//	specularbound = true;
 					//}
 				}
-				else if (mesh->data.textures[i].type == Assets::TextureType::Normal)
+				else if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Normal)
 				{
 				//	if (normalbound != true)
 					//{
-						mesh->data.textures[i].Texture.PSBind(2);
+						mesh->data.textures[i].PSBind(2);
 					//	normalbound = true;
 					//}
 				}

@@ -524,6 +524,7 @@
     <ClCompile Include="Source\Engine\Graphics\API\mContext.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\mGLContext.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
+    <ClCompile Include="Source\Engine\Assets\TextureAsset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
