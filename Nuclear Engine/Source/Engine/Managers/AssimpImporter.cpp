@@ -1,38 +1,35 @@
 #include "AssimpImporter.h"
 #include <Engine\Managers\AssetManager.h>
+#include <Base\Utilities\Hash.h>
+
 #pragma comment(lib,"assimp.lib")
 
 namespace NuclearEngine {
 	namespace Internal {
-		bool AssimpImporter::Load(std::string Path, Assets::Mesh * _model, const Managers::MeshLoadingDesc& desc)
+		
+		Assets::Mesh & AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc)
 		{
-			loaddesc = desc;
-			this->model = _model;
-			return LoadModel(Path);
-		}
-
-		bool AssimpImporter::LoadModel(std::string path)
-		{
-			Log.Info("[AssetManager] Loading Mesh: " + path + "\n");
+			Log.Info("[AssetManager] Loading Mesh: " + Path + "\n");
+			LoadingDesc = desc;
 			Assimp::Importer importer;
-			const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
+			const aiScene* scene = importer.ReadFile(Path, aiProcess_Triangulate);
 
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
-				Log.Error("[AssetManager] Assimp Failed to load mesh: " + path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
-				return false;
+				Log.Error("[AssetManager] Assimp Failed to load mesh: " + Path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
+				return Assets::Mesh();
 			}
-			directory = path.substr(0, path.find_last_of('/'));
+			directory = Path.substr(0, Path.find_last_of('/'));
 			ProcessNode(scene->mRootNode, scene);
 
 			for (unsigned int i = 0; i < meshes_loaded.size(); i++)
 			{
-				model->SubMeshes.push_back(Assets::Mesh::SubMesh(meshes_loaded.at(i)));
+				model.SubMeshes.push_back(Assets::Mesh::SubMesh(meshes_loaded.at(i)));
 			}
-
-			Log.Info("[AssetManager] Loaded Mesh: " + path + "\n");
-			return true;
+			auto hashedname = Utilities::Hash(Path);
+			Log.Info("[AssetManager] Loaded Mesh: " + Path + "\n");
+			return 	Managers::AssetManager::mImportedMeshes[hashedname] = model;
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
 		{
@@ -71,7 +68,7 @@ namespace NuclearEngine {
 					result.UV.push_back(Math::Vector2(0.0f, 0.0f));
 				}
 				// normals
-				if (loaddesc.UseNormals == true)
+				if (LoadingDesc.UseNormals == true)
 				{
 					if (mesh->mNormals != NULL)
 						result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));			
@@ -80,7 +77,7 @@ namespace NuclearEngine {
 				}
 
 				//tangents
-				if (loaddesc.UseTangents == true)
+				if (LoadingDesc.UseTangents == true)
 				{
 					if (mesh->mTangents != NULL)
 						result.Tangents.push_back(Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z));
@@ -99,17 +96,17 @@ namespace NuclearEngine {
 			}
 			// process materials
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			if (loaddesc.LoadDiffuseTextures)
+			if (LoadingDesc.LoadDiffuseTextures)
 			{
 				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
 				result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
 			}
-			if (loaddesc.LoadSpecularTextures)
+			if (LoadingDesc.LoadSpecularTextures)
 			{
 				std::vector<Assets::Texture> SpecularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
 				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
-			if (loaddesc.LoadNormalTextures)
+			if (LoadingDesc.LoadNormalTextures)
 			{
 				std::vector<Assets::Texture> NormalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
 				result.textures.insert(result.textures.end(), NormalMaps.begin(), NormalMaps.end());

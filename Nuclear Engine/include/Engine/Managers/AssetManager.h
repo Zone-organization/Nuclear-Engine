@@ -23,7 +23,7 @@ namespace NuclearEngine {
 			bool LoadNormalTextures = false;
 		};
 
-		//typedef Utilities::Delegate<Assets::Mesh&(const std::string& Path, const Managers::MeshLoadingDesc& desc)> MeshImport;
+		typedef Utilities::Delegate<Assets::Mesh&(const std::string& Path, const Managers::MeshLoadingDesc& desc)> MeshImport;
 		typedef Utilities::Delegate<Graphics::API::Texture_Data(const std::string& Path, const Graphics::API::Texture_Desc & Desc)> TextureImport;
 
 		class NEAPI AssetManager {
@@ -35,7 +35,14 @@ namespace NuclearEngine {
 			static std::unordered_map<Uint32,std::string> mHashedTexturesNames;
 			//tells the asset manager whether to store the real texture name or not
 			static bool mSaveTextureNames;
-						
+			
+			//All imported meshes with their hashed names with crc32c (always saved)
+			static std::unordered_map<Uint32, Assets::Mesh> mImportedMeshes;
+			//Real pre-hashed meshes names with paths (conditionally saved see SaveTextureNames)
+			static std::unordered_map<Uint32, std::string> mHashedMeshesNames;
+			//tells the asset manager whether to store the real mesh name or not
+			static bool mSaveMeshNames;
+
 			//Methods
 			static void Initialize(bool SaveTextureNames = false);
 			static void ShutDown();
@@ -45,12 +52,15 @@ namespace NuclearEngine {
 			static Assets::Texture& Import(const std::string& Path, const Assets::TextureUsageType& type, const Graphics::API::Texture_Desc& Desc = Graphics::API::Texture_Desc());
 
 			static TextureImport DefaultTextureImporter;
+			static MeshImport DefaultMeshImporter;
 
 			static bool DoesTextureExist(Uint32 hashedname, Assets::Texture* texture);
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
 			static std::array<Graphics::API::Texture_Data, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const Graphics::API::Texture_Desc& Desc);
+			
 			static Graphics::API::Texture_Data LoadTex_stb_image(const std::string& Path, const Graphics::API::Texture_Desc & Desc);
+			static Assets::Mesh& LoadMesh_Assimp(const std::string& Path, const Managers::MeshLoadingDesc& desc);
 
 		private:
 			static Graphics::API::Texture_Data TextureCube_Load(const std::string& Path, const Graphics::API::Texture_Desc& Desc);

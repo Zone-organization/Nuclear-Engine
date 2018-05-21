@@ -11,6 +11,9 @@ namespace NuclearEngine {
 	namespace Managers {
 		std::unordered_map<Uint32,Assets::Texture> AssetManager::mImportedTextures = std::unordered_map<Uint32, Assets::Texture>();
 		std::unordered_map<Uint32, std::string> AssetManager::mHashedTexturesNames = std::unordered_map<Uint32, std::string>();
+
+		std::unordered_map<Uint32, Assets::Mesh> AssetManager::mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();
+		std::unordered_map<Uint32, std::string> AssetManager::mHashedMeshesNames = std::unordered_map<Uint32, std::string>();
 		Graphics::API::Texture_Data AssetManager::LoadTex_stb_image(const std::string& Path, const Graphics::API::Texture_Desc & Desc)
 		{
 			int req_c;
@@ -39,6 +42,14 @@ namespace NuclearEngine {
 
 			return Data;
 		}
+		
+		Assets::Mesh & AssetManager::LoadMesh_Assimp(const std::string & Path, const Managers::MeshLoadingDesc & desc)
+		{
+			Internal::AssimpImporter importer;
+			return importer.Load(Path, desc);
+			// TODO: insert return statement here
+		}
+
 		TextureImport AssetManager::DefaultTextureImporter = TextureImport::create<&AssetManager::LoadTex_stb_image>();
 		bool AssetManager::mSaveTextureNames = false;
 
@@ -53,7 +64,6 @@ namespace NuclearEngine {
 		}
 		void AssetManager::Initialize(bool SaveTextureNames)
 		{
-			DefaultTextureImporter = TextureImport::create<&AssetManager::LoadTex_stb_image>();
 			mSaveTextureNames = SaveTextureNames;
 		}
 
@@ -66,12 +76,11 @@ namespace NuclearEngine {
 			mImportedTextures.clear();
 			mHashedTexturesNames.clear();
 		}
-
-	
-		Assets::Mesh & AssetManager::Import(const std::string & Path, const MeshLoadingDesc &)
+			
+		Assets::Mesh & AssetManager::Import(const std::string & Path, const MeshLoadingDesc &desc)
 		{
 			// TODO: insert return statement here
-			return Assets::Mesh();
+			return LoadMesh_Assimp(Path,desc);
 		}
 
 		Assets::Texture & AssetManager::Import(const std::string & Path, const Graphics::API::Texture_Desc & Desc)
@@ -112,13 +121,7 @@ namespace NuclearEngine {
 
 			return mImportedTextures[hashedname] = Tex;
 		}
-
-		/*bool AssetManager::LoadModel(std::string Path, Assets::Mesh * model, const MeshLoadingDesc& desc)
-		{
-			Internal::AssimpImporter importer;
-			return importer.Load(Path, model, desc);
-		}*/
-	
+					
 		Graphics::API::Texture_Data AssetManager::TextureCube_Load(const std::string& Path, const Graphics::API::Texture_Desc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);

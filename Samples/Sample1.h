@@ -149,7 +149,7 @@ public:
 		Managers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
-		//Managers::AssetManager::LoadModel("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &NanosuitAsset, ModelDesc);
+		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
 
 		//Create The skybox
@@ -328,8 +328,8 @@ public:
 			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
 			NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
-			//Camera.SetModelMatrix(NanosuitMatrix);
-			//Renderer->InstantRender(&NanosuitModel);
+			Camera.SetModelMatrix(NanosuitMatrix);
+			Renderer->InstantRender(&NanosuitModel);
 		}
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
@@ -345,7 +345,7 @@ public:
 		ImGui::Checkbox("Render Boxes", &renderboxes);
 		ImGui::Checkbox("Render Lamps Spheres", &renderspheres);
 		ImGui::Checkbox("Render Nanosuit", &rendernanosuit);
-		ImGui::Image(&DiffuseTex.mTexture,ImVec2(100.0f,100.0f));
+				
 		ShowOverlay(true);
 		
 		ImGui::Render();

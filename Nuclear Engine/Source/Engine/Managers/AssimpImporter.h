@@ -10,18 +10,18 @@ namespace NuclearEngine {
 	
 		class AssimpImporter {
 		public:
-			bool Load(std::string Path, Assets::Mesh* model, const Managers::MeshLoadingDesc& desc);
+			Assets::Mesh & Load(const std::string& Path, const Managers::MeshLoadingDesc& desc);
 		private:
-			bool LoadModel(std::string Path);
+
 			void ProcessNode(aiNode *node, const aiScene *scene);
 			Assets::Mesh::SubMesh::SubMeshData ProcessMesh(aiMesh *mesh, const aiScene *scene);
 			std::vector<Assets::Texture> ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
 			
-			Assets::Mesh* model;
+			Assets::Mesh model;
 			std::vector<Assets::Mesh::SubMesh::SubMeshData> meshes_loaded;
 			std::string directory;
 
-			Managers::MeshLoadingDesc loaddesc;
+			Managers::MeshLoadingDesc LoadingDesc;
 		};
 	}
 }

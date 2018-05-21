@@ -97,11 +97,6 @@ namespace NuclearEngine {
 
 		Mesh::~Mesh()
 		{
-			for (unsigned int i = 0; i < SubMeshes.size(); i++)
-			{
-				SubMeshes.at(i).Delete();
-			}
-			SubMeshes.clear();
 		}
 
 		void Mesh::Initialize(Graphics::API::VertexShader* _shader)
@@ -111,6 +106,14 @@ namespace NuclearEngine {
 				SubMeshes.at(i).Initialize(_shader);
 			}
 			init = true;
+		}
+		void Mesh::Delete()
+		{
+			for (unsigned int i = 0; i < SubMeshes.size(); i++)
+			{
+				SubMeshes.at(i).Delete();
+			}
+			SubMeshes.clear();
 		}
 		struct Vertex
 		{
