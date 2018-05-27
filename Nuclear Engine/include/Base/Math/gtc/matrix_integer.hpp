@@ -183,151 +183,151 @@ namespace Math
 
 	/// High-qualifier unsigned integer 2x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 2, uint, highp>				highp_umat2;	
+	typedef mat<2, 2, Uint32, highp>				highp_umat2;	
 
 	/// High-qualifier unsigned integer 3x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 3, uint, highp>				highp_umat3;
+	typedef mat<3, 3, Uint32, highp>				highp_umat3;
 
 	/// High-qualifier unsigned integer 4x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 4, uint, highp>				highp_umat4;
+	typedef mat<4, 4, Uint32, highp>				highp_umat4;
 
 	/// High-qualifier unsigned integer 2x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 2, uint, highp>				highp_umat2x2;
+	typedef mat<2, 2, Uint32, highp>				highp_umat2x2;
 
 	/// High-qualifier unsigned integer 2x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 3, uint, highp>				highp_umat2x3;
+	typedef mat<2, 3, Uint32, highp>				highp_umat2x3;
 
 	/// High-qualifier unsigned integer 2x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 4, uint, highp>				highp_umat2x4;
+	typedef mat<2, 4, Uint32, highp>				highp_umat2x4;
 
 	/// High-qualifier unsigned integer 3x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 2, uint, highp>				highp_umat3x2;
+	typedef mat<3, 2, Uint32, highp>				highp_umat3x2;
 
 	/// High-qualifier unsigned integer 3x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 3, uint, highp>				highp_umat3x3;
+	typedef mat<3, 3, Uint32, highp>				highp_umat3x3;
 
 	/// High-qualifier unsigned integer 3x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 4, uint, highp>				highp_umat3x4;
+	typedef mat<3, 4, Uint32, highp>				highp_umat3x4;
 
 	/// High-qualifier unsigned integer 4x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 2, uint, highp>				highp_umat4x2;
+	typedef mat<4, 2, Uint32, highp>				highp_umat4x2;
 
 	/// High-qualifier unsigned integer 4x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 3, uint, highp>				highp_umat4x3;
+	typedef mat<4, 3, Uint32, highp>				highp_umat4x3;
 
 	/// High-qualifier unsigned integer 4x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 4, uint, highp>				highp_umat4x4;
+	typedef mat<4, 4, Uint32, highp>				highp_umat4x4;
 
 
 	/// Medium-qualifier unsigned integer 2x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 2, uint, mediump>			mediump_umat2;
+	typedef mat<2, 2, Uint32, mediump>			mediump_umat2;
 
 	/// Medium-qualifier unsigned integer 3x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 3, uint, mediump>			mediump_umat3;
+	typedef mat<3, 3, Uint32, mediump>			mediump_umat3;
 
 	/// Medium-qualifier unsigned integer 4x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 4, uint, mediump>			mediump_umat4;
+	typedef mat<4, 4, Uint32, mediump>			mediump_umat4;
 
 
 	/// Medium-qualifier unsigned integer 2x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 2, uint, mediump>			mediump_umat2x2;
+	typedef mat<2, 2, Uint32, mediump>			mediump_umat2x2;
 
 	/// Medium-qualifier unsigned integer 2x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 3, uint, mediump>			mediump_umat2x3;
+	typedef mat<2, 3, Uint32, mediump>			mediump_umat2x3;
 
 	/// Medium-qualifier unsigned integer 2x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 4, uint, mediump>			mediump_umat2x4;
+	typedef mat<2, 4, Uint32, mediump>			mediump_umat2x4;
 
 	/// Medium-qualifier unsigned integer 3x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 2, uint, mediump>			mediump_umat3x2;
+	typedef mat<3, 2, Uint32, mediump>			mediump_umat3x2;
 
 	/// Medium-qualifier unsigned integer 3x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 3, uint, mediump>			mediump_umat3x3;
+	typedef mat<3, 3, Uint32, mediump>			mediump_umat3x3;
 
 	/// Medium-qualifier unsigned integer 3x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 4, uint, mediump>			mediump_umat3x4;
+	typedef mat<3, 4, Uint32, mediump>			mediump_umat3x4;
 
 	/// Medium-qualifier unsigned integer 4x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 2, uint, mediump>			mediump_umat4x2;
+	typedef mat<4, 2, Uint32, mediump>			mediump_umat4x2;
 
 	/// Medium-qualifier unsigned integer 4x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 3, uint, mediump>			mediump_umat4x3;
+	typedef mat<4, 3, Uint32, mediump>			mediump_umat4x3;
 
 	/// Medium-qualifier unsigned integer 4x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 4, uint, mediump>			mediump_umat4x4;
+	typedef mat<4, 4, Uint32, mediump>			mediump_umat4x4;
 
 
 	/// Low-qualifier unsigned integer 2x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 2, uint, lowp>				lowp_umat2;
+	typedef mat<2, 2, Uint32, lowp>				lowp_umat2;
 	
 	/// Low-qualifier unsigned integer 3x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 3, uint, lowp>				lowp_umat3;
+	typedef mat<3, 3, Uint32, lowp>				lowp_umat3;
 
 	/// Low-qualifier unsigned integer 4x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 4, uint, lowp>				lowp_umat4;
+	typedef mat<4, 4, Uint32, lowp>				lowp_umat4;
 
 
 	/// Low-qualifier unsigned integer 2x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 2, uint, lowp>				lowp_umat2x2;
+	typedef mat<2, 2, Uint32, lowp>				lowp_umat2x2;
 
 	/// Low-qualifier unsigned integer 2x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 3, uint, lowp>				lowp_umat2x3;
+	typedef mat<2, 3, Uint32, lowp>				lowp_umat2x3;
 
 	/// Low-qualifier unsigned integer 2x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<2, 4, uint, lowp>				lowp_umat2x4;
+	typedef mat<2, 4, Uint32, lowp>				lowp_umat2x4;
 
 	/// Low-qualifier unsigned integer 3x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 2, uint, lowp>				lowp_umat3x2;
+	typedef mat<3, 2, Uint32, lowp>				lowp_umat3x2;
 
 	/// Low-qualifier unsigned integer 3x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 3, uint, lowp>				lowp_umat3x3;
+	typedef mat<3, 3, Uint32, lowp>				lowp_umat3x3;
 
 	/// Low-qualifier unsigned integer 3x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<3, 4, uint, lowp>				lowp_umat3x4;
+	typedef mat<3, 4, Uint32, lowp>				lowp_umat3x4;
 
 	/// Low-qualifier unsigned integer 4x2 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 2, uint, lowp>				lowp_umat4x2;
+	typedef mat<4, 2, Uint32, lowp>				lowp_umat4x2;
 
 	/// Low-qualifier unsigned integer 4x3 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 3, uint, lowp>				lowp_umat4x3;
+	typedef mat<4, 3, Uint32, lowp>				lowp_umat4x3;
 
 	/// Low-qualifier unsigned integer 4x4 matrix.
 	/// @see gtc_matrix_integer
-	typedef mat<4, 4, uint, lowp>				lowp_umat4x4;
+	typedef mat<4, 4, Uint32, lowp>				lowp_umat4x4;
 
 #if(defined(GLM_PRECISION_HIGHP_INT))
 	typedef highp_imat2								imat2;

@@ -4,13 +4,13 @@
 namespace Math
 {
 	// pow
-	GLM_FUNC_QUALIFIER int pow(int x, uint y)
+	GLM_FUNC_QUALIFIER int pow(int x, Uint32 y)
 	{
 		if(y == 0)
 			return x >= 0 ? 1 : -1;
 
 		int result = x;
-		for(uint i = 1; i < y; ++i)
+		for(Uint32 i = 1; i < y; ++i)
 			result *= x;
 		return result;
 	}
@@ -110,23 +110,23 @@ namespace detail
 			factorial(x.w));
 	}
 
-	GLM_FUNC_QUALIFIER uint pow(uint x, uint y)
+	GLM_FUNC_QUALIFIER Uint32 pow(Uint32 x, Uint32 y)
 	{
 		if (y == 0)
 			return 1u;
 
-		uint result = x;
-		for(uint i = 1; i < y; ++i)
+		Uint32 result = x;
+		for(Uint32 i = 1; i < y; ++i)
 			result *= x;
 		return result;
 	}
 
-	GLM_FUNC_QUALIFIER uint sqrt(uint x)
+	GLM_FUNC_QUALIFIER Uint32 sqrt(Uint32 x)
 	{
 		if(x <= 1) return x;
 
-		uint NextTrial = x >> 1;
-		uint CurrentAnswer;
+		Uint32 NextTrial = x >> 1;
+		Uint32 CurrentAnswer;
 
 		do
 		{
@@ -137,7 +137,7 @@ namespace detail
 		return CurrentAnswer;
 	}
 
-	GLM_FUNC_QUALIFIER uint mod(uint x, uint y)
+	GLM_FUNC_QUALIFIER Uint32 mod(Uint32 x, Uint32 y)
 	{
 		return x - y * (x / y);
 	}

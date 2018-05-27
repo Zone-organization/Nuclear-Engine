@@ -109,12 +109,12 @@ namespace detail
 			((p & 0x001f) << 18); // Mantissa
 	}
 
-	GLM_FUNC_QUALIFIER Math::uint half2float(Math::uint h)
+	GLM_FUNC_QUALIFIER Math::Uint32 half2float(Math::Uint32 h)
 	{
 		return ((h & 0x8000) << 16) | ((( h & 0x7c00) + 0x1C000) << 13) | ((h & 0x03FF) << 13);
 	}
 
-	GLM_FUNC_QUALIFIER Math::uint floatTo11bit(float x)
+	GLM_FUNC_QUALIFIER Math::Uint32 floatTo11bit(float x)
 	{
 		if(x == 0.0f)
 			return 0u;
@@ -123,12 +123,12 @@ namespace detail
 		else if(Math::isinf(x))
 			return 0x1Fu << 6u;
 
-		uint Pack = 0u;
+		Uint32 Pack = 0u;
 		memcpy(&Pack, &x, sizeof(Pack));
 		return float2packed11(Pack);
 	}
 
-	GLM_FUNC_QUALIFIER float packed11bitToFloat(Math::uint x)
+	GLM_FUNC_QUALIFIER float packed11bitToFloat(Math::Uint32 x)
 	{
 		if(x == 0)
 			return 0.0f;
@@ -137,14 +137,14 @@ namespace detail
 		else if(x == (0x1f << 6))
 			return ~0;//Inf
 
-		uint Result = packed11ToFloat(x);
+		Uint32 Result = packed11ToFloat(x);
 
 		float Temp = 0;
 		memcpy(&Temp, &Result, sizeof(Temp));
 		return Temp;
 	}
 
-	GLM_FUNC_QUALIFIER Math::uint floatTo10bit(float x)
+	GLM_FUNC_QUALIFIER Math::Uint32 floatTo10bit(float x)
 	{
 		if(x == 0.0f)
 			return 0u;
@@ -153,12 +153,12 @@ namespace detail
 		else if(Math::isinf(x))
 			return 0x1Fu << 5u;
 
-		uint Pack = 0;
+		Uint32 Pack = 0;
 		memcpy(&Pack, &x, sizeof(Pack));
 		return float2packed10(Pack);
 	}
 
-	GLM_FUNC_QUALIFIER float packed10bitToFloat(Math::uint x)
+	GLM_FUNC_QUALIFIER float packed10bitToFloat(Math::Uint32 x)
 	{
 		if(x == 0)
 			return 0.0f;
@@ -167,14 +167,14 @@ namespace detail
 		else if(x == (0x1f << 5))
 			return ~0;//Inf
 
-		uint Result = packed10ToFloat(x);
+		Uint32 Result = packed10ToFloat(x);
 
 		float Temp = 0;
 		memcpy(&Temp, &Result, sizeof(Temp));
 		return Temp;
 	}
 
-//	GLM_FUNC_QUALIFIER glm::uint f11_f11_f10(float x, float y, float z)
+//	GLM_FUNC_QUALIFIER glm::Uint32 f11_f11_f10(float x, float y, float z)
 //	{
 //		return ((floatTo11bit(x) & ((1 << 11) - 1)) << 0) |  ((floatTo11bit(y) & ((1 << 11) - 1)) << 11) | ((floatTo10bit(z) & ((1 << 10) - 1)) << 22);
 //	}
@@ -183,9 +183,9 @@ namespace detail
 	{
 		struct
 		{
-			uint x : 3;
-			uint y : 3;
-			uint z : 2;
+			Uint32 x : 3;
+			Uint32 y : 3;
+			Uint32 z : 2;
 		} data;
 		uint8 pack;
 	};
@@ -194,8 +194,8 @@ namespace detail
 	{
 		struct
 		{
-			uint x : 4;
-			uint y : 4;
+			Uint32 x : 4;
+			Uint32 y : 4;
 		} data;
 		uint8 pack;
 	};
@@ -204,10 +204,10 @@ namespace detail
 	{
 		struct
 		{
-			uint x : 4;
-			uint y : 4;
-			uint z : 4;
-			uint w : 4;
+			Uint32 x : 4;
+			Uint32 y : 4;
+			Uint32 z : 4;
+			Uint32 w : 4;
 		} data;
 		uint16 pack;
 	};
@@ -216,9 +216,9 @@ namespace detail
 	{
 		struct
 		{
-			uint x : 5;
-			uint y : 6;
-			uint z : 5;
+			Uint32 x : 5;
+			Uint32 y : 6;
+			Uint32 z : 5;
 		} data;
 		uint16 pack;
 	};
@@ -227,10 +227,10 @@ namespace detail
 	{
 		struct
 		{
-			uint x : 5;
-			uint y : 5;
-			uint z : 5;
-			uint w : 1;
+			Uint32 x : 5;
+			Uint32 y : 5;
+			Uint32 z : 5;
+			Uint32 w : 1;
 		} data;
 		uint16 pack;
 	};
@@ -239,10 +239,10 @@ namespace detail
 	{
 		struct
 		{
-			uint x : 10;
-			uint y : 10;
-			uint z : 10;
-			uint w : 2;
+			Uint32 x : 10;
+			Uint32 y : 10;
+			Uint32 z : 10;
+			Uint32 w : 2;
 		} data;
 		uint32 pack;
 	};
@@ -263,10 +263,10 @@ namespace detail
 	{
 		struct
 		{
-			uint x : 9;
-			uint y : 9;
-			uint z : 9;
-			uint w : 5;
+			Uint32 x : 9;
+			Uint32 y : 9;
+			Uint32 z : 9;
+			Uint32 w : 5;
 		} data;
 		uint32 pack;
 	};
@@ -628,7 +628,7 @@ namespace detail
 		Unpack.data.x = ColorComp.x;
 		Unpack.data.y = ColorComp.y;
 		Unpack.data.z = ColorComp.z;
-		Unpack.data.w = uint(ExpShared);
+		Unpack.data.w = Uint32(ExpShared);
 		return Unpack.pack;
 	}
 
@@ -879,14 +879,14 @@ namespace detail
 		return Unpack;
 	}
 
-	GLM_FUNC_QUALIFIER uint packUint2x16(u16vec2 const& v)
+	GLM_FUNC_QUALIFIER Uint32 packUint2x16(u16vec2 const& v)
 	{
-		uint Pack = 0;
+		Uint32 Pack = 0;
 		memcpy(&Pack, &v, sizeof(Pack));
 		return Pack;
 	}
 
-	GLM_FUNC_QUALIFIER u16vec2 unpackUint2x16(uint p)
+	GLM_FUNC_QUALIFIER u16vec2 unpackUint2x16(Uint32 p)
 	{
 		u16vec2 Unpack;
 		memcpy(&Unpack, &p, sizeof(Unpack));

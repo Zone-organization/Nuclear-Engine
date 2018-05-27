@@ -6,9 +6,6 @@
 #define NEAPI __declspec(dllimport)
 #endif
 
-typedef unsigned int uint;
-typedef signed int sint;
-
 // 8 bits integer types
 typedef signed   char Int8;
 typedef unsigned char Uint8;
@@ -29,3 +26,6 @@ typedef unsigned __int64 Uint64;
 typedef signed   long long Int64;
 typedef unsigned long long Uint64;
 #endif
+
+typedef float Float32;
+typedef double Float64;

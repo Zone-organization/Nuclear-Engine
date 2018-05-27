@@ -179,21 +179,21 @@ namespace detail
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<2, uint, highp>		highp_uvec2;
+	typedef vec<2, Uint32, highp>		highp_uvec2;
 
 	/// 2 components vector of medium qualifier unsigned integer numbers.
 	/// There is no guarantee on the actual qualifier.
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<2, uint, mediump>	mediump_uvec2;
+	typedef vec<2, Uint32, mediump>	mediump_uvec2;
 
 	/// 2 components vector of low qualifier unsigned integer numbers.
 	/// There is no guarantee on the actual qualifier.
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<2, uint, lowp>		lowp_uvec2;
+	typedef vec<2, Uint32, lowp>		lowp_uvec2;
 
 	/// 2 components vector of high qualifier bool numbers.
 	/// There is no guarantee on the actual qualifier.
@@ -289,21 +289,21 @@ namespace detail
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<3, uint, highp>		highp_uvec3;
+	typedef vec<3, Uint32, highp>		highp_uvec3;
 
 	/// 3 components vector of medium qualifier unsigned integer numbers.
 	/// There is no guarantee on the actual qualifier.
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<3, uint, mediump>	mediump_uvec3;
+	typedef vec<3, Uint32, mediump>	mediump_uvec3;
 
 	/// 3 components vector of low qualifier unsigned integer numbers.
 	/// There is no guarantee on the actual qualifier.
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<3, uint, lowp>		lowp_uvec3;
+	typedef vec<3, Uint32, lowp>		lowp_uvec3;
 
 	/// 3 components vector of high qualifier bool numbers.
 	///
@@ -386,19 +386,19 @@ namespace detail
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<4, uint, highp>		highp_uvec4;
+	typedef vec<4, Uint32, highp>		highp_uvec4;
 
 	/// 4 components vector of medium qualifier unsigned integer numbers.
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<4, uint, mediump>	mediump_uvec4;
+	typedef vec<4, Uint32, mediump>	mediump_uvec4;
 
 	/// 4 components vector of low qualifier unsigned integer numbers.
 	///
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.1.5 Vectors</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 4.7.2 Precision Qualifier</a>
-	typedef vec<4, uint, lowp>		lowp_uvec4;
+	typedef vec<4, Uint32, lowp>		lowp_uvec4;
 
 	/// 4 components vector of high qualifier bool numbers.
 	///

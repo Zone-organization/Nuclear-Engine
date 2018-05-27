@@ -50,20 +50,20 @@ namespace detail
 	}
 
 	template<typename genType>
-	GLM_FUNC_QUALIFIER uint uround(genType x)
+	GLM_FUNC_QUALIFIER Uint32 uround(genType x)
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<genType>::is_iec559, "'uround' only accept floating-point inputs");
 		assert(static_cast<genType>(0.0) <= x);
 
-		return static_cast<uint>(x + static_cast<genType>(0.5));
+		return static_cast<Uint32>(x + static_cast<genType>(0.5));
 	}
 
 	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, uint, Q> uround(vec<L, T, Q> const& x)
+	GLM_FUNC_QUALIFIER vec<L, Uint32, Q> uround(vec<L, T, Q> const& x)
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'uround' only accept floating-point inputs");
 		assert(all(lessThanEqual(vec<L, T, Q>(0), x)));
 
-		return vec<L, uint, Q>(x + static_cast<T>(0.5));
+		return vec<L, Uint32, Q>(x + static_cast<T>(0.5));
 	}
 }//namespace glm

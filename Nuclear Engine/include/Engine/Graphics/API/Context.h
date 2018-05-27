@@ -36,7 +36,7 @@ namespace NuclearEngine
 
 				static void SetPrimitiveType(PrimitiveType primitivetype);
 
-				static void Clear(Graphics::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
+				static void Clear(Graphics::Color color, Uint32 flags, float depth = 1.0f, unsigned int stencil = 0);
 
 				//Render the frame to the window
 				static void PresentFrame();

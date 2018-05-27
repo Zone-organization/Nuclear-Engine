@@ -2,7 +2,7 @@
 
 namespace NuclearEngine {
 	namespace Components {
-		Sprite::Sprite(int x, int y, Graphics::API::Texture *texture, const std::vector<uint> &frames)
+		Sprite::Sprite(int x, int y, Graphics::API::Texture *texture, const std::vector<Uint32> &frames)
 			: Renderable2D(x, y, texture), Frames(frames) {
 			this->Color = 4294967295; // r = 255, g = 255, b = 255, a = 255
 			this->NumberOfFrames = this->Frames.size();
@@ -11,7 +11,7 @@ namespace NuclearEngine {
 			this->Sprites =	new Graphics::SpriteSheet(texture, this->Dimensions.x, this->Dimensions.y);
 		}
 
-		Sprite::Sprite(int x, int y, Graphics::API::Texture *texture, uint frame)
+		Sprite::Sprite(int x, int y, Graphics::API::Texture *texture, Uint32 frame)
 			: Renderable2D(x, y, texture) {
 			this->Color = 4294967295; // r = 255, g = 255, b = 255, a = 255
 			this->NumberOfFrames = 1;
@@ -21,7 +21,7 @@ namespace NuclearEngine {
 		}
 
 		Sprite::Sprite(int x, int y, int w, int h, Graphics::API::Texture *texture,
-			uint frame)
+			Uint32 frame)
 			: Renderable2D(x, y, w, h, texture) {
 			this->Color = 4294967295; // r = 255, g = 255, b = 255, a = 255
 			this->NumberOfFrames = 1;
@@ -34,9 +34,9 @@ namespace NuclearEngine {
 
 		void Sprite::Update() { this->Frame = Animations.Update(); }
 
-		void Sprite::SetFrame(uint frame) { Frame = frame % this->NumberOfFrames; }
+		void Sprite::SetFrame(Uint32 frame) { Frame = frame % this->NumberOfFrames; }
 
-		void Sprite::SetDirectFrame(uint frame) { Frame = frame; }
+		void Sprite::SetDirectFrame(Uint32 frame) { Frame = frame; }
 
 		void Sprite::SetColorRGB(int r, int g, int b) {
 			this->Color = 255 << 24 | b << 16 | g << 8 | r;

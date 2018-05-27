@@ -262,16 +262,16 @@ namespace Math
 	}
 
 	template<typename T>
-	GLM_FUNC_QUALIFIER T next_float(T const& x, uint const& ulps)
+	GLM_FUNC_QUALIFIER T next_float(T const& x, Uint32 const& ulps)
 	{
 		T temp = x;
-		for(uint i = 0; i < ulps; ++i)
+		for(Uint32 i = 0; i < ulps; ++i)
 			temp = next_float(temp);
 		return temp;
 	}
 
 	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, T, Q> next_float(vec<L, T, Q> const& x, vec<L, uint, Q> const& ulps)
+	GLM_FUNC_QUALIFIER vec<L, T, Q> next_float(vec<L, T, Q> const& x, vec<L, Uint32, Q> const& ulps)
 	{
 		vec<L, T, Q> Result;
 		for(length_t i = 0, n = Result.length(); i < n; ++i)
@@ -280,16 +280,16 @@ namespace Math
 	}
 
 	template<typename T>
-	GLM_FUNC_QUALIFIER T prev_float(T const& x, uint const& ulps)
+	GLM_FUNC_QUALIFIER T prev_float(T const& x, Uint32 const& ulps)
 	{
 		T temp = x;
-		for(uint i = 0; i < ulps; ++i)
+		for(Uint32 i = 0; i < ulps; ++i)
 			temp = prev_float(temp);
 		return temp;
 	}
 
 	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, T, Q> prev_float(vec<L, T, Q> const& x, vec<L, uint, Q> const& ulps)
+	GLM_FUNC_QUALIFIER vec<L, T, Q> prev_float(vec<L, T, Q> const& x, vec<L, Uint32, Q> const& ulps)
 	{
 		vec<L, T, Q> Result;
 		for(length_t i = 0, n = Result.length(); i < n; ++i)
@@ -298,9 +298,9 @@ namespace Math
 	}
 
 	template<typename T>
-	GLM_FUNC_QUALIFIER uint float_distance(T const& x, T const& y)
+	GLM_FUNC_QUALIFIER Uint32 float_distance(T const& x, T const& y)
 	{
-		uint ulp = 0;
+		Uint32 ulp = 0;
 
 		if(x < y)
 		{
@@ -329,9 +329,9 @@ namespace Math
 	}
 
 	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, uint, Q> float_distance(vec<L, T, Q> const& x, vec<L, T, Q> const& y)
+	GLM_FUNC_QUALIFIER vec<L, Uint32, Q> float_distance(vec<L, T, Q> const& x, vec<L, T, Q> const& y)
 	{
-		vec<L, uint, Q> Result;
+		vec<L, Uint32, Q> Result;
 		for(length_t i = 0, n = Result.length(); i < n; ++i)
 			Result[i] = float_distance(x[i], y[i]);
 		return Result;

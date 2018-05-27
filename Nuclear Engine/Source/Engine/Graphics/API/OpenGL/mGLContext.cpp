@@ -48,7 +48,7 @@ namespace NuclearEngine
 					}
 				}
 
-				void GLContext::Clear(Graphics::Color color, uint flags, float depth, unsigned int stencil)
+				void GLContext::Clear(Graphics::Color color, Uint32 flags, float depth, unsigned int stencil)
 				{
 					GLbitfield flaggl = 0;
 					//Color buffer

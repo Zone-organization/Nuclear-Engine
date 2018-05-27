@@ -57,7 +57,7 @@ namespace Math
 	/// @see <a href="http://www.opengl.org/sdk/docs/manglsl/xhtml/round.xml">GLSL round man page</a>
 	/// @see gtc_integer
 	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_DECL vec<L, uint, Q> uround(vec<L, T, Q> const& x);
+	GLM_FUNC_DECL vec<L, Uint32, Q> uround(vec<L, T, Q> const& x);
 
 	/// @}
 } //namespace glm

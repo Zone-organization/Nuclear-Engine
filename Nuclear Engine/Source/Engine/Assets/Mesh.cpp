@@ -331,7 +331,7 @@ namespace NuclearEngine {
 		{
 			SubMesh::SubMeshData meshData;
 			std::vector<Vertex> Vertices;
-			std::vector<uint> Indices;
+			std::vector<Uint32> Indices;
 
 			UINT vertexCount = m * n;
 			UINT faceCount = (m - 1)*(n - 1) * 2;
@@ -411,7 +411,7 @@ namespace NuclearEngine {
 		void Mesh::CreateScreenQuad(Mesh * model)
 		{
 			std::vector<Vertex> Vertices;
-			std::vector<uint> Indices;
+			std::vector<Uint32> Indices;
 
 			SubMesh::SubMeshData meshData;
 

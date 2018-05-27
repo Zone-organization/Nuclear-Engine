@@ -92,7 +92,7 @@ public:
 		Graphics::API::VertexShader::Create(&Vertexshader, &Graphics::API::CompileShader(VertexShader, Graphics::API::ShaderType::Vertex));
 		Graphics::API::PixelShader::Create(&Pixelshader, &Graphics::API::CompileShader(PixelShader, Graphics::API::ShaderType::Pixel));
 		
-		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), static_cast<Float32>(Core::Application::GetAspectRatio()), 0.1f, 100.0f));
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 

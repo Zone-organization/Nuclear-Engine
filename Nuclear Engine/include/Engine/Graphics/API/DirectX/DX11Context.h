@@ -3,7 +3,7 @@
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/Color.h>
 #include <Core\Application.h>
-
+#include <ThirdParty/SFML/Window.hpp>
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -20,7 +20,7 @@ namespace NuclearEngine
 
 					static void SetPrimitiveType(int primitivetype);
 
-					static void Clear(Graphics::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
+					static void Clear(Graphics::Color color, Uint32 flags, float depth = 1.0f, unsigned int stencil = 0);
 
 					static void Draw(unsigned int count);
 					static void DrawIndexed(unsigned int vertexCount);
@@ -35,7 +35,7 @@ namespace NuclearEngine
 					static void Bind_Default_Rasterizer_State();
 					static void Bind_Default_RenderTarget();
 				private:
-					static bool Initialize(GLFWwindow* window);
+					static bool Initialize(sf::Window* window);
 					static void Shutdown();
 					static void SwapBuffers();
 				};

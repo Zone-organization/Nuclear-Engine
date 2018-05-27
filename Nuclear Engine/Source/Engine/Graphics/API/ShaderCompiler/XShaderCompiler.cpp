@@ -94,15 +94,15 @@ namespace NuclearEngine
 					std::string Get_Whole_Log()
 					{
 						std::string result;
-						for (uint i = 0; i < Infos.size(); i++)
+						for (Uint32 i = 0; i < Infos.size(); i++)
 						{
 							result += std::string("[XShaderCompiler] " + Infos.at(i).Message() + '\n');
 						}
-						for (uint i = 0; i < Warnings.size(); i++)
+						for (Uint32 i = 0; i < Warnings.size(); i++)
 						{
 							result += std::string("[XShaderCompiler] " + Warnings.at(i).Message() + '\n');
 						}
-						for (uint i = 0; i < Errors.size(); i++)
+						for (Uint32 i = 0; i < Errors.size(); i++)
 						{
 							result += std::string("[XShaderCompiler] " + Errors.at(i).Message() + '\n');
 						}

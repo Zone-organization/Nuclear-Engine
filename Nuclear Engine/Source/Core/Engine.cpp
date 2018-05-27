@@ -54,7 +54,7 @@ namespace NuclearEngine {
 			PrintIntroLog();
 
 			//Create platform specific app (window)
-			Application::Create(desc.mAppdesc);
+			Application::Start(desc.mAppdesc);
 			Application::SetMouseInputMode(MouseInputMode::Normal);
 
 			//init sub-engines
@@ -182,7 +182,7 @@ namespace NuclearEngine {
 
 		bool Engine::ShouldClose()
 		{
-			return Core::Application::ShouldClose();
+			return Core::Application::ShouldClose;
 		}
 
 		Game * Engine::GetGame()

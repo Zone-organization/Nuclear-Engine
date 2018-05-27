@@ -13,15 +13,15 @@ void Start()
 	std::cin >> choice;
 	Core::EngineStartupDesc desc;
 	if (choice == 'a') {
-		desc.mAppdesc.renderer =	 Core::RenderAPI::OpenGL3;
+		desc.mAppdesc.Renderer =	 Core::RenderAPI::OpenGL3;
 	}
 	else if (choice == 'b')
 	{
-		desc.mAppdesc.renderer = Core::RenderAPI::DirectX11;
+		desc.mAppdesc.Renderer = Core::RenderAPI::DirectX11;
 	}
 	else {
 		std::cout << "Wrong choice thus setting to DirectX 11 as default on window.\n";
-		desc.mAppdesc.renderer = Core::RenderAPI::DirectX11;
+		desc.mAppdesc.Renderer = Core::RenderAPI::DirectX11;
 	}
 	Core::Engine::Start(desc);
 }
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 	{
 		Start();
 		std::cout << "Enter The test number: ";
-		uint testno;
+		Uint32 testno;
 		std::cin >> testno;
 		Core::Engine::RunTest(testno);
 	}

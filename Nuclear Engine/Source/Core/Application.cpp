@@ -2,105 +2,56 @@
 #include <Core\Application.h>
 #include <Engine\Graphics\API\Context.h>
 #include <GLAD\include\glad\glad.h>
-#include <GLFW\include\GLFW\glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW\include\GLFW\glfw3native.h>
 #include "imgui_impl\imgui_impl.h"
-
 #include <Engine/Graphics/API/DirectX\DX11Context.h>
 #include <Core\Engine.h>
 
 #pragma comment (lib, "GLAD.lib")
-#pragma comment (lib, "glfw3.lib")
 
 namespace NuclearEngine
 {
 	namespace Core
-	{	
-		static GLFWwindow* window;
+	{		
+		bool Application::ShouldClose = false;
+		sf::Window Application::MainWindow;
 
-		void window_size_callback(GLFWwindow* window, int width, int height)
+		bool Application::Start(const ApplicationDesc & Desc)
 		{
-			Engine::GetGame()->OnWindowResize(width, height);
-		}
-		void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-		{
-			Engine::GetGame()->OnMouseMovement(xpos, ypos);
-		}
-		void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-		{
-			Imgui_Scroll_Callback(yoffset);
-			Engine::GetGame()->OnMouseScroll(xoffset, yoffset);
-		}
+			Graphics::API::Context::SetRenderAPI(Desc.Renderer);
 
-		void mouse_button_callback(GLFWwindow*, int button, int action, int mods)
-		{
-			Imgui_mouse_button_callback(button, action);
-		}
-		void key_callback(GLFWwindow*, int key, int, int action, int mods)
-		{
-			ImGuiIO& io = ImGui::GetIO();
-			if (action == GLFW_PRESS)
-				io.KeysDown[key] = true;
-			if (action == GLFW_RELEASE)
-				io.KeysDown[key] = false;
-
-			(void)mods; // Modifiers are not reliable across systems
-			io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-			io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-			io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-			io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
-		}
-
-		void char_callback(GLFWwindow*, unsigned int c)
-		{
-			ImGuiIO& io = ImGui::GetIO();
-			if (c > 0 && c < 0x10000)
-				io.AddInputCharacter((unsigned short)c);
-		}
-
-		bool Application::Create(const ApplicationDesc & Desc)
-		{
-			Graphics::API::Context::SetRenderAPI(Desc.renderer);
-
-			glfwInit();
-
-			if (Desc.renderer != RenderAPI::OpenGL3)
+			sf::ContextSettings context;
+			if (Desc.Renderer != RenderAPI::OpenGL3)
 			{
-				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+				context.duninitopengl = true;
 			}
-			else {
-				glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-				glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-				glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-			}
-			window = glfwCreateWindow(Desc.width, Desc.height, Desc.title.c_str(), NULL, NULL);
-			if (window == NULL)
+			MainWindow.create(sf::VideoMode(Desc.WindowWidth, Desc.WindowHeight),Desc.Title,Desc.Style, context);
+
+			if (Desc.Renderer == RenderAPI::DirectX11)
 			{
-				Log.Error("[Application] Failed to create GLFW window: " + Desc.title + "\n");
-				return false;
+				Graphics::API::DirectX::DX11Context::Initialize(&MainWindow);
 			}
-			glfwHideWindow(window);
-			if (Desc.renderer == RenderAPI::OpenGL3)
+
+		
+			if (Desc.Renderer == RenderAPI::OpenGL3)
 			{
-				glfwMakeContextCurrent(window);
-				if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+				MainWindow.setActive(true);
+				if (!gladLoadGL())
 				{
-					Log.Error("[Application] Failed to initialize GLAD in window: " + Desc.title + "\n");
+					Log.Error("[Application] Failed to initialize GLAD in window: " + Desc.Title + "\n");
 					return false;
 				}
 
 			}
 
-			if (Desc.renderer == RenderAPI::DirectX11)
+			if (Desc.Renderer == RenderAPI::DirectX11)
 			{
-				if (!Graphics::API::DirectX::DX11Context::Initialize(window))
+				if (!Graphics::API::DirectX::DX11Context::Initialize(&MainWindow))
 				{
-					Log.Error("[Application] Failed to initialize DirectX11 in window: " + Desc.title + "\n");
+					Log.Error("[Application] Failed to initialize DirectX11 in window: " + Desc.Title + "\n");
 					return false;
 				}
 			}
-			ImGui_Impl_Init(window);
+			/*ImGui_Impl_Init(window);
 
 			if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::OpenGL3)
 			{
@@ -109,18 +60,18 @@ namespace NuclearEngine
 			else if (NuclearEngine::Graphics::API::Context::GetRenderAPI() == NuclearEngine::Core::RenderAPI::DirectX11)
 			{
 				ImGui_ImplDX11_Init(Graphics::API::DirectX::DX11Context::GetDevice(), Graphics::API::DirectX::DX11Context::GetContext());
-			}
+			}*/
 
-			ImGui_Impl_CreateDeviceObjects();
+			//mGui_Impl_CreateDeviceObjects();
 			//Install Callbacks
-			glfwSetWindowSizeCallback(window, window_size_callback);
-			glfwSetCursorPosCallback(window, mouse_callback);
-			glfwSetScrollCallback(window, scroll_callback);
-			glfwSetMouseButtonCallback(window, mouse_button_callback);
-			glfwSetKeyCallback(window, key_callback);
-			glfwSetCharCallback(window, char_callback);
+			//glfwSetWindowSizeCallback(window, window_size_callback);
+			//glfwSetCursorPosCallback(window, mouse_callback);
+			//glfwSetScrollCallback(window, scroll_callback);
+			//glfwSetMouseButtonCallback(window, mouse_button_callback);
+			//glfwSetKeyCallback(window, key_callback);
+			//glfwSetCharCallback(window, char_callback);
 
-			Log.Info("[Application] Created Application: " + Desc.title + " Width: " +  std::to_string(Desc.width) + " Height: " + std::to_string(Desc.height) + " \n");
+			Log.Info("[Application] Created Application: " + Desc.Title + " Width: " +  std::to_string(MainWindow.getSize().x) + " Height: " + std::to_string(MainWindow.getSize().y) + " \n");
 			return true;
 		}
 		void Application::Shutdown()
@@ -129,22 +80,18 @@ namespace NuclearEngine
 			{
 				Graphics::API::DirectX::DX11Context::Shutdown();
 			}
-			glfwDestroyWindow(window);
-			glfwTerminate();
+			//glfwDestroyWindow(window);
+			//glfwTerminate();
 		}
 		void Application::Display()
 		{
-			glfwShowWindow(window);
-		}
-		void Application::Hide()
-		{
-			glfwHideWindow(window);
+			MainWindow.setVisible(true);
 		}
 		void Application::SwapBuffers()
 		{
 			if (Graphics::API::Context::GetRenderAPI() == RenderAPI::OpenGL3)
 			{
-				glfwSwapBuffers(window);
+				//glfwSwapBuffers(window);
 			}
 			else if (Graphics::API::Context::GetRenderAPI() == RenderAPI::DirectX11)
 			{
@@ -153,53 +100,41 @@ namespace NuclearEngine
 		}
 		void Application::ProcessEvents()
 		{
-			glfwPollEvents();
+			//glfwPollEvents();
 		}
-		void Application::SetSize(int width, int height)
-		{
-			glfwSetWindowSize(window, width, height);
+		bool Application::PollEvents()
+		{    
+			// handle events
+			sf::Event wevent;
+			while (MainWindow.pollEvent(wevent))
+			{
+				if (wevent.type == sf::Event::Closed)
+				{
+					ShouldClose = false;
+				}
+				else if (wevent.type == sf::Event::Resized)
+				{
+				}
+			
+			}
+
+			return ShouldClose;
 		}
-		void Application::SetTitle(std::string title)
+		Uint32 Application::GetAspectRatio()
 		{
-			glfwSetWindowTitle(window, title.c_str());
-		}
-		bool Application::ShouldClose()
-		{
-			return glfwWindowShouldClose(window);
+			return (MainWindow.getSize().x / MainWindow.getSize().y);
 		}
 		void Application::SetMouseInputMode(const MouseInputMode & mode)
 		{
-			switch (mode)
+			/*switch (mode)
 			{
 			case MouseInputMode::Normal:
-				return glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				//return //glfwSetInputMode(window, //glfw_CURSOR, //glfw_CURSOR_NORMAL);
 			case MouseInputMode::Virtual:
-				return glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				//return //glfwSetInputMode(window, //glfw_CURSOR, //glfw_CURSOR_DISABLED);
 			case MouseInputMode::Hidden:
-				return glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-			}
-		}	
-		void Application::GetSize(Uint32& awidth, Uint32& aheight)
-		{
-			int width, height;
-
-			GetSize(width, height);
-			awidth = static_cast<Uint32>(width);
-			aheight = static_cast<Uint32>(height);
-		}
-		void Application::GetSize(int& width, int& height)
-		{
-			glfwGetWindowSize(window,&width, &height);
-		}
-		float Application::GetAspectRatiof()
-		{
-			int width= 800, height = 600;
-			GetSize(width, height);
-			return static_cast<float>(width) / static_cast<float>(height);
-		}
-		HWND Application::GetHandle()
-		{
-			return glfwGetWin32Window(window);
+				//return //glfwSetInputMode(window, //glfw_CURSOR, //glfw_CURSOR_HIDDEN);
+			}*/
 		}
 	}
 }

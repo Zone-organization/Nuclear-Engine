@@ -1,55 +1,44 @@
 #pragma once
 #include <Base\NE_Common.h>
-#ifdef APP_EXPOSE_WIN32
-#include <Windows.h>
-#endif
-
-struct GLFWwindow;
+#include <ThirdParty\SFML\Window.hpp>
 
 namespace NuclearEngine {
 	namespace Core {
 		enum class MouseInputMode { Virtual , Normal , Hidden };
 		
-		enum class NEAPI RenderAPI {
+		enum class NEAPI RenderAPI : Uint8
+		{
 			OpenGL3,
 			DirectX11
 		};
 
 		struct ApplicationDesc
 		{
-			uint width = 1024;
-			uint height = 768;
-			bool fullscreen = false;
-			bool resizable = false;
-			RenderAPI renderer = RenderAPI::OpenGL3;
-			std::string title = "NuclearEngine";
+			Uint32 WindowWidth = 1024;
+			Uint32 WindowHeight = 768;
+			Uint32 Style = 0;
+			RenderAPI Renderer = RenderAPI::OpenGL3;
+			std::string Title = "NuclearEngine";
 		};
 
 		class NEAPI Application
 		{
 		public:
-			static bool Create(const ApplicationDesc& Desc);
+			static bool Start(const ApplicationDesc& Desc);
 			static void Shutdown();
 
 			static void Display();
-			static void Hide();
+
 			static void SwapBuffers();
 			static void ProcessEvents();
 
-			static void SetSize(int width, int height);
-			static void SetTitle(std::string title);
+			static bool ShouldClose;
 
-			static bool ShouldClose();
-
+			static bool PollEvents();
 			static void SetMouseInputMode(const MouseInputMode& mode);
 
-			static void GetSize(Uint32& width, Uint32& height);
-			static void GetSize(int& width, int& height);
-			static float GetAspectRatiof();
-
-#ifdef APP_EXPOSE_WIN32
-			static HWND GetHandle();
-#endif
+			static Uint32 GetAspectRatio();
+			static sf::Window MainWindow;
 		};
 	}
 }

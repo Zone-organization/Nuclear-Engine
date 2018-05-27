@@ -165,7 +165,7 @@ public:
 		CubeVB.SetInputLayout(&ShaderIL, &Vertexshader);
 		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
 
-		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), static_cast<Float32>(Core::Application::GetAspectRatio()), 0.1f, 100.0f));
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 		

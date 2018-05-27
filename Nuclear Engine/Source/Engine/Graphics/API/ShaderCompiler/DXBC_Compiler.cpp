@@ -164,7 +164,7 @@ namespace NuclearEngine
 				}
 				void ParseConstantBuffers(const D3D11_SHADER_DESC& shaderDesc, ID3D11ShaderReflection* pReflector, BinaryShaderBlob *result)
 				{
-					for (uint i = 0; i < shaderDesc.ConstantBuffers; i++)
+					for (Uint32 i = 0; i < shaderDesc.ConstantBuffers; i++)
 					{
 						ID3D11ShaderReflectionConstantBuffer* reflectedcb = nullptr;
 						reflectedcb = pReflector->GetConstantBufferByIndex(i);

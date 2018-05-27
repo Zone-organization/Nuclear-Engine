@@ -35,7 +35,7 @@ namespace NuclearEngine {
 			API::IndexBuffer m_IB;
 			std::vector<Math::Matrix4> TransformationStack;
 			Math::Matrix4* TransformationBack;
-			uint IndexCount;
+			Uint32 IndexCount;
 			std::vector<Graphics::API::Texture*> Textures;
 			bool TexturesBinded;
 		};

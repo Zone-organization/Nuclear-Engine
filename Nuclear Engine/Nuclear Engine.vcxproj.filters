@@ -429,7 +429,6 @@
     <ClCompile Include="Source\Engine\Graphics\API\Texture.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\VertexShader.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\Animator2D.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
@@ -451,10 +450,6 @@
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\SpriteRenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Transform\Transform.cpp" />
-    <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
-    <ClCompile Include="Source\Engine\ECS\Event.cpp" />
-    <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
-    <ClCompile Include="Source\Engine\ECS\System.cpp" />
     <ClCompile Include="Source\Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\Light.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
@@ -525,6 +520,11 @@
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\mGLContext.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Assets\TextureAsset.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Animator2D.cpp" />
+    <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
+    <ClCompile Include="Source\Engine\ECS\Event.cpp" />
+    <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
+    <ClCompile Include="Source\Engine\ECS\System.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

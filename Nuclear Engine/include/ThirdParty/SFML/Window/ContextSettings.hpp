@@ -59,7 +59,7 @@ struct ContextSettings
     /// \param sRgb         sRGB capable framebuffer
     ///
     ////////////////////////////////////////////////////////////
-    explicit ContextSettings(unsigned int depth = 0, unsigned int stencil = 0, unsigned int antialiasing = 0, unsigned int major = 1, unsigned int minor = 1, unsigned int attributes = Default, bool sRgb = false,	unsigned int contexttype = 0) :
+    explicit ContextSettings(unsigned int depth = 0, unsigned int stencil = 0, unsigned int antialiasing = 0, unsigned int major = 1, unsigned int minor = 1, unsigned int attributes = Default, bool sRgb = false,	bool duninitopengla = false) :
     depthBits        (depth),
     stencilBits      (stencil),
     antialiasingLevel(antialiasing),
@@ -67,7 +67,7 @@ struct ContextSettings
     minorVersion     (minor),
     attributeFlags   (attributes),
     sRgbCapable      (sRgb),
-	contextType	(contexttype)
+	duninitopengl	(duninitopengla)
     {
     }
 
@@ -81,7 +81,7 @@ struct ContextSettings
     unsigned int minorVersion;      ///< Minor number of the context version to create
     Uint32       attributeFlags;    ///< The attribute flags to create the context with
     bool         sRgbCapable;       ///< Whether the context framebuffer is sRGB capable
-	unsigned int contextType;       ///< Only for windows ,1: Opengl, 2: Directx 11
+	bool duninitopengl;
 };
 
 } // namespace sf

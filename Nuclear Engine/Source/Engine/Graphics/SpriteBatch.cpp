@@ -28,7 +28,7 @@ namespace NuclearEngine
 			//RectangleVB.SetInputLayout(&RectangleIL, &VShader);
 
 			int offset = 0;
-			uint indices[INDICES_SIZE];
+			Uint32 indices[INDICES_SIZE];
 			for (int i = 0; i < INDICES_SIZE; i += 6) {
 				indices[i] = offset;
 				indices[i + 1] = offset + 1;
@@ -57,8 +57,8 @@ namespace NuclearEngine
 
 			const Math::Vector2 &uv = sprite.GetFrameCoords();
 			const SpriteSheet &spritesheet = sprite.GetSpriteSheet();
-			const uint &stW = spritesheet.GetWidth();
-			const uint &stH = spritesheet.GetHeight();
+			const Uint32 &stW = spritesheet.GetWidth();
+			const Uint32 &stH = spritesheet.GetHeight();
 
 			Graphics::API::Texture* texture = sprite.GetTexture();
 

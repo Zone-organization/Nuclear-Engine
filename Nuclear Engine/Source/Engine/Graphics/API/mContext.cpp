@@ -49,7 +49,7 @@ namespace NuclearEngine
 #endif
 			}
 
-			void Context::Clear(Graphics::Color color, uint flags, float depth, unsigned int stencil)
+			void Context::Clear(Graphics::Color color, Uint32 flags, float depth, unsigned int stencil)
 			{
 #ifndef NE_USE_RUNTIME_RENDER_API
 				ctx.Clear(color, flags, depth, stencil);

@@ -203,10 +203,8 @@ public:
 			5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 		};	
 		
-		int windowwidth, windowheight;
-		Core::Application::GetSize(windowwidth, windowheight);
-
-
+		int windowwidth = Core::Application::MainWindow.getSize().x;
+		int windowheight = Core::Application::MainWindow.getSize().y;
 
 		Graphics::API::VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;
@@ -251,7 +249,7 @@ public:
 		RT.AttachTexture(&ScreenTex);
 		RT.AttachDepthStencilBuffer(Math::Vector2ui(windowwidth, windowheight));
 
-		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatiof(), 0.1f, 100.0f));
+		Camera.Initialize(Math::Perspective(Math::radians(45.0f), static_cast<Float32>(Core::Application::GetAspectRatio()), 0.1f, 100.0f));
 
 		VShader.SetConstantBuffer(&Camera.GetCBuffer());
 

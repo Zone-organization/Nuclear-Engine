@@ -359,17 +359,17 @@ namespace Math
 	/// 1 component vector of unsigned integer numbers.
 	///
 	/// @see ext_vec1
-	typedef vec<1, uint, highp>			highp_uvec1;
+	typedef vec<1, Uint32, highp>			highp_uvec1;
 
 	/// 1 component vector of unsigned integer numbers.
 	///
 	/// @see ext_vec1
-	typedef vec<1, uint, mediump>		mediump_uvec1;
+	typedef vec<1, Uint32, mediump>		mediump_uvec1;
 
 	/// 1 component vector of unsigned integer numbers.
 	///
 	/// @see ext_vec1
-	typedef vec<1, uint, lowp>			lowp_uvec1;
+	typedef vec<1, Uint32, lowp>			lowp_uvec1;
 
 	/// 1 component vector of bool values.
 	///

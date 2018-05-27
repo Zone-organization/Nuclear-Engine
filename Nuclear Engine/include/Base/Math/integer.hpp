@@ -33,10 +33,10 @@ namespace Math
 	/// @see <a href="http://www.opengl.org/sdk/docs/manglsl/xhtml/uaddCarry.xml">GLSL uaddCarry man page</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 8.8 Integer Functions</a>
 	template<length_t L, qualifier Q>
-	GLM_FUNC_DECL vec<L, uint, Q> uaddCarry(
-		vec<L, uint, Q> const& x,
-		vec<L, uint, Q> const& y,
-		vec<L, uint, Q> & carry);
+	GLM_FUNC_DECL vec<L, Uint32, Q> uaddCarry(
+		vec<L, Uint32, Q> const& x,
+		vec<L, Uint32, Q> const& y,
+		vec<L, Uint32, Q> & carry);
 
 	/// Subtracts the 32-bit unsigned integer y from x, returning
 	/// the difference if non-negative, or pow(2, 32) plus the difference
@@ -47,10 +47,10 @@ namespace Math
 	/// @see <a href="http://www.opengl.org/sdk/docs/manglsl/xhtml/usubBorrow.xml">GLSL usubBorrow man page</a>
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 8.8 Integer Functions</a>
 	template<length_t L, qualifier Q>
-	GLM_FUNC_DECL vec<L, uint, Q> usubBorrow(
-		vec<L, uint, Q> const& x,
-		vec<L, uint, Q> const& y,
-		vec<L, uint, Q> & borrow);
+	GLM_FUNC_DECL vec<L, Uint32, Q> usubBorrow(
+		vec<L, Uint32, Q> const& x,
+		vec<L, Uint32, Q> const& y,
+		vec<L, Uint32, Q> & borrow);
 
 	/// Multiplies 32-bit integers x and y, producing a 64-bit
 	/// result. The 32 least-significant bits are returned in lsb.
@@ -62,10 +62,10 @@ namespace Math
 	/// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 8.8 Integer Functions</a>
 	template<length_t L, qualifier Q>
 	GLM_FUNC_DECL void umulExtended(
-		vec<L, uint, Q> const& x,
-		vec<L, uint, Q> const& y,
-		vec<L, uint, Q> & msb,
-		vec<L, uint, Q> & lsb);
+		vec<L, Uint32, Q> const& x,
+		vec<L, Uint32, Q> const& y,
+		vec<L, Uint32, Q> & msb,
+		vec<L, Uint32, Q> & lsb);
 
 	/// Multiplies 32-bit integers x and y, producing a 64-bit
 	/// result. The 32 least-significant bits are returned in lsb.

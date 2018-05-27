@@ -18,7 +18,7 @@ namespace NuclearEngine
 				public:
 					static void SetPrimitiveType(int primitivetype);
 
-					static void Clear(Graphics::Color color, uint flags, float depth = 1.0f, unsigned int stencil = 0);
+					static void Clear(Graphics::Color color, Uint32 flags, float depth = 1.0f, unsigned int stencil = 0);
 
 					static void Draw(unsigned int count);
 					static void DrawIndexed(unsigned int vertexCount);

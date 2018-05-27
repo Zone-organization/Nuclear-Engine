@@ -36,7 +36,7 @@ namespace NuclearEngine {
 			if (coordX == -1) {
 				coordX = this->SizeInFramesX - 1;
 			}
-			unsigned int coordY = static_cast<uint>(ceil(frame / (float)this->SizeInFramesX)) - 1;
+			unsigned int coordY = static_cast<Uint32>(ceil(frame / (float)this->SizeInFramesX)) - 1;
 
 			float uvX = coordX * this->FrameX / w;
 			float uvY = 1.0f - coordY * this->FrameY / h;
