@@ -41,6 +41,8 @@
 #include <cstring>
 #include <cctype>
 #include <cassert>
+#include <GLAD\include\glad\glad.h>
+#include <Base\NE_Common.h>
 
 #if !defined(SFML_OPENGL_ES)
 
@@ -641,7 +643,10 @@ void GlContext::initialize(const ContextSettings& requestedSettings)
     // Retrieve the context version number
     int majorVersion = 0;
     int minorVersion = 0;
-
+	if (!gladLoadGL())
+	{
+		NuclearEngine::Log.Error("[Application] Failed to initialize GLAD...\n");
+	}
     // Try the new way first
     glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
     glGetIntegerv(GL_MINOR_VERSION, &minorVersion);

@@ -25,12 +25,6 @@ namespace NuclearEngine
 			if (Desc.Renderer == RenderAPI::OpenGL3)
 			{
 				MainWindow->setActive(true);
-				if (!gladLoadGL())
-				{
-					Log.Error("[Application] Failed to initialize GLAD in window: " + Desc.Title + "\n");
-					return false;
-				}
-
 			}
 
 			if (Desc.Renderer == RenderAPI::DirectX11)
