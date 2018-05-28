@@ -16,7 +16,7 @@ namespace NuclearEngine {
 		{
 			Uint32 WindowWidth = 1024;
 			Uint32 WindowHeight = 768;
-			Uint32 Style = 0;
+			Uint32 Style = sf::Style::Default;
 			RenderAPI Renderer = RenderAPI::OpenGL3;
 			std::string Title = "NuclearEngine";
 		};
@@ -30,7 +30,6 @@ namespace NuclearEngine {
 			static void Display();
 
 			static void SwapBuffers();
-			static void ProcessEvents();
 
 			static bool ShouldClose;
 
@@ -38,7 +37,7 @@ namespace NuclearEngine {
 			static void SetMouseInputMode(const MouseInputMode& mode);
 
 			static Uint32 GetAspectRatio();
-			static sf::Window MainWindow;
+			static sf::Window* MainWindow;
 		};
 	}
 }

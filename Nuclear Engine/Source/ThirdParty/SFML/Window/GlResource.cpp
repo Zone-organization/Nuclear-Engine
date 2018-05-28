@@ -27,21 +27,27 @@
 ////////////////////////////////////////////////////////////
 #include <ThirdParty/SFML/Window/GlResource.hpp>
 #include <ThirdParty/SFML/Window/GlContext.hpp>
-
+#include <Engine\Graphics\API\Context.h>
 
 namespace sf
 {
 ////////////////////////////////////////////////////////////
 GlResource::GlResource()
 {
-    priv::GlContext::initResource();
+	if (NuclearEngine::Graphics::API::Context::isOpenGL3RenderAPI())
+	{
+		priv::GlContext::initResource();
+	}
 }
 
 
 ////////////////////////////////////////////////////////////
 GlResource::~GlResource()
 {
-    priv::GlContext::cleanupResource();
+	if (NuclearEngine::Graphics::API::Context::isOpenGL3RenderAPI())
+	{
+		priv::GlContext::cleanupResource();
+	}
 }
 
 

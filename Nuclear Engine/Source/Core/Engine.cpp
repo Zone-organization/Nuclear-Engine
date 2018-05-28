@@ -197,7 +197,7 @@ namespace NuclearEngine {
 			Base::Utilities::Timer timer;
 
 			//Main Game Loop
-			while (Core::Engine::ShouldClose() != true)
+			while (!Core::Application::ShouldClose)
 			{
 				// per-frame time logic (ensure speed is constant through all platforms)
 				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());

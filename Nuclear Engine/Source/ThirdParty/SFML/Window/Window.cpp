@@ -30,6 +30,7 @@
 #include <ThirdParty/SFML/Window/WindowImpl.hpp>
 #include <ThirdParty/SFML/System/Sleep.hpp>
 #include <ThirdParty/SFML/System/Err.hpp>
+#include <Engine\Graphics\API\Context.h>
 
 
 namespace
@@ -123,7 +124,7 @@ void Window::create(VideoMode mode, const String& title, Uint32 style, const Con
     // Recreate the window implementation
     m_impl = priv::WindowImpl::create(mode, title, style, settings);
 
-	if (!settings.duninitopengl)
+	if (NuclearEngine::Graphics::API::Context::isOpenGL3RenderAPI())
 	{
 		m_context = priv::GlContext::create(settings, m_impl, mode.bitsPerPixel);
 	}
@@ -140,9 +141,9 @@ void Window::create(WindowHandle handle, const ContextSettings& settings)
 
     // Recreate the window implementation
     m_impl = priv::WindowImpl::create(handle);
-	if (!settings.duninitopengl)
+
+	if (NuclearEngine::Graphics::API::Context::isOpenGL3RenderAPI())
 	{
-		// Recreate the context
 		m_context = priv::GlContext::create(settings, m_impl, VideoMode::getDesktopMode().bitsPerPixel);
 	}
     // Perform common initializations

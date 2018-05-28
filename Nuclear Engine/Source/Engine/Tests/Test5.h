@@ -203,8 +203,8 @@ public:
 			5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 		};	
 		
-		int windowwidth = Core::Application::MainWindow.getSize().x;
-		int windowheight = Core::Application::MainWindow.getSize().y;
+		int windowwidth = Core::Application::MainWindow->getSize().x;
+		int windowheight = Core::Application::MainWindow->getSize().y;
 
 		Graphics::API::VertexBufferDesc vDesc;
 		vDesc.data = cubevertices;

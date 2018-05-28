@@ -69,7 +69,7 @@ namespace NuclearEngine
 			{
 				//First Render the frame then go check events
 				Core::Application::SwapBuffers();
-				Core::Application::ProcessEvents();
+				Core::Application::PollEvents();
 			}
 
 			void Context::Draw(unsigned int count)
