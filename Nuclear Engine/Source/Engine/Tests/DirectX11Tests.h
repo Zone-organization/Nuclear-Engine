@@ -406,13 +406,13 @@ public:
 
 	void Update(float deltatime) override
 	{
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::W))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::A))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::A))
 			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::S))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::S))
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::D))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::D))
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		Camera.Update();
@@ -466,7 +466,7 @@ public:
 	{
 
 
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num1))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num1))
 		{
 			mRenderscene();
 		}
@@ -491,11 +491,11 @@ public:
 			//Render RT Texture (color buffer) content
 			states.DisabledDepthStencil.Bind();
 
-			if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num1))
+			if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num1))
 			{
 				R_State.Bind();
 			}
-			else if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num2))
+			else if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num2))
 			{
 				states.DefaultRasterizer.Bind();
 			}

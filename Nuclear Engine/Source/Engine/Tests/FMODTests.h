@@ -60,7 +60,7 @@ public:
 	{
 		Graphics::API::Context::PresentFrame();
 
-		//if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num1))
+		//if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num1))
 		//{
 			result = system->playSound(sound1, 0, false, &channel);
 			ERRCHECK(result);

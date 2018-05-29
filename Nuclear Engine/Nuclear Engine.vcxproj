@@ -800,7 +800,6 @@
     <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
-    <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\Base\Utilities\Timer.cpp" />
     <ClCompile Include="Source\Core\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />

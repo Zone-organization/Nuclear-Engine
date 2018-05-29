@@ -460,7 +460,6 @@
     <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Base\Utilities\Timer.cpp" />
-    <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />

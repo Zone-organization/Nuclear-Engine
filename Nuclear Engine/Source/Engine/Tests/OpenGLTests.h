@@ -165,7 +165,7 @@ public:
 
 		LinearSampler.PSBind(0);
 		LinearSampler.PSBind(1);
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num1))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num1))
 		{
 			texture1.PSBind(0);
 			texture2.PSBind(1);

@@ -273,13 +273,13 @@ public:
 
 	void Update(float deltatime) override
 	{
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::W))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::A))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::A))
 			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::S))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::S))
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::D))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::D))
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		Camera.Update();
@@ -313,7 +313,7 @@ public:
 
 		Vertexshader.Bind();		
 		
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num0))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num0))
 		{
 			Depthpixelshader.Bind();
 			Depthshaderenabled = true;
@@ -326,20 +326,20 @@ public:
 			Depthshaderenabled = false;
 		}
 
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num1))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num1))
 		{
 			DS_State.Bind();
 		}
-		else if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num2)) 
+		else if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num2)) 
 		{
 			states.DefaultDepthStencil.Bind();
 		}
 
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num3))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num3))
 		{
 			R_State.Bind();
 		}
-		else if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num4))
+		else if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num4))
 		{
 			states.DefaultRasterizer.Bind();
 		}
@@ -367,11 +367,11 @@ public:
 		Camera.SetModelMatrix(Math::Matrix4((1.0f)));
 		Graphics::API::Context::Draw(6);
 
-		if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num5))
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num5))
 		{
 			B_State.Bind(Graphics::Color(0.75f));
 		}
-		else if (Core::Input::Keyboard::IsKeyPressed(Core::Input::Keyboard::Key::Num6))
+		else if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Num6))
 		{
 			states.DefaultBlendState.Bind();
 		}
