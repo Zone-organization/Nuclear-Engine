@@ -26,13 +26,8 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Current Platforms
   - Windows 7+     
 
-## Currently TODO
-  - Restructure the Engine.
-  - Implement dynamic Material class.
-  - Depend 100% on ECS.
-  
-##  Future Plans
-  - Support PBR with IBL.
+## Roadmap:
+* [Roadmap](https://github.com/Zone-organization/Nuclear-Engine/blob/master/ROADMAP.md)
   
 ### Building
 Please See NuclearDeps Repo for external dependencies.

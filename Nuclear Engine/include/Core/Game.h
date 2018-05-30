@@ -34,7 +34,7 @@ namespace NuclearEngine {
 			virtual void Shutdown();      // At Shutdown
 
 			virtual void OnMouseScroll(double xpos, double ypos);
-			virtual void OnMouseMovement(double xpos, double ypos);
+			virtual void OnMouseMovement(int xpos, int ypos);
 			virtual void OnWindowResize(int width, int height);
 
 			void SetActiveScene(ECS::Scene* scene);

@@ -250,7 +250,7 @@ public:
 		Core::Application::Display();
 	}
 
-	void OnMouseMovement(double xpos_a, double ypos_a) override
+	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
 		float xpos = static_cast<float>(xpos_a);
 		float ypos = static_cast<float>(ypos_a);

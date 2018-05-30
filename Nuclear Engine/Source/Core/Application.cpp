@@ -21,7 +21,8 @@ namespace NuclearEngine
 			MainWindow = new sf::Window();
 
 			MainWindow->create(sf::VideoMode(Desc.WindowWidth, Desc.WindowHeight),Desc.Title,Desc.Style);
-					
+			MainWindow->setVisible(false);
+
 			if (Desc.Renderer == RenderAPI::OpenGL3)
 			{
 				MainWindow->setActive(true);
@@ -45,8 +46,8 @@ namespace NuclearEngine
 			{
 				Graphics::API::DirectX::DX11Context::Shutdown();
 			}
-			//glfwDestroyWindow(window);
-			//glfwTerminate();
+			MainWindow->close();
+			delete MainWindow;
 		}
 		void Application::Display()
 		{
@@ -75,8 +76,12 @@ namespace NuclearEngine
 				}
 				else if (wevent.type == sf::Event::Resized)
 				{
+					Engine::GetGame()->OnWindowResize(wevent.size.width, wevent.size.height);
 				}
-			
+				else if (wevent.type == sf::Event::MouseMoved)
+				{
+					Engine::GetGame()->OnMouseMovement(wevent.mouseMove.x, wevent.mouseMove.y);
+				}
 			}
 
 			return ShouldClose;
