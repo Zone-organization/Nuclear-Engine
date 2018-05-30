@@ -2,7 +2,6 @@
 #include <Core\Application.h>
 #include <Engine\Graphics\API\Context.h>
 #include <GLAD\include\glad\glad.h>
-#include "imgui_impl\imgui_impl.h"
 #include <Engine/Graphics/API/DirectX\DX11Context.h>
 #include <Core\Engine.h>
 

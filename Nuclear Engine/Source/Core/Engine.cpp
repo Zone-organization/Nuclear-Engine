@@ -12,8 +12,6 @@
 #include <..\Source\Engine\Tests\Test3.h>
 #include <..\Source\Engine\Tests\Test4.h>
 #include <..\Source\Engine\Tests\Test5.h>
-#include <Engine\GUI\imgui.h>
-#include "..\Core\imgui_impl\imgui_impl.h"
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Audio\AudioEngine.h>
 #include <FMOD\includer.h> 
@@ -204,8 +202,6 @@ namespace NuclearEngine {
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
 				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
-				GamePtr->FrameTime = 1000.0f / ImGui::GetIO().Framerate;
-				GamePtr->FPS = ImGui::GetIO().Framerate;
 
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);

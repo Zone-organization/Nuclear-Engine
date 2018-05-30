@@ -9,9 +9,6 @@
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Application.h" />
-    <ClInclude Include="Source\Core\imgui_impl\imgui_impl.h" />
-    <ClInclude Include="Source\Core\imgui_impl\imgui_impl_dx11.h" />
-    <ClInclude Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Engine\Transform\Transform.h" />
@@ -25,9 +22,6 @@
     <ClInclude Include="include\Engine\Managers\AssetManager.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\ShaderManager.h" />
-    <ClInclude Include="include\Engine\GUI\CGUI.h" />
-    <ClInclude Include="include\Engine\GUI\imconfig.h" />
-    <ClInclude Include="include\Engine\GUI\ImGui.h" />
     <ClInclude Include="include\Engine\Graphics\API\DirectX\DX11BlendState.h" />
     <ClInclude Include="include\Engine\Graphics\API\DirectX\DX11Common.h" />
     <ClInclude Include="include\Engine\Graphics\API\DirectX\DX11ConstantBuffer.h" />
@@ -262,10 +256,6 @@
     <ClInclude Include="include\Base\NE_PrivateCommon.h" />
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
-    <ClInclude Include="Source\Engine\GUI\imgui_internal.h" />
-    <ClInclude Include="Source\Engine\GUI\stb_rect_pack.h" />
-    <ClInclude Include="Source\Engine\GUI\stb_textedit.h" />
-    <ClInclude Include="Source\Engine\GUI\stb_truetype.h" />
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\Engine\Tests\DirectX11Tests.h" />
@@ -384,9 +374,6 @@
     <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Core\imgui_impl\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Source\Core\imgui_impl\imgui_impl.cpp" />
-    <ClCompile Include="Source\Core\IMGUI_Impl\imgui_impl_gl3.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
     <ClCompile Include="Source\Base\Utilities\Logger.cpp" />
@@ -437,8 +424,6 @@
     <ClCompile Include="Source\Engine\Graphics\Skybox.cpp" />
     <ClCompile Include="Source\Engine\Graphics\SpriteBatch.cpp" />
     <ClCompile Include="Source\Engine\Graphics\SpriteSheet.cpp" />
-    <ClCompile Include="Source\Engine\GUI\imgui.cpp" />
-    <ClCompile Include="Source\Engine\GUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />

@@ -53,9 +53,6 @@ _____________/BOOOM\_____________
 #include <Engine\Graphics\Background.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 
-//# GUI Headers
-#include <Engine\GUI\IMGUI.h>
-
 //# Engine Components Headers
 #include <Engine/Components\CameraComponent.h>
 #include <Engine/Components\Light.h>

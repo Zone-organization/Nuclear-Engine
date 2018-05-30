@@ -6,10 +6,6 @@ class Sample1 : public Core::Game
 protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-	bool renderboxes = true;
-	bool renderspheres = true;
-	bool rendernanosuit = true;
-
 	//Assets
 	Assets::Texture DiffuseTex;
 	Assets::Texture SpecularTex;
@@ -212,17 +208,6 @@ public:
 	
 		SetupEntities();
 
-		for (auto x : Managers::AssetManager::mHashedTexturesNames)
-		{
-			Log.Info("HASH: " + std::to_string(x.first) + " PATH: " + x.second + "\n");
-		}
-		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 16.0f);
-
-		SampleScene.Entities;
-
-		ImGui::StyleColorsDark();
-
 		states.EnabledDepth_DisabledStencil.Bind();
 		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 
@@ -266,29 +251,8 @@ public:
 
 		Camera.Update();
 	}
-	void ShowOverlay(bool show)
-	{
-		const float DISTANCE = 10.0f;
-		static int corner = 0;
-		ImVec2 window_pos = ImVec2((corner & 1) ? ImGui::GetIO().DisplaySize.x - DISTANCE : DISTANCE, (corner & 2) ? ImGui::GetIO().DisplaySize.y - DISTANCE : DISTANCE);
-		ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
-		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.3f)); // Transparent background
-		if (ImGui::Begin("FPS Overlay", &show, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings))
-		{
-			ImGui::Text("FPS Overlay\n");
-			ImGui::Separator();
-			ImGui::Text(" %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
-
-		}
-		ImGui::PopStyleColor();
-	}
 	void Render(float dt) override
 	{
-
-		ImGui::NE_NewFrame();
-
 		Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
@@ -296,41 +260,34 @@ public:
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
 
-		if (renderboxes)
+		for (unsigned int i = 0; i < 10; i++)
 		{
-			for (unsigned int i = 0; i < 10; i++)
-			{
-				// calculate the model matrix for each object and pass it to shader before drawing
-				Math::Matrix4 model(1.0f);
-				model = Math::Translate(model, cubePositions[i]);
-				float angle = 20.0f * i * ClockTime;
+			// calculate the model matrix for each object and pass it to shader before drawing
+			Math::Matrix4 model(1.0f);
+			model = Math::Translate(model, cubePositions[i]);
+			float angle = 20.0f * i * ClockTime;
 
-				model = Math::Rotate(model, Math::radians(angle), Math::Vector3(1.0f, 0.3f, 0.5f));
-				Camera.SetModelMatrix(model);
+			model = Math::Rotate(model, Math::radians(angle), Math::Vector3(1.0f, 0.3f, 0.5f));
+			Camera.SetModelMatrix(model);
 
-				Renderer->InstantRender(&CubeModel);
-			}
+			Renderer->InstantRender(&CubeModel);
 		}
-		if (renderspheres)
+		for (unsigned int i = 0; i < 9; i++)
 		{
-			for (unsigned int i = 0; i < 9; i++)
-			{
-				Math::Matrix4 model(1.0f);
-				model = Math::Translate(model, pointLightPositions[i]);
-				model = Math::Scale(model, Math::Vector3(0.25f));
-				Camera.SetModelMatrix(model);
-				Renderer->InstantRender(&LampModel);
-			}
+			Math::Matrix4 model(1.0f);
+			model = Math::Translate(model, pointLightPositions[i]);
+			model = Math::Scale(model, Math::Vector3(0.25f));
+			Camera.SetModelMatrix(model);
+			Renderer->InstantRender(&LampModel);
 		}
-		if (rendernanosuit)
-		{
-			Math::Matrix4 NanosuitMatrix(1.0f);
-			NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-			NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
-			NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
-			Camera.SetModelMatrix(NanosuitMatrix);
-			Renderer->InstantRender(&NanosuitModel);
-		}
+
+		Math::Matrix4 NanosuitMatrix(1.0f);
+		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
+		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
+		NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
+		Camera.SetModelMatrix(NanosuitMatrix);
+		Renderer->InstantRender(&NanosuitModel);
+
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
 
@@ -342,13 +299,6 @@ public:
 		Skybox.Render();
 		states.EnabledDepth_DisabledStencil.Bind();
 
-		ImGui::Checkbox("Render Boxes", &renderboxes);
-		ImGui::Checkbox("Render Lamps Spheres", &renderspheres);
-		ImGui::Checkbox("Render Nanosuit", &rendernanosuit);
-				
-		ShowOverlay(true);
-		
-		ImGui::Render();
 		Graphics::API::Context::PresentFrame();
 	}
 };
