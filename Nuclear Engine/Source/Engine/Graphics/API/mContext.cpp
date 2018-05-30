@@ -1,6 +1,6 @@
 #include <Engine\Graphics\API\Context.h>
 #include <Core\Engine.h>
-
+#include <Core\Application.h>
 #ifndef NE_USE_RUNTIME_RENDER_API
 #ifdef NE_USE_OPENGL_3_3
 #include <Engine/Graphics/API/OpenGL\GLContext.h>

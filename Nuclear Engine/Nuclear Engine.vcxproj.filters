@@ -374,6 +374,7 @@
     <ClInclude Include="Source\ThirdParty\SFML\Window\WindowImpl.hpp" />
     <ClInclude Include="include\ThirdParty\SFML\OpenGL.hpp" />
     <ClInclude Include="include\Engine\Assets\Texture.h" />
+    <ClInclude Include="include\Core\ApplicationDesc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

@@ -2,7 +2,6 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/Color.h>
-#include <Core\Application.h>
 #include <ThirdParty/SFML/Window.hpp>
 namespace NuclearEngine
 {
@@ -15,7 +14,6 @@ namespace NuclearEngine
 				class DX11RenderTarget;
 				class NEAPI DX11Context
 				{
-					friend Core::Application;
 				public:
 
 					static void SetPrimitiveType(int primitivetype);
@@ -34,7 +32,7 @@ namespace NuclearEngine
 					static void Bind_RenderTarget(DX11RenderTarget* rt);
 					static void Bind_Default_Rasterizer_State();
 					static void Bind_Default_RenderTarget();
-				private:
+
 					static bool Initialize(sf::Window* window);
 					static void Shutdown();
 					static void SwapBuffers();

@@ -153,7 +153,7 @@ public:
 
 		Shader_Uniforms.Model = Shader_Uniforms.Model * Math::toMat4(Math::Quaternion(Math::Vector3(0.5f, 1.0f, 0.0f)));
 		Shader_Uniforms.View = Math::Translate(Shader_Uniforms.View, Math::Vector3(0.0f, 0.0f, -3.0f));
-		Shader_Uniforms.Projection = Math::Perspective(45.0f, static_cast<Float32>(Core::Application::GetAspectRatio()), 0.1f, 100.0f);
+		Shader_Uniforms.Projection = Math::Perspective(45.0f, Core::Application::GetAspectRatioF32(), 0.1f, 100.0f);
 
 		CubeCB.Update(&Shader_Uniforms, sizeof(Shader_Uniforms));
 		Core::Application::Display();

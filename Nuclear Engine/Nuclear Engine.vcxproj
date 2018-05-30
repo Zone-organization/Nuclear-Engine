@@ -333,6 +333,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Core\ApplicationDesc.h" />
     <ClInclude Include="include\Engine\Assets\Material.h" />
     <ClInclude Include="include\Engine\Assets\Texture.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />

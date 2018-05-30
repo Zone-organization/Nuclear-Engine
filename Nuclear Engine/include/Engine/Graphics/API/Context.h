@@ -1,7 +1,7 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Engine/Graphics/Color.h>
-#include <Core\Application.h>
+#include <Core\ApplicationDesc.h>
 
 #define	ClearColorBuffer 0b00000001
 #define	ClearDepthBuffer 0b00000010
@@ -30,7 +30,6 @@ namespace NuclearEngine
 
 			class NEAPI Context
 			{
-				friend class Core::Application;
 			public:
 				static Core::RenderAPI GetRenderAPI();
 
@@ -49,7 +48,6 @@ namespace NuclearEngine
 				static bool isOpenGL3RenderAPI();
 				static bool isDirectX11RenderAPI();
 
-			private:
 				static void SetRenderAPI(const Core::RenderAPI & renderer);
 			};
 		}

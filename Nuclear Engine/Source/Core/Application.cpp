@@ -90,6 +90,10 @@ namespace NuclearEngine
 		{
 			return (MainWindow->getSize().x / MainWindow->getSize().y);
 		}
+		Float32 Application::GetAspectRatioF32()
+		{
+			return static_cast<Float32>(MainWindow->getSize().x) / static_cast<Float32>(MainWindow->getSize().y);
+		}
 		void Application::SetMouseInputMode(const MouseInputMode & mode)
 		{
 			/*switch (mode)

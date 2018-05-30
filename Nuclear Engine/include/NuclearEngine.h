@@ -15,6 +15,7 @@ _____________/BOOOM\_____________
 #include <Core/Engine.h>
 #include <Core/Game.h>
 #include <Core/Editor.h>
+#include <Core/Application.h>
 #include <Core/FileSystem.h>
 #include <Core/Parsers/XMLParser.h>
 #include <Core/Input.h>

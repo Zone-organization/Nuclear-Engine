@@ -1,6 +1,6 @@
 #pragma once
 #include <Core\Game.h>
-#include <Core\Application.h>
+#include <Core\ApplicationDesc.h>
 namespace NuclearEngine
 {
 	namespace Core
