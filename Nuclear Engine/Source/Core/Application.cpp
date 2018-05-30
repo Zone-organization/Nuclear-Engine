@@ -18,8 +18,8 @@ namespace NuclearEngine
 		{
 			Graphics::API::Context::SetRenderAPI(Desc.Renderer);
 			MainWindow = new sf::Window();
-
-			MainWindow->create(sf::VideoMode(Desc.WindowWidth, Desc.WindowHeight),Desc.Title,Desc.Style);
+			sf::ContextSettings settings(0, 0, 0, 3, 3,	sf::ContextSettings::Core, false);
+			MainWindow->create(sf::VideoMode(Desc.WindowWidth, Desc.WindowHeight),Desc.Title,Desc.Style, settings);
 			MainWindow->setVisible(false);
 
 			if (Desc.Renderer == RenderAPI::OpenGL3)
@@ -71,7 +71,7 @@ namespace NuclearEngine
 			{
 				if (wevent.type == sf::Event::Closed)
 				{
-					ShouldClose = false;
+					ShouldClose = true;
 				}
 				else if (wevent.type == sf::Event::Resized)
 				{
