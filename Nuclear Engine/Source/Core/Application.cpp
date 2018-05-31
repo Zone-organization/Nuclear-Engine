@@ -18,7 +18,7 @@ namespace NuclearEngine
 		{
 			Graphics::API::Context::SetRenderAPI(Desc.Renderer);
 			MainWindow = new sf::Window();
-			sf::ContextSettings settings(0, 0, 0, 3, 3,	sf::ContextSettings::Core, false);
+			sf::ContextSettings settings(24, 8, 0, 3, 3,	sf::ContextSettings::Core, false);
 			MainWindow->create(sf::VideoMode(Desc.WindowWidth, Desc.WindowHeight),Desc.Title,Desc.Style, settings);
 			MainWindow->setVisible(false);
 

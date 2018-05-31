@@ -18,7 +18,7 @@ namespace NuclearEngine
 					switch (func)
 					{
 					case Comparison_Func::NEVER: return GL_NEVER;
-					case Comparison_Func::LESS: return GL_LESS;
+					case Comparison_Func::LESS:	return GL_LESS;
 					case Comparison_Func::EQUAL: return GL_EQUAL;
 					case Comparison_Func::LESS_EQUAL: return GL_LEQUAL;
 					case Comparison_Func::GREATER: return GL_GREATER;
