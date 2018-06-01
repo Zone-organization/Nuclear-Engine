@@ -296,7 +296,7 @@ public:
 		SampleScene.Systems.Update_All(dt);
 
 
-		//Skybox.Render();
+		Skybox.Render();
 		states.EnabledDepth_DisabledStencil.Bind();
 
 		Graphics::API::Context::PresentFrame();
