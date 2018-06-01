@@ -1,6 +1,6 @@
 #pragma once
 #include <Core\ApplicationDesc.h>
-#include <ThirdParty\SFML\Window.hpp>
+#include <SFML\Window.hpp>
 
 namespace NuclearEngine {
 	namespace Core {

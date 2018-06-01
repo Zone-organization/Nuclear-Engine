@@ -1,6 +1,6 @@
 #include "Engine\Managers\AssetManager.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "Thirdparty\stb_image.h"
+#include "..\..\ThirdParty\stb_image.h"
 #include <Engine\Assets\Mesh.h>
 #include "AssimpImporter.h"
 #include <Base\Utilities\Hash.h>

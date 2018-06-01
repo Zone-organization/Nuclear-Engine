@@ -2,7 +2,7 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/Color.h>
-#include <ThirdParty/SFML/Window.hpp>
+#include <SFML/Window.hpp>
 namespace NuclearEngine
 {
 	namespace Graphics

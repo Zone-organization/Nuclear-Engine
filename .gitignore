@@ -27,3 +27,5 @@
 /Samples/Assets/Common/Sounds
 *.user
 *.filters
+
+!logo.png

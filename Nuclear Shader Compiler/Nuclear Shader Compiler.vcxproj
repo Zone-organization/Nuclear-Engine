@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\AST\AST.cpp" />
+    <ClCompile Include="source\AST\ASTEnums.cpp" />
+    <ClCompile Include="source\AST\ASTFactory.cpp" />
+    <ClCompile Include="source\AST\Identifier.cpp" />
+    <ClCompile Include="source\AST\SourceArea.cpp" />
+    <ClCompile Include="source\AST\SourcePosition.cpp" />
+    <ClCompile Include="source\AST\Token.cpp" />
+    <ClCompile Include="source\AST\TokenString.cpp" />
+    <ClCompile Include="source\AST\TypeDenoter.cpp" />
+    <ClCompile Include="source\AST\Visitor\ASTPrinter.cpp" />
+    <ClCompile Include="source\AST\Visitor\ControlPathAnalyzer.cpp" />
+    <ClCompile Include="source\AST\Visitor\EndOfScopeAnalyzer.cpp" />
+    <ClCompile Include="source\AST\Visitor\ExprConverter.cpp" />
+    <ClCompile Include="source\AST\Visitor\ExprEvaluator.cpp" />
+    <ClCompile Include="source\AST\Visitor\FuncNameConverter.cpp" />
+    <ClCompile Include="source\AST\Visitor\Optimizer.cpp" />
+    <ClCompile Include="source\AST\Visitor\ReferenceAnalyzer.cpp" />
+    <ClCompile Include="source\AST\Visitor\ReflectionAnalyzer.cpp" />
+    <ClCompile Include="source\AST\Visitor\StructParameterAnalyzer.cpp" />
+    <ClCompile Include="source\AST\Visitor\TypeConverter.cpp" />
+    <ClCompile Include="source\AST\Visitor\Visitor.cpp" />
+    <ClCompile Include="source\AST\Visitor\VisitorTracker.cpp" />
+    <ClCompile Include="source\Backend\Converter.cpp" />
+    <ClCompile Include="source\Backend\Generator.cpp" />
+    <ClCompile Include="source\Backend\GLSL\GLSLConverter.cpp" />
+    <ClCompile Include="source\Backend\GLSL\GLSLExtensionAgent.cpp" />
+    <ClCompile Include="source\Backend\GLSL\GLSLGenerator.cpp" />
+    <ClCompile Include="source\Backend\GLSL\GLSLIntrinsics.cpp" />
+    <ClCompile Include="source\CodeWriter.cpp" />
+    <ClCompile Include="source\Compiler.cpp" />
+    <ClCompile Include="source\ConsoleManip.cpp" />
+    <ClCompile Include="source\Exception.cpp" />
+    <ClCompile Include="source\Frontend\Analyzer.cpp" />
+    <ClCompile Include="source\Frontend\GLSL\GLSLExtensions.cpp" />
+    <ClCompile Include="source\Frontend\GLSL\GLSLKeywords.cpp" />
+    <ClCompile Include="source\Frontend\GLSL\GLSLParser.cpp" />
+    <ClCompile Include="source\Frontend\GLSL\GLSLPreProcessor.cpp" />
+    <ClCompile Include="source\Frontend\GLSL\GLSLScanner.cpp" />
+    <ClCompile Include="source\Frontend\HLSL\HLSLAnalyzer.cpp" />
+    <ClCompile Include="source\Frontend\HLSL\HLSLIntrinsics.cpp" />
+    <ClCompile Include="source\Frontend\HLSL\HLSLKeywords.cpp" />
+    <ClCompile Include="source\Frontend\HLSL\HLSLParser.cpp" />
+    <ClCompile Include="source\Frontend\HLSL\HLSLScanner.cpp" />
+    <ClCompile Include="source\Frontend\IntrinsicAdept.cpp" />
+    <ClCompile Include="source\Frontend\Parser.cpp" />
+    <ClCompile Include="source\Frontend\PreProcessor.cpp" />
+    <ClCompile Include="source\Frontend\PreProcessorScanner.cpp" />
+    <ClCompile Include="source\Frontend\Scanner.cpp" />
+    <ClCompile Include="source\Frontend\SLParser.cpp" />
+    <ClCompile Include="source\Frontend\SLScanner.cpp" />
+    <ClCompile Include="source\IncludeHandler.cpp" />
+    <ClCompile Include="source\IndentHandler.cpp" />
+    <ClCompile Include="source\JoinString.cpp" />
+    <ClCompile Include="source\Log.cpp" />
+    <ClCompile Include="source\Platform\Unix\UnixConsoleManip.cpp" />
+    <ClCompile Include="source\Platform\Win32\Win32ConsoleManip.cpp" />
+    <ClCompile Include="source\Reflection.cpp" />
+    <ClCompile Include="source\ReflectionPrinter.cpp" />
+    <ClCompile Include="source\Report\Report.cpp" />
+    <ClCompile Include="source\Report\ReportHandler.cpp" />
+    <ClCompile Include="source\ShaderVersion.cpp" />
+    <ClCompile Include="source\SourceCode.cpp" />
+    <ClCompile Include="source\SymbolTable.cpp" />
+    <ClCompile Include="source\Targets.cpp" />
+    <ClCompile Include="source\Variant.cpp" />
+    <ClCompile Include="source\Xsc.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\ConsoleManip.h" />
+    <ClInclude Include="include\Export.h" />
+    <ClInclude Include="include\IncludeHandler.h" />
+    <ClInclude Include="include\IndentHandler.h" />
+    <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\Reflection.h" />
+    <ClInclude Include="include\Report.h" />
+    <ClInclude Include="include\Targets.h" />
+    <ClInclude Include="include\Version.h" />
+    <ClInclude Include="include\Xsc.h" />
+    <ClInclude Include="source\AST\AST.h" />
+    <ClInclude Include="source\AST\ASTEnums.h" />
+    <ClInclude Include="source\AST\ASTFactory.h" />
+    <ClInclude Include="source\AST\Identifier.h" />
+    <ClInclude Include="source\AST\SourceArea.h" />
+    <ClInclude Include="source\AST\SourcePosition.h" />
+    <ClInclude Include="source\AST\Token.h" />
+    <ClInclude Include="source\AST\TokenString.h" />
+    <ClInclude Include="source\AST\TypeDenoter.h" />
+    <ClInclude Include="source\AST\Visitor\ASTPrinter.h" />
+    <ClInclude Include="source\AST\Visitor\ControlPathAnalyzer.h" />
+    <ClInclude Include="source\AST\Visitor\EndOfScopeAnalyzer.h" />
+    <ClInclude Include="source\AST\Visitor\ExprConverter.h" />
+    <ClInclude Include="source\AST\Visitor\ExprEvaluator.h" />
+    <ClInclude Include="source\AST\Visitor\FuncNameConverter.h" />
+    <ClInclude Include="source\AST\Visitor\Optimizer.h" />
+    <ClInclude Include="source\AST\Visitor\ReferenceAnalyzer.h" />
+    <ClInclude Include="source\AST\Visitor\ReflectionAnalyzer.h" />
+    <ClInclude Include="source\AST\Visitor\StructParameterAnalyzer.h" />
+    <ClInclude Include="source\AST\Visitor\TypeConverter.h" />
+    <ClInclude Include="source\AST\Visitor\Visitor.h" />
+    <ClInclude Include="source\AST\Visitor\VisitorTracker.h" />
+    <ClInclude Include="source\Backend\Converter.h" />
+    <ClInclude Include="source\Backend\Generator.h" />
+    <ClInclude Include="source\Backend\GLSL\GLSLConverter.h" />
+    <ClInclude Include="source\Backend\GLSL\GLSLExtensionAgent.h" />
+    <ClInclude Include="source\Backend\GLSL\GLSLGenerator.h" />
+    <ClInclude Include="source\Backend\GLSL\GLSLIntrinsics.h" />
+    <ClInclude Include="source\CiString.h" />
+    <ClInclude Include="source\CodeWriter.h" />
+    <ClInclude Include="source\Compiler.h" />
+    <ClInclude Include="source\Dictionary.h" />
+    <ClInclude Include="source\Exception.h" />
+    <ClInclude Include="source\Flags.h" />
+    <ClInclude Include="source\Frontend\Analyzer.h" />
+    <ClInclude Include="source\Frontend\GLSL\GLSLExtensions.h" />
+    <ClInclude Include="source\Frontend\GLSL\GLSLKeywords.h" />
+    <ClInclude Include="source\Frontend\GLSL\GLSLParser.h" />
+    <ClInclude Include="source\Frontend\GLSL\GLSLPreProcessor.h" />
+    <ClInclude Include="source\Frontend\GLSL\GLSLScanner.h" />
+    <ClInclude Include="source\Frontend\HLSL\HLSLAnalyzer.h" />
+    <ClInclude Include="source\Frontend\HLSL\HLSLIntrinsics.h" />
+    <ClInclude Include="source\Frontend\HLSL\HLSLKeywords.h" />
+    <ClInclude Include="source\Frontend\HLSL\HLSLParser.h" />
+    <ClInclude Include="source\Frontend\HLSL\HLSLScanner.h" />
+    <ClInclude Include="source\Frontend\IntrinsicAdept.h" />
+    <ClInclude Include="source\Frontend\Parser.h" />
+    <ClInclude Include="source\Frontend\PreProcessor.h" />
+    <ClInclude Include="source\Frontend\PreProcessorScanner.h" />
+    <ClInclude Include="source\Frontend\Scanner.h" />
+    <ClInclude Include="source\Frontend\SLParser.h" />
+    <ClInclude Include="source\Frontend\SLScanner.h" />
+    <ClInclude Include="source\Helper.h" />
+    <ClInclude Include="source\JoinString.h" />
+    <ClInclude Include="source\ReflectionPrinter.h" />
+    <ClInclude Include="source\Report\ReportHandler.h" />
+    <ClInclude Include="source\Report\ReportIdents.h" />
+    <ClInclude Include="source\Report\ReportIdentsEN.h" />
+    <ClInclude Include="source\ShaderVersion.h" />
+    <ClInclude Include="source\SourceCode.h" />
+    <ClInclude Include="source\SymbolTable.h" />
+    <ClInclude Include="source\Variant.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{EF2F3F08-6DD4-4957-A31C-589DED7D97CE}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>NuclearShaderCompiler</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <ThirdParty\SFML\Window\Keyboard.hpp>
+#include <SFML\Window\Keyboard.hpp>
 
 namespace NuclearEngine 
 {
