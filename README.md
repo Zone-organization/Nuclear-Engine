@@ -1,6 +1,9 @@
-![Nuclear Engine Logo](logo.png "Nuclear Engine Logo")
+<p align="center">![Nuclear Engine Logo](logo.png "Nuclear Engine Logo")</p>
+
+
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
-[![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine)
+
+[![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine)[![Build status]
 
 # Large restructure is undergoing...
   
