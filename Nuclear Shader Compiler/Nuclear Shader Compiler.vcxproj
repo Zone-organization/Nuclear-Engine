@@ -19,153 +19,152 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\AST\AST.cpp" />
-    <ClCompile Include="source\AST\ASTEnums.cpp" />
-    <ClCompile Include="source\AST\ASTFactory.cpp" />
-    <ClCompile Include="source\AST\Identifier.cpp" />
-    <ClCompile Include="source\AST\SourceArea.cpp" />
-    <ClCompile Include="source\AST\SourcePosition.cpp" />
-    <ClCompile Include="source\AST\Token.cpp" />
-    <ClCompile Include="source\AST\TokenString.cpp" />
-    <ClCompile Include="source\AST\TypeDenoter.cpp" />
-    <ClCompile Include="source\AST\Visitor\ASTPrinter.cpp" />
-    <ClCompile Include="source\AST\Visitor\ControlPathAnalyzer.cpp" />
-    <ClCompile Include="source\AST\Visitor\EndOfScopeAnalyzer.cpp" />
-    <ClCompile Include="source\AST\Visitor\ExprConverter.cpp" />
-    <ClCompile Include="source\AST\Visitor\ExprEvaluator.cpp" />
-    <ClCompile Include="source\AST\Visitor\FuncNameConverter.cpp" />
-    <ClCompile Include="source\AST\Visitor\Optimizer.cpp" />
-    <ClCompile Include="source\AST\Visitor\ReferenceAnalyzer.cpp" />
-    <ClCompile Include="source\AST\Visitor\ReflectionAnalyzer.cpp" />
-    <ClCompile Include="source\AST\Visitor\StructParameterAnalyzer.cpp" />
-    <ClCompile Include="source\AST\Visitor\TypeConverter.cpp" />
-    <ClCompile Include="source\AST\Visitor\Visitor.cpp" />
-    <ClCompile Include="source\AST\Visitor\VisitorTracker.cpp" />
-    <ClCompile Include="source\Backend\Converter.cpp" />
-    <ClCompile Include="source\Backend\Generator.cpp" />
-    <ClCompile Include="source\Backend\GLSL\GLSLConverter.cpp" />
-    <ClCompile Include="source\Backend\GLSL\GLSLExtensionAgent.cpp" />
-    <ClCompile Include="source\Backend\GLSL\GLSLGenerator.cpp" />
-    <ClCompile Include="source\Backend\GLSL\GLSLIntrinsics.cpp" />
-    <ClCompile Include="source\CodeWriter.cpp" />
-    <ClCompile Include="source\Compiler.cpp" />
-    <ClCompile Include="source\ConsoleManip.cpp" />
-    <ClCompile Include="source\Exception.cpp" />
-    <ClCompile Include="source\Frontend\Analyzer.cpp" />
-    <ClCompile Include="source\Frontend\GLSL\GLSLExtensions.cpp" />
-    <ClCompile Include="source\Frontend\GLSL\GLSLKeywords.cpp" />
-    <ClCompile Include="source\Frontend\GLSL\GLSLParser.cpp" />
-    <ClCompile Include="source\Frontend\GLSL\GLSLPreProcessor.cpp" />
-    <ClCompile Include="source\Frontend\GLSL\GLSLScanner.cpp" />
-    <ClCompile Include="source\Frontend\HLSL\HLSLAnalyzer.cpp" />
-    <ClCompile Include="source\Frontend\HLSL\HLSLIntrinsics.cpp" />
-    <ClCompile Include="source\Frontend\HLSL\HLSLKeywords.cpp" />
-    <ClCompile Include="source\Frontend\HLSL\HLSLParser.cpp" />
-    <ClCompile Include="source\Frontend\HLSL\HLSLScanner.cpp" />
-    <ClCompile Include="source\Frontend\IntrinsicAdept.cpp" />
-    <ClCompile Include="source\Frontend\Parser.cpp" />
-    <ClCompile Include="source\Frontend\PreProcessor.cpp" />
-    <ClCompile Include="source\Frontend\PreProcessorScanner.cpp" />
-    <ClCompile Include="source\Frontend\Scanner.cpp" />
-    <ClCompile Include="source\Frontend\SLParser.cpp" />
-    <ClCompile Include="source\Frontend\SLScanner.cpp" />
-    <ClCompile Include="source\IncludeHandler.cpp" />
-    <ClCompile Include="source\IndentHandler.cpp" />
-    <ClCompile Include="source\JoinString.cpp" />
-    <ClCompile Include="source\Log.cpp" />
-    <ClCompile Include="source\Platform\Unix\UnixConsoleManip.cpp" />
-    <ClCompile Include="source\Platform\Win32\Win32ConsoleManip.cpp" />
-    <ClCompile Include="source\Reflection.cpp" />
-    <ClCompile Include="source\ReflectionPrinter.cpp" />
-    <ClCompile Include="source\Report\Report.cpp" />
-    <ClCompile Include="source\Report\ReportHandler.cpp" />
-    <ClCompile Include="source\ShaderVersion.cpp" />
-    <ClCompile Include="source\SourceCode.cpp" />
-    <ClCompile Include="source\SymbolTable.cpp" />
-    <ClCompile Include="source\Targets.cpp" />
-    <ClCompile Include="source\Variant.cpp" />
-    <ClCompile Include="source\Xsc.cpp" />
+    <ClInclude Include="inc\Xsc\ConsoleManip.h" />
+    <ClInclude Include="inc\Xsc\Export.h" />
+    <ClInclude Include="inc\Xsc\IncludeHandler.h" />
+    <ClInclude Include="inc\Xsc\IndentHandler.h" />
+    <ClInclude Include="inc\Xsc\Log.h" />
+    <ClInclude Include="inc\Xsc\Reflection.h" />
+    <ClInclude Include="inc\Xsc\Report.h" />
+    <ClInclude Include="inc\Xsc\Targets.h" />
+    <ClInclude Include="inc\Xsc\Version.h" />
+    <ClInclude Include="inc\Xsc\Xsc.h" />
+    <ClInclude Include="src\Compiler\AST\AST.h" />
+    <ClInclude Include="src\Compiler\AST\ASTEnums.h" />
+    <ClInclude Include="src\Compiler\AST\ASTFactory.h" />
+    <ClInclude Include="src\Compiler\AST\Identifier.h" />
+    <ClInclude Include="src\Compiler\AST\SourceArea.h" />
+    <ClInclude Include="src\Compiler\AST\SourcePosition.h" />
+    <ClInclude Include="src\Compiler\AST\Token.h" />
+    <ClInclude Include="src\Compiler\AST\TokenString.h" />
+    <ClInclude Include="src\Compiler\AST\TypeDenoter.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\ASTPrinter.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\ControlPathAnalyzer.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\EndOfScopeAnalyzer.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\ExprConverter.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\ExprEvaluator.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\FuncNameConverter.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\Optimizer.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\ReferenceAnalyzer.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\ReflectionAnalyzer.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\StructParameterAnalyzer.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\TypeConverter.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\Visitor.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\VisitorTracker.h" />
+    <ClInclude Include="src\Compiler\Backend\Converter.h" />
+    <ClInclude Include="src\Compiler\Backend\Generator.h" />
+    <ClInclude Include="src\Compiler\Backend\GLSL\GLSLConverter.h" />
+    <ClInclude Include="src\Compiler\Backend\GLSL\GLSLExtensionAgent.h" />
+    <ClInclude Include="src\Compiler\Backend\GLSL\GLSLGenerator.h" />
+    <ClInclude Include="src\Compiler\Backend\GLSL\GLSLIntrinsics.h" />
+    <ClInclude Include="src\Compiler\CiString.h" />
+    <ClInclude Include="src\Compiler\CodeWriter.h" />
+    <ClInclude Include="src\Compiler\Compiler.h" />
+    <ClInclude Include="src\Compiler\Dictionary.h" />
+    <ClInclude Include="src\Compiler\Exception.h" />
+    <ClInclude Include="src\Compiler\Flags.h" />
+    <ClInclude Include="src\Compiler\Frontend\Analyzer.h" />
+    <ClInclude Include="src\Compiler\Frontend\GLSL\GLSLExtensions.h" />
+    <ClInclude Include="src\Compiler\Frontend\GLSL\GLSLKeywords.h" />
+    <ClInclude Include="src\Compiler\Frontend\GLSL\GLSLParser.h" />
+    <ClInclude Include="src\Compiler\Frontend\GLSL\GLSLPreProcessor.h" />
+    <ClInclude Include="src\Compiler\Frontend\GLSL\GLSLScanner.h" />
+    <ClInclude Include="src\Compiler\Frontend\HLSL\HLSLAnalyzer.h" />
+    <ClInclude Include="src\Compiler\Frontend\HLSL\HLSLIntrinsics.h" />
+    <ClInclude Include="src\Compiler\Frontend\HLSL\HLSLKeywords.h" />
+    <ClInclude Include="src\Compiler\Frontend\HLSL\HLSLParser.h" />
+    <ClInclude Include="src\Compiler\Frontend\HLSL\HLSLScanner.h" />
+    <ClInclude Include="src\Compiler\Frontend\IntrinsicAdept.h" />
+    <ClInclude Include="src\Compiler\Frontend\Parser.h" />
+    <ClInclude Include="src\Compiler\Frontend\PreProcessor.h" />
+    <ClInclude Include="src\Compiler\Frontend\PreProcessorScanner.h" />
+    <ClInclude Include="src\Compiler\Frontend\Scanner.h" />
+    <ClInclude Include="src\Compiler\Frontend\SLParser.h" />
+    <ClInclude Include="src\Compiler\Frontend\SLScanner.h" />
+    <ClInclude Include="src\Compiler\Helper.h" />
+    <ClInclude Include="src\Compiler\JoinString.h" />
+    <ClInclude Include="src\Compiler\ReflectionPrinter.h" />
+    <ClInclude Include="src\Compiler\Report\ReportHandler.h" />
+    <ClInclude Include="src\Compiler\Report\ReportIdents.h" />
+    <ClInclude Include="src\Compiler\Report\ReportIdentsEN.h" />
+    <ClInclude Include="src\Compiler\ShaderVersion.h" />
+    <ClInclude Include="src\Compiler\SourceCode.h" />
+    <ClInclude Include="src\Compiler\SymbolTable.h" />
+    <ClInclude Include="src\Compiler\Variant.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\ConsoleManip.h" />
-    <ClInclude Include="include\Export.h" />
-    <ClInclude Include="include\IncludeHandler.h" />
-    <ClInclude Include="include\IndentHandler.h" />
-    <ClInclude Include="include\Log.h" />
-    <ClInclude Include="include\Reflection.h" />
-    <ClInclude Include="include\Report.h" />
-    <ClInclude Include="include\Targets.h" />
-    <ClInclude Include="include\Version.h" />
-    <ClInclude Include="include\Xsc.h" />
-    <ClInclude Include="source\AST\AST.h" />
-    <ClInclude Include="source\AST\ASTEnums.h" />
-    <ClInclude Include="source\AST\ASTFactory.h" />
-    <ClInclude Include="source\AST\Identifier.h" />
-    <ClInclude Include="source\AST\SourceArea.h" />
-    <ClInclude Include="source\AST\SourcePosition.h" />
-    <ClInclude Include="source\AST\Token.h" />
-    <ClInclude Include="source\AST\TokenString.h" />
-    <ClInclude Include="source\AST\TypeDenoter.h" />
-    <ClInclude Include="source\AST\Visitor\ASTPrinter.h" />
-    <ClInclude Include="source\AST\Visitor\ControlPathAnalyzer.h" />
-    <ClInclude Include="source\AST\Visitor\EndOfScopeAnalyzer.h" />
-    <ClInclude Include="source\AST\Visitor\ExprConverter.h" />
-    <ClInclude Include="source\AST\Visitor\ExprEvaluator.h" />
-    <ClInclude Include="source\AST\Visitor\FuncNameConverter.h" />
-    <ClInclude Include="source\AST\Visitor\Optimizer.h" />
-    <ClInclude Include="source\AST\Visitor\ReferenceAnalyzer.h" />
-    <ClInclude Include="source\AST\Visitor\ReflectionAnalyzer.h" />
-    <ClInclude Include="source\AST\Visitor\StructParameterAnalyzer.h" />
-    <ClInclude Include="source\AST\Visitor\TypeConverter.h" />
-    <ClInclude Include="source\AST\Visitor\Visitor.h" />
-    <ClInclude Include="source\AST\Visitor\VisitorTracker.h" />
-    <ClInclude Include="source\Backend\Converter.h" />
-    <ClInclude Include="source\Backend\Generator.h" />
-    <ClInclude Include="source\Backend\GLSL\GLSLConverter.h" />
-    <ClInclude Include="source\Backend\GLSL\GLSLExtensionAgent.h" />
-    <ClInclude Include="source\Backend\GLSL\GLSLGenerator.h" />
-    <ClInclude Include="source\Backend\GLSL\GLSLIntrinsics.h" />
-    <ClInclude Include="source\CiString.h" />
-    <ClInclude Include="source\CodeWriter.h" />
-    <ClInclude Include="source\Compiler.h" />
-    <ClInclude Include="source\Dictionary.h" />
-    <ClInclude Include="source\Exception.h" />
-    <ClInclude Include="source\Flags.h" />
-    <ClInclude Include="source\Frontend\Analyzer.h" />
-    <ClInclude Include="source\Frontend\GLSL\GLSLExtensions.h" />
-    <ClInclude Include="source\Frontend\GLSL\GLSLKeywords.h" />
-    <ClInclude Include="source\Frontend\GLSL\GLSLParser.h" />
-    <ClInclude Include="source\Frontend\GLSL\GLSLPreProcessor.h" />
-    <ClInclude Include="source\Frontend\GLSL\GLSLScanner.h" />
-    <ClInclude Include="source\Frontend\HLSL\HLSLAnalyzer.h" />
-    <ClInclude Include="source\Frontend\HLSL\HLSLIntrinsics.h" />
-    <ClInclude Include="source\Frontend\HLSL\HLSLKeywords.h" />
-    <ClInclude Include="source\Frontend\HLSL\HLSLParser.h" />
-    <ClInclude Include="source\Frontend\HLSL\HLSLScanner.h" />
-    <ClInclude Include="source\Frontend\IntrinsicAdept.h" />
-    <ClInclude Include="source\Frontend\Parser.h" />
-    <ClInclude Include="source\Frontend\PreProcessor.h" />
-    <ClInclude Include="source\Frontend\PreProcessorScanner.h" />
-    <ClInclude Include="source\Frontend\Scanner.h" />
-    <ClInclude Include="source\Frontend\SLParser.h" />
-    <ClInclude Include="source\Frontend\SLScanner.h" />
-    <ClInclude Include="source\Helper.h" />
-    <ClInclude Include="source\JoinString.h" />
-    <ClInclude Include="source\ReflectionPrinter.h" />
-    <ClInclude Include="source\Report\ReportHandler.h" />
-    <ClInclude Include="source\Report\ReportIdents.h" />
-    <ClInclude Include="source\Report\ReportIdentsEN.h" />
-    <ClInclude Include="source\ShaderVersion.h" />
-    <ClInclude Include="source\SourceCode.h" />
-    <ClInclude Include="source\SymbolTable.h" />
-    <ClInclude Include="source\Variant.h" />
+    <ClCompile Include="src\Compiler\AST\AST.cpp" />
+    <ClCompile Include="src\Compiler\AST\ASTEnums.cpp" />
+    <ClCompile Include="src\Compiler\AST\ASTFactory.cpp" />
+    <ClCompile Include="src\Compiler\AST\Identifier.cpp" />
+    <ClCompile Include="src\Compiler\AST\SourceArea.cpp" />
+    <ClCompile Include="src\Compiler\AST\SourcePosition.cpp" />
+    <ClCompile Include="src\Compiler\AST\Token.cpp" />
+    <ClCompile Include="src\Compiler\AST\TokenString.cpp" />
+    <ClCompile Include="src\Compiler\AST\TypeDenoter.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\ASTPrinter.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\ControlPathAnalyzer.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\EndOfScopeAnalyzer.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\ExprConverter.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\ExprEvaluator.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\FuncNameConverter.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\Optimizer.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\ReferenceAnalyzer.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\ReflectionAnalyzer.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\StructParameterAnalyzer.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\TypeConverter.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\Visitor.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\VisitorTracker.cpp" />
+    <ClCompile Include="src\Compiler\Backend\Converter.cpp" />
+    <ClCompile Include="src\Compiler\Backend\Generator.cpp" />
+    <ClCompile Include="src\Compiler\Backend\GLSL\GLSLConverter.cpp" />
+    <ClCompile Include="src\Compiler\Backend\GLSL\GLSLExtensionAgent.cpp" />
+    <ClCompile Include="src\Compiler\Backend\GLSL\GLSLGenerator.cpp" />
+    <ClCompile Include="src\Compiler\Backend\GLSL\GLSLIntrinsics.cpp" />
+    <ClCompile Include="src\Compiler\CodeWriter.cpp" />
+    <ClCompile Include="src\Compiler\Compiler.cpp" />
+    <ClCompile Include="src\Compiler\ConsoleManip.cpp" />
+    <ClCompile Include="src\Compiler\Exception.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\Analyzer.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\GLSL\GLSLExtensions.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\GLSL\GLSLKeywords.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\GLSL\GLSLParser.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\GLSL\GLSLPreProcessor.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\GLSL\GLSLScanner.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\HLSL\HLSLAnalyzer.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\HLSL\HLSLIntrinsics.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\HLSL\HLSLKeywords.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\HLSL\HLSLParser.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\HLSL\HLSLScanner.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\IntrinsicAdept.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\Parser.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\PreProcessor.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\PreProcessorScanner.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\Scanner.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\SLParser.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\SLScanner.cpp" />
+    <ClCompile Include="src\Compiler\IncludeHandler.cpp" />
+    <ClCompile Include="src\Compiler\IndentHandler.cpp" />
+    <ClCompile Include="src\Compiler\JoinString.cpp" />
+    <ClCompile Include="src\Compiler\Log.cpp" />
+    <ClCompile Include="src\Compiler\Platform\Win32\Win32ConsoleManip.cpp" />
+    <ClCompile Include="src\Compiler\Reflection.cpp" />
+    <ClCompile Include="src\Compiler\ReflectionPrinter.cpp" />
+    <ClCompile Include="src\Compiler\Report\Report.cpp" />
+    <ClCompile Include="src\Compiler\Report\ReportHandler.cpp" />
+    <ClCompile Include="src\Compiler\ShaderVersion.cpp" />
+    <ClCompile Include="src\Compiler\SourceCode.cpp" />
+    <ClCompile Include="src\Compiler\SymbolTable.cpp" />
+    <ClCompile Include="src\Compiler\Targets.cpp" />
+    <ClCompile Include="src\Compiler\Variant.cpp" />
+    <ClCompile Include="src\Compiler\Xsc.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{EF2F3F08-6DD4-4957-A31C-589DED7D97CE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NuclearShaderCompiler</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -214,24 +213,31 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\DebugX86\</OutDir>
+    <IntDir>Build\DebugX86\</IntDir>
+    <TargetName>NuclearShaderCompiler</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Bin\ReleaseX86\</OutDir>
+    <IntDir>..\Bin\ReleaseX86\</IntDir>
+    <TargetName>NuclearShaderCompiler</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>inc;src/Compiler;src/Compiler/AST;src/Compiler/AST/Visitor;src/Compiler/Frontend;src/Compiler/Frontend/HLSL;src/Compiler/Frontend/GLSL;src/Compiler/Backend;src/Compiler/Backend/GLSL;src/Compiler/Report;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -254,14 +260,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>inc;src/Compiler;src/Compiler/AST;src/Compiler/AST/Visitor;src/Compiler/Frontend;src/Compiler/Frontend/HLSL;src/Compiler/Frontend/GLSL;src/Compiler/Backend;src/Compiler/Backend/GLSL;src/Compiler/Report;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
