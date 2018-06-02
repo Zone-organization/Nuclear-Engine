@@ -30,6 +30,7 @@
 #include <SFML/Window/WindowImpl.hpp>
 #include <SFML/System/Sleep.hpp>
 #include <SFML/System/Err.hpp>
+#include "SFML\Window\ContextType.h"
 
 namespace
 {
@@ -122,7 +123,7 @@ void Window::create(VideoMode mode, const String& title, Uint32 style, const Con
     // Recreate the window implementation
     m_impl = priv::WindowImpl::create(mode, title, style, settings);
 
-	if (OpenGLRenderAPI)
+	if (IsOpenGLContext())
 	{
 		m_context = priv::GlContext::create(settings, m_impl, mode.bitsPerPixel);
 	}
@@ -140,7 +141,7 @@ void Window::create(WindowHandle handle, const ContextSettings& settings)
     // Recreate the window implementation
     m_impl = priv::WindowImpl::create(handle);
 
-	if (OpenGLRenderAPI)
+	if (IsOpenGLContext())
 	{
 		m_context = priv::GlContext::create(settings, m_impl, VideoMode::getDesktopMode().bitsPerPixel);
 	}

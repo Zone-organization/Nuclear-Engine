@@ -27,13 +27,14 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Window/GlResource.hpp>
 #include <SFML/Window/GlContext.hpp>
+#include "SFML\Window\ContextType.h"
 
 namespace sf
 {
 ////////////////////////////////////////////////////////////
 GlResource::GlResource()
 {
-	if (OpenGLRenderAPI)
+	if (IsOpenGLContext())
 	{
 		priv::GlContext::initResource();
 	}
@@ -43,7 +44,7 @@ GlResource::GlResource()
 ////////////////////////////////////////////////////////////
 GlResource::~GlResource()
 {
-	if (OpenGLRenderAPI)
+	if (IsOpenGLContext())
 	{
 		priv::GlContext::cleanupResource();
 	}

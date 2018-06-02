@@ -4,7 +4,7 @@
 #include <GLAD\include\glad\glad.h>
 #include <Engine/Graphics/API/DirectX\DX11Context.h>
 #include <Core\Engine.h>
-
+#include <SFML\Window\ContextType.h>
 #pragma comment (lib, "GLAD.lib")
 
 namespace NuclearEngine
@@ -17,6 +17,12 @@ namespace NuclearEngine
 		bool Application::Start(const ApplicationDesc & Desc)
 		{
 			Graphics::API::Context::SetRenderAPI(Desc.Renderer);
+			sf::SetOpenGLContext(false);
+
+			if (Desc.Renderer == RenderAPI::OpenGL3)
+				sf::SetOpenGLContext(true);
+			
+			//Create Window
 			MainWindow = new sf::Window();
 			sf::ContextSettings settings(24, 8, 0, 3, 3,	sf::ContextSettings::Core, false);
 			MainWindow->create(sf::VideoMode(Desc.WindowWidth, Desc.WindowHeight),Desc.Title,Desc.Style, settings);
@@ -29,6 +35,7 @@ namespace NuclearEngine
 
 			if (Desc.Renderer == RenderAPI::DirectX11)
 			{
+
 				if (!Graphics::API::DirectX::DX11Context::Initialize(MainWindow))
 				{
 					Log.Error("[Application] Failed to initialize DirectX11 in window: " + Desc.Title + "\n");

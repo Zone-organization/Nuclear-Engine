@@ -60,6 +60,7 @@
     <ClInclude Include="SFML\Window\Clipboard.hpp" />
     <ClInclude Include="SFML\Window\Context.hpp" />
     <ClInclude Include="SFML\Window\ContextSettings.hpp" />
+    <ClInclude Include="SFML\Window\ContextType.h" />
     <ClInclude Include="SFML\Window\Cursor.hpp" />
     <ClInclude Include="SFML\Window\Event.hpp" />
     <ClInclude Include="SFML\Window\Export.hpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="source\SFML\System\Win32\ThreadLocalImpl.cpp" />
     <ClCompile Include="source\SFML\Window\Clipboard.cpp" />
     <ClCompile Include="source\SFML\Window\Context.cpp" />
+    <ClCompile Include="source\SFML\Window\ContextType.cpp" />
     <ClCompile Include="source\SFML\Window\Cursor.cpp" />
     <ClCompile Include="source\SFML\Window\GlContext.cpp" />
     <ClCompile Include="source\SFML\Window\GlResource.cpp" />

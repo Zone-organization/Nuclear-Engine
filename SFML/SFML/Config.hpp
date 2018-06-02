@@ -233,6 +233,5 @@ namespace sf
 
 } // namespace sf
 
-static bool OpenGLRenderAPI;
 
 #endif // SFML_CONFIG_HPP
