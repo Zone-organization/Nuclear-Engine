@@ -63,7 +63,7 @@ namespace NuclearEngine
 			//Update Functions
 			void Update(ECS::EntityManager &es, ECS::EventManager &events, ECS::TimeDelta dt) override;
 			void Update_Light();
-
+			void Update_Meshes(ECS::EntityManager & es);
 		private:
 			void Calculate_Light_CB_Size();
 			void BakePixelShader();

@@ -43,6 +43,8 @@ enum class InputShaderVersion
     HLSL5   = 5,            //!< HLSL Shader Model 5.0 (DirectX 11).
     HLSL6   = 6,            //!< HLSL Shader Model 6.0 (DirectX 12).
 
+	NSL     = 7,			//!< Nuclear Shader Language
+
     GLSL    = 0x0000ffff,   //!< GLSL (OpenGL).
     ESSL    = 0x0001ffff,   //!< GLSL (OpenGL ES).
     VKSL    = 0x0002ffff,   //!< GLSL (Vulkan).
@@ -51,6 +53,11 @@ enum class InputShaderVersion
 //! Output shader version enumeration.
 enum class OutputShaderVersion
 {
+	HLSL3 = 3,					    //!< HLSL Shader Model 3.0 (DirectX 9).
+	HLSL4 = 4,					     //!< HLSL Shader Model 4.0 (DirectX 10).
+	HLSL5 = 5,					      //!< HLSL Shader Model 5.0 (DirectX 11).
+	HLSL6 = 6,					      //!< HLSL Shader Model 6.0 (DirectX 12).
+
     GLSL110 = 110,                  //!< GLSL 1.10 (OpenGL 2.0).
     GLSL120 = 120,                  //!< GLSL 1.20 (OpenGL 2.1).
     GLSL130 = 130,                  //!< GLSL 1.30 (OpenGL 3.0).

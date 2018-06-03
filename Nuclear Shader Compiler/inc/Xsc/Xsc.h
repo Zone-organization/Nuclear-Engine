@@ -252,7 +252,7 @@ struct ShaderInput
     std::shared_ptr<std::istream>   sourceCode;
 
     //! Specifies the input shader version (e.g. InputShaderVersion::HLSL5 for "HLSL 5"). By default InputShaderVersion::HLSL5.
-    InputShaderVersion              shaderVersion       = InputShaderVersion::HLSL5;
+    InputShaderVersion              shaderVersion       = InputShaderVersion::NSL;
     
     //! Specifies the target shader (Vertex, Fragment etc.). By default ShaderTarget::Undefined.
     ShaderTarget                    shaderTarget        = ShaderTarget::Undefined;

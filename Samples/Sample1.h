@@ -42,10 +42,6 @@ protected:
 	ECS::Entity ELamp;
 	ECS::Entity ENanosuit;
 
-	Components::MeshComponent CubeModel;
-	Components::MeshComponent LampModel;
-	Components::MeshComponent NanosuitModel;
-
 	// positions all containers
 	Math::Vector3 cubePositions[10] = 
 	{
@@ -163,15 +159,15 @@ public:
 	}
 	void SetupEntities()
 	{
-		CubeModel.mMesh = &CubeAsset;
-		//ECube = SampleScene.Entities.Create();
-		//ECube.Assign<Components::MeshComponent>(CubeModel);
-		LampModel.mMesh = &SphereAsset;
-		//ELamp = SampleScene.Entities.Create();
-		//ELamp.Assign<Components::MeshComponent>(LampModel);
-		NanosuitModel.mMesh = &NanosuitAsset;
-		//ENanosuit = SampleScene.Entities.Create();
-		//ENanosuit.Assign<Components::MeshComponent>(NanosuitModel);
+		//Create Entities
+		ECube = SampleScene.Entities.Create();
+		ELamp = SampleScene.Entities.Create();
+		ENanosuit = SampleScene.Entities.Create();
+
+		//Assign Components
+		ECube.Assign<Components::MeshComponent>(&CubeAsset , true);
+		ELamp.Assign<Components::MeshComponent>(&SphereAsset , true);
+		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset);
 
 	}
 	void Load()
@@ -260,6 +256,9 @@ public:
 		states.DefaultSampler.PSBind(0);
 		states.DefaultSampler.PSBind(1);
 
+		std::vector<Math::Matrix4> CubeTransforms;
+		std::vector<Math::Matrix4> LampTransforms;
+		
 		for (unsigned int i = 0; i < 10; i++)
 		{
 			// calculate the model matrix for each object and pass it to shader before drawing
@@ -268,34 +267,28 @@ public:
 			float angle = 20.0f * i * ClockTime;
 
 			model = Math::Rotate(model, Math::radians(angle), Math::Vector3(1.0f, 0.3f, 0.5f));
-			Camera.SetModelMatrix(model);
-
-			Renderer->InstantRender(&CubeModel);
+			CubeTransforms.push_back(model);
 		}
 		for (unsigned int i = 0; i < 9; i++)
 		{
 			Math::Matrix4 model(1.0f);
 			model = Math::Translate(model, pointLightPositions[i]);
 			model = Math::Scale(model, Math::Vector3(0.25f));
-			Camera.SetModelMatrix(model);
-			Renderer->InstantRender(&LampModel);
+			LampTransforms.push_back(model);
 		}
 
-		Math::Matrix4 NanosuitMatrix(1.0f);
-		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
-		NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
-		Camera.SetModelMatrix(NanosuitMatrix);
-		Renderer->InstantRender(&NanosuitModel);
+		ECube.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = CubeTransforms;
+		ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
+
+		ENanosuit.GetTransform()->SetPosition(Math::Vector3(5.0f, -1.75f, 0.0f));
+		ENanosuit.GetTransform()->SetScale(Math::Vector3(0.25f));
+		ENanosuit.GetTransform()->SetRotation(Math::angleAxis(ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f)));
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
 
-		Renderer->Update_Light();
-
 		SampleScene.Systems.Update_All(dt);
-
-
+		
 		Skybox.Render();
 		states.EnabledDepth_DisabledStencil.Bind();
 

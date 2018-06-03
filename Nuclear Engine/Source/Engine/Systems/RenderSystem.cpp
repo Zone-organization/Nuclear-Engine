@@ -182,6 +182,33 @@ namespace NuclearEngine
 			NE_Light_CB.Update(LightsBuffer.data(), NE_Light_CB_Size);
 		}
 
+		void RenderSystem::Update_Meshes(ECS::EntityManager & es)
+		{
+			ECS::ComponentHandle<Components::MeshComponent> MeshObject;
+			for (ECS::Entity entity : es.entities_with_components(MeshObject))
+			{
+				if (!MeshObject.Get()->mMultiRender)
+				{
+					entity.GetTransform()->Update();
+					ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransformMatrix());
+					InstantRender(MeshObject.Get());
+				}
+				else 
+				{
+					for (auto i : MeshObject.Get()->mMultiRenderTransforms)
+					{
+						ActiveCamera->SetModelMatrix(i);
+						InstantRender(MeshObject.Get());
+					}
+				}
+			}
+		}
+		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
+		{
+			Update_Meshes(es);
+			Update_Light();
+
+		}
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{
 			if (object->mMesh)
@@ -257,26 +284,7 @@ namespace NuclearEngine
 			PostProcessTexture.PSBind(0);
 			InstantRender(&PostProcessScreenQuad);
 		}
-		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
-		{
-			ECS::ComponentHandle<Components::MeshComponent> ModelObject;
-			for (ECS::Entity entity : es.entities_with_components(ModelObject))
-			{
-				entity.GetTransform()->Update();
-				ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransformMatrix());
-				if (ModelObject.Get()->mMaterial)
-				{
-					if (ModelObject.Get()->mMaterial->mVShader.isValid)
-						ModelObject.Get()->mMaterial->mVShader.Bind();
-					//else
-
-					if (ModelObject.Get()->mMaterial->mPShader.isValid)
-						ModelObject.Get()->mMaterial->mPShader.Bind();
-					//else
-				}
-				InstantRender(ModelObject.Get());
-			}
-		}
+	
 		void RenderSystem::Calculate_Light_CB_Size()
 		{
 			NE_Light_CB_Size = sizeof(Math::Vector4);

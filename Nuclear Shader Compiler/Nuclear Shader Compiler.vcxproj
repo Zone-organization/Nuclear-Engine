@@ -75,6 +75,7 @@
     <ClInclude Include="src\Compiler\Frontend\HLSL\HLSLParser.h" />
     <ClInclude Include="src\Compiler\Frontend\HLSL\HLSLScanner.h" />
     <ClInclude Include="src\Compiler\Frontend\IntrinsicAdept.h" />
+    <ClInclude Include="src\Compiler\Frontend\NSL\NSLParser.h" />
     <ClInclude Include="src\Compiler\Frontend\Parser.h" />
     <ClInclude Include="src\Compiler\Frontend\PreProcessor.h" />
     <ClInclude Include="src\Compiler\Frontend\PreProcessorScanner.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="src\Compiler\Frontend\HLSL\HLSLParser.cpp" />
     <ClCompile Include="src\Compiler\Frontend\HLSL\HLSLScanner.cpp" />
     <ClCompile Include="src\Compiler\Frontend\IntrinsicAdept.cpp" />
+    <ClCompile Include="src\Compiler\Frontend\NSL\NSLParser.cpp" />
     <ClCompile Include="src\Compiler\Frontend\Parser.cpp" />
     <ClCompile Include="src\Compiler\Frontend\PreProcessor.cpp" />
     <ClCompile Include="src\Compiler\Frontend\PreProcessorScanner.cpp" />
