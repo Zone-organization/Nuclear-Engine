@@ -8,7 +8,7 @@
 /// @ingroup gtx
 ///
 /// Include <glm/gtx/associated_min_max.hpp> to use the features of this extension.
-/// 
+///
 /// @brief Min and max functions that return associated values not the compared onces.
 
 #pragma once
@@ -24,7 +24,7 @@
 #	pragma message("GLM: GLM_GTX_associated_min_max extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_associated_min_max
 	/// @{

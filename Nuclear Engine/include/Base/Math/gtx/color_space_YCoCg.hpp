@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_color_space_YCoCg extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_color_space_YCoCg
 	/// @{

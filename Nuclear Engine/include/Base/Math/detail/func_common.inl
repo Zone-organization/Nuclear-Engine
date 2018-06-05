@@ -8,7 +8,7 @@
 #include "_vectorize.hpp"
 #include <limits>
 
-namespace Math
+namespace glm
 {
 	// min
 	template<typename genType>
@@ -63,7 +63,7 @@ namespace Math
 
 }//namespace glm
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<typename genFIType, bool /*signed*/>
@@ -184,7 +184,7 @@ namespace detail
 	{
 		GLM_FUNC_QUALIFIER static vec<L, T, Q> call(vec<L, T, Q> const& x)
 		{
-			return vec<L, T, Q>(Math::lessThan(vec<L, T, Q>(0), x)) - vec<L, T, Q>(Math::lessThan(x, vec<L, T, Q>(0)));
+			return vec<L, T, Q>(glm::lessThan(vec<L, T, Q>(0), x)) - vec<L, T, Q>(glm::lessThan(x, vec<L, T, Q>(0)));
 		}
 	};
 
@@ -289,7 +289,7 @@ namespace detail
 	{
 		GLM_FUNC_QUALIFIER static vec<L, T, Q> call(vec<L, T, Q> const& edge, vec<L, T, Q> const& x)
 		{
-			return mix(vec<L, T, Q>(1), vec<L, T, Q>(0), Math::lessThan(x, edge));
+			return mix(vec<L, T, Q>(1), vec<L, T, Q>(0), glm::lessThan(x, edge));
 		}
 	};
 
@@ -319,13 +319,13 @@ namespace detail
 
 	// sign
 	// fast and works for any type
-	template<typename genFIType> 
+	template<typename genFIType>
 	GLM_FUNC_QUALIFIER genFIType sign(genFIType x)
 	{
 		GLM_STATIC_ASSERT(
 			std::numeric_limits<genFIType>::is_iec559 || (std::numeric_limits<genFIType>::is_signed && std::numeric_limits<genFIType>::is_integer),
 			"'sign' only accept signed inputs");
-		
+
 		return detail::compute_sign<1, genFIType, defaultp, std::numeric_limits<genFIType>::is_iec559, highp>::call(vec<1, genFIType>(x)).x;
 	}
 
@@ -378,7 +378,7 @@ namespace detail
 	GLM_FUNC_QUALIFIER genType roundEven(genType x)
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<genType>::is_iec559, "'roundEven' only accept floating-point inputs");
-		
+
 		int Integer = static_cast<int>(x);
 		genType IntegerPart = static_cast<genType>(Integer);
 		genType FractionalPart = fract(x);
@@ -391,7 +391,7 @@ namespace detail
 		{
 			return IntegerPart;
 		}
-		else if(x <= static_cast<genType>(0)) // Work around... 
+		else if(x <= static_cast<genType>(0)) // Work around...
 		{
 			return IntegerPart - static_cast<genType>(1);
 		}
@@ -622,7 +622,7 @@ namespace detail
 #	if GLM_HAS_CXX11_STL
 		using std::isnan;
 #	else
-		template<typename genType> 
+		template<typename genType>
 		GLM_FUNC_QUALIFIER bool isnan(genType x)
 		{
 			GLM_STATIC_ASSERT(std::numeric_limits<genType>::is_iec559, "'isnan' only accept floating-point inputs");
@@ -640,7 +640,7 @@ namespace detail
 #			elif (GLM_COMPILER & (GLM_COMPILER_GCC | GLM_COMPILER_CLANG)) && (GLM_PLATFORM & GLM_PLATFORM_ANDROID) && __cplusplus < 201103L
 				return _isnan(x) != 0;
 #			elif GLM_COMPILER & GLM_COMPILER_CUDA
-				return isnan(x) != 0;
+				return ::isnan(x) != 0;
 #			else
 				return std::isnan(x);
 #			endif
@@ -654,14 +654,14 @@ namespace detail
 
 		vec<L, bool, Q> Result;
 		for (length_t l = 0; l < v.length(); ++l)
-			Result[l] = Math::isnan(v[l]);
+			Result[l] = glm::isnan(v[l]);
 		return Result;
 	}
 
 #	if GLM_HAS_CXX11_STL
 		using std::isinf;
 #	else
-		template<typename genType> 
+		template<typename genType>
 		GLM_FUNC_QUALIFIER bool isinf(genType x)
 		{
 			GLM_STATIC_ASSERT(std::numeric_limits<genType>::is_iec559, "'isinf' only accept floating-point inputs");
@@ -682,7 +682,7 @@ namespace detail
 #				endif
 #			elif GLM_COMPILER & GLM_COMPILER_CUDA
 				// http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/docs/online/group__CUDA__MATH__DOUBLE_g13431dd2b40b51f9139cbb7f50c18fab.html#g13431dd2b40b51f9139cbb7f50c18fab
-				return isinf(double(x)) != 0;
+				return ::isinf(double(x)) != 0;
 #			else
 				return std::isinf(x);
 #			endif
@@ -696,7 +696,7 @@ namespace detail
 
 		vec<L, bool, Q> Result;
 		for (length_t l = 0; l < v.length(); ++l)
-			Result[l] = Math::isinf(v[l]);
+			Result[l] = glm::isinf(v[l]);
 		return Result;
 	}
 
@@ -719,12 +719,12 @@ namespace detail
 		return reinterpret_cast<vec<L, int, Q>&>(const_cast<vec<L, float, Q>&>(v));
 	}
 
-	GLM_FUNC_QUALIFIER Uint32 floatBitsToUint(float const& v)
+	GLM_FUNC_QUALIFIER uint floatBitsToUint(float const& v)
 	{
 		union
 		{
 			float in;
-			Uint32 out;
+			uint out;
 		} u;
 
 		u.in = v;
@@ -733,9 +733,9 @@ namespace detail
 	}
 
 	template<length_t L, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, Uint32, Q> floatBitsToUint(vec<L, float, Q> const& v)
+	GLM_FUNC_QUALIFIER vec<L, uint, Q> floatBitsToUint(vec<L, float, Q> const& v)
 	{
-		return reinterpret_cast<vec<L, Uint32, Q>&>(const_cast<vec<L, float, Q>&>(v));
+		return reinterpret_cast<vec<L, uint, Q>&>(const_cast<vec<L, float, Q>&>(v));
 	}
 
 	GLM_FUNC_QUALIFIER float intBitsToFloat(int const& v)
@@ -757,11 +757,11 @@ namespace detail
 		return reinterpret_cast<vec<L, float, Q>&>(const_cast<vec<L, int, Q>&>(v));
 	}
 
-	GLM_FUNC_QUALIFIER float uintBitsToFloat(Uint32 const& v)
+	GLM_FUNC_QUALIFIER float uintBitsToFloat(uint const& v)
 	{
 		union
 		{
-			Uint32 in;
+			uint in;
 			float out;
 		} u;
 
@@ -771,11 +771,11 @@ namespace detail
 	}
 
 	template<length_t L, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, float, Q> uintBitsToFloat(vec<L, Uint32, Q> const& v)
+	GLM_FUNC_QUALIFIER vec<L, float, Q> uintBitsToFloat(vec<L, uint, Q> const& v)
 	{
-		return reinterpret_cast<vec<L, float, Q>&>(const_cast<vec<L, Uint32, Q>&>(v));
+		return reinterpret_cast<vec<L, float, Q>&>(const_cast<vec<L, uint, Q>&>(v));
 	}
-	
+
 	template<typename genType>
 	GLM_FUNC_QUALIFIER genType fma(genType const& a, genType const& b, genType const& c)
 	{

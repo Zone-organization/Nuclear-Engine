@@ -1,13 +1,13 @@
 /// @ref ext_vector_relational
 /// @file glm/ext/vector_relational.hpp
-/// 
+///
 /// @see core (dependence)
 ///
 /// @defgroup ext_vector_relational GLM_EXT_vector_relational
 /// @ingroup ext
 ///
 /// Include <glm/ext/vector_relational.hpp> to use the features of this extension.
-/// 
+///
 /// Comparison functions for a user defined epsilon values.
 
 #pragma once
@@ -20,7 +20,7 @@
 #	pragma message("GLM: GLM_EXT_vector_relational extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup ext_vector_relational
 	/// @{
@@ -86,26 +86,6 @@ namespace Math
 	/// @see ext_vector_relational
 	template<typename genType>
 	GLM_FUNC_DECL bool notEqual(genType const& x, genType const& y, genType const& epsilon);
-
-	/// Returns whether vector components values are within an interval. A open interval excludes its endpoints, and is denoted with square brackets.
-	///
-	/// @tparam L Integer between 1 and 4 included that qualify the dimension of the vector
-	/// @tparam T Floating-point or integer scalar types
-	/// @tparam Q Value from qualifier enum
-	///
-	/// @see ext_vector_relational
-	template <length_t L, typename T, qualifier Q>
-	GLM_FUNC_DECL vec<L, bool, Q> openBounded(vec<L, T, Q> const& Value, vec<L, T, Q> const& Min, vec<L, T, Q> const& Max);
-
-	/// Returns whether vector components values are within an interval. A closed interval includes its endpoints, and is denoted with square brackets.
-	///
-	/// @tparam L Integer between 1 and 4 included that qualify the dimension of the vector
-	/// @tparam T Floating-point or integer scalar types
-	/// @tparam Q Value from qualifier enum
-	///
-	/// @see ext_vector_relational
-	template <length_t L, typename T, qualifier Q>
-	GLM_FUNC_DECL vec<L, bool, Q> closeBounded(vec<L, T, Q> const& Value, vec<L, T, Q> const& Min, vec<L, T, Q> const& Max);
 
 	/// @}
 }//namespace glm

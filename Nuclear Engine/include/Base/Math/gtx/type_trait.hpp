@@ -25,7 +25,7 @@
 #	pragma message("GLM: GLM_GTX_type_trait extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_type_trait
 	/// @{

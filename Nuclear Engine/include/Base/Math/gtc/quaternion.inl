@@ -8,7 +8,7 @@
 #include "epsilon.hpp"
 #include <limits>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<typename T, qualifier Q, bool Aligned>
@@ -85,9 +85,12 @@ namespace detail
 
 	// -- Implicit basic constructors --
 
-#	if !GLM_HAS_DEFAULTED_FUNCTIONS
+#	if !GLM_HAS_DEFAULTED_FUNCTIONS || defined(GLM_FORCE_CTOR_INIT)
 		template<typename T, qualifier Q>
 		GLM_FUNC_QUALIFIER GLM_CONSTEXPR tquat<T, Q>::tquat()
+#			ifdef GLM_FORCE_CTOR_INIT
+			: x(0), y(0), z(0), w(1)
+#			endif
 		{}
 #	endif
 
@@ -127,7 +130,7 @@ namespace detail
 		, w(static_cast<T>(q.w))
 	{}
 
-	//template<typename valType> 
+	//template<typename valType>
 	//GLM_FUNC_QUALIFIER tquat<valType>::tquat
 	//(
 	//	valType const& pitch,
@@ -138,7 +141,7 @@ namespace detail
 	//	vec<3, valType> eulerAngle(pitch * valType(0.5), yaw * valType(0.5), roll * valType(0.5));
 	//	vec<3, valType> c = glm::cos(eulerAngle * valType(0.5));
 	//	vec<3, valType> s = glm::sin(eulerAngle * valType(0.5));
-	//	
+	//
 	//	this->w = c.x * c.y * c.z + s.x * s.y * s.z;
 	//	this->x = s.x * c.y * c.z - c.x * s.y * s.z;
 	//	this->y = c.x * s.y * c.z + s.x * c.y * s.z;
@@ -163,18 +166,18 @@ namespace detail
 		else
 		{
 			// Otherwise, build quaternion the standard way.
-			t = Cross(u, v);
+			t = cross(u, v);
 		}
 
-	    *this = Normalize(tquat<T, Q>(real_part, t.x, t.y, t.z));
+	    *this = normalize(tquat<T, Q>(real_part, t.x, t.y, t.z));
 	}
 
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q>::tquat(vec<3, T, Q> const& eulerAngle)
 	{
-		vec<3, T, Q> c = Math::cos(eulerAngle * T(0.5));
-		vec<3, T, Q> s = Math::sin(eulerAngle * T(0.5));
-		
+		vec<3, T, Q> c = glm::cos(eulerAngle * T(0.5));
+		vec<3, T, Q> s = glm::sin(eulerAngle * T(0.5));
+
 		this->w = c.x * c.y * c.z + s.x * s.y * s.z;
 		this->x = s.x * c.y * c.z - c.x * s.y * s.z;
 		this->y = c.x * s.y * c.z + s.x * c.y * s.z;
@@ -199,7 +202,7 @@ namespace detail
 	{
 		return mat3_cast(*this);
 	}
-	
+
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q>::operator mat<4, 4, T, Q>()
 	{
@@ -324,8 +327,8 @@ namespace detail
 	GLM_FUNC_QUALIFIER vec<3, T, Q> operator*(tquat<T, Q> const& q, vec<3, T, Q> const& v)
 	{
 		vec<3, T, Q> const QuatVector(q.x, q.y, q.z);
-		vec<3, T, Q> const uv(Math::Cross(QuatVector, v));
-		vec<3, T, Q> const uuv(Math::Cross(QuatVector, uv));
+		vec<3, T, Q> const uv(glm::cross(QuatVector, v));
+		vec<3, T, Q> const uuv(glm::cross(QuatVector, uv));
 
 		return v + ((uv * q.w) + uuv) * static_cast<T>(2);
 	}
@@ -333,7 +336,7 @@ namespace detail
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<3, T, Q> operator*(vec<3, T, Q> const& v, tquat<T, Q> const& q)
 	{
-		return Math::inverse(q) * v;
+		return glm::inverse(q) * v;
 	}
 
 	template<typename T, qualifier Q>
@@ -345,7 +348,7 @@ namespace detail
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<4, T, Q> operator*(vec<4, T, Q> const& v, tquat<T, Q> const& q)
 	{
-		return Math::inverse(q) * v;
+		return glm::inverse(q) * v;
 	}
 
 	template<typename T, qualifier Q>
@@ -394,11 +397,11 @@ namespace detail
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER T length(tquat<T, Q> const& q)
 	{
-		return Math::sqrt(dot(q, q));
+		return glm::sqrt(dot(q, q));
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER tquat<T, Q> Normalize(tquat<T, Q> const& q)
+	GLM_FUNC_QUALIFIER tquat<T, Q> normalize(tquat<T, Q> const& q)
 	{
 		T len = length(q);
 		if(len <= T(0)) // Problem
@@ -408,7 +411,7 @@ namespace detail
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER tquat<T, Q> Cross(tquat<T, Q> const& q1, tquat<T, Q> const& q2)
+	GLM_FUNC_QUALIFIER tquat<T, Q> cross(tquat<T, Q> const& q1, tquat<T, Q> const& q2)
 	{
 		return tquat<T, Q>(
 			q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z,
@@ -458,8 +461,8 @@ namespace detail
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q> mix2
 	(
-		tquat<T, Q> const& x, 
-		tquat<T, Q> const& y, 
+		tquat<T, Q> const& x,
+		tquat<T, Q> const& y,
 		T const& a
 	)
 	{
@@ -488,7 +491,7 @@ namespace detail
 
 		if(flip)
 			alpha = -alpha;
-		
+
 		return normalize(beta * x + alpha * y);
 	}
 */
@@ -533,7 +536,7 @@ namespace detail
 
 		T cosTheta = dot(x, y);
 
-		// If cosTheta < 0, the interpolation will take the long way around the sphere. 
+		// If cosTheta < 0, the interpolation will take the long way around the sphere.
 		// To fix this, one quat must be negated.
 		if (cosTheta < T(0))
 		{
@@ -560,12 +563,12 @@ namespace detail
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER tquat<T, Q> Rotate(tquat<T, Q> const& q, T const& angle, vec<3, T, Q> const& v)
+	GLM_FUNC_QUALIFIER tquat<T, Q> rotate(tquat<T, Q> const& q, T const& angle, vec<3, T, Q> const& v)
 	{
 		vec<3, T, Q> Tmp = v;
 
 		// Axis of rotation must be normalised
-		T len = Math::length(Tmp);
+		T len = glm::length(Tmp);
 		if(abs(len - T(1)) > T(0.001))
 		{
 			T oneOverLen = static_cast<T>(1) / len;
@@ -719,9 +722,9 @@ namespace detail
 		tquat<T, Q> Result;
 
 		T const a(angle);
-		T const s = Math::sin(a * static_cast<T>(0.5));
+		T const s = glm::sin(a * static_cast<T>(0.5));
 
-		Result.w = Math::cos(a * static_cast<T>(0.5));
+		Result.w = glm::cos(a * static_cast<T>(0.5));
 		Result.x = v.x * s;
 		Result.y = v.y * s;
 		Result.z = v.z * s;

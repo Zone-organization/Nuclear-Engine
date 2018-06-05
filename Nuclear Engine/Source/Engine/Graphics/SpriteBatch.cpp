@@ -72,12 +72,12 @@ namespace NuclearEngine
 			float uvoffsetY = dimensions.y / (float)stH;
 
 			auto particular_transform = *this->TransformationBack;
-			//particular_transform = Math::Translate(particular_transform, Math::Vector3(position + dimensions/2.f, 0.f)); // Translating half dimension to set the point of rotation to the center of the sprite
-			particular_transform = Math::Translate(particular_transform, Math::Vector3(position, 0.f)); // Translating half dimension to set the point of rotation to the center of the sprite
-			particular_transform = Math::Scale(particular_transform, Math::Vector3(scale, 1.f));
-			particular_transform = Math::Translate(particular_transform, Math::Vector3(dimensions / 2.f, 0.f)); // Translating half dimension to set the point of rotation to the center of the sprite
-			particular_transform = Math::Rotate(particular_transform, Math::radians(rotation), Math::Vector3(0.f, 0.f, 1.f));
-			particular_transform = Math::Translate(particular_transform, Math::Vector3(-dimensions / 2.f, 0.f)); // Removing the added half dimension
+			//particular_transform = Math::translate(particular_transform, Math::Vector3(position + dimensions/2.f, 0.f)); // Translating half dimension to set the point of rotation to the center of the sprite
+			particular_transform = Math::translate(particular_transform, Math::Vector3(position, 0.f)); // Translating half dimension to set the point of rotation to the center of the sprite
+			particular_transform = Math::scale(particular_transform, Math::Vector3(scale, 1.f));
+			particular_transform = Math::translate(particular_transform, Math::Vector3(dimensions / 2.f, 0.f)); // Translating half dimension to set the point of rotation to the center of the sprite
+			particular_transform = Math::rotate(particular_transform, Math::radians(rotation), Math::Vector3(0.f, 0.f, 1.f));
+			particular_transform = Math::translate(particular_transform, Math::Vector3(-dimensions / 2.f, 0.f)); // Removing the added half dimension
 
 			auto transformation_result = particular_transform * Math::Vector4(0.f, 0.f, 1.f, 1.f);
 			//auto transformation_result = particular_transform * Math::Vector4(position, 1.f, 1.f); 

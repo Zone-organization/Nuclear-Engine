@@ -1,7 +1,7 @@
 /// @ref gtx_matrix_query
 /// @file glm/gtx/matrix_query.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER bool isNull(mat<2, 2, T, Q> const& m, T const& epsilon)

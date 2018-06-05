@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_log_base extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_log_base
 	/// @{

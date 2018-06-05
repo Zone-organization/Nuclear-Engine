@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_polar_coordinates extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_polar_coordinates
 	/// @{

@@ -10,10 +10,10 @@
 #include <cstring>
 #include <limits>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
-	GLM_FUNC_QUALIFIER Math::uint16 float2half(Math::uint32 f)
+	GLM_FUNC_QUALIFIER glm::uint16 float2half(glm::uint32 f)
 	{
 		// 10 bits    =>                         EE EEEFFFFF
 		// 11 bits    =>                        EEE EEFFFFFF
@@ -31,7 +31,7 @@ namespace detail
 			((f >> 13) & 0x03ff); // Mantissa
 	}
 
-	GLM_FUNC_QUALIFIER Math::uint32 float2packed11(Math::uint32 f)
+	GLM_FUNC_QUALIFIER glm::uint32 float2packed11(glm::uint32 f)
 	{
 		// 10 bits    =>                         EE EEEFFFFF
 		// 11 bits    =>                        EEE EEFFFFFF
@@ -49,7 +49,7 @@ namespace detail
 			((f >> 17) & 0x003f); // Mantissa
 	}
 
-	GLM_FUNC_QUALIFIER Math::uint32 packed11ToFloat(Math::uint32 p)
+	GLM_FUNC_QUALIFIER glm::uint32 packed11ToFloat(glm::uint32 p)
 	{
 		// 10 bits    =>                         EE EEEFFFFF
 		// 11 bits    =>                        EEE EEFFFFFF
@@ -67,7 +67,7 @@ namespace detail
 			((p & 0x003f) << 17); // Mantissa
 	}
 
-	GLM_FUNC_QUALIFIER Math::uint32 float2packed10(Math::uint32 f)
+	GLM_FUNC_QUALIFIER glm::uint32 float2packed10(glm::uint32 f)
 	{
 		// 10 bits    =>                         EE EEEFFFFF
 		// 11 bits    =>                        EEE EEFFFFFF
@@ -88,7 +88,7 @@ namespace detail
 			((f >> 18) & 0x001f); // Mantissa
 	}
 
-	GLM_FUNC_QUALIFIER Math::uint32 packed10ToFloat(Math::uint32 p)
+	GLM_FUNC_QUALIFIER glm::uint32 packed10ToFloat(glm::uint32 p)
 	{
 		// 10 bits    =>                         EE EEEFFFFF
 		// 11 bits    =>                        EEE EEFFFFFF
@@ -109,26 +109,26 @@ namespace detail
 			((p & 0x001f) << 18); // Mantissa
 	}
 
-	GLM_FUNC_QUALIFIER Math::Uint32 half2float(Math::Uint32 h)
+	GLM_FUNC_QUALIFIER glm::uint half2float(glm::uint h)
 	{
 		return ((h & 0x8000) << 16) | ((( h & 0x7c00) + 0x1C000) << 13) | ((h & 0x03FF) << 13);
 	}
 
-	GLM_FUNC_QUALIFIER Math::Uint32 floatTo11bit(float x)
+	GLM_FUNC_QUALIFIER glm::uint floatTo11bit(float x)
 	{
 		if(x == 0.0f)
 			return 0u;
-		else if(Math::isnan(x))
+		else if(glm::isnan(x))
 			return ~0u;
-		else if(Math::isinf(x))
+		else if(glm::isinf(x))
 			return 0x1Fu << 6u;
 
-		Uint32 Pack = 0u;
+		uint Pack = 0u;
 		memcpy(&Pack, &x, sizeof(Pack));
 		return float2packed11(Pack);
 	}
 
-	GLM_FUNC_QUALIFIER float packed11bitToFloat(Math::Uint32 x)
+	GLM_FUNC_QUALIFIER float packed11bitToFloat(glm::uint x)
 	{
 		if(x == 0)
 			return 0.0f;
@@ -137,28 +137,28 @@ namespace detail
 		else if(x == (0x1f << 6))
 			return ~0;//Inf
 
-		Uint32 Result = packed11ToFloat(x);
+		uint Result = packed11ToFloat(x);
 
 		float Temp = 0;
 		memcpy(&Temp, &Result, sizeof(Temp));
 		return Temp;
 	}
 
-	GLM_FUNC_QUALIFIER Math::Uint32 floatTo10bit(float x)
+	GLM_FUNC_QUALIFIER glm::uint floatTo10bit(float x)
 	{
 		if(x == 0.0f)
 			return 0u;
-		else if(Math::isnan(x))
+		else if(glm::isnan(x))
 			return ~0u;
-		else if(Math::isinf(x))
+		else if(glm::isinf(x))
 			return 0x1Fu << 5u;
 
-		Uint32 Pack = 0;
+		uint Pack = 0;
 		memcpy(&Pack, &x, sizeof(Pack));
 		return float2packed10(Pack);
 	}
 
-	GLM_FUNC_QUALIFIER float packed10bitToFloat(Math::Uint32 x)
+	GLM_FUNC_QUALIFIER float packed10bitToFloat(glm::uint x)
 	{
 		if(x == 0)
 			return 0.0f;
@@ -167,14 +167,14 @@ namespace detail
 		else if(x == (0x1f << 5))
 			return ~0;//Inf
 
-		Uint32 Result = packed10ToFloat(x);
+		uint Result = packed10ToFloat(x);
 
 		float Temp = 0;
 		memcpy(&Temp, &Result, sizeof(Temp));
 		return Temp;
 	}
 
-//	GLM_FUNC_QUALIFIER glm::Uint32 f11_f11_f10(float x, float y, float z)
+//	GLM_FUNC_QUALIFIER glm::uint f11_f11_f10(float x, float y, float z)
 //	{
 //		return ((floatTo11bit(x) & ((1 << 11) - 1)) << 0) |  ((floatTo11bit(y) & ((1 << 11) - 1)) << 11) | ((floatTo10bit(z) & ((1 << 10) - 1)) << 22);
 //	}
@@ -183,9 +183,9 @@ namespace detail
 	{
 		struct
 		{
-			Uint32 x : 3;
-			Uint32 y : 3;
-			Uint32 z : 2;
+			uint x : 3;
+			uint y : 3;
+			uint z : 2;
 		} data;
 		uint8 pack;
 	};
@@ -194,8 +194,8 @@ namespace detail
 	{
 		struct
 		{
-			Uint32 x : 4;
-			Uint32 y : 4;
+			uint x : 4;
+			uint y : 4;
 		} data;
 		uint8 pack;
 	};
@@ -204,10 +204,10 @@ namespace detail
 	{
 		struct
 		{
-			Uint32 x : 4;
-			Uint32 y : 4;
-			Uint32 z : 4;
-			Uint32 w : 4;
+			uint x : 4;
+			uint y : 4;
+			uint z : 4;
+			uint w : 4;
 		} data;
 		uint16 pack;
 	};
@@ -216,9 +216,9 @@ namespace detail
 	{
 		struct
 		{
-			Uint32 x : 5;
-			Uint32 y : 6;
-			Uint32 z : 5;
+			uint x : 5;
+			uint y : 6;
+			uint z : 5;
 		} data;
 		uint16 pack;
 	};
@@ -227,10 +227,10 @@ namespace detail
 	{
 		struct
 		{
-			Uint32 x : 5;
-			Uint32 y : 5;
-			Uint32 z : 5;
-			Uint32 w : 1;
+			uint x : 5;
+			uint y : 5;
+			uint z : 5;
+			uint w : 1;
 		} data;
 		uint16 pack;
 	};
@@ -239,10 +239,10 @@ namespace detail
 	{
 		struct
 		{
-			Uint32 x : 10;
-			Uint32 y : 10;
-			Uint32 z : 10;
-			Uint32 w : 2;
+			uint x : 10;
+			uint y : 10;
+			uint z : 10;
+			uint w : 2;
 		} data;
 		uint32 pack;
 	};
@@ -263,10 +263,10 @@ namespace detail
 	{
 		struct
 		{
-			Uint32 x : 9;
-			Uint32 y : 9;
-			Uint32 z : 9;
-			Uint32 w : 5;
+			uint x : 9;
+			uint y : 9;
+			uint z : 9;
+			uint w : 5;
 		} data;
 		uint32 pack;
 	};
@@ -356,13 +356,13 @@ namespace detail
 	{
 		return static_cast<uint8>(round(clamp(v, 0.0f, 1.0f) * 255.0f));
 	}
-	
+
 	GLM_FUNC_QUALIFIER float unpackUnorm1x8(uint8 p)
 	{
 		float const Unpack(p);
 		return Unpack * static_cast<float>(0.0039215686274509803921568627451); // 1 / 255
 	}
-	
+
 	GLM_FUNC_QUALIFIER uint16 packUnorm2x8(vec2 const& v)
 	{
 		u8vec2 const Topack(round(clamp(v, 0.0f, 1.0f) * 255.0f));
@@ -371,7 +371,7 @@ namespace detail
 		memcpy(&Unpack, &Topack, sizeof(Unpack));
 		return Unpack;
 	}
-	
+
 	GLM_FUNC_QUALIFIER vec2 unpackUnorm2x8(uint16 p)
 	{
 		u8vec2 Unpack;
@@ -386,7 +386,7 @@ namespace detail
 		memcpy(&Packed, &Topack, sizeof(Packed));
 		return Packed;
 	}
-	
+
 	GLM_FUNC_QUALIFIER float unpackSnorm1x8(uint8 p)
 	{
 		int8 Unpack = 0;
@@ -395,7 +395,7 @@ namespace detail
 			static_cast<float>(Unpack) * 0.00787401574803149606299212598425f, // 1.0f / 127.0f
 			-1.0f, 1.0f);
 	}
-	
+
 	GLM_FUNC_QUALIFIER uint16 packSnorm2x8(vec2 const& v)
 	{
 		i8vec2 const Topack(round(clamp(v, -1.0f, 1.0f) * 127.0f));
@@ -403,7 +403,7 @@ namespace detail
 		memcpy(&Packed, &Topack, sizeof(Packed));
 		return Packed;
 	}
-	
+
 	GLM_FUNC_QUALIFIER vec2 unpackSnorm2x8(uint16 p)
 	{
 		i8vec2 Unpack;
@@ -452,7 +452,7 @@ namespace detail
 		int16 Unpack = 0;
 		memcpy(&Unpack, &p, sizeof(Unpack));
 		return clamp(
-			static_cast<float>(Unpack) * 3.0518509475997192297128208258309e-5f, //1.0f / 32767.0f, 
+			static_cast<float>(Unpack) * 3.0518509475997192297128208258309e-5f, //1.0f / 32767.0f,
 			-1.0f, 1.0f);
 	}
 
@@ -488,7 +488,7 @@ namespace detail
 		return detail::toFloat32(Unpack);
 	}
 
-	GLM_FUNC_QUALIFIER uint64 packHalf4x16(Math::vec4 const& v)
+	GLM_FUNC_QUALIFIER uint64 packHalf4x16(glm::vec4 const& v)
 	{
 		i16vec4 const Unpack(
 			detail::toFloat16(v.x),
@@ -500,7 +500,7 @@ namespace detail
 		return Packed;
 	}
 
-	GLM_FUNC_QUALIFIER Math::vec4 unpackHalf4x16(uint64 v)
+	GLM_FUNC_QUALIFIER glm::vec4 unpackHalf4x16(uint64 v)
 	{
 		i16vec4 Unpack;
 		memcpy(&Unpack, &v, sizeof(Unpack));
@@ -518,7 +518,7 @@ namespace detail
 		Result.data.y = v.y;
 		Result.data.z = v.z;
 		Result.data.w = v.w;
-		return Result.pack; 
+		return Result.pack;
 	}
 
 	GLM_FUNC_QUALIFIER ivec4 unpackI3x10_1x2(uint32 v)
@@ -539,7 +539,7 @@ namespace detail
 		Result.data.y = v.y;
 		Result.data.z = v.z;
 		Result.data.w = v.w;
-		return Result.pack; 
+		return Result.pack;
 	}
 
 	GLM_FUNC_QUALIFIER uvec4 unpackU3x10_1x2(uint32 v)
@@ -628,7 +628,7 @@ namespace detail
 		Unpack.data.x = ColorComp.x;
 		Unpack.data.y = ColorComp.y;
 		Unpack.data.z = ColorComp.z;
-		Unpack.data.w = Uint32(ExpShared);
+		Unpack.data.w = uint(ExpShared);
 		return Unpack.pack;
 	}
 
@@ -879,14 +879,14 @@ namespace detail
 		return Unpack;
 	}
 
-	GLM_FUNC_QUALIFIER Uint32 packUint2x16(u16vec2 const& v)
+	GLM_FUNC_QUALIFIER uint packUint2x16(u16vec2 const& v)
 	{
-		Uint32 Pack = 0;
+		uint Pack = 0;
 		memcpy(&Pack, &v, sizeof(Pack));
 		return Pack;
 	}
 
-	GLM_FUNC_QUALIFIER u16vec2 unpackUint2x16(Uint32 p)
+	GLM_FUNC_QUALIFIER u16vec2 unpackUint2x16(uint p)
 	{
 		u16vec2 Unpack;
 		memcpy(&Unpack, &p, sizeof(Unpack));

@@ -5,7 +5,7 @@
 #include "../gtc/epsilon.hpp"
 #include "../gtc/constants.hpp"
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t L, typename T, qualifier Q, bool isFloat = true>
@@ -27,7 +27,7 @@ namespace detail
 	};
 }//namespace detail
 
-	template<typename T> 
+	template<typename T>
 	GLM_FUNC_QUALIFIER bool isdenormal(T const& x)
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'isdenormal' only accept floating-point inputs");
@@ -110,5 +110,17 @@ namespace detail
 	GLM_FUNC_QUALIFIER vec<L, T, Q> fmod(vec<L, T, Q> const& x, vec<L, T, Q> const& y)
 	{
 		return detail::compute_fmod<L, T, Q, std::numeric_limits<T>::is_iec559>::call(x, y);
+	}
+
+	template <length_t L, typename T, qualifier Q>
+	GLM_FUNC_QUALIFIER vec<L, bool, Q> openBounded(vec<L, T, Q> const& Value, vec<L, T, Q> const& Min, vec<L, T, Q> const& Max)
+	{
+		return greaterThan(Value, Min) && lessThan(Value, Max);
+	}
+
+	template <length_t L, typename T, qualifier Q>
+	GLM_FUNC_QUALIFIER vec<L, bool, Q> closeBounded(vec<L, T, Q> const& Value, vec<L, T, Q> const& Min, vec<L, T, Q> const& Max)
+	{
+		return greaterThanEqual(Value, Min) && lessThanEqual(Value, Max);
 	}
 }//namespace glm

@@ -33,7 +33,7 @@
 #	endif
 #endif//GLM_COMPILER
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_compatibility
 	/// @{

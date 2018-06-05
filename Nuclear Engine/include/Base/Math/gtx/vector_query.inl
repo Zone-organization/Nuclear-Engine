@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t L, typename T, qualifier Q>
@@ -14,7 +14,7 @@ namespace detail
 	{
 		GLM_FUNC_QUALIFIER static bool call(vec<2, T, Q> const& v0, vec<2, T, Q> const& v1, T const& epsilon)
 		{
-			return length(Cross(vec<3, T, Q>(v0, static_cast<T>(0)), vec<3, T, Q>(v1, static_cast<T>(0)))) < epsilon;
+			return length(cross(vec<3, T, Q>(v0, static_cast<T>(0)), vec<3, T, Q>(v1, static_cast<T>(0)))) < epsilon;
 		}
 	};
 
@@ -23,7 +23,7 @@ namespace detail
 	{
 		GLM_FUNC_QUALIFIER static bool call(vec<3, T, Q> const& v0, vec<3, T, Q> const& v1, T const& epsilon)
 		{
-			return length(Cross(v0, v1)) < epsilon;
+			return length(cross(v0, v1)) < epsilon;
 		}
 	};
 
@@ -32,7 +32,7 @@ namespace detail
 	{
 		GLM_FUNC_QUALIFIER static bool call(vec<4, T, Q> const& v0, vec<4, T, Q> const& v1, T const& epsilon)
 		{
-			return length(Cross(vec<3, T, Q>(v0), vec<3, T, Q>(v1))) < epsilon;
+			return length(cross(vec<3, T, Q>(v0), vec<3, T, Q>(v1))) < epsilon;
 		}
 	};
 

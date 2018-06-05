@@ -255,7 +255,7 @@ namespace NuclearEngine {
 					v.Position.z = radius * sinf(phi)*sinf(theta);
 
 					Math::Vector3 p = v.Position;
-					v.Normal = Math::Normalize(p);
+					v.Normal = Math::normalize(p);
 
 					// Partial derivative of P with respect to theta
 					v.Tangents.x = -radius * sinf(phi)*sinf(theta);
@@ -263,7 +263,7 @@ namespace NuclearEngine {
 					v.Tangents.z = +radius * sinf(phi)*cosf(theta);
 
 					Math::Vector3 T = v.Tangents;
-					v.Tangents = Math::Normalize(T);
+					v.Tangents = Math::normalize(T);
 
 					v.UV.x = theta / (2 * MathPI);
 					v.UV.y = phi / MathPI;

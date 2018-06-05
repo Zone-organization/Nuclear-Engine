@@ -7,7 +7,7 @@
 /// @ingroup gtc
 ///
 /// Include <glm/gtc/constants.hpp> to use the features of this extension.
-/// 
+///
 /// Provide a list of constants and precomputed useful values.
 
 #pragma once
@@ -19,7 +19,7 @@
 #	pragma message("GLM: GLM_GTC_constants extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtc_constants
 	/// @{

@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_handed_coordinate_space extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_handed_coordinate_space
 	/// @{

@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_optimum_pow extension included")
 #endif
 
-namespace Math{
+namespace glm{
 namespace gtx
 {
 	/// @addtogroup gtx_optimum_pow

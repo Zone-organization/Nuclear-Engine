@@ -4,7 +4,7 @@
 #include <limits>
 #include "../gtc/constants.hpp"
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q> quat_identity()
@@ -13,13 +13,13 @@ namespace Math
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<3, T, Q> Cross(vec<3, T, Q> const& v, tquat<T, Q> const& q)
+	GLM_FUNC_QUALIFIER vec<3, T, Q> cross(vec<3, T, Q> const& v, tquat<T, Q> const& q)
 	{
 		return inverse(q) * v;
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<3, T, Q> Cross(tquat<T, Q> const& q, vec<3, T, Q> const& v)
+	GLM_FUNC_QUALIFIER vec<3, T, Q> cross(tquat<T, Q> const& q, vec<3, T, Q> const& v)
 	{
 		return q * v;
 	}
@@ -108,13 +108,13 @@ namespace Math
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<3, T, Q> Rotate(tquat<T, Q> const& q, vec<3, T, Q> const& v)
+	GLM_FUNC_QUALIFIER vec<3, T, Q> rotate(tquat<T, Q> const& q, vec<3, T, Q> const& v)
 	{
 		return q * v;
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<4, T, Q> Rotate(tquat<T, Q> const& q, vec<4, T, Q> const& v)
+	GLM_FUNC_QUALIFIER vec<4, T, Q> rotate(tquat<T, Q> const& q, vec<4, T, Q> const& v)
 	{
 		return q * v;
 	}
@@ -175,7 +175,7 @@ namespace Math
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q> fastMix(tquat<T, Q> const& x, tquat<T, Q> const& y, T const& a)
 	{
-		return glm::Normalize(x * (static_cast<T>(1) - a) + (y * a));
+		return glm::normalize(x * (static_cast<T>(1) - a) + (y * a));
 	}
 
 	template<typename T, qualifier Q>
@@ -196,27 +196,27 @@ namespace Math
 			// So guess one; any will do as long as it's perpendicular to start
 			// This implementation favors a rotation around the Up axis (Y),
 			// since it's often what you want to do.
-			rotationAxis = Cross(vec<3, T, Q>(0, 0, 1), orig);
+			rotationAxis = cross(vec<3, T, Q>(0, 0, 1), orig);
 			if(length2(rotationAxis) < epsilon<T>()) // bad luck, they were parallel, try again!
-				rotationAxis = Cross(vec<3, T, Q>(1, 0, 0), orig);
+				rotationAxis = cross(vec<3, T, Q>(1, 0, 0), orig);
 
-			rotationAxis = Normalize(rotationAxis);
+			rotationAxis = normalize(rotationAxis);
 			return angleAxis(pi<T>(), rotationAxis);
 		}
 
 		// Implementation from Stan Melax's Game Programming Gems 1 article
-		rotationAxis = Cross(orig, dest);
+		rotationAxis = cross(orig, dest);
 
 		T s = sqrt((T(1) + cosTheta) * static_cast<T>(2));
 		T invs = static_cast<T>(1) / s;
 
 		return tquat<T, Q>(
-			s * static_cast<T>(0.5f), 
+			s * static_cast<T>(0.5f),
 			rotationAxis.x * invs,
 			rotationAxis.y * invs,
 			rotationAxis.z * invs);
 	}
-	
+
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q> quatLookAt(vec<3, T, Q> const& direction, vec<3, T, Q> const& up)
 	{
@@ -233,8 +233,8 @@ namespace Math
 		mat<3, 3, T, Q> Result;
 
 		Result[2] = -direction;
-		Result[0] = Normalize(Cross(up, Result[2]));
-		Result[1] = Cross(Result[2], Result[0]);
+		Result[0] = normalize(cross(up, Result[2]));
+		Result[1] = cross(Result[2], Result[0]);
 
 		return quat_cast(Result);
 	}
@@ -245,8 +245,8 @@ namespace Math
 		mat<3, 3, T, Q> Result;
 
 		Result[2] = direction;
-		Result[0] = Normalize(Cross(up, Result[2]));
-		Result[1] = Cross(Result[2], Result[0]);
+		Result[0] = normalize(cross(up, Result[2]));
+		Result[1] = cross(Result[2], Result[0]);
 
 		return quat_cast(Result);
 	}

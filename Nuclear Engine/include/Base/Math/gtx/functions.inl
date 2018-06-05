@@ -3,7 +3,7 @@
 
 #include "../exponential.hpp"
 
-namespace Math
+namespace glm
 {
 	template<typename T>
 	GLM_FUNC_QUALIFIER T gauss

@@ -176,7 +176,7 @@ public:
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
-		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
 		Renderer->AddLight(&spotLight);
@@ -263,17 +263,17 @@ public:
 		{
 			// calculate the model matrix for each object and pass it to shader before drawing
 			Math::Matrix4 model(1.0f);
-			model = Math::Translate(model, cubePositions[i]);
+			model = Math::translate(model, cubePositions[i]);
 			float angle = 20.0f * i * ClockTime;
 
-			model = Math::Rotate(model, Math::radians(angle), Math::Vector3(1.0f, 0.3f, 0.5f));
+			model = Math::rotate(model, Math::radians(angle), Math::Vector3(1.0f, 0.3f, 0.5f));
 			CubeTransforms.push_back(model);
 		}
 		for (unsigned int i = 0; i < 9; i++)
 		{
 			Math::Matrix4 model(1.0f);
-			model = Math::Translate(model, pointLightPositions[i]);
-			model = Math::Scale(model, Math::Vector3(0.25f));
+			model = Math::translate(model, pointLightPositions[i]);
+			model = Math::scale(model, Math::Vector3(0.25f));
 			LampTransforms.push_back(model);
 		}
 
@@ -281,9 +281,9 @@ public:
 		ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
 		
 		Math::Matrix4 NanosuitMatrix(1.0f);
-		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
-		NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
+		NanosuitMatrix = Math::translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
+		NanosuitMatrix = Math::scale(NanosuitMatrix, Math::Vector3(0.25f));
+		NanosuitMatrix = Math::rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
 		ENanosuit.GetTransform()->SetTransform(NanosuitMatrix);
 
 		spotLight.SetPosition(Camera.GetPosition());

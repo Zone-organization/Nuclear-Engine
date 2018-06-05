@@ -4,7 +4,7 @@
 #include <cstring>
 #include <limits>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template <typename T, bool isFloat = std::numeric_limits<T>::is_iec559>

@@ -1,6 +1,6 @@
 /// @ref gtx_functions
 /// @file glm/gtx/functions.hpp
-/// 
+///
 /// @see core (dependence)
 /// @see gtc_quaternion (dependence)
 ///
@@ -8,7 +8,7 @@
 /// @ingroup gtx
 ///
 /// Include <glm/gtx/functions.hpp> to use the features of this extension.
-/// 
+///
 /// List of useful common functions.
 
 #pragma once
@@ -22,7 +22,7 @@
 #	pragma message("GLM: GLM_GTX_functions extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_functions
 	/// @{

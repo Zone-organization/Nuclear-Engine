@@ -1,7 +1,7 @@
 /// @ref gtx_color_space_YCoCg
 /// @file glm/gtx/color_space_YCoCg.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<3, T, Q> rgb2YCoCg

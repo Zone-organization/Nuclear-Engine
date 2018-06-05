@@ -1,7 +1,7 @@
 /// @ref gtx_mixed_product
 /// @file glm/gtx/mixed_product.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER T mixedProduct
@@ -11,6 +11,6 @@ namespace Math
 		vec<3, T, Q> const& v3
 	)
 	{
-		return dot(Cross(v1, v2), v3);
+		return dot(cross(v1, v2), v3);
 	}
 }//namespace glm

@@ -25,7 +25,7 @@
 #	pragma message("GLM: GLM_GTX_gradient_paint extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_gradient_paint
 	/// @{

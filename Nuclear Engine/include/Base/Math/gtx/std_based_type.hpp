@@ -25,7 +25,7 @@
 #	pragma message("GLM: GLM_GTX_std_based_type extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_std_based_type
 	/// @{

@@ -4,14 +4,14 @@
 #include "../gtc/constants.hpp"
 #include "../gtc/epsilon.hpp"
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	/// Make a linear combination of two vectors and return the result.
 	// result = (a * ascl) + (b * bscl)
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<3, T, Q> combine(
-		vec<3, T, Q> const& a, 
+		vec<3, T, Q> const& a,
 		vec<3, T, Q> const& b,
 		T ascl, T bscl)
 	{
@@ -56,8 +56,8 @@ namespace detail
 
 		// First, isolate perspective.  This is the messiest.
 		if(
-			epsilonNotEqual(LocalMatrix[0][3], static_cast<T>(0), epsilon<T>()) || 
-			epsilonNotEqual(LocalMatrix[1][3], static_cast<T>(0), epsilon<T>()) || 
+			epsilonNotEqual(LocalMatrix[0][3], static_cast<T>(0), epsilon<T>()) ||
+			epsilonNotEqual(LocalMatrix[1][3], static_cast<T>(0), epsilon<T>()) ||
 			epsilonNotEqual(LocalMatrix[2][3], static_cast<T>(0), epsilon<T>()))
 		{
 			// rightHandSide is the right hand side of the equation.
@@ -70,8 +70,8 @@ namespace detail
 			// Solve the equation by inverting PerspectiveMatrix and multiplying
 			// rightHandSide by the inverse.  (This is the easiest way, not
 			// necessarily the best.)
-			mat<4, 4, T, Q> InversePerspectiveMatrix = Math::inverse(PerspectiveMatrix);//   inverse(PerspectiveMatrix, inversePerspectiveMatrix);
-			mat<4, 4, T, Q> TransposedInversePerspectiveMatrix = Math::transpose(InversePerspectiveMatrix);//   transposeMatrix4(inversePerspectiveMatrix, transposedInversePerspectiveMatrix);
+			mat<4, 4, T, Q> InversePerspectiveMatrix = glm::inverse(PerspectiveMatrix);//   inverse(PerspectiveMatrix, inversePerspectiveMatrix);
+			mat<4, 4, T, Q> TransposedInversePerspectiveMatrix = glm::transpose(InversePerspectiveMatrix);//   transposeMatrix4(inversePerspectiveMatrix, transposedInversePerspectiveMatrix);
 
 			Perspective = TransposedInversePerspectiveMatrix * RightHandSide;
 			//  v4MulPointByMatrix(rightHandSide, transposedInversePerspectiveMatrix, perspectivePoint);
@@ -112,9 +112,9 @@ namespace detail
 		Skew.z /= Scale.y;
 
 		// Compute XZ and YZ shears, orthogonalize 3rd row.
-		Skew.y = Math::dot(Row[0], Row[2]);
+		Skew.y = glm::dot(Row[0], Row[2]);
 		Row[2] = detail::combine(Row[2], Row[0], static_cast<T>(1), -Skew.y);
-		Skew.x = Math::dot(Row[1], Row[2]);
+		Skew.x = glm::dot(Row[1], Row[2]);
 		Row[2] = detail::combine(Row[2], Row[1], static_cast<T>(1), -Skew.x);
 
 		// Next, get Z scale and normalize 3rd row.
@@ -126,7 +126,7 @@ namespace detail
 		// At this point, the matrix (in rows[]) is orthonormal.
 		// Check for a coordinate system flip.  If the determinant
 		// is -1, then negate the matrix and the scaling factors.
-		Pdum3 = Cross(Row[1], Row[2]); // v3Cross(row[1], row[2], Pdum3);
+		Pdum3 = cross(Row[1], Row[2]); // v3Cross(row[1], row[2], Pdum3);
 		if(dot(Row[0], Pdum3) < 0)
 		{
 			for(length_t i = 0; i < 3; i++)

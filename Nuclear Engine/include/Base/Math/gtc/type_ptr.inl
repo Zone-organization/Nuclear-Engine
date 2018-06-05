@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtc_type_ptr
 	/// @{

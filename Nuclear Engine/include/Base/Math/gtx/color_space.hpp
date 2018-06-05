@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_color_space extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_color_space
 	/// @{
@@ -39,7 +39,7 @@ namespace Math
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> hsvColor(
 		vec<3, T, Q> const& rgbValue);
-		
+
 	/// Build a saturation matrix.
 	/// @see gtx_color_space
 	template<typename T>
@@ -52,14 +52,14 @@ namespace Math
 	GLM_FUNC_DECL vec<3, T, Q> saturation(
 		T const s,
 		vec<3, T, Q> const& color);
-		
+
 	/// Modify the saturation of a color.
 	/// @see gtx_color_space
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<4, T, Q> saturation(
 		T const s,
 		vec<4, T, Q> const& color);
-		
+
 	/// Compute color luminosity associating ratios (0.33, 0.59, 0.11) to RGB canals.
 	/// @see gtx_color_space
 	template<typename T, qualifier Q>

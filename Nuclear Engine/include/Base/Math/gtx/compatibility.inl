@@ -3,7 +3,7 @@
 
 #include <limits>
 
-namespace Math
+namespace glm
 {
 	// isfinite
 	template<typename genType>

@@ -3,7 +3,7 @@
 
 #include "../gtc/constants.hpp"
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER void axisAngle(mat<4, 4, T, Q> const& mat, vec<3, T, Q> & axis, T & angle)
@@ -94,7 +94,7 @@ namespace Math
 		T c = cos(angle);
 		T s = sin(angle);
 		T t = static_cast<T>(1) - c;
-		vec<3, T, Q> n = Normalize(axis);
+		vec<3, T, Q> n = normalize(axis);
 
 		return mat<4, 4, T, Q>(
 			t * n.x * n.x + c,          t * n.x * n.y + n.z * s,    t * n.x * n.z - n.y * s,    static_cast<T>(0.0),

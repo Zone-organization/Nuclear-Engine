@@ -1,7 +1,7 @@
 /// @ref gtc_matrix_inverse
 /// @file glm/gtc/matrix_inverse.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER mat<3, 3, T, Q> affineInverse(mat<3, 3, T, Q> const& m)

@@ -3,7 +3,7 @@
 
 #include "../detail/qualifier.hpp"
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t L, typename T, qualifier Q, bool Aligned>

@@ -1,7 +1,7 @@
 /// @ref gtx_color_encoding
 /// @file glm/gtx/color_encoding.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<3, T, Q> convertLinearSRGBToD65XYZ(vec<3, T, Q> const& ColorLinearSRGB)

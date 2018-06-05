@@ -1,7 +1,7 @@
 /// @ref gtx_gradient_paint
 /// @file glm/gtx/gradient_paint.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER T radialGradient

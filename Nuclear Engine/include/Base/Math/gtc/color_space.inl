@@ -1,7 +1,7 @@
 /// @ref gtc_color_space
 /// @file glm/gtc/color_space.inl
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t L, typename T, qualifier Q>

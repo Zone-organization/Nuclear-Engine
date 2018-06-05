@@ -1,12 +1,12 @@
 /// @ref gtc_noise
 /// @file glm/gtc/noise.inl
 ///
-// Based on the work of Stefan Gustavson and Ashima Arts on "webgl-noise": 
-// https://github.com/ashima/webgl-noise 
-// Following Stefan Gustavson's paper "Simplex noise demystified": 
+// Based on the work of Stefan Gustavson and Ashima Arts on "webgl-noise":
+// https://github.com/ashima/webgl-noise
+// Following Stefan Gustavson's paper "Simplex noise demystified":
 // http://www.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
 
-namespace Math{
+namespace glm{
 namespace gtc
 {
 	template<typename T, qualifier Q>
@@ -15,7 +15,7 @@ namespace gtc
 		vec<3, T, Q> pXYZ = floor(fract(vec<3, T, Q>(j) * vec<3, T, Q>(ip)) * T(7)) * ip[2] - T(1);
 		T pW = static_cast<T>(1.5) - dot(abs(pXYZ), vec<3, T, Q>(1));
 		vec<4, T, Q> s = vec<4, T, Q>(lessThan(vec<4, T, Q>(pXYZ, pW), vec<4, T, Q>(0.0)));
-		pXYZ = pXYZ + (vec<3, T, Q>(s) * T(2) - T(1)) * s.w; 
+		pXYZ = pXYZ + (vec<3, T, Q>(s) * T(2) - T(1)) * s.w;
 		return vec<4, T, Q>(pXYZ, pW);
 	}
 }//namespace gtc
@@ -24,8 +24,8 @@ namespace gtc
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER T perlin(vec<2, T, Q> const& Position)
 	{
-		vec<4, T, Q> Pi = Math::floor(vec<4, T, Q>(Position.x, Position.y, Position.x, Position.y)) + vec<4, T, Q>(0.0, 0.0, 1.0, 1.0);
-		vec<4, T, Q> Pf = Math::fract(vec<4, T, Q>(Position.x, Position.y, Position.x, Position.y)) - vec<4, T, Q>(0.0, 0.0, 1.0, 1.0);
+		vec<4, T, Q> Pi = glm::floor(vec<4, T, Q>(Position.x, Position.y, Position.x, Position.y)) + vec<4, T, Q>(0.0, 0.0, 1.0, 1.0);
+		vec<4, T, Q> Pf = glm::fract(vec<4, T, Q>(Position.x, Position.y, Position.x, Position.y)) - vec<4, T, Q>(0.0, 0.0, 1.0, 1.0);
 		Pi = mod(Pi, vec<4, T, Q>(289)); // To avoid truncation effects in permutation
 		vec<4, T, Q> ix(Pi.x, Pi.z, Pi.x, Pi.z);
 		vec<4, T, Q> iy(Pi.y, Pi.y, Pi.w, Pi.w);
@@ -34,9 +34,9 @@ namespace gtc
 
 		vec<4, T, Q> i = detail::permute(detail::permute(ix) + iy);
 
-		vec<4, T, Q> gx = static_cast<T>(2) * Math::fract(i / T(41)) - T(1);
-		vec<4, T, Q> gy = Math::abs(gx) - T(0.5);
-		vec<4, T, Q> tx = Math::floor(gx + T(0.5));
+		vec<4, T, Q> gx = static_cast<T>(2) * glm::fract(i / T(41)) - T(1);
+		vec<4, T, Q> gy = glm::abs(gx) - T(0.5);
+		vec<4, T, Q> tx = glm::floor(gx + T(0.5));
 		gx = gx - tx;
 
 		vec<2, T, Q> g00(gx.x, gy.x);
@@ -128,7 +128,7 @@ namespace gtc
 		vec<3, T, Q> fade_xyz = detail::fade(Pf0);
 		vec<4, T, Q> n_z = mix(vec<4, T, Q>(n000, n100, n010, n110), vec<4, T, Q>(n001, n101, n011, n111), fade_xyz.z);
 		vec<2, T, Q> n_yz = mix(vec<2, T, Q>(n_z.x, n_z.y), vec<2, T, Q>(n_z.z, n_z.w), fade_xyz.y);
-		T n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
+		T n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
 		return T(2.2) * n_xyz;
 	}
 	/*
@@ -199,9 +199,9 @@ namespace gtc
 		vec<3, T, Q> fade_xyz = fade(Pf0);
 		vec<4, T, Q> n_z = mix(vec<4, T, Q>(n000, n100, n010, n110), vec<4, T, Q>(n001, n101, n011, n111), fade_xyz.z);
 		vec<2, T, Q> n_yz = mix(
-			vec<2, T, Q>(n_z.x, n_z.y), 
+			vec<2, T, Q>(n_z.x, n_z.y),
 			vec<2, T, Q>(n_z.z, n_z.w), fade_xyz.y);
-		T n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
+		T n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
 		return T(2.2) * n_xyz;
 	}
 	*/
@@ -589,7 +589,7 @@ namespace gtc
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER T simplex(Math::vec<2, T, Q> const& v)
+	GLM_FUNC_QUALIFIER T simplex(glm::vec<2, T, Q> const& v)
 	{
 		vec<4, T, Q> const C = vec<4, T, Q>(
 			T( 0.211324865405187),  // (3.0 -  sqrt(3.0)) / 6.0
@@ -619,7 +619,7 @@ namespace gtc
 
 		vec<3, T, Q> m = max(vec<3, T, Q>(0.5) - vec<3, T, Q>(
 			dot(x0, x0),
-			dot(vec<2, T, Q>(x12.x, x12.y), vec<2, T, Q>(x12.x, x12.y)), 
+			dot(vec<2, T, Q>(x12.x, x12.y), vec<2, T, Q>(x12.x, x12.y)),
 			dot(vec<2, T, Q>(x12.z, x12.w), vec<2, T, Q>(x12.z, x12.w))), vec<3, T, Q>(0));
 		m = m * m ;
 		m = m * m ;
@@ -770,7 +770,7 @@ namespace gtc
 		vec<4, T, Q> x4 = x0 + C.w;
 
 		// Permutations
-		i = mod(i, vec<4, T, Q>(289)); 
+		i = mod(i, vec<4, T, Q>(289));
 		T j0 = detail::permute(detail::permute(detail::permute(detail::permute(i.w) + i.z) + i.y) + i.x);
 		vec<4, T, Q> j1 = detail::permute(detail::permute(detail::permute(detail::permute(
 			i.w + vec<4, T, Q>(i1.w, i2.w, i3.w, T(1))) +
@@ -801,8 +801,8 @@ namespace gtc
 		vec<2, T, Q> m1 = max(T(0.6) - vec<2, T, Q>(dot(x3, x3), dot(x4, x4)             ), vec<2, T, Q>(0));
 		m0 = m0 * m0;
 		m1 = m1 * m1;
-		return T(49) * 
-			(dot(m0 * m0, vec<3, T, Q>(dot(p0, x0), dot(p1, x1), dot(p2, x2))) + 
+		return T(49) *
+			(dot(m0 * m0, vec<3, T, Q>(dot(p0, x0), dot(p1, x1), dot(p2, x2))) +
 			dot(m1 * m1, vec<2, T, Q>(dot(p3, x3), dot(p4, x4))));
 	}
 }//namespace glm

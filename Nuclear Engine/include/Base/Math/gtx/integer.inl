@@ -1,16 +1,16 @@
 /// @ref gtx_integer
 /// @file glm/gtx/integer.inl
 
-namespace Math
+namespace glm
 {
 	// pow
-	GLM_FUNC_QUALIFIER int pow(int x, Uint32 y)
+	GLM_FUNC_QUALIFIER int pow(int x, uint y)
 	{
 		if(y == 0)
 			return x >= 0 ? 1 : -1;
 
 		int result = x;
-		for(Uint32 i = 1; i < y; ++i)
+		for(uint i = 1; i < y; ++i)
 			result *= x;
 		return result;
 	}
@@ -110,23 +110,23 @@ namespace detail
 			factorial(x.w));
 	}
 
-	GLM_FUNC_QUALIFIER Uint32 pow(Uint32 x, Uint32 y)
+	GLM_FUNC_QUALIFIER uint pow(uint x, uint y)
 	{
 		if (y == 0)
 			return 1u;
 
-		Uint32 result = x;
-		for(Uint32 i = 1; i < y; ++i)
+		uint result = x;
+		for(uint i = 1; i < y; ++i)
 			result *= x;
 		return result;
 	}
 
-	GLM_FUNC_QUALIFIER Uint32 sqrt(Uint32 x)
+	GLM_FUNC_QUALIFIER uint sqrt(uint x)
 	{
 		if(x <= 1) return x;
 
-		Uint32 NextTrial = x >> 1;
-		Uint32 CurrentAnswer;
+		uint NextTrial = x >> 1;
+		uint CurrentAnswer;
 
 		do
 		{
@@ -137,14 +137,14 @@ namespace detail
 		return CurrentAnswer;
 	}
 
-	GLM_FUNC_QUALIFIER Uint32 mod(Uint32 x, Uint32 y)
+	GLM_FUNC_QUALIFIER uint mod(uint x, uint y)
 	{
 		return x - y * (x / y);
 	}
 
 #if(GLM_COMPILER & (GLM_COMPILER_VC | GLM_COMPILER_GCC))
 
-	GLM_FUNC_QUALIFIER unsigned int nlz(unsigned int x) 
+	GLM_FUNC_QUALIFIER unsigned int nlz(unsigned int x)
 	{
 		return 31u - findMSB(x);
 	}
@@ -152,7 +152,7 @@ namespace detail
 #else
 
 	// Hackers Delight: http://www.hackersdelight.org/HDcode/nlz.c.txt
-	GLM_FUNC_QUALIFIER unsigned int nlz(unsigned int x) 
+	GLM_FUNC_QUALIFIER unsigned int nlz(unsigned int x)
 	{
 		int y, m, n;
 

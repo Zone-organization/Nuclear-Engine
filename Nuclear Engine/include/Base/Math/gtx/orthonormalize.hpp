@@ -26,7 +26,7 @@
 #	pragma message("GLM: GLM_GTX_orthonormalize extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_orthonormalize
 	/// @{
@@ -34,13 +34,13 @@ namespace Math
 	/// Returns the orthonormalized matrix of m.
 	///
 	/// @see gtx_orthonormalize
-	template<typename T, qualifier Q> 
+	template<typename T, qualifier Q>
 	GLM_FUNC_DECL mat<3, 3, T, Q> orthonormalize(mat<3, 3, T, Q> const& m);
-		
+
 	/// Orthonormalizes x according y.
 	///
 	/// @see gtx_orthonormalize
-	template<typename T, qualifier Q> 
+	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> orthonormalize(vec<3, T, Q> const& x, vec<3, T, Q> const& y);
 
 	/// @}

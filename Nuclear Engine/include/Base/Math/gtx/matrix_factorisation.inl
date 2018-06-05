@@ -1,7 +1,7 @@
 /// @ref gtx_matrix_factorisation
 /// @file glm/gtx/matrix_factorisation.inl
 
-namespace Math
+namespace glm
 {
 	template <length_t C, length_t R, typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER mat<C, R, T, Q> flipud(mat<C, R, T, Q> const& in)
@@ -49,7 +49,7 @@ namespace Math
 			}
 
 			//Now, Q i-th column is orthogonal to all the previous columns. Normalize it.
-			q[i] = Normalize(q[i]);
+			q[i] = normalize(q[i]);
 
 			//j = [i,C[
 			//Finally, compute the corresponding coefficients of R by computing the projection of the resulting column on the other columns of the input.

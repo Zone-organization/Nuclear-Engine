@@ -5,7 +5,7 @@
 
 #if GLM_ARCH & GLM_ARCH_SSE2_BIT
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<qualifier Q>

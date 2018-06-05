@@ -30,7 +30,7 @@
 #include "../mat2x2.hpp"
 #include <type_traits>
 
-namespace Math
+namespace glm
 {
 	template<typename T, typename Vec>
 	using return_type_scalar_multiplication = typename std::enable_if<

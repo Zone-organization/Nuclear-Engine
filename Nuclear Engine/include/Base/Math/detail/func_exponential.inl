@@ -7,7 +7,7 @@
 #include <cmath>
 #include <cassert>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 #	if GLM_HAS_CXX11_STL
@@ -48,7 +48,7 @@ namespace detail
 			return static_cast<T>(1) / sqrt(x);
 		}
 	};
-		
+
 	template<length_t L, bool Aligned>
 	struct compute_inversesqrt<L, float, lowp, Aligned>
 	{
@@ -56,8 +56,8 @@ namespace detail
 		{
 			vec<L, float, lowp> tmp(x);
 			vec<L, float, lowp> xhalf(tmp * 0.5f);
-			vec<L, Uint32, lowp>* p = reinterpret_cast<vec<L, Uint32, lowp>*>(const_cast<vec<L, float, lowp>*>(&x));
-			vec<L, Uint32, lowp> i = vec<L, Uint32, lowp>(0x5f375a86) - (*p >> vec<L, Uint32, lowp>(1));
+			vec<L, uint, lowp>* p = reinterpret_cast<vec<L, uint, lowp>*>(const_cast<vec<L, float, lowp>*>(&x));
+			vec<L, uint, lowp> i = vec<L, uint, lowp>(0x5f375a86) - (*p >> vec<L, uint, lowp>(1));
 			vec<L, float, lowp>* ptmp = reinterpret_cast<vec<L, float, lowp>*>(&i);
 			tmp = *ptmp;
 			tmp = tmp * (1.5f - xhalf * tmp * tmp);
@@ -137,7 +137,7 @@ namespace detail
 	{
 		return static_cast<genType>(1) / sqrt(x);
 	}
-	
+
 	template<length_t L, typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<L, T, Q> inversesqrt(vec<L, T, Q> const& x)
 	{

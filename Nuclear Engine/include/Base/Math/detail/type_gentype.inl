@@ -1,43 +1,43 @@
 /// @ref core
 /// @file glm/detail/type_gentype.inl
 
-namespace Math{
+namespace glm{
 namespace detail{
 
 /////////////////////////////////
 // Static functions
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 typename base<vT, cT, rT, pT>::size_type base<vT, cT, rT, pT>::col_size()
 {
 	return cT;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 typename base<vT, cT, rT, pT>::size_type base<vT, cT, rT, pT>::row_size()
 {
 	return rT;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 typename base<vT, cT, rT, pT>::size_type base<vT, cT, rT, pT>::value_size()
 {
 	return rT * cT;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 bool base<vT, cT, rT, pT>::is_scalar()
 {
 	return rT == 1 && cT == 1;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 bool base<vT, cT, rT, pT>::is_vector()
 {
 	return rT == 1;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 bool base<vT, cT, rT, pT>::is_matrix()
 {
 	return rT != 1;
@@ -46,13 +46,13 @@ bool base<vT, cT, rT, pT>::is_matrix()
 /////////////////////////////////
 // Constructor
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 base<vT, cT, rT, pT>::base()
 {
 	memset(&this->value, 0, cT * rT * sizeof(vT));
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 base<vT, cT, rT, pT>::base
 (
 	typename base<vT, cT, rT, pT>::class_type const& m
@@ -69,7 +69,7 @@ base<vT, cT, rT, pT>::base
 	}
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 base<vT, cT, rT, pT>::base
 (
 	typename base<vT, cT, rT, pT>::T const& x
@@ -105,7 +105,7 @@ base<vT, cT, rT, pT>::base
 	}
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 base<vT, cT, rT, pT>::base
 (
 	typename base<vT, cT, rT, pT>::value_type const * const x
@@ -114,7 +114,7 @@ base<vT, cT, rT, pT>::base
 	memcpy(&this->value, &x.value, cT * rT * sizeof(vT));
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 base<vT, cT, rT, pT>::base
 (
 	typename base<vT, cT, rT, pT>::col_type const * const x
@@ -131,8 +131,8 @@ base<vT, cT, rT, pT>::base
 	}
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-template<typename vU, Uint32 cU, Uint32 rU, profile pU>
+template<typename vT, uint cT, uint rT, profile pT>
+template<typename vU, uint cU, uint rU, profile pU>
 base<vT, cT, rT, pT>::base
 (
 	base<vU, cU, rU, pU> const& m
@@ -152,7 +152,7 @@ base<vT, cT, rT, pT>::base
 //////////////////////////////////////
 // Accesses
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 typename base<vT, cT, rT, pT>::col_type& base<vT, cT, rT, pT>::operator[]
 (
 	typename base<vT, cT, rT, pT>::size_type i
@@ -161,7 +161,7 @@ typename base<vT, cT, rT, pT>::col_type& base<vT, cT, rT, pT>::operator[]
 	return this->value[i];
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 typename base<vT, cT, rT, pT>::col_type const& base<vT, cT, rT, pT>::operator[]
 (
 	typename base<vT, cT, rT, pT>::size_type i
@@ -173,8 +173,8 @@ typename base<vT, cT, rT, pT>::col_type const& base<vT, cT, rT, pT>::operator[]
 //////////////////////////////////////
 // Unary updatable operators
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator=
 (
 	typename base<vT, cT, rT, pT>::class_type const& x
 )
@@ -183,8 +183,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator+= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator+=
 (
 	typename base<vT, cT, rT, pT>::T const& x
 )
@@ -199,8 +199,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator+=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator+= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator+=
 (
 	typename base<vT, cT, rT, pT>::class_type const& x
 )
@@ -215,8 +215,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator+=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator-= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator-=
 (
 	typename base<vT, cT, rT, pT>::T const& x
 )
@@ -231,8 +231,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator-=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator-= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator-=
 (
 	typename base<vT, cT, rT, pT>::class_type const& x
 )
@@ -247,8 +247,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator-=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator*= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator*=
 (
 	typename base<vT, cT, rT, pT>::T const& x
 )
@@ -263,8 +263,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator*=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator*= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator*=
 (
 	typename base<vT, cT, rT, pT>::class_type const& x
 )
@@ -279,8 +279,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator*=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator/= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator/=
 (
 	typename base<vT, cT, rT, pT>::T const& x
 )
@@ -295,8 +295,8 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator/=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
-typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator/= 
+template<typename vT, uint cT, uint rT, profile pT>
+typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator/=
 (
 	typename base<vT, cT, rT, pT>::class_type const& x
 )
@@ -311,7 +311,7 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator/=
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator++ ()
 {
 	typename base<vT, cT, rT, pT>::size_type stop_col = col_size();
@@ -324,7 +324,7 @@ typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator++ ()
 	return *this;
 }
 
-template<typename vT, Uint32 cT, Uint32 rT, profile pT>
+template<typename vT, uint cT, uint rT, profile pT>
 typename base<vT, cT, rT, pT>::class_type& base<vT, cT, rT, pT>::operator-- ()
 {
 	typename base<vT, cT, rT, pT>::size_type stop_col = col_size();

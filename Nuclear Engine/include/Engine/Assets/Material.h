@@ -44,7 +44,7 @@ namespace NuclearEngine
 			Graphics::API::PixelShader mPShader;
 
 			//PixelShader Textures
-			std::unordered_map<Uint32, TextureSet> mPixelShaderTextures;
+			std::vector<TextureSet> mPixelShaderTextures;
 			TextureSet PixelShaderTS;
 		private:
 			void ParseVertexShader();

@@ -24,7 +24,7 @@ namespace NuclearEngine
 		}
 		void Material::SetTexture(std::string name, const Assets::Texture& value, unsigned int slot)
 		{
-			auto it = mPixelShaderTextures.find(Utilities::Hash(name));
+			/*auto it = mPixelShaderTextures.find(Utilities::Hash(name));
 			if (it != mPixelShaderTextures.end())
 			{
 			//	it->second.mGPUTexture = value;
@@ -33,11 +33,11 @@ namespace NuclearEngine
 			else 
 			{
 				Log.Error("[Material] Setting an non-existing texture (" + name + ").\n");
-			}
+			}*/
 		}
 		void Material::SetTexture(std::string name, const MaterialTexture & texture)
 		{
-			auto it = mPixelShaderTextures.find(Utilities::Hash(name));
+			/*auto it = mPixelShaderTextures.find(Utilities::Hash(name));
 			if (it != mPixelShaderTextures.end())
 			{
 			//	it->second = texture;
@@ -45,7 +45,7 @@ namespace NuclearEngine
 			else
 			{
 				Log.Error("[Material] Setting an non-existing texture (" + name + ").\n");
-			}
+			}*/
 		}
 		void Material::ParseVertexShader()
 		{

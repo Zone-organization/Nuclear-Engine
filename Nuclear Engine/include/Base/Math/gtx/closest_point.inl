@@ -1,7 +1,7 @@
 /// @ref gtx_closest_point
 /// @file glm/gtx/closest_point.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<3, T, Q> closestPointOnLine
@@ -22,7 +22,7 @@ namespace Math
 		if(Distance >= LineLength) return b;
 		return a + LineDirection * Distance;
 	}
-	
+
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<2, T, Q> closestPointOnLine
 	(
@@ -42,5 +42,5 @@ namespace Math
 		if(Distance >= LineLength) return b;
 		return a + LineDirection * Distance;
 	}
-	
+
 }//namespace glm

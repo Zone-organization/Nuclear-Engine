@@ -8,7 +8,7 @@
 #include "type_vec3.hpp"
 #include "type_vec4.hpp"
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t L, typename R, typename T, qualifier Q>

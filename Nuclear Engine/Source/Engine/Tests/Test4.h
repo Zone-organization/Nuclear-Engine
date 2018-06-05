@@ -211,7 +211,7 @@ public:
 		PlaneVB.SetInputLayout(&ShaderIL, &Vertexshader);
 		WindowVB.SetInputLayout(&ShaderIL, &Vertexshader);
 
-		Camera.Initialize(Math::Perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
 
 		Vertexshader.SetConstantBuffer(&Camera.GetCBuffer());
 
@@ -348,12 +348,12 @@ public:
 
 		// cube 1
 		Math::Matrix4 CubeModel(1.0f);
-		CubeModel = Math::Translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
+		CubeModel = Math::translate(CubeModel, Math::Vector3(-1.0f, 0.0f, -1.0f));
 		Camera.SetModelMatrix(CubeModel);
 		Graphics::API::Context::Draw(36);
 		// cube 2
 		CubeModel = Math::Matrix4(1.0f);
-		CubeModel = Math::Translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
+		CubeModel = Math::translate(CubeModel, Math::Vector3(2.0f, 0.0f, 0.0f));
 		Camera.SetModelMatrix(CubeModel);
 		Graphics::API::Context::Draw(36);
 		
@@ -391,7 +391,7 @@ public:
 		for (std::map<float, Math::Vector3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 		{
 			Math::Matrix4 model(1.0f);
-			model = Math::Translate(model, it->second);
+			model = Math::translate(model, it->second);
 			Camera.SetModelMatrix(model);
 			Graphics::API::Context::Draw(6);
 		}		

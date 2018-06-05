@@ -1,12 +1,12 @@
 /// @ref gtx_texture
 /// @file glm/gtx/texture.inl
 
-namespace Math
+namespace glm
 {
 	template <length_t L, typename T, qualifier Q>
 	inline T levels(vec<L, T, Q> const& Extent)
 	{
-		return Math::log2(compMax(Extent)) + static_cast<T>(1);
+		return glm::log2(compMax(Extent)) + static_cast<T>(1);
 	}
 
 	template <typename T>

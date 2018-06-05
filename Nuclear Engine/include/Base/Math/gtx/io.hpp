@@ -10,7 +10,7 @@
 /// @ingroup gtx
 ///
 /// Include <glm/gtx/io.hpp> to use the features of this extension.
-/// 
+///
 /// std::[w]ostream support for glm types
 ///
 /// std::[w]ostream support for glm types + qualifier/width/etc. manipulators
@@ -35,7 +35,7 @@
 #include <locale>  // std::locale, std::locale::facet, std::locale::id
 #include <utility> // std::pair<>
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_io
 	/// @{

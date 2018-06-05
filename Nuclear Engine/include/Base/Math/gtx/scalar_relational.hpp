@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_extend extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_scalar_relational
 	/// @{

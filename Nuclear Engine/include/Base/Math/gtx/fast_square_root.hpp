@@ -9,7 +9,7 @@
 /// Include <glm/gtx/fast_square_root.hpp> to use the features of this extension.
 ///
 /// Fast but less accurate implementations of square root based functions.
-/// - Sqrt optimisation based on Newton's method, 
+/// - Sqrt optimisation based on Newton's method,
 /// www.gamedev.net/community/forums/topic.asp?topic id=139956
 
 #pragma once
@@ -27,7 +27,7 @@
 #	pragma message("GLM: GLM_GTX_fast_square_root extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_fast_square_root
 	/// @{
@@ -35,7 +35,7 @@ namespace Math
 	/// Faster than the common sqrt function but less accurate.
 	///
 	/// @see gtx_fast_square_root extension.
-	template<typename genType> 
+	template<typename genType>
 	GLM_FUNC_DECL genType fastSqrt(genType x);
 
 	/// Faster than the common sqrt function but less accurate.
@@ -47,7 +47,7 @@ namespace Math
 	/// Faster than the common inversesqrt function but less accurate.
 	///
 	/// @see gtx_fast_square_root extension.
-	template<typename genType> 
+	template<typename genType>
 	GLM_FUNC_DECL genType fastInverseSqrt(genType x);
 
 	/// Faster than the common inversesqrt function but less accurate.
@@ -83,7 +83,7 @@ namespace Math
 	/// Faster than the common normalize function but less accurate.
 	///
 	/// @see gtx_fast_square_root extension.
-	template<typename genType> 
+	template<typename genType>
 	GLM_FUNC_DECL genType fastNormalize(genType const& x);
 
 	/// @}

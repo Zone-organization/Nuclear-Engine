@@ -7,7 +7,7 @@
 /// @ingroup gtx
 ///
 /// Include <glm/gtx/bit.hpp> to use the features of this extension.
-/// 
+///
 /// Allow to perform bit operations on integer values
 
 #pragma once
@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_bit extension is deprecated, include GLM_GTC_bitfield and GLM_GTC_integer instead")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_bit
 	/// @{

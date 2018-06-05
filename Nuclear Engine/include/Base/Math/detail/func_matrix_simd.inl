@@ -8,7 +8,7 @@
 #include "../simd/matrix.h"
 #include <cstring>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<qualifier Q>

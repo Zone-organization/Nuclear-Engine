@@ -5,7 +5,7 @@
 
 #include "setup.hpp"
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	typedef short hdata;

@@ -1,7 +1,7 @@
 /// @ref gtx_rotate_vector
 /// @file glm/gtx/rotate_vector.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<3, T, Q> slerp
@@ -26,7 +26,7 @@ namespace Math
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<2, T, Q> Rotate
+	GLM_FUNC_QUALIFIER vec<2, T, Q> rotate
 	(
 		vec<2, T, Q> const& v,
 		T const& angle
@@ -42,14 +42,14 @@ namespace Math
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<3, T, Q> Rotate
+	GLM_FUNC_QUALIFIER vec<3, T, Q> rotate
 	(
 		vec<3, T, Q> const& v,
 		T const& angle,
 		vec<3, T, Q> const& normal
 	)
 	{
-		return mat<3, 3, T, Q>(glm::Rotate(angle, normal)) * v;
+		return mat<3, 3, T, Q>(glm::rotate(angle, normal)) * v;
 	}
 	/*
 	template<typename T, qualifier Q>
@@ -64,14 +64,14 @@ namespace Math
 	}
 	*/
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<4, T, Q> Rotate
+	GLM_FUNC_QUALIFIER vec<4, T, Q> rotate
 	(
 		vec<4, T, Q> const& v,
 		T const& angle,
 		vec<3, T, Q> const& normal
 	)
 	{
-		return Rotate(angle, normal) * v;
+		return rotate(angle, normal) * v;
 	}
 
 	template<typename T, qualifier Q>
@@ -180,9 +180,9 @@ namespace Math
 		if(all(equal(Normal, Up)))
 			return mat<4, 4, T, Q>(T(1));
 
-		vec<3, T, Q> RotationAxis = Cross(Up, Normal);
+		vec<3, T, Q> RotationAxis = cross(Up, Normal);
 		T Angle = acos(dot(Normal, Up));
 
-		return Rotate(Angle, RotationAxis);
+		return rotate(Angle, RotationAxis);
 	}
 }//namespace glm

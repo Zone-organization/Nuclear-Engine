@@ -5,7 +5,7 @@
 
 #include "setup.hpp"
 
-namespace Math
+namespace glm
 {
 	/// Qualify GLM types in term of alignment (packed, aligned) and precision in term of ULPs (lowp, mediump, highp)
 	enum qualifier
@@ -33,12 +33,14 @@ namespace Math
 #		endif
 	};
 
+	typedef qualifier precision;
+
 	template<length_t L, typename T, qualifier Q = defaultp> struct vec;
 	template<length_t C, length_t R, typename T, qualifier Q = defaultp> struct mat;
 
 namespace detail
 {
-	template<Math::qualifier P>
+	template<glm::qualifier P>
 	struct is_aligned
 	{
 		static const bool value = false;
@@ -46,19 +48,19 @@ namespace detail
 
 #	if GLM_HAS_ALIGNED_TYPE
 		template<>
-		struct is_aligned<Math::aligned_lowp>
+		struct is_aligned<glm::aligned_lowp>
 		{
 			static const bool value = true;
 		};
 
 		template<>
-		struct is_aligned<Math::aligned_mediump>
+		struct is_aligned<glm::aligned_mediump>
 		{
 			static const bool value = true;
 		};
 
 		template<>
-		struct is_aligned<Math::aligned_highp>
+		struct is_aligned<glm::aligned_highp>
 		{
 			static const bool value = true;
 		};

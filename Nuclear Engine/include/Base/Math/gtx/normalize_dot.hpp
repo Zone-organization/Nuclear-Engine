@@ -24,7 +24,7 @@
 #	pragma message("GLM: GLM_GTX_normalize_dot extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_normalize_dot
 	/// @{

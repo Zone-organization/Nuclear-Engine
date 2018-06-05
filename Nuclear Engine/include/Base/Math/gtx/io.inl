@@ -7,7 +7,7 @@
 #include "../gtc/matrix_access.hpp" // glm::col, glm::row
 #include "../gtx/type_trait.hpp"    // glm::type<>
 
-namespace Math{
+namespace glm{
 namespace io
 {
 	template<typename CTy>

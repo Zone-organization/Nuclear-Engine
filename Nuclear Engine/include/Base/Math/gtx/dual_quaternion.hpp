@@ -28,7 +28,7 @@
 #	pragma message("GLM: GLM_GTX_dual_quaternion extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_dual_quaternion
 	/// @{
@@ -39,11 +39,11 @@ namespace Math
 		// -- Implementation detail --
 
 		typedef T value_type;
-		typedef Math::tquat<T, Q> part_type;
+		typedef glm::tquat<T, Q> part_type;
 
 		// -- Data --
 
-		Math::tquat<T, Q> real, dual;
+		glm::tquat<T, Q> real, dual;
 
 		// -- Component accesses --
 
@@ -56,7 +56,7 @@ namespace Math
 
 		// -- Implicit basic constructors --
 
-		GLM_FUNC_DECL GLM_CONSTEXPR tdualquat() GLM_DEFAULT;
+		GLM_FUNC_DECL GLM_CONSTEXPR tdualquat() GLM_DEFAULT_CTOR;
 		GLM_FUNC_DECL GLM_CONSTEXPR tdualquat(tdualquat<T, Q> const& d) GLM_DEFAULT;
 		template<qualifier P>
 		GLM_FUNC_DECL GLM_CONSTEXPR tdualquat(tdualquat<T, P> const& d);
@@ -142,7 +142,7 @@ namespace Math
 	///
 	/// @see gtx_dual_quaternion
 	template<typename T, qualifier Q>
-	GLM_FUNC_DECL tdualquat<T, Q> Normalize(tdualquat<T, Q> const& q);
+	GLM_FUNC_DECL tdualquat<T, Q> normalize(tdualquat<T, Q> const& q);
 
 	/// Returns the linear interpolation of two dual quaternion.
 	///

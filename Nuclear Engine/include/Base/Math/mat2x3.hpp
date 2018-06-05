@@ -7,7 +7,7 @@
 
 #include "detail/type_mat2x3.hpp"
 
-namespace Math
+namespace glm
 {
 	/// 2 columns of 3 components matrix of low qualifier floating-point numbers.
 	/// There is no guarantee on the actual qualifier.

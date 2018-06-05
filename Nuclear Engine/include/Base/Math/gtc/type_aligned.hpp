@@ -24,7 +24,7 @@
 #include "../vec4.hpp"
 #include "../gtc/vec1.hpp"
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtc_type_aligned
 	/// @{
@@ -59,13 +59,13 @@ namespace Math
 	typedef vec<1, int, aligned_lowp>		aligned_lowp_ivec1;
 
 	/// 1 component vector aligned in memory of unsigned integer numbers.
-	typedef vec<1, Uint32, aligned_highp>		aligned_highp_uvec1;
+	typedef vec<1, uint, aligned_highp>		aligned_highp_uvec1;
 
 	/// 1 component vector aligned in memory of unsigned integer numbers.
-	typedef vec<1, Uint32, aligned_mediump>	aligned_mediump_uvec1;
+	typedef vec<1, uint, aligned_mediump>	aligned_mediump_uvec1;
 
 	/// 1 component vector aligned in memory of unsigned integer numbers.
-	typedef vec<1, Uint32, aligned_lowp>		aligned_lowp_uvec1;
+	typedef vec<1, uint, aligned_lowp>		aligned_lowp_uvec1;
 
 	/// 1 component vector aligned in memory of bool values.
 	typedef vec<1, bool, aligned_highp>		aligned_highp_bvec1;
@@ -104,13 +104,13 @@ namespace Math
 	typedef vec<1, int, packed_lowp>		packed_lowp_ivec1;
 
 	/// 1 component vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<1, Uint32, packed_highp>		packed_highp_uvec1;
+	typedef vec<1, uint, packed_highp>		packed_highp_uvec1;
 
 	/// 1 component vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<1, Uint32, packed_mediump>	packed_mediump_uvec1;
+	typedef vec<1, uint, packed_mediump>	packed_mediump_uvec1;
 
 	/// 1 component vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<1, Uint32, packed_lowp>		packed_lowp_uvec1;
+	typedef vec<1, uint, packed_lowp>		packed_lowp_uvec1;
 
 	/// 1 component vector tightly packed in memory of bool values.
 	typedef vec<1, bool, packed_highp>		packed_highp_bvec1;
@@ -151,13 +151,13 @@ namespace Math
 	typedef vec<2, int, aligned_lowp>		aligned_lowp_ivec2;
 
 	/// 2 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<2, Uint32, aligned_highp>		aligned_highp_uvec2;
+	typedef vec<2, uint, aligned_highp>		aligned_highp_uvec2;
 
 	/// 2 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<2, Uint32, aligned_mediump>	aligned_mediump_uvec2;
+	typedef vec<2, uint, aligned_mediump>	aligned_mediump_uvec2;
 
 	/// 2 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<2, Uint32, aligned_lowp>		aligned_lowp_uvec2;
+	typedef vec<2, uint, aligned_lowp>		aligned_lowp_uvec2;
 
 	/// 2 components vector aligned in memory of bool values.
 	typedef vec<2, bool, aligned_highp>		aligned_highp_bvec2;
@@ -196,13 +196,13 @@ namespace Math
 	typedef vec<2, int, packed_lowp>		packed_lowp_ivec2;
 
 	/// 2 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<2, Uint32, packed_highp>		packed_highp_uvec2;
+	typedef vec<2, uint, packed_highp>		packed_highp_uvec2;
 
 	/// 2 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<2, Uint32, packed_mediump>	packed_mediump_uvec2;
+	typedef vec<2, uint, packed_mediump>	packed_mediump_uvec2;
 
 	/// 2 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<2, Uint32, packed_lowp>		packed_lowp_uvec2;
+	typedef vec<2, uint, packed_lowp>		packed_lowp_uvec2;
 
 	/// 2 components vector tightly packed in memory of bool values.
 	typedef vec<2, bool, packed_highp>		packed_highp_bvec2;
@@ -243,13 +243,13 @@ namespace Math
 	typedef vec<3, int, aligned_lowp>		aligned_lowp_ivec3;
 
 	/// 3 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<3, Uint32, aligned_highp>		aligned_highp_uvec3;
+	typedef vec<3, uint, aligned_highp>		aligned_highp_uvec3;
 
 	/// 3 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<3, Uint32, aligned_mediump>	aligned_mediump_uvec3;
+	typedef vec<3, uint, aligned_mediump>	aligned_mediump_uvec3;
 
 	/// 3 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<3, Uint32, aligned_lowp>		aligned_lowp_uvec3;
+	typedef vec<3, uint, aligned_lowp>		aligned_lowp_uvec3;
 
 	/// 3 components vector aligned in memory of bool values.
 	typedef vec<3, bool, aligned_highp>		aligned_highp_bvec3;
@@ -288,13 +288,13 @@ namespace Math
 	typedef vec<3, int, packed_lowp>		packed_lowp_ivec3;
 
 	/// 3 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<3, Uint32, packed_highp>		packed_highp_uvec3;
+	typedef vec<3, uint, packed_highp>		packed_highp_uvec3;
 
 	/// 3 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<3, Uint32, packed_mediump>	packed_mediump_uvec3;
+	typedef vec<3, uint, packed_mediump>	packed_mediump_uvec3;
 
 	/// 3 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<3, Uint32, packed_lowp>		packed_lowp_uvec3;
+	typedef vec<3, uint, packed_lowp>		packed_lowp_uvec3;
 
 	/// 3 components vector tightly packed in memory of bool values.
 	typedef vec<3, bool, packed_highp>		packed_highp_bvec3;
@@ -335,13 +335,13 @@ namespace Math
 	typedef vec<4, int, aligned_lowp>		aligned_lowp_ivec4;
 
 	/// 4 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<4, Uint32, aligned_highp>		aligned_highp_uvec4;
+	typedef vec<4, uint, aligned_highp>		aligned_highp_uvec4;
 
 	/// 4 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<4, Uint32, aligned_mediump>	aligned_mediump_uvec4;
+	typedef vec<4, uint, aligned_mediump>	aligned_mediump_uvec4;
 
 	/// 4 components vector aligned in memory of unsigned integer numbers.
-	typedef vec<4, Uint32, aligned_lowp>		aligned_lowp_uvec4;
+	typedef vec<4, uint, aligned_lowp>		aligned_lowp_uvec4;
 
 	/// 4 components vector aligned in memory of bool values.
 	typedef vec<4, bool, aligned_highp>		aligned_highp_bvec4;
@@ -380,13 +380,13 @@ namespace Math
 	typedef vec<4, int, packed_lowp>		packed_lowp_ivec4;
 
 	/// 4 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<4, Uint32, packed_highp>		packed_highp_uvec4;
+	typedef vec<4, uint, packed_highp>		packed_highp_uvec4;
 
 	/// 4 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<4, Uint32, packed_mediump>	packed_mediump_uvec4;
+	typedef vec<4, uint, packed_mediump>	packed_mediump_uvec4;
 
 	/// 4 components vector tightly packed in memory of unsigned integer numbers.
-	typedef vec<4, Uint32, packed_lowp>		packed_lowp_uvec4;
+	typedef vec<4, uint, packed_lowp>		packed_lowp_uvec4;
 
 	/// 4 components vector tightly packed in memory of bool values.
 	typedef vec<4, bool, packed_highp>		packed_highp_bvec4;

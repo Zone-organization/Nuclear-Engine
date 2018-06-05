@@ -3,7 +3,7 @@
 
 #include <limits>
 
-namespace Math
+namespace glm
 {
 	template<typename genType>
 	GLM_FUNC_QUALIFIER GLM_CONSTEXPR genType epsilon()
@@ -50,7 +50,7 @@ namespace Math
 	template<typename genType>
 	GLM_FUNC_QUALIFIER GLM_CONSTEXPR genType three_over_two_pi()
 	{
-		return genType(4.71238898038468985769396507491925432);           
+		return genType(4.71238898038468985769396507491925432);
 	}
 
 	template<typename genType>

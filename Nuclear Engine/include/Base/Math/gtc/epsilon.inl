@@ -7,7 +7,7 @@
 #include "../common.hpp"
 #include "../detail/type_vec.hpp"
 
-namespace Math
+namespace glm
 {
 	template<>
 	GLM_FUNC_QUALIFIER bool epsilonEqual

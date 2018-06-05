@@ -38,12 +38,12 @@ namespace NuclearEngine
 			front.x = cos(radians(Yaw)) * cos(radians(Pitch));
 			front.y = sin(radians(Pitch));
 			front.z = sin(radians(Yaw)) * cos(radians(Pitch));
-			Front = Normalize(front);
+			Front = normalize(front);
 			// Also re-calculate the Right and Up vector
-			Right = Normalize(Math::Cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-			Up = Normalize(Math::Cross(Right, Front));
+			Right = normalize(Math::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+			Up = normalize(Math::cross(Right, Front));
 
-			_CameraBuffer.View = Math::LookAt(position, position + Front, Up);
+			_CameraBuffer.View = Math::lookAt(position, position + Front, Up);
 
 			UpdateMatricesOnly();
 			ConstantBuffer.Update(&_CameraBuffer, sizeof(_CameraBuffer));

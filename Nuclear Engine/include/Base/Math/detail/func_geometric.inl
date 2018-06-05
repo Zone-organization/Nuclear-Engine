@@ -7,7 +7,7 @@
 #include "type_vec4.hpp"
 #include "type_float.hpp"
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t L, typename T, qualifier Q, bool Aligned>
@@ -176,14 +176,14 @@ namespace detail
 
 	// cross
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<3, T, Q> Cross(vec<3, T, Q> const& x, vec<3, T, Q> const& y)
+	GLM_FUNC_QUALIFIER vec<3, T, Q> cross(vec<3, T, Q> const& x, vec<3, T, Q> const& y)
 	{
 		return detail::compute_cross<T, Q, detail::is_aligned<Q>::value>::call(x, y);
 	}
 
 	// normalize
 	template<typename genType>
-	GLM_FUNC_QUALIFIER genType Normalize(genType const& x)
+	GLM_FUNC_QUALIFIER genType normalize(genType const& x)
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<genType>::is_iec559, "'normalize' accepts only floating-point inputs");
 
@@ -191,7 +191,7 @@ namespace detail
 	}
 
 	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, T, Q> Normalize(vec<L, T, Q> const& x)
+	GLM_FUNC_QUALIFIER vec<L, T, Q> normalize(vec<L, T, Q> const& x)
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'normalize' accepts only floating-point inputs");
 

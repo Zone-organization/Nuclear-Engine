@@ -1,7 +1,7 @@
 /// @ref gtx_bit
 /// @file glm/gtx/bit.inl
 
-namespace Math
+namespace glm
 {
 	///////////////////
 	// highestBitValue

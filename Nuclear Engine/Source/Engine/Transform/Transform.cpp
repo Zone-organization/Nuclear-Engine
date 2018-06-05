@@ -82,10 +82,10 @@ namespace NuclearEngine
 	{
 		if (mDirty)
 		{
-			//mTransform = Math::Translate(mPosition)*Math::toMat4(mRotation)*Math::Scale(mScale);
+			//mTransform = Math::translate(mPosition)*Math::toMat4(mRotation)*Math::scale(mScale);
 
-			//mTransform = Math::Translate(mTransform, mPosition);
-			//mTransform = Math::Scale(mTransform, mScale);
+			//mTransform = Math::translate(mTransform, mPosition);
+			//mTransform = Math::scale(mTransform, mScale);
 			//mTransform *= Math::toMat4(mRotation);
 			mDirty = false;
 		}

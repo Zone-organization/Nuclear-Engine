@@ -1,7 +1,7 @@
 /// @ref gtc_swizzle
 /// @file glm/gtc/swizzle.inl
 
-namespace Math
+namespace glm
 {
 
 }

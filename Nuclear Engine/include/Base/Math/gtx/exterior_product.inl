@@ -3,7 +3,7 @@
 
 #include <limits>
 
-namespace Math {
+namespace glm {
 namespace detail
 {
 	template<typename T, qualifier Q, bool Aligned>
@@ -19,7 +19,7 @@ namespace detail
 }//namespace detail
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER T Cross(vec<2, T, Q> const& x, vec<2, T, Q> const& y)
+	GLM_FUNC_QUALIFIER T cross(vec<2, T, Q> const& x, vec<2, T, Q> const& y)
 	{
 		return detail::compute_cross_vec2<T, Q, detail::is_aligned<Q>::value>::call(x, y);
 	}

@@ -7,7 +7,7 @@
 
 #include <immintrin.h>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<qualifier Q>

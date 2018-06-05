@@ -1,7 +1,7 @@
 /// @ref gtx_intersect
 /// @file glm/gtx/intersect.inl
 
-namespace Math
+namespace glm
 {
 	template<typename genType>
 	GLM_FUNC_QUALIFIER bool intersectRayPlane
@@ -11,12 +11,12 @@ namespace Math
 		typename genType::value_type & intersectionDistance
 	)
 	{
-		typename genType::value_type d = Math::dot(dir, planeNormal);
+		typename genType::value_type d = glm::dot(dir, planeNormal);
 		typename genType::value_type Epsilon = std::numeric_limits<typename genType::value_type>::epsilon();
 
 		if(d < -Epsilon)
 		{
-			intersectionDistance = Math::dot(planeOrig - orig, planeNormal) / d;
+			intersectionDistance = glm::dot(planeOrig - orig, planeNormal) / d;
 			return true;
 		}
 
@@ -36,7 +36,7 @@ namespace Math
 		vec<3, T, Q> const edge2 = vert2 - vert0;
 
 		// begin calculating determinant - also used to calculate U parameter
-		vec<3, T, Q> const p = glm::Cross(dir, edge2);
+		vec<3, T, Q> const p = glm::cross(dir, edge2);
 
 		// if determinant is near zero, ray lies in plane of triangle
 		T const det = glm::dot(edge1, p);
@@ -54,7 +54,7 @@ namespace Math
 				return false;
 
 			// prepare to test V parameter
-			qvec = Math::Cross(tvec, edge1);
+			qvec = glm::cross(tvec, edge1);
 
 			// calculate V parameter and test bounds
 			baryPosition.y = glm::dot(dir, qvec);
@@ -72,7 +72,7 @@ namespace Math
 				return false;
 
 			// prepare to test V parameter
-			qvec = glm::Cross(tvec, edge1);
+			qvec = glm::cross(tvec, edge1);
 
 			// calculate V parameter and test bounds
 			baryPosition.y = glm::dot(dir, qvec);
@@ -85,7 +85,7 @@ namespace Math
 		T inv_det = static_cast<T>(1) / det;
 
 		// calculate distance, ray intersects triangle
-		distance = Math::dot(edge2, qvec) * inv_det;
+		distance = glm::dot(edge2, qvec) * inv_det;
 		baryPosition *= inv_det;
 
 		return true;
@@ -131,7 +131,7 @@ namespace Math
 		genType edge1 = vert1 - vert0;
 		genType edge2 = vert2 - vert0;
 
-		genType pvec = Cross(dir, edge2);
+		genType pvec = cross(dir, edge2);
 
 		float det = dot(edge1, pvec);
 
@@ -145,7 +145,7 @@ namespace Math
 		if (position.y < typename genType::value_type(0) || position.y > typename genType::value_type(1))
 			return false;
 
-		genType qvec = Cross(tvec, edge1);
+		genType qvec = cross(tvec, edge1);
 
 		position.z = dot(dir, qvec) * inv_det;
 		if (position.z < typename genType::value_type(0) || position.y + position.z > typename genType::value_type(1))
@@ -200,12 +200,12 @@ namespace Math
 	(
 		genType const& point0, genType const& point1,
 		genType const& sphereCenter, typename genType::value_type sphereRadius,
-		genType & intersectionPoint1, genType & intersectionNormal1, 
+		genType & intersectionPoint1, genType & intersectionNormal1,
 		genType & intersectionPoint2, genType & intersectionNormal2
 	)
 	{
 		typename genType::value_type Epsilon = std::numeric_limits<typename genType::value_type>::epsilon();
-		genType dir = Normalize(point1 - point0);
+		genType dir = normalize(point1 - point0);
 		genType diff = sphereCenter - point0;
 		typename genType::value_type t0 = dot(diff, dir);
 		typename genType::value_type dSquared = dot(diff, diff) - t0 * t0;

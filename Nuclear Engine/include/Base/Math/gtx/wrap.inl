@@ -1,7 +1,7 @@
 /// @ref gtx_wrap
 /// @file glm/gtx/wrap.inl
 
-namespace Math
+namespace glm
 {
 	template<length_t L, typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<L, T, Q> clamp(vec<L, T, Q> const& Texcoord)

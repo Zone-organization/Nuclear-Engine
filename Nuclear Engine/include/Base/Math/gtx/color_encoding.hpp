@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTC_color_encoding extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_color_encoding
 	/// @{

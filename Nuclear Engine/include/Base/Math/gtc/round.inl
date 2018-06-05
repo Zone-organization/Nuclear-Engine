@@ -3,7 +3,7 @@
 
 #include "../integer.hpp"
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t L, typename T, qualifier Q, bool compute = false>
@@ -215,7 +215,7 @@ namespace detail
 	template<typename genType>
 	GLM_FUNC_QUALIFIER bool isPowerOfTwo(genType Value)
 	{
-		genType const Result = Math::abs(Value);
+		genType const Result = glm::abs(Value);
 		return !(Result & (Result - 1));
 	}
 

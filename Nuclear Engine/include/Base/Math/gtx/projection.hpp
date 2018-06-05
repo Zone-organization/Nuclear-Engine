@@ -23,7 +23,7 @@
 #	pragma message("GLM: GLM_GTX_projection extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_projection
 	/// @{

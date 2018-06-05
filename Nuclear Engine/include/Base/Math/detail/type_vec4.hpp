@@ -13,7 +13,7 @@
 #endif //GLM_SWIZZLE
 #include <cstddef>
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	struct vec<4, T, Q>
@@ -89,7 +89,7 @@ namespace Math
 
 		// -- Implicit basic constructors --
 
-		GLM_FUNC_DECL GLM_CONSTEXPR_SIMD vec() GLM_DEFAULT;
+		GLM_FUNC_DECL GLM_CONSTEXPR_SIMD vec() GLM_DEFAULT_CTOR;
 		GLM_FUNC_DECL GLM_CONSTEXPR_SIMD vec(vec<4, T, Q> const& v) GLM_DEFAULT;
 		template<qualifier P>
 		GLM_FUNC_DECL GLM_CONSTEXPR_SIMD vec(vec<4, T, P> const& v);
@@ -194,10 +194,10 @@ namespace Math
 
 		// -- Unary arithmetic operators --
 
-		GLM_FUNC_DECL vec<4, T, Q>& operator=(vec<4, T, Q> const& v) GLM_DEFAULT;
+		GLM_FUNC_DECL GLM_CONSTEXPR_CXX14 vec<4, T, Q>& operator=(vec<4, T, Q> const& v) GLM_DEFAULT;
 
 		template<typename U>
-		GLM_FUNC_DECL vec<4, T, Q>& operator=(vec<4, U, Q> const& v);
+		GLM_FUNC_DECL GLM_CONSTEXPR_CXX14 vec<4, T, Q>& operator=(vec<4, U, Q> const& v);
 		template<typename U>
 		GLM_FUNC_DECL vec<4, T, Q>& operator+=(U scalar);
 		template<typename U>
@@ -281,7 +281,7 @@ namespace Math
 	// -- Binary operators --
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_DECL vec<4, T, Q> operator+(vec<4, T, Q> const& v, T scalar);
+	GLM_FUNC_DECL vec<4, T, Q> operator+(vec<4, T, Q> const& v, T const & scalar);
 
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<4, T, Q> operator+(vec<4, T, Q> const& v1, vec<1, T, Q> const& v2);
@@ -296,7 +296,7 @@ namespace Math
 	GLM_FUNC_DECL vec<4, T, Q> operator+(vec<4, T, Q> const& v1, vec<4, T, Q> const& v2);
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_DECL vec<4, T, Q> operator-(vec<4, T, Q> const& v, T scalar);
+	GLM_FUNC_DECL vec<4, T, Q> operator-(vec<4, T, Q> const& v, T const & scalar);
 
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<4, T, Q> operator-(vec<4, T, Q> const& v1, vec<1, T, Q> const& v2);
@@ -311,7 +311,7 @@ namespace Math
 	GLM_FUNC_DECL vec<4, T, Q> operator-(vec<4, T, Q> const& v1, vec<4, T, Q> const& v2);
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_DECL vec<4, T, Q> operator*(vec<4, T, Q> const& v, T scalar);
+	GLM_FUNC_DECL vec<4, T, Q> operator*(vec<4, T, Q> const& v, T const & scalar);
 
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<4, T, Q> operator*(vec<4, T, Q> const& v1, vec<1, T, Q> const& v2);
@@ -326,7 +326,7 @@ namespace Math
 	GLM_FUNC_DECL vec<4, T, Q> operator*(vec<4, T, Q> const& v1, vec<4, T, Q> const& v2);
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_DECL vec<4, T, Q> operator/(vec<4, T, Q> const& v, T scalar);
+	GLM_FUNC_DECL vec<4, T, Q> operator/(vec<4, T, Q> const& v, T const & scalar);
 
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<4, T, Q> operator/(vec<4, T, Q> const& v1, vec<1, T, Q> const& v2);

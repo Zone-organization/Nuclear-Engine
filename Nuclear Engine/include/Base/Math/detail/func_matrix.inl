@@ -4,7 +4,7 @@
 #include "../geometric.hpp"
 #include <limits>
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<length_t C, length_t R, typename T, qualifier Q, bool Aligned>

@@ -1,7 +1,7 @@
 /// @ref gtx_fast_square_root
 /// @file glm/gtx/fast_square_root.inl
 
-namespace Math
+namespace glm
 {
 	// fastSqrt
 	template<typename genType>

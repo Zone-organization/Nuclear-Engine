@@ -36,7 +36,7 @@
 #	pragma message("GLM: GLM_GTX_string_cast extension included")
 #endif
 
-namespace Math
+namespace glm
 {
 	/// @addtogroup gtx_string_cast
 	/// @{

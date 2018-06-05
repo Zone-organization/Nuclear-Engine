@@ -720,8 +720,19 @@
 
 #if GLM_HAS_DEFAULTED_FUNCTIONS
 #	define GLM_DEFAULT = default
+
+#	ifdef GLM_FORCE_NO_CTOR_INIT
+#		undef GLM_FORCE_CTOR_INIT
+#	endif
+
+#	ifdef GLM_FORCE_CTOR_INIT
+#		define GLM_DEFAULT_CTOR
+#	else
+#		define GLM_DEFAULT_CTOR = default
+#	endif
 #else
 #	define GLM_DEFAULT
+#	define GLM_DEFAULT_CTOR
 #endif
 
 #if GLM_HAS_CONSTEXPR || GLM_HAS_CONSTEXPR_PARTIAL
@@ -740,6 +751,18 @@
 #	define GLM_RELAXED_CONSTEXPR constexpr
 #else
 #	define GLM_RELAXED_CONSTEXPR const
+#endif
+
+#if GLM_LANG >= GLM_LANG_CXX14
+#	if ((GLM_COMPILER & GLM_COMPILER_VC) && (GLM_COMPILER <= GLM_COMPILER_VC14)) // Visual C++ < 2017 does not support extended const expressions https://msdn.microsoft.com/en-us/library/hh567368.aspx https://github.com/g-truc/glm/issues/749
+#		define GLM_CONSTEXPR_CXX14
+#	else
+#		define GLM_CONSTEXPR_CXX14 GLM_CONSTEXPR
+#	endif
+#	define GLM_CONSTEXPR_CTOR_CXX14 GLM_CONSTEXPR_CTOR
+#else
+#	define GLM_CONSTEXPR_CXX14
+#	define GLM_CONSTEXPR_CTOR_CXX14
 #endif
 
 #if GLM_ARCH == GLM_ARCH_PURE
@@ -765,7 +788,7 @@
 
 // User define: GLM_FORCE_SIZE_T_LENGTH
 
-namespace Math
+namespace glm
 {
 	using std::size_t;
 #	if defined(GLM_FORCE_SIZE_T_LENGTH)
@@ -788,7 +811,7 @@ namespace Math
 // countof
 
 #if GLM_HAS_CONSTEXPR_PARTIAL
-	namespace Math
+	namespace glm
 	{
 		template<typename T, std::size_t N>
 		constexpr std::size_t countof(T const (&)[N])
@@ -796,7 +819,7 @@ namespace Math
 			return N;
 		}
 	}//namespace glm
-#	define GLM_COUNTOF(arr) Math::countof(arr)
+#	define GLM_COUNTOF(arr) glm::countof(arr)
 #elif defined(_MSC_VER)
 #	define GLM_COUNTOF(arr) _countof(arr)
 #else
@@ -806,7 +829,7 @@ namespace Math
 ///////////////////////////////////////////////////////////////////////////////////
 // Check inclusions of different versions of GLM
 
-#elif ((GLM_SETUP_INCLUDED != GLM_VERSION) && !defined(GLM_FORCE_IGNORE_VERSION))	
+#elif ((GLM_SETUP_INCLUDED != GLM_VERSION) && !defined(GLM_FORCE_IGNORE_VERSION))
 #	error "GLM error: A different version of GLM is already included. Define GLM_FORCE_IGNORE_VERSION before including GLM headers to ignore this error."
 #elif GLM_SETUP_INCLUDED == GLM_VERSION
 

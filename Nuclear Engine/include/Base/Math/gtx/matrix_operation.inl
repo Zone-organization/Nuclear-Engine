@@ -1,7 +1,7 @@
 /// @ref gtx_matrix_operation
 /// @file glm/gtx/matrix_operation.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER mat<2, 2, T, Q> diagonal2x2
@@ -88,7 +88,7 @@ namespace Math
 		Result[1][1] = v[1];
 		Result[2][2] = v[2];
 		Result[3][3] = v[3];
-		return Result;		
+		return Result;
 	}
 
 	template<typename T, qualifier Q>
@@ -101,7 +101,7 @@ namespace Math
 		Result[0][0] = v[0];
 		Result[1][1] = v[1];
 		Result[2][2] = v[2];
-		return Result;		
+		return Result;
 	}
 
 	template<typename T, qualifier Q>
@@ -113,6 +113,6 @@ namespace Math
 		mat<4, 2, T, Q> Result(static_cast<T>(1));
 		Result[0][0] = v[0];
 		Result[1][1] = v[1];
-		return Result;		
+		return Result;
 	}
 }//namespace glm

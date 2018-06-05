@@ -1,7 +1,7 @@
 /// @ref gtx_type_trait
 /// @file glm/gtx/type_trait.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T>
 	bool const type<T>::is_vec;

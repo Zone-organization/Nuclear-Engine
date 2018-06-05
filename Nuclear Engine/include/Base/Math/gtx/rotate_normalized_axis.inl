@@ -1,7 +1,7 @@
 /// @ref gtx_rotate_normalized_axis
 /// @file glm/gtx/rotate_normalized_axis.inl
 
-namespace Math
+namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER mat<4, 4, T, Q> rotateNormalizedAxis
@@ -43,7 +43,7 @@ namespace Math
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q> rotateNormalizedAxis
 	(
-		tquat<T, Q> const& q, 
+		tquat<T, Q> const& q,
 		T const& angle,
 		vec<3, T, Q> const& v
 	)

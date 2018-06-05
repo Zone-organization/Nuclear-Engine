@@ -22,7 +22,7 @@
 #	endif
 #endif
 
-namespace Math{
+namespace glm{
 namespace detail
 {
 	template<typename T>
@@ -75,7 +75,7 @@ namespace detail
 			if(Value == 0)
 				return -1;
 
-			return Math::bitCount(~Value & (Value - static_cast<genIUType>(1)));
+			return glm::bitCount(~Value & (Value - static_cast<genIUType>(1)));
 		}
 	};
 
@@ -135,7 +135,7 @@ namespace detail
 			x = compute_findMSB_step_vec<L, T, Q, sizeof(T) * 8 >= 16>::call(x, static_cast<T>( 8));
 			x = compute_findMSB_step_vec<L, T, Q, sizeof(T) * 8 >= 32>::call(x, static_cast<T>(16));
 			x = compute_findMSB_step_vec<L, T, Q, sizeof(T) * 8 >= 64>::call(x, static_cast<T>(32));
-			return vec<L, int, Q>(sizeof(T) * 8 - 1) - Math::bitCount(~x);
+			return vec<L, int, Q>(sizeof(T) * 8 - 1) - glm::bitCount(~x);
 		}
 	};
 
@@ -179,7 +179,7 @@ namespace detail
 }//namespace detail
 
 	// uaddCarry
-	GLM_FUNC_QUALIFIER Uint32 uaddCarry(Uint32 const& x, Uint32 const& y, Uint32 & Carry)
+	GLM_FUNC_QUALIFIER uint uaddCarry(uint const& x, uint const& y, uint & Carry)
 	{
 		uint64 const Value64(static_cast<uint64>(x) + static_cast<uint64>(y));
 		uint64 const Max32((static_cast<uint64>(1) << static_cast<uint64>(32)) - static_cast<uint64>(1));
@@ -188,7 +188,7 @@ namespace detail
 	}
 
 	template<length_t L, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, Uint32, Q> uaddCarry(vec<L, Uint32, Q> const& x, vec<L, Uint32, Q> const& y, vec<L, Uint32, Q>& Carry)
+	GLM_FUNC_QUALIFIER vec<L, uint, Q> uaddCarry(vec<L, uint, Q> const& x, vec<L, uint, Q> const& y, vec<L, uint, Q>& Carry)
 	{
 		vec<L, uint64, Q> Value64(vec<L, uint64, Q>(x) + vec<L, uint64, Q>(y));
 		vec<L, uint64, Q> Max32((static_cast<uint64>(1) << static_cast<uint64>(32)) - static_cast<uint64>(1));
@@ -197,9 +197,9 @@ namespace detail
 	}
 
 	// usubBorrow
-	GLM_FUNC_QUALIFIER Uint32 usubBorrow(Uint32 const& x, Uint32 const& y, Uint32 & Borrow)
+	GLM_FUNC_QUALIFIER uint usubBorrow(uint const& x, uint const& y, uint & Borrow)
 	{
-		GLM_STATIC_ASSERT(sizeof(Uint32) == sizeof(uint32), "Uint32 and uint32 size mismatch");
+		GLM_STATIC_ASSERT(sizeof(uint) == sizeof(uint32), "uint and uint32 size mismatch");
 
 		Borrow = x >= y ? static_cast<uint32>(0) : static_cast<uint32>(1);
 		if(y >= x)
@@ -209,28 +209,28 @@ namespace detail
 	}
 
 	template<length_t L, qualifier Q>
-	GLM_FUNC_QUALIFIER vec<L, Uint32, Q> usubBorrow(vec<L, Uint32, Q> const& x, vec<L, Uint32, Q> const& y, vec<L, Uint32, Q>& Borrow)
+	GLM_FUNC_QUALIFIER vec<L, uint, Q> usubBorrow(vec<L, uint, Q> const& x, vec<L, uint, Q> const& y, vec<L, uint, Q>& Borrow)
 	{
-		Borrow = mix(vec<L, Uint32, Q>(1), vec<L, Uint32, Q>(0), greaterThanEqual(x, y));
-		vec<L, Uint32, Q> const YgeX(y - x);
-		vec<L, Uint32, Q> const XgeY(vec<L, uint32, Q>((static_cast<int64>(1) << static_cast<int64>(32)) + (vec<L, int64, Q>(y) - vec<L, int64, Q>(x))));
+		Borrow = mix(vec<L, uint, Q>(1), vec<L, uint, Q>(0), greaterThanEqual(x, y));
+		vec<L, uint, Q> const YgeX(y - x);
+		vec<L, uint, Q> const XgeY(vec<L, uint32, Q>((static_cast<int64>(1) << static_cast<int64>(32)) + (vec<L, int64, Q>(y) - vec<L, int64, Q>(x))));
 		return mix(XgeY, YgeX, greaterThanEqual(y, x));
 	}
 
 	// umulExtended
-	GLM_FUNC_QUALIFIER void umulExtended(Uint32 const& x, Uint32 const& y, Uint32 & msb, Uint32 & lsb)
+	GLM_FUNC_QUALIFIER void umulExtended(uint const& x, uint const& y, uint & msb, uint & lsb)
 	{
-		GLM_STATIC_ASSERT(sizeof(Uint32) == sizeof(uint32), "Uint32 and uint32 size mismatch");
+		GLM_STATIC_ASSERT(sizeof(uint) == sizeof(uint32), "uint and uint32 size mismatch");
 
 		uint64 Value64 = static_cast<uint64>(x) * static_cast<uint64>(y);
-		msb = static_cast<Uint32>(Value64 >> static_cast<uint64>(32));
-		lsb = static_cast<Uint32>(Value64);
+		msb = static_cast<uint>(Value64 >> static_cast<uint64>(32));
+		lsb = static_cast<uint>(Value64);
 	}
 
 	template<length_t L, qualifier Q>
-	GLM_FUNC_QUALIFIER void umulExtended(vec<L, Uint32, Q> const& x, vec<L, Uint32, Q> const& y, vec<L, Uint32, Q>& msb, vec<L, Uint32, Q>& lsb)
+	GLM_FUNC_QUALIFIER void umulExtended(vec<L, uint, Q> const& x, vec<L, uint, Q> const& y, vec<L, uint, Q>& msb, vec<L, uint, Q>& lsb)
 	{
-		GLM_STATIC_ASSERT(sizeof(Uint32) == sizeof(uint32), "Uint32 and uint32 size mismatch");
+		GLM_STATIC_ASSERT(sizeof(uint) == sizeof(uint32), "uint and uint32 size mismatch");
 
 		vec<L, uint64, Q> Value64(vec<L, uint64, Q>(x) * vec<L, uint64, Q>(y));
 		msb = vec<L, uint32, Q>(Value64 >> static_cast<uint64>(32));
@@ -292,7 +292,7 @@ namespace detail
 	template<typename genType>
 	GLM_FUNC_QUALIFIER genType bitfieldReverse(genType x)
 	{
-		return bitfieldReverse(Math::vec<1, genType, Math::defaultp>(x)).x;
+		return bitfieldReverse(glm::vec<1, genType, glm::defaultp>(x)).x;
 	}
 
 	template<length_t L, typename T, qualifier Q>
@@ -312,7 +312,7 @@ namespace detail
 	template<typename genType>
 	GLM_FUNC_QUALIFIER int bitCount(genType x)
 	{
-		return bitCount(Math::vec<1, genType, Math::defaultp>(x)).x;
+		return bitCount(glm::vec<1, genType, glm::defaultp>(x)).x;
 	}
 
 	template<length_t L, typename T, qualifier Q>
