@@ -3,7 +3,7 @@
 #include <Engine/Graphics/API/VertexShader.h>
 #include <Engine/Graphics/API/PixelShader.h>
 #include <Engine/Graphics/API/ConstantBuffer.h>
-#include <Engine/Graphics/API/Texture.h>
+#include <Engine/Assets/Texture.h>
 #include <map>
 
 namespace NuclearEngine
@@ -12,22 +12,17 @@ namespace NuclearEngine
 	{
 		struct MaterialTexture
 		{
-			MaterialTexture(){}
-			MaterialTexture(Graphics::API::Texture* tex, Uint8 slot)
+			MaterialTexture() { mSlot = 0; }
+			MaterialTexture(const Assets::Texture& _tex, Uint8 _slot)
+				: mGPUTexture(_tex) , mSlot(_slot)
 			{
-				mGPUTexture = tex;
-				mSlot = slot;
 			}
-
-			Graphics::API::Texture* mGPUTexture;
+			Assets::Texture mGPUTexture;
 			Uint8 mSlot;
 		};
 
-		struct MaterialTextureSet
-		{
-			std::vector<MaterialTexture> mTextures;
-		};
-		
+		typedef	std::vector<MaterialTexture> TextureSet;
+			
 		/*
 			Material class defines how should the rendering system render the mesh,
 			it contains all the info about textures & vertex, pixel shaders.
@@ -41,7 +36,7 @@ namespace NuclearEngine
 
 			void SetVertexShader(Graphics::API::VertexShader vshader);
 			void SetPixelShader(Graphics::API::PixelShader pshader);
-			void SetTexture(std::string name, Graphics::API::Texture* value, unsigned int slot = 0);
+			void SetTexture(std::string name, const Assets::Texture& value, unsigned int slot = 0);
 			void SetTexture(std::string name, const MaterialTexture& texture);
 
 			//If the shader isn't valid the default shader is bound
@@ -49,8 +44,8 @@ namespace NuclearEngine
 			Graphics::API::PixelShader mPShader;
 
 			//PixelShader Textures
-			std::unordered_map<std::string, MaterialTexture> mTextures;
-
+			std::unordered_map<Uint32, TextureSet> mPixelShaderTextures;
+			TextureSet PixelShaderTS;
 		private:
 			void ParseVertexShader();
 			void ParsePixelShader();

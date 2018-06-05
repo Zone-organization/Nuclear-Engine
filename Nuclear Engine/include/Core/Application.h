@@ -23,6 +23,8 @@ namespace NuclearEngine {
 			static Uint32 GetAspectRatio();
 			static Float32 GetAspectRatioF32();
 			static sf::Window* MainWindow;
+		private:
+			static void SplashScreen();
 		};
 	}
 }

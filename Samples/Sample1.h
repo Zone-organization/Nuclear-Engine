@@ -279,10 +279,12 @@ public:
 
 		ECube.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = CubeTransforms;
 		ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
-
-		ENanosuit.GetTransform()->SetPosition(Math::Vector3(5.0f, -1.75f, 0.0f));
-		ENanosuit.GetTransform()->SetScale(Math::Vector3(0.25f));
-		ENanosuit.GetTransform()->SetRotation(Math::angleAxis(ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f)));
+		
+		Math::Matrix4 NanosuitMatrix(1.0f);
+		NanosuitMatrix = Math::Translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
+		NanosuitMatrix = Math::Scale(NanosuitMatrix, Math::Vector3(0.25f));
+		NanosuitMatrix = Math::Rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
+		ENanosuit.GetTransform()->SetTransform(NanosuitMatrix);
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());

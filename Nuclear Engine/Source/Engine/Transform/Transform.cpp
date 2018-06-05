@@ -74,14 +74,19 @@ namespace NuclearEngine
 		if (scale.z < 0.0f) scale.z *= -1.0f;
 		return scale;
 	}
+	void Transform::SetTransform(Math::Matrix4 _Transform)
+	{
+		mTransform = _Transform;
+	}
 	void Transform::Update()
 	{
 		if (mDirty)
 		{
-			// first scale, then rotate, then translation
-			mTransform = Math::Translate(mTransform, mPosition);
-			mTransform = Math::Scale(mTransform, mScale);
-			mTransform *= Math::toMat4(mRotation);
+			//mTransform = Math::Translate(mPosition)*Math::toMat4(mRotation)*Math::Scale(mScale);
+
+			//mTransform = Math::Translate(mTransform, mPosition);
+			//mTransform = Math::Scale(mTransform, mScale);
+			//mTransform *= Math::toMat4(mRotation);
 			mDirty = false;
 		}
 	}
