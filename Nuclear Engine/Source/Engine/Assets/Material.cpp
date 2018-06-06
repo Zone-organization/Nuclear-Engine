@@ -22,31 +22,7 @@ namespace NuclearEngine
 			mPShader = pshader;
 			ParsePixelShader();
 		}
-		void Material::SetTexture(std::string name, const Assets::Texture& value, unsigned int slot)
-		{
-			/*auto it = mPixelShaderTextures.find(Utilities::Hash(name));
-			if (it != mPixelShaderTextures.end())
-			{
-			//	it->second.mGPUTexture = value;
-			//	it->second.mSlot = slot;
-			}
-			else 
-			{
-				Log.Error("[Material] Setting an non-existing texture (" + name + ").\n");
-			}*/
-		}
-		void Material::SetTexture(std::string name, const MaterialTexture & texture)
-		{
-			/*auto it = mPixelShaderTextures.find(Utilities::Hash(name));
-			if (it != mPixelShaderTextures.end())
-			{
-			//	it->second = texture;
-			}
-			else
-			{
-				Log.Error("[Material] Setting an non-existing texture (" + name + ").\n");
-			}*/
-		}
+	
 		void Material::ParseVertexShader()
 		{
 			if (mVShader.isValid)

@@ -1,5 +1,6 @@
 #include "AssimpImporter.h"
 #include <Engine\Managers\AssetManager.h>
+#include <Engine\Assets\Material.h>
 #include <Base\Utilities\Hash.h>
 
 #pragma comment(lib,"assimp.lib")
@@ -7,7 +8,7 @@
 namespace NuclearEngine {
 	namespace Internal {
 		
-		Assets::Mesh & AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc)
+		Assets::Mesh & AssimpImporter::Load(const std::string& Path, Assets::Material* material, const Managers::MeshLoadingDesc& desc)
 		{
 			Log.Info("[AssetManager] Loading Mesh: " + Path + "\n");
 			LoadingDesc = desc;
@@ -46,6 +47,30 @@ namespace NuclearEngine {
 			{
 				ProcessNode(node->mChildren[i], scene);
 			}
+		}
+		void AssimpImporter::ProcessMaterial(aiMesh * mesh, const aiScene * scene)
+		{	
+			Assets::TextureSet TexSet;
+
+			// process materials
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			if (LoadingDesc.LoadDiffuseTextures)
+			{
+				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
+				TexSet.insert(TexSet.end(), DiffuseMaps.begin(), DiffuseMaps.end());
+			}
+			if (LoadingDesc.LoadSpecularTextures)
+			{
+				std::vector<Assets::Texture> SpecularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
+				TexSet.insert(TexSet.end(), SpecularMaps.begin(), SpecularMaps.end());
+			}
+			if (LoadingDesc.LoadNormalTextures)
+			{
+				std::vector<Assets::Texture> NormalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
+				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
+			}
+
+			this->material->mPixelShaderTextures.push_back(TexSet);
 		}
 		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{
@@ -94,23 +119,10 @@ namespace NuclearEngine {
 					result.indices.push_back(face.mIndices[j]);
 				}
 			}
-			// process materials
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			if (LoadingDesc.LoadDiffuseTextures)
-			{
-				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
-				result.textures.insert(result.textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-			}
-			if (LoadingDesc.LoadSpecularTextures)
-			{
-				std::vector<Assets::Texture> SpecularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
-				result.textures.insert(result.textures.end(), SpecularMaps.begin(), SpecularMaps.end());
-			}
-			if (LoadingDesc.LoadNormalTextures)
-			{
-				std::vector<Assets::Texture> NormalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
-				result.textures.insert(result.textures.end(), NormalMaps.begin(), NormalMaps.end());
-			}
+
+			// process material		
+			ProcessMaterial(mesh, scene);
+
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}

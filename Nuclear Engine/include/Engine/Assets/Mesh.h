@@ -43,7 +43,7 @@ namespace NuclearEngine {
 					std::vector<Math::Vector3> Tangents;
 
 					std::vector<unsigned int> indices;
-					std::vector<Assets::Texture> textures;
+					Uint32 TexSetIndex;
 				};
 
 				/*  Mesh Data  */

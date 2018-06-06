@@ -10,18 +10,18 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-		struct MaterialTexture
+		struct ShaderTextureInfo
 		{
-			MaterialTexture() { mSlot = 0; }
-			MaterialTexture(const Assets::Texture& _tex, Uint8 _slot)
+			ShaderTextureInfo() { mSlot = 0; }
+			ShaderTextureInfo(const Assets::Texture& _tex, Uint8 _slot)
 				: mGPUTexture(_tex) , mSlot(_slot)
 			{
 			}
-			Assets::Texture mGPUTexture;
+			Assets::Texture mDefaultTexture;
 			Uint8 mSlot;
 		};
 
-		typedef	std::vector<MaterialTexture> TextureSet;
+		typedef	std::vector<Assets::Texture> TextureSet;
 			
 		/*
 			Material class defines how should the rendering system render the mesh,
@@ -36,8 +36,8 @@ namespace NuclearEngine
 
 			void SetVertexShader(Graphics::API::VertexShader vshader);
 			void SetPixelShader(Graphics::API::PixelShader pshader);
-			void SetTexture(std::string name, const Assets::Texture& value, unsigned int slot = 0);
-			void SetTexture(std::string name, const MaterialTexture& texture);
+
+
 
 			//If the shader isn't valid the default shader is bound
 			Graphics::API::VertexShader mVShader;
@@ -45,7 +45,7 @@ namespace NuclearEngine
 
 			//PixelShader Textures
 			std::vector<TextureSet> mPixelShaderTextures;
-			TextureSet PixelShaderTS;
+			std::vector<ShaderTextureInfo> PixelShaderTS;
 		private:
 			void ParseVertexShader();
 			void ParsePixelShader();
