@@ -15,6 +15,9 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 ## Current Platforms & RenderAPIs
   - Windows 7+   (DirectX 11 & OpenGL)
 
+### Current TODO:
+Fix Dynamic Material class.
+
 ### Building
 Please See NuclearDeps Repo for external dependencies.
 Currently I am using Visual Studio 2017 to build it.
