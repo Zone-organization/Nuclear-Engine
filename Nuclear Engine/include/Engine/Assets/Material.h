@@ -3,7 +3,7 @@
 #include <Engine/Graphics/API/VertexShader.h>
 #include <Engine/Graphics/API/PixelShader.h>
 #include <Engine/Graphics/API/ConstantBuffer.h>
-#include <Engine/Assets/HTexture.h>
+#include <Engine/Assets/Texture.h>
 #include <map>
 
 namespace NuclearEngine

@@ -16,7 +16,7 @@ namespace NuclearEngine {
 		std::unordered_map<Uint32, std::string> AssetManager::mHashedMeshesNames = std::unordered_map<Uint32, std::string>();
 
 		std::unordered_map<Uint32, Assets::Material> AssetManager::mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
-		std::unordered_map<Uint32, std::string> AssetManager::mHashedMaterialNames = std::unordered_map<Uint32, std::string>();
+		std::unordered_map<Uint32, std::string> AssetManager::mHashedMaterialsNames = std::unordered_map<Uint32, std::string>();
 
 		Graphics::API::Texture_Data AssetManager::LoadTex_stb_image(const std::string& Path, const Graphics::API::Texture_Desc & Desc)
 		{

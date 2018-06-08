@@ -1,8 +1,4 @@
 #pragma once
-#include <Engine\Assets\DefaultTextures.h>
-#include <Engine\Assets\Material.h>
-#include <Engine\Assets\Mesh.h>
-#include <Engine\Assets\HTexture.h>
 #include <Base\Utilities\Hash.h>
 
 namespace NuclearEngine

@@ -195,7 +195,7 @@ public:
 		Renderer->Bake();
 
 
-		mat.SetPixelShader(Renderer->GetPixelShader());
+		//mat.SetPixelShader(Renderer->GetPixelShader());
 
 		Managers::AssetManager::mSaveTextureNames = true;
 

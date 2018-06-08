@@ -2,8 +2,8 @@
 #include <Base\Math\Math.h>
 #include <Engine/Graphics/API/Texture.h>
 #include <Engine/Graphics/API/Sampler.h>
+#include <Engine/Assets/Asset.h>
 #include <vector>
-#include <string>
 
 namespace NuclearEngine {
 	namespace Assets {
@@ -16,7 +16,7 @@ namespace NuclearEngine {
 			Unknown = 255
 		};
 
-		class NEAPI Texture
+		class NEAPI Texture : public Asset
 		{
 		public:
 			Texture();

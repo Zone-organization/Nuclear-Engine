@@ -1,5 +1,5 @@
 #pragma once
-#include <Engine/Assets/HTexture.h>
+#include <Engine/Assets/Texture.h>
 
 namespace NuclearEngine
 {
