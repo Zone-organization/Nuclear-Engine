@@ -14,6 +14,10 @@ namespace NuclearEngine {
 
 		std::unordered_map<Uint32, Assets::Mesh> AssetManager::mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();
 		std::unordered_map<Uint32, std::string> AssetManager::mHashedMeshesNames = std::unordered_map<Uint32, std::string>();
+
+		std::unordered_map<Uint32, Assets::Material> AssetManager::mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
+		std::unordered_map<Uint32, std::string> AssetManager::mHashedMaterialNames = std::unordered_map<Uint32, std::string>();
+
 		Graphics::API::Texture_Data AssetManager::LoadTex_stb_image(const std::string& Path, const Graphics::API::Texture_Desc & Desc)
 		{
 			int req_c;
@@ -46,7 +50,7 @@ namespace NuclearEngine {
 		Assets::Mesh & AssetManager::LoadMesh_Assimp(const std::string & Path, Assets::Material* material, const Managers::MeshLoadingDesc & desc)
 		{
 			Internal::AssimpImporter importer;
-			return importer.Load(Path, material, desc);
+			return importer.Load(Path, desc, material);
 			// TODO: insert return statement here
 		}
 
@@ -77,7 +81,7 @@ namespace NuclearEngine {
 			mHashedTexturesNames.clear();
 		}
 
-		Assets::Mesh & AssetManager::Import(const std::string & Path, Assets::Material* material, const MeshLoadingDesc &desc)
+		Assets::Mesh & AssetManager::Import(const std::string & Path, const MeshLoadingDesc &desc, Assets::Material* material)
 		{
 			// TODO: insert return statement here
 			return LoadMesh_Assimp(Path, material, desc);

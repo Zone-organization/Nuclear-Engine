@@ -237,7 +237,7 @@ namespace NuclearEngine
 			//bool specularbound = false;
 			//bool normalbound = false;
 
-			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
+/*			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
 				if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Diffuse)
@@ -264,7 +264,7 @@ namespace NuclearEngine
 					//	normalbound = true;
 					//}
 				}
-			}
+			}*/
 			mesh->VBO.Bind();
 			mesh->IBO.Bind();
 			Graphics::API::Context::DrawIndexed(mesh->IndicesCount);

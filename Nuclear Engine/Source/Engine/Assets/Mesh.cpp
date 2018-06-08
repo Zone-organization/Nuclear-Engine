@@ -83,11 +83,11 @@ namespace NuclearEngine {
 		{
 			Graphics::API::VertexBuffer::Delete(&VBO);
 			Graphics::API::IndexBuffer::Delete(&IBO);
-			for (size_t i = 0; i < data.textures.size(); i++)
+			/*for (size_t i = 0; i < data.textures.size(); i++)
 			{
 				Graphics::API::Texture::Delete(&data.textures.at(i).mTexture);
 			}
-			data.textures.clear();
+			data.textures.clear();*/
 		}
 
 		Mesh::Mesh()
@@ -219,7 +219,7 @@ namespace NuclearEngine {
 			indices.assign(&i[0], &i[36]);
 
 			meshData.indices = indices;
-			meshData.textures = Textures;
+			//meshData.textures = Textures;
 
 			model->SubMeshes.push_back(meshData);
 		}
@@ -307,7 +307,7 @@ namespace NuclearEngine {
 				meshData.indices.push_back(baseIndex + i);
 				meshData.indices.push_back(baseIndex + i + 1);
 			}
-			meshData.textures = Textures;
+			//meshData.textures = Textures;
 
 			for (Vertex vert : vertices)
 			{
@@ -403,7 +403,7 @@ namespace NuclearEngine {
 			}
 			meshData.indices = Indices;
 
-			meshData.textures = Textures;
+			//meshData.textures = Textures;
 
 			model->SubMeshes.push_back(meshData);
 		}

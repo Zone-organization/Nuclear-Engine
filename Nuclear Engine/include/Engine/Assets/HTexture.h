@@ -25,11 +25,9 @@ namespace NuclearEngine {
 			Math::Vector2ui GetDimensions();
 			unsigned int GetWidth();
 			unsigned int GetHeight();
-			Uint32 GetHashedName();
 			Uint8 GetUsageType();
 
-			void SetHashedName(Uint32 name);
-			void SetName(const std::string& str);
+
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
@@ -56,7 +54,6 @@ namespace NuclearEngine {
 
 		private:
 			Math::Vector2ui mDimensions;
-			Uint32 mHashedName;
 			Uint8 mUsageType;
 		};
 	}

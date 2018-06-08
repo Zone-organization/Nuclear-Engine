@@ -15,6 +15,8 @@ protected:
 	Assets::Mesh SphereAsset;
 	Assets::Mesh NanosuitAsset;
 
+	Assets::Material NanosuitMaterial;
+
 	//Default states
 	Graphics::API::CommonStates states;
 
@@ -193,7 +195,6 @@ public:
 		Renderer->Bake();
 
 
-		Assets::Material mat;
 		mat.SetPixelShader(Renderer->GetPixelShader());
 
 		Managers::AssetManager::mSaveTextureNames = true;

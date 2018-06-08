@@ -8,7 +8,7 @@
 namespace NuclearEngine {
 	namespace Internal {
 		
-		Assets::Mesh & AssimpImporter::Load(const std::string& Path, Assets::Material* material, const Managers::MeshLoadingDesc& desc)
+		Assets::Mesh & AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc, Assets::Material* _material)
 		{
 			Log.Info("[AssetManager] Loading Mesh: " + Path + "\n");
 			LoadingDesc = desc;
@@ -30,7 +30,10 @@ namespace NuclearEngine {
 			}
 			auto hashedname = Utilities::Hash(Path);
 			Log.Info("[AssetManager] Loaded Mesh: " + Path + "\n");
+
+			_material = &(Managers::AssetManager::mImportedMaterials[hashedname] = material);
 			return 	Managers::AssetManager::mImportedMeshes[hashedname] = model;
+
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
 		{
@@ -70,7 +73,7 @@ namespace NuclearEngine {
 				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 
-			this->material->mPixelShaderTextures.push_back(TexSet);
+			this->material.mPixelShaderTextures.push_back(TexSet);
 		}
 		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{

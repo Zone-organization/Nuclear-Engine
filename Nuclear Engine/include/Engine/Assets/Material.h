@@ -3,7 +3,7 @@
 #include <Engine/Graphics/API/VertexShader.h>
 #include <Engine/Graphics/API/PixelShader.h>
 #include <Engine/Graphics/API/ConstantBuffer.h>
-#include <Engine/Assets/Texture.h>
+#include <Engine/Assets/HTexture.h>
 #include <map>
 
 namespace NuclearEngine
@@ -14,7 +14,7 @@ namespace NuclearEngine
 		{
 			ShaderTextureInfo() { mSlot = 0; }
 			ShaderTextureInfo(const Assets::Texture& _tex, Uint8 _slot)
-				: mGPUTexture(_tex) , mSlot(_slot)
+				: mDefaultTexture(_tex) , mSlot(_slot)
 			{
 			}
 			Assets::Texture mDefaultTexture;

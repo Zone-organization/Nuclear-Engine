@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\Math\Math.h>
-#include <Engine/Assets/Texture.h>
+#include <Engine/Assets/HTexture.h>
 #include <Engine/Graphics/API/VertexBuffer.h>
 #include <Engine/Graphics/API/IndexBuffer.h>
 #include <vector>

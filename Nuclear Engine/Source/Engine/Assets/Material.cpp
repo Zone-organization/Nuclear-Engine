@@ -42,9 +42,9 @@ namespace NuclearEngine
 					{
 						std::string texname(Tex.first);
 						texname.erase(0, 7);
-						MaterialTexture mTex;
-						mTex.mGPUTexture = DefaultTextures::DefaultBlackTex;
-						mTex.mGPUTexture.SetName(texname);
+						ShaderTextureInfo mTex;
+						mTex.mDefaultTexture = DefaultTextures::DefaultBlackTex;
+						mTex.mDefaultTexture.SetName(texname);
 						mTex.mSlot = Tex.second.BindingSlot;
 						PixelShaderTS.push_back(mTex);
 					}					
