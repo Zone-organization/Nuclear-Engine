@@ -22,19 +22,19 @@ namespace NuclearEngine {
 				STATIC_BASE_API_FUNC_CALL(Delete)
 
 			}
-			void Sampler::VSBind(unsigned int index)
+			void Sampler::VSBind(Uint8 slot)
 			{
-				BASE_API_FUNC_CALL_ARGS(VSBind, index)
+				BASE_API_FUNC_CALL_ARGS(VSBind, slot)
 			}
 
-			void Sampler::PSBind(unsigned int index)
+			void Sampler::PSBind(Uint8 slot)
 			{
-				BASE_API_FUNC_CALL_ARGS(PSBind, index)
+				BASE_API_FUNC_CALL_ARGS(PSBind, slot)
 
 			}
-			void Sampler::GSBind(unsigned int index)
+			void Sampler::GSBind(Uint8 slot)
 			{
-				BASE_API_FUNC_CALL_ARGS(GSBind, index)
+				BASE_API_FUNC_CALL_ARGS(GSBind, slot)
 			}
 		}
 	}

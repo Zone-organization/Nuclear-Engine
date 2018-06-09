@@ -57,16 +57,16 @@ namespace NuclearEngine
 					}
 					texture->samplerState = nullptr;
 				}
-				void DX11Sampler::PSBind(unsigned int slot)
+				void DX11Sampler::PSBind(Uint8 slot)
 				{
 					DX11Context::GetContext()->PSSetSamplers(slot, 1, &samplerState);
 				}
 
-				void DX11Sampler::VSBind(unsigned int slot)
+				void DX11Sampler::VSBind(Uint8 slot)
 				{
 					DX11Context::GetContext()->VSSetSamplers(slot, 1, &samplerState);
 				}
-				void DX11Sampler::GSBind(unsigned int slot)
+				void DX11Sampler::GSBind(Uint8 slot)
 				{
 					DX11Context::GetContext()->GSSetSamplers(slot, 1, &samplerState);
 				}

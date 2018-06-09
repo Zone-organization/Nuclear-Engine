@@ -23,9 +23,9 @@ namespace NuclearEngine
 					static void Create(DX11Sampler* texture, const SamplerDesc& Desc);
 					static void Delete(DX11Sampler* texture);
 
-					void VSBind(unsigned int slot);
-					void GSBind(unsigned int slot);
-					void PSBind(unsigned int slot);
+					void VSBind(Uint8 slot);
+					void GSBind(Uint8 slot);
+					void PSBind(Uint8 slot);
 
 				protected:
 					ID3D11SamplerState * samplerState;

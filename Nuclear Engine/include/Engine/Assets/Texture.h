@@ -22,12 +22,7 @@ namespace NuclearEngine {
 			Texture();
 			~Texture();
 
-			Math::Vector2ui GetDimensions();
-			unsigned int GetWidth();
-			unsigned int GetHeight();
 			Uint8 GetUsageType();
-
-
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
@@ -53,7 +48,6 @@ namespace NuclearEngine {
 			Graphics::API::Texture mTexture;
 
 		private:
-			Math::Vector2ui mDimensions;
 			Uint8 mUsageType;
 		};
 	}

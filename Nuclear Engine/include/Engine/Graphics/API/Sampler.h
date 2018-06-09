@@ -17,9 +17,9 @@ namespace NuclearEngine {
 				static void Delete(Sampler* texture);
 
 				//TODO: MOVE
-				void VSBind(unsigned int slot);
-				void GSBind(unsigned int slot);
-				void PSBind(unsigned int slot);
+				void VSBind(Uint8 slot);
+				void GSBind(Uint8 slot);
+				void PSBind(Uint8 slot);
 
 				BASE_API(Sampler)
 			};

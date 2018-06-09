@@ -2,6 +2,7 @@
 #include <Engine/Graphics/API/OpenGL\GLCommon.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
+#include <Engine/Graphics/API/Texture_Types.h>
 #include <Base\Math\Math.h>
 namespace NuclearEngine
 {
@@ -23,7 +24,7 @@ namespace NuclearEngine
 
 					void AttachDepthStencilBuffer(const Math::Vector2ui& size);
 
-					void AttachTexture(GLTexture* texture);
+					void AttachTexture(GLTexture* texture, const Texture_Desc& Desc);
 
 					void Bind();
 					static void Bind_Default();

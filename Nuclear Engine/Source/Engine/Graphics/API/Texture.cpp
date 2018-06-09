@@ -15,23 +15,25 @@ namespace NuclearEngine {
 			Texture::~Texture()
 			{
 			}
-			void Texture::Create(Texture *obj, const Texture_Data& TexData, const Texture_Desc& Desc)
+			bool Texture::Create(Texture *obj, const Texture_Data& TexData, const Texture_Desc& Desc)
 			{
-				obj->mDimensions.x = TexData.Width;
-				obj->mDimensions.y = TexData.Height;
-				STATIC_BASE_API_FUNC_CALL_ARGS(Create, TexData, Desc)
+				obj->mTexDesc = Desc;
+				STATIC_CREATE_BASE_API_FUNC_CALL_ARGS(TexData, Desc)
 
-				obj->isValid = true;				
 				for (auto func : GraphicsEngine::TextureCreationCallbacks)
 				{
 					if (!func.isNull())
 						func(obj, TexData, Desc);
 				}
+
+				return obj->isValid;
 			}
 
-			void Texture::Create(Texture* obj, const std::array<Texture_Data, 6>& data, const Texture_Desc & Desc)
+			bool Texture::Create(Texture* obj, const std::array<Texture_Data, 6>& data, const Texture_Desc & Desc)
 			{
-				STATIC_BASE_API_FUNC_CALL_ARGS(Create,data, Desc)
+				STATIC_CREATE_BASE_API_FUNC_CALL_ARGS(data, Desc)
+
+				return obj->isValid;
 			}
 
 			void Texture::Delete(Texture * obj)
@@ -39,33 +41,37 @@ namespace NuclearEngine {
 				STATIC_BASE_API_FUNC_CALL(Delete)
 			}
 
-			Math::Vector2ui Texture::GetDimensions()
+			Math::Vector3ui Texture::GetDimensions(Uint8 Mipmaplevel)
 			{
-				return mDimensions;
+				if (Mipmaplevel < 0)
+				{
+					Log.Error("[Texture] Invalid mipmap index.\n");
+					return 	Math::Vector3ui(0, 0, 0);
+				}
+
+				BASE_API_RETURN_FUNC_CALL_ARGS(GetDimensions , Mipmaplevel)
+
+				//For Unexpected events
+				return Math::Vector3ui(0, 0, 0);
 			}
 
-			unsigned int Texture::GetWidth()
+			Texture_Desc Texture::GetTextureDesc()
 			{
-				return mDimensions.x;
+				return mTexDesc;
 			}
-			unsigned int Texture::GetHeight()
-			{
-				return mDimensions.y;
-			}
-
 		
-			void Texture::VSBind(unsigned int index)
+			void Texture::VSBind(Uint8 slot)
 			{
-				BASE_API_FUNC_CALL_ARGS(VSBind, index)		
+				BASE_API_FUNC_CALL_ARGS(VSBind, slot)
 			}
 
-			void Texture::PSBind(unsigned int index)
+			void Texture::PSBind(Uint8 slot)
 			{
-				BASE_API_FUNC_CALL_ARGS(PSBind, index)
+				BASE_API_FUNC_CALL_ARGS(PSBind, slot)
 			}
-			void Texture::GSBind(unsigned int index)
+			void Texture::GSBind(Uint8 slot)
 			{
-				BASE_API_FUNC_CALL_ARGS(GSBind, index)
+				BASE_API_FUNC_CALL_ARGS(GSBind, slot)
 			}
 		}
 	}

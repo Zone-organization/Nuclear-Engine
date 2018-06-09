@@ -49,11 +49,11 @@ namespace NuclearEngine
 						GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 					}
 				}
-				void GLRenderTarget::AttachTexture(GLTexture * texture)
+				void GLRenderTarget::AttachTexture(GLTexture * texture, const Texture_Desc& Desc)
 				{
 					GLCall(glBindFramebuffer(GL_FRAMEBUFFER, FBO));
 
-					switch (texture->GetTextureDesc().Type)
+					switch (Desc.Type)
 					{
 					case TextureType::Texture2D:
 						GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + ColorAttachmentsi, GL_TEXTURE_2D, texture->GLGetTextureID(), 0));

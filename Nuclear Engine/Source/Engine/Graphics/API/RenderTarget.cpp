@@ -32,7 +32,7 @@ namespace NuclearEngine {
 
 			void RenderTarget::AttachTexture(Texture * texture)
 			{
-				SPECIAL_BASE_API_FUNC_CALL(AttachTexture, texture)
+				SPECIAL_BASE_API_FUNC_CALL_ARGS(AttachTexture, texture, texture->GetTextureDesc())
 			}
 
 			void RenderTarget::Bind()
@@ -41,14 +41,7 @@ namespace NuclearEngine {
 			}
 			void RenderTarget::Bind_Default()
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					OpenGL::GLRenderTarget::Bind_Default();
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					DirectX::DX11RenderTarget::Bind_Default();
-				}
+				STATIC_BASE_API_FUNC_CALL_SPECIAL_FUNC(RenderTarget, Bind_Default)
 			}
 		}
 	}

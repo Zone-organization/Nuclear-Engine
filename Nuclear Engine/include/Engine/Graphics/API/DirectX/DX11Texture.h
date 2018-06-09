@@ -24,27 +24,20 @@ namespace NuclearEngine
 					DX11Texture();
 					~DX11Texture();
 
-					static void Create(DX11Texture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
-					static void Create(DX11Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
+					static bool Create(DX11Texture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
+					static bool Create(DX11Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 					static void Delete(DX11Texture* texture);
 
-					void VSBind(unsigned int slot);
-					void GSBind(unsigned int slot);
-					void PSBind(unsigned int slot);
+					void VSBind(Uint8 slot);
+					void GSBind(Uint8 slot);
+					void PSBind(Uint8 slot);
 
-					Texture_Desc GetTextureDesc();
+					Math::Vector3ui GetDimensions(Uint8 Mipmaplevel);
 
 				protected:
-					Texture_Desc desc;
 
-					static void Create1D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
-					static void Create2D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
-					static void Create3D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
-					static void CreateCube(DX11Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
-
-					ID3D11Texture1D* tex1D;
-					ID3D11Texture2D* tex2D;
-					ID3D11Texture3D* tex3D;
+					static bool Create1D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
+					static bool Create2D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
 					ID3D11ShaderResourceView* resourceView;
 				};
 			}

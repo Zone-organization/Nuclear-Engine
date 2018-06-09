@@ -63,29 +63,33 @@ namespace NuclearEngine
 						Log.Error("[DX11RenderTarget] Failed to create DepthStencilView for render-target!\n");
 					}
 				}
-				void DX11RenderTarget::AttachTexture(DX11Texture * texture)
+				void DX11RenderTarget::AttachTexture(DX11Texture * texture, const Texture_Desc& Desc)
 				{
 					D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
 					ZeroMemory(&renderTargetViewDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
-					renderTargetViewDesc.Format = DXTypeMap(texture->GetTextureDesc().Format);
+					renderTargetViewDesc.Format = DXTypeMap(Desc.Format);
 
-					switch (texture->GetTextureDesc().Type)
+					switch (Desc.Type)
 					{
 					case TextureType::Texture2D:
 						renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 						renderTargetViewDesc.Texture2D.MipSlice = 0;
-					default:
-						Exceptions::NotImplementedException();
-					}
-					ID3D11RenderTargetView* rtv;
+						ID3D11RenderTargetView* rtv;
 
-					if (FAILED(Graphics::API::DirectX::DX11Context::GetDevice()->CreateRenderTargetView(texture->tex2D, &renderTargetViewDesc, &rtv)))
-					{
-						Log.Error("[DX11RenderTarget] Failed to create render-target-view (RTV)!\n");
+						ID3D11Texture2D* texture2d = nullptr;
+						HRESULT hr = texture->resourceView->QueryInterface(&texture2d);
+
+						if (FAILED(Graphics::API::DirectX::DX11Context::GetDevice()->CreateRenderTargetView(texture2d, &renderTargetViewDesc, &rtv)))
+						{
+							Log.Error("[DX11RenderTarget] CreateRenderTargetView (RTV) for Texture2D Failed!\n");
+							return;
+						}
+
+						rendertargetviews.push_back(rtv);
 						return;
-					}
+					}					
+					Exceptions::NotImplementedException();
 
-					rendertargetviews.push_back(rtv);
 				}
 				void DX11RenderTarget::Bind()
 				{

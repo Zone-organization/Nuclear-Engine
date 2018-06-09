@@ -29,10 +29,8 @@ namespace NuclearEngine
 					type = 0;
 				}
 
-				void GLTexture::Create(GLTexture* result, const Texture_Data& Data, const Texture_Desc& Desc)
+				bool GLTexture::Create(GLTexture* result, const Texture_Data& Data, const Texture_Desc& Desc)
 				{
-					result->desc = Desc;
-
 					if (Desc.Type == TextureType::Texture1D)
 					{
 						result->type = GL_TEXTURE_1D;
@@ -101,12 +99,12 @@ namespace NuclearEngine
 						GLCall(glPixelStorei(GL_PACK_ALIGNMENT, 1));
 					}
 					GLCall(glBindTexture(result->type, 0));
+
+					return true;
 				}
 
-				void GLTexture::Create(GLTexture * result, const std::array<Graphics::API::Texture_Data, 6>& data, const Texture_Desc& Desc)
+				bool GLTexture::Create(GLTexture * result, const std::array<Graphics::API::Texture_Data, 6>& data, const Texture_Desc& Desc)
 				{
-					result->desc = Desc;
-
 					GLCall(glGenTextures(1, &result->textureID));
 					result->type = GL_TEXTURE_CUBE_MAP;
 
@@ -130,6 +128,8 @@ namespace NuclearEngine
 					}
 
 					GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+
+					return true;
 				}
 
 				void GLTexture::Delete(GLTexture * texture)
@@ -143,31 +143,34 @@ namespace NuclearEngine
 					texture->type = 0;
 				}
 
-				void GLTexture::VSBind(unsigned int slot)
+				void GLTexture::VSBind(Uint8 slot)
 				{
 					GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 					GLCall(glBindTexture(type, textureID));
 				}
 
 
-				void GLTexture::PSBind(unsigned int slot)
+				void GLTexture::PSBind(Uint8 slot)
 				{
 					GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 					GLCall(glBindTexture(type, textureID));
 				}
 
-				void GLTexture::GSBind(unsigned int slot)
+				void GLTexture::GSBind(Uint8 slot)
 				{
 					GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 					GLCall(glBindTexture(type, textureID));
 				}
-
-				Texture_Desc GLTexture::GetTextureDesc()
+				Math::Vector3ui GLTexture::GetDimensions(Uint8 miplevel)
 				{
-					return desc;
+					int w, h, d;
+					glGetTexLevelParameteriv(GL_TEXTURE_2D, miplevel, GL_TEXTURE_WIDTH, &w);
+					glGetTexLevelParameteriv(GL_TEXTURE_2D, miplevel, GL_TEXTURE_HEIGHT, &h);
+					glGetTexLevelParameteriv(GL_TEXTURE_2D, miplevel, GL_TEXTURE_DEPTH, &d);
+
+					return Math::Vector3ui(w,h,d);
 				}
-
-
+				
 				unsigned int GLTexture::GLGetTextureID()
 				{
 					return textureID;

@@ -18,30 +18,29 @@ namespace NuclearEngine
 			class VertexShader;
 			class PixelShader;
 			class RenderTarget;
-			class NEAPI Texture //<OpenGL::GLTexture, DirectX::DX11Texture>
+			class NEAPI Texture
 			{
 				friend class RenderTarget;
 			public:
 				Texture();
 				~Texture();
 
-				static void Create(Texture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
-				static void Create(Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
+				static bool Create(Texture* texture, const Texture_Data& TexData, const Texture_Desc& Desc);
+				static bool Create(Texture* texture, const std::array<Texture_Data, 6>& data, const Texture_Desc& Desc);
 				static void Delete(Texture* texture);
 
-				//TODO: Replace with "real" acessor that gets the dimensions of each mip map
-				Math::Vector2ui GetDimensions();
-				unsigned int GetWidth();
-				unsigned int GetHeight();
-		
+				Math::Vector3ui GetDimensions(Uint8 Mipmaplevel = 0);
+				Texture_Desc GetTextureDesc();
+
 				//TODO: Combine Sampler binding methods with these to ensure error-free bindings!
-				void VSBind(unsigned int slot);
-				void GSBind(unsigned int slot);
-				void PSBind(unsigned int slot);
+				void VSBind(Uint8 slot);
+				void GSBind(Uint8 slot);
+				void PSBind(Uint8 slot);
 
 				BASE_API(Texture)
-			private:
-				Math::Vector2ui mDimensions;
+
+			protected:
+				Texture_Desc mTexDesc;
 			};
 		}
 	}

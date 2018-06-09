@@ -57,8 +57,6 @@ _____________/BOOOM\_____________
 #include <Engine/Components\CameraComponent.h>
 #include <Engine/Components\Light.h>
 #include <Engine/Components\MeshComponent.h>
-#include <Engine/Components\Sprite.h>
 
 //# Engine Systems Headers
 #include <Engine/Systems\RenderSystem.h>
-#include <Engine/Systems\SpriteRenderSystem.h>

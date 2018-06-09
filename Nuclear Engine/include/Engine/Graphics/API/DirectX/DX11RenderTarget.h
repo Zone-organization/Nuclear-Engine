@@ -2,6 +2,7 @@
 #include <Engine/Graphics/API/DirectX\DX11Common.h>
 
 #ifdef NE_COMPILE_DIRECTX11
+#include <Engine/Graphics/API/Texture_Types.h>
 #include <Base\Math\Math.h>
 #include <vector>
 namespace NuclearEngine
@@ -26,7 +27,7 @@ namespace NuclearEngine
 
 					void AttachDepthStencilBuffer(const Math::Vector2ui& size);
 
-					void AttachTexture(DX11Texture* texture);
+					void AttachTexture(DX11Texture* texture, const Texture_Desc& Desc);
 
 					void Bind();
 					static void Bind_Default();

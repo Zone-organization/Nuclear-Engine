@@ -13,7 +13,6 @@
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Engine\Transform\Transform.h" />
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
-    <ClInclude Include="include\Engine\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="include\Engine\Physics3D\Collider.h" />
     <ClInclude Include="include\Engine\Physics3D\Physics3DEngine.h" />
     <ClInclude Include="include\Engine\Physics3D\PhysicsMaterial.h" />
@@ -72,14 +71,11 @@
     <ClInclude Include="include\Engine\Graphics\API\Texture_Types.h" />
     <ClInclude Include="include\Engine\Graphics\API\VertexBuffer.h" />
     <ClInclude Include="include\Engine\Graphics\API\VertexShader.h" />
-    <ClInclude Include="include\Engine\Graphics\Animator2D.h" />
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Engine\Graphics\Skybox.h" />
-    <ClInclude Include="include\Engine\Graphics\SpriteBatch.h" />
-    <ClInclude Include="include\Engine\Graphics\SpriteSheet.h" />
     <ClInclude Include="include\Engine\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
     <ClInclude Include="include\Engine\ECS\ECSConfig.h" />
@@ -90,8 +86,6 @@
     <ClInclude Include="include\Engine\Components\CameraComponent.h" />
     <ClInclude Include="include\Engine\Components\Light.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
-    <ClInclude Include="include\Engine\Components\Renderable2D.h" />
-    <ClInclude Include="include\Engine\Components\Sprite.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
     <ClInclude Include="include\Engine\Audio\Channel.h" />
     <ClInclude Include="include\Engine\Audio\Sound.h" />
@@ -347,8 +341,6 @@
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Skybox.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\SpriteBatch.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\SpriteSheet.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
@@ -359,13 +351,10 @@
     <ClCompile Include="Source\Engine\Physics3D\PhysicsScene.cpp" />
     <ClCompile Include="Source\Engine\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
-    <ClCompile Include="Source\Engine\Systems\SpriteRenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Transform\Transform.cpp" />
     <ClCompile Include="Source\Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\Light.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
-    <ClCompile Include="Source\Engine\Components\Renderable2D.cpp" />
-    <ClCompile Include="Source\Engine\Components\Sprite.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Audio\Channel.cpp" />
     <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
@@ -379,7 +368,6 @@
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\mGLContext.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Assets\TextureAsset.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\Animator2D.cpp" />
     <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
     <ClCompile Include="Source\Engine\ECS\Event.cpp" />
     <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
