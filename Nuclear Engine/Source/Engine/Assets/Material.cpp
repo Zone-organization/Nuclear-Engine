@@ -22,6 +22,10 @@ namespace NuclearEngine
 			mPShader = pshader;
 			ParsePixelShader();
 		}
+
+		void Material::BindTexSet(Uint32 index)
+		{
+		}
 	
 		void Material::ParseVertexShader()
 		{

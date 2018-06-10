@@ -37,7 +37,7 @@ namespace NuclearEngine
 			void SetVertexShader(Graphics::API::VertexShader vshader);
 			void SetPixelShader(Graphics::API::PixelShader pshader);
 
-
+			void BindTexSet(Uint32 index);
 
 			//If the shader isn't valid the default shader is bound
 			Graphics::API::VertexShader mVShader;

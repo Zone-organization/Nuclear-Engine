@@ -6,6 +6,7 @@
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\Light.h>
 #include <Engine\Assets\Mesh.h>
+#include <Engine\Assets\Material.h>
 #include <Engine/Graphics/API/RenderTarget.h>
 #include <Engine/Graphics/API/Sampler.h>
 #include <vector>
@@ -53,9 +54,9 @@ namespace NuclearEngine
 			// Render A MeshComponent Component instantly
 			void InstantRender(Components::MeshComponent* object);
 			// Render A SubMesh instantly
-			void InstantRender(Assets::Mesh::SubMesh* submesh);
+			void InstantRender(Assets::Mesh::SubMesh* submesh, Assets::Material* material);
 			// Render A Mesh instantly
-			void InstantRender(Assets::Mesh* mesh);
+			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
 			void RenderToPostProcessingRT();
 			void RenderPostProcessingContents();

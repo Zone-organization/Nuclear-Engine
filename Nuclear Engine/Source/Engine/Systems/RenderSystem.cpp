@@ -215,29 +215,29 @@ namespace NuclearEngine
 			{
 				for (size_t i = 0; i < object->mMesh->SubMeshes.size(); i++)
 				{
-					InstantRender(&object->mMesh->SubMeshes.at(i));
+					InstantRender(&object->mMesh->SubMeshes.at(i),object->mMaterial);
 				}
 			}
 		}
-		void RenderSystem::InstantRender(Assets::Mesh * object)
+		void RenderSystem::InstantRender(Assets::Mesh * object, Assets::Material* material)
 		{
 			for (size_t i = 0; i< object->SubMeshes.size(); i++)
 			{
-				InstantRender(&object->SubMeshes.at(i));
+				InstantRender(&object->SubMeshes.at(i), material);
 			}
 		}
-		void RenderSystem::InstantRender(Assets::Mesh::SubMesh * mesh)
+		void RenderSystem::InstantRender(Assets::Mesh::SubMesh * mesh, Assets::Material* material)
 		{
 			///FIXME URGENT ERRROR BLA BLA
 
 
 			//Lil and UGLY AND SLOW hack to ensure only one rendering texture is bound
 			//TODO: Support Multi-Texture Models
-		//	bool diffusebound = false;
+			//	bool diffusebound = false;
 			//bool specularbound = false;
 			//bool normalbound = false;
 
-/*			for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
+		/*	for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
 			{
 
 				if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Diffuse)
@@ -282,7 +282,7 @@ namespace NuclearEngine
 			PostProcess_PShader.Bind();
 			ScreenSampler.PSBind(0);
 			PostProcessTexture.PSBind(0);
-			InstantRender(&PostProcessScreenQuad);
+			InstantRender(&PostProcessScreenQuad, nullptr);
 		}
 	
 		void RenderSystem::Calculate_Light_CB_Size()
