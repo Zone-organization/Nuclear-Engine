@@ -47,7 +47,6 @@ namespace NuclearEngine
 			std::vector<TextureSet> mPixelShaderTextures;
 			std::vector<ShaderTextureInfo> PixelShaderTS;
 		private:
-			void ParseVertexShader();
 			void ParsePixelShader();
 			Graphics::API::ConstantBuffer mCbuffer;
 

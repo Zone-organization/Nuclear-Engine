@@ -15,7 +15,6 @@ namespace NuclearEngine
 		void Material::SetVertexShader(Graphics::API::VertexShader vshader)
 		{
 			mVShader = vshader;
-			ParseVertexShader();
 		}
 		void Material::SetPixelShader(Graphics::API::PixelShader pshader)
 		{
@@ -27,13 +26,6 @@ namespace NuclearEngine
 		{
 		}
 	
-		void Material::ParseVertexShader()
-		{
-			if (mVShader.isValid)
-			{
-
-			}
-		}
 		void Material::ParsePixelShader()
 		{
 			if (mPShader.isValid)
