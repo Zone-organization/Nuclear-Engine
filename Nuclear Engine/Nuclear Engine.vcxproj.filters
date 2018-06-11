@@ -252,17 +252,6 @@
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
-    <ClInclude Include="Source\Engine\Tests\DirectX11Tests.h" />
-    <ClInclude Include="Source\Engine\Tests\ECSTests.h" />
-    <ClInclude Include="Source\Engine\Tests\FMODTests.h" />
-    <ClInclude Include="Source\Engine\Tests\OpenGLTests.h" />
-    <ClInclude Include="Source\Engine\Tests\PhysXTests.h" />
-    <ClInclude Include="Source\Engine\Tests\Test1.h" />
-    <ClInclude Include="Source\Engine\Tests\Test2.h" />
-    <ClInclude Include="Source\Engine\Tests\Test3.h" />
-    <ClInclude Include="Source\Engine\Tests\Test4.h" />
-    <ClInclude Include="Source\Engine\Tests\Test5.h" />
-    <ClInclude Include="Source\Engine\Tests\TestCommon.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="include\Base\Utilities\Timer.h" />
     <ClInclude Include="include\Core\Input.h" />

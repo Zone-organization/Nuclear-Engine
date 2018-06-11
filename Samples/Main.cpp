@@ -1,7 +1,5 @@
 ﻿#include "Common.h"
 #include "Sample1.h"
-#include "Playground.h"
-#include "Sandbox.h"
 #include <iostream>
 
 void Start()
@@ -26,62 +24,10 @@ void Start()
 
 int main(int argc, char* argv[])
 {
-	std::cout
-		<< "-----[Select the sample you want]-----\n"
+	Start();
+	Sample1 demo;
+	Core::Engine::RunGame(&demo);
 
-		<< "---Engine Samples:\n"
-		<< "1) Sample 1 - Lighted Scene - introduction to Camera & Input & ECS & RenderSystem\n"
-		<< "----------------[Other]---------------\n"
-		<< "x) Playground - testing new stuff (Currently Normal Mapping)\n"
-		<< "y) Sandbox - testing new stuff (Currently Bloom)\n"
-		<< "z) Tests\n";
-	
-
-	char choice;
-	std::cin >> choice;
-	if (choice == '1') {
-		Start();
-		Sample1 demo;
-		Core::Engine::RunGame(&demo);
-	}
-	else if (choice == 'x') {
-		Start();
-		Playground game;
-		Core::Engine::RunGame(&game);
-	}
-	else if (choice == 'y') {
-		Start();
-		Sandbox game;
-		Core::Engine::RunGame(&game);
-	}	
-	else if (choice == 'z')
-	{
-		Start();
-		std::cout << "Enter The test number: ";
-		Uint32 testno;
-		std::cin >> testno;
-		Core::Engine::RunTest(testno);
-	}
-	else if (choice == 'H')
-	{
-		/*std::string TexUp("Texture.png");
-		std::string TexDown("texture.png");
-		std::string TexPathed("Assets/Common/Textures/Texture.png");
-
-		Platform::Clock clock;
-		clock.Restart();
-		auto I0 = Utilities::Hash(TexUp);
-		std::cout << clock.GetElapsedTime().AsMicroseconds() << "\n";
-		clock.Restart();
-		auto I1 = Utilities::Hash(TexDown);
-		std::cout << clock.GetElapsedTime().AsMicroseconds() << "\n";
-		clock.Restart();
-
-		auto I2 = Utilities::Hash(TexPathed);
-		std::cout << clock.GetElapsedTime().AsMicroseconds() << "\n";
-		clock.Restart();
-		*/
-	}
 	Core::Engine::Shutdown();
 
 	return 0;

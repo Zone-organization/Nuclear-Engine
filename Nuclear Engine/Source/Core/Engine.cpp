@@ -1,17 +1,8 @@
 #include <Core\Engine.h>
 #include <Base\NE_Common.h>
 #include <Base\Utilities\Timer.h>
-#include "Core\Input.h"
-#include <..\Source\Engine\Tests\ECSTests.h>
-#include <..\Source\Engine\Tests\PhysXTests.h>
-#include <..\Source\Engine\Tests\FMODTests.h>
-#include <..\Source\Engine\Tests\DirectX11Tests.h>
-#include <..\Source\Engine\Tests\OpenGLTests.h>
-#include <..\Source\Engine\Tests\Test1.h>
-#include <..\Source\Engine\Tests\Test2.h>
-#include <..\Source\Engine\Tests\Test3.h>
-#include <..\Source\Engine\Tests\Test4.h>
-#include <..\Source\Engine\Tests\Test5.h>
+#include <Core\Input.h>
+#include <Core\Application.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Audio\AudioEngine.h>
 #include <FMOD\includer.h> 
@@ -96,88 +87,7 @@ namespace NuclearEngine {
 			SetState(Engine::State::Shuttingdown);
 			GamePtr->Shutdown();
 		}
-		/*
-		Normal Tests:
-			From 1 to 10
-		Special Tests:
-			DirectX 11:  11
-			OpenGL3:	 22
-			Fmod:		 33
-			ECS:         44
-			Physics:     55
-
-		ELSE:
-			Runs 1st Test
-		*/
-		void Engine::RunTest(unsigned int TestNumber)
-		{
-			switch (TestNumber)
-			{
-			case 1:
-			{	Test1 test1;
-				Engine::RunGame(&test1);
-				break; 
-			}
-			case 2:
-			{	Test2 test2;
-				Engine::RunGame(&test2);
-				break;
-			}
-			case 3: 
-			{
-				Test3 test3;
-				Engine::RunGame(&test3);
-				break; 
-			}
-			case 4:
-			{
-				Test4 test4;
-				Engine::RunGame(&test4);
-				break; 
-			}
-			case 5:
-			{
-				Test5 test5;
-				Engine::RunGame(&test5);
-				break; 
-			}
-			case 11:
-			{
-				DirectX11Tests test11;
-				Engine::RunGame(&test11);
-				break;
-			}
-			case 22:
-			{
-				OpenGLTests test22;
-				Engine::RunGame(&test22);
-				break;
-			}
-			case 33:
-			{
-				FMODTests test33;
-				Engine::RunGame(&test33);
-				break; 
-			}
-			case 44:
-			{
-				ECSTests test44;
-				Engine::RunGame(&test44);
-				break; 
-			}
-			case 55:
-			{
-				PhysXTests test55;
-				Engine::RunGame(&test55);
-				break;
-			}
-			default:
-			{	Test1 test1;
-				Engine::RunGame(&test1);
-			}
-			}
-		}
-
+		
 		bool Engine::ShouldClose()
 		{
 			return Core::Application::ShouldClose;

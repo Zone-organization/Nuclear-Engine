@@ -24,8 +24,6 @@ namespace NuclearEngine
 
 			static void RunGame(Game *YourGame);
 
-			static void RunTest(unsigned int TestNumber);
-
 			static void SetState(const State& state);
 
 			static bool ShouldClose();
