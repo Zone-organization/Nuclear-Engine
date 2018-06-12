@@ -1,51 +1,51 @@
 #pragma once
-
+#include <Base\NE_Common.h>
 #include "animator.h"
 #include "renderable.h"
 #include "spritesheet.h"
 
-namespace stella {
-namespace graphics {
+namespace NuclearEngine {
+	namespace Graphics {
 
-struct VertexData {
-  glm::vec3 vertex;
-  glm::vec2 uv;
-  GLfloat tid;
-  unsigned int color;
-};
+		struct VertexData {
+			glm::vec3 vertex;
+			glm::vec2 uv;
+			Float32 tid;
+			unsigned int color;
+		};
 
-class Sprite : public Renderable {
-public:
-  Animator Animations;
+		class Sprite : public Renderable {
+		public:
+			Animator Animations;
 
-  Sprite(GLint x, GLint y, Texture &texture, const std::vector<GLuint> &frames);
-  Sprite(GLint x, GLint y, Texture &texture, GLuint frame = 0);
-  Sprite(GLint x, GLint y, GLint w, GLint h, Texture &texture,
-         GLuint frame = 0);
-  ~Sprite();
+			Sprite(Int32 x, Int32 y, Texture &texture, const std::vector<Uint32> &frames);
+			Sprite(Int32 x, Int32 y, Texture &texture, Uint32 frame = 0);
+			Sprite(Int32 x, Int32 y, Int32 w, Int32 h, Texture &texture,
+				Uint32 frame = 0);
+			~Sprite();
 
-  void Update();
+			void Update();
 
-  // Getters
-	inline unsigned int GetColor() const { return Color; }
-  inline GLuint GetCurrentFrame() const { return Frame; }
-  inline SpriteSheet GetSpriteSheet() const { return *Sprites; }
-  inline glm::vec2 GetFrameCoords() const { return Sprites->GetUV(this->Frame); }
+			// Getters
+			inline unsigned int GetColor() const { return Color; }
+			inline Uint32 GetCurrentFrame() const { return Frame; }
+			inline SpriteSheet GetSpriteSheet() const { return *Sprites; }
+			inline glm::vec2 GetFrameCoords() const { return Sprites->GetUV(this->Frame); }
 
-  // Setters
-  void SetFrame(GLuint frame);
-  void SetDirectFrame(GLuint frame);
-	void SetColorRGB(int r, int g, int b);
-  void SetColorRGBA(unsigned int r, unsigned int g, unsigned int b, unsigned int a);
-	void SetAlpha(int a);
-	void Flip() { this->SetScale(glm::vec2(-1.f, 0.f)); }
+			// Setters
+			void SetFrame(Uint32 frame);
+			void SetDirectFrame(Uint32 frame);
+			void SetColorRGB(int r, int g, int b);
+			void SetColorRGBA(unsigned int r, unsigned int g, unsigned int b, unsigned int a);
+			void SetAlpha(int a);
+			void Flip() { this->SetScale(glm::vec2(-1.f, 0.f)); }
 
-private:
-  //glm::vec4 Color;
-  unsigned int Color;
-  std::vector<GLuint> Frames;
-  GLuint Frame = 0, NumberOfFrames;
-  SpriteSheet *Sprites;
-};
-} // namespace graphics
-} // namespace stella
+		private:
+			//glm::vec4 Color;
+			unsigned int Color;
+			std::vector<Uint32> Frames;
+			Uint32 Frame = 0, NumberOfFrames;
+			SpriteSheet *Sprites;
+		};
+	} 
+}

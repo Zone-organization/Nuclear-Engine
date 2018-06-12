@@ -1,29 +1,28 @@
 #pragma once
-
-#include <glm/glm.hpp>
+#include <Base\NE_Common.h>
+#include <Base/Math/Math.h>
 #include <vector>
+#include "shader.h"
+#include "sprite.h"
+#include "renderer.h"
 
-#include "stella/graphics/shader.h"
-#include "stella/graphics/sprite.h"
-#include "stella/graphics/renderer.h"
+namespace NuclearEngine {
+	namespace Graphics {
 
-namespace stella {
-namespace graphics {
+		class Layer {
+		public:
+			virtual ~Layer();
+			virtual void Add(Sprite *sprite);
+			virtual void Remove(Sprite *sprite);
+			virtual void Render();
 
-class Layer {
-public:
-  virtual ~Layer();
-  virtual void Add(Sprite *sprite);
-  virtual void Remove(Sprite *sprite);
-  virtual void Render();
+		protected:
+			Renderer * Ren;
+			Shader *Shad;
+			glm::mat4 Projection;
+			std::vector<Sprite *> Sprites;
 
-protected:
-  Renderer *Ren;
-  Shader *Shad;
-  glm::mat4 Projection;
-  std::vector<Sprite *> Sprites;
-
-  Layer(Renderer *renderer, Shader *shader, glm::mat4 projection);
-};
-} // namespace graphics
-} // namespace stella
+			Layer(Renderer *renderer, Shader *shader, glm::mat4 projection);
+		};
+	} 
+}

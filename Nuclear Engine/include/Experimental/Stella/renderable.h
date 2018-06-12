@@ -1,55 +1,49 @@
 #pragma once
+#include <Base/Math/Math.h>
+#include <Base\NE_Common.h>
 
-#include <string>
-#include <glm/glm.hpp>
+namespace NuclearEngine {
+	namespace Graphics {
 
-typedef float GLfloat;
-typedef unsigned int GLuint;
-typedef int GLint;
-typedef unsigned char GLboolean;
+		class Texture;
 
-namespace stella {
-namespace graphics {
+		class Renderable {
+		public:
+			glm::vec2 Pos, Dimensions, RealDimensions;
 
-class Texture; 
+			Renderable(Int32 x, Int32 y, Int32 w, Int32 h, Texture &texture, GLboolean visible = 1);
+			Renderable(Int32 x, Int32 y, Texture &texture);
+			Renderable(Texture &texture);
+			virtual ~Renderable();
 
-class Renderable {
-public:
-  glm::vec2 Pos, Dimensions, RealDimensions;
+			// Getters
+			inline glm::vec2 GetPos() const { return Pos; }
+			inline glm::vec2 GetDimensions() const { return Dimensions; }
+			inline Float32 GetWidth() const { return Dimensions.x; }
+			inline Float32 GetHeight() const { return Dimensions.y; }
+			inline Float32 GetRotation() const { return Rotation; }
+			inline glm::vec2 GetScale() const { return Scale; }
+			Uint32 GetTexID() const;
+			const std::string &GetTexName() const;
+			Texture *GetTexture() const;
+			inline const GLboolean& IsVisible() const { return Visible; }
 
-  Renderable(GLint x, GLint y, GLint w, GLint h, Texture &texture, GLboolean visible = 1);
-  Renderable(GLint x, GLint y, Texture &texture);
-  Renderable(Texture &texture);
-  virtual ~Renderable();
+			// Setters
+			void SetVisible(GLboolean vis) { Visible = vis; }
+			void ToggleVisible() { Visible = !Visible; }
+			void SetDimensions(glm::vec2 dimensions) { Dimensions = dimensions; }
+			void SetRotation(float rotation) { Rotation = rotation; }
+			void SetRelativeScale(glm::vec2 scale) { Scale = scale; }
+			void SetScale(glm::vec2 scale) { Scale = scale; }
 
-  // Getters
-  inline glm::vec2 GetPos() const { return Pos; }
-  inline glm::vec2 GetDimensions() const { return Dimensions; }
-  inline GLfloat GetWidth() const { return Dimensions.x; }
-  inline GLfloat GetHeight() const { return Dimensions.y; }
-  inline GLfloat GetRotation() const { return Rotation; }
-  inline glm::vec2 GetScale() const { return Scale; }
-  GLuint GetTexID() const;
-  const std::string &GetTexName() const;
-  Texture *GetTexture() const;
-  inline const GLboolean& IsVisible() const { return Visible; }
+			void SetDirectScale(glm::vec2 scale) { Scale = scale / (this->Dimensions); }
+			//void SetDirectScale(glm::vec2 scale) { Scale = scale/(this->Dimensions); this->Dimensions *= this->Scale; }
 
-  // Setters
-  void SetVisible(GLboolean vis) { Visible = vis; }
-  void ToggleVisible() { Visible = !Visible; }
-  void SetDimensions(glm::vec2 dimensions) { Dimensions = dimensions; }
-  void SetRotation(float rotation) { Rotation = rotation; }
-  void SetRelativeScale(glm::vec2 scale) { Scale = scale; }
-  void SetScale(glm::vec2 scale) { Scale = scale; }
-  
-  void SetDirectScale(glm::vec2 scale) { Scale = scale/(this->Dimensions);  }
-  //void SetDirectScale(glm::vec2 scale) { Scale = scale/(this->Dimensions); this->Dimensions *= this->Scale; }
-
-protected:
-  Texture &Tex;
-  GLboolean Visible;
-  float Rotation = 0.f;
-  glm::vec2 Scale = glm::vec2(1.f,1.f);
-};
-} // namespace graphics
-} // namespace stella
+		protected:
+			Texture & Tex;
+			GLboolean Visible;
+			float Rotation = 0.f;
+			glm::vec2 Scale = glm::vec2(1.f, 1.f);
+		};
+	} 
+}
