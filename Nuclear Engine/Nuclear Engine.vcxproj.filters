@@ -273,12 +273,6 @@
     <ClInclude Include="include\Base\Utilities\SmartPointer.h" />
     <ClInclude Include="include\Engine\Assets\Asset.h" />
     <ClInclude Include="include\Engine\Assets\Texture.h" />
-    <ClInclude Include="include\Experimental\Stella\Animator.h" />
-    <ClInclude Include="include\Experimental\Stella\Layer.h" />
-    <ClInclude Include="include\Experimental\Stella\Renderable.h" />
-    <ClInclude Include="include\Experimental\Stella\Renderer.h" />
-    <ClInclude Include="include\Experimental\Stella\Sprite.h" />
-    <ClInclude Include="include\Experimental\Stella\SpriteSheet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

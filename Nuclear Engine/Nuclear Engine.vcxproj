@@ -545,12 +545,6 @@
     <ClInclude Include="include\Engine\Physics3D\RigidBody.h" />
     <ClInclude Include="include\Engine\Assets\Mesh.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
-    <ClInclude Include="include\Experimental\Stella\Animator.h" />
-    <ClInclude Include="include\Experimental\Stella\Layer.h" />
-    <ClInclude Include="include\Experimental\Stella\Renderable.h" />
-    <ClInclude Include="include\Experimental\Stella\Renderer.h" />
-    <ClInclude Include="include\Experimental\Stella\Sprite.h" />
-    <ClInclude Include="include\Experimental\Stella\SpriteSheet.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="include\Engine\Transform\Transform.h" />
     <ClInclude Include="include\Engine\ECS\ComponentDependency.h" />
