@@ -4,16 +4,14 @@
 
 namespace NuclearEngine {
 	namespace Graphics {
-
-		class Texture;
-
+		namespace API {	class Texture;	}
 		class Renderable {
 		public:
 			glm::vec2 Pos, Dimensions, RealDimensions;
 
-			Renderable(Int32 x, Int32 y, Int32 w, Int32 h, Texture &texture, bool visible = 1);
-			Renderable(Int32 x, Int32 y, Texture &texture);
-			Renderable(Texture &texture);
+			Renderable(Int32 x, Int32 y, Int32 w, Int32 h, API::Texture &texture, bool visible = 1);
+			Renderable(Int32 x, Int32 y, API::Texture &texture);
+			Renderable(API::Texture &texture);
 			virtual ~Renderable();
 
 			// Getters
@@ -23,9 +21,7 @@ namespace NuclearEngine {
 			inline Float32 GetHeight() const { return Dimensions.y; }
 			inline Float32 GetRotation() const { return Rotation; }
 			inline glm::vec2 GetScale() const { return Scale; }
-			Uint32 GetTexID() const;
-			const std::string &GetTexName() const;
-			Texture *GetTexture() const;
+			API::Texture *GetTexture() const;
 			inline const bool& IsVisible() const { return Visible; }
 
 			// Setters
@@ -40,7 +36,7 @@ namespace NuclearEngine {
 			//void SetDirectScale(glm::vec2 scale) { Scale = scale/(this->Dimensions); this->Dimensions *= this->Scale; }
 
 		protected:
-			Texture & Tex;
+			API::Texture & Tex;
 			bool Visible;
 			float Rotation = 0.f;
 			glm::vec2 Scale = glm::vec2(1.f, 1.f);

@@ -2,7 +2,7 @@
 
 namespace NuclearEngine {
 	namespace Graphics {
-		Sprite::Sprite(Int32 x, Int32 y, Texture &texture,
+		Sprite::Sprite(Int32 x, Int32 y, API::Texture &texture,
 			const std::vector<Uint32> &frames)
 			: Renderable(x, y, texture), Frames(frames) {
 			this->Color = 4294967295; // r = 255, g = 255, b = 255, a = 255
@@ -13,7 +13,7 @@ namespace NuclearEngine {
 				new SpriteSheet(texture, this->Dimensions.x, this->Dimensions.y);
 		}
 
-		Sprite::Sprite(Int32 x, Int32 y, Texture &texture, Uint32 frame)
+		Sprite::Sprite(Int32 x, Int32 y, API::Texture &texture, Uint32 frame)
 			: Renderable(x, y, texture) {
 			this->Color = 4294967295; // r = 255, g = 255, b = 255, a = 255
 			this->NumberOfFrames = 1;
@@ -23,7 +23,7 @@ namespace NuclearEngine {
 				new SpriteSheet(texture, this->Dimensions.x, this->Dimensions.y);
 		}
 
-		Sprite::Sprite(Int32 x, Int32 y, Int32 w, Int32 h, Texture &texture,
+		Sprite::Sprite(Int32 x, Int32 y, Int32 w, Int32 h, API::Texture &texture,
 			Uint32 frame)
 			: Renderable(x, y, w, h, texture) {
 			this->Color = 4294967295; // r = 255, g = 255, b = 255, a = 255

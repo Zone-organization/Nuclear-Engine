@@ -5,26 +5,23 @@
 
 namespace NuclearEngine {
 	namespace Graphics {
-		class Texture;
-
+		namespace API {	class Texture;	}
 		class SpriteSheet {
 		public:
-			SpriteSheet(const Texture &texture, unsigned int framex, unsigned int framey,
-				unsigned int number_of_frames = 0);
+			SpriteSheet(API::Texture &texture, unsigned int framex, unsigned int framey,	unsigned int number_of_frames = 0);
 			~SpriteSheet();
 
-			glm::vec2 GetUV(unsigned int frame);
-			unsigned int GetWidth() const;
-			unsigned int GetHeight() const;
+			Math::Vector2 GetUV(unsigned int frame);
+			Math::Vector2ui GetDimensions() const;
 
 			inline void SetOffset(unsigned int x, unsigned int y) {
 				OffsetX = x;
 				OffsetY = y;
 			}
 		private:
-			const Texture &Frames;
+			API::Texture &Frames;
 			unsigned int FrameX, FrameY, OffsetX, OffsetY, NumOfFrames, SizeInFramesX,
 				SizeInFramesY;
 		};
-	} 
+	}
 }

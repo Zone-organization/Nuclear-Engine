@@ -18,9 +18,9 @@ namespace NuclearEngine {
 		public:
 			Animator Animations;
 
-			Sprite(Int32 x, Int32 y, Texture &texture, const std::vector<Uint32> &frames);
-			Sprite(Int32 x, Int32 y, Texture &texture, Uint32 frame = 0);
-			Sprite(Int32 x, Int32 y, Int32 w, Int32 h, Texture &texture,
+			Sprite(Int32 x, Int32 y, API::Texture &texture, const std::vector<Uint32> &frames);
+			Sprite(Int32 x, Int32 y, API::Texture &texture, Uint32 frame = 0);
+			Sprite(Int32 x, Int32 y, Int32 w, Int32 h, API::Texture &texture,
 				Uint32 frame = 0);
 			~Sprite();
 
