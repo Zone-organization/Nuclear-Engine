@@ -1,6 +1,7 @@
 #pragma once
 #include <Base/Math/Math.h>
 #include <Base\NE_Common.h>
+#include <Engine/Graphics/API/RenderAPI.h>
 #include <vector>
 
 #define MAX_SPRITES 10000
@@ -12,7 +13,6 @@
 namespace NuclearEngine {
 	namespace Graphics {
 		class Sprite;
-		class Texture;
 		struct VertexData;
 
 		enum Index { VERTEX_INDEX, UV_INDEX, TID_INDEX, COLOR_INDEX };
@@ -33,7 +33,10 @@ namespace NuclearEngine {
 
 		private:
 			VertexData * VertexBuffer;
-			Uint32 VAO, VBO, EBO;
+
+			API::VertexBuffer VBO;
+			API::IndexBuffer IBO;
+
 			std::vector<glm::mat4> TransformationStack;
 			glm::mat4* TransformationBack;
 			Int32 IndexCount;

@@ -1,12 +1,7 @@
 #include "Experimental/Stella/Renderer.h"
 #include "Experimental/Stella/Sprite.h"
-
-#include <glad/glad.h>
-
 #include <algorithm>
 #include <cstddef>
-
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace NuclearEngine {
 	namespace Graphics {
