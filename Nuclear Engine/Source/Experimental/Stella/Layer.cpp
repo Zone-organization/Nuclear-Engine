@@ -1,7 +1,6 @@
 #include "Experimental/Stella/Layer.h"
 
 #include <algorithm>
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace NuclearEngine {
 	namespace Graphics {

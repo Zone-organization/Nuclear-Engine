@@ -279,6 +279,9 @@
     <ClInclude Include="include\Experimental\Stella\Renderer.h" />
     <ClInclude Include="include\Experimental\Stella\Sprite.h" />
     <ClInclude Include="include\Experimental\Stella\SpriteSheet.h" />
+    <ClInclude Include="include\Engine\Graphics\API\UnifiedShader.h" />
+    <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLUnifiedShader.h" />
+    <ClInclude Include="include\Engine\Graphics\API\DirectX\DX11UnifiedShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

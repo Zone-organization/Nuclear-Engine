@@ -346,9 +346,12 @@
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
+    <ClInclude Include="include\Engine\Graphics\API\DirectX\DX11UnifiedShader.h" />
     <ClInclude Include="include\Engine\Graphics\API\GraphicsAPICommon.h" />
     <ClInclude Include="include\Engine\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Engine\Graphics\API\Buffer_Types.h" />
+    <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLUnifiedShader.h" />
+    <ClInclude Include="include\Engine\Graphics\API\UnifiedShader.h" />
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
