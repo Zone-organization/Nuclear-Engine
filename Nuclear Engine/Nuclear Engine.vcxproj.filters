@@ -362,8 +362,6 @@
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_sse42.cc" />
-    <ClCompile Include="Source\Engine\Graphics\API\mContext.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\OpenGL\mGLContext.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Assets\TextureAsset.cpp" />
     <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
@@ -372,6 +370,8 @@
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLUnifiedShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\DirectX\DX11UnifiedShader.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLContext.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\Context.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

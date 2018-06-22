@@ -646,7 +646,7 @@
     <ClCompile Include="Source\Engine\Graphics\API\IndexBuffer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\InputLayout.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLConstantBuffer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\OpenGL\mGLContext.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLContext.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLDepthStencilState.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLError.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLIndexBuffer.cpp" />
@@ -685,7 +685,7 @@
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_sse42.cc" />
     <ClCompile Include="Source\Engine\Transform\Transform.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\mContext.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\Context.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
     <ClCompile Include="Source\Engine\ECS\Event.cpp" />
