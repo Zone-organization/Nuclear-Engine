@@ -44,7 +44,7 @@ namespace NuclearEngine
 
 			Graphics::API::PixelShader::Create(
 				&PostProcess_PShader,
-				&Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
+				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
 					Graphics::API::ShaderType::Pixel));
 
 

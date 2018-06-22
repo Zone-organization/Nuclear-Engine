@@ -14,14 +14,14 @@ namespace NuclearEngine
 		{
 			namespace OpenGL
 			{
-				void GLPixelShader::Fix_Reflected_ConstantBuffer_Slot(GLPixelShader* result, BinaryShaderBlob* blob)
+				void GLPixelShader::Fix_Reflected_ConstantBuffer_Slot(GLPixelShader* result, const BinaryShaderBlob& blob)
 				{
-					std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
-					for (it = blob->Reflection.ConstantBuffers.begin(); it != blob->Reflection.ConstantBuffers.end(); it++)
+					/*std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
+					for (it = blob.Reflection.ConstantBuffers.begin(); it != blob.Reflection.ConstantBuffers.end(); it++)
 					{
 						it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str());
 						GLCheckError();
-					}
+					}*/
 				}
 
 				GLPixelShader::GLPixelShader()
@@ -73,17 +73,17 @@ namespace NuclearEngine
 					}
 				}
 
-				void GLPixelShader::Create(GLPixelShader* result, BinaryShaderBlob* desc)
+				void GLPixelShader::Create(GLPixelShader* result, const BinaryShaderBlob& desc)
 				{
-					if (desc->Finished)
+					if (desc.isValid)
 					{
-						if (desc->GLSL_SourceCode.size() == 0)
+						if (desc.GLSL_SourceCode.size() == 0)
 						{
 							Log.Error("[GLPixelShader] GLSL Source Code is empty!\n");
 						}
 						else
 						{
-							CompileFragmentshader(result->_ProgramID, desc->GLSL_SourceCode);
+							CompileFragmentshader(result->_ProgramID, desc.GLSL_SourceCode);
 						}
 					}
 

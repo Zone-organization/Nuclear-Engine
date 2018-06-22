@@ -59,7 +59,7 @@ namespace NuclearEngine
 
 			Graphics::API::PixelShader::Create(
 				&PostProcess_PShader,
-				&Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
+				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
 					Graphics::API::ShaderType::Pixel));
 
 
@@ -113,7 +113,7 @@ namespace NuclearEngine
 
 				Graphics::API::PixelShader::Create(
 					&PShader,
-					&Graphics::API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
+					Graphics::API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
 						Graphics::API::ShaderType::Pixel));
 
 				Calculate_Light_CB_Size();
@@ -140,7 +140,7 @@ namespace NuclearEngine
 				else {
 					Graphics::API::VertexShader::Create(
 						&VShader,
-						&Graphics::API::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
+						Graphics::API::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
 							Graphics::API::ShaderType::Vertex));
 				}
 

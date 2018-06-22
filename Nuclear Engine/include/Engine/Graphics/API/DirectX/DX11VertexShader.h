@@ -21,7 +21,7 @@ namespace NuclearEngine
 					DX11VertexShader();
 					~DX11VertexShader();
 
-					static void Create(DX11VertexShader *shader, BinaryShaderBlob* desc);
+					static void Create(DX11VertexShader *shader, const BinaryShaderBlob& desc);
 					static void Delete(DX11VertexShader *shader);
 
 					void SetConstantBuffer(DX11ConstantBuffer* ubuffer);

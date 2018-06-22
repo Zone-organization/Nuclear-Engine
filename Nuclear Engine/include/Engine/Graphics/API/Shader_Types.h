@@ -84,7 +84,7 @@ namespace NuclearEngine
 				bool Converted = false;
 
 				//A usable shader??
-				bool Finished = false;
+				bool isValid = false;
 			};
 		}
 	}

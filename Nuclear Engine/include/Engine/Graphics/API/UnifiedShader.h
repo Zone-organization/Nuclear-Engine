@@ -18,7 +18,7 @@ namespace NuclearEngine {
 				UnifiedShader();
 				~UnifiedShader();
 
-				static void	Create(UnifiedShader* shader, BinaryShaderBlob* vshader, BinaryShaderBlob* pshader);
+				static void	Create(UnifiedShader* shader, const BinaryShaderBlob& vshader, const BinaryShaderBlob& pshader);
 
 				static void	Delete(UnifiedShader* shader);
 

@@ -20,7 +20,7 @@ namespace NuclearEngine
 					DX11PixelShader();
 					~DX11PixelShader();
 
-					static void Create(DX11PixelShader *shader, BinaryShaderBlob* desc);
+					static void Create(DX11PixelShader *shader, const BinaryShaderBlob& desc);
 					static void Delete(DX11PixelShader *shader);
 
 					void SetConstantBuffer(DX11ConstantBuffer* ubuffer);

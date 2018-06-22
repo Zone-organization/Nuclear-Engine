@@ -23,21 +23,21 @@ namespace NuclearEngine
 					VertexShader = nullptr;
 				}
 
-				void DX11VertexShader::Create(DX11VertexShader* result, BinaryShaderBlob* sdesc)
+				void DX11VertexShader::Create(DX11VertexShader* result, const BinaryShaderBlob& ShaderDesc)
 				{
-					if (sdesc->Finished)
+					if (ShaderDesc.isValid)
 					{
-						if (sdesc->DXBC_SourceCode.Buffer == nullptr)
+						if (ShaderDesc.DXBC_SourceCode.Buffer == nullptr)
 						{
 							Log.Error("[DX11VertexShader] DirectX Bytecode \"DXBC\" Buffer is nullptr!\n");
 						}
 						else
 						{
-							result->VS_Buffer = sdesc->DXBC_SourceCode.Buffer;
-							result->VS_Size = sdesc->DXBC_SourceCode.Size;
-							result->Reflection = sdesc->Reflection;
+							result->VS_Buffer = ShaderDesc.DXBC_SourceCode.Buffer;
+							result->VS_Size = ShaderDesc.DXBC_SourceCode.Size;
+							result->Reflection = ShaderDesc.Reflection;
 							// encapsulate both shaders into shader Components
-							if (FAILED(DX11Context::GetDevice()->CreateVertexShader(sdesc->DXBC_SourceCode.Buffer, sdesc->DXBC_SourceCode.Size, 0, &result->VertexShader)))
+							if (FAILED(DX11Context::GetDevice()->CreateVertexShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->VertexShader)))
 							{
 								Log.Info("[DX11VertexShader] Vertex Shader Creation Failed!\n");
 								return;

@@ -23,7 +23,7 @@ namespace NuclearEngine {
 					DXBC_Compiler::CompileHLSL2DXBC(blob, SourceCode, type);
 				}
 
-				blob->Finished = true;
+				blob->isValid = true;
 				return true;
 			}
 

@@ -14,14 +14,14 @@ namespace NuclearEngine
 			namespace OpenGL
 			{
 				static GLuint pipelineid = 0;
-				void GLVertexShader::Fix_Reflected_ConstantBuffer_Slot(GLVertexShader* result, BinaryShaderBlob* blob)
+				void GLVertexShader::Fix_Reflected_ConstantBuffer_Slot(GLVertexShader* result, const BinaryShaderBlob& blob)
 				{
-					std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
-					for (it = blob->Reflection.ConstantBuffers.begin(); it != blob->Reflection.ConstantBuffers.end(); it++)
+					/*std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
+					for (it = blob.Reflection.ConstantBuffers.begin(); it != blob.Reflection.ConstantBuffers.end(); it++)
 					{
 						it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str());
 						GLCheckError();
-					}
+					}*/
 				}
 
 				GLVertexShader::GLVertexShader()
@@ -74,22 +74,22 @@ namespace NuclearEngine
 					}
 				}
 
-				void GLVertexShader::Create(GLVertexShader* result, BinaryShaderBlob* desc)
+				void GLVertexShader::Create(GLVertexShader* result, const BinaryShaderBlob& desc)
 				{
 					if (pipelineid == 0)
 					{
 						glGenProgramPipelines(1, &pipelineid);
 					}
 
-					if (desc->Finished)
+					if (desc.isValid)
 					{
-						if (desc->GLSL_SourceCode.size() == 0)
+						if (desc.GLSL_SourceCode.size() == 0)
 						{
 							Log.Error("[GLVertexShader] GLSL Source Code is empty!\n");
 						}
 						else
 						{
-							CompileVertexshader(result->_ProgramID, desc->GLSL_SourceCode);
+							CompileVertexshader(result->_ProgramID, desc.GLSL_SourceCode);
 						}
 					}
 

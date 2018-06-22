@@ -23,18 +23,18 @@ namespace NuclearEngine
 					PixelShader = nullptr;
 				}
 
-				void DX11PixelShader::Create(DX11PixelShader* result, BinaryShaderBlob* sdesc)
+				void DX11PixelShader::Create(DX11PixelShader* result, const BinaryShaderBlob& ShaderDesc)
 				{
-					if (sdesc->Finished)
+					if (ShaderDesc.isValid)
 					{
-						if (sdesc->DXBC_SourceCode.Buffer == nullptr)
+						if (ShaderDesc.DXBC_SourceCode.Buffer == nullptr)
 						{
 							Log.Error("[DX11PixelShader] DirectX Bytecode \"DXBC\" Buffer is nullptr!\n");
 						}
 						else
 						{
-							result->Reflection = sdesc->Reflection;
-							if (FAILED(DX11Context::GetDevice()->CreatePixelShader(sdesc->DXBC_SourceCode.Buffer, sdesc->DXBC_SourceCode.Size, 0, &result->PixelShader)))
+							result->Reflection = ShaderDesc.Reflection;
+							if (FAILED(DX11Context::GetDevice()->CreatePixelShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->PixelShader)))
 							{
 								Log.Info("[DX11PixelShader] Pixel Shader Creation Failed!\n");
 								return;

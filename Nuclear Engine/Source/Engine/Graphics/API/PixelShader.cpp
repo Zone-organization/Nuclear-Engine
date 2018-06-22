@@ -17,11 +17,11 @@ namespace NuclearEngine {
 				isValid = false;
 			}
 
-			void PixelShader::Create(PixelShader* obj, BinaryShaderBlob* Desc)
+			void PixelShader::Create(PixelShader* obj, const BinaryShaderBlob& Desc)
 			{
 				STATIC_BASE_API_FUNC_CALL_ARGS(Create, Desc)
 
-				obj->Reflection = Desc->Reflection;
+				obj->Reflection = Desc.Reflection;
 				obj->isValid = true;
 				for (auto func : GraphicsEngine::PixelShaderCreationCallbacks)
 				{

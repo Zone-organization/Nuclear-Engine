@@ -370,6 +370,8 @@
     <ClCompile Include="Source\Engine\ECS\Event.cpp" />
     <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLUnifiedShader.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\DirectX\DX11UnifiedShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

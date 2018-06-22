@@ -22,7 +22,7 @@ namespace NuclearEngine
 					GLPixelShader();
 					~GLPixelShader();
 
-					static void Create(GLPixelShader* shader, BinaryShaderBlob* Desc);
+					static void Create(GLPixelShader* shader, const BinaryShaderBlob& Desc);
 					static void Delete(GLPixelShader* shader);
 
 					void SetConstantBuffer(GLConstantBuffer* ubuffer);
@@ -30,7 +30,7 @@ namespace NuclearEngine
 					void Bind();
 				private:
 					GLuint _ProgramID;
-					static void Fix_Reflected_ConstantBuffer_Slot(GLPixelShader* result, BinaryShaderBlob* blob);
+					static void Fix_Reflected_ConstantBuffer_Slot(GLPixelShader* result, const BinaryShaderBlob& blob);
 				};
 			}
 		}

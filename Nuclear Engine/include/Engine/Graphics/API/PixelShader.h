@@ -15,7 +15,7 @@ namespace NuclearEngine {
 				PixelShader();
 				~PixelShader();
 
-				static void	Create(PixelShader* shader, BinaryShaderBlob* Desc);
+				static void	Create(PixelShader* shader, const BinaryShaderBlob& Desc);
 				static void	Delete(PixelShader* shader);
 
 				void SetConstantBuffer(ConstantBuffer* cbuffer);

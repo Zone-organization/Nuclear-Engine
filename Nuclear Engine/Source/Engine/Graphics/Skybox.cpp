@@ -65,8 +65,8 @@ namespace NuclearEngine
 
 		void Skybox::Initialize(Components::CameraComponent * Camera, Graphics::API::Texture data)
 		{
-			Graphics::API::VertexShader::Create(&mVShader, &Graphics::API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), Graphics::API::ShaderType::Vertex));
-			Graphics::API::PixelShader::Create(&mPShader, &Graphics::API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), Graphics::API::ShaderType::Pixel));
+			Graphics::API::VertexShader::Create(&mVShader, Graphics::API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), Graphics::API::ShaderType::Vertex));
+			Graphics::API::PixelShader::Create(&mPShader, Graphics::API::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), Graphics::API::ShaderType::Pixel));
 
 			mVShader.SetConstantBuffer(&Camera->GetCBuffer());
 

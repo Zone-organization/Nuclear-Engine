@@ -15,7 +15,7 @@ namespace NuclearEngine {
 				VertexShader();
 				~VertexShader();
 
-				static void	Create(VertexShader* shader, BinaryShaderBlob* Desc);
+				static void	Create(VertexShader* shader, const BinaryShaderBlob& Desc);
 				static void	Delete(VertexShader* shader);
 
 				void SetConstantBuffer(ConstantBuffer* cbuffer);

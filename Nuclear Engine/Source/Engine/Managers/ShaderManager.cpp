@@ -29,7 +29,7 @@ namespace NuclearEngine
 
 			Graphics::API::VertexShader::Create(
 				&result,
-				&Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
+				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
 					Graphics::API::ShaderType::Vertex));
 
 			return result;
@@ -44,7 +44,7 @@ namespace NuclearEngine
 
 			Graphics::API::PixelShader::Create(
 				&result,
-				&Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
+				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
 					Graphics::API::ShaderType::Pixel));
 			return result;
 		}

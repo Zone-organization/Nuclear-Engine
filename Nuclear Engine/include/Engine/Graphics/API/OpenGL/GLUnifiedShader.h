@@ -21,7 +21,7 @@ namespace NuclearEngine
 					GLUnifiedShader();
 					~GLUnifiedShader();
 
-					static void	Create(GLUnifiedShader* shader, BinaryShaderBlob* vshader, BinaryShaderBlob* pshader);
+					static bool	Create(GLUnifiedShader* shader, const BinaryShaderBlob& vshader, const BinaryShaderBlob& pshader);
 					static void Delete(GLUnifiedShader* shader);
 
 					void SetConstantBuffer(GLConstantBuffer* ubuffer);
@@ -31,8 +31,8 @@ namespace NuclearEngine
 					//OpenGL only!
 					static GLuint GetID();
 				private:
-					GLuint _ProgramID;
-					static void Fix_Reflected_ConstantBuffer_Slot(GLUnifiedShader* result, BinaryShaderBlob* blob);
+					GLuint ShaderID;
+					static void Fix_Reflected_ConstantBuffer_Slot(GLUnifiedShader* result, const BinaryShaderBlob& blob);
 				};
 			}
 		}

@@ -21,7 +21,7 @@ namespace NuclearEngine
 					DX11UnifiedShader();
 					~DX11UnifiedShader();
 
-					static void Create(DX11UnifiedShader *shader, BinaryShaderBlob* desc);
+					static void Create(DX11UnifiedShader *shader, const BinaryShaderBlob& VS_Desc, const BinaryShaderBlob& PS_Desc);
 					static void Delete(DX11UnifiedShader *shader);
 
 					void SetConstantBuffer(DX11ConstantBuffer* ubuffer);
