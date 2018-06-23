@@ -100,6 +100,11 @@ namespace NuclearEngine
 					GLCall(glUseProgram(this->ShaderID));
 				}
 
+				GLuint GLUnifiedShader::GetID()
+				{
+					return ShaderID;
+				}
+
 				bool CheckShaderErrors(GLuint shader, const char* type)
 				{
 					GLint success;

@@ -24,15 +24,13 @@ namespace NuclearEngine
 					static void Create(DX11UnifiedShader *shader, const BinaryShaderBlob& VS_Desc, const BinaryShaderBlob& PS_Desc);
 					static void Delete(DX11UnifiedShader *shader);
 
-					void SetConstantBuffer(DX11ConstantBuffer* ubuffer);
+					void SetConstantBuffer(DX11ConstantBuffer* ubuffer,ShaderReflection& reflection,const ShaderType& type);
 
 					void Bind();
 				private:
 
 					ID3D11VertexShader * VertexShader;
 					ID3D11PixelShader * PixelShader;
-
-					ShaderReflection Reflection;
 
 					/*Used for InputLayouts*/
 					void* VS_Buffer;

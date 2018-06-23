@@ -16,11 +16,13 @@ namespace NuclearEngine
 				DX11UnifiedShader::DX11UnifiedShader()
 				{
 					VertexShader = nullptr;
+					PixelShader = nullptr;
 				}
 
 				DX11UnifiedShader::~DX11UnifiedShader()
 				{
 					VertexShader = nullptr;
+					PixelShader = nullptr;
 				}
 
 				void DX11UnifiedShader::Create(DX11UnifiedShader* result, const BinaryShaderBlob& VS_Desc, const BinaryShaderBlob& PS_Desc)
@@ -29,17 +31,16 @@ namespace NuclearEngine
 					{
 						if (VS_Desc.DXBC_SourceCode.Buffer == nullptr)
 						{
-							Log.Error("[DX11UnifiedShader] DirectX Bytecode \"DXBC\" Buffer is nullptr!\n");
+							Log.Error("[DX11UnifiedShader][VS] DirectX Bytecode \"DXBC\" Buffer is nullptr!\n");
 						}
 						else
 						{
 							result->VS_Buffer = VS_Desc.DXBC_SourceCode.Buffer;
 							result->VS_Size = VS_Desc.DXBC_SourceCode.Size;
-							result->Reflection = VS_Desc.Reflection;
 							// encapsulate both shaders into shader Components
 							if (FAILED(DX11Context::GetDevice()->CreateVertexShader(VS_Desc.DXBC_SourceCode.Buffer, VS_Desc.DXBC_SourceCode.Size, 0, &result->VertexShader)))
 							{
-								Log.Info("[DX11UnifiedShader] Vertex Shader Creation Failed!\n");
+								Log.Info("[DX11UnifiedShader][VS] Vertex Shader Creation Failed!\n");
 								return;
 							}
 						}
@@ -48,14 +49,13 @@ namespace NuclearEngine
 					{
 						if (PS_Desc.DXBC_SourceCode.Buffer == nullptr)
 						{
-							Log.Error("[DX11PixelShader] DirectX Bytecode \"DXBC\" Buffer is nullptr!\n");
+							Log.Error("[DX11PixelShader][PS] DirectX Bytecode \"DXBC\" Buffer is nullptr!\n");
 						}
 						else
 						{
-							result->Reflection = PS_Desc.Reflection;
 							if (FAILED(DX11Context::GetDevice()->CreatePixelShader(PS_Desc.DXBC_SourceCode.Buffer, PS_Desc.DXBC_SourceCode.Size, 0, &result->PixelShader)))
 							{
-								Log.Info("[DX11PixelShader] Pixel Shader Creation Failed!\n");
+								Log.Info("[DX11PixelShader][PS] Pixel Shader Creation Failed!\n");
 								return;
 							}
 						}
@@ -68,17 +68,32 @@ namespace NuclearEngine
 					{
 						shader->VertexShader->Release();
 					}
+					if (shader->PixelShader != nullptr)
+					{
+						shader->PixelShader->Release();
+					}
 					shader->VertexShader = nullptr;
+					shader->PixelShader = nullptr;
 				}
-				void DX11UnifiedShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer)
+				void DX11UnifiedShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer, ShaderReflection& reflection, const ShaderType& type)
 				{
-					DX11Context::GetContext()->VSSetShader(VertexShader, 0, 0);
-					DX11Context::GetContext()->VSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->GetName()].BindingSlot, 1, ubuffer->GetBufferPtr());
+					if (type == ShaderType::Vertex)
+					{
+						DX11Context::GetContext()->VSSetShader(VertexShader, 0, 0);
+						DX11Context::GetContext()->VSSetConstantBuffers(reflection.ConstantBuffers[ubuffer->GetName()].BindingSlot, 1, ubuffer->GetBufferPtr());
+					}
+					else if (type == ShaderType::Pixel) 
+					{
+						DX11Context::GetContext()->PSSetShader(PixelShader, 0, 0);
+						DX11Context::GetContext()->PSSetConstantBuffers(reflection.ConstantBuffers[ubuffer->GetName()].BindingSlot, 1, ubuffer->GetBufferPtr());
+					}
 				}
 
 				void DX11UnifiedShader::Bind()
 				{
 					DX11Context::GetContext()->VSSetShader(VertexShader, 0, 0);
+					DX11Context::GetContext()->PSSetShader(PixelShader, 0, 0);
+
 				}
 			}
 		}
