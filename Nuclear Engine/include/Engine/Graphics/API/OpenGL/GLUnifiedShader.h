@@ -29,7 +29,7 @@ namespace NuclearEngine
 					void Bind();
 
 					//OpenGL only!
-					static GLuint GetID();
+					GLuint GetID();
 				private:
 					GLuint ShaderID;
 					static void Fix_Reflected_ConstantBuffer_Slot(GLUnifiedShader* result, const BinaryShaderBlob& blob);
