@@ -4,3 +4,4 @@
   - Support Reflections & Refractions
   - Support for PBR with IBL
   - Support for SSAO
+  - Support 2D Renderer
