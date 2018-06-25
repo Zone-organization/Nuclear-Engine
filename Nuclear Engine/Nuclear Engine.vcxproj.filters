@@ -372,6 +372,11 @@
     <ClCompile Include="Source\Engine\Graphics\API\DirectX\DX11UnifiedShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLContext.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\Context.cpp" />
+    <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
+    <ClCompile Include="Source\Experimental\Stella\Layer.cpp" />
+    <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />
+    <ClCompile Include="Source\Experimental\Stella\Sprite.cpp" />
+    <ClCompile Include="Source\Experimental\Stella\SpriteSheet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

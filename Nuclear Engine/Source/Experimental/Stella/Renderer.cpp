@@ -12,15 +12,16 @@ namespace NuclearEngine {
 			this->init();
 		}
 
-		Renderer::~Renderer() {
-			glDeleteBuffers(1, &this->VBO);
-			glDeleteBuffers(1, &this->EBO);
-			glDeleteVertexArrays(1, &this->VAO);
+		Renderer::~Renderer() 
+		{	
+			API::VertexBuffer::Delete(&VBO);		
+			API::IndexBuffer::Delete(&IBO);
 		}
 
-		void Renderer::BindAsRenderTarget(int width, int height) {
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-			glViewport(0, 0, width, height);
+		void Renderer::BindAsRenderTarget(int width, int height) 
+		{
+			//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+			//glViewport(0, 0, width, height);
 		}
 
 		void Renderer::init() {
@@ -71,9 +72,9 @@ namespace NuclearEngine {
 			glBindVertexArray(0);
 		}
 
-		void Renderer::Begin() {
-			glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-			VertexBuffer = (VertexData *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		void Renderer::Begin()
+		{
+			VertexBuffer = (VertexData*)VBO.Map();
 		}
 
 		void Renderer::Submit(const Sprite &sprite) {
@@ -85,16 +86,16 @@ namespace NuclearEngine {
 
 			const glm::vec2 &uv = sprite.GetFrameCoords();
 			const SpriteSheet &spritesheet = sprite.GetSpriteSheet();
-			const Uint32 &stW = spritesheet.GetWidth();
-			const Uint32 &stH = spritesheet.GetHeight();
+			const Uint32 &stW = spritesheet.GetDimensions().x;
+			const Uint32 &stH = spritesheet.GetDimensions().y;
 
-			Texture *texture = sprite.GetTexture();
+			API::Texture *texture = sprite.GetTexture();
 
-			if (!texture->IsCached()) {
+			/*if (!texture->IsCached()) {
 				Textures.push_back(texture);
 				texture->SetCached((Float32)(Textures.size() - 1));
 				this->TexturesBinded = false;
-			}
+			}*/
 
 			Float32 uvoffsetX = dimensions.x / (Float32)stW;
 			Float32 uvoffsetY = dimensions.y / (Float32)stH;
@@ -143,19 +144,16 @@ namespace NuclearEngine {
 		}
 
 		void Renderer::End() {
-			glUnmapBuffer(GL_ARRAY_BUFFER);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			VBO.Unmap();
 		}
 
 		void Renderer::Draw() {
 			for (unsigned int i = 0; i < Textures.size(); ++i) {
-				glActiveTexture(GL_TEXTURE0 + i);
-				Textures[i]->Bind();
+				Textures[i]->PSBind(i);
 			}
 
-			glBindVertexArray(this->VAO);
+			VBO.Bind();
 			glDrawElements(GL_TRIANGLES, this->IndexCount, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
 			this->IndexCount = 0;
 		}
 

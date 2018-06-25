@@ -2,7 +2,7 @@
 #include <Base\NE_Common.h>
 #include <Base/Math/Math.h>
 #include <vector>
-#include "Engine\Graphics\API\PixelShader.h"
+#include "Engine\Graphics\API\UnifiedShader.h"
 #include "sprite.h"
 #include "renderer.h"
 
@@ -17,12 +17,12 @@ namespace NuclearEngine {
 			virtual void Render();
 
 		protected:
-			Renderer * Ren;
-			API::PixelShader *Shad;
+			Renderer * mRenderer;
+			API::UnifiedShader *mShader;
 			glm::mat4 Projection;
 			std::vector<Sprite *> Sprites;
 
-			Layer(Renderer *renderer, API::PixelShader *shader, glm::mat4 projection);
+			Layer(Renderer *renderer, API::UnifiedShader *shader, glm::mat4 projection);
 		};
 	} 
 }

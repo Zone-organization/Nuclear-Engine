@@ -4,18 +4,15 @@
 
 namespace NuclearEngine {
 	namespace Graphics {
-		Layer::Layer(Renderer *renderer, Shader *shader, glm::mat4 projection)
-			: Ren(renderer), Shad(shader), Projection(projection) {
-			this->Shad->Enable();
-			this->Shad->SetMat4("proj", projection);
-			this->Shad->Disable();
+		Layer::Layer(Renderer *renderer, API::UnifiedShader *shader, glm::mat4 projection)
+			: mRenderer(renderer), mShader(shader), Projection(projection) 
+		{
 		}
 
 		Layer::~Layer() {
-			this->Shad->Disable();
 			for (auto i : this->Sprites)
 				delete i;
-			delete Ren;
+			delete mRenderer;
 		}
 
 		void Layer::Add(Sprite *sprite) { this->Sprites.push_back(sprite); }
@@ -27,24 +24,23 @@ namespace NuclearEngine {
 
 		void Layer::Render() {
 
-			this->Shad->Enable();
-			this->Ren->Begin();
+			this->mShader->Bind();
+			this->mRenderer->Begin();
 
 			//glm::mat4 trans;
 			//trans = glm::translate(trans, glm::vec3(360.0f, 202.0f, 0.0f));
 			//trans = glm::scale(trans, glm::vec3(0.9f, 0.9f, 1.0f));
 			//trans = glm::rotate(trans, glm::radians(-5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 			//trans = glm::translate(trans, glm::vec3(-360.0f, -202.0f, 0.0f));
-			//this->Ren->PushTransformation(trans);
+			//this->mRenderer->PushTransformation(trans);
 
 			for (auto i : Sprites)
-				this->Ren->Submit(*i);
+				this->mRenderer->Submit(*i);
 
-			//this->Ren->PopTransformation();
+			//this->mRenderer->PopTransformation();
 
-			this->Ren->End();
-			this->Ren->Draw();
-			this->Shad->Disable();
+			this->mRenderer->End();
+			this->mRenderer->Draw();
 		}
 	}
 }

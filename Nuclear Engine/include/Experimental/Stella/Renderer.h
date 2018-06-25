@@ -40,7 +40,7 @@ namespace NuclearEngine {
 			std::vector<glm::mat4> TransformationStack;
 			glm::mat4* TransformationBack;
 			Int32 IndexCount;
-			std::vector<Texture *> Textures;
+			std::vector<API::Texture *> Textures;
 			bool TexturesBinded;
 
 			void init();
