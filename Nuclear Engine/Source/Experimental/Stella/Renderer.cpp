@@ -26,32 +26,21 @@ namespace NuclearEngine {
 
 		void Renderer::init() {
 			this->IndexCount = 0;
-			glGenVertexArrays(1, &this->VAO);
-			glGenBuffers(1, &this->VBO);
-			glGenBuffers(1, &this->EBO);
 
-			glBindVertexArray(this->VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+			Graphics::API::VertexBufferDesc Desc;
+			Desc.data = NULL;
+			Desc.size = BUFFER_SIZE;
+			Desc.usage = Graphics::API::BufferUsage::Dynamic;
 
-			glBufferData(GL_ARRAY_BUFFER, BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
-			glVertexAttribPointer(VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE,
-				(GLvoid *)0);
-			glEnableVertexAttribArray(VERTEX_INDEX);
+			Graphics::API::VertexBuffer::Create(&VBO, Desc);
 
-			glVertexAttribPointer(UV_INDEX, 2, GL_FLOAT, GL_FALSE, VERTEX_SIZE,
-				(GLvoid *)offsetof(VertexData, uv));
-			glEnableVertexAttribArray(UV_INDEX);
+			Graphics::API::InputLayout InputL;
+			InputL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
+			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float);
+			InputL.AppendAttribute("COLOR", 0, Graphics::API::DataType::Float4);
 
-			glVertexAttribPointer(TID_INDEX, 1, GL_FLOAT, GL_FALSE, VERTEX_SIZE,
-				(GLvoid *)offsetof(VertexData, tid));
-			glEnableVertexAttribArray(TID_INDEX);
-
-			glVertexAttribPointer(COLOR_INDEX, 4, GL_UNSIGNED_BYTE, true, VERTEX_SIZE,
-				(GLvoid *)offsetof(VertexData, color));
-			glEnableVertexAttribArray(COLOR_INDEX);
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			//VBO.SetInputLayout(&InputL, &VShader);
 
 			Int32 offset = 0;
 			Uint32 indices[INDICES_SIZE];
@@ -66,10 +55,20 @@ namespace NuclearEngine {
 
 				offset += 4;
 			}
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-				GL_STATIC_DRAW);
+			Graphics::API::IndexBuffer::Create(&IBO, indices, sizeof(indices));
 
-			glBindVertexArray(0);
+			/*glVertexAttribPointer(VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE,	(GLvoid *)0);
+			glEnableVertexAttribArray(VERTEX_INDEX);
+
+			glVertexAttribPointer(UV_INDEX, 2, GL_FLOAT, GL_FALSE, VERTEX_SIZE,	(GLvoid *)offsetof(VertexData, uv));
+			glEnableVertexAttribArray(UV_INDEX);
+
+			glVertexAttribPointer(TID_INDEX, 1, GL_FLOAT, GL_FALSE, VERTEX_SIZE, (GLvoid *)offsetof(VertexData, tid));
+			glEnableVertexAttribArray(TID_INDEX);
+
+			glVertexAttribPointer(COLOR_INDEX, 4, GL_UNSIGNED_BYTE, true, VERTEX_SIZE,	(GLvoid *)offsetof(VertexData, color));
+			glEnableVertexAttribArray(COLOR_INDEX);
+			*/
 		}
 
 		void Renderer::Begin()
@@ -112,7 +111,7 @@ namespace NuclearEngine {
 			//auto transformation_result = particular_transform * glm::vec4(position, 1.f, 1.f); 
 			this->VertexBuffer->vertex = glm::vec3(transformation_result.x, transformation_result.y, transformation_result.z);
 			this->VertexBuffer->uv = glm::vec2(uv.x, uv.y);
-			this->VertexBuffer->tid = texture->GetCacheID();
+			///this->VertexBuffer->tid = texture->GetCacheID();
 			this->VertexBuffer->color = c;
 			this->VertexBuffer++;
 
@@ -120,7 +119,7 @@ namespace NuclearEngine {
 			//transformation_result = particular_transform * glm::vec4(position.x + dimensions.x, position.y, 1.f, 1.f); 
 			this->VertexBuffer->vertex = glm::vec3(transformation_result.x, transformation_result.y, transformation_result.z);
 			this->VertexBuffer->uv = glm::vec2(uv.x + uvoffsetX, uv.y);
-			this->VertexBuffer->tid = texture->GetCacheID();
+			///this->VertexBuffer->tid = texture->GetCacheID();
 			this->VertexBuffer->color = c;
 			this->VertexBuffer++;
 
@@ -128,7 +127,7 @@ namespace NuclearEngine {
 			//transformation_result = particular_transform * glm::vec4(position.x + dimensions.x, position.y + dimensions.y, 1.f, 1.f);
 			this->VertexBuffer->vertex = glm::vec3(transformation_result.x, transformation_result.y, transformation_result.z);
 			this->VertexBuffer->uv = glm::vec2(uv.x + uvoffsetX, uv.y - uvoffsetY);
-			this->VertexBuffer->tid = texture->GetCacheID();
+			///this->VertexBuffer->tid = texture->GetCacheID();
 			this->VertexBuffer->color = c;
 			this->VertexBuffer++;
 
@@ -136,7 +135,7 @@ namespace NuclearEngine {
 			//transformation_result = particular_transform * glm::vec4(position.x, position.y + dimensions.y, 1.f, 1.f);
 			this->VertexBuffer->vertex = glm::vec3(transformation_result.x, transformation_result.y, transformation_result.z);
 			this->VertexBuffer->uv = glm::vec2(uv.x, uv.y - uvoffsetY);
-			this->VertexBuffer->tid = texture->GetCacheID();
+			///this->VertexBuffer->tid = texture->GetCacheID();
 			this->VertexBuffer->color = c;
 			this->VertexBuffer++;
 
@@ -153,7 +152,7 @@ namespace NuclearEngine {
 			}
 
 			VBO.Bind();
-			glDrawElements(GL_TRIANGLES, this->IndexCount, GL_UNSIGNED_INT, 0);
+			///glDrawElements(GL_TRIANGLES, this->IndexCount, GL_UNSIGNED_INT, 0);
 			this->IndexCount = 0;
 		}
 

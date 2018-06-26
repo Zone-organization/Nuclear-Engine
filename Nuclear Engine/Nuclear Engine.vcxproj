@@ -626,6 +626,7 @@
     <ClCompile Include="Source\Engine\Graphics\API\BlendState.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\DirectX\DX11UnifiedShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLUnifiedShader.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\UnifiedShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
@@ -682,6 +683,7 @@
     <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Layer.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />
+    <ClCompile Include="Source\Experimental\Stella\Renderer.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Sprite.cpp" />
     <ClCompile Include="Source\Experimental\Stella\SpriteSheet.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />

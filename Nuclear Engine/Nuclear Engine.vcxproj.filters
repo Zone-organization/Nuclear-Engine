@@ -377,6 +377,8 @@
     <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Sprite.cpp" />
     <ClCompile Include="Source\Experimental\Stella\SpriteSheet.cpp" />
+    <ClCompile Include="Source\Experimental\Stella\Renderer.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\API\UnifiedShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
