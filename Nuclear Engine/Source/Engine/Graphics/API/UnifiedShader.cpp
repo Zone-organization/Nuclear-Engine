@@ -34,9 +34,25 @@ namespace NuclearEngine {
 					obj->isValid = false;
 			}
 
-			void UnifiedShader::SetConstantBuffer(ConstantBuffer * cbuffer)
+			void UnifiedShader::SetConstantBuffer(ConstantBuffer * cbuffer, const ShaderType& type)
 			{
-				//SPECIAL_BASE_API_FUNC_CALL(SetConstantBuffer, cbuffer)
+				//SPECIAL_CUSTOM_API_CALL
+				if (Graphics::API::Context::isOpenGL3RenderAPI()) 
+				{
+					GLObject.SetConstantBuffer(&cbuffer->GLObject);
+				} 
+				else if (Graphics::API::Context::isDirectX11RenderAPI())
+				{
+					if (type == ShaderType::Vertex)
+					{
+						DXObject.SetConstantBuffer(&cbuffer->DXObject, VSReflection, type);
+					}
+					else if (type == ShaderType::Pixel)
+					{
+						DXObject.SetConstantBuffer(&cbuffer->DXObject, PSReflection, type);
+					}
+				}
+
 			}
 
 			void UnifiedShader::Bind()

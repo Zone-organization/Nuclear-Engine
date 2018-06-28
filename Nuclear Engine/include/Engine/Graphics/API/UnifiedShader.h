@@ -22,7 +22,7 @@ namespace NuclearEngine {
 
 				static void	Delete(UnifiedShader* shader);
 
-				void SetConstantBuffer(ConstantBuffer* cbuffer);
+				void SetConstantBuffer(ConstantBuffer* cbuffer, const ShaderType& type);
 				void Bind();
 
 				ShaderReflection VSReflection;
