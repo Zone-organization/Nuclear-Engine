@@ -1,5 +1,11 @@
 #pragma once
 #include "Common.h"
+#include "Experimental\Stella\Animator.h"
+#include "Experimental\Stella\Layer.h"
+#include "Experimental\Stella\Renderable.h"
+#include "Experimental\Stella\Sprite.h"
+#include "Experimental\Stella\Renderer.h"
+#include "Experimental\Stella\SpriteSheet.h"
 
 class StellaTest : public Core::Game
 {

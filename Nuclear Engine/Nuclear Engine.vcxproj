@@ -548,6 +548,8 @@
     <ClInclude Include="include\Engine\Physics3D\RigidBody.h" />
     <ClInclude Include="include\Engine\Assets\Mesh.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
+    <ClInclude Include="include\Experimental\ImGui\imconfig.h" />
+    <ClInclude Include="include\Experimental\ImGui\imgui.h" />
     <ClInclude Include="include\Experimental\Stella\Animator.h" />
     <ClInclude Include="include\Experimental\Stella\Layer.h" />
     <ClInclude Include="include\Experimental\Stella\Renderable.h" />
@@ -602,6 +604,11 @@
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
+    <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Binding.h" />
+    <ClInclude Include="Source\Experimental\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\Experimental\ImGui\stb_rect_pack.h" />
+    <ClInclude Include="Source\Experimental\ImGui\stb_textedit.h" />
+    <ClInclude Include="Source\Experimental\ImGui\stb_truetype.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_config.h" />
@@ -680,6 +687,10 @@
     <ClCompile Include="Source\Engine\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Binding.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Layer.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />

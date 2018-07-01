@@ -1,5 +1,6 @@
 #include "Experimental/Stella/Renderer.h"
 #include "Experimental/Stella/Sprite.h"
+#include "Engine/Graphics/API/Context.h"
 #include <algorithm>
 #include <cstddef>
 
@@ -152,7 +153,7 @@ namespace NuclearEngine {
 			}
 
 			VBO.Bind();
-			///glDrawElements(GL_TRIANGLES, this->IndexCount, GL_UNSIGNED_INT, 0);
+			Graphics::API::Context::DrawIndexed(IndexCount);
 			this->IndexCount = 0;
 		}
 

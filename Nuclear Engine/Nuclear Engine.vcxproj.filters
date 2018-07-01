@@ -282,6 +282,13 @@
     <ClInclude Include="include\Engine\Graphics\API\UnifiedShader.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLUnifiedShader.h" />
     <ClInclude Include="include\Engine\Graphics\API\DirectX\DX11UnifiedShader.h" />
+    <ClInclude Include="Source\Experimental\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\Experimental\ImGui\stb_rect_pack.h" />
+    <ClInclude Include="Source\Experimental\ImGui\stb_textedit.h" />
+    <ClInclude Include="Source\Experimental\ImGui\stb_truetype.h" />
+    <ClInclude Include="include\Experimental\ImGui\imconfig.h" />
+    <ClInclude Include="include\Experimental\ImGui\imgui.h" />
+    <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Binding.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -379,6 +386,10 @@
     <ClCompile Include="Source\Experimental\Stella\SpriteSheet.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Renderer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\UnifiedShader.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Binding.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
