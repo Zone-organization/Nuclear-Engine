@@ -605,6 +605,7 @@
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Binding.h" />
+    <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.h" />
     <ClInclude Include="Source\Experimental\ImGui\imgui_internal.h" />
     <ClInclude Include="Source\Experimental\ImGui\stb_rect_pack.h" />
     <ClInclude Include="Source\Experimental\ImGui\stb_textedit.h" />
@@ -688,6 +689,7 @@
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Binding.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\imgui.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\imgui_draw.cpp" />

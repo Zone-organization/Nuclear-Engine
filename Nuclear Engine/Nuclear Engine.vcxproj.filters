@@ -289,6 +289,7 @@
     <ClInclude Include="include\Experimental\ImGui\imconfig.h" />
     <ClInclude Include="include\Experimental\ImGui\imgui.h" />
     <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Binding.h" />
+    <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -390,6 +391,7 @@
     <ClCompile Include="Source\Experimental\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Binding.cpp" />
+    <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
