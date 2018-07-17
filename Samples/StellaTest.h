@@ -10,11 +10,14 @@
 class StellaTest : public Core::Game
 {
 protected:
-	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-	float lastX = _Width_ / 2.0f;
-	float lastY = _Height_ / 2.0f;
-	bool firstMouse = true;
+	//Graphics::Sprite sprite;
+	Graphics::SpriteSheet spritesheet;
+	Graphics::Layer layer;
+	Graphics::Animator animator;
+	Graphics::Renderable renderable;
+	Graphics::Renderer renderer;
+
 public:
 	StellaTest()
 	{
@@ -23,17 +26,16 @@ public:
 	void Load()
 	{
 	
-		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 
-		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
-		Core::Application::Display();
+
+		LoadFinishUp();
 	}
 
 	
 
 	void Update(float deltatime) override
 	{
-		//Core::Application::SetTitle("Nuclear Engine FPS: " + std::to_string(FPS) + " FrameTime: " + std::to_string(FrameTime));
+
 
 	}
 	void Render(float dt) override

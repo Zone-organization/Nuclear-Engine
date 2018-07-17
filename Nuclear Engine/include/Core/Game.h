@@ -37,6 +37,9 @@ namespace NuclearEngine {
 			virtual void OnMouseMovement(int xpos, int ypos);
 			virtual void OnWindowResize(int width, int height);
 
+			// Helper Functions
+			virtual void LoadFinishUp();
+
 			void SetActiveScene(ECS::Scene* scene);
 			ECS::Scene* GetActiveScene();
 

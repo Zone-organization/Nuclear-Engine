@@ -24,6 +24,7 @@ namespace NuclearEngine
 
 		void Material::BindTexSet(Uint32 index)
 		{
+
 		}
 	
 		void Material::ParsePixelShader()

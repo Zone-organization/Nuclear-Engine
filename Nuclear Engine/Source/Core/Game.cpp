@@ -1,4 +1,6 @@
-#include "..\..\include\Core\Game.h"
+#include <Core/Game.h>
+#include <Core/Application.h>
+#include <Engine/Graphics/API/Context.h>
 
 
 namespace NuclearEngine {
@@ -37,6 +39,12 @@ namespace NuclearEngine {
 		}
 		void Game::Shutdown()
 		{
+		}
+		void Game::LoadFinishUp()
+		{
+			Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
+			Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
+			Core::Application::Display();
 		}
 		void Game::OnMouseScroll(double val1, double val2)
 		{

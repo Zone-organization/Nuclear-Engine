@@ -228,43 +228,16 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh::SubMesh * mesh, Assets::Material* material)
 		{
-			///FIXME URGENT ERRROR BLA BLA
-
-
-			//Lil and UGLY AND SLOW hack to ensure only one rendering texture is bound
-			//TODO: Support Multi-Texture Models
-			//	bool diffusebound = false;
-			//bool specularbound = false;
-			//bool normalbound = false;
-
-		/*	for (unsigned int i = 0; i < mesh->data.textures.size(); i++)
+			if (mesh == nullptr)
 			{
+				Log.Error("[RenderSystem] Rendering invalid Mesh...\n");
+			}
+			if (material == nullptr)
+			{
+				Log.Error("[RenderSystem] Rendering Mesh with invalid Material...\n");
+			}
 
-				if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Diffuse)
-				{
-					//if (diffusebound != true)
-					//{
-						mesh->data.textures[i].PSBind(0);
-					//	diffusebound = true;
-					//}
-				}
-				else if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Specular)
-				{
-					//if (specularbound != true)
-					//{
-						mesh->data.textures[i].PSBind(1);
-					//	specularbound = true;
-					//}
-				}
-				else if (mesh->data.textures[i].GetUsageType() == Assets::TextureUsageType::Normal)
-				{
-				//	if (normalbound != true)
-					//{
-						mesh->data.textures[i].PSBind(2);
-					//	normalbound = true;
-					//}
-				}
-			}*/
+			material->BindTexSet(mesh->data.TexSetIndex);
 			mesh->VBO.Bind();
 			mesh->IBO.Bind();
 			Graphics::API::Context::DrawIndexed(mesh->IndicesCount);
