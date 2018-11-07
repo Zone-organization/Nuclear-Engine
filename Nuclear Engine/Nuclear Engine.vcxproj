@@ -22,7 +22,7 @@
     <ProjectGuid>{1E657253-3D76-4C77-A747-4D85EEFA91DA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NuclearEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ProjectName>Nuclear Engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

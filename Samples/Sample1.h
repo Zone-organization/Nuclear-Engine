@@ -15,7 +15,7 @@ protected:
 	Assets::Mesh SphereAsset;
 	Assets::Mesh NanosuitAsset;
 
-	Assets::Material NanosuitMaterial;
+	Assets::Material* NanosuitMaterial;
 
 	//Default states
 	Graphics::API::CommonStates states;
@@ -143,7 +143,7 @@ public:
 		Managers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
-		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
 		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
 
 		//Create The skybox

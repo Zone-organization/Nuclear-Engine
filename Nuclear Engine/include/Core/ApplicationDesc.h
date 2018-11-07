@@ -8,7 +8,7 @@ namespace NuclearEngine {
 
 		enum class RenderAPI : Uint8
 		{
-			OpenGL3,
+			OpenGL4_5,
 			DirectX11
 		};
 
@@ -17,7 +17,7 @@ namespace NuclearEngine {
 			Uint32 WindowWidth = 1024;
 			Uint32 WindowHeight = 768;
 			Uint32 Style = DEFAULT_SFML_STYLE;
-			RenderAPI Renderer = RenderAPI::OpenGL3;
+			RenderAPI Renderer = RenderAPI::OpenGL4_5;
 			std::string Title = "NuclearEngine";
 		};
 	}

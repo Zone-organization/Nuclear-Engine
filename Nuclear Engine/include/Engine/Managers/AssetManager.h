@@ -55,7 +55,7 @@ namespace NuclearEngine {
 			static void Initialize(bool SaveTextureNames = false);
 			static void ShutDown();
 			
-			static Assets::Mesh& Import(const std::string& Path, const MeshLoadingDesc& desc, Assets::Material* material = nullptr);
+			static Assets::Mesh& Import(const std::string& Path, const MeshLoadingDesc& desc, Assets::Material* material);
 			static Assets::Texture& Import(const std::string& Path, const Graphics::API::Texture_Desc& Desc = Graphics::API::Texture_Desc());
 			static Assets::Texture& Import(const std::string& Path, const Assets::TextureUsageType& type, const Graphics::API::Texture_Desc& Desc = Graphics::API::Texture_Desc());
 

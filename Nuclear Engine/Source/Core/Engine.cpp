@@ -178,7 +178,7 @@ namespace NuclearEngine {
 
 
 #ifdef 	NE_USE_CORE_OPENGL
-			Log.Info("OpenGL 3.3 Core\n");
+			Log.Info("OpenGL 4.5 Core\n");
 #endif
 
 #ifdef 	NE_USE_DIRECTX11
@@ -186,7 +186,7 @@ namespace NuclearEngine {
 #endif
 
 #ifdef 	NE_USE_RUNTIME_RENDER_API
-			Log.Info("OpenGL 3.3 Core & DirectX 11\n");
+			Log.Info("OpenGL 4.5 Core & DirectX 11\n");
 #endif
 
 #ifndef FMOD_NOT_INCLUDED

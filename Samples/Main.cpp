@@ -5,11 +5,11 @@
 void Start()
 {
 	char choice;
-	std::cout << "--Choose A Renderer: \nA) OpenGL 3 \nB) DirectX 11\n";
+	std::cout << "--Choose A Renderer: \nA) OpenGL 4.5 \nB) DirectX 11\n";
 	std::cin >> choice;
 	Core::EngineStartupDesc desc;
 	if (choice == 'a') {
-		desc.mAppdesc.Renderer =	 Core::RenderAPI::OpenGL3;
+		desc.mAppdesc.Renderer = Core::RenderAPI::OpenGL4_5;
 	}
 	else if (choice == 'b')
 	{

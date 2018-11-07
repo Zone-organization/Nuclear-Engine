@@ -68,18 +68,18 @@ float4 main(PixelInputType input) : SV_TARGET
 			Graphics::API::Context::SetRenderAPI(Desc.Renderer);
 			sf::SetOpenGLContext(false);
 
-			if (Desc.Renderer == RenderAPI::OpenGL3)
+			if (Desc.Renderer == RenderAPI::OpenGL4_5)
 				sf::SetOpenGLContext(true);
 			
 			//Create Window
 			MainWindow = new sf::Window();
-			sf::ContextSettings settings(24, 8, 0, 3, 3,	sf::ContextSettings::Core, false);
+			sf::ContextSettings settings(24, 8, 0, 4, 5,	sf::ContextSettings::Core, false);
 
 
 			MainWindow->create(sf::VideoMode(Desc.WindowWidth, Desc.WindowHeight), Desc.Title, Desc.Style, settings);
 			MainWindow->setVisible(false);
 
-			if (Desc.Renderer == RenderAPI::OpenGL3)
+			if (Desc.Renderer == RenderAPI::OpenGL4_5)
 			{
 				MainWindow->setActive(true);
 			}
@@ -113,7 +113,7 @@ float4 main(PixelInputType input) : SV_TARGET
 		}
 		void Application::SwapBuffers()
 		{
-			if (Graphics::API::Context::GetRenderAPI() == RenderAPI::OpenGL3)
+			if (Graphics::API::Context::GetRenderAPI() == RenderAPI::OpenGL4_5)
 			{
 				MainWindow->display();
 			}

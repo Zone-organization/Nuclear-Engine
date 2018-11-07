@@ -140,13 +140,15 @@ namespace NuclearEngine
 
 					D3D_FEATURE_LEVEL FeatureLevelsRequested[]
 					{
-						D3D_FEATURE_LEVEL_10_1,
+						D3D_FEATURE_LEVEL_11_0,
 					};
 
 					UINT creationFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 
 #ifdef _DEBUG
-					creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+					//"2018-8-11 Reboot"
+					//Disabled until I D3D11 SDK Layers for Windows 10
+					//creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 					result = D3D11CreateDeviceAndSwapChain(
 						adapter,

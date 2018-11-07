@@ -38,7 +38,7 @@ namespace NuclearEngine
 #ifndef NE_USE_RUNTIME_RENDER_API
 				ctx.SetPrimitiveType(primitivetype);
 #else
-				if (_renderer == RenderAPI::OpenGL3)
+				if (_renderer == RenderAPI::OpenGL4_5)
 				{
 					return Graphics::API::OpenGL::GLContext::SetPrimitiveType(primitivetype);
 				}
@@ -54,7 +54,7 @@ namespace NuclearEngine
 #ifndef NE_USE_RUNTIME_RENDER_API
 				ctx.Clear(color, flags, depth, stencil);
 #else
-				if (_renderer == RenderAPI::OpenGL3)
+				if (_renderer == RenderAPI::OpenGL4_5)
 				{
 					return Graphics::API::OpenGL::GLContext::Clear(color, flags, depth, stencil);
 				}
@@ -77,7 +77,7 @@ namespace NuclearEngine
 #ifndef NE_USE_RUNTIME_RENDER_API
 				ctx.Draw(count);
 #else
-				if (_renderer == RenderAPI::OpenGL3)
+				if (_renderer == RenderAPI::OpenGL4_5)
 				{
 					return Graphics::API::OpenGL::GLContext::Draw(count);
 				}
@@ -93,7 +93,7 @@ namespace NuclearEngine
 #ifndef NE_USE_RUNTIME_RENDER_API
 				ctx.DrawIndexed(vertexCount);
 #else
-				if (_renderer == RenderAPI::OpenGL3)
+				if (_renderer == RenderAPI::OpenGL4_5)
 				{
 					return Graphics::API::OpenGL::GLContext::DrawIndexed(vertexCount);
 				}
@@ -109,7 +109,7 @@ namespace NuclearEngine
 #ifndef NE_USE_RUNTIME_RENDER_API
 				ctx.SetViewPort(x, y, width, height);
 #else
-				if (_renderer == RenderAPI::OpenGL3)
+				if (_renderer == RenderAPI::OpenGL4_5)
 				{
 					return Graphics::API::OpenGL::GLContext::SetViewPort(x, y, width, height);
 				}
@@ -131,7 +131,7 @@ namespace NuclearEngine
 			{
 				_renderer = renderer;
 
-				if (_renderer == Core::RenderAPI::OpenGL3)
+				if (_renderer == Core::RenderAPI::OpenGL4_5)
 				{
 					isOpengl3 = true;
 					isDirectX11 = false;

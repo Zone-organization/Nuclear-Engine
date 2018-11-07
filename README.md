@@ -1,6 +1,6 @@
 ![Nuclear Engine Logo](logo.png "Nuclear Engine Logo") 
 
-A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 11
+A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 4.5+ , DirectX 11
 
 # Large restructure is undergoing...
 [![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine) 
@@ -9,8 +9,13 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 3.3+ , DirectX 
 * [Engine features](https://github.com/Zone-organization/Nuclear-Engine/blob/master/FEATURES.md) - A list of all working features.
 * [Roadmap](https://github.com/Zone-organization/Nuclear-Engine/blob/master/ROADMAP.md) - A list of planned features. 
 
+## APIs
+  - DirectX 11		"Working"
+  - OpenGL 4.5		"Working"
+  - Vulkan			"W.I.P"
+
 ## Requirements
-  - DirectX 10.1 or OpenGL 3.3 Capable GPU
+  - DirectX 11 or OpenGL 4.5 Capable GPU
 
 ## Current Platforms & RenderAPIs
   - Windows 7+   (DirectX 11 & OpenGL)

@@ -31,7 +31,8 @@ namespace NuclearEngine {
 			auto hashedname = Utilities::Hash(Path);
 			Log.Info("[AssetManager] Loaded Mesh: " + Path + "\n");
 
-			_material = &(Managers::AssetManager::mImportedMaterials[hashedname] = material);
+			Managers::AssetManager::mImportedMaterials[hashedname] = material;
+			_material = &Managers::AssetManager::mImportedMaterials[hashedname];
 			return 	Managers::AssetManager::mImportedMeshes[hashedname] = model;
 
 		}
