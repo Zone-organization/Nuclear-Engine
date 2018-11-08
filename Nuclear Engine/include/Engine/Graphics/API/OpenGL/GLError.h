@@ -21,9 +21,8 @@ namespace NuclearEngine
 
 #ifdef _DEBUG
 #define GLCall(stmt) \
-				do { stmt; \
-					glCheckError(__FILE__, __LINE__);\
-				} while (false)
+					stmt; \
+					glCheckError(__FILE__, __LINE__);
 #else
 #define GLCall(stmt) stmt
 #endif

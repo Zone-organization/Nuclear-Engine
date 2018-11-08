@@ -134,11 +134,7 @@ namespace NuclearEngine
 
 				void GLTexture::Delete(GLTexture * texture)
 				{
-					if (texture->textureID != 0)
-					{
-						GLCall(glDeleteTextures(1, &texture->textureID));
-					}
-
+					GLCall(glDeleteTextures(1, &texture->textureID));
 					texture->textureID = 0;
 					texture->type = 0;
 				}

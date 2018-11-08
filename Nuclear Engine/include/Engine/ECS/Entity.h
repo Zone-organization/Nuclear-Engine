@@ -110,8 +110,7 @@ namespace NuclearEngine {
 				return other.id_ < id_;
 			}
 
-			Transform* GetTransform();
-			void SetTransform(const Transform& trans);
+			Transform mTransform;
 
 			/**
 			 * Is this Entity handle Valid?
@@ -171,8 +170,6 @@ namespace NuclearEngine {
 			std::bitset<MAX_COMPONENTS> component_mask() const;
 
 		private:
-			Transform mTransform;
-
 			EntityManager * manager_ = nullptr;
 			Entity::Id id_ = INVALID;
 		};

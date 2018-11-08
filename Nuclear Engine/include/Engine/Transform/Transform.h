@@ -31,9 +31,9 @@ namespace NuclearEngine
 		void Update();
 
 		void Update(Math::Matrix4 parent);
+		Math::Matrix4 mTransform = Math::Matrix4(1.0f);
 
 	private:
-		Math::Matrix4 mTransform = Math::Matrix4(1.0f);
 	
 		Math::Vector3 mPosition = Math::Vector3(0.0f);
 		Math::Quaternion mRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);

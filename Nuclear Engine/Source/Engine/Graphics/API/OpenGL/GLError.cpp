@@ -13,7 +13,7 @@ namespace NuclearEngine
 			{
 				GLenum glCheckError(const char *file, int line)
 				{
-					GLenum errorCode;
+					GLenum errorCode , savederrorcode = -1;
 					while ((errorCode = glGetError()) != GL_NO_ERROR)
 					{
 						std::string error;
@@ -27,7 +27,14 @@ namespace NuclearEngine
 						case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
 						case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
 						}
-						Log.Error("[OpenGL Error] File: " + std::string(file) + " Line: " + std::to_string(line) + " Error: " + error + "\n");
+						if (errorCode != savederrorcode)
+						{
+							//Save Error Code to avoid replication of error printing after exiting
+							savederrorcode = errorCode;
+							Log.Error("[OpenGL Error] File: " + std::string(file) + " Line: " + std::to_string(line) + " Error: " + error + "\n");
+						}
+						else
+							break;
 					}
 					return errorCode;
 				}

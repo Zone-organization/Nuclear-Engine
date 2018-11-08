@@ -39,6 +39,7 @@ namespace NuclearEngine
 
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::CameraComponent* camera);
+			Components::CameraComponent* GetCamera();
 
 			Graphics::API::VertexShader GetVertexShader();
 			Graphics::API::PixelShader GetPixelShader();

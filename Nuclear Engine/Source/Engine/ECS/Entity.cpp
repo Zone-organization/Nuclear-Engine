@@ -29,14 +29,6 @@ namespace NuclearEngine {
 			manager_->Destroy(id_);
 			InValidate();
 		}
-		Transform* Entity::GetTransform()
-		{
-			return &mTransform;
-		}
-		void Entity::SetTransform(const Transform& trans)
-		{
-			mTransform = trans;
-		}
 
 		std::bitset<ECS::MAX_COMPONENTS> Entity::component_mask() const {
 			return manager_->component_mask(id_);

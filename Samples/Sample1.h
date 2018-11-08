@@ -168,8 +168,8 @@ public:
 		ENanosuit = SampleScene.Entities.Create();
 
 		//Assign Components
-		ECube.Assign<Components::MeshComponent>(&CubeAsset , true);
-		ELamp.Assign<Components::MeshComponent>(&SphereAsset , true);
+		//ECube.Assign<Components::MeshComponent>(&CubeAsset , true);
+		//ELamp.Assign<Components::MeshComponent>(&SphereAsset , true);
 		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
 
 	}
@@ -179,9 +179,10 @@ public:
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
 
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
+		//Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
+		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->AddLight(&spotLight);
 		Renderer->AddLight(&pointlight1);
 		Renderer->AddLight(&pointlight2);
@@ -279,14 +280,14 @@ public:
 			LampTransforms.push_back(model);
 		}
 
-		ECube.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = CubeTransforms;
-		ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
+	//	ECube.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = CubeTransforms;
+	//	ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
 		
 		Math::Matrix4 NanosuitMatrix(1.0f);
 		NanosuitMatrix = Math::translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 		NanosuitMatrix = Math::scale(NanosuitMatrix, Math::Vector3(0.25f));
 		NanosuitMatrix = Math::rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
-		ENanosuit.GetTransform()->SetTransform(NanosuitMatrix);
+		ENanosuit.mTransform.mTransform = NanosuitMatrix;
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());

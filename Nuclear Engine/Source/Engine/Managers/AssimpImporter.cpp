@@ -52,7 +52,7 @@ namespace NuclearEngine {
 				ProcessNode(node->mChildren[i], scene);
 			}
 		}
-		void AssimpImporter::ProcessMaterial(aiMesh * mesh, const aiScene * scene)
+		unsigned int AssimpImporter::ProcessMaterial(aiMesh * mesh, const aiScene * scene)
 		{	
 			Assets::TextureSet TexSet;
 
@@ -74,7 +74,15 @@ namespace NuclearEngine {
 				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 
-			this->material.mPixelShaderTextures.push_back(TexSet);
+			if (!TexSet.empty())
+			{
+				this->material.mPixelShaderTextures.push_back(TexSet);
+				return (this->material.mPixelShaderTextures.size() - 1);
+			}
+			else
+			{
+				return 0;
+			}
 		}
 		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{
@@ -125,7 +133,7 @@ namespace NuclearEngine {
 			}
 
 			// process material		
-			ProcessMaterial(mesh, scene);
+			result.TexSetIndex = ProcessMaterial(mesh, scene);
 
 			// return a mesh object created from the extracted mesh data
 			return result;

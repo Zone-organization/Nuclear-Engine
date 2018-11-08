@@ -14,12 +14,16 @@ namespace NuclearEngine
 		RenderSystem::RenderSystem(const RenderSystemDesc & desc)
 		{
 			Desc = desc;
-			ActiveCamera = &Components::CameraComponent();
+			ActiveCamera = new Components::CameraComponent();
 			this->status = RenderSystemStatus::RequireBaking;
 		}
 		RenderSystem::~RenderSystem()
 		{
-			ActiveCamera = nullptr;
+			if (ActiveCamera != nullptr)
+			{
+				delete ActiveCamera;
+				ActiveCamera = nullptr;
+			}
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
@@ -70,6 +74,10 @@ namespace NuclearEngine
 		void RenderSystem::SetCamera(Components::CameraComponent * camera)
 		{
 			this->ActiveCamera = camera;
+		}
+		Components::CameraComponent* RenderSystem::GetCamera()
+		{
+			return this->ActiveCamera;
 		}
 		Graphics::API::VertexShader RenderSystem::GetVertexShader()
 		{
@@ -189,8 +197,12 @@ namespace NuclearEngine
 			{
 				if (!MeshObject.Get()->mMultiRender)
 				{
-					entity.GetTransform()->Update();
-					ActiveCamera->SetModelMatrix(entity.GetTransform()->GetTransformMatrix());
+					Math::Matrix4 NanosuitMatrix(1.0f);
+					NanosuitMatrix = Math::translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
+					NanosuitMatrix = Math::scale(NanosuitMatrix, Math::Vector3(0.25f));
+					//NanosuitMatrix = Math::rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
+					//entity.GetTransform()->Update();
+					ActiveCamera->SetModelMatrix(NanosuitMatrix/*entity.mTransform.GetTransformMatrix()*/);
 					InstantRender(MeshObject.Get());
 				}
 				else 

@@ -15,7 +15,7 @@ namespace NuclearEngine {
 		private:
 
 			void ProcessNode(aiNode *node, const aiScene *scene);
-			void ProcessMaterial(aiMesh * mesh, const aiScene * scene);
+			unsigned int ProcessMaterial(aiMesh * mesh, const aiScene * scene);
 			Assets::Mesh::SubMesh::SubMeshData ProcessMesh(aiMesh *mesh, const aiScene *scene);
 			std::vector<Assets::Texture> ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
 			Assets::Material material;

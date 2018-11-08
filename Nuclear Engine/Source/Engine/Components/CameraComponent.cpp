@@ -23,11 +23,15 @@ namespace NuclearEngine
 	
 		CameraComponent::~CameraComponent()
 		{
-			Graphics::API::ConstantBuffer::Delete(&ConstantBuffer);
+			if (Init)
+			{
+				Graphics::API::ConstantBuffer::Delete(&ConstantBuffer);
+			}
 		}
 	
 		void CameraComponent::Initialize(Math::Matrix4 projectionMatrix)
 		{
+			Init = true;
 			_CameraBuffer.Projection = projectionMatrix;
 			Update();
 		}

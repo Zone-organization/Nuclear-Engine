@@ -15,13 +15,13 @@ namespace NuclearEngine
 				GLConstantBuffer::GLConstantBuffer()
 				{
 					this->buffer = 0;
-					this->name = "unset";
+					this->name = "NewCB";
 					this->BindingIndex = 0;
 				}
 				GLConstantBuffer::~GLConstantBuffer()
 				{
 					this->buffer = 0;
-					this->name = "deleted";
+					this->name = "OldCB";
 					this->BindingIndex = 0;
 				}
 				void GLConstantBuffer::Create(GLConstantBuffer* result, const char * Nameinshader, unsigned int size)
@@ -48,11 +48,7 @@ namespace NuclearEngine
 
 				void GLConstantBuffer::Delete(GLConstantBuffer * cbuffer)
 				{
-					if (cbuffer->buffer != 0)
-					{
-						GLCall(glDeleteBuffers(1, &cbuffer->buffer));
-					}
-
+					GLCall(glDeleteBuffers(1, &cbuffer->buffer));					
 					cbuffer->buffer = 0;
 				}
 
