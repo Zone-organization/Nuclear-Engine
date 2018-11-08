@@ -1,7 +1,7 @@
 /*
  * ReferenceAnalyzer.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -285,7 +285,7 @@ IMPLEMENT_VISIT_PROC(CallExpr)
 
     /* Mark all arguments, that are assigned to output parameters, as l-values */
     ast->ForEachOutputArgument(
-        [this](ExprPtr& argExpr)
+        [this](ExprPtr& argExpr, VarDecl* /*param*/)
         {
             MarkLValueExpr(argExpr.get());
         }

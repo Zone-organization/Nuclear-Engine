@@ -1,7 +1,7 @@
 /*
  * GLSLParser.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -38,7 +38,7 @@ ProgramPtr GLSLParser::ParseSource(
     {
         /* Parse program AST */
         auto ast = ParseProgram(source);
-        return (GetReportHandler().HasErros() ? nullptr : ast);
+        return (GetReportHandler().HasErrors() ? nullptr : ast);
     }
     catch (const Report& err)
     {
@@ -421,7 +421,7 @@ StructDeclPtr GLSLParser::ParseStructDecl(bool parseStructTkn, const TokenPtr& i
     {
         /* Parse member variable declarations */
         ast->localStmnts = ParseGlobalStmntList();
-        
+
         for (auto& stmnt : ast->localStmnts)
         {
             if (stmnt->Type() == AST::Types::VarDeclStmnt)
@@ -843,7 +843,7 @@ StmntPtr GLSLParser::ParseStmntWithStructDecl()
 {
     /* Parse structure declaration statement */
     auto ast = Make<BasicDeclStmnt>();
-    
+
     auto structDecl = ParseStructDecl();
     structDecl->declStmntRef = ast.get();
 
@@ -855,7 +855,7 @@ StmntPtr GLSLParser::ParseStmntWithStructDecl()
         auto varDeclStmnt = Make<VarDeclStmnt>();
 
         varDeclStmnt->typeSpecifier = ASTFactory::MakeTypeSpecifier(structDecl);
-        
+
         /* Parse variable declarations */
         varDeclStmnt->varDecls = ParseVarDeclList(varDeclStmnt.get());
         Semi();
@@ -1142,7 +1142,7 @@ ExprPtr GLSLParser::ParseObjectOrCallExpr(const ExprPtr& expr)
 {
     /* Parse variable identifier first (for variables and functions) */
     auto objectExpr = ParseObjectExpr(expr);
-    
+
     if (Is(Tokens::LBracket))
         return ParseCallExpr(objectExpr);
 
@@ -1511,7 +1511,7 @@ bool GLSLParser::ParseModifiers(TypeSpecifier* typeSpecifier, bool allowPrimitiv
     {
         /* Parse input modifier */
         std::string modifier;
-        
+
         if (inputTkn)
             modifier = inputTkn->Spell();
         else
@@ -1551,7 +1551,7 @@ bool GLSLParser::ParseModifiers(TypeSpecifier* typeSpecifier, bool allowPrimitiv
         /* Parse primitive type */
         if (!allowPrimitiveType)
             Error(R_NotAllowedInThisContext(R_PrimitiveType), false, false);
-        
+
         auto primitiveType = ParsePrimitiveType();
 
         if (typeSpecifier->primitiveType == PrimitiveType::Undefined)

@@ -1,7 +1,7 @@
 /*
  * ReportHandler.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -37,24 +37,24 @@ class ReportHandler
         ReportHandler(Log* log);
 
         void Warning(
-            bool breakWithExpection,
-            const std::string& msg,
-            SourceCode* sourceCode = nullptr,
-            const SourceArea& area = SourceArea::ignore
+            bool                breakWithExpection,
+            const std::string&  msg,
+            SourceCode*         sourceCode          = nullptr,
+            const SourceArea&   area                = SourceArea::ignore
         );
 
         void SubmitReport(
-            bool breakWithExpection,
-            const ReportTypes type,
-            const std::string& typeName,
-            const std::string& msg,
-            SourceCode* sourceCode = nullptr,
-            const SourceArea& area = SourceArea::ignore,
-            const std::vector<SourceArea>& secondaryAreas = {}
+            bool                            breakWithExpection,
+            const ReportTypes               type,
+            const std::string&              typeName,
+            const std::string&              msg,
+            SourceCode*                     sourceCode      = nullptr,
+            const SourceArea&               area            = SourceArea::ignore,
+            const std::vector<SourceArea>&  secondaryAreas  = {}
         );
 
         // Returns true if any errors have been submitted.
-        inline bool HasErros() const
+        inline bool HasErrors() const
         {
             return hasErrors_;
         }
@@ -72,11 +72,11 @@ class ReportHandler
     private:
 
         Report MakeReport(
-            const ReportTypes type,
-            const std::string& msg,
-            SourceCode* sourceCode,
-            const SourceArea& area,
-            const std::vector<SourceArea>& secondaryAreas
+            const ReportTypes               type,
+            const std::string&              msg,
+            SourceCode*                     sourceCode,
+            const SourceArea&               area,
+            const std::vector<SourceArea>&  secondaryAreas
         );
 
         Log*                        log_                = nullptr;
@@ -84,7 +84,9 @@ class ReportHandler
 
         std::stack<std::string>     contextDescStack_;
 
+        // TODO: sometimes the same error/warning message appears multiple times, these sets are a workaround for this issue
         std::set<SourcePosition>    errorPositions_;
+        std::set<SourcePosition>    warningPositions_;
 
 };
 

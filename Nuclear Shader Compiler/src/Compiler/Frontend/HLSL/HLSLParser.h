@@ -1,7 +1,7 @@
 /*
  * HLSLParser.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -22,21 +22,21 @@ namespace Xsc
 // Syntax parser class for the shading language HLSL.
 class HLSLParser : public SLParser
 {
-    
+
     public:
-        
+
         HLSLParser(Log* log = nullptr);
 
         ProgramPtr ParseSource(
-            const SourceCodePtr& source,
-            const NameMangling& nameMangling,
-            const InputShaderVersion versionIn,
-            bool rowMajorAlignment = false,
-            bool enableWarnings = false
+            const SourceCodePtr&        source,
+            const NameMangling&         nameMangling,
+            const InputShaderVersion    versionIn,
+            bool                        rowMajorAlignment   = false,
+            bool                        enableWarnings      = false
         );
 
     private:
-        
+
         /* === Functions === */
 
         ScannerPtr MakeScanner() override;
@@ -46,7 +46,7 @@ class HLSLParser : public SLParser
 
         // Returns true if the current token is a base data type (i.e. scalar, vector, matrix, or string type denoter).
         bool IsBaseDataType() const;
-        
+
         // Returns true if the current token is a literal.
         bool IsLiteral() const;
 

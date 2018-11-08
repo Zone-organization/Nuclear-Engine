@@ -1,7 +1,7 @@
 /*
  * StructParameterAnalyzer.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -109,8 +109,8 @@ IMPLEMENT_VISIT_PROC(VarDecl)
             return (varDecl->flags(VarDecl::isShaderInput) || varDecl->flags(VarDecl::isShaderOutput));
             #endif
         };
-        
-        /* Returns true, if the current structure declaratin (if there is one) is marked as shader input/output */
+
+        /* Returns true, if the current structure declaration (if there is one) is marked as shader input/output */
         auto InsideShaderIOStruct = [this]() -> bool
         {
             if (auto structDecl = ActiveStructDecl())

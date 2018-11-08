@@ -1,7 +1,7 @@
 /*
  * Xsc.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -78,7 +78,10 @@ namespace Xsc
 
 /* ===== Public structures ===== */
 
-//! Compiler warning flags.
+/**
+\brief Compiler warning flags.
+\see ShaderInput::warnings
+*/
 struct Warnings
 {
     enum : unsigned int
@@ -102,6 +105,7 @@ struct Warnings
 /**
 \brief Language extension flags.
 \remakrs This is only supported, if the compiler was build with the 'XSC_ENABLE_LANGUAGE_EXT' macro.
+\see ShaderInput::extensions
 */
 struct Extensions
 {
@@ -114,7 +118,10 @@ struct Extensions
     };
 };
 
-//! Formatting descriptor structure for the output shader.
+/**
+\brief Formatting descriptor structure for the output shader.
+\see ShaderOutput::formatting
+*/
 struct Formatting
 {
     //! If true, scopes are always written in braces. By default false.
@@ -194,9 +201,15 @@ struct Options
 
     //! If true, the source code is only validated, but no output code will be generated. By default false.
     bool    validateOnly            = false;
+
+    //! If true, the generator header with metadata is written as first comment to the output. By default true.
+    bool    writeGeneratorHeader    = true;
 };
 
-//! Name mangling descriptor structure for shader input/output variables (also referred to as "varyings"), temporary variables, and reserved keywords.
+/**
+\brief Name mangling descriptor structure for shader input/output variables (also referred to as "varyings"), temporary variables, and reserved keywords.
+\see ShaderOutput::nameMangling
+*/
 struct NameMangling
 {
     /**
@@ -242,7 +255,10 @@ struct NameMangling
     bool            renameBufferFields  = false;
 };
 
-//! Shader input descriptor structure.
+/**
+\brief Shader input descriptor structure.
+\see CompileShader
+*/
 struct ShaderInput
 {
     //! Specifies the filename of the input shader code. This is an optional attribute, and only a hint to the compiler.
@@ -252,8 +268,8 @@ struct ShaderInput
     std::shared_ptr<std::istream>   sourceCode;
 
     //! Specifies the input shader version (e.g. InputShaderVersion::HLSL5 for "HLSL 5"). By default InputShaderVersion::HLSL5.
-    InputShaderVersion              shaderVersion       = InputShaderVersion::NSL;
-    
+    InputShaderVersion              shaderVersion       = InputShaderVersion::HLSL5;
+
     //! Specifies the target shader (Vertex, Fragment etc.). By default ShaderTarget::Undefined.
     ShaderTarget                    shaderTarget        = ShaderTarget::Undefined;
 
@@ -289,7 +305,10 @@ struct ShaderInput
     IncludeHandler*                 includeHandler      = nullptr;
 };
 
-//! Vertex shader semantic (or rather attribute) layout structure.
+/**
+\brief Vertex shader semantic (or rather attribute) layout structure.
+\see ShaderOutput::vertexSemantics
+*/
 struct VertexSemantic
 {
     //! Specifies the shader semantic (or rather attribute).
@@ -299,7 +318,26 @@ struct VertexSemantic
     int         location;
 };
 
-//! Shader output descriptor structure.
+/**
+\brief Uniform packing parameter structure.
+\see ShaderOutput::uniformPacking
+*/
+struct UniformPacking
+{
+    //! If true, all global uniform statements will be packed into a single uniform buffer (except for textures, imges, samplers). By default false.
+    bool        enabled     = false;
+
+    //! Index of the binding slot for this uniform buffer. Only relevant if 'Options::explicitBinding' is enabled. By default 0.
+    int         bindingSlot = 0;
+
+    //! Name of the uniform buffer. By default "xsp_buffer".
+    std::string bufferName  = "xsp_buffer";
+};
+
+/**
+\brief Shader output descriptor structure.
+\see CompileShader
+*/
 struct ShaderOutput
 {
     //! Specifies the filename of the output shader code. This is an optional attribute, and only a hint to the compiler.
@@ -314,17 +352,23 @@ struct ShaderOutput
     //! Optional list of vertex semantic layouts, to bind a vertex attribute (semantic name) to a location index (only used when 'explicitBinding' is true).
     std::vector<VertexSemantic> vertexSemantics;
 
+    //! Optional parameters to pack all global uniforms into a single output uniform buffer.
+    UniformPacking              uniformPacking;
+
     //! Additional options to configure the code generation.
     Options                     options;
 
     //! Output code formatting descriptor.
     Formatting                  formatting;
-    
+
     //! Specifies the options for name mangling.
     NameMangling                nameMangling;
 };
 
-//! Descriptor structure for the shader disassembler.
+/**
+\brief Descriptor structure for the shader disassembler.
+\see DisassembleShader
+*/
 struct AssemblyDescriptor
 {
     //! Specifies the intermediate language of the assembly input code. Currently only SPIR-V is supported. By default IntermediateLanguage::SPIRV.

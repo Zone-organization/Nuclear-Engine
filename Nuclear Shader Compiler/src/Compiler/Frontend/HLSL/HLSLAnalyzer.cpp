@@ -1,7 +1,7 @@
 /*
  * HLSLAnalyzer.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -99,7 +99,7 @@ IMPLEMENT_VISIT_PROC(Program)
     for (auto it = ast->globalStmnts.begin(); it != ast->globalStmnts.end(); ++it)
     {
         auto stmnt = it->get();
-        
+
         /* Visit current global statement */
         Visit(stmnt);
 
@@ -247,7 +247,7 @@ IMPLEMENT_VISIT_PROC(StructDecl)
         CloseScope();
     }
     PopStructDecl();
-    
+
     /* Analyze type modifiers of member variables */
     for (const auto& member : ast->varMembers)
     {
@@ -297,7 +297,20 @@ IMPLEMENT_VISIT_PROC(FunctionDecl)
 
     /* Analyze parameter type denoters (required before function can be registered in symbol table) */
     for (auto& param : ast->parameters)
+    {
+        /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TODO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+        //NOTE: "AnalyzeArrayDimensionList" is called twice, here and in "AnalyzeParameter".
+        //      The analysis of parameters should be cleaned up here!!!
+        /*
+        Analyze array dimensions of parameters in advance, so that the 'size' member
+        gets initialized before the function identifier is registered in the symbol table
+        */
+        AnalyzeArrayDimensionList(param->varDecls.front()->arrayDims);
+        /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /TODO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+        /* Analyze type denoter from type specifier */
         AnalyzeTypeDenoter(param->typeSpecifier->typeDenoter, param->typeSpecifier.get());
+    }
 
     /* Only use global symbol table for non-member functions */
     if (!ast->IsMemberFunction())
@@ -739,6 +752,9 @@ void HLSLAnalyzer::AnalyzeVarDeclLocal(VarDecl* varDecl, bool registerVarIdent)
 
         /* Try to evaluate initializer expression */
         varDecl->initializerValue = EvaluateOrDefault(*(varDecl->initializer));
+
+        if (!varDecl->initializerValue.IsValid() && varDecl->IsParameter())
+            Error(R_ExpectedConstExpr(R_DefaultArgOfFuncParam(varDecl->ident)), varDecl->initializer.get());
     }
     else if (auto varDeclStmnt = varDecl->declStmntRef)
     {
@@ -877,9 +893,9 @@ void HLSLAnalyzer::AnalyzeCallExprPrimary(CallExpr* callExpr, const TypeDenoter*
 
         /* Analyze all l-value arguments that are assigned to output parameters */
         callExpr->ForEachOutputArgument(
-            [this](ExprPtr& argExpr)
+            [this](ExprPtr& argExpr, VarDecl* param)
             {
-                AnalyzeLValueExpr(argExpr.get());
+                AnalyzeLValueExpr(argExpr.get(), nullptr, param);
             }
         );
 
@@ -955,8 +971,8 @@ void HLSLAnalyzer::AnalyzeCallExprFunction(
             if (!param->varDecls.empty())
             {
                 auto paramVar = param->varDecls.front().get();
-                if (auto initExpr = paramVar->initializer.get())
-                    callExpr->defaultArgumentRefs.push_back(initExpr);
+                if (paramVar->initializer)
+                    callExpr->defaultParamRefs.push_back(paramVar);
                 else
                     Error(R_MissingInitializerForDefaultParam(paramVar->ident), paramVar);
             }
@@ -968,12 +984,15 @@ void HLSLAnalyzer::AnalyzeCallExprIntrinsic(CallExpr* callExpr, const HLSLIntrin
 {
     const auto intrinsic = intr.intrinsic;
 
-    /* Decoarte function call with intrinsic ID */
-    AnalyzeCallExprIntrinsicPrimary(callExpr, intr);
+    if (IsGlobalIntrinsic(intrinsic) || prefixTypeDenoter)
+    {
+        /* Decoarte function call with intrinsic ID */
+        AnalyzeCallExprIntrinsicPrimary(callExpr, intr);
 
-    /* No intrinsics can be called static */
-    if (isStatic)
-        Error(R_IllegalStaticIntrinsicCall(callExpr->ident), callExpr);
+        /* No intrinsics can be called static */
+        if (isStatic)
+            Error(R_IllegalStaticIntrinsicCall(callExpr->ident), callExpr);
+    }
 
     if (IsGlobalIntrinsic(intrinsic))
     {
@@ -1013,8 +1032,12 @@ void HLSLAnalyzer::AnalyzeCallExprIntrinsic(CallExpr* callExpr, const HLSLIntrin
         }
         else
         {
-            /* Report error on non-global intrinsic without prefix expression */
-            Error(R_InvalidClassIntrinsic(callExpr->ident), callExpr);
+            /* Report warning on reserved identifier for class intrinsic */
+            if (WarnEnabled(Warnings::DeclarationShadowing))
+                Warning(R_FuncCallShadowsClassIntrinsic(callExpr->ident), callExpr);
+
+            /* Try to interpet intrinsic identifier as globally declared function */
+            AnalyzeCallExprFunction(callExpr, callExpr->isStatic, callExpr->prefixExpr.get(), prefixTypeDenoter);
         }
     }
 }
@@ -1398,19 +1421,25 @@ bool HLSLAnalyzer::AnalyzeStaticTypeSpecifier(const TypeSpecifier* typeSpecifier
     return true;
 }
 
-void HLSLAnalyzer::AnalyzeLValueExpr(const Expr* expr, const AST* ast)
+void HLSLAnalyzer::AnalyzeLValueExpr(Expr* expr, const AST* ast, VarDecl* param)
 {
     if (expr)
     {
         /* Fetch l-value from expression */
         if (auto lvalueExpr = expr->FetchLValueExpr())
-            AnalyzeLValueExprObject(lvalueExpr, ast);
+            AnalyzeLValueExprObject(lvalueExpr, ast, param);
         else
-            Error(R_IllegalRValueAssignment, (ast != nullptr ? ast : expr));
+        {
+            ast = (ast != nullptr ? ast : expr);
+            if (param && param->declStmntRef)
+                Error(R_IllegalRValueAssignment(param->declStmntRef->ToString()), ast);
+            else
+                Error(R_IllegalRValueAssignment, ast);
+        }
     }
 }
 
-void HLSLAnalyzer::AnalyzeLValueExprObject(const ObjectExpr* objectExpr, const AST* ast)
+void HLSLAnalyzer::AnalyzeLValueExprObject(ObjectExpr* objectExpr, const AST* ast, VarDecl* param)
 {
     /* Analyze prefix expression as l-value */
     AnalyzeLValueExpr(objectExpr->prefixExpr.get(), ast);
@@ -1419,6 +1448,24 @@ void HLSLAnalyzer::AnalyzeLValueExprObject(const ObjectExpr* objectExpr, const A
     {
         if (auto varDecl = symbol->As<VarDecl>())
         {
+            /*
+            For assignments of arguments to parameters:
+            Check if types are equal so no implicit type conversion is necessary, which would result in an r-value expression
+            */
+            if (param != nullptr)
+            {
+                const auto& lhsTypeDen = varDecl->GetTypeDenoter();
+                const auto& rhsTypeDen = param->GetTypeDenoter();
+
+                if (!lhsTypeDen->Equals(*rhsTypeDen))
+                {
+                    Error(
+                        R_IllegalLValueAssignmentToTypeCast(objectExpr->ident, param->declStmntRef->ToString()),
+                        (ast != nullptr ? ast : objectExpr)
+                    );
+                }
+            }
+
             if (varDecl->declStmntRef->IsConstOrUniform())
             {
                 /* Construct error message depending if the variable is implicitly or explicitly declared as constant */
@@ -1608,7 +1655,7 @@ void HLSLAnalyzer::AnalyzeEntryPointInputOutput(FunctionDecl* funcDecl)
         }
     );
 
-    for (const auto it : outputSemanticCounter)
+    for (const auto& it : outputSemanticCounter)
     {
         if (it.second > 1)
             Error(R_DuplicateUseOfOutputSemantic(it.first.ToString()));
@@ -1925,7 +1972,7 @@ void HLSLAnalyzer::AnalyzeEntryPointSemantics(FunctionDecl* funcDecl, const std:
     {
         FindSemantics(outSemantics, semantics, R_InvalidOutputSemanticInEntryPoint);
     };
-    
+
     /*auto RequiredInSemantics = [&](const std::vector<Semantic>& semantics)
     {
         FindSemantics(semantics, inSemantics, R_MissingInputSemanticInEntryPoint);
@@ -2024,7 +2071,7 @@ void HLSLAnalyzer::AnalyzeEntryPointOutput(Expr* expr)
                     /* Add variable as parameter-structure to entry point */
                     if (program_->entryPointRef)
                         program_->entryPointRef->paramStructs.push_back({ expr, varDecl, structDecl });
-                        
+
                     /* Mark variable as local variable of the entry-point */
                     varDecl->flags << VarDecl::isEntryPointLocal;
                 }
@@ -2411,7 +2458,7 @@ void HLSLAnalyzer::AnalyzeAttributeLayout(Attribute* attrib, const TypeDenoterPt
                         if (auto baseTypeDen = bufferTypeDen->genericTypeDenoter->As<BaseTypeDenoter>())
                             baseType = BaseDataType(baseTypeDen->dataType);
                     }
-                    
+
                     /* Ensure format is used on a valid buffer type */
                     if (baseType != DataType::Undefined)
                     {

@@ -1,7 +1,7 @@
 /*
  * ReflectionAnalyzer.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -15,6 +15,8 @@
 #include "Visitor.h"
 #include "Token.h"
 #include "Variant.h"
+#include "TypeDenoter.h"
+#include <map>
 
 
 namespace Xsc
@@ -27,21 +29,21 @@ This class collects all meta information that can be optionally retrieved.
 */
 class ReflectionAnalyzer : private Visitor
 {
-    
+
     public:
-        
+
         ReflectionAnalyzer(Log* log);
 
         // Collect all reflection data from the program AST.
         void Reflect(
-            Program& program,
-            const ShaderTarget shaderTarget,
+            Program&                    program,
+            const ShaderTarget          shaderTarget,
             Reflection::ReflectionData& reflectionData,
-            bool enableWarnings
+            bool                        enableWarnings
         );
 
     private:
-        
+
         void Warning(const std::string& msg, const AST* ast = nullptr);
 
         int GetBindingPoint(const std::vector<RegisterPtr>& slotRegisters) const;
@@ -54,16 +56,17 @@ class ReflectionAnalyzer : private Visitor
         DECL_VISIT_PROC( Program           );
 
         DECL_VISIT_PROC( SamplerDecl       );
+        DECL_VISIT_PROC( StructDecl        );
 
         DECL_VISIT_PROC( FunctionDecl      );
         DECL_VISIT_PROC( UniformBufferDecl );
         DECL_VISIT_PROC( BufferDeclStmnt   );
-        
+
         DECL_VISIT_PROC( VarDecl           );
 
         /* --- Helper functions for code reflection --- */
 
-        void ReflectSamplerValue(SamplerValue* ast, Reflection::SamplerState& samplerState);
+        void ReflectSamplerValue(SamplerValue* ast, Reflection::SamplerStateDesc& desc);
         void ReflectSamplerValueFilter(const std::string& value, Reflection::Filter& filter, const AST* ast = nullptr);
         void ReflectSamplerValueTextureAddressMode(const std::string& value, Reflection::TextureAddressMode& addressMode, const AST* ast = nullptr);
         void ReflectSamplerValueComparisonFunc(const std::string& value, Reflection::ComparisonFunc& comparisonFunc, const AST* ast = nullptr);
@@ -71,16 +74,24 @@ class ReflectionAnalyzer : private Visitor
         void ReflectAttributes(const std::vector<AttributePtr>& attribs);
         void ReflectAttributesNumThreads(Attribute* ast);
 
+        void ReflectField(VarDecl* ast, Reflection::Field& field, unsigned int& accumSize, unsigned int& accumPadding);
+        void ReflectFieldType(Reflection::Field& field, const TypeDenoter& typeDen);
+
+        // Returns the index of the record that is associated with the specified structure declaration object, or -1 on failure.
+        int FindRecordIndex(const StructDecl* structDecl) const;
+
         /* === Members === */
 
-        ReportHandler               reportHandler_;
+        ReportHandler                               reportHandler_;
 
-        ShaderTarget                shaderTarget_   = ShaderTarget::VertexShader;
-        Program*                    program_        = nullptr;
+        ShaderTarget                                shaderTarget_       = ShaderTarget::VertexShader;
+        Program*                                    program_            = nullptr;
 
-        Reflection::ReflectionData* data_           = nullptr;
+        Reflection::ReflectionData*                 data_               = nullptr;
 
-        bool                        enableWarnings_ = false;
+        bool                                        enableWarnings_     = false;
+
+        std::map<const StructDecl*, std::size_t>    recordIndicesMap_;
 
 };
 

@@ -51,7 +51,6 @@ namespace NuclearEngine {
 		{
 			Internal::AssimpImporter importer;
 			return importer.Load(Path, desc, material);
-			// TODO: insert return statement here
 		}
 
 		TextureImport AssetManager::DefaultTextureImporter = TextureImport::create<&AssetManager::LoadTex_stb_image>();

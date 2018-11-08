@@ -1,7 +1,7 @@
 /*
  * JoinString.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -96,7 +96,7 @@ class JoinableString
 {
 
     public:
-        
+
         JoinableString() = default;
         JoinableString(const JoinableString&) = default;
         JoinableString& operator = (const JoinableString&) = default;
@@ -121,7 +121,7 @@ class JoinableString
         }
 
     private:
-        
+
         const char* s_          = nullptr;
         bool        canJoin_    = false;
 

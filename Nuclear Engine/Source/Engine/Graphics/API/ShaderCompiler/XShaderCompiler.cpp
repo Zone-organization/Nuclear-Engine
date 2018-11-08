@@ -1,11 +1,11 @@
 #include "XShaderCompiler.h"
 
 #ifdef NE_COMPILE_XSHADERCOMPILER
-#include <XShaderCompiler\inc\Xsc\Xsc.h>
+#include <..\Nuclear Shader Compiler\inc\Xsc\Xsc.h>
 #include <sstream>
 #include <iostream>
 #include <vector>
-#pragma comment(lib,"XShaderCompiler.lib")
+#pragma comment(lib,"NuclearShaderCompiler.lib")
 
 namespace NuclearEngine
 {
@@ -15,61 +15,100 @@ namespace NuclearEngine
 		{
 			namespace XShaderCompiler
 			{
-				ShaderVariableType Reflect_Vars(int foo)
+				ShaderVariableType Reflect_FieldType(Xsc::Reflection::Field field)
 				{
-					switch (foo)
+					switch (field.type)
 					{
-					case (int)Xsc::Reflection::VarType::Bool:	return ShaderVariableType::Bool;
-					case (int)Xsc::Reflection::VarType::Int:	return ShaderVariableType::Int1;
-					case (int)Xsc::Reflection::VarType::Int2:	return ShaderVariableType::Int2;
-					case (int)Xsc::Reflection::VarType::Int3:	return ShaderVariableType::Int3;
-					case (int)Xsc::Reflection::VarType::Int4:	return ShaderVariableType::Int4;
-					case (int)Xsc::Reflection::VarType::Float:	return ShaderVariableType::Float1;
-					case (int)Xsc::Reflection::VarType::Float2:	return ShaderVariableType::Float2;
-					case (int)Xsc::Reflection::VarType::Float3:	return ShaderVariableType::Float3;
-					case (int)Xsc::Reflection::VarType::Float4:	return ShaderVariableType::Float4;
-					case (int)Xsc::Reflection::VarType::Float2x2:	return ShaderVariableType::Matrix2x2;
-					case (int)Xsc::Reflection::VarType::Float3x3:	return ShaderVariableType::Matrix3x3;
-					case (int)Xsc::Reflection::VarType::Float4x4:	return ShaderVariableType::Matrix4x4;
+					case Xsc::Reflection::FieldType::Bool:
+						return ShaderVariableType::Bool;
+
+					case Xsc::Reflection::FieldType::Int:
+						//TODO Support Integer Matrices
+						if (field.dimensions[0] == 1)
+						{
+							if (field.dimensions[1] == 1)
+								return ShaderVariableType::Int1;
+							else if (field.dimensions[1] == 2)
+								return ShaderVariableType::Int2;
+							else if (field.dimensions[1] == 3)
+								return ShaderVariableType::Int3;
+							else if (field.dimensions[1] == 4)
+								return ShaderVariableType::Int4;
+							else
+								return ShaderVariableType::Unknown;
+						}
+						else
+							return ShaderVariableType::Unknown;
+
+					case Xsc::Reflection::FieldType::Float:
+						if (field.dimensions[0] == 1)
+						{
+							if (field.dimensions[1] == 1)
+								return ShaderVariableType::Float1;
+							else if (field.dimensions[1] == 2)
+								return ShaderVariableType::Float2;
+							else if (field.dimensions[1] == 3)
+								return ShaderVariableType::Float3;
+							else if (field.dimensions[1] == 4)
+								return ShaderVariableType::Float4;
+						}
+						else if (field.dimensions[0] == 2 && field.dimensions[1] == 2)
+						{
+							return ShaderVariableType::Matrix2x2;
+						}
+						else if (field.dimensions[0] == 3 && field.dimensions[1] == 3)
+						{
+							return ShaderVariableType::Matrix3x3;
+						}
+						else if (field.dimensions[0] == 4 && field.dimensions[1] == 4)
+						{
+							return ShaderVariableType::Matrix4x4;
+						}
+
 					default:
-						Log.Warning("[XShaderCompiler] [Reflection] Using Unsupported Variable type: " + std::to_string(foo) + " \n");
+						//Log.Warning("[XShaderCompiler] [Reflection] Using Unsupported Variable type: " + std::to_string(Xsc::Reflection::FieldType::Bool) + " \n");
 						return ShaderVariableType::Unknown;
 					}
+					return ShaderVariableType::Unknown;
 				}
-				void ParseConstantBuffers(const std::vector<Xsc::Reflection::ConstantBufferRefl>& cbuffers, BinaryShaderBlob * result)
+				void ParseConstantBuffers(const std::vector<Xsc::Reflection::ConstantBuffer>& cbuffers, BinaryShaderBlob * result)
 				{
 					for (auto cb : cbuffers)
 					{
 						Reflected_Constantbuffer refl_cb;
-						refl_cb.BindingSlot = cb.location;
+						refl_cb.BindingSlot = cb.slot;
 
-						for (auto member : cb.members)
+						for (auto member : cb.fields)
 						{
 							ShaderVariable variable;
 							//special case
-							if (member.type == Xsc::Reflection::UniformType::Struct)
+							if (member.type == Xsc::Reflection::FieldType::Record)
 								variable.Type = ShaderVariableType::Struct;
 							else
-								variable.Type = Reflect_Vars(member.baseType);
+								variable.Type = Reflect_FieldType(member);
 
-							refl_cb.Variables[member.ident] = variable;
+							refl_cb.Variables[member.name] = variable;
 						}
-						result->Reflection.ConstantBuffers[cb.ident] = refl_cb;
+						refl_cb.Size = cb.size;
+						result->Reflection.ConstantBuffers[cb.name] = refl_cb;
 					}
 				}
-				void ParseTextures(const std::vector<Xsc::Reflection::BindingSlot>& textures, BinaryShaderBlob * result)
+				void ParseResource(const std::vector<Xsc::Reflection::Resource>& resources, BinaryShaderBlob * result)
 				{
-					for (Xsc::Reflection::BindingSlot tex : textures)
+					for (Xsc::Reflection::Resource mRes : resources)
 					{
-						Reflected_Texture refl_tex;
-						refl_tex.BindingSlot = tex.location;
+						if (mRes.type == Xsc::Reflection::ResourceType::Texture2D)
+						{
+							Reflected_Texture refl_tex;
+							refl_tex.BindingSlot = mRes.slot;
 
-						result->Reflection.Textures[tex.ident] = refl_tex;
+							result->Reflection.Textures[mRes.name] = refl_tex;
+						}
 					}
 				}
 				void Reflect(Xsc::Reflection::ReflectionData* reflection, BinaryShaderBlob * result)
 				{
-					ParseTextures(reflection->textures, result);
+					ParseResource(reflection->resources, result);
 					ParseConstantBuffers(reflection->constantBuffers, result);
 				}
 
@@ -125,7 +164,7 @@ namespace NuclearEngine
 
 					Xsc::ShaderInput inputDesc;
 					inputDesc.sourceCode = input;
-					inputDesc.shaderVersion = Xsc::InputShaderVersion::HLSL4;
+					inputDesc.shaderVersion = Xsc::InputShaderVersion::HLSL5;
 					inputDesc.entryPoint = "main";
 					switch (type)
 					{
@@ -146,8 +185,7 @@ namespace NuclearEngine
 					Xsc::ShaderOutput outputDesc;
 					std::ostringstream stream;
 					outputDesc.sourceCode = &stream;
-					outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL330;
-					outputDesc.options.allowExtensions = true;
+					outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL450;
 
 					Xsc::Reflection::ReflectionData reflection;
 					if (result->convertedshaderrowmajor == true)

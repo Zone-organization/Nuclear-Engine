@@ -1,7 +1,7 @@
 /*
  * SLParser.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -25,13 +25,13 @@ namespace Xsc
 // Syntax parser base class for HLSL and GLSL.
 class SLParser : public Parser
 {
-    
+
     public:
-        
+
         SLParser(Log* log = nullptr);
 
     protected:
-        
+
         /* === Functions === */
 
         // Accepts the semicolon token (Accept(Tokens::Semicolon)).

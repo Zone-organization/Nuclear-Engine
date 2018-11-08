@@ -1,7 +1,7 @@
 /*
  * Xsc.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -20,8 +20,10 @@ namespace Xsc
 
 
 XSC_EXPORT bool CompileShader(
-    const ShaderInput& inputDesc, const ShaderOutput& outputDesc,
-    Log* log, Reflection::ReflectionData* reflectionData)
+    const ShaderInput&          inputDesc,
+    const ShaderOutput&         outputDesc,
+    Log*                        log,
+    Reflection::ReflectionData* reflectionData)
 {
     /* Compile shader with compiler driver */
     Compiler::StageTimePoints timePoints;
@@ -35,26 +37,6 @@ XSC_EXPORT bool CompileShader(
         &timePoints
     );
 
-    if (reflectionData)
-    {
-        /* Sort reflection */
-        auto SortStats = [](std::vector<Reflection::BindingSlot>& objects)
-        {
-            std::sort(
-                objects.begin(), objects.end(),
-                [](const Reflection::BindingSlot& lhs, const Reflection::BindingSlot& rhs)
-                {
-                    return (lhs.location < rhs.location);
-                }
-            );
-        };
-
-        SortStats(reflectionData->textures);
-        SortStats(reflectionData->constantBuffers);
-        SortStats(reflectionData->inputAttributes);
-        SortStats(reflectionData->outputAttributes);
-    }
-
     /* Show timings */
     if (outputDesc.options.showTimes && log)
     {
@@ -63,7 +45,7 @@ XSC_EXPORT bool CompileShader(
         auto PrintTiming = [log](const std::string& processName, const TimePoint startTime, const TimePoint endTime)
         {
             long long duration = 0ll;
-            
+
             if (endTime > startTime)
             {
                 duration =
@@ -93,7 +75,9 @@ XSC_EXPORT bool CompileShader(
 }
 
 XSC_EXPORT void DisassembleShader(
-    std::istream& streamIn, std::ostream& streamOut, const AssemblyDescriptor& desc)
+    std::istream&               streamIn,
+    std::ostream&               streamOut,
+    const AssemblyDescriptor&   desc)
 {
     switch (desc.intermediateLanguage)
     {
@@ -107,7 +91,7 @@ XSC_EXPORT void DisassembleShader(
             disassembler.Print(streamOut, desc);
 
             #else
-            
+
             throw std::invalid_argument(R_NotBuildWithSPIRV);
 
             #endif

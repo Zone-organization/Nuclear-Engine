@@ -1,7 +1,7 @@
 /*
  * GLSLExtensionAgent.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -26,21 +26,24 @@ GLSLExtensionAgent::GLSLExtensionAgent()
     /* Establish intrinsic-to-extension map */
     intrinsicExtMap_ = std::map<Intrinsic, const char*>
     {
-        { Intrinsic::AsDouble,                  E_GL_ARB_gpu_shader_int64    },
-        { Intrinsic::AsFloat,                   E_GL_ARB_shader_bit_encoding },
-        { Intrinsic::AsInt,                     E_GL_ARB_shader_bit_encoding },
-        { Intrinsic::AsUInt_1,                  E_GL_ARB_shader_bit_encoding },
-        { Intrinsic::CountBits,                 E_GL_ARB_gpu_shader5         },
-        { Intrinsic::DDXCoarse,                 E_GL_ARB_derivative_control  },
-        { Intrinsic::DDXFine,                   E_GL_ARB_derivative_control  },
-        { Intrinsic::DDYCoarse,                 E_GL_ARB_derivative_control  },
-        { Intrinsic::DDYFine,                   E_GL_ARB_derivative_control  },
-        { Intrinsic::FirstBitHigh,              E_GL_ARB_gpu_shader5         },
-        { Intrinsic::FirstBitLow,               E_GL_ARB_gpu_shader5         },
-        { Intrinsic::FrExp,                     E_GL_ARB_gpu_shader_fp64     },
-        { Intrinsic::LdExp,                     E_GL_ARB_gpu_shader_fp64     },
-        { Intrinsic::Texture_QueryLod,          E_GL_ARB_texture_query_lod   },
-        { Intrinsic::Texture_QueryLodUnclamped, E_GL_ARB_texture_query_lod   },
+        { Intrinsic::AsDouble,                  E_GL_ARB_gpu_shader_int64         },
+        { Intrinsic::AsFloat,                   E_GL_ARB_shader_bit_encoding      },
+        { Intrinsic::AsInt,                     E_GL_ARB_shader_bit_encoding      },
+        { Intrinsic::AsUInt_1,                  E_GL_ARB_shader_bit_encoding      },
+        { Intrinsic::CountBits,                 E_GL_ARB_gpu_shader5              },
+        { Intrinsic::DDXCoarse,                 E_GL_ARB_derivative_control       },
+        { Intrinsic::DDXFine,                   E_GL_ARB_derivative_control       },
+        { Intrinsic::DDYCoarse,                 E_GL_ARB_derivative_control       },
+        { Intrinsic::DDYFine,                   E_GL_ARB_derivative_control       },
+        { Intrinsic::FirstBitHigh,              E_GL_ARB_gpu_shader5              },
+        { Intrinsic::FirstBitLow,               E_GL_ARB_gpu_shader5              },
+        { Intrinsic::FrExp,                     E_GL_ARB_gpu_shader_fp64          },
+        { Intrinsic::LdExp,                     E_GL_ARB_gpu_shader_fp64          },
+        { Intrinsic::Texture_QueryLod,          E_GL_ARB_texture_query_lod        },
+        { Intrinsic::Texture_QueryLodUnclamped, E_GL_ARB_texture_query_lod        },
+        { Intrinsic::F16toF32,                  E_GL_ARB_shading_language_packing },
+        { Intrinsic::F32toF16,                  E_GL_ARB_shading_language_packing },
+        { Intrinsic::PackHalf2x16,              E_GL_ARB_shading_language_packing },
     };
 }
 
@@ -60,8 +63,13 @@ static OutputShaderVersion GetMinGLSLVersionForTarget(const ShaderTarget shaderT
 }
 
 std::set<std::string> GLSLExtensionAgent::DetermineRequiredExtensions(
-    Program& program, OutputShaderVersion& targetGLSLVersion, const ShaderTarget shaderTarget,
-    bool allowExtensions, bool explicitBinding, bool separateShaders, const OnReportProc& onReportExtension)
+    Program&                program,
+    OutputShaderVersion&    targetGLSLVersion,
+    const ShaderTarget      shaderTarget,
+    bool                    allowExtensions,
+    bool                    explicitBinding,
+    bool                    separateShaders,
+    const OnReportProc&     onReportExtension)
 {
     /* Store parameters */
     shaderTarget_       = shaderTarget;
@@ -180,6 +188,13 @@ IMPLEMENT_VISIT_PROC(VarDecl)
     /* Check for arrays of arrays */
     if (ast->GetTypeDenoter()->NumDimensions() >= 2)
         AcquireExtension(E_GL_ARB_arrays_of_arrays, R_MultiDimArray, ast);
+
+    /* Check for explicit binding point */
+    if (explicitBinding_)
+    {
+        if (auto slotRegister = Register::GetForTarget(ast->slotRegisters, shaderTarget_))
+            AcquireExtension(E_GL_ARB_explicit_uniform_location, R_ExplicitBindingSlot, slotRegister);
+    }
 
     /* Check for packoffsets */
     if (ast->packOffset)

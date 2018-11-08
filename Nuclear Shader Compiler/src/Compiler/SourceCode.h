@@ -1,7 +1,7 @@
 /*
  * SourceCode.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -24,9 +24,9 @@ namespace Xsc
 // Source code stream class.
 class SourceCode
 {
-    
+
     public:
-        
+
         SourceCode(const std::shared_ptr<std::istream>& stream);
 
         // Returns true if this is a valid source code stream.
@@ -63,7 +63,7 @@ class SourceCode
         std::string Filename() const;
 
     protected:
-        
+
         SourceCode() = default;
 
         // Returns the line (if it has already been read) by the zero-based line index.

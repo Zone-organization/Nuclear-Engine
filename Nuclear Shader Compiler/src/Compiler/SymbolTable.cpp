@@ -1,7 +1,7 @@
 /*
  * SymbolTable.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -96,9 +96,12 @@ void RuntimeErrNoActiveScope()
 }
 
 [[noreturn]]
-void RuntimeErrIdentAlreadyDeclared(const std::string& ident)
+void RuntimeErrIdentAlreadyDeclared(const std::string& ident, const AST* prevDeclAST)
 {
-    RuntimeErr(R_IdentAlreadyDeclared(ident));
+    if (prevDeclAST != nullptr)
+        RuntimeErr(R_IdentAlreadyDeclared(ident, prevDeclAST->area.Pos().ToString()));
+    else
+        RuntimeErr(R_IdentAlreadyDeclared(ident));
 }
 
 
@@ -128,7 +131,7 @@ bool ASTSymbolOverload::AddSymbolRef(AST* ast)
         /* Can this type of symbol be overloaded? */
         if (ast->Type() != AST::Types::FunctionDecl)
             return false;
-        
+
         /* Is the new declaration a forward declaration? */
         auto newFuncDecl = static_cast<FunctionDecl*>(ast);
         if (newFuncDecl->IsForwardDecl())

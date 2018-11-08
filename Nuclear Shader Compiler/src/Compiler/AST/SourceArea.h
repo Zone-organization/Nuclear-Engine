@@ -1,7 +1,7 @@
 /*
  * SourceArea.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -74,7 +74,7 @@ class SourceArea
 
         SourcePosition  pos_;
         unsigned int    length_ = 0;
-        unsigned int    offset_  = 0;
+        unsigned int    offset_ = 0;
 
 };
 

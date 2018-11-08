@@ -1,7 +1,7 @@
 /*
  * Generator.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -23,23 +23,23 @@ namespace Xsc
 // Output code generator base class.
 class Generator : protected VisitorTracker
 {
-    
+
     public:
-        
+
         Generator(Log* log);
 
         bool GenerateCode(
-            Program& program,
-            const ShaderInput& inputDesc,
+            Program&            program,
+            const ShaderInput&  inputDesc,
             const ShaderOutput& outputDesc,
-            Log* log = nullptr
+            Log*                log = nullptr
         );
 
     protected:
-        
+
         virtual void GenerateCodePrimary(
-            Program& program,
-            const ShaderInput& inputDesc,
+            Program&            program,
+            const ShaderInput&  inputDesc,
             const ShaderOutput& outputDesc
         ) = 0;
 
@@ -53,19 +53,19 @@ class Generator : protected VisitorTracker
         void EndSep();
 
         void Separator();
-        
+
         void WriteScopeOpen(bool compact = false, bool endWithSemicolon = false, bool useBraces = true);
         void WriteScopeClose();
         void WriteScopeContinue();
 
         bool IsOpenLine() const;
-        
+
         void Write(const std::string& text);
         void WriteLn(const std::string& text);
 
         void IncIndent();
         void DecIndent();
-        
+
         void PushOptions(const CodeWriter::Options& options);
         void PopOptions();
 

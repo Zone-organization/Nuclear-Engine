@@ -1,7 +1,7 @@
 /*
  * GLSLGenerator.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -34,21 +34,21 @@ struct BaseTypeDenoter;
 // GLSL output code generator.
 class GLSLGenerator : public Generator
 {
-    
+
     public:
-        
+
         GLSLGenerator(Log* log);
 
     private:
-        
+
         // Function callback interface for entries in a layout qualifier.
         using LayoutEntryFunctor = std::function<void()>;
 
         /* === Functions === */
 
         void GenerateCodePrimary(
-            Program& program,
-            const ShaderInput& inputDesc,
+            Program&            program,
+            const ShaderInput&  inputDesc,
             const ShaderOutput& outputDesc
         ) override;
 
@@ -153,6 +153,7 @@ class GLSLGenerator : public Generator
         void PreProcessFuncNameConverter();
         void PreProcessReferenceAnalyzer(const ShaderInput& inputDesc);
         void PreProcessExprConverterSecondary();
+        void PreProcessPackedUniforms();
 
         /* ----- Basics ----- */
 
@@ -192,13 +193,14 @@ class GLSLGenerator : public Generator
         void WriteLayoutGlobalIn(const std::initializer_list<LayoutEntryFunctor>& entryFunctors, const LayoutEntryFunctor& varFunctor = nullptr);
         void WriteLayoutGlobalOut(const std::initializer_list<LayoutEntryFunctor>& entryFunctors, const LayoutEntryFunctor& varFunctor = nullptr);
         void WriteLayoutBinding(const std::vector<RegisterPtr>& slotRegisters);
+        void WriteLayoutBindingOrLocation(const std::vector<RegisterPtr>& slotRegisters);
 
         /* ----- Input semantics ----- */
 
         void WriteLocalInputSemantics(FunctionDecl* entryPoint);
         void WriteLocalInputSemanticsVarDecl(VarDecl* varDecl);
         void WriteLocalInputSemanticsStructDeclParam(VarDeclStmnt* param, StructDecl* structDecl);
-        
+
         void WriteGlobalInputSemantics(FunctionDecl* entryPoint);
         void WriteGlobalInputSemanticsVarDecl(VarDecl* varDecl);
 
@@ -206,7 +208,7 @@ class GLSLGenerator : public Generator
 
         void WriteLocalOutputSemantics(FunctionDecl* entryPoint);
         void WriteLocalOutputSemanticsStructDeclParam(VarDeclStmnt* param, StructDecl* structDecl);
-        
+
         void WriteGlobalOutputSemantics(FunctionDecl* entryPoint);
         void WriteGlobalOutputSemanticsVarDecl(VarDecl* varDecl, bool useSemanticName = false);
         void WriteGlobalOutputSemanticsSlot(TypeSpecifier* typeSpecifier, IndexedSemantic& semantic, const std::string& ident, VarDecl* varDecl = nullptr);
@@ -279,6 +281,7 @@ class GLSLGenerator : public Generator
         void WriteWrapperIntrinsicsLit(const IntrinsicUsage& usage);
         void WriteWrapperIntrinsicsSinCos(const IntrinsicUsage& usage);
         void WriteWrapperIntrinsicsMemoryBarrier(const Intrinsic intrinsic, bool groupSync);
+        void WriteWrapperIntrinsicsF16toF32();
 
         void WriteWrapperMatrixSubscript(const MatrixSubscriptUsage& usage);
 
@@ -319,6 +322,7 @@ class GLSLGenerator : public Generator
         OutputShaderVersion                     versionOut_             = OutputShaderVersion::GLSL;
         NameMangling                            nameMangling_;
         std::map<CiString, VertexSemanticLoc>   vertexSemanticsMap_;
+        UniformPacking                          uniformPacking_;
         std::string                             entryPointName_;
 
         bool                                    allowExtensions_        = false;
@@ -330,6 +334,7 @@ class GLSLGenerator : public Generator
         bool                                    separateShaders_        = false;
         bool                                    separateSamplers_       = true;
         bool                                    autoBinding_            = false;
+        bool                                    writeHeaderComment_     = true;
 
         std::set<int>                           usedInLocationsSet_;
         std::set<int>                           usedOutLocationsSet_;

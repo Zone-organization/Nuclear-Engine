@@ -1,7 +1,7 @@
 /*
  * ReportHandler.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -16,7 +16,7 @@ namespace Xsc
 {
 
 
-static std::vector<std::string> g_hintQueue;
+thread_local static std::vector<std::string> g_hintQueue;
 
 ReportHandler::ReportHandler(Log* log) :
     log_ { log }
@@ -30,23 +30,49 @@ void ReportHandler::Warning(
 }
 
 void ReportHandler::SubmitReport(
-    bool breakWithExpection, const ReportTypes type, const std::string& typeName, const std::string& msg,
-    SourceCode* sourceCode, const SourceArea& area, const std::vector<SourceArea>& secondaryAreas)
+    bool                            breakWithExpection,
+    const ReportTypes               type,
+    const std::string&              typeName,
+    const std::string&              msg,
+    SourceCode*                     sourceCode,
+    const SourceArea&               area,
+    const std::vector<SourceArea>&  secondaryAreas)
 {
+    if (type == ReportTypes::Error)
+        hasErrors_ = true;
+
+    #if 1 // TODO: this is a workaround to avoid the same error/warning message multiple times (at the same position)
     /* Check if error location has already been reported */
     if (!breakWithExpection && area.Pos().IsValid())
     {
-        if (errorPositions_.find(area.Pos()) == errorPositions_.end())
-            errorPositions_.insert(area.Pos());
-        else
-            return;
+        switch (type)
+        {
+            case ReportTypes::Warning:
+            {
+                if (warningPositions_.find(area.Pos()) == warningPositions_.end())
+                    warningPositions_.insert(area.Pos());
+                else
+                    return;
+            }
+            break;
+
+            case ReportTypes::Error:
+            {
+                if (errorPositions_.find(area.Pos()) == errorPositions_.end())
+                    errorPositions_.insert(area.Pos());
+                else
+                    return;
+            }
+            break;
+
+            default:
+            break;
+        }
     }
+    #endif // /TODO
 
     /* Initialize output message */
     auto outputMsg = typeName;
-    
-    if (type == ReportTypes::Error)
-        hasErrors_ = true;
 
     /* Add source position */
     if (area.Pos().IsValid())
@@ -97,8 +123,11 @@ void ReportHandler::HintForNextReport(const std::string& hint)
  */
 
 Report ReportHandler::MakeReport(
-    const ReportTypes type, const std::string& msg, SourceCode* sourceCode,
-    const SourceArea& area, const std::vector<SourceArea>& secondaryAreas)
+    const ReportTypes               type,
+    const std::string&              msg,
+    SourceCode*                     sourceCode,
+    const SourceArea&               area,
+    const std::vector<SourceArea>&  secondaryAreas)
 {
     /* Get current context description */
     std::string contextDesc;
@@ -132,12 +161,12 @@ Report ReportHandler::MakeReport(
 
         /* Return report */
         if (!line.empty())
-            return Report(type, msg, line, marker, contextDesc);
+            return Report { type, msg, line, marker, contextDesc };
         else
-            return Report(type, msg, contextDesc);
+            return Report { type, msg, contextDesc };
     }
     else
-        return Report(type, msg, contextDesc);
+        return Report { type, msg, contextDesc };
 }
 
 

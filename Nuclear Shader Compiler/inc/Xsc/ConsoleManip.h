@@ -1,7 +1,7 @@
 /*
  * ConsoleManip.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -85,9 +85,9 @@ void XSC_EXPORT PopColor(std::ostream& stream = std::cout);
 //! Helper class for scoped color stack operations.
 class ScopedColor
 {
-    
+
     public:
-    
+
         /**
         \brief Constructor with output stream and front color flags.
         \param[in,out] stream Specifies the output stream for which the scope is to be changed. This is only used for Unix systems.
@@ -123,11 +123,11 @@ class ScopedColor
         {
             PopColor(stream_);
         }
-        
+
     private:
-        
+
         std::ostream& stream_;
-        
+
 };
 
 

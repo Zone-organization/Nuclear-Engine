@@ -1,7 +1,7 @@
 /*
  * GLSLExtensionAgent.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -25,24 +25,24 @@ namespace Xsc
 // GLSL extension agent visitor. Determines which GLSL extension are required for a given GLSL target version.
 class GLSLExtensionAgent : private Visitor
 {
-    
+
     public:
-        
+
         GLSLExtensionAgent();
 
         // Returns a set of strings with all required extensions for the specified program and target output GLSL version.
         std::set<std::string> DetermineRequiredExtensions(
-            Program& program,
-            OutputShaderVersion& targetGLSLVersion,
-            const ShaderTarget shaderTarget,
-            bool allowExtensions,
-            bool explicitBinding,
-            bool separateShaders,
-            const OnReportProc& onReportExtension = nullptr
+            Program&                program,
+            OutputShaderVersion&    targetGLSLVersion,
+            const ShaderTarget      shaderTarget,
+            bool                    allowExtensions,
+            bool                    explicitBinding,
+            bool                    separateShaders,
+            const OnReportProc&     onReportExtension = nullptr
         );
 
     private:
-        
+
         void AcquireExtension(const std::string& extension, const std::string& reason = "", const AST* ast = nullptr);
 
         /* --- Visitor implementation --- */

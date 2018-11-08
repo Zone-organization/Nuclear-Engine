@@ -1,7 +1,7 @@
 /*
  * Analyzer.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -46,7 +46,7 @@ bool Analyzer::DecorateAST(
         Error(e.what());
     }
 
-    return (!reportHandler_.HasErros());
+    return (!reportHandler_.HasErrors());
 }
 
 
@@ -168,7 +168,7 @@ AST* Analyzer::Fetch(const std::string& ident, const AST* ast)
         /* Fetch symbol from global symbol table */
         if (auto symbol = symTable_.Fetch(ident))
             return symbol->Fetch();
-        
+
         /* Report undefined identifier error */
         ErrorUndeclaredIdent(ident, "", FetchSimilarIdent(ident, structDecl), ast);
     }
@@ -252,7 +252,7 @@ FunctionDecl* Analyzer::FetchFunctionDecl(const std::string& ident, const std::v
         /* Fetch function with argument type denoters from global symbol table */
         if (auto symbol = symTable_.Fetch(ident))
             return symbol->FetchFunctionDecl(argTypeDens);
-        
+
         /* Check if identifier exists but does not name a function */
         if (Fetch(ident, ast) != nullptr)
             Error(R_IdentIsNotFunc(ident), ast);
@@ -391,7 +391,7 @@ StructDecl* Analyzer::FindCompatibleStructDecl(const StructDecl& rhs)
         if (auto ref = symbol->Fetch(false))
             return ref->As<StructDecl>();
     }
-    
+
     return nullptr;
 }
 
@@ -465,7 +465,22 @@ void Analyzer::AnalyzeTypeSpecifier(TypeSpecifier* typeSpecifier)
     Visit(typeSpecifier->structDecl);
 
     if (typeSpecifier->typeDenoter)
+    {
         AnalyzeTypeDenoter(typeSpecifier->typeDenoter, typeSpecifier);
+
+        /* Make sure integer types only have the interpolation modifier 'nointerpolation' */
+        if (auto baseTypeDen = typeSpecifier->typeDenoter->GetAliased().As<BaseTypeDenoter>())
+        {
+            if (IsIntegralType(baseTypeDen->dataType))
+            {
+                for (auto modifier : typeSpecifier->interpModifiers)
+                {
+                    if (modifier != InterpModifier::NoInterpolation)
+                        Error(R_OnlyNoInterpolationForInts, typeSpecifier);
+                }
+            }
+        }
+    }
     else
         Error(R_MissingVariableType, typeSpecifier);
 }

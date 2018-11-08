@@ -1,7 +1,7 @@
 /*
  * Compiler.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -21,9 +21,9 @@ namespace Xsc
 // Compiler driver class.
 class Compiler
 {
-    
+
     public:
-        
+
         using Time      = std::chrono::system_clock;
         using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
@@ -48,7 +48,7 @@ class Compiler
         );
 
     private:
-        
+
         /* === Functions === */
 
         bool ReturnWithError(const std::string& msg);

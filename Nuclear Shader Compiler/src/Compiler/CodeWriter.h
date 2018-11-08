@@ -1,7 +1,7 @@
 /*
  * CodeWriter.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -23,9 +23,9 @@ namespace Xsc
 // Output code writer.
 class CodeWriter : public IndentHandler
 {
-    
+
     public:
-        
+
         struct Options
         {
             Options() = default;
@@ -85,7 +85,7 @@ class CodeWriter : public IndentHandler
         bool newLineOpenScope = false;
 
     private:
-        
+
         /* === Structures === */
 
         struct SeparatedLine

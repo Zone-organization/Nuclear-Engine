@@ -1,7 +1,7 @@
 /*
  * Reflection.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -29,10 +29,15 @@ XSC_EXPORT std::string ToString(const Reflection::ComparisonFunc t)
     return CompareFuncToString(t);
 }
 
-XSC_EXPORT void PrintReflection(std::ostream& stream, const Reflection::ReflectionData& reflectionData)
+XSC_EXPORT std::string ToString(const Reflection::ResourceType t)
 {
-    ReflectionPrinter printer(stream);
-    printer.PrintReflection(reflectionData);
+    return ResourceTypeToString(t);
+}
+
+XSC_EXPORT void PrintReflection(std::ostream& stream, const Reflection::ReflectionData& reflectionData, bool referencedOnly)
+{
+    ReflectionPrinter printer { stream };
+    printer.PrintReflection(reflectionData, referencedOnly);
 }
 
 

@@ -1,7 +1,7 @@
 /*
  * Visitor.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -17,11 +17,6 @@ namespace Xsc
 #define IMPLEMENT_VISIT_PROC(AST_NAME) \
     void Visitor::Visit##AST_NAME(AST_NAME* ast, void* args)
 
-
-Visitor::~Visitor()
-{
-    // dummy
-}
 
 IMPLEMENT_VISIT_PROC(Program)
 {
@@ -75,6 +70,7 @@ IMPLEMENT_VISIT_PROC(VarDecl)
 {
     Visit(ast->namespaceExpr);
     Visit(ast->arrayDims);
+    Visit(ast->slotRegisters);
     Visit(ast->packOffset);
     Visit(ast->annotations);
     Visit(ast->initializer);

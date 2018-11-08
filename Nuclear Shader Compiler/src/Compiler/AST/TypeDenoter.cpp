@@ -1,7 +1,7 @@
 /*
  * TypeDenoter.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -179,6 +179,11 @@ bool TypeDenoter::Equals(const TypeDenoter& rhs, const Flags& /*compareFlags*/) 
 bool TypeDenoter::IsCastableTo(const TypeDenoter& targetType) const
 {
     return (GetAliased().Type() == targetType.GetAliased().Type());
+}
+
+bool TypeDenoter::AccumAlignedVectorSize(unsigned int& /*size*/, unsigned int& /*padding*/, unsigned int* /*offset*/) const
+{
+    return false; // dummy
 }
 
 /* ----- Shortcuts ----- */
@@ -373,7 +378,7 @@ static TypeDenoterPtr FindCommonTypeDenoterScalarAndMatrix(BaseTypeDenoter* lhsT
 static TypeDenoterPtr FindCommonTypeDenoterVectorAndVector(BaseTypeDenoter* lhsTypeDen, BaseTypeDenoter* rhsTypeDen)
 {
     auto commonType = HighestOrderDataType(BaseDataType(lhsTypeDen->dataType), BaseDataType(rhsTypeDen->dataType));
-    
+
     /* Return always lowest dimension (e.g. 'v3 * v4' => 'v3 * float3(v4)') */
     auto lhsDim = VectorTypeDim(lhsTypeDen->dataType);
     auto rhsDim = VectorTypeDim(rhsTypeDen->dataType);
@@ -602,7 +607,7 @@ bool BaseTypeDenoter::IsCastableTo(const TypeDenoter& targetType) const
 {
     //TODO: this must be extended for a lot of casting variants!!!
     #if 0
-    
+
     if (IsScalar())
         return (targetType.Type() == Types::Base || targetType.Type() == Types::Struct);
     else if (IsVector())
@@ -622,14 +627,19 @@ bool BaseTypeDenoter::IsCastableTo(const TypeDenoter& targetType) const
         }
     }
     return false;
-    
+
     #else
-    
+
     const auto& targetTypeAliased = targetType.GetAliased();
     const auto targetTypeClass = targetTypeAliased.Type();
     return (targetTypeClass == Types::Base || targetTypeClass == Types::Struct || targetTypeClass == Types::Array);
 
     #endif
+}
+
+bool BaseTypeDenoter::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset) const
+{
+    return Xsc::AccumAlignedVectorSize(dataType, size, padding, offset);
 }
 
 TypeDenoterPtr BaseTypeDenoter::GetSubObject(const std::string& ident, const AST* ast)
@@ -901,7 +911,7 @@ bool StructTypeDenoter::IsCastableTo(const TypeDenoter& targetType) const
 {
     /* Get structure declarations from type denoters */
     auto structDecl = GetStructDeclOrThrow();
-    
+
     const auto& targetAliasedType = targetType.GetAliased();
     if (auto targetStructTypeDen = targetAliasedType.As<StructTypeDenoter>())
     {
@@ -915,6 +925,14 @@ bool StructTypeDenoter::IsCastableTo(const TypeDenoter& targetType) const
     }
 
     return false;
+}
+
+bool StructTypeDenoter::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset) const
+{
+    if (structDeclRef)
+        return structDeclRef->AccumAlignedVectorSize(size, padding, offset);
+    else
+        return false;
 }
 
 std::string StructTypeDenoter::Ident() const
@@ -999,6 +1017,11 @@ bool AliasTypeDenoter::Equals(const TypeDenoter& rhs, const Flags& compareFlags)
 bool AliasTypeDenoter::IsCastableTo(const TypeDenoter& targetType) const
 {
     return GetAliasedTypeOrThrow()->IsCastableTo(targetType);
+}
+
+bool AliasTypeDenoter::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset) const
+{
+    return GetAliasedTypeOrThrow()->AccumAlignedVectorSize(size, padding, offset);
 }
 
 std::string AliasTypeDenoter::Ident() const
@@ -1094,7 +1117,7 @@ TypeDenoterPtr ArrayTypeDenoter::Copy() const
 TypeDenoterPtr ArrayTypeDenoter::GetSubArray(const std::size_t numArrayIndices, const AST* ast)
 {
     const auto numDims = arrayDims.size();
-    
+
     if (numArrayIndices == 0)
     {
         /* Just return this array type denoter */
@@ -1131,6 +1154,45 @@ bool ArrayTypeDenoter::IsCastableTo(const TypeDenoter& targetType) const
         /* Compare sub type denoters */
         if (subTypeDenoter && targetArrayTypeDen->subTypeDenoter && EqualsDimensions(*targetArrayTypeDen))
             return subTypeDenoter->IsCastableTo(*targetArrayTypeDen->subTypeDenoter);
+    }
+    return false;
+}
+
+bool ArrayTypeDenoter::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset) const
+{
+    /* First get size and padding from sub type denoter */
+    unsigned int subSize = 0, subPadding = 0;
+    if (subTypeDenoter->AccumAlignedVectorSize(subSize, subPadding))
+    {
+        /* Get linear array size */
+        unsigned int linearArraySize = 1;
+        auto dimSizes = GetDimensionSizes();
+
+        for (auto size : dimSizes)
+        {
+            if (size > 0)
+                linearArraySize *= static_cast<unsigned int>(size);
+            else
+                return false;
+        }
+
+        /* Fill up previous size and padding */
+        auto remainingSize = RemainingVectorSize(size);
+        size    += remainingSize;
+        padding += remainingSize;
+
+        /* Store offset */
+        if (offset != nullptr)
+            *offset = size;
+
+        /* Accumulate array element sizes */
+        subPadding = RemainingVectorSize(subSize);
+        subSize += subPadding;
+
+        size    += (linearArraySize * subSize);
+        padding += (linearArraySize * subPadding);
+
+        return true;
     }
     return false;
 }

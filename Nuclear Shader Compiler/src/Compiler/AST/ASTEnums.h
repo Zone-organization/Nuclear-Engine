@@ -1,7 +1,7 @@
 /*
  * ASTEnums.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -159,7 +159,7 @@ enum class DataType
     Half,       // half         float
     Float,      // float        float
     Double,     // double       double
-    
+
     /* --- Vector types --- */
                 // HLSL         GLSL
                 // -----------  -----------
@@ -261,6 +261,9 @@ struct MatrixSubscriptUsage
 // Returns a descriptive string of the specified data type.
 std::string DataTypeToString(const DataType t, bool useTemplateSyntax = false);
 
+// Returns the size (in bytes) of the specified data type, or 0 if the data type is invalid, undefined, or equal to DataType::String.
+unsigned int DataTypeSize(const DataType t);
+
 // Returns true if the specified data type is a scalar type.
 bool IsScalarType(const DataType t);
 
@@ -278,6 +281,9 @@ bool IsRealType(const DataType t);
 
 // Returns true if the specified data type is a half-precision real type (i.e. half, half2, half4x4 etc.).
 bool IsHalfRealType(const DataType t);
+
+// Returns true if the specified data type is a single-precision real type (i.e. float, float2, float4x4 etc.).
+bool IsSingleRealType(const DataType t);
 
 // Returns true if the specified data type is a double-precision real type (i.e. double, double2, double4x4 etc.).
 bool IsDoubleRealType(const DataType t);
@@ -320,6 +326,12 @@ DataType TokenToDataType(const Token& tkn);
 
 // Returns the data type as non-double (i.e. replaces doubles by floats).
 DataType DoubleToFloatDataType(const DataType dataType);
+
+// Returns the remaining size (in bytes) of a vector slot with the specified alignment.
+unsigned int RemainingVectorSize(unsigned int vectorSize, unsigned int alignment = 16u);
+
+// Accumulates the vector size for the specified data type (with a 16 byte boundary), and returns true on success.
+bool AccumAlignedVectorSize(const DataType dataType, unsigned int& size, unsigned int& padding, unsigned int* offset = nullptr);
 
 
 /* ----- PrimitiveType Enum ----- */
@@ -565,7 +577,7 @@ enum class ImageLayoutFormat
     SN8X4,          // rgba8_snorm
     SN8X2,          // rg8_snorm
     SN8X1,          // r8_snorm
-    
+
     /* --- Signed integer formats --- */
     I32X4,          // rgba32i
     I32X2,          // rg32i
@@ -576,7 +588,7 @@ enum class ImageLayoutFormat
     I8X4,           // rgba8i
     I8X2,           // rg8i
     I8X1,           // r8i
-    
+
     /* --- Unsigned integer formats --- */
     UI32X4,         // rgba32ui
     UI32X2,         // rg32ui
@@ -1021,17 +1033,19 @@ enum class Intrinsic
     StreamOutput_Append,        // Append(StreamDataType)
     StreamOutput_RestartStrip,  // RestartStrip()
 
-    /* --- GLSL image intrinsics --- */
-    Image_Load,                 // GLSL only
-    Image_Store,                // GLSL only
-    Image_AtomicAdd,            // GLSL only
-    Image_AtomicAnd,            // GLSL only
-    Image_AtomicOr,             // GLSL only
-    Image_AtomicXor,            // GLSL only
-    Image_AtomicMin,            // GLSL only
-    Image_AtomicMax,            // GLSL only
-    Image_AtomicCompSwap,       // GLSL only
-    Image_AtomicExchange        // GLSL only
+    /* --- GLSL only intrinsics --- */
+    Image_Load,                 // imageLoad(gimage Image, T Location)
+    Image_Store,                // imageStore(gimage Image, T Location, G Data)
+    Image_AtomicAdd,            // atomicAdd(inout T Memory, T Data)
+    Image_AtomicAnd,            // atomicAnd(inout T Memory, T Data)
+    Image_AtomicOr,             // atomicOr(inout T Memory, T Data)
+    Image_AtomicXor,            // atomicXor(inout T Memory, T Data)
+    Image_AtomicMin,            // atomicMin(inout T Memory, T Data)
+    Image_AtomicMax,            // atomicMax(inout T Memory, T Data)
+    Image_AtomicCompSwap,       // atomicCompSwap(inout T Memory, T compare, T Data)
+    Image_AtomicExchange,       // atomicExchange(inout T Memory, T Data)
+
+    PackHalf2x16,               // packHalf2x16(vec2 Vec)
 };
 
 // Container structure for all kinds of intrinsic call usages (can be used as std::map<Intrinsic, IntrinsicUsage>).
@@ -1223,6 +1237,15 @@ Reflection::TextureAddressMode StringToTexAddressMode(const std::string& s);
 
 std::string CompareFuncToString(const Reflection::ComparisonFunc t);
 Reflection::ComparisonFunc StringToCompareFunc(const std::string& s);
+
+
+/* ----- Reflection::ResourceType Enum ----- */
+
+std::string ResourceTypeToString(const Reflection::ResourceType t);
+
+Reflection::ResourceType UniformBufferTypeToResourceType(const UniformBufferType t);
+Reflection::ResourceType BufferTypeToResourceType(const BufferType t);
+Reflection::ResourceType SamplerTypeToResourceType(const SamplerType t);
 
 
 } // /namespace Xsc

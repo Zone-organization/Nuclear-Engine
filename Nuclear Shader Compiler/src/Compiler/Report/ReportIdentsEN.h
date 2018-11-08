@@ -1,7 +1,7 @@
 /*
  * ReportIdentsEN.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -95,8 +95,8 @@ DECL_REPORT( EndOfStream,                       "end-of-stream"                 
 /* ----- AST ----- */
 
 DECL_REPORT( IllegalTypeOfFuncObj,              "illegal type denoter of function object '{0}'"                                                                 );
-DECL_REPORT( CantDirectlyAccessMembersOf,       "can not directly access members of '{0}'"                                                                      );
-DECL_REPORT( CantDirectlyAccessArrayOf,         "can not directly access array of '{0}'"                                                                        );
+DECL_REPORT( CantDirectlyAccessMembersOf,       "cannot directly access members of '{0}'"                                                                       );
+DECL_REPORT( CantDirectlyAccessArrayOf,         "cannot directly access array of '{0}'"                                                                         );
 DECL_REPORT( UnknownTypeOfObjectIdentSymbolRef, "unknown type of symbol reference to derive type denoter of object identifier '{0}'"                            );
 DECL_REPORT( InvalidSubscriptBaseType,          "invalid base type denoter for vector subscript"                                                                );
 DECL_REPORT( IllegalStaticAccessForSubscript,   "illegal static access for subscript '{0}'"                                                                     );
@@ -110,10 +110,10 @@ DECL_REPORT( TernaryExpr,                       "ternary expression"            
 DECL_REPORT( BinaryExpr,                        "binary expression '{0}'"                                                                                       );
 DECL_REPORT( OnlyBaseTypeAllowed,               "only scalar, vector, and matrix type allowed[ in {0}][, but got '{1}']"                                        );
 DECL_REPORT( CastExpr,                          "cast expression"                                                                                               );
-DECL_REPORT( CantDeriveTypeOfInitializer,       "can not derive type of initializer list without type parameter"                                                );
-DECL_REPORT( CantDeriveTypeOfEmptyInitializer,  "can not derive type of initializer list with no elements"                                                      );
-DECL_REPORT( CantDeriveTypeOfFunction,          "can not derive type of function object"                                                                        );
-DECL_REPORT( CantDeriveTypeOfConstBuffer,       "can not derive type of constant buffer object"                                                                 );
+DECL_REPORT( CantDeriveTypeOfInitializer,       "cannot derive type of initializer list without type parameter"                                                 );
+DECL_REPORT( CantDeriveTypeOfEmptyInitializer,  "cannot derive type of initializer list with no elements"                                                       );
+DECL_REPORT( CantDeriveTypeOfFunction,          "cannot derive type of function object"                                                                         );
+DECL_REPORT( CantDeriveTypeOfConstBuffer,       "cannot derive type of constant buffer object"                                                                  );
 DECL_REPORT( ConditionOfTernaryExpr,            "condition of ternary expression"                                                                               );
 DECL_REPORT( ExpectedInitializerForArrayAccess, "initializer expression expected for array access"                                                              );
 DECL_REPORT( InvalidNumElementsInInitializer,   "invalid number of elements in initializer expression for type '{0}' (expected {1}, but got {2})"               );
@@ -135,7 +135,7 @@ DECL_REPORT( Attributes,                        "attributes"                    
 DECL_REPORT( Undefined,                         "<undefined>"                                                                                                   );
 DECL_REPORT( UserDefined,                       "<user-defined>"                                                                                                );
 DECL_REPORT( FailedToMap,                       "failed to map {0} to {1}"                                                                                      );
-DECL_REPORT( VectorSubscriptCantHaveNComps,     "vector subscript can not have {0} components"                                                                  );
+DECL_REPORT( VectorSubscriptCantHaveNComps,     "vector subscript cannot have {0} components"                                                                   );
 DECL_REPORT( IncompleteMatrixSubscript,         "incomplete matrix subscript: '{0}'"                                                                            );
 DECL_REPORT( InvalidVectorDimension,            "invalid vector dimension (must be in the range \\[1, 4\\], but got {0})"                                       );
 DECL_REPORT( InvalidVectorSubscript,            "invalid vector subscript '{0}' for {1}"                                                                        );
@@ -148,7 +148,7 @@ DECL_REPORT( InvalidIntrinsicArgs,              "invalid arguments for intrinsic
 
 /* ----- TypeDenoter ------ */
 
-DECL_REPORT( VarIdentCantBeResolved,            "variable identifier can not be resolved"                                                                       );
+DECL_REPORT( VarIdentCantBeResolved,            "variable identifier cannot be resolved"                                                                        );
 DECL_REPORT( TypeHasNoSuchObject,               "type '{0}' has no object named '{1}'"                                                                          );
 DECL_REPORT( IllegalArrayAccess,                "array access not allowed[ for '{0}']"                                                                          );
 DECL_REPORT( TooManyArrayDimensions,            "too many array dimensions[ for '{0}']"                                                                         );
@@ -170,7 +170,7 @@ DECL_REPORT( IdentIsNotVar,                     "identifier '{0}' does not name 
 DECL_REPORT( IdentIsNotType,                    "identifier '{0}' does not name a type"                                                                         );
 DECL_REPORT( IdentIsNotDecl,                    "identifier '{0}' does not name a declaration object"                                                           );
 DECL_REPORT( IdentIsNotBaseOf,                  "identifier '{0}' does not name a base of '{1}'"                                                                );
-DECL_REPORT( IdentAlreadyDeclared,              "identifier '{0}' already declared in this scope"                                                               );
+DECL_REPORT( IdentAlreadyDeclared,              "identifier '{0}' already declared in this scope[; previous declaration at ({1})]"                              );
 DECL_REPORT( NoActiveScopeToRegisterSymbol,     "no active scope to register symbol"                                                                            );
 
 /* ----- Scanner ----- */
@@ -238,19 +238,21 @@ DECL_REPORT( WritePrefixStackUnderflow,         "write prefix stack underflow"  
 /* ----- Analyzer ----- */
 
 DECL_REPORT( UndeclaredIdent,                   "undeclared identifier \"{0}\"[ in '{1}'][; did you mean \"{2}\"?]"                                             );
+DECL_REPORT( DefaultArgOfFuncParam,             "default argument of function parameter[ '{0}']"                                                                );
 DECL_REPORT( StatementWithEmptyBody,            "<{0}> statement with empty body"                                                                               );
 DECL_REPORT( MissingReferenceToStructInType,    "missing reference to structure declaration in type denoter '{0}'"                                              );
 DECL_REPORT( MissingVariableType,               "missing variable type"                                                                                         );
-DECL_REPORT( ParameterCantBeUniformAndOut,      "type attributes 'out' and 'inout' can not be used together with 'uniform' for a parameter"                     );
-DECL_REPORT( IllegalCast,                       "can not cast '{0}' to '{1}'[ in {2}]"                                                                          );
+DECL_REPORT( ParameterCantBeUniformAndOut,      "type attributes 'out' and 'inout' cannot be used together with 'uniform' for a parameter"                      );
+DECL_REPORT( IllegalCast,                       "cannot cast '{0}' to '{1}'[ in {2}]"                                                                           );
 DECL_REPORT( NullPointerArgument,               "null pointer passed to {0}"                                                                                    );
 DECL_REPORT( ConditionalExprNotScalar,          "conditional expression must evaluate to scalar, but got '{0}'"                                                 );
-DECL_REPORT( ExpectedConstExpr,                 "expected constant expression"                                                                                  );
-DECL_REPORT( ExpectedConstIntExpr,              "expected constant integer expression"                                                                          );
-DECL_REPORT( ExpectedConstFloatExpr,            "expected constant floating-point expression"                                                                   );
+DECL_REPORT( ExpectedConstExpr,                 "expected constant expression[ for {0}]"                                                                        );
+DECL_REPORT( ExpectedConstIntExpr,              "expected constant integer expression[ for {0}]"                                                                );
+DECL_REPORT( ExpectedConstFloatExpr,            "expected constant floating-point expression[ for {0}]"                                                         );
 DECL_REPORT( VarDeclaredButNeverUsed,           "variable '{0}' is declared but never used"                                                                     );
 DECL_REPORT( ImplicitVectorTruncation,          "implicit truncation of vector type[ in {2}][ (from {0} to {1} dimensions)]"                                    );
-DECL_REPORT( CantImplicitlyConvertVectorType,   "can not implicitly convert vector type[ in {2}][ (from {0} to {1} dimensions)]"                                );
+DECL_REPORT( CantImplicitlyConvertVectorType,   "cannot implicitly convert vector type[ in {2}][ (from {0} to {1} dimensions)]"                                 );
+DECL_REPORT( OnlyNoInterpolationForInts,        "only 'nointerpolation' interpolation modifier allowed for integral types "                                     );
 
 /* ----- ExprEvaluator ----- */
 
@@ -335,7 +337,7 @@ DECL_REPORT( InterpModNotSupportedForGLSL120,   "interpolation modifiers not sup
 DECL_REPORT( InvalidParamVarCount,              "invalid number of variables in function parameter"                                                             ); // internal error
 DECL_REPORT( NotAllStorageClassesMappedToGLSL,  "not all storage classes can be mapped to GLSL keywords"                                                        );
 DECL_REPORT( NotAllInterpModMappedToGLSL,       "not all interpolation modifiers can be mapped to GLSL keywords"                                                );
-DECL_REPORT( CantTranslateSamplerToGLSL,        "can not translate sampler state object to GLSL sampler"                                                        );
+DECL_REPORT( CantTranslateSamplerToGLSL,        "cannot translate sampler state object to GLSL sampler"                                                         );
 DECL_REPORT( MissingArrayPrefixForIOSemantic,   "missing array prefix expression for input/output semantic[ '{0}']"                                             );
 
 /* ----- GLSLPreProcessor ----- */
@@ -405,7 +407,7 @@ DECL_REPORT( PatchCtrlPointLimitIs64,           "number of control points in pat
 DECL_REPORT( VectorAndMatrixDimOutOfRange,      "vector and matrix dimensions must be in the range [1, 4], but got {0}"                                         );
 DECL_REPORT( TechniquesAreIgnored,              "techniques are ignored"                                                                                        );
 DECL_REPORT( MissingClosingBrace,               "missing closing brace '}' for open code block"                                                                 );
-DECL_REPORT( RegisterIgnoredForVarDecls,        "register is ignored for variable declarations"                                                                 );
+DECL_REPORT( PackOffsetOverridden,              "overwriting packoffset will cause previous packoffset to expire"                                               );
 DECL_REPORT( RegisterIgnoredForFuncDecls,       "register is ignored for function declarations"                                                                 );
 DECL_REPORT( ExpectedSamplerOrSamplerState,     "expected sampler type denoter or sampler state"                                                                );
 DECL_REPORT( ExpectedOpenBracketOrAngleBracket, "expected '<' or '('"                                                                                           );
@@ -418,7 +420,7 @@ DECL_REPORT( SecondEntryPointNotFound,          "secondary entry point \"{0}\" n
 DECL_REPORT( NestedStructsMustBeAnonymous,      "nested structures must be anonymous"                                                                           );
 DECL_REPORT( TypeHasNoMemberVariables,          "'{0}' has no member variables"                                                                                 );
 DECL_REPORT( BufferCanOnlyHaveOneSlot,          "buffers can only be bound to one slot"                                                                         );
-DECL_REPORT( UserCBuffersCantBeTargetSpecific,  "user-defined constant buffer slots can not be target specific"                                                 );
+DECL_REPORT( UserCBuffersCantBeTargetSpecific,  "user-defined constant buffer slots cannot be target specific"                                                  );
 DECL_REPORT( DeclShadowsPreviousLocal,          "declaration of '{0}' shadows a previous local at ({1})"                                                        );
 DECL_REPORT( DeclShadowsMemberOfBase,           "declaration of '{0}' shadows member of base '{1}'"                                                             );
 DECL_REPORT( ReturnOutsideFuncDecl,             "return statement outside function declaration"                                                                 );
@@ -434,7 +436,6 @@ DECL_REPORT( InvalidIntrinsicForRWTexture,      "invalid intrinsic '{0}' for RW 
 DECL_REPORT( InvalidIntrinsicForStreamOutput,   "invalid intrinsic '{0}' for stream-output object"                                                              );
 DECL_REPORT( InvalidGlobalIntrinsicForType,     "invalid global intrinsic '{0}' for type '{1}'"                                                                 );
 DECL_REPORT( InvalidClassIntrinsicForType,      "invalid class intrinsic '{0}' for type '{1}'"                                                                  );
-DECL_REPORT( InvalidClassIntrinsic,             "invalid class intrinsic '{0}' for global function call"                                                        );
 DECL_REPORT( InvalidMemberFuncForType,          "invalid member function '{0}' for type '{1}'"                                                                  );
 DECL_REPORT( InvalidTypeModifierForMemberField, "invalid type modifier for structure member field"                                                              );
 DECL_REPORT( InvalidSymbolRefToVarIdent,        "invalid symbol reference to variable identifier '{0}'"                                                         );
@@ -445,15 +446,16 @@ DECL_REPORT( MissingInputSemanticInEntryPoint,  "missing input semantic '{0}' in
 DECL_REPORT( MissingOutputSemanticInEntryPoint, "missing output semantic '{0}' in entry point '{1}'"                                                            );
 DECL_REPORT( MissingAttributeForEntryPoint,     "missing '{0}' attribute for entry point"                                                                       );
 DECL_REPORT( MissingExprInReturnForFunc,        "missing expression in return statement for function with '{0}' return type"                                    );
-DECL_REPORT( MissingInitializerForDefaultParam, "missing initializer expression for default parameter '{0}'"                                                    ); // internal error
+DECL_REPORT( MissingInitializerForDefaultParam, "missing initializer expression for default argument of parameter '{0}'"                                        ); // internal error
 DECL_REPORT( MissingInitializerForConstant,     "missing initializer expression for local constant '{0}'"                                                       );
 DECL_REPORT( MissingSemanticInEntryPointParam,  "missing semantic in parameter '{0}' of entry point"                                                            );
 DECL_REPORT( MissingGenericTypeDen,             "missing generic type denoter[ in '{0}']"                                                                       );
 DECL_REPORT( IllegalUseOfNormModifiers,         "'snorm' and 'unorm' type modifiers can only be used for floating-point types"                                  );
 DECL_REPORT( IllegalExprInReturnForVoidFunc,    "illegal expression in return statement for function with 'void' return type"                                   );
 DECL_REPORT( IllegalBufferTypeForEntryPoint,    "illegal buffer type for entry point[ {0}]"                                                                     );
+DECL_REPORT( IllegalLValueAssignmentToTypeCast, "illegal assignment to l-value '{0}' due to type mismatch[ with function parameter '{1}']"                      );
 DECL_REPORT( IllegalLValueAssignmentToConst,    "illegal assignment to l-value '{0}' that is[ {1}] declared as constant"                                        );
-DECL_REPORT( IllegalRValueAssignment,           "illegal assignment to r-value expression"                                                                      );
+DECL_REPORT( IllegalRValueAssignment,           "illegal assignment to r-value expression[ via function parameter '{0}']"                                       );
 DECL_REPORT( IllegalNonStaticAccessToMember,    "illegal non-static access to static structure member[ '{0}']"                                                  );
 DECL_REPORT( IllegalStaticAccessToMember,       "illegal static access to non-static structure member[ '{0}']"                                                  );
 DECL_REPORT( IllegalNonStaticAccessToType,      "illegal non-static access to type[ '{0}']"                                                                     );
@@ -463,7 +465,7 @@ DECL_REPORT( IllegalStaticFuncCall,             "illegal static call to function
 DECL_REPORT( IllegalNonStaticFuncCall,          "illegal call to static function[ '{0}']"                                                                       );
 DECL_REPORT( IllegalDefOfNonStaticMemberVar,    "illegal definition of non-static member variable[ '{0}']"                                                      );
 DECL_REPORT( DuplicateUseOfOutputSemantic,      "duplicate use of output semantic '{0}'"                                                                        );
-DECL_REPORT( UniformCantBeOutput,               "uniforms can not be defined as output"                                                                         );
+DECL_REPORT( UniformCantBeOutput,               "uniforms cannot be defined as output"                                                                          );
 DECL_REPORT( TooManyArgsForAttribute,           "too many arguments for attribute[ '{0}'][ (expected {1}, but got {2})]"                                        );
 DECL_REPORT( TooFewArgsForAttribute,            "too few arguments for attribute[ '{0}'][ (expected {1}, but got {2})]"                                         );
 DECL_REPORT( ExpectedIdentArgInAttribute,       "expected identifier as argument for attribute[ '{0}']"                                                         );
@@ -477,12 +479,13 @@ DECL_REPORT( EntryPointForPatchFuncNotFound,    "entry point \"{0}\" for patch c
 DECL_REPORT( MaxVertexCountMustBeGreaterZero,   "maximal vertex count must be greater than zero"                                                                );
 DECL_REPORT( NumThreadsMustBeGreaterZero,       "number of threads must be greater than zero"                                                                   );
 DECL_REPORT( SecondaryArrayDimMustBeExplicit,   "secondary array dimensions must be explicit"                                                                   );
-DECL_REPORT( StructsCantBeDefinedInParam,       "structures can not be defined in a parameter type[: '{0}']"                                                    );
+DECL_REPORT( StructsCantBeDefinedInParam,       "structures cannot be defined in a parameter type[: '{0}']"                                                     );
 DECL_REPORT( StaticMembersCantBeDefinedInGlob,  "static members can only be defined in global scope[: '{0}']"                                                   );
 DECL_REPORT( StaticMemberVarRedef,              "redefinition of static member variable[ '{0}']"                                                                );
-DECL_REPORT( MemberVarsCantHaveDefaultValues,   "member variables can not have default values[: '{0}']"                                                         );
+DECL_REPORT( MemberVarsCantHaveDefaultValues,   "member variables cannot have default values[: '{0}']"                                                          );
 DECL_REPORT( DeclTypeDiffersFromDefType,        "declaration type '{0}' differs from definition type '{1}'"                                                     );
 DECL_REPORT( ArrayTypeCanOnlyAppearInDef,       "array type can only appear in definition of static member variables[: '{0}']"                                  );
+DECL_REPORT( FuncCallShadowsClassIntrinsic,     "function call shadows class intrinsic '{0}'"                                                                   );
 
 /* ----- Instruction ----- */
 
@@ -560,6 +563,7 @@ DECL_REPORT( CmdHelpReflect,                    "Enables/disables code reflectio
 DECL_REPORT( CmdHelpPPOnly,                     "Enables/disables to only preprocess source code; default={0}"                                                  );
 DECL_REPORT( CmdHelpMacro,                      "Adds the identifier <IDENT> to the pre-defined macros with an optional VALUE"                                  );
 DECL_REPORT( CmdHelpSemantic,                   "Adds the vertex semantic <IDENT> binding to VALUE (Requires -EB)"                                              );
+DECL_REPORT( CmdHelpPackUniforms,               "Packs global uniforms into a single constant buffer; default={0}"                                              );
 DECL_REPORT( CmdHelpPause,                      "Waits for user input after the translation process"                                                            );
 DECL_REPORT( CmdHelpPresetting,                 "Parse further arguments from the presetting file"                                                              );
 DECL_REPORT( CmdHelpVersion,                    "Prints the version information"                                                                                );

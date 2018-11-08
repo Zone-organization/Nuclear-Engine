@@ -1,7 +1,7 @@
 /*
  * SLParser.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -40,7 +40,7 @@ ArrayDimensionPtr SLParser::ParseArrayDimension(bool allowDynamicDimension)
     auto ast = Make<ArrayDimension>();
 
     Accept(Tokens::LParen);
-    
+
     if (Is(Tokens::RParen))
     {
         if (!allowDynamicDimension)
@@ -191,7 +191,7 @@ CtrlTransferStmntPtr SLParser::ParseCtrlTransferStmnt()
 {
     /* Parse control transfer statement */
     auto ast = Make<CtrlTransferStmnt>();
-    
+
     auto ctrlTransfer = Accept(Tokens::CtrlTransfer)->Spell();
     ast->transfer = StringToCtrlTransfer(ctrlTransfer);
 
@@ -261,10 +261,10 @@ ExprPtr SLParser::ParseArrayIndex()
     auto area = Tkn()->Area();
 
     Accept(Tokens::LParen);
-    
+
     auto ast = ParseExpr();
     ast->area = area;
-    
+
     Accept(Tokens::RParen);
 
     return UpdateSourceArea(ast);

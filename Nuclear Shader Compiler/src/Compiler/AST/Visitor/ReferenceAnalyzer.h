@@ -1,7 +1,7 @@
 /*
  * ReferenceAnalyzer.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -27,14 +27,14 @@ All other functions will be ignored by the code generator.
 */
 class ReferenceAnalyzer : private VisitorTracker
 {
-    
+
     public:
-        
+
         // Marks all declarational AST nodes (i.e. function decl, structure decl etc.) that are reachable from the specififed entry point.
         void MarkReferencesFromEntryPoint(Program& program, const ShaderTarget shaderTarget);
 
     private:
-        
+
         // Marks the specified AST node as reachable and returns false if the AST node has already been marked as reachable.
         bool Reachable(AST* ast);
 
@@ -70,7 +70,7 @@ class ReferenceAnalyzer : private VisitorTracker
 
         Program*                program_        = nullptr;
         ShaderTarget            shaderTarget_   = ShaderTarget::VertexShader;
-        
+
         std::vector<CallExpr*>  callExprStack_;
 
 };

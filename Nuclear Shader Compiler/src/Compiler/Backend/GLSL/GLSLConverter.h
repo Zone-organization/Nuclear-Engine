@@ -1,7 +1,7 @@
 /*
  * GLSLConverter.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -30,12 +30,12 @@ class GLSLConverter : public Converter
 
         static bool ConvertVarDeclType(VarDecl& varDecl);
         static bool ConvertVarDeclBaseTypeDenoter(VarDecl& varDecl, const DataType dataType);
-    
+
     private:
-        
+
         void ConvertASTPrimary(
-            Program& program,
-            const ShaderInput& inputDesc,
+            Program&            program,
+            const ShaderInput&  inputDesc,
             const ShaderOutput& outputDesc
         ) override;
 
@@ -113,6 +113,7 @@ class GLSLConverter : public Converter
         void ConvertIntrinsicCallImageAtomic(CallExpr* ast);
         void ConvertIntrinsicCallGather(CallExpr* ast);
         void ConvertIntrinsicCallSampleCmp(CallExpr* ast);
+        void ConvertIntrisicCallF32toF16(CallExpr* ast);
 
         void ConvertFunctionCall(CallExpr* ast);
 
@@ -128,6 +129,8 @@ class GLSLConverter : public Converter
 
         //TODO: this should be replaced by the code-injection functionality.
         void ConvertEntryPointReturnStmntToCodeBlock(StmntPtr& stmnt);
+
+        void AddMissingInterpModifiers(const std::vector<VarDecl*>& varDecls);
 
         /* ----- Object expressions ----- */
 

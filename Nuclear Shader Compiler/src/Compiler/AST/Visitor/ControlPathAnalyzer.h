@@ -1,7 +1,7 @@
 /*
  * ControlPathAnalyzer.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -26,13 +26,13 @@ Marks 'FunctionDecl::hasNonReturnControlPath' and 'AST::isDeadCode' flags.
 */
 class ControlPathAnalyzer : private Visitor
 {
-    
+
     public:
-        
+
         void MarkControlPathsFromFunction(FunctionDecl& funcDecl);
 
     private:
-        
+
         void PushReturnPath(bool returnPath);
         bool PopReturnPath();
 

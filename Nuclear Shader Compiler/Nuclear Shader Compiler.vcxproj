@@ -49,6 +49,7 @@
     <ClInclude Include="src\Compiler\AST\Visitor\ReflectionAnalyzer.h" />
     <ClInclude Include="src\Compiler\AST\Visitor\StructParameterAnalyzer.h" />
     <ClInclude Include="src\Compiler\AST\Visitor\TypeConverter.h" />
+    <ClInclude Include="src\Compiler\AST\Visitor\UniformPacker.h" />
     <ClInclude Include="src\Compiler\AST\Visitor\Visitor.h" />
     <ClInclude Include="src\Compiler\AST\Visitor\VisitorTracker.h" />
     <ClInclude Include="src\Compiler\Backend\Converter.h" />
@@ -114,6 +115,7 @@
     <ClCompile Include="src\Compiler\AST\Visitor\ReflectionAnalyzer.cpp" />
     <ClCompile Include="src\Compiler\AST\Visitor\StructParameterAnalyzer.cpp" />
     <ClCompile Include="src\Compiler\AST\Visitor\TypeConverter.cpp" />
+    <ClCompile Include="src\Compiler\AST\Visitor\UniformPacker.cpp" />
     <ClCompile Include="src\Compiler\AST\Visitor\Visitor.cpp" />
     <ClCompile Include="src\Compiler\AST\Visitor\VisitorTracker.cpp" />
     <ClCompile Include="src\Compiler\Backend\Converter.cpp" />

@@ -1,7 +1,7 @@
 /*
  * SymbolTable.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -28,8 +28,10 @@ unsigned int StringDistance(const std::string& a, const std::string& b);
 void RuntimeErrNoActiveScope();
 
 [[noreturn]]
-void RuntimeErrIdentAlreadyDeclared(const std::string& ident);
+void RuntimeErrIdentAlreadyDeclared(const std::string& ident, const AST* prevDeclAST = nullptr);
 
+template <typename SymbolType>
+AST* FetchASTFromSymbol(const SymbolType& symbol);
 
 template <typename T>
 struct GenericDefaultValue
@@ -53,9 +55,9 @@ struct GenericDefaultValue<bool>
 template <typename SymbolType>
 class SymbolTable
 {
-    
+
     public:
-        
+
         // Callback function when a symbol is about to be overriden. Must return true to allow a symbol override.
         using OnOverrideProc = std::function<bool(SymbolType& prevSymbol)>;
 
@@ -143,7 +145,7 @@ class SymbolTable
                         if (overrideProc && overrideProc(entry.symbol))
                             return true;
                         else if (throwOnFailure)
-                            RuntimeErrIdentAlreadyDeclared(ident);
+                            RuntimeErrIdentAlreadyDeclared(ident, FetchASTFromSymbol(entry.symbol));
                         else
                             return false;
                     }
@@ -250,7 +252,7 @@ class SymbolTable
         }
 
     private:
-        
+
         struct Symbol
         {
             SymbolType  symbol;
@@ -280,7 +282,7 @@ class ASTSymbolOverload
 {
 
     public:
-    
+
         ASTSymbolOverload(const std::string& ident, AST* ast);
 
         // Adds the specified AST reference to this overloaded symbol, and return true if the overload is valid.
@@ -315,6 +317,20 @@ using ASTSymbolOverloadPtr = std::shared_ptr<ASTSymbolOverload>;
 
 // AST symbol table type for ovloading.
 using ASTSymbolOverloadTable = SymbolTable<ASTSymbolOverloadPtr>;
+
+
+// Template to fetch AST node from a generic symbol type.
+template <typename SymbolType>
+AST* FetchASTFromSymbol(const SymbolType& symbol)
+{
+    return nullptr;
+}
+
+template <>
+inline AST* FetchASTFromSymbol<ASTSymbolOverloadPtr>(const ASTSymbolOverloadPtr& symbol)
+{
+    return symbol->Fetch(false);
+}
 
 
 } // /namespace Xsc

@@ -1,7 +1,7 @@
 /*
  * ASTFactory.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -437,6 +437,17 @@ BasicDeclStmntPtr MakeStructDeclStmnt(const StructDeclPtr& structDecl)
     {
         ast->declObject = structDecl;
         structDecl->declStmntRef = ast.get();
+    }
+    return ast;
+}
+
+UniformBufferDeclPtr MakeUniformBufferDecl(const std::string& ident, int bindingSlot, const UniformBufferType bufferType)
+{
+    auto ast = MakeAST<UniformBufferDecl>();
+    {
+        ast->ident      = ident;
+        ast->bufferType = bufferType;
+        ast->slotRegisters.push_back(MakeRegister(bindingSlot, RegisterType::ConstantBuffer));
     }
     return ast;
 }

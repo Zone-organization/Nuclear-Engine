@@ -1,7 +1,7 @@
 /*
  * SLScanner.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -207,7 +207,7 @@ TokenPtr SLScanner::ScanPlusOp()
 {
     std::string spell;
     spell += TakeIt();
-    
+
     if (Is('+'))
         return Make(Tokens::UnaryOp, spell, true);
     else if (Is('='))

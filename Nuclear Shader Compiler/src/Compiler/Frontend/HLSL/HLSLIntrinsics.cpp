@@ -1,7 +1,7 @@
 /*
  * HLSLIntrinsics.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -201,7 +201,7 @@ static HLSLIntrinsicsMap GenerateIntrinsicMap()
 enum class IntrinsicReturnType
 {
     Void,               // Fixed void type
-    
+
     Bool,               // Fixed bool type
     Int,                // Fixed int type
     Int2,               // Fixed int2 type
@@ -596,6 +596,8 @@ static std::map<Intrinsic, IntrinsicSignature> GenerateIntrinsicSignatureMap()
         { T::Image_AtomicMin,                  {                   2, 3 } },
         { T::Image_AtomicOr,                   {                   2, 3 } },
         { T::Image_AtomicXor,                  {                   2, 3 } },
+
+        { T::PackHalf2x16,                     { Ret::UInt,        1    } },
     };
 }
 
@@ -796,7 +798,7 @@ TypeDenoterPtr HLSLIntrinsicAdept::DeriveReturnTypeMulPrimary(const std::vector<
     /* Scalar x TYPE = TYPE */
     if (type0->IsScalar())
         return type1;
-        
+
     if (type0->IsVector())
     {
         /* TYPE x Scalar = TYPE */
@@ -1014,7 +1016,7 @@ void HLSLIntrinsicAdept::DeriveParameterTypesFirstBit(std::vector<TypeDenoterPtr
     if (auto baseType0 = type0->As<BaseTypeDenoter>())
     {
         const auto baseDataType = BaseDataType(baseType0->dataType);
-        
+
         if (IsScalarType(baseDataType) || IsVectorType(baseDataType))
         {
             if (baseDataType != DataType::Int && baseDataType != DataType::UInt)

@@ -1,7 +1,7 @@
 /*
  * GLSLGenerator.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -17,6 +17,7 @@
 #include "TypeConverter.h"
 #include "ExprConverter.h"
 #include "FuncNameConverter.h"
+#include "UniformPacker.h"
 #include "Helper.h"
 #include "ReportIdents.h"
 #include <initializer_list>
@@ -66,9 +67,11 @@ void GLSLGenerator::GenerateCodePrimary(
     separateShaders_    = outputDesc.options.separateShaders;
     separateSamplers_   = outputDesc.options.separateSamplers;
     autoBinding_        = outputDesc.options.autoBinding;
+    writeHeaderComment_ = outputDesc.options.writeGeneratorHeader;
     allowLineMarks_     = outputDesc.formatting.lineMarks;
     compactWrappers_    = outputDesc.formatting.compactWrappers;
     alwaysBracedScopes_ = outputDesc.formatting.alwaysBracedScopes;
+    uniformPacking_     = outputDesc.uniformPacking;
     entryPointName_     = inputDesc.entryPoint;
 
     #ifdef XSC_ENABLE_LANGUAGE_EXT
@@ -137,7 +140,8 @@ bool GLSLGenerator::IsWrappedIntrinsic(const Intrinsic intrinsic) const
         Intrinsic::GroupMemoryBarrierWithGroupSync,
         Intrinsic::DeviceMemoryBarrier,
         Intrinsic::DeviceMemoryBarrierWithGroupSync,
-        Intrinsic::AllMemoryBarrierWithGroupSync
+        Intrinsic::AllMemoryBarrierWithGroupSync,
+        Intrinsic::F16toF32
     };
     return (wrappedIntrinsics.find(intrinsic) != wrappedIntrinsics.end());
 }
@@ -619,6 +623,8 @@ IMPLEMENT_VISIT_PROC(VarDeclStmnt)
     }
     #endif
 
+    const auto& varDecl0 = varDecls.front();
+
     /* Ignore declaration statement of static member variables */
     if (ast->typeSpecifier->HasAnyStorageClassOf({ StorageClass::Static }) && ast->FetchStructDeclRef() != nullptr)
         return;
@@ -626,6 +632,16 @@ IMPLEMENT_VISIT_PROC(VarDeclStmnt)
     PushVarDeclStmnt(ast);
     {
         BeginLn();
+
+        /* Write location layout qualifier */
+        if (!varDecl0->slotRegisters.empty())
+        {
+            WriteLayout(
+                {
+                    [&]() { WriteLayoutBindingOrLocation(varDecl0->slotRegisters); },
+                }
+            );
+        }
 
         /* Write storage classes and interpolation modifiers (must be before in/out keywords) */
         if (!InsideStructDecl())
@@ -738,7 +754,7 @@ IMPLEMENT_VISIT_PROC(ForLoopStmnt)
 {
     /* Write loop header */
     BeginLn();
-    
+
     Write("for (");
 
     PushOptions({ false, false });
@@ -763,7 +779,7 @@ IMPLEMENT_VISIT_PROC(WhileLoopStmnt)
 {
     /* Write loop condExpr */
     BeginLn();
-    
+
     Write("while (");
     Visit(ast->condition);
     Write(")");
@@ -780,11 +796,11 @@ IMPLEMENT_VISIT_PROC(DoWhileLoopStmnt)
 
     /* Write loop condExpr */
     WriteScopeContinue();
-    
+
     Write("while (");
     Visit(ast->condition);
     Write(");");
-    
+
     EndLn();
 }
 
@@ -795,11 +811,11 @@ IMPLEMENT_VISIT_PROC(IfStmnt)
     /* Write if condExpr */
     if (!hasElseParentNode)
         BeginLn();
-    
+
     Write("if (");
     Visit(ast->condition);
     Write(")");
-    
+
     /* Write if body */
     WriteScopedStmnt(ast->bodyStmnt.get());
 
@@ -836,7 +852,7 @@ IMPLEMENT_VISIT_PROC(SwitchStmnt)
 {
     /* Write selector */
     BeginLn();
-    
+
     Write("switch (");
     Visit(ast->selector);
     Write(")");
@@ -1022,7 +1038,7 @@ IMPLEMENT_VISIT_PROC(InitializerExpr)
     else
     {
         Write("{ ");
-        
+
         for (std::size_t i = 0; i < ast->exprs.size(); ++i)
         {
             Visit(ast->exprs[i]);
@@ -1049,6 +1065,7 @@ void GLSLGenerator::PreProcessAST(const ShaderInput& inputDesc, const ShaderOutp
     PreProcessFuncNameConverter();
     PreProcessReferenceAnalyzer(inputDesc);
     PreProcessExprConverterSecondary();
+    PreProcessPackedUniforms();
 }
 
 void GLSLGenerator::PreProcessStructParameterAnalyzer(const ShaderInput& inputDesc)
@@ -1121,6 +1138,21 @@ void GLSLGenerator::PreProcessExprConverterSecondary()
     /* Convert AST for GLSL code generation (After reference analysis) */
     ExprConverter converter;
     converter.Convert(*GetProgram(), ExprConverter::ConvertMatrixSubscripts, nameMangling_);
+}
+
+void GLSLGenerator::PreProcessPackedUniforms()
+{
+    if (uniformPacking_.enabled)
+    {
+        /* Move all global uniform into a single uniform buffer */
+        UniformPacker packer;
+        UniformPacker::CbufferAttributes attribs;
+        {
+            attribs.bindingSlot = uniformPacking_.bindingSlot;
+            attribs.name        = uniformPacking_.bufferName;
+        }
+        packer.Convert(*GetProgram(), attribs);
+    }
 }
 
 /* ----- Basics ----- */
@@ -1223,16 +1255,19 @@ void GLSLGenerator::WriteProgramHeaderVersion()
 
 void GLSLGenerator::WriteProgramHeaderComment()
 {
-    /* Write header */
-    if (entryPointName_.empty())
-        WriteComment("GLSL " + ToString(GetShaderTarget()));
-    else
-        WriteComment("GLSL " + ToString(GetShaderTarget()) + " \"" + entryPointName_ + "\"");
+    if (writeHeaderComment_)
+    {
+        /* Write header */
+        if (entryPointName_.empty())
+            WriteComment("GLSL " + ToString(GetShaderTarget()));
+        else
+            WriteComment("GLSL " + ToString(GetShaderTarget()) + " \"" + entryPointName_ + "\"");
 
-    WriteComment("Generated by XShaderCompiler");
-    WriteComment(TimePoint());
+        WriteComment("Generated by XShaderCompiler");
+        WriteComment(TimePoint());
 
-    Blank();
+        Blank();
+    }
 }
 
 void GLSLGenerator::WriteProgramHeaderExtension(const std::string& extensionName)
@@ -1579,6 +1614,31 @@ void GLSLGenerator::WriteLayoutBinding(const std::vector<RegisterPtr>& slotRegis
     }
 }
 
+void GLSLGenerator::WriteLayoutBindingOrLocation(const std::vector<RegisterPtr>& slotRegisters)
+{
+    /* For ESSL: "binding" and "location" qualifiers are only available since ESSL 310 */
+    if ( explicitBinding_ && ( !IsESSL() || versionOut_ >= OutputShaderVersion::ESSL310 ) )
+    {
+        if (auto slotRegister = Register::GetForTarget(slotRegisters, GetShaderTarget()))
+        {
+            switch (slotRegister->registerType)
+            {
+                case RegisterType::BufferOffset:
+                    Write("location = " + std::to_string(slotRegister->slot));
+                    break;
+                case RegisterType::UnorderedAccessView:
+                case RegisterType::ConstantBuffer:
+                case RegisterType::TextureBuffer:
+                case RegisterType::Sampler:
+                    Write("binding = " + std::to_string(slotRegister->slot));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+
 /* ----- Input semantics ----- */
 
 void GLSLGenerator::WriteLocalInputSemantics(FunctionDecl* entryPoint)
@@ -1646,7 +1706,7 @@ void GLSLGenerator::WriteLocalInputSemanticsStructDeclParam(VarDeclStmnt* param,
         {
             /* Write global shader input to local variable assignments */
             auto paramVar = param->varDecls.front().get();
-        
+
             if (paramVar->arrayDims.empty())
             {
                 structDecl->ForEachVarDecl(
@@ -2139,7 +2199,7 @@ void GLSLGenerator::WriteObjectExprIdentOrSystemValue(const ObjectExpr& objectEx
     /* Find system value semantic in object identifier */
     std::unique_ptr<std::string> semanticKeyword;
     Flags varFlags;
-    
+
     if (auto varDecl = symbol->As<VarDecl>())
     {
         /* Copy flags from variable */
@@ -2669,7 +2729,7 @@ void GLSLGenerator::WriteCallExprIntrinsicClip(CallExpr* funcCall)
         Error(R_InvalidIntrinsicArgType("clip"), expr.get());
 
     Write(")");
-    
+
     /* Write if-body (we are still inside an active line, so first 'EndLn', then 'BeginLn') */
     EndLn();
     IncIndent();
@@ -2795,14 +2855,20 @@ void GLSLGenerator::WriteCallExprArguments(CallExpr* callExpr, std::size_t first
         numWriteArgs = ~0u;
 
     const auto n = callExpr->arguments.size();
-    const auto m = std::min(numWriteArgs, n + callExpr->defaultArgumentRefs.size());
+    const auto m = std::min(numWriteArgs, n + callExpr->defaultParamRefs.size());
 
     for (std::size_t i = firstArgIndex; i < m; ++i)
     {
         if (i < n)
             Visit(callExpr->arguments[i]);
         else
-            Visit(callExpr->defaultArgumentRefs[i - n]);
+        {
+            auto defaultParam = callExpr->defaultParamRefs[i - n];
+            if (defaultParam->initializerValue.IsRepresentableAsString())
+                Write(defaultParam->initializerValue.ToString());
+            else
+                Visit(defaultParam->initializer);
+        }
 
         if (i + 1 < m)
             Write(", ");
@@ -2832,6 +2898,8 @@ void GLSLGenerator::WriteWrapperIntrinsics()
         WriteWrapperIntrinsicsMemoryBarrier(Intrinsic::DeviceMemoryBarrier, true);
     if (program->FetchIntrinsicUsage(Intrinsic::AllMemoryBarrierWithGroupSync) != nullptr)
         WriteWrapperIntrinsicsMemoryBarrier(Intrinsic::AllMemoryBarrier, true);
+    if (program->FetchIntrinsicUsage(Intrinsic::F16toF32) != nullptr)
+        WriteWrapperIntrinsicsF16toF32();
 
     /* Write matrix subscript wrappers */
     for (const auto& usage : program->usedMatrixSubscripts)
@@ -2840,12 +2908,12 @@ void GLSLGenerator::WriteWrapperIntrinsics()
 
 void GLSLGenerator::WriteWrapperIntrinsicsClip(const IntrinsicUsage& usage)
 {
-    bool wrappersWritten = false;
+    bool anyWrappersWritten = false;
 
     for (const auto& argList : usage.argLists)
     {
         auto arg0Type = (!argList.argTypes.empty() ? argList.argTypes.front() : DataType::Undefined);
-        
+
         if (IsScalarType(arg0Type) || IsVectorType(arg0Type))
         {
             BeginLn();
@@ -2883,11 +2951,11 @@ void GLSLGenerator::WriteWrapperIntrinsicsClip(const IntrinsicUsage& usage)
             }
             EndLn();
 
-            wrappersWritten = true;
+            anyWrappersWritten = true;
         }
     }
 
-    if (wrappersWritten)
+    if (anyWrappersWritten)
         Blank();
 }
 
@@ -2918,7 +2986,7 @@ void GLSLGenerator::WriteWrapperIntrinsicsLit(const IntrinsicUsage& usage)
 
 void GLSLGenerator::WriteWrapperIntrinsicsSinCos(const IntrinsicUsage& usage)
 {
-    bool wrappersWritten = false;
+    bool anyWrappersWritten = false;
 
     for (const auto& argList : usage.argLists)
     {
@@ -2944,12 +3012,33 @@ void GLSLGenerator::WriteWrapperIntrinsicsSinCos(const IntrinsicUsage& usage)
             }
             EndLn();
 
-            wrappersWritten = true;
+            anyWrappersWritten = true;
         }
     }
 
-    if (wrappersWritten)
+    if (anyWrappersWritten)
         Blank();
+}
+
+void GLSLGenerator::WriteWrapperIntrinsicsF16toF32()
+{
+    BeginLn();
+    {
+        /* Write function signature */
+        Write("float f16tof32(");
+        WriteDataType(DataType::UInt, IsESSL());
+        Write(" x)");
+
+        /* Write function body */
+        WriteScopeOpen(compactWrappers_);
+        {
+            Write("return unpackHalf2x16(x).x;");
+        }
+        WriteScopeClose();
+    }
+    EndLn();
+
+    Blank();
 }
 
 static std::string GetWrapperNameForMemoryBarrier(const Intrinsic intrinsic, bool groupSync)
@@ -3085,7 +3174,7 @@ bool GLSLGenerator::WriteStructDecl(StructDecl* structDecl, bool endWithSemicolo
     }
     EndSep();
     WriteScopeClose();
-    
+
     /* Only append blank line if struct is not part of a variable declaration */
     if (!InsideVarDeclStmnt())
         Blank();
@@ -3231,7 +3320,7 @@ void GLSLGenerator::WriteBufferDeclStorageBuffer(BufferDecl* bufferDecl)
             }
         );
         Write(*bufferTypeKeyword + " ");
-        
+
         if (nameMangling_.renameBufferFields)
         {
             Write(bufferDecl->ident);

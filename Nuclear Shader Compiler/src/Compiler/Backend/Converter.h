@@ -1,7 +1,7 @@
 /*
  * Converter.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -28,24 +28,24 @@ e.g. remove arguments from intrinsic calls, that are not allowed in GLSL, such a
 */
 class Converter : public VisitorTracker
 {
-    
+
     public:
-        
+
         // Converts the specified AST for the target language.
         bool ConvertAST(
-            Program& program,
-            const ShaderInput& inputDesc,
+            Program&            program,
+            const ShaderInput&  inputDesc,
             const ShaderOutput& outputDesc
         );
 
     protected:
 
         virtual void ConvertASTPrimary(
-            Program& program,
-            const ShaderInput& inputDesc,
+            Program&            program,
+            const ShaderInput&  inputDesc,
             const ShaderOutput& outputDesc
         ) = 0;
-        
+
         /* ----- Symbol table functions ----- */
 
         // Opens a new scope in the smybol table.

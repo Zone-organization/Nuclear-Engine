@@ -1,7 +1,7 @@
 /*
  * Optimizer.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -22,14 +22,14 @@ namespace Xsc
 // This AST optimizer supports only little optimizations such as null-statement removal.
 class Optimizer : private Visitor
 {
-    
+
     public:
-        
+
         // Optimizes the specified program AST.
         void Optimize(Program& program);
 
     private:
-        
+
         void OptimizeStmntList(std::vector<StmntPtr>& stmnts);
 
         void OptimizeExpr(ExprPtr& expr);
@@ -37,7 +37,7 @@ class Optimizer : private Visitor
         bool CanRemoveStmnt(const Stmnt& ast) const;
 
         /* ----- Visitor implementation ----- */
- 
+
         DECL_VISIT_PROC( CodeBlock         );
         DECL_VISIT_PROC( SwitchCase        );
         DECL_VISIT_PROC( ArrayDimension    );

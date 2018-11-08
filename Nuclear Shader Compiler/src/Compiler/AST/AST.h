@@ -1,7 +1,7 @@
 /*
  * AST.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -49,7 +49,7 @@ enum SearchFlags : unsigned int
 using VarDeclIteratorFunctor = std::function<void(VarDeclPtr& varDecl)>;
 
 // Iteration callback for Expr AST nodes.
-using ExprIteratorFunctor = std::function<void(ExprPtr& expr)>;
+using ExprIteratorFunctor = std::function<void(ExprPtr& expr, VarDecl* param)>;
 
 // Iteration callback for argument/parameter-type associations.
 using ArgumentParameterTypeFunctor = std::function<void(ExprPtr& argument, const TypeDenoter& paramTypeDen)>;
@@ -164,7 +164,7 @@ struct AST
     };
 
     virtual ~AST();
-    
+
     // Returns the AST node type.
     virtual Types Type() const = 0;
 
@@ -253,7 +253,7 @@ struct TypedAST : public AST
         virtual TypeDenoterPtr DeriveTypeDenoter(const TypeDenoter* expectedTypeDenoter) = 0;
 
     private:
-    
+
         // Buffered type denoter which is stored in the "GetTypeDenoter" function and can be reset with the "ResetTypeDenoter" function.
         TypeDenoterPtr bufferedTypeDenoter_;
 
@@ -275,9 +275,13 @@ struct Expr : public TypedAST
     If the return value is non-null, the object expression must refer to a declaration object. By default null.
     */
     virtual const ObjectExpr* FetchLValueExpr() const;
+    ObjectExpr* FetchLValueExpr();
 
     // Returns the semantic of this expression, or Semantic::Undefined if this expression has no semantic.
     virtual IndexedSemantic FetchSemantic() const;
+
+    // Returns true if this expression can be trivially copied (e.g. simple expressions without potential side effects). By default false.
+    virtual bool IsTrivialCopyable(unsigned int maxTreeDepth = 3) const;
 
     // Returns the first expression for which the specified predicate returns true.
     virtual const Expr* Find(const FindPredicateConstFunctor& predicate, unsigned int flags = SearchAll) const;
@@ -322,7 +326,7 @@ struct Decl : public TypedAST
 
 // Program AST root.
 struct Program : public AST
-{   
+{
     AST_INTERFACE(Program);
 
     // Layout meta data for tessellation-control shaders
@@ -354,7 +358,7 @@ struct Program : public AST
     {
         // True, if fragment coordinate (SV_Position) is used inside a fragment shader.
         bool fragCoordUsed      = false;
-        
+
         // True, if pixel center is assumed to be integral, otherwise pixel center is assumed to have an (0.5, 0.5) offset.
         bool pixelCenterInteger = false;
 
@@ -490,7 +494,7 @@ struct ArrayDimension : public TypedAST
 struct TypeSpecifier : public TypedAST
 {
     AST_INTERFACE(TypeSpecifier);
-    
+
     // Returns the name of this type and all modifiers.
     std::string ToString() const;
 
@@ -526,7 +530,7 @@ struct TypeSpecifier : public TypedAST
     bool                        isInput         = false;                    // Input modifier 'in'.
     bool                        isOutput        = false;                    // Input modifier 'out'.
     bool                        isUniform       = false;                    // Input modifier 'uniform'.
-    
+
     std::set<StorageClass>      storageClasses;                             // Storage classes, e.g. extern, precise, etc.
     std::set<InterpModifier>    interpModifiers;                            // Interpolation modifiers, e.g. nointerpolation, linear, centroid etc.
     std::set<TypeModifier>      typeModifiers;                              // Type modifiers, e.g. const, row_major, column_major (also 'snorm' and 'unorm' for floats).
@@ -586,8 +590,12 @@ struct VarDecl : public Decl
     // Adds the specified flag to this variable and all members and sub members of the structure, if the variable has a structure type.
     void AddFlagsRecursive(unsigned int varFlags);
 
+    // Accumulates the vector size for this variables (with a 16 byte boundary), and returns true on success.
+    bool AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset = nullptr);
+
     ObjectExprPtr                   namespaceExpr;                  // Optional namespace expression. May be null.
     std::vector<ArrayDimensionPtr>  arrayDims;                      // Array dimension list. May be empty.
+    std::vector<RegisterPtr>        slotRegisters;                  // Slot register list. May be empty.
     IndexedSemantic                 semantic;                       // Variable semantic. May be invalid.
     PackOffsetPtr                   packOffset;                     // Optional pack offset. May be null.
     std::vector<VarDeclStmntPtr>    annotations;                    // Annotations can be ignored by analyzers and generators.
@@ -678,8 +686,10 @@ struct StructDecl : public Decl
 
     // Returns the FunctionDecl AST node for the specified argument type denoter list (used to derive the overloaded function).
     FunctionDecl* FetchFunctionDecl(
-        const std::string& ident, const std::vector<TypeDenoterPtr>& argTypeDenoters,
-        const StructDecl** owner = nullptr, bool throwErrorIfNoMatch = false
+        const std::string&                  ident,
+        const std::vector<TypeDenoterPtr>&  argTypeDenoters,
+        const StructDecl**                  owner               = nullptr,
+        bool                                throwErrorIfNoMatch = false
     ) const;
 
     // Returns an identifier that is similar to the specified identifier (for suggestions of typos)
@@ -723,6 +733,9 @@ struct StructDecl : public Decl
 
     // Returns the member variable of the specified zero-based index, null on failure.
     VarDecl* IndexToMemberVar(std::size_t idx, bool includeBaseStructs = true) const;
+
+    // Accumulates the vector size for all members in this structure (with a 16 byte boundary for each member), and returns true on success.
+    bool AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset = nullptr);
 
     bool                            isClass                 = false;    // This struct was declared as 'class'.
     std::string                     baseStructName;                     // May be empty (if no inheritance is used).
@@ -802,10 +815,10 @@ struct FunctionDecl : public Decl
 
     // Returns true if this is a static function (see TypeSpecifier::HasAnyStorageClassOf).
     bool IsStatic() const;
-    
+
     // Returns a descriptive string of the function signature (e.g. "void f(int x)").
     std::string ToString() const override;
-    
+
     // Returns a descriptive string of the function signature (e.g. "void f(int x)").
     std::string ToString(bool useParamNames) const;
 
@@ -829,9 +842,10 @@ struct FunctionDecl : public Decl
 
     // Fetches the function declaration from the list that matches the specified argument types.
     static FunctionDecl* FetchFunctionDeclFromList(
-        const std::vector<FunctionDecl*>& funcDeclList,
-        const std::string& ident, const std::vector<TypeDenoterPtr>& argTypeDenoters,
-        bool throwErrorIfNoMatch = true
+        const std::vector<FunctionDecl*>&   funcDeclList,
+        const std::string&                  ident,
+        const std::vector<TypeDenoterPtr>&  argTypeDenoters,
+        bool                                throwErrorIfNoMatch = true
     );
 
     TypeSpecifierPtr                returnType;                                 // Function return type (TypeSpecifier).
@@ -862,6 +876,9 @@ struct UniformBufferDecl : public Decl
 
     // Derives the common storage layout type modifier of all variable members (see 'commonStorageLayout' member).
     TypeModifier DeriveCommonStorageLayout(const TypeModifier defaultStorgeLayout = TypeModifier::Undefined);
+
+    // Accumulates the vector size of the entire uniform buffer (with 16 byte alignemnd for each vector), and return true on success.
+    bool AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset = nullptr);
 
     UniformBufferType               bufferType          = UniformBufferType::Undefined; // Type of this uniform buffer. Must not be undefined.
     std::vector<RegisterPtr>        slotRegisters;                                      // Slot register list. May be empty.
@@ -927,9 +944,12 @@ struct VarDeclStmnt : public Stmnt
 
     // Returns the var-decl statement as string.
     std::string ToString(bool useVarNames = true) const;
-    
+
     // Returns the VarDecl AST node inside this var-decl statement for the specified identifier, or null if there is no such VarDecl.
     VarDecl* FetchVarDecl(const std::string& ident) const;
+
+    // Returns the one and only VarDecl AST node (used for parameters of FunctionDecl AST nodes).
+    VarDecl* FetchUniqueVarDecl() const;
 
     // Returns true if this is an input parameter.
     bool IsInput() const;
@@ -957,6 +977,9 @@ struct VarDeclStmnt : public Stmnt
 
     // Returns the reference to the owner structure from the first variable entry, or null if there is no such owner structure.
     StructDecl* FetchStructDeclRef() const;
+
+    // Accumulates the vector size for all variables in this statement (with a 16 byte boundary for each member), and returns true on success.
+    bool AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset = nullptr);
 
     TypeSpecifierPtr        typeSpecifier;  // Type basis for all variables (can be extended by array indices in each individual variable).
     std::vector<VarDeclPtr> varDecls;       // Variable declaration list.
@@ -1219,8 +1242,10 @@ struct CallExpr : public Expr
 
     IndexedSemantic FetchSemantic() const override;
 
-    // Returns a list of all argument expressions (including the default parameters).
+    #if 0//UNUSED
+    // Returns a list of all argument expressions (including the default arguments).
     std::vector<Expr*> GetArguments() const;
+    #endif
 
     // Returns the reference to the function declaration of this call expression, or null if not set.
     FunctionDecl* GetFunctionDecl() const;
@@ -1257,7 +1282,7 @@ struct CallExpr : public Expr
 
     FunctionDecl*           funcDeclRef         = nullptr;              // Reference to the function declaration. May be null.
     Intrinsic               intrinsic           = Intrinsic::Undefined; // Intrinsic ID (if this is an intrinsic).
-    std::vector<Expr*>      defaultArgumentRefs;                        // Reference to default argument expressions of all remaining parameters.
+    std::vector<VarDecl*>   defaultParamRefs;                           // Reference to parameters that have a default argument.
 };
 
 // Bracket expression.
@@ -1310,6 +1335,8 @@ struct ObjectExpr : public Expr
     const ObjectExpr* FetchLValueExpr() const override;
 
     IndexedSemantic FetchSemantic() const override;
+
+    bool IsTrivialCopyable(unsigned int maxTreeDepth = 3) const override;
 
     // Returns a type denoter for the vector subscript of this object expression or throws an runtime error on failure.
     BaseTypeDenoterPtr GetTypeDenoterFromSubscript() const;

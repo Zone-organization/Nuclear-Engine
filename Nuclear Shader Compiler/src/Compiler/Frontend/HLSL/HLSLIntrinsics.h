@@ -1,7 +1,7 @@
 /*
  * HLSLIntrinsics.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -44,9 +44,9 @@ class HLSLIntrinsicAdept : public IntrinsicAdept
         HLSLIntrinsicAdept();
 
         TypeDenoterPtr GetIntrinsicReturnType(
-            const Intrinsic intrinsic,
+            const Intrinsic             intrinsic,
             const std::vector<ExprPtr>& args,
-            const TypeDenoterPtr& prefixTypeDenoter = nullptr
+            const TypeDenoterPtr&       prefixTypeDenoter = nullptr
         ) const override;
 
         std::vector<TypeDenoterPtr> GetIntrinsicParameterTypes(const Intrinsic intrinsic, const std::vector<ExprPtr>& args) const override;
@@ -69,10 +69,10 @@ class HLSLIntrinsicAdept : public IntrinsicAdept
         TypeDenoterPtr DeriveReturnTypeTextureGatherCmp(const BaseTypeDenoterPtr& genericTypeDenoter) const;
 
         void DeriveParameterTypes(
-            std::vector<TypeDenoterPtr>& paramTypeDenoters,
-            const Intrinsic intrinsic,
-            const std::vector<ExprPtr>& args,
-            bool useMinDimension = false
+            std::vector<TypeDenoterPtr>&    paramTypeDenoters,
+            const Intrinsic                 intrinsic,
+            const std::vector<ExprPtr>&     args,
+            bool                            useMinDimension     = false
         ) const;
 
         void DeriveParameterTypesMul(std::vector<TypeDenoterPtr>& paramTypeDenoters, const std::vector<ExprPtr>& args) const;

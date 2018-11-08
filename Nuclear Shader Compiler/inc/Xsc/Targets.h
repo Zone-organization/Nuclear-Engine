@@ -1,7 +1,7 @@
 /*
  * Targets.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -43,8 +43,6 @@ enum class InputShaderVersion
     HLSL5   = 5,            //!< HLSL Shader Model 5.0 (DirectX 11).
     HLSL6   = 6,            //!< HLSL Shader Model 6.0 (DirectX 12).
 
-	NSL     = 7,			//!< Nuclear Shader Language
-
     GLSL    = 0x0000ffff,   //!< GLSL (OpenGL).
     ESSL    = 0x0001ffff,   //!< GLSL (OpenGL ES).
     VKSL    = 0x0002ffff,   //!< GLSL (Vulkan).
@@ -53,11 +51,6 @@ enum class InputShaderVersion
 //! Output shader version enumeration.
 enum class OutputShaderVersion
 {
-	HLSL3 = 3,					    //!< HLSL Shader Model 3.0 (DirectX 9).
-	HLSL4 = 4,					     //!< HLSL Shader Model 4.0 (DirectX 10).
-	HLSL5 = 5,					      //!< HLSL Shader Model 5.0 (DirectX 11).
-	HLSL6 = 6,					      //!< HLSL Shader Model 6.0 (DirectX 12).
-
     GLSL110 = 110,                  //!< GLSL 1.10 (OpenGL 2.0).
     GLSL120 = 120,                  //!< GLSL 1.20 (OpenGL 2.1).
     GLSL130 = 130,                  //!< GLSL 1.30 (OpenGL 3.0).
@@ -73,10 +66,10 @@ enum class OutputShaderVersion
     GLSL460 = 460,                  //!< GLSL 4.60 (OpenGL 4.6).
     GLSL    = 0x0000ffff,           //!< Auto-detect minimal required GLSL version (for OpenGL 2+).
 
-    ESSL100 = (0x00010000 + 100),   //!< ESSL 1.00 (OpenGL ES 2.0). \note Currently not supported!
-    ESSL300 = (0x00010000 + 300),   //!< ESSL 3.00 (OpenGL ES 3.0). \note Currently not supported!
-    ESSL310 = (0x00010000 + 310),   //!< ESSL 3.10 (OpenGL ES 3.1). \note Currently not supported!
-    ESSL320 = (0x00010000 + 320),   //!< ESSL 3.20 (OpenGL ES 3.2). \note Currently not supported!
+    ESSL100 = (0x00010000 + 100),   //!< ESSL 1.00 (OpenGL ES 2.0). \note Only partially supported!
+    ESSL300 = (0x00010000 + 300),   //!< ESSL 3.00 (OpenGL ES 3.0). \note Only partially supported!
+    ESSL310 = (0x00010000 + 310),   //!< ESSL 3.10 (OpenGL ES 3.1). \note Only partially supported!
+    ESSL320 = (0x00010000 + 320),   //!< ESSL 3.20 (OpenGL ES 3.2). \note Only partially supported!
     ESSL    = 0x0001ffff,           //!< Auto-detect minimum required ESSL version (for OpenGL ES 2+). \note Currently not supported!
 
     VKSL450 = (0x00020000 + 450),   //!< VKSL 4.50 (Vulkan 1.0).

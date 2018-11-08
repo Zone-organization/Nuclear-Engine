@@ -1,7 +1,7 @@
 /*
  * IncludeHandler.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -28,9 +28,10 @@ namespace Xsc
 */
 class XSC_EXPORT IncludeHandler
 {
-    
+
     public:
-        
+
+        IncludeHandler();
         virtual ~IncludeHandler();
 
         /**
@@ -40,9 +41,18 @@ class XSC_EXPORT IncludeHandler
         \return Unique pointer to the new input stream.
         */
         virtual std::unique_ptr<std::istream> Include(const std::string& filename, bool useSearchPathsFirst);
-        
-        //! List of search paths.
-        std::vector<std::string> searchPaths;
+
+        //! Returns the list of search paths.
+        std::vector<std::string>& GetSearchPaths();
+
+        //! Returns the constant list of search paths.
+        const std::vector<std::string>& GetSearchPaths() const;
+
+    private:
+
+        // PImple idiom
+        struct OpaqueData;
+        OpaqueData* data_ = nullptr;
 
 };
 

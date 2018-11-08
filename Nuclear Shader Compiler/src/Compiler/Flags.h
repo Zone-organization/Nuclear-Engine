@@ -1,7 +1,7 @@
 /*
  * Flags.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -16,9 +16,9 @@ namespace Xsc
 // Common flags class.
 class Flags
 {
-    
+
     public:
-        
+
         Flags() = default;
         Flags(const Flags&) = default;
         Flags& operator = (const Flags&) = default;
@@ -84,7 +84,7 @@ class Flags
         }
 
     private:
-        
+
         unsigned int bitMask_ = 0;
 
 };

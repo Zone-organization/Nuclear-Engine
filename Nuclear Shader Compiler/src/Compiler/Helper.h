@@ -1,7 +1,7 @@
 /*
  * Helper.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -266,7 +266,7 @@ template <typename T>
 int NumDigits(T n)
 {
     static_assert(std::is_integral<T>::value, "NumDigits template only allows integral types");
-    
+
     int digits = (n < 0 ? 1 : 0);
 
     while (n != 0)

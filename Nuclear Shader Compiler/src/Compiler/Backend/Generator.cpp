@@ -1,9 +1,11 @@
 /*
  * Generator.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
+
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "Generator.h"
 #include "AST.h"
@@ -48,7 +50,7 @@ bool Generator::GenerateCode(
         return false;
     }
 
-    return (!reportHandler_.HasErros());
+    return (!reportHandler_.HasErrors());
 }
 
 
@@ -59,8 +61,12 @@ bool Generator::GenerateCode(
 void Generator::Error(const std::string& msg, const AST* ast, bool breakWithExpection)
 {
     reportHandler_.SubmitReport(
-        breakWithExpection, ReportTypes::Error, R_CodeGenerationError,
-        msg, program_->sourceCode.get(), (ast ? ast->area : SourceArea::ignore)
+        breakWithExpection,
+        ReportTypes::Error,
+        R_CodeGenerationError,
+        msg,
+        program_->sourceCode.get(),
+        (ast ? ast->area : SourceArea::ignore)
     );
 }
 
@@ -190,7 +196,7 @@ void Generator::Blank()
     if (allowBlanks_)
         WriteLn("");
 }
-
+#define _CRT_SECURE_NO_WARNINGS
 std::string Generator::TimePoint() const
 {
     auto currentTime    = std::chrono::system_clock::now();

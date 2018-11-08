@@ -1,7 +1,7 @@
 /*
  * Win32ConsoleManip.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -79,7 +79,7 @@ class ScreenBufferInfo
 
 };
 
-static ScreenBufferInfo g_screenBufferInfo;
+thread_local static ScreenBufferInfo g_screenBufferInfo;
 
 static HANDLE StdOut()
 {
@@ -131,12 +131,12 @@ void PushColor(long front, std::ostream& /*stream*/)
 
     /* Setup attributes for new console color */
     WORD attrib = (bufInfo.wAttributes & 0xFFF0);
-    
-    if (( front & ColorFlags::Red    ) != 0) attrib |= FOREGROUND_RED;
-    if (( front & ColorFlags::Green  ) != 0) attrib |= FOREGROUND_GREEN;
-    if (( front & ColorFlags::Blue   ) != 0) attrib |= FOREGROUND_BLUE;
-    if (( front & ColorFlags::Intens ) != 0) attrib |= FOREGROUND_INTENSITY;
-    
+
+    if (( front & ColorFlags::Red    ) != 0) { attrib |= FOREGROUND_RED;       }
+    if (( front & ColorFlags::Green  ) != 0) { attrib |= FOREGROUND_GREEN;     }
+    if (( front & ColorFlags::Blue   ) != 0) { attrib |= FOREGROUND_BLUE;      }
+    if (( front & ColorFlags::Intens ) != 0) { attrib |= FOREGROUND_INTENSITY; }
+
     /* Set new console attribute */
     SetConsoleTextAttribute(StdOut(), attrib);
 }

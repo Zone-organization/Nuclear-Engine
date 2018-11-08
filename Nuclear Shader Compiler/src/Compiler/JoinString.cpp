@@ -1,7 +1,7 @@
 /*
  * JoinString.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -163,7 +163,7 @@ std::string JoinString(const std::string& s, const std::vector<std::string>& val
 {
     std::string out;
     std::size_t pos = 0;
-    
+
     /* Join sub string */
     JoinStringSub(s, pos, out, values, false);
 

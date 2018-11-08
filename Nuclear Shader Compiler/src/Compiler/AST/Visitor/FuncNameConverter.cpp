@@ -1,7 +1,7 @@
 /*
  * FuncNameConverter.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -14,10 +14,10 @@ namespace Xsc
 
 
 void FuncNameConverter::Convert(
-    Program& program,
-    const NameMangling& nameMangling,
-    const OnFuncSigantureCompare& onFuncSignatureCompare,
-    const Flags& conversionFlags)
+    Program&                        program,
+    const NameMangling&             nameMangling,
+    const OnFuncSigantureCompare&   onFuncSignatureCompare,
+    const Flags&                    conversionFlags)
 {
     /* Copy parameters */
     nameMangling_           = nameMangling;

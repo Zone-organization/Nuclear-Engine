@@ -1,7 +1,7 @@
 /*
  * IndentHandler.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -12,32 +12,50 @@ namespace Xsc
 {
 
 
-IndentHandler::IndentHandler(const std::string& initialIndent) :
-    indent_ { initialIndent }
+struct IndentHandler::OpaqueData
 {
+    std::string                         indent;
+    std::string                         indentFull;
+    std::stack<std::string::size_type>  indentStack;
+};
+
+IndentHandler::IndentHandler(const std::string& initialIndent) :
+    data_ { new OpaqueData() }
+{
+    data_->indent = initialIndent;
+}
+
+IndentHandler::~IndentHandler()
+{
+    delete data_;
 }
 
 void IndentHandler::SetIndent(const std::string& indent)
 {
-    indent_ = indent;
+    data_->indent = indent;
 }
 
 void IndentHandler::IncIndent()
 {
     /* Append indentation string and store current size */
-    indentFull_ += indent_;
-    indentStack_.push(indent_.size());
+    data_->indentFull += data_->indent;
+    data_->indentStack.push(data_->indent.size());
 }
 
 void IndentHandler::DecIndent()
 {
-    if (!indentStack_.empty())
+    if (!data_->indentStack.empty())
     {
         /* Reduce indentation string by previous size */
-        auto size = indentStack_.top();
-        indentFull_.resize(indentFull_.size() - size);
-        indentStack_.pop();
+        auto size = data_->indentStack.top();
+        data_->indentFull.resize(data_->indentFull.size() - size);
+        data_->indentStack.pop();
     }
+}
+
+const std::string& IndentHandler::FullIndent() const
+{
+    return data_->indentFull;
 }
 
 

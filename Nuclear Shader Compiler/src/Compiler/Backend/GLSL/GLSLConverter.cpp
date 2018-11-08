@@ -1,7 +1,7 @@
 /*
  * GLSLConverter.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -157,6 +157,12 @@ IMPLEMENT_VISIT_PROC(Program)
     RegisterGlobalDeclIdents(entryPoint->inputSemantics.varDeclRefsSV);
     RegisterGlobalDeclIdents(entryPoint->outputSemantics.varDeclRefsSV);
 
+    /* Add missing interpolation modifiers */
+    if (shaderTarget_ != ShaderTarget::VertexShader && shaderTarget_ != ShaderTarget::ComputeShader)
+        AddMissingInterpModifiers(entryPoint->inputSemantics.varDeclRefs);
+    if (shaderTarget_ != ShaderTarget::FragmentShader && shaderTarget_ != ShaderTarget::ComputeShader)
+        AddMissingInterpModifiers(entryPoint->outputSemantics.varDeclRefs);
+
     VisitScopedStmntList(ast->globalStmnts);
 }
 
@@ -171,7 +177,7 @@ IMPLEMENT_VISIT_PROC(CodeBlock)
 
 IMPLEMENT_VISIT_PROC(CallExpr)
 {
-    Visit(ast->prefixExpr);
+    VISIT_DEFAULT(CallExpr);
 
     if (ast->intrinsic != Intrinsic::Undefined)
     {
@@ -211,8 +217,6 @@ IMPLEMENT_VISIT_PROC(CallExpr)
         ConvertIntrinsicCall(ast);
     else
         ConvertFunctionCall(ast);
-
-    VISIT_DEFAULT(CallExpr);
 }
 
 IMPLEMENT_VISIT_PROC(SwitchCase)
@@ -284,7 +288,7 @@ IMPLEMENT_VISIT_PROC(StructDecl)
     {
         while (Fetch(ast->ident))
             RenameIdentOf(ast);
-        
+
         RegisterDeclIdent(ast);
     }
 
@@ -855,6 +859,10 @@ void GLSLConverter::ConvertIntrinsicCall(CallExpr* ast)
             ConvertIntrinsicCallSaturate(ast);
             break;
 
+        case Intrinsic::F32toF16:
+            ConvertIntrisicCallF32toF16(ast);
+            break;
+
         case Intrinsic::Tex1DLod:
         case Intrinsic::Tex2DLod:
         case Intrinsic::Tex3DLod:
@@ -909,6 +917,36 @@ void GLSLConverter::ConvertIntrinsicCallSaturate(CallExpr* ast)
         RuntimeErr(R_InvalidIntrinsicArgCount(ast->ident, 1, ast->arguments.size()), ast);
 }
 
+void GLSLConverter::ConvertIntrisicCallF32toF16(CallExpr* ast)
+{
+    /* Convert "f32tof16(x)" to "packHalf2x16(vec2(x, 0))" */
+    if (ast->arguments.size() == 1)
+    {
+        auto argTypeDen = ast->arguments.front()->GetTypeDenoter()->GetSub();
+        if (argTypeDen->IsBase())
+        {
+            auto& args = ast->arguments;
+
+            /* Change intrinsic to "packHalf2x16" and generate new c'tor arguments */
+            ast->intrinsic = Intrinsic::PackHalf2x16;
+
+            auto typeDenoter = std::make_shared<BaseTypeDenoter>(DataType::Float2);
+
+            std::vector<ExprPtr> ctorArgs =
+            {
+                args[0],
+                ASTFactory::MakeLiteralExpr(DataType::Float, "0")
+            };
+
+            args[0] = ASTFactory::MakeTypeCtorCallExpr(typeDenoter, ctorArgs);
+        }
+        else
+            RuntimeErr(R_InvalidIntrinsicArgType(ast->ident), ast->arguments.front().get());
+    }
+    else
+        RuntimeErr(R_InvalidIntrinsicArgCount(ast->ident, 1, ast->arguments.size()), ast);
+}
+
 static int GetTextureDimFromIntrinsicCall(CallExpr* ast)
 {
     /* Get buffer object from sample intrinsic call */
@@ -931,17 +969,26 @@ void GLSLConverter::ConvertIntrinsicCallTextureLOD(CallExpr* ast)
             /* Convert arguments */
             ExprConverter::ConvertExprIfCastRequired(args[1], DataType::Float4, true);
 
-            /* Generate temporary variable with second argument, and insert its declaration statement before the intrinsic call */
-            auto tempVarIdent           = MakeTempVarIdent();
-            auto tempVarTypeSpecifier   = ASTFactory::MakeTypeSpecifier(args[1]->GetTypeDenoter());
-            auto tempVarDeclStmnt       = ASTFactory::MakeVarDeclStmnt(tempVarTypeSpecifier, tempVarIdent, args[1]);
-            auto tempVarExpr            = ASTFactory::MakeObjectExpr(tempVarIdent, tempVarDeclStmnt->varDecls.front().get());
+            /* Split expression into two sub expression, one for the ".xyz" part and one for the ".w" part */
+            ExprPtr subExpr;
 
-            InsertStmntBefore(tempVarDeclStmnt);
+            if (!args[1]->IsTrivialCopyable())
+            {
+                /* Generate temporary variable with second argument, and insert its declaration statement before the intrinsic call */
+                auto tempVarIdent           = MakeTempVarIdent();
+                auto tempVarTypeSpecifier   = ASTFactory::MakeTypeSpecifier(args[1]->GetTypeDenoter());
+                auto tempVarDeclStmnt       = ASTFactory::MakeVarDeclStmnt(tempVarTypeSpecifier, tempVarIdent, args[1]);
+                auto tempVarExpr            = ASTFactory::MakeObjectExpr(tempVarIdent, tempVarDeclStmnt->varDecls.front().get());
+
+                InsertStmntBefore(tempVarDeclStmnt);
+
+                subExpr = ASTFactory::MakeObjectExpr(tempVarDeclStmnt->varDecls.front().get());
+            }
+            else
+                subExpr = args[1];
 
             const std::string vectorSubscript = "xyzw";
 
-            auto subExpr    = ASTFactory::MakeObjectExpr(tempVarDeclStmnt->varDecls.front().get());
             auto arg1Expr   = ASTFactory::MakeObjectExpr(subExpr, vectorSubscript.substr(0, textureDim));
             auto arg2Expr   = ASTFactory::MakeObjectExpr(subExpr, "w");
 
@@ -1242,7 +1289,7 @@ void GLSLConverter::ConvertFunctionCall(CallExpr* ast)
         {
             if (funcDecl->IsStatic())
             {
-                /* Drop prefix expression, since GLSL does not only allow member functions */
+                /* Drop prefix expression, since GLSL does not allow member functions */
                 ast->prefixExpr.reset();
             }
             else
@@ -1418,6 +1465,24 @@ void GLSLConverter::ConvertEntryPointReturnStmntToCodeBlock(StmntPtr& stmnt)
         {
             /* Convert statement into a code block statement */
             stmnt = ASTFactory::MakeCodeBlockStmnt(stmnt);
+        }
+    }
+}
+
+void GLSLConverter::AddMissingInterpModifiers(const std::vector<VarDecl*>& varDecls)
+{
+    for (auto varDecl : varDecls)
+    {
+        if (auto baseTypeDen = varDecl->GetTypeDenoter()->GetAliased().As<BaseTypeDenoter>())
+        {
+            if (auto typeSpecifier = varDecl->FetchTypeSpecifier())
+            {
+                if (IsIntegralType(baseTypeDen->dataType))
+                {
+                    /* GLSL requires 'flat' modifier for integer types */
+                    typeSpecifier->interpModifiers.insert(InterpModifier::NoInterpolation);
+                }
+            }
         }
     }
 }

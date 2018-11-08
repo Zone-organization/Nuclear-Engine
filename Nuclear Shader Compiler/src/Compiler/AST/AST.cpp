@@ -1,7 +1,7 @@
 /*
  * AST.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -97,9 +97,23 @@ const ObjectExpr* Expr::FetchLValueExpr() const
     return nullptr;
 }
 
+ObjectExpr* Expr::FetchLValueExpr()
+{
+    /*
+    Use const function and cast the constness away,
+    which is allowed here, since this is a non-const member function
+    */
+    return const_cast<ObjectExpr*>(const_cast<const Expr*>(this)->FetchLValueExpr());
+}
+
 IndexedSemantic Expr::FetchSemantic() const
 {
     return Semantic::Undefined;
+}
+
+bool Expr::IsTrivialCopyable(unsigned int /*maxTreeDepth*/) const
+{
+    return false;
 }
 
 const Expr* Expr::Find(const FindPredicateConstFunctor& predicate, unsigned int flags) const
@@ -250,7 +264,7 @@ std::string Register::ToString() const
     std::string s;
 
     s += "Register(";
-    
+
     if (registerType == RegisterType::Undefined)
         s += R_Undefined;
     else
@@ -359,7 +373,7 @@ std::string TypeSpecifier::ToString() const
 
     if (isUniform)
         s += "uniform ";
-    
+
     if (IsConst())
         s += "const ";
 
@@ -590,6 +604,18 @@ void VarDecl::AddFlagsRecursive(unsigned int varFlags)
     }
 }
 
+bool VarDecl::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset)
+{
+    try
+    {
+        return GetTypeDenoter()->AccumAlignedVectorSize(size, padding, offset);
+    }
+    catch (const std::exception&)
+    {
+        return false;
+    }
+}
+
 
 /* ----- BufferDecl ----- */
 
@@ -782,7 +808,7 @@ bool StructDecl::HasNonSystemValueMembers() const
     /* Check if base structure has any non-system-value members */
     if (baseStructRef && baseStructRef->HasNonSystemValueMembers())
         return true;
-    
+
     /* Search for non-system-value member */
     for (const auto& member : varMembers)
     {
@@ -997,6 +1023,18 @@ VarDecl* StructDecl::IndexToMemberVar(std::size_t idx, bool includeBaseStructs) 
     return FindIndexOfStructMemberVar(*this, idx, includeBaseStructs);
 }
 
+bool StructDecl::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset)
+{
+    for (const auto& member : varMembers)
+    {
+        /* Store offset only for first element */
+        if (!member->AccumAlignedVectorSize(size, padding, offset))
+            return false;
+        offset = nullptr;
+    }
+    return true;
+}
+
 
 /* ----- AliasDecl ----- */
 
@@ -1167,8 +1205,9 @@ bool FunctionDecl::EqualsSignature(const FunctionDecl& rhs, const Flags& compare
     /* Compare parameter type denoters */
     for (std::size_t i = 0; i < parameters.size(); ++i)
     {
-        auto lhsTypeDen = parameters[i]->typeSpecifier->typeDenoter.get();
-        auto rhsTypeDen = rhs.parameters[i]->typeSpecifier->typeDenoter.get();
+        /* Get type denoters from <VarDecl>, since array dimensions are stored there, while the type specifier only holds its base type */
+        const auto& lhsTypeDen = parameters[i]->varDecls.front()->GetTypeDenoter();
+        const auto& rhsTypeDen = rhs.parameters[i]->varDecls.front()->GetTypeDenoter();
 
         if (!lhsTypeDen->Equals(*rhsTypeDen, compareFlags))
             return false;
@@ -1272,8 +1311,10 @@ static void ListAllFuncCandidates(const std::vector<FunctionDecl*>& candidates)
 };
 
 FunctionDecl* FunctionDecl::FetchFunctionDeclFromList(
-    const std::vector<FunctionDecl*>& funcDeclList, const std::string& ident,
-    const std::vector<TypeDenoterPtr>& argTypeDenoters, bool throwErrorIfNoMatch)
+    const std::vector<FunctionDecl*>&   funcDeclList,
+    const std::string&                  ident,
+    const std::vector<TypeDenoterPtr>&  argTypeDenoters,
+    bool                                throwErrorIfNoMatch)
 {
     if (funcDeclList.empty())
     {
@@ -1413,6 +1454,28 @@ TypeModifier UniformBufferDecl::DeriveCommonStorageLayout(const TypeModifier def
     return commonStorageLayout;
 }
 
+bool UniformBufferDecl::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset)
+{
+    if (bufferType == UniformBufferType::ConstantBuffer)
+    {
+        /* Accumulate size for each member */
+        for (const auto& member : varMembers)
+        {
+            /* Store offset only for first element */
+            member->AccumAlignedVectorSize(size, padding, offset);
+            offset = nullptr;
+        }
+
+        /* Accumulate remaining padding */
+        auto remainingPadding = RemainingVectorSize(size);
+        size += remainingPadding;
+        padding += remainingPadding;
+
+        return true;
+    }
+    return false;
+}
+
 
 /* ----- BufferDeclStmnt ----- */
 
@@ -1484,6 +1547,14 @@ VarDecl* VarDeclStmnt::FetchVarDecl(const std::string& ident) const
     return nullptr;
 }
 
+VarDecl* VarDeclStmnt::FetchUniqueVarDecl() const
+{
+    if (varDecls.size() == 1)
+        return varDecls.front().get();
+    else
+        return nullptr;
+}
+
 bool VarDeclStmnt::IsInput() const
 {
     return typeSpecifier->IsInput();
@@ -1548,6 +1619,18 @@ StructDecl* VarDeclStmnt::FetchStructDeclRef() const
         return nullptr;
     else
         return varDecls.front()->structDeclRef;
+}
+
+bool VarDeclStmnt::AccumAlignedVectorSize(unsigned int& size, unsigned int& padding, unsigned int* offset)
+{
+    for (const auto& varDecl : varDecls)
+    {
+        /* Store offset only for first element */
+        if (!varDecl->AccumAlignedVectorSize(size, padding, offset))
+            return false;
+        offset = nullptr;
+    }
+    return true;
 }
 
 
@@ -1623,42 +1706,42 @@ void LiteralExpr::ConvertDataType(const DataType type)
         switch (type)
         {
             case DataType::Bool:
-                variant.ToBool();
+                variant = variant.ToBool();
                 value = variant.ToString();
                 break;
 
             case DataType::Int:
-                variant.ToInt();
+                variant = variant.ToInt();
                 value = variant.ToString();
                 break;
 
             case DataType::UInt:
-                variant.ToInt();
+                variant = variant.ToInt();
                 value = variant.ToString() + "u";
                 break;
 
             case DataType::Half:
                 if (dataType != DataType::Double)
                 {
-                    variant.ToReal();
+                    variant = variant.ToReal();
                     value = variant.ToString();
                 }
                 break;
-                
+
             case DataType::Float:
                 if (dataType != DataType::Double)
                 {
-                    variant.ToReal();
+                    variant = variant.ToReal();
                     value = variant.ToString();
                 }
                 value.push_back('f');
                 break;
-                
+
             case DataType::Double:
-                variant.ToReal();
+                variant = variant.ToReal();
                 value = variant.ToString();
                 break;
-                
+
             default:
                 break;
         }
@@ -1970,21 +2053,23 @@ IndexedSemantic CallExpr::FetchSemantic() const
         return Semantic::Undefined;
 }
 
+#if 0//UNUSED
 std::vector<Expr*> CallExpr::GetArguments() const
 {
     std::vector<Expr*> args;
-    args.reserve(arguments.size() + defaultArgumentRefs.size());
+    args.reserve(arguments.size() + defaultParamRefs.size());
 
     /* Add explicit arguments */
     for (const auto& arg : arguments)
         args.push_back(arg.get());
 
     /* Add remaining default arguments */
-    for (auto arg : defaultArgumentRefs)
-        args.push_back(arg);
+    for (auto param : defaultParamRefs)
+        args.push_back(param->initializer.get());
 
     return args;
 }
+#endif
 
 FunctionDecl* CallExpr::GetFunctionDecl() const
 {
@@ -2014,7 +2099,7 @@ void CallExpr::ForEachOutputArgument(const ExprIteratorFunctor& iterator)
             for (std::size_t i = 0, n = std::min(arguments.size(), parameters.size()); i < n; ++i)
             {
                 if (parameters[i]->IsOutput())
-                    iterator(arguments[i]);
+                    iterator(arguments[i], parameters[i]->FetchUniqueVarDecl());
             }
         }
         else if (intrinsic != Intrinsic::Undefined)
@@ -2024,7 +2109,7 @@ void CallExpr::ForEachOutputArgument(const ExprIteratorFunctor& iterator)
             for (auto paramIndex : outputParamIndices)
             {
                 if (paramIndex < arguments.size())
-                    iterator(arguments[paramIndex]);
+                    iterator(arguments[paramIndex], nullptr);
             }
         }
     }
@@ -2186,7 +2271,7 @@ TypeDenoterPtr ObjectExpr::DeriveTypeDenoter(const TypeDenoter* /*expectedTypeDe
         else
             return prefixExpr->GetTypeDenoter()->GetSub(this);
     }
-    
+
     RuntimeErr(R_UnknownTypeOfObjectIdentSymbolRef(ident), this);
 }
 
@@ -2253,6 +2338,26 @@ IndexedSemantic ObjectExpr::FetchSemantic() const
         return prefixExpr->FetchSemantic();
     }
     return Semantic::Undefined;
+}
+
+bool ObjectExpr::IsTrivialCopyable(unsigned int maxTreeDepth) const
+{
+    if (symbolRef)
+    {
+        /* Does this expression refer to a variable? */
+        if (auto varDecl = symbolRef->As<VarDecl>())
+        {
+            if (prefixExpr)
+            {
+                /* Check prefix expression if tree hierarchy is not too long */
+                if (maxTreeDepth > 0)
+                    return prefixExpr->IsTrivialCopyable(maxTreeDepth - 1);
+            }
+            else
+                return true;
+        }
+    }
+    return false;
 }
 
 BaseTypeDenoterPtr ObjectExpr::GetTypeDenoterFromSubscript() const
@@ -2419,7 +2524,7 @@ TypeDenoterPtr InitializerExpr::DeriveTypeDenoter(const TypeDenoter* expectedTyp
             const auto matrixDim        = MatrixTypeDim(baseTypeDen->dataType);
             const auto numTypeElements  = static_cast<std::size_t>(matrixDim.first * matrixDim.second);
             #endif
-            
+
             //TODO: does not work for { 1, v3 } --> float4(1, v3)
 
             #if 0
@@ -2473,7 +2578,7 @@ const Expr* InitializerExpr::Find(const FindPredicateConstFunctor& predicate, un
 std::size_t InitializerExpr::NumElementsUnrolled() const
 {
     std::size_t n = 0;
-    
+
     for (const auto& e : exprs)
     {
         if (auto initSubExpr = e->FindFirstNotOf(AST::Types::BracketExpr)->As<InitializerExpr>())
@@ -2521,7 +2626,7 @@ static ExprPtr FetchSubExprFromInitializerExpr(const InitializerExpr* ast, const
         if (idx >= 0 && static_cast<std::size_t>(idx) < ast->exprs.size())
         {
             auto expr = ast->exprs[idx];
-            
+
             if (layer + 1 == arrayIndices.size())
             {
                 /* Return final sub expression */
@@ -2561,7 +2666,7 @@ static bool NextArrayIndicesFromInitializerExpr(const InitializerExpr* ast, std:
 
             /* Increment index */
             ++idx;
-            
+
             if (static_cast<std::size_t>(idx) == ast->exprs.size())
             {
                 idx = 0;

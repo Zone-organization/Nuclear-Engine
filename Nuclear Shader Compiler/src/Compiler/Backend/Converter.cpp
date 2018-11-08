@@ -1,7 +1,7 @@
 /*
  * Converter.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -238,7 +238,7 @@ void Converter::VisitScopedStmntsFromHandler(const StmntScopeHandler& handler, v
 {
     /* Push scope handler onto stack */
     stmntScopeHandlerStack_.push(handler);
-    
+
     if (!stmntScopeHandlerGlobalRef_)
         stmntScopeHandlerGlobalRef_ = &(stmntScopeHandlerStack_.top());
 
@@ -248,7 +248,7 @@ void Converter::VisitScopedStmntsFromHandler(const StmntScopeHandler& handler, v
     /* Visit all statements from the scope handler */
     while (auto stmnt = activeHandler.Next())
         Visit(stmnt, args);
-    
+
     /* Pop scope handler from stack */
     stmntScopeHandlerStack_.pop();
 
@@ -304,7 +304,7 @@ Stmnt* Converter::StmntScopeHandler::Next()
 void Converter::StmntScopeHandler::InsertStmntBefore(const StmntPtr& stmnt)
 {
     EnsureStmntList();
-    
+
     if (idx_ > 0)
         InsertStmntAt(stmnt, idx_ - 1);
     else

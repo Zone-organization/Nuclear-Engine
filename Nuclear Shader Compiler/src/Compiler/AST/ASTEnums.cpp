@@ -1,7 +1,7 @@
 /*
  * ASTEnums.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -296,6 +296,23 @@ std::string DataTypeToString(const DataType t, bool useTemplateSyntax)
     return R_Undefined;
 }
 
+unsigned int DataTypeSize(const DataType t)
+{
+    if (t >= DataType::Bool && t <= DataType::Double4x4)
+    {
+        auto dim = MatrixTypeDim(t);
+        auto dimSize = static_cast<unsigned int>(dim.first * dim.second);
+        if (IsDoubleRealType(t))
+            return dimSize * 8;
+        if (IsIntegralType(t) || IsSingleRealType(t))
+            return dimSize * 4;
+        if (IsHalfRealType(t))
+            return dimSize * 2;
+        return dimSize;
+    }
+    return 0;
+}
+
 bool IsScalarType(const DataType t)
 {
     return (t >= DataType::Bool && t <= DataType::Double);
@@ -338,6 +355,16 @@ bool IsHalfRealType(const DataType t)
         (t == DataType::Half) ||
         (t >= DataType::Half2 && t <= DataType::Half4) ||
         (t >= DataType::Half2x2 && t <= DataType::Half4x4)
+    );
+}
+
+bool IsSingleRealType(const DataType t)
+{
+    return
+    (
+        (t == DataType::Float) ||
+        (t >= DataType::Float2 && t <= DataType::Float4) ||
+        (t >= DataType::Float2x2 && t <= DataType::Float4x4)
     );
 }
 
@@ -392,7 +419,7 @@ int VectorTypeDim(const DataType t)
         case DataType::Float:
         case DataType::Double:
             return 1;
-    
+
         case DataType::Bool2:
         case DataType::Int2:
         case DataType::UInt2:
@@ -433,7 +460,7 @@ std::pair<int, int> MatrixTypeDim(const DataType t)
         case DataType::Float:
         case DataType::Double:
             return { 1, 1 };
-    
+
         case DataType::Bool2:
         case DataType::Int2:
         case DataType::UInt2:
@@ -796,6 +823,38 @@ DataType DoubleToFloatDataType(const DataType dataType)
     if (dataType >= DataType::Double2x2 && dataType <= DataType::Double4x4)
         return static_cast<DataType>(Idx(dataType) - Idx(DataType::Double2x2) + Idx(DataType::Float2x2));
     return dataType;
+}
+
+unsigned int RemainingVectorSize(unsigned int vectorSize, unsigned int alignment)
+{
+    return (alignment - vectorSize % alignment) % alignment;
+}
+
+bool AccumAlignedVectorSize(const DataType dataType, unsigned int& size, unsigned int& padding, unsigned int* offset)
+{
+    auto dataSize = DataTypeSize(dataType);
+    if (dataSize > 0)
+    {
+        /* Check if data type breaks the 16-byte boundary */
+        auto remainingSize = RemainingVectorSize(size);
+
+        /* Fill up previous vector slot, if data type breaks the 16-byte boundary */
+        if (remainingSize > 0 && dataSize > remainingSize)
+        {
+            size += remainingSize;
+            padding += remainingSize;
+        }
+
+        /* Store offest */
+        if (offset != nullptr)
+            *offset = size;
+
+        /* Append data type size */
+        size += dataSize;
+
+        return true;
+    }
+    return false;
 }
 
 
@@ -1391,7 +1450,7 @@ std::string IndexedSemantic::ToString() const
     }
     else
         s = SemanticToString(semantic_);
-    
+
     s += std::to_string(index_);
 
     return s;
@@ -1595,6 +1654,125 @@ std::string CompareFuncToString(const Reflection::ComparisonFunc t)
 Reflection::ComparisonFunc StringToCompareFunc(const std::string& s)
 {
     return StringToTypeSecondary(DetailsMap2::g_mapCompareFunc, s, "SamplerState::ComparisonFunc");
+}
+
+
+/* ----- Reflection::ResourceType Enum ----- */
+
+std::string ResourceTypeToString(const Reflection::ResourceType t)
+{
+    #define CASE_TO_STRING(IDENT) case Reflection::ResourceType::IDENT: return #IDENT
+
+    switch (t)
+    {
+        case Reflection::ResourceType::Undefined:
+            return R_Undefined;
+
+        CASE_TO_STRING( Texture1D               );
+        CASE_TO_STRING( Texture2D               );
+        CASE_TO_STRING( Texture3D               );
+        CASE_TO_STRING( TextureCube             );
+        CASE_TO_STRING( Texture1DArray          );
+        CASE_TO_STRING( Texture2DArray          );
+        CASE_TO_STRING( TextureCubeArray        );
+        CASE_TO_STRING( Texture2DMS             );
+        CASE_TO_STRING( Texture2DMSArray        );
+
+        CASE_TO_STRING( RWTexture1D             );
+        CASE_TO_STRING( RWTexture2D             );
+        CASE_TO_STRING( RWTexture3D             );
+        CASE_TO_STRING( RWTextureCube           );
+        CASE_TO_STRING( RWTexture1DArray        );
+        CASE_TO_STRING( RWTexture2DArray        );
+        CASE_TO_STRING( RWTextureCubeArray      );
+        CASE_TO_STRING( RWTexture2DMS           );
+        CASE_TO_STRING( RWTexture2DMSArray      );
+
+        CASE_TO_STRING( Sampler1D               );
+        CASE_TO_STRING( Sampler2D               );
+        CASE_TO_STRING( Sampler3D               );
+        CASE_TO_STRING( SamplerCube             );
+        CASE_TO_STRING( Sampler1DArray          );
+        CASE_TO_STRING( Sampler2DArray          );
+        CASE_TO_STRING( SamplerCubeArray        );
+        CASE_TO_STRING( Sampler2DMS             );
+        CASE_TO_STRING( Sampler2DMSArray        );
+        CASE_TO_STRING( Sampler2DRect           );
+
+        CASE_TO_STRING( Buffer                  );
+        CASE_TO_STRING( ByteAddressBuffer       );
+        CASE_TO_STRING( StructuredBuffer        );
+        CASE_TO_STRING( AppendStructuredBuffer  );
+        CASE_TO_STRING( ConsumeStructuredBuffer );
+
+        CASE_TO_STRING( RWBuffer                );
+        CASE_TO_STRING( RWByteAddressBuffer     );
+        CASE_TO_STRING( RWStructuredBuffer      );
+
+        CASE_TO_STRING( ConstantBuffer          );
+        CASE_TO_STRING( TextureBuffer           );
+        CASE_TO_STRING( SamplerState            );
+        CASE_TO_STRING( SamplerComparisonState  );
+    }
+    return "";
+
+    #undef CASE_TO_STRING
+}
+
+Reflection::ResourceType UniformBufferTypeToResourceType(const UniformBufferType t)
+{
+    using Src = UniformBufferType;
+    using Dst = Reflection::ResourceType;
+    switch (t)
+    {
+        case Src::ConstantBuffer:   return Dst::ConstantBuffer;
+        case Src::TextureBuffer:    return Dst::TextureBuffer;
+        default:                    return Dst::Undefined;
+    }
+}
+
+Reflection::ResourceType BufferTypeToResourceType(const BufferType t)
+{
+    using Src = BufferType;
+    using Dst = Reflection::ResourceType;
+    switch (t)
+    {
+        case Src::Buffer:                   return Dst::Buffer;
+        case Src::StructuredBuffer:         return Dst::StructuredBuffer;
+        case Src::ByteAddressBuffer:        return Dst::ByteAddressBuffer;
+        case Src::RWBuffer:                 return Dst::RWBuffer;
+        case Src::RWStructuredBuffer:       return Dst::RWStructuredBuffer;
+        case Src::RWByteAddressBuffer:      return Dst::RWByteAddressBuffer;
+        case Src::AppendStructuredBuffer:   return Dst::AppendStructuredBuffer;
+        case Src::ConsumeStructuredBuffer:  return Dst::ConsumeStructuredBuffer;
+        case Src::RWTexture1D:              return Dst::RWTexture1D;
+        case Src::RWTexture1DArray:         return Dst::RWTexture1DArray;
+        case Src::RWTexture2D:              return Dst::RWTexture2D;
+        case Src::RWTexture2DArray:         return Dst::RWTexture2DArray;
+        case Src::RWTexture3D:              return Dst::RWTexture3D;
+        case Src::Texture1D:                return Dst::Texture1D;
+        case Src::Texture1DArray:           return Dst::Texture1DArray;
+        case Src::Texture2D:                return Dst::Texture2D;
+        case Src::Texture2DArray:           return Dst::Texture2DArray;
+        case Src::Texture3D:                return Dst::Texture3D;
+        case Src::TextureCube:              return Dst::TextureCube;
+        case Src::TextureCubeArray:         return Dst::TextureCubeArray;
+        case Src::Texture2DMS:              return Dst::Texture2DMS;
+        case Src::Texture2DMSArray:         return Dst::Texture2DMSArray;
+        default:                            return Dst::Undefined;
+    }
+}
+
+Reflection::ResourceType SamplerTypeToResourceType(const SamplerType t)
+{
+    using Src = SamplerType;
+    using Dst = Reflection::ResourceType;
+    switch (t)
+    {
+        case Src::SamplerState:             return Dst::SamplerState;
+        case Src::SamplerComparisonState:   return Dst::SamplerComparisonState;
+        default:                            return Dst::Undefined;
+    }
 }
 
 

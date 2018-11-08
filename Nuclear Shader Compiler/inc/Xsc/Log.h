@@ -1,7 +1,7 @@
 /*
  * Log.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -24,9 +24,11 @@ namespace Xsc
 //! Log base class.
 class XSC_EXPORT Log
 {
-    
+
     public:
-        
+
+        virtual ~Log() = default;
+
         //! Submits the specified report.
         virtual void SubmitReport(const Report& report) = 0;
 
@@ -70,6 +72,9 @@ class XSC_EXPORT StdLog : public Log
 
     public:
 
+        StdLog();
+        ~StdLog();
+
         //! Implements the base class interface.
         void SubmitReport(const Report& report) override;
 
@@ -78,20 +83,9 @@ class XSC_EXPORT StdLog : public Log
 
     private:
 
-        struct IndentReport
-        {
-            std::string indent;
-            Report      report;
-        };
-
-        using IndentReportList = std::vector<IndentReport>;
-
-        void PrintReport(const IndentReport& r, bool verbose);
-        void PrintAndClearReports(IndentReportList& reports, bool verbose, const std::string& headline = "");
-
-        IndentReportList infos_;
-        IndentReportList warnings_;
-        IndentReportList errors_;
+        // PImple idiom
+        struct OpaqueData;
+        OpaqueData* data_ = nullptr;
 
 };
 

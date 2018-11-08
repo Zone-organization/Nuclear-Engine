@@ -1,7 +1,7 @@
 /*
  * Token.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -22,9 +22,9 @@ namespace Xsc
 // Token class used by the scanners and parsers.
 class Token
 {
-    
+
     public:
-        
+
         // Token type enumeration.
         enum class Types
         {
@@ -80,10 +80,10 @@ class Token
             Do,                 // do
             While,              // while
             For,                // for
-            
+
             If,                 // if
             Else,               // else
-            
+
             Switch,             // switch
             Case,               // case
             Default,            // default

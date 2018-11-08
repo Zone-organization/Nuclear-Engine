@@ -1,7 +1,7 @@
 /*
  * Targets.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -64,13 +64,13 @@ XSC_EXPORT std::string ToString(const OutputShaderVersion shaderVersion)
         case OutputShaderVersion::GLSL450:  return "GLSL 4.50";
         case OutputShaderVersion::GLSL460:  return "GLSL 4.60";
         case OutputShaderVersion::GLSL:     return "GLSL";
-        
+
         case OutputShaderVersion::ESSL100:  return "ESSL 1.00";
         case OutputShaderVersion::ESSL300:  return "ESSL 3.00";
         case OutputShaderVersion::ESSL310:  return "ESSL 3.10";
         case OutputShaderVersion::ESSL320:  return "ESSL 3.20";
         case OutputShaderVersion::ESSL:     return "ESSL";
-        
+
         case OutputShaderVersion::VKSL450:  return "VKSL 4.50";
         case OutputShaderVersion::VKSL:     return "VKSL";
     }

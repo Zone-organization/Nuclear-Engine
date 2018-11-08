@@ -1,7 +1,7 @@
 /*
  * StructParameterAnalyzer.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -25,14 +25,14 @@ structures are used for another reason than entry-point parameters.
 */
 class StructParameterAnalyzer : private VisitorTracker
 {
-    
+
     public:
-        
+
         // Marks all declarational AST nodes (i.e. function decl, structure decl etc.) that are reachable from the specififed entry point.
         void MarkStructsFromEntryPoint(Program& program, const ShaderTarget shaderTarget);
 
     private:
-        
+
         // Returns true if the specified AST has not yet been visited.
         bool NotVisited(const AST* ast);
 
@@ -65,7 +65,7 @@ class StructParameterAnalyzer : private VisitorTracker
 
         Program*                program_        = nullptr;
         ShaderTarget            shaderTarget_   = ShaderTarget::VertexShader;
-        
+
         std::set<const AST*>    visitSet_;
 
 };

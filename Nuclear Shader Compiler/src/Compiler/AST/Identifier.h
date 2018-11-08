@@ -1,7 +1,7 @@
 /*
  * Identifier.h
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -71,12 +71,12 @@ class Identifier
 
         bool        originalSet_    = false;
         std::string original_;
-        
+
         bool        renamedSet_     = false;
         std::string renamed_;
 
         int         counter_        = 0;
-    
+
 };
 
 

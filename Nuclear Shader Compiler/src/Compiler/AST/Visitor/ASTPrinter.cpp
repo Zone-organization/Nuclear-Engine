@@ -1,7 +1,7 @@
 /*
  * ASTPrinter.cpp
  * 
- * This file is part of the XShaderCompiler project (Copyright (c) 2014-2017 by Lukas Hermanns)
+ * This file is part of the XShaderCompiler project (Copyright (c) 2014-2018 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
@@ -52,6 +52,12 @@ template <>
 inline std::string MemberToString<std::string>(const std::string& member)
 {
     return member;
+}
+
+template <>
+inline std::string MemberToString<int>(const int& member)
+{
+    return std::to_string(member);
 }
 
 template <>
@@ -131,7 +137,8 @@ IMPLEMENT_VISIT_PROC(Register)
 {
     PushPrintable(ast, WriteLabel("Register"));
     {
-        // do nothing
+        Printable(ast, "registerType", std::string(1, RegisterTypeToChar(ast->registerType)));
+        ADD_PRINTABLE_MEMBER(slot);
     }
     PopPrintable();
 }
@@ -140,7 +147,8 @@ IMPLEMENT_VISIT_PROC(PackOffset)
 {
     PushPrintable(ast, WriteLabel("PackOffset"));
     {
-        // do nothing
+        ADD_PRINTABLE_MEMBER(registerName);
+        ADD_PRINTABLE_MEMBER(vectorComponent);
     }
     PopPrintable();
 }
@@ -173,6 +181,7 @@ IMPLEMENT_VISIT_PROC(VarDecl)
         ADD_PRINTABLE_MEMBER(ident);
         VISIT_MEMBER(namespaceExpr);
         VISIT_MEMBER(arrayDims);
+        VISIT_MEMBER(slotRegisters);
         VISIT_MEMBER(packOffset);
         VISIT_MEMBER(annotations);
         VISIT_MEMBER(initializer);
@@ -611,7 +620,7 @@ std::string ASTPrinter::WriteLabel(const std::string& astName, TypedAST* ast)
     if (ast)
     {
         s += " <";
-        
+
         try
         {
             s += ast->GetTypeDenoter()->ToString();
