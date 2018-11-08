@@ -8,7 +8,7 @@
 namespace NuclearEngine {
 	namespace Internal {
 		
-		Assets::Mesh & AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc, Assets::Material* _material)
+		Assets::Mesh & AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc, Assets::Material& _material)
 		{
 			Log.Info("[AssetManager] Loading Mesh: " + Path + "\n");
 			LoadingDesc = desc;
@@ -32,7 +32,7 @@ namespace NuclearEngine {
 			Log.Info("[AssetManager] Loaded Mesh: " + Path + "\n");
 
 			Managers::AssetManager::mImportedMaterials[hashedname] = material;
-			_material = &Managers::AssetManager::mImportedMaterials[hashedname];
+			_material = Managers::AssetManager::mImportedMaterials[hashedname];
 			return 	Managers::AssetManager::mImportedMeshes[hashedname] = model;
 
 		}

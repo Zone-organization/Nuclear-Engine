@@ -47,7 +47,7 @@ namespace NuclearEngine {
 			return Data;
 		}
 		
-		Assets::Mesh & AssetManager::LoadMesh_Assimp(const std::string & Path, Assets::Material* material, const Managers::MeshLoadingDesc & desc)
+		Assets::Mesh & AssetManager::LoadMesh_Assimp(const std::string & Path, Assets::Material& material, const Managers::MeshLoadingDesc & desc)
 		{
 			Internal::AssimpImporter importer;
 			return importer.Load(Path, desc, material);
@@ -80,7 +80,7 @@ namespace NuclearEngine {
 			mHashedTexturesNames.clear();
 		}
 
-		Assets::Mesh & AssetManager::Import(const std::string & Path, const MeshLoadingDesc &desc, Assets::Material* material)
+		Assets::Mesh & AssetManager::Import(const std::string & Path, const MeshLoadingDesc &desc, Assets::Material& material)
 		{
 			// TODO: insert return statement here
 			return LoadMesh_Assimp(Path, material, desc);

@@ -11,7 +11,7 @@ namespace NuclearEngine {
 	
 		class AssimpImporter {
 		public:
-			Assets::Mesh & Load(const std::string& Path, const Managers::MeshLoadingDesc& desc, Assets::Material* material);
+			Assets::Mesh & Load(const std::string& Path, const Managers::MeshLoadingDesc& desc, Assets::Material& material);
 		private:
 
 			void ProcessNode(aiNode *node, const aiScene *scene);

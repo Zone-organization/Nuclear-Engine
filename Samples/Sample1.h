@@ -15,7 +15,9 @@ protected:
 	Assets::Mesh SphereAsset;
 	Assets::Mesh NanosuitAsset;
 
-	Assets::Material* NanosuitMaterial;
+	Assets::Material CubeMaterial;
+	Assets::Material SphereMaterial;
+	Assets::Material NanosuitMaterial;
 
 	//Default states
 	Graphics::API::CommonStates states;
@@ -112,24 +114,22 @@ public:
 		pointlight9.SetPosition(pointLightPositions[8]);
 		pointlight9.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 	}
-	void SetupTextures()
-	{
-		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
-		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
-		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
-	}
 	void SetupAssets()
 	{
-		SetupTextures();
-
+		//Cube Creation
+		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
+		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
 		std::vector<Assets::Texture> Textures;
 		Textures.push_back(DiffuseTex);
 		Textures.push_back(SpecularTex);
 
 		Assets::Mesh::CreateCube(&CubeAsset, Textures);
 		CubeAsset.Initialize(&Renderer->GetVertexShader());
-
+		//CubeMaterial.mPixelShaderTextures = Textures;
 		Textures.clear();
+
+		//Sphere Creation
+		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
 
 		std::vector<Assets::Texture> SphereTextures;
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
@@ -140,12 +140,13 @@ public:
 		Assets::Mesh::CreateSphere(&SphereAsset, SphereTextures);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
 
+		//NanoSuit Creation
 		Managers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
 		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
-
+		//NanosuitMaterial = Managers::AssetManager::mImportedMaterials.at(0);
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
 		{
@@ -169,7 +170,7 @@ public:
 		//Assign Components
 		ECube.Assign<Components::MeshComponent>(&CubeAsset , true);
 		ELamp.Assign<Components::MeshComponent>(&SphereAsset , true);
-		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset);
+		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
 
 	}
 	void Load()

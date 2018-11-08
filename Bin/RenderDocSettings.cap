@@ -5,7 +5,7 @@
         "commandLine": "",
         "environment": [
         ],
-        "executable": "E:\\Zone\\Nuclear-Project\\Bin\\DebugX86\\Samples.exe",
+        "executable": "F:\\Zone\\Nuclear-Project\\Bin\\DebugX86\\Samples.exe",
         "inject": false,
         "options": {
             "allowFullscreen": true,
@@ -18,9 +18,8 @@
             "delayForDebugger": 0,
             "hookIntoChildren": false,
             "refAllResources": false,
-            "saveAllInitials": false,
             "verifyMapWrites": false
         },
-        "workingDir": "E:/Zone/Nuclear-Project/Samples"
+        "workingDir": "F:/Zone/Nuclear-Project/Samples"
     }
 }

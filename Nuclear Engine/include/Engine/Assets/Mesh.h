@@ -37,13 +37,13 @@ namespace NuclearEngine {
 			struct SubMesh {
 				struct SubMeshData
 				{
-					std::vector<Math::Vector3> Positions;
-					std::vector<Math::Vector2> UV;
-					std::vector<Math::Vector3> Normals;
-					std::vector<Math::Vector3> Tangents;
+					std::vector<Math::Vector3> Positions = std::vector<Math::Vector3>{};
+					std::vector<Math::Vector2> UV = std::vector<Math::Vector2>{};
+					std::vector<Math::Vector3> Normals = std::vector<Math::Vector3>{};
+					std::vector<Math::Vector3> Tangents = std::vector<Math::Vector3>{};
 
-					std::vector<unsigned int> indices;
-					Uint32 TexSetIndex;
+					std::vector<unsigned int> indices = std::vector<unsigned int>{};
+					Uint32 TexSetIndex = 0;
 				};
 
 				/*  Mesh Data  */

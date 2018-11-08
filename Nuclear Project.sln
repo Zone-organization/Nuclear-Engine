@@ -5,6 +5,7 @@ VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclear Engine", "Nuclear Engine\Nuclear Engine.vcxproj", "{1E657253-3D76-4C77-A747-4D85EEFA91DA}"
 	ProjectSection(ProjectDependencies) = postProject
+		{EF2F3F08-6DD4-4957-A31C-589DED7D97CE} = {EF2F3F08-6DD4-4957-A31C-589DED7D97CE}
 		{F2183A10-A26F-4A58-A4EB-DBD2B8D41801} = {F2183A10-A26F-4A58-A4EB-DBD2B8D41801}
 	EndProjectSection
 EndProject
