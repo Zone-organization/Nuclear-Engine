@@ -163,13 +163,15 @@ public:
 	void SetupEntities()
 	{
 		//Create Entities
-		ECube = SampleScene.Entities.Create();
-		ELamp = SampleScene.Entities.Create();
+		//ECube = SampleScene.Entities.Create();
+		//ELamp = SampleScene.Entities.Create();
 		ENanosuit = SampleScene.Entities.Create();
 
 		//Assign Components
 		//ECube.Assign<Components::MeshComponent>(&CubeAsset , true);
 		//ELamp.Assign<Components::MeshComponent>(&SphereAsset , true);
+		ENanosuit.Assign<Components::TransformComponent>();
+
 		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
 
 	}
@@ -287,7 +289,8 @@ public:
 		NanosuitMatrix = Math::translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
 		NanosuitMatrix = Math::scale(NanosuitMatrix, Math::Vector3(0.25f));
 		NanosuitMatrix = Math::rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
-		ENanosuit.mTransform.mTransform = NanosuitMatrix;
+
+		ENanosuit.GetComponent<Components::TransformComponent>().Get()->mTransform = NanosuitMatrix;
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());

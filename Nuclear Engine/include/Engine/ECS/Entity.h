@@ -29,7 +29,6 @@
 #include <type_traits>
 #include <functional>
 #include <Base\NE_Common.h>
-#include "Engine/Transform/Transform.h"
 #include "Base/Utilities/Pool.h"
 #include "ECSConfig.h"
 #include "Event.h"
@@ -74,9 +73,9 @@ namespace NuclearEngine {
 				uint32_t index() const { return id_ & 0xffffffffUL; }
 				uint32_t version() const { return id_ >> 32; }
 				
+
 			private:
 				friend class EntityManager;
-
 				uint64_t id_;
 			};
 
@@ -109,8 +108,6 @@ namespace NuclearEngine {
 			bool operator < (const Entity &other) const {
 				return other.id_ < id_;
 			}
-
-			Transform mTransform;
 
 			/**
 			 * Is this Entity handle Valid?
@@ -577,6 +574,7 @@ namespace NuclearEngine {
 					free_list_.pop_back();
 					version = entity_version_[index];
 				}
+
 				Entity entity(this, Entity::Id(index, version));
 				event_manager_.Emit<EntityCreatedEvent>(entity);
 				return entity;

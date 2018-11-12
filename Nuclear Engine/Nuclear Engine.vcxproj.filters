@@ -11,7 +11,6 @@
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
-    <ClInclude Include="include\Engine\Transform\Transform.h" />
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="include\Engine\Physics3D\Collider.h" />
     <ClInclude Include="include\Engine\Physics3D\Physics3DEngine.h" />
@@ -290,6 +289,7 @@
     <ClInclude Include="include\Experimental\ImGui\imgui.h" />
     <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Binding.h" />
     <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.h" />
+    <ClInclude Include="include\Engine\Components\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -357,7 +357,6 @@
     <ClCompile Include="Source\Engine\Physics3D\PhysicsScene.cpp" />
     <ClCompile Include="Source\Engine\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
-    <ClCompile Include="Source\Engine\Transform\Transform.cpp" />
     <ClCompile Include="Source\Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\Light.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
@@ -392,6 +391,7 @@
     <ClCompile Include="Source\Experimental\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Binding.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.cpp" />
+    <ClCompile Include="Source\Engine\Components\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

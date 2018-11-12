@@ -557,7 +557,7 @@
     <ClInclude Include="include\Experimental\Stella\Sprite.h" />
     <ClInclude Include="include\Experimental\Stella\SpriteSheet.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
-    <ClInclude Include="include\Engine\Transform\Transform.h" />
+    <ClInclude Include="include\Engine\Components\TransformComponent.h" />
     <ClInclude Include="include\Engine\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Engine\Graphics\API\Context.h" />
     <ClInclude Include="include\Base\BuildConfig.h" />
@@ -703,7 +703,7 @@
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_sse42.cc" />
-    <ClCompile Include="Source\Engine\Transform\Transform.cpp" />
+    <ClCompile Include="Source\Engine\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\Context.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />

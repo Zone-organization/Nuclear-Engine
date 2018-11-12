@@ -3,7 +3,7 @@
 #include <Engine/Graphics/API/ConstantBuffer.h>
 #include <Engine/Graphics/API/ShaderCompiler.h>
 #include <Engine\Graphics\API\Context.h>
-#include <Engine\Transform\Transform.h>
+#include <Engine\Components/TransformComponent.h>
 #include <Engine\Managers\ShaderManager.h>
 #include <Engine\Assets\Material.h>
 
@@ -197,12 +197,8 @@ namespace NuclearEngine
 			{
 				if (!MeshObject.Get()->mMultiRender)
 				{
-					Math::Matrix4 NanosuitMatrix(1.0f);
-					NanosuitMatrix = Math::translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-					NanosuitMatrix = Math::scale(NanosuitMatrix, Math::Vector3(0.25f));
-					//NanosuitMatrix = Math::rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
 					//entity.GetTransform()->Update();
-					ActiveCamera->SetModelMatrix(NanosuitMatrix/*entity.mTransform.GetTransformMatrix()*/);
+					ActiveCamera->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->GetTransformMatrix());
 					InstantRender(MeshObject.Get());
 				}
 				else 
