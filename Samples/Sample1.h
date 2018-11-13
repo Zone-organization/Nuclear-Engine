@@ -146,6 +146,9 @@ public:
 		ModelDesc.LoadSpecularTextures = true;
 		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
 		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
+
+		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());
+
 		//NanosuitMaterial = Managers::AssetManager::mImportedMaterials.at(0);
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths

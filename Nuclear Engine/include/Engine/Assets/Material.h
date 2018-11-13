@@ -10,23 +10,21 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-		struct ShaderTextureInfo
+	
+		struct ShaderTexture
 		{
-			ShaderTextureInfo() { mSlot = 0; }
-			ShaderTextureInfo(const Assets::Texture& _tex, Uint8 _slot)
-				: mDefaultTexture(_tex) , mSlot(_slot)
-			{
-			}
-			Assets::Texture mDefaultTexture;
+			ShaderTexture() { mSlot = 0; }
+			ShaderTexture(const Assets::Texture& _tex, Uint8 _slot = 14)	: mTexture(_tex) , mSlot(_slot)	{	}
+			Assets::Texture mTexture;
 			Uint8 mSlot;
 		};
 
-		typedef	std::vector<Assets::Texture> TextureSet;
+		typedef	std::vector<Assets::ShaderTexture> TextureSet;
 			
 		/*
 			Material class defines how should the rendering system render the mesh,
 			it contains all the info about textures & vertex, pixel shaders.
-			Note: Textures and material parsing is available in PixelShader only "currently"!
+			Note: Textures and material parsing is "currently" available in PixelShader only!
 		*/			
 		class NEAPI Material
 		{
@@ -45,7 +43,7 @@ namespace NuclearEngine
 
 			//PixelShader Textures
 			std::vector<TextureSet> mPixelShaderTextures;
-			std::vector<ShaderTextureInfo> PixelShaderTS;
+			std::vector<ShaderTexture> PixelShaderTS;
 		private:
 			void ParsePixelShader();
 			Graphics::API::ConstantBuffer mCbuffer;
