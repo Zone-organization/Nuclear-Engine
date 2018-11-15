@@ -219,36 +219,33 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{
-			if (object->mMesh)
+			if (object == nullptr)
 			{
-				for (size_t i = 0; i < object->mMesh->SubMeshes.size(); i++)
-				{
-					InstantRender(&object->mMesh->SubMeshes.at(i),object->mMaterial);
-				}
+				Log.Error("[RenderSystem] Skipped Rendering invalid MeshComponent...\n");
+				return;
 			}
-		}
-		void RenderSystem::InstantRender(Assets::Mesh * object, Assets::Material* material)
-		{
-			for (size_t i = 0; i< object->SubMeshes.size(); i++)
+			if (object->mMesh == nullptr)
 			{
-				InstantRender(&object->SubMeshes.at(i), material);
+				Log.Error("[RenderSystem] Skipped Rendering invalid Mesh...\n");
+				return;
 			}
-		}
-		void RenderSystem::InstantRender(Assets::Mesh::SubMesh * mesh, Assets::Material* material)
-		{
-			if (mesh == nullptr)
+			if (object->mMaterial == nullptr)
 			{
-				Log.Error("[RenderSystem] Rendering invalid Mesh...\n");
-			}
-			if (material == nullptr)
-			{
-				Log.Error("[RenderSystem] Rendering Mesh with invalid Material...\n");
+				Log.Error("[RenderSystem] Skipped Rendering Mesh with invalid Material...\n");
+				return;
 			}
 
-			material->BindTexSet(mesh->data.TexSetIndex);
-			mesh->VBO.Bind();
-			mesh->IBO.Bind();
-			Graphics::API::Context::DrawIndexed(mesh->IndicesCount);
+			InstantRender(object->mMesh, object->mMaterial);
+		}
+		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
+		{
+			for (size_t i = 0; i< mesh->SubMeshes.size(); i++)
+			{
+				material->BindTexSet(mesh->SubMeshes.at(i).data.TexSetIndex);
+				mesh->SubMeshes.at(i).VBO.Bind();
+				mesh->SubMeshes.at(i).IBO.Bind();
+				Graphics::API::Context::DrawIndexed(mesh->SubMeshes.at(i).IndicesCount);
+			}
 		}
 		void RenderSystem::RenderToPostProcessingRT()
 		{

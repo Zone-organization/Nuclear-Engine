@@ -7,6 +7,7 @@ namespace NuclearEngine
 	namespace Assets
 	{
 		Material::Material()
+			: mPixelShaderTextures(std::vector<TextureSet>()), PixelShaderTS(std::vector<ShaderTexture>())
 		{
 		}
 		Material::~Material()
@@ -24,9 +25,13 @@ namespace NuclearEngine
 
 		void Material::BindTexSet(Uint32 index)
 		{
-			for (auto tex : mPixelShaderTextures.at(index))
+			//TODO: Check if all Slots have been occupied and then bind the free ones to fix some glitches
+			if (!mPixelShaderTextures.empty())
 			{
-				tex.mTexture.PSBind(tex.mSlot);
+				for (auto tex : mPixelShaderTextures.at(index))
+				{
+					tex.mTexture.PSBind(tex.mSlot);
+				}
 			}
 			/*auto tex = mPixelShaderTextures.at(index).at(0);
 			tex.mTexture.PSBind(tex.GetUsageType());*/

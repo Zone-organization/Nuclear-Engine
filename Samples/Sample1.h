@@ -116,28 +116,11 @@ public:
 	}
 	void SetupAssets()
 	{
-		//Cube Creation
-		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
-		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
-		std::vector<Assets::Texture> Textures;
-		Textures.push_back(DiffuseTex);
-		Textures.push_back(SpecularTex);
-
-		Assets::Mesh::CreateCube(&CubeAsset, Textures);
+		//Create some shapes
+		Assets::Mesh::CreateCube(&CubeAsset);
 		CubeAsset.Initialize(&Renderer->GetVertexShader());
-		//CubeMaterial.mPixelShaderTextures = Textures;
-		Textures.clear();
 
-		//Sphere Creation
-		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
-
-		std::vector<Assets::Texture> SphereTextures;
-		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		SphereTextures.push_back(WhiteTex);
-		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-		SphereTextures.push_back(WhiteTex);
-
-		Assets::Mesh::CreateSphere(&SphereAsset, SphereTextures);
+		Assets::Mesh::CreateSphere(&SphereAsset);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
 
 		//NanoSuit Creation
@@ -146,10 +129,33 @@ public:
 		ModelDesc.LoadSpecularTextures = true;
 		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
 		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
+		
+		//Load some textures manually
+		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
+		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
+		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
 
+		
+
+		Assets::TextureSet SphereTextures;
+		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		SphereTextures.push_back(WhiteTex);
+		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
+		SphereTextures.push_back(WhiteTex);
+
+		//Initialize Materials
+		Assets::TextureSet CubeSet;
+		CubeSet.push_back(DiffuseTex);
+		CubeSet.push_back(SpecularTex);
+		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
+		CubeMaterial.SetPixelShader(Renderer->GetPixelShader());
+		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
+		SphereMaterial.SetPixelShader(Renderer->GetPixelShader());
 		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());
 
-		//NanosuitMaterial = Managers::AssetManager::mImportedMaterials.at(0);
+		CubeSet.clear();
+		SphereTextures.clear();
+
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
 		{
@@ -166,15 +172,18 @@ public:
 	void SetupEntities()
 	{
 		//Create Entities
-		//ECube = SampleScene.Entities.Create();
-		//ELamp = SampleScene.Entities.Create();
+		ECube = SampleScene.Entities.Create();
+		ELamp = SampleScene.Entities.Create();
 		ENanosuit = SampleScene.Entities.Create();
 
 		//Assign Components
-		//ECube.Assign<Components::MeshComponent>(&CubeAsset , true);
-		//ELamp.Assign<Components::MeshComponent>(&SphereAsset , true);
+		ECube.Assign<Components::TransformComponent>();
+		ELamp.Assign<Components::TransformComponent>();
 		ENanosuit.Assign<Components::TransformComponent>();
 
+
+		ECube.Assign<Components::MeshComponent>(&CubeAsset ,&CubeMaterial, true);
+		ELamp.Assign<Components::MeshComponent>(&SphereAsset ,&SphereMaterial, true);
 		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
 
 	}
@@ -183,8 +192,6 @@ public:
 		Systems::RenderSystemDesc desc;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
 		SampleScene.Systems.Configure();
-
-		//Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
 
 		Renderer->SetCamera(&Camera);
 		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
@@ -200,9 +207,6 @@ public:
 		Renderer->AddLight(&pointlight9);
 		Renderer->AddLight(&dirlight);
 		Renderer->Bake();
-
-
-		//mat.SetPixelShader(Renderer->GetPixelShader());
 
 		Managers::AssetManager::mSaveTextureNames = true;
 
@@ -242,8 +246,6 @@ public:
 
 	void Update(float deltatime) override
 	{
-		//Core::Application::SetTitle("Nuclear Engine FPS: " + std::to_string(FPS) + " FrameTime: " + std::to_string(FrameTime));
-
 		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
 		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::A))
@@ -285,8 +287,8 @@ public:
 			LampTransforms.push_back(model);
 		}
 
-	//	ECube.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = CubeTransforms;
-	//	ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
+		ECube.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = CubeTransforms;
+		ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
 		
 		Math::Matrix4 NanosuitMatrix(1.0f);
 		NanosuitMatrix = Math::translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));

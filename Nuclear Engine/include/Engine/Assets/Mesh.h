@@ -28,10 +28,10 @@ namespace NuclearEngine {
 			void Initialize(Graphics::API::VertexShader* _shader);
 			void Delete();
 
-			static void CreateCube(Mesh* model, std::vector<Assets::Texture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
-			static void CreateSphere(Mesh* model, std::vector<Assets::Texture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
-			static void CreatePlane(Mesh* model, std::vector<Assets::Texture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float depth = 1.0f);
-			static void CreateGrid(Mesh* model, std::vector<Assets::Texture> Textures, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 10.0f, float depth = 10.0f, unsigned int m = 10, unsigned int n = 10);
+			static void CreateCube(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
+			static void CreateSphere(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
+			static void CreatePlane(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float depth = 1.0f);
+			static void CreateGrid(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 10.0f, float depth = 10.0f, unsigned int m = 10, unsigned int n = 10);
 			static void CreateScreenQuad(Mesh* model);
 
 			struct SubMesh {

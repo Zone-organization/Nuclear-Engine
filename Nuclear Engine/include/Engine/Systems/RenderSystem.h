@@ -54,8 +54,6 @@ namespace NuclearEngine
 			void Render();
 			// Render A MeshComponent Component instantly
 			void InstantRender(Components::MeshComponent* object);
-			// Render A SubMesh instantly
-			void InstantRender(Assets::Mesh::SubMesh* submesh, Assets::Material* material);
 			// Render A Mesh instantly
 			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
