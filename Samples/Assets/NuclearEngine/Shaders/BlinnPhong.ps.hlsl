@@ -71,7 +71,7 @@ float4 main(PixelInputType input) : SV_TARGET
 }
 
 //TODO: move to a global light modifier or some shit
-#define Shininess 32.0f
+#define Shininess 64.0f
 
 float DoBlinnSpecular(float3 normal, float3 lightDir, float3 viewDir)
 {

@@ -31,6 +31,14 @@ namespace NuclearEngine {
 			};
 		}
 
+		enum ShadowQuality
+		{
+			NoShadows = 0,
+			LowQualityShadow = 1,      //Hard Shadows
+			MediumQualityShadow =2,    //Semi-Soft Shadows
+			HighQualityShadow = 3	   //Soft Shadows
+		};
+
 		struct NEAPI DirectionalLight
 		{
 		public:
@@ -42,6 +50,8 @@ namespace NuclearEngine {
 			void SetDirection(Math::Vector3 dir);
 
 			Internal::Shader_DirLight_Struct GetInternalData();
+
+			ShadowQuality ShadowQ = ShadowQuality::MediumQualityShadow;
 
 		protected:
 			Internal::Shader_DirLight_Struct data;
@@ -62,6 +72,8 @@ namespace NuclearEngine {
 			void SetAttenuation(Math::Vector3 att);
 
 			Internal::Shader_PointLight_Struct GetInternalData();
+
+			ShadowQuality ShadowQ = ShadowQuality::MediumQualityShadow;
 
 		protected:
 			Internal::Shader_PointLight_Struct data;
@@ -86,6 +98,9 @@ namespace NuclearEngine {
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
 
 			Internal::Shader_SpotLight_Struct GetInternalData();
+
+			ShadowQuality ShadowQ = ShadowQuality::MediumQualityShadow;
+
 		protected:
 			Internal::Shader_SpotLight_Struct data;
 		};

@@ -11,7 +11,6 @@
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
-    <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="include\Engine\Physics3D\Collider.h" />
     <ClInclude Include="include\Engine\Physics3D\Physics3DEngine.h" />
     <ClInclude Include="include\Engine\Physics3D\PhysicsMaterial.h" />
@@ -290,6 +289,8 @@
     <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Binding.h" />
     <ClInclude Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.h" />
     <ClInclude Include="include\Engine\Components\TransformComponent.h" />
+    <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
+    <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -392,6 +393,7 @@
     <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Binding.cpp" />
     <ClCompile Include="Source\Experimental\ImGui\Binding\ImGui_Renderer.cpp" />
     <ClCompile Include="Source\Engine\Components\TransformComponent.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

@@ -11,14 +11,14 @@ namespace NuclearEngine
 		namespace API
 		{
 			class Texture;
-			class NEAPI RenderTarget //<OpenGL::GLRenderTarget, DirectX::DX11RenderTarget>
+			class NEAPI RenderTarget
 			{
 			public:
 				RenderTarget();
 				~RenderTarget();
 
-				static void	Create(RenderTarget* shader);
-				static void	Delete(RenderTarget* shader);
+				static void	Create(RenderTarget* aRenderT);
+				static void	Delete(RenderTarget* aRenderT);
 
 				void AttachDepthStencilBuffer(const Math::Vector2ui& size);
 

@@ -394,6 +394,7 @@
     <ClInclude Include="include\Engine\Graphics\API\ShaderCompiler.h" />
     <ClInclude Include="include\Engine\Graphics\API\VertexShader.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
+    <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Base\Math\common.hpp" />
@@ -678,6 +679,7 @@
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\VertexShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />

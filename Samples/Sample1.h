@@ -10,14 +10,18 @@ protected:
 	Assets::Texture DiffuseTex;
 	Assets::Texture SpecularTex;
 	Assets::Texture WhiteTex;
+	Assets::Texture GreyTex;
+	Assets::Texture GridTex;
 
 	Assets::Mesh CubeAsset;
 	Assets::Mesh SphereAsset;
 	Assets::Mesh NanosuitAsset;
+	Assets::Mesh GridAsset;
 
 	Assets::Material CubeMaterial;
 	Assets::Material SphereMaterial;
 	Assets::Material NanosuitMaterial;
+	Assets::Material GridMaterial;
 
 	//Default states
 	Graphics::API::CommonStates states;
@@ -45,6 +49,7 @@ protected:
 	ECS::Entity ECube;
 	ECS::Entity ELamp;
 	ECS::Entity ENanosuit;
+	ECS::Entity EGrid;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] = 
@@ -123,6 +128,9 @@ public:
 		Assets::Mesh::CreateSphere(&SphereAsset);
 		SphereAsset.Initialize(&Renderer->GetVertexShader());
 
+		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6 , 6, 10, 10);
+		GridAsset.Initialize(&Renderer->GetVertexShader());
+		
 		//NanoSuit Creation
 		Managers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
@@ -134,14 +142,8 @@ public:
 		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
 		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
 		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
-
-		
-
-		Assets::TextureSet SphereTextures;
-		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		SphereTextures.push_back(WhiteTex);
-		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-		SphereTextures.push_back(WhiteTex);
+		GreyTex = Managers::AssetManager::Import("Assets/Common/Textures/grey.png");
+		GridTex = Managers::AssetManager::Import("Assets/Common/Textures/Grid.png");		
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
@@ -149,12 +151,30 @@ public:
 		CubeSet.push_back(SpecularTex);
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 		CubeMaterial.SetPixelShader(Renderer->GetPixelShader());
+
+
+		Assets::TextureSet SphereTextures;
+		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		SphereTextures.push_back(WhiteTex);
+		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
+		SphereTextures.push_back(WhiteTex);
 		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
 		SphereMaterial.SetPixelShader(Renderer->GetPixelShader());
+
+
 		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());
+
+		Assets::TextureSet GridTextures;
+		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		GridTextures.push_back(GridTex);
+		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
+		GridTextures.push_back(GreyTex);
+		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
+		GridMaterial.SetPixelShader(Renderer->GetPixelShader());
 
 		CubeSet.clear();
 		SphereTextures.clear();
+		GridTextures.clear();
 
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
@@ -172,18 +192,15 @@ public:
 	void SetupEntities()
 	{
 		//Create Entities
-		ECube = SampleScene.Entities.Create();
-		ELamp = SampleScene.Entities.Create();
-		ENanosuit = SampleScene.Entities.Create();
+		ECube = SampleScene.CreateEntity();
+		ELamp = SampleScene.CreateEntity();
+		EGrid = SampleScene.CreateEntity();
+		ENanosuit = SampleScene.CreateEntity();
 
 		//Assign Components
-		ECube.Assign<Components::TransformComponent>();
-		ELamp.Assign<Components::TransformComponent>();
-		ENanosuit.Assign<Components::TransformComponent>();
-
-
 		ECube.Assign<Components::MeshComponent>(&CubeAsset ,&CubeMaterial, true);
 		ELamp.Assign<Components::MeshComponent>(&SphereAsset ,&SphereMaterial, true);
+		EGrid.Assign<Components::MeshComponent>(&GridAsset, &GridMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
 
 	}
@@ -296,6 +313,17 @@ public:
 		NanosuitMatrix = Math::rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
 
 		ENanosuit.GetComponent<Components::TransformComponent>().Get()->mTransform = NanosuitMatrix;
+
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Up))
+			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(0.0f, 0.01f, 0.0f));
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Down))
+			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(0.0f, -0.01f, 0.0f));
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Right))
+			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(0.01f, 0.0f, 0.0f));
+		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Left))
+			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(-0.01f, 0.0f, 0.0f));
+
+
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
