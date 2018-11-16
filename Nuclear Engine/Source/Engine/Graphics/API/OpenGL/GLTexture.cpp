@@ -4,7 +4,7 @@
 #include <Engine/Graphics/API/OpenGL\GLVertexShader.h>
 #include <Engine/Graphics/API/OpenGL\GLPixelShader.h>
 
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 
 namespace NuclearEngine
 {
@@ -44,28 +44,28 @@ namespace NuclearEngine
 						result->type = GL_TEXTURE_3D;
 					}
 
-					GLCall(glGenTextures(1, &result->textureID));
-					GLCall(glBindTexture(result->type, result->textureID));
+					glGenTextures(1, &result->textureID);
+					glBindTexture(result->type, result->textureID);
 
 					if (Desc.Format == Format::R8_UNORM)
 					{
-						GLCall(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
+						glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 					}
 
 					if (Desc.Type == TextureType::Texture1D)
 					{
-						GLCall(glTexImage1D(result->type,
+						glTexImage1D(result->type,
 							0,
 							GetGLInternalFormat(Desc.Format),
 							Data.Width,
 							0,
 							GetGLFormat(Desc.Format),
 							GetGLFormatType(Desc.Format),
-							Data.Img_Data_Buf));
+							Data.Img_Data_Buf);
 					}
 					else if (Desc.Type == TextureType::Texture2D)
 					{
-						GLCall(glTexImage2D(result->type,
+						glTexImage2D(result->type,
 							0,
 							GetGLInternalFormat(Desc.Format),
 							Data.Width,
@@ -73,11 +73,11 @@ namespace NuclearEngine
 							0,
 							GetGLFormat(Desc.Format),
 							GetGLFormatType(Desc.Format),
-							Data.Img_Data_Buf));
+							Data.Img_Data_Buf);
 					}
 					else if (Desc.Type == TextureType::Texture3D)
 					{
-						GLCall(glTexImage3D(result->type,
+						glTexImage3D(result->type,
 							0,
 							GetGLInternalFormat(Desc.Format),
 							Data.Width,
@@ -86,76 +86,76 @@ namespace NuclearEngine
 							0,
 							GetGLFormat(Desc.Format),
 							GetGLFormatType(Desc.Format),
-							Data.Img_Data_Buf));
+							Data.Img_Data_Buf);
 					}
 
 					if (Desc.GenerateMipMaps == true)
 					{
-						GLCall(glGenerateMipmap(result->type));
+						glGenerateMipmap(result->type);
 					}
 
 					if (Desc.Format == Format::R8_UNORM)
 					{
-						GLCall(glPixelStorei(GL_PACK_ALIGNMENT, 1));
+						glPixelStorei(GL_PACK_ALIGNMENT, 1);
 					}
-					GLCall(glBindTexture(result->type, 0));
+					glBindTexture(result->type, 0);
 
 					return true;
 				}
 
 				bool GLTexture::Create(GLTexture * result, const std::array<Graphics::API::Texture_Data, 6>& data, const Texture_Desc& Desc)
 				{
-					GLCall(glGenTextures(1, &result->textureID));
+					glGenTextures(1, &result->textureID);
 					result->type = GL_TEXTURE_CUBE_MAP;
 
-					GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, result->textureID));
+					glBindTexture(GL_TEXTURE_CUBE_MAP, result->textureID);
 
 					for (GLuint i = 0; i < data.size(); i++)
 					{
-						GLCall(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+						glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
 							GetGLInternalFormat(Desc.Format),
 							data[i].Width,
 							data[i].Height,
 							0,
 							GetGLFormat(Desc.Format),
 							GetGLFormatType(Desc.Format),
-							data[i].Img_Data_Buf));
+							data[i].Img_Data_Buf);
 					}
 
 					if (Desc.GenerateMipMaps == true)
 					{
-						GLCall(glGenerateMipmap(GL_TEXTURE_CUBE_MAP));
+						glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 					}
 
-					GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+					glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 					return true;
 				}
 
 				void GLTexture::Delete(GLTexture * texture)
 				{
-					GLCall(glDeleteTextures(1, &texture->textureID));
+					glDeleteTextures(1, &texture->textureID);
 					texture->textureID = 0;
 					texture->type = 0;
 				}
 
 				void GLTexture::VSBind(Uint8 slot)
 				{
-					GLCall(glActiveTexture(GL_TEXTURE0 + slot));
-					GLCall(glBindTexture(type, textureID));
+					glActiveTexture(GL_TEXTURE0 + slot);
+					glBindTexture(type, textureID);
 				}
 
 
 				void GLTexture::PSBind(Uint8 slot)
 				{
-					GLCall(glActiveTexture(GL_TEXTURE0 + slot));
-					GLCall(glBindTexture(type, textureID));
+					glActiveTexture(GL_TEXTURE0 + slot);
+					glBindTexture(type, textureID);
 				}
 
 				void GLTexture::GSBind(Uint8 slot)
 				{
-					GLCall(glActiveTexture(GL_TEXTURE0 + slot));
-					GLCall(glBindTexture(type, textureID));
+					glActiveTexture(GL_TEXTURE0 + slot);
+					glBindTexture(type, textureID);
 				}
 				Math::Vector3ui GLTexture::GetDimensions(Uint8 miplevel)
 				{

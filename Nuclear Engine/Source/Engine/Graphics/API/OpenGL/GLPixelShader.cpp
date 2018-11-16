@@ -5,7 +5,7 @@
 #include <Engine/Graphics/API/OpenGL\GLConstantBuffer.h>
 #include <Engine/Graphics/API/OpenGL\GLVertexShader.h>
 
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -38,34 +38,33 @@ namespace NuclearEngine
 					shader = glCreateShader(GL_FRAGMENT_SHADER);
 					if (shader) {
 						const GLchar* strings = source.c_str();
-						GLCall(glShaderSource(shader, 1, &strings, NULL));
-						GLCall(glCompileShader(shader));
+						glShaderSource(shader, 1, &strings, NULL);
+						glCompileShader(shader);
 						const GLuint program = glCreateProgram();
-						GLCheckError();
 						if (program) {
 							GLint compiled = GL_FALSE;
-							GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled));
-							GLCall(glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE));
+							glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+							glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
 
 							//Check for error begin
 							GLint success;
 							char infoLog[1024];
-							GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
+							glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 							if (!success)
 							{
-								GLCall(glGetShaderInfoLog(shader, 1024, NULL, infoLog));
+								glGetShaderInfoLog(shader, 1024, NULL, infoLog);
 								Log.Error("[GLPixelShader] Compiling Error -- Info: " + std::string(infoLog) + "\n");
 
 							}
 							// check for error end
 
 							if (compiled) {
-								GLCall(glAttachShader(program, shader));
-								GLCall(glLinkProgram(program));
-								GLCall(glDetachShader(program, shader));
+								glAttachShader(program, shader);
+								glLinkProgram(program);
+								glDetachShader(program, shader);
 							}
 						}
-						GLCall(glDeleteShader(shader));
+						glDeleteShader(shader);
 						shader = program;
 					}
 					else {
@@ -93,19 +92,19 @@ namespace NuclearEngine
 				{
 					if (shader->_ProgramID != 0)
 					{
-						GLCall(glDeleteProgram(shader->_ProgramID));
+						glDeleteProgram(shader->_ProgramID);
 					}
 					shader->_ProgramID = 0;
 				}
 
 				void GLPixelShader::SetConstantBuffer(GLConstantBuffer* ubuffer)
 				{
-					GLCall(glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex()));
+					glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
 				}
 
 				void GLPixelShader::Bind()
 				{
-					GLCall(glUseProgramStages(GLVertexShader::GetPipelineID(), GL_FRAGMENT_SHADER_BIT, _ProgramID));
+					glUseProgramStages(GLVertexShader::GetPipelineID(), GL_FRAGMENT_SHADER_BIT, _ProgramID);
 				}
 			}
 		}

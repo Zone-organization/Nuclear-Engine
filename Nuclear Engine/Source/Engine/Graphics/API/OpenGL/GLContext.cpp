@@ -3,7 +3,7 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 static GLuint GL_PRIMITIVE_TYPE;
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 
 namespace NuclearEngine
 {
@@ -54,39 +54,39 @@ namespace NuclearEngine
 					//Color buffer
 					if (CHECK_BIT(flags, 0))
 					{
-						GLCall(glClearColor(color.r, color.g, color.b, color.a));
+						glClearColor(color.r, color.g, color.b, color.a);
 						flaggl = flaggl | GL_COLOR_BUFFER_BIT;
 					}
 					//Depth Buffer
 					if (CHECK_BIT(flags, 1))
 					{
-						GLCall(glClearDepth(depth));
+						glClearDepth(depth);
 						flaggl = flaggl | GL_DEPTH_BUFFER_BIT;
 					}
 					//Stencil Buffer
 					if (CHECK_BIT(flags, 2))
 					{
-						GLCall(glClearStencil(stencil));
+						glClearStencil(stencil);
 						flaggl = flaggl | GL_STENCIL_BUFFER_BIT;
 					}
-					GLCall(glClear(flaggl));
+					glClear(flaggl);
 				}
 
 				void GLContext::Draw(unsigned int count)
 				{
-					GLCall(glDrawArrays(GL_PRIMITIVE_TYPE, 0, count));
+					glDrawArrays(GL_PRIMITIVE_TYPE, 0, count);
 
 				}
 
 				void GLContext::DrawIndexed(unsigned int vertexCount)
 				{
-					GLCall(glDrawElements(GL_PRIMITIVE_TYPE, vertexCount, GL_UNSIGNED_INT, 0));
+					glDrawElements(GL_PRIMITIVE_TYPE, vertexCount, GL_UNSIGNED_INT, 0);
 				}
 
 
 				void GLContext::SetViewPort(int x, int y, int width, int height)
 				{
-					GLCall(glViewport(x, y, width, height));
+					glViewport(x, y, width, height);
 				}
 
 				void GLContext::Query_VAO_EBO_State()

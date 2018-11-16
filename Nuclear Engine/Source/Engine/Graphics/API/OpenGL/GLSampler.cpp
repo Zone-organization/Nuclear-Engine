@@ -1,7 +1,7 @@
 #include "Engine/Graphics/API/OpenGL/GLSampler.h"
 
 #ifdef NE_COMPILE_CORE_OPENGL
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 #include <Engine\Graphics\API\Context.h>
 
 namespace NuclearEngine
@@ -43,38 +43,38 @@ namespace NuclearEngine
 					{
 					case TextureFilter::Point2D:
 					{
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 						break;
 					}
 					case TextureFilter::Linear2D:
 					{
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 						break;
 					}
 					case TextureFilter::Point:
 					{
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR));
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 						break;
 					}
 					case TextureFilter::Bilinear:
 					{
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 						break;
 					}
 					case TextureFilter::Trilinear:
 					{
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 						break;
 					}
 
 					default:
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-						GLCall(glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 						break;
 					}
 					if (Graphics::API::ContextDesc::MaxAnisotropicLevel != 0.0f)

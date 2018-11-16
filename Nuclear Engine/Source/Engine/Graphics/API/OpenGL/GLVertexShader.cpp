@@ -4,7 +4,7 @@
 #include <Engine/Graphics/API/Shader_Types.h>
 #include <Engine/Graphics/API/OpenGL\GLConstantBuffer.h>
 
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -19,7 +19,7 @@ namespace NuclearEngine
 					/*std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
 					for (it = blob.Reflection.ConstantBuffers.begin(); it != blob.Reflection.ConstantBuffers.end(); it++)
 					{
-						it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str());
+						it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str();
 						GLCheckError();
 					}*/
 				}
@@ -38,22 +38,21 @@ namespace NuclearEngine
 					shader = glCreateShader(GL_VERTEX_SHADER);
 					if (shader) {
 						const GLchar* strings = source.c_str();
-						GLCall(glShaderSource(shader, 1, &strings, NULL));
-						GLCall(glCompileShader(shader));
+						glShaderSource(shader, 1, &strings, NULL);
+						glCompileShader(shader);
 						const GLuint program = glCreateProgram();
-						GLCheckError();
 						if (program) {
 							GLint compiled = GL_FALSE;
-							GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled));
-							GLCall(glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE));
+							glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+							glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
 
 							//Check for error begin
 							GLint success;
 							char infoLog[1024];
-							GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
+							glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 							if (!success)
 							{
-								GLCall(glGetShaderInfoLog(shader, 1024, NULL, infoLog));
+								glGetShaderInfoLog(shader, 1024, NULL, infoLog);
 								Log.Error("[GLVertexShader] Compiling Error -- Info: " + std::string(infoLog) + "\n");
 
 							}
@@ -61,12 +60,12 @@ namespace NuclearEngine
 
 							if (compiled)
 							{
-								GLCall(glAttachShader(program, shader));
-								GLCall(glLinkProgram(program));
-								GLCall(glDetachShader(program, shader));
+								glAttachShader(program, shader);
+								glLinkProgram(program);
+								glDetachShader(program, shader);
 							}
 						}
-						GLCall(glDeleteShader(shader));
+						glDeleteShader(shader);
 						shader = program;
 					}
 					else {
@@ -99,20 +98,20 @@ namespace NuclearEngine
 				{
 					if (shader->_ProgramID != 0)
 					{
-						GLCall(glDeleteProgram(shader->_ProgramID));
+						glDeleteProgram(shader->_ProgramID);
 					}
 					shader->_ProgramID = 0;
 				}
 
 				void GLVertexShader::SetConstantBuffer(GLConstantBuffer* ubuffer)
 				{
-					GLCall(glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex()));
+					glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
 				}
 
 				void GLVertexShader::Bind()
 				{
-					GLCall(glBindProgramPipeline(pipelineid));
-					GLCall(glUseProgramStages(pipelineid, GL_VERTEX_SHADER_BIT, _ProgramID));
+					glBindProgramPipeline(pipelineid);
+					glUseProgramStages(pipelineid, GL_VERTEX_SHADER_BIT, _ProgramID);
 				}
 				GLuint GLVertexShader::GetPipelineID()
 				{

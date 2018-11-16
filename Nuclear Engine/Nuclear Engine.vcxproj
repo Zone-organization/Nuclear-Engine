@@ -374,7 +374,6 @@
     <ClInclude Include="include\Engine\Graphics\API\IndexBuffer.h" />
     <ClInclude Include="include\Engine\Graphics\API\InputLayout.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLBlendState.h" />
-    <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLError.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLPixelShader.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLRasterizerState.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLRenderTarget.h" />

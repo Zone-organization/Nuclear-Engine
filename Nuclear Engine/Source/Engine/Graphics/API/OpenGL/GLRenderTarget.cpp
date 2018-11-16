@@ -2,7 +2,7 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <Engine/Graphics/API/OpenGL\GLTexture.h>
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 
 namespace NuclearEngine
 {
@@ -24,18 +24,18 @@ namespace NuclearEngine
 				}
 				void GLRenderTarget::Create(GLRenderTarget * result)
 				{
-					GLCall(glGenFramebuffers(1, &result->FBO));
+					glGenFramebuffers(1, &result->FBO);
 
 				}
 				void GLRenderTarget::Delete(GLRenderTarget * result)
 				{
 					if (result->FBO != 0)
 					{
-						GLCall(glDeleteFramebuffers(1, &result->FBO));
+						glDeleteFramebuffers(1, &result->FBO);
 					}
 					if (result->RBO != 0)
 					{
-						GLCall(glDeleteRenderbuffers(1, &result->RBO));
+						glDeleteRenderbuffers(1, &result->RBO);
 					}
 					result->FBO = 0;
 					result->RBO = 0;
@@ -44,32 +44,32 @@ namespace NuclearEngine
 				{
 					if (CreateRenderBuffer(GL_DEPTH24_STENCIL8, size) == true)
 					{
-						GLCall(glBindFramebuffer(GL_FRAMEBUFFER, FBO));
-						GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO));
-						GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+						glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+						glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+						glBindFramebuffer(GL_FRAMEBUFFER, 0);
 					}
 				}
 				void GLRenderTarget::AttachTexture(GLTexture * texture, const Texture_Desc& Desc)
 				{
-					GLCall(glBindFramebuffer(GL_FRAMEBUFFER, FBO));
+					glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
 					switch (Desc.Type)
 					{
 					case TextureType::Texture2D:
-						GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + ColorAttachmentsi, GL_TEXTURE_2D, texture->GLGetTextureID(), 0));
+						glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + ColorAttachmentsi, GL_TEXTURE_2D, texture->GLGetTextureID(), 0);
 						ColorAttachmentsi++;
 					default:
 						Exceptions::NotImplementedException();
 					}
-					GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+					glBindFramebuffer(GL_FRAMEBUFFER, 0);
 				}
 				void GLRenderTarget::Bind()
 				{
-					GLCall(glBindFramebuffer(GL_FRAMEBUFFER, FBO));
+					glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 				}
 				void GLRenderTarget::Bind_Default()
 				{
-					GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+					glBindFramebuffer(GL_FRAMEBUFFER, 0);
 				}
 				bool GLRenderTarget::CreateRenderBuffer(GLenum format, const Math::Vector2ui& size)
 				{
@@ -79,10 +79,10 @@ namespace NuclearEngine
 						Log.Error("[GLRenderTarget] RenderTarget (ID: " + std::to_string(FBO) + ") has DepthStencil Attachement already!\n");
 						return false;
 					}
-					GLCall(glGenRenderbuffers(1, &RBO));
-					GLCall(glBindRenderbuffer(GL_RENDERBUFFER, RBO));
-					GLCall(glRenderbufferStorage(GL_RENDERBUFFER, format, size.x, size.y));
-					GLCall(glBindRenderbuffer(GL_RENDERBUFFER, 0));
+					glGenRenderbuffers(1, &RBO);
+					glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+					glRenderbufferStorage(GL_RENDERBUFFER, format, size.x, size.y);
+					glBindRenderbuffer(GL_RENDERBUFFER, 0);
 					return true;
 				}
 			}

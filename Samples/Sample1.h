@@ -207,10 +207,9 @@ public:
 	void Load()
 	{
 		Systems::RenderSystemDesc desc;
-		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc);
+		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
 		SampleScene.Systems.Configure();
 
-		Renderer->SetCamera(&Camera);
 		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->AddLight(&spotLight);
 		Renderer->AddLight(&pointlight1);

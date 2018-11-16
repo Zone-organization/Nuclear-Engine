@@ -34,7 +34,7 @@ namespace NuclearEngine
 
 		class NEAPI RenderSystem : public ECS::System<RenderSystem> {
 		public:
-			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc());
+			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc(), Components::CameraComponent* camera = nullptr);
 			~RenderSystem();
 
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);

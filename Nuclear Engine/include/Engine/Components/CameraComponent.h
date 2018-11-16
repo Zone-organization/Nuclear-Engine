@@ -80,8 +80,6 @@ namespace NuclearEngine
 			Graphics::API::ConstantBuffer ConstantBuffer;
 
 			Math::Vector3 position, direction;
-
-			bool Init = false;
 		};
 
 		typedef CameraComponent Camera;

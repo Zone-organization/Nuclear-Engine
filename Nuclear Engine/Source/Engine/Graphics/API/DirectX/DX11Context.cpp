@@ -145,9 +145,11 @@ namespace NuclearEngine
 
 					UINT creationFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 
+
 #ifdef _DEBUG
 					//"2018-8-11 Reboot"
 					//Disabled until I D3D11 SDK Layers for Windows 10
+					//if(window->getSettings().attributeFlags == sf::ContextSettings::Debug)
 					//creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 					result = D3D11CreateDeviceAndSwapChain(

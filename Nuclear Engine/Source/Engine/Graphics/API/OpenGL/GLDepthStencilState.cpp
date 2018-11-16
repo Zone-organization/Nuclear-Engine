@@ -2,7 +2,7 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <Engine/Graphics/API/RenderStates_Types.h>
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 
 namespace NuclearEngine
 {
@@ -71,12 +71,12 @@ namespace NuclearEngine
 				{
 					if (depthenabled)
 					{
-						GLCall(glEnable(GL_DEPTH_TEST));
-						GLCall(glDepthMask(depthmask));
-						GLCall(glDepthFunc(depthfunc));
+						glEnable(GL_DEPTH_TEST);
+						glDepthMask(depthmask);
+						glDepthFunc(depthfunc);
 					}
 					else {
-						GLCall(glDisable(GL_DEPTH_TEST));
+						glDisable(GL_DEPTH_TEST);
 					}
 					/*	if (stencilenabled)
 						{

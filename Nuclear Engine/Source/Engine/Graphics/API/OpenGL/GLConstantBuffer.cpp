@@ -2,7 +2,7 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 static int ubosBindingindex = 0;
-#include <Engine/Graphics/API/OpenGL\GLError.h>
+
 
 namespace NuclearEngine
 {
@@ -35,28 +35,28 @@ namespace NuclearEngine
 					result->name = Nameinshader;
 					result->BindingIndex = ubosBindingindex;
 
-					GLCall(glGenBuffers(1, &result->buffer));
-					GLCall(glBindBuffer(GL_UNIFORM_BUFFER, result->buffer));
-					GLCall(glBufferData(GL_UNIFORM_BUFFER, size, NULL, GL_DYNAMIC_DRAW));
+					glGenBuffers(1, &result->buffer);
+					glBindBuffer(GL_UNIFORM_BUFFER, result->buffer);
+					glBufferData(GL_UNIFORM_BUFFER, size, NULL, GL_DYNAMIC_DRAW);
 
-					GLCall(glBindBufferRange(GL_UNIFORM_BUFFER, result->BindingIndex, result->buffer, 0, size));
+					glBindBufferRange(GL_UNIFORM_BUFFER, result->BindingIndex, result->buffer, 0, size);
 
 					//Increment the binding index
 					ubosBindingindex++;
-					GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+					glBindBuffer(GL_UNIFORM_BUFFER, 0);
 				}
 
 				void GLConstantBuffer::Delete(GLConstantBuffer * cbuffer)
 				{
-					GLCall(glDeleteBuffers(1, &cbuffer->buffer));					
+					glDeleteBuffers(1, &cbuffer->buffer);					
 					cbuffer->buffer = 0;
 				}
 
 				void GLConstantBuffer::Update(const void* data, unsigned int size)
 				{
-					GLCall(glBindBuffer(GL_UNIFORM_BUFFER, buffer));
-					GLCall(glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data));
-					GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+					glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+					glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
+					glBindBuffer(GL_UNIFORM_BUFFER, 0);
 				}
 
 				unsigned int GLConstantBuffer::GetBindingIndex()

@@ -38,7 +38,6 @@
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLConstantBuffer.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLContext.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLDepthStencilState.h" />
-    <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLError.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLIndexBuffer.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLPixelShader.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLRasterizerState.h" />

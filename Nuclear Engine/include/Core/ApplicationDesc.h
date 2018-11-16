@@ -18,6 +18,7 @@ namespace NuclearEngine {
 			Uint32 WindowHeight = 768;
 			Uint32 Style = DEFAULT_SFML_STYLE;
 			RenderAPI Renderer = RenderAPI::OpenGL4_5;
+			bool DebugRenderAPI = false;
 			std::string Title = "NuclearEngine";
 		};
 	}

@@ -11,19 +11,14 @@ namespace NuclearEngine
 {
 	namespace Systems
 	{
-		RenderSystem::RenderSystem(const RenderSystemDesc & desc)
+		RenderSystem::RenderSystem(const RenderSystemDesc & desc, Components::CameraComponent* camera)
 		{
 			Desc = desc;
-			ActiveCamera = new Components::CameraComponent();
+			ActiveCamera = camera;
 			this->status = RenderSystemStatus::RequireBaking;
 		}
 		RenderSystem::~RenderSystem()
 		{
-			if (ActiveCamera != nullptr)
-			{
-				delete ActiveCamera;
-				ActiveCamera = nullptr;
-			}
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
