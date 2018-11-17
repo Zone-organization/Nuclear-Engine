@@ -74,7 +74,7 @@ float4 main(PixelInputType input) : SV_TARGET
 			// ignore non-significant error/warning codes
 			if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
-			std::cout << "\n---------------" << std::endl;
+			std::cout << "\n--------------------------" << std::endl;
 			std::cout << "OpenGL Debug message (" << id << "): " << message << std::endl;
 
 			switch (source)
@@ -107,7 +107,7 @@ float4 main(PixelInputType input) : SV_TARGET
 			case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
 			case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
 			} std::cout << std::endl;
-			std::cout << std::endl;
+			std::cout << "--------------------------" << std::endl;
 		}
 
 		bool Application::Start(const ApplicationDesc & Desc)
