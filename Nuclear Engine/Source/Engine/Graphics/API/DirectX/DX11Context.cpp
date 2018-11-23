@@ -399,9 +399,9 @@ namespace NuclearEngine
 					Context->Draw(count, 0);
 				}
 
-				void DX11Context::DrawIndexed(unsigned int vertexCount)
+				void DX11Context::DrawIndexed(unsigned int vertexCount, unsigned int StartIndexLocation, int BaseVertexLocation)
 				{
-					Context->DrawIndexed(vertexCount, 0, 0);
+					Context->DrawIndexed(vertexCount, StartIndexLocation, BaseVertexLocation);
 				}
 
 				void DX11Context::SetPrimitiveType(int primitiveType)

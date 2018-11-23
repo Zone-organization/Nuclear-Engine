@@ -56,6 +56,10 @@ namespace NuclearEngine
 				{
 					DX11Context::GetContext()->IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT, 0);
 				}
+				void DX11IndexBuffer::Update(const void * data, unsigned int size)
+				{
+					DX11Context::GetContext()->UpdateSubresource(buffer, 0, 0, data, 0, 0);
+				}
 			}
 		}
 	}

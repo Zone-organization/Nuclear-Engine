@@ -21,7 +21,7 @@ namespace NuclearEngine
 					static void Clear(Graphics::Color color, Uint32 flags, float depth = 1.0f, unsigned int stencil = 0);
 
 					static void Draw(unsigned int count);
-					static void DrawIndexed(unsigned int vertexCount);
+					static void DrawIndexed(unsigned int vertexCount, unsigned int StartIndexLocation, int BaseVertexLocation);
 
 					static void SetViewPort(int x, int y, int width, int height);
 

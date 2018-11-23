@@ -20,6 +20,8 @@ namespace NuclearEngine
 				static void Delete(IndexBuffer *buffer);
 
 				void Bind();
+				void Update(const void* data, unsigned int size);
+				
 				BASE_API(IndexBuffer)
 
 			};

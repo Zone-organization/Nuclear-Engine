@@ -43,6 +43,12 @@ namespace NuclearEngine
 				{
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 				}
+				void GLIndexBuffer::Update(const void * data, unsigned int size)
+				{
+					glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
+					glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+					glBindBuffer(GL_ARRAY_BUFFER, 0);
+				}
 			}
 		}
 	}

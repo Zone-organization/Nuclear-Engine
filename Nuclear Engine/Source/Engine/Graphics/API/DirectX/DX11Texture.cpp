@@ -37,6 +37,8 @@ namespace NuclearEngine
 						Exceptions::NotImplementedException("Texture3D creation in DirectX 11 Backend isn't supported yet...\n");
 						return false;
 					}
+					Exceptions::NotImplementedException("DirectX Texture Creation unsupported type...\n");
+					return false;
 				}
 
 				bool DX11Texture::Create(DX11Texture* texture, const std::array<Graphics::API::Texture_Data, 6>& data, const Texture_Desc& Desc)

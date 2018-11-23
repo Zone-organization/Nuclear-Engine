@@ -19,7 +19,9 @@ namespace NuclearEngine
 					static void Create(GLIndexBuffer* buffer, const void* indices, unsigned int count);
 					static void Delete(GLIndexBuffer* ibuffer);
 
-					void Bind();
+					void Bind();			
+					void Update(const void* data, unsigned int size);
+
 				private:
 					GLuint buffer;
 				};

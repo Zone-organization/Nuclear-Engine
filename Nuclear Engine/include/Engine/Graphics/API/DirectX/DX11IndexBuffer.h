@@ -20,6 +20,8 @@ namespace NuclearEngine
 					static void Delete(DX11IndexBuffer* buffer);
 
 					void Bind();
+					void Update(const void* data, unsigned int size);
+
 				protected:
 					ID3D11Buffer * buffer;
 				};

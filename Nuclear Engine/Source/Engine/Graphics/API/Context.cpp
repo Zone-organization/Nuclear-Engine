@@ -88,18 +88,18 @@ namespace NuclearEngine
 #endif
 			}
 
-			void Context::DrawIndexed(unsigned int vertexCount)
+			void Context::DrawIndexed(unsigned int vertexCount, unsigned int StartIndexLocation, int BaseVertexLocation )
 			{
 #ifndef NE_USE_RUNTIME_RENDER_API
 				ctx.DrawIndexed(vertexCount);
 #else
 				if (_renderer == RenderAPI::OpenGL4_5)
 				{
-					return Graphics::API::OpenGL::GLContext::DrawIndexed(vertexCount);
+					return Graphics::API::OpenGL::GLContext::DrawIndexed(vertexCount, StartIndexLocation, BaseVertexLocation);
 				}
 				else if (_renderer == RenderAPI::DirectX11)
 				{
-					return Graphics::API::DirectX::DX11Context::DrawIndexed(vertexCount);
+					return Graphics::API::DirectX::DX11Context::DrawIndexed(vertexCount, StartIndexLocation, BaseVertexLocation);
 				}
 #endif
 			}

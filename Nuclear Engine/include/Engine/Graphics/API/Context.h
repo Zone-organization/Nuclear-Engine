@@ -41,7 +41,7 @@ namespace NuclearEngine
 				static void PresentFrame();
 
 				static void Draw(unsigned int count);
-				static void DrawIndexed(unsigned int vertexCount);
+				static void DrawIndexed(unsigned int VerticesCount, unsigned int StartIndexLocation = 0, int BaseVertexLocation = 0);
 
 				static void SetViewPort(int x, int y, int width, int height);
 

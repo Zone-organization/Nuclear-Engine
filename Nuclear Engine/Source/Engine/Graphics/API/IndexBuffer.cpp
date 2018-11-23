@@ -28,6 +28,10 @@ namespace NuclearEngine {
 			{
 				BASE_API_FUNC_CALL(Bind)
 			}
+			void IndexBuffer::Update(const void * data, unsigned int size)
+			{
+				BASE_API_FUNC_CALL_ARGS(Update, data, size)
+			}
 		}
 	}
 }
