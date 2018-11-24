@@ -15,11 +15,8 @@ namespace NuclearEngine
 			static void RenderDrawData(ImDrawData* draw_data);
 
 			// Use if you want to reset your rendering device without losing ImGui state.
-			static void InvalidateDeviceObjects();
-			static bool CreateDeviceObjects();
-
-
-			//static int                      g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
+			static void CreateFontsTexture();
+			static void DestroyFontsTexture();
 		};
 	}
 }

@@ -1,4 +1,5 @@
 #include "ImGui_Renderer.h"
+#include "Core/FileSystem.h"
 
 namespace NuclearEngine
 {
@@ -12,22 +13,98 @@ namespace NuclearEngine
 		static API::ConstantBuffer     gVertexConstantBuffer;
 		static API::PixelShader		   gPixelShader;
 		static API::Sampler			   gFontSampler;
-		static API::Texture			   gFontTextureView;
+		static API::Texture			   gFontTexture;
 		static API::RasterizerState	   gRasterizerState;
 		static API::BlendState		   gBlendState;
 		static API::DepthStencilState  gDepthStencilState;
 		static int  g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
-
+		static bool Initialized = false;
 		bool ImGui_Renderer::Initialize()
 		{
+			if (Initialized == true)
+			{
+				Shutdown();
+			}
 
+			// Create the vertex shader
+			Graphics::API::VertexShader::Create(
+				&gVertexShader,
+				Graphics::API::CompileShader(
+					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShaderManager/GUIShader.vs.hlsl"),
+					Graphics::API::ShaderType::Vertex));
+
+			// Create the input layout
 			gInputLayout.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float2);
-			gInputLayout.AppendAttribute("COLOR0", 0, Graphics::API::DataType::Float4);
-			gInputLayout.AppendAttribute("TEXCOORD0", 0, Graphics::API::DataType::Float2);
-			return false;
+			gInputLayout.AppendAttribute("COLOR", 0, Graphics::API::DataType::Float4);
+			gInputLayout.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
+
+
+			// Create the constant buffer
+			API::ConstantBuffer::Create(&gVertexConstantBuffer, "vertexBuffer", sizeof(float[4][4]));
+		
+			// Create the pixel shader
+			Graphics::API::PixelShader::Create(
+				&gPixelShader,
+				Graphics::API::CompileShader(
+					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl"),
+					Graphics::API::ShaderType::Pixel));
+
+
+			// Create the blending setup
+			{
+				API::BlendStateDesc desc;
+				desc.AlphaToCoverageEnable = false;
+				desc.RenderTarget[0].BlendEnable = true;
+				desc.RenderTarget[0].SrcBlend = API::BLEND::SRC_ALPHA;
+				desc.RenderTarget[0].DestBlend = API::BLEND::INV_SRC_ALPHA;
+				desc.RenderTarget[0].BlendOp = API::BLEND_OP::OP_ADD;
+				desc.RenderTarget[0].SrcBlendAlpha = API::BLEND::INV_SRC_ALPHA;
+				desc.RenderTarget[0].DestBlendAlpha = API::BLEND::ZERO;
+				desc.RenderTarget[0].BlendOpAlpha = API::BLEND_OP::OP_ADD;
+				desc.RenderTarget[0].RenderTargetWriteMask = API::COLOR_WRITE_ENABLE_ALL;
+				API::BlendState::Create(&gBlendState, desc);
+			}
+
+			// Create the rasterizer state
+			{
+				API::RasterizerStateDesc desc;
+				desc.FillMode = API::FillMode::Solid;
+				desc.CullMode = API::CullMode::None;
+				desc.ScissorEnable = true;
+				desc.DepthClipEnable = true;
+				API::RasterizerState::Create(&gRasterizerState, desc);
+			}
+
+			// Create depth-stencil State
+			{
+				API::DepthStencilStateDesc desc;
+				desc.DepthEnabled = false;
+				desc.DepthMaskEnabled = true;
+				desc.DepthFunc = API::Comparison_Func::ALWAYS;
+				desc.StencilEnabled = false;
+				desc.StencilFrontFace.StencilFailOp = desc.StencilFrontFace.StencilDepthFailOp = desc.StencilFrontFace.StencilPassOp = API::Stencil_OP::KEEP;
+				desc.StencilFrontFace.StencilFunc = API::Comparison_Func::ALWAYS;
+				desc.StencilBackFace = desc.StencilFrontFace;
+				API::DepthStencilState::Create(&gDepthStencilState, desc);
+			}
+
+			CreateFontsTexture();
+			Initialized = true;
+			return true;
 		}
+
 		void ImGui_Renderer::Shutdown()
 		{
+			 API::VertexBuffer::Delete(&gVB);
+			 API::IndexBuffer::Delete(&gIB);
+			 API::VertexShader::Delete(&gVertexShader);
+			 API::ConstantBuffer::Delete(&gVertexConstantBuffer);
+			 API::PixelShader::Delete(&gPixelShader);
+			 API::Sampler::Delete(&gFontSampler);
+			 API::Texture::Delete(&gFontTexture);
+			 API::RasterizerState::Delete(&gRasterizerState);
+			 API::BlendState::Delete(&gBlendState);
+			 API::DepthStencilState::Delete(&gDepthStencilState);
 		}
 		void ImGui_Renderer::NewFrame()
 		{
@@ -58,16 +135,6 @@ namespace NuclearEngine
 				API::IndexBuffer::Create(&gIB, NULL, g_IndexBufferSize * sizeof(ImDrawIdx));
 			}
 
-			// Copy and convert all vertices into a single contiguous buffer
-
-			/*D3D11_MAPPED_SUBRESOURCE vtx_resource, idx_resource;
-			if (ctx->Map(gVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &vtx_resource) != S_OK)
-				return;
-			if (ctx->Map(gIB, 0, D3D11_MAP_WRITE_DISCARD, 0, &idx_resource) != S_OK)
-				return;
-				*/
-
-
 			for (int n = 0; n < draw_data->CmdListsCount; n++)
 			{
 				const ImDrawList* cmd_list = draw_data->CmdLists[n];
@@ -78,7 +145,6 @@ namespace NuclearEngine
 				gIB.Update((const void*)cmd_list->IdxBuffer.Data, (ptrdiff_t)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
 
 			}
-
 
 			// Setup orthographic projection matrix into our constant buffer
 			// Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). 
@@ -230,12 +296,43 @@ namespace NuclearEngine
 			*/
 		}
 
-		void ImGui_Renderer::InvalidateDeviceObjects()
+		void ImGui_Renderer::CreateFontsTexture()
 		{
+			// Build texture atlas
+			ImGuiIO& io = ImGui::GetIO();
+			unsigned char* pixels;
+			int width, height;
+			io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+
+			// Upload texture to graphics system
+
+			Graphics::API::Texture_Data data;
+			data.Width = width;
+			data.Height = height;
+			data.Img_Data_Buf = pixels;
+
+			Graphics::API::Texture_Desc desc;
+			desc.GenerateMipMaps = false;
+			desc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+
+			API::Texture::Create(&gFontTexture, data, desc);
+
+			// Store our identifier
+			io.Fonts->TexID = (ImTextureID)&gFontTexture;
+
+			API::SamplerDesc samplerdesc;
+
+			samplerdesc.Filter = API::TextureFilter::Trilinear;
+			samplerdesc.WrapU = API::TextureWrap::Repeat;
+			samplerdesc.WrapV = API::TextureWrap::Repeat;
+			samplerdesc.WrapW = API::TextureWrap::Repeat;
+		
+			API::Sampler::Create(&gFontSampler, samplerdesc);
 		}
-		bool ImGui_Renderer::CreateDeviceObjects()
+		void ImGui_Renderer::DestroyFontsTexture()
 		{
-			return false;
+			API::Texture::Delete(&gFontTexture);
+			API::Sampler::Delete(&gFontSampler);
 		}
 	}
 }

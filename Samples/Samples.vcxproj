@@ -165,7 +165,6 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Sample1.h" />
-    <ClInclude Include="StellaTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

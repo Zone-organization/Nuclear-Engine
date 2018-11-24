@@ -82,6 +82,7 @@ protected:
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
+
 public:
 	Sample1()
 	{
