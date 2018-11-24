@@ -284,12 +284,12 @@
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\ImGuiConfig.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Binding.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Renderer.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imgui_internal.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_truetype.h" />
+    <ClInclude Include="include\Engine\Graphics\ImGui_Renderer.h" />
+    <ClInclude Include="include\Engine\Graphics\ImGui_Binding.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

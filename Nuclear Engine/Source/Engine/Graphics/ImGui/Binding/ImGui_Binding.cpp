@@ -3,7 +3,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Touch.hpp>
 #include <SFML/Window/Window.hpp>
-#include "ImGui_Binding.h"
+#include "Engine\Graphics\ImGui_Binding.h"
 
 namespace
 {
