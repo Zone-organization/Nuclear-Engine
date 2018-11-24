@@ -204,7 +204,7 @@ namespace NuclearEngine
 								{
 									bool validtexture = true;
 									Reflected_Texture texture;
-									texture.BindingSlot = i;
+									texture.BindingSlot = resource_desc.BindPoint;
 									switch (resource_desc.Dimension)
 									{
 									case D3D_SRV_DIMENSION_TEXTURE1D:
