@@ -57,8 +57,12 @@ namespace NuclearEngine
 	{
 		namespace ImGui_Binding
 		{
-			void Init(sf::Window& window)
+			void Initialize(sf::Window* window)
 			{
+				if (window == nullptr)
+				{
+					return;
+				}
 				ImGui::CreateContext();
 				ImGuiIO& io = ImGui::GetIO();
 
@@ -114,7 +118,7 @@ namespace NuclearEngine
 					UpdateFontTexture();
 				}*/
 
-				s_windowHasFocus = window.hasFocus();
+				s_windowHasFocus = window->hasFocus();
 			}
 			void ProcessEvent(const sf::Event & event)
 			{

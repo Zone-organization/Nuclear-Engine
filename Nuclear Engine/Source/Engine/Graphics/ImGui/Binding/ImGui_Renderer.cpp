@@ -30,7 +30,7 @@ namespace NuclearEngine
 			Graphics::API::VertexShader::Create(
 				&gVertexShader,
 				Graphics::API::CompileShader(
-					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShaderManager/GUIShader.vs.hlsl"),
+					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/GUIShader.vs.hlsl"),
 					Graphics::API::ShaderType::Vertex));
 
 			// Create the input layout
@@ -46,7 +46,7 @@ namespace NuclearEngine
 			Graphics::API::PixelShader::Create(
 				&gPixelShader,
 				Graphics::API::CompileShader(
-					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl"),
+					Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/GUIShader.ps.hlsl"),
 					Graphics::API::ShaderType::Pixel));
 
 
@@ -90,21 +90,23 @@ namespace NuclearEngine
 
 			CreateFontsTexture();
 			Initialized = true;
+			Log.Info("[ImGui] Initialized ImGui_Renderer.\n");
 			return true;
 		}
 
 		void ImGui_Renderer::Shutdown()
 		{
-			 API::VertexBuffer::Delete(&gVB);
-			 API::IndexBuffer::Delete(&gIB);
-			 API::VertexShader::Delete(&gVertexShader);
-			 API::ConstantBuffer::Delete(&gVertexConstantBuffer);
-			 API::PixelShader::Delete(&gPixelShader);
-			 API::Sampler::Delete(&gFontSampler);
-			 API::Texture::Delete(&gFontTexture);
-			 API::RasterizerState::Delete(&gRasterizerState);
-			 API::BlendState::Delete(&gBlendState);
-			 API::DepthStencilState::Delete(&gDepthStencilState);
+			Log.Info("[ImGui] Shutting down ImGui_Renderer...\n");
+			API::VertexBuffer::Delete(&gVB);
+			API::IndexBuffer::Delete(&gIB);
+			API::VertexShader::Delete(&gVertexShader);
+			API::ConstantBuffer::Delete(&gVertexConstantBuffer);
+			API::PixelShader::Delete(&gPixelShader);
+			API::Sampler::Delete(&gFontSampler);
+			API::Texture::Delete(&gFontTexture);
+			API::RasterizerState::Delete(&gRasterizerState);
+			API::BlendState::Delete(&gBlendState);
+			API::DepthStencilState::Delete(&gDepthStencilState);
 		}
 		void ImGui_Renderer::NewFrame()
 		{

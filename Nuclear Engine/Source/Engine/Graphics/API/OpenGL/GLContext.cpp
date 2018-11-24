@@ -80,7 +80,7 @@ namespace NuclearEngine
 
 				void GLContext::DrawIndexed(unsigned int vertexCount, unsigned int StartIndexLocation, int BaseVertexLocation)
 				{
-					glDrawElements(GL_PRIMITIVE_TYPE, vertexCount, GL_UNSIGNED_INT, &StartIndexLocation);
+					glDrawElements(GL_PRIMITIVE_TYPE, vertexCount, GL_UNSIGNED_INT, 0);
 				}
 
 

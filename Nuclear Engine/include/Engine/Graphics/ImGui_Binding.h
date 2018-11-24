@@ -15,7 +15,7 @@ namespace NuclearEngine
 	{
 		namespace ImGui_Binding
 		{
-			void Init(sf::Window& window);
+			void Initialize(sf::Window* window);
 			void ProcessEvent(const sf::Event& event);
 		}
 	}

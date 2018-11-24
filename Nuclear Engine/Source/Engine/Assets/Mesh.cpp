@@ -219,7 +219,6 @@ namespace NuclearEngine {
 			indices.assign(&i[0], &i[36]);
 
 			meshData.indices = indices;
-			//meshData.textures = Textures;
 
 			model->SubMeshes.push_back(meshData);
 		}

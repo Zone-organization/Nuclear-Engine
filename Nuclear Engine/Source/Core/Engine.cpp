@@ -6,6 +6,9 @@
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Audio\AudioEngine.h>
 #include <FMOD\includer.h> 
+#include <Engine\Graphics\ImGui_Binding.h>
+#include <Engine\Graphics\ImGui_Renderer.h>
+
 /*
 	      .-.               
           |N|          
@@ -47,6 +50,8 @@ namespace NuclearEngine {
 
 			//init sub-engines
 			Graphics::GraphicsEngine::Initialize();
+			Graphics::ImGui_Binding::Initialize(Application::MainWindow);
+			Graphics::ImGui_Renderer::Initialize();
 
 			if(desc.InitAudioEngine)
 				Audio::AudioEngine::Initialize();
@@ -62,6 +67,7 @@ namespace NuclearEngine {
 			GamePtr = &Defaultgame;
 			Core::Application::Shutdown();
 			Audio::AudioEngine::Shutdown();
+			Graphics::ImGui_Renderer::Shutdown();
 		}
 
 		void Engine::RunGame(Game * _YourGame)
