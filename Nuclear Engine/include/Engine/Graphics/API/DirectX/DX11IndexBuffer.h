@@ -23,6 +23,8 @@ namespace NuclearEngine
 
 					void Bind();
 					void Update(const void* data, unsigned int size);
+					void* Map();
+					void Unmap();
 
 				protected:
 					ID3D11Buffer * buffer;

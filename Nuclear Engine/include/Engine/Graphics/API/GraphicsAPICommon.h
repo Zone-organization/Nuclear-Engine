@@ -14,6 +14,11 @@ else if (Graphics::API::Context::isDirectX11RenderAPI()) {	DXObject.##FuncName()
 if (Graphics::API::Context::isOpenGL3RenderAPI()) {	GLObject.##FuncName(&Param1Name->GLObject); } \
 else if (Graphics::API::Context::isDirectX11RenderAPI()) {	DXObject.##FuncName(&Param1Name->DXObject);}
 
+#define SPECIAL_BUFFER_API_MAP_FUNC_CALL() \
+if (Graphics::API::Context::isOpenGL3RenderAPI()) { return GLObject.Map(); } \
+else if (Graphics::API::Context::isDirectX11RenderAPI()) { return DXObject.Map(); } \
+return nullptr;
+
 #define SPECIAL_BASE_API_FUNC_CALL_ARGS(FuncName, Param1Name, ...) \
 if (Graphics::API::Context::isOpenGL3RenderAPI()) {	GLObject.##FuncName(&Param1Name->GLObject,__VA_ARGS__); } \
 else if (Graphics::API::Context::isDirectX11RenderAPI()) {	DXObject.##FuncName(&Param1Name->DXObject,__VA_ARGS__);}

@@ -47,16 +47,7 @@ namespace NuclearEngine {
 			}
 			void * VertexBuffer::Map()
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
-				{
-					return GLObject.Map();
-				}
-				else if (Graphics::API::Context::isDirectX11RenderAPI())
-				{
-					return DXObject.Map();
-				}
-
-				return nullptr;
+				SPECIAL_BUFFER_API_MAP_FUNC_CALL();
 			}
 			void VertexBuffer::Unmap()
 			{

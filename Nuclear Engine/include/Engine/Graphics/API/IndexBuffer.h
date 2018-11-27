@@ -22,7 +22,9 @@ namespace NuclearEngine
 
 				void Bind();
 				void Update(const void* data, unsigned int size);
-				
+				void* Map();
+				void Unmap();
+
 				BASE_API(IndexBuffer)
 
 			};

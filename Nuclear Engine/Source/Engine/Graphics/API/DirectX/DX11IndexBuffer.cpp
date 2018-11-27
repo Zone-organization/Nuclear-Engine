@@ -84,6 +84,18 @@ namespace NuclearEngine
 				{
 					DX11Context::GetContext()->UpdateSubresource(buffer, 0, 0, data, 0, 0);
 				}
+				void * DX11IndexBuffer::Map()
+				{
+					D3D11_MAPPED_SUBRESOURCE mappedSubResource;
+					ZeroMemory(&mappedSubResource, sizeof(mappedSubResource));
+
+					DX11Context::GetContext()->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
+					return mappedSubResource.pData;
+				}
+				void DX11IndexBuffer::Unmap()
+				{
+					DX11Context::GetContext()->Unmap(buffer, 0);
+				}
 			}
 		}
 	}

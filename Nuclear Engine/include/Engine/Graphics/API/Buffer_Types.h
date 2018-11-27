@@ -1,4 +1,6 @@
 #pragma once
+#include <Engine/Graphics/API/Format.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics

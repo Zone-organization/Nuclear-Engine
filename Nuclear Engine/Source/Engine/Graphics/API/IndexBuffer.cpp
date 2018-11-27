@@ -32,6 +32,14 @@ namespace NuclearEngine {
 			{
 				BASE_API_FUNC_CALL_ARGS(Update, data, size)
 			}
+			void * IndexBuffer::Map()
+			{
+				SPECIAL_BUFFER_API_MAP_FUNC_CALL();
+			}
+			void IndexBuffer::Unmap()
+			{
+				BASE_API_FUNC_CALL(Unmap)
+			}
 		}
 	}
 }

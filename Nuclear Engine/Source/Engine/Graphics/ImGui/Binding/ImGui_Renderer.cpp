@@ -144,6 +144,19 @@ namespace NuclearEngine
 				ValidIB = true;
 			}
 
+			ImDrawVert* vtx_dst = (ImDrawVert*)gVB.Map();
+			ImDrawIdx* idx_dst = (ImDrawIdx*)gIB.Map();
+			for (int n = 0; n < draw_data->CmdListsCount; n++)
+			{
+				const ImDrawList* cmd_list = draw_data->CmdLists[n];
+				memcpy(vtx_dst, cmd_list->VtxBuffer.Data, cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
+				memcpy(idx_dst, cmd_list->IdxBuffer.Data, cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
+				vtx_dst += cmd_list->VtxBuffer.Size;
+				idx_dst += cmd_list->IdxBuffer.Size;
+			}
+			gVB.Unmap();
+			gIB.Unmap();
+
 			// Setup orthographic projection matrix into our constant buffer
 			// Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). 
 
@@ -176,7 +189,6 @@ namespace NuclearEngine
 
 				gVertexConstantBuffer.Update(mvp, sizeof(mvp));
 			}
-		
 
 			// Backup DX state that will be modified to restore it afterwards (unfortunately this is very ugly looking and verbose. Close your eyes!)
 			/*struct BACKUP_DX11_STATE
@@ -222,16 +234,16 @@ namespace NuclearEngine
 			*/
 
 			// Setup viewport
-			Graphics::API::Context::SetViewPort(0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y);
-			
+			Graphics::API::Context::SetViewPort(0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y);			
 
 			// Bind shader
 			Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 			gVertexShader.Bind();
 			gPixelShader.Bind();
 			gFontSampler.PSBind(0);
-		
-			// Setup render state
+			gVB.Bind();
+			gIB.Bind();
+
 			gBlendState.Bind(Graphics::Color(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 			gDepthStencilState.Bind();
 			gRasterizerState.Bind();
@@ -243,15 +255,7 @@ namespace NuclearEngine
 			for (int n = 0; n < draw_data->CmdListsCount; n++)
 			{
 				const ImDrawList* cmd_list = draw_data->CmdLists[n];
-				const ImDrawIdx* idx_buffer_offset = 0;
 
-				gVB.Update(cmd_list->VtxBuffer.Data, (ptrdiff_t)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
-				gIB.Update(cmd_list->IdxBuffer.Data, (ptrdiff_t)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
-
-				gVB.Bind();
-				gIB.Bind();
-
-				///const ImDrawList* cmd_list = draw_data->CmdLists[n];
 				for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++)
 				{
 					const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
