@@ -28,12 +28,14 @@ namespace NuclearEngine {
 		void Renderer::init() {
 			this->IndexCount = 0;
 
-			Graphics::API::VertexBufferDesc Desc;
-			Desc.data = NULL;
-			Desc.size = BUFFER_SIZE;
-			Desc.usage = Graphics::API::BufferUsage::Dynamic;
+			{
+				Graphics::API::VertexBufferDesc Desc;
+				Desc.Data = NULL;
+				Desc.Size = BUFFER_SIZE;
+				Desc.UsageType = Graphics::API::BufferUsage::Dynamic;
 
-			Graphics::API::VertexBuffer::Create(&VBO, Desc);
+				Graphics::API::VertexBuffer::Create(&VBO, Desc);
+			}
 
 			Graphics::API::InputLayout InputL;
 			InputL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
@@ -56,7 +58,7 @@ namespace NuclearEngine {
 
 				offset += 4;
 			}
-			Graphics::API::IndexBuffer::Create(&IBO, indices, sizeof(indices));
+			//Graphics::API::IndexBuffer::Create(&IBO, indices, sizeof(indices));
 
 			/*glVertexAttribPointer(VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE,	(GLvoid *)0);
 			glEnableVertexAttribArray(VERTEX_INDEX);

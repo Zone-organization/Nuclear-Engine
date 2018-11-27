@@ -9,6 +9,7 @@ namespace NuclearEngine
 	{
 		namespace API
 		{
+			struct IndexBufferDesc;
 
 			class NEAPI IndexBuffer //<OpenGL::GLIndexBuffer, DirectX::DX11IndexBuffer>
 			{
@@ -16,7 +17,7 @@ namespace NuclearEngine
 				IndexBuffer();
 				~IndexBuffer();
 
-				static void Create(IndexBuffer *buffer, void* indices, unsigned int count);
+				static void Create(IndexBuffer *buffer, const IndexBufferDesc& desc);
 				static void Delete(IndexBuffer *buffer);
 
 				void Bind();

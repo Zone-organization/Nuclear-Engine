@@ -111,41 +111,37 @@ namespace NuclearEngine
 		void ImGui_Renderer::NewFrame()
 		{
 		}
+		static bool ValidVB = false, ValidIB = false;
 		void ImGui_Renderer::RenderDrawData(ImDrawData * draw_data)
 		{
 			// Create and grow vertex/index buffers if needed
-			if (g_VertexBufferSize < draw_data->TotalVtxCount)
+			if (ValidVB == false || g_VertexBufferSize < draw_data->TotalVtxCount)
 			{
 				API::VertexBuffer::Delete(&gVB);
 
 				g_VertexBufferSize = draw_data->TotalVtxCount + 5000;
 
 				API::VertexBufferDesc desc;
-				desc.usage = API::BufferUsage::Dynamic;
-				desc.size = g_VertexBufferSize * sizeof(ImDrawVert);
-				desc.data = NULL;
+				desc.UsageType = API::BufferUsage::Dynamic;
+				desc.Size = g_VertexBufferSize * sizeof(ImDrawVert);
+				desc.Data = NULL;
 				API::VertexBuffer::Create(&gVB, desc);
 
 				gVB.SetInputLayout(&gInputLayout, &gVertexShader);
+				ValidVB = true;
 			}
-			if (g_IndexBufferSize < draw_data->TotalIdxCount)
+			if (ValidIB == false || g_IndexBufferSize < draw_data->TotalIdxCount)
 			{
 				API::IndexBuffer::Delete(&gIB);
 
 				g_IndexBufferSize = draw_data->TotalIdxCount + 10000;
-
-				API::IndexBuffer::Create(&gIB, NULL, g_IndexBufferSize * sizeof(ImDrawIdx));
-			}
-
-			for (int n = 0; n < draw_data->CmdListsCount; n++)
-			{
-				const ImDrawList* cmd_list = draw_data->CmdLists[n];
-				const ImDrawIdx* idx_buffer_offset = 0;
-
-				gVB.Update((const void*)cmd_list->VtxBuffer.Data, (ptrdiff_t)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
-
-				gIB.Update((const void*)cmd_list->IdxBuffer.Data, (ptrdiff_t)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
-
+				API::IndexBufferDesc desc;
+				desc.UsageType = API::BufferUsage::Dynamic;
+				desc.Size = g_IndexBufferSize * sizeof(ImDrawIdx);
+				desc.Data = NULL;
+				desc.UsePreciseSize = true;
+				API::IndexBuffer::Create(&gIB, desc);
+				ValidIB = true;
 			}
 
 			// Setup orthographic projection matrix into our constant buffer
@@ -229,17 +225,9 @@ namespace NuclearEngine
 			Graphics::API::Context::SetViewPort(0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y);
 			
 
-			// Bind shader and vertex buffers
-			/*unsigned int stride = sizeof(ImDrawVert);
-			unsigned int offset = 0;*/
-
-			///Binds Input Layout too
-			gVB.Bind();
-			gIB.Bind();				//ctx->IASetIndexBuffer(gIB, sizeof(ImDrawIdx) == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0);
+			// Bind shader
 			Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 			gVertexShader.Bind();
-
-			///ctx->VSSetConstantBuffers(0, 1, &gVertexConstantBuffer);
 			gPixelShader.Bind();
 			gFontSampler.PSBind(0);
 		
@@ -255,6 +243,15 @@ namespace NuclearEngine
 			for (int n = 0; n < draw_data->CmdListsCount; n++)
 			{
 				const ImDrawList* cmd_list = draw_data->CmdLists[n];
+				const ImDrawIdx* idx_buffer_offset = 0;
+
+				gVB.Update(cmd_list->VtxBuffer.Data, (ptrdiff_t)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
+				gIB.Update(cmd_list->IdxBuffer.Data, (ptrdiff_t)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
+
+				gVB.Bind();
+				gIB.Bind();
+
+				///const ImDrawList* cmd_list = draw_data->CmdLists[n];
 				for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++)
 				{
 					const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
@@ -270,8 +267,7 @@ namespace NuclearEngine
 						//ctx->RSSetScissorRects(1, &r);
 
 						// Bind texture, Draw
-						ID3D11ShaderResourceView* texture_srv = (ID3D11ShaderResourceView*)pcmd->TextureId;
-						///ctx->PSSetShaderResources(0, 1, &texture_srv);
+						gFontTexture.PSBind(0);
 						Graphics::API::Context::DrawIndexed(pcmd->ElemCount, idx_offset, vtx_offset);
 					}
 					idx_offset += pcmd->ElemCount;
@@ -320,7 +316,7 @@ namespace NuclearEngine
 			API::Texture::Create(&gFontTexture, data, desc);
 
 			// Store our identifier
-			io.Fonts->TexID = (ImTextureID)&gFontTexture;
+			io.Fonts->TexID = &gFontTexture;
 
 			API::SamplerDesc samplerdesc;
 

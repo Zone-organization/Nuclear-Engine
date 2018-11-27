@@ -35,13 +35,13 @@ namespace NuclearEngine
 
 					glGenBuffers(1, &buffer->VBO);
 					glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
-					if (desc.usage == Graphics::API::BufferUsage::Static)
+					if (desc.UsageType == Graphics::API::BufferUsage::Static)
 					{
-						glBufferData(GL_ARRAY_BUFFER, desc.size, desc.data, GL_STATIC_DRAW);
+						glBufferData(GL_ARRAY_BUFFER, desc.Size, desc.Data, GL_STATIC_DRAW);
 					}
 					else
 					{
-						glBufferData(GL_ARRAY_BUFFER, desc.size, desc.data, GL_DYNAMIC_DRAW);
+						glBufferData(GL_ARRAY_BUFFER, desc.Size, desc.Data, GL_DYNAMIC_DRAW);
 					}
 					glBindBuffer(GL_ARRAY_BUFFER, 0);
 					glBindVertexArray(0);

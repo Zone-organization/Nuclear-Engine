@@ -27,13 +27,14 @@ namespace NuclearEngine
 
 				void DX11VertexBuffer::Create(DX11VertexBuffer * buffer, const VertexBufferDesc& desc)
 				{
+					buffer->offset = 0;
 					D3D11_BUFFER_DESC VertexBufferDesc;
 
-					if (desc.usage == BufferUsage::Static) {
+					if (desc.UsageType == BufferUsage::Static) {
 						VertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 						VertexBufferDesc.CPUAccessFlags = 0;
 					}
-					else if (desc.usage == BufferUsage::Dynamic)
+					else if (desc.UsageType == BufferUsage::Dynamic)
 					{
 						VertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 						VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -45,18 +46,23 @@ namespace NuclearEngine
 					}
 
 					VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-					VertexBufferDesc.ByteWidth = desc.size;
+					VertexBufferDesc.ByteWidth = desc.Size;
 					VertexBufferDesc.MiscFlags = 0;
 					VertexBufferDesc.StructureByteStride = 0;
 
-					D3D11_SUBRESOURCE_DATA InitialData;
-					InitialData.pSysMem = desc.data;
-					InitialData.SysMemPitch = 0;
-					InitialData.SysMemSlicePitch = 0;
+					if (desc.Data != NULL)
+					{
+						D3D11_SUBRESOURCE_DATA InitialData;
+						InitialData.pSysMem = desc.Data;
+						InitialData.SysMemPitch = 0;
+						InitialData.SysMemSlicePitch = 0;
+						DX11Context::GetDevice()->CreateBuffer(&VertexBufferDesc, &InitialData, &buffer->VertexBuffer);
 
-					buffer->offset = 0;
-
-					DX11Context::GetDevice()->CreateBuffer(&VertexBufferDesc, &InitialData, &buffer->VertexBuffer);
+					}
+					else
+					{
+						DX11Context::GetDevice()->CreateBuffer(&VertexBufferDesc, NULL, &buffer->VertexBuffer);
+					}
 				}
 
 				void DX11VertexBuffer::Delete(DX11VertexBuffer * buffer)

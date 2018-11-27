@@ -14,9 +14,9 @@ namespace NuclearEngine {
 
 			}
 
-			void IndexBuffer::Create(IndexBuffer* obj, void * indices, unsigned int count)
+			void IndexBuffer::Create(IndexBuffer* obj, const IndexBufferDesc& desc)
 			{
-				STATIC_BASE_API_FUNC_CALL_ARGS(Create, indices, count)
+				STATIC_BASE_API_FUNC_CALL_ARGS(Create, desc)
 			}
 
 			void IndexBuffer::Delete(IndexBuffer * obj)

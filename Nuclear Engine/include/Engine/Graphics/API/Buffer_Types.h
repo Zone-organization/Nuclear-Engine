@@ -14,9 +14,16 @@ namespace NuclearEngine
 			};
 
 			struct VertexBufferDesc {
-				const void* data;
-				unsigned int size;
-				BufferUsage usage = BufferUsage::Default;
+				const void* Data;
+				unsigned int Size;
+				BufferUsage UsageType = BufferUsage::Default;
+			};
+
+			struct IndexBufferDesc {
+				const void* Data;
+				unsigned int Size;
+				BufferUsage UsageType = BufferUsage::Default;
+				bool UsePreciseSize = false;
 			};
 		}
 	}

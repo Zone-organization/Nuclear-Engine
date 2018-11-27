@@ -8,6 +8,8 @@ namespace NuclearEngine
 	{
 		namespace API
 		{
+			struct IndexBufferDesc;
+
 			namespace DirectX
 			{
 				class NEAPI DX11IndexBuffer
@@ -16,7 +18,7 @@ namespace NuclearEngine
 					DX11IndexBuffer();
 					~DX11IndexBuffer();
 
-					static void Create(DX11IndexBuffer* buffer, const void* data, unsigned int size);
+					static void Create(DX11IndexBuffer* buffer, const IndexBufferDesc& desc);
 					static void Delete(DX11IndexBuffer* buffer);
 
 					void Bind();

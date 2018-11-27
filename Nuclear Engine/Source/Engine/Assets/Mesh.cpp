@@ -46,14 +46,24 @@ namespace NuclearEngine {
 					verticesdata.push_back(data.Tangents[i].z);
 				}
 			}
-			Graphics::API::VertexBufferDesc desc;
-			desc.data = verticesdata.data();
-			desc.size = (unsigned int)verticesdata.size() * sizeof(float);
-			desc.usage = Graphics::API::BufferUsage::Static;
+			
+			{
+				Graphics::API::VertexBufferDesc desc;
+				desc.Data = verticesdata.data();
+				desc.Size = (unsigned int)verticesdata.size() * sizeof(float);
+				desc.UsageType = Graphics::API::BufferUsage::Static;
 
-			Graphics::API::VertexBuffer::Create(&VBO, desc);
-			Graphics::API::IndexBuffer::Create(&IBO, data.indices.data(), data.indices.size());
+				Graphics::API::VertexBuffer::Create(&VBO, desc);
+			}
 
+			{
+				Graphics::API::IndexBufferDesc desc;
+				desc.Data = data.indices.data();
+				desc.Size = (unsigned int)data.indices.size();
+				desc.UsageType = Graphics::API::BufferUsage::Static;
+
+				Graphics::API::IndexBuffer::Create(&IBO, desc);
+			}
 			IndicesCount = data.indices.size();
 
 			Graphics::API::InputLayout layout;

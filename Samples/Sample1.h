@@ -1,5 +1,6 @@
 #pragma once
 #include "Common.h"
+#include <Engine\Graphics\ImGui_Renderer.h>
 
 class Sample1 : public Core::Game
 {
@@ -276,6 +277,8 @@ public:
 	}
 	void Render(float dt) override
 	{
+		//ImGui::NewFrame();
+
 		Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		Renderer->GetVertexShader().Bind();
 		Renderer->GetPixelShader().Bind();
@@ -324,6 +327,11 @@ public:
 			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(-0.01f, 0.0f, 0.0f));
 
 
+		//ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+		//ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+		//ImGui::End();
+
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
@@ -333,6 +341,10 @@ public:
 		Skybox.Render();
 		states.EnabledDepth_DisabledStencil.Bind();
 
+
+		//ImGui::Render();
+		//Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
 		Graphics::API::Context::PresentFrame();
+
 	}
 };

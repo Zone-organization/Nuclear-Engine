@@ -1,7 +1,7 @@
 #include <Engine/Graphics/API/OpenGL\GLIndexBuffer.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
-
+#include <Engine/Graphics/API/Buffer_Types.h>
 
 namespace NuclearEngine
 {
@@ -19,13 +19,17 @@ namespace NuclearEngine
 					buffer = 0;
 				}
 
-				void GLIndexBuffer::Create(GLIndexBuffer* result, const void * indices, unsigned int count)
+				void GLIndexBuffer::Create(GLIndexBuffer* result,const IndexBufferDesc& desc)
 				{
 					glGenBuffers(1, &result->buffer);
 
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->buffer);
 
-					glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+					if (!desc.UsePreciseSize)
+						glBufferData(GL_ELEMENT_ARRAY_BUFFER, desc.Size * sizeof(unsigned int), desc.Data, GL_STATIC_DRAW);
+					else
+						glBufferData(GL_ELEMENT_ARRAY_BUFFER, desc.Size, desc.Data, GL_STATIC_DRAW);
+
 
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 				}
@@ -45,9 +49,9 @@ namespace NuclearEngine
 				}
 				void GLIndexBuffer::Update(const void * data, unsigned int size)
 				{
-					glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-					glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-					glBindBuffer(GL_ARRAY_BUFFER, 0);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->buffer);
+					glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 				}
 			}
 		}

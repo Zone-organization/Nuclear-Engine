@@ -71,9 +71,9 @@ namespace NuclearEngine
 			mVShader.SetConstantBuffer(&Camera->GetCBuffer());
 
 			Graphics::API::VertexBufferDesc VDesc;
-			VDesc.data = skyboxVertices;
-			VDesc.size = sizeof(skyboxVertices);
-			VDesc.usage = Graphics::API::BufferUsage::Static;
+			VDesc.Data = skyboxVertices;
+			VDesc.Size = sizeof(skyboxVertices);
+			VDesc.UsageType = Graphics::API::BufferUsage::Static;
 
 			Graphics::API::VertexBuffer::Create(&mVBuffer, VDesc);
 

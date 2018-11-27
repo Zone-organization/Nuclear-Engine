@@ -5,8 +5,8 @@
 namespace NuclearEngine
 {
 	namespace Graphics
-	{
-		class ImGui_Renderer
+	{		
+		class NEAPI ImGui_Renderer
 		{
 		public:
 			static bool Initialize();

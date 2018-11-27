@@ -105,9 +105,9 @@ namespace NuclearEngine
 				///initDefaultJoystickMapping();
 
 				// init rendering
-				/*io.DisplaySize = static_cast<sf::Vector2f>(target.getSize());
+				io.DisplaySize = ImVec2(window->getSize().x, window->getSize().y);
 
-				if (s_fontTexture) { // delete previously created texture
+				/*if (s_fontTexture) { // delete previously created texture
 					delete s_fontTexture;
 				}
 				s_fontTexture = new sf::Texture;
