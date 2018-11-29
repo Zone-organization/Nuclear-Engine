@@ -1,7 +1,6 @@
 #include <Engine/Graphics/API/OpenGL\GLBlendState.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
-#include <Engine/Graphics/API/RenderStates_Types.h>
 
 namespace NuclearEngine
 {
@@ -20,7 +19,122 @@ namespace NuclearEngine
 				{
 
 				}
-				GLenum Blend2_GLenumBlend(BLEND blend)
+				//URGENT: NOT FINSIHED!
+				void GLBlendState::Create(GLBlendState* result, const BlendStateDesc& type)
+				{
+					result->IndependentBlendEnable = type.IndependentBlendEnable;
+
+					for (unsigned int i = 0; i < 8; i++)
+					{
+						result->targets[i].BlendEnable = type.RenderTarget[i].BlendEnable;
+						result->targets[i].SrcBlend = BLEND_TO_GLenum(type.RenderTarget[i].SrcBlend);
+						result->targets[i].DestBlend = BLEND_TO_GLenum(type.RenderTarget[i].DestBlend);
+						result->targets[i].BlendOp = BLEND_OP_TO_GLenum(type.RenderTarget[i].BlendOp);
+						result->targets[i].SrcBlendAlpha = BLEND_TO_GLenum(type.RenderTarget[i].SrcBlendAlpha);
+						result->targets[i].DestBlendAlpha = BLEND_TO_GLenum(type.RenderTarget[i].DestBlendAlpha);
+						result->targets[i].BlendOpAlpha = BLEND_OP_TO_GLenum(type.RenderTarget[i].BlendOpAlpha);
+						result->targets[i].RenderTargetWriteMask = type.RenderTarget[i].RenderTargetWriteMask;
+					}
+				}
+				void GLBlendState::Delete(GLBlendState * result)
+				{
+
+				}
+				void GLBlendState::Bind(Graphics::Color blendfactor, unsigned int samplemask)
+				{
+					if (IndependentBlendEnable == false)
+					{
+						for (unsigned int i = 0; i < 8; i++)
+						{
+							if (targets[i].BlendEnable)
+							{
+								glEnablei(GL_BLEND, i);
+								glBlendFuncSeparatei(i, targets[0].SrcBlend, targets[0].DestBlend, targets[0].SrcBlendAlpha, targets[0].DestBlendAlpha);
+								glBlendEquationSeparatei(i, targets[0].BlendOp, targets[0].BlendOpAlpha);
+								glBlendColor(blendfactor.r, blendfactor.g, blendfactor.b, blendfactor.a);
+							}
+							else
+							{
+								glDisablei(GL_BLEND, i);
+							}
+
+						}			
+					}
+					else
+					{
+						if (targets[0].BlendEnable)
+						{
+							glEnable(GL_BLEND);
+							glBlendFuncSeparate(targets[0].SrcBlend, targets[0].DestBlend, targets[0].SrcBlendAlpha, targets[0].DestBlendAlpha);
+							glBlendEquationSeparate(targets[0].BlendOp, targets[0].BlendOpAlpha);
+							glBlendColor(blendfactor.r, blendfactor.g, blendfactor.b, blendfactor.a);
+						}
+						else
+						{
+							glDisable(GL_BLEND);
+						}
+					}
+				}
+				BLEND GLBlendState::GLenum_TO_BLEND(GLenum blend)
+				{
+					switch (blend)
+					{
+					case GL_ZERO:
+						return BLEND::ZERO;
+					case GL_ONE: 
+						return BLEND::ONE;
+					case GL_SRC_COLOR:
+						return BLEND::SRC_COLOR;
+					case GL_ONE_MINUS_SRC_COLOR: 
+						return BLEND::INV_SRC_COLOR;
+					case GL_SRC_ALPHA: 
+						return BLEND::SRC_ALPHA;
+					case GL_ONE_MINUS_SRC_ALPHA:
+						return BLEND::INV_SRC_ALPHA;
+					case GL_DST_ALPHA:
+						return BLEND::DEST_ALPHA;
+					case GL_ONE_MINUS_DST_ALPHA: 
+						return BLEND::INV_DEST_ALPHA;
+					case GL_DST_COLOR: 
+						return BLEND::DEST_COLOR;
+					case GL_ONE_MINUS_DST_COLOR:
+						return BLEND::INV_DEST_COLOR;
+					case GL_SRC_ALPHA_SATURATE:
+						return BLEND::SRC_ALPHA_SAT;
+					case GL_CONSTANT_COLOR: 
+						return BLEND::BLEND_FACTOR;
+					case GL_ONE_MINUS_CONSTANT_COLOR:
+						return BLEND::INV_BLEND_FACTOR;
+					case GL_SRC1_COLOR:
+						return BLEND::SRC1_COLOR;
+					case GL_ONE_MINUS_SRC1_COLOR:
+						return BLEND::INV_SRC1_COLOR;
+					case GL_SRC1_ALPHA:
+						return BLEND::SRC1_ALPHA;
+					case GL_ONE_MINUS_SRC1_ALPHA:
+						return BLEND::INV_SRC1_ALPHA;
+					}
+
+					return BLEND::ONE;
+				}
+				BLEND_OP GLBlendState::GLenum_TO_BLEND_OP(GLenum blend)
+				{
+					switch (blend)
+					{
+					case GL_FUNC_ADD:
+						return BLEND_OP::OP_ADD;
+					case GL_FUNC_SUBTRACT:
+						return BLEND_OP::OP_SUBTRACT;
+					case GL_FUNC_REVERSE_SUBTRACT:
+						return BLEND_OP::OP_REV_SUBTRACT;
+					case GL_MIN:
+						return BLEND_OP::OP_MIN;
+					case GL_MAX:
+						return BLEND_OP::OP_MAX;
+					}
+					return BLEND_OP::OP_ADD;
+				}
+				GLenum GLBlendState::BLEND_TO_GLenum(BLEND blend)
 				{
 					switch (blend)
 					{
@@ -45,7 +159,7 @@ namespace NuclearEngine
 
 					return GL_ONE;
 				}
-				GLenum BlendOP2_GLenumBlendOP(BLEND_OP blend)
+				GLenum GLBlendState::BLEND_OP_TO_GLenum(BLEND_OP blend)
 				{
 					switch (blend)
 					{
@@ -56,45 +170,6 @@ namespace NuclearEngine
 					case BLEND_OP::OP_MAX: return GL_MAX; //5,
 					}
 					return GL_FUNC_ADD;
-				}
-				//URGENT: NOT FINSIHED!
-				void GLBlendState::Create(GLBlendState* result, const BlendStateDesc& type)
-				{
-					result->IndependentBlendEnable = type.IndependentBlendEnable;
-
-					for (unsigned int i = 0; i < 8; i++)
-					{
-						result->targets[i].BlendEnable = type.RenderTarget[i].BlendEnable;
-						result->targets[i].SrcBlend = Blend2_GLenumBlend(type.RenderTarget[i].SrcBlend);
-						result->targets[i].DestBlend = Blend2_GLenumBlend(type.RenderTarget[i].DestBlend);
-						result->targets[i].BlendOp = BlendOP2_GLenumBlendOP(type.RenderTarget[i].BlendOp);
-						result->targets[i].SrcBlendAlpha = Blend2_GLenumBlend(type.RenderTarget[i].SrcBlendAlpha);
-						result->targets[i].DestBlendAlpha = Blend2_GLenumBlend(type.RenderTarget[i].DestBlendAlpha);
-						result->targets[i].BlendOpAlpha = BlendOP2_GLenumBlendOP(type.RenderTarget[i].BlendOpAlpha);
-						result->targets[i].RenderTargetWriteMask = type.RenderTarget[i].RenderTargetWriteMask;
-					}
-				}
-				void GLBlendState::Delete(GLBlendState * result)
-				{
-
-				}
-				void GLBlendState::Bind(Graphics::Color blendfactor, unsigned int samplemask)
-				{
-					if (IndependentBlendEnable == false)
-					{
-						if (targets[0].BlendEnable)
-						{
-							glEnable(GL_BLEND);
-							glBlendFuncSeparate(targets[0].SrcBlend, targets[0].DestBlend, targets[0].SrcBlendAlpha, targets[0].DestBlendAlpha);
-							glBlendEquationSeparate(targets[0].BlendOp, targets[0].BlendOpAlpha);
-							glBlendColor(blendfactor.r, blendfactor.g, blendfactor.b, blendfactor.a);
-						}
-						else
-						{
-							glDisable(GL_BLEND);
-						}
-					}
-
 				}
 			}
 		}

@@ -19,6 +19,7 @@ namespace NuclearEngine
 				IndexBuffer mIndexBuffer;
 				VertexBuffer mVertexBuffer;
 				ConstantBuffer mConstantBuffer;
+				IndicesFormat mIndicesFormat;
 			};
 		}
 	}

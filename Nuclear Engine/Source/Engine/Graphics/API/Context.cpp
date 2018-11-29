@@ -20,6 +20,15 @@ static NuclearEngine::Graphics::API::DirectX::DX11Context ctx;
 #include <Engine/Graphics/API/Context.h>
 #endif
 
+#ifndef NE_USE_RUNTIME_RENDER_API
+#define CONTEXT_API_GET_FUNC_CALL(FuncName) \
+return ctx.##FuncName();
+#else
+#define CONTEXT_API_GET_FUNC_CALL(ClassName) \
+if (Graphics::API::Context::isOpenGL3RenderAPI()) {	return Graphics::API::OpenGL::GLContext::Get##ClassName(); } \
+else if (Graphics::API::Context::isDirectX11RenderAPI()) { return Graphics::API::DirectX::DX11Context::Get##ClassName();}
+#endif
+
 
 namespace NuclearEngine
 {
@@ -104,6 +113,24 @@ namespace NuclearEngine
 					return Graphics::API::DirectX::DX11Context::DrawIndexed(vertexCount, StartIndexLocation, BaseVertexLocation);
 				}
 #endif
+			}		
+			
+			static IndicesFormat gFormat = IndicesFormat::UINT_R32;
+
+			void Context::SetIndicesType(const IndicesFormat & type)
+			{
+				gFormat = type;
+#ifdef NE_COMPILE_CORE_OPENGL
+				if (_renderer == RenderAPI::OpenGL4_5)
+				{
+					return Graphics::API::OpenGL::GLContext::SetIndicesType(type);
+				}
+#endif
+			}
+
+			IndicesFormat Context::GetIndicesType()
+			{
+				return gFormat;
 			}
 
 			void Context::SetViewPort(int x, int y, int width, int height)
@@ -148,6 +175,7 @@ namespace NuclearEngine
 			SavedState Context::SaveState()
 			{
 				SavedState state;
+				state.mIndicesFormat = GetIndicesType();
 				state.mRasterizerState	=	GetRasterizerState();
 				state.mBlendState		=	GetBlendState();
 				state.mDepthStencilState=	GetDepthStencilState();
@@ -164,6 +192,7 @@ namespace NuclearEngine
 
 			void Context::LoadState(SavedState& state)
 			{
+				SetIndicesType(state.mIndicesFormat);
 				state.mRasterizerState.Bind();
 				state.mBlendState.Bind(state.mBlendState.SavedBlendFactor, state.mBlendState.SavedSampleMask);
 				state.mDepthStencilState.Bind();
@@ -173,16 +202,9 @@ namespace NuclearEngine
 				state.mVertexShader.Bind();
 				state.mIndexBuffer.Bind();
 				state.mVertexBuffer.Bind();
+
 			}
 
-#ifndef NE_USE_RUNTIME_RENDER_API
-#define CONTEXT_API_GET_FUNC_CALL(FuncName) \
-return ctx.##FuncName();
-#else
-#define CONTEXT_API_GET_FUNC_CALL(ClassName) \
-if (Graphics::API::Context::isOpenGL3RenderAPI()) {	return Graphics::API::OpenGL::GLContext::Get##ClassName(); } \
-else if (Graphics::API::Context::isDirectX11RenderAPI()) { return Graphics::API::DirectX::DX11Context::Get##ClassName();}
-#endif
 
 			RasterizerState Context::GetRasterizerState()
 			{

@@ -23,6 +23,7 @@ namespace NuclearEngine
 
 					static void Draw(unsigned int count);
 					static void DrawIndexed(unsigned int vertexCount, unsigned int StartIndexLocation, int BaseVertexLocation);
+					static void SetIndicesType(const IndicesFormat& type);
 
 					static void SetViewPort(int x, int y, int width, int height);
 

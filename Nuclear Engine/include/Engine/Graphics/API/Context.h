@@ -21,12 +21,15 @@ namespace NuclearEngine
 			TriangeStrip = 4
 		};
 
-		namespace API {
+		namespace API
+		{
 			namespace ContextDesc
 			{
 				//If 0 then Ansiotropic isn't supported.
 				static float MaxAnisotropicLevel = 0.0f;
 			}
+
+			enum class IndicesFormat;
 			class RasterizerState;
 			class BlendState;
 			class DepthStencilState;
@@ -54,6 +57,7 @@ namespace NuclearEngine
 				static void Draw(unsigned int count);
 				static void DrawIndexed(unsigned int VerticesCount, unsigned int StartIndexLocation = 0, int BaseVertexLocation = 0);
 
+				static void SetIndicesType(const IndicesFormat& type);
 				static void SetViewPort(int x, int y, int width, int height);
 
 				static bool isOpenGL3RenderAPI();
@@ -74,6 +78,8 @@ namespace NuclearEngine
 				static IndexBuffer			GetIndexBuffer();
 				static VertexBuffer			GetVertexBuffer();
 				static ConstantBuffer		GetConstantBuffer();
+				static IndicesFormat		GetIndicesType();
+
 			};
 		}
 	}

@@ -24,8 +24,8 @@ namespace NuclearEngine
 					void VSBind(unsigned int Slot);
 					void GSBind(unsigned int Slot);
 					void PSBind(unsigned int Slot);
-				private:
-					GLuint SamplerID;
+
+					GLuint mSamplerID;
 				};
 			}
 		}

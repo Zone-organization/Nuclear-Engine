@@ -28,9 +28,8 @@ namespace NuclearEngine
 					void SetConstantBuffer(GLConstantBuffer* ubuffer);
 
 					void Bind();
-				private:
-					GLuint _ProgramID;
-					static void Fix_Reflected_ConstantBuffer_Slot(GLPixelShader* result, const BinaryShaderBlob& blob);
+
+					GLuint mFragmentShaderID;
 				};
 			}
 		}

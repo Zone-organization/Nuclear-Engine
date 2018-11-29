@@ -14,61 +14,50 @@ namespace NuclearEngine
 			{
 				GLConstantBuffer::GLConstantBuffer()
 				{
-					this->buffer = 0;
-					this->name = "NewCB";
-					this->BindingIndex = 0;
+					this->mCBuffer = 0;
+					this->mName = "NewCB";
+					this->mBindingIndex = 0;
 				}
 				GLConstantBuffer::~GLConstantBuffer()
 				{
-					this->buffer = 0;
-					this->name = "OldCB";
-					this->BindingIndex = 0;
+					this->mCBuffer = 0;
+					this->mName = "OldCB";
+					this->mBindingIndex = 0;
 				}
 				void GLConstantBuffer::Create(GLConstantBuffer* result, const char * Nameinshader, unsigned int size)
 				{
 					int remainder = size % 16;
 					if (remainder != 0)
 					{
-						Log.Warning("[GLConstantBuffer] The size of buffer isn't a multiple of 16 which can cause many unexpected problems! \n");
+						Log.Warning("[GLConstantBuffer] The size of mCBuffer isn't a multiple of 16 which can cause many unexpected problems! \n");
 					}
 
-					result->name = Nameinshader;
-					result->BindingIndex = ubosBindingindex;
+					result->mName = Nameinshader;
+					result->mBindingIndex = ubosBindingindex;
 
-					glGenBuffers(1, &result->buffer);
-					glBindBuffer(GL_UNIFORM_BUFFER, result->buffer);
+					glGenBuffers(1, &result->mCBuffer);
+					glBindBuffer(GL_UNIFORM_BUFFER, result->mCBuffer);
 					glBufferData(GL_UNIFORM_BUFFER, size, NULL, GL_DYNAMIC_DRAW);
 
-					glBindBufferRange(GL_UNIFORM_BUFFER, result->BindingIndex, result->buffer, 0, size);
+					glBindBufferRange(GL_UNIFORM_BUFFER, result->mBindingIndex, result->mCBuffer, 0, size);
 
 					//Increment the binding index
 					ubosBindingindex++;
 					glBindBuffer(GL_UNIFORM_BUFFER, 0);
 				}
 
-				void GLConstantBuffer::Delete(GLConstantBuffer * cbuffer)
+				void GLConstantBuffer::Delete(GLConstantBuffer * cmCBuffer)
 				{
-					glDeleteBuffers(1, &cbuffer->buffer);					
-					cbuffer->buffer = 0;
+					glDeleteBuffers(1, &cmCBuffer->mCBuffer);					
+					cmCBuffer->mCBuffer = 0;
 				}
 
 				void GLConstantBuffer::Update(const void* data, unsigned int size)
 				{
-					glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+					glBindBuffer(GL_UNIFORM_BUFFER, mCBuffer);
 					glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 					glBindBuffer(GL_UNIFORM_BUFFER, 0);
 				}
-
-				unsigned int GLConstantBuffer::GetBindingIndex()
-				{
-					return BindingIndex;
-				}
-
-				const char * GLConstantBuffer::GetName()
-				{
-					return name;
-				}
-
 			}
 		}
 	}

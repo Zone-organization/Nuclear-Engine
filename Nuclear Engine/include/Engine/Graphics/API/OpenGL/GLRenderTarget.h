@@ -28,16 +28,14 @@ namespace NuclearEngine
 
 					void Bind();
 					static void Bind_Default();
-				private:
-					bool CreateRenderBuffer(GLenum storage, const Math::Vector2ui& size);
+					
+					GLuint mFBO;			//Framebuffer
+					GLuint mRBO;			//RenderBuffer
 
+				private:
+					bool CreateRenderBuffer(GLenum storage, const Math::Vector2ui& size);	
 					unsigned int ColorAttachmentsi = 0;
 
-					//Framebuffer
-					GLuint FBO;
-
-					//RenderBuffer
-					GLuint RBO;
 				};
 			}
 		}

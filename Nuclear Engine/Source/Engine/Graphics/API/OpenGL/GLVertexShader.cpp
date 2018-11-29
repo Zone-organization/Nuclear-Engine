@@ -14,24 +14,15 @@ namespace NuclearEngine
 			namespace OpenGL
 			{
 				static GLuint pipelineid = 0;
-				void GLVertexShader::Fix_Reflected_ConstantBuffer_Slot(GLVertexShader* result, const BinaryShaderBlob& blob)
-				{
-					/*std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
-					for (it = blob.Reflection.ConstantBuffers.begin(); it != blob.Reflection.ConstantBuffers.end(); it++)
-					{
-						it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str();
-						GLCheckError();
-					}*/
-				}
-
+			
 				GLVertexShader::GLVertexShader()
 				{
-					_ProgramID = 0;
+					mVertexShaderID = 0;
 				}
 
 				GLVertexShader::~GLVertexShader()
 				{
-					_ProgramID = 0;
+					mVertexShaderID = 0;
 				}
 				void CompileVertexshader(GLuint& shader, std::string source)
 				{
@@ -88,7 +79,7 @@ namespace NuclearEngine
 						}
 						else
 						{
-							CompileVertexshader(result->_ProgramID, desc.GLSL_SourceCode);
+							CompileVertexshader(result->mVertexShaderID, desc.GLSL_SourceCode);
 						}
 					}
 
@@ -96,22 +87,22 @@ namespace NuclearEngine
 
 				void GLVertexShader::Delete(GLVertexShader * shader)
 				{
-					if (shader->_ProgramID != 0)
+					if (shader->mVertexShaderID != 0)
 					{
-						glDeleteProgram(shader->_ProgramID);
+						glDeleteProgram(shader->mVertexShaderID);
 					}
-					shader->_ProgramID = 0;
+					shader->mVertexShaderID = 0;
 				}
 
 				void GLVertexShader::SetConstantBuffer(GLConstantBuffer* ubuffer)
 				{
-					glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
+					glUniformBlockBinding(mVertexShaderID, glGetUniformBlockIndex(mVertexShaderID, ubuffer->mName), ubuffer->mBindingIndex);
 				}
 
 				void GLVertexShader::Bind()
 				{
 					glBindProgramPipeline(pipelineid);
-					glUseProgramStages(pipelineid, GL_VERTEX_SHADER_BIT, _ProgramID);
+					glUseProgramStages(pipelineid, GL_VERTEX_SHADER_BIT, mVertexShaderID);
 				}
 				GLuint GLVertexShader::GetPipelineID()
 				{

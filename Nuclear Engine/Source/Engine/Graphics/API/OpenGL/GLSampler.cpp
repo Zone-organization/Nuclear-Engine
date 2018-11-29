@@ -14,11 +14,11 @@ namespace NuclearEngine
 			{
 				GLSampler::GLSampler()
 				{
-					SamplerID = 0;
+					mSamplerID = 0;
 				}
 				GLSampler::~GLSampler()
 				{
-					SamplerID = 0;
+					mSamplerID = 0;
 				}
 				int GetGLTextureWrap(TextureWrap textureWrap)
 				{
@@ -33,82 +33,82 @@ namespace NuclearEngine
 				}
 				void GLSampler::Create(GLSampler * result, const SamplerDesc & desc)
 				{
-					glGenSamplers(1, &result->SamplerID);
+					glGenSamplers(1, &result->mSamplerID);
 
-					glSamplerParameteri(result->SamplerID, GL_TEXTURE_WRAP_S, GetGLTextureWrap(desc.WrapU));
-					glSamplerParameteri(result->SamplerID, GL_TEXTURE_WRAP_T, GetGLTextureWrap(desc.WrapV));
-					glSamplerParameteri(result->SamplerID, GL_TEXTURE_WRAP_R, GetGLTextureWrap(desc.WrapW));
+					glSamplerParameteri(result->mSamplerID, GL_TEXTURE_WRAP_S, GetGLTextureWrap(desc.WrapU));
+					glSamplerParameteri(result->mSamplerID, GL_TEXTURE_WRAP_T, GetGLTextureWrap(desc.WrapV));
+					glSamplerParameteri(result->mSamplerID, GL_TEXTURE_WRAP_R, GetGLTextureWrap(desc.WrapW));
 
 					switch (desc.Filter)
 					{
 					case TextureFilter::Point2D:
 					{
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 						break;
 					}
 					case TextureFilter::Linear2D:
 					{
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 						break;
 					}
 					case TextureFilter::Point:
 					{
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 						break;
 					}
 					case TextureFilter::Bilinear:
 					{
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 						break;
 					}
 					case TextureFilter::Trilinear:
 					{
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 						break;
 					}
 
 					default:
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-						glSamplerParameteri(result->SamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+						glSamplerParameteri(result->mSamplerID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 						break;
 					}
 					if (Graphics::API::ContextDesc::MaxAnisotropicLevel != 0.0f)
 					{
 						if (desc.AnisoFilter != AnisotropicFilter::None)
 						{
-							glSamplerParameterf(result->SamplerID, GL_TEXTURE_MAX_ANISOTROPY_EXT, Math::min(static_cast<float>(desc.AnisoFilter), Graphics::API::ContextDesc::MaxAnisotropicLevel));
+							glSamplerParameterf(result->mSamplerID, GL_TEXTURE_MAX_ANISOTROPY_EXT, Math::min(static_cast<float>(desc.AnisoFilter), Graphics::API::ContextDesc::MaxAnisotropicLevel));
 						}
 					}
 
-					//glSamplerParameterf(result->SamplerID, GL_TEXTURE_MIN_LOD, desc.MinLOD);
-					//glSamplerParameterf(result->SamplerID, GL_TEXTURE_MAX_LOD, desc.MaxLOD);
+					//glSamplerParameterf(result->mSamplerID, GL_TEXTURE_MIN_LOD, desc.MinLOD);
+					//glSamplerParameterf(result->mSamplerID, GL_TEXTURE_MAX_LOD, desc.MaxLOD);
 
-					glSamplerParameteri(result->SamplerID, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+					glSamplerParameteri(result->mSamplerID, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 					GLfloat bcolor[4] = { desc.BorderColor.r,desc.BorderColor.g,desc.BorderColor.b,desc.BorderColor.a };
-					glSamplerParameterfv(result->SamplerID, GL_TEXTURE_BORDER_COLOR, bcolor);
+					glSamplerParameterfv(result->mSamplerID, GL_TEXTURE_BORDER_COLOR, bcolor);
 				}
 				void GLSampler::Delete(GLSampler * result)
 				{
-					glDeleteSamplers(1, &result->SamplerID);
+					glDeleteSamplers(1, &result->mSamplerID);
 
 				}
 				void GLSampler::VSBind(unsigned int Slot)
 				{
-					glBindSampler(Slot, SamplerID);
+					glBindSampler(Slot, mSamplerID);
 				}
 				void GLSampler::GSBind(unsigned int Slot)
 				{
-					glBindSampler(Slot, SamplerID);
+					glBindSampler(Slot, mSamplerID);
 
 				}
 				void GLSampler::PSBind(unsigned int Slot)
 				{
-					glBindSampler(Slot, SamplerID);
+					glBindSampler(Slot, mSamplerID);
 				}
 			}
 		}

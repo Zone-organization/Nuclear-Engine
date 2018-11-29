@@ -276,9 +276,6 @@
     <ClInclude Include="include\Experimental\Stella\Renderer.h" />
     <ClInclude Include="include\Experimental\Stella\Sprite.h" />
     <ClInclude Include="include\Experimental\Stella\SpriteSheet.h" />
-    <ClInclude Include="include\Engine\Graphics\API\UnifiedShader.h" />
-    <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLUnifiedShader.h" />
-    <ClInclude Include="include\Engine\Graphics\API\DirectX\DX11UnifiedShader.h" />
     <ClInclude Include="include\Engine\Components\TransformComponent.h" />
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
@@ -376,8 +373,6 @@
     <ClCompile Include="Source\Engine\ECS\Event.cpp" />
     <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLUnifiedShader.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\DirectX\DX11UnifiedShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\OpenGL\GLContext.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\Context.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
@@ -386,7 +381,6 @@
     <ClCompile Include="Source\Experimental\Stella\Sprite.cpp" />
     <ClCompile Include="Source\Experimental\Stella\SpriteSheet.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Renderer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\UnifiedShader.cpp" />
     <ClCompile Include="Source\Engine\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Binding.cpp" />

@@ -33,11 +33,8 @@ namespace NuclearEngine
 
 					Math::Vector3ui GetDimensions(Uint8 Mipmaplevel);
 
-					//OpenGL only
-					unsigned int GLGetTextureID();
-				private:
-					GLuint textureID;
-					GLenum type;
+					GLuint mTextureID;
+					GLenum mTextureType;
 				};
 			}
 		}

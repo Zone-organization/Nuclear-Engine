@@ -30,9 +30,9 @@ namespace NuclearEngine
 					void Bind();
 					void* Map();
 					void Unmap();
-				private:
-					GLuint VAO;
-					GLuint VBO;
+
+					GLuint mVAO;
+					GLuint mVBO;
 				};
 			}
 		}

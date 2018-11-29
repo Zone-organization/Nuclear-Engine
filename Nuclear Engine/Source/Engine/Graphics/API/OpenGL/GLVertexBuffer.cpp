@@ -13,29 +13,31 @@ namespace NuclearEngine
 			namespace OpenGL
 			{
 				GLenum GetGLDataType(Format dataType);
+				GLboolean IsFormatNormalized(Format dataType);
+
 				unsigned int GetDataTypeSizeInBytes(Format dataType);
 
 				unsigned int GetComponentCount(Format dataType);
 
 				GLVertexBuffer::GLVertexBuffer()
 				{
-					VAO = 0;
-					VBO = 0;
+					mVAO = 0;
+					mVBO = 0;
 				}
 
 				GLVertexBuffer::~GLVertexBuffer()
 				{
-					VAO = 0;
-					VBO = 0;
+					mVAO = 0;
+					mVBO = 0;
 				}
 
 				void GLVertexBuffer::Create(GLVertexBuffer * buffer, const VertexBufferDesc& desc)
 				{
-					glGenVertexArrays(1, &buffer->VAO);
-					glBindVertexArray(buffer->VAO);
+					glGenVertexArrays(1, &buffer->mVAO);
+					glBindVertexArray(buffer->mVAO);
 
-					glGenBuffers(1, &buffer->VBO);
-					glBindBuffer(GL_ARRAY_BUFFER, buffer->VBO);
+					glGenBuffers(1, &buffer->mVBO);
+					glBindBuffer(GL_ARRAY_BUFFER, buffer->mVBO);
 					if (desc.UsageType == Graphics::API::BufferUsage::Static)
 					{
 						glBufferData(GL_ARRAY_BUFFER, desc.Size, desc.Data, GL_STATIC_DRAW);
@@ -52,16 +54,16 @@ namespace NuclearEngine
 				void GLVertexBuffer::Delete(GLVertexBuffer * buffer)
 				{
 
-					glDeleteBuffers(1, &buffer->VAO);
-					glDeleteBuffers(1, &buffer->VBO);
+					glDeleteBuffers(1, &buffer->mVAO);
+					glDeleteBuffers(1, &buffer->mVBO);
 
-					buffer->VAO = 0;
-					buffer->VBO = 0;
+					buffer->mVAO = 0;
+					buffer->mVBO = 0;
 				}
 
 				void GLVertexBuffer::Update(const void * data, unsigned int size)
 				{
-					glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+					glBindBuffer(GL_ARRAY_BUFFER, this->mVBO);
 					glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 					glBindBuffer(GL_ARRAY_BUFFER, 0);
 				}
@@ -69,8 +71,8 @@ namespace NuclearEngine
 				void GLVertexBuffer::SetInputLayout(InputLayout * layout, GLVertexShader * shader)
 				{
 					unsigned int index = 0;
-					glBindVertexArray(VAO);
-					glBindBuffer(GL_ARRAY_BUFFER, VBO);
+					glBindVertexArray(mVAO);
+					glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
 					//Calculate Stride & Offset
 					unsigned int stride = 0;
@@ -87,7 +89,7 @@ namespace NuclearEngine
 						glVertexAttribPointer(index,
 							GetComponentCount(layout->GetBufferElement()[i].format),
 							GetGLDataType(layout->GetBufferElement()[i].format),
-							GL_FALSE, stride,
+							IsFormatNormalized(layout->GetBufferElement()[i].format), stride,
 							(GLvoid*)offset);
 
 						index++;
@@ -101,12 +103,12 @@ namespace NuclearEngine
 
 				void GLVertexBuffer::Bind()
 				{
-					glBindVertexArray(VAO);
+					glBindVertexArray(mVAO);
 				}
 
 				void * GLVertexBuffer::Map()
 				{
-					glBindBuffer(GL_ARRAY_BUFFER, VBO);
+					glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 					return glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 				}
 
@@ -128,6 +130,26 @@ namespace NuclearEngine
 					{		return GL_FLOAT;	}
 					case Format::R8G8B8A8_UNORM:
 					{	return GL_UNSIGNED_BYTE;	}
+					default:
+						return -1;
+						break;
+					}
+				}
+
+				GLboolean IsFormatNormalized(Format dataType)
+				{
+					switch (dataType)
+					{
+					case Format::R32_FLOAT:
+					case Format::R32G32_FLOAT:
+					case Format::R32G32B32_FLOAT:
+					case Format::R32G32B32A32_FLOAT:
+					{		return GL_FALSE;		}
+					case Format::R8_UNORM:
+					case Format::R8G8_UNORM:
+					case Format::R8G8B8_UNORM:
+					case Format::R8G8B8A8_UNORM:
+					{	    return GL_TRUE;			}
 					default:
 						return -1;
 						break;

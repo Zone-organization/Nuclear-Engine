@@ -133,6 +133,13 @@ namespace NuclearEngine
 				R8G8B8_UNORM = 133,
 				R16G16B16_FLOAT = 134,
 			};
+			
+			enum class IndicesFormat
+			{
+				UINT_R8 = 62,
+				UINT_R16 = 57,
+				UINT_R32 = 42
+			};
 		}
 	}
 }

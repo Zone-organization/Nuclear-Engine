@@ -31,14 +31,14 @@ namespace NuclearEngine
 					static void Delete(GLDepthStencilState *state);
 
 					void Bind();
-				protected:
-					GLboolean depthmask;
-					GLenum depthfunc;
-					bool depthenabled;
 
-					bool stencilenabled;
-					GLuint stencilwritemask;
-					GLuint stencilreadmask;
+					GLboolean mDepthMask;
+					GLenum mDepthFunc;
+					bool mDepthEnabled;
+
+					bool mStencilEnabled;
+					GLuint mStencilWriteMask;
+					GLuint mStencilReadMask;
 
 				};
 			}

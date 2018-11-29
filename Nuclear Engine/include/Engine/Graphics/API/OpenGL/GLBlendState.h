@@ -3,6 +3,7 @@
 
 #ifdef NE_COMPILE_CORE_OPENGL
 #include <Engine/Graphics/Color.h>
+#include <Engine/Graphics/API/RenderStates_Types.h>
 
 namespace NuclearEngine
 {
@@ -36,9 +37,15 @@ namespace NuclearEngine
 					static void Delete(GLBlendState *state);
 
 					void Bind(Graphics::Color blendfactor = Graphics::Color(0.0f), unsigned int samplemask = 0xffffffff);
-				protected:
+
 					bool IndependentBlendEnable;
 					OpenGL_RT_Blend targets[8];
+
+					//Helper Functions
+					static GLenum BLEND_TO_GLenum(BLEND blend);
+					static GLenum BLEND_OP_TO_GLenum(BLEND_OP blend);
+					static BLEND GLenum_TO_BLEND(GLenum blend);
+					static BLEND_OP GLenum_TO_BLEND_OP(GLenum blend);
 				};
 			}
 		}

@@ -11,19 +11,19 @@ namespace NuclearEngine
 		{
 			namespace OpenGL
 			{
-				GLIndexBuffer::GLIndexBuffer() : buffer(0)
+				GLIndexBuffer::GLIndexBuffer() : mIdxBuffer(0)
 				{
 				}
 				GLIndexBuffer::~GLIndexBuffer()
 				{
-					buffer = 0;
+					mIdxBuffer = 0;
 				}
 
 				void GLIndexBuffer::Create(GLIndexBuffer* result,const IndexBufferDesc& desc)
 				{
-					glGenBuffers(1, &result->buffer);
+					glGenBuffers(1, &result->mIdxBuffer);
 
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->buffer);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->mIdxBuffer);
 
 					GLenum Usage;
 					if (desc.UsageType == BufferUsage::Static)
@@ -41,28 +41,28 @@ namespace NuclearEngine
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 				}
 
-				void GLIndexBuffer::Delete(GLIndexBuffer * ibuffer)
+				void GLIndexBuffer::Delete(GLIndexBuffer * imIdxBuffer)
 				{
-					if (ibuffer->buffer != 0)
+					if (imIdxBuffer->mIdxBuffer != 0)
 					{
-						glDeleteBuffers(1, &ibuffer->buffer);
+						glDeleteBuffers(1, &imIdxBuffer->mIdxBuffer);
 					}
-					ibuffer->buffer = 0;
+					imIdxBuffer->mIdxBuffer = 0;
 				}
 
 				void GLIndexBuffer::Bind()
 				{
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIdxBuffer);
 				}
 				void GLIndexBuffer::Update(const void * data, unsigned int size)
 				{
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->buffer);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->mIdxBuffer);
 					glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 				}
 				void * GLIndexBuffer::Map()
 				{
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIdxBuffer);
 					return glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
 				}
 				void GLIndexBuffer::Unmap()

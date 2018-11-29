@@ -14,7 +14,7 @@ namespace NuclearEngine
 
 				GLRasterizerState::GLRasterizerState()
 				{
-					Cullenabled = false;
+					mCullEnabled = false;
 				}
 				GLRasterizerState::~GLRasterizerState()
 				{
@@ -25,30 +25,30 @@ namespace NuclearEngine
 				{
 					if (type.CullMode != CullMode::None)
 					{
-						result->Cullenabled = true;
+						result->mCullEnabled = true;
 						if (type.CullMode != CullMode::Front)
 						{
-							result->Cullfacemode = GL_FRONT;
+							result->mCullFaceMode = GL_FRONT;
 						}
 						else {
-							result->Cullfacemode = GL_BACK;
+							result->mCullFaceMode = GL_BACK;
 						}
 
 						if (type.FrontCounterClockwise)
 						{
-							result->Frontfaceorientation = GL_CCW;
+							result->mFrontFaceOrientation = GL_CCW;
 						}
 						else {
-							result->Frontfaceorientation = GL_CW;
+							result->mFrontFaceOrientation = GL_CW;
 						}
 					}
 
 					if (type.FillMode == FillMode::Wireframe)
 					{
-						result->Fillmode = GL_LINE;
+						result->mFillMode = GL_LINE;
 					}
 					else {
-						result->Fillmode = GL_FILL;
+						result->mFillMode = GL_FILL;
 					}
 				}
 				void GLRasterizerState::Delete(GLRasterizerState * result)
@@ -57,13 +57,13 @@ namespace NuclearEngine
 				}
 				void GLRasterizerState::Bind()
 				{
-					if (this->Cullenabled)
+					if (this->mCullEnabled)
 					{
 						glEnable(GL_CULL_FACE);
-						glCullFace(Cullfacemode);
-						glFrontFace(Frontfaceorientation);
+						glCullFace(mCullFaceMode);
+						glFrontFace(mFrontFaceOrientation);
 					}
-					glPolygonMode(GL_FRONT_AND_BACK, Fillmode);
+					glPolygonMode(GL_FRONT_AND_BACK, mFillMode);
 
 				}
 			}

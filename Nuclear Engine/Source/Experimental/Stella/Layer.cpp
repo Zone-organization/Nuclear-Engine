@@ -4,10 +4,10 @@
 
 namespace NuclearEngine {
 	namespace Graphics {
-		Layer::Layer(Renderer *renderer, API::UnifiedShader *shader, glm::mat4 projection)
+		/*Layer::Layer(Renderer *renderer, API::UnifiedShader *shader, glm::mat4 projection)
 			: mRenderer(renderer), mShader(shader), Projection(projection) 
 		{
-		}
+		}*/
 
 		Layer::~Layer() {
 			for (auto i : this->Sprites)
@@ -24,7 +24,7 @@ namespace NuclearEngine {
 
 		void Layer::Render() {
 
-			this->mShader->Bind();
+			//this->mShader->Bind();
 			this->mRenderer->Begin();
 
 			//glm::mat4 trans;

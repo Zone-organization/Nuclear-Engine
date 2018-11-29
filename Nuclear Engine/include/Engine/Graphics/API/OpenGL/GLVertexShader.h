@@ -30,9 +30,8 @@ namespace NuclearEngine
 
 					//OpenGL only!
 					static GLuint GetPipelineID();
-				private:
-					GLuint _ProgramID;
-					static void Fix_Reflected_ConstantBuffer_Slot(GLVertexShader* result, const BinaryShaderBlob& blob);
+
+					GLuint mVertexShaderID;
 				};
 			}
 		}

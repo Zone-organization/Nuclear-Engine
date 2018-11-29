@@ -32,53 +32,53 @@ namespace NuclearEngine
 
 				GLDepthStencilState::GLDepthStencilState()
 				{
-					depthenabled = false;
-					stencilenabled = false;
+					mDepthEnabled = false;
+					mStencilEnabled = false;
 
 				}
 				GLDepthStencilState::~GLDepthStencilState()
 				{
-					depthenabled = false;
-					stencilenabled = false;
+					mDepthEnabled = false;
+					mStencilEnabled = false;
 				}
 				void GLDepthStencilState::Create(GLDepthStencilState* result, const DepthStencilStateDesc& type)
 				{
-					result->depthenabled = type.DepthEnabled;
-					result->stencilenabled = type.StencilEnabled;
+					result->mDepthEnabled = type.DepthEnabled;
+					result->mStencilEnabled = type.StencilEnabled;
 
 					if (type.DepthEnabled == true)
 					{
-						result->depthmask = type.DepthMaskEnabled;
-						result->depthfunc = GetGLComparisonFunc(type.DepthFunc);
-						result->depthenabled = true;
+						result->mDepthMask = type.DepthMaskEnabled;
+						result->mDepthFunc = GetGLComparisonFunc(type.DepthFunc);
+						result->mDepthEnabled = true;
 					}
 					//URGENT: NOT FINSIHED!
 					if (type.StencilEnabled == true)
 					{
-						result->stencilenabled = true;
-						result->stencilwritemask = type.StencilWriteMask;
-						result->stencilreadmask = type.StencilReadMask;
+						result->mStencilEnabled = true;
+						result->mStencilWriteMask = type.StencilWriteMask;
+						result->mStencilReadMask = type.StencilReadMask;
 
 					}
 				}
 				void GLDepthStencilState::Delete(GLDepthStencilState * result)
 				{
-					result->depthmask = false;
-					result->depthfunc = GL_LESS;
-					result->depthenabled = false;
+					result->mDepthMask = false;
+					result->mDepthFunc = GL_LESS;
+					result->mDepthEnabled = false;
 				}
 				void GLDepthStencilState::Bind()
 				{
-					if (depthenabled)
+					if (mDepthEnabled)
 					{
 						glEnable(GL_DEPTH_TEST);
-						glDepthMask(depthmask);
-						glDepthFunc(depthfunc);
+						glDepthMask(mDepthMask);
+						glDepthFunc(mDepthFunc);
 					}
 					else {
 						glDisable(GL_DEPTH_TEST);
 					}
-					/*	if (stencilenabled)
+					/*	if (mStencilEnabled)
 						{
 							glEnable(GL_STENCIL_TEST);
 						//	glStencilMaskSeparate(0xFF); // each bit is written to the stencil buffer as is

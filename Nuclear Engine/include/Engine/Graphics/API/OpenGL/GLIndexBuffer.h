@@ -26,8 +26,7 @@ namespace NuclearEngine
 					void* Map();
 					void Unmap();
 
-				private:
-					GLuint buffer;
+					GLuint mIdxBuffer;
 				};
 			}
 		}

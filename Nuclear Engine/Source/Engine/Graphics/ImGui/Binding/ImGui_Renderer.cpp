@@ -1,5 +1,6 @@
 #include "Engine\Graphics\ImGui_Renderer.h"
 #include "Core/FileSystem.h"
+#include <Engine/Graphics/API/OpenGL\GLContext.h>
 
 namespace NuclearEngine
 {
@@ -201,6 +202,12 @@ namespace NuclearEngine
 			gVertexShader.Bind();
 			gPixelShader.Bind();
 			gFontSampler.PSBind(0);
+
+			if(sizeof(ImDrawIdx) == 2)
+				Graphics::API::Context::SetIndicesType(Graphics::API::IndicesFormat::UINT_R16);
+			else
+				Graphics::API::Context::SetIndicesType(Graphics::API::IndicesFormat::UINT_R32);
+
 			gVB.Bind();
 			gIB.Bind();
 

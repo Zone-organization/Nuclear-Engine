@@ -19,33 +19,33 @@ namespace NuclearEngine
 				int GetGLFormatType(Format format);
 				int GetGLFormat(Format format);
 
-				GLTexture::GLTexture() : textureID(0), type(0)
+				GLTexture::GLTexture() : mTextureID(0), mTextureType(0)
 				{
 				}
 
 				GLTexture::~GLTexture()
 				{
-					textureID = 0;
-					type = 0;
+					mTextureID = 0;
+					mTextureType = 0;
 				}
 
 				bool GLTexture::Create(GLTexture* result, const Texture_Data& Data, const Texture_Desc& Desc)
 				{
 					if (Desc.Type == TextureType::Texture1D)
 					{
-						result->type = GL_TEXTURE_1D;
+						result->mTextureType = GL_TEXTURE_1D;
 					}
 					else if (Desc.Type == TextureType::Texture2D)
 					{
-						result->type = GL_TEXTURE_2D;
+						result->mTextureType = GL_TEXTURE_2D;
 					}
 					else if (Desc.Type == TextureType::Texture3D)
 					{
-						result->type = GL_TEXTURE_3D;
+						result->mTextureType = GL_TEXTURE_3D;
 					}
 
-					glGenTextures(1, &result->textureID);
-					glBindTexture(result->type, result->textureID);
+					glGenTextures(1, &result->mTextureID);
+					glBindTexture(result->mTextureType, result->mTextureID);
 
 					if (Desc.Format == Format::R8_UNORM)
 					{
@@ -54,7 +54,7 @@ namespace NuclearEngine
 
 					if (Desc.Type == TextureType::Texture1D)
 					{
-						glTexImage1D(result->type,
+						glTexImage1D(result->mTextureType,
 							0,
 							GetGLInternalFormat(Desc.Format),
 							Data.Width,
@@ -65,7 +65,7 @@ namespace NuclearEngine
 					}
 					else if (Desc.Type == TextureType::Texture2D)
 					{
-						glTexImage2D(result->type,
+						glTexImage2D(result->mTextureType,
 							0,
 							GetGLInternalFormat(Desc.Format),
 							Data.Width,
@@ -77,7 +77,7 @@ namespace NuclearEngine
 					}
 					else if (Desc.Type == TextureType::Texture3D)
 					{
-						glTexImage3D(result->type,
+						glTexImage3D(result->mTextureType,
 							0,
 							GetGLInternalFormat(Desc.Format),
 							Data.Width,
@@ -91,24 +91,24 @@ namespace NuclearEngine
 
 					if (Desc.GenerateMipMaps == true)
 					{
-						glGenerateMipmap(result->type);
+						glGenerateMipmap(result->mTextureType);
 					}
 
 					if (Desc.Format == Format::R8_UNORM)
 					{
 						glPixelStorei(GL_PACK_ALIGNMENT, 1);
 					}
-					glBindTexture(result->type, 0);
+					glBindTexture(result->mTextureType, 0);
 
 					return true;
 				}
 
 				bool GLTexture::Create(GLTexture * result, const std::array<Graphics::API::Texture_Data, 6>& data, const Texture_Desc& Desc)
 				{
-					glGenTextures(1, &result->textureID);
-					result->type = GL_TEXTURE_CUBE_MAP;
+					glGenTextures(1, &result->mTextureID);
+					result->mTextureType = GL_TEXTURE_CUBE_MAP;
 
-					glBindTexture(GL_TEXTURE_CUBE_MAP, result->textureID);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, result->mTextureID);
 
 					for (GLuint i = 0; i < data.size(); i++)
 					{
@@ -134,28 +134,28 @@ namespace NuclearEngine
 
 				void GLTexture::Delete(GLTexture * texture)
 				{
-					glDeleteTextures(1, &texture->textureID);
-					texture->textureID = 0;
-					texture->type = 0;
+					glDeleteTextures(1, &texture->mTextureID);
+					texture->mTextureID = 0;
+					texture->mTextureType = 0;
 				}
 
 				void GLTexture::VSBind(Uint8 slot)
 				{
 					glActiveTexture(GL_TEXTURE0 + slot);
-					glBindTexture(type, textureID);
+					glBindTexture(mTextureType, mTextureID);
 				}
 
 
 				void GLTexture::PSBind(Uint8 slot)
 				{
 					glActiveTexture(GL_TEXTURE0 + slot);
-					glBindTexture(type, textureID);
+					glBindTexture(mTextureType, mTextureID);
 				}
 
 				void GLTexture::GSBind(Uint8 slot)
 				{
 					glActiveTexture(GL_TEXTURE0 + slot);
-					glBindTexture(type, textureID);
+					glBindTexture(mTextureType, mTextureID);
 				}
 				Math::Vector3ui GLTexture::GetDimensions(Uint8 miplevel)
 				{
@@ -167,10 +167,6 @@ namespace NuclearEngine
 					return Math::Vector3ui(w,h,d);
 				}
 				
-				unsigned int GLTexture::GLGetTextureID()
-				{
-					return textureID;
-				}
 				int GetGLInternalFormat(Format format)
 				{
 					switch (format)

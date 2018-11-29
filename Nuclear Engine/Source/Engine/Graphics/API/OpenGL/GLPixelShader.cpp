@@ -14,24 +14,14 @@ namespace NuclearEngine
 		{
 			namespace OpenGL
 			{
-				void GLPixelShader::Fix_Reflected_ConstantBuffer_Slot(GLPixelShader* result, const BinaryShaderBlob& blob)
-				{
-					/*std::unordered_map<std::string, Reflected_Constantbuffer>::iterator it;
-					for (it = blob.Reflection.ConstantBuffers.begin(); it != blob.Reflection.ConstantBuffers.end(); it++)
-					{
-						it->second.BindingSlot = glGetUniformBlockIndex(result->_ProgramID, it->first.c_str());
-						GLCheckError();
-					}*/
-				}
-
 				GLPixelShader::GLPixelShader()
 				{
-					_ProgramID = 0;
+					mFragmentShaderID = 0;
 				}
 
 				GLPixelShader::~GLPixelShader()
 				{
-					_ProgramID = 0;
+					mFragmentShaderID = 0;
 				}
 				void CompileFragmentshader(GLuint& shader, std::string source)
 				{
@@ -82,7 +72,7 @@ namespace NuclearEngine
 						}
 						else
 						{
-							CompileFragmentshader(result->_ProgramID, desc.GLSL_SourceCode);
+							CompileFragmentshader(result->mFragmentShaderID, desc.GLSL_SourceCode);
 						}
 					}
 
@@ -90,21 +80,21 @@ namespace NuclearEngine
 
 				void GLPixelShader::Delete(GLPixelShader * shader)
 				{
-					if (shader->_ProgramID != 0)
+					if (shader->mFragmentShaderID != 0)
 					{
-						glDeleteProgram(shader->_ProgramID);
+						glDeleteProgram(shader->mFragmentShaderID);
 					}
-					shader->_ProgramID = 0;
+					shader->mFragmentShaderID = 0;
 				}
 
 				void GLPixelShader::SetConstantBuffer(GLConstantBuffer* ubuffer)
 				{
-					glUniformBlockBinding(_ProgramID, glGetUniformBlockIndex(_ProgramID, ubuffer->GetName()), ubuffer->GetBindingIndex());
+					glUniformBlockBinding(mFragmentShaderID, glGetUniformBlockIndex(mFragmentShaderID, ubuffer->mName), ubuffer->mBindingIndex);
 				}
 
 				void GLPixelShader::Bind()
 				{
-					glUseProgramStages(GLVertexShader::GetPipelineID(), GL_FRAGMENT_SHADER_BIT, _ProgramID);
+					glUseProgramStages(GLVertexShader::GetPipelineID(), GL_FRAGMENT_SHADER_BIT, mFragmentShaderID);
 				}
 			}
 		}

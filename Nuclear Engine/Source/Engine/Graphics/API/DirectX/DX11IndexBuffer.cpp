@@ -3,6 +3,7 @@
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/API/DirectX\DX11Context.h>
 #include <Engine/Graphics/API/Buffer_Types.h>
+#include <Engine/Graphics/API/Context.h>
 
 namespace NuclearEngine
 {
@@ -78,7 +79,7 @@ namespace NuclearEngine
 
 				void DX11IndexBuffer::Bind()
 				{
-					DX11Context::GetContext()->IASetIndexBuffer(mIXBuffer, DXGI_FORMAT_R32_UINT, 0);
+					DX11Context::GetContext()->IASetIndexBuffer(mIXBuffer, (DXGI_FORMAT)API::Context::GetIndicesType(), 0);
 				}
 				void DX11IndexBuffer::Update(const void * data, unsigned int size)
 				{

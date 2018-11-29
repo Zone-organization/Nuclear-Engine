@@ -21,11 +21,11 @@ namespace NuclearEngine
 					static void Delete(GLRasterizerState *state);
 
 					void Bind();
-				protected:
-					bool Cullenabled;
-					GLenum Cullfacemode;
-					GLenum Frontfaceorientation;
-					GLenum Fillmode;
+
+					bool mCullEnabled;
+					GLenum mCullFaceMode;
+					GLenum mFrontFaceOrientation;
+					GLenum mFillMode;
 				};
 			}
 		}

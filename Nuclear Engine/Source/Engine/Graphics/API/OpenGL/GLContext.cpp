@@ -13,7 +13,7 @@ namespace NuclearEngine
 		{
 			namespace OpenGL
 			{
-
+				static GLenum gIndicesType = GL_UNSIGNED_INT;
 				void GLContext::SetPrimitiveType(int primitivetype)
 				{
 					switch (primitivetype)
@@ -80,10 +80,22 @@ namespace NuclearEngine
 
 				void GLContext::DrawIndexed(unsigned int vertexCount, unsigned int StartIndexLocation, int BaseVertexLocation)
 				{
-					glDrawElements(GL_PRIMITIVE_TYPE, vertexCount, GL_UNSIGNED_INT, (int*)BaseVertexLocation);
+					glDrawElements(GL_PRIMITIVE_TYPE, vertexCount, gIndicesType, (int*)BaseVertexLocation);
 				}
 
-
+				void GLContext::SetIndicesType(const IndicesFormat & type)
+				{
+					if (type == IndicesFormat::UINT_R8)
+					{
+						gIndicesType = GL_UNSIGNED_BYTE;
+					}
+					else if (type == IndicesFormat::UINT_R16)
+					{
+						gIndicesType = GL_UNSIGNED_SHORT;
+					}
+					else
+						gIndicesType = GL_UNSIGNED_INT;
+				}
 				void GLContext::SetViewPort(int x, int y, int width, int height)
 				{
 					glViewport(x, y, width, height);
@@ -91,26 +103,59 @@ namespace NuclearEngine
 
 				RasterizerState GLContext::GetRasterizerState()
 				{
-					return RasterizerState();
+					RasterizerState Obj;
+					Obj.GLObject.mCullEnabled = glIsEnabled(GL_CULL_FACE);
+
+					return Obj;
 				}
 
 				BlendState GLContext::GetBlendState()
 				{
-					return BlendState();
+					BlendState Obj;					
+
+					for (unsigned int i = 0; i < 8; i++)
+					{
+						GLenum last_blend_src_rgb; glGetIntegeri_v(GL_BLEND_SRC_RGB,i, (GLint*)&last_blend_src_rgb);
+						GLenum last_blend_dst_rgb; glGetIntegeri_v(GL_BLEND_DST_RGB,i, (GLint*)&last_blend_dst_rgb);
+						GLenum last_blend_src_alpha; glGetIntegeri_v(GL_BLEND_SRC_ALPHA,i, (GLint*)&last_blend_src_alpha);
+						GLenum last_blend_dst_alpha; glGetIntegeri_v(GL_BLEND_DST_ALPHA,i, (GLint*)&last_blend_dst_alpha);
+						GLenum last_blend_equation_rgb; glGetIntegeri_v(GL_BLEND_EQUATION_RGB,i, (GLint*)&last_blend_equation_rgb);
+						GLenum last_blend_equation_alpha; glGetIntegeri_v(GL_BLEND_EQUATION_ALPHA,i, (GLint*)&last_blend_equation_alpha);
+						GLboolean last_enable_blend = glIsEnabledi(GL_BLEND, 1);
+
+						Obj.GLObject.targets[i].BlendEnable = last_enable_blend;
+						Obj.GLObject.targets[i].SrcBlend = last_blend_src_rgb;
+						Obj.GLObject.targets[i].DestBlend = last_blend_dst_rgb;
+						Obj.GLObject.targets[i].BlendOp = last_blend_equation_rgb;
+						Obj.GLObject.targets[i].SrcBlendAlpha = last_blend_src_alpha;
+						Obj.GLObject.targets[i].DestBlendAlpha = last_blend_dst_alpha;
+						Obj.GLObject.targets[i].BlendOpAlpha = last_blend_equation_alpha;
+						//Obj.GLObject.targets[i].RenderTargetWriteMask = Obj.GLObject.type.RenderTarget[i].RenderTargetWriteMask;
+					}
+
+					return Obj;
 				}
 
 				DepthStencilState GLContext::GetDepthStencilState()
 				{
-					return DepthStencilState();
+					DepthStencilState Obj;
+					Obj.GLObject.mDepthEnabled = glIsEnabled(GL_DEPTH_TEST);
+					Obj.GLObject.mStencilEnabled = glIsEnabled(GL_STENCIL_TEST);
+
+					return Obj;
 				}
 
 				Texture GLContext::GetPSTexture()
 				{
+					GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+
 					return Texture();
 				}
 
 				Sampler GLContext::GetPSSampler()
 				{
+					GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+					//glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
 					return Sampler();
 				}
 
@@ -126,12 +171,16 @@ namespace NuclearEngine
 
 				IndexBuffer GLContext::GetIndexBuffer()
 				{
-					return IndexBuffer();
+					IndexBuffer Obj;
+					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, (GLint*)&Obj.GLObject.mIdxBuffer);
+					return Obj;
 				}
 
 				VertexBuffer GLContext::GetVertexBuffer()
 				{
-					return VertexBuffer();
+					VertexBuffer Obj;
+					glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (GLint*)&Obj.GLObject.mVAO);
+					return Obj;
 				}
 
 				ConstantBuffer GLContext::GetConstantBuffer()

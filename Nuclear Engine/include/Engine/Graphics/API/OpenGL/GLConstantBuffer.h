@@ -20,13 +20,10 @@ namespace NuclearEngine
 					static void Delete(GLConstantBuffer* cbuffer);
 
 					void Update(const void* data, unsigned int size);
-					unsigned int GetBindingIndex();
-					const char * GetName();
 
-				protected:
-					GLuint buffer;
-					GLuint BindingIndex;
-					const char* name;
+					GLuint mCBuffer;
+					GLuint mBindingIndex;
+					const char* mName;
 
 				};
 			}
