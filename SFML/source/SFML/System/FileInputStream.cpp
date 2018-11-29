@@ -25,11 +25,12 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <SFML/System/FileInputStream.hpp>
 #ifdef ANDROID
 #include <SFML/System/Android/ResourceStream.hpp>
 #endif
-
 
 namespace sf
 {

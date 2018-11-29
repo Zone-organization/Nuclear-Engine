@@ -104,7 +104,7 @@ namespace NuclearEngine
 					}
 
 					// Convert the name of the video card to a character array and store it
-					if (wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128) != 0)
+					if (wcstombs_s((size_t*)&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128) != 0)
 					{
 						return false;
 					}
