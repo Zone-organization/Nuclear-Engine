@@ -148,6 +148,21 @@ namespace NuclearEngine
 				}
 #endif
 			}
+			void Context::SetScissors(int x, int y, int width, int height)
+			{
+#ifndef NE_USE_RUNTIME_RENDER_API
+				ctx.SetScissors(x, y, width, height);
+#else
+				if (_renderer == RenderAPI::OpenGL4_5)
+				{
+					return Graphics::API::OpenGL::GLContext::SetScissors(x, y, width, height);
+				}
+				else if (_renderer == RenderAPI::DirectX11)
+				{
+					return Graphics::API::DirectX::DX11Context::SetScissors(x, y, width, height);
+				}
+#endif
+			}
 			bool Context::isOpenGL3RenderAPI()
 			{
 				return isOpengl3;
@@ -186,7 +201,6 @@ namespace NuclearEngine
 				state.mIndexBuffer		=	GetIndexBuffer();
 				state.mVertexBuffer		=	GetVertexBuffer();
 				state.mConstantBuffer	=	GetConstantBuffer();
-				state.mVertexShader.SetConstantBuffer(&state.mConstantBuffer);
 				return state;
 			}
 

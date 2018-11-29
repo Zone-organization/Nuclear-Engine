@@ -39,7 +39,8 @@ namespace NuclearEngine
 					IDXGIFactory1* factory;
 					IDXGIAdapter1* adapter;
 					IDXGIOutput* adapterOutput;
-					unsigned int numModes, i, numerator, denominator, stringLength;
+					unsigned int numModes, i, numerator, denominator;
+					size_t stringLength;
 					DXGI_MODE_DESC* displayModeList;
 					DXGI_ADAPTER_DESC adapterDesc;
 					char m_videoCardDescription[128];
@@ -104,7 +105,7 @@ namespace NuclearEngine
 					}
 
 					// Convert the name of the video card to a character array and store it
-					if (wcstombs_s((size_t*)&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128) != 0)
+					if (wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128) != 0)
 					{
 						return false;
 					}
@@ -147,10 +148,10 @@ namespace NuclearEngine
 
 
 #ifdef _DEBUG
-					//"2018-8-11 Reboot"
-					//Disabled until I D3D11 SDK Layers for Windows 10
-					//if(window->getSettings().attributeFlags == sf::ContextSettings::Debug)
-					//creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+					if (window->getSettings().attributeFlags == sf::ContextSettings::Debug)
+					{
+						creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+					}
 #endif
 					result = D3D11CreateDeviceAndSwapChain(
 						adapter,
@@ -469,6 +470,16 @@ namespace NuclearEngine
 					viewPort.MinDepth = 0.0f;
 					viewPort.MaxDepth = 1.0f;
 					Context->RSSetViewports(1, &viewPort);
+				}
+
+				void DX11Context::SetScissors(int x, int y, int width, int height)
+				{
+					D3D11_RECT rc;
+					rc.left = x;
+					rc.top = y;
+					rc.right = width;
+					rc.bottom = height;
+					Context->RSSetScissorRects(1, &rc);
 				}
 
 				RasterizerState DX11Context::GetRasterizerState()

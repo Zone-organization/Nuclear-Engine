@@ -45,20 +45,25 @@ namespace NuclearEngine
 			class NEAPI Context
 			{
 			public:
+				//get active render api
 				static Core::RenderAPI GetRenderAPI();
 
+				//Set primitive topology
 				static void SetPrimitiveType(PrimitiveType primitivetype);
 
+				//Clears "Color, Depth and Stencil" Buffers
 				static void Clear(Graphics::Color color, Uint32 flags, float depth = 1.0f, unsigned int stencil = 0);
 
 				//Render the frame to the window
 				static void PresentFrame();
 
+				//Drawing Function
 				static void Draw(unsigned int count);
 				static void DrawIndexed(unsigned int VerticesCount, unsigned int StartIndexLocation = 0, int BaseVertexLocation = 0);
 
 				static void SetIndicesType(const IndicesFormat& type);
 				static void SetViewPort(int x, int y, int width, int height);
+				static void SetScissors(int x, int y, int width, int height);
 
 				static bool isOpenGL3RenderAPI();
 				static bool isDirectX11RenderAPI();

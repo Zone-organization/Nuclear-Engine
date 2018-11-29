@@ -26,6 +26,7 @@ namespace NuclearEngine
 					static void DrawIndexed(unsigned int vertexCount, unsigned int StartIndexLocation, int BaseVertexLocation);
 
 					static void SetViewPort(int x, int y, int width, int height);
+					static void SetScissors(int x, int y, int width, int height);
 
 					//DX11 Specific
 					static ID3D11Device* GetDevice();

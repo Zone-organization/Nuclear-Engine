@@ -39,10 +39,13 @@ namespace NuclearEngine
 			gInputLayout.AppendAttribute("COLOR", 0, Graphics::API::Format::R8G8B8A8_UNORM);
 			gInputLayout.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32G32_FLOAT);
 
+			gInputLayout.AutoAlignedOffset = false;
 
 			// Create the constant buffer
 			API::ConstantBuffer::Create(&gVertexConstantBuffer, "vertexBuffer", sizeof(float[4][4]));
 		
+			gVertexShader.SetConstantBuffer(&gVertexConstantBuffer);
+
 			// Create the pixel shader
 			Graphics::API::PixelShader::Create(
 				&gPixelShader,
@@ -167,13 +170,13 @@ namespace NuclearEngine
 			float B = draw_data->DisplayPos.y + draw_data->DisplaySize.y;
 
 			if (Graphics::API::Context::isOpenGL3RenderAPI())
-			{				
+			{
 				float mvp[4][4] =
 				{
-					{ 2.0f / (R - L),   0.0f,         0.0f,   0.0f },
-					{ 0.0f,         2.0f / (T - B),   0.0f,   0.0f },
+					{ 2.0f/(R-L),   0.0f,         0.0f,   0.0f },
+					{ 0.0f,         2.0f/(T-B),   0.0f,   0.0f },
 					{ 0.0f,         0.0f,        -1.0f,   0.0f },
-					{ (R + L) / (L - R),  (T + B) / (B - T),  0.0f,   1.0f },
+					{ (R+L)/(L-R),  (T+B)/(B-T),  0.0f,   1.0f },
 				};
 
 				gVertexConstantBuffer.Update(mvp, sizeof(mvp));
@@ -182,10 +185,10 @@ namespace NuclearEngine
 			{
 				float mvp[4][4] =
 				{
-					{ 2.0f / (R - L),   0.0f		  ,     0.0f,       0.0f },
-					{ 0.0f			,   2.0f / (T - B),     0.0f,       0.0f },
+					{ 2.0f/(R-L),   0.0f,           0.0f,       0.0f },
+					{ 0.0f,         2.0f/(T-B),     0.0f,       0.0f },
 					{ 0.0f,         0.0f,           0.5f,       0.0f },
-					{ (R + L) / (L - R),  (T + B) / (B - T),    0.5f,       1.0f },
+					{ (R+L)/(L-R),  (T+B)/(B-T),    0.5f,       1.0f },
 				};
 
 				gVertexConstantBuffer.Update(mvp, sizeof(mvp));
@@ -193,6 +196,14 @@ namespace NuclearEngine
 
 			// Backup state that will be modified to restore it afterwards 
 			auto state = Graphics::API::Context::SaveState();
+
+			if (sizeof(ImDrawIdx) == 2)
+				Graphics::API::Context::SetIndicesType(Graphics::API::IndicesFormat::UINT_R16);
+			else
+				Graphics::API::Context::SetIndicesType(Graphics::API::IndicesFormat::UINT_R32);
+
+			gVB.Bind();
+			gIB.Bind();
 
 			// Setup viewport
 			Graphics::API::Context::SetViewPort(0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y);			
@@ -203,17 +214,15 @@ namespace NuclearEngine
 			gPixelShader.Bind();
 			gFontSampler.PSBind(0);
 
-			if(sizeof(ImDrawIdx) == 2)
-				Graphics::API::Context::SetIndicesType(Graphics::API::IndicesFormat::UINT_R16);
-			else
-				Graphics::API::Context::SetIndicesType(Graphics::API::IndicesFormat::UINT_R32);
-
-			gVB.Bind();
-			gIB.Bind();
-
 			gBlendState.Bind(Graphics::Color(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 			gDepthStencilState.Bind();
 			gRasterizerState.Bind();
+
+			ImGuiIO& io = ImGui::GetIO();
+			int fb_width = (int)(draw_data->DisplaySize.x * io.DisplayFramebufferScale.x);
+			int fb_height = (int)(draw_data->DisplaySize.y * io.DisplayFramebufferScale.y);
+			if (fb_width <= 0 || fb_height <= 0)
+				return;
 
 			// Render command lists
 			int vtx_offset = 0;
@@ -234,12 +243,19 @@ namespace NuclearEngine
 					else
 					{
 						// Apply scissor/clipping rectangle
-						const D3D11_RECT r = { (LONG)(pcmd->ClipRect.x - pos.x), (LONG)(pcmd->ClipRect.y - pos.y), (LONG)(pcmd->ClipRect.z - pos.x), (LONG)(pcmd->ClipRect.w - pos.y) };
-						//ctx->RSSetScissorRects(1, &r);
+					
+						ImVec4 clip_rect = ImVec4(pcmd->ClipRect.x - pos.x, pcmd->ClipRect.y - pos.y, pcmd->ClipRect.z - pos.x, pcmd->ClipRect.w - pos.y);
+						if (clip_rect.x < fb_width && clip_rect.y < fb_height && clip_rect.z >= 0.0f && clip_rect.w >= 0.0f)
+						{
+							// Apply scissor/clipping rectangle
+							Graphics::API::Context::SetScissors((int)clip_rect.x, (int)(fb_height - clip_rect.w), (int)(clip_rect.z - clip_rect.x), (int)(clip_rect.w - clip_rect.y));
+							
+							// Bind texture, Draw
+							gFontTexture.PSBind(0);
+							Graphics::API::Context::DrawIndexed(pcmd->ElemCount, idx_offset, vtx_offset);
+						}
 
-						// Bind texture, Draw
-						gFontTexture.PSBind(0);
-						Graphics::API::Context::DrawIndexed(pcmd->ElemCount, idx_offset, vtx_offset);
+					
 					}
 					idx_offset += pcmd->ElemCount;
 				}

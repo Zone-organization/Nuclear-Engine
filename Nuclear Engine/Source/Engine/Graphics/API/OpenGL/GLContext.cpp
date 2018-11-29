@@ -101,6 +101,11 @@ namespace NuclearEngine
 					glViewport(x, y, width, height);
 				}
 
+				void GLContext::SetScissors(int x, int y, int width, int height)
+				{
+					glScissor(x, y, width, height);
+				}
+
 				RasterizerState GLContext::GetRasterizerState()
 				{
 					RasterizerState Obj;

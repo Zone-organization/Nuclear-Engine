@@ -130,7 +130,10 @@ namespace NuclearEngine
 						inputElementDesc[i].SemanticIndex = layout->GetBufferElement()[i].index;
 						inputElementDesc[i].Format = (DXGI_FORMAT)layout->GetBufferElement()[i].format;
 						inputElementDesc[i].InputSlot = 0;
-						inputElementDesc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+						if(layout->AutoAlignedOffset)
+							inputElementDesc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+						else
+							inputElementDesc[i].AlignedByteOffset = 0;
 						inputElementDesc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 						inputElementDesc[i].InstanceDataStepRate = 0;
 

@@ -26,6 +26,7 @@ namespace NuclearEngine
 					static void SetIndicesType(const IndicesFormat& type);
 
 					static void SetViewPort(int x, int y, int width, int height);
+					static void SetScissors(int x, int y, int width, int height);
 
 					//UINT                        ScissorRectsCount, ViewportsCount();
 					//D3D11_RECT                  ScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE]();

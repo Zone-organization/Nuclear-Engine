@@ -22,6 +22,7 @@ namespace NuclearEngine {
 
 				void AppendAttribute(const char* SemanticName, int SemanticIndex, Format format);
 
+				bool AutoAlignedOffset = true;
 				std::vector<ILElement> GetBufferElement();
 
 			protected:
