@@ -276,8 +276,8 @@ namespace NuclearEngine
 						return false;
 					}
 
-					DefaultRT.rendertargetviews.push_back(RenderTarget);
-					DefaultRT.depthstencilview = m_depthStencilView;
+					DefaultRT.mRTVs.push_back(RenderTarget);
+					DefaultRT.mDepthStencilView = m_depthStencilView;
 					ActiveRT = &DefaultRT;
 					// Bind the render target view and depth stencil buffer to the output render pipeline.
 					Context->OMSetRenderTargets(1, &RenderTarget, m_depthStencilView);
@@ -332,12 +332,12 @@ namespace NuclearEngine
 					{
 						float Colors[4] = { color.r,color.g,color.b,color.a };
 
-						for (auto rtv : ActiveRT->rendertargetviews)
+						for (auto rtv : ActiveRT->mRTVs)
 						{
 							Context->ClearRenderTargetView(rtv, Colors);
 						}
 					}
-					if (ActiveRT->depthstencilview != NULL)
+					if (ActiveRT->mDepthStencilView != NULL)
 					{
 						unsigned int dxflag = 0;
 
@@ -353,14 +353,14 @@ namespace NuclearEngine
 						}
 						if (dxflag != 0)
 						{
-							Context->ClearDepthStencilView(ActiveRT->depthstencilview, dxflag, depth, stencil);
+							Context->ClearDepthStencilView(ActiveRT->mDepthStencilView, dxflag, depth, stencil);
 						}
 					}
 					return;
 				}
 				void DX11Context::Bind_RenderTarget(DX11RenderTarget * rt)
 				{
-					Context->OMSetRenderTargets(static_cast<UINT>(rt->rendertargetviews.size()), rt->rendertargetviews.data(), rt->depthstencilview);
+					Context->OMSetRenderTargets(static_cast<UINT>(rt->mRTVs.size()), rt->mRTVs.data(), rt->mDepthStencilView);
 					ActiveRT = rt;
 				}
 				void DX11Context::Bind_Default_RenderTarget()
@@ -470,6 +470,83 @@ namespace NuclearEngine
 					viewPort.MaxDepth = 1.0f;
 					Context->RSSetViewports(1, &viewPort);
 				}
+
+				RasterizerState DX11Context::GetRasterizerState()
+				{
+					RasterizerState Obj;
+					Context->RSGetState(&Obj.DXObject.mRSState);
+					return Obj;
+				}
+				BlendState DX11Context::GetBlendState()
+				{
+					BlendState Obj;
+					FLOAT BlendFactor[4];
+					Context->OMGetBlendState(&Obj.DXObject.mBState, BlendFactor, &Obj.SavedSampleMask);
+					Obj.SavedBlendFactor = Graphics::Color(BlendFactor[0], BlendFactor[1], BlendFactor[2], BlendFactor[3]);
+					return Obj;
+				}
+				
+				DepthStencilState DX11Context::GetDepthStencilState()
+				{
+					DepthStencilState Obj;
+					Context->OMGetDepthStencilState(&Obj.DXObject.mDSState, &Obj.SavedStencilRef);
+					return Obj;
+				}
+				Texture DX11Context::GetPSTexture()
+				{
+					Texture Obj;
+					Context->PSGetShaderResources(0, 1, &Obj.DXObject.mResourceView);
+					return Obj;
+				}
+				Sampler DX11Context::GetPSSampler()
+				{
+					Sampler Obj;
+					Context->PSGetSamplers(0, 1, &Obj.DXObject.mSamplerState);
+
+					return Obj;
+				}
+				PixelShader DX11Context::GetPixelShader()
+				{
+					PixelShader Obj;
+					Context->PSGetShader(&Obj.DXObject.mPixelShader, 0, 0);
+
+					return Obj;
+				}
+				VertexShader DX11Context::GetVertexShader()
+				{
+					VertexShader Obj;
+
+					Context->VSGetShader(&Obj.DXObject.mVertexShader, 0,0);
+
+					return Obj;
+				}
+				IndexBuffer DX11Context::GetIndexBuffer()
+				{
+					IndexBuffer Obj;
+
+					Context->IAGetIndexBuffer(&Obj.DXObject.mIXBuffer, 0,0);
+
+					return Obj;
+				}
+				VertexBuffer DX11Context::GetVertexBuffer()
+				{
+					VertexBuffer Obj;
+
+					Context->IAGetVertexBuffers(0, 1, &Obj.DXObject.mVBuffer, &Obj.DXObject.mStride, &Obj.DXObject.mOffset);
+					Context->IAGetInputLayout(&Obj.DXObject.mInputLayout);
+
+					return Obj;
+				}
+				ConstantBuffer DX11Context::GetConstantBuffer()
+				{
+					ConstantBuffer Obj;
+					Obj.DXObject.mName = "Unknown-Reflected";
+					Context->VSGetConstantBuffers(0, 1, &Obj.DXObject.mCBuffer);
+
+					return Obj;
+				}
+			
+
 			}
 		}
 	}

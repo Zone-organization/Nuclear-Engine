@@ -27,9 +27,9 @@ namespace NuclearEngine
 					void SetConstantBuffer(DX11ConstantBuffer* ubuffer);
 
 					void Bind();
-				private:
 
-					ID3D11VertexShader * VertexShader;
+
+					ID3D11VertexShader * mVertexShader;
 					ShaderReflection Reflection;
 
 					/*Used for InputLayouts*/

@@ -26,8 +26,8 @@ namespace NuclearEngine
 					void SetConstantBuffer(DX11ConstantBuffer* ubuffer);
 
 					void Bind();
-				private:
-					ID3D11PixelShader * PixelShader;
+
+					ID3D11PixelShader * mPixelShader;
 					ShaderReflection Reflection;
 				};
 			}

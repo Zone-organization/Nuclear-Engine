@@ -351,6 +351,7 @@
     <ClInclude Include="include\Engine\Graphics\API\BlendState.h" />
     <ClInclude Include="include\Engine\Graphics\API\Buffer_Types.h" />
     <ClInclude Include="include\Engine\Graphics\API\OpenGL\GLUnifiedShader.h" />
+    <ClInclude Include="include\Engine\Graphics\API\SavedState.h" />
     <ClInclude Include="include\Engine\Graphics\API\UnifiedShader.h" />
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />

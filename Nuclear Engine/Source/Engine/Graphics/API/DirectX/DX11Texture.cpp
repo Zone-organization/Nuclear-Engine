@@ -13,13 +13,13 @@ namespace NuclearEngine
 			namespace DirectX
 			{
 				DX11Texture::DX11Texture() :
-					resourceView(nullptr)
+					mResourceView(nullptr)
 				{
 				}
 
 				DX11Texture::~DX11Texture()
 				{
-					resourceView = nullptr;
+					mResourceView = nullptr;
 				}
 
 				bool DX11Texture::Create(DX11Texture* texture, const Texture_Data&Data, const Texture_Desc& Desc)
@@ -89,33 +89,33 @@ namespace NuclearEngine
 					srvDesc.TextureCube.MipLevels = texDesc.MipLevels;
 					srvDesc.TextureCube.MostDetailedMip = 0;
 
-					DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &texture->resourceView);
+					DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &texture->mResourceView);
 					return true;
 				}
 
 				void DX11Texture::Delete(DX11Texture * texture)
 				{				
-					if (texture->resourceView != nullptr)
+					if (texture->mResourceView != nullptr)
 					{
-						texture->resourceView->Release();
+						texture->mResourceView->Release();
 					}
 
-					texture->resourceView = nullptr;
+					texture->mResourceView = nullptr;
 				}
 
 				void DX11Texture::PSBind(Uint8 slot)
 				{
-					DX11Context::GetContext()->PSSetShaderResources(slot, 1, &resourceView);
+					DX11Context::GetContext()->PSSetShaderResources(slot, 1, &mResourceView);
 				}
 
 				void DX11Texture::VSBind(Uint8 slot)
 				{
-					DX11Context::GetContext()->VSSetShaderResources(slot, 1, &resourceView);
+					DX11Context::GetContext()->VSSetShaderResources(slot, 1, &mResourceView);
 				}
 
 				void DX11Texture::GSBind(Uint8 slot)
 				{
-					DX11Context::GetContext()->GSSetShaderResources(slot, 1, &resourceView);
+					DX11Context::GetContext()->GSSetShaderResources(slot, 1, &mResourceView);
 				}
 
 				Math::Vector3ui DX11Texture::GetDimensions(Uint8 Mipmaplevel)
@@ -130,7 +130,7 @@ namespace NuclearEngine
 
 					//if()
 					ID3D11Texture2D* texture2d = nullptr;
-					HRESULT hr = resourceView->QueryInterface(&texture2d);
+					HRESULT hr = mResourceView->QueryInterface(&texture2d);
 
 					if (SUCCEEDED(hr))
 					{
@@ -185,7 +185,7 @@ namespace NuclearEngine
 							return false;
 						}
 
-						DX11Context::GetDevice()->CreateShaderResourceView(tex1D, 0, &result->resourceView);
+						DX11Context::GetDevice()->CreateShaderResourceView(tex1D, 0, &result->mResourceView);
 					}
 					else
 					{
@@ -199,9 +199,9 @@ namespace NuclearEngine
 						srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
 						srvDesc.Texture1D.MipLevels = -1;
 						srvDesc.Texture1DArray.MostDetailedMip = 0;
-						DX11Context::GetDevice()->CreateShaderResourceView(tex1D, &srvDesc, &result->resourceView);
+						DX11Context::GetDevice()->CreateShaderResourceView(tex1D, &srvDesc, &result->mResourceView);
 						DX11Context::GetContext()->UpdateSubresource(tex1D, 0, 0, subData.pSysMem, subData.SysMemPitch, 0);
-						DX11Context::GetContext()->GenerateMips(result->resourceView);
+						DX11Context::GetContext()->GenerateMips(result->mResourceView);
 
 					}
 
@@ -254,7 +254,7 @@ namespace NuclearEngine
 						srvDesc.Texture2D.MostDetailedMip = 0;
 						srvDesc.Texture2D.MipLevels = 1;
 
-						DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &result->resourceView);
+						DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &result->mResourceView);
 
 						return true;
 					}
@@ -278,7 +278,7 @@ namespace NuclearEngine
 						srvDesc.Texture2D.MostDetailedMip = 0;
 						srvDesc.Texture2D.MipLevels = 1;
 
-						DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &result->resourceView);
+						DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &result->mResourceView);
 					}
 					else
 					{
@@ -292,9 +292,9 @@ namespace NuclearEngine
 						srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 						srvDesc.Texture2D.MipLevels = -1;
 						srvDesc.Texture2DArray.MostDetailedMip = 0;
-						DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &result->resourceView);
+						DX11Context::GetDevice()->CreateShaderResourceView(tex2D, &srvDesc, &result->mResourceView);
 						DX11Context::GetContext()->UpdateSubresource(tex2D, 0, 0, subData.pSysMem, subData.SysMemPitch, 0);
-						DX11Context::GetContext()->GenerateMips(result->resourceView);
+						DX11Context::GetContext()->GenerateMips(result->mResourceView);
 
 					}
 

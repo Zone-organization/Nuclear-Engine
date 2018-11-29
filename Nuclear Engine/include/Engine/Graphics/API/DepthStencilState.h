@@ -19,6 +19,9 @@ namespace NuclearEngine
 				static void Delete(DepthStencilState* state);
 
 				void Bind();
+
+				Uint32 SavedStencilRef;
+
 				BASE_API(DepthStencilState)
 			};
 		}

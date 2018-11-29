@@ -15,12 +15,12 @@ namespace NuclearEngine
 			{
 				DX11VertexShader::DX11VertexShader()
 				{
-					VertexShader = nullptr;
+					mVertexShader = nullptr;
 				}
 
 				DX11VertexShader::~DX11VertexShader()
 				{
-					VertexShader = nullptr;
+					mVertexShader = nullptr;
 				}
 
 				void DX11VertexShader::Create(DX11VertexShader* result, const BinaryShaderBlob& ShaderDesc)
@@ -37,7 +37,7 @@ namespace NuclearEngine
 							result->VS_Size = ShaderDesc.DXBC_SourceCode.Size;
 							result->Reflection = ShaderDesc.Reflection;
 							// encapsulate both shaders into shader Components
-							if (FAILED(DX11Context::GetDevice()->CreateVertexShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->VertexShader)))
+							if (FAILED(DX11Context::GetDevice()->CreateVertexShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->mVertexShader)))
 							{
 								Log.Info("[DX11VertexShader] Vertex Shader Creation Failed!\n");
 								return;
@@ -48,21 +48,21 @@ namespace NuclearEngine
 				}
 				void DX11VertexShader::Delete(DX11VertexShader * shader)
 				{
-					if (shader->VertexShader != nullptr)
+					if (shader->mVertexShader != nullptr)
 					{
-						shader->VertexShader->Release();
+						shader->mVertexShader->Release();
 					}
-					shader->VertexShader = nullptr;
+					shader->mVertexShader = nullptr;
 				}
 				void DX11VertexShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer)
 				{
-					DX11Context::GetContext()->VSSetShader(VertexShader, 0, 0);
-					DX11Context::GetContext()->VSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->GetName()].BindingSlot, 1, ubuffer->GetBufferPtr());
+					DX11Context::GetContext()->VSSetShader(mVertexShader, 0, 0);
+					DX11Context::GetContext()->VSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->mName].BindingSlot, 1, &ubuffer->mCBuffer);
 				}
 
 				void DX11VertexShader::Bind()
 				{
-					DX11Context::GetContext()->VSSetShader(VertexShader, 0, 0);
+					DX11Context::GetContext()->VSSetShader(mVertexShader, 0, 0);
 				}
 			}
 		}

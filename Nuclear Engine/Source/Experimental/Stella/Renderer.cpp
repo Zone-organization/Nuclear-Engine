@@ -38,10 +38,10 @@ namespace NuclearEngine {
 			}
 
 			Graphics::API::InputLayout InputL;
-			InputL.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
-			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
-			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float);
-			InputL.AppendAttribute("COLOR", 0, Graphics::API::DataType::Float4);
+			InputL.AppendAttribute("POSITION", 0, Graphics::API::Format::R32G32B32_FLOAT);
+			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32G32_FLOAT);
+			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32_FLOAT);
+			InputL.AppendAttribute("COLOR", 0, Graphics::API::Format::R32G32B32A32_FLOAT);
 
 			//VBO.SetInputLayout(&InputL, &VShader);
 

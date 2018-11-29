@@ -290,6 +290,7 @@
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_truetype.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui_Renderer.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui_Binding.h" />
+    <ClInclude Include="include\Engine\Graphics\API\SavedState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

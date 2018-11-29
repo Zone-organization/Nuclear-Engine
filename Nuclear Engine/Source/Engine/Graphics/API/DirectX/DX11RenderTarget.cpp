@@ -15,13 +15,13 @@ namespace NuclearEngine
 			{
 				DX11RenderTarget::DX11RenderTarget()
 				{
-					depthstenciltex = NULL;
-					depthstencilview = NULL;
+					mDepthStencilTex = NULL;
+					mDepthStencilView = NULL;
 				}
 				DX11RenderTarget::~DX11RenderTarget()
 				{
-					depthstenciltex = NULL;
-					depthstencilview = NULL;
+					mDepthStencilTex = NULL;
+					mDepthStencilView = NULL;
 				}
 				void DX11RenderTarget::Create(DX11RenderTarget * result)
 				{
@@ -29,11 +29,11 @@ namespace NuclearEngine
 				}
 				void DX11RenderTarget::Delete(DX11RenderTarget * result)
 				{
-					for (size_t i = 0; i < result->rendertargetviews.size(); i++)
+					for (size_t i = 0; i < result->mRTVs.size(); i++)
 					{
-						result->rendertargetviews.at(i)->Release();
+						result->mRTVs.at(i)->Release();
 					}
-					result->rendertargetviews.clear();
+					result->mRTVs.clear();
 				}
 
 				void DX11RenderTarget::AttachDepthStencilBuffer(const Math::Vector2ui & size)
@@ -52,13 +52,13 @@ namespace NuclearEngine
 						texDesc.CPUAccessFlags = 0;
 						texDesc.MiscFlags = 0;
 					}
-					if (FAILED(Graphics::API::DirectX::DX11Context::GetDevice()->CreateTexture2D(&texDesc, nullptr, &depthstenciltex)))
+					if (FAILED(Graphics::API::DirectX::DX11Context::GetDevice()->CreateTexture2D(&texDesc, nullptr, &mDepthStencilTex)))
 					{
 						Log.Error("[DX11RenderTarget] Failed to create DepthStencilTexture for render-target!\n");
 						//Return or the next call will fail too
 						return;
 					}
-					if (FAILED(Graphics::API::DirectX::DX11Context::GetDevice()->CreateDepthStencilView(depthstenciltex, nullptr, &depthstencilview)))
+					if (FAILED(Graphics::API::DirectX::DX11Context::GetDevice()->CreateDepthStencilView(mDepthStencilTex, nullptr, &mDepthStencilView)))
 					{
 						Log.Error("[DX11RenderTarget] Failed to create DepthStencilView for render-target!\n");
 					}
@@ -77,7 +77,7 @@ namespace NuclearEngine
 						ID3D11RenderTargetView* rtv;
 
 						ID3D11Texture2D* texture2d = nullptr;
-						HRESULT hr = texture->resourceView->QueryInterface(&texture2d);
+						HRESULT hr = texture->mResourceView->QueryInterface(&texture2d);
 
 						if (FAILED(Graphics::API::DirectX::DX11Context::GetDevice()->CreateRenderTargetView(texture2d, &renderTargetViewDesc, &rtv)))
 						{
@@ -85,7 +85,7 @@ namespace NuclearEngine
 							return;
 						}
 
-						rendertargetviews.push_back(rtv);
+						mRTVs.push_back(rtv);
 						return;
 					}					
 					Exceptions::NotImplementedException();

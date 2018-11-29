@@ -89,6 +89,56 @@ namespace NuclearEngine
 					glViewport(x, y, width, height);
 				}
 
+				RasterizerState GLContext::GetRasterizerState()
+				{
+					return RasterizerState();
+				}
+
+				BlendState GLContext::GetBlendState()
+				{
+					return BlendState();
+				}
+
+				DepthStencilState GLContext::GetDepthStencilState()
+				{
+					return DepthStencilState();
+				}
+
+				Texture GLContext::GetPSTexture()
+				{
+					return Texture();
+				}
+
+				Sampler GLContext::GetPSSampler()
+				{
+					return Sampler();
+				}
+
+				PixelShader GLContext::GetPixelShader()
+				{
+					return PixelShader();
+				}
+
+				VertexShader GLContext::GetVertexShader()
+				{
+					return VertexShader();
+				}
+
+				IndexBuffer GLContext::GetIndexBuffer()
+				{
+					return IndexBuffer();
+				}
+
+				VertexBuffer GLContext::GetVertexBuffer()
+				{
+					return VertexBuffer();
+				}
+
+				ConstantBuffer GLContext::GetConstantBuffer()
+				{
+					return ConstantBuffer();
+				}
+
 				void GLContext::Query_VAO_EBO_State()
 				{
 					std::string baseMessage;

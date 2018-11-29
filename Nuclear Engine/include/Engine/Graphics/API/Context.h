@@ -24,9 +24,20 @@ namespace NuclearEngine
 		namespace API {
 			namespace ContextDesc
 			{
-				//IF 0 then Ansiotrpopic isnot supported
+				//If 0 then Ansiotropic isn't supported.
 				static float MaxAnisotropicLevel = 0.0f;
 			}
+			class RasterizerState;
+			class BlendState;
+			class DepthStencilState;
+			class Texture;
+			class Sampler;
+			class PixelShader;
+			class VertexShader;
+			class IndexBuffer;
+			class VertexBuffer;
+			class ConstantBuffer;			
+			struct SavedState;
 
 			class NEAPI Context
 			{
@@ -49,6 +60,20 @@ namespace NuclearEngine
 				static bool isDirectX11RenderAPI();
 
 				static void SetRenderAPI(const Core::RenderAPI & renderer);
+				
+				static SavedState SaveState();
+				static void LoadState(SavedState& state);
+
+				static RasterizerState		GetRasterizerState();
+				static BlendState			GetBlendState();
+				static DepthStencilState	GetDepthStencilState();
+				static Texture				GetPSTexture();
+				static Sampler				GetPSSampler();
+				static PixelShader			GetPixelShader();
+				static VertexShader			GetVertexShader();
+				static IndexBuffer			GetIndexBuffer();
+				static VertexBuffer			GetVertexBuffer();
+				static ConstantBuffer		GetConstantBuffer();
 			};
 		}
 	}

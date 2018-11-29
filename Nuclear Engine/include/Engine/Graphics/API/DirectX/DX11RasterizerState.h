@@ -22,8 +22,7 @@ namespace NuclearEngine
 
 					void Bind();
 
-				protected:
-					ID3D11RasterizerState * RS_State;
+					ID3D11RasterizerState * mRSState;
 				};
 			}
 		}

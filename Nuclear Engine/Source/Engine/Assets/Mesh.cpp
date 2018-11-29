@@ -1,6 +1,7 @@
 #include <Engine/Assets/Mesh.h>
 #include <Engine\Graphics\API\Context.h>
 #include <Engine/Graphics/API/InputLayout.h>
+#include <Engine/Graphics/API/Buffer_Types.h>
 
 namespace NuclearEngine {
 
@@ -67,18 +68,18 @@ namespace NuclearEngine {
 			IndicesCount = data.indices.size();
 
 			Graphics::API::InputLayout layout;
-			layout.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+			layout.AppendAttribute("POSITION", 0, Graphics::API::Format::R32G32B32_FLOAT);
 			if (data.UV.size() > 0)
 			{
-				layout.AppendAttribute("TEXCOORD", 0, Graphics::API::DataType::Float2);
+				layout.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32G32_FLOAT);
 			}
 			if (data.Normals.size() > 0)
 			{
-				layout.AppendAttribute("NORMAL", 0, Graphics::API::DataType::Float3);
+				layout.AppendAttribute("NORMAL", 0, Graphics::API::Format::R32G32B32_FLOAT);
 			}
 			if (data.Tangents.size() > 0)
 			{
-				layout.AppendAttribute("TANGENT", 0, Graphics::API::DataType::Float3);
+				layout.AppendAttribute("TANGENT", 0, Graphics::API::Format::R32G32B32_FLOAT);
 			}
 			VBO.SetInputLayout(&layout, _shader);
 

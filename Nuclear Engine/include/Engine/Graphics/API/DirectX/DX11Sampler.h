@@ -27,8 +27,7 @@ namespace NuclearEngine
 					void GSBind(Uint8 slot);
 					void PSBind(Uint8 slot);
 
-				protected:
-					ID3D11SamplerState * samplerState;
+					ID3D11SamplerState * mSamplerState;
 				};
 			}
 		}

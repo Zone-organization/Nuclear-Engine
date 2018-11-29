@@ -15,12 +15,12 @@ namespace NuclearEngine
 			{
 				DX11PixelShader::DX11PixelShader()
 				{
-					PixelShader = nullptr;
+					mPixelShader = nullptr;
 				}
 
 				DX11PixelShader::~DX11PixelShader()
 				{
-					PixelShader = nullptr;
+					mPixelShader = nullptr;
 				}
 
 				void DX11PixelShader::Create(DX11PixelShader* result, const BinaryShaderBlob& ShaderDesc)
@@ -34,7 +34,7 @@ namespace NuclearEngine
 						else
 						{
 							result->Reflection = ShaderDesc.Reflection;
-							if (FAILED(DX11Context::GetDevice()->CreatePixelShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->PixelShader)))
+							if (FAILED(DX11Context::GetDevice()->CreatePixelShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->mPixelShader)))
 							{
 								Log.Info("[DX11PixelShader] Pixel Shader Creation Failed!\n");
 								return;
@@ -45,21 +45,21 @@ namespace NuclearEngine
 				}
 				void DX11PixelShader::Delete(DX11PixelShader * shader)
 				{
-					if (shader->PixelShader != nullptr)
+					if (shader->mPixelShader != nullptr)
 					{
-						shader->PixelShader->Release();
+						shader->mPixelShader->Release();
 					}
-					shader->PixelShader = nullptr;
+					shader->mPixelShader = nullptr;
 				}
 				void DX11PixelShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer)
 				{
-					DX11Context::GetContext()->PSSetShader(PixelShader, 0, 0);
-					DX11Context::GetContext()->PSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->GetName()].BindingSlot, 1, ubuffer->GetBufferPtr());
+					DX11Context::GetContext()->PSSetShader(mPixelShader, 0, 0);
+					DX11Context::GetContext()->PSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->mName].BindingSlot, 1, &ubuffer->mCBuffer);
 				}
 
 				void DX11PixelShader::Bind()
 				{
-					DX11Context::GetContext()->PSSetShader(PixelShader, 0, 0);
+					DX11Context::GetContext()->PSSetShader(mPixelShader, 0, 0);
 				}
 			}
 		}

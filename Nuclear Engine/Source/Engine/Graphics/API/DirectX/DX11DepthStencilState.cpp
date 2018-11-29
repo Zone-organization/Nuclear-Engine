@@ -47,12 +47,12 @@ namespace NuclearEngine
 
 				DX11DepthStencilState::DX11DepthStencilState()
 				{
-					DS_State = nullptr;
+					mDSState = nullptr;
 				}
 
 				DX11DepthStencilState::~DX11DepthStencilState()
 				{
-					DS_State = nullptr;
+					mDSState = nullptr;
 				}
 
 				void DX11DepthStencilState::Create(DX11DepthStencilState* result, const DepthStencilStateDesc& type)
@@ -90,23 +90,23 @@ namespace NuclearEngine
 					DSDesc.BackFace.StencilFailOp = GetDXStencilOP(type.StencilBackFace.StencilFailOp);
 
 
-					DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &result->DS_State);
+					DX11Context::GetDevice()->CreateDepthStencilState(&DSDesc, &result->mDSState);
 
 				}
 
 				void DX11DepthStencilState::Delete(DX11DepthStencilState * state)
 				{
-					if (state->DS_State != nullptr)
+					if (state->mDSState != nullptr)
 					{
-						state->DS_State->Release();
+						state->mDSState->Release();
 					}
 
-					state->DS_State = nullptr;
+					state->mDSState = nullptr;
 				}
 
 				void DX11DepthStencilState::Bind()
 				{
-					DX11Context::GetContext()->OMSetDepthStencilState(DS_State, 0);
+					DX11Context::GetContext()->OMSetDepthStencilState(mDSState, 0);
 				}
 
 			}

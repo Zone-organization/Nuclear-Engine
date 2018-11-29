@@ -1,4 +1,3 @@
-#include "Engine/Graphics/API/InputLayout.h"
 #include <Engine\Graphics\API\InputLayout.h>
 
 namespace NuclearEngine
@@ -15,13 +14,13 @@ namespace NuclearEngine
 			{
 			}
 
-			void InputLayout::AppendAttribute(const char* SemanticName, int SemanticIndex, DataType dataType)
+			void InputLayout::AppendAttribute(const char* SemanticName, int SemanticIndex, Format sformat)
 			{
 				ILElement Block;
 
 				Block.index = SemanticIndex;
 				Block.name = SemanticName;
-				Block.dataType = dataType;
+				Block.format = sformat;
 				Elements.push_back(Block);
 			}
 

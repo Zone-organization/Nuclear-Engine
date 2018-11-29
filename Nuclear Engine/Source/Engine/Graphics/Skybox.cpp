@@ -78,7 +78,7 @@ namespace NuclearEngine
 			Graphics::API::VertexBuffer::Create(&mVBuffer, VDesc);
 
 			Graphics::API::InputLayout vertexBufferLayout;
-			vertexBufferLayout.AppendAttribute("POSITION", 0, Graphics::API::DataType::Float3);
+			vertexBufferLayout.AppendAttribute("POSITION", 0, Graphics::API::Format::R32G32B32_FLOAT);
 			mVBuffer.SetInputLayout(&vertexBufferLayout, &mVShader);
 
 			Graphics::API::SamplerDesc Samplerdesc;

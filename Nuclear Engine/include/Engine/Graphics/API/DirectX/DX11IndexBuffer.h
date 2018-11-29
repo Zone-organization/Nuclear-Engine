@@ -26,8 +26,7 @@ namespace NuclearEngine
 					void* Map();
 					void Unmap();
 
-				protected:
-					ID3D11Buffer * buffer;
+					ID3D11Buffer * mIXBuffer;
 				};
 			}
 		}

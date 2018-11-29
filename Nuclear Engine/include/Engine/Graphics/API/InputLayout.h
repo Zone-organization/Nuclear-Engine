@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine/Graphics/API/Buffer_Types.h>
+#include <Engine/Graphics/API/Format.h>
 #include <vector>
 
 namespace NuclearEngine {
@@ -11,7 +11,7 @@ namespace NuclearEngine {
 			{
 				int index = 0;
 				const char* name = "";
-				DataType dataType;
+				Format format;
 			};
 
 			class NEAPI InputLayout
@@ -20,7 +20,7 @@ namespace NuclearEngine {
 				InputLayout();
 				~InputLayout();
 
-				void AppendAttribute(const char* SemanticName, int SemanticIndex, DataType dataType);
+				void AppendAttribute(const char* SemanticName, int SemanticIndex, Format format);
 
 				std::vector<ILElement> GetBufferElement();
 

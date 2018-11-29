@@ -25,10 +25,17 @@ namespace NuclearEngine
 
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result->buffer);
 
-					if (!desc.UsePreciseSize)
-						glBufferData(GL_ELEMENT_ARRAY_BUFFER, desc.Size * sizeof(unsigned int), desc.Data, GL_STATIC_DRAW);
+					GLenum Usage;
+					if (desc.UsageType == BufferUsage::Static)
+						Usage = GL_STATIC_DRAW;
 					else
-						glBufferData(GL_ELEMENT_ARRAY_BUFFER, desc.Size, desc.Data, GL_STATIC_DRAW);
+						Usage = GL_DYNAMIC_DRAW;
+
+
+					if (!desc.UsePreciseSize)
+						glBufferData(GL_ELEMENT_ARRAY_BUFFER, desc.Size * sizeof(unsigned int), desc.Data, Usage);
+					else
+						glBufferData(GL_ELEMENT_ARRAY_BUFFER, desc.Size, desc.Data, Usage);
 
 
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

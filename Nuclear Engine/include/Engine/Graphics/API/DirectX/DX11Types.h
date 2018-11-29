@@ -18,7 +18,7 @@ namespace NuclearEngine
 						Log.Warning("[DirectX] R8G8B8_UNORM Format isn't supported in DirectX11 Backend, setting to R8G8B8A8_UNORM by default.\n");
 						return DXGI_FORMAT_R8G8B8A8_UNORM;
 					case Format::R16G16B16_FLOAT:
-						Log.Warning("[DirectX] R16G16B16_FLOAT Format isn't supported in DirectX11 Backend,  setting to R16G16B16A16_FLOAT by default.\n");
+						Log.Warning("[DirectX] R16G16B16_FLOAT Format isn't supported in DirectX11 Backend, setting to R16G16B16A16_FLOAT by default.\n");
 						return DXGI_FORMAT_R16G16B16A16_FLOAT;
 					default:
 						return (DXGI_FORMAT)format;

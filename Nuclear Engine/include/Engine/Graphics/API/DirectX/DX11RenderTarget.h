@@ -31,11 +31,11 @@ namespace NuclearEngine
 
 					void Bind();
 					static void Bind_Default();
-				private:
-					ID3D11Texture2D * depthstenciltex;
-					ID3D11DepthStencilView* depthstencilview;
 
-					std::vector<ID3D11RenderTargetView*> rendertargetviews;
+					ID3D11Texture2D * mDepthStencilTex;
+					ID3D11DepthStencilView* mDepthStencilView;
+
+					std::vector<ID3D11RenderTargetView*> mRTVs;
 				};
 			}
 		}

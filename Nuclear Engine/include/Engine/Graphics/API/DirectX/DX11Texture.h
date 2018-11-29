@@ -34,11 +34,11 @@ namespace NuclearEngine
 
 					Math::Vector3ui GetDimensions(Uint8 Mipmaplevel);
 
-				protected:
+					ID3D11ShaderResourceView* mResourceView;
 
+				protected:
 					static bool Create1D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
 					static bool Create2D(DX11Texture* texture, const Texture_Data& Data, const Texture_Desc& Desc);
-					ID3D11ShaderResourceView* resourceView;
 				};
 			}
 		}

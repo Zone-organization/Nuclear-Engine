@@ -13,13 +13,13 @@ namespace NuclearEngine
 			namespace DirectX
 			{
 
-				DX11Sampler::DX11Sampler() : samplerState(nullptr)
+				DX11Sampler::DX11Sampler() : mSamplerState(nullptr)
 				{
 				}
 
 				DX11Sampler::~DX11Sampler()
 				{
-					samplerState = nullptr;
+					mSamplerState = nullptr;
 				}
 
 				void DX11Sampler::Create(DX11Sampler* result, const SamplerDesc& Desc)
@@ -41,7 +41,7 @@ namespace NuclearEngine
 
 					samplerDesc.MaxAnisotropy = static_cast<unsigned int>(Desc.AnisoFilter);
 
-					if (FAILED(DX11Context::GetDevice()->CreateSamplerState(&samplerDesc, &result->samplerState)))
+					if (FAILED(DX11Context::GetDevice()->CreateSamplerState(&samplerDesc, &result->mSamplerState)))
 					{
 						Log.Error("[DirectX] SamplerState Creation Failed!\n");
 						return;
@@ -51,24 +51,24 @@ namespace NuclearEngine
 
 				void DX11Sampler::Delete(DX11Sampler * texture)
 				{
-					if (texture->samplerState != nullptr)
+					if (texture->mSamplerState != nullptr)
 					{
-						texture->samplerState->Release();
+						texture->mSamplerState->Release();
 					}
-					texture->samplerState = nullptr;
+					texture->mSamplerState = nullptr;
 				}
 				void DX11Sampler::PSBind(Uint8 slot)
 				{
-					DX11Context::GetContext()->PSSetSamplers(slot, 1, &samplerState);
+					DX11Context::GetContext()->PSSetSamplers(slot, 1, &mSamplerState);
 				}
 
 				void DX11Sampler::VSBind(Uint8 slot)
 				{
-					DX11Context::GetContext()->VSSetSamplers(slot, 1, &samplerState);
+					DX11Context::GetContext()->VSSetSamplers(slot, 1, &mSamplerState);
 				}
 				void DX11Sampler::GSBind(Uint8 slot)
 				{
-					DX11Context::GetContext()->GSSetSamplers(slot, 1, &samplerState);
+					DX11Context::GetContext()->GSSetSamplers(slot, 1, &mSamplerState);
 				}
 
 			}

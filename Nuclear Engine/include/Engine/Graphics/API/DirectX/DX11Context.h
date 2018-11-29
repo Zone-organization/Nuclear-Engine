@@ -3,6 +3,8 @@
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/Color.h>
 #include <SFML/Window.hpp>
+#include <Engine/Graphics/API/RenderAPI.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -36,6 +38,20 @@ namespace NuclearEngine
 					static bool Initialize(sf::Window* window);
 					static void Shutdown();
 					static void SwapBuffers();
+
+					//UINT                        ScissorRectsCount, ViewportsCount();
+				    //D3D11_RECT                  ScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE]();
+			    	//D3D11_VIEWPORT              Viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE]();
+					static RasterizerState      GetRasterizerState();
+					static BlendState           GetBlendState();
+					static DepthStencilState    GetDepthStencilState();
+					static Texture			    GetPSTexture();
+					static Sampler			    GetPSSampler();
+					static PixelShader          GetPixelShader();
+					static VertexShader         GetVertexShader();
+					static IndexBuffer          GetIndexBuffer();
+					static VertexBuffer         GetVertexBuffer();
+					static ConstantBuffer       GetConstantBuffer();
 				};
 			}
 		}

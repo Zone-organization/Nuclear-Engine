@@ -16,8 +16,11 @@ namespace NuclearEngine {
 				static void Delete(BlendState* state);
 
 				void Bind(Graphics::Color blendfactor = Graphics::Color(0.0f), unsigned int samplemask = 0xffffffff);
-				BASE_API(BlendState)
 
+				Graphics::Color SavedBlendFactor;
+				unsigned int SavedSampleMask;
+
+				BASE_API(BlendState)
 			};
 		}
 	}

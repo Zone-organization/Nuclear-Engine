@@ -11,7 +11,7 @@ namespace NuclearEngine
 		{
 			struct IndexBufferDesc;
 
-			class NEAPI IndexBuffer //<OpenGL::GLIndexBuffer, DirectX::DX11IndexBuffer>
+			class NEAPI IndexBuffer
 			{
 			public:
 				IndexBuffer();

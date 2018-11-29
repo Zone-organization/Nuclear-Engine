@@ -30,11 +30,11 @@ namespace NuclearEngine
 					void Bind();
 					void* Map();
 					void Unmap();
-				private:
-					ID3D11Buffer * VertexBuffer;
-					ID3D11InputLayout* inputLayout;
 
-					unsigned int offset, stride;
+					ID3D11Buffer * mVBuffer;
+					ID3D11InputLayout* mInputLayout;
+
+					unsigned int mOffset, mStride;
 				};
 			}
 		}

@@ -22,12 +22,9 @@ namespace NuclearEngine
 					static void Delete(DX11ConstantBuffer *cbuffer);
 
 					void Update(const void* data, unsigned int size);
-					const char* GetName();
 
-					ID3D11Buffer ** GetBufferPtr();
-				protected:
-					ID3D11Buffer * buffer;
-					const char* name;
+					ID3D11Buffer * mCBuffer;
+					const char* mName;
 				};
 			}
 		}

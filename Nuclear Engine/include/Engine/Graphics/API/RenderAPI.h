@@ -25,3 +25,4 @@
 #include <Engine/Graphics/API/CommonStates.h>
 #include <Engine/Graphics/API/Texture_Types.h>
 #include <Engine/Graphics/API/Buffer_Types.h>
+#include <Engine/Graphics/API/SavedState.h>

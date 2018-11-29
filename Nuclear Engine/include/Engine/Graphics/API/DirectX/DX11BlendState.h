@@ -24,8 +24,7 @@ namespace NuclearEngine
 
 					void Bind(Graphics::Color blendfactor = Graphics::Color(0.0f), unsigned int samplemask = 0xffffffff);
 
-				protected:
-					ID3D11BlendState * Stateobj;
+					ID3D11BlendState * mBState;
 				};
 			}
 		}

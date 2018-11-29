@@ -15,11 +15,11 @@ namespace NuclearEngine
 			{
 				DX11RasterizerState::DX11RasterizerState()
 				{
-					RS_State = nullptr;
+					mRSState = nullptr;
 				}
 				DX11RasterizerState::~DX11RasterizerState()
 				{
-					RS_State = nullptr;
+					mRSState = nullptr;
 				}
 				void DX11RasterizerState::Create(DX11RasterizerState * state, const RasterizerStateDesc & type)
 				{
@@ -37,15 +37,15 @@ namespace NuclearEngine
 					RSDesc.MultisampleEnable = type.MultisampleEnable;
 					RSDesc.AntialiasedLineEnable = type.AntialiasedLineEnable;
 
-					DX11Context::GetDevice()->CreateRasterizerState(&RSDesc, &state->RS_State);
+					DX11Context::GetDevice()->CreateRasterizerState(&RSDesc, &state->mRSState);
 				}
 				void DX11RasterizerState::Delete(DX11RasterizerState * state)
 				{
-					state->RS_State->Release();
+					state->mRSState->Release();
 				}
 				void DX11RasterizerState::Bind()
 				{
-					DX11Context::GetContext()->RSSetState(RS_State);
+					DX11Context::GetContext()->RSSetState(mRSState);
 				}
 			}
 		}

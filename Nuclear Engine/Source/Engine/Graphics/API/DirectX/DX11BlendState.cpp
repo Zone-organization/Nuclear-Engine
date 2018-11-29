@@ -15,11 +15,11 @@ namespace NuclearEngine
 			{
 				DX11BlendState::DX11BlendState()
 				{
-					Stateobj = nullptr;
+					mBState = nullptr;
 				}
 				DX11BlendState::~DX11BlendState()
 				{
-					Stateobj = nullptr;
+					mBState = nullptr;
 				}
 				void DX11BlendState::Create(DX11BlendState * state, const BlendStateDesc & type)
 				{
@@ -38,17 +38,17 @@ namespace NuclearEngine
 						BSDesc.RenderTarget[i].BlendOpAlpha = (D3D11_BLEND_OP)type.RenderTarget[i].BlendOpAlpha;
 						BSDesc.RenderTarget[i].RenderTargetWriteMask = type.RenderTarget[i].RenderTargetWriteMask;
 					}
-					DX11Context::GetDevice()->CreateBlendState(&BSDesc, &state->Stateobj);
+					DX11Context::GetDevice()->CreateBlendState(&BSDesc, &state->mBState);
 				}
 				void DX11BlendState::Delete(DX11BlendState * state)
 				{
-					state->Stateobj->Release();
+					state->mBState->Release();
 				}
 				void DX11BlendState::Bind(Graphics::Color blendfactor, unsigned int samplemas)
 				{
 					float blendFactor[4] = { blendfactor.r,blendfactor.g,blendfactor.b,blendfactor.a };
 
-					DX11Context::GetContext()->OMSetBlendState(Stateobj, blendFactor, samplemas);
+					DX11Context::GetContext()->OMSetBlendState(mBState, blendFactor, samplemas);
 				}
 			}
 		}

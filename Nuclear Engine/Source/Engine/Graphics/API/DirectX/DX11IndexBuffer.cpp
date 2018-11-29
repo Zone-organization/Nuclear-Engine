@@ -15,11 +15,11 @@ namespace NuclearEngine
 
 				DX11IndexBuffer::DX11IndexBuffer()
 				{
-					buffer = nullptr;
+					mIXBuffer = nullptr;
 				}
 				DX11IndexBuffer::~DX11IndexBuffer()
 				{
-					buffer = nullptr;
+					mIXBuffer = nullptr;
 				}
 
 				void DX11IndexBuffer::Create(DX11IndexBuffer* result, const IndexBufferDesc& desc)
@@ -59,42 +59,42 @@ namespace NuclearEngine
 						subData.SysMemPitch = 0;
 						subData.SysMemSlicePitch = 0;
 
-						DX11Context::GetDevice()->CreateBuffer(&bufferDesc, &subData, &result->buffer);
+						DX11Context::GetDevice()->CreateBuffer(&bufferDesc, &subData, &result->mIXBuffer);
 					}
 					else {
-						DX11Context::GetDevice()->CreateBuffer(&bufferDesc,NULL, &result->buffer);
+						DX11Context::GetDevice()->CreateBuffer(&bufferDesc,NULL, &result->mIXBuffer);
 					}
 				}
 
 				void DX11IndexBuffer::Delete(DX11IndexBuffer * ibuffer)
 				{
-					if (ibuffer->buffer != nullptr)
+					if (ibuffer->mIXBuffer != nullptr)
 					{
-						ibuffer->buffer->Release();
+						ibuffer->mIXBuffer->Release();
 					}
 
-					ibuffer->buffer = nullptr;
+					ibuffer->mIXBuffer = nullptr;
 				}
 
 				void DX11IndexBuffer::Bind()
 				{
-					DX11Context::GetContext()->IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT, 0);
+					DX11Context::GetContext()->IASetIndexBuffer(mIXBuffer, DXGI_FORMAT_R32_UINT, 0);
 				}
 				void DX11IndexBuffer::Update(const void * data, unsigned int size)
 				{
-					DX11Context::GetContext()->UpdateSubresource(buffer, 0, 0, data, 0, 0);
+					DX11Context::GetContext()->UpdateSubresource(mIXBuffer, 0, 0, data, 0, 0);
 				}
 				void * DX11IndexBuffer::Map()
 				{
 					D3D11_MAPPED_SUBRESOURCE mappedSubResource;
 					ZeroMemory(&mappedSubResource, sizeof(mappedSubResource));
 
-					DX11Context::GetContext()->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
+					DX11Context::GetContext()->Map(mIXBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
 					return mappedSubResource.pData;
 				}
 				void DX11IndexBuffer::Unmap()
 				{
-					DX11Context::GetContext()->Unmap(buffer, 0);
+					DX11Context::GetContext()->Unmap(mIXBuffer, 0);
 				}
 			}
 		}

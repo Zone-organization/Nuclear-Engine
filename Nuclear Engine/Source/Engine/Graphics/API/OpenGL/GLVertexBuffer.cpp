@@ -1,8 +1,9 @@
 #include <Engine/Graphics/API/OpenGL\GLVertexBuffer.h>
 
 #ifdef NE_COMPILE_CORE_OPENGL
-
 #include <Engine/Graphics/API/InputLayout.h>
+#include <Engine/Graphics/API/Buffer_Types.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -11,10 +12,10 @@ namespace NuclearEngine
 		{
 			namespace OpenGL
 			{
-				GLenum GetGLDataType(DataType dataType);
-				unsigned int GetDataTypeSizeInBytes(DataType dataType);
+				GLenum GetGLDataType(Format dataType);
+				unsigned int GetDataTypeSizeInBytes(Format dataType);
 
-				unsigned int GetComponentCount(DataType dataType);
+				unsigned int GetComponentCount(Format dataType);
 
 				GLVertexBuffer::GLVertexBuffer()
 				{
@@ -77,21 +78,21 @@ namespace NuclearEngine
 
 					for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
 					{
-						stride = stride + GetDataTypeSizeInBytes(layout->GetBufferElement()[i].dataType);
+						stride = stride + GetDataTypeSizeInBytes(layout->GetBufferElement()[i].format);
 					}
 
 					for (size_t i = 0; i < layout->GetBufferElement().size(); i++)
 					{
 						glEnableVertexAttribArray(index);
 						glVertexAttribPointer(index,
-							GetComponentCount(layout->GetBufferElement()[i].dataType),
-							GetGLDataType(layout->GetBufferElement()[i].dataType),
+							GetComponentCount(layout->GetBufferElement()[i].format),
+							GetGLDataType(layout->GetBufferElement()[i].format),
 							GL_FALSE, stride,
 							(GLvoid*)offset);
 
 						index++;
 
-						offset = offset + GetDataTypeSizeInBytes(layout->GetBufferElement()[i].dataType);
+						offset = offset + GetDataTypeSizeInBytes(layout->GetBufferElement()[i].format);
 					}
 
 					glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -115,91 +116,57 @@ namespace NuclearEngine
 					glBindBuffer(GL_ARRAY_BUFFER, 0);
 				}
 
-				GLenum GetGLDataType(DataType dataType)
+				GLenum GetGLDataType(Format dataType)
 				{
 
 					switch (dataType)
 					{
-					case DataType::Float:
-					{
-						return GL_FLOAT;
-						break;
-					}
-					case DataType::Float2:
-					{
-						return GL_FLOAT;
-						break;
-					}
-					case DataType::Float3:
-					{
-						return GL_FLOAT;
-						break;
-					}
-					case DataType::Float4:
-					{
-						return GL_FLOAT;
-						break;
-					}
+					case Format::R32_FLOAT:
+					case Format::R32G32_FLOAT:
+					case Format::R32G32B32_FLOAT:
+					case Format::R32G32B32A32_FLOAT:
+					{		return GL_FLOAT;	}
+					case Format::R8G8B8A8_UNORM:
+					{	return GL_UNSIGNED_BYTE;	}
 					default:
 						return -1;
 						break;
 					}
 				}
 
-				unsigned int GetDataTypeSizeInBytes(DataType dataType)
+				unsigned int GetDataTypeSizeInBytes(Format format)
 				{
-					switch (dataType)
+					switch (format)
 					{
-					case DataType::Float:
-					{
-						return 4;
-						break;
-					}
-					case DataType::Float2:
-					{
-						return 8;
-						break;
-					}
-					case DataType::Float3:
-					{
-						return 12;
-						break;
-					}
-					case DataType::Float4:
-					{
-						return 16;
-						break;
-					}
+					case Format::R32_FLOAT:
+					{	return 4;	}
+					case Format::R32G32_FLOAT:
+					{	return 8;	}
+					case Format::R32G32B32_FLOAT:
+					{	return 12;	}
+					case Format::R32G32B32A32_FLOAT:
+					{	return 16;	}
+					case Format::R8G8B8A8_UNORM:
+					{	return 4;	}
 					default:
 						return -1;
-						break;
 					}
 				}
 
-				unsigned int GetComponentCount(DataType dataType)
+				unsigned int GetComponentCount(Format dataType)
 				{
 					switch (dataType)
 					{
-					case DataType::Float:
-					{
-						return 1;
-						break;
-					}
-					case DataType::Float2:
-					{
-						return 2;
-						break;
-					}
-					case DataType::Float3:
-					{
-						return 3;
-						break;
-					}
-					case DataType::Float4:
-					{
-						return 4;
-						break;
-					}
+					case Format::R32_FLOAT:
+					{ return 1;	}
+					case Format::R32G32_FLOAT:
+					{ return 2; }
+					case Format::R32G32B32_FLOAT:
+					{ return 3; }
+					case Format::R32G32B32A32_FLOAT:
+					{ return 4; }
+					case Format::R8G8B8A8_UNORM:
+					{ return 4;	}
 					default:
 						return -1;
 						break;

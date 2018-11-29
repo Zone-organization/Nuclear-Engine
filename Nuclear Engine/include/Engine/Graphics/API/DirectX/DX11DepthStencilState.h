@@ -22,8 +22,7 @@ namespace NuclearEngine
 
 					void Bind();
 
-				protected:
-					ID3D11DepthStencilState * DS_State;
+					ID3D11DepthStencilState * mDSState;
 				};
 			}
 		}

@@ -1,6 +1,8 @@
 #include <Engine\Graphics\API\Context.h>
 #include <Core\Engine.h>
 #include <Core\Application.h>
+#include <Engine/Graphics/API/RenderAPI.h>
+
 #ifndef NE_USE_RUNTIME_RENDER_API
 #ifdef NE_USE_OPENGL_3_3
 #include <Engine/Graphics/API/OpenGL\GLContext.h>
@@ -141,6 +143,86 @@ namespace NuclearEngine
 					isOpengl3 = false;
 					isDirectX11 = true;
 				}
+			}
+
+			SavedState Context::SaveState()
+			{
+				SavedState state;
+				state.mRasterizerState	=	GetRasterizerState();
+				state.mBlendState		=	GetBlendState();
+				state.mDepthStencilState=	GetDepthStencilState();
+				state.mTexture			=	GetPSTexture();
+				state.mSampler			=	GetPSSampler();
+				state.mPixelShader		=	GetPixelShader();
+				state.mVertexShader		=	GetVertexShader();
+				state.mIndexBuffer		=	GetIndexBuffer();
+				state.mVertexBuffer		=	GetVertexBuffer();
+				state.mConstantBuffer	=	GetConstantBuffer();
+				state.mVertexShader.SetConstantBuffer(&state.mConstantBuffer);
+				return state;
+			}
+
+			void Context::LoadState(SavedState& state)
+			{
+				state.mRasterizerState.Bind();
+				state.mBlendState.Bind(state.mBlendState.SavedBlendFactor, state.mBlendState.SavedSampleMask);
+				state.mDepthStencilState.Bind();
+				state.mTexture.PSBind(0);
+				state.mSampler.PSBind(0);
+				state.mPixelShader.Bind();
+				state.mVertexShader.Bind();
+				state.mIndexBuffer.Bind();
+				state.mVertexBuffer.Bind();
+			}
+
+#ifndef NE_USE_RUNTIME_RENDER_API
+#define CONTEXT_API_GET_FUNC_CALL(FuncName) \
+return ctx.##FuncName();
+#else
+#define CONTEXT_API_GET_FUNC_CALL(ClassName) \
+if (Graphics::API::Context::isOpenGL3RenderAPI()) {	return Graphics::API::OpenGL::GLContext::Get##ClassName(); } \
+else if (Graphics::API::Context::isDirectX11RenderAPI()) { return Graphics::API::DirectX::DX11Context::Get##ClassName();}
+#endif
+
+			RasterizerState Context::GetRasterizerState()
+			{
+				CONTEXT_API_GET_FUNC_CALL(RasterizerState)
+			}
+			BlendState Context::GetBlendState()
+			{
+				CONTEXT_API_GET_FUNC_CALL(BlendState)
+			}
+			DepthStencilState Context::GetDepthStencilState()
+			{
+				CONTEXT_API_GET_FUNC_CALL(DepthStencilState)
+			}
+			Texture Context::GetPSTexture()
+			{
+				CONTEXT_API_GET_FUNC_CALL(PSTexture)
+			}
+			Sampler Context::GetPSSampler()
+			{
+				CONTEXT_API_GET_FUNC_CALL(PSSampler)
+			}
+			PixelShader Context::GetPixelShader()
+			{
+				CONTEXT_API_GET_FUNC_CALL(PixelShader)
+			}
+			VertexShader Context::GetVertexShader()
+			{
+				CONTEXT_API_GET_FUNC_CALL(VertexShader)
+			}
+			IndexBuffer Context::GetIndexBuffer()
+			{
+				CONTEXT_API_GET_FUNC_CALL(IndexBuffer)
+			}
+			VertexBuffer Context::GetVertexBuffer()
+			{
+				CONTEXT_API_GET_FUNC_CALL(VertexBuffer)
+			}
+			ConstantBuffer Context::GetConstantBuffer()
+			{
+				CONTEXT_API_GET_FUNC_CALL(ConstantBuffer)
 			}
 		}
 	}
