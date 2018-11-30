@@ -120,6 +120,47 @@ namespace NuclearEngine
 
 				s_windowHasFocus = window->hasFocus();
 			}
+			void Update(const sf::Vector2i& mousePos, const sf::Vector2f& displaySize, float dt)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.DisplaySize = ImVec2(displaySize.x, displaySize.y);
+				io.DeltaTime = dt;
+
+				if (s_windowHasFocus) {
+					if (io.WantSetMousePos) {
+						sf::Vector2i mousePos(static_cast<int>(io.MousePos.x), static_cast<int>(io.MousePos.y));
+						sf::Mouse::setPosition(mousePos);
+					}
+					else {
+						io.MousePos = ImVec2(mousePos.x, mousePos.y);
+					}
+					for (unsigned int i = 0; i < 3; i++) {
+						io.MouseDown[i] = s_touchDown[i] || sf::Touch::isDown(i) || s_mousePressed[i] || sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
+						s_mousePressed[i] = false;
+						s_touchDown[i] = false;
+					}
+				}
+			}
+
+			void ImGui_Binding::Update(sf::Window& window, float dt)
+			{
+				if (!s_mouseMoved) {
+					if (sf::Touch::isDown(0))
+						s_touchPos = sf::Touch::getPosition(0, window);
+
+					Update(s_touchPos, static_cast<sf::Vector2f>(window.getSize()), dt);
+				}
+				else {
+					Update(sf::Mouse::getPosition(window), static_cast<sf::Vector2f>(window.getSize()), dt);
+				}
+
+				if (ImGui::GetIO().MouseDrawCursor) {
+					// Hide OS mouse cursor if imgui is drawing it
+					window.setMouseCursorVisible(false);
+				}
+			}
+
+
 			void ProcessEvent(const sf::Event & event)
 			{
 				if (s_windowHasFocus) {
@@ -190,8 +231,7 @@ namespace NuclearEngine
 				default:
 					break;
 				}
-			}
-		
+			}		
 		}
 	}
 }

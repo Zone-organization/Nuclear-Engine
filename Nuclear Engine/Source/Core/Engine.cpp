@@ -108,7 +108,7 @@ namespace NuclearEngine {
 			SetState(Engine::State::Rendering);
 
 			Base::Utilities::Timer timer;
-
+			
 			//Main Game Loop
 			while (!Core::Application::ShouldClose)
 			{
@@ -117,6 +117,7 @@ namespace NuclearEngine {
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
 				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
+				Graphics::ImGui_Binding::Update(*Core::Application::MainWindow, deltaTime);
 
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);

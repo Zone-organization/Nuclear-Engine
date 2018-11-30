@@ -356,6 +356,5 @@ public:
 		ImGui::Render();
 		Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
 		Graphics::API::Context::PresentFrame();
-
 	}
 };

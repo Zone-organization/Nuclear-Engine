@@ -3,6 +3,7 @@
 #include <Engine\Graphics\API\Context.h>
 #include <Core\Engine.h>
 #include <SFML\Window\ContextType.h>
+#include <Engine\Graphics\ImGui_Binding.h>
 #pragma comment (lib, "GLAD.lib")
 
 namespace NuclearEngine
@@ -55,6 +56,8 @@ namespace NuclearEngine
 			sf::Event wevent;
 			while (MainWindow->pollEvent(wevent))
 			{
+				Graphics::ImGui_Binding::ProcessEvent(wevent);
+
 				if (wevent.type == sf::Event::Closed)
 				{
 					ShouldClose = true;

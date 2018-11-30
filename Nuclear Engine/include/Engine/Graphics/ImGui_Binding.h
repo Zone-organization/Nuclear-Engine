@@ -17,6 +17,7 @@ namespace NuclearEngine
 		{
 			void Initialize(sf::Window* window);
 			void ProcessEvent(const sf::Event& event);
+			void Update(sf::Window& window,float dt);
 		}
 	}
 }
