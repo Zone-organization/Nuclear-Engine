@@ -25,6 +25,7 @@ namespace NuclearEngine
 		static ID3D11BlendState*        g_pBlendState = NULL;
 		static ID3D11DepthStencilState* g_pDepthStencilState = NULL;
 		static int                      g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
+		static NuclearEngine::Graphics::API::Texture dxuseless;
 
 		struct VERTEX_CONSTANT_BUFFER
 		{
@@ -430,9 +431,8 @@ namespace NuclearEngine
 				g_pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, &g_pFontTextureView);
 				pTexture->Release();
 			}
-
-			// Store our identifier
-			io.Fonts->TexID = (ImTextureID)g_pFontTextureView;
+			io.Fonts->TexID = &dxuseless;
+			io.Fonts->TexID->DXObject.mResourceView = g_pFontTextureView;
 
 			// Create texture sampler
 			{

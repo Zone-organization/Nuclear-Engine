@@ -12,7 +12,7 @@ namespace NuclearEngine
 		static int          g_AttribLocationTex = 0, g_AttribLocationProjMtx = 0;
 		static int          g_AttribLocationPosition = 0, g_AttribLocationUV = 0, g_AttribLocationColor = 0;
 		static unsigned int g_VboHandle = 0, g_ElementsHandle = 0;
-
+		static NuclearEngine::Graphics::API::Texture useless;
 		void ImGui_GL4_Renderer_CreateFontsTexture();
 		void ImGui_GL4_Renderer_DestroyFontsTexture();
 
@@ -310,7 +310,8 @@ namespace NuclearEngine
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
 			// Store our identifier
-			io.Fonts->TexID = (ImTextureID)(intptr_t)g_FontTexture;
+			io.Fonts->TexID = &useless;
+			io.Fonts->TexID->GLObject.mTextureID = g_FontTexture;
 
 			// Restore state
 			glBindTexture(GL_TEXTURE_2D, last_texture);
