@@ -41,29 +41,22 @@ namespace NuclearEngine
 							return ShaderVariableType::Unknown;
 
 					case Xsc::Reflection::FieldType::Float:
-						if (field.dimensions[0] == 1)
-						{
-							if (field.dimensions[1] == 1)
-								return ShaderVariableType::Float1;
-							else if (field.dimensions[1] == 2)
-								return ShaderVariableType::Float2;
-							else if (field.dimensions[1] == 3)
-								return ShaderVariableType::Float3;
-							else if (field.dimensions[1] == 4)
-								return ShaderVariableType::Float4;
-						}
+
+						if (field.dimensions[0] == 1 && field.dimensions[1] == 1)
+							return ShaderVariableType::Float1;
+						else if (field.dimensions[0] == 2 && field.dimensions[1] == 1)
+							return ShaderVariableType::Float2;
+						else if (field.dimensions[0] == 3 && field.dimensions[1] == 1)
+							return ShaderVariableType::Float3;
+						else if (field.dimensions[0] == 4 && field.dimensions[1] == 1)
+							return ShaderVariableType::Float4;
 						else if (field.dimensions[0] == 2 && field.dimensions[1] == 2)
-						{
 							return ShaderVariableType::Matrix2x2;
-						}
 						else if (field.dimensions[0] == 3 && field.dimensions[1] == 3)
-						{
 							return ShaderVariableType::Matrix3x3;
-						}
 						else if (field.dimensions[0] == 4 && field.dimensions[1] == 4)
-						{
 							return ShaderVariableType::Matrix4x4;
-						}
+						
 
 					default:
 						//Log.Warning("[XShaderCompiler] [Reflection] Using Unsupported Variable type: " + std::to_string(Xsc::Reflection::FieldType::Bool) + " \n");

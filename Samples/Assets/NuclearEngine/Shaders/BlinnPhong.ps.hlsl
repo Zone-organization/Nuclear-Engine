@@ -1,9 +1,9 @@
 //Definitions:
-//NE_USE_NORMAL_MAPS
 //#define NE_USE_NORMAL_MAPS
 //#define NE_DIR_LIGHTS_NUM 1
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
+//#define NE_SHADOWS_ENABLED
 
 struct PixelInputType
 {
@@ -63,6 +63,12 @@ cbuffer NE_Light_CB
 #endif
 
 };
+cbuffer NE_Material
+{
+	float3 ModelColor;
+	float Shininess;
+};
+
 float4 DoLighting(PixelInputType input);
 
 float4 main(PixelInputType input) : SV_TARGET
@@ -71,7 +77,7 @@ float4 main(PixelInputType input) : SV_TARGET
 }
 
 //TODO: move to a global light modifier or some shit
-#define Shininess 64.0f
+//#define Shininess 64.0f
 
 float DoBlinnSpecular(float3 normal, float3 lightDir, float3 viewDir)
 {
@@ -112,7 +118,7 @@ float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 vi
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    return (ambient + diffuse + specular);
+    return (ambient + diffuse + specular) * ModelColor;
 }
 
 // calculates the color when using a spot light.

@@ -152,8 +152,6 @@ public:
 		CubeSet.push_back(DiffuseTex);
 		CubeSet.push_back(SpecularTex);
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
-		CubeMaterial.SetPixelShader(Renderer->GetPixelShader());
-
 
 		Assets::TextureSet SphereTextures;
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
@@ -161,10 +159,7 @@ public:
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
 		SphereTextures.push_back(WhiteTex);
 		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
-		SphereMaterial.SetPixelShader(Renderer->GetPixelShader());
 
-
-		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());
 
 		Assets::TextureSet GridTextures;
 		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
@@ -172,11 +167,27 @@ public:
 		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
 		GridTextures.push_back(GreyTex);
 		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
+
 		GridMaterial.SetPixelShader(Renderer->GetPixelShader());
+		CubeMaterial.SetPixelShader(Renderer->GetPixelShader());
+		SphereMaterial.SetPixelShader(Renderer->GetPixelShader());
+		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());
 
 		CubeSet.clear();
 		SphereTextures.clear();
 		GridTextures.clear();
+
+		CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+		SphereMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		SphereMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+		NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+		GridMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		GridMaterial.SetMaterialVariable("Shininess", 8.0f);
 
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths

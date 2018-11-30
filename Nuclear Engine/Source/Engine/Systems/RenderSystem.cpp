@@ -246,6 +246,8 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
 		{
+			material->UpdateMaterialCBuffer();
+			material->Bind();
 			for (size_t i = 0; i< mesh->SubMeshes.size(); i++)
 			{
 				material->BindTexSet(mesh->SubMeshes.at(i).data.TexSetIndex);

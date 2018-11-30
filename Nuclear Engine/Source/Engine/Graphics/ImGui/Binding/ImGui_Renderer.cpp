@@ -36,8 +36,8 @@ namespace NuclearEngine
 
 			// Create the input layout
 			gInputLayout.AppendAttribute("POSITION", 0, Graphics::API::Format::R32G32_FLOAT);
-			gInputLayout.AppendAttribute("COLOR", 0, Graphics::API::Format::R8G8B8A8_UNORM);
 			gInputLayout.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32G32_FLOAT);
+			gInputLayout.AppendAttribute("COLOR", 0, Graphics::API::Format::R8G8B8A8_UNORM);
 
 			gInputLayout.AutoAlignedOffset = false;
 
