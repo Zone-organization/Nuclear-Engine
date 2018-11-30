@@ -600,6 +600,8 @@
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_DX11_Renderer.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_GL4_Renderer.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imgui_internal.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_textedit.h" />
@@ -671,6 +673,7 @@
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\VertexShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Renderer_Dirty.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_draw.cpp" />
@@ -687,7 +690,6 @@
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Binding.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Renderer.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Layer.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />
