@@ -1,5 +1,7 @@
 #include <Engine/Graphics/API/ConstantBuffer.h>
 #include <Engine\Graphics\API\Context.h>
+#include <Engine/Graphics/API/VertexShader.h>
+#include <Engine/Graphics/API/PixelShader.h>
 
 namespace NuclearEngine {
 	namespace Graphics {
@@ -24,6 +26,21 @@ namespace NuclearEngine {
 			void ConstantBuffer::Update(const void* data, unsigned int size)
 			{
 				BASE_API_FUNC_CALL_ARGS(Update, data, size)
+			}
+
+			void ConstantBuffer::VSBind(Uint8 slot)
+			{
+				BASE_API_FUNC_CALL_ARGS(VSBind, slot)
+			}
+
+			void ConstantBuffer::PSBind(Uint8 slot)
+			{
+				BASE_API_FUNC_CALL_ARGS(PSBind, slot)
+
+			}
+			void ConstantBuffer::GSBind(Uint8 slot)
+			{
+				BASE_API_FUNC_CALL_ARGS(GSBind, slot)
 			}
 		}
 	}

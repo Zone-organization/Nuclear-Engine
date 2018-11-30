@@ -21,6 +21,10 @@ namespace NuclearEngine
 
 					void Update(const void* data, unsigned int size);
 
+					void VSBind(Uint8 slot);
+					void GSBind(Uint8 slot);
+					void PSBind(Uint8 slot);
+
 					GLuint mCBuffer;
 					GLuint mBindingIndex;
 					const char* mName;

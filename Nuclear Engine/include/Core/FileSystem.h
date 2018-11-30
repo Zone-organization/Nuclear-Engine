@@ -1,6 +1,7 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Base\NE_PrivateCommon.h>
 #include <vector>
+
 namespace NuclearEngine
 {
 	namespace Core

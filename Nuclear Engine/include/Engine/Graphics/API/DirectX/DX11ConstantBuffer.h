@@ -21,6 +21,10 @@ namespace NuclearEngine
 					static void Create(DX11ConstantBuffer *buffer, const char *Nameinshader, unsigned int size);
 					static void Delete(DX11ConstantBuffer *cbuffer);
 
+					void VSBind(Uint8 slot);
+					void GSBind(Uint8 slot);
+					void PSBind(Uint8 slot);
+
 					void Update(const void* data, unsigned int size);
 
 					ID3D11Buffer * mCBuffer;

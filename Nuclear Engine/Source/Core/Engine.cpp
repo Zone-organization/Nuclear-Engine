@@ -156,11 +156,11 @@ namespace NuclearEngine {
 		{
 			Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
 			Log.Info("[Engine] Starting Engine...\n");
-			Log.Info("[Engine] Version: ");
+			Log.Info("[Engine] Engine Build: ");
 			Log.Info(MajorVersion);
 			Log.Info(".");
 			Log.Info(MinorVersion);
-			Log.Info("\n[Engine] Built On: ");
+			Log.Info("  On: ");
 			Log.Info(__DATE__);
 			Log.Info("  At: ");
 			Log.Info(__TIME__);
@@ -169,37 +169,49 @@ namespace NuclearEngine {
 			Log.Info("[Engine] Built For: ");
 
 #ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
-			Log.Info("Windows-PC 32 Bit\n");
+			Log.Info("Windows-PC 32 Bit");
 #endif
 
 #ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
-			Log.Info("Windows-PC 64 bit\n");
+			Log.Info("Windows-PC 64 bit");
+#endif
+
+#ifdef 	_DEBUG
+			Log.Info("  [DEBUG Build]\n");
+#endif
+
+#ifdef 	NDEBUG
+			Log.Info("  [RELEASE Build]\n");
 #endif
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)
 #endif
-			Log.Info("[Engine] Built With Renderer: ");
+			Log.Info("[Engine] Built-In Renderer");
 
 
 #ifdef 	NE_USE_CORE_OPENGL
-			Log.Info("OpenGL 4.5 Core\n");
+			Log.Info(": OpenGL 4.5 Core\n");
 #endif
 
 #ifdef 	NE_USE_DIRECTX11
-			Log.Info("DirectX 11\n");
+			Log.Info(": DirectX 11\n");
 #endif
 
 #ifdef 	NE_USE_RUNTIME_RENDER_API
-			Log.Info("OpenGL 4.5 Core & DirectX 11\n");
+			Log.Info("s: OpenGL 4.5 Core & DirectX 11\n");
 #endif
 
 #ifndef FMOD_NOT_INCLUDED
 			Log.Info("[Engine] Built With FMOD AudioEngine\n");
 #else
-			Log.Warning("[Engine] Engine built without FMOD AudioEngine\n");
+			Log.Warning("[Engine] Engine built without FMOD AudioEngine.\n");
 #endif
-
+#ifndef PHYSX_NOT_INCLUDED
+			Log.Info("[Engine] Built With NVIDIA PhysX\n");
+#else
+			Log.Warning("[Engine] Engine built without NVIDIA PhysX.\n");
+#endif
 		}
 
 	}

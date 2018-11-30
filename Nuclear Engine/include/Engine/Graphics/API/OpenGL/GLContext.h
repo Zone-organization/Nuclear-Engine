@@ -5,6 +5,7 @@
 #include <Engine/Graphics/Color.h>
 #include <Engine/Graphics/API/RenderAPI.h>
 
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -17,6 +18,8 @@ namespace NuclearEngine
 				class NEAPI GLContext
 				{
 				public:
+					static bool Initialize(sf::Window* window);
+
 					static void SetPrimitiveType(int primitivetype);
 
 					static void Clear(Graphics::Color color, Uint32 flags, float depth = 1.0f, unsigned int stencil = 0);

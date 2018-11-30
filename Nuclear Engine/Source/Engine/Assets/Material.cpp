@@ -71,9 +71,9 @@ namespace NuclearEngine
 				}
 
 				//Parse loaded textures
-				for (int i = 0; i < mPixelShaderTextures.size(); i++)
+				for (size_t i = 0; i < mPixelShaderTextures.size(); i++)
 				{
-					for (int j = 0; j < mPixelShaderTextures.at(i).size(); j++)
+					for (size_t j = 0; j < mPixelShaderTextures.at(i).size(); j++)
 					{
 						for (ShaderTexture TSinfo : PixelShaderTS)
 						{

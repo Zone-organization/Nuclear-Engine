@@ -2,6 +2,7 @@
 
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/API/DirectX\DX11RenderTarget.h>
+#include <Engine/Graphics/API/RenderAPI.h>
 
 #include <wrl.h>
 template <typename T>
@@ -146,13 +147,11 @@ namespace NuclearEngine
 
 					UINT creationFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 
-
-#ifdef _DEBUG
 					if (window->getSettings().attributeFlags == sf::ContextSettings::Debug)
 					{
 						creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 					}
-#endif
+
 					result = D3D11CreateDeviceAndSwapChain(
 						adapter,
 						D3D_DRIVER_TYPE_UNKNOWN,

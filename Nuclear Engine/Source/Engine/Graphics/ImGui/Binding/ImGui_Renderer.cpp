@@ -118,7 +118,7 @@ namespace NuclearEngine
 		static bool ValidVB = false, ValidIB = false;
 		void ImGui_Renderer::RenderDrawData(ImDrawData * draw_data)
 		{
-			// Create and grow vertex/index buffers if needed
+			 //Create and grow vertex/index buffers if needed
 			if (ValidVB == false || g_VertexBufferSize < draw_data->TotalVtxCount)
 			{
 				API::VertexBuffer::Delete(&gVB);
@@ -190,7 +190,6 @@ namespace NuclearEngine
 					{ 0.0f,         0.0f,           0.5f,       0.0f },
 					{ (R+L)/(L-R),  (T+B)/(B-T),    0.5f,       1.0f },
 				};
-
 				gVertexConstantBuffer.Update(mvp, sizeof(mvp));
 			}
 
@@ -211,6 +210,7 @@ namespace NuclearEngine
 			// Bind shader
 			Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 			gVertexShader.Bind();
+			gVertexConstantBuffer.VSBind(0);
 			gPixelShader.Bind();
 			gFontSampler.PSBind(0);
 

@@ -1,5 +1,4 @@
 #include <Engine\Graphics\API\Context.h>
-#include <Core\Engine.h>
 #include <Core\Application.h>
 #include <Engine/Graphics/API/RenderAPI.h>
 
@@ -21,12 +20,13 @@ static NuclearEngine::Graphics::API::DirectX::DX11Context ctx;
 #endif
 
 #ifndef NE_USE_RUNTIME_RENDER_API
-#define CONTEXT_API_GET_FUNC_CALL(FuncName) \
+#define CONTEXT_API_GET_FUNC_CALL(FuncName, BaseName) \
 return ctx.##FuncName();
 #else
-#define CONTEXT_API_GET_FUNC_CALL(ClassName) \
+#define CONTEXT_API_GET_FUNC_CALL(ClassName, BaseName) \
 if (Graphics::API::Context::isOpenGL3RenderAPI()) {	return Graphics::API::OpenGL::GLContext::Get##ClassName(); } \
-else if (Graphics::API::Context::isDirectX11RenderAPI()) { return Graphics::API::DirectX::DX11Context::Get##ClassName();}
+else if (Graphics::API::Context::isDirectX11RenderAPI()) { return Graphics::API::DirectX::DX11Context::Get##ClassName();} \
+return BaseName();
 #endif
 
 
@@ -39,6 +39,57 @@ namespace NuclearEngine
 			static RenderAPI _renderer;
 			static bool isOpengl3 = false;
 			static bool isDirectX11 = false;;
+			bool Context::Initialize(sf::Window * window)
+			{
+				if (_renderer == RenderAPI::OpenGL4_5)
+				{
+					if (!Graphics::API::OpenGL::GLContext::Initialize(window))
+					{
+						Log.Error("[Context] Failed to initialize OpenGL 4.5! \n");
+						return false;
+					}
+				}
+
+				else if (_renderer == RenderAPI::DirectX11)
+				{
+
+					if (!Graphics::API::DirectX::DX11Context::Initialize(window))
+					{
+						Log.Error("[Context] Failed to initialize DirectX11! \n");
+						return false;
+					}
+				}
+
+				return true;
+			}
+			void Context::Shutdown()
+			{
+#ifdef NE_COMPILE_DIRECTX11
+				if (Graphics::API::Context::GetRenderAPI() == RenderAPI::DirectX11)
+				{
+					Graphics::API::DirectX::DX11Context::Shutdown();
+				}
+#endif
+			}
+			void Context::SwapBuffers()
+			{
+#ifdef NE_USE_RUNTIME_RENDER_API
+				if (Graphics::API::Context::GetRenderAPI() == RenderAPI::OpenGL4_5)
+				{
+					Application::MainWindow->display();
+				}
+				else if (Graphics::API::Context::GetRenderAPI() == RenderAPI::DirectX11)
+				{
+					Graphics::API::DirectX::DX11Context::SwapBuffers();
+				}
+#endif
+#ifdef NE_USE_DIRECTX11
+				Graphics::API::DirectX::DX11Context::SwapBuffers();
+#endif
+#ifdef NE_USE_CORE_OPENGL
+				Application::MainWindow->display();
+#endif
+			}
 			RenderAPI Context::GetRenderAPI()
 			{
 				return _renderer;
@@ -210,55 +261,54 @@ namespace NuclearEngine
 				state.mRasterizerState.Bind();
 				state.mBlendState.Bind(state.mBlendState.SavedBlendFactor, state.mBlendState.SavedSampleMask);
 				state.mDepthStencilState.Bind();
+				state.mVertexShader.Bind();
+				state.mConstantBuffer.VSBind(state.mVertexShader.GetCBSlot(&state.mConstantBuffer));
+				state.mPixelShader.Bind();
 				state.mTexture.PSBind(0);
 				state.mSampler.PSBind(0);
-				state.mPixelShader.Bind();
-				state.mVertexShader.Bind();
 				state.mIndexBuffer.Bind();
 				state.mVertexBuffer.Bind();
-
 			}
-
 
 			RasterizerState Context::GetRasterizerState()
 			{
-				CONTEXT_API_GET_FUNC_CALL(RasterizerState)
+				CONTEXT_API_GET_FUNC_CALL(RasterizerState, RasterizerState)
 			}
 			BlendState Context::GetBlendState()
 			{
-				CONTEXT_API_GET_FUNC_CALL(BlendState)
+				CONTEXT_API_GET_FUNC_CALL(BlendState, BlendState)
 			}
 			DepthStencilState Context::GetDepthStencilState()
 			{
-				CONTEXT_API_GET_FUNC_CALL(DepthStencilState)
+				CONTEXT_API_GET_FUNC_CALL(DepthStencilState, DepthStencilState)
 			}
 			Texture Context::GetPSTexture()
 			{
-				CONTEXT_API_GET_FUNC_CALL(PSTexture)
+				CONTEXT_API_GET_FUNC_CALL(PSTexture, Texture)
 			}
 			Sampler Context::GetPSSampler()
 			{
-				CONTEXT_API_GET_FUNC_CALL(PSSampler)
+				CONTEXT_API_GET_FUNC_CALL(PSSampler, Sampler)
 			}
 			PixelShader Context::GetPixelShader()
 			{
-				CONTEXT_API_GET_FUNC_CALL(PixelShader)
+				CONTEXT_API_GET_FUNC_CALL(PixelShader, PixelShader)
 			}
 			VertexShader Context::GetVertexShader()
 			{
-				CONTEXT_API_GET_FUNC_CALL(VertexShader)
+				CONTEXT_API_GET_FUNC_CALL(VertexShader, VertexShader)
 			}
 			IndexBuffer Context::GetIndexBuffer()
 			{
-				CONTEXT_API_GET_FUNC_CALL(IndexBuffer)
+				CONTEXT_API_GET_FUNC_CALL(IndexBuffer, IndexBuffer)
 			}
 			VertexBuffer Context::GetVertexBuffer()
 			{
-				CONTEXT_API_GET_FUNC_CALL(VertexBuffer)
+				CONTEXT_API_GET_FUNC_CALL(VertexBuffer, VertexBuffer)
 			}
 			ConstantBuffer Context::GetConstantBuffer()
 			{
-				CONTEXT_API_GET_FUNC_CALL(ConstantBuffer)
+				CONTEXT_API_GET_FUNC_CALL(ConstantBuffer, ConstantBuffer)
 			}
 		}
 	}

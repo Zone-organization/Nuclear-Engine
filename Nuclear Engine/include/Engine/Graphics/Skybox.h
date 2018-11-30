@@ -1,14 +1,18 @@
 #pragma once
 #include <Engine/Graphics/API/VertexBuffer.h>
-#include <Engine/Graphics/API/IndexBuffer.h>
 #include <Engine/Graphics/API/Texture.h>
 #include <Engine/Graphics/API/Sampler.h>
 #include <Engine/Graphics/API/DepthStencilState.h>
-#include <Core/FileSystem.h>
-#include <Engine\Components\CameraComponent.h>
+#include <Engine/Graphics/API/VertexShader.h>
+#include <Engine/Graphics/API/PixelShader.h>
+
 
 namespace NuclearEngine
 {
+	namespace Components
+	{
+		class CameraComponent;
+	}
 	namespace Graphics
 	{			
 		class NEAPI Skybox

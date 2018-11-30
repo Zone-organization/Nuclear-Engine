@@ -2,7 +2,6 @@
 #include <Base\NE_Common.h>
 #include <Engine\ECS/Entity.h>
 #include <Engine\ECS/System.h>
-#include <Engine\Graphics\Background.h>
 
 namespace NuclearEngine
 {

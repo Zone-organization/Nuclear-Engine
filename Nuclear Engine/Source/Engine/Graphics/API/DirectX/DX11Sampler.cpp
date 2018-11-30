@@ -37,7 +37,7 @@ namespace NuclearEngine
 					samplerDesc.AddressW = DXTypeMap(Desc.WrapW);
 					samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 					samplerDesc.MinLOD = 0;
-					samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+					samplerDesc.MaxLOD = FLT_MAX;
 
 					samplerDesc.MaxAnisotropy = static_cast<unsigned int>(Desc.AnisoFilter);
 

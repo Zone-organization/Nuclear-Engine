@@ -56,6 +56,21 @@ namespace NuclearEngine
 				{
 					DX11Context::GetContext()->UpdateSubresource(mCBuffer, 0, NULL, data, 0, 0);
 				}
+
+				void DX11ConstantBuffer::VSBind(Uint8 slot)
+				{
+					DX11Context::GetContext()->VSSetConstantBuffers(slot, 1, &mCBuffer);
+				}
+
+				void DX11ConstantBuffer::PSBind(Uint8 slot)
+				{
+					DX11Context::GetContext()->PSSetConstantBuffers(slot, 1, &mCBuffer);
+
+				}
+				void DX11ConstantBuffer::GSBind(Uint8 slot)
+				{
+					DX11Context::GetContext()->GSSetConstantBuffers(slot, 1, &mCBuffer);
+				}
 			}
 		}
 	}

@@ -7,7 +7,7 @@ namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
 
-			class NEAPI Sampler //<OpenGL::GLSampler, DirectX::DX11Sampler>
+			class NEAPI Sampler
 			{
 			public:
 				Sampler();
@@ -16,7 +16,6 @@ namespace NuclearEngine {
 				static void Create(Sampler* texture, const SamplerDesc& Desc);
 				static void Delete(Sampler* texture);
 
-				//TODO: MOVE
 				void VSBind(Uint8 slot);
 				void GSBind(Uint8 slot);
 				void PSBind(Uint8 slot);

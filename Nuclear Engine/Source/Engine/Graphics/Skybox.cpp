@@ -5,6 +5,9 @@
 #include <Engine/Graphics/API/Buffer_Types.h>
 #include <Engine/Graphics/API/RenderStates_Types.h>
 #include <Engine/Graphics/API/InputLayout.h>
+#include <Engine\Components\CameraComponent.h>
+#include <Engine/Graphics/API/IndexBuffer.h>
+#include <Core/FileSystem.h>
 
 namespace NuclearEngine
 {

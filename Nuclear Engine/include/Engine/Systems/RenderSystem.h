@@ -44,6 +44,9 @@ namespace NuclearEngine
 			Graphics::API::VertexShader GetVertexShader();
 			Graphics::API::PixelShader GetPixelShader();
 
+			void BindShaders();
+			void BindConstantBuffers();
+
 			void AddLight(Components::DirectionalLight* light);
 			void AddLight(Components::PointLight* light);
 			void AddLight(Components::SpotLight* light);

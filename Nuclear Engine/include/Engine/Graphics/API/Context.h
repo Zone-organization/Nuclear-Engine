@@ -6,6 +6,7 @@
 #define	ClearColorBuffer 0b00000001
 #define	ClearDepthBuffer 0b00000010
 #define	ClearStencilBuffer 0b00000100
+namespace sf { class Window; }
 
 namespace NuclearEngine
 {
@@ -45,6 +46,10 @@ namespace NuclearEngine
 			class NEAPI Context
 			{
 			public:
+				static bool Initialize(sf::Window* window);
+				static void Shutdown();
+				static void SwapBuffers();
+
 				//get active render api
 				static Core::RenderAPI GetRenderAPI();
 

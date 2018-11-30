@@ -82,6 +82,16 @@ namespace NuclearEngine
 		{
 			return this->PShader;
 		}
+		void RenderSystem::BindShaders()
+		{
+			VShader.Bind();
+			PShader.Bind();
+		}
+		void RenderSystem::BindConstantBuffers()
+		{
+			ActiveCamera->GetCBuffer().VSBind(VShader.GetCBSlot(&ActiveCamera->GetCBuffer()));
+			NE_Light_CB.PSBind(VShader.GetCBSlot(&NE_Light_CB));
+		}
 		void RenderSystem::AddLight(Components::DirectionalLight * light)
 		{
 			DirLights.push_back(light);
@@ -208,6 +218,8 @@ namespace NuclearEngine
 		}
 		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
+			BindShaders();
+			BindConstantBuffers();
 			Update_Meshes(es);
 			Update_Light();
 

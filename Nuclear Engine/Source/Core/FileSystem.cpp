@@ -1,4 +1,5 @@
 #include "Core\FileSystem.h"
+#include <Base\NE_Common.h>
 #include <fstream>
 
 namespace NuclearEngine

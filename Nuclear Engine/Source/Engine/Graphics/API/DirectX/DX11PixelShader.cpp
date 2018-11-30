@@ -33,7 +33,6 @@ namespace NuclearEngine
 						}
 						else
 						{
-							result->Reflection = ShaderDesc.Reflection;
 							if (FAILED(DX11Context::GetDevice()->CreatePixelShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->mPixelShader)))
 							{
 								Log.Info("[DX11PixelShader] Pixel Shader Creation Failed!\n");
@@ -53,8 +52,7 @@ namespace NuclearEngine
 				}
 				void DX11PixelShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer)
 				{
-					DX11Context::GetContext()->PSSetShader(mPixelShader, 0, 0);
-					DX11Context::GetContext()->PSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->mName].BindingSlot, 1, &ubuffer->mCBuffer);
+
 				}
 
 				void DX11PixelShader::Bind()

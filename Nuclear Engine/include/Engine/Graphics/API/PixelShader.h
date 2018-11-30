@@ -8,7 +8,7 @@ namespace NuclearEngine {
 	{
 		namespace API {
 			class ConstantBuffer;
-			class NEAPI PixelShader //<OpenGL::GLPixelShader, DirectX::DX11PixelShader>
+			class NEAPI PixelShader
 			{
 				friend class Texture;
 			public:
@@ -19,6 +19,9 @@ namespace NuclearEngine {
 				static void	Delete(PixelShader* shader);
 
 				void SetConstantBuffer(ConstantBuffer* cbuffer);
+
+				//Only For DirectX 11!
+				Uint8 GetCBSlot(ConstantBuffer* cbuffer);
 				void Bind();
 
 				ShaderReflection Reflection;

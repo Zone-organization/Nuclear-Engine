@@ -58,6 +58,17 @@ namespace NuclearEngine
 					glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 					glBindBuffer(GL_UNIFORM_BUFFER, 0);
 				}
+
+				void GLConstantBuffer::VSBind(Uint8 slot)
+				{
+				}
+
+				void GLConstantBuffer::PSBind(Uint8 slot)
+				{
+				}
+				void GLConstantBuffer::GSBind(Uint8 slot)
+				{
+				}
 			}
 		}
 	}

@@ -2,7 +2,9 @@
 #include <Engine/Graphics/API/DirectX\DX11Common.h>
 
 #ifdef NE_COMPILE_DIRECTX11
+#include <vector>
 #include <Engine/Graphics/API/Shader_Types.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -30,7 +32,6 @@ namespace NuclearEngine
 
 
 					ID3D11VertexShader * mVertexShader;
-					ShaderReflection Reflection;
 
 					/*Used for InputLayouts*/
 					void* VS_Buffer;

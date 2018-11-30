@@ -19,6 +19,9 @@ namespace NuclearEngine {
 				static void	Delete(VertexShader* shader);
 
 				void SetConstantBuffer(ConstantBuffer* cbuffer);
+
+				//Only For DirectX 11!
+				Uint8 GetCBSlot(ConstantBuffer* cbuffer);
 				void Bind();
 
 				ShaderReflection Reflection;

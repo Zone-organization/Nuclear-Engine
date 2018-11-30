@@ -3,7 +3,6 @@
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/API/DirectX\DX11Context.h>
 #include <Engine/Graphics/API/DirectX\DX11ConstantBuffer.h>
-#include <Engine/Graphics/API/Shader_Types.h>
 
 namespace NuclearEngine
 {
@@ -35,7 +34,6 @@ namespace NuclearEngine
 						{
 							result->VS_Buffer = ShaderDesc.DXBC_SourceCode.Buffer;
 							result->VS_Size = ShaderDesc.DXBC_SourceCode.Size;
-							result->Reflection = ShaderDesc.Reflection;
 							// encapsulate both shaders into shader Components
 							if (FAILED(DX11Context::GetDevice()->CreateVertexShader(ShaderDesc.DXBC_SourceCode.Buffer, ShaderDesc.DXBC_SourceCode.Size, 0, &result->mVertexShader)))
 							{
@@ -56,8 +54,7 @@ namespace NuclearEngine
 				}
 				void DX11VertexShader::SetConstantBuffer(DX11ConstantBuffer* ubuffer)
 				{
-					DX11Context::GetContext()->VSSetShader(mVertexShader, 0, 0);
-					DX11Context::GetContext()->VSSetConstantBuffers(Reflection.ConstantBuffers[ubuffer->mName].BindingSlot, 1, &ubuffer->mCBuffer);
+
 				}
 
 				void DX11VertexShader::Bind()

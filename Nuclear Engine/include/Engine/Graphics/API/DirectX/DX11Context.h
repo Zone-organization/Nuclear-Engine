@@ -3,7 +3,6 @@
 #ifdef NE_COMPILE_DIRECTX11
 #include <Engine/Graphics/Color.h>
 #include <SFML/Window.hpp>
-#include <Engine/Graphics/API/RenderAPI.h>
 
 namespace NuclearEngine
 {
@@ -11,12 +10,25 @@ namespace NuclearEngine
 	{
 		namespace API
 		{
+			class RasterizerState;
+			class BlendState;
+			class DepthStencilState;
+			class Texture;
+			class Sampler;
+			class PixelShader;
+			class VertexShader;
+			class IndexBuffer;
+			class VertexBuffer;
+			class ConstantBuffer;
 			namespace DirectX
 			{
 				class DX11RenderTarget;
+
 				class NEAPI DX11Context
 				{
 				public:
+					static bool Initialize(sf::Window* window);
+					static void Shutdown();
 
 					static void SetPrimitiveType(int primitivetype);
 
@@ -35,9 +47,7 @@ namespace NuclearEngine
 					static void Bind_RenderTarget(DX11RenderTarget* rt);
 					static void Bind_Default_Rasterizer_State();
 					static void Bind_Default_RenderTarget();
-
-					static bool Initialize(sf::Window* window);
-					static void Shutdown();
+								
 					static void SwapBuffers();
 
 					//UINT                        ScissorRectsCount, ViewportsCount();

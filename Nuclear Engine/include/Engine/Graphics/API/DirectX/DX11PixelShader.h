@@ -28,7 +28,6 @@ namespace NuclearEngine
 					void Bind();
 
 					ID3D11PixelShader * mPixelShader;
-					ShaderReflection Reflection;
 				};
 			}
 		}

@@ -4,6 +4,7 @@
 #include <Engine/Graphics/API/DirectX\DX11Context.h>
 #include <Engine/Graphics/API/DirectX\DX11VertexShader.h>
 #include <Engine/Graphics/API/InputLayout.h>
+#include <Engine/Graphics/API/Buffer_Types.h>
 
 namespace NuclearEngine
 {

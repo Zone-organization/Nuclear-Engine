@@ -1,6 +1,7 @@
 #include <Engine/Graphics/API/OpenGL\GLContext.h>
+#include <SFML\Window.hpp>
 
-
+#include <sstream>
 #ifdef NE_COMPILE_CORE_OPENGL
 static GLuint GL_PRIMITIVE_TYPE;
 
@@ -13,7 +14,75 @@ namespace NuclearEngine
 		{
 			namespace OpenGL
 			{
+				void APIENTRY glDebugOutput(GLenum source,
+					GLenum type,
+					GLuint id,
+					GLenum severity,
+					GLsizei length,
+					const GLchar *message,
+					const void *userParam)
+				{
+					// ignore non-significant error/warning codes
+					if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+
+					std::stringstream info;
+
+					info << "\n--------------------------\n" << std::endl;
+					info << "OpenGL Debug message (" << id << "): " << message << '\n';
+
+					switch (source)
+					{
+					case GL_DEBUG_SOURCE_API:             info << "Source: API"; break;
+					case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   info << "Source: Window System"; break;
+					case GL_DEBUG_SOURCE_SHADER_COMPILER: info << "Source: Shader Compiler"; break;
+					case GL_DEBUG_SOURCE_THIRD_PARTY:     info << "Source: Third Party"; break;
+					case GL_DEBUG_SOURCE_APPLICATION:     info << "Source: Application"; break;
+					case GL_DEBUG_SOURCE_OTHER:           info << "Source: Other"; break;
+					} info << std::endl;
+
+					switch (type)
+					{
+					case GL_DEBUG_TYPE_ERROR:               info << "Type: Error"; break;
+					case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: info << "Type: Deprecated Behaviour"; break;
+					case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  info << "Type: Undefined Behaviour"; break;
+					case GL_DEBUG_TYPE_PORTABILITY:         info << "Type: Portability"; break;
+					case GL_DEBUG_TYPE_PERFORMANCE:         info << "Type: Performance"; break;
+					case GL_DEBUG_TYPE_MARKER:              info << "Type: Marker"; break;
+					case GL_DEBUG_TYPE_PUSH_GROUP:          info << "Type: Push Group"; break;
+					case GL_DEBUG_TYPE_POP_GROUP:           info << "Type: Pop Group"; break;
+					case GL_DEBUG_TYPE_OTHER:               info << "Type: Other"; break;
+					} info << std::endl;
+
+					switch (severity)
+					{
+					case GL_DEBUG_SEVERITY_HIGH:         info << "Severity: high"; break;
+					case GL_DEBUG_SEVERITY_MEDIUM:       info << "Severity: medium"; break;
+					case GL_DEBUG_SEVERITY_LOW:          info << "Severity: low"; break;
+					case GL_DEBUG_SEVERITY_NOTIFICATION: info << "Severity: notification"; break;
+					} info << std::endl;
+					info << "--------------------------" << std::endl;
+
+					Log.Warning(info.str());
+				}
+
 				static GLenum gIndicesType = GL_UNSIGNED_INT;
+				bool GLContext::Initialize(sf::Window * window)
+				{
+					bool result;
+					result = window->setActive(true);
+					if (result)
+					{
+						if (window->getSettings().attributeFlags == sf::ContextSettings::Debug)
+						{
+							glEnable(GL_DEBUG_OUTPUT);
+							glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+							glDebugMessageCallback(glDebugOutput, nullptr);
+							glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+						}
+					}
+
+					return result;
+				}
 				void GLContext::SetPrimitiveType(int primitivetype)
 				{
 					switch (primitivetype)
@@ -206,7 +275,7 @@ namespace NuclearEngine
 					baseMessage.append("  IBO: " + std::to_string(eabb) + ", size=" + std::to_string(eabbs) + "\n");
 
 					glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &mva);
-					for (unsigned i = 0; i < mva; ++i)
+					for (unsigned i = 0; i < (unsigned)mva; ++i)
 					{
 						glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &isOn);
 						if (isOn)

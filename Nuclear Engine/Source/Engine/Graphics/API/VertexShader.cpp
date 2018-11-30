@@ -41,6 +41,13 @@ namespace NuclearEngine {
 				SPECIAL_BASE_API_FUNC_CALL(SetConstantBuffer, cbuffer)
 			}
 
+			Uint8 VertexShader::GetCBSlot(ConstantBuffer * cbuffer)
+			{
+#ifdef NE_COMPILE_DIRECTX11
+				return Reflection.ConstantBuffers[cbuffer->DXObject.mName].BindingSlot;
+#endif
+			}
+
 			void VertexShader::Bind()
 			{
 				BASE_API_FUNC_CALL(Bind)
