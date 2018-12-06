@@ -48,8 +48,18 @@ Building options:
 #define NE_COMPILE_XSHADERCOMPILER
 #endif
 
+#ifdef NE_USE_VULKAN
+#define NE_COMPILE_VULKAN
+#define NE_COMPILE_XSHADERCOMPILER
+#endif
+
 #ifdef NE_USE_DIRECTX11
 #define NE_COMPILE_DIRECTX11
+#define NE_COMPILE_D3DCOMPILER
+#endif
+
+#ifdef NE_USE_DIRECTX12
+#define NE_COMPILE_DIRECTX12
 #define NE_COMPILE_D3DCOMPILER
 #endif
 
@@ -65,8 +75,18 @@ Building options:
 #error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
 #endif
 
+#ifdef NE_COMPILE_DIRECTX12
+#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
+#endif
+
+#ifdef NE_COMPILE_VULKAN
+#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
+#endif
+
 #define NE_COMPILE_CORE_OPENGL
 #define NE_COMPILE_DIRECTX11
+#define NE_COMPILE_DIRECTX12
+#define NE_COMPILE_VULKAN
 #define NE_COMPILE_D3DCOMPILER
 #define NE_COMPILE_XSHADERCOMPILER
 

@@ -187,7 +187,7 @@ public:
 		NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
 
 		GridMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-		GridMaterial.SetMaterialVariable("Shininess", 8.0f);
+		GridMaterial.SetMaterialVariable("Shininess", 64.0f);
 
 		//Create The skybox
 		std::array<std::string, 6> SkyBoxTexturePaths
@@ -286,6 +286,27 @@ public:
 
 		Camera.Update();
 	}
+
+	void MaterialEditor()
+	{
+		ImGui::Begin("Material Editor");                          // Create a window called "Hello, world!" and append into it.
+
+		for (auto i : Managers::AssetManager::mImportedMaterials)
+		{
+			for (auto texset : i.second.mPixelShaderTextures)
+			{
+				for (auto tex : texset)
+				{
+					ImGui::Image(&tex.mTexture.mTexture, ImVec2(tex.mTexture.mTexture.GetDimensions().x, tex.mTexture.mTexture.GetDimensions().y));
+				}
+			}
+		}
+
+		ImGui::End();
+
+	} 
+
+	
 	void Render(float dt) override
 	{
 		ImGui::NewFrame();
@@ -337,12 +358,7 @@ public:
 		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Left))
 			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(-0.01f, 0.0f, 0.0f));
 
-
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::End();
-
+		MaterialEditor();
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());

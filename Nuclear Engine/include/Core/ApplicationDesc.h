@@ -1,6 +1,5 @@
 #pragma once
 #include <Base\NE_Common.h>
-#define DEFAULT_SFML_STYLE 7
 
 namespace NuclearEngine {
 	namespace Core {
@@ -16,10 +15,11 @@ namespace NuclearEngine {
 		{
 			Uint32 WindowWidth = 1024;
 			Uint32 WindowHeight = 768;
-			Uint32 Style = DEFAULT_SFML_STYLE;
+			Uint32 Samples = 2;
 			RenderAPI Renderer = RenderAPI::OpenGL4_5;
 			bool DebugRenderAPI = false;
-			std::string Title = "NuclearEngine";
+			bool V_Sync = true;
+			std::wstring Title = L"NuclearEngine";
 		};
 	}
 }

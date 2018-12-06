@@ -1,6 +1,6 @@
 #include "Engine\Graphics\ImGui_Renderer.h"
 #include "Core/FileSystem.h"
-#include <Engine/Graphics/API/DirectX\DX11Context.h>
+#include <Engine/Graphics/API/DirectX11\DX11Context.h>
 #include <d3dcompiler.h>
 
 namespace NuclearEngine
@@ -363,8 +363,7 @@ namespace NuclearEngine
 						ctx->RSSetScissorRects(1, &r);
 
 						// Bind texture, Draw
-						ID3D11ShaderResourceView* texture_srv = (ID3D11ShaderResourceView*)pcmd->TextureId;
-						ctx->PSSetShaderResources(0, 1, &texture_srv);
+						pcmd->TextureId->PSBind(0);
 						ctx->DrawIndexed(pcmd->ElemCount, idx_offset, vtx_offset);
 					}
 					idx_offset += pcmd->ElemCount;
