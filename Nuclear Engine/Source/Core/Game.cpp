@@ -42,7 +42,7 @@ namespace NuclearEngine {
 		}
 		void Game::LoadFinishUp()
 		{
-			Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
+			LLGL::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 			Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 			Core::Application::Display();
 		}

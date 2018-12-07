@@ -161,7 +161,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
@@ -200,7 +200,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <IntrinsicFunctions>false</IntrinsicFunctions>
@@ -241,7 +241,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <DebugInformationFormat>None</DebugInformationFormat>
@@ -288,7 +288,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
@@ -347,11 +347,13 @@
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
+    <ClInclude Include="include\Engine\Graphics\Context.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui.h" />
     <ClInclude Include="include\Engine\Graphics\ImGuiConfig.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui_Binding.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui_Renderer.h" />
+    <ClInclude Include="include\Engine\Graphics\ShaderTypes.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
@@ -579,24 +581,13 @@
     <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\BlendState.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\DepthStencilState.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\IndexBuffer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\InputLayout.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\PixelShader.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\RasterizerState.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\RenderTarget.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\Sampler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler\DXBC_Compiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\Texture.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\ConstantBuffer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\VertexBuffer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\VertexShader.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Renderer_Dirty.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui.cpp" />
@@ -627,7 +618,6 @@
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_sse42.cc" />
     <ClCompile Include="Source\Engine\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\Context.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
     <ClCompile Include="Source\Engine\ECS\Event.cpp" />

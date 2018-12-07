@@ -16,7 +16,7 @@ namespace NuclearEngine
 
 		void Background::BeginFrame(Uint8 flags)
 		{
-			Graphics::API::Context::Clear(mClearColor, flags);
+			LLGL::Context::Clear(mClearColor, flags);
 		}
 
 		void Background::EndFrame()

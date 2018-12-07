@@ -31,7 +31,7 @@ namespace NuclearEngine
 
 				void ParseVariables(const D3D11_SHADER_BUFFER_DESC& CBDesc, ID3D11ShaderReflectionConstantBuffer* reflectedcb, Reflected_Constantbuffer* Constbuf)
 				{
-					for (UINT32 i = 0; i < CBDesc.Variables; i++)
+					for (Uint32 i = 0; i < CBDesc.Variables; i++)
 					{
 						ID3D11ShaderReflectionVariable* VariableReflection = reflectedcb->GetVariableByIndex(i);
 						D3D11_SHADER_VARIABLE_DESC VariableDesc;
@@ -57,7 +57,7 @@ namespace NuclearEngine
 									type = ShaderVariableType::Bool;
 									break;
 								case D3D_SVT_INT:
-								case D3D_SVT_UINT:
+								case D3D_SVT_Uint32:
 									type = ShaderVariableType::Int1;
 									break;
 								case D3D_SVT_FLOAT:
@@ -72,7 +72,7 @@ namespace NuclearEngine
 							{
 								switch (VarTypeDesc.Type)
 								{
-								case D3D_SVT_UINT:
+								case D3D_SVT_Uint32:
 								case D3D_SVT_INT:
 								{
 									switch (VarTypeDesc.Columns)
@@ -187,7 +187,7 @@ namespace NuclearEngine
 				}
 				void ParseResources(const D3D11_SHADER_DESC& shaderDesc, ID3D11ShaderReflection* pReflector, BinaryShaderBlob *result)
 				{
-					for (UINT32 i = 0; i < shaderDesc.BoundResources; i++)
+					for (Uint32 i = 0; i < shaderDesc.BoundResources; i++)
 					{
 						D3D11_SHADER_INPUT_BIND_DESC resource_desc;
 						if (FAILED(pReflector->GetResourceBindingDesc(i, &resource_desc)))
@@ -196,7 +196,7 @@ namespace NuclearEngine
 						}
 						else
 						{
-							for (UINT32 i = 0; i < resource_desc.BindCount; i++)
+							for (Uint32 i = 0; i < resource_desc.BindCount; i++)
 							{
 								switch (resource_desc.Type)
 								{
@@ -208,16 +208,16 @@ namespace NuclearEngine
 									switch (resource_desc.Dimension)
 									{
 									case D3D_SRV_DIMENSION_TEXTURE1D:
-										texture.Type = Graphics::API::TextureType::Texture1D;
+										texture.Type = LLGL::TextureType::Texture1D;
 										break;
 									case D3D_SRV_DIMENSION_TEXTURE2D:
-										texture.Type = Graphics::API::TextureType::Texture2D;
+										texture.Type = LLGL::TextureType::Texture2D;
 										break;
 									case D3D_SRV_DIMENSION_TEXTURE3D:
-										texture.Type = Graphics::API::TextureType::Texture3D;
+										texture.Type = LLGL::TextureType::Texture3D;
 										break;
 									case D3D_SRV_DIMENSION_TEXTURECUBE:
-										texture.Type = Graphics::API::TextureType::TextureCube;
+										texture.Type = LLGL::TextureType::TextureCube;
 										break;
 									default:
 										Log.Warning("[Reflect_DXBC] [ParseResources] Unsupported Texture type used, therefore not added to reflection!\n");
@@ -253,18 +253,18 @@ namespace NuclearEngine
 
 					return;
 				}
-				void CompileHLSL2DXBC(BinaryShaderBlob * result, std::string SourceCode, Graphics::API::ShaderType type)
+				void CompileHLSL2DXBC(BinaryShaderBlob * result, std::string SourceCode, LLGL::ShaderType type)
 				{
 					const char* shadermodel;
-					if (type == Graphics::API::ShaderType::Vertex)
+					if (type == LLGL::ShaderType::Vertex)
 					{
 						shadermodel = "vs_4_1";
 					}
-					else if (type == Graphics::API::ShaderType::Pixel)
+					else if (type == LLGL::ShaderType::Pixel)
 					{
 						shadermodel = "ps_4_1";
 					}
-					else if (type == Graphics::API::ShaderType::Geometry)
+					else if (type == LLGL::ShaderType::Geometry)
 					{
 						shadermodel = "gs_4_1";
 					}

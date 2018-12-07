@@ -8,13 +8,13 @@
 namespace NuclearEngine {
 	namespace Graphics {
 		namespace API {
-			NEAPI BinaryShaderBlob CompileShader(const ShaderLoadDesc& desc, const Graphics::API::ShaderType& type)
+			NEAPI BinaryShaderBlob CompileShader(const ShaderLoadDesc& desc, const LLGL::ShaderType& type)
 			{
 				return CompileShader(Core::FileSystem::LoadShader(desc.Path, desc.Defines, desc.Includes, desc.ReverseIncludeOrder), type);
 			}
-			bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode, const Graphics::API::ShaderType& type)
+			bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode, const LLGL::ShaderType& type)
 			{
-				if (Graphics::API::Context::isOpenGL3RenderAPI())
+				if (LLGL::Context::isOpenGL3RenderAPI())
 				{
 					XShaderCompiler::CompileHLSL2GLSL(blob, SourceCode, type);
 				}
@@ -27,7 +27,7 @@ namespace NuclearEngine {
 				return true;
 			}
 
-			BinaryShaderBlob CompileShader(std::string SourceCode, const Graphics::API::ShaderType& type)
+			BinaryShaderBlob CompileShader(std::string SourceCode, const LLGL::ShaderType& type)
 			{
 				BinaryShaderBlob result;
 				CompileShader(&result, SourceCode, type);

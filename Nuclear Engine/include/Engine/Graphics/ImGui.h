@@ -71,7 +71,7 @@ struct ImFontAtlas;                 // Runtime data for multiple fonts, bake mul
 struct ImFontConfig;                // Configuration data when adding a font or merging fonts
 struct ImColor;                     // Helper functions to create a color that can be converted to either u32 or float4 (*obsolete* please avoid using)
 #ifndef ImTextureID
-typedef NuclearEngine::Graphics::API::Texture* ImTextureID;          // User data to identify a texture (this is whatever to you want it to be! read the FAQ about ImTextureID in imgui.cpp)
+typedef NuclearEngine::LLGL::Texture* ImTextureID;          // User data to identify a texture (this is whatever to you want it to be! read the FAQ about ImTextureID in imgui.cpp)
 #endif
 struct ImGuiContext;                // ImGui context (opaque)
 struct ImGuiIO;                     // Main configuration and I/O between your application and ImGui

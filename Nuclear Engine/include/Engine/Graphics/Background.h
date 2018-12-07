@@ -1,8 +1,9 @@
 #pragma once
 #include <Engine\Graphics\Skybox.h>
 #include <Base\Math\Math.h>
-#include <Engine\Graphics\API\Context.h>
+#include <Engine\Graphics\Context.h>
 #include <Engine\Graphics\Color.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics 

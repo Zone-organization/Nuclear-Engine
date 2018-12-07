@@ -18,11 +18,11 @@ namespace NuclearEngine
 		{
 		public:
 			void Bake(const PostProcessDesc& desc);
-			Graphics::API::Sampler ScreenSampler;
-			Graphics::API::Texture PostProcessTexture;
-			Graphics::API::RenderTarget PostProcessRT;
-			Graphics::API::VertexShader PostProcess_VShader;
-			Graphics::API::PixelShader PostProcess_PShader;
+			LLGL::Sampler ScreenSampler;
+			LLGL::Texture* PostProcessTexture;
+			LLGL::RenderTarget PostProcessRT;
+			LLGL::Shader* PostProcess_VShader;
+			LLGL::Shader* PostProcess_PShader;
 			Assets::Mesh PostProcessScreenQuad;
 		};
 	}

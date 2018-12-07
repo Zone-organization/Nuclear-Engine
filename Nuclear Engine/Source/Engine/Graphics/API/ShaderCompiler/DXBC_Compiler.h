@@ -10,7 +10,7 @@ namespace NuclearEngine
 		{
 			namespace DXBC_Compiler
 			{
-				void CompileHLSL2DXBC(BinaryShaderBlob *result, std::string SourceCode, Graphics::API::ShaderType type);
+				void CompileHLSL2DXBC(BinaryShaderBlob *result, std::string SourceCode, LLGL::ShaderType type);
 
 			}
 		}

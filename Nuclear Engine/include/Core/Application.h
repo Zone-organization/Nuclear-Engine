@@ -21,9 +21,9 @@ namespace NuclearEngine {
 			static bool PollEvents();
 			static void SetMouseInputMode(const MouseInputMode& mode);
 
-			static Uint32 GetAspectRatio();
 			static Float32 GetAspectRatioF32();
-			static sf::Window* MainWindow;
+
+			static std::unique_ptr<LLGL::Window> MainWindow;
 		};
 	}
 }

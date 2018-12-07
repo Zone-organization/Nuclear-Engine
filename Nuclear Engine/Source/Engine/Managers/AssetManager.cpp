@@ -18,23 +18,23 @@ namespace NuclearEngine {
 		std::unordered_map<Uint32, Assets::Material> AssetManager::mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
 		std::unordered_map<Uint32, std::string> AssetManager::mHashedMaterialsNames = std::unordered_map<Uint32, std::string>();
 
-		Graphics::API::Texture_Data AssetManager::LoadTex_stb_image(const std::string& Path, const Graphics::API::Texture_Desc & Desc)
+		LLGL::Texture_Data AssetManager::LoadTex_stb_image(const std::string& Path, const LLGL::Texture_Desc & Desc)
 		{
 			int req_c;
 			switch (Desc.Format)
 			{
-			case Graphics::API::Format::R8_UNORM:
+			case LLGL::Format::R8_UNORM:
 				req_c = 1; break;
-			case Graphics::API::Format::R8G8_UNORM:
+			case LLGL::Format::R8G8_UNORM:
 				req_c = 2; break;
-			case Graphics::API::Format::R8G8B8_UNORM:
+			case LLGL::Format::R8G8B8_UNORM:
 				req_c = 3; break;
-			case Graphics::API::Format::R8G8B8A8_UNORM:
-			case Graphics::API::Format::R8G8B8A8_UNORM_SRGB:
+			case LLGL::Format::R8G8B8A8_UNORM:
+			case LLGL::Format::R8G8B8A8_UNORM_SRGB:
 				req_c = 4; break;
 			default:					req_c = 4; break;
 			}
-			Graphics::API::Texture_Data Data;
+			LLGL::Texture_Data Data;
 
 			stbi_set_flip_vertically_on_load(Desc.FlipY_Axis);
 			Data.Img_Data_Buf = stbi_load(Path.c_str(), &Data.Width, &Data.Height, &Data.Components_Number, req_c);
@@ -74,7 +74,7 @@ namespace NuclearEngine {
 		{
 			for (auto x : mImportedTextures)
 			{
-				Graphics::API::Texture::Delete(&x.second.mTexture);
+				LLGL::Texture::Delete(&x.second.mTexture);
 			}
 			mImportedTextures.clear();
 			mHashedTexturesNames.clear();
@@ -86,12 +86,12 @@ namespace NuclearEngine {
 			return LoadMesh_Assimp(Path, material, desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path, const Graphics::API::Texture_Desc & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path, const LLGL::Texture_Desc & Desc)
 		{
 			return Import(Path, Assets::TextureUsageType::Unknown, Desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type, const Graphics::API::Texture_Desc & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type, const LLGL::Texture_Desc & Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
@@ -120,12 +120,12 @@ namespace NuclearEngine {
 
 			Assets::Texture Tex;
 			Tex.SetUsageType(type);
-			Graphics::API::Texture::Create(&Tex.mTexture, Data, Desc);
+			LLGL::Texture::Create(&Tex.mTexture, Data, Desc);
 
 			return mImportedTextures[hashedname] = Tex;
 		}
 					
-		Graphics::API::Texture_Data AssetManager::TextureCube_Load(const std::string& Path, const Graphics::API::Texture_Desc& Desc)
+		LLGL::Texture_Data AssetManager::TextureCube_Load(const std::string& Path, const LLGL::Texture_Desc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
@@ -155,10 +155,10 @@ namespace NuclearEngine {
 			texture = nullptr;
 			return false;
 		}
-		std::array<Graphics::API::Texture_Data, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const Graphics::API::Texture_Desc& desc)
+		std::array<LLGL::Texture_Data, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const LLGL::Texture_Desc& desc)
 		{
-			Graphics::API::Texture_Data data1, data2, data3, data4, data5, data6;
-			Graphics::API::Texture_Desc Desc = desc;
+			LLGL::Texture_Data data1, data2, data3, data4, data5, data6;
+			LLGL::Texture_Desc Desc = desc;
 			Desc.FlipY_Axis = false;
 			data1 = TextureCube_Load(Paths.at(0), Desc);
 			data2 = TextureCube_Load(Paths.at(1), Desc);
@@ -167,7 +167,7 @@ namespace NuclearEngine {
 			data5 = TextureCube_Load(Paths.at(4), Desc);
 			data6 = TextureCube_Load(Paths.at(5), Desc);
 			
-			std::array<Graphics::API::Texture_Data, 6> result = { data1, data2, data3, data4, data5, data6 };
+			std::array<LLGL::Texture_Data, 6> result = { data1, data2, data3, data4, data5, data6 };
 
 			return result;
 		}

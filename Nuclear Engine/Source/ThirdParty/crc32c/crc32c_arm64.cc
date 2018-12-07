@@ -108,7 +108,7 @@ uint32_t ExtendArm64(uint32_t crc, const uint8_t *buf, size_t size) {
   }
 
   if (length & 2) {
-    crc = __crc32ch(crc, *(uint16_t *)p);
+    crc = __crc32ch(crc, *(Uint3216_t *)p);
     p += 2;
   }
 

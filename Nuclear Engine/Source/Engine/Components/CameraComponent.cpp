@@ -18,12 +18,12 @@ namespace NuclearEngine
 		{
 
 			position = __position;
-			Graphics::API::ConstantBuffer::Create(&ConstantBuffer, "NE_Camera", sizeof(_CameraBuffer));
+			LLGL::Buffer*::Create(&ConstantBuffer, "NE_Camera", sizeof(_CameraBuffer));
 		}
 	
 		CameraComponent::~CameraComponent()
 		{
-			Graphics::API::ConstantBuffer::Delete(&ConstantBuffer);			
+			LLGL::Buffer*::Delete(&ConstantBuffer);			
 		}
 	
 		void CameraComponent::Initialize(Math::Matrix4 projectionMatrix)
@@ -95,7 +95,7 @@ namespace NuclearEngine
 		{
 			return position;
 		}
-		Graphics::API::ConstantBuffer CameraComponent::GetCBuffer()
+		LLGL::Buffer* CameraComponent::GetCBuffer()
 		{
 			return ConstantBuffer;
 		}

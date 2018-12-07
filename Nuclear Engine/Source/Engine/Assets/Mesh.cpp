@@ -1,7 +1,5 @@
 #include <Engine/Assets/Mesh.h>
-#include <Engine\Graphics\API\Context.h>
-#include <Engine/Graphics/API/InputLayout.h>
-#include <Engine/Graphics/API/Buffer_Types.h>
+#include <Engine\Graphics\Context.h>
 
 namespace NuclearEngine {
 
@@ -21,7 +19,7 @@ namespace NuclearEngine {
 
 		}
 
-		void Mesh::SubMesh::Initialize(Graphics::API::VertexShader* _shader)
+		void Mesh::SubMesh::Initialize(LLGL::Shader* _shader)
 		{
 			std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
@@ -49,39 +47,36 @@ namespace NuclearEngine {
 			}
 			
 			{
-				Graphics::API::VertexBufferDesc desc;
-				desc.Data = verticesdata.data();
-				desc.Size = (unsigned int)verticesdata.size() * sizeof(float);
-				desc.UsageType = Graphics::API::BufferUsage::Static;
+				LLGL::VertexFormat layout;
+				layout.AppendAttribute({ "POSITION", LLGL::Format::RGB32Float });
+				if (data.UV.size() > 0)
+				{
+					layout.AppendAttribute({ "TEXCOORD", LLGL::Format::RG32Float });
+				}
+				if (data.Normals.size() > 0)
+				{
+					layout.AppendAttribute({ "NORMAL", LLGL::Format::RGB32Float });
+				}
+				if (data.Tangents.size() > 0)
+				{
+					layout.AppendAttribute({ "TANGENT", LLGL::Format::RGB32Float });
+				}
 
-				Graphics::API::VertexBuffer::Create(&VBO, desc);
+				LLGL::BufferDescriptor desc;
+				desc.type = LLGL::BufferType::Vertex;
+				desc.size = (unsigned int)verticesdata.size() * sizeof(float);
+				desc.vertexBuffer.format = layout;             // Vertex format layout
+
+				mVB = Graphics::Context::GetRenderer()->CreateBuffer(desc, verticesdata.data());
 			}
 
 			{
-				Graphics::API::IndexBufferDesc desc;
-				desc.Data = data.indices.data();
-				desc.Size = (unsigned int)data.indices.size();
-				desc.UsageType = Graphics::API::BufferUsage::Static;
-
-				Graphics::API::IndexBuffer::Create(&IBO, desc);
+				LLGL::BufferDescriptor desc;
+				desc.type = LLGL::BufferType::Index;
+				desc.size = (unsigned int)data.indices.size();
+				mIB = Graphics::Context::GetRenderer()->CreateBuffer(desc, data.indices.data());
 			}
-			IndicesCount = data.indices.size();
-
-			Graphics::API::InputLayout layout;
-			layout.AppendAttribute("POSITION", 0, Graphics::API::Format::R32G32B32_FLOAT);
-			if (data.UV.size() > 0)
-			{
-				layout.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32G32_FLOAT);
-			}
-			if (data.Normals.size() > 0)
-			{
-				layout.AppendAttribute("NORMAL", 0, Graphics::API::Format::R32G32B32_FLOAT);
-			}
-			if (data.Tangents.size() > 0)
-			{
-				layout.AppendAttribute("TANGENT", 0, Graphics::API::Format::R32G32B32_FLOAT);
-			}
-			VBO.SetInputLayout(&layout, _shader);
+			IndicesCount = data.indices.size();			
 
 			data.Positions.clear();
 			data.UV.clear();
@@ -92,11 +87,11 @@ namespace NuclearEngine {
 
 		void Mesh::SubMesh::Delete()
 		{
-			Graphics::API::VertexBuffer::Delete(&VBO);
-			Graphics::API::IndexBuffer::Delete(&IBO);
+			Graphics::Context::GetRenderer()->Release(*mVB);
+			Graphics::Context::GetRenderer()->Release(*mIB);
 			/*for (size_t i = 0; i < data.textures.size(); i++)
 			{
-				Graphics::API::Texture::Delete(&data.textures.at(i).mTexture);
+				LLGL::Texture::Delete(&data.textures.at(i).mTexture);
 			}
 			data.textures.clear();*/
 		}
@@ -110,7 +105,7 @@ namespace NuclearEngine {
 		{
 		}
 
-		void Mesh::Initialize(Graphics::API::VertexShader* _shader)
+		void Mesh::Initialize(LLGL::Shader* _shader)
 		{
 			for (unsigned int i = 0; i < SubMeshes.size(); i++)
 			{
@@ -206,7 +201,7 @@ namespace NuclearEngine {
 					meshData.Tangents.push_back(vert.Tangents);
 			}
 			// Create the indices.			
-			UINT i[36];
+			Uint32 i[36];
 			// Fill in the front face index data
 			i[0] = 0; i[1] = 1; i[2] = 2;
 			i[3] = 0; i[4] = 2; i[5] = 3;
@@ -248,12 +243,12 @@ namespace NuclearEngine {
 			float thetaStep = 2.0f * MathPI / sliceCount;
 
 			// Compute vertices for each stack ring (do not count the poles as rings).
-			for (UINT i = 1; i <= stackCount - 1; ++i)
+			for (Uint32 i = 1; i <= stackCount - 1; ++i)
 			{
 				float phi = i * phiStep;
 
 				// Vertices of ring.
-				for (UINT j = 0; j <= sliceCount; ++j)
+				for (Uint32 j = 0; j <= sliceCount; ++j)
 				{
 					float theta = j * thetaStep;
 
@@ -284,17 +279,17 @@ namespace NuclearEngine {
 
 			vertices.push_back(bottomVertex);
 
-			for (UINT i = 1; i <= sliceCount; ++i)
+			for (Uint32 i = 1; i <= sliceCount; ++i)
 			{
 				meshData.indices.push_back(0);
 				meshData.indices.push_back(i + 1);
 				meshData.indices.push_back(i);
 			}
-			UINT baseIndex = 1;
-			UINT ringVertexCount = sliceCount + 1;
-			for (UINT i = 0; i < stackCount - 2; ++i)
+			Uint32 baseIndex = 1;
+			Uint32 ringVertexCount = sliceCount + 1;
+			for (Uint32 i = 0; i < stackCount - 2; ++i)
 			{
-				for (UINT j = 0; j < sliceCount; ++j)
+				for (Uint32 j = 0; j < sliceCount; ++j)
 				{
 					meshData.indices.push_back(baseIndex + i * ringVertexCount + j);
 					meshData.indices.push_back(baseIndex + i * ringVertexCount + j + 1);
@@ -306,12 +301,12 @@ namespace NuclearEngine {
 				}
 			}
 
-			UINT southPoleIndex = (UINT)vertices.size() - 1;
+			Uint32 southPoleIndex = (Uint32)vertices.size() - 1;
 
 			// Offset the indices to the index of the first vertex in the last ring.
 			baseIndex = southPoleIndex - ringVertexCount;
 
-			for (UINT i = 0; i < sliceCount; ++i)
+			for (Uint32 i = 0; i < sliceCount; ++i)
 			{
 				meshData.indices.push_back(southPoleIndex);
 				meshData.indices.push_back(baseIndex + i);
@@ -343,8 +338,8 @@ namespace NuclearEngine {
 			std::vector<Vertex> Vertices;
 			std::vector<Uint32> Indices;
 
-			UINT vertexCount = m * n;
-			UINT faceCount = (m - 1)*(n - 1) * 2;
+			Uint32 vertexCount = m * n;
+			Uint32 faceCount = (m - 1)*(n - 1) * 2;
 
 			//
 			// Create the vertices.
@@ -360,10 +355,10 @@ namespace NuclearEngine {
 			float dv = 1.0f / (m - 1);
 
 			Vertices.resize(vertexCount);
-			for (UINT i = 0; i < m; ++i)
+			for (Uint32 i = 0; i < m; ++i)
 			{
 				float z = halfDepth - i * dz;
-				for (UINT j = 0; j < n; ++j)
+				for (Uint32 j = 0; j < n; ++j)
 				{
 					float x = -halfWidth + j * dx;
 
@@ -384,10 +379,10 @@ namespace NuclearEngine {
 			Indices.resize(faceCount * 3); // 3 indices per face
 
 													// Iterate over each quad and compute indices.
-			UINT k = 0;
-			for (UINT i = 0; i < m - 1; ++i)
+			Uint32 k = 0;
+			for (Uint32 i = 0; i < m - 1; ++i)
 			{
-				for (UINT j = 0; j < n - 1; ++j)
+				for (Uint32 j = 0; j < n - 1; ++j)
 				{
 					Indices[k] = i * n + j;
 					Indices[k + 1] = i * n + j + 1;
@@ -428,7 +423,7 @@ namespace NuclearEngine {
 
 			float VTexCoord = +1.0f;
 
-			if (Graphics::API::Context::isOpenGL3RenderAPI())
+			if (LLGL::Context::isOpenGL3RenderAPI())
 			{
 				VTexCoord = -1.0f;
 			}

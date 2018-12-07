@@ -499,11 +499,11 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
                     return 0;
                 }
                 TIXMLASSERT( digit < 16 );
-                TIXMLASSERT( digit == 0 || mult <= UINT_MAX / digit );
+                TIXMLASSERT( digit == 0 || mult <= UINT32_MAX / digit );
                 const unsigned int digitScaled = mult * digit;
                 TIXMLASSERT( ucs <= ULONG_MAX - digitScaled );
                 ucs += digitScaled;
-                TIXMLASSERT( mult <= UINT_MAX / 16 );
+                TIXMLASSERT( mult <= UINT32_MAX / 16 );
                 mult *= 16;
                 --q;
             }
@@ -529,7 +529,7 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
                 if ( *q >= '0' && *q <= '9' ) {
                     const unsigned int digit = *q - '0';
                     TIXMLASSERT( digit < 10 );
-                    TIXMLASSERT( digit == 0 || mult <= UINT_MAX / digit );
+                    TIXMLASSERT( digit == 0 || mult <= UINT32_MAX / digit );
                     const unsigned int digitScaled = mult * digit;
                     TIXMLASSERT( ucs <= ULONG_MAX - digitScaled );
                     ucs += digitScaled;
@@ -537,7 +537,7 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
                 else {
                     return 0;
                 }
-                TIXMLASSERT( mult <= UINT_MAX / 10 );
+                TIXMLASSERT( mult <= UINT32_MAX / 10 );
                 mult *= 10;
                 --q;
             }

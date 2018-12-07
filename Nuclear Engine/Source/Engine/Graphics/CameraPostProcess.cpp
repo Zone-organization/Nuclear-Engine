@@ -8,25 +8,25 @@ namespace NuclearEngine
 	{
 		void CameraPostProcess::Bake(const PostProcessDesc& Desc)
 		{
-			Graphics::API::Texture_Desc ScreenTexDesc;
+			LLGL::Texture_Desc ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
-				ScreenTexDesc.Format = Graphics::API::Format::R16G16B16A16_FLOAT;
+				ScreenTexDesc.Format = LLGL::Format::R16G16B16A16_FLOAT;
 			}
 			else
 			{
-				ScreenTexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+				ScreenTexDesc.Format = LLGL::Format::R8G8B8A8_UNORM;
 			}
-			ScreenTexDesc.Type = Graphics::API::TextureType::Texture2D;
+			ScreenTexDesc.Type = LLGL::TextureType::Texture2D;
 			ScreenTexDesc.GenerateMipMaps = false;
 
-			Graphics::API::Texture_Data Data;
+			LLGL::Texture_Data Data;
 			Data.Img_Data_Buf = NULL;
 			Data.Width = Desc.WindowWidth;
 			Data.Height = Desc.WindowHeight;
-			Graphics::API::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
+			LLGL::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
 
-			Graphics::API::RenderTarget::Create(&PostProcessRT);
+			LLGL::RenderTarget::Create(&PostProcessRT);
 			PostProcessRT.AttachTexture(&PostProcessTexture);
 			PostProcessRT.AttachDepthStencilBuffer(Math::Vector2ui(Desc.WindowWidth, Desc.WindowHeight));
 
@@ -42,15 +42,15 @@ namespace NuclearEngine
 			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
-			Graphics::API::PixelShader::Create(
+			LLGL::Shader*::Create(
 				&PostProcess_PShader,
-				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
-					Graphics::API::ShaderType::Pixel));
+				LLGL::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
+					LLGL::ShaderType::Pixel));
 
 
-			Graphics::API::SamplerDesc Samplerdesc;
-			Samplerdesc.Filter = Graphics::API::TextureFilter::Point2D;
-			Graphics::API::Sampler::Create(&ScreenSampler, Samplerdesc);
+			LLGL::SamplerDesc Samplerdesc;
+			Samplerdesc.Filter = LLGL::TextureFilter::Point2D;
+			LLGL::Sampler::Create(&ScreenSampler, Samplerdesc);
 		}
 	}
 }

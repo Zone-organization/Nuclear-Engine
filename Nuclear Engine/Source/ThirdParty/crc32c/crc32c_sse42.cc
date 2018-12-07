@@ -137,7 +137,7 @@ uint32_t ExtendSse42(uint32_t crc, const uint8_t* data, size_t size) {
 
 #define STEP8(crc, data)                          \
   do {                                            \
-    crc = _mm_crc32_u64(crc, ReadUint64LE(data)); \
+    crc = _mm_crc32_u64(crc, ReadUint3264LE(data)); \
     data += 8;                                    \
   } while (0)
 
@@ -150,9 +150,9 @@ uint32_t ExtendSse42(uint32_t crc, const uint8_t* data, size_t size) {
 
 #define STEP8X3(crc0, crc1, crc2, bs)                     \
   do {                                                    \
-    crc0 = _mm_crc32_u64(crc0, ReadUint64LE(p));          \
-    crc1 = _mm_crc32_u64(crc1, ReadUint64LE(p + bs));     \
-    crc2 = _mm_crc32_u64(crc2, ReadUint64LE(p + 2 * bs)); \
+    crc0 = _mm_crc32_u64(crc0, ReadUint3264LE(p));          \
+    crc1 = _mm_crc32_u64(crc1, ReadUint3264LE(p + bs));     \
+    crc2 = _mm_crc32_u64(crc2, ReadUint3264LE(p + 2 * bs)); \
     p += 8;                                               \
   } while (0)
 

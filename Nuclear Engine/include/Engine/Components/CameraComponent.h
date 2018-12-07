@@ -1,7 +1,7 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
-#include <Engine/Graphics/API/ConstantBuffer.h>
+#include <LLGL/Buffer.h>
 #include <Engine\ECS\Entity.h>
 
 namespace NuclearEngine
@@ -53,7 +53,7 @@ namespace NuclearEngine
 			Math::Vector3 GetPosition();
 
 			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
-			Graphics::API::ConstantBuffer GetCBuffer();
+			LLGL::Buffer* GetCBuffer();
 
 		protected:
 			// Eular Angles
@@ -77,7 +77,7 @@ namespace NuclearEngine
 				Math::Matrix4 Projection = Math::Matrix4(1.0f);
 			}_CameraBuffer;
 
-			Graphics::API::ConstantBuffer ConstantBuffer;
+			LLGL::Buffer* ConstantBuffer;
 
 			Math::Vector3 position, direction;
 		};

@@ -7,17 +7,17 @@ namespace NuclearEngine
 	namespace Graphics
 	{
 		// OpenGL Data
-		static GLuint       g_FontTexture = 0;
-		static GLuint       g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
+		static GLUint32       g_FontTexture = 0;
+		static GLUint32       g_ShaderHandle = 0, g_VertHandle = 0, g_FragHandle = 0;
 		static int          g_AttribLocationTex = 0, g_AttribLocationProjMtx = 0;
 		static int          g_AttribLocationPosition = 0, g_AttribLocationUV = 0, g_AttribLocationColor = 0;
 		static unsigned int g_VboHandle = 0, g_ElementsHandle = 0;
-		static NuclearEngine::Graphics::API::Texture useless;
+		static NuclearEngine::LLGL::Texture* useless;
 		void ImGui_GL4_Renderer_CreateFontsTexture();
 		void ImGui_GL4_Renderer_DestroyFontsTexture();
 
 		// If you get an error please report on github. You may try different GL context version or GLSL version.
-		static bool CheckShader(GLuint handle, const char* desc)
+		static bool CheckShader(GLUint32 handle, const char* desc)
 		{
 			GLint status = 0, log_length = 0;
 			glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
@@ -35,7 +35,7 @@ namespace NuclearEngine
 		}
 
 		// If you get an error please report on github. You may try different GL context version or GLSL version.
-		static bool CheckProgram(GLuint handle, const char* desc)
+		static bool CheckProgram(GLUint32 handle, const char* desc)
 		{
 			GLint status = 0, log_length = 0;
 			glGetProgramiv(handle, GL_LINK_STATUS, &status);
@@ -218,7 +218,7 @@ namespace NuclearEngine
 #endif
 	// Recreate the VAO every time
 	// (This is to easily allow multiple GL contexts. VAO are not shared among GL contexts, and we don't track creation/deletion of windows so we don't have an obvious key to use to cache them.)
-			GLuint vao_handle = 0;
+			GLUint32 vao_handle = 0;
 			glGenVertexArrays(1, &vao_handle);
 			glBindVertexArray(vao_handle);
 			glBindBuffer(GL_ARRAY_BUFFER, g_VboHandle);

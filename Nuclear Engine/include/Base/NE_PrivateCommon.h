@@ -24,7 +24,7 @@ typedef signed   __int64 Int64;
 typedef unsigned __int64 Uint64;
 #else
 typedef signed   long long Int64;
-typedef unsigned long long Uint64;
+typedef unsigned long long Uin264;
 #endif
 
 typedef float Float32;

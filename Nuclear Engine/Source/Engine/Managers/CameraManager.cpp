@@ -4,9 +4,9 @@ namespace NuclearEngine
 {
 	namespace Managers 
 	{
-		Graphics::API::ConstantBuffer NECamera;
+		LLGL::Buffer* NECamera;
 
-		Graphics::API::ConstantBuffer * CameraManager::GetCameraCB()
+		LLGL::Buffer* * CameraManager::GetCameraCB()
 		{
 			return &NECamera;
 		}

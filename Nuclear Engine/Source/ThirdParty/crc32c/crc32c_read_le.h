@@ -28,7 +28,7 @@ inline uint32_t ReadUint32LE(const uint8_t* buffer) {
 }
 
 // Reads a little-endian 64-bit integer from a 64-bit-aligned buffer.
-inline uint64_t ReadUint64LE(const uint8_t* buffer) {
+inline uint64_t ReadUint3264LE(const uint8_t* buffer) {
 #if BYTE_ORDER_BIG_ENDIAN
   return ((static_cast<uint32_t>(static_cast<uint8_t>(buffer[0]))) |
           (static_cast<uint32_t>(static_cast<uint8_t>(buffer[1])) << 8) |

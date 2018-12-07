@@ -1,8 +1,7 @@
 #pragma once
+#include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
 #include <Engine/Assets/Texture.h>
-#include <Engine/Graphics/API/VertexBuffer.h>
-#include <Engine/Graphics/API/IndexBuffer.h>
 #include <vector>
 #include <string>
 
@@ -25,7 +24,7 @@ namespace NuclearEngine {
 			Note:
 				We only require shader to validate the input layout but you are free to render the model with any shader you want.
 			*/
-			void Initialize(Graphics::API::VertexShader* _shader);
+			void Initialize(LLGL::Shader* _shader);
 			void Delete();
 
 			static void CreateCube(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
@@ -50,14 +49,15 @@ namespace NuclearEngine {
 				SubMesh(SubMeshData data);
 				SubMesh(const SubMesh& obj);
 				~SubMesh();
-				void Initialize(Graphics::API::VertexShader* _shader);
+				void Initialize(LLGL::Shader* _shader);
 				void Delete();
 
 				SubMeshData data;
 				unsigned int IndicesCount = 0;
+
 				//Buffers
-				Graphics::API::IndexBuffer IBO;
-				Graphics::API::VertexBuffer VBO;
+				LLGL::Buffer* mIB;
+				LLGL::Buffer* mVB;
 			};
 
 			std::vector<SubMesh> SubMeshes;

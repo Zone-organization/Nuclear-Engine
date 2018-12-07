@@ -240,6 +240,8 @@
     <ClInclude Include="include\Engine\Graphics\ImGui_Binding.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_DX11_Renderer.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_GL4_Renderer.h" />
+    <ClInclude Include="include\Engine\Graphics\Context.h" />
+    <ClInclude Include="include\Engine\Graphics\ShaderTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -255,19 +257,7 @@
     <ClCompile Include="Source\Core\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler\DXBC_Compiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\BlendState.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\ConstantBuffer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\DepthStencilState.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\IndexBuffer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\InputLayout.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\PixelShader.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\RasterizerState.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\RenderTarget.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\Sampler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\Texture.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\VertexBuffer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\VertexShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
@@ -301,7 +291,6 @@
     <ClCompile Include="Source\Engine\ECS\Event.cpp" />
     <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\Context.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Layer.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />
@@ -316,6 +305,7 @@
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Renderer_Dirty.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

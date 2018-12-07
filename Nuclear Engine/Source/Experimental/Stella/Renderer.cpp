@@ -29,21 +29,21 @@ namespace NuclearEngine {
 			this->IndexCount = 0;
 
 			{
-				Graphics::API::VertexBufferDesc Desc;
+				LLGL::BufferDescriptor Desc;
 				Desc.Data = NULL;
 				Desc.Size = BUFFER_SIZE;
-				Desc.UsageType = Graphics::API::BufferUsage::Dynamic;
+				Desc.UsageType = LLGL::BufferUsage::Dynamic;
 
-				Graphics::API::VertexBuffer::Create(&VBO, Desc);
+				LLGL::Buffer*::Create(&VBO, Desc);
 			}
 
-			Graphics::API::InputLayout InputL;
-			InputL.AppendAttribute("POSITION", 0, Graphics::API::Format::R32G32B32_FLOAT);
-			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32G32_FLOAT);
-			InputL.AppendAttribute("TEXCOORD", 0, Graphics::API::Format::R32_FLOAT);
-			InputL.AppendAttribute("COLOR", 0, Graphics::API::Format::R32G32B32A32_FLOAT);
+			LLGL::VertexFormat InputL;
+			InputL.AppendAttribute("POSITION", 0, LLGL::Format::RGB32Float);
+			InputL.AppendAttribute("TEXCOORD", 0, LLGL::Format::LLGL::Format::RG32Float);
+			InputL.AppendAttribute("TEXCOORD", 0, LLGL::Format::R32_FLOAT);
+			InputL.AppendAttribute("COLOR", 0, LLGL::Format::R32G32B32A32_FLOAT);
 
-			//VBO.SetInputLayout(&InputL, &VShader);
+			//VBO.SetVertexFormat(&InputL, &VShader);
 
 			Int32 offset = 0;
 			Uint32 indices[INDICES_SIZE];
@@ -58,7 +58,7 @@ namespace NuclearEngine {
 
 				offset += 4;
 			}
-			//Graphics::API::IndexBuffer::Create(&IBO, indices, sizeof(indices));
+			//LLGL::Buffer*::Create(&IBO, indices, sizeof(indices));
 
 			/*glVertexAttribPointer(VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE,	(GLvoid *)0);
 			glEnableVertexAttribArray(VERTEX_INDEX);
@@ -155,7 +155,7 @@ namespace NuclearEngine {
 			}
 
 			VBO.Bind();
-			Graphics::API::Context::DrawIndexed(IndexCount);
+			LLGL::Context::DrawIndexed(IndexCount);
 			this->IndexCount = 0;
 		}
 

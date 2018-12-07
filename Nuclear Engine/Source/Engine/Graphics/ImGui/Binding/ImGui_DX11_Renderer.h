@@ -15,7 +15,7 @@ namespace NuclearEngine
 		static ID3D11Buffer*            g_pIB = NULL;
 		static ID3D10Blob*              g_pVertexShaderBlob = NULL;
 		static ID3D11VertexShader*      g_pVertexShader = NULL;
-		static ID3D11InputLayout*       g_pInputLayout = NULL;
+		static ID3D11VertexFormat*       g_pVertexFormat = NULL;
 		static ID3D11Buffer*            g_pVertexConstantBuffer = NULL;
 		static ID3D10Blob*              g_pPixelShaderBlob = NULL;
 		static ID3D11PixelShader*       g_pPixelShader = NULL;
@@ -25,7 +25,7 @@ namespace NuclearEngine
 		static ID3D11BlendState*        g_pBlendState = NULL;
 		static ID3D11DepthStencilState* g_pDepthStencilState = NULL;
 		static int                      g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
-		static NuclearEngine::Graphics::API::Texture dxuseless;
+		static NuclearEngine::LLGL::Texture* dxuseless;
 
 		struct VERTEX_CONSTANT_BUFFER
 		{
@@ -35,8 +35,8 @@ namespace NuclearEngine
 		void ImGui_DX11_Renderer_DestroyFontsTexture();
 		bool ImGui_DX11_Renderer_Initialize()
 		{
-			g_pd3dDevice = Graphics::API::DirectX::DX11Context::GetDevice();
-			g_pd3dDeviceContext = Graphics::API::DirectX::DX11Context::GetContext();
+			g_pd3dDevice = LLGL::DirectX::DX11Context::GetDevice();
+			g_pd3dDeviceContext = LLGL::DirectX::DX11Context::GetContext();
 	
 			// By using D3DCompile() from <d3dcompiler.h> / d3dcompiler.lib, we introduce a dependency to a given version of d3dcompiler_XX.dll (see D3DCOMPILER_DLL_A)
 			// If you would like to use this DX11 sample code but remove this dependency you can: 
@@ -83,11 +83,11 @@ namespace NuclearEngine
 				// Create the input layout
 				D3D11_INPUT_ELEMENT_DESC local_layout[] =
 				{
-					{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT,   0, (size_t)(&((ImDrawVert*)0)->pos), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,   0, (size_t)(&((ImDrawVert*)0)->uv),  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "POSITION", 0, DXGI_FORMAT_LLGL::Format::RG32Float,   0, (size_t)(&((ImDrawVert*)0)->pos), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "TEXCOORD", 0, DXGI_FORMAT_LLGL::Format::RG32Float,   0, (size_t)(&((ImDrawVert*)0)->uv),  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, (size_t)(&((ImDrawVert*)0)->col), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 				};
-				if (g_pd3dDevice->CreateInputLayout(local_layout, 3, g_pVertexShaderBlob->GetBufferPointer(), g_pVertexShaderBlob->GetBufferSize(), &g_pInputLayout) != S_OK)
+				if (g_pd3dDevice->CreateVertexFormat(local_layout, 3, g_pVertexShaderBlob->GetBufferPointer(), g_pVertexShaderBlob->GetBufferSize(), &g_pVertexFormat) != S_OK)
 					return false;
 
 				// Create the constant buffer
@@ -187,7 +187,7 @@ namespace NuclearEngine
 			if (g_pPixelShader) { g_pPixelShader->Release(); g_pPixelShader = NULL; }
 			if (g_pPixelShaderBlob) { g_pPixelShaderBlob->Release(); g_pPixelShaderBlob = NULL; }
 			if (g_pVertexConstantBuffer) { g_pVertexConstantBuffer->Release(); g_pVertexConstantBuffer = NULL; }
-			if (g_pInputLayout) { g_pInputLayout->Release(); g_pInputLayout = NULL; }
+			if (g_pVertexFormat) { g_pVertexFormat->Release(); g_pVertexFormat = NULL; }
 			if (g_pVertexShader) { g_pVertexShader->Release(); g_pVertexShader = NULL; }
 			if (g_pVertexShaderBlob) { g_pVertexShaderBlob->Release(); g_pVertexShaderBlob = NULL; }
 			Log.Info("[ImGui] Shutting down ImGui_DX11_Renderer...\n");
@@ -274,26 +274,26 @@ namespace NuclearEngine
 			// Backup DX state that will be modified to restore it afterwards (unfortunately this is very ugly looking and verbose. Close your eyes!)
 			struct BACKUP_DX11_STATE
 			{
-				UINT                        ScissorRectsCount, ViewportsCount;
+				Uint32                        ScissorRectsCount, ViewportsCount;
 				D3D11_RECT                  ScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
 				D3D11_VIEWPORT              Viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
 				ID3D11RasterizerState*      RS;
 				ID3D11BlendState*           BlendState;
 				FLOAT                       BlendFactor[4];
-				UINT                        SampleMask;
-				UINT                        StencilRef;
+				Uint32                        SampleMask;
+				Uint32                        StencilRef;
 				ID3D11DepthStencilState*    DepthStencilState;
 				ID3D11ShaderResourceView*   PSShaderResource;
 				ID3D11SamplerState*         PSSampler;
 				ID3D11PixelShader*          PS;
 				ID3D11VertexShader*         VS;
-				UINT                        PSInstancesCount, VSInstancesCount;
+				Uint32                        PSInstancesCount, VSInstancesCount;
 				ID3D11ClassInstance*        PSInstances[256], *VSInstances[256];   // 256 is max according to PSSetShader documentation
 				D3D11_PRIMITIVE_TOPOLOGY    PrimitiveTopology;
 				ID3D11Buffer*               IndexBuffer, *VertexBuffer, *VSConstantBuffer;
-				UINT                        IndexBufferOffset, VertexBufferStride, VertexBufferOffset;
+				Uint32                        IndexBufferOffset, VertexBufferStride, VertexBufferOffset;
 				DXGI_FORMAT                 IndexBufferFormat;
-				ID3D11InputLayout*          InputLayout;
+				ID3D11VertexFormat*          VertexFormat;
 			};
 			BACKUP_DX11_STATE old;
 			old.ScissorRectsCount = old.ViewportsCount = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
@@ -311,7 +311,7 @@ namespace NuclearEngine
 			ctx->IAGetPrimitiveTopology(&old.PrimitiveTopology);
 			ctx->IAGetIndexBuffer(&old.IndexBuffer, &old.IndexBufferFormat, &old.IndexBufferOffset);
 			ctx->IAGetVertexBuffers(0, 1, &old.VertexBuffer, &old.VertexBufferStride, &old.VertexBufferOffset);
-			ctx->IAGetInputLayout(&old.InputLayout);
+			ctx->IAGetVertexFormat(&old.VertexFormat);
 
 			// Setup viewport
 			D3D11_VIEWPORT vp;
@@ -326,9 +326,9 @@ namespace NuclearEngine
 			// Bind shader and vertex buffers
 			unsigned int stride = sizeof(ImDrawVert);
 			unsigned int offset = 0;
-			ctx->IASetInputLayout(g_pInputLayout);
+			ctx->IASetVertexFormat(g_pVertexFormat);
 			ctx->IASetVertexBuffers(0, 1, &g_pVB, &stride, &offset);
-			ctx->IASetIndexBuffer(g_pIB, sizeof(ImDrawIdx) == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0);
+			ctx->IASetIndexBuffer(g_pIB, sizeof(ImDrawIdx) == 2 ? DXGI_FORMAT_R16_Uint32 : DXGI_FORMAT_R32_Uint32, 0);
 			ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			ctx->VSSetShader(g_pVertexShader, NULL, 0);
 			ctx->VSSetConstantBuffers(0, 1, &g_pVertexConstantBuffer);
@@ -380,14 +380,14 @@ namespace NuclearEngine
 			ctx->PSSetShaderResources(0, 1, &old.PSShaderResource); if (old.PSShaderResource) old.PSShaderResource->Release();
 			ctx->PSSetSamplers(0, 1, &old.PSSampler); if (old.PSSampler) old.PSSampler->Release();
 			ctx->PSSetShader(old.PS, old.PSInstances, old.PSInstancesCount); if (old.PS) old.PS->Release();
-			for (UINT i = 0; i < old.PSInstancesCount; i++) if (old.PSInstances[i]) old.PSInstances[i]->Release();
+			for (Uint32 i = 0; i < old.PSInstancesCount; i++) if (old.PSInstances[i]) old.PSInstances[i]->Release();
 			ctx->VSSetShader(old.VS, old.VSInstances, old.VSInstancesCount); if (old.VS) old.VS->Release();
 			ctx->VSSetConstantBuffers(0, 1, &old.VSConstantBuffer); if (old.VSConstantBuffer) old.VSConstantBuffer->Release();
-			for (UINT i = 0; i < old.VSInstancesCount; i++) if (old.VSInstances[i]) old.VSInstances[i]->Release();
+			for (Uint32 i = 0; i < old.VSInstancesCount; i++) if (old.VSInstances[i]) old.VSInstances[i]->Release();
 			ctx->IASetPrimitiveTopology(old.PrimitiveTopology);
 			ctx->IASetIndexBuffer(old.IndexBuffer, old.IndexBufferFormat, old.IndexBufferOffset); if (old.IndexBuffer) old.IndexBuffer->Release();
 			ctx->IASetVertexBuffers(0, 1, &old.VertexBuffer, &old.VertexBufferStride, &old.VertexBufferOffset); if (old.VertexBuffer) old.VertexBuffer->Release();
-			ctx->IASetInputLayout(old.InputLayout); if (old.InputLayout) old.InputLayout->Release();
+			ctx->IASetVertexFormat(old.VertexFormat); if (old.VertexFormat) old.VertexFormat->Release();
 
 		}
 

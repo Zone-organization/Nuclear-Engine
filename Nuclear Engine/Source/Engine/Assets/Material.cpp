@@ -14,11 +14,11 @@ namespace NuclearEngine
 		Material::~Material()
 		{
 		}
-		void Material::SetVertexShader(Graphics::API::VertexShader vshader)
+		void Material::SetVertexShader(LLGL::Shader* vshader)
 		{
 			mVShader = vshader;
 		}
-		void Material::SetPixelShader(Graphics::API::PixelShader pshader)
+		void Material::SetPixelShader(LLGL::Shader* pshader)
 		{
 			mPShader = pshader;
 			ParsePixelShader();
@@ -167,8 +167,8 @@ namespace NuclearEngine
 					mCbufferRef = MatCB->second;
 					mPSHaveMaterialCB = true;
 
-					Graphics::API::ConstantBuffer::Delete(&mCbuffer);
-					Graphics::API::ConstantBuffer::Create(&mCbuffer, "NE_Material", mCbufferRef.Size);
+					LLGL::Buffer*::Delete(&mCbuffer);
+					LLGL::Buffer*::Create(&mCbuffer, "NE_Material", mCbufferRef.Size);
 					mPShader.SetConstantBuffer(&mCbuffer);
 
 					//Parse Material Variables

@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <SFML\Window\Keyboard.hpp>
+#include <LLGL\Input.h>
 
 namespace NuclearEngine 
 {
@@ -8,7 +8,7 @@ namespace NuclearEngine
 	{
 		namespace Input 
 		{
-			using namespace sf;
+			using namespace LLGL;
 		}
 	}
 }

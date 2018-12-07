@@ -1,9 +1,7 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine/Graphics/API/VertexShader.h>
-#include <Engine/Graphics/API/PixelShader.h>
-#include <Engine/Graphics/API/ConstantBuffer.h>
-#include <Engine/Assets/Texture.h>
+#include <Engine\Graphics\ShaderTypes.h>
+#include <LLGL/LLGL.h>
 #include <map>
 
 namespace NuclearEngine
@@ -34,15 +32,15 @@ namespace NuclearEngine
 			Material();
 			~Material();
 
-			void SetVertexShader(Graphics::API::VertexShader vshader);
-			void SetPixelShader(Graphics::API::PixelShader pshader);
+			void SetVertexShader(LLGL::Shader* vshader);
+			void SetPixelShader(LLGL::Shader* pshader);
 
 			void BindTexSet(Uint32 index);
 			void Bind();
 
 			//If the shader isn't valid the default shader is bound
-			Graphics::API::VertexShader mVShader;
-			Graphics::API::PixelShader mPShader;
+			LLGL::Shader* mVShader;
+			LLGL::Shader* mPShader;
 
 			void SetMaterialVariable(const std::string&  name, Float32 value);
 			void SetMaterialVariable(const std::string&  name, Math::Vector2 value);
@@ -58,8 +56,8 @@ namespace NuclearEngine
 			std::vector<ShaderTexture> PixelShaderTS;
 		private:
 			void ParsePixelShader();
-			Graphics::API::ConstantBuffer mCbuffer;
-			Graphics::API::Reflected_Constantbuffer mCbufferRef;
+			LLGL::Buffer* mCbuffer;
+			Graphics::Reflected_Constantbuffer mCbufferRef;
 			std::map<std::string, Float32> mCbufferData;
 			bool mPSHaveMaterialCB;
 		};

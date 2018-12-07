@@ -7,8 +7,6 @@
 #include <Engine\Components\Light.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
-#include <Engine/Graphics/API/RenderTarget.h>
-#include <Engine/Graphics/API/Sampler.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -41,8 +39,8 @@ namespace NuclearEngine
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
-			Graphics::API::VertexShader GetVertexShader();
-			Graphics::API::PixelShader GetPixelShader();
+			LLGL::Shader* GetVertexShader();
+			LLGL::Shader* GetPixelShader();
 
 			void BindShaders();
 			void BindConstantBuffers();
@@ -72,9 +70,9 @@ namespace NuclearEngine
 			void BakePixelShader();
 			void BakeVertexShader();
 
-			Graphics::API::VertexShader VShader;
-			Graphics::API::PixelShader PShader;
-			Graphics::API::ConstantBuffer NE_Light_CB;
+			LLGL::Shader* VShader;
+			LLGL::Shader* PShader;
+			LLGL::Buffer* NE_Light_CB;
 
 			Components::CameraComponent* ActiveCamera;
 
@@ -93,11 +91,11 @@ namespace NuclearEngine
 
 			//PostProcess stuff
 			bool PostProcessingEnabled = false;
-			Graphics::API::Sampler ScreenSampler;
-			Graphics::API::Texture PostProcessTexture;
-			Graphics::API::RenderTarget PostProcessRT;
-			Graphics::API::VertexShader PostProcess_VShader;
-			Graphics::API::PixelShader PostProcess_PShader;
+			LLGL::Sampler ScreenSampler;
+			LLGL::Texture* PostProcessTexture;
+			LLGL::RenderTarget* PostProcessRT;
+			LLGL::Shader* PostProcess_VShader;
+			LLGL::Shader* PostProcess_PShader;
 			Assets::Mesh PostProcessScreenQuad;
 		};
 

@@ -1,11 +1,6 @@
 #pragma once
-#include <Engine/Graphics/API/VertexBuffer.h>
-#include <Engine/Graphics/API/Texture.h>
-#include <Engine/Graphics/API/Sampler.h>
-#include <Engine/Graphics/API/DepthStencilState.h>
-#include <Engine/Graphics/API/VertexShader.h>
-#include <Engine/Graphics/API/PixelShader.h>
-
+#include <LLGL/LLGL.h>
+#include <Base\NE_Common.h>
 
 namespace NuclearEngine
 {
@@ -21,20 +16,20 @@ namespace NuclearEngine
 			Skybox();
 			~Skybox();
 
-			void Initialize(Components::CameraComponent* Camera, Graphics::API::Texture data);
-			void Initialize(Components::CameraComponent* Camera, const std::array<Graphics::API::Texture_Data, 6>& data);
+			void Initialize(Components::CameraComponent* Camera, LLGL::Texture* data);
+			void Initialize(Components::CameraComponent* Camera, const std::array<LLGL::Texture_Data, 6>& data);
 			void Initialize(Components::CameraComponent* Camera, const std::array<std::string, 6>& paths);
 
 			void Release();
 			void Render();
 
 		private:
-			Graphics::API::VertexShader mVShader;
-			Graphics::API::PixelShader mPShader;
-			Graphics::API::VertexBuffer mVBuffer;
-			Graphics::API::Sampler mSampler;
-			Graphics::API::DepthStencilState mDSState;
-			Graphics::API::Texture mTexture;
+			LLGL::Shader* mVShader;
+			LLGL::Shader* mPShader;
+			LLGL::Buffer* mVBuffer;
+			LLGL::Sampler mSampler;
+			LLGL::DepthStencilState mDSState;
+			LLGL::Texture* mTexture;
 			bool ReleaseTex = false;
 		};
 	}

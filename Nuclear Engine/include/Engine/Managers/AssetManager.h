@@ -25,7 +25,7 @@ namespace NuclearEngine {
 		};
 
 		typedef Utilities::Delegate<Assets::Mesh&(const std::string& Path, const Managers::MeshLoadingDesc& desc)> MeshImport;
-		typedef Utilities::Delegate<Graphics::API::Texture_Data(const std::string& Path, const Graphics::API::Texture_Desc & Desc)> TextureImport;
+		typedef Utilities::Delegate<LLGL::Texture_Data(const std::string& Path, const LLGL::Texture_Desc & Desc)> TextureImport;
 
 		class NEAPI AssetManager {
 		public:
@@ -56,8 +56,8 @@ namespace NuclearEngine {
 			static void ShutDown();
 			
 			static Assets::Mesh& Import(const std::string& Path, const MeshLoadingDesc& desc, Assets::Material& material);
-			static Assets::Texture& Import(const std::string& Path, const Graphics::API::Texture_Desc& Desc = Graphics::API::Texture_Desc());
-			static Assets::Texture& Import(const std::string& Path, const Assets::TextureUsageType& type, const Graphics::API::Texture_Desc& Desc = Graphics::API::Texture_Desc());
+			static Assets::Texture& Import(const std::string& Path, const LLGL::Texture_Desc& Desc = LLGL::Texture_Desc());
+			static Assets::Texture& Import(const std::string& Path, const Assets::TextureUsageType& type, const LLGL::Texture_Desc& Desc = LLGL::Texture_Desc());
 
 			static TextureImport DefaultTextureImporter;
 			static MeshImport DefaultMeshImporter;
@@ -65,13 +65,13 @@ namespace NuclearEngine {
 			static bool DoesTextureExist(Uint32 hashedname, Assets::Texture* texture);
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			static std::array<Graphics::API::Texture_Data, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const Graphics::API::Texture_Desc& Desc);
+			static std::array<LLGL::Texture_Data, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const LLGL::Texture_Desc& Desc);
 			
-			static Graphics::API::Texture_Data LoadTex_stb_image(const std::string& Path, const Graphics::API::Texture_Desc & Desc);
+			static LLGL::Texture_Data LoadTex_stb_image(const std::string& Path, const LLGL::Texture_Desc & Desc);
 			static Assets::Mesh& LoadMesh_Assimp(const std::string& Path, Assets::Material& material, const Managers::MeshLoadingDesc& desc);
 
 		private:
-			static Graphics::API::Texture_Data TextureCube_Load(const std::string& Path, const Graphics::API::Texture_Desc& Desc);
+			static LLGL::Texture_Data TextureCube_Load(const std::string& Path, const LLGL::Texture_Desc& Desc);
 		};
 	}
 }

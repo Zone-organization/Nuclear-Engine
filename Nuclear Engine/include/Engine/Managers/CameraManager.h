@@ -18,7 +18,7 @@ namespace NuclearEngine
 
 
 
-			Graphics::API::ConstantBuffer* GetCameraCB();
+			LLGL::Buffer** GetCameraCB();
 
 		};
 	}

@@ -11,9 +11,9 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		Graphics::API::VertexShader ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
+		LLGL::Shader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
 		{
-			Graphics::API::VertexShader result;
+			LLGL::Shader* result;
 			std::vector<std::string> defines;
 
 			if (desc.InTexCoords)
@@ -27,25 +27,25 @@ namespace NuclearEngine
 			if (desc.OutFragPos)
 				defines.push_back("NE_OUT_FRAG_POS");
 
-			Graphics::API::VertexShader::Create(
+			LLGL::Shader*::Create(
 				&result,
-				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
-					Graphics::API::ShaderType::Vertex));
+				LLGL::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
+					LLGL::ShaderType::Vertex));
 
 			return result;
 		}
-		Graphics::API::PixelShader ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
+		LLGL::Shader* ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
 		{
-			Graphics::API::PixelShader result;
+			LLGL::Shader* result;
 			std::vector<std::string> defines;
 
 			if (desc.OutputTexture)
 				defines.push_back("NE_OUTPUT_TEXTURE");
 
-			Graphics::API::PixelShader::Create(
+			LLGL::Shader*::Create(
 				&result,
-				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
-					Graphics::API::ShaderType::Pixel));
+				LLGL::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
+					LLGL::ShaderType::Pixel));
 			return result;
 		}
 	}

@@ -22,25 +22,25 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
-			Graphics::API::Texture_Desc ScreenTexDesc;
+			LLGL::Texture_Desc ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
-				ScreenTexDesc.Format = Graphics::API::Format::R16G16B16A16_FLOAT;
+				ScreenTexDesc.Format = LLGL::Format::R16G16B16A16_FLOAT;
 			}
 			else
 			{
-				ScreenTexDesc.Format = Graphics::API::Format::R8G8B8A8_UNORM;
+				ScreenTexDesc.Format = LLGL::Format::R8G8B8A8_UNORM;
 			}
-			ScreenTexDesc.Type = Graphics::API::TextureType::Texture2D;
+			ScreenTexDesc.Type = LLGL::TextureType::Texture2D;
 			ScreenTexDesc.GenerateMipMaps = false;
 
-			Graphics::API::Texture_Data Data;
+			LLGL::Texture_Data Data;
 			Data.Img_Data_Buf = NULL;
 			Data.Width = WindowWidth;
 			Data.Height = WindowHeight;
-			Graphics::API::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
+			LLGL::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
 
-			Graphics::API::RenderTarget::Create(&PostProcessRT);
+			LLGL::RenderTarget::Create(&PostProcessRT);
 			PostProcessRT.AttachTexture(&PostProcessTexture);
 			PostProcessRT.AttachDepthStencilBuffer(Math::Vector2ui(WindowWidth, WindowHeight));
 
@@ -56,15 +56,15 @@ namespace NuclearEngine
 			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
-			Graphics::API::PixelShader::Create(
+			LLGL::Shader*::Create(
 				&PostProcess_PShader,
-				Graphics::API::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
-					Graphics::API::ShaderType::Pixel));
+				LLGL::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true),
+					LLGL::ShaderType::Pixel));
 
 
-			Graphics::API::SamplerDesc Samplerdesc;
-			Samplerdesc.Filter = Graphics::API::TextureFilter::Point2D;
-			Graphics::API::Sampler::Create(&ScreenSampler, Samplerdesc);
+			LLGL::SamplerDesc Samplerdesc;
+			Samplerdesc.Filter = LLGL::TextureFilter::Point2D;
+			LLGL::Sampler::Create(&ScreenSampler, Samplerdesc);
 		}
 		void RenderSystem::SetCamera(Components::CameraComponent * camera)
 		{
@@ -74,11 +74,11 @@ namespace NuclearEngine
 		{
 			return this->ActiveCamera;
 		}
-		Graphics::API::VertexShader RenderSystem::GetVertexShader()
+		LLGL::Shader* RenderSystem::GetVertexShader()
 		{
 			return this->VShader;
 		}
-		Graphics::API::PixelShader RenderSystem::GetPixelShader()
+		LLGL::Shader* RenderSystem::GetPixelShader()
 		{
 			return this->PShader;
 		}
@@ -121,17 +121,17 @@ namespace NuclearEngine
 
 			if (PSDirty = true)
 			{
-				Graphics::API::PixelShader::Delete(&PShader);
-				Graphics::API::ConstantBuffer::Delete(&NE_Light_CB);
+				LLGL::Shader*::Delete(&PShader);
+				LLGL::Buffer*::Delete(&NE_Light_CB);
 
-				Graphics::API::PixelShader::Create(
+				LLGL::Shader*::Create(
 					&PShader,
-					Graphics::API::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
-						Graphics::API::ShaderType::Pixel));
+					LLGL::CompileShader(Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true),
+						LLGL::ShaderType::Pixel));
 
 				Calculate_Light_CB_Size();
 
-				Graphics::API::ConstantBuffer::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
+				LLGL::Buffer*::Create(&NE_Light_CB, "NE_Light_CB", this->NE_Light_CB_Size);
 
 				this->PShader.SetConstantBuffer(&this->NE_Light_CB);
 				PSDirty = false;
@@ -141,7 +141,7 @@ namespace NuclearEngine
 		{
 			if (VSDirty = true)
 			{
-				Graphics::API::VertexShader::Delete(&VShader);
+				LLGL::Shader*::Delete(&VShader);
 
 				if (Desc.VShaderPath == "NE_Default")
 				{
@@ -151,10 +151,10 @@ namespace NuclearEngine
 					VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
 				}
 				else {
-					Graphics::API::VertexShader::Create(
+					LLGL::Shader*::Create(
 						&VShader,
-						Graphics::API::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
-							Graphics::API::ShaderType::Vertex));
+						LLGL::CompileShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath),
+							LLGL::ShaderType::Vertex));
 				}
 
 				if (this->ActiveCamera != nullptr)
@@ -253,18 +253,18 @@ namespace NuclearEngine
 				material->BindTexSet(mesh->SubMeshes.at(i).data.TexSetIndex);
 				mesh->SubMeshes.at(i).VBO.Bind();
 				mesh->SubMeshes.at(i).IBO.Bind();
-				Graphics::API::Context::DrawIndexed(mesh->SubMeshes.at(i).IndicesCount);
+				LLGL::Context::DrawIndexed(mesh->SubMeshes.at(i).IndicesCount);
 			}
 		}
 		void RenderSystem::RenderToPostProcessingRT()
 		{
 			PostProcessRT.Bind();
-			Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			LLGL::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		}
 		void RenderSystem::RenderPostProcessingContents()
 		{
 			PostProcessRT.Bind_Default();
-			Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			LLGL::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			PostProcess_VShader.Bind();
 			PostProcess_PShader.Bind();
 			ScreenSampler.PSBind(0);

@@ -7,8 +7,10 @@ namespace NuclearEngine {
 
 		enum class RenderAPI : Uint8
 		{
+			DirectX11,
+			DirectX12,
 			OpenGL4_5,
-			DirectX11
+			Vulkan
 		};
 
 		struct ApplicationDesc
@@ -16,9 +18,12 @@ namespace NuclearEngine {
 			Uint32 WindowWidth = 1024;
 			Uint32 WindowHeight = 768;
 			Uint32 Samples = 2;
+			bool ManualSelectRenderer = false;
+			bool AutoSelectRenderer = true;
+			bool ForceRenderer = false;
 			RenderAPI Renderer = RenderAPI::OpenGL4_5;
 			bool DebugRenderAPI = false;
-			bool V_Sync = true;
+			bool VSync = true;
 			std::wstring Title = L"NuclearEngine";
 		};
 	}
