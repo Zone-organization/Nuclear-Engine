@@ -99,12 +99,12 @@ namespace NuclearEngine
 			LLGL::DepthStencilState::Create(&mDSState, DS_State);
 		}
 
-		void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<LLGL::Texture_Data, 6>& data)
+		void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<LLGL::SrcImageDescriptor, 6>& data)
 		{
 			ReleaseTex = true;
 			mTexture.Delete(&mTexture);
 
-			LLGL::Texture_Desc Desc;
+			LLGL::TextureDescriptor Desc;
 			Desc.Format = LLGL::Format::R8G8B8A8_UNORM;
 			Desc.Type = LLGL::TextureType::TextureCube;
 			Desc.GenerateMipMaps = false;
@@ -114,7 +114,7 @@ namespace NuclearEngine
 		void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<std::string, 6>& paths)
 		{
 			ReleaseTex = true;
-			LLGL::Texture_Desc Desc;
+			LLGL::TextureDescriptor Desc;
 			Desc.Format = LLGL::Format::R8G8B8A8_UNORM;
 			Desc.Type = LLGL::TextureType::Texture2D;
 			return Initialize(Camera, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));

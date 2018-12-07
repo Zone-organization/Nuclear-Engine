@@ -18,31 +18,26 @@ namespace NuclearEngine {
 		std::unordered_map<Uint32, Assets::Material> AssetManager::mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
 		std::unordered_map<Uint32, std::string> AssetManager::mHashedMaterialsNames = std::unordered_map<Uint32, std::string>();
 
-		LLGL::Texture_Data AssetManager::LoadTex_stb_image(const std::string& Path, const LLGL::Texture_Desc & Desc)
+		LLGL::SrcImageDescriptor AssetManager::LoadTex_stb_image(const std::string& Path,  LLGL::TextureDescriptor & Desc)
 		{
 			int req_c;
-			switch (Desc.Format)
+			switch (Desc.format)
 			{
-			case LLGL::Format::R8_UNORM:
+			case LLGL::Format::R8UNorm:
 				req_c = 1; break;
-			case LLGL::Format::R8G8_UNORM:
+			case LLGL::Format::RG8UNorm:
 				req_c = 2; break;
-			case LLGL::Format::R8G8B8_UNORM:
+			case LLGL::Format::RGB8UNorm:
 				req_c = 3; break;
-			case LLGL::Format::R8G8B8A8_UNORM:
-			case LLGL::Format::R8G8B8A8_UNORM_SRGB:
+			case LLGL::Format::RGBA8UNorm:
+			case LLGL::Format::BGRA8sRGB:
 				req_c = 4; break;
 			default:					req_c = 4; break;
 			}
-			LLGL::Texture_Data Data;
+			LLGL::SrcImageDescriptor Data;
 
-			stbi_set_flip_vertically_on_load(Desc.FlipY_Axis);
-			Data.Img_Data_Buf = stbi_load(Path.c_str(), &Data.Width, &Data.Height, &Data.Components_Number, req_c);
-
-			if (Data.Img_Data_Buf == NULL)
-				Data.Valid = false;
-			else
-				Data.Valid = true;
+			//stbi_set_flip_vertically_on_load(Desc.FlipY_Axis);
+			Data.data = stbi_load(Path.c_str(), &Data.Width, &Data.Height, &Data.Components_Number, req_c);
 
 			return Data;
 		}
@@ -74,6 +69,7 @@ namespace NuclearEngine {
 		{
 			for (auto x : mImportedTextures)
 			{
+				
 				LLGL::Texture::Delete(&x.second.mTexture);
 			}
 			mImportedTextures.clear();
@@ -86,12 +82,12 @@ namespace NuclearEngine {
 			return LoadMesh_Assimp(Path, material, desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path, const LLGL::Texture_Desc & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path,  LLGL::TextureDescriptor & Desc)
 		{
 			return Import(Path, Assets::TextureUsageType::Unknown, Desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type, const LLGL::Texture_Desc & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type,  LLGL::TextureDescriptor & Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
@@ -103,7 +99,7 @@ namespace NuclearEngine {
 
 			auto Data = DefaultTextureImporter(Path, Desc);
 
-			if (!Data.Valid)
+			if (Data.data == NULL)
 			{
 				Log.Error(std::string("[AssetManager] Failed To Load Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
 				return Assets::Texture();
@@ -125,21 +121,19 @@ namespace NuclearEngine {
 			return mImportedTextures[hashedname] = Tex;
 		}
 					
-		LLGL::Texture_Data AssetManager::TextureCube_Load(const std::string& Path, const LLGL::Texture_Desc& Desc)
+		LLGL::SrcImageDescriptor AssetManager::TextureCube_Load(const std::string& Path,  LLGL::TextureDescriptor& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
 			auto Data = DefaultTextureImporter(Path, Desc);
 
-			if (!Data.Valid)
+			if (Data.data == NULL)
 			{
 				Log.Error(std::string("[AssetManager] Failed To Load Texture2D (For CubeMap): " + Path + '\n'));
 				return Data;
 			}
-
-			Data.HashedName = hashedname;
 	
-			Log.Info(std::string("[AssetManager] Loaded Texture2D (For CubeMap): " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) +'\n'));
+			Log.Info(std::string("[AssetManager] Loaded Texture2D (For CubeMap): " + Path + '\n'));
 
 			return Data;
 		}
@@ -155,11 +149,11 @@ namespace NuclearEngine {
 			texture = nullptr;
 			return false;
 		}
-		std::array<LLGL::Texture_Data, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const LLGL::Texture_Desc& desc)
+		std::array<LLGL::SrcImageDescriptor, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths,  LLGL::TextureDescriptor& desc)
 		{
-			LLGL::Texture_Data data1, data2, data3, data4, data5, data6;
-			LLGL::Texture_Desc Desc = desc;
-			Desc.FlipY_Axis = false;
+			LLGL::SrcImageDescriptor data1, data2, data3, data4, data5, data6;
+			LLGL::TextureDescriptor Desc = desc;
+			//Desc.FlipY_Axis = false;
 			data1 = TextureCube_Load(Paths.at(0), Desc);
 			data2 = TextureCube_Load(Paths.at(1), Desc);
 			data3 = TextureCube_Load(Paths.at(2), Desc);
@@ -167,7 +161,7 @@ namespace NuclearEngine {
 			data5 = TextureCube_Load(Paths.at(4), Desc);
 			data6 = TextureCube_Load(Paths.at(5), Desc);
 			
-			std::array<LLGL::Texture_Data, 6> result = { data1, data2, data3, data4, data5, data6 };
+			std::array<LLGL::SrcImageDescriptor, 6> result = { data1, data2, data3, data4, data5, data6 };
 
 			return result;
 		}

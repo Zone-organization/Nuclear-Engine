@@ -8,7 +8,7 @@ namespace NuclearEngine
 	{
 		void CameraPostProcess::Bake(const PostProcessDesc& Desc)
 		{
-			LLGL::Texture_Desc ScreenTexDesc;
+			LLGL::TextureDescriptor ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
 				ScreenTexDesc.Format = LLGL::Format::R16G16B16A16_FLOAT;
@@ -20,7 +20,7 @@ namespace NuclearEngine
 			ScreenTexDesc.Type = LLGL::TextureType::Texture2D;
 			ScreenTexDesc.GenerateMipMaps = false;
 
-			LLGL::Texture_Data Data;
+			LLGL::SrcImageDescriptor Data;
 			Data.Img_Data_Buf = NULL;
 			Data.Width = Desc.WindowWidth;
 			Data.Height = Desc.WindowHeight;

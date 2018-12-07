@@ -1,6 +1,7 @@
 #include <Engine\Assets\Material.h>
 #include <Base\Utilities\Hash.h>
 #include <Engine/Assets/DefaultTextures.h>
+#include <Engine\Graphics\Context.h>
 
 namespace NuclearEngine
 {
@@ -14,11 +15,11 @@ namespace NuclearEngine
 		Material::~Material()
 		{
 		}
-		void Material::SetVertexShader(LLGL::Shader* vshader)
+		void Material::SetVertexShader(Graphics::Shader* vshader)
 		{
 			mVShader = vshader;
 		}
-		void Material::SetPixelShader(LLGL::Shader* pshader)
+		void Material::SetPixelShader(Graphics::Shader* pshader)
 		{
 			mPShader = pshader;
 			ParsePixelShader();
@@ -30,15 +31,17 @@ namespace NuclearEngine
 			if (!mPixelShaderTextures.empty())
 			{
 				for (auto tex : mPixelShaderTextures.at(index))
-				{
-					tex.mTexture.PSBind(tex.mSlot);
+				{	
+					//BINDING_LLGL
+					//tex.mTexture.PSBind(tex.mSlot);
 				}
 			}
 		}
 
 		void Material::Bind()
-		{
-			mCbuffer.PSBind(mCbufferRef.BindingSlot);
+		{	
+			//BINDING_LLGL
+			//mCbuffer.PSBind(mCbufferRef.BindingSlot);
 		}
 
 		void Material::SetMaterialVariable(const std::string&  name, Float32 value)
@@ -108,7 +111,7 @@ namespace NuclearEngine
 			{				
 				data.push_back(i.second);
 			}
-			mCbuffer.Update(data.data(), mCbufferRef.Size);
+			Graphics::Context::GetRenderer()->WriteBuffer(*mCbuffer, 0, data.data(), mCbufferRef.Size);
 		}
 	
 		TextureUsageType ParseTexUsageFromName(std::string& name)
@@ -125,12 +128,12 @@ namespace NuclearEngine
 
 		void Material::ParsePixelShader()
 		{
-			if (mPShader.isValid)
+			if (mPShader)
 			{
 				mPSHaveMaterialCB = false;
 				//Parse Shader
 				PixelShaderTS.clear();
-				for (auto Tex : mPShader.Reflection.Textures)
+				for (auto Tex : mPShader->Reflection.Textures)
 				{
 					if (Tex.first.find("NE_Tex_") == 0)
 					{
@@ -161,20 +164,23 @@ namespace NuclearEngine
 				}
 
 				//Parse Material
-				auto MatCB = mPShader.Reflection.ConstantBuffers.find("NE_Material");
-				if (MatCB != mPShader.Reflection.ConstantBuffers.end())
+				auto MatCB = mPShader->Reflection.ConstantBuffers.find("NE_Material");
+				if (MatCB != mPShader->Reflection.ConstantBuffers.end())
 				{
 					mCbufferRef = MatCB->second;
 					mPSHaveMaterialCB = true;
 
-					LLGL::Buffer*::Delete(&mCbuffer);
-					LLGL::Buffer*::Create(&mCbuffer, "NE_Material", mCbufferRef.Size);
-					mPShader.SetConstantBuffer(&mCbuffer);
+					Graphics::Context::GetRenderer()->Release(*mCbuffer);
+
+					mCbuffer = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(mCbufferRef.Size));
+
+					//BINDING_LLGL
+					//mPShader->SetConstantBuffer(&mCbuffer);
 
 					//Parse Material Variables
 					for (auto var : mCbufferRef.Variables)
 					{
-						using namespace Graphics::API;
+						using namespace Graphics;
 						switch (var.second.Type)
 						{
 						case ShaderVariableType::Float1:

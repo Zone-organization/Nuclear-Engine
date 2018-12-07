@@ -17,7 +17,7 @@ namespace NuclearEngine
 			~Skybox();
 
 			void Initialize(Components::CameraComponent* Camera, LLGL::Texture* data);
-			void Initialize(Components::CameraComponent* Camera, const std::array<LLGL::Texture_Data, 6>& data);
+			void Initialize(Components::CameraComponent* Camera, const std::array<LLGL::SrcImageDescriptor, 6>& data);
 			void Initialize(Components::CameraComponent* Camera, const std::array<std::string, 6>& paths);
 
 			void Release();
@@ -28,7 +28,8 @@ namespace NuclearEngine
 			LLGL::Shader* mPShader;
 			LLGL::Buffer* mVBuffer;
 			LLGL::Sampler mSampler;
-			LLGL::DepthStencilState mDSState;
+			LLGL::DepthDescriptor mDepthState;
+			LLGL::StencilDescriptor mStencilState;
 			LLGL::Texture* mTexture;
 			bool ReleaseTex = false;
 		};

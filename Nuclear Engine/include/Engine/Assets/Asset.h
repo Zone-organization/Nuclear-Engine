@@ -1,11 +1,12 @@
 #pragma once
 #include <Base\Utilities\Hash.h>
+#include <Base\NE_PrivateCommon.h>
 
 namespace NuclearEngine
 {
 	namespace Assets 
 	{
-		class Asset
+		class NEAPI Asset
 		{
 		public:
 			Uint32 GetName() {	return 	mHashedName; }

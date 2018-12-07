@@ -1,8 +1,8 @@
 #include <Engine\Systems\RenderSystem.h>
 #include <Core\FileSystem.h>
-#include <Engine/Graphics/API/ConstantBuffer.h>
-#include <Engine/Graphics/API/ShaderCompiler.h>
-#include <Engine\Graphics\API\Context.h>
+#include <LLGL\Buffer.h>
+#include <Engine/Graphics/ShaderCompiler.h>
+#include <Engine\Graphics\Context.h>
 #include <Engine\Components/TransformComponent.h>
 #include <Engine\Managers\ShaderManager.h>
 #include <Engine\Assets\Material.h>
@@ -22,22 +22,23 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
-			LLGL::Texture_Desc ScreenTexDesc;
+			LLGL::TextureDescriptor ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
-				ScreenTexDesc.Format = LLGL::Format::R16G16B16A16_FLOAT;
+				ScreenTexDesc.format = LLGL::Format::RGBA16Float;
 			}
 			else
 			{
-				ScreenTexDesc.Format = LLGL::Format::R8G8B8A8_UNORM;
+				ScreenTexDesc.format = LLGL::Format::RGBA8UNorm;
 			}
-			ScreenTexDesc.Type = LLGL::TextureType::Texture2D;
-			ScreenTexDesc.GenerateMipMaps = false;
+			ScreenTexDesc.type = LLGL::TextureType::Texture2D;
+			//ScreenTexDesc.GenerateMipMaps = false;
 
-			LLGL::Texture_Data Data;
-			Data.Img_Data_Buf = NULL;
-			Data.Width = WindowWidth;
-			Data.Height = WindowHeight;
+			LLGL::SrcImageDescriptor Data;
+			Data.data = NULL;
+			ScreenTexDesc.extent.width = WindowWidth;
+			ScreenTexDesc.extent.height = WindowHeight;
+
 			LLGL::Texture::Create(&PostProcessTexture, Data, ScreenTexDesc);
 
 			LLGL::RenderTarget::Create(&PostProcessRT);

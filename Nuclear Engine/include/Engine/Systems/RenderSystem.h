@@ -7,6 +7,7 @@
 #include <Engine\Components\Light.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
+#include <LLGL\Sampler.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -91,7 +92,7 @@ namespace NuclearEngine
 
 			//PostProcess stuff
 			bool PostProcessingEnabled = false;
-			LLGL::Sampler ScreenSampler;
+			LLGL::Sampler* ScreenSampler;
 			LLGL::Texture* PostProcessTexture;
 			LLGL::RenderTarget* PostProcessRT;
 			LLGL::Shader* PostProcess_VShader;

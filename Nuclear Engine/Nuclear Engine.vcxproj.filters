@@ -22,7 +22,6 @@
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
-    <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Engine\Graphics\Skybox.h" />
     <ClInclude Include="include\Engine\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
@@ -230,18 +229,10 @@
     <ClInclude Include="include\Engine\Components\TransformComponent.h" />
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGuiConfig.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGui.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_truetype.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGui_Renderer.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGui_Binding.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_DX11_Renderer.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_GL4_Renderer.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
     <ClInclude Include="include\Engine\Graphics\ShaderTypes.h" />
+    <ClInclude Include="include\Engine\Graphics\Shader.h" />
+    <ClInclude Include="include\Engine\Graphics\ShaderCompiler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -261,7 +252,6 @@
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Skybox.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />
@@ -299,12 +289,6 @@
     <ClCompile Include="Source\Experimental\Stella\Renderer.cpp" />
     <ClCompile Include="Source\Engine\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Binding.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Renderer_Dirty.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
   </ItemGroup>
   <ItemGroup>

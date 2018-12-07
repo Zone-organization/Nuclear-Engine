@@ -19,7 +19,7 @@ namespace NuclearEngine {
 
 		}
 
-		void Mesh::SubMesh::Initialize(LLGL::Shader* _shader)
+		void Mesh::SubMesh::Initialize(Graphics::Shader* _shader)
 		{
 			std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
@@ -105,7 +105,7 @@ namespace NuclearEngine {
 		{
 		}
 
-		void Mesh::Initialize(LLGL::Shader* _shader)
+		void Mesh::Initialize(Graphics::Shader* _shader)
 		{
 			for (unsigned int i = 0; i < SubMeshes.size(); i++)
 			{
@@ -423,7 +423,7 @@ namespace NuclearEngine {
 
 			float VTexCoord = +1.0f;
 
-			if (LLGL::Context::isOpenGL3RenderAPI())
+			if (Graphics::Context::IsOpenGL())
 			{
 				VTexCoord = -1.0f;
 			}

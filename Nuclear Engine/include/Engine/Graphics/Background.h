@@ -14,7 +14,7 @@ namespace NuclearEngine
 			Background();
 			~Background();
 			
-			void BeginFrame(Uint8 flags = (ClearColorBuffer | ClearDepthBuffer));
+			//void BeginFrame(Uint8 flags = (ClearColorBuffer | ClearDepthBuffer));
 			void EndFrame();
 
 			bool mUseSkybox;

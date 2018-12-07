@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\Math\Math.h>
-#include <LLGL/LLGL.h>
+#include <LLGL/Texture.h>
 #include <Engine/Assets/Asset.h>
 #include <vector>
 
@@ -25,7 +25,7 @@ namespace NuclearEngine {
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
-			inline void VSBind(Uint32 slot, LLGL::Sampler& sampler)
+			/*inline void VSBind(Uint32 slot, LLGL::Sampler& sampler)
 			{
 				sampler.VSBind(slot);
 				mTexture.VSBind(slot);
@@ -43,7 +43,7 @@ namespace NuclearEngine {
 			{
 				return mTexture.PSBind(slot);
 			}
-
+			*/
 			LLGL::Texture* mTexture;
 
 		private:

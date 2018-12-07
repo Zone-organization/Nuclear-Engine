@@ -2,6 +2,7 @@
 #include "Base/Math/gtc/matrix_inverse.hpp"
 #include <Core\Engine.h>
 #include <Engine/ECS\Scene.h>
+#include <Engine\Graphics\Context.h>
 
 namespace NuclearEngine
 {
@@ -23,7 +24,7 @@ namespace NuclearEngine
 	
 		CameraComponent::~CameraComponent()
 		{
-			LLGL::Buffer*::Delete(&ConstantBuffer);			
+			Graphics::Context::GetRenderer()->Release(*ConstantBuffer);
 		}
 	
 		void CameraComponent::Initialize(Math::Matrix4 projectionMatrix)

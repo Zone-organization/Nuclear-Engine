@@ -2,6 +2,7 @@
 #include <string>
 #include <Base\BuildConfig.h>
 #include <unordered_map>
+#include <LLGL\TextureFlags.h>
 
 namespace NuclearEngine
 {
@@ -44,7 +45,7 @@ namespace NuclearEngine
 		struct Reflected_Texture
 		{
 			unsigned int BindingSlot = 0;
-			TextureType Type = TextureType::Texture2D;
+			LLGL::TextureType Type = LLGL::TextureType::Texture2D;
 		};
 
 		struct ShaderReflection

@@ -166,6 +166,7 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -206,6 +207,7 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -245,6 +247,7 @@
       <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -293,6 +296,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -348,11 +352,8 @@
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
-    <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGui.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGuiConfig.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGui_Binding.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGui_Renderer.h" />
+    <ClInclude Include="include\Engine\Graphics\Shader.h" />
+    <ClInclude Include="include\Engine\Graphics\ShaderCompiler.h" />
     <ClInclude Include="include\Engine\Graphics\ShaderTypes.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
@@ -552,12 +553,6 @@
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_DX11_Renderer.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\Binding\ImGui_GL4_Renderer.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
@@ -588,12 +583,6 @@
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Renderer_Dirty.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
@@ -605,7 +594,6 @@
     <ClCompile Include="Source\Engine\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\Binding\ImGui_Binding.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Layer.cpp" />
     <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />

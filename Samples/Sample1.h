@@ -1,6 +1,6 @@
 #pragma once
 #include "Common.h"
-#include <Engine\Graphics\ImGui_Renderer.h>
+//#include <Engine\Graphics\ImGui_Renderer.h>
 
 class Sample1 : public Core::Game
 {
@@ -369,7 +369,7 @@ public:
 		states.EnabledDepth_DisabledStencil.Bind();
 
 
-		ImGui::Render();
+		//ImGui::Render();
 		Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
 		Graphics::API::Context::PresentFrame();
 	}

@@ -1,7 +1,9 @@
 #pragma once
 #include <Base\NE_Common.h>
+#include <Engine/Assets\Texture.h>
 #include <Engine\Graphics\ShaderTypes.h>
-#include <LLGL/LLGL.h>
+#include <Engine/Graphics\Shader.h>
+#include <LLGL/Buffer.h>
 #include <map>
 
 namespace NuclearEngine
@@ -32,15 +34,15 @@ namespace NuclearEngine
 			Material();
 			~Material();
 
-			void SetVertexShader(LLGL::Shader* vshader);
-			void SetPixelShader(LLGL::Shader* pshader);
+			void SetVertexShader(Graphics::Shader* vshader);
+			void SetPixelShader(Graphics::Shader* pshader);
 
 			void BindTexSet(Uint32 index);
 			void Bind();
 
 			//If the shader isn't valid the default shader is bound
-			LLGL::Shader* mVShader;
-			LLGL::Shader* mPShader;
+			Graphics::Shader* mVShader;
+			Graphics::Shader* mPShader;
 
 			void SetMaterialVariable(const std::string&  name, Float32 value);
 			void SetMaterialVariable(const std::string&  name, Math::Vector2 value);

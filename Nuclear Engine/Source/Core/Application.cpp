@@ -64,7 +64,7 @@ namespace NuclearEngine
 
 		Float32 Application::GetAspectRatioF32()
 		{
-			auto resolution = Graphics::Context::mContext->GetVideoMode().resolution;
+			auto resolution = Graphics::Context::GetRenderContext()->GetVideoMode().resolution;
 			return (static_cast<float>(resolution.width) / static_cast<float>(resolution.height));
 		}
 	

@@ -3,11 +3,10 @@
 #include <Base\Utilities\Timer.h>
 #include <Core\Input.h>
 #include <Core\Application.h>
-#include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Audio\AudioEngine.h>
 #include <FMOD\includer.h> 
-#include <Engine\Graphics\ImGui_Binding.h>
-#include <Engine\Graphics\ImGui_Renderer.h>
+//#include <Engine\Graphics\ImGui_Binding.h>
+//#include <Engine\Graphics\ImGui_Renderer.h>
 
 /*
 	      .-.               
@@ -49,9 +48,8 @@ namespace NuclearEngine {
 			Application::SetMouseInputMode(MouseInputMode::Normal);
 
 			//init sub-engines
-			Graphics::GraphicsEngine::Initialize();
-			Graphics::ImGui_Binding::Initialize(Application::MainWindow);
-			Graphics::ImGui_Renderer::Initialize();
+			//Graphics::ImGui_Binding::Initialize(Application::MainWindow);
+			//Graphics::ImGui_Renderer::Initialize();
 
 			if(desc.InitAudioEngine)
 				Audio::AudioEngine::Initialize();
@@ -67,7 +65,7 @@ namespace NuclearEngine {
 			GamePtr = &Defaultgame;
 			Core::Application::Shutdown();
 			Audio::AudioEngine::Shutdown();
-			Graphics::ImGui_Renderer::Shutdown();
+			//Graphics::ImGui_Renderer::Shutdown();
 		}
 
 		void Engine::RunGame(Game * _YourGame)
@@ -117,7 +115,7 @@ namespace NuclearEngine {
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
 				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
-				Graphics::ImGui_Binding::Update(*Core::Application::MainWindow, deltaTime);
+				//Graphics::ImGui_Binding::Update(*Core::Application::MainWindow, deltaTime);
 
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);
