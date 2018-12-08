@@ -11,7 +11,7 @@ namespace NuclearEngine
 		class NEAPI Context
 		{
 		public:
-			static bool Initialize(const Core::ApplicationDesc & Desc, LLGL::Window* window);
+			static bool Initialize(const Core::ApplicationDesc & Desc);
 
 			static void PostInitialize();
 

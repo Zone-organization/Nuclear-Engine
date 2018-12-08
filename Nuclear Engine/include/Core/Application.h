@@ -21,7 +21,7 @@ namespace NuclearEngine {
 
 			static Float32 GetAspectRatioF32();
 
-			static LLGL::Window* MainWindow;
+			static LLGL::Window* GetWindow();
 		};
 	}
 }

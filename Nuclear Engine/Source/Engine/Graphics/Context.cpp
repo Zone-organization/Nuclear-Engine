@@ -16,7 +16,7 @@ namespace NuclearEngine
 		bool Metal = false;
 
 
-		bool Context::Initialize(const Core::ApplicationDesc & Desc, LLGL::Window* window)
+		bool Context::Initialize(const Core::ApplicationDesc & Desc)
 		{
 			/* Select renderer module */
 			std::string rendererModule;
@@ -90,7 +90,7 @@ namespace NuclearEngine
 				contextDesc.multiSampling = LLGL::MultiSamplingDescriptor{ 8 }; // check if LLGL adapts sample count that is too high
 #endif
 			}
-			LLGL::RenderContext* context = gRenderer->CreateRenderContext(contextDesc);
+			 gContext = gRenderer->CreateRenderContext(contextDesc);
 
 			// Print renderer information
 			const auto& info = gRenderer->GetRendererInfo();
@@ -101,10 +101,7 @@ namespace NuclearEngine
 			Log.Info("[Context] Vendor:           " + info.vendorName + "\n");
 			Log.Info("[Context] Shading Language: " + info.shadingLanguageName + "\n");
 
-			auto& _window = static_cast<LLGL::Window&>(gContext->GetSurface());
-
 			return true;
-
 		}
 
 		void Context::PostInitialize()

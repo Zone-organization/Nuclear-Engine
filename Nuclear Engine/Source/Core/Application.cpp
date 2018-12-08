@@ -10,16 +10,15 @@ namespace NuclearEngine
 	namespace Core
 	{		
 		bool Application::ShouldClose = false;
-		LLGL::Window* Application::MainWindow = nullptr;
+		LLGL::Window* MainWindow = nullptr;
 
 		bool Application::Start(const ApplicationDesc & Desc)
 		{
 			//Initialize Context
-			Graphics::Context::Initialize(Desc, MainWindow);
-			auto& window = static_cast<LLGL::Window&>(Graphics::Context::GetRenderContext()->GetSurface());
-			//MainWindow = &window;
+			Graphics::Context::Initialize(Desc);
+			MainWindow = &static_cast<LLGL::Window&>(Graphics::Context::GetRenderContext()->GetSurface());
 
-			window.SetTitle(Desc.Title);
+			MainWindow->SetTitle(Desc.Title);
 
 			return true;
 		}
@@ -45,6 +44,11 @@ namespace NuclearEngine
 		{
 			auto resolution = Graphics::Context::GetRenderContext()->GetVideoMode().resolution;
 			return (static_cast<float>(resolution.width) / static_cast<float>(resolution.height));
+		}
+
+		LLGL::Window * Application::GetWindow()
+		{
+			return MainWindow;
 		}
 	
 		void Application::SetMouseInputMode(const MouseInputMode & mode)
