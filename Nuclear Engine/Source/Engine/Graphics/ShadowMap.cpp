@@ -1,4 +1,5 @@
 #include "Engine\Graphics\ShadowMap.h"
+#include <Engine\Graphics\Context.h>
 
 namespace NuclearEngine
 {
@@ -15,8 +16,13 @@ namespace NuclearEngine
 			this->mWidth = Width;
 			this->mHeight = Height;
 
-			API::RenderTarget::Create(&mDepthMap);
-			mDepthMap.AttachDepthStencilBuffer(Math::Vector2ui(mWidth, mHeight));
+
+			LLGL::RenderTargetDescriptor RTDesc;
+			RTDesc.resolution.width = mWidth;
+			RTDesc.resolution.height = mHeight;
+			RTDesc.attachments.push_back({ LLGL::AttachmentType::DepthStencil });
+
+			mDepthMap = Graphics::Context::GetRenderer()->CreateRenderTarget(RTDesc);
 		}
 		void ShadowMap::Update(std::vector<Components::DirectionalLight*> DirLights, std::vector<Components::PointLight*> PointLights, std::vector<Components::SpotLight*> SpotLights)
 		{

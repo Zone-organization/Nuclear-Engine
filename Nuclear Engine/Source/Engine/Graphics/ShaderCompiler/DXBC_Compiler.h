@@ -1,5 +1,5 @@
 #pragma once
-#include <Engine/Graphics/API/ShaderCompiler.h>
+#include <Engine/Graphics/ShaderCompiler.h>
 #ifdef NE_COMPILE_D3DCOMPILER
 
 namespace NuclearEngine 

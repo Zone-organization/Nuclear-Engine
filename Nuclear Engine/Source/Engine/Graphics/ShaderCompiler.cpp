@@ -1,6 +1,6 @@
-#include <Engine/Graphics/API/ShaderCompiler.h>
-#include <Engine/Graphics/API/Shader_Types.h>
-#include <Engine\Graphics\API\Context.h>
+#include <Engine/Graphics/ShaderCompiler.h>
+#include <Engine/Graphics/ShaderTypes.h>
+#include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 #include "ShaderCompiler\DXBC_Compiler.h"
 #include "ShaderCompiler\XShaderCompiler.h"
@@ -14,7 +14,7 @@ namespace NuclearEngine {
 			}
 			bool CompileShader(BinaryShaderBlob* blob, std::string SourceCode, const LLGL::ShaderType& type)
 			{
-				if (LLGL::Context::isOpenGL3RenderAPI())
+				if (Graphics::Context::IsOpenGL())
 				{
 					XShaderCompiler::CompileHLSL2GLSL(blob, SourceCode, type);
 				}

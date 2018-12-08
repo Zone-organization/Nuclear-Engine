@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <LLGL/LLGL.h>
+#include <Engine\Graphics/Shader.h>
 #include <vector>
 
 namespace NuclearEngine 
@@ -29,8 +29,8 @@ namespace NuclearEngine
 			ShaderManager();
 			~ShaderManager();
 
-			static LLGL::Shader* CreateAutoVertexShader(const AutoVertexShaderDesc& desc);
-			static LLGL::Shader* CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
+			static Graphics::Shader CreateAutoVertexShader(const AutoVertexShaderDesc& desc);
+			static Graphics::Shader CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
 
 	
 

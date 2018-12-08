@@ -34,15 +34,15 @@ namespace NuclearEngine
 			Material();
 			~Material();
 
-			void SetVertexShader(Graphics::Shader* vshader);
-			void SetPixelShader(Graphics::Shader* pshader);
+			void SetVertexShader(Graphics::Shader vshader);
+			void SetPixelShader(Graphics::Shader pshader);
 
 			void BindTexSet(Uint32 index);
 			void Bind();
 
 			//If the shader isn't valid the default shader is bound
-			Graphics::Shader* mVShader;
-			Graphics::Shader* mPShader;
+			Graphics::Shader mVShader;
+			Graphics::Shader mPShader;
 
 			void SetMaterialVariable(const std::string&  name, Float32 value);
 			void SetMaterialVariable(const std::string&  name, Math::Vector2 value);

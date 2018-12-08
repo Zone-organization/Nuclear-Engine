@@ -2,6 +2,8 @@
 #include <Base\NE_Common.h>
 #include <vector>
 #include <Engine/Graphics/ShaderTypes.h>
+#include <LLGL/ShaderFlags.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -20,11 +22,11 @@ namespace NuclearEngine
 				bool ReverseIncludeOrder = false;
 			};
 
-			NEAPI BinaryShaderBlob CompileShader(const ShaderLoadDesc& desc, const Graphics::API::ShaderType& type);
+			NEAPI BinaryShaderBlob CompileShader(const ShaderLoadDesc& desc, const LLGL::ShaderType& type);
 
-			NEAPI bool CompileShader(BinaryShaderBlob* result, std::string SourceCode, const Graphics::API::ShaderType& type);
+			NEAPI bool CompileShader(BinaryShaderBlob* result, std::string SourceCode, const LLGL::ShaderType& type);
 
-			NEAPI BinaryShaderBlob CompileShader(std::string SourceCode, const Graphics::API::ShaderType& type);
+			NEAPI BinaryShaderBlob CompileShader(std::string SourceCode, const LLGL::ShaderType& type);
 		}
 	}
 }

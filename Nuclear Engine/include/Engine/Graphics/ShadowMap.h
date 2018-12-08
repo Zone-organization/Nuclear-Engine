@@ -1,6 +1,6 @@
 #pragma once
-#include <Engine/Graphics/API/RenderAPI.h>
 #include <Engine/Components/Light.h>
+#include <LLGL/RenderTarget.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -18,7 +18,7 @@ namespace NuclearEngine
 						std::vector<Components::PointLight*> PointLights,
 						std::vector<Components::SpotLight*> SpotLights);
 
-			API::RenderTarget mDepthMap;
+			LLGL::RenderTarget* mDepthMap;
 
 		private:
 			Uint8 mWidth;

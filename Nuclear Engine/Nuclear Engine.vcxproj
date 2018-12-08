@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -26,42 +18,7 @@
     <ProjectName>Nuclear Engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -75,75 +32,23 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\Bin\DebugX86\</OutDir>
-    <IntDir>Build\DebugX86\</IntDir>
-    <TargetName>Nuclear.Engine</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\Build\</OutDir>
-    <IntDir>.\Build\</IntDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\Bin\DebugX64\</OutDir>
     <IntDir>Build\DebugX64\</IntDir>
     <TargetName>Nuclear.Engine</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\Build</OutDir>
-    <IntDir>.\Build</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\Bin\ReleaseX86\</OutDir>
-    <IntDir>Build\ReleaseX86\</IntDir>
-    <TargetName>Nuclear.Engine</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\Build</OutDir>
-    <IntDir>.\Build</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -151,51 +56,6 @@
     <IntDir>Build\ReleaseX64\</IntDir>
     <TargetName>Nuclear.Engine</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\Build</OutDir>
-    <IntDir>.\Build</IntDir>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <SubSystem>NotSet</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX86\;..\..\Nuclear-Deps\Bin\DebugX86\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;SFML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;PROTOTYPEENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.15063.0\ucrt;..\Deps\Freetype\include;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-    </ClCompile>
-    <Link>
-      <SubSystem>NotSet</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Deps\OpenAL\libs;..\Deps\GLEW\Libs;..\Deps\DirectX\Lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -212,76 +72,8 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX64\;..\..\Nuclear-Deps\Bin\DebugX64\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX64\;..\..\Nuclear-Deps\Bin\DebugX64\;F:\Zone\LLGL\bin\build\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;SFML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug _UWP|x64'">
-    <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;PROTOTYPEENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.15063.0\ucrt;..\Deps\Freetype\include;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <OmitFramePointers>false</OmitFramePointers>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-    </ClCompile>
-    <Link>
-      <SubSystem>NotSet</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Projects\Prototype-Project\Deps\OpenAL\libs;E:\Projects\Prototype-Project\Deps\Assimp\Libs;E:\Projects\Prototype-Project\Deps\GLEW\Libs;E:\Projects\Prototype-Project\Deps\Freetype\Libs;E:\Projects\Prototype-Project\Deps\DirectX\Lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;freetype271MT.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <DebugInformationFormat>None</DebugInformationFormat>
-      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <SubSystem>NotSet</SubSystem>
-      <EnableCOMDATFolding>
-      </EnableCOMDATFolding>
-      <OptimizeReferences>
-      </OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX86\;..\..\Nuclear-Deps\;..\..\Nuclear-Deps\Bin\ReleaseX86\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;SFML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;PROTOTYPEENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.15063.0\ucrt;..\Deps\Freetype\include;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <DebugInformationFormat>None</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <SubSystem>NotSet</SubSystem>
-      <EnableCOMDATFolding>
-      </EnableCOMDATFolding>
-      <OptimizeReferences>
-      </OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Projects\Prototype-Project\Deps\OpenAL\libs;E:\Projects\Prototype-Project\Deps\Assimp\Libs;E:\Projects\Prototype-Project\Deps\GLEW\Libs;E:\Projects\Prototype-Project\Deps\Freetype\Libs;E:\Projects\Prototype-Project\Deps\DirectX\Lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;freetype271MT.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -307,31 +99,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX64\;..\..\Nuclear-Deps\;..\..\Nuclear-Deps\Bin\ReleaseX64\</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;SFML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release _UWP|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;PROTOTYPEENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.15063.0\ucrt;..\Deps\Freetype\include;..\Deps;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>false</OmitFramePointers>
-      <DebugInformationFormat>None</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <SubSystem>NotSet</SubSystem>
-      <EnableCOMDATFolding>
-      </EnableCOMDATFolding>
-      <OptimizeReferences>
-      </OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Projects\Prototype-Project\Deps\OpenAL\libs;E:\Projects\Prototype-Project\Deps\Assimp\Libs;E:\Projects\Prototype-Project\Deps\GLEW\Libs;E:\Projects\Prototype-Project\Deps\Freetype\Libs;E:\Projects\Prototype-Project\Deps\DirectX\Lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;freetype271MT.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -510,12 +277,6 @@
     <ClInclude Include="include\Engine\Physics3D\RigidBody.h" />
     <ClInclude Include="include\Engine\Assets\Mesh.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
-    <ClInclude Include="include\Experimental\Stella\Animator.h" />
-    <ClInclude Include="include\Experimental\Stella\Layer.h" />
-    <ClInclude Include="include\Experimental\Stella\Renderable.h" />
-    <ClInclude Include="include\Experimental\Stella\Renderer.h" />
-    <ClInclude Include="include\Experimental\Stella\Sprite.h" />
-    <ClInclude Include="include\Experimental\Stella\SpriteSheet.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="include\Engine\Components\TransformComponent.h" />
     <ClInclude Include="include\Engine\ECS\ComponentDependency.h" />
@@ -551,8 +312,8 @@
     <ClInclude Include="include\Base\Utilities\Pool.h" />
     <ClInclude Include="include\Base\Utilities\Signal.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
-    <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\DXBC_Compiler.h" />
-    <ClInclude Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.h" />
+    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\DXBC_Compiler.h" />
+    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
@@ -579,9 +340,9 @@
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler\DXBC_Compiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler\XShaderCompiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\API\ShaderCompiler.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\DXBC_Compiler.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />
@@ -594,12 +355,6 @@
     <ClCompile Include="Source\Engine\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
-    <ClCompile Include="Source\Experimental\Stella\Animator.cpp" />
-    <ClCompile Include="Source\Experimental\Stella\Layer.cpp" />
-    <ClCompile Include="Source\Experimental\Stella\Renderable.cpp" />
-    <ClCompile Include="Source\Experimental\Stella\Renderer.cpp" />
-    <ClCompile Include="Source\Experimental\Stella\Sprite.cpp" />
-    <ClCompile Include="Source\Experimental\Stella\SpriteSheet.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />

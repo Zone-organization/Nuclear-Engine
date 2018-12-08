@@ -8,7 +8,7 @@ namespace NuclearEngine
 	{
 		void CameraPostProcess::Bake(const PostProcessDesc& Desc)
 		{
-			LLGL::TextureDescriptor ScreenTexDesc;
+		/*	LLGL::TextureDescriptor ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
 				ScreenTexDesc.Format = LLGL::Format::R16G16B16A16_FLOAT;
@@ -50,7 +50,7 @@ namespace NuclearEngine
 
 			LLGL::SamplerDesc Samplerdesc;
 			Samplerdesc.Filter = LLGL::TextureFilter::Point2D;
-			LLGL::Sampler::Create(&ScreenSampler, Samplerdesc);
+			LLGL::Sampler::Create(&ScreenSampler, Samplerdesc);*/
 		}
 	}
 }

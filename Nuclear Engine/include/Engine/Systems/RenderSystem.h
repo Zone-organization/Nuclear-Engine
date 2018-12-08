@@ -7,6 +7,7 @@
 #include <Engine\Components\Light.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
+#include <Engine\Graphics\Shader.h>
 #include <LLGL\Sampler.h>
 #include <vector>
 
@@ -40,8 +41,8 @@ namespace NuclearEngine
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
-			LLGL::Shader* GetVertexShader();
-			LLGL::Shader* GetPixelShader();
+			Graphics::Shader GetVertexShader();
+			Graphics::Shader GetPixelShader();
 
 			void BindShaders();
 			void BindConstantBuffers();
@@ -71,8 +72,8 @@ namespace NuclearEngine
 			void BakePixelShader();
 			void BakeVertexShader();
 
-			LLGL::Shader* VShader;
-			LLGL::Shader* PShader;
+			Graphics::Shader VShader;
+			Graphics::Shader PShader;
 			LLGL::Buffer* NE_Light_CB;
 
 			Components::CameraComponent* ActiveCamera;
@@ -95,8 +96,8 @@ namespace NuclearEngine
 			LLGL::Sampler* ScreenSampler;
 			LLGL::Texture* PostProcessTexture;
 			LLGL::RenderTarget* PostProcessRT;
-			LLGL::Shader* PostProcess_VShader;
-			LLGL::Shader* PostProcess_PShader;
+			Graphics::Shader PostProcess_VShader;
+			Graphics::Shader PostProcess_PShader;
 			Assets::Mesh PostProcessScreenQuad;
 		};
 

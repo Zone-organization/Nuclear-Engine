@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Engine/Graphics/API/ShaderCompiler.h>
+#include <Engine/Graphics/ShaderCompiler.h>
 
 #ifdef NE_COMPILE_XSHADERCOMPILER
-#include <Engine/Graphics/API/Shader_Types.h>
+#include <Engine/Graphics/ShaderTypes.h>
 
 namespace NuclearEngine
 {

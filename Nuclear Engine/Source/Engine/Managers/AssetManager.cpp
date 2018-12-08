@@ -1,6 +1,7 @@
 #include "Engine\Managers\AssetManager.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "..\..\ThirdParty\stb_image.h"
+#include <Engine\Graphics\Context.h>
 #include <Engine\Assets\Mesh.h>
 #include "AssimpImporter.h"
 #include <Base\Utilities\Hash.h>
@@ -36,8 +37,17 @@ namespace NuclearEngine {
 			}
 			LLGL::SrcImageDescriptor Data;
 
+			int texWidth = 0, texHeight = 0, texComponents = 0;
+			
+
 			//stbi_set_flip_vertically_on_load(Desc.FlipY_Axis);
-			Data.data = stbi_load(Path.c_str(), &Data.Width, &Data.Height, &Data.Components_Number, req_c);
+			Data.data = stbi_load(Path.c_str(), &texWidth, &texHeight, &texComponents, req_c);
+
+			// Set image buffer size
+			Data.dataSize = static_cast<std::size_t>(texWidth*texHeight*texComponents);
+
+			// Texture size
+			Desc.extent = { static_cast<std::uint32_t>(texWidth), static_cast<std::uint32_t>(texHeight), 1u };
 
 			return Data;
 		}
@@ -69,8 +79,7 @@ namespace NuclearEngine {
 		{
 			for (auto x : mImportedTextures)
 			{
-				
-				LLGL::Texture::Delete(&x.second.mTexture);
+				Graphics::Context::GetRenderer()->Release(*x.second.mTexture);
 			}
 			mImportedTextures.clear();
 			mHashedTexturesNames.clear();
@@ -89,6 +98,8 @@ namespace NuclearEngine {
 
 		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type,  LLGL::TextureDescriptor & Desc)
 		{
+			Assets::Texture Tex;
+
 			auto hashedname = Utilities::Hash(Path);
 
 			auto it = mImportedTextures.find(hashedname);
@@ -105,7 +116,7 @@ namespace NuclearEngine {
 				return Assets::Texture();
 			}
 
-			Data.HashedName = hashedname;
+			Tex.SetName(hashedname);
 
 			if (mSaveTextureNames)
 			{
@@ -114,9 +125,9 @@ namespace NuclearEngine {
 
 			Log.Info(std::string("[AssetManager] Loaded Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
 
-			Assets::Texture Tex;
 			Tex.SetUsageType(type);
-			LLGL::Texture::Create(&Tex.mTexture, Data, Desc);
+
+			Tex.mTexture = Graphics::Context::GetRenderer()->CreateTexture(Desc, &Data);
 
 			return mImportedTextures[hashedname] = Tex;
 		}

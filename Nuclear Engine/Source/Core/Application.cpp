@@ -3,6 +3,7 @@
 #include <Core\Engine.h>
 #include <Engine\Graphics\ImGui_Binding.h>
 #include <Engine\Graphics\Context.h>
+#pragma comment(lib,"LLGLD.lib")
 
 namespace NuclearEngine
 {
@@ -22,7 +23,7 @@ namespace NuclearEngine
 			MainWindow = LLGL::Window::Create(windowDesc);
 		
 
-			//return result;
+			return true;
 		}
 		void Application::Shutdown()
 		{			

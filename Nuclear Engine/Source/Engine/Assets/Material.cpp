@@ -15,11 +15,11 @@ namespace NuclearEngine
 		Material::~Material()
 		{
 		}
-		void Material::SetVertexShader(Graphics::Shader* vshader)
+		void Material::SetVertexShader(Graphics::Shader vshader)
 		{
 			mVShader = vshader;
 		}
-		void Material::SetPixelShader(Graphics::Shader* pshader)
+		void Material::SetPixelShader(Graphics::Shader pshader)
 		{
 			mPShader = pshader;
 			ParsePixelShader();
@@ -128,12 +128,12 @@ namespace NuclearEngine
 
 		void Material::ParsePixelShader()
 		{
-			if (mPShader)
+			if (mPShader.mShader)
 			{
 				mPSHaveMaterialCB = false;
 				//Parse Shader
 				PixelShaderTS.clear();
-				for (auto Tex : mPShader->Reflection.Textures)
+				for (auto Tex : mPShader.Reflection.Textures)
 				{
 					if (Tex.first.find("NE_Tex_") == 0)
 					{
@@ -164,8 +164,8 @@ namespace NuclearEngine
 				}
 
 				//Parse Material
-				auto MatCB = mPShader->Reflection.ConstantBuffers.find("NE_Material");
-				if (MatCB != mPShader->Reflection.ConstantBuffers.end())
+				auto MatCB = mPShader.Reflection.ConstantBuffers.find("NE_Material");
+				if (MatCB != mPShader.Reflection.ConstantBuffers.end())
 				{
 					mCbufferRef = MatCB->second;
 					mPSHaveMaterialCB = true;

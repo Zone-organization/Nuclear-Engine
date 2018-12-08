@@ -1,6 +1,7 @@
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
-#include <Engine/Graphics/API/ShaderCompiler.h>
+#include <Engine/Graphics/ShaderCompiler.h>
+
 namespace NuclearEngine
 {
 	namespace Managers
@@ -11,9 +12,9 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		LLGL::Shader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
+		Graphics::Shader ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
 		{
-			LLGL::Shader* result;
+			Graphics::Shader result;
 			std::vector<std::string> defines;
 
 			if (desc.InTexCoords)
@@ -27,25 +28,35 @@ namespace NuclearEngine
 			if (desc.OutFragPos)
 				defines.push_back("NE_OUT_FRAG_POS");
 
-			LLGL::Shader*::Create(
-				&result,
-				LLGL::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
-					LLGL::ShaderType::Vertex));
+
+			auto shadersource = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
+			
+			LLGL::ShaderDescriptor sdesc;
+			sdesc.source = shadersource.c_str();
+			sdesc.sourceSize = shadersource.size();
+			sdesc.sourceType = LLGL::ShaderSourceType::CodeString;
+			sdesc.type = LLGL::ShaderType::Vertex;
+			result.mShader = Graphics::Context::GetRenderer()->CreateShader(sdesc);
 
 			return result;
 		}
-		LLGL::Shader* ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
+		Graphics::Shader ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
 		{
-			LLGL::Shader* result;
+			Graphics::Shader result;
 			std::vector<std::string> defines;
 
 			if (desc.OutputTexture)
 				defines.push_back("NE_OUTPUT_TEXTURE");
+			
+			auto shadersource = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
 
-			LLGL::Shader*::Create(
-				&result,
-				LLGL::CompileShader(Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
-					LLGL::ShaderType::Pixel));
+			LLGL::ShaderDescriptor sdesc;
+			sdesc.source = shadersource.c_str();
+			sdesc.sourceSize = shadersource.size();
+			sdesc.sourceType = LLGL::ShaderSourceType::CodeString;
+			sdesc.type = LLGL::ShaderType::Fragment;
+			result.mShader = Graphics::Context::GetRenderer()->CreateShader(sdesc);
+
 			return result;
 		}
 	}

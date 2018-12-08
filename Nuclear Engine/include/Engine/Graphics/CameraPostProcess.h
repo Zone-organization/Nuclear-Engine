@@ -1,5 +1,4 @@
 #pragma once
-#include <Engine/Graphics/API/RenderAPI.h>
 #include <Engine\Assets\Mesh.h>
 
 namespace NuclearEngine
@@ -20,9 +19,9 @@ namespace NuclearEngine
 			void Bake(const PostProcessDesc& desc);
 			LLGL::Sampler ScreenSampler;
 			LLGL::Texture* PostProcessTexture;
-			LLGL::RenderTarget PostProcessRT;
-			LLGL::Shader* PostProcess_VShader;
-			LLGL::Shader* PostProcess_PShader;
+			LLGL::RenderTarget* PostProcessRT;
+			Graphics::Shader PostProcess_VShader;
+			Graphics::Shader PostProcess_PShader;
 			Assets::Mesh PostProcessScreenQuad;
 		};
 	}

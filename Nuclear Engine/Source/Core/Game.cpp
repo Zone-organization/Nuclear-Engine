@@ -1,7 +1,5 @@
 #include <Core/Game.h>
 #include <Core/Application.h>
-#include <Engine/Graphics/API/Context.h>
-
 
 namespace NuclearEngine {
 	namespace Core {
@@ -42,7 +40,6 @@ namespace NuclearEngine {
 		}
 		void Game::LoadFinishUp()
 		{
-			LLGL::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
 			Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 			Core::Application::Display();
 		}

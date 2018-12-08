@@ -57,7 +57,7 @@ namespace NuclearEngine
 									type = ShaderVariableType::Bool;
 									break;
 								case D3D_SVT_INT:
-								case D3D_SVT_Uint32:
+								case D3D_SVT_UINT:
 									type = ShaderVariableType::Int1;
 									break;
 								case D3D_SVT_FLOAT:
@@ -72,7 +72,7 @@ namespace NuclearEngine
 							{
 								switch (VarTypeDesc.Type)
 								{
-								case D3D_SVT_Uint32:
+								case D3D_SVT_UINT:
 								case D3D_SVT_INT:
 								{
 									switch (VarTypeDesc.Columns)
@@ -260,7 +260,7 @@ namespace NuclearEngine
 					{
 						shadermodel = "vs_4_1";
 					}
-					else if (type == LLGL::ShaderType::Pixel)
+					else if (type == LLGL::ShaderType::Fragment)
 					{
 						shadermodel = "ps_4_1";
 					}

@@ -19,7 +19,8 @@ namespace NuclearEngine
 		{
 
 			position = __position;
-			LLGL::Buffer*::Create(&ConstantBuffer, "NE_Camera", sizeof(_CameraBuffer));
+
+			ConstantBuffer = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(sizeof(_CameraBuffer)));
 		}
 	
 		CameraComponent::~CameraComponent()
@@ -47,7 +48,7 @@ namespace NuclearEngine
 			_CameraBuffer.View = Math::lookAt(position, position + Front, Up);
 
 			UpdateMatricesOnly();
-			ConstantBuffer.Update(&_CameraBuffer, sizeof(_CameraBuffer));
+			Graphics::Context::GetRenderer()->WriteBuffer(*ConstantBuffer, 0, &_CameraBuffer, sizeof(_CameraBuffer));
 		}
 		void CameraComponent::UpdateMatricesOnly()
 		{

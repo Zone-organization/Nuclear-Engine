@@ -1,12 +1,9 @@
 #include "Engine\Graphics\Skybox.h"
-#include <Engine\Graphics\API\Context.h>
-#include <Engine/Graphics/API/ShaderCompiler.h>
+#include <Engine\Graphics\Context.h>
+#include <Engine/Graphics/ShaderCompiler.h>
 #include <Engine\Managers\AssetManager.h>
-#include <Engine/Graphics/API/Buffer_Types.h>
-#include <Engine/Graphics/API/RenderStates_Types.h>
-#include <Engine/Graphics/API/VertexFormat.h>
 #include <Engine\Components\CameraComponent.h>
-#include <Engine/Graphics/API/IndexBuffer.h>
+#include <LLGL\Buffer.h>
 #include <Core/FileSystem.h>
 
 namespace NuclearEngine
@@ -68,80 +65,97 @@ namespace NuclearEngine
 
 		void Skybox::Initialize(Components::CameraComponent * Camera, LLGL::Texture* data)
 		{
-			LLGL::Shader*::Create(&mVShader, LLGL::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl").c_str(), LLGL::ShaderType::Vertex));
-			LLGL::Shader*::Create(&mPShader, LLGL::CompileShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl").c_str(), LLGL::ShaderType::Pixel));
 
-			mVShader.SetConstantBuffer(&Camera->GetCBuffer());
+			auto shadersource = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl");
 
-			LLGL::BufferDescriptor VDesc;
-			VDesc.Data = skyboxVertices;
-			VDesc.Size = sizeof(skyboxVertices);
-			VDesc.UsageType = LLGL::BufferUsage::Static;
+			LLGL::ShaderDescriptor sdesc;
+			sdesc.source = shadersource.c_str();
+			sdesc.sourceSize = shadersource.size();
+			sdesc.sourceType = LLGL::ShaderSourceType::CodeString;
+			sdesc.type = LLGL::ShaderType::Vertex;
+			mVShader.mShader = Graphics::Context::GetRenderer()->CreateShader(sdesc);
 
-			LLGL::Buffer*::Create(&mVBuffer, VDesc);
+			shadersource = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.ps.hlsl");
+			sdesc.type = LLGL::ShaderType::Fragment;
+			mPShader.mShader = Graphics::Context::GetRenderer()->CreateShader(sdesc);
+
+			//mVShader.SetConstantBuffer(&Camera->GetCBuffer());
 
 			LLGL::VertexFormat vertexBufferLayout;
-			vertexBufferLayout.AppendAttribute("POSITION", 0, LLGL::Format::RGB32Float);
-			mVBuffer.SetVertexFormat(&vertexBufferLayout, &mVShader);
+			vertexBufferLayout.AppendAttribute({ "POSITION", LLGL::Format::RGB32Float });
 
-			LLGL::SamplerDesc Samplerdesc;
-			Samplerdesc.Filter = LLGL::TextureFilter::Linear2D;
-			Samplerdesc.WrapU = LLGL::TextureWrap::ClampToEdge;
-			Samplerdesc.WrapV = LLGL::TextureWrap::ClampToEdge;
-			Samplerdesc.WrapW = LLGL::TextureWrap::ClampToEdge;
+			LLGL::BufferDescriptor VDesc;
+			VDesc.type = LLGL::BufferType::Vertex;
+			VDesc.size = sizeof(skyboxVertices);
+			VDesc.vertexBuffer.format = vertexBufferLayout;
 
-			LLGL::Sampler::Create(&mSampler, Samplerdesc);
+			mVBuffer = Graphics::Context::GetRenderer()->CreateBuffer(VDesc, skyboxVertices);
 
-			LLGL::DepthStencilStateDesc DS_State;
-			DS_State.DepthEnabled = true;
-			DS_State.DepthFunc = LLGL::Comparison_Func::LESS_EQUAL;
-			DS_State.DepthMaskEnabled = false;
-			LLGL::DepthStencilState::Create(&mDSState, DS_State);
+
+
+			LLGL::SamplerDescriptor Samplerdesc;
+			Samplerdesc.minFilter = Samplerdesc.minFilter = Samplerdesc.mipMapFilter = LLGL::SamplerFilter::Linear;
+			Samplerdesc.addressModeU = LLGL::SamplerAddressMode::Clamp;
+			Samplerdesc.addressModeV = LLGL::SamplerAddressMode::Clamp;
+			Samplerdesc.addressModeW = LLGL::SamplerAddressMode::Clamp;
+
+			mSampler = Graphics::Context::GetRenderer()->CreateSampler(Samplerdesc);
+
+			mDepthState.testEnabled = true;
+			mDepthState.writeEnabled = false;
+			mDepthState.compareOp = LLGL::CompareOp::LessEqual;
 		}
 
 		void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<LLGL::SrcImageDescriptor, 6>& data)
 		{
 			ReleaseTex = true;
-			mTexture.Delete(&mTexture);
+			Graphics::Context::GetRenderer()->Release(*mTexture);
 
 			LLGL::TextureDescriptor Desc;
-			Desc.Format = LLGL::Format::R8G8B8A8_UNORM;
-			Desc.Type = LLGL::TextureType::TextureCube;
-			Desc.GenerateMipMaps = false;
-			LLGL::Texture::Create(&mTexture, data, Desc);
+			Desc.format = LLGL::Format::RGBA8UNorm;
+			Desc.type = LLGL::TextureType::TextureCube;
+			//Desc.GenerateMipMaps = false;
+
+			mTexture = Graphics::Context::GetRenderer()->CreateTexture(Desc);
+
+
+			//LLGL_FIXME
+			//LLGL::Texture::Create(&mTexture, data, Desc);
+
+
 			return Initialize(Camera, mTexture);
 		}
 		void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<std::string, 6>& paths)
 		{
 			ReleaseTex = true;
 			LLGL::TextureDescriptor Desc;
-			Desc.Format = LLGL::Format::R8G8B8A8_UNORM;
-			Desc.Type = LLGL::TextureType::Texture2D;
+			Desc.format = LLGL::Format::RGBA8UNorm;
+			Desc.type = LLGL::TextureType::Texture2D;
 			return Initialize(Camera, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));
 		}
 
 		void Skybox::Release()
 		{
-			LLGL::Shader*::Delete(&mVShader);
-			LLGL::Shader*::Delete(&mPShader);
-			LLGL::Buffer*::Delete(&mVBuffer);
-			LLGL::Sampler::Delete(&mSampler);
-			LLGL::DepthStencilState::Delete(&mDSState);
+			Graphics::Context::GetRenderer()->Release(*mVShader.mShader);
+			Graphics::Context::GetRenderer()->Release(*mPShader.mShader);
+			Graphics::Context::GetRenderer()->Release(*mVBuffer);
+			Graphics::Context::GetRenderer()->Release(*mSampler);
+
 			if (ReleaseTex)
 			{
-				LLGL::Texture::Delete(&mTexture);
+				Graphics::Context::GetRenderer()->Release(*mTexture);
 			}
 		}
 
 		void Skybox::Render()
 		{
-			mVBuffer.Bind();
+		/*	mVBuffer.Bind();
 			mDSState.Bind();
 			mVShader.Bind();
 			mPShader.Bind();
 			mTexture.PSBind(0);
 			mSampler.PSBind(0);
-			LLGL::Context::Draw(36);
+			LLGL::Context::Draw(36);*/
 		}
 
 	}

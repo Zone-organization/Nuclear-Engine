@@ -1,6 +1,7 @@
 #pragma once
 #include <LLGL/LLGL.h>
 #include <Base\NE_Common.h>
+#include <Engine\Graphics\Shader.h>
 
 namespace NuclearEngine
 {
@@ -24,12 +25,11 @@ namespace NuclearEngine
 			void Render();
 
 		private:
-			LLGL::Shader* mVShader;
-			LLGL::Shader* mPShader;
+			Graphics::Shader mVShader;
+			Graphics::Shader mPShader;
 			LLGL::Buffer* mVBuffer;
-			LLGL::Sampler mSampler;
+			LLGL::Sampler* mSampler;
 			LLGL::DepthDescriptor mDepthState;
-			LLGL::StencilDescriptor mStencilState;
 			LLGL::Texture* mTexture;
 			bool ReleaseTex = false;
 		};

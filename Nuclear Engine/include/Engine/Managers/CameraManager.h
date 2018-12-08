@@ -1,8 +1,5 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine/Graphics/API/VertexShader.h>
-#include <Engine/Graphics/API/PixelShader.h>
-#include <Engine/Graphics/API/ConstantBuffer.h>
 
 namespace NuclearEngine
 {
@@ -18,7 +15,7 @@ namespace NuclearEngine
 
 
 
-			LLGL::Buffer** GetCameraCB();
+			//LLGL::Buffer** GetCameraCB();
 
 		};
 	}

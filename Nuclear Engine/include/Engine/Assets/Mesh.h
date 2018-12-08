@@ -26,7 +26,7 @@ namespace NuclearEngine {
 			Note:
 				We only require shader to validate the input layout but you are free to render the model with any shader you want.
 			*/
-			void Initialize(Graphics::Shader* _shader);
+			void Initialize(Graphics::Shader _shader);
 			void Delete();
 
 			static void CreateCube(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
@@ -51,7 +51,7 @@ namespace NuclearEngine {
 				SubMesh(SubMeshData data);
 				SubMesh(const SubMesh& obj);
 				~SubMesh();
-				void Initialize(Graphics::Shader* _shader);
+				void Initialize(Graphics::Shader _shader);
 				void Delete();
 
 				SubMeshData data;

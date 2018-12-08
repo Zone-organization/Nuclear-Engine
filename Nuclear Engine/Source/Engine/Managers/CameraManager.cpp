@@ -4,11 +4,11 @@ namespace NuclearEngine
 {
 	namespace Managers 
 	{
-		LLGL::Buffer* NECamera;
+		/*LLGL::Buffer* NECamera;
 
 		LLGL::Buffer* * CameraManager::GetCameraCB()
 		{
 			return &NECamera;
-		}
+		}*/
 	}
 }
