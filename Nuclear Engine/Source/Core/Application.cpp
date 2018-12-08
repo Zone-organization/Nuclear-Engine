@@ -19,6 +19,7 @@ namespace NuclearEngine
 			MainWindow = &static_cast<LLGL::Window&>(Graphics::Context::GetRenderContext()->GetSurface());
 
 			MainWindow->SetTitle(Desc.Title);
+			MainWindow->Show();
 
 			return true;
 		}
@@ -34,8 +35,8 @@ namespace NuclearEngine
 		}
 	
 		bool Application::PollEvents()
-		{    
-			ShouldClose = MainWindow->ProcessEvents();
+		{
+			ShouldClose = !MainWindow->ProcessEvents();
 
 			return ShouldClose;
 		}
