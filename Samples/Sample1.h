@@ -1,5 +1,33 @@
 #pragma once
 #include "Common.h"
+class Sample1 : public Core::Game
+{
+public:
+	Sample1()
+	{
+	}
+
+
+	void Load()
+	{
+	
+		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
+		Core::Application::Display();
+	}
+
+
+	void Render(float dt) override
+	{
+
+		//Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+	
+
+		//ImGui::Render();
+		//Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
+		Graphics::Context::PresentFrame();
+	}
+};
+/*
 //#include <Engine\Graphics\ImGui_Renderer.h>
 
 class Sample1 : public Core::Game
@@ -374,3 +402,4 @@ public:
 		Graphics::API::Context::PresentFrame();
 	}
 };
+*/

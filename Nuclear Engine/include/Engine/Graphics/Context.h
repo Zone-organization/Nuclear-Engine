@@ -2,15 +2,20 @@
 #include <Base\NE_Common.h>
 #include <LLGL/LLGL.h>
 #include <LLGL/Utility.h>
+#include <Core/ApplicationDesc.h>
 
 namespace NuclearEngine
 {
 	namespace Graphics 
 	{
-		class Context
+		class NEAPI Context
 		{
 		public:
+			static bool Initialize(const Core::ApplicationDesc & Desc, LLGL::Window* window);
+
 			static void PostInitialize();
+
+			static void PresentFrame();
 
 			static bool IsOpenGL();			// Returns ture if OpenGL is used as rendering API.
 

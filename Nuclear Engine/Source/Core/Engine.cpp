@@ -51,8 +51,8 @@ namespace NuclearEngine {
 			//Graphics::ImGui_Binding::Initialize(Application::MainWindow);
 			//Graphics::ImGui_Renderer::Initialize();
 
-			if(desc.InitAudioEngine)
-				Audio::AudioEngine::Initialize();
+			//if(desc.InitAudioEngine)
+			//	Audio::AudioEngine::Initialize();
 
 			GamePtr = &Defaultgame;
 			return true;
@@ -108,7 +108,7 @@ namespace NuclearEngine {
 			Base::Utilities::Timer timer;
 			
 			//Main Game Loop
-			while (!Core::Application::ShouldClose)
+			while (!Core::Application::PollEvents())
 			{
 				// per-frame time logic (ensure speed is constant through all platforms)
 				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
@@ -185,20 +185,6 @@ namespace NuclearEngine {
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)
-#endif
-			Log.Info("[Engine] Built-In Renderer");
-
-
-#ifdef 	NE_USE_CORE_OPENGL
-			Log.Info(": OpenGL 4.5 Core\n");
-#endif
-
-#ifdef 	NE_USE_DIRECTX11
-			Log.Info(": DirectX 11\n");
-#endif
-
-#ifdef 	NE_USE_RUNTIME_RENDER_API
-			Log.Info("s: OpenGL 4.5 Core & DirectX 11\n");
 #endif
 
 #ifndef FMOD_NOT_INCLUDED

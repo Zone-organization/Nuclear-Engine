@@ -8,12 +8,6 @@ namespace NuclearEngine
 {
 	namespace Graphics
 	{
-		enum class ShaderType {
-			Vertex,
-			Geometry,
-			Pixel
-		};
-
 		enum class ShaderVariableType
 		{
 			Unknown,
@@ -72,9 +66,9 @@ namespace NuclearEngine
 #ifdef NE_COMPILE_D3DCOMPILER
 			DXBC_BLOB DXBC_SourceCode = DXBC_BLOB();
 #endif
-#ifdef NE_COMPILE_CORE_OPENGL
+#ifdef NE_COMPILE_XSHADERCOMPILER
 			std::string GLSL_SourceCode;
-			bool convertedshaderrowmajor = false;
+			bool ConvertedShaderRowMajor = false;
 #endif
 			ShaderReflection Reflection;
 

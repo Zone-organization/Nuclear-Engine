@@ -43,51 +43,6 @@ Building options:
 #error PhysX isnot available
 #endif
 
-#ifdef NE_USE_CORE_OPENGL
-#define NE_COMPILE_CORE_OPENGL
-#define NE_COMPILE_XSHADERCOMPILER
-#endif
-
-#ifdef NE_USE_VULKAN
-#define NE_COMPILE_VULKAN
-#define NE_COMPILE_XSHADERCOMPILER
-#endif
-
-#ifdef NE_USE_DIRECTX11
-#define NE_COMPILE_DIRECTX11
-#define NE_COMPILE_D3DCOMPILER
-#endif
-
-#ifdef NE_USE_DIRECTX12
-#define NE_COMPILE_DIRECTX12
-#define NE_COMPILE_D3DCOMPILER
-#endif
-
-#define NE_USE_RUNTIME_RENDER_API
-#define NE_USE_RENDER_API_DEBUG_LAYER
-#ifdef NE_USE_RUNTIME_RENDER_API
-
-#ifdef NE_USE_CORE_OPENGL
-#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
-#endif
-
-#ifdef NE_USE_DIRECTX11
-#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
-#endif
-
-#ifdef NE_COMPILE_DIRECTX12
-#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
-#endif
-
-#ifdef NE_COMPILE_VULKAN
-#error "Nuclear Engine: Cannot use seperate renderers with runtime renderer!"
-#endif
-
-#define NE_COMPILE_CORE_OPENGL
-#define NE_COMPILE_DIRECTX11
-#define NE_COMPILE_DIRECTX12
-#define NE_COMPILE_VULKAN
 #define NE_COMPILE_D3DCOMPILER
 #define NE_COMPILE_XSHADERCOMPILER
 
-#endif

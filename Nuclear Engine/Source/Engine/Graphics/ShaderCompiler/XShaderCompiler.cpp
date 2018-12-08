@@ -161,13 +161,13 @@ namespace NuclearEngine
 					inputDesc.entryPoint = "main";
 					switch (type)
 					{
-					case ShaderType::Vertex:
+					case LLGL::ShaderType::Vertex:
 						inputDesc.shaderTarget = Xsc::ShaderTarget::VertexShader;
 						break;
-					case ShaderType::Geometry:
+					case LLGL::ShaderType::Geometry:
 						inputDesc.shaderTarget = Xsc::ShaderTarget::GeometryShader;
 						break;
-					case ShaderType::Pixel:
+					case LLGL::ShaderType::Fragment:
 						inputDesc.shaderTarget = Xsc::ShaderTarget::FragmentShader;
 						break;
 					default:
@@ -181,7 +181,7 @@ namespace NuclearEngine
 					outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL450;
 
 					Xsc::Reflection::ReflectionData reflection;
-					if (result->convertedshaderrowmajor == true)
+					if (result->ConvertedShaderRowMajor == true)
 					{
 						outputDesc.options.rowMajorAlignment = true;
 					}

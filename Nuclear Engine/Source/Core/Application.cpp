@@ -3,62 +3,40 @@
 #include <Core\Engine.h>
 #include <Engine\Graphics\ImGui_Binding.h>
 #include <Engine\Graphics\Context.h>
-#pragma comment(lib,"LLGLD.lib")
+#pragma comment(lib,"LLGL.lib")
 
 namespace NuclearEngine
 {
 	namespace Core
 	{		
 		bool Application::ShouldClose = false;
+		LLGL::Window* Application::MainWindow = nullptr;
 
 		bool Application::Start(const ApplicationDesc & Desc)
 		{
-			LLGL::WindowDescriptor windowDesc;
-			windowDesc.title = Desc.Title;
-			windowDesc.visible = true;
-			windowDesc.centered = true;
-			windowDesc.size.width = Desc.WindowWidth;
-			windowDesc.size.height = Desc.WindowHeight;
-			
-			MainWindow = LLGL::Window::Create(windowDesc);
-		
+			//Initialize Context
+			Graphics::Context::Initialize(Desc, MainWindow);
+			auto& window = static_cast<LLGL::Window&>(Graphics::Context::GetRenderContext()->GetSurface());
+			//MainWindow = &window;
+
+			window.SetTitle(Desc.Title);
 
 			return true;
 		}
 		void Application::Shutdown()
-		{			
+		{
+			//MainWindow->
 			//MainWindow->close();
 			//delete MainWindow;
 		}
-		void Application::Display()
+		void Application::Display(bool show)
 		{
-			///MainWindow->setVisible(true);
+			MainWindow->Show(show);
 		}
-		void Application::SwapBuffers()
-		{
-			//LLGL::Context::SwapBuffers();
-		}
+	
 		bool Application::PollEvents()
 		{    
-			// handle events
-		/*	sf::Event wevent;
-			while (MainWindow->pollEvent(wevent))
-			{
-				Graphics::ImGui_Binding::ProcessEvent(wevent);
-
-				if (wevent.type == sf::Event::Closed)
-				{
-					ShouldClose = true;
-				}
-				else if (wevent.type == sf::Event::Resized)
-				{
-					Engine::GetGame()->OnWindowResize(wevent.size.width, wevent.size.height);
-				}
-				else if (wevent.type == sf::Event::MouseMoved)
-				{
-					Engine::GetGame()->OnMouseMovement(wevent.mouseMove.x, wevent.mouseMove.y);
-				}
-			}*/
+			ShouldClose = MainWindow->ProcessEvents();
 
 			return ShouldClose;
 		}

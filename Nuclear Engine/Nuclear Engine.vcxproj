@@ -23,7 +23,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -72,8 +72,8 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX64\;..\..\Nuclear-Deps\Bin\DebugX64\;F:\Zone\LLGL\bin\build\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;SFML.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX64\;..\..\Nuclear-Deps\Bin\DebugX64\;..\..\LLGL\Bin\DebugX64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -97,8 +97,8 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX64\;..\..\Nuclear-Deps\;..\..\Nuclear-Deps\Bin\ReleaseX64\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;SFML.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX64\;..\..\Nuclear-Deps\;..\..\Nuclear-Deps\Bin\ReleaseX64\;..\..\LLGL\Bin\ReleaseX64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
