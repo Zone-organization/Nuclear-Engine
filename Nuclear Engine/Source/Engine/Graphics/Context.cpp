@@ -101,6 +101,11 @@ namespace NuclearEngine
 			Log.Info("[Context] Vendor:           " + info.vendorName + "\n");
 			Log.Info("[Context] Shading Language: " + info.shadingLanguageName + "\n");
 
+			return true;
+		}
+
+		void Context::PostInitialize()
+		{
 			if (gRenderer->GetRendererID() == LLGL::RendererID::OpenGL)
 				OpenGL = true;
 			else if (gRenderer->GetRendererID() == LLGL::RendererID::Vulkan)
@@ -113,7 +118,7 @@ namespace NuclearEngine
 			else if (gRenderer->GetRendererID() == LLGL::RendererID::Metal)
 				Metal = true;
 
-			return true;
+			return;
 		}
 
 		void Context::PresentFrame()

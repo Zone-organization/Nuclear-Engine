@@ -25,7 +25,9 @@ namespace NuclearEngine
 		}
 		void Application::Shutdown()
 		{
-			
+			//MainWindow->
+			//MainWindow->close();
+			//delete MainWindow;
 		}
 		void Application::Display(bool show)
 		{

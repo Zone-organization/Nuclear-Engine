@@ -60,7 +60,7 @@ namespace NuclearEngine {
 
 		void Engine::Shutdown()
 		{
-			Log.Info("[Engine] Shutting Down Engine.");
+			Log.Info("[Engine] Shutting Down Engine.\n");
 
 			GamePtr = &Defaultgame;
 			Core::Application::Shutdown();
@@ -71,13 +71,13 @@ namespace NuclearEngine {
 		void Engine::RunGame(Game * _YourGame)
 		{
 			GamePtr = _YourGame;
-			Log.Info("[Engine] Running Game.");
+			Log.Info("[Engine] Running Game.\n");
 
 			if (GamePtr->GetGameInfo() != nullptr)
 			{
-				Log.Info("[Engine] Game Name: " + std::string(GamePtr->GetGameInfo()->Name));
-				Log.Info("[Engine] Game Version: " + std::string(GamePtr->GetGameInfo()->Version));
-				Log.Info("[Engine] Game Developer: " + std::string(GamePtr->GetGameInfo()->Developer));
+				Log.Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetGameInfo()->Name) + "\n"));
+				Log.Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetGameInfo()->Version) + "\n"));
+				Log.Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetGameInfo()->Developer) + "\n"));
 			}
 
 			SetState(Engine::State::Initializing);
@@ -148,48 +148,54 @@ namespace NuclearEngine {
 					break;
 			}
 
-			Log.Info("[Engine] Game state changed to " + name);
+			Log.Info("[Engine] Game state changed to " + name + "\n");
 		}
 
 		void PrintIntroLog()
 		{
-			Log.Initialize();
-			Log.Info("[-Nuclear Engine-]");
-			Log.Info("[Engine] Starting Engine...");
-			Log.Info("[Engine] Engine Build: " + MajorVersion + '.' + MinorVersion + "  On: " + __DATE__ + "  At: " + __TIME__);
+			Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
+			Log.Info("[Engine] Starting Engine...\n");
+			Log.Info("[Engine] Engine Build: ");
+			Log.Info(MajorVersion);
+			Log.Info(".");
+			Log.Info(MinorVersion);
+			Log.Info("  On: ");
+			Log.Info(__DATE__);
+			Log.Info("  At: ");
+			Log.Info(__TIME__);
+			Log.EndLine();
 
-			std::string EngineOS("[Engine] Built For: ");
+			Log.Info("[Engine] Built For: ");
 
 #ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
-			EngineOS + "Windows-PC 32 Bit";
+			Log.Info("Windows-PC 32 Bit");
 #endif
 
 #ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
-			EngineOS + "Windows-PC 64 bit";
+			Log.Info("Windows-PC 64 bit");
 #endif
 
 #ifdef 	_DEBUG
-			EngineOS + "  [DEBUG Build]";
+			Log.Info("  [DEBUG Build]\n");
 #endif
 
 #ifdef 	NDEBUG
-			EngineOS + "  [RELEASE Build]";
+			Log.Info("  [RELEASE Build]\n");
 #endif
-			Log.Info(EngineOS);
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)
 #endif
 
 #ifndef FMOD_NOT_INCLUDED
-			Log.Info("[Engine] Built With FMOD AudioEngine");
+			Log.Info("[Engine] Built With FMOD AudioEngine\n");
 #else
-			Log.Warning("[Engine] Engine built without FMOD AudioEngine.");
+			Log.Warning("[Engine] Engine built without FMOD AudioEngine.\n");
 #endif
 #ifndef PHYSX_NOT_INCLUDED
-			Log.Info("[Engine] Built With NVIDIA PhysX");
+			Log.Info("[Engine] Built With NVIDIA PhysX\n");
 #else
-			Log.Warning("[Engine] Engine built without NVIDIA PhysX.");
+			Log.Warning("[Engine] Engine built without NVIDIA PhysX.\n");
 #endif
 		}
 
