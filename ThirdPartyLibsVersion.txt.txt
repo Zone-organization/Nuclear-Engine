@@ -1,1 +1,2 @@
 -IMGUI 1.65
+-spdlog 1.2.1 
