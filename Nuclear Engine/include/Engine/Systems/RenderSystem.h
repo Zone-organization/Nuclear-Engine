@@ -37,7 +37,6 @@ namespace NuclearEngine
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc(), Components::CameraComponent* camera = nullptr);
 			~RenderSystem();
 
-			void Initialize();
 			void BakePipelines();
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::CameraComponent* camera);

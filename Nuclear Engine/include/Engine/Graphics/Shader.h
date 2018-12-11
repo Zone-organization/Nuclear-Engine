@@ -13,6 +13,7 @@ namespace NuclearEngine
 		public:
 			LLGL::Shader* mShader;
 			ShaderReflection Reflection;
+			LLGL::VertexFormat mVSFormat;
 		};
 	}
 }

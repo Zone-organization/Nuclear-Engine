@@ -20,15 +20,12 @@ namespace NuclearEngine
 		RenderSystem::~RenderSystem()
 		{
 		}
-		void RenderSystem::Initialize()
-		{
-		}
 		void RenderSystem::BakePipelines()
 		{  
 			// Create shader program which is used as composite
 			LLGL::ShaderProgramDescriptor shaderProgramDesc;
 			{
-				//shaderProgramDesc.vertexFormats = { VShader.mShader };
+				shaderProgramDesc.vertexFormats = { VShader.mVSFormat };
 				shaderProgramDesc.vertexShader = VShader.mShader;
 				shaderProgramDesc.fragmentShader = PShader.mShader;
 			}
@@ -37,20 +34,8 @@ namespace NuclearEngine
 			// Link shader program and check for errors
 			if (shaderProgram->HasErrors())
 				throw std::runtime_error(shaderProgram->QueryInfoLog());
-
-
-			// Create pipeline layout
-			LLGL::PipelineLayoutDescriptor layoutDesc;
-			{
-				layoutDesc.bindings =
-				{
-					LLGL::BindingDescriptor { LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 0 },
-					LLGL::BindingDescriptor { LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 1 },
-				};
-			}
-			PipelineLayout = Graphics::Context::GetRenderer()->CreatePipelineLayout(layoutDesc);
-			//shaderProgram->QueryReflectionDesc();
-
+			
+		
 			// Create graphics pipeline
 			LLGL::GraphicsPipelineDescriptor pipelineDesc;
 			{
@@ -157,15 +142,32 @@ namespace NuclearEngine
 		{
 			BakeVertexShader();
 			BakePixelShader();
+			BakePipelines();
 		}
 		void RenderSystem::BakePixelShader()
 		{
 			std::vector<std::string> defines;
+			LLGL::PipelineLayoutDescriptor layoutDesc;
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 0 });
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 1 });
+
 
 			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true; }
 			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
 			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  PSDirty = true; }
-			if (Desc.NormalMaps == true) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+			if (Desc.NormalMaps == true) 
+			{ 
+				defines.push_back("NE_USE_NORMAL_MAPS");
+				layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 2 });
+			}
+
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 0 });
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 1 });
+
+			if (Desc.NormalMaps == true)
+			{
+				layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 2 });
+			}
 
 			if (PSDirty = true)
 			{
@@ -189,6 +191,8 @@ namespace NuclearEngine
 				//this->PShader.SetConstantBuffer(&this->NE_Light_CB);
 				PSDirty = false;
 			}
+
+			PipelineLayout = Graphics::Context::GetRenderer()->CreatePipelineLayout(layoutDesc);
 		}
 		void RenderSystem::BakeVertexShader()
 		{

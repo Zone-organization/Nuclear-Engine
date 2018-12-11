@@ -20,7 +20,7 @@ struct PixelInputType
 Texture2D NE_Tex_Diffuse1 : register(t0);
 Texture2D NE_Tex_Specular1 : register(t1);
 #ifdef NE_USE_NORMAL_MAPS
-Texture2D NE_Tex_Normal1 : register(t3);
+Texture2D NE_Tex_Normal1 : register(t2);
 #endif
 
 SamplerState NE_Diffuse1_Sampler : register(s0);
