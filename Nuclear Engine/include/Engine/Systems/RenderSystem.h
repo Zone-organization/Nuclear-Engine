@@ -37,6 +37,8 @@ namespace NuclearEngine
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc(), Components::CameraComponent* camera = nullptr);
 			~RenderSystem();
 
+			void Initialize();
+			void BakePipelines();
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
@@ -74,7 +76,10 @@ namespace NuclearEngine
 
 			Graphics::Shader VShader;
 			Graphics::Shader PShader;
-			LLGL::Buffer* NE_Light_CB;
+			LLGL::ShaderProgram* ShaderProgram;
+			LLGL::Buffer* NE_Light_CB = nullptr;
+			LLGL::PipelineLayout*   PipelineLayout = nullptr;
+			LLGL::GraphicsPipeline* Pipeline = nullptr;
 
 			Components::CameraComponent* ActiveCamera;
 

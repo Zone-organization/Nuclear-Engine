@@ -101,11 +101,6 @@ namespace NuclearEngine
 			Log.Info("[Context] Vendor:           " + info.vendorName + "\n");
 			Log.Info("[Context] Shading Language: " + info.shadingLanguageName + "\n");
 
-			return true;
-		}
-
-		void Context::PostInitialize()
-		{
 			if (gRenderer->GetRendererID() == LLGL::RendererID::OpenGL)
 				OpenGL = true;
 			else if (gRenderer->GetRendererID() == LLGL::RendererID::Vulkan)
@@ -118,7 +113,14 @@ namespace NuclearEngine
 			else if (gRenderer->GetRendererID() == LLGL::RendererID::Metal)
 				Metal = true;
 
-			return;
+
+			// Get command queue to record and submit command buffers
+			gCommandQueue = gRenderer->GetCommandQueue();
+
+			// Create command buffer to submit subsequent graphics commands to the GPU
+			gCommands = gRenderer->CreateCommandBuffer();
+
+			return true;
 		}
 
 		void Context::PresentFrame()

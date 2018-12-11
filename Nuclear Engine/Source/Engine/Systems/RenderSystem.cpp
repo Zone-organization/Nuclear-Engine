@@ -20,6 +20,46 @@ namespace NuclearEngine
 		RenderSystem::~RenderSystem()
 		{
 		}
+		void RenderSystem::Initialize()
+		{
+		}
+		void RenderSystem::BakePipelines()
+		{  
+			// Create shader program which is used as composite
+			LLGL::ShaderProgramDescriptor shaderProgramDesc;
+			{
+				//shaderProgramDesc.vertexFormats = { VShader.mShader };
+				shaderProgramDesc.vertexShader = VShader.mShader;
+				shaderProgramDesc.fragmentShader = PShader.mShader;
+			}
+			LLGL::ShaderProgram* shaderProgram = Graphics::Context::GetRenderer()->CreateShaderProgram(shaderProgramDesc);
+
+			// Link shader program and check for errors
+			if (shaderProgram->HasErrors())
+				throw std::runtime_error(shaderProgram->QueryInfoLog());
+
+
+			// Create pipeline layout
+			LLGL::PipelineLayoutDescriptor layoutDesc;
+			{
+				layoutDesc.bindings =
+				{
+					LLGL::BindingDescriptor { LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 0 },
+					LLGL::BindingDescriptor { LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 1 },
+				};
+			}
+			PipelineLayout = Graphics::Context::GetRenderer()->CreatePipelineLayout(layoutDesc);
+			//shaderProgram->QueryReflectionDesc();
+
+			// Create graphics pipeline
+			LLGL::GraphicsPipelineDescriptor pipelineDesc;
+			{
+				pipelineDesc.shaderProgram = ShaderProgram;
+				pipelineDesc.pipelineLayout = PipelineLayout;
+				pipelineDesc.primitiveTopology = LLGL::PrimitiveTopology::TriangleStrip;
+			}
+			Pipeline = Graphics::Context::GetRenderer()->CreateGraphicsPipeline(pipelineDesc);
+		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
 			LLGL::TextureDescriptor ScreenTexDesc;

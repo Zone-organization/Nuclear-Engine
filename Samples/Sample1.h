@@ -2,37 +2,6 @@
 #include "Common.h"
 class Sample1 : public Core::Game
 {
-public:
-	Sample1()
-	{
-	}
-
-
-	void Load()
-	{
-	
-		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
-		Core::Application::Display();
-	}
-
-
-	void Render(float dt) override
-	{
-
-		//Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-	
-
-		//ImGui::Render();
-		//Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
-		Graphics::Context::PresentFrame();
-	}
-};
-/*
-//#include <Engine\Graphics\ImGui_Renderer.h>
-
-class Sample1 : public Core::Game
-{
-protected:
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
 	//Assets
@@ -53,7 +22,7 @@ protected:
 	Assets::Material GridMaterial;
 
 	//Default states
-	Graphics::API::CommonStates states;
+	//Graphics::API::CommonStates states;
 
 	Components::CameraComponent Camera;
 
@@ -81,7 +50,7 @@ protected:
 	ECS::Entity EGrid;
 
 	// positions all containers
-	Math::Vector3 cubePositions[10] = 
+	Math::Vector3 cubePositions[10] =
 	{
 		Math::Vector3(0.0f,  0.0f,  0.0f),
 		Math::Vector3(2.0f,  5.0f, -15.0f),
@@ -116,7 +85,6 @@ public:
 	Sample1()
 	{
 	}
-
 	void SetupLights()
 	{
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -153,27 +121,27 @@ public:
 	{
 		//Create some shapes
 		Assets::Mesh::CreateCube(&CubeAsset);
-		CubeAsset.Initialize(&Renderer->GetVertexShader());
+		CubeAsset.Initialize(Renderer->GetVertexShader());
 
 		Assets::Mesh::CreateSphere(&SphereAsset);
-		SphereAsset.Initialize(&Renderer->GetVertexShader());
+		SphereAsset.Initialize(Renderer->GetVertexShader());
 
-		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6 , 6, 10, 10);
-		GridAsset.Initialize(&Renderer->GetVertexShader());
-		
+		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
+		GridAsset.Initialize(Renderer->GetVertexShader());
+
 		//NanoSuit Creation
 		Managers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
-		NanosuitAsset.Initialize(&Renderer->GetVertexShader());
-		
+		NanosuitAsset.Initialize(Renderer->GetVertexShader());
+
 		//Load some textures manually
 		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
 		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
 		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
 		GreyTex = Managers::AssetManager::Import("Assets/Common/Textures/grey.png");
-		GridTex = Managers::AssetManager::Import("Assets/Common/Textures/Grid.png");		
+		GridTex = Managers::AssetManager::Import("Assets/Common/Textures/Grid.png");
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
@@ -239,8 +207,8 @@ public:
 		ENanosuit = SampleScene.CreateEntity();
 
 		//Assign Components
-		ECube.Assign<Components::MeshComponent>(&CubeAsset ,&CubeMaterial, true);
-		ELamp.Assign<Components::MeshComponent>(&SphereAsset ,&SphereMaterial, true);
+		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial, true);
+		ELamp.Assign<Components::MeshComponent>(&SphereAsset, &SphereMaterial, true);
 		EGrid.Assign<Components::MeshComponent>(&GridAsset, &GridMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
 
@@ -270,11 +238,8 @@ public:
 		SetupLights();
 
 		SetupAssets();
-	
-		SetupEntities();
 
-		states.EnabledDepth_DisabledStencil.Bind();
-		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
+		SetupEntities();
 
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
@@ -303,7 +268,7 @@ public:
 
 	void Update(float deltatime) override
 	{
-		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::W))
+		/*if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
 		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::A))
 			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
@@ -311,10 +276,58 @@ public:
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
 		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::D))
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
-
+*/
 		Camera.Update();
 	}
 
+
+	void Render(float dt) override
+	{  
+		// Set the render context as the initial render target
+		Graphics::Context::GetCommands()->BeginRenderPass(*Graphics::Context::GetRenderContext());
+		{
+			// Clear color buffer
+			Graphics::Context::GetCommands()->Clear(LLGL::ClearFlags::Color | LLGL::ClearFlags::Depth);
+			Graphics::Context::GetCommands()->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+
+			// Draw triangle with 3 vertices
+			//commands->Draw(3, 0);
+		}
+		Graphics::Context::GetCommands()->EndRenderPass();
+		//Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+	
+
+		//ImGui::Render();
+		//Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
+		Graphics::Context::PresentFrame();
+	}
+};
+/*
+//#include <Engine\Graphics\ImGui_Renderer.h>
+
+class Sample1 : public Core::Game
+{
+protected:
+	
+
+public:
+	Sample1()
+	{
+	}
+
+	
+
+	void Load()
+	{
+		
+		states.EnabledDepth_DisabledStencil.Bind();
+		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
+
+		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
+		Core::Application::Display();
+	}
+
+	
 	void MaterialEditor()
 	{
 		ImGui::Begin("Material Editor");                          // Create a window called "Hello, world!" and append into it.
