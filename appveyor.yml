@@ -10,7 +10,7 @@ before_build:
   - git clone https://github.com/Zone-organization/Nuclear-Deps.git ..\Nuclear-Deps
   - ps: msbuild ..\Nuclear-Deps\Nuclear-Deps.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - git clone https://github.com/Zone-organization/LLGL.git ..\LLGL
-  - cmake -G "Visual Studio 15 2017 Win64" -LLGL_BUILD_RENDERER_DIRECT3D11 -LLGL_BUILD_RENDERER_DIRECT3D12 -LLGL_BUILD_RENDERER_OPENGL -CMAKE_BUILD_DIRECTORY:STRING="Projects"
+  - cmake -S "..\LLGL" -B "..\LLGL\Projects" -G "Visual Studio 15 2017 Win64"
   - ps: msbuild ..\LLGL\Projects\LLGL.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 build:
