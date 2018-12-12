@@ -9,9 +9,10 @@ configuration:
 before_build:
   - git clone https://github.com/Zone-organization/Nuclear-Deps.git ..\Nuclear-Deps
   - ps: msbuild ..\Nuclear-Deps\Nuclear-Deps.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - git clone https://github.com/Zone-organization/LLGL.git
-  - cmake -G "Visual Studio 15 2017" -LLGL_BUILD_RENDERER_DIRECT3D11 -LLGL_BUILD_RENDERER_DIRECT3D12 -LLGL_BUILD_RENDERER_OPENGL
+  - git clone https://github.com/Zone-organization/LLGL.git ..\LLGL
+  - cmake -G "Visual Studio 15 2017 Win64" -LLGL_BUILD_RENDERER_DIRECT3D11 -LLGL_BUILD_RENDERER_DIRECT3D12 -LLGL_BUILD_RENDERER_OPENGL -CMAKE_BUILD_DIRECTORY:STRING="Projects"
+  - ps: msbuild ..\LLGL\Projects\LLGL.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
-  build:
+build:
   parallel: true                  # enable MSBuild parallel builds
   project: Nuclear Project.sln

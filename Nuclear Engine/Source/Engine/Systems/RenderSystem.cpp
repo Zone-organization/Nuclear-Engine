@@ -33,7 +33,7 @@ namespace NuclearEngine
 
 			// Link shader program and check for errors
 			if (shaderProgram->HasErrors())
-				throw std::runtime_error(shaderProgram->QueryInfoLog());
+				Log.Error(shaderProgram->QueryInfoLog());
 			
 		
 			// Create graphics pipeline
@@ -312,9 +312,11 @@ namespace NuclearEngine
 			for (size_t i = 0; i< mesh->SubMeshes.size(); i++)
 			{
 				material->BindTexSet(mesh->SubMeshes.at(i).data.TexSetIndex);
-				///mesh->SubMeshes.at(i).VBO.Bind();
-				///mesh->SubMeshes.at(i).IBO.Bind();
-				///LLGL::Context::DrawIndexed(mesh->SubMeshes.at(i).IndicesCount);
+
+				Graphics::Context::GetCommands()->SetIndexBuffer(*mesh->SubMeshes.at(i).mIB);
+				Graphics::Context::GetCommands()->SetVertexBuffer(*mesh->SubMeshes.at(i).mVB);
+
+				Graphics::Context::GetCommands()->DrawIndexed(mesh->SubMeshes.at(i).IndicesCount, 0);
 			}
 		}
 		void RenderSystem::RenderToPostProcessingRT()

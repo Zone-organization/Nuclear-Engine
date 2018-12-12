@@ -268,15 +268,15 @@ public:
 
 	void Update(float deltatime) override
 	{
-		/*if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::W))
+		if (Core::Input->KeyPressed(Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::A))
+		if (Core::Input->KeyPressed(Input::Keyboard::Key::A))
 			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::S))
+		if (Core::Input->KeyPressed(Input::Keyboard::Key::S))
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::D))
+		if (Core::Input->KeyPressed(Input::Keyboard::Key::D))
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
-*/
+
 		Camera.Update();
 	}
 
@@ -287,15 +287,16 @@ public:
 		Graphics::Context::GetCommands()->BeginRenderPass(*Graphics::Context::GetRenderContext());
 		{
 			// Clear color buffer
-			Graphics::Context::GetCommands()->Clear(LLGL::ClearFlags::Color | LLGL::ClearFlags::Depth);
+			Graphics::Context::GetCommands()->Clear(LLGL::ClearFlags::ColorDepth);
 			Graphics::Context::GetCommands()->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			Graphics::Context::GetCommands()->SetGraphicsPipeline(*Renderer->Pipeline);
 
 			// Draw triangle with 3 vertices
-			//commands->Draw(3, 0);
+			Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
+
 		}
 		Graphics::Context::GetCommands()->EndRenderPass();
-		//Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-	
+
 
 		//ImGui::Render();
 		//Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());

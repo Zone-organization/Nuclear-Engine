@@ -4,11 +4,16 @@
 
 namespace NuclearEngine 
 {
+	namespace Input
+	{
+		namespace Keyboard
+		{
+			using LLGL::Key;
+		}
+	}
+
 	namespace Core 
 	{
-		namespace Input 
-		{
-			using namespace LLGL;
-		}
+		std::shared_ptr<LLGL::Input> Input;
 	}
 }

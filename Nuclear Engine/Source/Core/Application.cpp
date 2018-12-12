@@ -1,9 +1,7 @@
-#define APP_EXPOSE_WIN32
 #include <Core\Application.h>
 #include <Core\Engine.h>
 #include <Engine\Graphics\ImGui_Binding.h>
 #include <Engine\Graphics\Context.h>
-#pragma comment(lib,"LLGL.lib")
 
 namespace NuclearEngine
 {
