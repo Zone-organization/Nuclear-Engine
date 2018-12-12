@@ -11,6 +11,8 @@ before_build:
   - ps: msbuild ..\Nuclear-Deps\Nuclear-Deps.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - git clone https://github.com/Zone-organization/LLGL.git ..\LLGL
   - ps: tree
+  - ps: tree ..
+  - ps: tree ..\LLGL
   - cmake -S "..\LLGL" -B "..\LLGL\Projects" -G "Visual Studio 15 2017 Win64"
   - ps: msbuild ..\LLGL\Projects\LLGL.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 build:
