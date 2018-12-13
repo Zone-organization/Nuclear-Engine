@@ -227,6 +227,8 @@
     <ClInclude Include="include\Engine\Graphics\ShaderCompiler.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
+    <ClInclude Include="include\Engine\Graphics\Renderer.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -278,6 +280,7 @@
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\DXBC_Compiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

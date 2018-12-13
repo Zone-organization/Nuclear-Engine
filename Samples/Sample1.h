@@ -240,7 +240,7 @@ public:
 		SetupAssets();
 
 		SetupEntities();
-
+		
 		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
 		Core::Application::Display();
 	}
