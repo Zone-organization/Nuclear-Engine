@@ -9,7 +9,7 @@ configuration:
 before_build:
   - git clone https://github.com/Zone-organization/LLGL.git ..\LLGL
   - cd ..\LLGL\
-  - cmake -B Projects\ -G "Visual Studio 15 2017 Win64"
+  - cmake --help
   - ps: msbuild Projects\LLGL.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cd ..\nuclear-engine\
   - git clone https://github.com/Zone-organization/Nuclear-Deps.git ..\Nuclear-Deps
