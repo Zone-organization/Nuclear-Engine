@@ -7,11 +7,11 @@ configuration:
   - Release
 
 before_build:
-  - git clone https://github.com/Zone-organization/Nuclear-Deps.git ..\Nuclear-Deps
-  - ps: msbuild ..\Nuclear-Deps\Nuclear-Deps.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - git clone https://github.com/Zone-organization/LLGL.git ..\LLGL
-  - cmake -B\..\LLGL\Projects\ -H\..\LLGL\ -G "Visual Studio 15 2017 Win64"
+  - cmake -B\C:\PROJECTS\LLGL\Projects\ -H\C:\PROJECTS\LLGL\ -G "Visual Studio 15 2017 Win64"
   - ps: msbuild ..\LLGL\Projects\LLGL.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - git clone https://github.com/Zone-organization/Nuclear-Deps.git ..\Nuclear-Deps
+  - ps: msbuild ..\Nuclear-Deps\Nuclear-Deps.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 build:
   parallel: true                  # enable MSBuild parallel builds
   project: Nuclear Project.sln
