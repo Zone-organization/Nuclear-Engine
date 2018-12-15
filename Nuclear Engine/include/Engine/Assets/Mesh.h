@@ -55,14 +55,16 @@ namespace NuclearEngine {
 				void Delete();
 
 				SubMeshData data;
-				unsigned int IndicesCount = 0;
+
+				Uint32 mIndicesCount = 0;
+				Uint32 mIndicesOffset = 0;
 
 				//Buffers
 				LLGL::Buffer* mIB;
 				LLGL::Buffer* mVB;
 			};
 
-			std::vector<SubMesh> SubMeshes;
+			std::vector<SubMesh> mSubMeshes;
 		private:
 			bool init;
 		};

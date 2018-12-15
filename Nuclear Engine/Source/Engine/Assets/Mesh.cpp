@@ -76,7 +76,7 @@ namespace NuclearEngine {
 				desc.size = (unsigned int)data.indices.size();
 				mIB = Graphics::Context::GetRenderer()->CreateBuffer(desc, data.indices.data());
 			}
-			IndicesCount = data.indices.size();			
+			mIndicesCount = data.indices.size();			
 
 			data.Positions.clear();
 			data.UV.clear();
@@ -107,19 +107,19 @@ namespace NuclearEngine {
 
 		void Mesh::Initialize(Graphics::Shader _shader)
 		{
-			for (unsigned int i = 0; i < SubMeshes.size(); i++)
+			for (unsigned int i = 0; i < mSubMeshes.size(); i++)
 			{
-				SubMeshes.at(i).Initialize(_shader);
+				mSubMeshes.at(i).Initialize(_shader);
 			}
 			init = true;
 		}
 		void Mesh::Delete()
 		{
-			for (unsigned int i = 0; i < SubMeshes.size(); i++)
+			for (unsigned int i = 0; i < mSubMeshes.size(); i++)
 			{
-				SubMeshes.at(i).Delete();
+				mSubMeshes.at(i).Delete();
 			}
-			SubMeshes.clear();
+			mSubMeshes.clear();
 		}
 		struct Vertex
 		{
@@ -226,7 +226,7 @@ namespace NuclearEngine {
 
 			meshData.indices = indices;
 
-			model->SubMeshes.push_back(meshData);
+			model->mSubMeshes.push_back(meshData);
 		}
 
 		void Mesh::CreateSphere(Mesh * model, const MeshVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
@@ -324,7 +324,7 @@ namespace NuclearEngine {
 				if (desc.Tangents == true)
 					meshData.Tangents.push_back(vert.Tangents);
 			}
-			model->SubMeshes.push_back(meshData);
+			model->mSubMeshes.push_back(meshData);
 		}
 
 		void Mesh::CreatePlane(Mesh * model, const MeshVertexDesc & desc, float width, float depth)
@@ -408,7 +408,7 @@ namespace NuclearEngine {
 			}
 			meshData.indices = Indices;
 
-			model->SubMeshes.push_back(meshData);
+			model->mSubMeshes.push_back(meshData);
 		}
 
 		void Mesh::CreateScreenQuad(Mesh * model)
@@ -467,7 +467,7 @@ namespace NuclearEngine {
 			}
 			meshData.indices = Indices;
 
-			model->SubMeshes.push_back(meshData);
+			model->mSubMeshes.push_back(meshData);
 		}
 
 	}

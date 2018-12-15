@@ -143,8 +143,10 @@ public:
 		GreyTex = Managers::AssetManager::Import("Assets/Common/Textures/grey.png");
 		GridTex = Managers::AssetManager::Import("Assets/Common/Textures/Grid.png");
 
+		//TODO::MATERIAL
+
 		//Initialize Materials
-		Assets::TextureSet CubeSet;
+		/*Assets::TextureSet CubeSet;
 		CubeSet.push_back(DiffuseTex);
 		CubeSet.push_back(SpecularTex);
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
@@ -167,11 +169,11 @@ public:
 		GridMaterial.SetPixelShader(Renderer->GetPixelShader());
 		CubeMaterial.SetPixelShader(Renderer->GetPixelShader());
 		SphereMaterial.SetPixelShader(Renderer->GetPixelShader());
-		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());
+		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());*/
 
-		CubeSet.clear();
-		SphereTextures.clear();
-		GridTextures.clear();
+		//CubeSet.clear();
+		//SphereTextures.clear();
+		//GridTextures.clear();
 
 		CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		CubeMaterial.SetMaterialVariable("Shininess", 64.0f);

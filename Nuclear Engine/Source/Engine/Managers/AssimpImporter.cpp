@@ -26,7 +26,7 @@ namespace NuclearEngine {
 
 			for (unsigned int i = 0; i < meshes_loaded.size(); i++)
 			{
-				model.SubMeshes.push_back(Assets::Mesh::SubMesh(meshes_loaded.at(i)));
+				model.mSubMeshes.push_back(Assets::Mesh::SubMesh(meshes_loaded.at(i)));
 			}
 			auto hashedname = Utilities::Hash(Path);
 			Log.Info("[AssetManager] Loaded Mesh: " + Path + "\n");
@@ -56,8 +56,10 @@ namespace NuclearEngine {
 		{	
 			Assets::TextureSet TexSet;
 
+			//TODO::MATERIAL
+
 			// process materials
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			/*aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			if (LoadingDesc.LoadDiffuseTextures)
 			{
 				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
@@ -82,7 +84,8 @@ namespace NuclearEngine {
 			else
 			{
 				return 0;
-			}
+			}*/
+			return 0;
 		}
 		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{

@@ -307,17 +307,17 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
 		{
-			material->Bind();
+		/*	material->Bind();
 			material->UpdateMaterialCBuffer();
-			for (size_t i = 0; i< mesh->SubMeshes.size(); i++)
+			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)
 			{
-				material->BindTexSet(mesh->SubMeshes.at(i).data.TexSetIndex);
+				material->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
-				Graphics::Context::GetCommands()->SetIndexBuffer(*mesh->SubMeshes.at(i).mIB);
+				Graphics::Context::GetCommands()->SetIndexBuffer(*mesh->mSubMeshes.at(i).mIB);
 				Graphics::Context::GetCommands()->SetVertexBuffer(*mesh->SubMeshes.at(i).mVB);
 
 				Graphics::Context::GetCommands()->DrawIndexed(mesh->SubMeshes.at(i).IndicesCount, 0);
-			}
+			}*/
 		}
 		void RenderSystem::RenderToPostProcessingRT()
 		{

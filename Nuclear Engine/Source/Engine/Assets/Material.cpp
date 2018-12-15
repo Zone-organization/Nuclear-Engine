@@ -6,8 +6,7 @@
 namespace NuclearEngine
 {
 	namespace Assets
-	{
-	
+	{	
 		Material::Material()
 			: mPixelShaderTextures(std::vector<TextureSet>()), PixelShaderTS(std::vector<ShaderTexture>())
 		{
@@ -15,15 +14,32 @@ namespace NuclearEngine
 		Material::~Material()
 		{
 		}
-		void Material::SetVertexShader(Graphics::Shader vshader)
+		void Material::Create(const MaterialCreationDesc& desc)
 		{
-			mVShader = vshader;
+			//Process Shaders & pipeline
+			ParsePixelShader(desc.mPShader);
+			mPipeline = desc.mPipeline;
+
+			/*TODO:
+				1: Generate PipelineLayout based on	ShaderReflection.
+				2: Create ResourceHeap for each texture.
+			*/
+
+			/*for (auto TexSet : mPixelShaderTextures)
+			{
+				for (auto Tex : TexSet)
+				{
+					LLGL::ResourceHeapDescriptor resourceHeapDesc;
+					{
+						resourceHeapDesc.pipelineLayout = pipelineLayout;
+						resourceHeapDesc.resourceViews = { sampler, colorMap };
+					}
+					resourceHeaps[i] = renderer->CreateResourceHeap(resourceHeapDesc);
+					Tex.mResourceHeap;
+				}
+			}*/
 		}
-		void Material::SetPixelShader(Graphics::Shader pshader)
-		{
-			mPShader = pshader;
-			ParsePixelShader();
-		}
+
 
 		void Material::BindTexSet(Uint32 index)
 		{
@@ -43,7 +59,7 @@ namespace NuclearEngine
 			//BINDING_LLGL
 			//mCbuffer.PSBind(mCbufferRef.BindingSlot);
 		}
-
+#if 1
 		void Material::SetMaterialVariable(const std::string&  name, Float32 value)
 		{
 			mCbufferData[name] = value;
@@ -103,6 +119,7 @@ namespace NuclearEngine
 			}
 		}
 
+#endif
 		void Material::UpdateMaterialCBuffer()
 		{
 			std::vector<Float32> data;
@@ -126,24 +143,24 @@ namespace NuclearEngine
 			return TextureUsageType::Unknown;
 		}
 
-		void Material::ParsePixelShader()
+		void Material::ParsePixelShader(Graphics::Shader* _PShader)
 		{
-			if (mPShader.mShader)
+			if (_PShader->mShader)
 			{
 				mPSHaveMaterialCB = false;
 				//Parse Shader
 				PixelShaderTS.clear();
-				for (auto Tex : mPShader.Reflection.Textures)
+				for (auto Tex : _PShader->Reflection.Textures)
 				{
 					if (Tex.first.find("NE_Tex_") == 0)
 					{
 						std::string texname(Tex.first);
 						texname.erase(0, 7);
 						ShaderTexture mTex;
-						mTex.mTexture = DefaultTextures::DefaultBlackTex;
-						mTex.mTexture.SetName(texname);
+						mTex.mTexture = &DefaultTextures::DefaultBlackTex;
+						mTex.mTexture->SetName(texname);
 						mTex.mSlot = Tex.second.BindingSlot;
-						mTex.mTexture.SetUsageType(ParseTexUsageFromName(texname));
+						mTex.mTexture->SetUsageType(ParseTexUsageFromName(texname));
 						PixelShaderTS.push_back(mTex);
 					}					
 				}
@@ -155,7 +172,7 @@ namespace NuclearEngine
 					{
 						for (ShaderTexture TSinfo : PixelShaderTS)
 						{
-							if (mPixelShaderTextures.at(i).at(j).mTexture.GetUsageType() == TSinfo.mTexture.GetUsageType())
+							if (mPixelShaderTextures.at(i).at(j).mTexture->GetUsageType() == TSinfo.mTexture->GetUsageType())
 							{
 								mPixelShaderTextures.at(i).at(j).mSlot = TSinfo.mSlot;
 							}
@@ -164,8 +181,8 @@ namespace NuclearEngine
 				}
 
 				//Parse Material
-				auto MatCB = mPShader.Reflection.ConstantBuffers.find("NE_Material");
-				if (MatCB != mPShader.Reflection.ConstantBuffers.end())
+				auto MatCB = _PShader->Reflection.ConstantBuffers.find("NE_Material");
+				if (MatCB != _PShader->Reflection.ConstantBuffers.end())
 				{
 					mCbufferRef = MatCB->second;
 					mPSHaveMaterialCB = true;
@@ -175,7 +192,7 @@ namespace NuclearEngine
 					mCbuffer = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(mCbufferRef.Size));
 
 					//BINDING_LLGL
-					//mPShader->SetConstantBuffer(&mCbuffer);
+					//_PShader->SetConstantBuffer(&mCbuffer);
 
 					//Parse Material Variables
 					for (auto var : mCbufferRef.Variables)
