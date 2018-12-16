@@ -10,16 +10,16 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-	
+
 		struct ShaderTexture
 		{
 			ShaderTexture() { mSlot = 0; }
-			ShaderTexture(Assets::Texture* _tex, Uint8 _slot = 14)	: mTexture(_tex) , mSlot(_slot)	{	}
+			ShaderTexture(Assets::Texture* _tex, Uint8 _slot = 14) : mTexture(_tex), mSlot(_slot) {	}
 			LLGL::ResourceHeap* mResourceHeap;
 			Assets::Texture* mTexture;
 			Uint8 mSlot;
 		};
-	
+
 		typedef	std::vector<Assets::ShaderTexture> TextureSet;
 
 		//TODO: Support more Shader Types.
@@ -37,21 +37,22 @@ namespace NuclearEngine
 			Notes:
 			   - Textures and material parsing is "currently" available in PixelShader only!
 			   - Material constant buffer should contain floats only!
+			   - Material Shaders should have certain order
 			   - Material has two main definitions:
 				 - Material Filling: means filling the material with textures.
-			     - Material Creation: means processing shaders & resource heaps & graphical pipeline needed to render a mesh.
+				 - Material Creation: means processing shaders & resource heaps & graphical pipeline needed to render a mesh.
 
 				 ---[[[ IMPORTANT NOTE: Material must be filled first before should be created it! ]]]---
 
-		*/			
+		*/
 		class NEAPI Material
 		{
 		public:
 			//TODO::MATERIAL
 			Material();
 			~Material();
-			
-			/* 
+
+			/*
 				It processes the shaders and the pipelne needed to render a mesh,
 				if the pipeline equals a nullptr the default renderer pipeline is used
 				and create the resource heap for all textures.
@@ -72,6 +73,25 @@ namespace NuclearEngine
 			void SetMaterialVariable(const std::string&  name, Math::Matrix3 value);
 			void SetMaterialVariable(const std::string&  name, Math::Matrix4 value);
 			void UpdateMaterialCBuffer();
+
+			/*
+				Creates PipelineLayoutDescriptor but u should consider some restrictions when writing shaders for it:
+				Order of Resources:
+				 - Textures
+				 - Samplers
+				 - Constant Buffer
+
+			EX:
+					Texture2D Tex_X;
+					Texture2D Tex_Y;
+					
+					SamplerState Sampler_A;
+					SamplerState Sampler_B;
+
+					cbuffer myCB_1;
+					cbuffer myCB_2;
+			*/
+			static LLGL::PipelineLayoutDescriptor GeneratePipelineLayoutDesc(Graphics::Shader* _VShader, Graphics::Shader* _PShader);
 
 			//PixelShader Textures
 			std::vector<TextureSet> mPixelShaderTextures;

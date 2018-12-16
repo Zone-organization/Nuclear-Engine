@@ -14,6 +14,32 @@ namespace NuclearEngine
 		Material::~Material()
 		{
 		}
+
+		LLGL::PipelineLayoutDescriptor Material::GeneratePipelineLayoutDesc(Graphics::Shader* _VShader, Graphics::Shader* _PShader)
+		{
+			LLGL::PipelineLayoutDescriptor Result;
+
+			if (_PShader->mShader)
+			{
+				for (auto Tex : _PShader->Reflection.Textures)
+				{
+					
+				}
+				for (auto Tex : _PShader->Reflection.Textures)
+				{
+
+				}
+
+				for (auto CBuf : _PShader->Reflection.ConstantBuffers)
+				{
+
+				}
+				
+
+			}
+			return Result;
+		}
+
 		void Material::Create(const MaterialCreationDesc& desc)
 		{
 			//Process Shaders & pipeline
@@ -24,6 +50,8 @@ namespace NuclearEngine
 				1: Generate PipelineLayout based on	ShaderReflection.
 				2: Create ResourceHeap for each texture.
 			*/
+			LLGL::ResourceHeapDescriptor;
+			
 
 			/*for (auto TexSet : mPixelShaderTextures)
 			{

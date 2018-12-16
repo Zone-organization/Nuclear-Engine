@@ -31,7 +31,7 @@ namespace NuclearEngine
 				}
 
 
-				void ParseVariables(const D3D11_SHADER_BUFFER_DESC& CBDesc, ID3D11ShaderReflectionConstantBuffer* reflectedcb, Reflected_Constantbuffer* Constbuf)
+				void ParseVariables(const D3D11_SHADER_BUFFER_DESC& CBDesc, ID3D11ShaderReflectionConstantBuffer* reflectedcb, ReflectedShaderResource* Constbuf)
 				{
 					for (Uint32 i = 0; i < CBDesc.Variables; i++)
 					{
@@ -156,9 +156,9 @@ namespace NuclearEngine
 							}
 
 							ShaderVariable reflected_var;
-							reflected_var.Type = type;
-							reflected_var.Size = VariableDesc.Size;
-							Constbuf->Variables[VariableDesc.Name] = reflected_var;
+							reflected_var.mType = type;
+							reflected_var.mSize = VariableDesc.Size;
+							Constbuf->mVariables[VariableDesc.Name] = reflected_var;
 
 						}
 					}
@@ -171,7 +171,7 @@ namespace NuclearEngine
 						ID3D11ShaderReflectionConstantBuffer* reflectedcb = nullptr;
 						reflectedcb = pReflector->GetConstantBufferByIndex(i);
 
-						Reflected_Constantbuffer Constbuf;
+						ReflectedShaderResource Constbuf;
 						D3D11_SHADER_BUFFER_DESC CBDesc;
 						if (FAILED(reflectedcb->GetDesc(&CBDesc)))
 						{
@@ -179,11 +179,12 @@ namespace NuclearEngine
 						}
 						else
 						{
-							Constbuf.BindingSlot = i;
-							Constbuf.Size = CBDesc.Size;
+							Constbuf.mSlot = i;
+							Constbuf.mSize = CBDesc.Size;
+							Constbuf.mType = ResourceType::ConstantBuffer;
 							ParseVariables(CBDesc, reflectedcb, &Constbuf);
 
-							result->Reflection.ConstantBuffers[CBDesc.Name] = Constbuf;
+							result->Reflection.mResources[CBDesc.Name] = Constbuf;
 						}
 					}
 				}
@@ -202,10 +203,16 @@ namespace NuclearEngine
 							{
 								switch (resource_desc.Type)
 								{
+								case D3D_SIT_CBUFFER:
+									break;
+
+								case D3D_SIT_TBUFFER:
+									break;
+
 								case D3D_SIT_TEXTURE:
 								{
 									bool validtexture = true;
-									Reflected_Texture texture;
+									ReflectedShaderResource texture;
 									texture.BindingSlot = resource_desc.BindPoint;
 									switch (resource_desc.Dimension)
 									{
@@ -229,8 +236,36 @@ namespace NuclearEngine
 									{
 										result->Reflection.Textures[resource_desc.Name] = texture;
 									}
-
+									break;
 								}
+								case D3D_SIT_SAMPLER:		
+									break;
+
+								case D3D_SIT_UAV_RWTYPED:		
+									break;
+
+								case D3D_SIT_STRUCTURED:		
+									break;
+
+								case D3D_SIT_UAV_RWSTRUCTURED:		
+									break;
+
+								case D3D_SIT_BYTEADDRESS:			
+									break;
+
+								case D3D_SIT_UAV_RWBYTEADDRESS:			
+									break;
+
+								case D3D_SIT_UAV_APPEND_STRUCTURED:		
+									break;
+
+								case D3D_SIT_UAV_CONSUME_STRUCTURED:		
+									break;
+
+								case D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:	
+									break;
+
+								
 
 								}
 
