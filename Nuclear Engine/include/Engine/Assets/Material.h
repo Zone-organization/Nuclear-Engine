@@ -99,7 +99,7 @@ namespace NuclearEngine
 		private:
 			void ParsePixelShader(Graphics::Shader* PixelShader);
 			LLGL::Buffer* mCbuffer;
-			Graphics::Reflected_Constantbuffer mCbufferRef;
+			Graphics::ReflectedShaderResource mCbufferRef;
 			std::map<std::string, Float32> mCbufferData;
 			bool mPSHaveMaterialCB;
 		};

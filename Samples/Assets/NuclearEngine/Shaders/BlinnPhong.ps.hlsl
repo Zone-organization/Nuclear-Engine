@@ -17,10 +17,10 @@ struct PixelInputType
 #endif
 };
 
-Texture2D NE_Tex_Diffuse1 : register(t0);
-Texture2D NE_Tex_Specular1 : register(t1);
+Texture2D NEMat_Diffuse1 : register(t0);
+Texture2D NEMat_Specular1 : register(t1);
 #ifdef NE_USE_NORMAL_MAPS
-Texture2D NE_Tex_Normal1 : register(t2);
+Texture2D NEMat_Normal1 : register(t2);
 #endif
 
 SamplerState NE_Diffuse1_Sampler : register(s0);
@@ -63,7 +63,7 @@ cbuffer NE_Light_CB
 #endif
 
 };
-cbuffer NE_Material
+cbuffer NEMaterial
 {
 	float3 ModelColor;
 	float Shininess;
@@ -99,9 +99,9 @@ float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float2 TexCoo
 {
     float3 lightDir = normalize(-light.Direction.xyz);
 
-    float3 ambient = 0.05f * float3(light.Color.xyz * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NE_Tex_Specular1.Sample(NE_Specular1_Sampler, TexCoords).xyz;
+    float3 ambient = 0.05f * float3(light.Color.xyz * NEMat_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
+    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NEMat_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
+    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NEMat_Specular1.Sample(NE_Specular1_Sampler, TexCoords).xyz;
     return (ambient + diffuse + specular);
 }
 
@@ -112,9 +112,9 @@ float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 vi
     // attenuation
     float attenuation = DoQuadraticAttenuation(light.Intensity_Attenuation, light.Position.xyz, fragPos);
     // combine results
-    float3 ambient = 0.05f * float3(light.Color.xyz * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NE_Tex_Specular1.Sample(NE_Specular1_Sampler, TexCoords).xyz;
+    float3 ambient = 0.05f * float3(light.Color.xyz * NEMat_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
+    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NEMat_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
+    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NEMat_Specular1.Sample(NE_Specular1_Sampler, TexCoords).xyz;
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
@@ -135,9 +135,9 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     float intensity = clamp((theta - light.InnerCutOf_OuterCutoff.y) / epsilon, 0.0, 1.0);
 
     // combine results
-    float3 ambient = 0.05f * float3(light.Color.xyz * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NE_Tex_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NE_Tex_Specular1.Sample(NE_Specular1_Sampler, TexCoords).xyz;
+    float3 ambient = 0.05f * float3(light.Color.xyz * NEMat_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz);
+    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NEMat_Diffuse1.Sample(NE_Diffuse1_Sampler, TexCoords).xyz;
+    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NEMat_Specular1.Sample(NE_Specular1_Sampler, TexCoords).xyz;
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
@@ -153,7 +153,7 @@ float4 DoLighting(PixelInputType input)
 
 
 #ifdef NE_USE_NORMAL_MAPS
-    norm = NE_Tex_Normal1.Sample(NE_Normal1_Sampler, input.TexCoords).xyz;
+    norm = NEMat_Normal1.Sample(NE_Normal1_Sampler, input.TexCoords).xyz;
     norm = normalize(mul(norm, 2.0f) - 1.0f);
     norm = normalize(mul(norm, input.TBN));
 #endif

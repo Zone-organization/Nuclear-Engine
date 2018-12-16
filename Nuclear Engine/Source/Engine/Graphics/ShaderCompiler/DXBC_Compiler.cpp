@@ -201,6 +201,9 @@ namespace NuclearEngine
 						{
 							for (Uint32 i = 0; i < resource_desc.BindCount; i++)
 							{
+								ReflectedShaderResource Resource;
+								Resource.mSlot = resource_desc.BindPoint;
+
 								switch (resource_desc.Type)
 								{
 								case D3D_SIT_CBUFFER:
@@ -210,62 +213,65 @@ namespace NuclearEngine
 									break;
 
 								case D3D_SIT_TEXTURE:
-								{
-									bool validtexture = true;
-									ReflectedShaderResource texture;
-									texture.BindingSlot = resource_desc.BindPoint;
+
 									switch (resource_desc.Dimension)
 									{
-									case D3D_SRV_DIMENSION_TEXTURE1D:
-										texture.Type = LLGL::TextureType::Texture1D;
-										break;
-									case D3D_SRV_DIMENSION_TEXTURE2D:
-										texture.Type = LLGL::TextureType::Texture2D;
-										break;
-									case D3D_SRV_DIMENSION_TEXTURE3D:
-										texture.Type = LLGL::TextureType::Texture3D;
-										break;
-									case D3D_SRV_DIMENSION_TEXTURECUBE:
-										texture.Type = LLGL::TextureType::TextureCube;
-										break;
+									case D3D_SRV_DIMENSION_TEXTURE1D: Resource.mType = ResourceType::Texture1D;	break;
+									case D3D_SRV_DIMENSION_TEXTURE1DARRAY: Resource.mType = ResourceType::Texture1DArray;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2D:Resource.mType = ResourceType::Texture2D;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2DARRAY:Resource.mType = ResourceType::Texture2DArray;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2DMS:Resource.mType = ResourceType::Texture2DMS;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2DMSARRAY:Resource.mType = ResourceType::Texture2DMSArray;	break;
+									case D3D_SRV_DIMENSION_TEXTURE3D:Resource.mType = ResourceType::Texture3D;	break;
+									case D3D_SRV_DIMENSION_TEXTURECUBE: Resource.mType = ResourceType::TextureCube;	break;
+									case D3D_SRV_DIMENSION_TEXTURECUBEARRAY: Resource.mType = ResourceType::TextureCubeArray;	break;
 									default:
-										Log.Warning("[Reflect_DXBC] [ParseResources] Unsupported Texture type used, therefore not added to reflection!\n");
-										validtexture = false;
+										break;
 									}
-									if (validtexture == true)
+									break;
+
+								case D3D_SIT_SAMPLER:
+									switch (resource_desc.Dimension)
 									{
-										result->Reflection.Textures[resource_desc.Name] = texture;
+									case D3D_SRV_DIMENSION_TEXTURE1D: Resource.mType = ResourceType::Sampler1D;	break;
+									case D3D_SRV_DIMENSION_TEXTURE1DARRAY: Resource.mType = ResourceType::Sampler1DArray;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2D:Resource.mType = ResourceType::Sampler2D;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2DARRAY:Resource.mType = ResourceType::Sampler2DArray;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2DMS:Resource.mType = ResourceType::Sampler2DMS;	break;
+									case D3D_SRV_DIMENSION_TEXTURE2DMSARRAY:Resource.mType = ResourceType::Sampler2DMSArray;	break;
+									case D3D_SRV_DIMENSION_TEXTURE3D:Resource.mType = ResourceType::Sampler3D;	break;
+									case D3D_SRV_DIMENSION_TEXTURECUBE: Resource.mType = ResourceType::SamplerCube;	break;
+									case D3D_SRV_DIMENSION_TEXTURECUBEARRAY: Resource.mType = ResourceType::SamplerCubeArray;	break;
+									default:
+										break;
 									}
 									break;
-								}
-								case D3D_SIT_SAMPLER:		
+
+								case D3D_SIT_UAV_RWTYPED:
 									break;
 
-								case D3D_SIT_UAV_RWTYPED:		
+								case D3D_SIT_STRUCTURED:
 									break;
 
-								case D3D_SIT_STRUCTURED:		
+								case D3D_SIT_UAV_RWSTRUCTURED:
 									break;
 
-								case D3D_SIT_UAV_RWSTRUCTURED:		
+								case D3D_SIT_BYTEADDRESS:
 									break;
 
-								case D3D_SIT_BYTEADDRESS:			
+								case D3D_SIT_UAV_RWBYTEADDRESS:
 									break;
 
-								case D3D_SIT_UAV_RWBYTEADDRESS:			
+								case D3D_SIT_UAV_APPEND_STRUCTURED:
 									break;
 
-								case D3D_SIT_UAV_APPEND_STRUCTURED:		
+								case D3D_SIT_UAV_CONSUME_STRUCTURED:
 									break;
 
-								case D3D_SIT_UAV_CONSUME_STRUCTURED:		
+								case D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
 									break;
 
-								case D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:	
-									break;
 
-								
 
 								}
 

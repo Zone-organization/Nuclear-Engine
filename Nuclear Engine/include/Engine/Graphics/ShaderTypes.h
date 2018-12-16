@@ -121,5 +121,28 @@ namespace NuclearEngine
 			//A usable shader??
 			bool isValid = false;
 		};
+
+		namespace ShaderTypesHelpers
+		{
+			inline bool IsTexture(const ResourceType& type)
+			{
+				switch (type)
+				{
+				case ResourceType::Texture1D:
+				case ResourceType::Texture1DArray:
+				case ResourceType::Texture2D:
+				case ResourceType::Texture2DArray:
+				case ResourceType::Texture2DMS:
+				case ResourceType::Texture2DMSArray:
+				case ResourceType::Texture3D:
+				case ResourceType::TextureCube:
+				case ResourceType::TextureCubeArray:
+					return true;
+				}
+				return false;
+			}
+
+		}
+
 	}
 }

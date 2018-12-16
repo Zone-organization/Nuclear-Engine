@@ -21,7 +21,7 @@ namespace NuclearEngine
 
 			if (_PShader->mShader)
 			{
-				for (auto Tex : _PShader->Reflection.Textures)
+				/*for (auto Tex : _PShader->Reflection.Textures)
 				{
 					
 				}
@@ -33,7 +33,7 @@ namespace NuclearEngine
 				for (auto CBuf : _PShader->Reflection.ConstantBuffers)
 				{
 
-				}
+				}*/
 				
 
 			}
@@ -156,7 +156,7 @@ namespace NuclearEngine
 			{				
 				data.push_back(i.second);
 			}
-			Graphics::Context::GetRenderer()->WriteBuffer(*mCbuffer, 0, data.data(), mCbufferRef.Size);
+			Graphics::Context::GetRenderer()->WriteBuffer(*mCbuffer, 0, data.data(), mCbufferRef.mSize);
 		}
 	
 		TextureUsageType ParseTexUsageFromName(std::string& name)
@@ -176,21 +176,99 @@ namespace NuclearEngine
 			if (_PShader->mShader)
 			{
 				mPSHaveMaterialCB = false;
-				//Parse Shader
+
 				PixelShaderTS.clear();
-				for (auto Tex : _PShader->Reflection.Textures)
+				for (auto Resource : _PShader->Reflection.mResources)
 				{
-					if (Tex.first.find("NE_Tex_") == 0)
+					//Parse Textures
+					if (Graphics::ShaderTypesHelpers::IsTexture(Resource.second.mType))
 					{
-						std::string texname(Tex.first);
-						texname.erase(0, 7);
-						ShaderTexture mTex;
-						mTex.mTexture = &DefaultTextures::DefaultBlackTex;
-						mTex.mTexture->SetName(texname);
-						mTex.mSlot = Tex.second.BindingSlot;
-						mTex.mTexture->SetUsageType(ParseTexUsageFromName(texname));
-						PixelShaderTS.push_back(mTex);
-					}					
+						if (Resource.first.find("NEMat_") == 0)
+						{
+							std::string texname(Resource.first);
+							texname.erase(0, 7);
+							ShaderTexture mTex;
+							mTex.mTexture = &DefaultTextures::DefaultBlackTex;
+							mTex.mTexture->SetName(texname);
+							mTex.mSlot = Resource.second.mSlot;
+							mTex.mTexture->SetUsageType(ParseTexUsageFromName(texname));
+							PixelShaderTS.push_back(mTex);
+						}
+					}
+
+					//Parse Material ConstantBuffer
+					auto MatCB = _PShader->Reflection.mResources.find("NEMaterial");
+					if (MatCB != _PShader->Reflection.mResources.end())
+					{
+						mCbufferRef = MatCB->second;
+						mPSHaveMaterialCB = true;
+
+						Graphics::Context::GetRenderer()->Release(*mCbuffer);
+
+						mCbuffer = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(mCbufferRef.mSize));
+
+						//BINDING_LLGL
+						//_PShader->SetConstantBuffer(&mCbuffer);
+
+						//Parse Material Variables
+						for (auto var : mCbufferRef.mVariables)
+						{
+							using namespace Graphics;
+							switch (var.second.mType)
+							{
+							case ShaderVariableType::Float1:
+								mCbufferData[var.first] = 0.0f;
+								break;
+							case ShaderVariableType::Float2:
+								mCbufferData[var.first + "_1"] = 0.0f;
+								mCbufferData[var.first + "_2"] = 0.0f;
+								break;
+							case ShaderVariableType::Float3:
+								mCbufferData[var.first + "_1"] = 0.0f;
+								mCbufferData[var.first + "_2"] = 0.0f;
+								mCbufferData[var.first + "_3"] = 0.0f;
+								break;
+							case ShaderVariableType::Float4:
+								mCbufferData[var.first + "_1"] = 0.0f;
+								mCbufferData[var.first + "_2"] = 0.0f;
+								mCbufferData[var.first + "_3"] = 0.0f;
+								mCbufferData[var.first + "_4"] = 0.0f;
+								break;
+							case ShaderVariableType::Matrix2x2:
+								for (Uint8 i = 1; i < 3; i++)
+								{
+									for (Uint8 j = 1; j < 3; j++)
+									{
+										mCbufferData[var.first + "_" + std::to_string(i) + 'x' + std::to_string(j)] = 0.0f;
+									}
+								}
+								break;
+							case ShaderVariableType::Matrix3x3:
+								for (Uint8 i = 1; i < 4; i++)
+								{
+									for (Uint8 j = 1; j < 4; j++)
+									{
+										mCbufferData[var.first + "_" + std::to_string(i) + 'x' + std::to_string(j)] = 0.0f;
+									}
+								}
+								break;
+							case ShaderVariableType::Matrix4x4:
+								for (Uint8 i = 1; i < 5; i++)
+								{
+									for (Uint8 j = 1; j < 5; j++)
+									{
+										mCbufferData[var.first + "_" + std::to_string(i) + 'x' + std::to_string(j)] = 0.0f;
+									}
+								}
+								break;
+
+							default:
+								Log.Error("[Material] Parsing Material Variable [" + var.first + "] Of Type: " + std::to_string((int)var.second.mType) + "\n");
+							}
+						}
+
+						return;
+					}
 				}
 
 				//Parse loaded textures
@@ -206,81 +284,7 @@ namespace NuclearEngine
 							}
 						}
 					}				
-				}
-
-				//Parse Material
-				auto MatCB = _PShader->Reflection.ConstantBuffers.find("NE_Material");
-				if (MatCB != _PShader->Reflection.ConstantBuffers.end())
-				{
-					mCbufferRef = MatCB->second;
-					mPSHaveMaterialCB = true;
-
-					Graphics::Context::GetRenderer()->Release(*mCbuffer);
-
-					mCbuffer = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(mCbufferRef.Size));
-
-					//BINDING_LLGL
-					//_PShader->SetConstantBuffer(&mCbuffer);
-
-					//Parse Material Variables
-					for (auto var : mCbufferRef.Variables)
-					{
-						using namespace Graphics;
-						switch (var.second.Type)
-						{
-						case ShaderVariableType::Float1:
-							mCbufferData[var.first] = 0.0f;
-							break;
-						case ShaderVariableType::Float2:
-							mCbufferData[var.first + "_1"] = 0.0f;
-							mCbufferData[var.first + "_2"] = 0.0f;
-							break;
-						case ShaderVariableType::Float3:
-							mCbufferData[var.first + "_1"] = 0.0f;
-							mCbufferData[var.first + "_2"] = 0.0f;
-							mCbufferData[var.first + "_3"] = 0.0f;
-							break;
-						case ShaderVariableType::Float4:
-							mCbufferData[var.first + "_1"] = 0.0f;
-							mCbufferData[var.first + "_2"] = 0.0f;
-							mCbufferData[var.first + "_3"] = 0.0f;
-							mCbufferData[var.first + "_4"] = 0.0f;
-							break;
-						case ShaderVariableType::Matrix2x2:
-							for (Uint8 i = 1; i < 3; i++)
-							{
-								for (Uint8 j = 1; j < 3; j++)
-								{
-									mCbufferData[var.first + "_" + std::to_string(i) + 'x' + std::to_string(j)] = 0.0f;
-								}
-							}	
-							break;
-						case ShaderVariableType::Matrix3x3:
-							for (Uint8 i = 1; i < 4; i++)
-							{
-								for (Uint8 j = 1; j < 4; j++)
-								{
-									mCbufferData[var.first + "_" + std::to_string(i) + 'x' + std::to_string(j)] = 0.0f;
-								}
-							}
-							break;
-						case ShaderVariableType::Matrix4x4:
-							for (Uint8 i = 1; i < 5; i++)
-							{
-								for (Uint8 j = 1; j < 5; j++)
-								{
-									mCbufferData[var.first + "_" + std::to_string(i) + 'x' + std::to_string(j)] = 0.0f;
-								}
-							}
-							break;
-
-						default:
-							Log.Error("[Material] Parsing Material Variable [" + var.first + "] Of Type: " + std::to_string((int)var.second.Type) + "\n");
-						}
-					}
-
-					return;
-				}
+				}								
 			}
 		}
 	}
