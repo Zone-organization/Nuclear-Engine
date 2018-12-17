@@ -8,25 +8,24 @@ namespace NuclearEngine
 {
 	namespace Graphics
 	{
-		namespace API
+		struct ShaderLoadDesc
 		{
-			struct ShaderLoadDesc
+			ShaderLoadDesc(std::string aPath)
 			{
-				ShaderLoadDesc(std::string aPath)
-				{
-					Path = aPath;
-				}
-				std::string Path;
-				std::vector<std::string> Includes;
-				std::vector<std::string> Defines;
-				bool ReverseIncludeOrder = false;
-			};
+				Path = aPath;
+			}
+			std::string Path;
+			std::vector<std::string> Includes;
+			std::vector<std::string> Defines;
+			bool ReverseIncludeOrder = false;
+		};
 
-			NEAPI BinaryShaderBlob CompileShader(const ShaderLoadDesc& desc, const LLGL::ShaderType& type);
-
-			NEAPI bool CompileShader(BinaryShaderBlob* result, std::string SourceCode, const LLGL::ShaderType& type);
-
-			NEAPI BinaryShaderBlob CompileShader(std::string SourceCode, const LLGL::ShaderType& type);
-		}
+		class NEAPI ShaderCompiler
+		{
+		public:
+			static BinaryShaderBlob CompileShader(const ShaderLoadDesc& desc, const LLGL::ShaderType& type);
+			static bool CompileShader(BinaryShaderBlob* result, std::string SourceCode, const LLGL::ShaderType& type);
+			static BinaryShaderBlob CompileShader(std::string SourceCode, const LLGL::ShaderType& type);
+		};
 	}
 }

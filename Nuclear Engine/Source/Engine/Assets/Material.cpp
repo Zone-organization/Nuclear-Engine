@@ -21,21 +21,11 @@ namespace NuclearEngine
 
 			if (_PShader->mShader)
 			{
-				/*for (auto Tex : _PShader->Reflection.Textures)
+				for (auto Resource : _PShader->Reflection.mResources)
 				{
 					
 				}
-				for (auto Tex : _PShader->Reflection.Textures)
-				{
-
-				}
-
-				for (auto CBuf : _PShader->Reflection.ConstantBuffers)
-				{
-
-				}*/
-				
-
+	
 			}
 			return Result;
 		}

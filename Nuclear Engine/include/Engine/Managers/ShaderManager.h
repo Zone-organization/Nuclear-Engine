@@ -32,8 +32,7 @@ namespace NuclearEngine
 			static Graphics::Shader CreateAutoVertexShader(const AutoVertexShaderDesc& desc);
 			static Graphics::Shader CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
 
-	
-
+			static LLGL::ShaderDescriptor CreateShaderDescFromBlob(const Graphics::BinaryShaderBlob& blob, const LLGL::ShaderType& type);
 		};
 	}
 }

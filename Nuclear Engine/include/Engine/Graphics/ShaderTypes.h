@@ -109,10 +109,8 @@ namespace NuclearEngine
 #ifdef NE_COMPILE_D3DCOMPILER
 			DXBC_BLOB DXBC_SourceCode = DXBC_BLOB();
 #endif
-#ifdef NE_COMPILE_XSHADERCOMPILER
-			std::string GLSL_SourceCode;
+			std::string SourceCode;
 			bool ConvertedShaderRowMajor = false;
-#endif
 			ShaderReflection Reflection;
 
 			//If this blob is crosscompiled (as HLSL 2 GLSL)
