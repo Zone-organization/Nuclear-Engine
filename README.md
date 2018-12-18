@@ -2,7 +2,7 @@
 
 A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 4.5+ , DirectX 11
 
-# Large restructure is undergoing...
+# Large restructure is undergoing to replace OneAPI with LLGL...
 [![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine) 
 
 # Features
@@ -12,7 +12,6 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine using OpenGL 4.5+ , DirectX 
 ## Major TODOs:
   - Remove all API backends, Replace it with LLGL.
   - Bloom effect.
-  - Remove SFML.
 
 ## Minimum Requirements
   - DirectX 11 or OpenGL 4.5 Capable GPU

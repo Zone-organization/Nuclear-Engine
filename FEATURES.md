@@ -23,8 +23,8 @@ Features with Buggy™ means it need more testing or work.
   - Support for streaming large audio files and playing them 				"Stream"  --Soon™
 
 - __Graphics__
-  - Support for Abstracted RenderAPI called "OneAPI" with DirectX 11 and OpenGL 3.3 Core backends.
-  - Support for HLSL Shaders which can be Cross Compiled to GLSL.
+  - Support for Abstracted RenderAPI called LLGL that supports DirectX 11, DirectX 11, Vulkan and OpenGL 4 backends.
+  - Support for HLSL Shaders which can be Cross Compiled to GLSL or SPIR-V.
   - Support for Separate Shaders & Seperate Samplers, Textures.
   - Support for Customized Dear-ImGui as a Default GUI Library.
   - ___RenderSystem___
@@ -33,19 +33,3 @@ Features with Buggy™ means it need more testing or work.
     - Support for PostProcessing Effects:
 	  - Gamma Correction
 	  - HDR 'Reinhard tone mapping'
-	  
-- __OneAPI__
-  - Context
-  - ConstantBuffer
-  - VertexBuffer
-  - IndexBuffer
-  - InputLayout
-  - Texture
-  - Sampler
-  - RenderTarget
-  - BlendState
-  - RasterizerState
-  - DepthStencilState
-  - ShaderCompiler
-  - VertexShader
-  - PixelShader
