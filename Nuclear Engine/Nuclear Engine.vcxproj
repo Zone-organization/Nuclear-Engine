@@ -299,7 +299,6 @@
     <ClInclude Include="include\Core\Parsers\INIFile.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\Base\NE_Exception.h" />
-    <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Base\Utilities\Timer.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Engine\Managers\AssetManager.h" />

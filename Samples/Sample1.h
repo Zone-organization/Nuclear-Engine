@@ -3,6 +3,7 @@
 class Sample1 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
+	std::shared_ptr<LLGL::Input> Input;
 
 	//Assets
 	Assets::Texture DiffuseTex;
@@ -217,6 +218,11 @@ public:
 	}
 	void Load()
 	{
+		//Setup Input System
+		// Add input event listener to window
+		Input = std::make_shared<LLGL::Input>();
+		Core::Application::GetWindow()->AddEventListener(Input);
+
 		Systems::RenderSystemDesc desc;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
 		SampleScene.Systems.Configure();
@@ -270,13 +276,13 @@ public:
 
 	void Update(float deltatime) override
 	{
-		if (Core::Input->KeyPressed(Input::Keyboard::Key::W))
+		if (Input->KeyPressed(Input::Keyboard::Key::W))
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-		if (Core::Input->KeyPressed(Input::Keyboard::Key::A))
+		if (Input->KeyPressed(Input::Keyboard::Key::A))
 			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-		if (Core::Input->KeyPressed(Input::Keyboard::Key::S))
+		if (Input->KeyPressed(Input::Keyboard::Key::S))
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-		if (Core::Input->KeyPressed(Input::Keyboard::Key::D))
+		if (Input->KeyPressed(Input::Keyboard::Key::D))
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		Camera.Update();

@@ -199,7 +199,6 @@
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="include\Base\Utilities\Timer.h" />
-    <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />

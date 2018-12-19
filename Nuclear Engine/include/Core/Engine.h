@@ -1,8 +1,17 @@
 #pragma once
 #include <Core\Game.h>
 #include <Core\ApplicationDesc.h>
+#include <LLGL/Input.h>
 namespace NuclearEngine
 {
+	namespace Input
+	{
+		namespace Keyboard
+		{
+			using LLGL::Key;
+		}
+	}
+
 	namespace Core
 	{
 		struct EngineStartupDesc

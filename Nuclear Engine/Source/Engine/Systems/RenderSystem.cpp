@@ -29,11 +29,11 @@ namespace NuclearEngine
 				shaderProgramDesc.vertexShader = VShader.mShader;
 				shaderProgramDesc.fragmentShader = PShader.mShader;
 			}
-			LLGL::ShaderProgram* shaderProgram = Graphics::Context::GetRenderer()->CreateShaderProgram(shaderProgramDesc);
+			ShaderProgram = Graphics::Context::GetRenderer()->CreateShaderProgram(shaderProgramDesc);
 
 			// Link shader program and check for errors
-			if (shaderProgram->HasErrors())
-				Log.Error(shaderProgram->QueryInfoLog());
+			if (ShaderProgram->HasErrors())
+				Log.Error(ShaderProgram->QueryInfoLog());
 			
 		
 			// Create graphics pipeline
