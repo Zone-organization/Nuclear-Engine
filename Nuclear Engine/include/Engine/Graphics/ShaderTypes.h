@@ -96,30 +96,6 @@ namespace NuclearEngine
 
 		};
 
-#ifdef NE_COMPILE_D3DCOMPILER
-		struct DXBC_BLOB
-		{
-			void* Buffer = nullptr;
-			size_t Size = 0;
-		};
-#endif
-
-		struct BinaryShaderBlob
-		{
-#ifdef NE_COMPILE_D3DCOMPILER
-			DXBC_BLOB DXBC_SourceCode = DXBC_BLOB();
-#endif
-			std::string SourceCode;
-			bool ConvertedShaderRowMajor = false;
-			ShaderReflection Reflection;
-
-			//If this blob is crosscompiled (as HLSL 2 GLSL)
-			bool Converted = false;
-
-			//A usable shader??
-			bool isValid = false;
-		};
-
 		namespace ShaderTypesHelpers
 		{
 			inline bool IsTexture(const ResourceType& type)

@@ -163,7 +163,7 @@ namespace NuclearEngine
 				}
 
 			}
-			void ParseConstantBuffers(const D3D11_SHADER_DESC& shaderDesc, ID3D11ShaderReflection* pReflector, BinaryShaderBlob *result)
+			void ParseConstantBuffers(const D3D11_SHADER_DESC& shaderDesc, ID3D11ShaderReflection* pReflector, Graphics::Shader *result)
 			{
 				for (Uint32 i = 0; i < shaderDesc.ConstantBuffers; i++)
 				{
@@ -183,11 +183,11 @@ namespace NuclearEngine
 						Constbuf.mType = ResourceType::ConstantBuffer;
 						ParseVariables(CBDesc, reflectedcb, &Constbuf);
 
-						result->Reflection.mResources[CBDesc.Name] = Constbuf;
+						result->mReflection.mResources[CBDesc.Name] = Constbuf;
 					}
 				}
 			}
-			void ParseResources(const D3D11_SHADER_DESC& shaderDesc, ID3D11ShaderReflection* pReflector, BinaryShaderBlob *result)
+			void ParseResources(const D3D11_SHADER_DESC& shaderDesc, ID3D11ShaderReflection* pReflector, Graphics::Shader *result)
 			{
 				for (Uint32 i = 0; i < shaderDesc.BoundResources; i++)
 				{
@@ -279,12 +279,12 @@ namespace NuclearEngine
 
 				}
 			}
-			void Reflect_DXBC(BinaryShaderBlob *result)
+			void Reflect_DXBC(Graphics::Shader *result, ID3D10Blob* blob)
 			{
 				ID3D11ShaderReflection* pReflector = NULL;
 
-				D3DReflect(result->DXBC_SourceCode.Buffer,
-					result->DXBC_SourceCode.Size,
+				D3DReflect(blob->GetBufferPointer(),
+					blob->GetBufferSize(),
 					IID_ID3D11ShaderReflection, (void**)&pReflector);
 
 				D3D11_SHADER_DESC shaderDesc;
@@ -295,7 +295,8 @@ namespace NuclearEngine
 
 				return;
 			}
-			void CompileHLSL2DXBC(BinaryShaderBlob * result, std::string SourceCode, LLGL::ShaderType type)
+
+			bool CompileHLSL2DXBC_ThenCreate(Graphics::Shader *result, const std::string& SourceCode, LLGL::ShaderType type)
 			{
 				const char* shadermodel;
 				if (type == LLGL::ShaderType::Vertex)
@@ -316,18 +317,29 @@ namespace NuclearEngine
 
 				if (FAILED(D3DCompile(SourceCode.c_str(), SourceCode.length(), 0, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shadermodel, 0, 0, &m_blob, &ERRMSG)))
 				{
-					Log.Error("[ShaderCompiler] CompileHLSL2DXBC Failed\n");
-
+					Log.Error("[DXBC_Compiler] D3DCompiler for Shader: " + std::to_string(result->mHashedName) + " Failed!\n");
 					Check_D3DCompile_Errors(ERRMSG);
-
-					return;
+					return false;
 				}
 
-				result->DXBC_SourceCode.Buffer = m_blob->GetBufferPointer();
-				result->DXBC_SourceCode.Size = m_blob->GetBufferSize();
-				Reflect_DXBC(result);
 
-				return;
+				Reflect_DXBC(result, m_blob);
+
+				//Create Shader
+				LLGL::ShaderDescriptor shaderdesc;
+				shaderdesc.source = static_cast<const char*>(m_blob->GetBufferPointer());
+				shaderdesc.sourceSize = m_blob->GetBufferSize();
+				shaderdesc.sourceType = LLGL::ShaderSourceType::BinaryBuffer;
+				shaderdesc.type = type;
+
+				result->mShader = Graphics::Context::GetRenderer()->CreateShader(shaderdesc);
+
+				if (result->mShader)
+				{
+					result->isValid = true;
+					return true;
+				}
+				return false;
 			}
 
 		}

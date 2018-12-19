@@ -85,14 +85,10 @@ namespace NuclearEngine
 			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
-			auto shadersource = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true);
 
-			LLGL::ShaderDescriptor PostFXShaderDesc;
-			PostFXShaderDesc.source = shadersource.c_str();
-			PostFXShaderDesc.sourceSize = shadersource.size();
-			PostFXShaderDesc.sourceType = LLGL::ShaderSourceType::CodeString;
-			PostFXShaderDesc.type = LLGL::ShaderType::Fragment;
-			PostProcess_PShader.mShader = Graphics::Context::GetRenderer()->CreateShader(PostFXShaderDesc);
+			Graphics::ShaderCompiler::CompileAndCreateShader(&PostProcess_PShader,
+				Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
+				LLGL::ShaderType::Fragment);
 	
 			LLGL::SamplerDescriptor Samplerdesc;
 			Samplerdesc.magFilter = Samplerdesc.minFilter = Samplerdesc.mipMapFilter = LLGL::SamplerFilter::Nearest;
@@ -174,15 +170,9 @@ namespace NuclearEngine
 				Graphics::Context::GetRenderer()->Release(*PShader.mShader);
 				Graphics::Context::GetRenderer()->Release(*NE_Light_CB);
 
+				Graphics::ShaderCompiler::CompileAndCreateShader(&PShader,
+					Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true), LLGL::ShaderType::Fragment);
 
-				auto shadersource = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
-
-				LLGL::ShaderDescriptor PShaderDesc;
-				PShaderDesc.source = shadersource.c_str();
-				PShaderDesc.sourceSize = shadersource.size();
-				PShaderDesc.sourceType = LLGL::ShaderSourceType::CodeString;
-				PShaderDesc.type = LLGL::ShaderType::Fragment;
-				PShader.mShader = Graphics::Context::GetRenderer()->CreateShader(PShaderDesc);
 
 				Calculate_Light_CB_Size();
 
@@ -208,14 +198,8 @@ namespace NuclearEngine
 					VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
 				}
 				else {
-					auto shadersource = Core::FileSystem::LoadFileToString(Desc.VShaderPath);
+					Graphics::ShaderCompiler::CompileAndCreateShader(&VShader,Core::FileSystem::LoadFileToString(Desc.VShaderPath), LLGL::ShaderType::Vertex);
 
-					LLGL::ShaderDescriptor VShaderDesc;
-					VShaderDesc.source = shadersource.c_str();
-					VShaderDesc.sourceSize = shadersource.size();
-					VShaderDesc.sourceType = LLGL::ShaderSourceType::CodeString;
-					VShaderDesc.type = LLGL::ShaderType::Vertex;
-					VShader.mShader = Graphics::Context::GetRenderer()->CreateShader(VShaderDesc);
 				}
 
 				/*if (this->ActiveCamera != nullptr)

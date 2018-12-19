@@ -21,7 +21,7 @@ namespace NuclearEngine
 
 			if (_PShader->mShader)
 			{
-				for (auto Resource : _PShader->Reflection.mResources)
+				for (auto Resource : _PShader->mReflection.mResources)
 				{
 					
 				}
@@ -168,7 +168,7 @@ namespace NuclearEngine
 				mPSHaveMaterialCB = false;
 
 				PixelShaderTS.clear();
-				for (auto Resource : _PShader->Reflection.mResources)
+				for (auto Resource : _PShader->mReflection.mResources)
 				{
 					//Parse Textures
 					if (Graphics::ShaderTypesHelpers::IsTexture(Resource.second.mType))
@@ -187,8 +187,8 @@ namespace NuclearEngine
 					}
 
 					//Parse Material ConstantBuffer
-					auto MatCB = _PShader->Reflection.mResources.find("NEMaterial");
-					if (MatCB != _PShader->Reflection.mResources.end())
+					auto MatCB = _PShader->mReflection.mResources.find("NEMaterial");
+					if (MatCB != _PShader->mReflection.mResources.end())
 					{
 						mCbufferRef = MatCB->second;
 						mPSHaveMaterialCB = true;

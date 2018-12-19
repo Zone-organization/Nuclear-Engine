@@ -11,8 +11,16 @@ namespace NuclearEngine
 		class NEAPI Shader 
 		{		
 		public:
+			bool isValid = false;
+			bool Converted = false;
+			bool ConvertShaderRowMajorGLSL = true;
+			bool KeepShaderSourceCode = false;
+
+			std::string mSourceCode;
+			Uint32 mHashedName;
+
 			LLGL::Shader* mShader;
-			ShaderReflection Reflection;
+			ShaderReflection mReflection;
 			LLGL::VertexFormat mVSFormat;
 		};
 	}

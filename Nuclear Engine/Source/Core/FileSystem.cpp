@@ -7,9 +7,9 @@ namespace NuclearEngine
 	namespace Core
 	{
 	
-			std::string FileSystem::LoadFileToString(std::string Filepath)
+			std::string FileSystem::LoadFileToString(const Path& Filepath)
 			{
-				std::ifstream file(Filepath, std::ios::in);
+				std::ifstream file(Filepath.mPath, std::ios::in);
 				std::string data = "", line = "";
 
 				if (file.is_open())
@@ -19,16 +19,15 @@ namespace NuclearEngine
 				}
 				else
 				{
-					Log.Error("[FileSystem] Couldn't Read File: " + Filepath + "\n");
+					Log.Error("[FileSystem] Couldn't Read File: " + Filepath.mPath + "\n");
 					return std::string("NoString");
-					//throw std::runtime_error(std::string("[FileSystem] Couldn't Read File: ") + Filepath);
 				}
 				return data;
 			}
 
-			std::string FileSystem::LoadShader(std::string Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder)
+			std::string FileSystem::LoadShader(const Path& Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder)
 			{
-				std::ifstream file(Filepath, std::ios::in);
+				std::ifstream file(Filepath.mPath, std::ios::in);
 				std::string data = "", line = "";
 
 				if (file.is_open())
@@ -40,7 +39,7 @@ namespace NuclearEngine
 				}
 				else
 				{
-					Log.Error("[FileSystem] Couldn't Read File: " + Filepath);
+					Log.Error("[FileSystem] Couldn't Read File: " + Filepath.mPath);
 					return std::string("NoString");
 				}
 				if (reverseorder = false)

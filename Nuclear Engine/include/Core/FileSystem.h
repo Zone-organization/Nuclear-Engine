@@ -1,5 +1,6 @@
 #pragma once
 #include <Base\NE_PrivateCommon.h>
+#include <Core\Path.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -10,9 +11,9 @@ namespace NuclearEngine
 			class NEAPI FileSystem
 			{
 			public:
-				static std::string LoadFileToString(std::string Filepath);
+				static std::string LoadFileToString(const Path& Filepath);
+				static std::string LoadShader(const Path& Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder = false);
 
-				static std::string LoadShader(std::string Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder =false);
 			};
 
 	}

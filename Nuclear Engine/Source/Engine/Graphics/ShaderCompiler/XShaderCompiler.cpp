@@ -2,6 +2,7 @@
 
 #ifdef NE_COMPILE_XSHADERCOMPILER
 #include <..\..\Nuclear Shader Compiler\inc\Xsc\Xsc.h>
+#include <Engine/Graphics/Context.h>
 #include <sstream>
 #include <iostream>
 #include <vector>
@@ -16,7 +17,7 @@ namespace NuclearEngine
 		{
 			ShaderVariableType Reflect_FieldType(Xsc::Reflection::Field field);
 
-			void Reflect(Xsc::Reflection::ReflectionData* reflection, BinaryShaderBlob * result)
+			void Reflect(Xsc::Reflection::ReflectionData* reflection, Graphics::Shader * result)
 			{
 				//Parse Resources
 				for (auto mRes : reflection->resources)
@@ -27,7 +28,7 @@ namespace NuclearEngine
 
 					if (mRes.type != Xsc::Reflection::ResourceType::ConstantBuffer)
 					{
-						result->Reflection.mResources[mRes.name] = ReflectedResource;
+						result->mReflection.mResources[mRes.name] = ReflectedResource;
 					}
 					else
 					{
@@ -49,7 +50,7 @@ namespace NuclearEngine
 								}
 
 								ReflectedResource.mSize = CB.size;
-								result->Reflection.mResources[mRes.name] = ReflectedResource;
+								result->mReflection.mResources[mRes.name] = ReflectedResource;
 							}
 						}
 					}
@@ -98,63 +99,6 @@ namespace NuclearEngine
 				std::vector<Xsc::Report> Warnings;
 				std::vector<Xsc::Report> Errors;
 			};
-
-
-			void CompileHLSL2GLSL(BinaryShaderBlob * result, std::string SourceCode, LLGL::ShaderType type)
-			{
-				// Initialize shader input descriptor structure
-				auto input = std::make_shared<std::stringstream>();
-
-				*input << SourceCode;
-
-				Xsc::ShaderInput inputDesc;
-				inputDesc.sourceCode = input;
-				inputDesc.shaderVersion = Xsc::InputShaderVersion::HLSL5;
-				inputDesc.entryPoint = "main";
-				switch (type)
-				{
-				case LLGL::ShaderType::Vertex:
-					inputDesc.shaderTarget = Xsc::ShaderTarget::VertexShader;
-					break;
-				case LLGL::ShaderType::Geometry:
-					inputDesc.shaderTarget = Xsc::ShaderTarget::GeometryShader;
-					break;
-				case LLGL::ShaderType::Fragment:
-					inputDesc.shaderTarget = Xsc::ShaderTarget::FragmentShader;
-					break;
-				default:
-					break;
-				}
-
-				// Initialize shader output descriptor structure
-				Xsc::ShaderOutput outputDesc;
-				std::ostringstream stream;
-				outputDesc.sourceCode = &stream;
-				outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL450;
-
-				Xsc::Reflection::ReflectionData reflection;
-				if (result->ConvertedShaderRowMajor == true)
-				{
-					outputDesc.options.rowMajorAlignment = true;
-				}
-
-				//Seperate shaders requirements
-				outputDesc.options.autoBinding = true;
-				outputDesc.options.separateShaders = true;
-
-				// Compile HLSL code into GLSL
-				XSC_ERROR_LOG log;
-
-				if (!Xsc::CompileShader(inputDesc, outputDesc, &log, &reflection))
-				{
-					Log.Error("[ShaderCompiler] CompileDXBC2GLSL Failed! Info: \n" + log.Get_Whole_Log());
-
-				}
-				result->SourceCode = stream.str();
-				Reflect(&reflection, result);
-
-				result->Converted = true;
-			}
 
 			ShaderVariableType Reflect_FieldType(Xsc::Reflection::Field field)
 			{
@@ -206,6 +150,83 @@ namespace NuclearEngine
 				return ShaderVariableType::Unknown;
 			}
 
+			bool CompileHLSL2GLSL_ThenCreate(Graphics::Shader * result,const std::string& SourceCode, LLGL::ShaderType type)
+			{
+				// Initialize shader input descriptor structure
+				auto input = std::make_shared<std::stringstream>();
+
+				*input << SourceCode;
+
+				Xsc::ShaderInput inputDesc;
+				inputDesc.sourceCode = input;
+				inputDesc.shaderVersion = Xsc::InputShaderVersion::HLSL5;
+				inputDesc.entryPoint = "main";
+				switch (type)
+				{
+				case LLGL::ShaderType::Vertex:
+					inputDesc.shaderTarget = Xsc::ShaderTarget::VertexShader;
+					break;
+				case LLGL::ShaderType::Geometry:
+					inputDesc.shaderTarget = Xsc::ShaderTarget::GeometryShader;
+					break;
+				case LLGL::ShaderType::Fragment:
+					inputDesc.shaderTarget = Xsc::ShaderTarget::FragmentShader;
+					break;
+				default:
+					break;
+				}
+
+				// Initialize shader output descriptor structure
+				Xsc::ShaderOutput outputDesc;
+				std::ostringstream stream;
+				outputDesc.sourceCode = &stream;
+				outputDesc.shaderVersion = Xsc::OutputShaderVersion::GLSL450;
+
+				Xsc::Reflection::ReflectionData reflection;
+				if (result->ConvertShaderRowMajorGLSL == true)
+				{
+					outputDesc.options.rowMajorAlignment = true;
+				}
+
+				//Seperate shaders requirements
+				outputDesc.options.autoBinding = true;
+				outputDesc.options.separateShaders = true;
+
+				// Compile HLSL code into GLSL
+				XSC_ERROR_LOG log;
+
+				if (!Xsc::CompileShader(inputDesc, outputDesc, &log, &reflection))
+				{
+					Log.Error("[XShaderCompiler] Compiling Shader: " + std::to_string(result->mHashedName) + " Failed! Info: \n" + log.Get_Whole_Log());
+					return false;
+				}
+
+				if (result->KeepShaderSourceCode)
+				{
+					result->mSourceCode = stream.str();
+				}
+
+				Reflect(&reflection, result);
+				result->Converted = true;
+
+
+				auto Source = stream.str();
+				//Create Shader
+				LLGL::ShaderDescriptor shaderdesc;
+				shaderdesc.source = Source.c_str();
+				shaderdesc.sourceType = LLGL::ShaderSourceType::CodeString;
+				shaderdesc.type = type;
+
+				result->mShader = Graphics::Context::GetRenderer()->CreateShader(shaderdesc);
+
+				if (result->mShader)
+				{
+					result->isValid = true;
+					return true;
+				}
+
+				return false;
+			}		
 		}
 	}
 }

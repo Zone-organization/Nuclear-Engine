@@ -104,6 +104,7 @@
   <ItemGroup>
     <ClInclude Include="include\Base\Utilities\SmartPointer.h" />
     <ClInclude Include="include\Core\ApplicationDesc.h" />
+    <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="include\Engine\Assets\Asset.h" />
     <ClInclude Include="include\Engine\Assets\DefaultTextures.h" />
     <ClInclude Include="include\Engine\Assets\Material.h" />
@@ -329,6 +330,7 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\Path.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Assets\TextureAsset.cpp" />
