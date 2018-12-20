@@ -1,6 +1,6 @@
 #include <Core\Application.h>
 #include <Core\Engine.h>
-#include <Engine\Graphics\ImGui_Binding.h>
+#include <Engine\Graphics\ImGuiBinding.h>
 #include <Engine\Graphics\Context.h>
 
 namespace NuclearEngine

@@ -79,7 +79,7 @@ namespace NuclearEngine
 			vertexBufferLayout.AppendAttribute({ "POSITION", LLGL::Format::RGB32Float });
 
 			LLGL::BufferDescriptor VDesc;
-			VDesc.type = LLGL::BufferType::Vertex;
+			VDesc.bindFlags = LLGL::BindFlags::VertexBuffer;
 			VDesc.size = sizeof(skyboxVertices);
 			VDesc.vertexBuffer.format = vertexBufferLayout;
 

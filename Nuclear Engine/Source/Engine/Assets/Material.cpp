@@ -40,7 +40,7 @@ namespace NuclearEngine
 				1: Generate PipelineLayout based on	ShaderReflection.
 				2: Create ResourceHeap for each texture.
 			*/
-			LLGL::ResourceHeapDescriptor;
+			//LLGL::ResourceHeapDescriptor;
 			
 
 			/*for (auto TexSet : mPixelShaderTextures)

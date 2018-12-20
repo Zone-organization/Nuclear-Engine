@@ -227,6 +227,13 @@
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\DXBC_Compiler.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="include\Core\Path.h" />
+    <ClInclude Include="include\Engine\Graphics\ImGui.h" />
+    <ClInclude Include="include\Engine\Graphics\ImGuiConfig.h" />
+    <ClInclude Include="include\Engine\Graphics\ImGuiBinding.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -279,6 +286,11 @@
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGui\ImGuiBinding.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

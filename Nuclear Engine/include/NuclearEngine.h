@@ -9,7 +9,6 @@
               /   \
 _____________/BOOOM\_____________
 */
-//Note: The Supported Renderers will expand when I get new hardware, currently planned in the future ( DirectX 12 , Vulkan )
 
 //# Core Engine Headers
 #include <Core/Engine.h>

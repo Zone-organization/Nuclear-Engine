@@ -144,9 +144,8 @@ namespace NuclearEngine
 		{
 			std::vector<std::string> defines;
 			LLGL::PipelineLayoutDescriptor layoutDesc;
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 0 });
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 1 });
-
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 0 });
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 1 });
 
 			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true; }
 			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
@@ -154,15 +153,15 @@ namespace NuclearEngine
 			if (Desc.NormalMaps == true) 
 			{ 
 				defines.push_back("NE_USE_NORMAL_MAPS");
-				layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture, LLGL::StageFlags::FragmentStage, 2 });
+				layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 2 });
 			}
 
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 0 });
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 1 });
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler,0, LLGL::StageFlags::FragmentStage, 0 });
+			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler,0, LLGL::StageFlags::FragmentStage, 1 });
 
 			if (Desc.NormalMaps == true)
 			{
-				layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler, LLGL::StageFlags::FragmentStage, 2 });
+				layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 2 });
 			}
 
 			if (PSDirty = true)

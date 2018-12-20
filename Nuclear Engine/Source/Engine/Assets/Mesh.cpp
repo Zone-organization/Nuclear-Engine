@@ -63,7 +63,7 @@ namespace NuclearEngine {
 				}
 
 				LLGL::BufferDescriptor desc;
-				desc.type = LLGL::BufferType::Vertex;
+				desc.bindFlags = LLGL::BindFlags::VertexBuffer;
 				desc.size = (unsigned int)verticesdata.size() * sizeof(float);
 				desc.vertexBuffer.format = layout;             // Vertex format layout
 
@@ -72,7 +72,7 @@ namespace NuclearEngine {
 
 			{
 				LLGL::BufferDescriptor desc;
-				desc.type = LLGL::BufferType::Index;
+				desc.bindFlags = LLGL::BindFlags::IndexBuffer;
 				desc.size = (unsigned int)data.indices.size();
 				mIB = Graphics::Context::GetRenderer()->CreateBuffer(desc, data.indices.data());
 			}
