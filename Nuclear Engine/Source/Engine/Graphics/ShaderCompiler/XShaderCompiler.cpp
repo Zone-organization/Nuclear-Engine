@@ -16,48 +16,63 @@ namespace NuclearEngine
 		namespace XShaderCompiler
 		{
 			ShaderVariableType Reflect_FieldType(Xsc::Reflection::Field field);
+			std::unordered_map<std::string, ShaderVariable> ReflectFields(const std::vector<Xsc::Reflection::Field>& fields)
+			{
+				std::unordered_map<std::string, ShaderVariable>  result;
+				for (auto fld : fields)
+				{
+					ShaderVariable variable
+					{
+						fld.referenced,
+						Reflect_FieldType(fld),
+						fld.typeRecordIndex,
+						fld.size,
+						fld.offset,
+						fld.arrayElements
+					};
 
+					result[fld.name] = variable;
+				}
+				return result;
+			}
 			void Reflect(Xsc::Reflection::ReflectionData* reflection, Graphics::Shader * result)
 			{
+				ShaderResource RRES;
+
 				//Parse Resources
-				for (auto mRes : reflection->resources)
+				for (auto res : reflection->resources)
 				{
-					ReflectedShaderResource ReflectedResource;
-					ReflectedResource.mSlot = mRes.slot;
-					ReflectedResource.mType = static_cast<ResourceType>(mRes.type);
-
-					if (mRes.type != Xsc::Reflection::ResourceType::ConstantBuffer)
-					{
-						result->mReflection.mResources[mRes.name] = ReflectedResource;
-					}
-					else
-					{
-						//Check for the resource in the constant buffer reflection.
-						for (auto CB : reflection->constantBuffers)
-						{
-							if (CB.name == mRes.name && CB.slot == mRes.slot)
-							{
-								for (auto member : CB.fields)
-								{
-									ShaderVariable variable;
-									//special case
-									if (member.type == Xsc::Reflection::FieldType::Record)
-										variable.mType = ShaderVariableType::Struct;
-									else
-										variable.mType = Reflect_FieldType(member);
-
-									ReflectedResource.mVariables[member.name] = variable;
-								}
-
-								ReflectedResource.mSize = CB.size;
-								result->mReflection.mResources[mRes.name] = ReflectedResource;
-							}
-						}
-					}
+					RRES.mSlot = res.slot;
+					RRES.mType = static_cast<ResourceType>(res.type);
+					result->mReflection.mResources[res.name] = RRES;
 				}
 
-			}
+				//Check for constant buffers resources.
+				for (auto CB : reflection->constantBuffers)
+				{
+					RRES.mVariables = ReflectFields(CB.fields);
+					RRES.mSlot = CB.slot;
+					RRES.mSize = CB.size;
+					RRES.mType = ResourceType::ConstantBuffer;
+					result->mReflection.mResources[CB.name] = RRES;
+				}
 
+				//Parse Shader Structures
+				for (auto St : reflection->records)
+				{
+					ShaderStructure RST
+					{
+						St.referenced,
+						St.name,
+						St.baseRecordIndex,
+						ReflectFields(St.fields),
+						St.size ,
+						St.padding,
+					};
+					result->mReflection.mStructures.push_back(RST);
+				}
+			}
+			
 			class XSC_ERROR_LOG : public Xsc::Log
 			{
 			public:
@@ -144,7 +159,7 @@ namespace NuclearEngine
 
 
 				default:
-					//Log.Warning("[XShaderCompiler] [Reflection] Using Unsupported Variable type: " + std::to_string(Xsc::Reflection::FieldType::Bool) + " \n");
+					Log.Warning("[XShaderCompiler] [Reflection] Using Unsupported Variable type: " + std::to_string(static_cast<int>(field.type)) + " \n");
 					return ShaderVariableType::Unknown;
 				}
 				return ShaderVariableType::Unknown;

@@ -122,20 +122,20 @@ public:
 	{
 		//Create some shapes
 		Assets::Mesh::CreateCube(&CubeAsset);
-		CubeAsset.Initialize(Renderer->GetVertexShader());
+		CubeAsset.Initialize(*Renderer->GetVertexShader());
 
 		Assets::Mesh::CreateSphere(&SphereAsset);
-		SphereAsset.Initialize(Renderer->GetVertexShader());
+		SphereAsset.Initialize(*Renderer->GetVertexShader());
 
 		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
-		GridAsset.Initialize(Renderer->GetVertexShader());
+		GridAsset.Initialize(*Renderer->GetVertexShader());
 
 		//NanoSuit Creation
 		Managers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
-		NanosuitAsset.Initialize(Renderer->GetVertexShader());
+		NanosuitAsset.Initialize(*Renderer->GetVertexShader());
 
 		//Load some textures manually
 		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
@@ -146,35 +146,42 @@ public:
 
 		//TODO::MATERIAL
 
+		Assets::MaterialCreationDesc desc;
+
+		desc.mVShader = Renderer->GetVertexShader();
+		desc.mPShader = Renderer->GetPixelShader();
+		desc.mPipeline = Renderer->Pipeline;
+
+
 		//Initialize Materials
-		/*Assets::TextureSet CubeSet;
-		CubeSet.push_back(DiffuseTex);
-		CubeSet.push_back(SpecularTex);
+		Assets::TextureSet CubeSet;
+		CubeSet.push_back(&DiffuseTex);
+		CubeSet.push_back(&SpecularTex);
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
 		Assets::TextureSet SphereTextures;
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		SphereTextures.push_back(WhiteTex);
+		SphereTextures.push_back(&WhiteTex);
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-		SphereTextures.push_back(WhiteTex);
+		SphereTextures.push_back(&WhiteTex);
 		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
 
 
 		Assets::TextureSet GridTextures;
 		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		GridTextures.push_back(GridTex);
+		GridTextures.push_back(&GridTex);
 		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
-		GridTextures.push_back(GreyTex);
+		GridTextures.push_back(&GreyTex);
 		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
 
-		GridMaterial.SetPixelShader(Renderer->GetPixelShader());
-		CubeMaterial.SetPixelShader(Renderer->GetPixelShader());
-		SphereMaterial.SetPixelShader(Renderer->GetPixelShader());
-		NanosuitMaterial.SetPixelShader(Renderer->GetPixelShader());*/
+		GridMaterial.Create(desc);
+		CubeMaterial.Create(desc);
+		SphereMaterial.Create(desc);
+		NanosuitMaterial.Create(desc);
 
-		//CubeSet.clear();
-		//SphereTextures.clear();
-		//GridTextures.clear();
+		CubeSet.clear();
+		SphereTextures.clear();
+		GridTextures.clear();
 
 		CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
@@ -296,10 +303,9 @@ public:
 		{
 			// Clear color buffer
 			Graphics::Context::GetCommands()->Clear(LLGL::ClearFlags::ColorDepth);
-			Graphics::Context::GetCommands()->SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			Graphics::Context::GetCommands()->SetClearColor({ 1.0f, 0.0f, 0.0f, 1.0f });
 			Graphics::Context::GetCommands()->SetGraphicsPipeline(*Renderer->Pipeline);
 
-			// Draw triangle with 3 vertices
 			Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
 
 		}

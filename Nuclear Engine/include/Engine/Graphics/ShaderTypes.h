@@ -79,21 +79,36 @@ namespace NuclearEngine
 
 		struct ShaderVariable
 		{
-			Uint32 mSize = 4;           // Size of variable (in bytes)
+			bool mReferenced = false;
 			ShaderVariableType mType = ShaderVariableType::Float1;
+			Int32  mTypeRecordIndex = -1;
+			Uint32 mSize = 4;           // Size of variable (in bytes)
+			Uint32 mOffset = 0;
+			std::vector<unsigned int> mArrayElements;
 		};
 
-		struct ReflectedShaderResource
+		struct ShaderResource
 		{
 			Uint32 mSlot = 0;
 			Uint32 mSize = 0;
 			ResourceType mType = ResourceType::Undefined;
 			std::unordered_map<std::string, ShaderVariable> mVariables;
 		};
+
+		struct ShaderStructure
+		{
+			bool mReferenced = false;
+			std::string mName;
+			int mBaseRecordIndex = -1;
+			std::unordered_map<std::string, ShaderVariable> mVariables;
+			Uint32 mSize = 0;
+			Uint32 mPadding = 0;
+		};
+
 		struct ShaderReflection
 		{
-			std::unordered_map<std::string, ReflectedShaderResource> mResources;
-
+			std::unordered_map<std::string, ShaderResource> mResources;
+			std::vector<ShaderStructure> mStructures;
 		};
 
 		namespace ShaderTypesHelpers

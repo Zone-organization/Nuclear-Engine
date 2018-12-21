@@ -16,9 +16,11 @@ namespace NuclearEngine
 			bool ConvertShaderRowMajorGLSL = true;
 			bool KeepShaderSourceCode = false;
 
+
+
 			std::string mSourceCode;
 			Uint32 mHashedName;
-
+					   
 			LLGL::Shader* mShader;
 			ShaderReflection mReflection;
 			LLGL::VertexFormat mVSFormat;

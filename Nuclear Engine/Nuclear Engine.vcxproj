@@ -67,7 +67,7 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -88,7 +88,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <DisableSpecificWarnings>4103;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>

@@ -42,8 +42,8 @@ namespace NuclearEngine
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
-			Graphics::Shader GetVertexShader();
-			Graphics::Shader GetPixelShader();
+			Graphics::Shader* GetVertexShader();
+			Graphics::Shader* GetPixelShader();
 
 			void BindShaders();
 			void BindConstantBuffers();

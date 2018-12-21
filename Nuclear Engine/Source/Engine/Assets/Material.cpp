@@ -193,12 +193,10 @@ namespace NuclearEngine
 						mCbufferRef = MatCB->second;
 						mPSHaveMaterialCB = true;
 
-						Graphics::Context::GetRenderer()->Release(*mCbuffer);
-
+						if (mCbuffer)						
+							Graphics::Context::GetRenderer()->Release(*mCbuffer);
+						
 						mCbuffer = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(mCbufferRef.mSize));
-
-						//BINDING_LLGL
-						//_PShader->SetConstantBuffer(&mCbuffer);
 
 						//Parse Material Variables
 						for (auto var : mCbufferRef.mVariables)
@@ -253,7 +251,7 @@ namespace NuclearEngine
 								break;
 
 							default:
-								Log.Error("[Material] Parsing Material Variable [" + var.first + "] Of Type: " + std::to_string((int)var.second.mType) + "\n");
+								Log.Error("[Material] Parsing Material Variable \"" + var.first + "\" Of Type: " + std::to_string((int)var.second.mType) + "\n");
 							}
 						}
 

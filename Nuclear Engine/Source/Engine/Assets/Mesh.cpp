@@ -76,7 +76,7 @@ namespace NuclearEngine {
 				desc.size = (unsigned int)data.indices.size();
 				mIB = Graphics::Context::GetRenderer()->CreateBuffer(desc, data.indices.data());
 			}
-			mIndicesCount = data.indices.size();			
+			mIndicesCount = static_cast<Uint32>(data.indices.size());			
 
 			data.Positions.clear();
 			data.UV.clear();

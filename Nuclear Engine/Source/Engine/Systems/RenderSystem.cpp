@@ -102,13 +102,13 @@ namespace NuclearEngine
 		{
 			return this->ActiveCamera;
 		}
-		Graphics::Shader RenderSystem::GetVertexShader()
+		Graphics::Shader* RenderSystem::GetVertexShader()
 		{
-			return this->VShader;
+			return &this->VShader;
 		}
-		Graphics::Shader RenderSystem::GetPixelShader()
+		Graphics::Shader* RenderSystem::GetPixelShader()
 		{
-			return this->PShader;
+			return &this->PShader;
 		}
 		void RenderSystem::BindShaders()
 		{
@@ -290,17 +290,17 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
 		{
-		/*	material->Bind();
+			material->Bind();
 			material->UpdateMaterialCBuffer();
 			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)
 			{
 				material->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
 				Graphics::Context::GetCommands()->SetIndexBuffer(*mesh->mSubMeshes.at(i).mIB);
-				Graphics::Context::GetCommands()->SetVertexBuffer(*mesh->SubMeshes.at(i).mVB);
+				Graphics::Context::GetCommands()->SetVertexBuffer(*mesh->mSubMeshes.at(i).mVB);
 
-				Graphics::Context::GetCommands()->DrawIndexed(mesh->SubMeshes.at(i).IndicesCount, 0);
-			}*/
+				Graphics::Context::GetCommands()->DrawIndexed(mesh->mSubMeshes.at(i).mIndicesCount, 0);
+			}
 		}
 		void RenderSystem::RenderToPostProcessingRT()
 		{

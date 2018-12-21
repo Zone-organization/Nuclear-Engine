@@ -30,7 +30,7 @@ namespace NuclearEngine
 			}
 
 
-			void ParseVariables(const D3D11_SHADER_BUFFER_DESC& CBDesc, ID3D11ShaderReflectionConstantBuffer* reflectedcb, ReflectedShaderResource* Constbuf)
+			void ParseVariables(const D3D11_SHADER_BUFFER_DESC& CBDesc, ID3D11ShaderReflectionConstantBuffer* reflectedcb, ShaderResource* Constbuf)
 			{
 				for (Uint32 i = 0; i < CBDesc.Variables; i++)
 				{
@@ -170,7 +170,7 @@ namespace NuclearEngine
 					ID3D11ShaderReflectionConstantBuffer* reflectedcb = nullptr;
 					reflectedcb = pReflector->GetConstantBufferByIndex(i);
 
-					ReflectedShaderResource Constbuf;
+					ShaderResource Constbuf;
 					D3D11_SHADER_BUFFER_DESC CBDesc;
 					if (FAILED(reflectedcb->GetDesc(&CBDesc)))
 					{
@@ -200,7 +200,7 @@ namespace NuclearEngine
 					{
 						for (Uint32 i = 0; i < resource_desc.BindCount; i++)
 						{
-							ReflectedShaderResource Resource;
+							ShaderResource Resource;
 							Resource.mSlot = resource_desc.BindPoint;
 
 							switch (resource_desc.Type)

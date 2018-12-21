@@ -51,7 +51,7 @@ namespace NuclearEngine
 			io.KeyMap[ImGuiKey_Z] = static_cast<int>(LLGL::Key::Z);
 
 			// init rendering
-			io.DisplaySize = ImVec2(window->GetSize().width, window->GetSize().height);
+			io.DisplaySize = ImVec2(static_cast<Float32>(window->GetSize().width), static_cast<Float32>(window->GetSize().height));
 
 			/*if (s_fontTexture) { // delete previously created texture
 				delete s_fontTexture;
@@ -91,7 +91,7 @@ namespace NuclearEngine
 		void ImGuiBinding::Update(LLGL::Window* window, float dt)
 		{
 			ImGuiIO& io = ImGui::GetIO();
-			io.DisplaySize = ImVec2(window->GetSize().width, window->GetSize().height);
+			io.DisplaySize = ImVec2(static_cast<Float32>(window->GetSize().width), static_cast<Float32>(window->GetSize().height));
 			io.DeltaTime = dt;
 
 			if (gWindowHasFocus) {
@@ -101,7 +101,7 @@ namespace NuclearEngine
 				}
 				else 
 				{
-					io.MousePos = ImVec2(static_cast<float>(gInput->GetMousePosition().x), static_cast<float>(gInput->GetMousePosition().y));
+					io.MousePos = ImVec2(static_cast<Float32>(gInput->GetMousePosition().x), static_cast<Float32>(gInput->GetMousePosition().y));
 				}
 				/*for (unsigned int i = 0; i < 3; i++) {
 					io.MouseDown[i] = s_touchDown[i] || sf::Touch::isDown(i) || s_mousePressed[i] || sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
