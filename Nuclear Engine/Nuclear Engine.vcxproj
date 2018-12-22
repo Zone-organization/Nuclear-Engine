@@ -62,7 +62,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\external\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
@@ -72,7 +72,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX64\;..\..\Nuclear-Deps\Bin\DebugX64\;..\..\LLGL\Projects\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Nuclear-Deps\;$(SolutionDir)Bin\DebugX64\;..\..\Nuclear-Deps\Bin\DebugX64\;..\external\LLGL\Projects\build\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;LLGLD.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -84,7 +84,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\external\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <DebugInformationFormat>None</DebugInformationFormat>
@@ -97,7 +97,7 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX64\;..\..\Nuclear-Deps\;..\..\Nuclear-Deps\Bin\ReleaseX64\;..\..\LLGL\Projects\build\Release</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX64\;..\..\Nuclear-Deps\;..\..\Nuclear-Deps\Bin\ReleaseX64\;..\external\LLGL\Projects\build\Release</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;LLGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
