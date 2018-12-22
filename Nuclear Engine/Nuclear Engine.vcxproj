@@ -319,7 +319,7 @@
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\DXBC_Compiler.h" />
+    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
@@ -353,7 +353,7 @@
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\DXBC_Compiler.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />

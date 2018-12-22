@@ -2,7 +2,7 @@
 #include <Engine/Graphics/ShaderTypes.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
-#include "ShaderCompiler\DXBC_Compiler.h"
+#include "ShaderCompiler\D3DCompiler.h"
 #include "ShaderCompiler\XShaderCompiler.h"
 
 namespace NuclearEngine {
@@ -14,7 +14,7 @@ namespace NuclearEngine {
 
 			if (std::find(languages.begin(), languages.end(), LLGL::ShadingLanguage::GLSL) != languages.end())
 			{
-				XShaderCompiler::CompileHLSL2GLSL_ThenCreate(result, SourceCode, type);
+				XShaderCompiler::Compile(result, SourceCode, type);
 			}
 			else if (std::find(languages.begin(), languages.end(), LLGL::ShadingLanguage::SPIRV) != languages.end())
 			{
@@ -22,7 +22,7 @@ namespace NuclearEngine {
 			}
 			else if (std::find(languages.begin(), languages.end(), LLGL::ShadingLanguage::HLSL) != languages.end())
 			{
-				DXBC_Compiler::CompileHLSL2DXBC_ThenCreate(result, SourceCode, type);
+				D3DCompiler::Compile(result, SourceCode, type);
 			}
 
 			return true;

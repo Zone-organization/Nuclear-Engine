@@ -15,7 +15,7 @@ namespace NuclearEngine
 			bool Converted = false;
 			bool ConvertShaderRowMajorGLSL = true;
 			bool KeepShaderSourceCode = false;
-
+			bool ReflectDuringCompilation = true;
 
 
 			std::string mSourceCode;
