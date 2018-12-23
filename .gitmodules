@@ -1,6 +1,0 @@
-[submodule "external/XShaderCompiler"]
-	path = external/XShaderCompiler
-	url = https://github.com/LukasBanana/XShaderCompiler
-[submodule "external/LLGL"]
-	path = external/LLGL
-	url = https://github.com/Zone-organization/LLGL
