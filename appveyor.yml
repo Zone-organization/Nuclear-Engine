@@ -7,9 +7,6 @@ configuration:
   - Release
 
 before_build:
-  - git submodule update --init --recursive
-  - cmake external\LLGL\ -B\external\LLGL\Projects\ -G "Visual Studio 15 2017 Win64"
-  - ps: msbuild external\LLGL\Projects\LLGL.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - git clone https://github.com/Zone-organization/Nuclear-Deps.git ..\Nuclear-Deps
   - ps: msbuild ..\Nuclear-Deps\Nuclear-Deps.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 build:
