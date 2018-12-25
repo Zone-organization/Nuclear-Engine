@@ -1,5 +1,5 @@
 #pragma once
-#include <LLGL/Shader.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Engine\Graphics\ShaderTypes.h>
 #include <Engine\Graphics\Context.h>
 #include <Base/NE_PrivateCommon.h>

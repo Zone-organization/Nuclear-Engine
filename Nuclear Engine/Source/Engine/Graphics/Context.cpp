@@ -143,35 +143,19 @@ namespace NuclearEngine
 			return Direct3D;
 		}
 
-		bool Context::IsMetal()
+		Diligent::IRenderDevice * Context::GetDevice()
 		{
-			return Metal;
+			return nullptr;
 		}
 
-		LLGL::RenderSystem* Context::GetRenderer()
+		Diligent::IDeviceContext * Context::GetContext()
 		{
-			return gRenderer.get();
+			return nullptr;
 		}
 
-		LLGL::RenderContext * Context::GetRenderContext()
+		Diligent::ISwapChain * Context::GetSwapChain()
 		{
-			return gContext;
+			return nullptr;
 		}
-
-		LLGL::CommandBuffer * Context::GetCommands()
-		{
-			return gCommands;
-		}
-
-		LLGL::CommandBufferExt * Context::GetCommandsExt()
-		{
-			return gCommandsExt;
-		}
-
-		LLGL::CommandQueue * Context::GetCommandQueue()
-		{
-			return gCommandQueue;
-		}
-
 	}
 }

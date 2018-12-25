@@ -1,8 +1,10 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <LLGL/LLGL.h>
-#include <LLGL/Utility.h>
 #include <Core/ApplicationDesc.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>
 
 namespace NuclearEngine
 {
@@ -20,15 +22,10 @@ namespace NuclearEngine
 			static bool IsVulkan();			// Returns ture if Vulkan is used as rendering API.
 			
 			static bool IsDirect3D();		// Returns ture if Direct3D is used as rendering API.
-									
-			static bool IsMetal();			// Returns ture if Metal is used as rendering API.
-
-			static LLGL::RenderSystem* GetRenderer();
-			static LLGL::RenderContext* GetRenderContext();
-			static LLGL::CommandBuffer* GetCommands();
-			static LLGL::CommandBufferExt* GetCommandsExt();
-			static LLGL::CommandQueue* GetCommandQueue();
-
+			
+			static Diligent::IRenderDevice* GetDevice();
+			static Diligent::IDeviceContext* GetContext();
+			static Diligent::ISwapChain* GetSwapChain();
 		};
 	}
 }

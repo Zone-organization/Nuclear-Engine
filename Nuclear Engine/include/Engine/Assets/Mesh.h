@@ -3,7 +3,8 @@
 #include <Base\Math\Math.h>
 #include <Engine/Assets/Texture.h>
 #include <Engine/Graphics/Shader.h>
-#include <LLGL\Buffer.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <vector>
 #include <string>
 
@@ -60,8 +61,8 @@ namespace NuclearEngine {
 				Uint32 mIndicesOffset = 0;
 
 				//Buffers
-				LLGL::Buffer* mIB;
-				LLGL::Buffer* mVB;
+				Diligent::RefCntAutoPtr<Diligent::IBuffer> mIB;
+				Diligent::RefCntAutoPtr<Diligent::IBuffer> mVB;
 			};
 
 			std::vector<SubMesh> mSubMeshes;
