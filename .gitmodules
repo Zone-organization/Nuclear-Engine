@@ -1,3 +1,3 @@
-[submodule "Diligent/Core"]
-	path = Diligent/Core
+[submodule "External/Diligent"]
+	path = External/Diligent
 	url = https://github.com/DiligentGraphics/DiligentCore
