@@ -62,7 +62,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\external\LLGL\include;..\..\Nuclear-Deps\PhysX\PxShared\include;..\..\Nuclear-Deps\PhysX\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
