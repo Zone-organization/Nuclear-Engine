@@ -19,7 +19,7 @@ namespace NuclearEngine {
 
 		}
 
-		void Mesh::SubMesh::Initialize(Graphics::Shader _shader)
+		void Mesh::SubMesh::Initialize(Diligent::IShader* _shader)
 		{
 			std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
@@ -47,34 +47,44 @@ namespace NuclearEngine {
 			}
 			
 			{
-				LLGL::VertexFormat layout;
-				layout.AppendAttribute({ "POSITION", LLGL::Format::RGB32Float });
+				using namespace Diligent;
+				std::vector<LayoutElement> LayoutElems;
+				LayoutElems.push_back({ 0, 0, 3, VT_FLOAT32, False });
+
 				if (data.UV.size() > 0)
-				{
-					layout.AppendAttribute({ "TEXCOORD", LLGL::Format::RG32Float });
-				}
+					LayoutElems.push_back({ 1, 0, 2, VT_FLOAT32, False });
+
 				if (data.Normals.size() > 0)
-				{
-					layout.AppendAttribute({ "NORMAL", LLGL::Format::RGB32Float });
-				}
+					LayoutElems.push_back({ 2, 0, 3, VT_FLOAT32, False });
+
 				if (data.Tangents.size() > 0)
-				{
-					layout.AppendAttribute({ "TANGENT", LLGL::Format::RGB32Float });
-				}
+					LayoutElems.push_back({ 3, 0, 3, VT_FLOAT32, False });
 
-				LLGL::BufferDescriptor desc;
-				desc.bindFlags = LLGL::BindFlags::VertexBuffer;
-				desc.size = (unsigned int)verticesdata.size() * sizeof(float);
-				desc.vertexBuffer.format = layout;             // Vertex format layout
 
-				mVB = Graphics::Context::GetRenderer()->CreateBuffer(desc, verticesdata.data());
+				BufferDesc VertBuffDesc;
+				VertBuffDesc.Usage = USAGE_STATIC;
+				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
+				VertBuffDesc.uiSizeInBytes = (unsigned int)verticesdata.size() * sizeof(float);
+
+				BufferData VBData;
+				VBData.pData = verticesdata.data();
+				VBData.DataSize = (unsigned int)verticesdata.size() * sizeof(float);
+				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, VBData, &mVB);
+
 			}
 
-			{
-				LLGL::BufferDescriptor desc;
-				desc.bindFlags = LLGL::BindFlags::IndexBuffer;
-				desc.size = (unsigned int)data.indices.size();
-				mIB = Graphics::Context::GetRenderer()->CreateBuffer(desc, data.indices.data());
+			{			
+				using namespace Diligent;
+				// Create index buffer
+				BufferDesc IndBuffDesc;
+				IndBuffDesc.Usage = USAGE_STATIC;
+				IndBuffDesc.BindFlags = BIND_INDEX_BUFFER;
+				IndBuffDesc.uiSizeInBytes = (unsigned int)data.indices.size();
+
+				BufferData IBData;
+				IBData.pData = data.indices.data();
+				IBData.DataSize = (unsigned int)data.indices.size();
+				Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, IBData, &mIB);
 			}
 			mIndicesCount = static_cast<Uint32>(data.indices.size());			
 
@@ -87,8 +97,8 @@ namespace NuclearEngine {
 
 		void Mesh::SubMesh::Delete()
 		{
-			Graphics::Context::GetRenderer()->Release(*mVB);
-			Graphics::Context::GetRenderer()->Release(*mIB);
+			mVB->Release();
+			mIB->Release();
 			/*for (size_t i = 0; i < data.textures.size(); i++)
 			{
 				LLGL::Texture::Delete(&data.textures.at(i).mTexture);
@@ -105,13 +115,13 @@ namespace NuclearEngine {
 		{
 		}
 
-		void Mesh::Initialize(Graphics::Shader _shader)
+		void Mesh::Initialize(Diligent::IShader* _shader)
 		{
-			for (unsigned int i = 0; i < mSubMeshes.size(); i++)
+		/*	for (unsigned int i = 0; i < mSubMeshes.size(); i++)
 			{
 				mSubMeshes.at(i).Initialize(_shader);
 			}
-			init = true;
+			init = true;*/
 		}
 		void Mesh::Delete()
 		{

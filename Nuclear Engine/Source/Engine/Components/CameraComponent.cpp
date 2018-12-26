@@ -17,15 +17,20 @@ namespace NuclearEngine
 		CameraComponent::CameraComponent(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
 			: Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
 		{
-
+			using namespace Diligent;
 			position = __position;
 
-			ConstantBuffer = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(sizeof(_CameraBuffer)));
+			BufferDesc CBDesc;
+			CBDesc.uiSizeInBytes = sizeof(_CameraBuffer);
+			CBDesc.Usage = USAGE_DYNAMIC;
+			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
+			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, BufferData(), &ConstantBuffer);
 		}
 	
 		CameraComponent::~CameraComponent()
 		{
-			Graphics::Context::GetRenderer()->Release(*ConstantBuffer);
+			ConstantBuffer->Release();
 		}
 	
 		void CameraComponent::Initialize(Math::Matrix4 projectionMatrix)
@@ -48,7 +53,8 @@ namespace NuclearEngine
 			_CameraBuffer.View = Math::lookAt(position, position + Front, Up);
 
 			UpdateMatricesOnly();
-			Graphics::Context::GetRenderer()->WriteBuffer(*ConstantBuffer, 0, &_CameraBuffer, sizeof(_CameraBuffer));
+
+			Graphics::Context::GetContext()->UpdateBuffer(ConstantBuffer, 0, sizeof(_CameraBuffer), &_CameraBuffer, Diligent::RESOURCE_STATE_TRANSITION_MODE_NONE);
 		}
 		void CameraComponent::UpdateMatricesOnly()
 		{
@@ -97,7 +103,7 @@ namespace NuclearEngine
 		{
 			return position;
 		}
-		LLGL::Buffer* CameraComponent::GetCBuffer()
+		Diligent::IBuffer* CameraComponent::GetCBuffer()
 		{
 			return ConstantBuffer;
 		}

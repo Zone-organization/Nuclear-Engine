@@ -61,7 +61,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS;PLATFORM_WIN32;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;GLES_SUPPORTED</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS;PLATFORM_WIN32;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\External\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <IntrinsicFunctions>false</IntrinsicFunctions>
@@ -83,7 +83,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;LLGL_ENABLE_UTILITY;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED;PLATFORM_WIN32;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\External\;..\..\Nuclear-Deps\;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
@@ -120,12 +120,6 @@
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGui.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGuiConfig.h" />
-    <ClInclude Include="include\Engine\Graphics\ImGuiBinding.h" />
-    <ClInclude Include="include\Engine\Graphics\Shader.h" />
-    <ClInclude Include="include\Engine\Graphics\ShaderCompiler.h" />
-    <ClInclude Include="include\Engine\Graphics\ShaderTypes.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
@@ -315,10 +309,7 @@
     <ClInclude Include="include\Base\Utilities\Pool.h" />
     <ClInclude Include="include\Base\Utilities\Signal.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
@@ -348,14 +339,8 @@
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\ImGuiBinding.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />

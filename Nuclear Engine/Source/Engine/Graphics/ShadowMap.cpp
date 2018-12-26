@@ -17,13 +17,13 @@ namespace NuclearEngine
 			this->mHeight = Height;
 
 
-			LLGL::RenderTargetDescriptor RTDesc;
+		/*	LLGL::RenderTargetDescriptor RTDesc;
 			RTDesc.resolution.width = mWidth;
 			RTDesc.resolution.height = mHeight;
 			RTDesc.attachments.push_back({ LLGL::AttachmentType::DepthStencil });
 
 			mDepthMap = Graphics::Context::GetRenderer()->CreateRenderTarget(RTDesc);
-		}
+	*/	}
 		void ShadowMap::Update(std::vector<Components::DirectionalLight*> DirLights, std::vector<Components::PointLight*> PointLights, std::vector<Components::SpotLight*> SpotLights)
 		{
 		}

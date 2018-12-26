@@ -5,12 +5,14 @@ namespace NuclearEngine {
 	namespace Core {
 		enum class MouseInputMode { Virtual, Normal, Hidden };
 
-		enum class RenderAPI : Uint8
+		enum class RenderAPI : Int32
 		{
-			DirectX11,
-			DirectX12,
-			OpenGL4,
-			Vulkan
+			Undefined = 0,  ///< Undefined device
+			DirectX11,      ///< D3D11 device
+			DirectX12,      ///< D3D12 device
+			OpenGL,     ///< OpenGL device 
+			OpenGLES,   ///< OpenGLES device
+			Vulkan      ///< Vulkan device
 		};
 
 		struct ApplicationDesc
@@ -23,7 +25,7 @@ namespace NuclearEngine {
 			bool DebugRenderAPI = false;
 			bool VSync = true;
 			bool AutoSelectRenderer = true;
-			std::wstring Title = L"NuclearEngine";
+			std::string Title = "NuclearEngine";
 		};
 	}
 }

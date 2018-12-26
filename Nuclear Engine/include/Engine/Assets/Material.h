@@ -1,9 +1,8 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Engine/Assets\Texture.h>
-#include <Engine\Graphics\ShaderTypes.h>
-#include <Engine/Graphics\Shader.h>
-#include <LLGL/Buffer.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <map>
 
 namespace NuclearEngine
@@ -63,7 +62,7 @@ namespace NuclearEngine
 			void Bind();
 
 			//If the shader isn't valid the default shader is bound
-			LLGL::GraphicsPipeline*	mPipeline = nullptr;
+			//LLGL::GraphicsPipeline*	mPipeline = nullptr;
 
 			void SetMaterialVariable(const std::string&  name, Float32 value);
 			void SetMaterialVariable(const std::string&  name, Math::Vector2 value);

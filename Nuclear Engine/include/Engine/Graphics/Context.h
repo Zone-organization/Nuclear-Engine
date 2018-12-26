@@ -23,6 +23,8 @@ namespace NuclearEngine
 			
 			static bool IsDirect3D();		// Returns ture if Direct3D is used as rendering API.
 			
+			static void ResizeSwapChain(Uint32 Width, Uint32 Height);
+
 			static Diligent::IRenderDevice* GetDevice();
 			static Diligent::IDeviceContext* GetContext();
 			static Diligent::ISwapChain* GetSwapChain();

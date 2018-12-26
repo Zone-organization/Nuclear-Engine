@@ -1,8 +1,7 @@
 #pragma once
 #include <Core\ApplicationDesc.h>
-#include <LLGL/LLGL.h>
-#include <LLGL/Utility.h>
 
+struct GLFWwindow;
 namespace NuclearEngine {
 	namespace Core {
 
@@ -21,7 +20,7 @@ namespace NuclearEngine {
 
 			static Float32 GetAspectRatioF32();
 
-			static LLGL::Window* GetWindow();
+			static GLFWwindow* GetWindow();
 		};
 	}
 }

@@ -34,10 +34,10 @@ Building options:
 	-Enabled Nvidia PhysX Engine integration (not suitable for 2D).
 */
 
-#include <PhysX\PhysXincluder.h>
-#if !defined(PHYSX_NOT_INCLUDED)
-#define NE_USE_PHYSICS3DENGINE
-#endif
+//#include <PhysX\PhysXincluder.h>
+//#if !defined(PHYSX_NOT_INCLUDED)
+//#define NE_USE_PHYSICS3DENGINE
+//#endif
 
 #if defined (NE_USE_PHYSICS3DENGINE) && defined(PHYSX_NOT_INCLUDED)
 #error PhysX isnot available

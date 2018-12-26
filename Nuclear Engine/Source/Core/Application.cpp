@@ -2,50 +2,59 @@
 #include <Core\Engine.h>
 #include <Engine\Graphics\ImGuiBinding.h>
 #include <Engine\Graphics\Context.h>
+#include <GLFW/include/GLFW/glfw3.h>
 
 namespace NuclearEngine
 {
 	namespace Core
 	{		
 		bool Application::ShouldClose = false;
-		LLGL::Window* MainWindow = nullptr;
+		GLFWwindow* MainWindow = nullptr;
 
 		bool Application::Start(const ApplicationDesc & Desc)
 		{
+			glfwInit();
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+			MainWindow = glfwCreateWindow(Desc.WindowWidth, Desc.WindowHeight, Desc.Title.c_str(), NULL, NULL);
+			if (MainWindow == NULL)
+			{
+				Log.FatalError("[Application] Creating Window Failed!\n");
+				glfwTerminate();
+				return false;
+			}
+
 			//Initialize Context
 			Graphics::Context::Initialize(Desc);
-			MainWindow = &static_cast<LLGL::Window&>(Graphics::Context::GetRenderContext()->GetSurface());
-
-			MainWindow->SetTitle(Desc.Title);
-			MainWindow->Show();
-
+			
 			return true;
 		}
 		void Application::Shutdown()
 		{
-			//MainWindow->
-			//MainWindow->close();
-			//delete MainWindow;
+			glfwDestroyWindow(MainWindow);
 		}
 		void Application::Display(bool show)
 		{
-			MainWindow->Show(show);
+			if(show)
+				glfwShowWindow(MainWindow);
+			else
+				glfwHideWindow(MainWindow);
 		}
 	
 		bool Application::PollEvents()
 		{
-			ShouldClose = !MainWindow->ProcessEvents();
-
+			ShouldClose = glfwWindowShouldClose(MainWindow);
 			return ShouldClose;
 		}
 
 		Float32 Application::GetAspectRatioF32()
 		{
-			auto resolution = Graphics::Context::GetRenderContext()->GetVideoMode().resolution;
-			return (static_cast<float>(resolution.width) / static_cast<float>(resolution.height));
+			//auto resolution = Graphics::Context::GetContext()->resolution;
+			//return (static_cast<float>(resolution.width) / static_cast<float>(resolution.height));
+			return 0;
 		}
 
-		LLGL::Window * Application::GetWindow()
+		GLFWwindow * Application::GetWindow()
 		{
 			return MainWindow;
 		}
