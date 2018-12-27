@@ -195,7 +195,6 @@
     <ClInclude Include="include\Base\BuildConfig.h" />
     <ClInclude Include="include\Base\NE_Exception.h" />
     <ClInclude Include="include\Base\NE_PrivateCommon.h" />
-    <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="include\Base\Utilities\Timer.h" />
@@ -226,6 +225,8 @@
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.h" />
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="include\Engine\Assets\Image.h" />
+    <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
+    <ClInclude Include="include\Engine\Importers\StbImageImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -277,6 +278,7 @@
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.cpp" />
+    <ClCompile Include="Source\Engine\Managers\StbImageImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

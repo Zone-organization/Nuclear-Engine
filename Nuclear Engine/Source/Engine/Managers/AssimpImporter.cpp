@@ -1,4 +1,5 @@
-#include "AssimpImporter.h"
+#define EXPOSE_ASSIMP_IMPORTER
+#include <Engine\Importers\AssimpImporter.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\Assets\Material.h>
 #include <Base\Utilities\Hash.h>
@@ -6,11 +7,11 @@
 #pragma comment(lib,"assimp.lib")
 
 namespace NuclearEngine {
-	namespace Internal {
+	namespace Importers {
 		
-		Assets::Mesh & AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc, Assets::Material& _material)
+		std::tuple<Assets::Mesh, Assets::Material> AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc)
 		{
-			Log.Info("[AssetManager] Loading Mesh: " + Path + "\n");
+			Log.Info("[AssimpImporter] Loading Mesh: " + Path + "\n");
 			LoadingDesc = desc;
 			Assimp::Importer importer;
 			const aiScene* scene = importer.ReadFile(Path, aiProcess_Triangulate);
@@ -18,8 +19,8 @@ namespace NuclearEngine {
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
-				Log.Error("[AssetManager] Assimp Failed to load mesh: " + Path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
-				return Assets::Mesh();
+				Log.Error("[AssimpImporter] Assimp Failed to load mesh: " + Path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
+				return std::tuple<Assets::Mesh, Assets::Material>();
 			}
 			directory = Path.substr(0, Path.find_last_of('/'));
 			ProcessNode(scene->mRootNode, scene);
@@ -29,12 +30,9 @@ namespace NuclearEngine {
 				model.mSubMeshes.push_back(Assets::Mesh::SubMesh(meshes_loaded.at(i)));
 			}
 			auto hashedname = Utilities::Hash(Path);
-			Log.Info("[AssetManager] Loaded Mesh: " + Path + "\n");
+			model.isValid = true;
 
-			Managers::AssetManager::mImportedMaterials[hashedname] = material;
-			_material = Managers::AssetManager::mImportedMaterials[hashedname];
-			return 	Managers::AssetManager::mImportedMeshes[hashedname] = model;
-
+			return { model , material };
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
 		{

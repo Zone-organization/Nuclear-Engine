@@ -3,6 +3,7 @@
 #include "..\..\ThirdParty\stb_image.h"
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\Mesh.h>
+#include <Engine\Assets\Material.h>
 #include "Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.h"
 #include "AssimpImporter.h"
 #include <Base\Utilities\Hash.h>
@@ -11,16 +12,6 @@
 
 namespace NuclearEngine {
 	namespace Managers {
-		std::unordered_map<Uint32,Assets::Texture> AssetManager::mImportedTextures = std::unordered_map<Uint32, Assets::Texture>();
-		std::unordered_map<Uint32, std::string> AssetManager::mHashedTexturesNames = std::unordered_map<Uint32, std::string>();
-
-		std::unordered_map<Uint32, Assets::Mesh> AssetManager::mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();
-		std::unordered_map<Uint32, std::string> AssetManager::mHashedMeshesNames = std::unordered_map<Uint32, std::string>();
-
-		std::unordered_map<Uint32, Assets::Material> AssetManager::mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
-		std::unordered_map<Uint32, std::string> AssetManager::mHashedMaterialsNames = std::unordered_map<Uint32, std::string>();
-
-
 		static const float a = 0.055f;
 
 		// https://en.wikipedia.org/wiki/SRGB
@@ -276,13 +267,28 @@ namespace NuclearEngine {
 				<< std::hex << i;
 			return stream.str();
 		}
-		void AssetManager::Initialize(bool SaveTextureNames)
+		AssetManager::AssetManager(AssetManagerDesc desc)
+			: mDesc(desc)
 		{
-			mSaveTextureNames = SaveTextureNames;
+			//Initialize Containers
+			mImportedTextures = std::unordered_map<Uint32, Assets::Texture>();
+			mHashedTexturesNames = std::unordered_map<Uint32, std::string>();
+
+			mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();
+			mHashedMeshesNames = std::unordered_map<Uint32, std::string>();
+
+			mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
+			mHashedMaterialsNames = std::unordered_map<Uint32, std::string>();
 		}
 
-		void AssetManager::ShutDown()
+		AssetManager::~AssetManager()
 		{
+			FlushContainers(mDesc.mFlushFlagOnShutdown);
+		}
+
+		void AssetManager::FlushContainers(ASSET_MANAGER_FLUSH_FLAGS flag)
+		{
+			//TODO
 			for (auto x : mImportedTextures)
 			{
 				x.second.mTexture.Release();
@@ -336,6 +342,22 @@ namespace NuclearEngine {
 			Tex.mTexture = Graphics::Context::GetRenderer()->CreateTexture(Desc, &Data);
 
 			return mImportedTextures[hashedname] = Tex;
+		}
+
+		std::tuple<Assets::Mesh, Assets::Material> AssetManager::Import(const std::string & Path, const Managers::MeshLoadingDesc & desc)
+		{
+			auto[mesh, material] = mMeshImporter(Path, desc);
+			auto hashedname = Utilities::Hash(Path);
+
+			Log.Info("[AssetManager] Loaded Mesh & Material at: " + Path + "\n");
+			mImportedMaterials[hashedname] = material;
+			mImportedMeshes[hashedname] = mesh;
+
+			if (mSaveMeshMaterialPaths)
+				mHashedMeshesMaterialsPaths[hashedname] = Path;
+
+
+			return { mesh , material };
 		}
 					
 		 Diligent::ITexture * AssetManager::TextureCube_Load(const std::string& Path, const TextureLoadingDesc& Desc)

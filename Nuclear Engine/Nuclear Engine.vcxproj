@@ -68,6 +68,7 @@
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -313,7 +314,8 @@
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
-    <ClInclude Include="Source\Engine\Managers\AssimpImporter.h" />
+    <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
+    <ClInclude Include="include\Engine\Importers\StbImageImporter.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
@@ -347,6 +349,7 @@
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Source\Engine\Managers\StbImageImporter.cpp" />
     <ClCompile Include="Source\Engine\Physics3D\Collider.cpp" />
     <ClCompile Include="Source\Engine\Physics3D\PhysicsMaterial.cpp" />
     <ClCompile Include="Source\Engine\Physics3D\PhysicsScene.cpp" />

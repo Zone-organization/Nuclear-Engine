@@ -5,6 +5,7 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
+#include <Engine/Assets/Asset.h>
 #include <vector>
 #include <string>
 
@@ -18,7 +19,7 @@ namespace NuclearEngine {
 			bool Tangents = false;
 		};
 
-		class NEAPI Mesh
+		class NEAPI Mesh : public Asset
 		{
 		public:			
 			Mesh();
