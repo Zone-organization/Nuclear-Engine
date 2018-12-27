@@ -1,7 +1,7 @@
 #pragma once
 #include <Base\Math\Math.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
 #include <Engine/Assets/Asset.h>
 #include <vector>
 
@@ -45,7 +45,7 @@ namespace NuclearEngine {
 				return mTexture.PSBind(slot);
 			}
 			*/
-			Diligent::RefCntAutoPtr<Diligent::ITexture>  mTexture;
+			RefCntAutoPtr<ITextureView>  mTexture;
 
 		private:
 			Uint8 mUsageType;

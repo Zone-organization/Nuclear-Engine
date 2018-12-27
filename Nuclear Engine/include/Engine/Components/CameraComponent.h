@@ -54,7 +54,7 @@ namespace NuclearEngine
 			Math::Vector3 GetPosition();
 
 			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
-			Diligent::IBuffer* GetCBuffer();
+			IBuffer* GetCBuffer();
 
 		protected:
 			// Eular Angles
@@ -78,7 +78,7 @@ namespace NuclearEngine
 				Math::Matrix4 Projection = Math::Matrix4(1.0f);
 			}_CameraBuffer;
 
-			Diligent::RefCntAutoPtr<Diligent::IBuffer> ConstantBuffer;
+			RefCntAutoPtr<IBuffer> ConstantBuffer;
 
 			Math::Vector3 position, direction;
 		};

@@ -220,13 +220,12 @@
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
-    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="include\Core\Path.h" />
-    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.h" />
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
     <ClInclude Include="include\Engine\Importers\StbImageImporter.h" />
+    <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -275,9 +274,7 @@
     <ClCompile Include="Source\Engine\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.cpp" />
     <ClCompile Include="Source\Engine\Managers\StbImageImporter.cpp" />
   </ItemGroup>
   <ItemGroup>

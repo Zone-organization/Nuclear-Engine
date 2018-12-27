@@ -6,9 +6,9 @@ namespace NuclearEngine
 {
 	namespace Graphics
 	{
-		static Diligent::IRenderDevice* gDevice;
-		static Diligent::IDeviceContext* gContext;
-		static Diligent::ISwapChain* gSwapChain;
+		static IRenderDevice* gDevice;
+		static IDeviceContext* gContext;
+		static ISwapChain* gSwapChain;
 		bool OpenGL = false;
 		bool Vulkan = false;
 		bool Direct3D = false;
@@ -17,8 +17,12 @@ namespace NuclearEngine
 
 		bool Context::Initialize(const Core::ApplicationDesc & Desc)
 		{
-			InitializeDiligentEngineWin32(Core::Application::GetWindow(),static_cast<Diligent::DeviceType>(Desc.Renderer), gDevice, gContext, gSwapChain);
-			Log.Info("[Context] Diligent Graphics API Initialized.\n");
+			bool Result = InitializeDiligentEngineWin32(Core::Application::GetWindow(),static_cast<DeviceType>(Desc.Renderer), gDevice, gContext, gSwapChain);
+
+			if(Result)
+				Log.Info("[Context] Diligent Graphics API Initialized.\n");
+
+			return true;
 		}
 
 		void Context::PresentFrame()
@@ -47,17 +51,17 @@ namespace NuclearEngine
 				gSwapChain->Resize(Width, Height);
 		}
 
-		Diligent::IRenderDevice * Context::GetDevice()
+		IRenderDevice * Context::GetDevice()
 		{
 			return gDevice;
 		}
 
-		Diligent::IDeviceContext * Context::GetContext()
+		IDeviceContext * Context::GetContext()
 		{
 			return gContext;
 		}
 
-		Diligent::ISwapChain * Context::GetSwapChain()
+		ISwapChain * Context::GetSwapChain()
 		{
 			return gSwapChain;
 		}

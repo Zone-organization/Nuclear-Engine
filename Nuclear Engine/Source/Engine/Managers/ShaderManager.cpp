@@ -1,7 +1,7 @@
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
-#include <Engine/Graphics/ShaderCompiler.h>
 #include <Engine\Graphics\Context.h>
+#include <Diligent/Graphics/GraphicsTools/include/BasicShaderSourceStreamFactory.h>
 
 namespace NuclearEngine
 {
@@ -13,57 +13,65 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		Graphics::Shader ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
+		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
 		{
-			Graphics::Shader result;
+			ShaderCreationAttribs CreationAttribs;
+			IShader* pVS;
 
-			result.mVSFormat.AppendAttribute({ "Position", LLGL::Format::RGBA32Float });
+			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
+			CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+			CreationAttribs.EntryPoint = "main";
+			CreationAttribs.Desc.Name = "AutoVertexShader";
 			
 			std::vector<std::string> defines;
 
 			if (desc.InTexCoords)
-			{
 				defines.push_back("NE_USE_UV");
-				result.mVSFormat.AppendAttribute({ "TexCoord", LLGL::Format::RG32Float });
-			}
+
 			if (desc.InNormals)
-			{
 				defines.push_back("NE_USE_NORMALS");
-				result.mVSFormat.AppendAttribute({ "Normals", LLGL::Format::RGB32Float });
-			}
+
 			if (desc.InTangents)
-			{
 				defines.push_back("NE_USE_TANGENTS");
-				result.mVSFormat.AppendAttribute({ "Tangents", LLGL::Format::RGB32Float });
-			}
+
 			if (desc.Use_Camera)
-			{
 				defines.push_back("NE_USE_DEF_CAMERA");
-			}
+
 			if (desc.OutFragPos)
-			{
 				defines.push_back("NE_OUT_FRAG_POS");
-			}
 
-			Graphics::ShaderCompiler::CompileAndCreateShader(&result,
-				Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true),
-				LLGL::ShaderType::Vertex);
 
-			return result;
+			CreationAttribs.Source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true).c_str();
+
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pVS);
+			
+			return pVS;
 		}
-		Graphics::Shader ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
+		IShader* ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
 		{
-			Graphics::Shader result;
+			ShaderCreationAttribs CreationAttribs;
+			IShader* pPS;
+
+			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
+			CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+			CreationAttribs.EntryPoint = "main";
+			CreationAttribs.Desc.Name = "AutoPixelShader";
+
 			std::vector<std::string> defines;
 
 			if (desc.OutputTexture)
 				defines.push_back("NE_OUTPUT_TEXTURE");
-			
 
-			Graphics::ShaderCompiler::CompileAndCreateShader(&result,
-				Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
-				LLGL::ShaderType::Fragment);
-			return result;
+
+			CreationAttribs.Source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true).c_str();
+
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pPS);
+
+			return pPS;
 		}
 	}
 }

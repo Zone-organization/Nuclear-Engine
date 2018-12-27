@@ -14,27 +14,12 @@ namespace NuclearEngine
 		Material::~Material()
 		{
 		}
-
-		LLGL::PipelineLayoutDescriptor Material::GeneratePipelineLayoutDesc(Graphics::Shader* _VShader, Graphics::Shader* _PShader)
-		{
-			LLGL::PipelineLayoutDescriptor Result;
-
-			if (_PShader->mShader)
-			{
-				for (auto Resource : _PShader->mReflection.mResources)
-				{
-					
-				}
-	
-			}
-			return Result;
-		}
-
 		void Material::Create(const MaterialCreationDesc& desc)
 		{
 			//Process Shaders & pipeline
 			ParsePixelShader(desc.mPShader);
-			mPipeline = desc.mPipeline;
+			///
+			//mPipeline = desc.mPipeline;
 
 			/*TODO:
 				1: Generate PipelineLayout based on	ShaderReflection.
@@ -77,76 +62,15 @@ namespace NuclearEngine
 			//BINDING_LLGL
 			//mCbuffer.PSBind(mCbufferRef.BindingSlot);
 		}
-#if 1
-		void Material::SetMaterialVariable(const std::string&  name, Float32 value)
-		{
-			mCbufferData[name] = value;
-		}
-
-		void Material::SetMaterialVariable(const std::string&  name, Math::Vector2 value)
-		{
-			mCbufferData[name + "_1"] = value.x;
-			mCbufferData[name + "_2"] = value.y;							
-		}
-
-		void Material::SetMaterialVariable(const std::string&  name, Math::Vector3 value)
-		{
-			mCbufferData[name + "_1"] = value.x;
-			mCbufferData[name + "_2"] = value.y;
-			mCbufferData[name + "_3"] = value.z;
-		}
-
-		void Material::SetMaterialVariable(const std::string& name, Math::Vector4 value)
-		{
-			mCbufferData[name + "_1"] = value.x;
-			mCbufferData[name + "_2"] = value.y;
-			mCbufferData[name + "_3"] = value.z;
-			mCbufferData[name + "_4"] = value.w;
-		}
-
-		void Material::SetMaterialVariable(const std::string& name, Math::Matrix2 value)
-		{
-			for (Uint8 i = 1; i < 3; i++)
-			{
-				for (Uint8 j = 1; j < 3; j++)
-				{
-					mCbufferData[name + "_" + std::to_string(i) + 'x' + std::to_string(j)] = value[i][j];
-				}
-			}
-		}
-
-		void Material::SetMaterialVariable(const std::string& name, Math::Matrix3 value)
-		{
-			for (Uint8 i = 1; i < 4; i++)
-			{
-				for (Uint8 j = 1; j < 4; j++)
-				{
-					mCbufferData[name + "_" + std::to_string(i) + 'x' + std::to_string(j)] = value[i][j];
-				}
-			}
-		}
-
-		void Material::SetMaterialVariable(const std::string& name, Math::Matrix4 value)
-		{
-			for (Uint8 i = 1; i < 5; i++)
-			{
-				for (Uint8 j = 1; j < 5; j++)
-				{
-					mCbufferData[name + "_" + std::to_string(i) + 'x' + std::to_string(j)] = value[i][j];
-				}
-			}
-		}
-
-#endif
 		void Material::UpdateMaterialCBuffer()
 		{
-			std::vector<Float32> data;
+		/*	std::vector<Float32> data;
 			data.reserve(mCbufferData.size());
 			for (auto i : mCbufferData)
 			{				
 				data.push_back(i.second);
 			}
-			Graphics::Context::GetRenderer()->WriteBuffer(*mCbuffer, 0, data.data(), mCbufferRef.mSize);
+			Graphics::Context::GetRenderer()->WriteBuffer(*mCbuffer, 0, data.data(), mCbufferRef.mSize);*/
 		}
 	
 		TextureUsageType ParseTexUsageFromName(std::string& name)
@@ -161,8 +85,8 @@ namespace NuclearEngine
 			return TextureUsageType::Unknown;
 		}
 
-		void Material::ParsePixelShader(Graphics::Shader* _PShader)
-		{
+		void Material::ParsePixelShader(IShader* _PShader)
+		{/*
 			if (_PShader->mShader)
 			{
 				mPSHaveMaterialCB = false;
@@ -272,8 +196,9 @@ namespace NuclearEngine
 							}
 						}
 					}				
-				}								
+				}		
 			}
+			*/
 		}
 	}
 }

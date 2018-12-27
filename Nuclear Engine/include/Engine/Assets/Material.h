@@ -27,10 +27,10 @@ namespace NuclearEngine
 		//TODO: Support more Shader Types.
 		struct MaterialCreationDesc
 		{
-			Diligent::IShader* mVShader = nullptr;
-			Diligent::IShader* mPShader = nullptr;
-			Diligent::IPipelineState* mPipeline = nullptr;
-			Diligent::ISampler* mSampler = nullptr;
+			IShader* mVShader = nullptr;
+			IShader* mPShader = nullptr;
+			IPipelineState* mPipeline = nullptr;
+			ISampler* mSampler = nullptr;
 		};
 
 		/*
@@ -67,13 +67,6 @@ namespace NuclearEngine
 			//If the shader isn't valid the default shader is bound
 			//LLGL::GraphicsPipeline*	mPipeline = nullptr;
 
-			void SetMaterialVariable(const std::string&  name, Float32 value);
-			void SetMaterialVariable(const std::string&  name, Math::Vector2 value);
-			void SetMaterialVariable(const std::string&  name, Math::Vector3 value);
-			void SetMaterialVariable(const std::string&  name, Math::Vector4 value);
-			void SetMaterialVariable(const std::string&  name, Math::Matrix2 value);
-			void SetMaterialVariable(const std::string&  name, Math::Matrix3 value);
-			void SetMaterialVariable(const std::string&  name, Math::Matrix4 value);
 			void UpdateMaterialCBuffer();
 
 			/*
@@ -99,7 +92,7 @@ namespace NuclearEngine
 			std::vector<TextureSet> mPixelShaderTextures;
 			std::vector<ShaderTexture> PixelShaderTS;
 		private:
-			void ParsePixelShader(Diligent::IShader* PixelShader);
+			void ParsePixelShader(IShader* PixelShader);
 			/*LLGL::Buffer* mCbuffer;
 			Graphics::ShaderResource mCbufferRef;
 			std::map<std::string, Float32> mCbufferData;

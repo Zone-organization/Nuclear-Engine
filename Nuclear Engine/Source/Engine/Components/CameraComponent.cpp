@@ -17,7 +17,7 @@ namespace NuclearEngine
 		CameraComponent::CameraComponent(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
 			: Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
 		{
-			using namespace Diligent;
+			
 			position = __position;
 
 			BufferDesc CBDesc;
@@ -54,7 +54,7 @@ namespace NuclearEngine
 
 			UpdateMatricesOnly();
 
-			Graphics::Context::GetContext()->UpdateBuffer(ConstantBuffer, 0, sizeof(_CameraBuffer), &_CameraBuffer, Diligent::RESOURCE_STATE_TRANSITION_MODE_NONE);
+			Graphics::Context::GetContext()->UpdateBuffer(ConstantBuffer, 0, sizeof(_CameraBuffer), &_CameraBuffer, RESOURCE_STATE_TRANSITION_MODE_NONE);
 		}
 		void CameraComponent::UpdateMatricesOnly()
 		{
@@ -103,7 +103,7 @@ namespace NuclearEngine
 		{
 			return position;
 		}
-		Diligent::IBuffer* CameraComponent::GetCBuffer()
+		IBuffer* CameraComponent::GetCBuffer()
 		{
 			return ConstantBuffer;
 		}

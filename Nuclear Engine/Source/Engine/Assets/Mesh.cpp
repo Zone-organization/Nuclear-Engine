@@ -19,7 +19,7 @@ namespace NuclearEngine {
 
 		}
 
-		void Mesh::SubMesh::Initialize(Diligent::IShader* _shader)
+		void Mesh::SubMesh::Initialize(IShader* _shader)
 		{
 			std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
@@ -47,7 +47,7 @@ namespace NuclearEngine {
 			}
 			
 			{
-				using namespace Diligent;
+				
 				std::vector<LayoutElement> LayoutElems;
 				LayoutElems.push_back({ 0, 0, 3, VT_FLOAT32, False });
 
@@ -74,7 +74,7 @@ namespace NuclearEngine {
 			}
 
 			{			
-				using namespace Diligent;
+				
 				// Create index buffer
 				BufferDesc IndBuffDesc;
 				IndBuffDesc.Usage = USAGE_STATIC;
@@ -115,7 +115,7 @@ namespace NuclearEngine {
 		{
 		}
 
-		void Mesh::Initialize(Diligent::IShader* _shader)
+		void Mesh::Initialize(IShader* _shader)
 		{
 		/*	for (unsigned int i = 0; i < mSubMeshes.size(); i++)
 			{

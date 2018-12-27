@@ -25,9 +25,9 @@ namespace NuclearEngine
 			
 			static void ResizeSwapChain(Uint32 Width, Uint32 Height);
 
-			static Diligent::IRenderDevice* GetDevice();
-			static Diligent::IDeviceContext* GetContext();
-			static Diligent::ISwapChain* GetSwapChain();
+			static IRenderDevice* GetDevice();
+			static IDeviceContext* GetContext();
+			static ISwapChain* GetSwapChain();
 		};
 	}
 }

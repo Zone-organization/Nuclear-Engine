@@ -312,10 +312,9 @@
     <ClInclude Include="include\Base\Utilities\Signal.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
-    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.h" />
-    <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.h" />
     <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
     <ClInclude Include="include\Engine\Importers\StbImageImporter.h" />
+    <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
     <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
@@ -342,8 +341,6 @@
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderCompiler\XShaderCompiler.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssimpImporter.cpp" />

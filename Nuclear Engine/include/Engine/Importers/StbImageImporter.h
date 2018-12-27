@@ -6,7 +6,7 @@ namespace NuclearEngine
 {
 	namespace Importers
 	{
-		static Assets::Image& LoadTex_STB(const std::string& Path, const TextureLoadingDesc & Desc);
+		static Assets::Image& StbImageLoad(const std::string& Path, const Managers::TextureLoadingDesc & Desc);
 	}
 }
 #endif

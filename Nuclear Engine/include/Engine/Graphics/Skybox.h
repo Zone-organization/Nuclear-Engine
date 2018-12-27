@@ -21,7 +21,7 @@ namespace NuclearEngine
 			Skybox();
 			~Skybox();
 
-			void Initialize(Components::CameraComponent* Camera, Diligent::ITexture* data);
+			//void Initialize(Components::CameraComponent* Camera, ITexture* data);
 			//void Initialize(Components::CameraComponent* Camera, const std::array<LLGL::SrcImageDescriptor, 6>& data);
 			void Initialize(Components::CameraComponent* Camera, const std::array<std::string, 6>& paths);
 
@@ -29,12 +29,12 @@ namespace NuclearEngine
 			void Render();
 
 		private:
-			Diligent::RefCntAutoPtr<Diligent::IShader> mVShader;
-			Diligent::RefCntAutoPtr<Diligent::IShader> mPShader;
-			Diligent::RefCntAutoPtr<Diligent::IBuffer> mVBuffer;
-			Diligent::RefCntAutoPtr<Diligent::ISampler> mSampler;
-			//Diligent::RefCntAutoPtr<Diligent::DepthStencilStateDesc> mDepthState;
-			Diligent::RefCntAutoPtr<Diligent::ITexture> mTexture;
+			RefCntAutoPtr<IShader> mVShader;
+			RefCntAutoPtr<IShader> mPShader;
+			RefCntAutoPtr<IBuffer> mVBuffer;
+			RefCntAutoPtr<ISampler> mSampler;
+			//RefCntAutoPtr<DepthStencilStateDesc> mDepthState;
+			RefCntAutoPtr<ITexture> mTexture;
 			bool ReleaseTex = false;
 		};
 	}

@@ -32,11 +32,7 @@ namespace NuclearEngine
 		};
 
 
-		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const std::string& Path, const Managers::MeshLoadingDesc& desc)
-		{
-			AssimpImporter importer;
-			return importer.Load(Path, desc);
-		}
+		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const std::string& Path, const Managers::MeshLoadingDesc& desc);
 
 	}
 }

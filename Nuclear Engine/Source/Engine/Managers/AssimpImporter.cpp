@@ -8,7 +8,7 @@
 
 namespace NuclearEngine {
 	namespace Importers {
-		
+
 		std::tuple<Assets::Mesh, Assets::Material> AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc)
 		{
 			Log.Info("[AssimpImporter] Loading Mesh: " + Path + "\n");
@@ -51,7 +51,7 @@ namespace NuclearEngine {
 			}
 		}
 		unsigned int AssimpImporter::ProcessMaterial(aiMesh * mesh, const aiScene * scene)
-		{	
+		{
 			Assets::TextureSet TexSet;
 
 			//TODO::MATERIAL
@@ -109,9 +109,9 @@ namespace NuclearEngine {
 				if (LoadingDesc.UseNormals == true)
 				{
 					if (mesh->mNormals != NULL)
-						result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));			
-					else	
-						result.Normals.push_back(Math::Vector3(0.0f,0.0f,0.0f));
+						result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
+					else
+						result.Normals.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
 				}
 
 				//tangents
@@ -139,7 +139,7 @@ namespace NuclearEngine {
 			// return a mesh object created from the extracted mesh data
 			return result;
 		}
-	
+
 		Assets::TextureUsageType GetTextureType(aiTextureType type)
 		{
 			switch (type)
@@ -174,6 +174,11 @@ namespace NuclearEngine {
 			}
 			return textures;
 		}
-		
+
+		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const std::string & Path, const Managers::MeshLoadingDesc & desc)
+		{
+			AssimpImporter importer;
+			return importer.Load(Path, desc);
+		}
 	}
 }

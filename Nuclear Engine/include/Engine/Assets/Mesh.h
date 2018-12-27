@@ -28,7 +28,7 @@ namespace NuclearEngine {
 			Note:
 				We only require shader to validate the input layout but you are free to render the model with any shader you want.
 			*/
-			void Initialize(Diligent::IShader* _shader);
+			void Initialize(IShader* _shader);
 			void Delete();
 
 			static void CreateCube(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
@@ -53,7 +53,7 @@ namespace NuclearEngine {
 				SubMesh(SubMeshData data);
 				SubMesh(const SubMesh& obj);
 				~SubMesh();
-				void Initialize(Diligent::IShader* _shader);
+				void Initialize(IShader* _shader);
 				void Delete();
 
 				SubMeshData data;
@@ -62,8 +62,8 @@ namespace NuclearEngine {
 				Uint32 mIndicesOffset = 0;
 
 				//Buffers
-				Diligent::RefCntAutoPtr<Diligent::IBuffer> mIB;
-				Diligent::RefCntAutoPtr<Diligent::IBuffer> mVB;
+				RefCntAutoPtr<IBuffer> mIB;
+				RefCntAutoPtr<IBuffer> mVB;
 			};
 
 			std::vector<SubMesh> mSubMeshes;
