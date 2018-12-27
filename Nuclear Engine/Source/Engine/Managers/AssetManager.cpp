@@ -3,6 +3,7 @@
 #include "..\..\ThirdParty\stb_image.h"
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\Mesh.h>
+#include "Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.h"
 #include "AssimpImporter.h"
 #include <Base\Utilities\Hash.h>
 #include <sstream>
@@ -19,37 +20,242 @@ namespace NuclearEngine {
 		std::unordered_map<Uint32, Assets::Material> AssetManager::mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
 		std::unordered_map<Uint32, std::string> AssetManager::mHashedMaterialsNames = std::unordered_map<Uint32, std::string>();
 
-		LLGL::SrcImageDescriptor AssetManager::LoadTex_stb_image(const std::string& Path,  LLGL::TextureDescriptor & Desc)
+
+		static const float a = 0.055f;
+
+		// https://en.wikipedia.org/wiki/SRGB
+		float SRGBToLinear(float SRGB)
 		{
-			int req_c;
-			switch (Desc.format)
+			if (SRGB < 0.04045f)
+				return SRGB / 12.92f;
+			else
+				return pow((SRGB + a) / (1 + a), 2.4f);
+		}
+
+		float LinearToSRGB(float c)
+		{
+			if (c < 0.0031308f)
+				return 12.92f * c;
+			else
+				return (1 + a) * pow(c, 1.f / 2.4f) - a;
+		}
+
+		template<typename ChannelType>
+		ChannelType SRGBAverage(ChannelType c0, ChannelType c1, ChannelType c2, ChannelType c3)
+		{
+			constexpr float NormVal = static_cast<float>(std::numeric_limits<ChannelType>::max());
+			float fc0 = static_cast<float>(c0) / NormVal;
+			float fc1 = static_cast<float>(c1) / NormVal;
+			float fc2 = static_cast<float>(c2) / NormVal;
+			float fc3 = static_cast<float>(c3) / NormVal;
+
+			float fLinearAverage = (SRGBToLinear(fc0) + SRGBToLinear(fc1) + SRGBToLinear(fc2) + SRGBToLinear(fc3)) / 4.f;
+			float fSRGBAverage = LinearToSRGB(fLinearAverage);
+			Int32 SRGBAverage = static_cast<Int32>(fSRGBAverage * NormVal);
+			SRGBAverage = std::min(SRGBAverage, static_cast<Int32>(std::numeric_limits<ChannelType>::max()));
+			SRGBAverage = std::max(SRGBAverage, static_cast<Int32>(std::numeric_limits<ChannelType>::min()));
+			return static_cast<ChannelType>(SRGBAverage);
+		}
+
+		template < typename ChannelType >
+		void ComputeCoarseMip(Uint32 NumChannels, bool IsSRGB,
+			const void* pFineMip,
+			Uint32      FineMipStride,
+			void*       pCoarseMip,
+			Uint32      CoarseMipStride,
+			Uint32      CoarseMipWidth,
+			Uint32      CoarseMipHeight)
+		{
+			for (size_t row = 0; row < size_t{ CoarseMipHeight }; ++row)
+				for (size_t col = 0; col < size_t{ CoarseMipWidth }; ++col)
+				{
+					auto FineRow0 = reinterpret_cast<const ChannelType*>(reinterpret_cast<const Uint8*>(pFineMip) + row * 2 * size_t{ FineMipStride });
+					auto FineRow1 = reinterpret_cast<const ChannelType*>(reinterpret_cast<const Uint8*>(pFineMip) + (row * 2 + 1) * size_t { FineMipStride });
+
+					for (Uint32 c = 0; c < NumChannels; ++c)
+					{
+						auto Col00 = FineRow0[col * 2 * NumChannels + c];
+						auto Col01 = FineRow0[(col * 2 + 1) * NumChannels + c];
+						auto Col10 = FineRow1[col * 2 * NumChannels + c];
+						auto Col11 = FineRow1[(col * 2 + 1) * NumChannels + c];
+						auto &DstCol = reinterpret_cast<ChannelType*>(reinterpret_cast<Uint8*>(pCoarseMip) + row * size_t{ CoarseMipStride })[col * NumChannels + c];
+						if (IsSRGB)
+							DstCol = SRGBAverage(Col00, Col01, Col10, Col11);
+						else
+							DstCol = (Col00 + Col01 + Col10 + Col11) / 4;
+					}
+				}
+		}
+
+		template < typename ChannelType >
+		void RGBToRGBA(const void*  pRGBData,
+			Uint32       RGBStride,
+			void*        pRGBAData,
+			Uint32       RGBAStride,
+			Uint32       Width,
+			Uint32       Height)
+		{
+			for (size_t row = 0; row < size_t{ Height }; ++row)
+				for (size_t col = 0; col < size_t{ Width }; ++col)
+				{
+					for (int c = 0; c < 3; ++c)
+					{
+						reinterpret_cast<ChannelType*>((reinterpret_cast<Uint8*>(pRGBAData) + size_t{ RGBAStride } *row))[col * 4 + c] =
+							reinterpret_cast<const ChannelType*>((reinterpret_cast<const Uint8*>(pRGBData) + size_t{ RGBStride } *row))[col * 3 + c];
+					}
+					reinterpret_cast<ChannelType*>((reinterpret_cast<Uint8*>(pRGBAData) + size_t{ RGBAStride } *row))[col * 4 + 3] = std::numeric_limits<ChannelType>::max();
+				}
+		}
+
+		Assets::Image& AssetManager::LoadTex_STB(const std::string& Path, const TextureLoadingDesc & Desc)
+		{
+			int ReqNumComponents, Channels;
+			switch (Desc.mFormat)
 			{
-			case LLGL::Format::R8UNorm:
-				req_c = 1; break;
-			case LLGL::Format::RG8UNorm:
-				req_c = 2; break;
-			case LLGL::Format::RGB8UNorm:
-				req_c = 3; break;
-			case LLGL::Format::RGBA8UNorm:
-			case LLGL::Format::BGRA8sRGB:
-				req_c = 4; break;
-			default:					req_c = 4; break;
+			case Diligent::TEX_FORMAT_R8_UNORM:
+				ReqNumComponents = 1;
+				Channels = 8;
+				break;
+			case Diligent::TEX_FORMAT_RG8_UNORM:
+				ReqNumComponents = 2;
+				Channels = 8;
+				break;
+			/*case Diligent::TEX_FORMAT_RGB8_UINT:
+				NumComponents = 3; break;*/
+			case Diligent::TEX_FORMAT_RGBA8_UNORM:
+			case Diligent::TEX_FORMAT_RGBA8_UNORM_SRGB:
+				ReqNumComponents = 4;
+				Channels = 8;
+				break;
+			default: 
+				ReqNumComponents = 4;
+				Channels = 8;
+				break;
 			}
-			LLGL::SrcImageDescriptor Data;
 
-			int texWidth = 0, texHeight = 0, texComponents = 0;
-			
+			int texWidth = 0, texHeight = 0, texComponents = 0, BitsPerPixel = 0;
+			stbi_set_flip_vertically_on_load(Desc.mFlipY_Axis);
+			auto data = stbi_load(Path.c_str(), &texWidth, &texHeight, &texComponents, ReqNumComponents);
+			BitsPerPixel = Channels * texComponents;
+			using namespace Diligent;
 
-			//stbi_set_flip_vertically_on_load(Desc.FlipY_Axis);
-			Data.data = stbi_load(Path.c_str(), &texWidth, &texHeight, &texComponents, req_c);
+			Diligent::TextureDesc TexDesc;
+			TexDesc.Name = Desc.mName.c_str();
+			TexDesc.Type = RESOURCE_DIM_TEX_2D;
+			TexDesc.Width = texWidth;
+			TexDesc.Height = texHeight;
+			TexDesc.MipLevels = ComputeMipLevelsCount(TexDesc.Width, TexDesc.Height);
+			if (Desc.mMipLevels > 0)
+				TexDesc.MipLevels = std::min(TexDesc.MipLevels, Desc.mMipLevels);
+			TexDesc.Usage = Desc.mUsage;
+			TexDesc.BindFlags = Desc.mBindFlags;
+			TexDesc.Format = Desc.mFormat;
+			TexDesc.CPUAccessFlags = Desc.mCPUAccessFlags;
 
-			// Set image buffer size
-			Data.dataSize = static_cast<std::size_t>(texWidth*texHeight*texComponents);
+			auto ChannelDepth = BitsPerPixel / texComponents;
+			Uint32 NumComponents = texComponents == 3 ? 4 : texComponents;
 
-			// Texture size
-			Desc.extent = { static_cast<std::uint32_t>(texWidth), static_cast<std::uint32_t>(texHeight), 1u };
+			bool IsSRGB = (texComponents >= 3 && ChannelDepth == 8) ? Desc.mIsSRGB : false;
+			if (TexDesc.Format == TEX_FORMAT_UNKNOWN)
+			{
+				if (ChannelDepth == 8)
+				{
+					switch (NumComponents)
+					{
+					case 1: TexDesc.Format = TEX_FORMAT_R8_UNORM; break;
+					case 2: TexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
+					case 4: TexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", texComponents, ")");
+					}
+				}
+				else if (ChannelDepth == 16)
+				{
+					switch (NumComponents)
+					{
+					case 1: TexDesc.Format = TEX_FORMAT_R16_UNORM; break;
+					case 2: TexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
+					case 4: TexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", texComponents, ")");
+					}
+				}
+				else
+					LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
+			}
+			else
+			{
+				const auto& TexFmtDesc = GetTextureFormatAttribs(TexDesc.Format);
+				if (TexFmtDesc.NumComponents != NumComponents)
+					LOG_ERROR_AND_THROW("Incorrect number of components ", texComponents, ") for texture format ", TexFmtDesc.Name);
+				if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
+					LOG_ERROR_AND_THROW("Incorrect channel size ", ChannelDepth, ") for texture format ", TexFmtDesc.Name);
+			}
 
-			return Data;
+
+			std::vector<TextureSubResData> pSubResources(TexDesc.MipLevels);
+			std::vector< std::vector<Uint8> > Mips(TexDesc.MipLevels);
+
+			if (texComponents == 3)
+			{
+				VERIFY_EXPR(NumComponents == 4);
+				auto RGBAStride = texWidth * NumComponents * ChannelDepth / 8;
+				RGBAStride = (RGBAStride + 3) & (-4);
+				Mips[0].resize(size_t{ RGBAStride } *size_t{ texHeight });
+				pSubResources[0].pData = Mips[0].data();
+				pSubResources[0].Stride = RGBAStride;
+				if (ChannelDepth == 8)
+					RGBToRGBA<Uint8>(data, ImgDesc.RowStride,
+						Mips[0].data(), RGBAStride,
+						ImgDesc.Width, ImgDesc.Height);
+				else if (ChannelDepth == 16)
+					RGBToRGBA<Uint16>(data, ImgDesc.RowStride,
+						Mips[0].data(), RGBAStride,
+						ImgDesc.Width, ImgDesc.Height);
+			}
+			else
+			{
+				pSubResources[0].pData = data;
+				pSubResources[0].Stride = ImgDesc.RowStride;
+			}
+
+			auto MipWidth = TexDesc.Width;
+			auto MipHeight = TexDesc.Height;
+			for (Uint32 m = 1; m < TexDesc.MipLevels; ++m)
+			{
+				auto CoarseMipWidth = std::max(MipWidth / 2u, 1u);
+				auto CoarseMipHeight = std::max(MipHeight / 2u, 1u);
+				auto CoarseMipStride = CoarseMipWidth * NumComponents * ChannelDepth / 8;
+				CoarseMipStride = (CoarseMipStride + 3) & (-4);
+				Mips[m].resize(size_t{ CoarseMipStride } *size_t{ CoarseMipHeight });
+
+				if (Desc.mGenerateMips)
+				{
+					if (ChannelDepth == 8)
+						ComputeCoarseMip<Uint8>(NumComponents, IsSRGB,
+							pSubResources[m - 1].pData, pSubResources[m - 1].Stride,
+							Mips[m].data(), CoarseMipStride,
+							CoarseMipWidth, CoarseMipHeight);
+					else if (ChannelDepth == 16)
+						ComputeCoarseMip<Uint16>(NumComponents, IsSRGB,
+							pSubResources[m - 1].pData, pSubResources[m - 1].Stride,
+							Mips[m].data(), CoarseMipStride,
+							CoarseMipWidth, CoarseMipHeight);
+				}
+
+				pSubResources[m].pData = Mips[m].data();
+				pSubResources[m].Stride = CoarseMipStride;
+
+				MipWidth = CoarseMipWidth;
+				MipHeight = CoarseMipHeight;
+			}
+
+			TextureData TexData;
+			TexData.pSubResources = pSubResources.data();
+			TexData.NumSubresources = TexDesc.MipLevels;
+
+			Diligent::ITexture *Tex;
+			Graphics::Context::GetDevice()->CreateTexture(TexDesc, TexData, &Tex);
+
+			return Tex;
 		}
 		
 		Assets::Mesh & AssetManager::LoadMesh_Assimp(const std::string & Path, Assets::Material& material, const Managers::MeshLoadingDesc & desc)
@@ -79,7 +285,7 @@ namespace NuclearEngine {
 		{
 			for (auto x : mImportedTextures)
 			{
-				Graphics::Context::GetRenderer()->Release(*x.second.mTexture);
+				x.second.mTexture.Release();
 			}
 			mImportedTextures.clear();
 			mHashedTexturesNames.clear();
@@ -91,12 +297,12 @@ namespace NuclearEngine {
 			return LoadMesh_Assimp(Path, material, desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path,  LLGL::TextureDescriptor & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path, const TextureLoadingDesc & Desc)
 		{
 			return Import(Path, Assets::TextureUsageType::Unknown, Desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type,  LLGL::TextureDescriptor & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type, const TextureLoadingDesc & Desc)
 		{
 			Assets::Texture Tex;
 
@@ -132,7 +338,7 @@ namespace NuclearEngine {
 			return mImportedTextures[hashedname] = Tex;
 		}
 					
-		LLGL::SrcImageDescriptor AssetManager::TextureCube_Load(const std::string& Path,  LLGL::TextureDescriptor& Desc)
+		 Diligent::ITexture * AssetManager::TextureCube_Load(const std::string& Path, const TextureLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
@@ -160,10 +366,10 @@ namespace NuclearEngine {
 			texture = nullptr;
 			return false;
 		}
-		std::array<LLGL::SrcImageDescriptor, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths,  LLGL::TextureDescriptor& desc)
+		std::array< Diligent::ITexture *, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const TextureLoadingDesc& desc)
 		{
-			LLGL::SrcImageDescriptor data1, data2, data3, data4, data5, data6;
-			LLGL::TextureDescriptor Desc = desc;
+			Diligent::ITexture *data1, *data2, *data3, *data4, *data5, *data6;
+			TextureLoadingDesc Desc = desc;
 			//Desc.FlipY_Axis = false;
 			data1 = TextureCube_Load(Paths.at(0), Desc);
 			data2 = TextureCube_Load(Paths.at(1), Desc);
@@ -172,7 +378,7 @@ namespace NuclearEngine {
 			data5 = TextureCube_Load(Paths.at(4), Desc);
 			data6 = TextureCube_Load(Paths.at(5), Desc);
 			
-			std::array<LLGL::SrcImageDescriptor, 6> result = { data1, data2, data3, data4, data5, data6 };
+			std::array<Diligent::ITexture *, 6> result = { data1, data2, data3, data4, data5, data6 };
 
 			return result;
 		}

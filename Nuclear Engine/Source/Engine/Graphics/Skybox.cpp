@@ -1,9 +1,8 @@
 #include "Engine\Graphics\Skybox.h"
 #include <Engine\Graphics\Context.h>
-#include <Engine/Graphics/ShaderCompiler.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\Components\CameraComponent.h>
-#include <LLGL\Buffer.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Core/FileSystem.h>
 
 namespace NuclearEngine
@@ -105,7 +104,7 @@ namespace NuclearEngine
 			ReleaseTex = true;
 			Graphics::Context::GetRenderer()->Release(*mTexture);
 
-			LLGL::TextureDescriptor Desc;
+			TextureLoadingDesc Desc;
 			Desc.format = LLGL::Format::RGBA8UNorm;
 			Desc.type = LLGL::TextureType::TextureCube;
 			//Desc.GenerateMipMaps = false;
@@ -122,7 +121,7 @@ namespace NuclearEngine
 		void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<std::string, 6>& paths)
 		{
 			ReleaseTex = true;
-			LLGL::TextureDescriptor Desc;
+			TextureLoadingDesc Desc;
 			Desc.format = LLGL::Format::RGBA8UNorm;
 			Desc.type = LLGL::TextureType::Texture2D;
 			return Initialize(Camera, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));

@@ -10,6 +10,8 @@
 typedef signed   char Int8;
 typedef unsigned char Uint8;
 
+typedef unsigned char Byte;
+
 // 16 bits integer types
 typedef signed   short Int16;
 typedef unsigned short Uint16;

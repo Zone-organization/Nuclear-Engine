@@ -2,7 +2,10 @@
 #include <Base\NE_Common.h>
 #include <Engine/Assets\Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
 #include <map>
 
 namespace NuclearEngine
@@ -14,7 +17,7 @@ namespace NuclearEngine
 		{
 			ShaderTexture() { mSlot = 0; }
 			ShaderTexture(Assets::Texture* _tex, Uint8 _slot = 14) : mTexture(_tex), mSlot(_slot) {	}
-			LLGL::ResourceHeap* mResourceHeap;
+			//LLGL::ResourceHeap* mResourceHeap;
 			Assets::Texture* mTexture;
 			Uint8 mSlot;
 		};
@@ -24,10 +27,10 @@ namespace NuclearEngine
 		//TODO: Support more Shader Types.
 		struct MaterialCreationDesc
 		{
-			Graphics::Shader* mVShader = nullptr;
-			Graphics::Shader* mPShader = nullptr;
-			LLGL::GraphicsPipeline* mPipeline = nullptr;
-			LLGL::Sampler* mSampler = nullptr;
+			Diligent::IShader* mVShader = nullptr;
+			Diligent::IShader* mPShader = nullptr;
+			Diligent::IPipelineState* mPipeline = nullptr;
+			Diligent::ISampler* mSampler = nullptr;
 		};
 
 		/*
@@ -90,17 +93,17 @@ namespace NuclearEngine
 					cbuffer myCB_1;
 					cbuffer myCB_2;
 			*/
-			static LLGL::PipelineLayoutDescriptor GeneratePipelineLayoutDesc(Graphics::Shader* _VShader, Graphics::Shader* _PShader);
+			//static LLGL::PipelineLayoutDescriptor GeneratePipelineLayoutDesc(Graphics::Shader* _VShader, Graphics::Shader* _PShader);
 
 			//PixelShader Textures
 			std::vector<TextureSet> mPixelShaderTextures;
 			std::vector<ShaderTexture> PixelShaderTS;
 		private:
-			void ParsePixelShader(Graphics::Shader* PixelShader);
-			LLGL::Buffer* mCbuffer;
+			void ParsePixelShader(Diligent::IShader* PixelShader);
+			/*LLGL::Buffer* mCbuffer;
 			Graphics::ShaderResource mCbufferRef;
 			std::map<std::string, Float32> mCbufferData;
-			bool mPSHaveMaterialCB;
+			bool mPSHaveMaterialCB;*/
 		};
 	}
 }

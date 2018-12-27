@@ -225,6 +225,7 @@
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderCompiler\D3DCompiler.h" />
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
+    <ClInclude Include="include\Engine\Assets\Image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
