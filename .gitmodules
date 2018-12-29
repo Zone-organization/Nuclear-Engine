@@ -4,3 +4,6 @@
 [submodule "External/GLFW"]
 	path = External/GLFW
 	url = https://github.com/glfw/glfw
+[submodule "External/Assimp"]
+	path = External/Assimp
+	url = https://github.com/assimp/assimp
