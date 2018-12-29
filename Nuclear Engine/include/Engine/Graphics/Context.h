@@ -15,6 +15,8 @@ namespace NuclearEngine
 		public:
 			static bool Initialize(const Core::ApplicationDesc & Desc);
 
+			static void ShutDown();
+
 			static void PresentFrame();
 
 			static bool IsOpenGL();			// Returns ture if OpenGL is used as rendering API.

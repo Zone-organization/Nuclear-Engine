@@ -32,6 +32,7 @@ namespace NuclearEngine
 		void Application::Shutdown()
 		{
 			glfwDestroyWindow(MainWindow);
+			Graphics::Context::ShutDown();
 		}
 		void Application::Display(bool show)
 		{
@@ -43,6 +44,7 @@ namespace NuclearEngine
 	
 		bool Application::PollEvents()
 		{
+			glfwPollEvents();
 			ShouldClose = glfwWindowShouldClose(MainWindow);
 			return ShouldClose;
 		}

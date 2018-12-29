@@ -14,9 +14,9 @@ namespace NuclearEngine
 {
 	bool InitializeDiligentEngineWin32(GLFWwindow* window,
 		const DeviceType& type,
-		IRenderDevice* device,
-		IDeviceContext* context,
-		ISwapChain* swapchain
+		IRenderDevice** device,
+		IDeviceContext** context,
+		ISwapChain** swapchain
 	)
 	{
 
@@ -40,10 +40,10 @@ namespace NuclearEngine
 			LoadGraphicsEngineD3D11(GetEngineFactoryD3D11);
 #endif
 			auto *pFactoryD3D11 = GetEngineFactoryD3D11();
-			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceAttribs, &device,
-				&context, NumDeferredCtx);
-			pFactoryD3D11->CreateSwapChainD3D11(device, context,
-				SCDesc, FSDesc, NativeWindowHandle, &swapchain);
+			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceAttribs, device,
+				context, NumDeferredCtx);
+			pFactoryD3D11->CreateSwapChainD3D11(*device, *context,
+				SCDesc, FSDesc, NativeWindowHandle, swapchain);
 		}
 		break;
 
@@ -56,10 +56,10 @@ namespace NuclearEngine
 #endif
 			EngineD3D12Attribs EngD3D12Attribs;
 			auto *pFactoryD3D12 = GetEngineFactoryD3D12();
-			pFactoryD3D12->CreateDeviceAndContextsD3D12(EngD3D12Attribs, &device,
-				&context, NumDeferredCtx);
-			pFactoryD3D12->CreateSwapChainD3D12(device, context,
-				SCDesc, FSDesc, NativeWindowHandle, &swapchain);
+			pFactoryD3D12->CreateDeviceAndContextsD3D12(EngD3D12Attribs, device,
+				context, NumDeferredCtx);
+			pFactoryD3D12->CreateSwapChainD3D12(*device, *context,
+				SCDesc, FSDesc, NativeWindowHandle, swapchain);
 		}
 		break;
 
@@ -76,7 +76,7 @@ namespace NuclearEngine
 			EngineGLAttribs CreationAttribs;
 			CreationAttribs.pNativeWndHandle = NativeWindowHandle;
 			pFactoryOpenGL->CreateDeviceAndSwapChainGL(
-				CreationAttribs, &device, &context, SCDesc, &swapchain);
+				CreationAttribs, device, context, SCDesc, swapchain);
 		}
 		break;
 
@@ -89,10 +89,10 @@ namespace NuclearEngine
 #endif
 			EngineVkAttribs EngVkAttribs;
 			auto *pFactoryVk = GetEngineFactoryVk();
-			pFactoryVk->CreateDeviceAndContextsVk(EngVkAttribs, &device,
-				&context, NumDeferredCtx);
-			pFactoryVk->CreateSwapChainVk(device, context,
-				SCDesc, NativeWindowHandle, &swapchain);
+			pFactoryVk->CreateDeviceAndContextsVk(EngVkAttribs, device,
+				context, NumDeferredCtx);
+			pFactoryVk->CreateSwapChainVk(*device, *context,
+				SCDesc, NativeWindowHandle, swapchain);
 		}
 		break;
 

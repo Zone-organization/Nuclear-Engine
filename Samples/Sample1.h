@@ -2,7 +2,14 @@
 #include "Common.h"
 class Sample1 : public Core::Game
 {
+	void Render(float dt) override
+	{  
+		// Clear the back buffer 
+		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
+		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+		Graphics::Context::GetSwapChain()->Present();
+	}
 };
 
 //#pragma once
