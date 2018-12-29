@@ -1,7 +1,5 @@
 #include <Engine\Systems\RenderSystem.h>
 #include <Core\FileSystem.h>
-#include <LLGL\Buffer.h>
-#include <Engine/Graphics/ShaderCompiler.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/TransformComponent.h>
 #include <Engine\Managers\ShaderManager.h>
@@ -23,55 +21,55 @@ namespace NuclearEngine
 		void RenderSystem::BakePipelines()
 		{  
 			// Create shader program which is used as composite
-			LLGL::ShaderProgramDescriptor shaderProgramDesc;
-			{
-				shaderProgramDesc.vertexFormats = { VShader.mVSFormat };
-				shaderProgramDesc.vertexShader = VShader.mShader;
-				shaderProgramDesc.fragmentShader = PShader.mShader;
-			}
-			ShaderProgram = Graphics::Context::GetRenderer()->CreateShaderProgram(shaderProgramDesc);
+			//IShaderProgramDescriptor shaderProgramDesc;
+			//{
+			//	shaderProgramDesc.vertexFormats = { VShader.mVSFormat };
+			//	shaderProgramDesc.vertexShader = VShader.mShader;
+			//	shaderProgramDesc.fragmentShader = PShader.mShader;
+			//}
+			//ShaderProgram = IContext::GetRenderer()->CreateShaderProgram(shaderProgramDesc);
 
-			// Link shader program and check for errors
-			if (ShaderProgram->HasErrors())
-				Log.Error(ShaderProgram->QueryInfoLog());
-			
+			//// Link shader program and check for errors
+			//if (ShaderProgram->HasErrors())
+			//	Log.Error(ShaderProgram->QueryInfoLog());
+			//
 		
-			// Create graphics pipeline
-			LLGL::GraphicsPipelineDescriptor pipelineDesc;
-			{
-				pipelineDesc.shaderProgram = ShaderProgram;
-				pipelineDesc.pipelineLayout = PipelineLayout;
-				pipelineDesc.primitiveTopology = LLGL::PrimitiveTopology::TriangleStrip;
-			}
-			Pipeline = Graphics::Context::GetRenderer()->CreateGraphicsPipeline(pipelineDesc);
+			//// Create graphics pipeline
+			//IGraphicsPipelineDescriptor pipelineDesc;
+			//{
+			//	pipelineDesc.shaderProgram = ShaderProgram;
+			//	pipelineDesc.pipelineLayout = PipelineLayout;
+			//	pipelineDesc.primitiveTopology = IPrimitiveTopology::TriangleStrip;
+			//}
+			//Pipeline = IContext::GetRenderer()->CreateGraphicsPipeline(pipelineDesc);
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
-			LLGL::TextureDescriptor ScreenTexDesc;
+			/*ITextureDescriptor ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
-				ScreenTexDesc.format = LLGL::Format::RGBA16Float;
+				ScreenTexDesc.format = IFormat::RGBA16Float;
 			}
 			else
 			{
-				ScreenTexDesc.format = LLGL::Format::RGBA8UNorm;
+				ScreenTexDesc.format = IFormat::RGBA8UNorm;
 			}
-			ScreenTexDesc.type = LLGL::TextureType::Texture2D;
+			ScreenTexDesc.type = ITextureType::Texture2D;
 
-			LLGL::SrcImageDescriptor Data;
+			ISrcImageDescriptor Data;
 			Data.data = NULL;
 			ScreenTexDesc.extent.width = WindowWidth;
 			ScreenTexDesc.extent.height = WindowHeight;
 
-			PostProcessTexture = Graphics::Context::GetRenderer()->CreateTexture(ScreenTexDesc, &Data);
+			PostProcessTexture = IContext::GetRenderer()->CreateTexture(ScreenTexDesc, &Data);
 
-			LLGL::RenderTargetDescriptor RTDesc;
+			IRenderTargetDescriptor RTDesc;
 			RTDesc.resolution.width = WindowWidth;
 			RTDesc.resolution.height = WindowHeight;
-			RTDesc.attachments.push_back({ LLGL::AttachmentType::Color, PostProcessTexture });
-			RTDesc.attachments.push_back({ LLGL::AttachmentType::DepthStencil });
+			RTDesc.attachments.push_back({ IAttachmentType::Color, PostProcessTexture });
+			RTDesc.attachments.push_back({ IAttachmentType::DepthStencil });
 
-			PostProcessRT = Graphics::Context::GetRenderer()->CreateRenderTarget(RTDesc);
+			PostProcessRT = IContext::GetRenderer()->CreateRenderTarget(RTDesc);
 
 			Managers::AutoVertexShaderDesc VertShaderDesc;
 			VertShaderDesc.Use_Camera = false;
@@ -86,13 +84,13 @@ namespace NuclearEngine
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
 
-			Graphics::ShaderCompiler::CompileAndCreateShader(&PostProcess_PShader,
+			IShaderCompiler::CompileAndCreateShader(&PostProcess_PShader,
 				Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
-				LLGL::ShaderType::Fragment);
+				IShaderType::Fragment);
 	
-			LLGL::SamplerDescriptor Samplerdesc;
-			Samplerdesc.magFilter = Samplerdesc.minFilter = Samplerdesc.mipMapFilter = LLGL::SamplerFilter::Nearest;
-			ScreenSampler = Graphics::Context::GetRenderer()->CreateSampler(Samplerdesc);
+			ISamplerDescriptor Samplerdesc;
+			Samplerdesc.magFilter = Samplerdesc.minFilter = Samplerdesc.mipMapFilter = ISamplerFilter::Nearest;
+			ScreenSampler = IContext::GetRenderer()->CreateSampler(Samplerdesc);*/
 		}
 		void RenderSystem::SetCamera(Components::CameraComponent * camera)
 		{
@@ -102,13 +100,13 @@ namespace NuclearEngine
 		{
 			return this->ActiveCamera;
 		}
-		Graphics::Shader* RenderSystem::GetVertexShader()
+		IShader* RenderSystem::GetVertexShader()
 		{
-			return &this->VShader;
+			return this->VShader;
 		}
-		Graphics::Shader* RenderSystem::GetPixelShader()
+		IShader* RenderSystem::GetPixelShader()
 		{
-			return &this->PShader;
+			return this->PShader;
 		}
 		void RenderSystem::BindShaders()
 		{
@@ -142,10 +140,10 @@ namespace NuclearEngine
 		}
 		void RenderSystem::BakePixelShader()
 		{
-			std::vector<std::string> defines;
-			LLGL::PipelineLayoutDescriptor layoutDesc;
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 0 });
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 1 });
+			/*std::vector<std::string> defines;
+			IPipelineLayoutDescriptor layoutDesc;
+			layoutDesc.bindings.push_back({ IResourceType::Texture,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 0 });
+			layoutDesc.bindings.push_back({ IResourceType::Texture,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 1 });
 
 			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true; }
 			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
@@ -153,41 +151,41 @@ namespace NuclearEngine
 			if (Desc.NormalMaps == true) 
 			{ 
 				defines.push_back("NE_USE_NORMAL_MAPS");
-				layoutDesc.bindings.push_back({ LLGL::ResourceType::Texture,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 2 });
+				layoutDesc.bindings.push_back({ IResourceType::Texture,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 2 });
 			}
 
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler,0, LLGL::StageFlags::FragmentStage, 0 });
-			layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler,0, LLGL::StageFlags::FragmentStage, 1 });
+			layoutDesc.bindings.push_back({ IResourceType::Sampler,0, IStageFlags::FragmentStage, 0 });
+			layoutDesc.bindings.push_back({ IResourceType::Sampler,0, IStageFlags::FragmentStage, 1 });
 
 			if (Desc.NormalMaps == true)
 			{
-				layoutDesc.bindings.push_back({ LLGL::ResourceType::Sampler,LLGL::BindFlags::SampleBuffer, LLGL::StageFlags::FragmentStage, 2 });
+				layoutDesc.bindings.push_back({ IResourceType::Sampler,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 2 });
 			}
 
 			if (PSDirty = true)
 			{
-				Graphics::Context::GetRenderer()->Release(*PShader.mShader);
-				Graphics::Context::GetRenderer()->Release(*NE_Light_CB);
+				IContext::GetRenderer()->Release(*PShader.mShader);
+				IContext::GetRenderer()->Release(*NE_Light_CB);
 
-				Graphics::ShaderCompiler::CompileAndCreateShader(&PShader,
-					Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true), LLGL::ShaderType::Fragment);
+				IShaderCompiler::CompileAndCreateShader(&PShader,
+					Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true), IShaderType::Fragment);
 
 
 				Calculate_Light_CB_Size();
 
-				NE_Light_CB = Graphics::Context::GetRenderer()->CreateBuffer(LLGL::ConstantBufferDesc(this->NE_Light_CB_Size));
+				NE_Light_CB = IContext::GetRenderer()->CreateBuffer(IConstantBufferDesc(this->NE_Light_CB_Size));
 
 				//this->PShader.SetConstantBuffer(&this->NE_Light_CB);
 				PSDirty = false;
 			}
-
-			PipelineLayout = Graphics::Context::GetRenderer()->CreatePipelineLayout(layoutDesc);
+			
+			PipelineLayout = IContext::GetRenderer()->CreatePipelineLayout(layoutDesc);*/
 		}
 		void RenderSystem::BakeVertexShader()
 		{
-			if (VSDirty = true)
+			/*if (VSDirty = true)
 			{
-				Graphics::Context::GetRenderer()->Release(*VShader.mShader);
+				IContext::GetRenderer()->Release(*VShader.mShader);
 
 				if (Desc.VShaderPath == "NE_Default")
 				{
@@ -197,7 +195,7 @@ namespace NuclearEngine
 					VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
 				}
 				else {
-					Graphics::ShaderCompiler::CompileAndCreateShader(&VShader,Core::FileSystem::LoadFileToString(Desc.VShaderPath), LLGL::ShaderType::Vertex);
+					IShaderCompiler::CompileAndCreateShader(&VShader,Core::FileSystem::LoadFileToString(Desc.VShaderPath), IShaderType::Vertex);
 
 				}
 
@@ -205,13 +203,13 @@ namespace NuclearEngine
 					this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
 				else
 					Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
-					*/
+					
 				VSDirty = false;
-			}
+			}*/
 		}
 		void RenderSystem::Update_Light()
 		{
-			std::vector<Math::Vector4> LightsBuffer;
+			/*std::vector<Math::Vector4> LightsBuffer;
 			//LightsBuffer.reserve(NUM_OF_LIGHT_VECS);
 
 			LightsBuffer.push_back(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
@@ -236,12 +234,12 @@ namespace NuclearEngine
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().InnerCutOf_OuterCutoff);
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Color);
 			}
-			Graphics::Context::GetRenderer()->WriteBuffer(*NE_Light_CB, 0, LightsBuffer.data(), NE_Light_CB_Size);
+			IContext::GetRenderer()->WriteBuffer(*NE_Light_CB, 0, LightsBuffer.data(), NE_Light_CB_Size);*/
 		}
 
 		void RenderSystem::Update_Meshes(ECS::EntityManager & es)
 		{
-			ECS::ComponentHandle<Components::MeshComponent> MeshObject;
+			/*ECS::ComponentHandle<Components::MeshComponent> MeshObject;
 			for (ECS::Entity entity : es.entities_with_components(MeshObject))
 			{
 				if (!MeshObject.Get()->mMultiRender)
@@ -258,7 +256,7 @@ namespace NuclearEngine
 						InstantRender(MeshObject.Get());
 					}
 				}
-			}
+			}*/
 		}
 		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
@@ -296,21 +294,21 @@ namespace NuclearEngine
 			{
 				material->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
-				Graphics::Context::GetCommands()->SetIndexBuffer(*mesh->mSubMeshes.at(i).mIB);
-				Graphics::Context::GetCommands()->SetVertexBuffer(*mesh->mSubMeshes.at(i).mVB);
+				/*IContext::GetCommands()->SetIndexBuffer(*mesh->mSubMeshes.at(i).mIB);
+				IContext::GetCommands()->SetVertexBuffer(*mesh->mSubMeshes.at(i).mVB);
 
-				Graphics::Context::GetCommands()->DrawIndexed(mesh->mSubMeshes.at(i).mIndicesCount, 0);
+				IContext::GetCommands()->DrawIndexed(mesh->mSubMeshes.at(i).mIndicesCount, 0);*/
 			}
 		}
 		void RenderSystem::RenderToPostProcessingRT()
 		{
 			///PostProcessRT.Bind();
-			///LLGL::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			///IContext::Clear(IColor(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 		}
 		void RenderSystem::RenderPostProcessingContents()
 		{
 			///PostProcessRT.Bind_Default();
-			///LLGL::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
+			///IContext::Clear(IColor(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			///PostProcess_VShader.Bind();
 			///PostProcess_PShader.Bind();
 			///ScreenSampler.PSBind(0);

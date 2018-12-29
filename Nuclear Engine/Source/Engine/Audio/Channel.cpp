@@ -1,7 +1,7 @@
 #include <Engine\Audio\Channel.h>
-#include <FMOD\includer.h> 
+//#include <FMOD\includer.h> 
 
-#ifndef FMOD_NOT_INCLUDED
+#ifdef FMOD_NOT_INCLUDED
 #include <FMOD\inc\fmod.hpp>
 #include <FMOD\inc\fmod_errors.h>
 namespace NuclearEngine

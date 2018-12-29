@@ -7,8 +7,11 @@
 #include <Engine\Components\Light.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
-#include <Engine\Graphics\Shader.h>
-#include <LLGL\Sampler.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -42,8 +45,8 @@ namespace NuclearEngine
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
-			Graphics::Shader* GetVertexShader();
-			Graphics::Shader* GetPixelShader();
+			IShader* GetVertexShader();
+			IShader* GetPixelShader();
 
 			void BindShaders();
 			void BindConstantBuffers();
@@ -69,18 +72,18 @@ namespace NuclearEngine
 			void Update_Light();
 			void Update_Meshes(ECS::EntityManager & es);
 
-			LLGL::GraphicsPipeline* Pipeline = nullptr;
+			IPipelineState* Pipeline = nullptr;
 
 		private:
 			void Calculate_Light_CB_Size();
 			void BakePixelShader();
 			void BakeVertexShader();
 
-			Graphics::Shader VShader;
-			Graphics::Shader PShader;
-			LLGL::ShaderProgram* ShaderProgram;
-			LLGL::Buffer* NE_Light_CB = nullptr;
-			LLGL::PipelineLayout*   PipelineLayout = nullptr;
+			IShader* VShader;
+			IShader* PShader;
+			//IShaderProgram* ShaderProgram;
+			IBuffer* NE_Light_CB = nullptr;
+			//IPipelineLayout*   PipelineLayout = nullptr;
 
 			Components::CameraComponent* ActiveCamera;
 
@@ -99,11 +102,11 @@ namespace NuclearEngine
 
 			//PostProcess stuff
 			bool PostProcessingEnabled = false;
-			LLGL::Sampler* ScreenSampler;
-			LLGL::Texture* PostProcessTexture;
-			LLGL::RenderTarget* PostProcessRT;
-			Graphics::Shader PostProcess_VShader;
-			Graphics::Shader PostProcess_PShader;
+			ISampler* ScreenSampler;
+			ITexture* PostProcessTexture;
+			//IRenderTarget* PostProcessRT;
+			IShader* PostProcess_VShader;
+			IShader* PostProcess_PShader;
 			Assets::Mesh PostProcessScreenQuad;
 		};
 

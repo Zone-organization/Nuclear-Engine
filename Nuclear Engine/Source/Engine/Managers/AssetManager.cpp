@@ -35,8 +35,8 @@ namespace NuclearEngine {
 			mHashedMaterialsPaths = std::unordered_map<Uint32, std::string>();
 
 
-			mTextureImporter = TextureImport::create<&Importers::StbImageLoad>();
-			mMeshImporter = MeshImport::create<&Importers::AssimpLoadMesh>();
+			mTextureImporter = Importers::TextureImporterDelegate::create<&Importers::StbImageLoad>();
+			mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
 		}
 
 		AssetManager::~AssetManager()
@@ -55,12 +55,12 @@ namespace NuclearEngine {
 			//mHashedTexturesNames.clear();
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path, const TextureLoadingDesc & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path, const Importers::TextureLoadingDesc & Desc)
 		{
 			return Import(Path, Assets::TextureUsageType::Unknown, Desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type, const TextureLoadingDesc & Desc)
+		Assets::Texture & AssetManager::Import(const std::string & Path, const Assets::TextureUsageType & type, const Importers::TextureLoadingDesc & Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
@@ -93,14 +93,14 @@ namespace NuclearEngine {
 			return mImportedTextures[hashedname] = Tex;
 		}
 
-		Assets::Texture & AssetManager::Import(const Assets::Image & Image, const TextureLoadingDesc & Desc)
+		Assets::Texture & AssetManager::Import(const Assets::Image & Image, const Importers::TextureLoadingDesc & Desc)
 		{
 			return Internal::CreateTextureFromRawImage(Image, Desc);
 		}
 
-		std::tuple<Assets::Mesh, Assets::Material> AssetManager::Import(const std::string & Path, const Managers::MeshLoadingDesc & desc)
+		std::tuple<Assets::Mesh, Assets::Material> AssetManager::Import(const std::string & Path, const Importers::MeshLoadingDesc & desc)
 		{
-			auto[mesh, material] = mMeshImporter(Path, desc);
+			auto[mesh, material] = mMeshImporter({ Path, desc, this });
 			auto hashedname = Utilities::Hash(Path);
 
 			Log.Info("[AssetManager] Loaded Mesh & Material at: " + Path + "\n");
@@ -116,7 +116,7 @@ namespace NuclearEngine {
 			return { mesh , material };
 		}
 					
-		ITexture * AssetManager::TextureCube_Load(const std::string& Path, const TextureLoadingDesc& Desc)
+		ITexture * AssetManager::TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
@@ -146,10 +146,10 @@ namespace NuclearEngine {
 			texture = nullptr;
 			return false;
 		}
-		std::array< ITexture *, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const TextureLoadingDesc& desc)
+		std::array< ITexture *, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const Importers::TextureLoadingDesc& desc)
 		{
 			ITexture *data1, *data2, *data3, *data4, *data5, *data6;
-			TextureLoadingDesc Desc = desc;
+			Importers::TextureLoadingDesc Desc = desc;
 			//Desc.FlipY_Axis = false;
 			data1 = TextureCube_Load(Paths.at(0), Desc);
 			data2 = TextureCube_Load(Paths.at(1), Desc);

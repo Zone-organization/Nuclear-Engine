@@ -2,6 +2,7 @@
 #include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Managers\AssetManager.h>
+#include <Engine/Importers/Importers.h>
 
 namespace NuclearEngine
 {
@@ -95,7 +96,7 @@ namespace NuclearEngine
 					}
 			}
 
-			Assets::Texture& CreateTextureFromRawImage(const Assets::Image& Image, const TextureLoadingDesc& Desc)
+			Assets::Texture& CreateTextureFromRawImage(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc)
 			{
 				
 

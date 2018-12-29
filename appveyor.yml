@@ -7,8 +7,20 @@ configuration:
   - Release
 
 before_build:
-  - git clone https://github.com/Zone-organization/Nuclear-Deps.git ..\Nuclear-Deps
-  - ps: msbuild ..\Nuclear-Deps\Nuclear-Deps.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - git submodule update --init --recursive
+  
+  # Build GLFW
+  - cmake External\GLFW\ -B\External\GLFW\Win32\ -G "Visual Studio 15 2017 Win64" 
+  - ps: msbuild External\GLFW\Win32\GLFW.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
+  
+  # Build Diligent
+  - cmake External\Diligent\ -B\External\Diligent\gen\ -G "Visual Studio 15 2017 Win64" 
+  - ps: msbuild External\Diligent\gen\Project.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
+ 
+  # Build Assimp
+  - cmake External\Assimp\ -B\Diligent\Assimp\.project\ -G "Visual Studio 15 2017 Win64" 
+  - ps: msbuild External\Assimp\.project\Assimp.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
+ 
 build:
   parallel: true                  # enable MSBuild parallel builds
   project: Nuclear Project.sln

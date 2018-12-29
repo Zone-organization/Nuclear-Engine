@@ -4,35 +4,35 @@
 #include <Engine\Assets\Material.h>
 #include <Base\Utilities\Hash.h>
 
-#pragma comment(lib,"assimp.lib")
-
 namespace NuclearEngine {
 	namespace Importers {
 
-		std::tuple<Assets::Mesh, Assets::Material> AssimpImporter::Load(const std::string& Path, const Managers::MeshLoadingDesc& desc)
+		std::tuple<Assets::Mesh, Assets::Material> AssimpImporter::Load(const MeshImporterDesc& desc)
 		{
-			Log.Info("[AssimpImporter] Loading Mesh: " + Path + "\n");
-			LoadingDesc = desc;
+			Log.Info("[AssimpImporter] Loading Mesh: " + desc.mPath + "\n");
+			mLoadingDesc = desc.mMeshDesc;
+			mManager = desc.mManager;
+
 			Assimp::Importer importer;
-			const aiScene* scene = importer.ReadFile(Path, aiProcess_Triangulate);
+			const aiScene* scene = importer.ReadFile(desc.mPath, aiProcess_Triangulate);
 
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
-				Log.Error("[AssimpImporter] Assimp Failed to load mesh: " + Path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
+				Log.Error("[AssimpImporter] Assimp Failed to load mesh: " + desc.mPath + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
 				return std::tuple<Assets::Mesh, Assets::Material>();
 			}
-			directory = Path.substr(0, Path.find_last_of('/'));
+			mDirectory = desc.mPath.substr(0, desc.mPath.find_last_of('/'));
 			ProcessNode(scene->mRootNode, scene);
 
-			for (unsigned int i = 0; i < meshes_loaded.size(); i++)
+			for (unsigned int i = 0; i < mMeshesLoaded.size(); i++)
 			{
-				model.mSubMeshes.push_back(Assets::Mesh::SubMesh(meshes_loaded.at(i)));
+				mMesh.mSubMeshes.push_back(Assets::Mesh::SubMesh(mMeshesLoaded.at(i)));
 			}
-			auto hashedname = Utilities::Hash(Path);
-			model.isValid = true;
+			auto hashedname = Utilities::Hash(desc.mPath);
+			mMesh.isValid = true;
 
-			return { model , material };
+			return { mMesh , mMaterial };
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
 		{
@@ -42,7 +42,7 @@ namespace NuclearEngine {
 				// the node object only contains indices to index the actual objects in the scene. 
 				// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-				meshes_loaded.push_back(ProcessMesh(mesh, scene));
+				mMeshesLoaded.push_back(ProcessMesh(mesh, scene));
 			}
 			// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 			for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -57,27 +57,27 @@ namespace NuclearEngine {
 			//TODO::MATERIAL
 
 			// process materials
-			/*aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			if (LoadingDesc.LoadDiffuseTextures)
+			/*aiMaterial* mMaterial = scene->mMaterials[mesh->mMaterialIndex];
+			if (mLoadingDesc.LoadDiffuseTextures)
 			{
-				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(material, aiTextureType_DIFFUSE);
+				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DIFFUSE);
 				TexSet.insert(TexSet.end(), DiffuseMaps.begin(), DiffuseMaps.end());
 			}
-			if (LoadingDesc.LoadSpecularTextures)
+			if (mLoadingDesc.LoadSpecularTextures)
 			{
-				std::vector<Assets::Texture> SpecularMaps = ProcessMaterialTexture(material, aiTextureType_SPECULAR);
+				std::vector<Assets::Texture> SpecularMaps = ProcessMaterialTexture(mMaterial, aiTextureType_SPECULAR);
 				TexSet.insert(TexSet.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
-			if (LoadingDesc.LoadNormalTextures)
+			if (mLoadingDesc.LoadNormalTextures)
 			{
-				std::vector<Assets::Texture> NormalMaps = ProcessMaterialTexture(material, aiTextureType_DISPLACEMENT);
+				std::vector<Assets::Texture> NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DISPLACEMENT);
 				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 
 			if (!TexSet.empty())
 			{
-				this->material.mPixelShaderTextures.push_back(TexSet);
-				return (this->material.mPixelShaderTextures.size() - 1);
+				this->mMaterial.mPixelShaderTextures.push_back(TexSet);
+				return (this->mMaterial.mPixelShaderTextures.size() - 1);
 			}
 			else
 			{
@@ -106,7 +106,7 @@ namespace NuclearEngine {
 					result.UV.push_back(Math::Vector2(0.0f, 0.0f));
 				}
 				// normals
-				if (LoadingDesc.UseNormals == true)
+				if (mLoadingDesc.UseNormals == true)
 				{
 					if (mesh->mNormals != NULL)
 						result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
@@ -115,7 +115,7 @@ namespace NuclearEngine {
 				}
 
 				//tangents
-				if (LoadingDesc.UseTangents == true)
+				if (mLoadingDesc.UseTangents == true)
 				{
 					if (mesh->mTangents != NULL)
 						result.Tangents.push_back(Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z));
@@ -133,7 +133,7 @@ namespace NuclearEngine {
 				}
 			}
 
-			// process material		
+			// process mMaterial		
 			result.TexSetIndex = ProcessMaterial(mesh, scene);
 
 			// return a mesh object created from the extracted mesh data
@@ -166,19 +166,19 @@ namespace NuclearEngine {
 				Assets::Texture texture;
 
 				std::string filename = str.C_Str();
-				filename = directory + '/' + filename;
+				filename = mDirectory + '/' + filename;
 
-				texture = Managers::AssetManager::Import(filename, GetTextureType(type));
+				texture = mManager->Import(filename, GetTextureType(type));
 
 				textures.push_back(texture);
 			}
 			return textures;
 		}
 
-		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const std::string & Path, const Managers::MeshLoadingDesc & desc)
+		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const MeshImporterDesc& desc)
 		{
 			AssimpImporter importer;
-			return importer.Load(Path, desc);
+			return importer.Load(desc);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 #include <Engine\Audio\Sound.h>
-#include <FMOD\includer.h> 
+//#include <FMOD\includer.h> 
 
-#ifndef FMOD_NOT_INCLUDED
+#ifdef FMOD_NOT_INCLUDED
 #include <Engine\Audio\AudioEngine.h>
 #include <Engine\Audio\Channel.h>
 #include <FMOD\inc\fmod.hpp>

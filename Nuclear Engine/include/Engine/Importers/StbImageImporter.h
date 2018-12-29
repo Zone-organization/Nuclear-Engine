@@ -1,12 +1,12 @@
 #pragma once
-#include <Engine\Managers\AssetManager.h>
+#include <Engine/Importers/Importers.h>
 
 #ifdef EXPOSE_STB_IMAGE_IMPORTER
 namespace NuclearEngine
 {
 	namespace Importers
 	{
-		static Assets::Image& StbImageLoad(const std::string& Path, const Managers::TextureLoadingDesc & Desc);
+		Assets::Image& StbImageLoad(const std::string& Path, const Importers::TextureLoadingDesc & Desc);
 	}
 }
 #endif

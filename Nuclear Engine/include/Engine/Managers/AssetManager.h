@@ -1,14 +1,8 @@
 #pragma once
 #include <Engine/Graphics/Color.h>
-#include <Engine/Assets/Texture.h>
-#include <Engine/Assets/Image.h>
-#include <Engine/Assets/Mesh.h>
-#include <Engine/Assets/Material.h>
-#include <Base\Utilities\Delegate.h>
-#include <tuple>
+#include <Engine/Importers/Importers.h>
 #include <unordered_map>
 #include <array>
-#include <string>
 
 namespace NuclearEngine {
 	namespace Managers
@@ -26,47 +20,7 @@ namespace NuclearEngine {
 		};
 		DEFINE_FLAG_ENUM_OPERATORS(ASSET_MANAGER_FLUSH_FLAGS)
 
-		struct MeshLoadingDesc
-		{
-			bool UseTexCoords = true;
-			bool UseNormals = true;
-			bool UseTangents = false;
-			bool LoadDiffuseTextures = true;
-			bool LoadSpecularTextures = false;
-			bool LoadNormalTextures = false;
-		};
-		struct TextureLoadingDesc
-		{
-			std::string mPath;
 
-			USAGE mUsage;
-
-			BIND_FLAGS mBindFlags;
-
-			Uint32 mMipLevels;
-
-			CPU_ACCESS_FLAGS mCPUAccessFlags;
-
-			bool mIsSRGB;
-
-			bool mGenerateMips;
-
-			bool mFlipY_Axis;
-
-			TEXTURE_FORMAT mFormat;
-
-			TextureLoadingDesc() :
-				mPath(""),
-				mUsage(USAGE_STATIC),
-				mBindFlags(BIND_SHADER_RESOURCE),
-				mMipLevels(0),
-				mCPUAccessFlags(CPU_ACCESS_NONE),
-				mIsSRGB(false),
-				mGenerateMips(true),
-				mFlipY_Axis(true),
-				mFormat(TEX_FORMAT_UNKNOWN)
-			{}
-		};
 		struct AssetManagerDesc
 		{
 			std::string mPath;
@@ -76,9 +30,6 @@ namespace NuclearEngine {
 			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real mesh name or not
 		};
 
-		typedef Utilities::Delegate<std::tuple<Assets::Mesh, Assets::Material>(const std::string& Path, const Managers::MeshLoadingDesc& desc)> MeshImport;
-		typedef Utilities::Delegate<Assets::Image&(const std::string& Path, const TextureLoadingDesc & Desc)> TextureImport;
-		
 		class NEAPI AssetManager {
 		public:
 			AssetManager(AssetManagerDesc desc = AssetManagerDesc());
@@ -96,28 +47,27 @@ namespace NuclearEngine {
 			std::unordered_map<Uint32, std::string> mHashedMaterialsPaths; //Real pre-hashed materials paths (conditionally saved see mSaveMaterialPaths)
 			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
 
+			bool mMultithreadMeshTextureLoading = true;
 
-			TextureImport mTextureImporter;
-			MeshImport mMeshImporter;
+			Importers::TextureImporterDelegate mTextureImporter;
+			Importers::MeshImporterDelegate mMeshImporter;
 
 			//Note: Automatically called on Destruction
 			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
 
-			Assets::Texture& Import(const std::string& Path, const TextureLoadingDesc& Desc = TextureLoadingDesc());
-			Assets::Texture& Import(const std::string& Path, const Assets::TextureUsageType& type, const TextureLoadingDesc& Desc = TextureLoadingDesc());
-			Assets::Texture& Import(const Assets::Image& Image, const TextureLoadingDesc& Desc = TextureLoadingDesc());
+			Assets::Texture& Import(const std::string& Path, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
+			Assets::Texture& Import(const std::string& Path, const Assets::TextureUsageType& type, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
+			Assets::Texture& Import(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
 
-			std::tuple<Assets::Mesh, Assets::Material> Import(const std::string& Path, const Managers::MeshLoadingDesc& desc);
-
-
-
+			std::tuple<Assets::Mesh, Assets::Material> Import(const std::string& Path, const Importers::MeshLoadingDesc& desc);
+			
 			bool DoesTextureExist(Uint32 hashedname, Assets::Texture* texture);
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<ITexture*, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const TextureLoadingDesc& Desc);
+			std::array<ITexture*, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const Importers::TextureLoadingDesc& Desc);
 		private:
 			AssetManagerDesc mDesc;
-			ITexture* TextureCube_Load(const std::string& Path, const TextureLoadingDesc& Desc);
+			ITexture* TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc);
 		};
 	}
 }

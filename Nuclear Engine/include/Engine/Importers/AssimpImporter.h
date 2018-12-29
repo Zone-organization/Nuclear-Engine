@@ -4,10 +4,10 @@
 #include <Base\NE_Common.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
+#include <Engine/Importers/Importers.h>
 #include <Assimp\include\assimp\Importer.hpp>
 #include <Assimp\include\assimp\scene.h>
 #include <Assimp\include\assimp\postprocess.h>
-#include <Engine\Managers\AssetManager.h>
 
 namespace NuclearEngine 
 {
@@ -15,7 +15,7 @@ namespace NuclearEngine
 	{
 		class AssimpImporter {
 		public:
-			std::tuple<Assets::Mesh, Assets::Material> Load(const std::string& Path, const Managers::MeshLoadingDesc& desc);
+			std::tuple<Assets::Mesh, Assets::Material> Load(const MeshImporterDesc& desc);
 
 		private:
 			std::vector<Assets::Texture> ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
@@ -23,16 +23,19 @@ namespace NuclearEngine
 			unsigned int ProcessMaterial(aiMesh * mesh, const aiScene * scene);
 			void ProcessNode(aiNode *node, const aiScene *scene);
 
-			std::vector<Assets::Mesh::SubMesh::SubMeshData> meshes_loaded;
-			Assets::Material material;
-			std::string directory;
-			Assets::Mesh model;
+			std::vector<Assets::Mesh::SubMesh::SubMeshData> mMeshesLoaded;
+			std::vector<std::string> TexturePaths;
 
-			Managers::MeshLoadingDesc LoadingDesc;
+			Assets::Material mMaterial;
+			std::string mDirectory;
+			Assets::Mesh mMesh;
+
+			Importers::MeshLoadingDesc mLoadingDesc;
+			Managers::AssetManager* mManager = nullptr;
 		};
 
 
-		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const std::string& Path, const Managers::MeshLoadingDesc& desc);
+		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const MeshImporterDesc& desc);
 
 	}
 }

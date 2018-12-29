@@ -3,24 +3,24 @@
 #include <Base\Utilities\Timer.h>
 #include <Core\Application.h>
 #include <Engine\Audio\AudioEngine.h>
-#include <FMOD\includer.h> 
+//#include <FMOD\includer.h> 
 //#include <Engine\Graphics\ImGui_Binding.h>
 //#include <Engine\Graphics\ImGui_Renderer.h>
 
-/*
-	      .-.               
-          |N|          
-          |U|
-          |C|  
-         _|L|_     
-        | |E| |-.    
-       /|  A  ` |     
-      | |  R    |      
-      |         | 
-      \         /       
-       |       |  
-       |ZLIXINE| 
-*/
+//Dependcies Linking
+#pragma comment(lib,"assimp-vc140-mt.lib")
+#pragma comment(lib,"glfw3.lib")
+
+//Diligent Linking
+#pragma comment(lib,"GraphicsEngineD3D11_64d.lib")
+#pragma comment(lib,"GraphicsEngineD3D12_64d.lib")
+#pragma comment(lib,"GraphicsEngineOpenGL_64d.lib")
+#pragma comment(lib,"GraphicsEngineVK_64d.lib")
+#pragma comment(lib,"GraphicsAccessories.lib")
+#pragma comment(lib,"BasicPlatform.lib")
+#pragma comment(lib,"Win32Platform.lib")
+
+
 namespace NuclearEngine {
 	namespace Core {
 

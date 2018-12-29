@@ -8,7 +8,7 @@ namespace NuclearEngine
 {
 	namespace Importers
 	{
-		Assets::Image & StbImageLoad(const std::string & Path, const Managers::TextureLoadingDesc & Desc)
+		Assets::Image & StbImageLoad(const std::string & Path, const Importers::TextureLoadingDesc & Desc)
 		{
 			int ReqNumComponents = 0, Channels = 0;
 			switch (Desc.mFormat)
