@@ -10,14 +10,10 @@ A Fast Cross-Platform Multi-Renderer 3D Game Engine Supporting DirectX 11, Direc
 
 # TODO:
   - Replace OneAPI with Diligent API.    [75%]
-  - PBR Renderer						 [0%]
+  - Full Audio Support with FMOD.		 [50%]
   - Bloom effect.						 [0%]
-
-## Minimum Requirements
-  - DirectX 11 or OpenGL 4.5 Capable GPU
-
-## Current Platforms & RenderAPIs
-  - Windows 7+
+  - PBR Renderer.						 [0%]
+  - Physics support with PhysX 4		 [0%]
 
 ### Building
 Besure to update all submodules to be able to build it
