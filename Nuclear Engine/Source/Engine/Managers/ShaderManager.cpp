@@ -13,6 +13,22 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
+		IShader * ShaderManager::CreateShader(std::string source, SHADER_TYPE type)
+		{
+			ShaderCreationAttribs CreationAttribs;
+			IShader* result;
+
+			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
+			CreationAttribs.Desc.ShaderType = type;
+			CreationAttribs.EntryPoint = "main";
+			CreationAttribs.Source = source.c_str();
+
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &result);
+
+			return result;
+		}
 		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
 		{
 			ShaderCreationAttribs CreationAttribs;

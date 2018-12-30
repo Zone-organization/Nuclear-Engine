@@ -18,30 +18,36 @@ namespace NuclearEngine
 		RenderSystem::~RenderSystem()
 		{
 		}
-		void RenderSystem::BakePipelines()
+		void RenderSystem::BakePipeline()
 		{  
-			// Create shader program which is used as composite
-			//IShaderProgramDescriptor shaderProgramDesc;
-			//{
-			//	shaderProgramDesc.vertexFormats = { VShader.mVSFormat };
-			//	shaderProgramDesc.vertexShader = VShader.mShader;
-			//	shaderProgramDesc.fragmentShader = PShader.mShader;
-			//}
-			//ShaderProgram = IContext::GetRenderer()->CreateShaderProgram(shaderProgramDesc);
+			// Pipeline state object encompasses configuration of all GPU stages
 
-			//// Link shader program and check for errors
-			//if (ShaderProgram->HasErrors())
-			//	Log.Error(ShaderProgram->QueryInfoLog());
-			//
-		
-			//// Create graphics pipeline
-			//IGraphicsPipelineDescriptor pipelineDesc;
-			//{
-			//	pipelineDesc.shaderProgram = ShaderProgram;
-			//	pipelineDesc.pipelineLayout = PipelineLayout;
-			//	pipelineDesc.primitiveTopology = IPrimitiveTopology::TriangleStrip;
-			//}
-			//Pipeline = IContext::GetRenderer()->CreateGraphicsPipeline(pipelineDesc);
+			PipelineStateDesc PSODesc;
+
+			PSODesc.Name = "RenderSystem PSO";
+			// This is a graphics pipeline
+			PSODesc.IsComputePipeline = false;
+			// This tutorial will render to a single render target
+			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
+			// Set render target format which is the format of the swap chain's color buffer
+			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			// Set depth buffer format which is the format of the swap chain's back buffer
+			PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+			// Primitive topology defines what kind of primitives will be rendered by this pipeline state
+			PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+			// Cull back faces
+			PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+			// Enable depth testing
+			PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = True;
+
+
+			//Create Shaders
+			RefCntAutoPtr<IShader> VSShader;
+			RefCntAutoPtr<IShader> PSShader;
+
+			BakeVertexShader(VSShader);
+			BakePixelShader(PSShader);
+
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
@@ -100,14 +106,7 @@ namespace NuclearEngine
 		{
 			return this->ActiveCamera;
 		}
-		IShader* RenderSystem::GetVertexShader()
-		{
-			return this->VShader;
-		}
-		IShader* RenderSystem::GetPixelShader()
-		{
-			return this->PShader;
-		}
+
 		void RenderSystem::BindShaders()
 		{
 			//BINDING_LLGL
@@ -117,7 +116,7 @@ namespace NuclearEngine
 		void RenderSystem::BindConstantBuffers()
 		{
 			///ActiveCamera->GetCBuffer().VSBind(VShader.GetCBSlot(&ActiveCamera->GetCBuffer()));
-			///NE_Light_CB.PSBind(VShader.GetCBSlot(&NE_Light_CB));
+			///mPSLightCB.PSBind(VShader.GetCBSlot(&mPSLightCB));
 		}
 		void RenderSystem::AddLight(Components::DirectionalLight * light)
 		{
@@ -134,82 +133,76 @@ namespace NuclearEngine
 
 		void RenderSystem::Bake()
 		{
-			BakeVertexShader();
-			BakePixelShader();
-			BakePipelines();
+			BakePipeline();
 		}
-		void RenderSystem::BakePixelShader()
+		IPipelineState * RenderSystem::GetPipeline()
 		{
-			/*std::vector<std::string> defines;
-			IPipelineLayoutDescriptor layoutDesc;
-			layoutDesc.bindings.push_back({ IResourceType::Texture,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 0 });
-			layoutDesc.bindings.push_back({ IResourceType::Texture,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 1 });
-
-			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); PSDirty = true; }
-			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size()));  PSDirty = true; }
-			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size()));  PSDirty = true; }
-			if (Desc.NormalMaps == true) 
-			{ 
-				defines.push_back("NE_USE_NORMAL_MAPS");
-				layoutDesc.bindings.push_back({ IResourceType::Texture,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 2 });
-			}
-
-			layoutDesc.bindings.push_back({ IResourceType::Sampler,0, IStageFlags::FragmentStage, 0 });
-			layoutDesc.bindings.push_back({ IResourceType::Sampler,0, IStageFlags::FragmentStage, 1 });
-
-			if (Desc.NormalMaps == true)
-			{
-				layoutDesc.bindings.push_back({ IResourceType::Sampler,IBindFlags::SampleBuffer, IStageFlags::FragmentStage, 2 });
-			}
-
-			if (PSDirty = true)
-			{
-				IContext::GetRenderer()->Release(*PShader.mShader);
-				IContext::GetRenderer()->Release(*NE_Light_CB);
-
-				IShaderCompiler::CompileAndCreateShader(&PShader,
-					Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true), IShaderType::Fragment);
-
-
-				Calculate_Light_CB_Size();
-
-				NE_Light_CB = IContext::GetRenderer()->CreateBuffer(IConstantBufferDesc(this->NE_Light_CB_Size));
-
-				//this->PShader.SetConstantBuffer(&this->NE_Light_CB);
-				PSDirty = false;
-			}
-			
-			PipelineLayout = IContext::GetRenderer()->CreatePipelineLayout(layoutDesc);*/
+			return mPipeline.RawPtr();
 		}
-		void RenderSystem::BakeVertexShader()
+		void RenderSystem::BakeVertexShader(IShader* VShader)
 		{
-			/*if (VSDirty = true)
+			if (Desc.VShaderPath == "NE_Default")
 			{
-				IContext::GetRenderer()->Release(*VShader.mShader);
+				Managers::AutoVertexShaderDesc VertShaderDesc;
+				if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
 
-				if (Desc.VShaderPath == "NE_Default")
-				{
-					Managers::AutoVertexShaderDesc VertShaderDesc;
-					if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
+				VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
+			}
+			else
 
-					VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
-				}
-				else {
-					IShaderCompiler::CompileAndCreateShader(&VShader,Core::FileSystem::LoadFileToString(Desc.VShaderPath), IShaderType::Vertex);
+				VShader = Managers::ShaderManager::CreateShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath), SHADER_TYPE_VERTEX);
 
-				}
 
-				/*if (this->ActiveCamera != nullptr)
-					this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
-				else
-					Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
-					
-				VSDirty = false;
-			}*/
+			/*if (this->ActiveCamera != nullptr)
+				this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
+			else
+				Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
+
+			VSDirty = false;*/
+
 		}
+		
+		void RenderSystem::BakePixelShader(IShader* shader)
+		{
+			ShaderCreationAttribs CreationAttribs;
+
+			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
+			CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+			CreationAttribs.EntryPoint = "main";
+			CreationAttribs.Desc.Name = "RenderSystem PixelShader";
+
+			std::vector<std::string> defines;
+
+			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); }
+			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size())); }
+			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
+			if (Desc.NormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+
+			CreationAttribs.Source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true).c_str();
+
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &shader);
+			shader->GetShaderVariable("NELights")->Set(mPSLightCB);
+			Calculate_Light_CB_Size();
+
+
+		}
+
+		void RenderSystem::BakeLightConstantBuffer()
+		{	
+			BufferDesc CBDesc;
+			CBDesc.Name = "RenderSystem LightCB";
+			CBDesc.uiSizeInBytes = NE_Light_CB_Size;
+			CBDesc.Usage = USAGE_DYNAMIC;
+			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
+			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, BufferData(), mPSLightCB.GetRawDblPtr());
+		}
+
 		void RenderSystem::Update_Light()
 		{
-			/*std::vector<Math::Vector4> LightsBuffer;
+			std::vector<Math::Vector4> LightsBuffer;
 			//LightsBuffer.reserve(NUM_OF_LIGHT_VECS);
 
 			LightsBuffer.push_back(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
@@ -234,12 +227,17 @@ namespace NuclearEngine
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().InnerCutOf_OuterCutoff);
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Color);
 			}
-			IContext::GetRenderer()->WriteBuffer(*NE_Light_CB, 0, LightsBuffer.data(), NE_Light_CB_Size);*/
+
+			void* data;
+			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, data);
+			data = mPSLightCB;
+			Graphics::Context::GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
+
 		}
 
 		void RenderSystem::Update_Meshes(ECS::EntityManager & es)
 		{
-			/*ECS::ComponentHandle<Components::MeshComponent> MeshObject;
+			ECS::ComponentHandle<Components::MeshComponent> MeshObject;
 			for (ECS::Entity entity : es.entities_with_components(MeshObject))
 			{
 				if (!MeshObject.Get()->mMultiRender)
@@ -256,7 +254,7 @@ namespace NuclearEngine
 						InstantRender(MeshObject.Get());
 					}
 				}
-			}*/
+			}
 		}
 		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
@@ -290,14 +288,20 @@ namespace NuclearEngine
 		{
 			material->Bind();
 			material->UpdateMaterialCBuffer();
+			Uint32 offset = 0;
+
 			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)
 			{
 				material->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
-				/*IContext::GetCommands()->SetIndexBuffer(*mesh->mSubMeshes.at(i).mIB);
-				IContext::GetCommands()->SetVertexBuffer(*mesh->mSubMeshes.at(i).mVB);
-
-				IContext::GetCommands()->DrawIndexed(mesh->mSubMeshes.at(i).mIndicesCount, 0);*/
+				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, mesh->mSubMeshes.at(i).mVB.GetRawDblPtr(), &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+				
+				DrawAttribs DrawAttrs;
+				DrawAttrs.IsIndexed = true;
+				DrawAttrs.IndexType = VT_UINT32;
+				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
+				Graphics::Context::GetContext()->Draw(DrawAttrs);
 			}
 		}
 		void RenderSystem::RenderToPostProcessingRT()

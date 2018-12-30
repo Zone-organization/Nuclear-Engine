@@ -27,8 +27,6 @@ namespace NuclearEngine
 		//TODO: Support more Shader Types.
 		struct MaterialCreationDesc
 		{
-			IShader* mVShader = nullptr;
-			IShader* mPShader = nullptr;
 			IPipelineState* mPipeline = nullptr;
 			ISampler* mSampler = nullptr;
 		};

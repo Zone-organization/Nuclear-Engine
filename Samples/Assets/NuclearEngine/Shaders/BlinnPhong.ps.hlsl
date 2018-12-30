@@ -48,7 +48,7 @@ struct SpotLight
     float4 InnerCutOf_OuterCutoff;
     float4 Color;
 };
-cbuffer NE_Light_CB
+cbuffer NELights
 {  
     float4 ViewPos;
 #ifdef NE_DIR_LIGHTS_NUM

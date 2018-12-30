@@ -17,7 +17,7 @@ namespace NuclearEngine
 		void Material::Create(const MaterialCreationDesc& desc)
 		{
 			//Process Shaders & pipeline
-			ParsePixelShader(desc.mPShader);
+			//ParsePixelShader(desc.mPShader);
 			///
 			//mPipeline = desc.mPipeline;
 

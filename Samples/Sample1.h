@@ -2,241 +2,243 @@
 #include "Common.h"
 class Sample1 : public Core::Game
 {
+	std::shared_ptr<Systems::RenderSystem> Renderer;
+
+	//Asset Manager (Loader)
+	Managers::AssetManager AssetLoader;
+
+	//Assets
+	Assets::Texture DiffuseTex;
+	Assets::Texture SpecularTex;
+	Assets::Texture WhiteTex;
+	Assets::Texture GreyTex;
+	Assets::Texture GridTex;
+
+	Assets::Mesh CubeAsset;
+	Assets::Mesh SphereAsset;
+	Assets::Mesh NanosuitAsset;
+	Assets::Mesh GridAsset;
+
+	Assets::Material CubeMaterial;
+	Assets::Material SphereMaterial;
+	Assets::Material NanosuitMaterial;
+	Assets::Material GridMaterial;
+
+	//Default states
+	//Graphics::API::CommonStates states;
+
+	Components::CameraComponent Camera;
+
+	Components::DirectionalLight dirlight;
+	Components::PointLight pointlight1;
+	Components::PointLight pointlight2;
+	Components::PointLight pointlight3;
+	Components::PointLight pointlight4;
+	Components::PointLight pointlight5;
+	Components::PointLight pointlight6;
+	Components::PointLight pointlight7;
+	Components::PointLight pointlight8;
+	Components::PointLight pointlight9;
+
+	Components::SpotLight spotLight;
+
+	Graphics::Skybox Skybox;
+
+	//ECS
+	ECS::Scene SampleScene;
+	ECS::Entity ESkybox;
+	ECS::Entity ECube;
+	ECS::Entity ELamp;
+	ECS::Entity ENanosuit;
+	ECS::Entity EGrid;
+
+	// positions all containers
+	Math::Vector3 cubePositions[10] =
+	{
+		Math::Vector3(0.0f,  0.0f,  0.0f),
+		Math::Vector3(2.0f,  5.0f, -15.0f),
+		Math::Vector3(-1.5f, -2.2f, -2.5f),
+		Math::Vector3(-3.8f, -2.0f, -12.3f),
+		Math::Vector3(2.4f, -0.4f, -3.5f),
+		Math::Vector3(-1.7f,  3.0f, -7.5f),
+		Math::Vector3(1.3f, -2.0f, -2.5f),
+		Math::Vector3(1.5f,  2.0f, -2.5f),
+		Math::Vector3(1.5f,  0.2f, -1.5f),
+		Math::Vector3(-1.3f,  1.0f, -1.5f)
+	};
+
+	// positions of the point lights
+	Math::Vector3 pointLightPositions[9] =
+	{
+		Math::Vector3(0.7f,  0.2f,  2.0f),
+		Math::Vector3(2.3f, -3.3f, -4.0f),
+		Math::Vector3(-4.0f,  2.0f, -12.0f),
+		Math::Vector3(0.0f,  0.0f, -3.0f),
+		Math::Vector3(4.0f,  3.0f, -2.0f),
+		Math::Vector3(6.2f, 2.0f, 0.0f),
+		Math::Vector3(6.2f, -2.0f, 0.0f),
+		Math::Vector3(-6.2f, 2.0f, 0.0f),
+		Math::Vector3(-6.2f, -2.0f, 0.0f)
+	};
+	float lastX = _Width_ / 2.0f;
+	float lastY = _Height_ / 2.0f;
+	bool firstMouse = true;
+
+
+	void SetupLights()
+	{
+		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		dirlight.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+
+		pointlight1.SetPosition(pointLightPositions[0]);
+		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+
+		pointlight2.SetPosition(pointLightPositions[1]);
+		pointlight2.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight3.SetPosition(pointLightPositions[2]);
+		pointlight3.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight4.SetPosition(pointLightPositions[3]);
+		pointlight4.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight5.SetPosition(pointLightPositions[4]);
+		pointlight5.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight6.SetPosition(pointLightPositions[5]);
+		pointlight6.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight7.SetPosition(pointLightPositions[6]);
+		pointlight7.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight8.SetPosition(pointLightPositions[7]);
+		pointlight8.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+
+		pointlight9.SetPosition(pointLightPositions[8]);
+		pointlight9.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+	}
+
+	void SetupAssets()
+	{
+		//Create some shapes
+		Assets::Mesh::CreateCube(&CubeAsset);
+		//CubeAsset.Initialize(*Renderer->GetVertexShader());
+
+		Assets::Mesh::CreateSphere(&SphereAsset);
+		//SphereAsset.Initialize(*Renderer->GetVertexShader());
+
+		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
+		//GridAsset.Initialize(*Renderer->GetVertexShader());
+
+		//NanoSuit Creation
+		//Managers::MeshLoadingDesc ModelDesc;
+		//ModelDesc.LoadDiffuseTextures = true;
+		//ModelDesc.LoadSpecularTextures = true;
+		//NanosuitAsset = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
+		//NanosuitAsset.Initialize(*Renderer->GetVertexShader());
+
+		//Load some textures manually
+		DiffuseTex = AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
+		SpecularTex = AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
+		WhiteTex = AssetLoader.Import("Assets/Common/Textures/white.png");
+		GreyTex = AssetLoader.Import("Assets/Common/Textures/grey.png");
+		GridTex = AssetLoader.Import("Assets/Common/Textures/Grid.png");
+
+		//TODO::MATERIAL
+
+		Assets::MaterialCreationDesc desc;
+		desc.mPipeline = Renderer->GetPipeline();
+
+
+		//Initialize Materials
+		Assets::TextureSet CubeSet;
+		CubeSet.push_back(&DiffuseTex);
+		CubeSet.push_back(&SpecularTex);
+		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
+
+		Assets::TextureSet SphereTextures;
+		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		SphereTextures.push_back(&WhiteTex);
+		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
+		SphereTextures.push_back(&WhiteTex);
+		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
+
+
+		Assets::TextureSet GridTextures;
+		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		GridTextures.push_back(&GridTex);
+		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
+		GridTextures.push_back(&GreyTex);
+		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
+
+		GridMaterial.Create(desc);
+		CubeMaterial.Create(desc);
+		SphereMaterial.Create(desc);
+		NanosuitMaterial.Create(desc);
+
+		CubeSet.clear();
+		SphereTextures.clear();
+		GridTextures.clear();
+
+		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+		//SphereMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		//SphereMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+		//NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+		//GridMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
+		//GridMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+		//Create The skybox
+		std::array<std::string, 6> SkyBoxTexturePaths
+		{
+			std::string("Assets/Common/Skybox/right.jpg"),
+			std::string("Assets/Common/Skybox/left.jpg"),
+			std::string("Assets/Common/Skybox/top.jpg"),
+			std::string("Assets/Common/Skybox/bottom.jpg"),
+			std::string("Assets/Common/Skybox/front.jpg"),
+			std::string("Assets/Common/Skybox/back.jpg")
+		};
+
+		Skybox.Initialize(&Camera, SkyBoxTexturePaths);
+	}
+
+
+	void SetupEntities()
+	{
+		//Create Entities
+		ECube = SampleScene.CreateEntity();
+		ELamp = SampleScene.CreateEntity();
+		EGrid = SampleScene.CreateEntity();
+		ENanosuit = SampleScene.CreateEntity();
+
+		//Assign Components
+		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial, true);
+		ELamp.Assign<Components::MeshComponent>(&SphereAsset, &SphereMaterial, true);
+		EGrid.Assign<Components::MeshComponent>(&GridAsset, &GridMaterial);
+		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
+	}
+
+	void Load()
+	{
+
+	}
 	void Render(float dt) override
-	{  
+	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+
 
 		Graphics::Context::GetSwapChain()->Present();
 	}
 };
 
-//#pragma once
-//#include "Common.h"
-//class Sample1 : public Core::Game
-//{
-//	std::shared_ptr<Systems::RenderSystem> Renderer;
-//	std::shared_ptr<LLGL::Input> Input;
-//
-//	//Assets
-//	Assets::Texture DiffuseTex;
-//	Assets::Texture SpecularTex;
-//	Assets::Texture WhiteTex;
-//	Assets::Texture GreyTex;
-//	Assets::Texture GridTex;
-//
-//	Assets::Mesh CubeAsset;
-//	Assets::Mesh SphereAsset;
-//	Assets::Mesh NanosuitAsset;
-//	Assets::Mesh GridAsset;
-//
-//	Assets::Material CubeMaterial;
-//	Assets::Material SphereMaterial;
-//	Assets::Material NanosuitMaterial;
-//	Assets::Material GridMaterial;
-//
-//	//Default states
-//	//Graphics::API::CommonStates states;
-//
-//	Components::CameraComponent Camera;
-//
-//	Components::DirectionalLight dirlight;
-//	Components::PointLight pointlight1;
-//	Components::PointLight pointlight2;
-//	Components::PointLight pointlight3;
-//	Components::PointLight pointlight4;
-//	Components::PointLight pointlight5;
-//	Components::PointLight pointlight6;
-//	Components::PointLight pointlight7;
-//	Components::PointLight pointlight8;
-//	Components::PointLight pointlight9;
-//
-//	Components::SpotLight spotLight;
-//
-//	Graphics::Skybox Skybox;
-//
-//	//ECS
-//	ECS::Scene SampleScene;
-//	ECS::Entity ESkybox;
-//	ECS::Entity ECube;
-//	ECS::Entity ELamp;
-//	ECS::Entity ENanosuit;
-//	ECS::Entity EGrid;
-//
-//	// positions all containers
-//	Math::Vector3 cubePositions[10] =
-//	{
-//		Math::Vector3(0.0f,  0.0f,  0.0f),
-//		Math::Vector3(2.0f,  5.0f, -15.0f),
-//		Math::Vector3(-1.5f, -2.2f, -2.5f),
-//		Math::Vector3(-3.8f, -2.0f, -12.3f),
-//		Math::Vector3(2.4f, -0.4f, -3.5f),
-//		Math::Vector3(-1.7f,  3.0f, -7.5f),
-//		Math::Vector3(1.3f, -2.0f, -2.5f),
-//		Math::Vector3(1.5f,  2.0f, -2.5f),
-//		Math::Vector3(1.5f,  0.2f, -1.5f),
-//		Math::Vector3(-1.3f,  1.0f, -1.5f)
-//	};
-//
-//	// positions of the point lights
-//	Math::Vector3 pointLightPositions[9] =
-//	{
-//		Math::Vector3(0.7f,  0.2f,  2.0f),
-//		Math::Vector3(2.3f, -3.3f, -4.0f),
-//		Math::Vector3(-4.0f,  2.0f, -12.0f),
-//		Math::Vector3(0.0f,  0.0f, -3.0f),
-//		Math::Vector3(4.0f,  3.0f, -2.0f),
-//		Math::Vector3(6.2f, 2.0f, 0.0f),
-//		Math::Vector3(6.2f, -2.0f, 0.0f),
-//		Math::Vector3(-6.2f, 2.0f, 0.0f),
-//		Math::Vector3(-6.2f, -2.0f, 0.0f)
-//	};
-//	float lastX = _Width_ / 2.0f;
-//	float lastY = _Height_ / 2.0f;
-//	bool firstMouse = true;
-//
-//public:
-//	Sample1()
-//	{
-//	}
-//	void SetupLights()
-//	{
-//		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-//		dirlight.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
-//
-//		pointlight1.SetPosition(pointLightPositions[0]);
-//		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-//
-//		pointlight2.SetPosition(pointLightPositions[1]);
-//		pointlight2.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//
-//		pointlight3.SetPosition(pointLightPositions[2]);
-//		pointlight3.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//
-//		pointlight4.SetPosition(pointLightPositions[3]);
-//		pointlight4.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//
-//		pointlight5.SetPosition(pointLightPositions[4]);
-//		pointlight5.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//
-//		pointlight6.SetPosition(pointLightPositions[5]);
-//		pointlight6.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//
-//		pointlight7.SetPosition(pointLightPositions[6]);
-//		pointlight7.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//
-//		pointlight8.SetPosition(pointLightPositions[7]);
-//		pointlight8.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//
-//		pointlight9.SetPosition(pointLightPositions[8]);
-//		pointlight9.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-//	}
-//	void SetupAssets()
-//	{
-//		//Create some shapes
-//		Assets::Mesh::CreateCube(&CubeAsset);
-//		CubeAsset.Initialize(*Renderer->GetVertexShader());
-//
-//		Assets::Mesh::CreateSphere(&SphereAsset);
-//		SphereAsset.Initialize(*Renderer->GetVertexShader());
-//
-//		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
-//		GridAsset.Initialize(*Renderer->GetVertexShader());
-//
-//		//NanoSuit Creation
-//		Managers::MeshLoadingDesc ModelDesc;
-//		ModelDesc.LoadDiffuseTextures = true;
-//		ModelDesc.LoadSpecularTextures = true;
-//		NanosuitAsset = Managers::AssetManager::Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
-//		NanosuitAsset.Initialize(*Renderer->GetVertexShader());
-//
-//		//Load some textures manually
-//		DiffuseTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
-//		SpecularTex = Managers::AssetManager::Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
-//		WhiteTex = Managers::AssetManager::Import("Assets/Common/Textures/white.png");
-//		GreyTex = Managers::AssetManager::Import("Assets/Common/Textures/grey.png");
-//		GridTex = Managers::AssetManager::Import("Assets/Common/Textures/Grid.png");
-//
-//		//TODO::MATERIAL
-//
-//		Assets::MaterialCreationDesc desc;
-//
-//		desc.mVShader = Renderer->GetVertexShader();
-//		desc.mPShader = Renderer->GetPixelShader();
-//		desc.mPipeline = Renderer->Pipeline;
-//
-//
-//		//Initialize Materials
-//		Assets::TextureSet CubeSet;
-//		CubeSet.push_back(&DiffuseTex);
-//		CubeSet.push_back(&SpecularTex);
-//		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
-//
-//		Assets::TextureSet SphereTextures;
-//		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-//		SphereTextures.push_back(&WhiteTex);
-//		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-//		SphereTextures.push_back(&WhiteTex);
-//		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
-//
-//
-//		Assets::TextureSet GridTextures;
-//		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-//		GridTextures.push_back(&GridTex);
-//		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
-//		GridTextures.push_back(&GreyTex);
-//		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
-//
-//		GridMaterial.Create(desc);
-//		CubeMaterial.Create(desc);
-//		SphereMaterial.Create(desc);
-//		NanosuitMaterial.Create(desc);
-//
-//		CubeSet.clear();
-//		SphereTextures.clear();
-//		GridTextures.clear();
-//
-//		CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-//		CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
-//
-//		SphereMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-//		SphereMaterial.SetMaterialVariable("Shininess", 64.0f);
-//
-//		NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-//		NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
-//
-//		GridMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-//		GridMaterial.SetMaterialVariable("Shininess", 64.0f);
-//
-//		//Create The skybox
-//		std::array<std::string, 6> SkyBoxTexturePaths
-//		{
-//			std::string("Assets/Common/Skybox/right.jpg"),
-//			std::string("Assets/Common/Skybox/left.jpg"),
-//			std::string("Assets/Common/Skybox/top.jpg"),
-//			std::string("Assets/Common/Skybox/bottom.jpg"),
-//			std::string("Assets/Common/Skybox/front.jpg"),
-//			std::string("Assets/Common/Skybox/back.jpg")
-//		};
-//
-//		Skybox.Initialize(&Camera, SkyBoxTexturePaths);
-//	}
-//	void SetupEntities()
-//	{
-//		//Create Entities
-//		ECube = SampleScene.CreateEntity();
-//		ELamp = SampleScene.CreateEntity();
-//		EGrid = SampleScene.CreateEntity();
-//		ENanosuit = SampleScene.CreateEntity();
-//
-//		//Assign Components
-//		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial, true);
-//		ELamp.Assign<Components::MeshComponent>(&SphereAsset, &SphereMaterial, true);
-//		EGrid.Assign<Components::MeshComponent>(&GridAsset, &GridMaterial);
-//		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
-//
-//	}
 //	void Load()
 //	{
 //		//Setup Input System
@@ -262,7 +264,7 @@ class Sample1 : public Core::Game
 //		Renderer->AddLight(&dirlight);
 //		Renderer->Bake();
 //
-//		Managers::AssetManager::mSaveTextureNames = true;
+//		AssetLoader.mSaveTextureNames = true;
 //
 //		SetupLights();
 //
@@ -361,7 +363,7 @@ class Sample1 : public Core::Game
 //	{
 //		ImGui::Begin("Material Editor");                          // Create a window called "Hello, world!" and append into it.
 //
-//		for (auto i : Managers::AssetManager::mImportedMaterials)
+//		for (auto i : AssetLoader.mImportedMaterials)
 //		{
 //			for (auto texset : i.second.mPixelShaderTextures)
 //			{

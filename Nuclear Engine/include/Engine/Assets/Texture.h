@@ -26,25 +26,6 @@ namespace NuclearEngine {
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
-			/*inline void VSBind(Uint32 slot, LLGL::Sampler& sampler)
-			{
-				sampler.VSBind(slot);
-				mTexture.VSBind(slot);
-			}
-			inline void PSBind(Uint32 slot, LLGL::Sampler& sampler)
-			{
-				sampler.PSBind(slot);
-				mTexture.PSBind(slot);
-			}
-			inline void VSBind(Uint32 slot)
-			{
-				return mTexture.VSBind(slot);
-			}
-			inline void PSBind(Uint32 slot)
-			{
-				return mTexture.PSBind(slot);
-			}
-			*/
 			RefCntAutoPtr<ITextureView>  mTexture;
 
 		private:

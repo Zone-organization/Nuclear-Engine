@@ -7,6 +7,7 @@
 #include <Engine\Components\Light.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
@@ -40,13 +41,13 @@ namespace NuclearEngine
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc(), Components::CameraComponent* camera = nullptr);
 			~RenderSystem();
 
-			void BakePipelines();
+			void BakeVertexShader(IShader* shader);
+			void BakePixelShader(IShader* shader);
+			void BakeLightConstantBuffer();
+			void BakePipeline();
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
-
-			IShader* GetVertexShader();
-			IShader* GetPixelShader();
 
 			void BindShaders();
 			void BindConstantBuffers();
@@ -56,6 +57,8 @@ namespace NuclearEngine
 			void AddLight(Components::SpotLight* light);
 
 			void Bake();
+
+			IPipelineState* GetPipeline();
 
 			//Main Rendering Function
 			void Render();
@@ -72,23 +75,15 @@ namespace NuclearEngine
 			void Update_Light();
 			void Update_Meshes(ECS::EntityManager & es);
 
-			IPipelineState* Pipeline = nullptr;
-
 		private:
 			void Calculate_Light_CB_Size();
-			void BakePixelShader();
-			void BakeVertexShader();
 
-			IShader* VShader;
-			IShader* PShader;
-			//IShaderProgram* ShaderProgram;
-			IBuffer* NE_Light_CB = nullptr;
-			//IPipelineLayout*   PipelineLayout = nullptr;
+			RefCntAutoPtr<IPipelineState> mPipeline;
+			RefCntAutoPtr<IBuffer> mPSLightCB;
 
 			Components::CameraComponent* ActiveCamera;
 
-			bool VSDirty = true;
-			bool PSDirty = true;
+			bool PipelineDirty = true;
 
 			size_t NE_Light_CB_Size;
 			size_t NUM_OF_LIGHT_VECS;
