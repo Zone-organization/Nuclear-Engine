@@ -8,9 +8,10 @@ configuration:
 
 before_build:
   - git submodule update --init --recursive
-  
+
   # Build GLFW
   - cmake External\GLFW\ -B\External\GLFW\Win32\ -G "Visual Studio 15 2017 Win64" 
+  - ps: tree
   - ps: msbuild External\GLFW\Win32\GLFW.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
   
   # Build Diligent

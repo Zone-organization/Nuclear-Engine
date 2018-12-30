@@ -4,7 +4,7 @@ Features with Buggy™ means it need more testing or work.
 
 - __Core__
   - Cross platform ready.
-  - Modern Fast code using C++14.
+  - Modern Fast code using C++17.
   - Fast Robust Entity Component System "ECS" using EntityX.
   - Cross-platform Application creation through GLFW.
   - Support for XML & INI Parsers.
@@ -23,9 +23,8 @@ Features with Buggy™ means it need more testing or work.
   - Support for streaming large audio files and playing them 				"Stream"  --Soon™
 
 - __Graphics__
-  - Support for Abstracted RenderAPI called LLGL that supports DirectX 11, DirectX 11, Vulkan and OpenGL 4 backends.
+  - Support for Abstracted RenderAPI called Diligent that supports DirectX 11, DirectX 12, Vulkan and OpenGL 4 backends.
   - Support for HLSL Shaders which can be Cross Compiled to GLSL or SPIR-V.
-  - Support for Separate Shaders & Seperate Samplers, Textures.
   - Support for Customized Dear-ImGui as a Default GUI Library.
   - ___RenderSystem___
     - Support for BlinnPhong Lighting.
