@@ -512,8 +512,8 @@ extern "C" {
 #endif
 
 #ifndef STBI_ASSERT
-#include <assert.h>
-#define STBI_ASSERT(x) assert(x)
+//#include <assert.h>
+#define STBI_ASSERT(x) //assert(x)
 #endif
 
 

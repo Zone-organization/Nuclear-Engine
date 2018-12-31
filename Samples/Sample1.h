@@ -18,12 +18,12 @@ class Sample1 : public Core::Game
 
 	Assets::Mesh CubeAsset;
 	Assets::Mesh SphereAsset;
-	Assets::Mesh NanosuitAsset;
+	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh GridAsset;
 
 	Assets::Material CubeMaterial;
 	Assets::Material SphereMaterial;
-	Assets::Material NanosuitMaterial;
+	Assets::Material* NanosuitMaterial;
 	Assets::Material GridMaterial;
 
 	//Default states
@@ -132,7 +132,7 @@ class Sample1 : public Core::Game
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
-		
+	
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
@@ -166,7 +166,7 @@ class Sample1 : public Core::Game
 		Renderer->CreateMaterial(&GridMaterial);
 		Renderer->CreateMaterial(&CubeMaterial);
 		Renderer->CreateMaterial(&SphereMaterial);
-		Renderer->CreateMaterial(&NanosuitMaterial);
+		Renderer->CreateMaterial(NanosuitMaterial);
 
 		CubeSet.clear();
 		SphereTextures.clear();
@@ -211,7 +211,7 @@ class Sample1 : public Core::Game
 		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial, true);
 		ELamp.Assign<Components::MeshComponent>(&SphereAsset, &SphereMaterial, true);
 		EGrid.Assign<Components::MeshComponent>(&GridAsset, &GridMaterial);
-		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
+		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 	}
 
 

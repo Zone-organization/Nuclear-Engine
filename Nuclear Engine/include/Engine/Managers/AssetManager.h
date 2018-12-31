@@ -59,7 +59,7 @@ namespace NuclearEngine {
 			Assets::Texture& Import(const std::string& Path, const Assets::TextureUsageType& type, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
 			Assets::Texture& Import(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
 
-			std::tuple<Assets::Mesh, Assets::Material> Import(const std::string& Path, const Importers::MeshLoadingDesc& desc);
+			std::tuple<Assets::Mesh*, Assets::Material*> Import(const std::string& Path, const Importers::MeshLoadingDesc& desc);
 			
 			bool DoesTextureExist(Uint32 hashedname, Assets::Texture* texture);
 

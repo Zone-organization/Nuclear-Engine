@@ -1,6 +1,5 @@
 #pragma once
 #include <Base\Math\Math.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
 #include <Engine/Assets/Asset.h>
 #include <vector>
@@ -26,7 +25,7 @@ namespace NuclearEngine {
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
-			RefCntAutoPtr<ITextureView>  mTexture;
+			ITextureView*  mTexture = nullptr;
 
 		private:
 			Uint8 mUsageType;

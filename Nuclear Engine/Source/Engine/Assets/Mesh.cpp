@@ -19,7 +19,7 @@ namespace NuclearEngine {
 
 		}
 
-		void Mesh::SubMesh::Initialize(IShader* _shader)
+		void Mesh::SubMesh::Create()
 		{
 			std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
@@ -47,20 +47,6 @@ namespace NuclearEngine {
 			}
 			
 			{
-				
-				std::vector<LayoutElement> LayoutElems;
-				LayoutElems.push_back({ 0, 0, 3, VT_FLOAT32, False });
-
-				if (data.UV.size() > 0)
-					LayoutElems.push_back({ 1, 0, 2, VT_FLOAT32, False });
-
-				if (data.Normals.size() > 0)
-					LayoutElems.push_back({ 2, 0, 3, VT_FLOAT32, False });
-
-				if (data.Tangents.size() > 0)
-					LayoutElems.push_back({ 3, 0, 3, VT_FLOAT32, False });
-
-
 				BufferDesc VertBuffDesc;
 				VertBuffDesc.Usage = USAGE_STATIC;
 				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
@@ -73,8 +59,7 @@ namespace NuclearEngine {
 
 			}
 
-			{			
-				
+			{				
 				// Create index buffer
 				BufferDesc IndBuffDesc;
 				IndBuffDesc.Usage = USAGE_STATIC;
@@ -95,7 +80,7 @@ namespace NuclearEngine {
 			data.indices.clear();
 		}
 
-		void Mesh::SubMesh::Delete()
+		void Mesh::SubMesh::Release()
 		{
 			mVB->Release();
 			mIB->Release();
@@ -110,14 +95,23 @@ namespace NuclearEngine {
 		{
 		}
 
-		void Mesh::Delete()
+		void Mesh::Create()
 		{
 			for (unsigned int i = 0; i < mSubMeshes.size(); i++)
 			{
-				mSubMeshes.at(i).Delete();
+				mSubMeshes.at(i).Create();
+			}
+		}
+
+		void Mesh::Release()
+		{
+			for (unsigned int i = 0; i < mSubMeshes.size(); i++)
+			{
+				mSubMeshes.at(i).Release();
 			}
 			mSubMeshes.clear();
 		}
+
 		struct Vertex
 		{
 			Vertex() {}
@@ -224,6 +218,8 @@ namespace NuclearEngine {
 			meshData.indices = indices;
 
 			model->mSubMeshes.push_back(meshData);
+
+			model->Create();
 		}
 
 		void Mesh::CreateSphere(Mesh * model, const MeshVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
@@ -322,6 +318,7 @@ namespace NuclearEngine {
 					meshData.Tangents.push_back(vert.Tangents);
 			}
 			model->mSubMeshes.push_back(meshData);
+			model->Create();
 		}
 
 		void Mesh::CreatePlane(Mesh * model, const MeshVertexDesc & desc, float width, float depth)
@@ -406,6 +403,7 @@ namespace NuclearEngine {
 			meshData.indices = Indices;
 
 			model->mSubMeshes.push_back(meshData);
+			model->Create();
 		}
 
 		void Mesh::CreateScreenQuad(Mesh * model)
@@ -465,6 +463,7 @@ namespace NuclearEngine {
 			meshData.indices = Indices;
 
 			model->mSubMeshes.push_back(meshData);
+			model->Create();
 		}
 
 	}

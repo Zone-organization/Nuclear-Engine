@@ -49,7 +49,7 @@ namespace NuclearEngine {
 			//TODO
 			for (auto x : mImportedTextures)
 			{
-				x.second.mTexture.Release();
+				x.second.mTexture->Release();
 			}
 			mImportedTextures.clear();
 			//mHashedTexturesNames.clear();
@@ -98,22 +98,32 @@ namespace NuclearEngine {
 			return Internal::CreateTextureFromRawImage(Image, Desc);
 		}
 
-		std::tuple<Assets::Mesh, Assets::Material> AssetManager::Import(const std::string & Path, const Importers::MeshLoadingDesc & desc)
+		std::tuple<Assets::Mesh*, Assets::Material*> AssetManager::Import(const std::string & Path, const Importers::MeshLoadingDesc & desc)
 		{
-			auto[mesh, material] = mMeshImporter({ Path, desc, this });
+			Assets::Mesh Mesh;
+			Assets::Material Material;
+
+			std::tie(Mesh, Material) = mMeshImporter({ Path, desc, this });
 			auto hashedname = Utilities::Hash(Path);
+			Mesh.Create();
 
 			Log.Info("[AssetManager : " + mDesc.mName +  "] Loaded Mesh & Material at: " + Path + "\n");
-			mImportedMaterials[hashedname] = material;
-			mImportedMeshes[hashedname] = mesh;
 
+			mImportedMaterials[hashedname] = Material;
+			mImportedMeshes[hashedname] = Mesh;
+
+			for (auto Bla : mImportedMeshes)
+			{
+				Bla;
+			}
 			if (mSaveMeshesPaths)
 				mHashedMeshesPaths[hashedname] = Path;
 
 			if (mSaveMaterialsPaths)
 				mHashedMaterialsPaths[hashedname] = Path;
 
-			return { mesh , material };
+
+			return { &mImportedMeshes[hashedname] , &mImportedMaterials[hashedname] };
 		}
 					
 		ITexture * AssetManager::TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc)

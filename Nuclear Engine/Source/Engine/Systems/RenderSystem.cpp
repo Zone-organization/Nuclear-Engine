@@ -71,7 +71,7 @@ namespace NuclearEngine
 			CreationAttribs.Source = source.c_str();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
-			PSShader->GetShaderVariable("NELights")->Set(mPSLightCB);
+			//PSShader->GetShaderVariable("NELights")->Set(mPSLightCB);
 			Calculate_Light_CB_Size();
 
 			PSODesc.GraphicsPipeline.pVS = VSShader;
@@ -288,7 +288,7 @@ namespace NuclearEngine
 				material->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
 				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, mesh->mSubMeshes.at(i).mVB.GetRawDblPtr(), &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 				
 				DrawAttribs DrawAttrs;
 				DrawAttrs.IsIndexed = true;

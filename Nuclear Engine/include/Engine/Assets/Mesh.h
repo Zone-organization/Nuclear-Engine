@@ -25,7 +25,8 @@ namespace NuclearEngine {
 			Mesh();
 			~Mesh();
 			
-			void Delete();
+			void Create();
+			void Release();
 
 			static void CreateCube(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
 			static void CreateSphere(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
@@ -49,8 +50,9 @@ namespace NuclearEngine {
 				SubMesh(SubMeshData data);
 				SubMesh(const SubMesh& obj);
 				~SubMesh();
-				void Initialize(IShader* _shader);
-				void Delete();
+
+				void Create();
+				void Release();
 
 				SubMeshData data;
 
@@ -58,8 +60,8 @@ namespace NuclearEngine {
 				Uint32 mIndicesOffset = 0;
 
 				//Buffers
-				RefCntAutoPtr<IBuffer> mIB;
-				RefCntAutoPtr<IBuffer> mVB;
+				IBuffer* mIB = nullptr;
+				IBuffer* mVB = nullptr;
 			};
 
 			std::vector<SubMesh> mSubMeshes;

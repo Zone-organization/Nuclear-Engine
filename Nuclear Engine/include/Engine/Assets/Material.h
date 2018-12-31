@@ -60,11 +60,17 @@ namespace NuclearEngine
 			void Bind();
 
 			//PixelShader Textures
+			std::vector<TextureSet> mVertexShaderTextures;
+			std::vector<ShaderTexture> mVertexShaderTS;
+
 			std::vector<TextureSet> mPixelShaderTextures;
-			std::vector<Texture> mPixelShaderTS;
+			std::vector<ShaderTexture> mPixelShaderTS;
 		private:
 			IPipelineState* mPipeline = nullptr;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
+
+			void ParseShader(SHADER_TYPE shadertype);
+
 			/*LLGL::Buffer* mCbuffer;
 			Graphics::ShaderResource mCbufferRef;
 			std::map<std::string, Float32> mCbufferData;
