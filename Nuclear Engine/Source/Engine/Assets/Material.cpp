@@ -8,7 +8,7 @@ namespace NuclearEngine
 	namespace Assets
 	{	
 		Material::Material()
-			: mPixelShaderTextures(std::vector<TextureSet>()), PixelShaderTS(std::vector<ShaderTexture>())
+			: mPixelShaderTextures(std::vector<TextureSet>()), PixelShaderTS(std::vector<Texture>())
 		{
 		}
 		Material::~Material()

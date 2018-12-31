@@ -74,7 +74,7 @@ namespace NuclearEngine {
 
 			if (Data.mData == NULL)
 			{
-				Log.Error(std::string("[AssetManager] Failed To Load Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
+				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
 				return Assets::Texture();
 			}
 
@@ -84,7 +84,7 @@ namespace NuclearEngine {
 				mHashedTexturesPaths[hashedname] = Path;
 			}
 
-			Log.Info(std::string("[AssetManager] Loaded Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
+			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
 
 			auto Tex = Internal::CreateTextureFromRawImage(Data, Desc);
 			Tex.SetName(hashedname);
@@ -103,7 +103,7 @@ namespace NuclearEngine {
 			auto[mesh, material] = mMeshImporter({ Path, desc, this });
 			auto hashedname = Utilities::Hash(Path);
 
-			Log.Info("[AssetManager] Loaded Mesh & Material at: " + Path + "\n");
+			Log.Info("[AssetManager : " + mDesc.mName +  "] Loaded Mesh & Material at: " + Path + "\n");
 			mImportedMaterials[hashedname] = material;
 			mImportedMeshes[hashedname] = mesh;
 
@@ -124,11 +124,11 @@ namespace NuclearEngine {
 
 			/*if (Data.mData == NULL)
 			{
-				Log.Error(std::string("[AssetManager] Failed To Load Texture2D (For CubeMap): " + Path + '\n'));
+				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture2D (For CubeMap): " + Path + '\n'));
 				return Data;
 			}
 	
-			Log.Info(std::string("[AssetManager] Loaded Texture2D (For CubeMap): " + Path + '\n'));
+			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture2D (For CubeMap): " + Path + '\n'));
 
 			return Data;*/
 

@@ -54,23 +54,21 @@ namespace NuclearEngine {
 		{
 			Assets::TextureSet TexSet;
 
-			//TODO::MATERIAL
-
 			// process materials
-			/*aiMaterial* mMaterial = scene->mMaterials[mesh->mMaterialIndex];
+			aiMaterial* mMaterial = scene->mMaterials[mesh->mMaterialIndex];
 			if (mLoadingDesc.LoadDiffuseTextures)
 			{
-				std::vector<Assets::Texture> DiffuseMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DIFFUSE);
+				auto DiffuseMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DIFFUSE);
 				TexSet.insert(TexSet.end(), DiffuseMaps.begin(), DiffuseMaps.end());
 			}
 			if (mLoadingDesc.LoadSpecularTextures)
 			{
-				std::vector<Assets::Texture> SpecularMaps = ProcessMaterialTexture(mMaterial, aiTextureType_SPECULAR);
+				auto SpecularMaps = ProcessMaterialTexture(mMaterial, aiTextureType_SPECULAR);
 				TexSet.insert(TexSet.end(), SpecularMaps.begin(), SpecularMaps.end());
 			}
 			if (mLoadingDesc.LoadNormalTextures)
 			{
-				std::vector<Assets::Texture> NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DISPLACEMENT);
+				auto NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DISPLACEMENT);
 				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 
@@ -82,7 +80,7 @@ namespace NuclearEngine {
 			else
 			{
 				return 0;
-			}*/
+			}
 			return 0;
 		}
 		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
@@ -167,8 +165,9 @@ namespace NuclearEngine {
 
 				std::string filename = str.C_Str();
 				filename = mDirectory + '/' + filename;
-
-				texture = mManager->Import(filename, GetTextureType(type));
+				Importers::TextureLoadingDesc desc;
+				desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+				texture = mManager->Import(filename, GetTextureType(type), desc);
 
 				textures.push_back(texture);
 			}

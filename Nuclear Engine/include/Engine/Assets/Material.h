@@ -12,17 +12,7 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-
-		struct ShaderTexture
-		{
-			ShaderTexture() { mSlot = 0; }
-			ShaderTexture(Assets::Texture* _tex, Uint8 _slot = 14) : mTexture(_tex), mSlot(_slot) {	}
-			//LLGL::ResourceHeap* mResourceHeap;
-			Assets::Texture* mTexture;
-			Uint8 mSlot;
-		};
-
-		typedef	std::vector<Assets::ShaderTexture> TextureSet;
+		typedef	std::vector<Assets::Texture> TextureSet;
 
 		//TODO: Support more Shader Types.
 		struct MaterialCreationDesc
@@ -88,7 +78,7 @@ namespace NuclearEngine
 
 			//PixelShader Textures
 			std::vector<TextureSet> mPixelShaderTextures;
-			std::vector<ShaderTexture> PixelShaderTS;
+			std::vector<Texture> PixelShaderTS;
 		private:
 			void ParsePixelShader(IShader* PixelShader);
 			/*LLGL::Buffer* mCbuffer;

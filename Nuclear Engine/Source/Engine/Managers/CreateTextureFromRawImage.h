@@ -216,7 +216,7 @@ namespace NuclearEngine
 				Assets::Texture result;
 				result.mTexture = Tex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-				//Tex->Release();
+				Tex->Release();
 				return result;
 			}
 		}

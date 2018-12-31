@@ -128,12 +128,11 @@ class Sample1 : public Core::Game
 		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
 
 		//NanoSuit Creation
-		/*Managers::MeshLoadingDesc ModelDesc;
+		Importers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
-		NanosuitAsset = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
-		NanosuitAsset.Initialize(*Renderer->GetVertexShader());*/
-
+		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
@@ -145,23 +144,23 @@ class Sample1 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.push_back(&DiffuseTex);
-		CubeSet.push_back(&SpecularTex);
+		CubeSet.push_back(DiffuseTex);
+		CubeSet.push_back(SpecularTex);
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
 		Assets::TextureSet SphereTextures;
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		SphereTextures.push_back(&WhiteTex);
+		SphereTextures.push_back(WhiteTex);
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-		SphereTextures.push_back(&WhiteTex);
+		SphereTextures.push_back(WhiteTex);
 		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
 
 
 		Assets::TextureSet GridTextures;
 		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		GridTextures.push_back(&GridTex);
+		GridTextures.push_back(GridTex);
 		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
-		GridTextures.push_back(&GreyTex);
+		GridTextures.push_back(GreyTex);
 		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
 
 		Renderer->CreateMaterial(&GridMaterial);
