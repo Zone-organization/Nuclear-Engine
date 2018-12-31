@@ -13,7 +13,7 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		IShader * ShaderManager::CreateShader(std::string source, SHADER_TYPE type)
+		IShader * ShaderManager::CreateShader(const std::string& source, SHADER_TYPE type)
 		{
 			ShaderCreationAttribs CreationAttribs;
 			IShader* result;
@@ -32,7 +32,7 @@ namespace NuclearEngine
 		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
 		{
 			ShaderCreationAttribs CreationAttribs;
-			IShader* pVS;
+			IShader* pVS = nullptr;
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
@@ -58,8 +58,8 @@ namespace NuclearEngine
 			if (desc.OutFragPos)
 				defines.push_back("NE_OUT_FRAG_POS");
 
-
-			CreationAttribs.Source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true).c_str();
+			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
+			CreationAttribs.Source = source.c_str();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pVS);
 			
@@ -68,7 +68,7 @@ namespace NuclearEngine
 		IShader* ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
 		{
 			ShaderCreationAttribs CreationAttribs;
-			IShader* pPS;
+			IShader* pPS = nullptr;
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
@@ -82,8 +82,8 @@ namespace NuclearEngine
 			if (desc.OutputTexture)
 				defines.push_back("NE_OUTPUT_TEXTURE");
 
-
-			CreationAttribs.Source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true).c_str();
+			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
+			CreationAttribs.Source = source.c_str();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pPS);
 

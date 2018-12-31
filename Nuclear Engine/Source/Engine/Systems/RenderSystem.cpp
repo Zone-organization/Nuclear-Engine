@@ -47,7 +47,6 @@ namespace NuclearEngine
 
 			BakeVertexShader(VSShader);
 			BakePixelShader(PSShader);
-
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
@@ -159,17 +158,15 @@ namespace NuclearEngine
 				VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
 			}
 			else
+			{
+				/*if (this->ActiveCamera != nullptr)
+					this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
+				else
+					Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
+					VSDirty = false;*/
 
 				VShader = Managers::ShaderManager::CreateShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath), SHADER_TYPE_VERTEX);
-
-
-			/*if (this->ActiveCamera != nullptr)
-				this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
-			else
-				Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
-
-			VSDirty = false;*/
-
+			}
 		}
 		
 		void RenderSystem::BakePixelShader(IShader* shader)
@@ -190,7 +187,8 @@ namespace NuclearEngine
 			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
 			if (Desc.NormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
 
-			CreationAttribs.Source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true).c_str();
+			auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
+			CreationAttribs.Source = source.c_str();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &shader);
 			shader->GetShaderVariable("NELights")->Set(mPSLightCB);

@@ -1,6 +1,5 @@
 #include <Core\Application.h>
 #include <Core\Engine.h>
-#include <Engine\Graphics\ImGuiBinding.h>
 #include <Engine\Graphics\Context.h>
 #include <GLFW/include/GLFW/glfw3.h>
 

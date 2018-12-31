@@ -24,11 +24,7 @@ namespace NuclearEngine {
 		public:			
 			Mesh();
 			~Mesh();
-			/*
-			Note:
-				We only require shader to validate the input layout but you are free to render the model with any shader you want.
-			*/
-			void Initialize(IShader* _shader);
+			
 			void Delete();
 
 			static void CreateCube(Mesh* model, const MeshVertexDesc& desc = MeshVertexDesc(), float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);

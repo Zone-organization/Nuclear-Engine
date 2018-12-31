@@ -30,7 +30,6 @@ namespace NuclearEngine
 	
 		CameraComponent::~CameraComponent()
 		{
-			ConstantBuffer->Release();
 		}
 	
 		void CameraComponent::Initialize(Math::Matrix4 projectionMatrix)
@@ -54,7 +53,10 @@ namespace NuclearEngine
 
 			UpdateMatricesOnly();
 
-			Graphics::Context::GetContext()->UpdateBuffer(ConstantBuffer, 0, sizeof(_CameraBuffer), &_CameraBuffer, RESOURCE_STATE_TRANSITION_MODE_NONE);
+			void* data;
+			Graphics::Context::GetContext()->MapBuffer(ConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD, data);
+			data = &_CameraBuffer;
+			Graphics::Context::GetContext()->UnmapBuffer(ConstantBuffer, MAP_WRITE);
 		}
 		void CameraComponent::UpdateMatricesOnly()
 		{

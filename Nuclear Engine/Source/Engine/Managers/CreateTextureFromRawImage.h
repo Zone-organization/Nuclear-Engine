@@ -97,9 +97,7 @@ namespace NuclearEngine
 			}
 
 			Assets::Texture& CreateTextureFromRawImage(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc)
-			{
-				
-
+			{	
 				TextureDesc TexDesc;
 				TexDesc.Type = RESOURCE_DIM_TEX_2D;
 				TexDesc.Width = Image.mWidth;
@@ -212,7 +210,7 @@ namespace NuclearEngine
 				TexData.pSubResources = pSubResources.data();
 				TexData.NumSubresources = TexDesc.MipLevels;
 
-				ITexture *Tex;
+				ITexture *Tex = nullptr;
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, TexData, &Tex);
 
 				Assets::Texture result;

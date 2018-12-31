@@ -10,21 +10,18 @@ namespace NuclearEngine
 	{
 		Assets::Image & StbImageLoad(const std::string & Path, const Importers::TextureLoadingDesc & Desc)
 		{
-			int ReqNumComponents = 0, Channels = 0;
+			int ReqNumComponents = 0, Channels = 8;
 			switch (Desc.mFormat)
 			{
 			case TEX_FORMAT_R8_UNORM:
 				ReqNumComponents = 1;
-				Channels = 8;
 				break;
 			case TEX_FORMAT_RG8_UNORM:
 				ReqNumComponents = 2;
-				Channels = 8;
 				break;
 			case TEX_FORMAT_RGBA8_UNORM:
 			case TEX_FORMAT_RGBA8_UNORM_SRGB:
 				ReqNumComponents = 4;
-				Channels = 8;
 				break;
 			}
 

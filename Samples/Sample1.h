@@ -124,22 +124,19 @@ class Sample1 : public Core::Game
 	{
 		//Create some shapes
 		Assets::Mesh::CreateCube(&CubeAsset);
-		//CubeAsset.Initialize(*Renderer->GetVertexShader());
-
 		Assets::Mesh::CreateSphere(&SphereAsset);
-		//SphereAsset.Initialize(*Renderer->GetVertexShader());
-
 		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
-		//GridAsset.Initialize(*Renderer->GetVertexShader());
 
 		//NanoSuit Creation
-		//Managers::MeshLoadingDesc ModelDesc;
-		//ModelDesc.LoadDiffuseTextures = true;
-		//ModelDesc.LoadSpecularTextures = true;
-		//NanosuitAsset = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
-		//NanosuitAsset.Initialize(*Renderer->GetVertexShader());
+		/*Managers::MeshLoadingDesc ModelDesc;
+		ModelDesc.LoadDiffuseTextures = true;
+		ModelDesc.LoadSpecularTextures = true;
+		NanosuitAsset = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc, NanosuitMaterial);
+		NanosuitAsset.Initialize(*Renderer->GetVertexShader());*/
 
 		//Load some textures manually
+		Importers::TextureLoadingDesc desc;
+		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		DiffuseTex = AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
 		SpecularTex = AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
 		WhiteTex = AssetLoader.Import("Assets/Common/Textures/white.png");
@@ -269,19 +266,19 @@ class Sample1 : public Core::Game
 		Camera.ProcessEye(xoffset, yoffset);
 	}
 
-	//void Update(float deltatime) override
-	//{
-	//	if (Input->KeyPressed(Input::Keyboard::Key::W))
-	//		Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-	//	if (Input->KeyPressed(Input::Keyboard::Key::A))
-	//		Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-	//	if (Input->KeyPressed(Input::Keyboard::Key::S))
-	//		Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-	//	if (Input->KeyPressed(Input::Keyboard::Key::D))
-	//		Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
+	void Update(float deltatime) override
+	{
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
+			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
+			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
+			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
+			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
-	//	Camera.Update();
-	//}
+		Camera.Update();
+	}
 	void Render(float dt) override
 	{
 		// Clear the back buffer 

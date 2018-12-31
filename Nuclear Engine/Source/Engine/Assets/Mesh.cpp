@@ -99,11 +99,6 @@ namespace NuclearEngine {
 		{
 			mVB->Release();
 			mIB->Release();
-			/*for (size_t i = 0; i < data.textures.size(); i++)
-			{
-				LLGL::Texture::Delete(&data.textures.at(i).mTexture);
-			}
-			data.textures.clear();*/
 		}
 
 		Mesh::Mesh()
@@ -115,14 +110,6 @@ namespace NuclearEngine {
 		{
 		}
 
-		void Mesh::Initialize(IShader* _shader)
-		{
-		/*	for (unsigned int i = 0; i < mSubMeshes.size(); i++)
-			{
-				mSubMeshes.at(i).Initialize(_shader);
-			}
-			init = true;*/
-		}
 		void Mesh::Delete()
 		{
 			for (unsigned int i = 0; i < mSubMeshes.size(); i++)

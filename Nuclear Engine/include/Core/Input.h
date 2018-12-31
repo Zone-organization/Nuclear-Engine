@@ -7,7 +7,7 @@ namespace NuclearEngine
 	{
 		class Window;
 
-		class Input
+		class NEAPI Input
 		{
 		public:
 			enum class MouseInputMode { Virtual, Normal, Hidden };
