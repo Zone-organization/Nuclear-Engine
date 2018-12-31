@@ -227,6 +227,8 @@
     <ClInclude Include="include\Engine\Importers\StbImageImporter.h" />
     <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
     <ClInclude Include="include\Engine\Importers\Importers.h" />
+    <ClInclude Include="include\Core\Input.h" />
+    <ClInclude Include="include\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -277,6 +279,8 @@
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp" />
     <ClCompile Include="Source\Engine\Importers\StbImageImporter.cpp" />
     <ClCompile Include="Source\Engine\Assets\Texture.cpp" />
+    <ClCompile Include="Source\Core\Input.cpp" />
+    <ClCompile Include="Source\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

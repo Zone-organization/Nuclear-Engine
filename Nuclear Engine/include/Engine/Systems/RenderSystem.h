@@ -56,6 +56,8 @@ namespace NuclearEngine
 			void AddLight(Components::PointLight* light);
 			void AddLight(Components::SpotLight* light);
 
+			void CreateMaterial(Assets::Material* material);
+
 			void Bake();
 
 			IPipelineState* GetPipeline();

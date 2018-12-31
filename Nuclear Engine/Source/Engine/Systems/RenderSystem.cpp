@@ -131,6 +131,16 @@ namespace NuclearEngine
 			SpotLights.push_back(light);
 		}
 
+		void RenderSystem::CreateMaterial(Assets::Material * material)
+		{
+			if (!material)
+				return;
+
+			Assets::MaterialCreationDesc desc;
+			desc.mPipeline = mPipeline;
+			material->Create(desc);
+		}
+
 		void RenderSystem::Bake()
 		{
 			BakePipeline();

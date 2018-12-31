@@ -3,6 +3,8 @@
 class Sample1 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
+	Core::Input Input;
+
 
 	//Asset Manager (Loader)
 	Managers::AssetManager AssetLoader;
@@ -144,12 +146,6 @@ class Sample1 : public Core::Game
 		GreyTex = AssetLoader.Import("Assets/Common/Textures/grey.png");
 		GridTex = AssetLoader.Import("Assets/Common/Textures/Grid.png");
 
-		//TODO::MATERIAL
-
-		Assets::MaterialCreationDesc desc;
-		desc.mPipeline = Renderer->GetPipeline();
-
-
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
 		CubeSet.push_back(&DiffuseTex);
@@ -171,10 +167,10 @@ class Sample1 : public Core::Game
 		GridTextures.push_back(&GreyTex);
 		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
 
-		GridMaterial.Create(desc);
-		CubeMaterial.Create(desc);
-		SphereMaterial.Create(desc);
-		NanosuitMaterial.Create(desc);
+		Renderer->CreateMaterial(&GridMaterial);
+		Renderer->CreateMaterial(&CubeMaterial);
+		Renderer->CreateMaterial(&SphereMaterial);
+		Renderer->CreateMaterial(&NanosuitMaterial);
 
 		CubeSet.clear();
 		SphereTextures.clear();
@@ -222,10 +218,70 @@ class Sample1 : public Core::Game
 		ENanosuit.Assign<Components::MeshComponent>(&NanosuitAsset, &NanosuitMaterial);
 	}
 
+
 	void Load()
 	{
+		Systems::RenderSystemDesc desc;
+		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
+		SampleScene.Systems.Configure();
 
+		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Renderer->AddLight(&spotLight);
+		Renderer->AddLight(&pointlight1);
+		Renderer->AddLight(&pointlight2);
+		Renderer->AddLight(&pointlight3);
+		Renderer->AddLight(&pointlight4);
+		Renderer->AddLight(&pointlight5);
+		Renderer->AddLight(&pointlight6);
+		Renderer->AddLight(&pointlight7);
+		Renderer->AddLight(&pointlight8);
+		Renderer->AddLight(&pointlight9);
+		Renderer->AddLight(&dirlight);
+		Renderer->Bake();
+
+		SetupLights();
+
+		SetupAssets();
+
+		SetupEntities();
+
+		//Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
+
+	void OnMouseMovement(int xpos_a, int ypos_a) override
+	{
+		float xpos = static_cast<float>(xpos_a);
+		float ypos = static_cast<float>(ypos_a);
+
+		if (firstMouse)
+		{
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos;
+
+		lastX = xpos;
+		lastY = ypos;
+
+		Camera.ProcessEye(xoffset, yoffset);
+	}
+
+	//void Update(float deltatime) override
+	//{
+	//	if (Input->KeyPressed(Input::Keyboard::Key::W))
+	//		Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
+	//	if (Input->KeyPressed(Input::Keyboard::Key::A))
+	//		Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
+	//	if (Input->KeyPressed(Input::Keyboard::Key::S))
+	//		Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
+	//	if (Input->KeyPressed(Input::Keyboard::Key::D))
+	//		Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
+
+	//	Camera.Update();
+	//}
 	void Render(float dt) override
 	{
 		// Clear the back buffer 
@@ -239,77 +295,6 @@ class Sample1 : public Core::Game
 	}
 };
 
-//	void Load()
-//	{
-//		//Setup Input System
-//		// Add input event listener to window
-//		Input = std::make_shared<LLGL::Input>();
-//		Core::Application::GetWindow()->AddEventListener(Input);
-//
-//		Systems::RenderSystemDesc desc;
-//		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
-//		SampleScene.Systems.Configure();
-//
-//		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetAspectRatioF32(), 0.1f, 100.0f));
-//		Renderer->AddLight(&spotLight);
-//		Renderer->AddLight(&pointlight1);
-//		Renderer->AddLight(&pointlight2);
-//		Renderer->AddLight(&pointlight3);
-//		Renderer->AddLight(&pointlight4);
-//		Renderer->AddLight(&pointlight5);
-//		Renderer->AddLight(&pointlight6);
-//		Renderer->AddLight(&pointlight7);
-//		Renderer->AddLight(&pointlight8);
-//		Renderer->AddLight(&pointlight9);
-//		Renderer->AddLight(&dirlight);
-//		Renderer->Bake();
-//
-//		AssetLoader.mSaveTextureNames = true;
-//
-//		SetupLights();
-//
-//		SetupAssets();
-//
-//		SetupEntities();
-//		
-//		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
-//		Core::Application::Display();
-//	}
-//
-//	void OnMouseMovement(int xpos_a, int ypos_a) override
-//	{
-//		float xpos = static_cast<float>(xpos_a);
-//		float ypos = static_cast<float>(ypos_a);
-//
-//		if (firstMouse)
-//		{
-//			lastX = xpos;
-//			lastY = ypos;
-//			firstMouse = false;
-//		}
-//
-//		float xoffset = xpos - lastX;
-//		float yoffset = lastY - ypos;
-//
-//		lastX = xpos;
-//		lastY = ypos;
-//
-//		Camera.ProcessEye(xoffset, yoffset);
-//	}
-//
-//	void Update(float deltatime) override
-//	{
-//		if (Input->KeyPressed(Input::Keyboard::Key::W))
-//			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
-//		if (Input->KeyPressed(Input::Keyboard::Key::A))
-//			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
-//		if (Input->KeyPressed(Input::Keyboard::Key::S))
-//			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
-//		if (Input->KeyPressed(Input::Keyboard::Key::D))
-//			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
-//
-//		Camera.Update();
-//	}
 //
 //
 //	void Render(float dt) override
@@ -333,117 +318,3 @@ class Sample1 : public Core::Game
 //		Graphics::Context::PresentFrame();
 //	}
 //};
-///*
-////#include <Engine\Graphics\ImGui_Renderer.h>
-//
-//class Sample1 : public Core::Game
-//{
-//protected:
-//	
-//
-//public:
-//	Sample1()
-//	{
-//	}
-//
-//	
-//
-//	void Load()
-//	{
-//		
-//		states.EnabledDepth_DisabledStencil.Bind();
-//		Graphics::API::Context::SetPrimitiveType(Graphics::PrimitiveType::TriangleList);
-//
-//		Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
-//		Core::Application::Display();
-//	}
-//
-//	
-//	void MaterialEditor()
-//	{
-//		ImGui::Begin("Material Editor");                          // Create a window called "Hello, world!" and append into it.
-//
-//		for (auto i : AssetLoader.mImportedMaterials)
-//		{
-//			for (auto texset : i.second.mPixelShaderTextures)
-//			{
-//				for (auto tex : texset)
-//				{
-//					ImGui::Image(&tex.mTexture.mTexture, ImVec2(tex.mTexture.mTexture.GetDimensions().x, tex.mTexture.mTexture.GetDimensions().y));
-//				}
-//			}
-//		}
-//
-//		ImGui::End();
-//
-//	} 
-//
-//	
-//	void Render(float dt) override
-//	{
-//		ImGui::NewFrame();
-//
-//		Graphics::API::Context::Clear(Graphics::Color(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-//		Renderer->GetVertexShader().Bind();
-//		Renderer->GetPixelShader().Bind();
-//
-//		states.DefaultSampler.PSBind(0);
-//		states.DefaultSampler.PSBind(1);
-//
-//		std::vector<Math::Matrix4> CubeTransforms;
-//		std::vector<Math::Matrix4> LampTransforms;
-//		
-//		for (unsigned int i = 0; i < 10; i++)
-//		{
-//			// calculate the model matrix for each object and pass it to shader before drawing
-//			Math::Matrix4 model(1.0f);
-//			model = Math::translate(model, cubePositions[i]);
-//			float angle = 20.0f * i * ClockTime;
-//
-//			model = Math::rotate(model, Math::radians(angle), Math::Vector3(1.0f, 0.3f, 0.5f));
-//			CubeTransforms.push_back(model);
-//		}
-//		for (unsigned int i = 0; i < 9; i++)
-//		{
-//			Math::Matrix4 model(1.0f);
-//			model = Math::translate(model, pointLightPositions[i]);
-//			model = Math::scale(model, Math::Vector3(0.25f));
-//			LampTransforms.push_back(model);
-//		}
-//
-//		ECube.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = CubeTransforms;
-//		ELamp.GetComponent<Components::MeshComponent>().Get()->mMultiRenderTransforms = LampTransforms;
-//		
-//		Math::Matrix4 NanosuitMatrix(1.0f);
-//		NanosuitMatrix = Math::translate(NanosuitMatrix, Math::Vector3(5.0f, -1.75f, 0.0f));
-//		NanosuitMatrix = Math::scale(NanosuitMatrix, Math::Vector3(0.25f));
-//		NanosuitMatrix = Math::rotate(NanosuitMatrix, ClockTime, Math::Vector3(0.0f, 1.0f, 0.0f));
-//
-//		ENanosuit.GetComponent<Components::TransformComponent>().Get()->mTransform = NanosuitMatrix;
-//
-//		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Up))
-//			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(0.0f, 0.01f, 0.0f));
-//		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Down))
-//			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(0.0f, -0.01f, 0.0f));
-//		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Right))
-//			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(0.01f, 0.0f, 0.0f));
-//		if (Core::Input::Keyboard::isKeyPressed(Core::Input::Keyboard::Key::Left))
-//			EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform = Math::translate(EGrid.GetComponent<Components::TransformComponent>().Get()->mTransform, Math::Vector3(-0.01f, 0.0f, 0.0f));
-//
-//		MaterialEditor();
-//
-//		spotLight.SetPosition(Camera.GetPosition());
-//		spotLight.SetDirection(Camera.GetFrontView());
-//
-//		SampleScene.Systems.Update_All(dt);
-//		
-//		Skybox.Render();
-//		states.EnabledDepth_DisabledStencil.Bind();
-//
-//
-//		//ImGui::Render();
-//		Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
-//		Graphics::API::Context::PresentFrame();
-//	}
-//};
-//*/

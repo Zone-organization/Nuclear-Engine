@@ -8,18 +8,15 @@ namespace NuclearEngine
 {
 	namespace Core
 	{		
-		bool Application::ShouldClose = false;
-		GLFWwindow* MainWindow = nullptr;
+		Window MainWindow;
 
 		bool Application::Start(const ApplicationDesc & Desc)
 		{
 			glfwInit();
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
-			MainWindow = glfwCreateWindow(Desc.WindowWidth, Desc.WindowHeight, Desc.Title.c_str(), NULL, NULL);
-			if (MainWindow == NULL)
+			if(!Window::Create(&MainWindow, {Desc.WindowWidth, Desc.WindowHeight, Desc.FullScreen, Desc.Title}))
 			{
-				Log.FatalError("[Application] Creating Window Failed!\n");
+				Log.FatalError("[Application] Creating Main Window Failed!\n");
 				glfwTerminate();
 				return false;
 			}
@@ -31,39 +28,19 @@ namespace NuclearEngine
 		}
 		void Application::Shutdown()
 		{
-			glfwDestroyWindow(MainWindow);
+			Window::Destroy(&MainWindow);
 			Graphics::Context::ShutDown();
 		}
-		void Application::Display(bool show)
-		{
-			if(show)
-				glfwShowWindow(MainWindow);
-			else
-				glfwHideWindow(MainWindow);
-		}
-	
+
 		bool Application::PollEvents()
 		{
 			glfwPollEvents();
-			ShouldClose = glfwWindowShouldClose(MainWindow);
-			return ShouldClose;
+			return MainWindow.ShouldClose();
 		}
 
-		Float32 Application::GetAspectRatioF32()
+		Window * Application::GetMainWindow()
 		{
-			//auto resolution = Graphics::Context::GetContext()->resolution;
-			//return (static_cast<float>(resolution.width) / static_cast<float>(resolution.height));
-			return 0;
-		}
-
-		GLFWwindow * Application::GetWindow()
-		{
-			return MainWindow;
-		}
-	
-		void Application::SetMouseInputMode(const MouseInputMode & mode)
-		{
-
+			return &MainWindow;
 		}
 	}
 }

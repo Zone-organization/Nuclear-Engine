@@ -40,8 +40,6 @@ namespace NuclearEngine {
 		}
 		void Game::LoadFinishUp()
 		{
-			Core::Application::SetMouseInputMode(Core::MouseInputMode::Virtual);
-			Core::Application::Display();
 		}
 		void Game::OnMouseScroll(double val1, double val2)
 		{

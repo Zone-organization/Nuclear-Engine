@@ -3,7 +3,6 @@
 
 namespace NuclearEngine {
 	namespace Core {
-		enum class MouseInputMode { Virtual, Normal, Hidden };
 
 		enum class RenderAPI : Int32
 		{

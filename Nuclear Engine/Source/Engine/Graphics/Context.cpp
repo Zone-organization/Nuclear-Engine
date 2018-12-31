@@ -17,7 +17,7 @@ namespace NuclearEngine
 
 		bool Context::Initialize(const Core::ApplicationDesc & Desc)
 		{
-			bool Result = InitializeDiligentEngineWin32(Core::Application::GetWindow(),static_cast<DeviceType>(Desc.Renderer), &gDevice, &gContext, &gSwapChain);
+			bool Result = InitializeDiligentEngineWin32(Core::Application::GetMainWindow()->GetRawWindowPtr(),static_cast<DeviceType>(Desc.Renderer), &gDevice, &gContext, &gSwapChain);
 
 			if(Result)
 				Log.Info("[Context] Diligent Graphics API Initialized.\n");
