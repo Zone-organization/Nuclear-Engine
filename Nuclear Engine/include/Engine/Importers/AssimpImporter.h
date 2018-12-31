@@ -18,7 +18,7 @@ namespace NuclearEngine
 			std::tuple<Assets::Mesh, Assets::Material> Load(const MeshImporterDesc& desc);
 
 		private:
-			std::vector<Assets::Texture> ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
+			Assets::TextureSet ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
 			Assets::Mesh::SubMesh::SubMeshData ProcessMesh(aiMesh *mesh, const aiScene *scene);
 			unsigned int ProcessMaterial(aiMesh * mesh, const aiScene * scene);
 			void ProcessNode(aiNode *node, const aiScene *scene);

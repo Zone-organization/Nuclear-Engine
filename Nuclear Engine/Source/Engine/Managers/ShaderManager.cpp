@@ -29,10 +29,13 @@ namespace NuclearEngine
 
 			return result;
 		}
-		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc)
+		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc, std::vector<LayoutElement>* Layout)
 		{
 			ShaderCreationAttribs CreationAttribs;
 			IShader* pVS = nullptr;
+			Layout->clear();
+
+			Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, False));
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
@@ -44,14 +47,20 @@ namespace NuclearEngine
 			std::vector<std::string> defines;
 
 			if (desc.InTexCoords)
+			{
 				defines.push_back("NE_USE_UV");
-
+				Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, False));
+			}
 			if (desc.InNormals)
+			{
 				defines.push_back("NE_USE_NORMALS");
-
+				Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, False));
+			}
 			if (desc.InTangents)
+			{
 				defines.push_back("NE_USE_TANGENTS");
-
+				Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, False));
+			}
 			if (desc.Use_Camera)
 				defines.push_back("NE_USE_DEF_CAMERA");
 

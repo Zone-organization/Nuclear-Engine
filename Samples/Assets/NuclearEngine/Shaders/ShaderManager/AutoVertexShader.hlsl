@@ -15,15 +15,15 @@ Defines:
 
 struct VertexInputType
 {
-    float4 Position : POSITION0;
+    float4 Position : ATTRIB0;
 #ifdef NE_USE_UV
-    float2 TexCoord : TEXCOORD0;
+    float2 TexCoord : ATTRIB1;
 #endif
 #ifdef NE_USE_NORMALS
-    float3 Normals : NORMAL0;
+    float3 Normals : ATTRIB2;
 #endif
 #ifdef NE_USE_TANGENTS
-    float3 Tangents : TANGENT0;
+    float3 Tangents : ATTRIB3;
 #endif
 };
 
@@ -45,7 +45,7 @@ struct PixelInputType
 };
 
 #ifdef NE_USE_DEF_CAMERA
-cbuffer NE_Camera : register(b0)
+cbuffer NECamera : register(b0)
 {
     matrix Model;
     matrix ModelInvTranspose;

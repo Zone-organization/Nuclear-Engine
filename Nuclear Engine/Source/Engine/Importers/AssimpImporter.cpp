@@ -153,9 +153,9 @@ namespace NuclearEngine {
 			//Unsupported types treated as diffuse
 			return Assets::TextureUsageType::Diffuse;
 		}
-		std::vector<Assets::Texture> AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
+		Assets::TextureSet AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{
-			std::vector<Assets::Texture> textures;
+			Assets::TextureSet textures;
 			for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 			{
 				aiString str;
@@ -169,7 +169,7 @@ namespace NuclearEngine {
 				desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 				texture = mManager->Import(filename, GetTextureType(type), desc);
 
-				textures.push_back(texture);
+				textures.push_back({ 0, texture });
 			}
 			return textures;
 		}

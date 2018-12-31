@@ -144,23 +144,23 @@ class Sample1 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.push_back(DiffuseTex);
-		CubeSet.push_back(SpecularTex);
+		CubeSet.push_back({ 0, DiffuseTex });
+		CubeSet.push_back({ 0, SpecularTex });
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
 		Assets::TextureSet SphereTextures;
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		SphereTextures.push_back(WhiteTex);
+		SphereTextures.push_back({ 0,WhiteTex });
 		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-		SphereTextures.push_back(WhiteTex);
+		SphereTextures.push_back({ 0,WhiteTex });
 		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
 
 
 		Assets::TextureSet GridTextures;
 		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		GridTextures.push_back(GridTex);
+		GridTextures.push_back({ 0,GridTex });
 		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
-		GridTextures.push_back(GreyTex);
+		GridTextures.push_back({ 0,GreyTex });
 		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
 
 		Renderer->CreateMaterial(&GridMaterial);
@@ -285,32 +285,8 @@ class Sample1 : public Core::Game
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-
+		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
 
 		Graphics::Context::GetSwapChain()->Present();
 	}
 };
-
-//
-//
-//	void Render(float dt) override
-//	{  
-//		// Set the render context as the initial render target
-//		Graphics::Context::GetCommands()->BeginRenderPass(*Graphics::Context::GetRenderContext());
-//		{
-//			// Clear color buffer
-//			Graphics::Context::GetCommands()->Clear(LLGL::ClearFlags::ColorDepth);
-//			Graphics::Context::GetCommands()->SetClearColor({ 1.0f, 0.0f, 0.0f, 1.0f });
-//			Graphics::Context::GetCommands()->SetGraphicsPipeline(*Renderer->Pipeline);
-//
-//			Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
-//
-//		}
-//		Graphics::Context::GetCommands()->EndRenderPass();
-//
-//
-//		//ImGui::Render();
-//		//Graphics::ImGui_Renderer::RenderDrawData(ImGui::GetDrawData());
-//		Graphics::Context::PresentFrame();
-//	}
-//};

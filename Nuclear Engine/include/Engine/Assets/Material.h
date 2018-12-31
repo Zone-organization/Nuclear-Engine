@@ -12,7 +12,6 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-		typedef	std::vector<Assets::Texture> TextureSet;
 
 		//TODO: Support more Shader Types.
 		struct MaterialCreationDesc
@@ -20,6 +19,14 @@ namespace NuclearEngine
 			IPipelineState* mPipeline = nullptr;
 			ISampler* mSampler = nullptr;
 		};
+
+		struct ShaderTexture
+		{
+			Uint32 mSlot;
+			Assets::Texture mTex;
+		};
+
+		typedef	std::vector<ShaderTexture> TextureSet;
 
 		/*
 			Material class defines how should the rendering system render the mesh,
@@ -52,35 +59,12 @@ namespace NuclearEngine
 			void BindTexSet(Uint32 index);
 			void Bind();
 
-			//If the shader isn't valid the default shader is bound
-			//LLGL::GraphicsPipeline*	mPipeline = nullptr;
-
-			void UpdateMaterialCBuffer();
-
-			/*
-				Creates PipelineLayoutDescriptor but u should consider some restrictions when writing shaders for it:
-				Order of Resources:
-				 - Textures
-				 - Samplers
-				 - Constant Buffer
-
-			EX:
-					Texture2D Tex_X;
-					Texture2D Tex_Y;
-					
-					SamplerState Sampler_A;
-					SamplerState Sampler_B;
-
-					cbuffer myCB_1;
-					cbuffer myCB_2;
-			*/
-			//static LLGL::PipelineLayoutDescriptor GeneratePipelineLayoutDesc(Graphics::Shader* _VShader, Graphics::Shader* _PShader);
-
 			//PixelShader Textures
 			std::vector<TextureSet> mPixelShaderTextures;
-			std::vector<Texture> PixelShaderTS;
+			std::vector<Texture> mPixelShaderTS;
 		private:
-			void ParsePixelShader(IShader* PixelShader);
+			IPipelineState* mPipeline = nullptr;
+			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 			/*LLGL::Buffer* mCbuffer;
 			Graphics::ShaderResource mCbufferRef;
 			std::map<std::string, Float32> mCbufferData;

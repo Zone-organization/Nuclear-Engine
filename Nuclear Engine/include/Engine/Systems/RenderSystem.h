@@ -41,8 +41,6 @@ namespace NuclearEngine
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc(), Components::CameraComponent* camera = nullptr);
 			~RenderSystem();
 
-			void BakeVertexShader(IShader* shader);
-			void BakePixelShader(IShader* shader);
 			void BakeLightConstantBuffer();
 			void BakePipeline();
 			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);

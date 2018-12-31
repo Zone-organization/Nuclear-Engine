@@ -44,9 +44,43 @@ namespace NuclearEngine
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
+			std::vector<LayoutElement> LayoutElems;
 
-			BakeVertexShader(VSShader);
-			BakePixelShader(PSShader);
+			Managers::AutoVertexShaderDesc VertShaderDesc;
+			if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
+
+			VSShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+			VSShader->GetShaderVariable("NECamera")->Set(ActiveCamera->GetCBuffer());
+
+			ShaderCreationAttribs CreationAttribs;
+			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_DYNAMIC;
+			CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+			CreationAttribs.EntryPoint = "main";
+			CreationAttribs.Desc.Name = "RenderSystem PixelShader";
+
+			std::vector<std::string> defines;
+
+			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); }
+			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size())); }
+			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
+			if (Desc.NormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+
+			auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
+			CreationAttribs.Source = source.c_str();
+
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
+			PSShader->GetShaderVariable("NELights")->Set(mPSLightCB);
+			Calculate_Light_CB_Size();
+
+			PSODesc.GraphicsPipeline.pVS = VSShader;
+			PSODesc.GraphicsPipeline.pPS = PSShader;
+			PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+			PSODesc.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
+
+			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
+
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
@@ -136,7 +170,7 @@ namespace NuclearEngine
 				return;
 
 			Assets::MaterialCreationDesc desc;
-			desc.mPipeline = mPipeline;
+			desc.mPipeline = mPipeline.RawPtr();
 			material->Create(desc);
 		}
 
@@ -147,54 +181,6 @@ namespace NuclearEngine
 		IPipelineState * RenderSystem::GetPipeline()
 		{
 			return mPipeline.RawPtr();
-		}
-		void RenderSystem::BakeVertexShader(IShader* VShader)
-		{
-			if (Desc.VShaderPath == "NE_Default")
-			{
-				Managers::AutoVertexShaderDesc VertShaderDesc;
-				if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
-
-				VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
-			}
-			else
-			{
-				/*if (this->ActiveCamera != nullptr)
-					this->VShader.SetConstantBuffer(&this->ActiveCamera->GetCBuffer());
-				else
-					Log.Warning("[RenderSystem] Baking the renderer without an active camera!\n");
-					VSDirty = false;*/
-
-				VShader = Managers::ShaderManager::CreateShader(Core::FileSystem::LoadFileToString(Desc.VShaderPath), SHADER_TYPE_VERTEX);
-			}
-		}
-		
-		void RenderSystem::BakePixelShader(IShader* shader)
-		{
-			ShaderCreationAttribs CreationAttribs;
-
-			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
-			CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-			CreationAttribs.EntryPoint = "main";
-			CreationAttribs.Desc.Name = "RenderSystem PixelShader";
-
-			std::vector<std::string> defines;
-
-			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); }
-			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size())); }
-			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
-			if (Desc.NormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
-
-			auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
-			CreationAttribs.Source = source.c_str();
-
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &shader);
-			shader->GetShaderVariable("NELights")->Set(mPSLightCB);
-			Calculate_Light_CB_Size();
-
-
 		}
 
 		void RenderSystem::BakeLightConstantBuffer()
@@ -295,7 +281,6 @@ namespace NuclearEngine
 		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
 		{
 			material->Bind();
-			material->UpdateMaterialCBuffer();
 			Uint32 offset = 0;
 
 			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)

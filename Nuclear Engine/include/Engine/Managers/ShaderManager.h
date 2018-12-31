@@ -1,6 +1,7 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/InputLayout.h>
 #include <vector>
 
 namespace NuclearEngine 
@@ -32,7 +33,7 @@ namespace NuclearEngine
 
 			static IShader* CreateShader(const std::string& source, SHADER_TYPE type);
 
-			static IShader* CreateAutoVertexShader(const AutoVertexShaderDesc& desc);
+			static IShader* CreateAutoVertexShader(const AutoVertexShaderDesc& desc, std::vector<LayoutElement>* Layout);
 			static IShader* CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
 		};
 	}
