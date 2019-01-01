@@ -15,7 +15,7 @@ namespace NuclearEngine
 	{
 		class AssimpImporter {
 		public:
-			std::tuple<Assets::Mesh, Assets::Material> Load(const MeshImporterDesc& desc);
+			std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material> Load(const MeshImporterDesc& desc);
 
 		private:
 			Assets::TextureSet ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
@@ -28,14 +28,14 @@ namespace NuclearEngine
 
 			Assets::Material mMaterial;
 			std::string mDirectory;
-			Assets::Mesh mMesh;
+			std::vector<Assets::Mesh::SubMesh> mMesh;
 
 			Importers::MeshLoadingDesc mLoadingDesc;
 			Managers::AssetManager* mManager = nullptr;
 		};
 
 
-		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const MeshImporterDesc& desc);
+		std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material> AssimpLoadMesh(const MeshImporterDesc& desc);
 
 	}
 }

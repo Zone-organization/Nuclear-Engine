@@ -19,7 +19,7 @@ namespace NuclearEngine {
 			bool Tangents = false;
 		};
 
-		class NEAPI Mesh : public Asset
+		class NEAPI Mesh : public Asset<Mesh>
 		{
 		public:			
 			Mesh();

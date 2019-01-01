@@ -6,7 +6,7 @@
 #define EXPOSE_ASSIMP_IMPORTER
 #include <Engine\Importers\AssimpImporter.h>
 #include <Engine\Importers\StbImageImporter.h>
-
+#include <utility>
 #include "CreateTextureFromRawImage.h"
 
 namespace NuclearEngine {
@@ -100,30 +100,28 @@ namespace NuclearEngine {
 
 		std::tuple<Assets::Mesh*, Assets::Material*> AssetManager::Import(const std::string & Path, const Importers::MeshLoadingDesc & desc)
 		{
-			Assets::Mesh Mesh;
+			std::vector<Assets::Mesh::SubMesh> submeshes;
+			Assets::Mesh* MeshPtr;
 			Assets::Material Material;
 
-			std::tie(Mesh, Material) = mMeshImporter({ Path, desc, this });
+			std::tie(submeshes, Material) = mMeshImporter({ Path, desc, this });
 			auto hashedname = Utilities::Hash(Path);
-			Mesh.Create();
 
 			Log.Info("[AssetManager : " + mDesc.mName +  "] Loaded Mesh & Material at: " + Path + "\n");
 
 			mImportedMaterials[hashedname] = Material;
-			mImportedMeshes[hashedname] = Mesh;
-
-			for (auto Bla : mImportedMeshes)
-			{
-				Bla;
-			}
+			mImportedMeshes[hashedname] = Assets::Mesh();
+			MeshPtr = &mImportedMeshes[hashedname];
+			MeshPtr->mSubMeshes = submeshes;
+			MeshPtr->Create();
+			
 			if (mSaveMeshesPaths)
 				mHashedMeshesPaths[hashedname] = Path;
 
 			if (mSaveMaterialsPaths)
 				mHashedMaterialsPaths[hashedname] = Path;
 
-
-			return { &mImportedMeshes[hashedname] , &mImportedMaterials[hashedname] };
+			return { MeshPtr , &mImportedMaterials[hashedname] };
 		}
 					
 		ITexture * AssetManager::TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc)

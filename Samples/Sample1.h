@@ -132,7 +132,8 @@ class Sample1 : public Core::Game
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
-	
+		AssetLoader.mImportedMeshes[0] = CubeAsset;
+
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;

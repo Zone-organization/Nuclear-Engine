@@ -7,7 +7,7 @@
 namespace NuclearEngine {
 	namespace Importers {
 
-		std::tuple<Assets::Mesh, Assets::Material> AssimpImporter::Load(const MeshImporterDesc& desc)
+		std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material> AssimpImporter::Load(const MeshImporterDesc& desc)
 		{
 			Log.Info("[AssimpImporter] Loading Mesh: " + desc.mPath + "\n");
 			mLoadingDesc = desc.mMeshDesc;
@@ -20,18 +20,16 @@ namespace NuclearEngine {
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
 				Log.Error("[AssimpImporter] Assimp Failed to load mesh: " + desc.mPath + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
-				return std::tuple<Assets::Mesh, Assets::Material>();
+				return std::tuple< std::vector<Assets::Mesh::SubMesh>, Assets::Material>();
 			}
 			mDirectory = desc.mPath.substr(0, desc.mPath.find_last_of('/'));
 			ProcessNode(scene->mRootNode, scene);
 
 			for (unsigned int i = 0; i < mMeshesLoaded.size(); i++)
 			{
-				mMesh.mSubMeshes.push_back(Assets::Mesh::SubMesh(mMeshesLoaded.at(i)));
+				mMesh.push_back(Assets::Mesh::SubMesh(mMeshesLoaded.at(i)));
 			}
 			auto hashedname = Utilities::Hash(desc.mPath);
-			mMesh.isValid = true;
-
 			return { mMesh , mMaterial };
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
@@ -174,7 +172,7 @@ namespace NuclearEngine {
 			return textures;
 		}
 
-		std::tuple<Assets::Mesh, Assets::Material> AssimpLoadMesh(const MeshImporterDesc& desc)
+		std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material> AssimpLoadMesh(const MeshImporterDesc& desc)
 		{
 			AssimpImporter importer;
 			return importer.Load(desc);

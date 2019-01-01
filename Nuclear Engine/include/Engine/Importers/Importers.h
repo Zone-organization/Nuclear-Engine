@@ -62,7 +62,7 @@ namespace NuclearEngine
 			Managers::AssetManager* mManager = nullptr;
 		};
 
-		typedef Utilities::Delegate<std::tuple<Assets::Mesh, Assets::Material>(const MeshImporterDesc& desc)> MeshImporterDelegate;
+		typedef Utilities::Delegate<std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material>(const MeshImporterDesc& desc)> MeshImporterDelegate;
 		typedef Utilities::Delegate<Assets::Image&(const std::string& Path, const TextureLoadingDesc & Desc)> TextureImporterDelegate;
 	}
 }

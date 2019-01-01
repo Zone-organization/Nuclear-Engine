@@ -15,7 +15,7 @@ namespace NuclearEngine {
 			Unknown = 255
 		};
 
-		class NEAPI Texture : public Asset
+		class NEAPI Texture : public Asset<Texture>
 		{
 		public:
 			Texture();
