@@ -101,6 +101,8 @@ namespace NuclearEngine {
 			{
 				mSubMeshes.at(i).Create();
 			}
+
+			isValid = true;
 		}
 
 		void Mesh::Release()
@@ -110,6 +112,8 @@ namespace NuclearEngine {
 				mSubMeshes.at(i).Release();
 			}
 			mSubMeshes.clear();
+
+			isValid = false;
 		}
 
 		struct Vertex

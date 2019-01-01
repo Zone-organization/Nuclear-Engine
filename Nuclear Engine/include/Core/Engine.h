@@ -10,8 +10,6 @@ namespace NuclearEngine
 		struct EngineStartupDesc
 		{
 			ApplicationDesc mAppdesc;
-
-
 			bool InitAudioEngine = true;
 		};
 

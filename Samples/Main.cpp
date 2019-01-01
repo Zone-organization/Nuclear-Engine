@@ -3,11 +3,36 @@
 #include <iostream>
 
 
+Core::RenderAPI SelectRenderer()
+{
+	std::cout << "Select Renderer: \n"
+		<< "1) DirectX 11 \n"
+		<< "2) DirectX 12 \n"
+		<< "3) OpenGL 4 \n"
+		<< "4) Vulkan \n";
+
+	int i;
+	std::cin >> i;
+
+	switch (i)
+	{
+	case 1:
+		return Core::RenderAPI::DirectX11;
+	case 2:
+		return Core::RenderAPI::DirectX12;
+	case 3:
+		return Core::RenderAPI::OpenGL;
+	case 4:
+		return Core::RenderAPI::Vulkan;
+	}
+
+	return Core::RenderAPI::DirectX12;
+}
+
 int main(int argc, char* argv[])
 {
 	Core::EngineStartupDesc desc;
-
-	desc.mAppdesc.AutoSelectRenderer = false;
+	desc.mAppdesc.Renderer = SelectRenderer();
 	Core::Engine::Start(desc);
 	Sample1 demo;
 	Core::Engine::RunGame(&demo);

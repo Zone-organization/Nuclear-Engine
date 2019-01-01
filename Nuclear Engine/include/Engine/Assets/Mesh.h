@@ -65,8 +65,6 @@ namespace NuclearEngine {
 			};
 
 			std::vector<SubMesh> mSubMeshes;
-		private:
-			bool init;
 		};
 
 	}

@@ -30,6 +30,7 @@ namespace NuclearEngine
 
 		void Material::BindTexSet(Uint32 index)
 		{
+			//mPixelShaderTextures;
 			//TODO: Check if all Slots have been occupied and then bind the free ones to fix some glitches
 		/*	if (!mPixelShaderTextures.empty())
 			{
@@ -42,7 +43,12 @@ namespace NuclearEngine
 
 		void Material::Bind()
 		{	
-			Graphics::Context::GetContext()->SetPipelineState(mPipeline);
+			//Graphics::Context::GetContext()->SetPipelineState(mPipeline);
+		}
+
+		IPipelineState * Material::GetPipeline()
+		{
+			return mPipeline;
 		}
 
 		TextureUsageType ParseTexUsageFromName(std::string& name)

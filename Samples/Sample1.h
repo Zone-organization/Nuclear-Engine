@@ -5,6 +5,7 @@ class Sample1 : public Core::Game
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	Core::Input Input;
 
+	RefCntAutoPtr<IShaderResourceBinding> mSRB;
 
 	//Asset Manager (Loader)
 	Managers::AssetManager AssetLoader;
@@ -242,6 +243,16 @@ class Sample1 : public Core::Game
 
 		SetupEntities();
 
+		NanosuitMaterial->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
+
+
+		mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
+		mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Specular1")->Set(SpecularTex.mTexture);
+
+		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
+		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(SpecularTex.mTexture);
+
+
 		//Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 
@@ -285,6 +296,9 @@ class Sample1 : public Core::Game
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+		Graphics::Context::GetContext()->SetPipelineState(NanosuitMaterial->GetPipeline());
+		Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
 
