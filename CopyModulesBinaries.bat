@@ -20,16 +20,20 @@ copy External\Diligent\gen\Graphics\GraphicsEngineD3D12\Debug\GraphicsEngineD3D1
 copy External\Diligent\gen\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.lib          Bin\DebugX64
 copy External\Diligent\gen\Graphics\GraphicsEngineVulkan\Debug\GraphicsEngineVk_64d.lib          	 Bin\DebugX64
 copy External\Diligent\gen\Graphics\GraphicsAccessories\Debug\GraphicsAccessories.lib                Bin\DebugX64
+copy External\Diligent\gen\Graphics\GraphicsTools\Debug\GraphicsTools.lib            			     Bin\DebugX64
 copy External\Diligent\gen\Platforms\Basic\Debug\BasicPlatform.lib      					         Bin\DebugX64
 copy External\Diligent\gen\Platforms\Win32\Debug\Win32Platform.lib      					         Bin\DebugX64
+copy External\Diligent\gen\Common\Debug\Common.lib            									     Bin\DebugX64
 
 copy External\Diligent\gen\Graphics\GraphicsEngineD3D11\Debug\GraphicsEngineD3D11_64d.pdb          	 Bin\DebugX64
 copy External\Diligent\gen\Graphics\GraphicsEngineD3D12\Debug\GraphicsEngineD3D12_64d.pdb          	 Bin\DebugX64
 copy External\Diligent\gen\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.pdb          Bin\DebugX64
 copy External\Diligent\gen\Graphics\GraphicsEngineVulkan\Debug\GraphicsEngineVk_64d.pdb          	 Bin\DebugX64
 copy External\Diligent\gen\Graphics\GraphicsAccessories\Debug\GraphicsAccessories.pdb                Bin\DebugX64
+copy External\Diligent\gen\Graphics\GraphicsTools\Debug\GraphicsTools.pdb            			     Bin\DebugX64
 copy External\Diligent\gen\Platforms\Basic\Debug\BasicPlatform.pdb      					         Bin\DebugX64
 copy External\Diligent\gen\Platforms\Win32\Debug\Win32Platform.pdb          					     Bin\DebugX64
+copy External\Diligent\gen\Common\Debug\Common.pdb            									     Bin\DebugX64
 
 
 copy External\Diligent\gen\Graphics\GraphicsEngineD3D11\Debug\GraphicsEngineD3D11_64d.dll          	 Bin\DebugX64

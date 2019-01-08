@@ -12,11 +12,13 @@
 #pragma comment(lib,"glfw3.lib")
 
 //Diligent Linking
+#pragma comment(lib,"Common.lib")
 #pragma comment(lib,"GraphicsEngineD3D11_64d.lib")
 #pragma comment(lib,"GraphicsEngineD3D12_64d.lib")
 #pragma comment(lib,"GraphicsEngineOpenGL_64d.lib")
 #pragma comment(lib,"GraphicsEngineVK_64d.lib")
 #pragma comment(lib,"GraphicsAccessories.lib")
+#pragma comment(lib,"GraphicsTools.lib")
 #pragma comment(lib,"BasicPlatform.lib")
 #pragma comment(lib,"Win32Platform.lib")
 

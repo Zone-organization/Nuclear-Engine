@@ -1,7 +1,7 @@
 ﻿#include "Common.h"
+#include "Test.h"
 #include "Sample1.h"
 #include <iostream>
-
 
 Core::RenderAPI SelectRenderer()
 {
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	Core::EngineStartupDesc desc;
 	desc.mAppdesc.Renderer = SelectRenderer();
 	Core::Engine::Start(desc);
-	Sample1 demo;
+	Test demo;
 	Core::Engine::RunGame(&demo);
 	
 	Core::Engine::Shutdown();

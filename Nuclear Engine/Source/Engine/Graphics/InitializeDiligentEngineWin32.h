@@ -12,6 +12,28 @@
 #include <GLFW/include/GLFW/glfw3native.h>
 namespace NuclearEngine 
 {
+	void DiligentMassageCallback(DebugMessageSeverity Severity, const Char* Message, const char* Function, const char* File, int Line)
+	{
+		switch (Severity)
+		{
+		case DebugMessageSeverity::Info:
+			Log.Info("[GraphicsEngine] " + std::string(Message) + '\n');
+			return;
+		case DebugMessageSeverity::Warning:
+			Log.Warning("[GraphicsEngine] " + std::string(Message) + '\n');
+			return;
+		case DebugMessageSeverity::Error:
+			Log.Error("[GraphicsEngine] " + std::string(Message) + '\n');
+			return;
+		case DebugMessageSeverity::FatalError:
+			Log.FatalError("[GraphicsEngine] " + std::string(Message) + '\n');
+			return;
+		default:
+			return;
+		};
+
+	}
+
 	bool InitializeDiligentEngineWin32(GLFWwindow* window,
 		const DeviceType& type,
 		IRenderDevice** device,
@@ -34,6 +56,7 @@ namespace NuclearEngine
 		case DeviceType::D3D11:
 		{
 			EngineD3D11Attribs DeviceAttribs;
+			DeviceAttribs.DebugMessageCallback = DiligentMassageCallback;
 #if ENGINE_DLL
 			GetEngineFactoryD3D11Type GetEngineFactoryD3D11 = nullptr;
 			// Load the dll and import GetEngineFactoryD3D11() function
@@ -55,6 +78,8 @@ namespace NuclearEngine
 			LoadGraphicsEngineD3D12(GetEngineFactoryD3D12);
 #endif
 			EngineD3D12Attribs EngD3D12Attribs;
+			EngD3D12Attribs.DebugMessageCallback = DiligentMassageCallback;
+
 			auto *pFactoryD3D12 = GetEngineFactoryD3D12();
 			pFactoryD3D12->CreateDeviceAndContextsD3D12(EngD3D12Attribs, device,
 				context, NumDeferredCtx);
@@ -74,6 +99,7 @@ namespace NuclearEngine
 #endif
 			auto *pFactoryOpenGL = GetEngineFactoryOpenGL();
 			EngineGLAttribs CreationAttribs;
+			CreationAttribs.DebugMessageCallback = DiligentMassageCallback;
 			CreationAttribs.pNativeWndHandle = NativeWindowHandle;
 			pFactoryOpenGL->CreateDeviceAndSwapChainGL(
 				CreationAttribs, device, context, SCDesc, swapchain);
@@ -88,6 +114,8 @@ namespace NuclearEngine
 			LoadGraphicsEngineVk(GetEngineFactoryVk);
 #endif
 			EngineVkAttribs EngVkAttribs;
+			EngVkAttribs.DebugMessageCallback = DiligentMassageCallback;
+
 			auto *pFactoryVk = GetEngineFactoryVk();
 			pFactoryVk->CreateDeviceAndContextsVk(EngVkAttribs, device,
 				context, NumDeferredCtx);

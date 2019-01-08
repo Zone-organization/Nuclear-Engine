@@ -19,7 +19,7 @@ namespace NuclearEngine
 		{
 		}
 		void RenderSystem::BakePipeline()
-		{  
+		{
 			// Pipeline state object encompasses configuration of all GPU stages
 
 			PipelineStateDesc PSODesc;
@@ -46,34 +46,39 @@ namespace NuclearEngine
 			RefCntAutoPtr<IShader> PSShader;
 			std::vector<LayoutElement> LayoutElems;
 
-			Managers::AutoVertexShaderDesc VertShaderDesc;
-			if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
+			//Create Vertex Shader
+			{
+				Managers::AutoVertexShaderDesc VertShaderDesc;
+				if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
 
-			VSShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
-			VSShader->GetShaderVariable("NECamera")->Set(ActiveCamera->GetCBuffer());
+				VSShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+				VSShader->GetShaderVariable("NECamera")->Set(ActiveCamera->GetCBuffer());
+			}
 
-			ShaderCreationAttribs CreationAttribs;
-			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_DYNAMIC;
-			CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-			CreationAttribs.EntryPoint = "main";
-			CreationAttribs.Desc.Name = "RenderSystem PixelShader";
+			//Create Pixel Shader
+			{
+				ShaderCreationAttribs CreationAttribs;
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_DYNAMIC;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "RenderSystem PixelShader";
 
-			std::vector<std::string> defines;
+				std::vector<std::string> defines;
 
-			if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); }
-			if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size())); }
-			if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
-			if (Desc.NormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+				if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); }
+				if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size())); }
+				if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
+				if (Desc.NormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
 
-			auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
-			CreationAttribs.Source = source.c_str();
+				auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
 
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
-			//PSShader->GetShaderVariable("NELights")->Set(mPSLightCB);
-			Calculate_Light_CB_Size();
-
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
+				//PSShader->GetShaderVariable("NELights")->Set(mPSLightCB);
+				Calculate_Light_CB_Size();
+			}
 			PSODesc.GraphicsPipeline.pVS = VSShader;
 			PSODesc.GraphicsPipeline.pPS = PSShader;
 			PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
