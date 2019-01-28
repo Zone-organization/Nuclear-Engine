@@ -6,6 +6,18 @@
 
 namespace NuclearEngine 
 {
+	struct NuclearShaderVariableDesc
+	{
+		std::string Name;
+
+		/// Shader variable type. See Diligent::SHADER_VARIABLE_TYPE for a list of allowed types
+		SHADER_VARIABLE_TYPE Type;
+		NuclearShaderVariableDesc(std::string _Name, SHADER_VARIABLE_TYPE _Type = SHADER_VARIABLE_TYPE_STATIC) :
+			Name(_Name),
+			Type(_Type)
+		{}
+	};
+
 	namespace Managers
 	{
 		struct AutoVertexShaderDesc
@@ -22,6 +34,8 @@ namespace NuclearEngine
 		{
 			bool OutputTexture = true;
 		};
+
+
 
 		//This is very useful class, it automates the shader creation easily, control all their Input & output, may even store them in the future.
 		class NEAPI ShaderManager

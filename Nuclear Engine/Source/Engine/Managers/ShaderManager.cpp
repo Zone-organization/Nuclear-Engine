@@ -25,8 +25,14 @@ namespace NuclearEngine
 			CreationAttribs.Desc.ShaderType = type;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Source = source.c_str();
+			std::vector<ShaderVariableDesc> _ref;
 
-			CreationAttribs.Desc.VariableDesc = shaderreflection.data();
+			for (auto I : shaderreflection)
+			{
+				auto iii = I.Name.c_str();
+				_ref.push_back({ iii, I.Type });
+			}
+			CreationAttribs.Desc.VariableDesc = _ref.data();
 			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &result);
@@ -74,7 +80,14 @@ namespace NuclearEngine
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
 			auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_VERTEX);
-			CreationAttribs.Desc.VariableDesc = shaderreflection.data();
+			std::vector<ShaderVariableDesc> _ref;
+
+			for (auto I : shaderreflection)
+			{
+				auto iii = I.Name.c_str();
+				_ref.push_back({ iii, I.Type });
+			}
+			CreationAttribs.Desc.VariableDesc = _ref.data();
 			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pVS);
 			
@@ -99,7 +112,14 @@ namespace NuclearEngine
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
 			auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_PIXEL);
-			CreationAttribs.Desc.VariableDesc = shaderreflection.data();
+			std::vector<ShaderVariableDesc> _ref;
+
+			for (auto I : shaderreflection)
+			{
+				auto iii = I.Name.c_str();
+				_ref.push_back({ iii, I.Type });
+			}
+			CreationAttribs.Desc.VariableDesc = _ref.data();
 			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pPS);
 

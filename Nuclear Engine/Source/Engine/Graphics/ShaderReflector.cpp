@@ -65,9 +65,9 @@ namespace NuclearEngine
 				}
 			}
 
-			std::vector<ShaderVariableDesc> Reflect_DXBC(ID3D10Blob* blob)
+			std::vector<NuclearShaderVariableDesc> Reflect_DXBC(ID3D10Blob* blob)
 			{
-				std::vector<ShaderVariableDesc> desc;
+				std::vector<NuclearShaderVariableDesc> desc;
 				ID3D11ShaderReflection* pReflector = NULL;
 
 				D3DReflect(blob->GetBufferPointer(),
@@ -85,8 +85,7 @@ namespace NuclearEngine
 
 				for (auto name : textures)
 				{
-					ShaderVariableDesc vardesc;
-					vardesc.Name = name.c_str();
+					NuclearShaderVariableDesc vardesc(name);
 					if (name.find("NEStatic_") == 0)
 					{
 						vardesc.Type = SHADER_VARIABLE_TYPE_STATIC;
@@ -109,8 +108,7 @@ namespace NuclearEngine
 
 				for (auto name : constantbuffers)
 				{
-					ShaderVariableDesc vardesc;
-					vardesc.Name = name.c_str();
+					NuclearShaderVariableDesc vardesc(name);
 					if (name.find("NEStatic_") == 0)
 					{
 						vardesc.Type = SHADER_VARIABLE_TYPE_STATIC;
@@ -133,7 +131,7 @@ namespace NuclearEngine
 				return desc;
 			}
 
-			std::vector<ShaderVariableDesc> ReflectHLSL(const std::string & SourceCode, SHADER_TYPE type)
+			std::vector<NuclearShaderVariableDesc> ReflectHLSL(const std::string & SourceCode, SHADER_TYPE type)
 			{
 				const char* shadermodel;
 				if (type == SHADER_TYPE_VERTEX)
@@ -158,7 +156,7 @@ namespace NuclearEngine
 
 					Check_D3DCompile_Errors(ERRMSG);
 
-					return std::vector<ShaderVariableDesc>();
+					return std::vector<NuclearShaderVariableDesc>();
 				}
 
 				auto result = Reflect_DXBC(m_blob);
