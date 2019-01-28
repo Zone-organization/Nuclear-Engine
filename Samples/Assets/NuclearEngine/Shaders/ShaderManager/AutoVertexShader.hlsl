@@ -45,7 +45,7 @@ struct PixelInputType
 };
 
 #ifdef NE_USE_DEF_CAMERA
-cbuffer NECamera : register(b0)
+cbuffer NEStatic_Camera : register(b0)
 {
     matrix Model;
     matrix ModelInvTranspose;

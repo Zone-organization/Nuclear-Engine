@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	Core::EngineStartupDesc desc;
 	desc.mAppdesc.Renderer = SelectRenderer();
 	Core::Engine::Start(desc);
-	Test demo;
+	Sample1 demo;
 	Core::Engine::RunGame(&demo);
 	
 	Core::Engine::Shutdown();

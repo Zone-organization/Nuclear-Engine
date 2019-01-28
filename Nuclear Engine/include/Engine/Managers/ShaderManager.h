@@ -31,7 +31,7 @@ namespace NuclearEngine
 			~ShaderManager();
 
 
-			static IShader* CreateShader(const std::string& source, SHADER_TYPE type);
+			static IShader* CreateShader(const std::string& source, SHADER_TYPE type, SHADER_VARIABLE_TYPE DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC);
 
 			static IShader* CreateAutoVertexShader(const AutoVertexShaderDesc& desc, std::vector<LayoutElement>* Layout);
 			static IShader* CreateAutoPixelShader(const AutoPixelShaderDesc& desc);

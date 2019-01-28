@@ -48,7 +48,7 @@ struct SpotLight
     float4 InnerCutOf_OuterCutoff;
     float4 Color;
 };
-cbuffer NELights
+cbuffer NEStatic_Lights
 {  
     float4 ViewPos;
 #ifdef NE_DIR_LIGHTS_NUM
@@ -63,7 +63,7 @@ cbuffer NELights
 #endif
 
 };
-cbuffer NEMaterial
+cbuffer NEDynamic_Material
 {
 	float3 ModelColor;
 	float Shininess;

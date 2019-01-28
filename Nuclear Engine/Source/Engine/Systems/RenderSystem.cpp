@@ -4,6 +4,7 @@
 #include <Engine\Components/TransformComponent.h>
 #include <Engine\Managers\ShaderManager.h>
 #include <Engine\Assets\Material.h>
+#include <Engine\Graphics\ShaderReflector.h>
 
 namespace NuclearEngine
 {
@@ -52,7 +53,7 @@ namespace NuclearEngine
 				if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
 
 				VSShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
-				VSShader->GetShaderVariable("NECamera")->Set(ActiveCamera->GetCBuffer());
+				VSShader->GetShaderVariable("NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
 			}
 
 			//Create Pixel Shader
@@ -64,6 +65,7 @@ namespace NuclearEngine
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 				CreationAttribs.EntryPoint = "main";
 				CreationAttribs.Desc.Name = "RenderSystem PixelShader";
+				
 
 				std::vector<std::string> defines;
 
@@ -74,6 +76,9 @@ namespace NuclearEngine
 
 				auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
+				auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_PIXEL);
+				CreationAttribs.Desc.VariableDesc = shaderreflection.data();
+				CreationAttribs.Desc.NumVariables = shaderreflection.size();
 
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				//PSShader->GetShaderVariable("NELights")->Set(mPSLightCB);

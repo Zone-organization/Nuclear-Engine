@@ -2,6 +2,7 @@
 #include <Core\FileSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Diligent/Graphics/GraphicsTools/include/BasicShaderSourceStreamFactory.h>
+#include <Engine\Graphics\ShaderReflector.h>
 
 namespace NuclearEngine
 {
@@ -13,17 +14,20 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		IShader * ShaderManager::CreateShader(const std::string& source, SHADER_TYPE type)
+		IShader * ShaderManager::CreateShader(const std::string& source, SHADER_TYPE type, SHADER_VARIABLE_TYPE DefaultVariableType)
 		{
 			ShaderCreationAttribs CreationAttribs;
 			IShader* result;
-
+			auto shaderreflection = Graphics::API::ReflectHLSL(source, type);
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
 			CreationAttribs.Desc.ShaderType = type;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Source = source.c_str();
+
+			CreationAttribs.Desc.VariableDesc = shaderreflection.data();
+			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &result);
 
@@ -39,11 +43,11 @@ namespace NuclearEngine
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
 			CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Desc.Name = "AutoVertexShader";
 			
+
 			std::vector<std::string> defines;
 
 			if (desc.InTexCoords)
@@ -69,7 +73,9 @@ namespace NuclearEngine
 
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
-
+			auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_VERTEX);
+			CreationAttribs.Desc.VariableDesc = shaderreflection.data();
+			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pVS);
 			
 			return pVS;
@@ -81,7 +87,6 @@ namespace NuclearEngine
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
 			CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Desc.Name = "AutoPixelShader";
@@ -93,7 +98,9 @@ namespace NuclearEngine
 
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
-
+			auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_PIXEL);
+			CreationAttribs.Desc.VariableDesc = shaderreflection.data();
+			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pPS);
 
 			return pPS;
