@@ -1,4 +1,9 @@
+mkdir Bin\DebugX64
+mkdir Bin\ReleaseX64
+
+
 ::Assimp Debug
+
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.dll	 Bin\DebugX64
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.lib	 Bin\DebugX64
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.pdb	 Bin\DebugX64
@@ -63,5 +68,4 @@ copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Release\Graphi
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Release\GraphicsEngineOpenGL_64r.dll          Bin\ReleaseX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Release\GraphicsEngineVk_64r.dll 		     Bin\ReleaseX64
 
-echo "Copying done"
 exit 0
