@@ -2,13 +2,9 @@
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.dll	 Bin\DebugX64
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.lib	 Bin\DebugX64
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.pdb	 Bin\DebugX64
-::Assimp Release
-copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.dll	 Bin\ReleaseX64
-copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.lib	 Bin\ReleaseX64
 
-::GLFW Debug & Release
+::GLFW Debug
 copy External\CmakeProjects\GLFW\src\Debug\glfw3.lib	 Bin\DebugX64
-copy External\CmakeProjects\GLFW\src\Release\glfw3.lib	 Bin\ReleaseX64
 
 ::Diligent Debug
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.dll	 Bin\DebugX64
@@ -41,6 +37,13 @@ copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Debug\Graphics
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.dll            Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Debug\GraphicsEngineVk_64d.dll          	     Bin\DebugX64
 
+::Assimp Release
+copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.dll	 Bin\ReleaseX64
+copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.lib	 Bin\ReleaseX64
+
+::GLFW Release
+copy External\CmakeProjects\GLFW\src\Release\glfw3.lib	 Bin\ReleaseX64
+
 ::Diligent Release
 copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.dll	 Bin\ReleaseX64
 copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.lib	 Bin\ReleaseX64
@@ -61,3 +64,4 @@ copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Release\Graph
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Release\GraphicsEngineVk_64r.dll 		     Bin\ReleaseX64
 
 echo "Copying done"
+exit 0
