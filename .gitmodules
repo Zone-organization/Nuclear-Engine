@@ -1,9 +1,9 @@
 [submodule "External/Diligent"]
 	path = External/Diligent
-	url = https://github.com/DiligentGraphics/DiligentCore
+	url = https://github.com/Zone-organization/DiligentCore
 [submodule "External/GLFW"]
 	path = External/GLFW
-	url = https://github.com/glfw/glfw
+	url = https://github.com/Zone-organization/glfw
 [submodule "External/Assimp"]
 	path = External/Assimp
-	url = https://github.com/assimp/assimp
+	url = https://github.com/Zone-organization/assimp
