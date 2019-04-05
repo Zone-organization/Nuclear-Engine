@@ -7,16 +7,25 @@
 //#include <Engine\Graphics\ImGui_Binding.h>
 //#include <Engine\Graphics\ImGui_Renderer.h>
 
-//Dependcies Linking
+//Dependencies Linking
 #pragma comment(lib,"assimp-vc140-mt.lib")
 #pragma comment(lib,"glfw3.lib")
 
 //Diligent Linking
 #pragma comment(lib,"Common.lib")
+
+#ifdef _DEBUG
 #pragma comment(lib,"GraphicsEngineD3D11_64d.lib")
 #pragma comment(lib,"GraphicsEngineD3D12_64d.lib")
 #pragma comment(lib,"GraphicsEngineOpenGL_64d.lib")
 #pragma comment(lib,"GraphicsEngineVK_64d.lib")
+#else
+#pragma comment(lib,"GraphicsEngineD3D11_64r.lib")
+#pragma comment(lib,"GraphicsEngineD3D12_64r.lib")
+#pragma comment(lib,"GraphicsEngineOpenGL_64r.lib")
+#pragma comment(lib,"GraphicsEngineVK_64r.lib")
+#endif
+
 #pragma comment(lib,"GraphicsAccessories.lib")
 #pragma comment(lib,"GraphicsTools.lib")
 #pragma comment(lib,"BasicPlatform.lib")

@@ -1,6 +1,6 @@
 ![Nuclear Engine Logo](logo.png "Nuclear Engine Logo") 
 
-## Currently it is unusable and even cannot be built due to major changes in its structure and how it renders.
+## Currently it is unusable due to major changes in its structure and how it renders.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine) 
 [![CodeFactor](https://www.codefactor.io/repository/github/zone-organization/nuclear-engine/badge)](https://www.codefactor.io/repository/github/zone-organization/nuclear-engine)
