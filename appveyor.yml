@@ -10,16 +10,14 @@ before_build:
   - git submodule update --init --recursive
 
   # Run Cmake
-  - cmake External\GLFW\ -B\External\GLFW\Win32\ -G "Visual Studio 15 2017 Win64" 
-  - cmake External\Diligent\ -B\External\Diligent\gen\ -G "Visual Studio 15 2017 Win64" 
-  - cmake External\Assimp\ -B\Diligent\Assimp\.project\ -G "Visual Studio 15 2017 Win64" 
+  - cmake External\GLFW\ -B External\GLFW\Win32\ -G "Visual Studio 15 2017 Win64" 
+  - cmake External\Diligent\ -B External\Diligent\gen\ -G "Visual Studio 15 2017 Win64" 
+  - cmake External\Assimp\ -B External\Assimp\build\ -G "Visual Studio 15 2017 Win64" 
 
-  - ps: tree
-  
   #Build Deps
   - ps: msbuild External\GLFW\Win32\GLFW.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
   - ps: msbuild External\Diligent\gen\Project.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
-  - ps: msbuild External\Assimp\.project\Assimp.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
+  - ps: msbuild External\Assimp\build\Assimp.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
  
 build:
   parallel: true                  # enable MSBuild parallel builds
