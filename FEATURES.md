@@ -1,4 +1,9 @@
 # Features
+
+# Note:
+# These features are now missing & Incomplete due to replacing OneAPI with Diligent.
+# it is planned to update this list and restore missing features later.
+
 All features (without Soon™) listed here are implemented.
 Features with Buggy™ means it need more testing or work.
 

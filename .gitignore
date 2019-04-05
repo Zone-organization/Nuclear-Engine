@@ -31,3 +31,5 @@
 !logo.png
 /Bin
 *.enc
+/External/CmakeProjects
+/External/CmakeProjects

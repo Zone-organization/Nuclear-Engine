@@ -62,7 +62,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS;PLATFORM_WIN32;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\Assimp\.project\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
@@ -85,7 +85,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED;PLATFORM_WIN32;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\Assimp\.project\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <DebugInformationFormat>None</DebugInformationFormat>

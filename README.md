@@ -1,19 +1,16 @@
 ![Nuclear Engine Logo](logo.png "Nuclear Engine Logo") 
 
-A Fast Cross-Platform Multi-Renderer 3D Game Engine Supporting DirectX 11, DirectX 12, Vulkan, OpenGL 4.5.
-
-# Development slowed down because I have exams.
-
+## Currently it is unusable and even cannot be built due to major changes in its structure and how it renders.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine) 
 [![CodeFactor](https://www.codefactor.io/repository/github/zone-organization/nuclear-engine/badge)](https://www.codefactor.io/repository/github/zone-organization/nuclear-engine)
 
-# Features
+## Old Features alot is missing now (*Gonna restore them soon*)
 * [Engine features](https://github.com/Zone-organization/Nuclear-Engine/blob/master/FEATURES.md) - A list of all working features.
 * [Roadmap](https://github.com/Zone-organization/Nuclear-Engine/blob/master/ROADMAP.md) - A list of planned features. 
 
-# TODO:
-  - Replace OneAPI with Diligent API.    [75%]
+# Major To-dos:
+  - Get the Engine working again by replacing OneAPI with Diligent API.    [50%]
   - Full Audio Support with FMOD.		 [50%]
   - Bloom effect.						 [0%]
   - PBR Renderer.						 [0%]
