@@ -40,3 +40,34 @@ copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Debug\Graphics
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Debug\GraphicsEngineD3D12_64d.dll          	 Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.dll          Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Debug\GraphicsEngineVk_64d.dll          	 Bin\DebugX64
+
+::Diligent Release
+copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.dll	 Bin\ReleaseX64
+copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.lib	 Bin\ReleaseX64
+copy External\CmakeProjects\Assimp\code\Release\assimp-vc140-mt.pdb	 Bin\ReleaseX64
+
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Release\GraphicsEngineD3D11_64r.lib          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Release\GraphicsEngineD3D12_64r.lib          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Release\GraphicsEngineOpenGL_64r.lib          Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Release\GraphicsEngineVk_64r.lib          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsAccessories\Release\GraphicsAccessories.lib                Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsTools\Release\GraphicsTools.lib            			     Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Platforms\Basic\Release\BasicPlatform.lib      					         Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Platforms\Win32\Release\Win32Platform.lib      					         Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Common\Release\Common.lib            									     Bin\ReleaseX64
+
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Release\GraphicsEngineD3D11_64r.pdb          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Release\GraphicsEngineD3D12_64r.pdb          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Release\GraphicsEngineOpenGL_64r.pdb          Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Release\GraphicsEngineVk_64r.pdb          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsAccessories\Release\GraphicsAccessories.pdb                Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsTools\Release\GraphicsTools.pdb            			     Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Platforms\Basic\Release\BasicPlatform.pdb      					         Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Platforms\Win32\Release\Win32Platform.pdb          					     Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Common\Release\Common.pdb            									     Bin\ReleaseX64
+
+
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Release\GraphicsEngineD3D11_64r.dll          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Release\GraphicsEngineD3D12_64r.dll          	 Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Release\GraphicsEngineOpenGL_64r.dll          Bin\ReleaseX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Release\GraphicsEngineVk_64r.dll 			    Bin\ReleaseX64

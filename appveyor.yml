@@ -9,18 +9,16 @@ configuration:
 before_build:
   - git submodule update --init --recursive
 
-  # Run Cmake
-  - cmake External\GLFW\ -B External\CmakeProjects\GLFW\ -G "Visual Studio 15 2017 Win64" 
-  - cmake External\Diligent\ -B External\CmakeProjects\Diligent\ -G "Visual Studio 15 2017 Win64" 
-  - cmake External\Assimp\ -B External\CmakeProjects\Assimp\ -G "Visual Studio 15 2017 Win64" 
-
+  - RunCmakeForDependencies.bat
+  
   # Build projects that only matter
   - ps: msbuild External\CmakeProjects\GLFW\src\glfw.vcxproj /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
   - ps: msbuild External\CmakeProjects\Diligent\Project.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
   - ps: msbuild External\CmakeProjects\Assimp\Assimp.sln /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
  
-  - CopyModulesBinaries.bat
+  - CopyDependenciesBinaries.bat
   
 build:
   parallel: true                  # enable MSBuild parallel builds
-  project: Nuclear Project.sln
+  verbosity: minimal
+  project: Nuclear Engine.sln
