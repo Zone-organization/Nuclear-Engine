@@ -59,3 +59,5 @@ copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Release\Graphi
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Release\GraphicsEngineD3D12_64r.dll          	 Bin\ReleaseX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Release\GraphicsEngineOpenGL_64r.dll          Bin\ReleaseX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Release\GraphicsEngineVk_64r.dll 		     Bin\ReleaseX64
+
+echo "Copying done"
