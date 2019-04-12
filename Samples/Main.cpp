@@ -1,5 +1,4 @@
 ﻿#include "Common.h"
-#include "Test.h"
 #include "Sample1.h"
 #include <iostream>
 

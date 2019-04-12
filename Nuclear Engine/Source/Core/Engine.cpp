@@ -3,6 +3,8 @@
 #include <Base\Utilities\Timer.h>
 #include <Core\Application.h>
 #include <Engine\Audio\AudioEngine.h>
+#include <Engine\Graphics\GraphicsEngine.h>
+
 //#include <FMOD\includer.h> 
 //#include <Engine\Graphics\ImGui_Binding.h>
 //#include <Engine\Graphics\ImGui_Renderer.h>
@@ -56,8 +58,8 @@ namespace NuclearEngine {
 			//Create platform specific app (window)
 			Application::Start(desc.mAppdesc);
 			Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
+			Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc);
 
-			//init sub-engines
 			//Graphics::ImGui_Binding::Initialize(Application::MainWindow);
 			//Graphics::ImGui_Renderer::Initialize();
 
@@ -75,6 +77,8 @@ namespace NuclearEngine {
 			GamePtr = &Defaultgame;
 			Core::Application::Shutdown();
 			Audio::AudioEngine::Shutdown();
+			Graphics::GraphicsEngine::Shutdown();
+
 			//Graphics::ImGui_Renderer::Shutdown();
 
 			Log.Info("------------------------ -Engine Has Shutdown- -----------------------\n");

@@ -124,7 +124,7 @@
     <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
-    <ClInclude Include="include\Engine\Graphics\ShaderReflector.h" />
+    <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Engine\Importers\Importers.h" />
@@ -348,7 +348,7 @@
     <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderReflector.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

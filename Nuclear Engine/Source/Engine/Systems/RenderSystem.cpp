@@ -2,9 +2,8 @@
 #include <Core\FileSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/TransformComponent.h>
-#include <Engine\Managers\ShaderManager.h>
+#include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\Material.h>
-#include <Engine\Graphics\ShaderReflector.h>
 
 namespace NuclearEngine
 {
@@ -52,16 +51,14 @@ namespace NuclearEngine
 				Managers::AutoVertexShaderDesc VertShaderDesc;
 				if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
 
-				VSShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
-				VSShader->GetShaderVariable("NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
+				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 			}
 
 			//Create Pixel Shader
 			{
-				ShaderCreationAttribs CreationAttribs;
+				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_DYNAMIC;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 				CreationAttribs.EntryPoint = "main";
 				CreationAttribs.Desc.Name = "RenderSystem PixelShader";
@@ -76,27 +73,23 @@ namespace NuclearEngine
 
 				auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-				auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_PIXEL);
-				std::vector<ShaderVariableDesc> _ref;
-
-				for (auto I : shaderreflection)
-				{
-					auto iii = I.Name.c_str();
-					_ref.push_back({ iii, I.Type });
-				}
-				CreationAttribs.Desc.VariableDesc = _ref.data();
-				CreationAttribs.Desc.NumVariables = shaderreflection.size();
 
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
-				//PSShader->GetShaderVariable("NELights")->Set(mPSLightCB);
 				Calculate_Light_CB_Size();
 			}
 			PSODesc.GraphicsPipeline.pVS = VSShader;
 			PSODesc.GraphicsPipeline.pPS = PSShader;
 			PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSODesc.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
-
+			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+			PSODesc.ResourceLayout.NumVariables = Vars.size();
+			PSODesc.ResourceLayout.Variables = Vars.data();
 			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
+
+
+			//Set pipeline static vars
+			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
+			mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
 
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
@@ -208,7 +201,7 @@ namespace NuclearEngine
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, BufferData(), mPSLightCB.GetRawDblPtr());
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &BufferData(), mPSLightCB.GetRawDblPtr());
 		}
 
 		void RenderSystem::Update_Light()

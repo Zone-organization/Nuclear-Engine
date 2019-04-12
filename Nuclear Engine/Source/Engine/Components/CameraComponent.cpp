@@ -25,7 +25,7 @@ namespace NuclearEngine
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, BufferData(), &ConstantBuffer);
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &BufferData(), &ConstantBuffer);
 		}
 	
 		CameraComponent::~CameraComponent()

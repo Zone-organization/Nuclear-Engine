@@ -246,7 +246,7 @@ class Sample1 : public Core::Game
 		NanosuitMaterial->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
 
 
-		mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
+		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Specular1")->Set(SpecularTex.mTexture);
 
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);

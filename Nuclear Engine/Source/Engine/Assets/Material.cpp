@@ -65,12 +65,12 @@ namespace NuclearEngine
 
 		void Material::ParseShader(SHADER_TYPE shadertype)
 		{
-			for (int i = 0; i < mSRB->GetVariableCount(shadertype); i++)
+			for (Uint32 i = 0; i < mSRB->GetVariableCount(shadertype); i++)
 			{
-				auto variable = mSRB->GetVariable(shadertype, i);
-				std::string VariableName(variable->GetName());
+				auto variable = mSRB->GetVariableByIndex(shadertype, i);
+				std::string VariableName(variable->GetResourceDesc().Name);
 
-				if (VariableName.find("NEMat_") == 0)
+				if (variable->GetResourceDesc().Type == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VariableName.find("NEMat_") == 0)
 				{
 					VariableName.erase(0, 6);
 					ShaderTexture mTex;

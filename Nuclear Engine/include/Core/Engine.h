@@ -1,6 +1,7 @@
 #pragma once
 #include <Core\Game.h>
 #include <Core\ApplicationDesc.h>
+#include <Engine\Graphics\GraphicsEngine.h>
 
 namespace NuclearEngine
 {
@@ -10,6 +11,7 @@ namespace NuclearEngine
 		struct EngineStartupDesc
 		{
 			ApplicationDesc mAppdesc;
+			Graphics::GraphicsEngineDesc mGraphicsEngineDesc;
 			bool InitAudioEngine = true;
 		};
 

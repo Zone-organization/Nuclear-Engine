@@ -1,8 +1,6 @@
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
 #include <Engine\Graphics\Context.h>
-#include <Diligent/Graphics/GraphicsTools/include/BasicShaderSourceStreamFactory.h>
-#include <Engine\Graphics\ShaderReflector.h>
 
 namespace NuclearEngine
 {
@@ -14,26 +12,15 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		IShader * ShaderManager::CreateShader(const std::string& source, SHADER_TYPE type, SHADER_VARIABLE_TYPE DefaultVariableType)
+		IShader * ShaderManager::CreateShader(const std::string& source, SHADER_TYPE type)
 		{
-			ShaderCreationAttribs CreationAttribs;
+			ShaderCreateInfo CreationAttribs;
 			IShader* result;
-			auto shaderreflection = Graphics::API::ReflectHLSL(source, type);
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.DefaultVariableType = SHADER_VARIABLE_TYPE_STATIC;
 			CreationAttribs.Desc.ShaderType = type;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Source = source.c_str();
-			std::vector<ShaderVariableDesc> _ref;
-
-			for (auto I : shaderreflection)
-			{
-				auto iii = I.Name.c_str();
-				_ref.push_back({ iii, I.Type });
-			}
-			CreationAttribs.Desc.VariableDesc = _ref.data();
-			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &result);
 
@@ -41,7 +28,7 @@ namespace NuclearEngine
 		}
 		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc, std::vector<LayoutElement>* Layout)
 		{
-			ShaderCreationAttribs CreationAttribs;
+			ShaderCreateInfo CreationAttribs;
 			IShader* pVS = nullptr;
 			Layout->clear();
 
@@ -79,23 +66,14 @@ namespace NuclearEngine
 
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
-			auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_VERTEX);
-			std::vector<ShaderVariableDesc> _ref;
 
-			for (auto I : shaderreflection)
-			{
-				auto iii = I.Name.c_str();
-				_ref.push_back({ iii, I.Type });
-			}
-			CreationAttribs.Desc.VariableDesc = _ref.data();
-			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pVS);
 			
 			return pVS;
 		}
 		IShader* ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
 		{
-			ShaderCreationAttribs CreationAttribs;
+			ShaderCreateInfo CreationAttribs;
 			IShader* pPS = nullptr;
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
@@ -111,19 +89,47 @@ namespace NuclearEngine
 
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
-			auto shaderreflection = Graphics::API::ReflectHLSL(source, SHADER_TYPE_PIXEL);
-			std::vector<ShaderVariableDesc> _ref;
-
-			for (auto I : shaderreflection)
-			{
-				auto iii = I.Name.c_str();
-				_ref.push_back({ iii, I.Type });
-			}
-			CreationAttribs.Desc.VariableDesc = _ref.data();
-			CreationAttribs.Desc.NumVariables = shaderreflection.size();
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pPS);
 
 			return pPS;
+		}
+
+		IPipelineState * ShaderManager::CreatePipelineState(IShader * VertexShader, IShader * PixelShader)
+		{
+			return nullptr;
+		}
+		
+		std::vector<ShaderResourceVariableDesc> ShaderManager::ReflectShaderVariables(IShader* VShader, IShader* PShader)
+		{
+			std::vector<ShaderResourceVariableDesc> resources;
+			for (int i = 0; i < VShader->GetResourceCount(); i++)
+			{
+				ShaderResourceVariableDesc Desc;
+				Desc.Name = VShader->GetResource(i).Name;
+				Desc.Type = ParseNameToGetType(VShader->GetResource(i).Name);
+				Desc.ShaderStages = VShader->GetDesc().ShaderType;
+				resources.push_back(Desc);
+			}
+			for (int i = 0; i < PShader->GetResourceCount(); i++)
+			{
+				ShaderResourceVariableDesc Desc;
+				Desc.Name = PShader->GetResource(i).Name;
+				Desc.Type = ParseNameToGetType(PShader->GetResource(i).Name);
+				Desc.ShaderStages = PShader->GetDesc().ShaderType;
+				resources.push_back(Desc);
+			}
+			return resources;
+		}
+		SHADER_RESOURCE_VARIABLE_TYPE ShaderManager::ParseNameToGetType(const std::string & name)
+		{
+			if (name.find("NEStatic") == 0)
+				return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
+			else if (name.find("NEMutable") == 0)
+				return SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE;
+			else if (name.find("NEDynamic") == 0)
+				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
+
+			return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
 		}
 	}
 }

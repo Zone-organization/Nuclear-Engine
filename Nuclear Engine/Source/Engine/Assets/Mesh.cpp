@@ -55,7 +55,7 @@ namespace NuclearEngine {
 				BufferData VBData;
 				VBData.pData = verticesdata.data();
 				VBData.DataSize = (unsigned int)verticesdata.size() * sizeof(float);
-				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, VBData, &mVB);
+				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
 
 			}
 
@@ -69,7 +69,7 @@ namespace NuclearEngine {
 				BufferData IBData;
 				IBData.pData = data.indices.data();
 				IBData.DataSize = (unsigned int)data.indices.size();
-				Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, IBData, &mIB);
+				Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
 			}
 			mIndicesCount = static_cast<Uint32>(data.indices.size());			
 

@@ -229,7 +229,7 @@
     <ClInclude Include="include\Engine\Importers\Importers.h" />
     <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Core\Window.h" />
-    <ClInclude Include="include\Engine\Graphics\ShaderReflector.h" />
+    <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -282,7 +282,7 @@
     <ClCompile Include="Source\Engine\Assets\Texture.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderReflector.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

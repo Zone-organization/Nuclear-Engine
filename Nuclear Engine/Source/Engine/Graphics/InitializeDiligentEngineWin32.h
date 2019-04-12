@@ -3,10 +3,10 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>
-#include "Diligent/Graphics/GraphicsEngineD3D11/interface/RenderDeviceFactoryD3D11.h"
-#include "Diligent/Graphics/GraphicsEngineD3D12/interface/RenderDeviceFactoryD3D12.h"
-#include "Diligent/Graphics/GraphicsEngineOpenGL/interface/RenderDeviceFactoryOpenGL.h"
-#include "Diligent/Graphics/GraphicsEngineVulkan/interface/RenderDeviceFactoryVk.h"
+#include "Diligent/Graphics/GraphicsEngineD3D11/interface/EngineFactoryD3D11.h"
+#include "Diligent/Graphics/GraphicsEngineD3D12/interface/EngineFactoryD3D12.h"
+#include "Diligent/Graphics/GraphicsEngineOpenGL/interface/EngineFactoryOpenGL.h"
+#include "Diligent/Graphics/GraphicsEngineVulkan/interface/EngineFactoryVk.h"
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/include/GLFW/glfw3.h>
 #include <GLFW/include/GLFW/glfw3native.h>
@@ -55,16 +55,16 @@ namespace NuclearEngine
 		{
 		case DeviceType::D3D11:
 		{
-			EngineD3D11Attribs DeviceAttribs;
-			DeviceAttribs.DebugMessageCallback = DiligentMassageCallback;
+			EngineD3D11CreateInfo DeviceCreateInfo;
+			DeviceCreateInfo.DebugMessageCallback = DiligentMassageCallback;
 #if ENGINE_DLL
 			GetEngineFactoryD3D11Type GetEngineFactoryD3D11 = nullptr;
 			// Load the dll and import GetEngineFactoryD3D11() function
 			LoadGraphicsEngineD3D11(GetEngineFactoryD3D11);
 #endif
 			auto *pFactoryD3D11 = GetEngineFactoryD3D11();
-			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceAttribs, device,
-				context, NumDeferredCtx);
+			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceCreateInfo, device,
+				context);
 			pFactoryD3D11->CreateSwapChainD3D11(*device, *context,
 				SCDesc, FSDesc, NativeWindowHandle, swapchain);
 		}
@@ -77,12 +77,12 @@ namespace NuclearEngine
 			// Load the dll and import GetEngineFactoryD3D12() function
 			LoadGraphicsEngineD3D12(GetEngineFactoryD3D12);
 #endif
-			EngineD3D12Attribs EngD3D12Attribs;
-			EngD3D12Attribs.DebugMessageCallback = DiligentMassageCallback;
+			EngineD3D12CreateInfo EngD3D12CreateInfo;
+			EngD3D12CreateInfo.DebugMessageCallback = DiligentMassageCallback;
 
 			auto *pFactoryD3D12 = GetEngineFactoryD3D12();
-			pFactoryD3D12->CreateDeviceAndContextsD3D12(EngD3D12Attribs, device,
-				context, NumDeferredCtx);
+			pFactoryD3D12->CreateDeviceAndContextsD3D12(EngD3D12CreateInfo, device,
+				context);
 			pFactoryD3D12->CreateSwapChainD3D12(*device, *context,
 				SCDesc, FSDesc, NativeWindowHandle, swapchain);
 		}
@@ -98,11 +98,11 @@ namespace NuclearEngine
 			LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL);
 #endif
 			auto *pFactoryOpenGL = GetEngineFactoryOpenGL();
-			EngineGLAttribs CreationAttribs;
-			CreationAttribs.DebugMessageCallback = DiligentMassageCallback;
-			CreationAttribs.pNativeWndHandle = NativeWindowHandle;
+			EngineGLCreateInfo CreationCreateInfo;
+			CreationCreateInfo.DebugMessageCallback = DiligentMassageCallback;
+			CreationCreateInfo.pNativeWndHandle = NativeWindowHandle;
 			pFactoryOpenGL->CreateDeviceAndSwapChainGL(
-				CreationAttribs, device, context, SCDesc, swapchain);
+				CreationCreateInfo, device, context, SCDesc, swapchain);
 		}
 		break;
 
@@ -113,12 +113,12 @@ namespace NuclearEngine
 			// Load the dll and import GetEngineFactoryVk() function
 			LoadGraphicsEngineVk(GetEngineFactoryVk);
 #endif
-			EngineVkAttribs EngVkAttribs;
-			EngVkAttribs.DebugMessageCallback = DiligentMassageCallback;
+			EngineVkCreateInfo EngVkCreateInfo;
+			EngVkCreateInfo.DebugMessageCallback = DiligentMassageCallback;
 
 			auto *pFactoryVk = GetEngineFactoryVk();
-			pFactoryVk->CreateDeviceAndContextsVk(EngVkAttribs, device,
-				context, NumDeferredCtx);
+			pFactoryVk->CreateDeviceAndContextsVk(EngVkCreateInfo, device,
+				context);
 			pFactoryVk->CreateSwapChainVk(*device, *context,
 				SCDesc, NativeWindowHandle, swapchain);
 		}

@@ -211,7 +211,7 @@ namespace NuclearEngine
 				TexData.NumSubresources = TexDesc.MipLevels;
 
 				ITexture *Tex = nullptr;
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, TexData, &Tex);
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &Tex);
 
 				Assets::Texture result;
 				result.mTexture = Tex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
