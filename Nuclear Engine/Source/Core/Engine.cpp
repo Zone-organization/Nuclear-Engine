@@ -76,6 +76,9 @@ namespace NuclearEngine {
 			Core::Application::Shutdown();
 			Audio::AudioEngine::Shutdown();
 			//Graphics::ImGui_Renderer::Shutdown();
+
+			Log.Info("------------------------ -Engine Has Shutdown- -----------------------\n");
+			Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
 		}
 
 		void Engine::RunGame(Game * _YourGame)
@@ -164,6 +167,7 @@ namespace NuclearEngine {
 		void PrintIntroLog()
 		{
 			Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
+			Log.Info("------------------------- Zone Organization --------------------------\n");
 			Log.Info("[Engine] Starting Engine...\n");
 			Log.Info("[Engine] Engine Build: ");
 			Log.Info(MajorVersion);
