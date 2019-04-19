@@ -64,11 +64,11 @@ namespace NuclearEngine {
 				BufferDesc IndBuffDesc;
 				IndBuffDesc.Usage = USAGE_STATIC;
 				IndBuffDesc.BindFlags = BIND_INDEX_BUFFER;
-				IndBuffDesc.uiSizeInBytes = (unsigned int)data.indices.size();
+				IndBuffDesc.uiSizeInBytes = (unsigned int)data.indices.size() * sizeof(Uint32);
 
 				BufferData IBData;
 				IBData.pData = data.indices.data();
-				IBData.DataSize = (unsigned int)data.indices.size();
+				IBData.DataSize = (unsigned int)data.indices.size() * sizeof(Uint32);
 				Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
 			}
 			mIndicesCount = static_cast<Uint32>(data.indices.size());			

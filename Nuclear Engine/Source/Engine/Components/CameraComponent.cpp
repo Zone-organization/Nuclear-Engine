@@ -3,6 +3,7 @@
 #include <Core\Engine.h>
 #include <Engine/ECS\Scene.h>
 #include <Engine\Graphics\Context.h>
+#include "Diligent\Graphics\GraphicsEngine\interface\MapHelper.h"
 
 namespace NuclearEngine
 {
@@ -21,6 +22,7 @@ namespace NuclearEngine
 			position = __position;
 
 			BufferDesc CBDesc;
+			CBDesc.Name = "CameraCB";
 			CBDesc.uiSizeInBytes = sizeof(_CameraBuffer);
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
@@ -52,6 +54,14 @@ namespace NuclearEngine
 			_CameraBuffer.View = Math::lookAt(position, position + Front, Up);
 
 			UpdateMatricesOnly();
+
+			//{
+			//	// Map the buffer and write current world-view-projection matrix
+			//	MapHelper<CameraBuffer> CBConstants(Graphics::Context::GetContext(), ConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
+			//	*CBConstants = _CameraBuffer;
+			//}
+			
+			//Graphics::Context::GetContext()->UpdateBuffer(ConstantBuffer,0,sizeof(CameraBuffer), &_CameraBuffer, RESOURCE_STATE_TRANSITION_MODE_NONE);
 
 			void* data;
 			Graphics::Context::GetContext()->MapBuffer(ConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD, data);

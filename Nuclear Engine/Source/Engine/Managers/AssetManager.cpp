@@ -49,7 +49,8 @@ namespace NuclearEngine {
 			//TODO
 			for (auto x : mImportedTextures)
 			{
-				x.second.mTexture->Release();
+				if(x.second.mTexture)
+					x.second.mTexture->Release();
 			}
 			mImportedTextures.clear();
 			//mHashedTexturesNames.clear();
