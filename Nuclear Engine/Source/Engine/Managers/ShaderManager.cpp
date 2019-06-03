@@ -94,30 +94,55 @@ namespace NuclearEngine
 			return pPS;
 		}
 
-		IPipelineState * ShaderManager::CreatePipelineState(IShader * VertexShader, IShader * PixelShader)
+		bool ShaderManager::ProcessPipelineResources(PipelineStateDesc& PSODesc,
+			const std::vector<ShaderResourceVariableDesc>& Resources,
+			const std::vector<StaticSamplerDesc>& StaticSamplers)
 		{
-			return nullptr;
+			PSODesc.ResourceLayout.NumVariables = Resources.size();
+			PSODesc.ResourceLayout.Variables = Resources.data();
+
+
+			PSODesc.ResourceLayout.NumStaticSamplers = StaticSamplers.size();
+			PSODesc.ResourceLayout.StaticSamplers = StaticSamplers.data();
+
+			return false;
 		}
-		
+			
+		bool CheckSampler(const std::string& name)
+		{
+			if (name.find("_sampler") != std::string::npos)
+				return true;
+
+			return false;
+		}
+
 		std::vector<ShaderResourceVariableDesc> ShaderManager::ReflectShaderVariables(IShader* VShader, IShader* PShader)
 		{
 			std::vector<ShaderResourceVariableDesc> resources;
-			for (int i = 0; i < VShader->GetResourceCount(); i++)
+			for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
 			{
-				ShaderResourceVariableDesc Desc;
-				Desc.Name = VShader->GetResource(i).Name;
-				Desc.Type = ParseNameToGetType(VShader->GetResource(i).Name);
-				Desc.ShaderStages = VShader->GetDesc().ShaderType;
-				resources.push_back(Desc);
+				if (!CheckSampler(VShader->GetResource(i).Name))
+				{
+					ShaderResourceVariableDesc Desc;
+					Desc.Name = VShader->GetResource(i).Name;
+					Desc.Type = ParseNameToGetType(VShader->GetResource(i).Name);
+					Desc.ShaderStages = VShader->GetDesc().ShaderType;
+					resources.push_back(Desc);
+				}
 			}
-			for (int i = 0; i < PShader->GetResourceCount(); i++)
+			for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
 			{
-				ShaderResourceVariableDesc Desc;
-				Desc.Name = PShader->GetResource(i).Name;
-				Desc.Type = ParseNameToGetType(PShader->GetResource(i).Name);
-				Desc.ShaderStages = PShader->GetDesc().ShaderType;
-				resources.push_back(Desc);
+				if (!CheckSampler(PShader->GetResource(i).Name))
+				{
+					std::string name(PShader->GetResource(i).Name);
+					ShaderResourceVariableDesc Desc;
+					Desc.Name = PShader->GetResource(i).Name;
+					Desc.Type = ParseNameToGetType(PShader->GetResource(i).Name);
+					Desc.ShaderStages = PShader->GetDesc().ShaderType;
+					resources.push_back(Desc);
+				}
 			}
+
 			return resources;
 		}
 		SHADER_RESOURCE_VARIABLE_TYPE ShaderManager::ParseNameToGetType(const std::string & name)

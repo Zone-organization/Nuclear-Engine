@@ -37,8 +37,9 @@ namespace NuclearEngine
 			IShader* CreateAutoVertexShader(const AutoVertexShaderDesc& desc, std::vector<LayoutElement>* Layout);
 			IShader* CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
 
-			//Not Done
-			IPipelineState* CreatePipelineState(IShader* VertexShader, IShader* PixelShader);
+			bool ProcessPipelineResources(PipelineStateDesc& Desc,
+				const std::vector<ShaderResourceVariableDesc>& Resources,
+				const std::vector<StaticSamplerDesc>& StaticSamplers);
 
 			std::vector<ShaderResourceVariableDesc> ReflectShaderVariables(IShader* VShader, IShader* PShader);
 

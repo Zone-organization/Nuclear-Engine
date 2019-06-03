@@ -63,10 +63,8 @@ namespace NuclearEngine
 			
 			//Graphics::Context::GetContext()->UpdateBuffer(ConstantBuffer,0,sizeof(CameraBuffer), &_CameraBuffer, RESOURCE_STATE_TRANSITION_MODE_NONE);
 
-			void* data;
-			Graphics::Context::GetContext()->MapBuffer(ConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD, data);
-			data = &_CameraBuffer;
-			Graphics::Context::GetContext()->UnmapBuffer(ConstantBuffer, MAP_WRITE);
+			Diligent::MapHelper<CameraBuffer> CBConstants(Graphics::Context::GetContext(), ConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
+			*CBConstants = _CameraBuffer;
 		}
 		void CameraComponent::UpdateMatricesOnly()
 		{

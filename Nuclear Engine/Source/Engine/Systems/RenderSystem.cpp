@@ -4,6 +4,7 @@
 #include <Engine\Components/TransformComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\Material.h>
+#include "Diligent\Graphics\GraphicsEngine\interface\MapHelper.h"
 
 namespace NuclearEngine
 {
@@ -82,14 +83,24 @@ namespace NuclearEngine
 			PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSODesc.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
-			PSODesc.ResourceLayout.NumVariables = Vars.size();
-			PSODesc.ResourceLayout.Variables = Vars.data();
-			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
 
+
+			//TODO: Automate the process of initalizing static samplers
+			SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
+				TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
+
+			std::vector<StaticSamplerDesc> StaticSamplers =
+			{
+				{SHADER_TYPE_PIXEL, "NEMat_Diffuse1", SamLinearClampDesc},
+				{SHADER_TYPE_PIXEL, "NEMat_Specular1", SamLinearClampDesc}
+			};
+
+			Graphics::GraphicsEngine::GetShaderManager()->ProcessPipelineResources(PSODesc, Vars, StaticSamplers);
+			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
 
 			//Set pipeline static vars
 			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
+			//mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
 
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
@@ -232,11 +243,15 @@ namespace NuclearEngine
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Color);
 			}
 
-			void* data;
-			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, data);
-			data = mPSLightCB;
-			Graphics::Context::GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
 
+
+	/*		Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::Context::GetContext(), mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD);
+			*CBConstants = LightsBuffer.data();
+*/
+			Math::Vector4* data;
+			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+			data = LightsBuffer.data();
+			Graphics::Context::GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
 		}
 
 		void RenderSystem::Update_Meshes(ECS::EntityManager & es)
