@@ -47,9 +47,6 @@ namespace NuclearEngine
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
-			void BindShaders();
-			void BindConstantBuffers();
-
 			void AddLight(Components::DirectionalLight* light);
 			void AddLight(Components::PointLight* light);
 			void AddLight(Components::SpotLight* light);

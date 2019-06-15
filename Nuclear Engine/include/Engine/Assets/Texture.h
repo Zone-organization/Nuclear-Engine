@@ -25,7 +25,8 @@ namespace NuclearEngine {
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
-			ITextureView*  mTexture = nullptr;
+			ITextureView*  mTextureView = nullptr;
+			ITexture* mTexture = nullptr;
 
 		private:
 			Uint8 mUsageType;

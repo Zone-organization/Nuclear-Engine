@@ -86,17 +86,16 @@ namespace NuclearEngine
 
 
 			//TODO: Automate the process of initalizing static samplers
-			SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
-				TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
+			//SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
+			//	TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
 
-			std::vector<StaticSamplerDesc> StaticSamplers =
-			{
-				{SHADER_TYPE_PIXEL, "NEMat_Diffuse1", SamLinearClampDesc},
-				{SHADER_TYPE_PIXEL, "NEMat_Specular1", SamLinearClampDesc}
-			};
+			//std::vector<StaticSamplerDesc> StaticSamplers =
+			//{
+			//	{SHADER_TYPE_PIXEL, "NEMat_Diffuse1", SamLinearClampDesc},
+			//	{SHADER_TYPE_PIXEL, "NEMat_Specular1", SamLinearClampDesc}
+			//};
 
-			Graphics::GraphicsEngine::GetShaderManager()->ProcessPipelineResources(PSODesc, Vars, StaticSamplers);
-			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
+			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSODesc, Vars, true);
 
 			//Set pipeline static vars
 			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
@@ -161,17 +160,6 @@ namespace NuclearEngine
 			return this->ActiveCamera;
 		}
 
-		void RenderSystem::BindShaders()
-		{
-			//BINDING_LLGL
-			//VShader.Bind();
-			//PShader.Bind();
-		}
-		void RenderSystem::BindConstantBuffers()
-		{
-			///ActiveCamera->GetCBuffer().VSBind(VShader.GetCBSlot(&ActiveCamera->GetCBuffer()));
-			///mPSLightCB.PSBind(VShader.GetCBSlot(&mPSLightCB));
-		}
 		void RenderSystem::AddLight(Components::DirectionalLight * light)
 		{
 			DirLights.push_back(light);
@@ -277,11 +265,8 @@ namespace NuclearEngine
 		}
 		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
-			BindShaders();
-			BindConstantBuffers();
 			Update_Meshes(es);
 			Update_Light();
-
 		}
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{

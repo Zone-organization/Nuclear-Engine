@@ -94,18 +94,46 @@ namespace NuclearEngine
 			return pPS;
 		}
 
-		bool ShaderManager::ProcessPipelineResources(PipelineStateDesc& PSODesc,
+		bool ShaderManager::ProcessAndCreatePipeline(
+			IPipelineState** PipelineState,
+			PipelineStateDesc& PSODesc,
 			const std::vector<ShaderResourceVariableDesc>& Resources,
+			bool AutoCreateSamplersDesc,
 			const std::vector<StaticSamplerDesc>& StaticSamplers)
 		{
 			PSODesc.ResourceLayout.NumVariables = Resources.size();
 			PSODesc.ResourceLayout.Variables = Resources.data();
+			std::vector<StaticSamplerDesc> GeneratedSamplerDesc;
+
+			if (!AutoCreateSamplersDesc)
+			{
+				PSODesc.ResourceLayout.NumStaticSamplers = StaticSamplers.size();
+				PSODesc.ResourceLayout.StaticSamplers = StaticSamplers.data();
+			}
+			else 
+			{
+
+				for (auto i : Resources)
+				{
+					std::string name(i.Name);
+					//Check its type
+					if (name.find("NEMat_") != std::string::npos)
+					{
+						SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
+							TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
+						StaticSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearClampDesc);
+						GeneratedSamplerDesc.push_back(desc);
+					}
+				}
+
+				PSODesc.ResourceLayout.NumStaticSamplers = GeneratedSamplerDesc.size();
+				PSODesc.ResourceLayout.StaticSamplers = GeneratedSamplerDesc.data();
+			}
 
 
-			PSODesc.ResourceLayout.NumStaticSamplers = StaticSamplers.size();
-			PSODesc.ResourceLayout.StaticSamplers = StaticSamplers.data();
+			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, PipelineState);
 
-			return false;
+			return true;
 		}
 			
 		bool CheckSampler(const std::string& name)
@@ -152,6 +180,8 @@ namespace NuclearEngine
 			else if (name.find("NEMutable") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE;
 			else if (name.find("NEDynamic") == 0)
+				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
+			else if (name.find("NEMat") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 
 			return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;

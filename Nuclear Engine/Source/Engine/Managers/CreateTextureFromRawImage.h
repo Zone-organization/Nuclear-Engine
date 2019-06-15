@@ -214,9 +214,8 @@ namespace NuclearEngine
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &Tex);
 
 				Assets::Texture result;
-				result.mTexture = Tex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-
-				Tex->Release();
+				result.mTextureView = Tex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+				result.mTexture = Tex;
 				return result;
 			}
 		}

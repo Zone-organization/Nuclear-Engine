@@ -32,13 +32,15 @@ namespace NuclearEngine
 		{
 			//mPixelShaderTextures;
 			//TODO: Check if all Slots have been occupied and then bind the free ones to fix some glitches
-		/*	if (!mPixelShaderTextures.empty())
+			if (!mPixelShaderTextures.empty())
 			{
 				for (auto tex : mPixelShaderTextures.at(index))
 				{	
-					mSRB->GetVariable(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.mTexture);
+					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.mTextureView);
 				}
-			}*/
+			}
+
+			Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 
 		void Material::Bind()

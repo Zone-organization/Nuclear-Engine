@@ -246,7 +246,7 @@ class Sample1 : public Core::Game
 		NanosuitMaterial->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
 
 
-		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
+		auto i =mSRB->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->GetIndex();
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Specular1")->Set(SpecularTex.mTexture);
 
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
@@ -298,7 +298,6 @@ class Sample1 : public Core::Game
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		Graphics::Context::GetContext()->SetPipelineState(NanosuitMaterial->GetPipeline());
-		Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
 
