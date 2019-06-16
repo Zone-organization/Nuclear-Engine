@@ -9,10 +9,6 @@ namespace NuclearEngine
 	{
 
 
-		void GLFW_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-		{
-
-		}
 
 		void GLFW_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 		{
@@ -39,7 +35,6 @@ namespace NuclearEngine
 		{
 			mParentWindow = window;
 			glfwSetCursorPosCallback(window->GetRawWindowPtr(), GLFW_MouseMovementCallback);
-			glfwSetMouseButtonCallback(window->GetRawWindowPtr(), GLFW_MouseButtonCallback);
 			glfwSetScrollCallback(window->GetRawWindowPtr(), GLFW_ScrollCallback);
 			glfwSetKeyCallback(window->GetRawWindowPtr(), GLFW_KeyCallback);
 			glfwSetCharCallback(window->GetRawWindowPtr(), GLFW_CharCallback);

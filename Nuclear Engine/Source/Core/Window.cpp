@@ -63,6 +63,12 @@ namespace NuclearEngine
 			glfwSetWindowTitle(mWindow, title.c_str());
 		}
 
+		void Window::InitializeInput()
+		{
+			//glfwSetMouseButtonCallback(mWindow, GLFW_MouseButtonCallback);
+
+		}
+
 		bool Window::ShouldClose()
 		{
 			return glfwWindowShouldClose(mWindow);

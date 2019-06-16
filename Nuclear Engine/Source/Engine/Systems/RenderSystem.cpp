@@ -37,6 +37,7 @@ namespace NuclearEngine
 			// Primitive topology defines what kind of primitives will be rendered by this pipeline state
 			PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			// Cull back faces
+			PSODesc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 			PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 			// Enable depth testing
 			PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = True;

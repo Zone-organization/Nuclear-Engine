@@ -253,7 +253,7 @@ class Sample1 : public Core::Game
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(SpecularTex.mTexture);
 
 
-		//Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
+		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -287,6 +287,13 @@ class Sample1 : public Core::Game
 			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
+
+		//Change Mouse Mode
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_T) == Core::Input::KeyboardKeyStatus::Pressed)
+			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
+
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_Y) == Core::Input::KeyboardKeyStatus::Pressed)
+			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 
 		Camera.Update();
 	}

@@ -31,6 +31,9 @@ namespace NuclearEngine
 			void SetSize(Uint32 width, Uint32 height);
 			void SetTitle(const std::string& title);
 
+			void InitializeInput();
+
+			void GLFW_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) const;
 
 			bool ShouldClose();
 
