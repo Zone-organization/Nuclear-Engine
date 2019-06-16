@@ -123,7 +123,9 @@ namespace NuclearEngine {
 			SetState(Engine::State::Rendering);
 
 			Base::Utilities::Timer timer;
-			
+
+			double SavedX = 0, SavedY = 0;
+
 			//Main Game Loop
 			while (!Core::Application::PollEvents())
 			{
@@ -132,7 +134,16 @@ namespace NuclearEngine {
 				deltaTime = currentFrame - lastFrame;
 				lastFrame = currentFrame;
 				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
-				//Graphics::ImGui_Binding::Update(*Core::Application::MainWindow, deltaTime);
+
+				//Mouse Movement Callback
+				double MousePosX, MousePosY;
+				Core::Application::GetMainWindow()->GetInput()->GetMousePosition(&MousePosX, &MousePosY);
+				if (SavedX != MousePosX || SavedY != MousePosY)
+				{
+					SavedX = MousePosX;
+					SavedY = MousePosY;
+					GamePtr->OnMouseMovement(static_cast<int>(SavedX), static_cast<int>(SavedY));
+				}
 
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);

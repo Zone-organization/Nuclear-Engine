@@ -56,14 +56,15 @@ namespace NuclearEngine
 			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
 			IBuffer* GetCBuffer();
 
-		protected:
-			// Eular Angles
-			float Yaw;
-			float Pitch;
 			// Camera options
 			float MovementSpeed;
 			float MouseSensitivity;
 			float Zoom;
+
+		protected:
+			// Eular Angles
+			float Yaw;
+			float Pitch;
 
 			Math::Vector3 Front, Up, Right, WorldUp;
 

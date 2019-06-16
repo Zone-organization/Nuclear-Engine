@@ -159,6 +159,8 @@ namespace NuclearEngine
 			void Initialize(Window* window);
 			KeyboardKeyStatus GetKeyStatus(KeyboardKey key);
 			void SetMouseInputMode(const MouseInputMode& mode);
+
+			void GetMousePosition(double* xpos, double* ypos);
 		private:
 			Window* mParentWindow;
 		};

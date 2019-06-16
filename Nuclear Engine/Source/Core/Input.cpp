@@ -8,36 +8,9 @@ namespace NuclearEngine
 	namespace Core
 	{
 
-
-
-		void GLFW_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
-		{
-
-		}
-
-		void GLFW_KeyCallback(GLFWwindow* window, int key, int, int action, int mods)
-		{
-
-		}
-
-		void GLFW_CharCallback(GLFWwindow* window, unsigned int c)
-		{
-
-		}
-
-		void GLFW_MouseMovementCallback(GLFWwindow* window, double xpos, double ypos)
-		{
-
-		}
-
-
 		void Input::Initialize(Window * window)
 		{
 			mParentWindow = window;
-			glfwSetCursorPosCallback(window->GetRawWindowPtr(), GLFW_MouseMovementCallback);
-			glfwSetScrollCallback(window->GetRawWindowPtr(), GLFW_ScrollCallback);
-			glfwSetKeyCallback(window->GetRawWindowPtr(), GLFW_KeyCallback);
-			glfwSetCharCallback(window->GetRawWindowPtr(), GLFW_CharCallback);
 		}
 
 		Input::KeyboardKeyStatus Input::GetKeyStatus(Input::KeyboardKey key)
@@ -55,6 +28,10 @@ namespace NuclearEngine
 			case MouseInputMode::Hidden:
 				return glfwSetInputMode(mParentWindow->GetRawWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 			}
+		}
+		void Input::GetMousePosition(double* xpos, double* ypos)
+		{
+			glfwGetCursorPos(mParentWindow->GetRawWindowPtr(), xpos, ypos);
 		}
 	}
 }

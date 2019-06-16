@@ -9,8 +9,8 @@ struct PixelInputType
 {
     float4 Position : SV_POSITION;
     float2 TexCoords : TEXCOORD0;
-    float3 Normal : NORMAL0;
-    float3 FragPos : TEXCOORD1;
+    //float3 Normal : NORMAL0;
+    //float3 FragPos : TEXCOORD1;
 
 #ifdef NE_USE_NORMAL_MAPS
     float3x3 TBN : TANGENT0;

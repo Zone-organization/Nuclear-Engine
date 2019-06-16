@@ -131,7 +131,7 @@ class Sample1 : public Core::Game
 		//NanoSuit Creation
 		Importers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
-		ModelDesc.LoadSpecularTextures = true;
+		ModelDesc.LoadSpecularTextures = false;
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		AssetLoader.mImportedMeshes[0] = CubeAsset;
 
@@ -245,8 +245,6 @@ class Sample1 : public Core::Game
 
 		NanosuitMaterial->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
 
-
-		auto i =mSRB->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->GetIndex();
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Specular1")->Set(SpecularTex.mTexture);
 
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
@@ -288,6 +286,11 @@ class Sample1 : public Core::Game
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
+			Camera.MovementSpeed = 5;
+		else
+			Camera.MovementSpeed = 2.5;
+
 		//Change Mouse Mode
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_T) == Core::Input::KeyboardKeyStatus::Pressed)
 			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
@@ -306,6 +309,10 @@ class Sample1 : public Core::Game
 
 		Graphics::Context::GetContext()->SetPipelineState(NanosuitMaterial->GetPipeline());
 
+		Math::Matrix4 model(1.0f);
+		model = Math::translate(model, Math::Vector3(0.0f, -1.75f, 0.0f));
+		model = Math::scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));
+		Camera.SetModelMatrix(model);
 		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
 
 		Graphics::Context::GetSwapChain()->Present();

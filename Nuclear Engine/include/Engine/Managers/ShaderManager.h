@@ -18,7 +18,7 @@ namespace NuclearEngine
 			bool InNormals = true;
 			bool InTangents = false;
 
-			bool OutFragPos = true;
+			bool OutFragPos = false;
 		};
 		struct AutoPixelShaderDesc
 		{

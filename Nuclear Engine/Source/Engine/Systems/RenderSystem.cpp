@@ -32,6 +32,9 @@ namespace NuclearEngine
 			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
 			// Set render target format which is the format of the swap chain's color buffer
 			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+			//PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].
+
 			// Set depth buffer format which is the format of the swap chain's back buffer
 			PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 			// Primitive topology defines what kind of primitives will be rendered by this pipeline state
@@ -51,7 +54,7 @@ namespace NuclearEngine
 			//Create Vertex Shader
 			{
 				Managers::AutoVertexShaderDesc VertShaderDesc;
-				if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
+				//if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
 
 				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 			}
