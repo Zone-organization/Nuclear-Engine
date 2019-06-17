@@ -38,12 +38,10 @@ namespace NuclearEngine
 		const DeviceType& type,
 		IRenderDevice** device,
 		IDeviceContext** context,
-		ISwapChain** swapchain
+		ISwapChain** swapchain,
+		const SwapChainDesc& SCDesc
 	)
 	{
-
-		SwapChainDesc SCDesc;
-		SCDesc.SamplesCount = 1;
 		Uint32 NumDeferredCtx = 0;
 
 		FullScreenModeDesc FSDesc;

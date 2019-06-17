@@ -1,4 +1,6 @@
 #include "Engine\Graphics\GraphicsEngine.h"
+#include <Engine\Graphics\Context.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -29,6 +31,14 @@ namespace NuclearEngine
 		Managers::ShaderManager * GraphicsEngine::GetShaderManager()
 		{
 			return pDefaultShaderManager;
+		}
+
+		bool GraphicsEngine::isGammaCorrect()
+		{
+			if (Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat == TEX_FORMAT_RGBA8_UNORM_SRGB)
+				return true;
+			else
+				return false;
 		}
 	}
 }

@@ -20,9 +20,6 @@ namespace NuclearEngine
 				return false;
 			}
 
-			//Initialize Context
-			Graphics::Context::Initialize(Desc);
-			
 			return true;
 		}
 		void Application::Shutdown()

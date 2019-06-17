@@ -31,12 +31,12 @@ namespace NuclearEngine
 			// This tutorial will render to a single render target
 			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
 			// Set render target format which is the format of the swap chain's color buffer
-			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
 			PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			//PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].
 
 			// Set depth buffer format which is the format of the swap chain's back buffer
-			PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+			PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
 			// Primitive topology defines what kind of primitives will be rendered by this pipeline state
 			PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			// Cull back faces
@@ -88,16 +88,6 @@ namespace NuclearEngine
 			PSODesc.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
 
-
-			//TODO: Automate the process of initalizing static samplers
-			//SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
-			//	TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
-
-			//std::vector<StaticSamplerDesc> StaticSamplers =
-			//{
-			//	{SHADER_TYPE_PIXEL, "NEMat_Diffuse1", SamLinearClampDesc},
-			//	{SHADER_TYPE_PIXEL, "NEMat_Specular1", SamLinearClampDesc}
-			//};
 
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSODesc, Vars, true);
 
@@ -189,6 +179,7 @@ namespace NuclearEngine
 
 		void RenderSystem::Bake()
 		{
+			BakeLightConstantBuffer();
 			BakePipeline();
 		}
 		IPipelineState * RenderSystem::GetPipeline()
@@ -235,11 +226,10 @@ namespace NuclearEngine
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Color);
 			}
 
-
-
 	/*		Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::Context::GetContext(), mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD);
 			*CBConstants = LightsBuffer.data();
 */
+
 			Math::Vector4* data;
 			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
 			data = LightsBuffer.data();

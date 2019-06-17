@@ -30,12 +30,28 @@ Core::RenderAPI SelectRenderer()
 
 int main(int argc, char* argv[])
 {
-	Core::EngineStartupDesc desc;
-	desc.mAppdesc.Renderer = SelectRenderer();
-	Core::Engine::Start(desc);
-	Sample1 demo;
-	Core::Engine::RunGame(&demo);
-	
+
+	std::cout << "Auto Initialize? \n"
+		<< "1) Yes \n"
+		<< "2) No \n";
+
+	int i;
+	std::cin >> i;
+	if (i == 2)
+	{
+		Core::EngineStartupDesc desc;
+		desc.mAppdesc.Renderer = SelectRenderer();
+		Core::Engine::Start(desc);
+		Sample1 demo;
+		Core::Engine::RunGame(&demo);
+	}
+	else
+	{
+		Core::EngineStartupDesc desc;
+		Core::Engine::Start(desc);
+		Sample1 demo;
+		Core::Engine::RunGame(&demo);
+	}
 	Core::Engine::Shutdown();
 
 	return 0;

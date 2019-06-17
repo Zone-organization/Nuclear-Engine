@@ -9,12 +9,12 @@ struct PixelInputType
 {
     float4 Position : SV_POSITION;
     float2 TexCoords : TEXCOORD0;
-    //float3 Normal : NORMAL0;
-    //float3 FragPos : TEXCOORD1;
+    float3 Normal : NORMAL0;
+    float3 FragPos : TEXCOORD1;
 
-#ifdef NE_USE_NORMAL_MAPS
-    float3x3 TBN : TANGENT0;
-#endif
+//#ifdef NE_USE_NORMAL_MAPS
+//    float3x3 TBN : TANGENT0;
+//#endif
 };
 
 Texture2D NEMat_Diffuse1 : register(t0);
@@ -28,26 +28,26 @@ SamplerState NEMat_Diffuse1_sampler : register(s0);
 //#ifdef NE_USE_NORMAL_MAPS
 //SamplerState NEMat_Normal1_sampler : register(s2);
 //#endif
-
-struct DirLight
-{
-    float4 Direction;
-    float4 Color;
-};
-struct PointLight
-{
-    float4 Position;
-    float4 Intensity_Attenuation;
-    float4 Color;
-};
-struct SpotLight
-{
-    float4 Position;
-    float4 Direction;
-    float4 Intensity_Attenuation;
-    float4 InnerCutOf_OuterCutoff;
-    float4 Color;
-};
+//
+//struct DirLight
+//{
+//    float4 Direction;
+//    float4 Color;
+//};
+//struct PointLight
+//{
+//    float4 Position;
+//    float4 Intensity_Attenuation;
+//    float4 Color;
+//};
+//struct SpotLight
+//{
+//    float4 Position;
+//    float4 Direction;
+//    float4 Intensity_Attenuation;
+//    float4 InnerCutOf_OuterCutoff;
+//    float4 Color;
+//};
 //cbuffer NEStatic_Lights
 //{  
 //    float4 ViewPos;
@@ -73,7 +73,6 @@ struct SpotLight
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-
 	return NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, input.TexCoords);
     //return DoLighting(input);
 }
@@ -120,7 +119,7 @@ float4 main(PixelInputType input) : SV_TARGET
 //    ambient *= attenuation;
 //    diffuse *= attenuation;
 //    specular *= attenuation;
-//    return (ambient + diffuse + specular) * ModelColor;
+//	return (ambient + diffuse + specular);// *ModelColor;
 //}
 //
 //// calculates the color when using a spot light.

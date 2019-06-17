@@ -4,6 +4,7 @@
 #include <Core\Application.h>
 #include <Engine\Audio\AudioEngine.h>
 #include <Engine\Graphics\GraphicsEngine.h>
+#include <Engine\Graphics\Context.h>
 
 //#include <FMOD\includer.h> 
 //#include <Engine\Graphics\ImGui_Binding.h>
@@ -59,6 +60,10 @@ namespace NuclearEngine {
 			Application::Start(desc.mAppdesc);
 			Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 			Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc);
+
+			//Initialize Context
+			Graphics::Context::Initialize(desc.mAppdesc, desc.mGraphicsEngineDesc);
+
 
 			//Graphics::ImGui_Binding::Initialize(Application::MainWindow);
 			//Graphics::ImGui_Renderer::Initialize();

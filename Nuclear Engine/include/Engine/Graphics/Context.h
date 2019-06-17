@@ -5,6 +5,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>
+#include "Engine\Graphics\GraphicsEngine.h"
 
 namespace NuclearEngine
 {
@@ -13,7 +14,7 @@ namespace NuclearEngine
 		class NEAPI Context
 		{
 		public:
-			static bool Initialize(const Core::ApplicationDesc & Desc);
+			static bool Initialize(const Core::ApplicationDesc & AppDesc, const Graphics::GraphicsEngineDesc& GraphicsDesc);
 
 			static void ShutDown();
 

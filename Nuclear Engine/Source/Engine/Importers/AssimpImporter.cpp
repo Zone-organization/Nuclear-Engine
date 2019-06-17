@@ -1,6 +1,7 @@
 #define EXPOSE_ASSIMP_IMPORTER
 #include <Engine\Importers\AssimpImporter.h>
 #include <Engine\Managers\AssetManager.h>
+#include "Engine\Graphics\GraphicsEngine.h"
 #include <Engine\Assets\Material.h>
 #include <Base\Utilities\Hash.h>
 
@@ -164,7 +165,13 @@ namespace NuclearEngine {
 				std::string filename = str.C_Str();
 				filename = mDirectory + '/' + filename;
 				Importers::TextureLoadingDesc desc;
-				desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+				if (Graphics::GraphicsEngine::isGammaCorrect())
+				{
+					desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
+				}
+				else {
+					desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+				}
 				texture = mManager->Import(filename, GetTextureType(type), desc);
 
 				textures.push_back({ 0, texture });

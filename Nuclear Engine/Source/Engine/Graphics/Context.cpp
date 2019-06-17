@@ -15,9 +15,19 @@ namespace NuclearEngine
 		bool Metal = false;
 
 
-		bool Context::Initialize(const Core::ApplicationDesc & Desc)
+		bool Context::Initialize(const Core::ApplicationDesc& AppDesc, const Graphics::GraphicsEngineDesc& GraphicsDesc)
 		{
-			bool Result = InitializeDiligentEngineWin32(Core::Application::GetMainWindow()->GetRawWindowPtr(),static_cast<DeviceType>(Desc.Renderer), &gDevice, &gContext, &gSwapChain);
+			SwapChainDesc SCDesc(GraphicsDesc.SCDesc);
+
+			if (GraphicsDesc.GammaCorrect)
+			{
+				SCDesc.ColorBufferFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
+			}
+			else
+			{
+				SCDesc.ColorBufferFormat = TEX_FORMAT_RGBA8_UNORM;
+			}
+			bool Result = InitializeDiligentEngineWin32(Core::Application::GetMainWindow()->GetRawWindowPtr(),static_cast<DeviceType>(AppDesc.Renderer), &gDevice, &gContext, &gSwapChain, SCDesc);
 
 			if(Result)
 				Log.Info("[Context] Diligent Graphics API Initialized.\n");

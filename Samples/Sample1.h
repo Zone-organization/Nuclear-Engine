@@ -147,7 +147,7 @@ class Sample1 : public Core::Game
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
 		CubeSet.push_back({ 0, DiffuseTex });
-		CubeSet.push_back({ 0, SpecularTex });
+		//CubeSet.push_back({ 1, SpecularTex });
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
 		Assets::TextureSet SphereTextures;
@@ -314,6 +314,13 @@ class Sample1 : public Core::Game
 		model = Math::scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));
 		Camera.SetModelMatrix(model);
 		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
+
+
+		model = Math::translate(model, Math::Vector3(2.0f, -1.75f, 2.0f));
+		Camera.SetModelMatrix(model);
+		Renderer->InstantRender(ECube.GetComponent<Components::MeshComponent>().Get());
+
+		//Renderer->Update_Light();
 
 		Graphics::Context::GetSwapChain()->Present();
 	}
