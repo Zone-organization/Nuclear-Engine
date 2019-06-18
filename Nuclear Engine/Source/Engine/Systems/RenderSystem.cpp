@@ -31,12 +31,12 @@ namespace NuclearEngine
 			// This tutorial will render to a single render target
 			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
 			// Set render target format which is the format of the swap chain's color buffer
-			PSODesc.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM_SRGB;
+			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			//PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].
 
 			// Set depth buffer format which is the format of the swap chain's back buffer
-			PSODesc.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
+			PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 			// Primitive topology defines what kind of primitives will be rendered by this pipeline state
 			PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			// Cull back faces
@@ -93,7 +93,7 @@ namespace NuclearEngine
 
 			//Set pipeline static vars
 			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
-			//mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
+			mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
 
 		}
 		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
@@ -181,6 +181,7 @@ namespace NuclearEngine
 		{
 			BakeLightConstantBuffer();
 			BakePipeline();
+			Update_Light();
 		}
 		IPipelineState * RenderSystem::GetPipeline()
 		{
@@ -226,9 +227,9 @@ namespace NuclearEngine
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Color);
 			}
 
-	/*		Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::Context::GetContext(), mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD);
-			*CBConstants = LightsBuffer.data();
-*/
+			//Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::Context::GetContext(), mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD);
+			//*CBConstants = *LightsBuffer.data();
+
 
 			Math::Vector4* data;
 			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);

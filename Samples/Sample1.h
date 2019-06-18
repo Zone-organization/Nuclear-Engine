@@ -125,54 +125,54 @@ class Sample1 : public Core::Game
 	{
 		//Create some shapes
 		Assets::Mesh::CreateCube(&CubeAsset);
-		Assets::Mesh::CreateSphere(&SphereAsset);
-		Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
+		//Assets::Mesh::CreateSphere(&SphereAsset);
+		//Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
 
 		//NanoSuit Creation
-		Importers::MeshLoadingDesc ModelDesc;
-		ModelDesc.LoadDiffuseTextures = true;
-		ModelDesc.LoadSpecularTextures = false;
-		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
-		AssetLoader.mImportedMeshes[0] = CubeAsset;
+		//Importers::MeshLoadingDesc ModelDesc;
+		//ModelDesc.LoadDiffuseTextures = true;
+		//ModelDesc.LoadSpecularTextures = true;
+		//std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		//AssetLoader.mImportedMeshes[0] = CubeAsset;
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		DiffuseTex = AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
 		SpecularTex = AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
-		WhiteTex = AssetLoader.Import("Assets/Common/Textures/white.png");
-		GreyTex = AssetLoader.Import("Assets/Common/Textures/grey.png");
-		GridTex = AssetLoader.Import("Assets/Common/Textures/Grid.png");
+		//WhiteTex = AssetLoader.Import("Assets/Common/Textures/white.png");
+		//GreyTex = AssetLoader.Import("Assets/Common/Textures/grey.png");
+		//GridTex = AssetLoader.Import("Assets/Common/Textures/Grid.png");
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
 		CubeSet.push_back({ 0, DiffuseTex });
-		//CubeSet.push_back({ 1, SpecularTex });
+		CubeSet.push_back({ 1, SpecularTex });
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
-		Assets::TextureSet SphereTextures;
-		WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		SphereTextures.push_back({ 0,WhiteTex });
-		WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-		SphereTextures.push_back({ 0,WhiteTex });
-		SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
+		//Assets::TextureSet SphereTextures;
+		//WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		//SphereTextures.push_back({ 0,WhiteTex });
+		//WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
+		//SphereTextures.push_back({ 0,WhiteTex });
+		//SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
 
 
-		Assets::TextureSet GridTextures;
-		GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		GridTextures.push_back({ 0,GridTex });
-		GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
-		GridTextures.push_back({ 0,GreyTex });
-		GridMaterial.mPixelShaderTextures.push_back(GridTextures);
+		//Assets::TextureSet GridTextures;
+		//GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
+		//GridTextures.push_back({ 0,GridTex });
+		//GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
+		//GridTextures.push_back({ 0,GreyTex });
+		//GridMaterial.mPixelShaderTextures.push_back(GridTextures);
 
-		Renderer->CreateMaterial(&GridMaterial);
+		//Renderer->CreateMaterial(&GridMaterial);
 		Renderer->CreateMaterial(&CubeMaterial);
-		Renderer->CreateMaterial(&SphereMaterial);
-		Renderer->CreateMaterial(NanosuitMaterial);
+		//Renderer->CreateMaterial(&SphereMaterial);
+		//Renderer->CreateMaterial(NanosuitMaterial);
 
 		CubeSet.clear();
-		SphereTextures.clear();
-		GridTextures.clear();
+		//SphereTextures.clear();
+		//GridTextures.clear();
 
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
@@ -187,17 +187,17 @@ class Sample1 : public Core::Game
 		//GridMaterial.SetMaterialVariable("Shininess", 64.0f);
 
 		//Create The skybox
-		std::array<std::string, 6> SkyBoxTexturePaths
-		{
-			std::string("Assets/Common/Skybox/right.jpg"),
-			std::string("Assets/Common/Skybox/left.jpg"),
-			std::string("Assets/Common/Skybox/top.jpg"),
-			std::string("Assets/Common/Skybox/bottom.jpg"),
-			std::string("Assets/Common/Skybox/front.jpg"),
-			std::string("Assets/Common/Skybox/back.jpg")
-		};
+		//std::array<std::string, 6> SkyBoxTexturePaths
+		//{
+		//	std::string("Assets/Common/Skybox/right.jpg"),
+		//	std::string("Assets/Common/Skybox/left.jpg"),
+		//	std::string("Assets/Common/Skybox/top.jpg"),
+		//	std::string("Assets/Common/Skybox/bottom.jpg"),
+		//	std::string("Assets/Common/Skybox/front.jpg"),
+		//	std::string("Assets/Common/Skybox/back.jpg")
+		//};
 
-		Skybox.Initialize(&Camera, SkyBoxTexturePaths);
+		//Skybox.Initialize(&Camera, SkyBoxTexturePaths);
 	}
 
 
@@ -243,7 +243,7 @@ class Sample1 : public Core::Game
 
 		SetupEntities();
 
-		NanosuitMaterial->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
+		//NanosuitMaterial->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
 
 		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Specular1")->Set(SpecularTex.mTexture);
 
@@ -287,12 +287,13 @@ class Sample1 : public Core::Game
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.MovementSpeed = 5;
+			Camera.MovementSpeed = 6;
 		else
 			Camera.MovementSpeed = 2.5;
 
 		//Change Mouse Mode
-		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_T) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_T) == Core::Input::KeyboardKeyStatus::Pressed
+			|| Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
 			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_Y) == Core::Input::KeyboardKeyStatus::Pressed)
@@ -307,20 +308,21 @@ class Sample1 : public Core::Game
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-		Graphics::Context::GetContext()->SetPipelineState(NanosuitMaterial->GetPipeline());
+		//Renderer->Update_Light();
+
+		Graphics::Context::GetContext()->SetPipelineState(Renderer->GetPipeline());
 
 		Math::Matrix4 model(1.0f);
-		model = Math::translate(model, Math::Vector3(0.0f, -1.75f, 0.0f));
-		model = Math::scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));
-		Camera.SetModelMatrix(model);
-		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
+		//model = Math::translate(model, Math::Vector3(0.0f, -1.75f, 0.0f));
+		//model = Math::scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));
+		//Camera.SetModelMatrix(model);
+		//Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
 
 
 		model = Math::translate(model, Math::Vector3(2.0f, -1.75f, 2.0f));
 		Camera.SetModelMatrix(model);
 		Renderer->InstantRender(ECube.GetComponent<Components::MeshComponent>().Get());
 
-		//Renderer->Update_Light();
 
 		Graphics::Context::GetSwapChain()->Present();
 	}

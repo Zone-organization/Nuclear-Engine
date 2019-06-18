@@ -230,6 +230,8 @@
     <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Core\Window.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\BlinnPhong.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

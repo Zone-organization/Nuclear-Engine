@@ -34,6 +34,8 @@ namespace NuclearEngine
 			//PostProcess Graphical Enchancements
 			bool GammaCorrection = false;
 			bool HDR = false;
+
+			int MaxLightsNumber = 10;
 		};
 
 		class NEAPI RenderSystem : public ECS::System<RenderSystem> {
