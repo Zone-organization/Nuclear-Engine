@@ -12,6 +12,7 @@ namespace NuclearEngine
 	{
 		struct AutoVertexShaderDesc
 		{
+			const char* Name = "AutoVS";
 			bool Use_Camera = true;
 
 			bool InTexCoords = true;
@@ -22,6 +23,8 @@ namespace NuclearEngine
 		};
 		struct AutoPixelShaderDesc
 		{
+			const char* Name = "AutoPS";
+
 			bool OutputTexture = true;
 		};
 

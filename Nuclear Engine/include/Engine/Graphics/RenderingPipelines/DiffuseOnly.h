@@ -21,7 +21,7 @@ namespace NuclearEngine
 	namespace Graphics
 	{
 
-		class NEAPI BlinnPhong : public RenderingPipeline
+		class NEAPI DiffuseOnly : public RenderingPipeline
 		{
 		public:
 			bool Bake(const RenderingPipelineDesc& desc) override;

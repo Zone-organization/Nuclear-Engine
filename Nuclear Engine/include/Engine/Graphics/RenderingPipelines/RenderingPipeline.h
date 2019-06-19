@@ -20,13 +20,23 @@ namespace NuclearEngine
 	namespace Graphics
 	{
 
+		struct RenderingPipelineDesc
+		{
+			Uint32 DirLights = 0;
+			Uint32 SpotLights = 0;
+			Uint32 PointLights = 0;
+			bool UseNormalMaps = false;
+		};
+
 		class NEAPI RenderingPipeline
 		{
 		public:
-			RenderingPipeline();
-			~RenderingPipeline();
+			virtual bool Bake(const RenderingPipelineDesc& desc) = 0;
 
-		private:
+			IPipelineState* GetPipeline();
+
+		protected:
+			RefCntAutoPtr<IPipelineState> mPipeline;
 
 		};
 

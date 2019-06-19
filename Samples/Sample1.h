@@ -47,6 +47,8 @@ class Sample1 : public Core::Game
 
 	Graphics::Skybox Skybox;
 
+	Graphics::DiffuseOnly DiffuseRP;
+
 	//ECS
 	ECS::Scene SampleScene;
 	ECS::Entity ESkybox;
@@ -200,6 +202,23 @@ class Sample1 : public Core::Game
 		//Skybox.Initialize(&Camera, SkyBoxTexturePaths);
 	}
 
+	void ChooseRenderingPipeline()
+	{
+		std::cout << "Select Rendering Pipeline: \n"
+			<< "1) DiffuseOnly \n"
+			<< "2) BlinnPhong \n";
+
+		int i;
+		std::cin >> i;
+
+		switch (i)
+		{
+		case 1:
+			//return Core::RenderAPI::DirectX11;
+		case 2:
+		//	return Core::RenderAPI::DirectX12;
+		}
+	}
 
 	void SetupEntities()
 	{

@@ -1,5 +1,4 @@
 #include <Engine\Systems\RenderSystem.h>
-#include <Core\FileSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/TransformComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
@@ -19,86 +18,15 @@ namespace NuclearEngine
 		RenderSystem::~RenderSystem()
 		{
 		}
-		void RenderSystem::BakePipeline()
+
+		void RenderSystem::SetRenderingPipeline(Graphics::RenderingPipeline* Pipeline)
 		{
-			// Pipeline state object encompasses configuration of all GPU stages
-
-			PipelineStateDesc PSODesc;
-
-			PSODesc.Name = "RenderSystem PSO";
-			// This is a graphics pipeline
-			PSODesc.IsComputePipeline = false;
-			// This tutorial will render to a single render target
-			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-			// Set render target format which is the format of the swap chain's color buffer
-			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-			PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			//PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].
-
-			// Set depth buffer format which is the format of the swap chain's back buffer
-			PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-			// Primitive topology defines what kind of primitives will be rendered by this pipeline state
-			PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-			// Cull back faces
-			PSODesc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			// Enable depth testing
-			PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = True;
-
-
-			//Create Shaders
-			RefCntAutoPtr<IShader> VSShader;
-			RefCntAutoPtr<IShader> PSShader;
-			std::vector<LayoutElement> LayoutElems;
-
-			//Create Vertex Shader
-			{
-				Managers::AutoVertexShaderDesc VertShaderDesc;
-				//if (Desc.NormalMaps == true) { VertShaderDesc.InTangents = true; }
-
-				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
-			}
-
-			//Create Pixel Shader
-			{
-				ShaderCreateInfo CreationAttribs;
-				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-				CreationAttribs.EntryPoint = "main";
-				CreationAttribs.Desc.Name = "RenderSystem PixelShader";
-				
-
-				std::vector<std::string> defines;
-
-				if (this->DirLights.size() > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(DirLights.size())); }
-				if (this->PointLights.size() > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(PointLights.size())); }
-				if (this->SpotLights.size() > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(SpotLights.size())); }
-				if (Desc.NormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
-
-				auto source = Core::FileSystem::LoadShader(Desc.PShaderPath, defines, std::vector<std::string>(), true);
-				CreationAttribs.Source = source.c_str();
-
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
-				Calculate_Light_CB_Size();
-			}
-			PSODesc.GraphicsPipeline.pVS = VSShader;
-			PSODesc.GraphicsPipeline.pPS = PSShader;
-			PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-			PSODesc.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
-			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
-
-
-			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSODesc, Vars, true);
-
-			//Set pipeline static vars
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
-
+			mRenderingPipeline = Pipeline;
 		}
-		void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
+
+		/*void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
 		{
-			/*ITextureDescriptor ScreenTexDesc;
+		    ITextureDescriptor ScreenTexDesc;
 			if (Desc.HDR == true)
 			{
 				ScreenTexDesc.format = IFormat::RGBA16Float;
@@ -143,8 +71,8 @@ namespace NuclearEngine
 	
 			ISamplerDescriptor Samplerdesc;
 			Samplerdesc.magFilter = Samplerdesc.minFilter = Samplerdesc.mipMapFilter = ISamplerFilter::Nearest;
-			ScreenSampler = IContext::GetRenderer()->CreateSampler(Samplerdesc);*/
-		}
+			ScreenSampler = IContext::GetRenderer()->CreateSampler(Samplerdesc);
+		}*/
 		void RenderSystem::SetCamera(Components::CameraComponent * camera)
 		{
 			this->ActiveCamera = camera;
@@ -173,23 +101,52 @@ namespace NuclearEngine
 				return;
 
 			Assets::MaterialCreationDesc desc;
-			desc.mPipeline = mPipeline.RawPtr();
+			desc.mPipeline = GetPipeline();
 			material->Create(desc);
 		}
 
 		void RenderSystem::Bake()
 		{
+			Graphics::RenderingPipelineDesc RPDesc;
+			
+			RPDesc.DirLights = 0;
+			RPDesc.SpotLights = 0;
+			RPDesc.PointLights = 0;
+			RPDesc.UseNormalMaps = false;
+			
+			mRenderingPipeline->Bake(RPDesc);
 			BakeLightConstantBuffer();
-			BakePipeline();
 			Update_Light();
+
+			//Set pipeline static vars
+			GetPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
+			GetPipeline()->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
 		}
 		IPipelineState * RenderSystem::GetPipeline()
 		{
-			return mPipeline.RawPtr();
+			return mRenderingPipeline->GetPipeline();
 		}
 
 		void RenderSystem::BakeLightConstantBuffer()
 		{	
+			NE_Light_CB_Size = sizeof(Math::Vector4);
+			NUM_OF_LIGHT_VECS = 1;
+			if (this->DirLights.size() > 0)
+			{
+				NE_Light_CB_Size = NE_Light_CB_Size + (this->DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
+				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->DirLights.size() * 2);
+			}
+			if (this->PointLights.size() > 0)
+			{
+				NE_Light_CB_Size = NE_Light_CB_Size + (this->PointLights.size() * sizeof(Components::Internal::Shader_PointLight_Struct));
+				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->PointLights.size() * 3);
+			}
+			if (this->SpotLights.size() > 0)
+			{
+				NE_Light_CB_Size = NE_Light_CB_Size + (this->SpotLights.size() * sizeof(Components::Internal::Shader_SpotLight_Struct));
+				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->SpotLights.size() * 5);
+			}
+
 			BufferDesc CBDesc;
 			CBDesc.Name = "RenderSystem LightCB";
 			CBDesc.uiSizeInBytes = NE_Light_CB_Size;
@@ -302,13 +259,13 @@ namespace NuclearEngine
 				Graphics::Context::GetContext()->Draw(DrawAttrs);
 			}
 		}
-		void RenderSystem::RenderToPostProcessingRT()
-		{
+		//void RenderSystem::RenderToPostProcessingRT()
+		//{
 			///PostProcessRT.Bind();
 			///IContext::Clear(IColor(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		}
-		void RenderSystem::RenderPostProcessingContents()
-		{
+		//}
+		//void RenderSystem::RenderPostProcessingContents()
+		//{
 			///PostProcessRT.Bind_Default();
 			///IContext::Clear(IColor(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
 			///PostProcess_VShader.Bind();
@@ -316,28 +273,7 @@ namespace NuclearEngine
 			///ScreenSampler.PSBind(0);
 			///PostProcessTexture.PSBind(0);
 			///InstantRender(&PostProcessScreenQuad, nullptr);
-		}
+		//}
 	
-		void RenderSystem::Calculate_Light_CB_Size()
-		{
-			NE_Light_CB_Size = sizeof(Math::Vector4);
-			NUM_OF_LIGHT_VECS = 1;
-			if (this->DirLights.size() > 0)
-			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (this->DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->DirLights.size() * 2);
-			}
-			if (this->PointLights.size() > 0)
-			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (this->PointLights.size() * sizeof(Components::Internal::Shader_PointLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->PointLights.size() * 3);
-			}
-			if (this->SpotLights.size() > 0)
-			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (this->SpotLights.size() * sizeof(Components::Internal::Shader_SpotLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->SpotLights.size() * 5);
-			}
-		}
-
 	}
 }

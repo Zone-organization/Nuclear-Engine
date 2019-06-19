@@ -38,7 +38,7 @@ namespace NuclearEngine
 			CreationAttribs.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 			CreationAttribs.EntryPoint = "main";
-			CreationAttribs.Desc.Name = "AutoVertexShader";
+			CreationAttribs.Desc.Name = desc.Name;
 			
 
 			std::vector<std::string> defines;

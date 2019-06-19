@@ -13,6 +13,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
+#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -43,9 +44,10 @@ namespace NuclearEngine
 			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc(), Components::CameraComponent* camera = nullptr);
 			~RenderSystem();
 
+			void SetRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
+
 			void BakeLightConstantBuffer();
-			void BakePipeline();
-			void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
+			//void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
@@ -66,8 +68,8 @@ namespace NuclearEngine
 			// Render A Mesh instantly
 			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
-			void RenderToPostProcessingRT();
-			void RenderPostProcessingContents();
+			//void RenderToPostProcessingRT();
+			//void RenderPostProcessingContents();
 
 			//Update Functions
 			void Update(ECS::EntityManager &es, ECS::EventManager &events, ECS::TimeDelta dt) override;
@@ -75,9 +77,6 @@ namespace NuclearEngine
 			void Update_Meshes(ECS::EntityManager & es);
 
 		private:
-			void Calculate_Light_CB_Size();
-
-			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IBuffer> mPSLightCB;
 
 			Components::CameraComponent* ActiveCamera;
@@ -95,13 +94,15 @@ namespace NuclearEngine
 			RenderSystemStatus status;
 
 			//PostProcess stuff
-			bool PostProcessingEnabled = false;
-			ISampler* ScreenSampler;
-			ITexture* PostProcessTexture;
+			//bool PostProcessingEnabled = false;
+			//ISampler* ScreenSampler;
+			//ITexture* PostProcessTexture;
 			//IRenderTarget* PostProcessRT;
-			IShader* PostProcess_VShader;
-			IShader* PostProcess_PShader;
-			Assets::Mesh PostProcessScreenQuad;
+			//IShader* PostProcess_VShader;
+			//IShader* PostProcess_PShader;
+			//Assets::Mesh PostProcessScreenQuad;
+
+			Graphics::RenderingPipeline* mRenderingPipeline;
 		};
 
 	}
