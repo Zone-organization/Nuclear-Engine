@@ -20,9 +20,6 @@ class Sample1 : public Core::Game
 	Assets::Material CubeMaterial;
 	Assets::Material* NanosuitMaterial;
 
-	//Default states
-	//Graphics::API::CommonStates states;
-
 	Components::CameraComponent Camera;
 
 	Components::DirectionalLight dirlight;

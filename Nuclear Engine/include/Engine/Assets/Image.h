@@ -17,7 +17,7 @@ namespace NuclearEngine {
 
 			Uint32 mRowStride = 0;
 
-			Byte* mData;
+			Byte* mData = nullptr;
 		};
 	}
 }

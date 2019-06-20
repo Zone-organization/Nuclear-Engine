@@ -21,7 +21,7 @@ namespace NuclearEngine
 			void SetName(const std::string& str) { mHashedName = Utilities::Hash(str); }
 			bool isValid = false;
 		protected:
-			Uint32 mHashedName;			
+			Uint32 mHashedName = 0;			
 		};
 	}
 }

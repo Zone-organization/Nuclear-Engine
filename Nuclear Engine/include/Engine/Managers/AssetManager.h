@@ -25,7 +25,7 @@ namespace NuclearEngine {
 		struct AssetManagerDesc
 		{
 			std::string mName = "UnNamed";
-			ASSET_MANAGER_FLUSH_FLAGS mFlushFlagOnShutdown;
+			ASSET_MANAGER_FLUSH_FLAGS mFlushFlagOnShutdown = ASSET_MANAGER_FLUSH_ALL;
 			bool mSaveTexturePaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
 			bool mSaveMeshPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real mesh name or not
 			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real material name or not
