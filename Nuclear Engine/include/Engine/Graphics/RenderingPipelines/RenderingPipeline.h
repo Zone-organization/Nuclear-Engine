@@ -26,6 +26,9 @@ namespace NuclearEngine
 			Uint32 SpotLights = 0;
 			Uint32 PointLights = 0;
 			bool UseNormalMaps = false;
+
+			IBuffer* CameraBufferPtr = nullptr;
+			IBuffer* LightsBufferPtr = nullptr;
 		};
 
 		class NEAPI RenderingPipeline

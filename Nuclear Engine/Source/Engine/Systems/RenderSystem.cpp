@@ -107,20 +107,19 @@ namespace NuclearEngine
 
 		void RenderSystem::Bake()
 		{
+			BakeLightConstantBuffer();
+			Update_Light();
+
 			Graphics::RenderingPipelineDesc RPDesc;
 			
 			RPDesc.DirLights = 0;
 			RPDesc.SpotLights = 0;
 			RPDesc.PointLights = 0;
 			RPDesc.UseNormalMaps = false;
-			
+			RPDesc.CameraBufferPtr = ActiveCamera->GetCBuffer();
+			RPDesc.LightsBufferPtr = mPSLightCB;
 			mRenderingPipeline->Bake(RPDesc);
-			BakeLightConstantBuffer();
-			Update_Light();
-
-			//Set pipeline static vars
-			GetPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(ActiveCamera->GetCBuffer());
-			GetPipeline()->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(mPSLightCB);
+	
 		}
 		IPipelineState * RenderSystem::GetPipeline()
 		{

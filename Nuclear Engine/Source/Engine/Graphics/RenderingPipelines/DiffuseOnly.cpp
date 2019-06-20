@@ -11,7 +11,7 @@ namespace NuclearEngine
 		{
 			PipelineStateDesc PSODesc;
 
-			PSODesc.Name = "RenderSystem PSO";
+			PSODesc.Name = "DiffuseOnly PSO";
 			PSODesc.IsComputePipeline = false;
 			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
 			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
@@ -51,8 +51,10 @@ namespace NuclearEngine
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSODesc, Vars, true);
 
+			if (desc.CameraBufferPtr)
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
+
 			return true;
-			return false;
 		}
 	}
 }

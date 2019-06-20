@@ -149,7 +149,7 @@ class Sample1 : public Core::Game
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
 		CubeSet.push_back({ 0, DiffuseTex });
-		CubeSet.push_back({ 1, SpecularTex });
+		//CubeSet.push_back({ 1, SpecularTex });
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
 		//Assets::TextureSet SphereTextures;
@@ -202,23 +202,23 @@ class Sample1 : public Core::Game
 		//Skybox.Initialize(&Camera, SkyBoxTexturePaths);
 	}
 
-	void ChooseRenderingPipeline()
-	{
-		std::cout << "Select Rendering Pipeline: \n"
-			<< "1) DiffuseOnly \n"
-			<< "2) BlinnPhong \n";
+	//void ChooseRenderingPipeline()
+	//{
+	//	std::cout << "Select Rendering Pipeline: \n"
+	//		<< "1) DiffuseOnly \n"
+	//		<< "2) BlinnPhong \n";
 
-		int i;
-		std::cin >> i;
+	//	int i;
+	//	std::cin >> i;
 
-		switch (i)
-		{
-		case 1:
-			//return Core::RenderAPI::DirectX11;
-		case 2:
-		//	return Core::RenderAPI::DirectX12;
-		}
-	}
+	//	switch (i)
+	//	{
+	//	case 1:
+	//		//return Core::RenderAPI::DirectX11;
+	//	case 2:
+	//	//	return Core::RenderAPI::DirectX12;
+	//	}
+	//}
 
 	void SetupEntities()
 	{
@@ -241,6 +241,8 @@ class Sample1 : public Core::Game
 		Systems::RenderSystemDesc desc;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
 		SampleScene.Systems.Configure();
+
+		Renderer->SetRenderingPipeline(&DiffuseRP);
 
 		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->AddLight(&spotLight);
