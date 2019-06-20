@@ -31,7 +31,7 @@ struct PixelInputType
 {
     float4 Position : SV_POSITION;
 #ifdef NE_USE_UV
-    float2 TexCoord : TEXCOORD0;
+    float2 TexCoord : TEX_COORD;
 #endif
 #ifdef NE_USE_NORMALS
     float3 Normals : NORMAL0;

@@ -16,8 +16,8 @@ namespace NuclearEngine {
 
 		struct ApplicationDesc
 		{
-			Uint32 WindowWidth = 1024;
-			Uint32 WindowHeight = 768;
+			Uint32 WindowWidth = 1280;
+			Uint32 WindowHeight = 720;
 			Uint32 Samples = 2;
 			bool FullScreen = false;
 			RenderAPI Renderer = RenderAPI::DirectX11;

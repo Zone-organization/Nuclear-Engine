@@ -8,7 +8,7 @@
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
-    float2 TexCoords : TEXCOORD0;
+    float2 TexCoords : TEX_COORD;
     float3 Normal : NORMAL0;
     float3 FragPos : TEXCOORD1;
 

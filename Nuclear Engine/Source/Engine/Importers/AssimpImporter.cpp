@@ -15,7 +15,7 @@ namespace NuclearEngine {
 			mManager = desc.mManager;
 
 			Assimp::Importer importer;
-			const aiScene* scene = importer.ReadFile(desc.mPath, aiProcess_Triangulate);
+			const aiScene* scene = importer.ReadFile(desc.mPath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)

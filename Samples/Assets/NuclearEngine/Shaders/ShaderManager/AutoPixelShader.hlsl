@@ -3,7 +3,7 @@ struct PixelInputType
 {
     float4 Position : SV_POSITION;
 #ifdef NE_OUTPUT_TEXTURE
-    float2 UV : TEXCOORD0;
+    float2 UV : TEX_COORD;
 #endif
 };
 
