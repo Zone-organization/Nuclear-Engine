@@ -16,9 +16,11 @@ class Sample1 : public Core::Game
 
 	Assets::Mesh CubeAsset;
 	Assets::Mesh* NanosuitAsset;
+	Assets::Mesh* CyborgAsset;
 
 	Assets::Material CubeMaterial;
 	Assets::Material* NanosuitMaterial;
+	Assets::Material* CyborgMaterial;
 
 	Components::CameraComponent Camera;
 
@@ -43,9 +45,8 @@ class Sample1 : public Core::Game
 	ECS::Scene SampleScene;
 	ECS::Entity ESkybox;
 	ECS::Entity ECube;
-	ECS::Entity ELamp;
+	ECS::Entity ECyborg;
 	ECS::Entity ENanosuit;
-	ECS::Entity EGrid;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] =
@@ -123,16 +124,13 @@ class Sample1 : public Core::Game
 		ModelDesc.LoadDiffuseTextures = true;
 		//ModelDesc.LoadSpecularTextures = true;
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
-		AssetLoader.mImportedMeshes[0] = CubeAsset;
+		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		DiffuseTex = AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
 		SpecularTex = AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
-		//WhiteTex = AssetLoader.Import("Assets/Common/Textures/white.png");
-		//GreyTex = AssetLoader.Import("Assets/Common/Textures/grey.png");
-		//GridTex = AssetLoader.Import("Assets/Common/Textures/Grid.png");
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
@@ -142,6 +140,7 @@ class Sample1 : public Core::Game
 
 		Renderer->CreateMaterial(&CubeMaterial);
 		Renderer->CreateMaterial(NanosuitMaterial);
+		Renderer->CreateMaterial(CyborgMaterial);
 
 		CubeSet.clear();
 
@@ -188,10 +187,13 @@ class Sample1 : public Core::Game
 		//Create Entities
 		ECube = SampleScene.CreateEntity();
 		ENanosuit = SampleScene.CreateEntity();
+		ECyborg = SampleScene.CreateEntity();
 
 		//Assign Components
-		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial, true);
+		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
+		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
+
 	}
 
 
@@ -222,6 +224,22 @@ class Sample1 : public Core::Game
 		SetupAssets();
 
 		SetupEntities();
+
+		//Setup positions
+
+		Math::Matrix4 TNanosuit(1.0f);
+		TNanosuit = Math::translate(TNanosuit, Math::Vector3(0.0f, -1.75f, 0.0f));
+		TNanosuit = Math::scale(TNanosuit, Math::Vector3(0.3f, 0.3f, 0.3f));
+		ENanosuit.GetComponent<Components::TransformComponent>()->SetTransform(TNanosuit);
+
+
+		Math::Matrix4 TCyborg(1.0f);
+		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
+		ECyborg.GetComponent<Components::TransformComponent>()->SetTransform(TCyborg);
+
+		Math::Matrix4 TCube(1.0f);
+		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
+		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -259,9 +277,9 @@ class Sample1 : public Core::Game
 			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.MovementSpeed = 6;
+			Camera.MovementSpeed = 10;
 		else
-			Camera.MovementSpeed = 2.5;
+			Camera.MovementSpeed = 4.5;
 
 		//Change Mouse Mode
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_T) == Core::Input::KeyboardKeyStatus::Pressed
@@ -280,20 +298,7 @@ class Sample1 : public Core::Game
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-		//Renderer->Update_Light();
-
-		Graphics::Context::GetContext()->SetPipelineState(Renderer->GetPipeline());
-
-		Math::Matrix4 model(1.0f);
-		model = Math::translate(model, Math::Vector3(0.0f, -1.75f, 0.0f));
-		model = Math::scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));
-		Camera.SetModelMatrix(model);
-		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
-
-		model = Math::translate(model, Math::Vector3(2.0f, -1.75f, 2.0f));
-		Camera.SetModelMatrix(model);
-		Renderer->InstantRender(ECube.GetComponent<Components::MeshComponent>().Get());
-
+		Renderer->Update(SampleScene.Entities , SampleScene.Events, dt);
 
 		Graphics::Context::GetSwapChain()->Present();
 	}

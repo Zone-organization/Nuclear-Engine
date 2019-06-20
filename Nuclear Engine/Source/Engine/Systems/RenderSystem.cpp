@@ -216,6 +216,8 @@ namespace NuclearEngine
 		}
 		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
 		{
+			Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
+
 			Update_Meshes(es);
 			Update_Light();
 		}
