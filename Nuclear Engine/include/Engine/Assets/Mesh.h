@@ -60,8 +60,8 @@ namespace NuclearEngine {
 				Uint32 mIndicesOffset = 0;
 
 				//Buffers
-				IBuffer* mIB = nullptr;
-				IBuffer* mVB = nullptr;
+				RefCntAutoPtr<IBuffer> mIB;
+				RefCntAutoPtr<IBuffer> mVB;
 			};
 
 			std::vector<SubMesh> mSubMeshes;

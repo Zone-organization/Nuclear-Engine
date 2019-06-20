@@ -96,7 +96,7 @@ namespace NuclearEngine
 					}
 			}
 
-			Assets::Texture& CreateTextureFromRawImage(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc)
+			bool CreateTextureFromRawImage(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc, Assets::Texture& result)
 			{	
 				TextureDesc TexDesc;
 				TexDesc.Type = RESOURCE_DIM_TEX_2D;
@@ -210,13 +210,15 @@ namespace NuclearEngine
 				TexData.pSubResources = pSubResources.data();
 				TexData.NumSubresources = TexDesc.MipLevels;
 
-				ITexture *Tex = nullptr;
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &Tex);
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &result.mTexture);
+				if (result.mTexture.RawPtr() != nullptr)
+				{
+					result.mTextureView = result.mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-				Assets::Texture result;
-				result.mTextureView = Tex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-				result.mTexture = Tex;
-				return result;
+					if (result.mTextureView.RawPtr() != nullptr)
+						return true;
+				}
+				return false;
 			}
 		}
 	}

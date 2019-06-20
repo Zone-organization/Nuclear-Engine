@@ -46,14 +46,11 @@ namespace NuclearEngine {
 
 		void AssetManager::FlushContainers(ASSET_MANAGER_FLUSH_FLAGS flag)
 		{
-			//TODO
-			for (auto x : mImportedTextures)
-			{
-				if(x.second.mTexture)
-					x.second.mTexture->Release();
-			}
 			mImportedTextures.clear();
-			//mHashedTexturesNames.clear();
+			mHashedTexturesPaths.clear();
+
+			mImportedMeshes.clear();
+			mHashedMeshesPaths.clear();
 		}
 
 		Assets::Texture & AssetManager::Import(const std::string & Path, const Importers::TextureLoadingDesc & Desc)
@@ -87,7 +84,8 @@ namespace NuclearEngine {
 
 			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
 
-			auto Tex = Internal::CreateTextureFromRawImage(Data, Desc);
+			Assets::Texture Tex;
+			Internal::CreateTextureFromRawImage(Data, Desc, Tex);
 			Tex.SetName(hashedname);
 			Tex.SetUsageType(type);
 
@@ -96,7 +94,9 @@ namespace NuclearEngine {
 
 		Assets::Texture & AssetManager::Import(const Assets::Image & Image, const Importers::TextureLoadingDesc & Desc)
 		{
-			return Internal::CreateTextureFromRawImage(Image, Desc);
+			Assets::Texture Tex;
+			Internal::CreateTextureFromRawImage(Image, Desc, Tex);
+			return Tex;
 		}
 
 		std::tuple<Assets::Mesh*, Assets::Material*> AssetManager::Import(const std::string & Path, const Importers::MeshLoadingDesc & desc)

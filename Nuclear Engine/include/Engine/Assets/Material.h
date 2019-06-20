@@ -16,8 +16,8 @@ namespace NuclearEngine
 		//TODO: Support more Shader Types.
 		struct MaterialCreationDesc
 		{
-			IPipelineState* mPipeline = nullptr;
-			ISampler* mSampler = nullptr;
+			RefCntAutoPtr<IPipelineState> mPipeline;
+			RefCntAutoPtr<ISampler> mSampler;
 		};
 
 		struct ShaderTexture
@@ -68,7 +68,7 @@ namespace NuclearEngine
 			std::vector<TextureSet> mPixelShaderTextures;
 			std::vector<ShaderTexture> mPixelShaderTS;
 		private:
-			IPipelineState* mPipeline = nullptr;
+			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 
 			void ParseShader(SHADER_TYPE shadertype);
