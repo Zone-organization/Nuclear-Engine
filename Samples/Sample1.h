@@ -13,19 +13,12 @@ class Sample1 : public Core::Game
 	//Assets
 	Assets::Texture DiffuseTex;
 	Assets::Texture SpecularTex;
-	Assets::Texture WhiteTex;
-	Assets::Texture GreyTex;
-	Assets::Texture GridTex;
 
 	Assets::Mesh CubeAsset;
-	Assets::Mesh SphereAsset;
 	Assets::Mesh* NanosuitAsset;
-	Assets::Mesh GridAsset;
 
 	Assets::Material CubeMaterial;
-	Assets::Material SphereMaterial;
 	Assets::Material* NanosuitMaterial;
-	Assets::Material GridMaterial;
 
 	//Default states
 	//Graphics::API::CommonStates states;
@@ -125,17 +118,15 @@ class Sample1 : public Core::Game
 
 	void SetupAssets()
 	{
-		//Create some shapes
+		//Create Cube
 		Assets::Mesh::CreateCube(&CubeAsset);
-		//Assets::Mesh::CreateSphere(&SphereAsset);
-		//Assets::Mesh::CreateGrid(&GridAsset, Assets::MeshVertexDesc(), 6, 6, 10, 10);
 
 		//NanoSuit Creation
-		//Importers::MeshLoadingDesc ModelDesc;
-		//ModelDesc.LoadDiffuseTextures = true;
+		Importers::MeshLoadingDesc ModelDesc;
+		ModelDesc.LoadDiffuseTextures = true;
 		//ModelDesc.LoadSpecularTextures = true;
-		//std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
-		//AssetLoader.mImportedMeshes[0] = CubeAsset;
+		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		AssetLoader.mImportedMeshes[0] = CubeAsset;
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
@@ -152,41 +143,16 @@ class Sample1 : public Core::Game
 		//CubeSet.push_back({ 1, SpecularTex });
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
-		//Assets::TextureSet SphereTextures;
-		//WhiteTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		//SphereTextures.push_back({ 0,WhiteTex });
-		//WhiteTex.SetUsageType(Assets::TextureUsageType::Specular);
-		//SphereTextures.push_back({ 0,WhiteTex });
-		//SphereMaterial.mPixelShaderTextures.push_back(SphereTextures);
-
-
-		//Assets::TextureSet GridTextures;
-		//GridTex.SetUsageType(Assets::TextureUsageType::Diffuse);
-		//GridTextures.push_back({ 0,GridTex });
-		//GreyTex.SetUsageType(Assets::TextureUsageType::Specular);
-		//GridTextures.push_back({ 0,GreyTex });
-		//GridMaterial.mPixelShaderTextures.push_back(GridTextures);
-
-		//Renderer->CreateMaterial(&GridMaterial);
 		Renderer->CreateMaterial(&CubeMaterial);
-		//Renderer->CreateMaterial(&SphereMaterial);
-		//Renderer->CreateMaterial(NanosuitMaterial);
+		Renderer->CreateMaterial(NanosuitMaterial);
 
 		CubeSet.clear();
-		//SphereTextures.clear();
-		//GridTextures.clear();
 
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
 
-		//SphereMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-		//SphereMaterial.SetMaterialVariable("Shininess", 64.0f);
-
 		//NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
-
-		//GridMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-		//GridMaterial.SetMaterialVariable("Shininess", 64.0f);
 
 		//Create The skybox
 		//std::array<std::string, 6> SkyBoxTexturePaths
@@ -224,14 +190,10 @@ class Sample1 : public Core::Game
 	{
 		//Create Entities
 		ECube = SampleScene.CreateEntity();
-		ELamp = SampleScene.CreateEntity();
-		EGrid = SampleScene.CreateEntity();
 		ENanosuit = SampleScene.CreateEntity();
 
 		//Assign Components
 		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial, true);
-		ELamp.Assign<Components::MeshComponent>(&SphereAsset, &SphereMaterial, true);
-		EGrid.Assign<Components::MeshComponent>(&GridAsset, &GridMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 	}
 
@@ -263,14 +225,6 @@ class Sample1 : public Core::Game
 		SetupAssets();
 
 		SetupEntities();
-
-		//NanosuitMaterial->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
-
-		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Specular1")->Set(SpecularTex.mTexture);
-
-		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(DiffuseTex.mTexture);
-		//mSRB->GetVariable(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(SpecularTex.mTexture);
-
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -334,11 +288,10 @@ class Sample1 : public Core::Game
 		Graphics::Context::GetContext()->SetPipelineState(Renderer->GetPipeline());
 
 		Math::Matrix4 model(1.0f);
-		//model = Math::translate(model, Math::Vector3(0.0f, -1.75f, 0.0f));
-		//model = Math::scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));
-		//Camera.SetModelMatrix(model);
-		//Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
-
+		model = Math::translate(model, Math::Vector3(0.0f, -1.75f, 0.0f));
+		model = Math::scale(model, Math::Vector3(0.2f, 0.2f, 0.2f));
+		Camera.SetModelMatrix(model);
+		Renderer->InstantRender(ENanosuit.GetComponent<Components::MeshComponent>().Get());
 
 		model = Math::translate(model, Math::Vector3(2.0f, -1.75f, 2.0f));
 		Camera.SetModelMatrix(model);
