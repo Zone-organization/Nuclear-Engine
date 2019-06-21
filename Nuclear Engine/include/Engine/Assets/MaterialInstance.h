@@ -20,14 +20,6 @@ namespace NuclearEngine
 			RefCntAutoPtr<ISampler> mSampler;
 		};
 
-		struct MIShaderTexture
-		{
-			Uint32 mSlot = 0;
-			Assets::Texture mTexture;
-		};
-
-		typedef	std::vector<MIShaderTexture> MITextureSet;
-
 		class NEAPI MaterialInstance
 		{
 		public:
@@ -39,7 +31,7 @@ namespace NuclearEngine
 
 			void BindTexSet(Uint32 index);
 
-			std::vector<MITextureSet> mPShaderTextures;
+			std::vector<TextureSet> mPShaderTextures;
 		private:
 			Graphics::RenderingPipeline* mRenderingPipeline = nullptr;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;

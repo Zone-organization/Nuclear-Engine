@@ -8,7 +8,7 @@ namespace NuclearEngine
 	namespace Assets
 	{
 		MaterialInstance::MaterialInstance()
-			: mPShaderTextures(std::vector<MITextureSet>())
+			: mPShaderTextures(std::vector<TextureSet>())
 		{
 		}
 		MaterialInstance::~MaterialInstance()
@@ -27,20 +27,42 @@ namespace NuclearEngine
 
 		void MaterialInstance::Initialize(const std::vector<TextureSet>& PixelShaderTextures)
 		{
-			//Parse loaded textures
-			for (size_t i = 0; i < PixelShaderTextures.size(); i++)
+			//Stage 1
+			//Load Suitable & usable texture only from the main material texture set
+			for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
 			{
-				for (size_t j = 0; j < PixelShaderTextures.at(i).size(); j++)
+				for (auto TexSet : PixelShaderTextures)
 				{
-					for (Graphics::ShaderTextureInfo TSinfo : mRenderingPipeline->mPixelShaderTextureInfo)
+					TextureSet NewTexSet;
+					for (auto TexSetTexture : TexSet)
 					{
-						if (mPShaderTextures.at(i).at(j).mTexture.GetUsageType() == TSinfo.mTexture.GetUsageType())
+						//Found a match
+						if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTexture.GetUsageType())
 						{
-							mPShaderTextures.at(i).at(j).mSlot = TSinfo.mSlot;
+							ShaderTexture NewTex(TexSetTexture);
+							TexSetTexture.mSlot = ShaderTexinfo.mSlot;
+							NewTexSet.push_back(NewTex);
 						}
 					}
+					mPShaderTextures.push_back(NewTexSet);
 				}
 			}
+
+			//TODO
+			//Validate the integrity of the created vector.
+			//for (auto TexSet : mPShaderTextures)
+			//{
+			//	for (auto TexSetTexture : TexSet)
+			//	{
+			//		for (auto Texinfo : mRenderingPipeline->mPixelShaderTextureInfo)
+			//		{
+			//			if (TexSetTexture.mTexture.GetUsageType() == Texinfo.mTexture.GetUsageType())
+			//			{
+			//				TexSetTexture.mSlot = Texinfo.mSlot;
+			//			}
+			//		}
+			//	}
+			//}
 		}
 
 		void MaterialInstance::BindTexSet(Uint32 index)
@@ -51,7 +73,7 @@ namespace NuclearEngine
 			{
 				for (auto tex : mPShaderTextures.at(index))
 				{
-					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTexture.mTextureView);
+					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.mTextureView);
 				}
 			}
 

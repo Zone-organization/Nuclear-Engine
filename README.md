@@ -10,7 +10,7 @@
 * [Roadmap](https://github.com/Zone-organization/Nuclear-Engine/blob/master/ROADMAP.md) - A list of planned features. 
 
 # Major To-dos:
-  - Get the Engine working again by replacing OneAPI with Diligent API.    [50%]
+  - Flexable Rendering pipeline and material system. [40%]
   - Full Audio Support with FMOD.		 [50%]
   - Bloom effect.						 [0%]
   - PBR Renderer.						 [0%]
@@ -18,4 +18,4 @@
 
 ### Building
 Besure to update all submodules to be able to build it
-Use Visual Studio 2017 to compile and build it.
+Use Visual Studio 2019 to compile and build it.

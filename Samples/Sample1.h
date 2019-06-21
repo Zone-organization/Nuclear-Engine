@@ -122,7 +122,7 @@ class Sample1 : public Core::Game
 		//NanoSuit Creation
 		Importers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
-		//ModelDesc.LoadSpecularTextures = true;
+		ModelDesc.LoadSpecularTextures = true;
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 
