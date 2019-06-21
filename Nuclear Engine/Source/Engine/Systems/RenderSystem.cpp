@@ -243,7 +243,6 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
 		{
-			material->Bind();
 			Uint32 offset = 0;
 
 			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)

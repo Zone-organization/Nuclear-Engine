@@ -6,7 +6,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
-#include <map>
+#include <unordered_map>
 
 namespace NuclearEngine
 {
@@ -22,7 +22,7 @@ namespace NuclearEngine
 
 		struct ShaderTexture
 		{
-			Uint32 mSlot;
+			Uint32 mSlot = 0;
 			Assets::Texture mTex;
 		};
 
@@ -57,16 +57,13 @@ namespace NuclearEngine
 			void Create(const MaterialCreationDesc& desc);
 
 			void BindTexSet(Uint32 index);
-			void Bind();
 
 			IPipelineState* GetPipeline();
 
-			//PixelShader Textures
-			std::vector<TextureSet> mVertexShaderTextures;
-			std::vector<ShaderTexture> mVertexShaderTS;
-
 			std::vector<TextureSet> mPixelShaderTextures;
 			std::vector<ShaderTexture> mPixelShaderTS;
+
+			std::unordered_map<Uint32, Assets::Material> mMaterialInstances;
 		private:
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;

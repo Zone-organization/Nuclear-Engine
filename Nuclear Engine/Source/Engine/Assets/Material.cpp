@@ -43,11 +43,6 @@ namespace NuclearEngine
 			Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 
-		void Material::Bind()
-		{	
-			//Graphics::Context::GetContext()->SetPipelineState(mPipeline);
-		}
-
 		IPipelineState * Material::GetPipeline()
 		{
 			return mPipeline;
@@ -71,7 +66,7 @@ namespace NuclearEngine
 			{
 				auto variable = mSRB->GetVariableByIndex(shadertype, i);
 				std::string VariableName(variable->GetResourceDesc().Name);
-
+				auto type = variable->GetResourceDesc().Type;
 				if (variable->GetResourceDesc().Type == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VariableName.find("NEMat_") == 0)
 				{
 					VariableName.erase(0, 6);
@@ -81,7 +76,7 @@ namespace NuclearEngine
 					mTex.mSlot = i;
 					mTex.mTex.SetUsageType(ParseTexUsageFromName(VariableName));
 					mPixelShaderTS.push_back(mTex);
-				}			
+				}
 			}
 
 			//Parse loaded textures

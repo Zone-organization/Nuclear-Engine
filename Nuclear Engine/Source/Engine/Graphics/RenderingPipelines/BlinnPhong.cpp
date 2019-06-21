@@ -72,6 +72,8 @@ namespace NuclearEngine
 			if (desc.LightsBufferPtr)
 				GetPipeline()->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
 
+			ReflectPixelShaderData();
+
 			return true;
 		}
 	}

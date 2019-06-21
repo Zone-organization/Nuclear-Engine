@@ -233,6 +233,7 @@
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\BlinnPhong.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\DiffuseOnly.h" />
+    <ClInclude Include="include\Engine\Assets\MaterialInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -289,6 +290,7 @@
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\RenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\BlinnPhong.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\DiffuseOnly.cpp" />
+    <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

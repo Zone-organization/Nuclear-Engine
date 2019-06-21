@@ -6,6 +6,7 @@ namespace NuclearEngine
 	namespace Assets 
 	{
 		Texture::Texture()
+			: mUsageType(Diffuse)
 		{
 		}
 

@@ -54,6 +54,8 @@ namespace NuclearEngine
 			if (desc.CameraBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
 
+			ReflectPixelShaderData();
+
 			return true;
 		}
 	}
