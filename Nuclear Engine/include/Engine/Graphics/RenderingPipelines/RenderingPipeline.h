@@ -10,16 +10,15 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <vector>
 
 namespace NuclearEngine
 {
 	namespace Graphics
 	{
-
 		struct RenderingPipelineDesc
 		{
 			Uint32 DirLights = 0;
@@ -45,13 +44,14 @@ namespace NuclearEngine
 			IPipelineState* GetPipeline();
 			virtual void ReflectPixelShaderData();
 
+			Uint32 GetID();
 
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
 			std::vector<ShaderTextureInfo> mPixelShaderTextureInfo;
 		protected:
 			RefCntAutoPtr<IPipelineState> mPipeline;
-
+			Uint32 mID = 0;
 		};
 
 	}

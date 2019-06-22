@@ -100,9 +100,7 @@ namespace NuclearEngine
 			if (!material)
 				return;
 
-			Assets::MaterialCreationDesc desc;
-			desc.mPipeline = GetPipeline();
-			material->Create(desc);
+			material->CreateInstance(mRenderingPipeline);
 		}
 
 		void RenderSystem::Bake()
@@ -247,7 +245,7 @@ namespace NuclearEngine
 
 			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)
 			{
-				material->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
+				material->GetMaterialInstance(mRenderingPipeline->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
 				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);

@@ -24,6 +24,7 @@ namespace NuclearEngine
 		class NEAPI BlinnPhong : public RenderingPipeline
 		{
 		public:
+			BlinnPhong();
 			bool Bake(const RenderingPipelineDesc& desc) override;
 
 		private:

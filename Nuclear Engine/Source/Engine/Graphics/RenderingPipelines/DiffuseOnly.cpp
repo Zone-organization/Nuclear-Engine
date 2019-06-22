@@ -1,12 +1,17 @@
 #include <Engine\Graphics\RenderingPipelines\DiffuseOnly.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
-
+#include <Base/Utilities/Hash.h>
 
 namespace NuclearEngine
 {
 	namespace Graphics
 	{
+		DiffuseOnly::DiffuseOnly()
+		{
+			mID  = Utilities::Hash("NE_Diffuse_Only");
+		}
+
 		bool DiffuseOnly::Bake(const RenderingPipelineDesc& desc)
 		{
 			PipelineStateDesc PSODesc;

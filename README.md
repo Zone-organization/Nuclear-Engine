@@ -10,7 +10,7 @@
 * [Roadmap](https://github.com/Zone-organization/Nuclear-Engine/blob/master/ROADMAP.md) - A list of planned features. 
 
 # Major To-dos:
-  - Flexable Rendering pipeline and material system. [40%]
+  - Flexible Rendering pipeline and material system. [70%]
   - Full Audio Support with FMOD.		 [50%]
   - Bloom effect.						 [0%]
   - PBR Renderer.						 [0%]

@@ -1,7 +1,0 @@
-- __Renderer__
-  - Support Dynamic Material 'Changes by changing shaders'
-  - Support Unified Shader (Nuclear Shader)
-  - Support Reflections & Refractions
-  - Support for PBR with IBL
-  - Support for SSAO
-  - Support 2D Renderer

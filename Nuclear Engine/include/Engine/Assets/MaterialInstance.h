@@ -1,32 +1,25 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine/Assets\Texture.h>
-#include <Engine\Assets\Material.h>
-#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Engine\Assets\MaterialTypes.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
 
 namespace NuclearEngine
 {
+	namespace Graphics
+	{
+		class RenderingPipeline;
+	}
 	namespace Assets
 	{
-		//TODO: Support more Shader Types.
-		struct MICreationDesc
-		{
-			Graphics::RenderingPipeline* mPipeline;
-			RefCntAutoPtr<ISampler> mSampler;
-		};
-
 		class NEAPI MaterialInstance
 		{
 		public:
 			MaterialInstance();
 			~MaterialInstance();
 
-			void Create(const MICreationDesc& desc);
+			void Create(Graphics::RenderingPipeline* Pipeline);
 			void Initialize(const std::vector<TextureSet>& PixelShaderTextures);
 
 			void BindTexSet(Uint32 index);

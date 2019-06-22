@@ -2,6 +2,7 @@
 #include <Base\Utilities\Hash.h>
 #include <Engine/Assets/DefaultTextures.h>
 #include <Engine\Graphics\Context.h>
+#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 
 namespace NuclearEngine
 {
@@ -14,14 +15,14 @@ namespace NuclearEngine
 		MaterialInstance::~MaterialInstance()
 		{
 		}
-		void MaterialInstance::Create(const MICreationDesc& desc)
+		void MaterialInstance::Create(Graphics::RenderingPipeline* Pipeline)
 		{
-			if (!desc.mPipeline)
+			if (!Pipeline)
 			{
 				Log.Error("[MaterialInstance] Creation requires a valid Pipeline object!\n");
 				return;
 			}
-			mRenderingPipeline = desc.mPipeline;
+			mRenderingPipeline =Pipeline;
 			mRenderingPipeline->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
 		}
 

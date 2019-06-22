@@ -24,6 +24,8 @@ namespace NuclearEngine
 		class NEAPI DiffuseOnly : public RenderingPipeline
 		{
 		public:
+			DiffuseOnly();
+
 			bool Bake(const RenderingPipelineDesc& desc) override;
 
 		private:

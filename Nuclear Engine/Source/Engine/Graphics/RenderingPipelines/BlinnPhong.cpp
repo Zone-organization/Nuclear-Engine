@@ -6,6 +6,10 @@ namespace NuclearEngine
 {
 	namespace Graphics
 	{
+		BlinnPhong::BlinnPhong()
+		{
+			mID = Utilities::Hash("NE_BlinnPhong");
+		}
 		bool BlinnPhong::Bake(const RenderingPipelineDesc& desc)
 		{		
 			PipelineStateDesc PSODesc;

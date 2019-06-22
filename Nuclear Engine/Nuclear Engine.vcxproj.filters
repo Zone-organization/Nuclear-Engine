@@ -231,9 +231,10 @@
     <ClInclude Include="include\Core\Window.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\BlinnPhong.h" />
-    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\DiffuseOnly.h" />
     <ClInclude Include="include\Engine\Assets\MaterialInstance.h" />
+    <ClInclude Include="include\Engine\Assets\MaterialTypes.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

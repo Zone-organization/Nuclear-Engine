@@ -113,6 +113,7 @@
     <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Assets\Material.h" />
     <ClInclude Include="include\Engine\Assets\MaterialInstance.h" />
+    <ClInclude Include="include\Engine\Assets\MaterialTypes.h" />
     <ClInclude Include="include\Engine\Assets\Texture.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
     <ClInclude Include="include\Engine\Audio\Channel.h" />

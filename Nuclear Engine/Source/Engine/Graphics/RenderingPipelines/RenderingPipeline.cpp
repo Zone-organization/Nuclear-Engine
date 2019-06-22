@@ -47,5 +47,9 @@ namespace NuclearEngine
 				}
 			}
 		}
+		Uint32 RenderingPipeline::GetID()
+		{
+			return mID;
+		}
 	}
 }
