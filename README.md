@@ -1,8 +1,5 @@
 ![Nuclear Engine Logo](logo.png "Nuclear Engine Logo") 
 
-[![Build status](https://ci.appveyor.com/api/projects/status/k7lo2s60aa0gmld2?svg=true)](https://ci.appveyor.com/project/Zone-organization/nuclear-engine) 
-[![CodeFactor](https://www.codefactor.io/repository/github/zone-organization/nuclear-engine/badge)](https://www.codefactor.io/repository/github/zone-organization/nuclear-engine)
-
 # To-dos 
   - W.I.P:
     - Flexible Rendering pipeline and material system. [95%]
