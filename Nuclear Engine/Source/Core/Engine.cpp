@@ -5,6 +5,7 @@
 #include <Engine\Audio\AudioEngine.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Graphics\Context.h>
+#include <Engine\Assets\DefaultMeshes.h>
 
 //#include <FMOD\includer.h> 
 //#include <Engine\Graphics\ImGui_Binding.h>
@@ -64,6 +65,7 @@ namespace NuclearEngine {
 			//Initialize Context
 			Graphics::Context::Initialize(desc.mAppdesc, desc.mGraphicsEngineDesc);
 
+			Assets::DefaultMeshes::Initialize();
 
 			//Graphics::ImGui_Binding::Initialize(Application::MainWindow);
 			//Graphics::ImGui_Renderer::Initialize();

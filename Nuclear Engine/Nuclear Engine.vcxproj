@@ -109,6 +109,7 @@
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="include\Core\Window.h" />
     <ClInclude Include="include\Engine\Assets\Asset.h" />
+    <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
     <ClInclude Include="include\Engine\Assets\DefaultTextures.h" />
     <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Assets\Material.h" />
@@ -341,6 +342,7 @@
     <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
+    <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultTextures.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />

@@ -80,6 +80,9 @@ namespace NuclearEngine
 			void Update_Light();
 			void Update_Meshes(ECS::EntityManager & es);
 
+			//Debug Only
+			bool VisualizePointLightsPositions = false;
+
 		private:
 			RefCntAutoPtr<IBuffer> mPSLightCB;
 
@@ -96,6 +99,8 @@ namespace NuclearEngine
 
 			RenderSystemDesc Desc;
 			RenderSystemStatus status;
+
+			Assets::Material LightSphereMaterial;
 
 			//PostProcess stuff
 			//bool PostProcessingEnabled = false;

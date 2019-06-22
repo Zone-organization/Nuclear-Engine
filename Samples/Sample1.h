@@ -14,7 +14,6 @@ class Sample1 : public Core::Game
 	Assets::Texture DiffuseTex;
 	Assets::Texture SpecularTex;
 
-	Assets::Mesh CubeAsset;
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
 
@@ -117,9 +116,6 @@ class Sample1 : public Core::Game
 
 	void SetupAssets()
 	{
-		//Create Cube
-		Assets::Mesh::CreateCube(&CubeAsset);
-
 		//NanoSuit Creation
 		Importers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
@@ -193,7 +189,7 @@ class Sample1 : public Core::Game
 		ECyborg = SampleScene.CreateEntity();
 
 		//Assign Components
-		ECube.Assign<Components::MeshComponent>(&CubeAsset, &CubeMaterial);
+		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
 
@@ -293,6 +289,14 @@ class Sample1 : public Core::Game
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_Y) == Core::Input::KeyboardKeyStatus::Pressed)
 			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
+
+
+		//Visualize Light positions
+
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_Z) == Core::Input::KeyboardKeyStatus::Pressed)
+			Renderer->VisualizePointLightsPositions = true;
+		else
+			Renderer->VisualizePointLightsPositions = false;
 
 		Camera.Update();
 	}

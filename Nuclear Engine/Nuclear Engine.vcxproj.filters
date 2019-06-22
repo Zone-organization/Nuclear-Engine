@@ -235,6 +235,7 @@
     <ClInclude Include="include\Engine\Assets\MaterialInstance.h" />
     <ClInclude Include="include\Engine\Assets\MaterialTypes.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
+    <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -293,6 +294,7 @@
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\DiffuseOnly.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultTextures.cpp" />
+    <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

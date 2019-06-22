@@ -4,7 +4,10 @@
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\Material.h>
 #include "Diligent\Graphics\GraphicsEngine\interface\MapHelper.h"
+#include <Engine\Assets\DefaultTextures.h>
+#include <Engine\Assets\DefaultMeshes.h>
 #include <cstring>
+
 namespace NuclearEngine
 {
 	namespace Systems
@@ -118,6 +121,12 @@ namespace NuclearEngine
 			RPDesc.LightsBufferPtr = mPSLightCB;
 			mRenderingPipeline->Bake(RPDesc);
 	
+			//TODO: Move!
+			Assets::TextureSet CubeSet;
+			CubeSet.push_back({ 0, Assets::DefaultTextures::DefaultDiffuseTex });
+			CubeSet.push_back({ 1, Assets::DefaultTextures::DefaultSpecularTex });
+			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
+			CreateMaterial(&LightSphereMaterial);
 		}
 		IPipelineState * RenderSystem::GetPipeline()
 		{
@@ -214,6 +223,21 @@ namespace NuclearEngine
 
 			Update_Meshes(es);
 			Update_Light();
+
+			if (VisualizePointLightsPositions)
+			{
+				for (unsigned int i = 0; i < PointLights.size(); i++)
+				{
+					Math::Matrix4 model(1.0f);
+					model = Math::translate(model, Math::Vector3(PointLights[i]->GetInternalData().Position));
+					model = Math::scale(model, Math::Vector3(0.25f));
+					ActiveCamera->SetModelMatrix(model);
+
+					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
+
+				}
+
+			}
 		}
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{
