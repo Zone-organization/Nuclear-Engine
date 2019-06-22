@@ -25,6 +25,8 @@ namespace NuclearEngine
 			void BindTexSet(Uint32 index);
 
 			std::vector<TextureSet> mPShaderTextures;
+
+			void ExtractTextureSetInfo(const std::vector<TextureSet>& data);
 		private:
 			Graphics::RenderingPipeline* mRenderingPipeline = nullptr;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;

@@ -58,7 +58,6 @@ namespace NuclearEngine
 
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
 			}
 
@@ -74,7 +73,7 @@ namespace NuclearEngine
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
 
 			if (desc.LightsBufferPtr)
-				GetPipeline()->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
 
 			ReflectPixelShaderData();
 

@@ -138,7 +138,7 @@ class Sample1 : public Core::Game
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
 		CubeSet.push_back({ 0, DiffuseTex });
-		//CubeSet.push_back({ 1, SpecularTex });
+		CubeSet.push_back({ 1, SpecularTex });
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
 		Renderer->CreateMaterial(&CubeMaterial);
@@ -206,7 +206,7 @@ class Sample1 : public Core::Game
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
 		SampleScene.Systems.Configure();
 
-		Renderer->SetRenderingPipeline(&DiffuseRP);
+		Renderer->SetRenderingPipeline(&BlinnPhongRP);
 
 		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->AddLight(&spotLight);

@@ -4,7 +4,7 @@
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\Material.h>
 #include "Diligent\Graphics\GraphicsEngine\interface\MapHelper.h"
-
+#include <cstring>
 namespace NuclearEngine
 {
 	namespace Systems
@@ -110,9 +110,9 @@ namespace NuclearEngine
 
 			Graphics::RenderingPipelineDesc RPDesc;
 			
-			RPDesc.DirLights = 0;
-			RPDesc.SpotLights = 0;
-			RPDesc.PointLights = 0;
+			RPDesc.DirLights = DirLights.size();
+			RPDesc.SpotLights = SpotLights.size();
+			RPDesc.PointLights = PointLights.size();
 			RPDesc.UseNormalMaps = false;
 			RPDesc.CameraBufferPtr = ActiveCamera->GetCBuffer();
 			RPDesc.LightsBufferPtr = mPSLightCB;
@@ -128,20 +128,20 @@ namespace NuclearEngine
 		{	
 			NE_Light_CB_Size = sizeof(Math::Vector4);
 			NUM_OF_LIGHT_VECS = 1;
-			if (this->DirLights.size() > 0)
+			if (DirLights.size() > 0)
 			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (this->DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->DirLights.size() * 2);
+				NE_Light_CB_Size = NE_Light_CB_Size + (DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
+				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (DirLights.size() * 2);
 			}
-			if (this->PointLights.size() > 0)
+			if (PointLights.size() > 0)
 			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (this->PointLights.size() * sizeof(Components::Internal::Shader_PointLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->PointLights.size() * 3);
+				NE_Light_CB_Size = NE_Light_CB_Size + (PointLights.size() * sizeof(Components::Internal::Shader_PointLight_Struct));
+				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (PointLights.size() * 3);
 			}
-			if (this->SpotLights.size() > 0)
+			if (SpotLights.size() > 0)
 			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (this->SpotLights.size() * sizeof(Components::Internal::Shader_SpotLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (this->SpotLights.size() * 5);
+				NE_Light_CB_Size = NE_Light_CB_Size + (SpotLights.size() * sizeof(Components::Internal::Shader_SpotLight_Struct));
+				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (SpotLights.size() * 5);
 			}
 
 			BufferDesc CBDesc;
@@ -181,13 +181,9 @@ namespace NuclearEngine
 				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Color);
 			}
 
-			//Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::Context::GetContext(), mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD);
-			//*CBConstants = *LightsBuffer.data();
-
-
-			Math::Vector4* data;
+			PVoid data;
 			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-			data = LightsBuffer.data();
+			data = memcpy(data, LightsBuffer.data(), NE_Light_CB_Size);
 			Graphics::Context::GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
 		}
 

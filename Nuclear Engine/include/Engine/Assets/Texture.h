@@ -23,7 +23,7 @@ namespace NuclearEngine {
 			Texture();
 			~Texture();
 
-			Uint8 GetUsageType();
+			Uint8 GetUsageType() const;
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 

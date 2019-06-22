@@ -30,27 +30,29 @@ namespace NuclearEngine
 		{
 			//Stage 1
 			//Load Suitable & usable texture only from the main material texture set
-			for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
+			for (auto TexSet : PixelShaderTextures)
 			{
-				for (auto TexSet : PixelShaderTextures)
+				TextureSet NewTexSet;
+
+				for (auto TexSetTexture : TexSet)
 				{
-					TextureSet NewTexSet;
-					for (auto TexSetTexture : TexSet)
+					for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
 					{
 						//Found a match
 						if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTexture.GetUsageType())
 						{
 							ShaderTexture NewTex(TexSetTexture);
-							TexSetTexture.mSlot = ShaderTexinfo.mSlot;
+							NewTex.mSlot = ShaderTexinfo.mSlot;
 							NewTexSet.push_back(NewTex);
 						}
 					}
-					mPShaderTextures.push_back(NewTexSet);
 				}
+				mPShaderTextures.push_back(NewTexSet);
 			}
-
+			
 			//TODO
-			//Validate the integrity of the created vector.
+			//Stage 2 
+			//Validate the integrity of the created vector, and set automatic textures if a texture isn't provided
 			//for (auto TexSet : mPShaderTextures)
 			//{
 			//	for (auto TexSetTexture : TexSet)
@@ -65,7 +67,30 @@ namespace NuclearEngine
 			//	}
 			//}
 		}
+		void MaterialInstance::ExtractTextureSetInfo(const std::vector<TextureSet>& data)
+		{
+			Log.Info("====   TexSet Info Begin...   ====\n");
+			Log.Info("Tex Set Size: " + std::to_string(data.size()) + " \n");
 
+			for (int i = 0; i < data.size(); i++)
+			{
+				Log.Info("-TexSet Index [" + std::to_string(i) + "] Size: " + std::to_string(data[i].size()) + " Begin: \n");
+
+				for (int j = 0; j < data[i].size(); j++)
+				{
+					Log.Info("---Texture Index [" + std::to_string(j) + " Info:\n");
+					Log.Info("-----Texture Slot [" + std::to_string(data[i][j].mSlot) + "] \n");
+					Log.Info("-----Texture Type [" + std::to_string(data[i][j].mTex.GetUsageType()) + "] \n");
+
+				}
+
+				Log.Info("-TexSet Index [" + std::to_string(i) + "] END... \n");
+
+			}
+
+			Log.Info("====   TexSet Info End...   ====\n");
+
+		}
 		void MaterialInstance::BindTexSet(Uint32 index)
 		{
 			//mPShaderTextures;
@@ -80,5 +105,6 @@ namespace NuclearEngine
 
 			Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
+	
 	}
 }

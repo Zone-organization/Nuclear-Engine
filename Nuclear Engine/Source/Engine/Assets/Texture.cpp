@@ -6,7 +6,7 @@ namespace NuclearEngine
 	namespace Assets 
 	{
 		Texture::Texture()
-			: mUsageType(Diffuse)
+			: mUsageType(Unknown)
 		{
 		}
 
@@ -14,7 +14,7 @@ namespace NuclearEngine
 		{
 		}
 	
-		Uint8 Texture::GetUsageType()
+		Uint8 Texture::GetUsageType() const
 		{
 			return mUsageType;
 		}
