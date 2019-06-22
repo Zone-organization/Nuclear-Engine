@@ -40,6 +40,7 @@ class Sample1 : public Core::Game
 	Graphics::Skybox Skybox;
 
 	Graphics::DiffuseOnly DiffuseRP;
+	Graphics::BlinnPhong BlinnPhongRP;
 
 	//ECS
 	ECS::Scene SampleScene;
