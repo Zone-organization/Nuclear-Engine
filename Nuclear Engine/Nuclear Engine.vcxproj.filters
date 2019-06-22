@@ -292,6 +292,7 @@
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\BlinnPhong.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\DiffuseOnly.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
+    <ClCompile Include="Source\Engine\Assets\DefaultTextures.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

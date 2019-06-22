@@ -202,6 +202,8 @@ class Sample1 : public Core::Game
 
 	void Load()
 	{
+		Assets::DefaultTextures::Initalize(&AssetLoader);
+
 		Systems::RenderSystemDesc desc;
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
 		SampleScene.Systems.Configure();
@@ -300,6 +302,9 @@ class Sample1 : public Core::Game
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+		spotLight.SetPosition(Camera.GetPosition());
+		spotLight.SetDirection(Camera.GetFrontView());
 
 		Renderer->Update(SampleScene.Entities , SampleScene.Events, dt);
 

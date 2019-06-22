@@ -37,6 +37,10 @@ namespace NuclearEngine
 			bool HDR = false;
 
 			int MaxLightsNumber = 10;
+
+			//TODO
+			bool AllowMultipleRenderingPipelines = true;
+			bool CreateMaterialInstanceForEachPipeline = true;
 		};
 
 		class NEAPI RenderSystem : public ECS::System<RenderSystem> {

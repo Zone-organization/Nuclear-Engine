@@ -30,12 +30,6 @@ namespace NuclearEngine
 			IBuffer* LightsBufferPtr = nullptr;
 		};
 
-		struct ShaderTextureInfo
-		{
-			Uint32 mSlot = 0;
-			Assets::Texture mTexture;
-		};
-
 		class NEAPI RenderingPipeline
 		{
 		public:
@@ -46,9 +40,11 @@ namespace NuclearEngine
 
 			Uint32 GetID();
 
+			virtual Assets::Texture GetDefaultTextureFromType(Uint8 Type);
+			
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
-			std::vector<ShaderTextureInfo> mPixelShaderTextureInfo;
+			std::vector<Assets::ShaderTexture> mPixelShaderTextureInfo;
 		protected:
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			Uint32 mID = 0;

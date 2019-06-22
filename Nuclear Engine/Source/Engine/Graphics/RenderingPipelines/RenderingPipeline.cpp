@@ -38,11 +38,11 @@ namespace NuclearEngine
 				if(VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
 				{
 					VarName.erase(0, 6);
-					ShaderTextureInfo ReflectedTex;
-					ReflectedTex.mTexture = Assets::DefaultTextures::DefaultBlackTex;
-					ReflectedTex.mTexture.SetName(VarName);
+					Assets::ShaderTexture ReflectedTex;
+					ReflectedTex.mTex = Assets::DefaultTextures::DefaultBlackTex;
+					ReflectedTex.mTex.SetName(VarName);
 					ReflectedTex.mSlot = i;
-					ReflectedTex.mTexture.SetUsageType(ParseTexUsageFromName(VarName));
+					ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
 					mPixelShaderTextureInfo.push_back(ReflectedTex);
 				}
 			}
@@ -50,6 +50,23 @@ namespace NuclearEngine
 		Uint32 RenderingPipeline::GetID()
 		{
 			return mID;
+		}
+		Assets::Texture RenderingPipeline::GetDefaultTextureFromType(Uint8 Type)
+		{
+			//TODO: Improve
+
+			switch (Type)
+			{
+			case Assets::TextureUsageType::Diffuse:
+				Assets::DefaultTextures::DefaultDiffuseTex;
+			case Assets::TextureUsageType::Specular:
+				Assets::DefaultTextures::DefaultSpecularTex;
+			case Assets::TextureUsageType::Normal:
+				Assets::DefaultTextures::DefaultNormalTex;
+			default:
+				break;
+			}
+			return Assets::DefaultTextures::DefaultBlackTex;
 		}
 	}
 }

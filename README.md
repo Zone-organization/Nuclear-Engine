@@ -5,8 +5,8 @@
 
 # To-dos 
   - W.I.P:
-    - Flexible Rendering pipeline and material system. [70%]
-    - Restore Blinn Phong rendering pipeline Support.  [50%]
+    - Flexible Rendering pipeline and material system. [95%]
+    - Restore Blinn Phong rendering pipeline Support.  [90%]
 	- Test all the working engine features and list them [40%]
 
   - Planned:

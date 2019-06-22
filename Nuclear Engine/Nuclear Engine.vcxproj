@@ -341,6 +341,7 @@
     <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
+    <ClCompile Include="Source\Engine\Assets\DefaultTextures.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />

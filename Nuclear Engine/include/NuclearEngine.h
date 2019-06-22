@@ -36,6 +36,9 @@ _____________/BOOOM\_____________
 //# Asset Classes
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
+#include <Engine\Assets\MaterialInstance.h>
+#include <Engine\Assets\DefaultTextures.h>
+#include <Engine\Assets\Texture.h>
 
 //# Audio SubSystem Headers
 #include <Engine/Audio/AudioEngine.h>

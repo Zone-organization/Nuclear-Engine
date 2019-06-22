@@ -33,13 +33,12 @@ namespace NuclearEngine
 			for (auto TexSet : PixelShaderTextures)
 			{
 				TextureSet NewTexSet;
-
 				for (auto TexSetTexture : TexSet)
 				{
 					for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
 					{
 						//Found a match
-						if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTexture.GetUsageType())
+						if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
 						{
 							ShaderTexture NewTex(TexSetTexture);
 							NewTex.mSlot = ShaderTexinfo.mSlot;
@@ -50,22 +49,37 @@ namespace NuclearEngine
 				mPShaderTextures.push_back(NewTexSet);
 			}
 			
-			//TODO
 			//Stage 2 
 			//Validate the integrity of the created vector, and set automatic textures if a texture isn't provided
-			//for (auto TexSet : mPShaderTextures)
-			//{
-			//	for (auto TexSetTexture : TexSet)
-			//	{
-			//		for (auto Texinfo : mRenderingPipeline->mPixelShaderTextureInfo)
-			//		{
-			//			if (TexSetTexture.mTexture.GetUsageType() == Texinfo.mTexture.GetUsageType())
-			//			{
-			//				TexSetTexture.mSlot = Texinfo.mSlot;
-			//			}
-			//		}
-			//	}
-			//}
+			for (int i = 0; i < mPShaderTextures.size(); i++)
+			{
+				//Check if a texture is missing
+				if (mPShaderTextures.at(i).size() != mRenderingPipeline->mPixelShaderTextureInfo.size())
+				{				
+					//Stage 2A
+					//Generate a copy of the texture set that doesnt contain duplicated textures.
+					auto TexSetCopy = mRenderingPipeline->mPixelShaderTextureInfo;
+
+					for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
+					{
+						for (int j = 0; j < mPShaderTextures.at(i).size(); j++)
+						{
+							if (mPShaderTextures.at(i).at(j).mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
+							{
+								TexSetCopy.erase(TexSetCopy.begin() + j);
+							}
+						}
+					}
+
+					//Stage 2B
+					//Fill the orignal tex set with the missing textures from the copy.
+					for (auto MissingTex : TexSetCopy)
+					{
+						mPShaderTextures.at(i).push_back(MissingTex);
+					}
+				}
+			}
+			
 		}
 		void MaterialInstance::ExtractTextureSetInfo(const std::vector<TextureSet>& data)
 		{
@@ -93,8 +107,6 @@ namespace NuclearEngine
 		}
 		void MaterialInstance::BindTexSet(Uint32 index)
 		{
-			//mPShaderTextures;
-			//TODO: Check if all Slots have been occupied and then bind the free ones to fix some glitches
 			if (!mPShaderTextures.empty())
 			{
 				for (auto tex : mPShaderTextures.at(index))
