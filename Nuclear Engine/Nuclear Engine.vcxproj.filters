@@ -236,6 +236,8 @@
     <ClInclude Include="include\Engine\Assets\MaterialTypes.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\Skybox.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderTarget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -295,6 +297,7 @@
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultTextures.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderTarget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

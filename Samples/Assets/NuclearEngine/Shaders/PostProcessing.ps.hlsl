@@ -8,8 +8,8 @@ struct PixelInputType
     float2 Tex : TEXCOORD;
 };
 
-Texture2D NE_Screen_Texture : register(t0);;
-SamplerState NE_Screen_Sampler : register(s0);
+Texture2D ScreenTex : register(t0);;
+SamplerState ScreenTex_sampler : register(s0);
 
 #ifdef NE_POST_PROCESS_SETTINGS
 cbuffer PostProcessingSettings
@@ -24,7 +24,7 @@ cbuffer PostProcessingSettings
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-    float3 result = NE_Screen_Texture.Sample(NE_Screen_Sampler,input.Tex).rgb;
+    float3 result = ScreenTex.Sample(ScreenTex_sampler,input.Tex).rgb;
 
     float GammaCorrectionValue = 1.0f / 2.2f;
     

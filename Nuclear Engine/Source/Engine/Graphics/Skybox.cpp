@@ -142,6 +142,8 @@ namespace NuclearEngine
 
 		void Skybox::Render()
 		{
+
+
 		/*	mVBuffer.Bind();
 			mDSState.Bind();
 			mVShader.Bind();

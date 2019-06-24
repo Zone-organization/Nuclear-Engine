@@ -2,22 +2,25 @@
 #include <Base\NE_Common.h>
 #include <Engine\ECS/Entity.h>
 #include <Engine\ECS/System.h>
-#include <Engine\Components\MeshComponent.h>
-#include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\Light.h>
-#include <Engine\Assets\Mesh.h>
-#include <Engine\Assets\Material.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <vector>
 
 namespace NuclearEngine
 {
+//Forward Declarations
+	namespace Assets {
+		class Mesh;
+		class Material;
+	}
+
+	namespace Components {
+		class CameraComponent;
+		class MeshComponent;
+	}
+
 	namespace Systems
 	{
 		enum class NEAPI RenderSystemStatus
@@ -51,7 +54,6 @@ namespace NuclearEngine
 			void SetRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
 
 			void BakeLightConstantBuffer();
-			//void InitializePostProcessing(unsigned int WindowWidth = 1024, unsigned int WindowHeight = 768);
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
@@ -65,15 +67,10 @@ namespace NuclearEngine
 
 			IPipelineState* GetPipeline();
 
-			//Main Rendering Function
-			void Render();
 			// Render A MeshComponent Component instantly
 			void InstantRender(Components::MeshComponent* object);
 			// Render A Mesh instantly
 			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
-
-			//void RenderToPostProcessingRT();
-			//void RenderPostProcessingContents();
 
 			//Update Functions
 			void Update(ECS::EntityManager &es, ECS::EventManager &events, ECS::TimeDelta dt) override;
@@ -101,15 +98,6 @@ namespace NuclearEngine
 			RenderSystemStatus status;
 
 			Assets::Material LightSphereMaterial;
-
-			//PostProcess stuff
-			//bool PostProcessingEnabled = false;
-			//ISampler* ScreenSampler;
-			//ITexture* PostProcessTexture;
-			//IRenderTarget* PostProcessRT;
-			//IShader* PostProcess_VShader;
-			//IShader* PostProcess_PShader;
-			//Assets::Mesh PostProcessScreenQuad;
 
 			Graphics::RenderingPipeline* mRenderingPipeline;
 		};

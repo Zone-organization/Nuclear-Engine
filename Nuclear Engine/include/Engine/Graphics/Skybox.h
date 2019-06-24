@@ -6,6 +6,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 
 namespace NuclearEngine
 {
@@ -29,8 +30,8 @@ namespace NuclearEngine
 			void Render();
 
 		private:
-			RefCntAutoPtr<IShader> mVShader;
-			RefCntAutoPtr<IShader> mPShader;
+			//RefCntAutoPtr
+			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IBuffer> mVBuffer;
 			RefCntAutoPtr<ISampler> mSampler;
 			//RefCntAutoPtr<DepthStencilStateDesc> mDepthState;

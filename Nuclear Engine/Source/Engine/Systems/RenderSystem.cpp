@@ -1,9 +1,10 @@
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/TransformComponent.h>
+#include <Engine\Components\CameraComponent.h>
+#include <Engine\Components\MeshComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\Material.h>
-#include "Diligent\Graphics\GraphicsEngine\interface\MapHelper.h"
 #include <Engine\Assets\DefaultTextures.h>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <cstring>
@@ -27,55 +28,6 @@ namespace NuclearEngine
 			mRenderingPipeline = Pipeline;
 		}
 
-		/*void RenderSystem::InitializePostProcessing(unsigned int WindowWidth, unsigned int WindowHeight)
-		{
-		    ITextureDescriptor ScreenTexDesc;
-			if (Desc.HDR == true)
-			{
-				ScreenTexDesc.format = IFormat::RGBA16Float;
-			}
-			else
-			{
-				ScreenTexDesc.format = IFormat::RGBA8UNorm;
-			}
-			ScreenTexDesc.type = ITextureType::Texture2D;
-
-			ISrcImageDescriptor Data;
-			Data.data = NULL;
-			ScreenTexDesc.extent.width = WindowWidth;
-			ScreenTexDesc.extent.height = WindowHeight;
-
-			PostProcessTexture = IContext::GetRenderer()->CreateTexture(ScreenTexDesc, &Data);
-
-			IRenderTargetDescriptor RTDesc;
-			RTDesc.resolution.width = WindowWidth;
-			RTDesc.resolution.height = WindowHeight;
-			RTDesc.attachments.push_back({ IAttachmentType::Color, PostProcessTexture });
-			RTDesc.attachments.push_back({ IAttachmentType::DepthStencil });
-
-			PostProcessRT = IContext::GetRenderer()->CreateRenderTarget(RTDesc);
-
-			Managers::AutoVertexShaderDesc VertShaderDesc;
-			VertShaderDesc.Use_Camera = false;
-			VertShaderDesc.InNormals = false;
-			VertShaderDesc.OutFragPos = false;
-
-			PostProcess_VShader = Managers::ShaderManager::CreateAutoVertexShader(VertShaderDesc);
-			Assets::Mesh::CreateScreenQuad(&PostProcessScreenQuad);
-			PostProcessScreenQuad.Initialize(PostProcess_VShader);
-			std::vector<std::string> defines;
-			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
-			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
-
-
-			IShaderCompiler::CompileAndCreateShader(&PostProcess_PShader,
-				Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true),
-				IShaderType::Fragment);
-	
-			ISamplerDescriptor Samplerdesc;
-			Samplerdesc.magFilter = Samplerdesc.minFilter = Samplerdesc.mipMapFilter = ISamplerFilter::Nearest;
-			ScreenSampler = IContext::GetRenderer()->CreateSampler(Samplerdesc);
-		}*/
 		void RenderSystem::SetCamera(Components::CameraComponent * camera)
 		{
 			this->ActiveCamera = camera;
@@ -165,7 +117,7 @@ namespace NuclearEngine
 		void RenderSystem::Update_Light()
 		{
 			std::vector<Math::Vector4> LightsBuffer;
-			//LightsBuffer.reserve(NUM_OF_LIGHT_VECS);
+			LightsBuffer.reserve(NUM_OF_LIGHT_VECS);
 
 			LightsBuffer.push_back(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
 
@@ -276,22 +228,6 @@ namespace NuclearEngine
 				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
 				Graphics::Context::GetContext()->Draw(DrawAttrs);
 			}
-		}
-		//void RenderSystem::RenderToPostProcessingRT()
-		//{
-			///PostProcessRT.Bind();
-			///IContext::Clear(IColor(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-		//}
-		//void RenderSystem::RenderPostProcessingContents()
-		//{
-			///PostProcessRT.Bind_Default();
-			///IContext::Clear(IColor(0.1f, 0.1f, 0.1f, 1.0f), ClearColorBuffer | ClearDepthBuffer);
-			///PostProcess_VShader.Bind();
-			///PostProcess_PShader.Bind();
-			///ScreenSampler.PSBind(0);
-			///PostProcessTexture.PSBind(0);
-			///InstantRender(&PostProcessScreenQuad, nullptr);
-		//}
-	
+		}	
 	}
 }

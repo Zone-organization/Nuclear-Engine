@@ -1,11 +1,10 @@
 #pragma once
 #include <Engine\Assets\Mesh.h>
-//#include <Diligent/Common/interface/RefCntAutoPtr.h>
-//#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
-//#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
-//#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
-//#include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
-//#include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
+#include <Engine\Graphics\RenderTarget.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
 
 namespace NuclearEngine
 {
@@ -13,8 +12,8 @@ namespace NuclearEngine
 	{
 		struct PostProcessDesc 
 		{
-			Uint8 WindowWidth;
-			Uint8 WindowHeight;
+			Uint8 Width;
+			Uint8 Height;
 			bool HDR;
 			bool GammaCorrection;
 			bool Bloom;
@@ -23,12 +22,19 @@ namespace NuclearEngine
 		{
 		public:
 			void Bake(const PostProcessDesc& desc);
-			/*LLGL::Sampler ScreenSampler;
-			LLGL::Texture* PostProcessTexture;
-			LLGL::RenderTarget* PostProcessRT;
-			Graphics::Shader PostProcess_VShader;
-			Graphics::Shader PostProcess_PShader;
-			Assets::Mesh PostProcessScreenQuad;*/
+
+			//Recreates the render target texture.
+			void Resize();
+
+		private:
+			void CreateRenderTarget(const PostProcessDesc& Desc);
+			void CreatePipeline(const PostProcessDesc& Desc);
+
+
+			RefCntAutoPtr<ISampler> ScreenSampler;
+			RenderTarget PostProcessRT;
+			RefCntAutoPtr<IPipelineState> mPSO;
+			Assets::Mesh PPScreenQuad;
 		};
 	}
 }
