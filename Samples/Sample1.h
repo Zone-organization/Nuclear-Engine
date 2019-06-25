@@ -227,12 +227,10 @@ class Sample1 : public Core::Game
 		SetupEntities();
 
 		//Setup positions
-
 		Math::Matrix4 TNanosuit(1.0f);
 		TNanosuit = Math::translate(TNanosuit, Math::Vector3(0.0f, -1.75f, 0.0f));
 		TNanosuit = Math::scale(TNanosuit, Math::Vector3(0.3f, 0.3f, 0.3f));
 		ENanosuit.GetComponent<Components::TransformComponent>()->SetTransform(TNanosuit);
-
 
 		Math::Matrix4 TCyborg(1.0f);
 		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
@@ -292,7 +290,6 @@ class Sample1 : public Core::Game
 
 
 		//Visualize Light positions
-
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_Z) == Core::Input::KeyboardKeyStatus::Pressed)
 			Renderer->VisualizePointLightsPositions = true;
 		else

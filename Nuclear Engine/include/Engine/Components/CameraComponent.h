@@ -3,6 +3,7 @@
 #include <Base\Math\Math.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
+#include <Engine\Graphics\RenderTarget.h>
 #include <Engine\ECS\Entity.h>
 
 namespace NuclearEngine
@@ -23,6 +24,16 @@ namespace NuclearEngine
 		const float SENSITIVTY = 0.05f;
 		const float ZOOM = 45.0f;
 
+		struct CameraBakingOptions
+		{
+			Uint32 RTWidth;
+			Uint32 RTHeight;
+			bool PostProcessingEnabled = false;
+			bool HDR = false;
+			bool GammaCorrection = false;
+			bool Bloom = false;
+		};
+
 		class NEAPI CameraComponent : public ECS::Component<CameraComponent>
 		{
 		public:
@@ -37,6 +48,9 @@ namespace NuclearEngine
 			Math::Vector3 GetFrontView();
 
 			void Initialize(Math::Matrix4 projectionMatrix);
+
+			void Bake(const CameraBakingOptions& Opt);
+
 			void Update();
 			//Note: Doesn't update the constant buffer, it calculates the ModelInvTranspose, ModelViewProjection
 			void UpdateMatricesOnly();
@@ -62,6 +76,10 @@ namespace NuclearEngine
 			float Zoom;
 
 		protected:
+			Graphics::RenderTarget CameraRT;
+			RefCntAutoPtr<IPipelineState> mPSO;
+			//Assets::Mesh PPScreenQuad;
+
 			// Eular Angles
 			float Yaw;
 			float Pitch;
@@ -82,6 +100,10 @@ namespace NuclearEngine
 			RefCntAutoPtr<IBuffer> ConstantBuffer;
 
 			Math::Vector3 position, direction;
+
+		private:
+			void BakeRenderTarget(const CameraBakingOptions& Desc);
+			void BakePipeline(const CameraBakingOptions& Desc);
 		};
 
 		typedef CameraComponent Camera;

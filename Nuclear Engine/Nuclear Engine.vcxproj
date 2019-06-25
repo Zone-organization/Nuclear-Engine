@@ -124,7 +124,6 @@
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
     <ClInclude Include="include\Engine\Graphics\Background.h" />
-    <ClInclude Include="include\Engine\Graphics\CameraPostProcess.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
@@ -356,7 +355,6 @@
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\CameraPostProcess.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
