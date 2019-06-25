@@ -4,7 +4,7 @@
 #include <Base\NE_Common.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
-#include <Engine/Importers/Importers.h>
+#include <Engine/Importers/Common.h>
 #include <Assimp\include\assimp\Importer.hpp>
 #include <Assimp\include\assimp\scene.h>
 #include <Assimp\include\assimp\postprocess.h>

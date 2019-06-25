@@ -12,10 +12,15 @@
     - Basic Physics support with PhysX 4.
     - Restore Skybox support.
     - Restore Post Processing Effects support.
-
+    - PhysX 4 Support
+	- Replace stb_image for a faster alernative.
+	
   - On Hold:
     - Full Audio Support with FMOD.		 [50%]
 
+  - Far:
+    - C# Scripting through ".Net Core or Mono"
+	
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.
     - Android Support (Mobile devices in general).

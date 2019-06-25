@@ -15,9 +15,9 @@ namespace NuclearEngine
 	{
 		RenderSystem::RenderSystem(const RenderSystemDesc & desc, Components::CameraComponent* camera)
 		{
-			Desc = desc;
+			mDesc = desc;
 			ActiveCamera = camera;
-			this->status = RenderSystemStatus::RequireBaking;
+			mStatus = RenderSystemStatus::RequireBaking;
 		}
 		RenderSystem::~RenderSystem()
 		{

@@ -1,5 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
+#include <Engine/Assets/Common.h>
 #include <Engine\Assets\MaterialInstance.h>
 #include <unordered_map>
 
@@ -7,7 +8,7 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-		class NEAPI Material
+		class NEAPI Material : public Asset<Material>
 		{
 		public:
 			Material();

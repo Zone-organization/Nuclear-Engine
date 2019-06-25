@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="include\Core\Parsers\INIParserClass.h" />
-    <ClInclude Include="include\Core\Parsers\INIFile.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\Core\FileSystem.h" />
     <ClInclude Include="include\Core\Game.h" />
@@ -10,12 +8,6 @@
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Editor.h" />
-    <ClInclude Include="include\Core\Parsers\XMLParser.h" />
-    <ClInclude Include="include\Engine\Physics3D\Collider.h" />
-    <ClInclude Include="include\Engine\Physics3D\Physics3DEngine.h" />
-    <ClInclude Include="include\Engine\Physics3D\PhysicsMaterial.h" />
-    <ClInclude Include="include\Engine\Physics3D\PhysicsScene.h" />
-    <ClInclude Include="include\Engine\Physics3D\RigidBody.h" />
     <ClInclude Include="include\Engine\Managers\AssetManager.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\ShaderManager.h" />
@@ -194,7 +186,6 @@
     <ClInclude Include="include\Base\BuildConfig.h" />
     <ClInclude Include="include\Base\NE_Exception.h" />
     <ClInclude Include="include\Base\NE_PrivateCommon.h" />
-    <ClInclude Include="Source\Engine\Physics3D\PhysXCommon.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="include\Base\Utilities\Timer.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
@@ -212,8 +203,6 @@
     <ClInclude Include="include\Core\ApplicationDesc.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Engine\Assets\DefaultTextures.h" />
-    <ClInclude Include="include\Base\Utilities\SmartPointer.h" />
-    <ClInclude Include="include\Engine\Assets\Asset.h" />
     <ClInclude Include="include\Engine\Assets\Texture.h" />
     <ClInclude Include="include\Engine\Components\TransformComponent.h" />
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
@@ -237,17 +226,28 @@
     <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\Skybox.h" />
     <ClInclude Include="include\Engine\Graphics\RenderTarget.h" />
+    <ClInclude Include="include\Engine\Systems\LightingSubSystem.h" />
+    <ClInclude Include="include\Engine\Components\Components.h" />
+    <ClInclude Include="include\Engine\Assets\Assets.h" />
+    <ClInclude Include="include\Engine\Graphics\Graphics.h" />
+    <ClInclude Include="include\Core\Core.h" />
+    <ClInclude Include="include\Core\Parsers\INIFile.h" />
+    <ClInclude Include="include\Core\Parsers\INIParserClass.h" />
+    <ClInclude Include="include\Core\Parsers\XMLParser.h" />
+    <ClInclude Include="include\Base\Base.h" />
+    <ClInclude Include="include\Engine\Managers\Managers.h" />
+    <ClInclude Include="include\Engine\Systems\Systems.h" />
+    <ClInclude Include="include\Engine\Assets\Common.h" />
+    <ClInclude Include="include\Engine\Importers\Common.h" />
+    <ClInclude Include="include\Engine\Audio\Audio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
     <ClCompile Include="Source\Core\Game.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
-    <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
-    <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
-    <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
     <ClCompile Include="Source\Base\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Core\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
@@ -256,11 +256,6 @@
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
-    <ClCompile Include="Source\Engine\Physics3D\Collider.cpp" />
-    <ClCompile Include="Source\Engine\Physics3D\Physics3DEngine.cpp" />
-    <ClCompile Include="Source\Engine\Physics3D\PhysicsMaterial.cpp" />
-    <ClCompile Include="Source\Engine\Physics3D\PhysicsScene.cpp" />
-    <ClCompile Include="Source\Engine\Physics3D\RigidBody.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\Light.cpp" />
@@ -296,6 +291,10 @@
     <ClCompile Include="Source\Engine\Assets\DefaultTextures.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderTarget.cpp" />
+    <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
+    <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
+    <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
+    <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

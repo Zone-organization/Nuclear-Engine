@@ -30,17 +30,7 @@ namespace NuclearEngine
 		};
 
 		struct NEAPI RenderSystemDesc
-		{			
-			bool NormalMaps = false;
-			std::string VShaderPath = "NE_Default";
-			std::string PShaderPath = "Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl";
-
-			//PostProcess Graphical Enchancements
-			bool GammaCorrection = false;
-			bool HDR = false;
-
-			int MaxLightsNumber = 10;
-
+		{
 			//TODO
 			bool AllowMultipleRenderingPipelines = true;
 			bool CreateMaterialInstanceForEachPipeline = true;
@@ -94,8 +84,8 @@ namespace NuclearEngine
 			std::vector<Components::PointLight*> PointLights;
 			std::vector<Components::SpotLight*> SpotLights;
 
-			RenderSystemDesc Desc;
-			RenderSystemStatus status;
+			RenderSystemDesc mDesc;
+			RenderSystemStatus mStatus;
 
 			Assets::Material LightSphereMaterial;
 

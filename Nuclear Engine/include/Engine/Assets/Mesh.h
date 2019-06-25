@@ -5,7 +5,7 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Engine/Assets/Asset.h>
+#include <Engine/Assets/Common.h>
 #include <vector>
 #include <string>
 

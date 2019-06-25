@@ -14,7 +14,7 @@ namespace NuclearEngine {
 			//INIFile INIReader("RulesBE.ini");
 			INIFile::INIFile(string filename)
 			{
-				_error = Utilities::INIParser.ini_parse(filename.c_str(), ValueHandler, this);
+				_error = INIParser.ini_parse(filename.c_str(), ValueHandler, this);
 			}
 
 			int INIFile::ParseError() const

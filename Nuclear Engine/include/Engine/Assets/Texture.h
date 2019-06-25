@@ -3,7 +3,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Engine/Assets/Asset.h>
+#include <Engine/Assets/Common.h>
 #include <vector>
 
 namespace NuclearEngine {
