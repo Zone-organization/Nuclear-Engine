@@ -26,7 +26,7 @@ namespace NuclearEngine
 			}
 
 			BufferDesc CBDesc;
-			CBDesc.Name = "RenderSystem LightCB";
+			CBDesc.Name = "LightCB";
 			CBDesc.uiSizeInBytes = NE_Light_CB_Size;
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;

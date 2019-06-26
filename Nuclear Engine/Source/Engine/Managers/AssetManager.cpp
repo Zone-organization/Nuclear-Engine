@@ -12,15 +12,7 @@
 namespace NuclearEngine {
 	namespace Managers {
 		
-		template< typename T >
-		std::string int_to_hex(T i)
-		{
-			std::stringstream stream;
-			stream << "0x"
-				<< std::setfill('0') << std::setw(sizeof(T) * 2)
-				<< std::hex << i;
-			return stream.str();
-		}
+	
 		AssetManager::AssetManager(AssetManagerDesc desc)
 			: mDesc(desc)
 		{
@@ -72,7 +64,7 @@ namespace NuclearEngine {
 
 			if (Data.mData == NULL)
 			{
-				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
+				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture: " + Path + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
 				return Assets::Texture();
 			}
 
@@ -82,7 +74,7 @@ namespace NuclearEngine {
 				mHashedTexturesPaths[hashedname] = Path;
 			}
 
-			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture: " + Path + " Hash: " + int_to_hex<Uint32>(hashedname) + '\n'));
+			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture: " + Path + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
 
 			Assets::Texture Tex;
 			Internal::CreateTextureFromRawImage(Data, Desc, Tex);

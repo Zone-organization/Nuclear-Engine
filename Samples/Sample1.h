@@ -137,9 +137,9 @@ class Sample1 : public Core::Game
 		CubeSet.push_back({ 1, SpecularTex });
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
-		Renderer->CreateMaterial(&CubeMaterial);
-		Renderer->CreateMaterial(NanosuitMaterial);
-		Renderer->CreateMaterial(CyborgMaterial);
+		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
+		Renderer->CreateMaterialForAllPipelines(NanosuitMaterial);
+		Renderer->CreateMaterialForAllPipelines(CyborgMaterial);
 
 		CubeSet.clear();
 
@@ -163,24 +163,6 @@ class Sample1 : public Core::Game
 		//Skybox.Initialize(&Camera, SkyBoxTexturePaths);
 	}
 
-	//void ChooseRenderingPipeline()
-	//{
-	//	std::cout << "Select Rendering Pipeline: \n"
-	//		<< "1) DiffuseOnly \n"
-	//		<< "2) BlinnPhong \n";
-
-	//	int i;
-	//	std::cin >> i;
-
-	//	switch (i)
-	//	{
-	//	case 1:
-	//		//return Core::RenderAPI::DirectX11;
-	//	case 2:
-	//	//	return Core::RenderAPI::DirectX12;
-	//	}
-	//}
-
 	void SetupEntities()
 	{
 		//Create Entities
@@ -195,16 +177,15 @@ class Sample1 : public Core::Game
 
 	}
 
-
 	void Load()
 	{
 		Assets::DefaultTextures::Initalize(&AssetLoader);
 
-		Systems::RenderSystemDesc desc;
-		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(desc, &Camera);
+		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(&Camera);
 		SampleScene.Systems.Configure();
 
-		Renderer->SetRenderingPipeline(&BlinnPhongRP);
+		Renderer->AddRenderingPipeline(&BlinnPhongRP);
+		Renderer->AddRenderingPipeline(&DiffuseRP);
 
 		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->AddLight(&spotLight);
@@ -266,6 +247,7 @@ class Sample1 : public Core::Game
 
 	void Update(float deltatime) override
 	{
+		//Movement
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
@@ -294,6 +276,12 @@ class Sample1 : public Core::Game
 			Renderer->VisualizePointLightsPositions = true;
 		else
 			Renderer->VisualizePointLightsPositions = false;
+
+		//Change Rendering Pipeline
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_1) == Core::Input::KeyboardKeyStatus::Pressed)
+			Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_2) == Core::Input::KeyboardKeyStatus::Pressed)
+			Renderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
 
 		Camera.Update();
 	}

@@ -5,11 +5,12 @@
 #include <Engine\Systems\LightingSubSystem.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <vector>
+#include <unordered_map>
 
 namespace NuclearEngine
 {
-//Forward Declarations
-	namespace Assets {
+	namespace Assets
+	{
 		class Mesh;
 		class Material;
 	}
@@ -27,19 +28,13 @@ namespace NuclearEngine
 			RequireBaking
 		};
 
-		struct NEAPI RenderSystemDesc
-		{
-			//TODO
-			bool AllowMultipleRenderingPipelines = true;
-			bool CreateMaterialInstanceForEachPipeline = true;
-		};
-
 		class NEAPI RenderSystem : public ECS::System<RenderSystem> {
 		public:
-			RenderSystem(const RenderSystemDesc& desc = RenderSystemDesc(), Components::CameraComponent* camera = nullptr);
+			RenderSystem(Components::CameraComponent* camera = nullptr);
 			~RenderSystem();
 
-			void SetRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
+			void AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
+			void SetActiveRenderingPipeline(Uint32 PipelineID);
 
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
@@ -48,9 +43,11 @@ namespace NuclearEngine
 			void AddLight(Components::PointLight* light);
 			void AddLight(Components::SpotLight* light);
 
-			void CreateMaterial(Assets::Material* material);
+			void CreateMaterialForAllPipelines(Assets::Material* material);
 
-			void Bake();
+			void CreateMaterial(Assets::Material* material, Uint32 PipelineID);
+
+			void Bake(bool AllPipelines = true);
 
 			IPipelineState* GetPipeline();
 
@@ -73,12 +70,11 @@ namespace NuclearEngine
 
 			bool PipelineDirty = true;
 
-			RenderSystemDesc mDesc;
 			RenderSystemStatus mStatus;
 
 			Assets::Material LightSphereMaterial;
-
-			Graphics::RenderingPipeline* mRenderingPipeline;
+			Graphics::RenderingPipeline* mActiveRenderingPipeline;
+			std::unordered_map<Uint32, Graphics::RenderingPipeline*> mRenderingPipelines;
 		};
 
 	}

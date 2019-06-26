@@ -2,9 +2,7 @@
 
 # To-dos 
   - W.I.P:
-    - Flexible Rendering pipeline and material system. [95%]
-    - Restore Blinn Phong rendering pipeline Support.  [90%]
-	- Test all the working engine features and list them [40%]
+	- Test all the working engine features and list them [60%]
 
   - Planned:
     - Bloom effect.
@@ -14,12 +12,11 @@
     - Restore Post Processing Effects support.
     - PhysX 4 Support
 	- Replace stb_image for a faster alernative.
-	
+	- Support ImGUI.
+	- C# Scripting through .Net Core
+
   - On Hold:
     - Full Audio Support with FMOD.		 [50%]
-
-  - Far:
-    - C# Scripting through ".Net Core or Mono"
 	
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.
@@ -50,7 +47,15 @@
 - __Graphics__
   - Support for Abstracted RenderAPI called Diligent that supports DirectX 11, DirectX 12, Vulkan backends.
   - Support for HLSL Shaders which can be Cross Compiled to GLSL or SPIR-V.
-	 
+  
+- __Rendering__
+  - Features Easy-to-use RenderSystem that create material and manage lighting by itself.
+  - The RenderSystem support what is called "Rendering Pipelines", that allow rendering large number of meshes
+  with different materials using different rendering methods such as(PBR - BlinnPhong) without having to tinker 
+  with low level API stuff as shader or configuring material with each pipeline as everything is done automatically.
+  - Render System and Render pipeline can be extended easily through simply inheriting from base class.
+  - Material are auto-created and auto-configured for each pipeline without user intervention.
+  
 ### Building  (Section W.I.P)
 
 Besure to update all submodules to be able to build it

@@ -13,19 +13,38 @@ namespace NuclearEngine
 {
 	namespace Systems
 	{
-		RenderSystem::RenderSystem(const RenderSystemDesc & desc, Components::CameraComponent* camera)
+		RenderSystem::RenderSystem(Components::CameraComponent* camera)
 		{
-			mDesc = desc;
 			ActiveCamera = camera;
 			mStatus = RenderSystemStatus::RequireBaking;
+			mActiveRenderingPipeline = nullptr;
 		}
 		RenderSystem::~RenderSystem()
 		{
 		}
 
-		void RenderSystem::SetRenderingPipeline(Graphics::RenderingPipeline* Pipeline)
+		void RenderSystem::AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline)
 		{
-			mRenderingPipeline = Pipeline;
+			if (!Pipeline)
+			{
+				Log.Error("[RenderSystem] Pipeline is invalid!\n");
+				return;
+			}
+			mRenderingPipelines[Pipeline->GetID()] = Pipeline;
+
+			if (mActiveRenderingPipeline == nullptr)
+				mActiveRenderingPipeline =	mRenderingPipelines[Pipeline->GetID()];
+		}
+
+		void RenderSystem::SetActiveRenderingPipeline(Uint32 PipelineID)
+		{
+			auto it = mRenderingPipelines.find(PipelineID);
+			if (it != mRenderingPipelines.end())
+			{
+				mActiveRenderingPipeline = it->second;
+				return;
+			}
+			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID)+ ") is not found, while setting it active.\n");
 		}
 
 		void RenderSystem::SetCamera(Components::CameraComponent * camera)
@@ -50,15 +69,33 @@ namespace NuclearEngine
 			mLightingSystem.SpotLights.push_back(light);
 		}
 
-		void RenderSystem::CreateMaterial(Assets::Material * material)
+		void RenderSystem::CreateMaterialForAllPipelines(Assets::Material* material)
 		{
 			if (!material)
 				return;
 
-			material->CreateInstance(mRenderingPipeline);
+			for (auto it : mRenderingPipelines)
+			{
+				material->CreateInstance(it.second);
+			}
 		}
 
-		void RenderSystem::Bake()
+		void RenderSystem::CreateMaterial(Assets::Material* material, Uint32 PipelineID)
+		{
+			if (!material)
+				return;
+
+			auto it = mRenderingPipelines.find(PipelineID);
+			if (it != mRenderingPipelines.end())
+			{
+				material->CreateInstance(it->second);
+				return;
+			}
+
+			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID) + ") is not found, while creating material instance from it.\n");
+		}
+
+		void RenderSystem::Bake(bool AllPipelines)
 		{
 			mLightingSystem.BakeBuffer();
 			mLightingSystem.UpdateBuffer(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
@@ -71,18 +108,29 @@ namespace NuclearEngine
 			RPDesc.UseNormalMaps = false;
 			RPDesc.CameraBufferPtr = ActiveCamera->GetCBuffer();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
-			mRenderingPipeline->Bake(RPDesc);
-	
+
+			if(AllPipelines)
+			{ 
+				for (auto it : mRenderingPipelines)
+				{
+					it.second->Bake(RPDesc);
+				}
+			}
+			else
+			{
+				mActiveRenderingPipeline->Bake(RPDesc);
+			}
+
 			//TODO: Move!
 			Assets::TextureSet CubeSet;
 			CubeSet.push_back({ 0, Assets::DefaultTextures::DefaultDiffuseTex });
 			CubeSet.push_back({ 1, Assets::DefaultTextures::DefaultSpecularTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
-			CreateMaterial(&LightSphereMaterial);
+			CreateMaterialForAllPipelines(&LightSphereMaterial);
 		}
 		IPipelineState * RenderSystem::GetPipeline()
 		{
-			return mRenderingPipeline->GetPipeline();
+			return mActiveRenderingPipeline->GetPipeline();
 		}
 		void RenderSystem::UpdateMeshes(ECS::EntityManager & es)
 		{
@@ -153,7 +201,7 @@ namespace NuclearEngine
 
 			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)
 			{
-				material->GetMaterialInstance(mRenderingPipeline->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
+				material->GetMaterialInstance(mActiveRenderingPipeline->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
 				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
