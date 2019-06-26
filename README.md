@@ -2,7 +2,8 @@
 
 # To-dos 
   - W.I.P:
-	- Test all the working engine features and list them [60%]
+	- Test all the working engine features and list them [70%]
+	- Support ImGUI. [10%]
 
   - Planned:
     - Bloom effect.
