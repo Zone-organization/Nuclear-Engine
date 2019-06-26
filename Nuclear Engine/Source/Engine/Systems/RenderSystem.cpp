@@ -39,15 +39,15 @@ namespace NuclearEngine
 
 		void RenderSystem::AddLight(Components::DirectionalLight * light)
 		{
-			DirLights.push_back(light);
+			mLightingSystem.DirLights.push_back(light);
 		}
 		void RenderSystem::AddLight(Components::PointLight * light)
 		{
-			PointLights.push_back(light);
+			mLightingSystem.PointLights.push_back(light);
 		}
 		void RenderSystem::AddLight(Components::SpotLight * light)
 		{
-			SpotLights.push_back(light);
+			mLightingSystem.SpotLights.push_back(light);
 		}
 
 		void RenderSystem::CreateMaterial(Assets::Material * material)
@@ -60,17 +60,17 @@ namespace NuclearEngine
 
 		void RenderSystem::Bake()
 		{
-			BakeLightConstantBuffer();
-			Update_Light();
+			mLightingSystem.BakeBuffer();
+			mLightingSystem.UpdateBuffer(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
 
 			Graphics::RenderingPipelineDesc RPDesc;
 			
-			RPDesc.DirLights = DirLights.size();
-			RPDesc.SpotLights = SpotLights.size();
-			RPDesc.PointLights = PointLights.size();
+			RPDesc.DirLights = mLightingSystem.DirLights.size();
+			RPDesc.SpotLights = mLightingSystem.SpotLights.size();
+			RPDesc.PointLights = mLightingSystem.PointLights.size();
 			RPDesc.UseNormalMaps = false;
 			RPDesc.CameraBufferPtr = ActiveCamera->GetCBuffer();
-			RPDesc.LightsBufferPtr = mPSLightCB;
+			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 			mRenderingPipeline->Bake(RPDesc);
 	
 			//TODO: Move!
@@ -84,71 +84,7 @@ namespace NuclearEngine
 		{
 			return mRenderingPipeline->GetPipeline();
 		}
-
-		void RenderSystem::BakeLightConstantBuffer()
-		{	
-			NE_Light_CB_Size = sizeof(Math::Vector4);
-			NUM_OF_LIGHT_VECS = 1;
-			if (DirLights.size() > 0)
-			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (DirLights.size() * 2);
-			}
-			if (PointLights.size() > 0)
-			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (PointLights.size() * sizeof(Components::Internal::Shader_PointLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (PointLights.size() * 3);
-			}
-			if (SpotLights.size() > 0)
-			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (SpotLights.size() * sizeof(Components::Internal::Shader_SpotLight_Struct));
-				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (SpotLights.size() * 5);
-			}
-
-			BufferDesc CBDesc;
-			CBDesc.Name = "RenderSystem LightCB";
-			CBDesc.uiSizeInBytes = NE_Light_CB_Size;
-			CBDesc.Usage = USAGE_DYNAMIC;
-			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
-			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &BufferData(), mPSLightCB.GetRawDblPtr());
-		}
-
-		void RenderSystem::Update_Light()
-		{
-			std::vector<Math::Vector4> LightsBuffer;
-			LightsBuffer.reserve(NUM_OF_LIGHT_VECS);
-
-			LightsBuffer.push_back(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
-
-			for (size_t i = 0; i < DirLights.size(); i++)
-			{
-				LightsBuffer.push_back(DirLights[i]->GetInternalData().Direction);
-				LightsBuffer.push_back(DirLights[i]->GetInternalData().Color);
-			}
-			for (size_t i = 0; i < PointLights.size(); i++)
-			{
-				LightsBuffer.push_back(PointLights[i]->GetInternalData().Position);
-				LightsBuffer.push_back(PointLights[i]->GetInternalData().Intensity_Attenuation);
-				LightsBuffer.push_back(PointLights[i]->GetInternalData().Color);
-
-			}
-			for (size_t i = 0; i < SpotLights.size(); i++)
-			{
-				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Position);
-				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Direction);
-				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Intensity_Attenuation);
-				LightsBuffer.push_back(SpotLights[i]->GetInternalData().InnerCutOf_OuterCutoff);
-				LightsBuffer.push_back(SpotLights[i]->GetInternalData().Color);
-			}
-
-			PVoid data;
-			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-			data = memcpy(data, LightsBuffer.data(), NE_Light_CB_Size);
-			Graphics::Context::GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
-		}
-
-		void RenderSystem::Update_Meshes(ECS::EntityManager & es)
+		void RenderSystem::UpdateMeshes(ECS::EntityManager & es)
 		{
 			ECS::ComponentHandle<Components::MeshComponent> MeshObject;
 			for (ECS::Entity entity : es.entities_with_components(MeshObject))
@@ -173,15 +109,15 @@ namespace NuclearEngine
 		{
 			Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
 
-			Update_Meshes(es);
-			Update_Light();
+			UpdateMeshes(es);
+			mLightingSystem.UpdateBuffer(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
 
 			if (VisualizePointLightsPositions)
 			{
-				for (unsigned int i = 0; i < PointLights.size(); i++)
+				for (unsigned int i = 0; i < mLightingSystem.PointLights.size(); i++)
 				{
 					Math::Matrix4 model(1.0f);
-					model = Math::translate(model, Math::Vector3(PointLights[i]->GetInternalData().Position));
+					model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
 					model = Math::scale(model, Math::Vector3(0.25f));
 					ActiveCamera->SetModelMatrix(model);
 

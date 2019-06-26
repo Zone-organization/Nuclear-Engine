@@ -2,9 +2,7 @@
 #include <Base\NE_Common.h>
 #include <Engine\ECS/Entity.h>
 #include <Engine\ECS/System.h>
-#include <Engine\Components\Light.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
+#include <Engine\Systems\LightingSubSystem.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <vector>
 
@@ -43,7 +41,6 @@ namespace NuclearEngine
 
 			void SetRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
 
-			void BakeLightConstantBuffer();
 			void SetCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetCamera();
 
@@ -64,25 +61,17 @@ namespace NuclearEngine
 
 			//Update Functions
 			void Update(ECS::EntityManager &es, ECS::EventManager &events, ECS::TimeDelta dt) override;
-			void Update_Light();
-			void Update_Meshes(ECS::EntityManager & es);
+			void UpdateMeshes(ECS::EntityManager & es);
 
 			//Debug Only
 			bool VisualizePointLightsPositions = false;
 
 		private:
-			RefCntAutoPtr<IBuffer> mPSLightCB;
+			LightingSubSystem mLightingSystem;
 
 			Components::CameraComponent* ActiveCamera;
 
 			bool PipelineDirty = true;
-
-			size_t NE_Light_CB_Size;
-			size_t NUM_OF_LIGHT_VECS;
-
-			std::vector<Components::DirectionalLight*> DirLights;
-			std::vector<Components::PointLight*> PointLights;
-			std::vector<Components::SpotLight*> SpotLights;
 
 			RenderSystemDesc mDesc;
 			RenderSystemStatus mStatus;
