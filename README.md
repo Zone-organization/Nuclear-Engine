@@ -3,7 +3,7 @@
 # To-dos 
   - W.I.P:
 	- Test all the working engine features and list them [70%]
-	- Support ImGUI. [10%]
+	- Support ImGUI. [70%]
 
   - Planned:
     - Bloom effect.
@@ -13,7 +13,6 @@
     - Restore Post Processing Effects support.
     - PhysX 4 Support
 	- Replace stb_image for a faster alernative.
-	- Support ImGUI.
 	- C# Scripting through .Net Core
 
   - On Hold:

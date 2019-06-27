@@ -1,5 +1,6 @@
 #pragma once
 #include "Common.h"
+#include <ImGUI/imgui_impl.h>
 class Sample1 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
@@ -221,6 +222,9 @@ class Sample1 : public Core::Game
 		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
 		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
 
+
+		ImGui_Impl_Init();
+		ImGui_Impl_CreateDeviceObjects();
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 
