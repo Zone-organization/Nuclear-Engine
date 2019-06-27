@@ -1,6 +1,8 @@
 #pragma once
 #include "Common.h"
 #include <ImGUI/imgui_impl.h>
+#include <ImGUI/imgui_impl_glfw.h>
+
 class Sample1 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
@@ -222,7 +224,8 @@ class Sample1 : public Core::Game
 		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
 		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
 
-
+		ImGui::CreateContext();
+		ImGui_ImplGlfw_Init(Core::Application::GetMainWindow()->GetRawWindowPtr(), true);
 		ImGui_Impl_Init();
 		ImGui_Impl_CreateDeviceObjects();
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
@@ -291,6 +294,10 @@ class Sample1 : public Core::Game
 	}
 	void Render(float dt) override
 	{
+		ImGui_Impl_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -299,7 +306,34 @@ class Sample1 : public Core::Game
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
 
-		Renderer->Update(SampleScene.Entities , SampleScene.Events, dt);
+		Renderer->Update(SampleScene.Entities, SampleScene.Events, dt);
+
+
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+
+			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+
+
+
+
+		ImGui::Render();
+		ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
+
 
 		Graphics::Context::GetSwapChain()->Present();
 	}

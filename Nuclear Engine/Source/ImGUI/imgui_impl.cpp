@@ -15,6 +15,7 @@ static RefCntAutoPtr<IBuffer> g_pIB;
 
 static RefCntAutoPtr<IPipelineState> g_pPSO;
 static RefCntAutoPtr<IBuffer> g_pVertexConstantBuffer;
+static RefCntAutoPtr<IShaderResourceBinding> g_pSRB;
 
 static Assets::Texture g_pFontTexture;
 static int                      g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
@@ -109,6 +110,15 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 
 	Graphics::Context::GetContext()->SetPipelineState(g_pPSO);
 
+	Diligent::Viewport vp;
+	vp.Width = draw_data->DisplaySize.x;
+	vp.Height = draw_data->DisplaySize.y;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = vp.TopLeftY = 0;
+	Graphics::Context::GetContext()->SetViewports(1, &vp,0,0);
+
+
 	Graphics::Context::GetContext()->SetIndexBuffer(g_pIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 	Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &g_pVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
@@ -132,7 +142,10 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 			// Apply scissor/clipping rectangle
 			const Rect r = { (long)(pcmd->ClipRect.x - clip_off.x), (long)(pcmd->ClipRect.y - clip_off.y), (long)(pcmd->ClipRect.z - clip_off.x), (long)(pcmd->ClipRect.w - clip_off.y) };
 			Graphics::Context::GetContext()->SetScissorRects(1, &r, 0, 0);
+
 			// Bind texture, Draw
+			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(((Assets::Texture*)pcmd->TextureId)->mTextureView);
+			Graphics::Context::GetContext()->CommitShaderResources(g_pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			DrawAttribs DrawAttrs;
 			DrawAttrs.IsIndexed = true;
@@ -141,11 +154,6 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 			DrawAttrs.FirstIndexLocation = pcmd->IdxOffset + global_idx_offset;
 			DrawAttrs.BaseVertex = pcmd->VtxOffset + global_vtx_offset;
 			Graphics::Context::GetContext()->Draw(DrawAttrs);
-
-
-			//ID3D11ShaderResourceView* texture_srv = (ID3D11ShaderResourceView*)pcmd->TextureId;
-			//ctx->PSSetShaderResources(0, 1, &texture_srv);
-
 		}
         global_idx_offset += cmd_list->IdxBuffer.Size;
         global_vtx_offset += cmd_list->VtxBuffer.Size;
@@ -232,6 +240,7 @@ bool    ImGui_Impl_CreateDeviceObjects()
 	ShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 	ShaderCI.UseCombinedTextureSamplers = true;
 
+
 	// Create vertex shader
 	RefCntAutoPtr<IShader> pVS;
 	{ 
@@ -242,9 +251,9 @@ bool    ImGui_Impl_CreateDeviceObjects()
             };\
             struct VS_INPUT\
             {\
-            float2 pos : POSITION;\
-            float4 col : COLOR0;\
-            float2 uv  : TEXCOORD0;\
+            float2 pos : ATTRIB0;\
+            float2 uv  : ATTRIB1;\
+            float4 col : ATTRIB2;\
             };\
             \
             struct PS_INPUT\
@@ -302,14 +311,12 @@ bool    ImGui_Impl_CreateDeviceObjects()
 	LayoutElement LayoutElems[] =
 	{
 		// Attribute 0 - vertex position
-		LayoutElement{0, 0, 2, VT_FLOAT32, False},
+		LayoutElement{0, 0, 2, VT_FLOAT32, False,IM_OFFSETOF(ImDrawVert, pos)},
 		// Attribute 1 - texture coordinates
-		LayoutElement{1, 0, 2, VT_FLOAT32, False},
-		// Attribute 1 - color coordinates
-		LayoutElement{1, 0, 4, VT_INT8, False}
+		LayoutElement{1, 0, 2, VT_FLOAT32, False, IM_OFFSETOF(ImDrawVert, uv)},
+		// Attribute 2 - color coordinates
+		LayoutElement{2, 0, 4, VT_UINT8, True, IM_OFFSETOF(ImDrawVert, col)}
 	};
-
-
 
 	PSODesc.GraphicsPipeline.pVS = pVS;
 	PSODesc.GraphicsPipeline.pPS = pPS;
@@ -343,6 +350,8 @@ bool    ImGui_Impl_CreateDeviceObjects()
 	Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &g_pPSO);
 
 	g_pPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "vertexBuffer")->Set(g_pVertexConstantBuffer);
+
+	g_pPSO->CreateShaderResourceBinding(&g_pSRB, true);
 
     ImGui_Impl_CreateFontsTexture();
 

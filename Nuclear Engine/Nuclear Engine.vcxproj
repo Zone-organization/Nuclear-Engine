@@ -296,6 +296,7 @@
     <ClInclude Include="include\ImGUI\imconfig.h" />
     <ClInclude Include="include\ImGUI\imgui.h" />
     <ClInclude Include="include\ImGUI\imgui_impl.h" />
+    <ClInclude Include="include\ImGUI\imgui_impl_glfw.h" />
     <ClInclude Include="Source\ImGUI\imgui_internal.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="include\Engine\Components\TransformComponent.h" />
@@ -379,6 +380,7 @@
     <ClCompile Include="Source\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="Source\ImGUI\imgui_draw.cpp" />
     <ClCompile Include="Source\ImGUI\imgui_impl.cpp" />
+    <ClCompile Include="Source\ImGUI\imgui_impl_glfw.cpp" />
     <ClCompile Include="Source\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

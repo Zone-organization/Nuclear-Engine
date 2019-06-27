@@ -247,6 +247,7 @@
     <ClInclude Include="Source\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\ImGUI\imgui_impl.h" />
+    <ClInclude Include="include\ImGUI\imgui_impl_glfw.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -307,6 +308,7 @@
     <ClCompile Include="Source\ImGUI\imgui_draw.cpp" />
     <ClCompile Include="Source\ImGUI\imgui_impl.cpp" />
     <ClCompile Include="Source\ImGUI\imgui_widgets.cpp" />
+    <ClCompile Include="Source\ImGUI\imgui_impl_glfw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
