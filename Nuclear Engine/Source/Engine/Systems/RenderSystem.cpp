@@ -38,6 +38,14 @@ namespace NuclearEngine
 
 		void RenderSystem::SetActiveRenderingPipeline(Uint32 PipelineID)
 		{
+			if (mActiveRenderingPipeline)
+			{
+				if (mActiveRenderingPipeline->GetID() == PipelineID)
+				{
+					return;
+				}
+			}
+
 			auto it = mRenderingPipelines.find(PipelineID);
 			if (it != mRenderingPipelines.end())
 			{

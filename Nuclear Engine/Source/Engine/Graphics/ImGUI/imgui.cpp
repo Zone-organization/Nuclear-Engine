@@ -1,7 +1,7 @@
 // dear imgui, v1.71
 // (main code and documentation)
 
-// Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp for demo code.
+// Call and read NuclearEngine::Graphics::ImGui::ShowDemoWindow() in imgui_demo.cpp for demo code.
 // Newcomers, read 'Programmer guide' below for notes on how to setup Dear ImGui in your codebase.
 // Get latest version at https://github.com/ocornut/imgui
 // Releases change-log at https://github.com/ocornut/imgui/releases
@@ -15,7 +15,7 @@
 // Individuals: you can support continued maintenance and development via donations or Patreon https://www.patreon.com/imgui.
 
 // It is recommended that you don't modify imgui.cpp! It will become difficult for you to update the library.
-// Note that 'ImGui::' being a namespace, you can add functions into the namespace from your own source files, without
+// Note that 'NuclearEngine::Graphics::ImGui::' being a namespace, you can add functions into the namespace from your own source files, without
 // modifying imgui.h or imgui.cpp. You may include imgui_internal.h to access internal data structures, but it doesn't
 // come with any guarantee of forward compatibility. Discussing your changes on the GitHub Issue Tracker may lead you
 // to a better solution or official support for them.
@@ -112,7 +112,7 @@ CODE
  ==============
 
  - Double-click on title bar to collapse window.
- - Click upper right corner to close a window, available when 'bool* p_open' is passed to ImGui::Begin().
+ - Click upper right corner to close a window, available when 'bool* p_open' is passed to NuclearEngine::Graphics::ImGui::Begin().
  - Click and drag on lower right corner to resize window (double-click to auto fit window to its contents).
  - Click and drag on any empty space to move window.
  - TAB/SHIFT+TAB to cycle through keyboard editable fields.
@@ -140,7 +140,7 @@ CODE
  - Read the FAQ below this section!
  - Your code creates the UI, if your code doesn't run the UI is gone! The UI can be highly dynamic, there are no construction
    or destruction steps, less superfluous data retention on your side, less state duplication, less state synchronization, less bugs.
- - Call and read ImGui::ShowDemoWindow() for demo code demonstrating most features.
+ - Call and read NuclearEngine::Graphics::ImGui::ShowDemoWindow() for demo code demonstrating most features.
  - The library is designed to be built from sources. Avoid pre-compiled binaries and packaged versions. See imconfig.h to configure your build.
  - Dear ImGui is an implementation of the IMGUI paradigm (immediate-mode graphical user interface, a term coined by Casey Muratori).
    You can learn about IMGUI principles at http://www.johno.se/book/imgui.html, http://mollyrocket.com/861 & more links docs/README.md.
@@ -151,7 +151,7 @@ CODE
  - This codebase is also optimized to yield decent performances with typical "Debug" builds settings.
  - Please make sure you have asserts enabled (IM_ASSERT redirects to assert() by default, but can be redirected).
    If you get an assert, read the messages and comments around the assert.
- - C++: this is a very C-ish codebase: we don't rely on C++11, we don't include any C++ headers, and ImGui:: is a namespace.
+ - C++: this is a very C-ish codebase: we don't rely on C++11, we don't include any C++ headers, and NuclearEngine::Graphics::ImGui:: is a namespace.
  - C++: ImVec2/ImVec4 do not expose math operators by default, because it is expected that you use your own math types.
    See FAQ "How can I use my own math types instead of ImVec2/ImVec4?" for details about setting up imconfig.h for that.
    However, imgui_internal.h can optionally export math operators for ImVec2/ImVec4, which we use in this codebase.
@@ -176,7 +176,7 @@ CODE
  - When using Dear ImGui, your programming IDE is your friend: follow the declaration of variables, functions and types to find comments about them.
  - Dear ImGui never touches or knows about your GPU state. The only function that knows about GPU is the draw function that you provide.
    Effectively it means you can create widgets at any time in your code, regardless of considerations of being in "update" vs "render"
-   phases of your own application. All rendering informatioe are stored into command-lists that you will retrieve after calling ImGui::Render().
+   phases of your own application. All rendering informatioe are stored into command-lists that you will retrieve after calling NuclearEngine::Graphics::ImGui::Render().
  - Refer to the bindings and demo applications in the examples/ folder for instruction on how to setup your code.
  - If you are running over a standard OS with a common graphics API, you should be able to use unmodified imgui_impl_*** files from the examples/ folder.
 
@@ -184,8 +184,8 @@ CODE
  EXHIBIT 1: USING THE EXAMPLE BINDINGS (imgui_impl_XXX.cpp files from the examples/ folder).
 
      // Application init: create a dear imgui context, setup some options, load fonts
-     ImGui::CreateContext();
-     ImGuiIO& io = ImGui::GetIO();
+     NuclearEngine::Graphics::ImGui::CreateContext();
+     ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
      // TODO: Set optional io.ConfigFlags values, e.g. 'io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard' to enable keyboard controls.
      // TODO: Fill optional fields of the io structure later.
      // TODO: Load TTF/OTF fonts if you don't want to use the default font.
@@ -200,28 +200,28 @@ CODE
          // Feed inputs to dear imgui, start new frame
          ImGui_ImplDX11_NewFrame();
          ImGui_ImplWin32_NewFrame();
-         ImGui::NewFrame();
+         NuclearEngine::Graphics::ImGui::NewFrame();
 
          // Any application code here
-         ImGui::Text("Hello, world!");
+         NuclearEngine::Graphics::ImGui::Text("Hello, world!");
 
          // Render dear imgui into screen
-         ImGui::Render();
-         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+         NuclearEngine::Graphics::ImGui::Render();
+         ImGui_ImplDX11_RenderDrawData(NuclearEngine::Graphics::ImGui::GetDrawData());
          g_pSwapChain->Present(1, 0);
      }
 
      // Shutdown
      ImGui_ImplDX11_Shutdown();
      ImGui_ImplWin32_Shutdown();
-     ImGui::DestroyContext();
+     NuclearEngine::Graphics::ImGui::DestroyContext();
 
  HOW A SIMPLE APPLICATION MAY LOOK LIKE:
  EXHIBIT 2: IMPLEMENTING CUSTOM BINDING / CUSTOM ENGINE.
 
      // Application init: create a dear imgui context, setup some options, load fonts
-     ImGui::CreateContext();
-     ImGuiIO& io = ImGui::GetIO();
+     NuclearEngine::Graphics::ImGui::CreateContext();
+     ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
      // TODO: Set optional io.ConfigFlags values, e.g. 'io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard' to enable keyboard controls.
      // TODO: Fill optional fields of the io structure later.
      // TODO: Load TTF/OTF fonts if you don't want to use the default font.
@@ -250,26 +250,26 @@ CODE
         io.MouseDown[0] = my_mouse_buttons[0];  // set the mouse button states
         io.MouseDown[1] = my_mouse_buttons[1];
 
-        // Call NewFrame(), after this point you can use ImGui::* functions anytime
+        // Call NewFrame(), after this point you can use NuclearEngine::Graphics::ImGui::* functions anytime
         // (So you want to try calling NewFrame() as early as you can in your mainloop to be able to use Dear ImGui everywhere)
-        ImGui::NewFrame();
+        NuclearEngine::Graphics::ImGui::NewFrame();
 
         // Most of your application code here
-        ImGui::Text("Hello, world!");
-        MyGameUpdate(); // may use any Dear ImGui functions, e.g. ImGui::Begin("My window"); ImGui::Text("Hello, world!"); ImGui::End();
+        NuclearEngine::Graphics::ImGui::Text("Hello, world!");
+        MyGameUpdate(); // may use any Dear ImGui functions, e.g. NuclearEngine::Graphics::ImGui::Begin("My window"); NuclearEngine::Graphics::ImGui::Text("Hello, world!"); NuclearEngine::Graphics::ImGui::End();
         MyGameRender(); // may use any Dear ImGui functions as well!
 
         // Render dear imgui, swap buffers
         // (You want to try calling EndFrame/Render as late as you can, to be able to use Dear ImGui in your own game rendering code)
-        ImGui::EndFrame();
-        ImGui::Render();
-        ImDrawData* draw_data = ImGui::GetDrawData();
+        NuclearEngine::Graphics::ImGui::EndFrame();
+        NuclearEngine::Graphics::ImGui::Render();
+        ImDrawData* draw_data = NuclearEngine::Graphics::ImGui::GetDrawData();
         MyImGuiRenderFunction(draw_data);
         SwapBuffers();
      }
 
      // Shutdown
-     ImGui::DestroyContext();
+     NuclearEngine::Graphics::ImGui::DestroyContext();
 
  HOW A SIMPLE RENDERING FUNCTION MAY LOOK LIKE:
 
@@ -398,12 +398,12 @@ CODE
  - 2018/08/21 (1.63) - removed ImGuiInputTextCallbackData::ReadOnly since it is a duplication of (ImGuiInputTextCallbackData::Flags & ImGuiInputTextFlags_ReadOnly).
  - 2018/08/01 (1.63) - removed per-window ImGuiWindowFlags_ResizeFromAnySide beta flag in favor of a global io.ConfigResizeWindowsFromEdges [update 1.67 renamed to ConfigWindowsResizeFromEdges] to enable the feature.
  - 2018/08/01 (1.63) - renamed io.OptCursorBlink to io.ConfigCursorBlink [-> io.ConfigInputTextCursorBlink in 1.65], io.OptMacOSXBehaviors to ConfigMacOSXBehaviors for consistency.
- - 2018/07/22 (1.63) - changed ImGui::GetTime() return value from float to double to avoid accumulating floating point imprecisions over time.
+ - 2018/07/22 (1.63) - changed NuclearEngine::Graphics::ImGui::GetTime() return value from float to double to avoid accumulating floating point imprecisions over time.
  - 2018/07/08 (1.63) - style: renamed ImGuiCol_ModalWindowDarkening to ImGuiCol_ModalWindowDimBg for consistency with other features. Kept redirection enum (will obsolete).
  - 2018/06/08 (1.62) - examples: the imgui_impl_xxx files have been split to separate platform (Win32, Glfw, SDL2, etc.) from renderer (DX11, OpenGL, Vulkan,  etc.).
                        old bindings will still work as is, however prefer using the separated bindings as they will be updated to support multi-viewports.
                        when adopting new bindings follow the main.cpp code of your preferred examples/ folder to know which functions to call.
-                       in particular, note that old bindings called ImGui::NewFrame() at the end of their ImGui_ImplXXXX_NewFrame() function.
+                       in particular, note that old bindings called NuclearEngine::Graphics::ImGui::NewFrame() at the end of their ImGui_ImplXXXX_NewFrame() function.
  - 2018/06/06 (1.62) - renamed GetGlyphRangesChinese() to GetGlyphRangesChineseFull() to distinguish other variants and discourage using the full set.
  - 2018/06/06 (1.62) - TreeNodeEx()/TreeNodeBehavior(): the ImGuiTreeNodeFlags_CollapsingHeader helper now include the ImGuiTreeNodeFlags_NoTreePushOnOpen flag. See Changelog for details.
  - 2018/05/03 (1.61) - DragInt(): the default compile-time format string has been changed from "%.0f" to "%d", as we are not using integers internally any more.
@@ -418,9 +418,9 @@ CODE
  - 2018/03/08 (1.60) - changed ImFont::DisplayOffset.y to default to 0 instead of +1. Fixed rounding of Ascent/Descent to match TrueType renderer. If you were adding or subtracting to ImFont::DisplayOffset check if your fonts are correctly aligned vertically.
  - 2018/03/03 (1.60) - renamed ImGuiStyleVar_Count_ to ImGuiStyleVar_COUNT and ImGuiMouseCursor_Count_ to ImGuiMouseCursor_COUNT for consistency with other public enums.
  - 2018/02/18 (1.60) - BeginDragDropSource(): temporarily removed the optional mouse_button=0 parameter because it is not really usable in many situations at the moment.
- - 2018/02/16 (1.60) - obsoleted the io.RenderDrawListsFn callback, you can call your graphics engine render function after ImGui::Render(). Use ImGui::GetDrawData() to retrieve the ImDrawData* to display.
+ - 2018/02/16 (1.60) - obsoleted the io.RenderDrawListsFn callback, you can call your graphics engine render function after NuclearEngine::Graphics::ImGui::Render(). Use NuclearEngine::Graphics::ImGui::GetDrawData() to retrieve the ImDrawData* to display.
  - 2018/02/07 (1.60) - reorganized context handling to be more explicit,
-                       - YOU NOW NEED TO CALL ImGui::CreateContext() AT THE BEGINNING OF YOUR APP, AND CALL ImGui::DestroyContext() AT THE END.
+                       - YOU NOW NEED TO CALL NuclearEngine::Graphics::ImGui::CreateContext() AT THE BEGINNING OF YOUR APP, AND CALL NuclearEngine::Graphics::ImGui::DestroyContext() AT THE END.
                        - removed Shutdown() function, as DestroyContext() serve this purpose.
                        - you may pass a ImFontAtlas* pointer to CreateContext() to share a font atlas between contexts. Otherwise CreateContext() will create its own font atlas instance.
                        - removed allocator parameters from CreateContext(), they are now setup with SetAllocatorFunctions(), and shared by all contexts.
@@ -440,7 +440,7 @@ CODE
  - 2017/12/12 (1.53) - renamed ImGuiTreeNodeFlags_AllowOverlapMode to ImGuiTreeNodeFlags_AllowItemOverlap. Kept redirection enum (will obsolete).
  - 2017/12/10 (1.53) - removed SetNextWindowContentWidth(), prefer using SetNextWindowContentSize(). Kept redirection function (will obsolete).
  - 2017/11/27 (1.53) - renamed ImGuiTextBuffer::append() helper to appendf(), appendv() to appendfv(). If you copied the 'Log' demo in your code, it uses appendv() so that needs to be renamed.
- - 2017/11/18 (1.53) - Style, Begin: removed ImGuiWindowFlags_ShowBorders window flag. Borders are now fully set up in the ImGuiStyle structure (see e.g. style.FrameBorderSize, style.WindowBorderSize). Use ImGui::ShowStyleEditor() to look them up.
+ - 2017/11/18 (1.53) - Style, Begin: removed ImGuiWindowFlags_ShowBorders window flag. Borders are now fully set up in the ImGuiStyle structure (see e.g. style.FrameBorderSize, style.WindowBorderSize). Use NuclearEngine::Graphics::ImGui::ShowStyleEditor() to look them up.
                        Please note that the style system will keep evolving (hopefully stabilizing in Q1 2018), and so custom styles will probably subtly break over time. It is recommended you use the StyleColorsClassic(), StyleColorsDark(), StyleColorsLight() functions.
  - 2017/11/18 (1.53) - Style: removed ImGuiCol_ComboBg in favor of combo boxes using ImGuiCol_PopupBg for consistency.
  - 2017/11/18 (1.53) - Style: renamed ImGuiCol_ChildWindowBg to ImGuiCol_ChildBg.
@@ -488,7 +488,7 @@ CODE
  - 2016/05/07 (1.49) - removed confusing set of GetInternalState(), GetInternalStateSize(), SetInternalState() functions. Now using CreateContext(), DestroyContext(), GetCurrentContext(), SetCurrentContext().
  - 2016/05/02 (1.49) - renamed SetNextTreeNodeOpened() to SetNextTreeNodeOpen(), no redirection.
  - 2016/05/01 (1.49) - obsoleted old signature of CollapsingHeader(const char* label, const char* str_id = NULL, bool display_frame = true, bool default_open = false) as extra parameters were badly designed and rarely used. You can replace the "default_open = true" flag in new API with CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen).
- - 2016/04/26 (1.49) - changed ImDrawList::PushClipRect(ImVec4 rect) to ImDrawList::PushClipRect(Imvec2 min,ImVec2 max,bool intersect_with_current_clip_rect=false). Note that higher-level ImGui::PushClipRect() is preferable because it will clip at logic/widget level, whereas ImDrawList::PushClipRect() only affect your renderer.
+ - 2016/04/26 (1.49) - changed ImDrawList::PushClipRect(ImVec4 rect) to ImDrawList::PushClipRect(Imvec2 min,ImVec2 max,bool intersect_with_current_clip_rect=false). Note that higher-level NuclearEngine::Graphics::ImGui::PushClipRect() is preferable because it will clip at logic/widget level, whereas ImDrawList::PushClipRect() only affect your renderer.
  - 2016/04/03 (1.48) - removed style.WindowFillAlphaDefault setting which was redundant. Bake default BG alpha inside style.Colors[ImGuiCol_WindowBg] and all other Bg color values. (ref github issue #337).
  - 2016/04/03 (1.48) - renamed ImGuiCol_TooltipBg to ImGuiCol_PopupBg, used by popups/menus and tooltips. popups/menus were previously using ImGuiCol_WindowBg. (ref github issue #337)
  - 2016/03/21 (1.48) - renamed GetWindowFont() to GetFont(), GetWindowFontSize() to GetFontSize(). Kept inline redirection function (will obsolete).
@@ -543,13 +543,13 @@ CODE
  - 2015/01/19 (1.30) - renamed ImGuiStorage::GetIntPtr()/GetFloatPtr() to GetIntRef()/GetIntRef() because Ptr was conflicting with actual pointer storage functions.
  - 2015/01/11 (1.30) - big font/image API change! now loads TTF file. allow for multiple fonts. no need for a PNG loader.
               (1.30) - removed GetDefaultFontData(). uses io.Fonts->GetTextureData*() API to retrieve uncompressed pixels.
-                       font init:  { const void* png_data; unsigned int png_size; ImGui::GetDefaultFontData(NULL, NULL, &png_data, &png_size); <..Upload texture to GPU..>; }
+                       font init:  { const void* png_data; unsigned int png_size; NuclearEngine::Graphics::ImGui::GetDefaultFontData(NULL, NULL, &png_data, &png_size); <..Upload texture to GPU..>; }
                        became:     { unsigned char* pixels; int width, height; io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height); <..Upload texture to GPU>; io.Fonts->TexId = YourTextureIdentifier; }
                        you now have more flexibility to load multiple TTF fonts and manage the texture buffer for internal needs.
                        it is now recommended that you sample the font texture with bilinear interpolation.
               (1.30) - added texture identifier in ImDrawCmd passed to your render function (we can now render images). make sure to set io.Fonts->TexID.
               (1.30) - removed IO.PixelCenterOffset (unnecessary, can be handled in user projection matrix)
-              (1.30) - removed ImGui::IsItemFocused() in favor of ImGui::IsItemActive() which handles all widgets
+              (1.30) - removed NuclearEngine::Graphics::ImGui::IsItemFocused() in favor of NuclearEngine::Graphics::ImGui::IsItemActive() which handles all widgets
  - 2014/12/10 (1.18) - removed SetNewWindowDefaultPos() in favor of new generic API SetNextWindowPos(pos, ImGuiSetCondition_FirstUseEver)
  - 2014/11/28 (1.17) - moved IO.Font*** options to inside the IO.Font-> structure (FontYOffset, FontTexUvForWhite, FontBaseScale, FontFallbackGlyph)
  - 2014/11/26 (1.17) - reworked syntax of IMGUI_ONCE_UPON_A_FRAME helper macro to increase compiler compatibility
@@ -569,7 +569,7 @@ CODE
  Q: Where is the documentation?
  A: This library is poorly documented at the moment and expects of the user to be acquainted with C/C++.
     - Run the examples/ and explore them.
-    - See demo code in imgui_demo.cpp and particularly the ImGui::ShowDemoWindow() function. 
+    - See demo code in imgui_demo.cpp and particularly the NuclearEngine::Graphics::ImGui::ShowDemoWindow() function. 
     - The demo covers most features of Dear ImGui, so you can read the code and see its output. 
     - See documentation and comments at the top of imgui.cpp + effectively imgui.h.
     - Dozens of standalone example applications using e.g. OpenGL/DirectX are provided in the examples/ 
@@ -600,7 +600,7 @@ CODE
     Please try to refer to this library as "Dear ImGui".
 
  Q: How can I tell whether to dispatch mouse/keyboard to Dear ImGui or to my application?
- A: You can read the 'io.WantCaptureMouse', 'io.WantCaptureKeyboard' and 'io.WantTextInput' flags from the ImGuiIO structure (e.g. if (ImGui::GetIO().WantCaptureMouse) { ... } )
+ A: You can read the 'io.WantCaptureMouse', 'io.WantCaptureKeyboard' and 'io.WantTextInput' flags from the ImGuiIO structure (e.g. if (NuclearEngine::Graphics::ImGui::GetIO().WantCaptureMouse) { ... } )
     - When 'io.WantCaptureMouse' is set, imgui wants to use your mouse state, and you may want to discard/hide the inputs from the rest of your application.
     - When 'io.WantCaptureKeyboard' is set, imgui wants to use your keyboard state, and you may want to discard/hide the inputs from the rest of your application.
     - When 'io.WantTextInput' is set to may want to notify your OS to popup an on-screen keyboard, if available (e.g. on a mobile phone, or console OS).
@@ -608,7 +608,7 @@ CODE
      This is because imgui needs to detect that you clicked in the void to unfocus its own windows.
     Note: The 'io.WantCaptureMouse' is more accurate that any attempt to "check if the mouse is hovering a window" (don't do that!).
      It handle mouse dragging correctly (both dragging that started over your application or over an imgui window) and handle e.g. modal windows blocking inputs.
-     Those flags are updated by ImGui::NewFrame(). Preferably read the flags after calling NewFrame() if you can afford it, but reading them before is also
+     Those flags are updated by NuclearEngine::Graphics::ImGui::NewFrame(). Preferably read the flags after calling NewFrame() if you can afford it, but reading them before is also
      perfectly fine, as the bool toggle fairly rarely. If you have on a touch device, you might find use for an early call to UpdateHoveredWindowAndCaptureFlags().
     Note: Text input widget releases focus on "Return KeyDown", so the subsequent "Return KeyUp" event that your application receive will typically
      have 'io.WantCaptureKeyboard=false'. Depending on your application logic it may or not be inconvenient. You might want to track which key-downs
@@ -616,7 +616,7 @@ CODE
 
  Q: How can I display an image? What is ImTextureID, how does it works?
  A: Short explanation:
-    - You may use functions such as ImGui::Image(), ImGui::ImageButton() or lower-level ImDrawList::AddImage() to emit draw calls that will use your own textures.
+    - You may use functions such as NuclearEngine::Graphics::ImGui::Image(), NuclearEngine::Graphics::ImGui::ImageButton() or lower-level ImDrawList::AddImage() to emit draw calls that will use your own textures.
     - Actual textures are identified in a way that is up to the user/engine. Those identifiers are stored and passed as ImTextureID (void*) value.
     - Loading image files from the disk and turning them into a texture is not within the scope of Dear ImGui (for a good reason).
       Please read documentations or tutorials on your graphics API to understand how to display textures on the screen before moving onward.
@@ -651,9 +651,9 @@ CODE
 
         // Cast our texture type to ImTextureID / void*
         MyTexture* texture = g_CoffeeTableTexture;
-        ImGui::Image((void*)texture, ImVec2(texture->Width, texture->Height));
+        NuclearEngine::Graphics::ImGui::Image((void*)texture, ImVec2(texture->Width, texture->Height));
 
-    The renderer function called after ImGui::Render() will receive that same value that the user code passed:
+    The renderer function called after NuclearEngine::Graphics::ImGui::Render() will receive that same value that the user code passed:
 
         // Cast ImTextureID / void* stored in the draw command as our texture type
         MyTexture* texture = (MyTexture*)pcmd->TextureId;
@@ -682,7 +682,7 @@ CODE
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 
         // Now that we have an OpenGL texture, assuming our imgui rendering function (imgui_impl_xxx.cpp file) takes GLuint as ImTextureID, we can display it:
-        ImGui::Image((void*)(intptr_t)my_opengl_texture, ImVec2(my_image_width, my_image_height));
+        NuclearEngine::Graphics::ImGui::Image((void*)(intptr_t)my_opengl_texture, ImVec2(my_image_width, my_image_height));
 
     C/C++ tip: a void* is pointer-sized storage. You may safely store any pointer or integer into it by casting your value to ImTextureID / void*, and vice-versa.
     Because both end-points (user code and rendering function) are under your control, you know exactly what is stored inside the ImTextureID / void*.
@@ -698,7 +698,7 @@ CODE
         my_void_ptr = (void*)my_dx11_srv;                       // cast a ID3D11ShaderResourceView* into an opaque void*
         my_dx11_srv = (ID3D11ShaderResourceView*)my_void_ptr;   // cast a void* into a ID3D11ShaderResourceView*
 
-    Finally, you may call ImGui::ShowMetricsWindow() to explore/visualize/understand how the ImDrawList are generated.
+    Finally, you may call NuclearEngine::Graphics::ImGui::ShowMetricsWindow() to explore/visualize/understand how the ImDrawList are generated.
 
  Q: Why are multiple widgets reacting when I interact with a single one?
  Q: How can I have multiple widgets with the same label or with an empty label?
@@ -822,7 +822,7 @@ CODE
 
  Q: How can I load a different font than the default?
  A: Use the font atlas to load the TTF/OTF file you want:
-      ImGuiIO& io = ImGui::GetIO();
+      ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
       io.Fonts->AddFontFromFileTTF("myfontfile.ttf", size_in_pixels);
       io.Fonts->GetTexDataAsRGBA32() or GetTexDataAsAlpha8()
     Default is ProggyClean.ttf, monospace, rendered at size 13, embedded in dear imgui's source code.
@@ -845,13 +845,13 @@ CODE
  A: Use the font atlas to pack them into a single texture:
     (Read the 'misc/fonts/README.txt' file and the code in ImFontAtlas for more details.)
 
-      ImGuiIO& io = ImGui::GetIO();
+      ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
       ImFont* font0 = io.Fonts->AddFontDefault();
       ImFont* font1 = io.Fonts->AddFontFromFileTTF("myfontfile.ttf", size_in_pixels);
       ImFont* font2 = io.Fonts->AddFontFromFileTTF("myfontfile2.ttf", size_in_pixels);
       io.Fonts->GetTexDataAsRGBA32() or GetTexDataAsAlpha8()
       // the first loaded font gets used by default
-      // use ImGui::PushFont()/ImGui::PopFont() to change the font at runtime
+      // use NuclearEngine::Graphics::ImGui::PushFont()/NuclearEngine::Graphics::ImGui::PopFont() to change the font at runtime
 
       // Options
       ImFontConfig config;
@@ -900,12 +900,12 @@ CODE
  A: - Being highly portable (bindings for several languages, frameworks, programming style, obscure or older platforms/compilers),
       and aiming for compatibility & performance suitable for every modern real-time game engines, dear imgui does not use
       any of std C++ types. We use raw types (e.g. char* instead of std::string) because they adapt to more use cases.
-    - To use ImGui::InputText() with a std::string or any resizable string class, see misc/cpp/imgui_stdlib.h.
+    - To use NuclearEngine::Graphics::ImGui::InputText() with a std::string or any resizable string class, see misc/cpp/imgui_stdlib.h.
     - To use combo boxes and list boxes with std::vector or any other data structure: the BeginCombo()/EndCombo() API
       lets you iterate and submit items yourself, so does the ListBoxHeader()/ListBoxFooter() API.
       Prefer using them over the old and awkward Combo()/ListBox() api.
     - Generally for most high-level types you should be able to access the underlying data type.
-      You may write your own one-liner wrappers to facilitate user code (tip: add new functions in ImGui:: namespace from your code).
+      You may write your own one-liner wrappers to facilitate user code (tip: add new functions in NuclearEngine::Graphics::ImGui:: namespace from your code).
     - Dear ImGui applications often need to make intensive use of strings. It is expected that many of the strings you will pass
       to the API are raw literals (free in C/C++) or allocated in a manner that won't incur a large cost on your application.
       Please bear in mind that using std::string on applications with large amount of UI may incur unsatisfactory performances.
@@ -922,9 +922,9 @@ CODE
  A: - You can create a dummy window. Call Begin() with the NoBackground | NoDecoration | NoSavedSettings | NoInputs flags.
       (The ImGuiWindowFlags_NoDecoration flag itself is a shortcut for NoTitleBar | NoResize | NoScrollbar | NoCollapse)
       Then you can retrieve the ImDrawList* via GetWindowDrawList() and draw to it in any way you like.
-    - You can call ImGui::GetBackgroundDrawList() or ImGui::GetForegroundDrawList() and use those draw list to display
+    - You can call NuclearEngine::Graphics::ImGui::GetBackgroundDrawList() or NuclearEngine::Graphics::ImGui::GetForegroundDrawList() and use those draw list to display
       contents behind or over every other imgui windows (one bg/fg drawlist per viewport).
-    - You can create your own ImDrawList instance. You'll need to initialize them ImGui::GetDrawListSharedData(), or create
+    - You can create your own ImDrawList instance. You'll need to initialize them NuclearEngine::Graphics::ImGui::GetDrawListSharedData(), or create
       your own ImDrawListSharedData, and then call your rendered code with your own ImDrawList or ImDrawData data.
 
  Q: How can I use this without a mouse, without a keyboard or without a screen? (gamepad, input share, remote display)
@@ -974,7 +974,7 @@ CODE
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include "ImGUI/imgui.h"
+#include <Engine/Graphics/ImGUI.h>
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
@@ -1061,39 +1061,44 @@ static const char*      GetClipboardTextFn_DefaultImpl(void* user_data);
 static void             SetClipboardTextFn_DefaultImpl(void* user_data, const char* text);
 static void             ImeSetInputScreenPosFn_DefaultImpl(int x, int y);
 
-namespace ImGui
+namespace NuclearEngine 
 {
-static bool             BeginChildEx(const char* name, ImGuiID id, const ImVec2& size_arg, bool border, ImGuiWindowFlags flags);
+	namespace Graphics
+	{
+		namespace ImGui
+		{
+			static bool             BeginChildEx(const char* name, ImGuiID id, const ImVec2& size_arg, bool border, ImGuiWindowFlags flags);
 
-// Navigation
-static void             NavUpdate();
-static void             NavUpdateWindowing();
-static void             NavUpdateWindowingList();
-static void             NavUpdateMoveResult();
-static float            NavUpdatePageUpPageDown(int allowed_dir_flags);
-static inline void      NavUpdateAnyRequestFlag();
-static void             NavProcessItem(ImGuiWindow* window, const ImRect& nav_bb, ImGuiID id);
-static ImVec2           NavCalcPreferredRefPos();
-static void             NavSaveLastChildNavWindowIntoParent(ImGuiWindow* nav_window);
-static ImGuiWindow*     NavRestoreLastChildNavWindow(ImGuiWindow* window);
-static int              FindWindowFocusIndex(ImGuiWindow* window);
+			// Navigation
+			static void             NavUpdate();
+			static void             NavUpdateWindowing();
+			static void             NavUpdateWindowingList();
+			static void             NavUpdateMoveResult();
+			static float            NavUpdatePageUpPageDown(int allowed_dir_flags);
+			static inline void      NavUpdateAnyRequestFlag();
+			static void             NavProcessItem(ImGuiWindow* window, const ImRect& nav_bb, ImGuiID id);
+			static ImVec2           NavCalcPreferredRefPos();
+			static void             NavSaveLastChildNavWindowIntoParent(ImGuiWindow* nav_window);
+			static ImGuiWindow* NavRestoreLastChildNavWindow(ImGuiWindow* window);
+			static int              FindWindowFocusIndex(ImGuiWindow* window);
 
-// Misc
-static void             UpdateMouseInputs();
-static void             UpdateMouseWheel();
-static bool             UpdateManualResize(ImGuiWindow* window, const ImVec2& size_auto_fit, int* border_held, int resize_grip_count, ImU32 resize_grip_col[4]);
-static void             RenderWindowOuterBorders(ImGuiWindow* window);
-static void             RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar_rect, bool title_bar_is_highlight, int resize_grip_count, const ImU32 resize_grip_col[4], float resize_grip_draw_size);
-static void             RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& title_bar_rect, const char* name, bool* p_open);
+			// Misc
+			static void             UpdateMouseInputs();
+			static void             UpdateMouseWheel();
+			static bool             UpdateManualResize(ImGuiWindow* window, const ImVec2& size_auto_fit, int* border_held, int resize_grip_count, ImU32 resize_grip_col[4]);
+			static void             RenderWindowOuterBorders(ImGuiWindow* window);
+			static void             RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar_rect, bool title_bar_is_highlight, int resize_grip_count, const ImU32 resize_grip_col[4], float resize_grip_draw_size);
+			static void             RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& title_bar_rect, const char* name, bool* p_open);
 
+		}
+	}
 }
-
 //-----------------------------------------------------------------------------
 // [SECTION] CONTEXT AND MEMORY ALLOCATORS
 //-----------------------------------------------------------------------------
 
 // Current context pointer. Implicitly used by all Dear ImGui functions. Always assumed to be != NULL.
-// ImGui::CreateContext() will automatically set this pointer if it is NULL. Change to a different context by calling ImGui::SetCurrentContext().
+// NuclearEngine::Graphics::ImGui::CreateContext() will automatically set this pointer if it is NULL. Change to a different context by calling NuclearEngine::Graphics::ImGui::SetCurrentContext().
 // 1) Important: globals are not shared across DLL boundaries! If you use DLLs or any form of hot-reloading: you will need to call
 //    SetCurrentContext() (with the pointer you got from CreateContext) from each unique static/DLL boundary, and after each hot-reloading.
 //    In your debugger, add GImGui to your watch window and notice how its value changes depending on which location you are currently stepping into.
@@ -1166,7 +1171,7 @@ ImGuiStyle::ImGuiStyle()
     CurveTessellationTol    = 1.25f;            // Tessellation tolerance when using PathBezierCurveTo() without a specific number of segments. Decrease for highly tessellated curves (higher quality, more polygons), increase to reduce quality.
 
     // Default theme
-    ImGui::StyleColorsDark(this);
+    NuclearEngine::Graphics::ImGui::StyleColorsDark(this);
 }
 
 // To scale your entire UI (e.g. if you want your app to use High DPI or generally be DPI aware) you may use this helper function. Scaling the fonts is done separately and is up to you.
@@ -1579,7 +1584,7 @@ FILE* ImFileOpen(const char* filename, const char* mode)
 }
 
 // Load file content into memory
-// Memory allocated with IM_ALLOC(), must be freed by user using IM_FREE() == ImGui::MemFree()
+// Memory allocated with IM_ALLOC(), must be freed by user using IM_FREE() == NuclearEngine::Graphics::ImGui::MemFree()
 void* ImFileLoadToMemory(const char* filename, const char* file_open_mode, size_t* out_file_size, int padding_bytes)
 {
     IM_ASSERT(filename && file_open_mode);
@@ -1808,7 +1813,7 @@ int ImTextCountUtf8BytesFromStr(const ImWchar* in_text, const ImWchar* in_text_e
 // Note: The Convert functions are early design which are not consistent with other API.
 //-----------------------------------------------------------------------------
 
-ImVec4 ImGui::ColorConvertU32ToFloat4(ImU32 in)
+ImVec4 NuclearEngine::Graphics::ImGui::ColorConvertU32ToFloat4(ImU32 in)
 {
     float s = 1.0f/255.0f;
     return ImVec4(
@@ -1818,7 +1823,7 @@ ImVec4 ImGui::ColorConvertU32ToFloat4(ImU32 in)
         ((in >> IM_COL32_A_SHIFT) & 0xFF) * s);
 }
 
-ImU32 ImGui::ColorConvertFloat4ToU32(const ImVec4& in)
+ImU32 NuclearEngine::Graphics::ImGui::ColorConvertFloat4ToU32(const ImVec4& in)
 {
     ImU32 out;
     out  = ((ImU32)IM_F32_TO_INT8_SAT(in.x)) << IM_COL32_R_SHIFT;
@@ -1830,7 +1835,7 @@ ImU32 ImGui::ColorConvertFloat4ToU32(const ImVec4& in)
 
 // Convert rgb floats ([0-1],[0-1],[0-1]) to hsv floats ([0-1],[0-1],[0-1]), from Foley & van Dam p592
 // Optimized http://lolengine.net/blog/2013/01/13/fast-rgb-to-hsv
-void ImGui::ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v)
+void NuclearEngine::Graphics::ImGui::ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float& out_s, float& out_v)
 {
     float K = 0.f;
     if (g < b)
@@ -1852,7 +1857,7 @@ void ImGui::ColorConvertRGBtoHSV(float r, float g, float b, float& out_h, float&
 
 // Convert hsv floats ([0-1],[0-1],[0-1]) to rgb floats ([0-1],[0-1],[0-1]), from Foley & van Dam p593
 // also http://en.wikipedia.org/wiki/HSL_and_HSV
-void ImGui::ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b)
+void NuclearEngine::Graphics::ImGui::ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float& out_g, float& out_b)
 {
     if (s == 0.0f)
     {
@@ -1879,7 +1884,7 @@ void ImGui::ColorConvertHSVtoRGB(float h, float s, float v, float& out_r, float&
     }
 }
 
-ImU32 ImGui::GetColorU32(ImGuiCol idx, float alpha_mul)
+ImU32 NuclearEngine::Graphics::ImGui::GetColorU32(ImGuiCol idx, float alpha_mul)
 {
     ImGuiStyle& style = GImGui->Style;
     ImVec4 c = style.Colors[idx];
@@ -1887,7 +1892,7 @@ ImU32 ImGui::GetColorU32(ImGuiCol idx, float alpha_mul)
     return ColorConvertFloat4ToU32(c);
 }
 
-ImU32 ImGui::GetColorU32(const ImVec4& col)
+ImU32 NuclearEngine::Graphics::ImGui::GetColorU32(const ImVec4& col)
 {
     ImGuiStyle& style = GImGui->Style;
     ImVec4 c = col;
@@ -1895,13 +1900,13 @@ ImU32 ImGui::GetColorU32(const ImVec4& col)
     return ColorConvertFloat4ToU32(c);
 }
 
-const ImVec4& ImGui::GetStyleColorVec4(ImGuiCol idx)
+const ImVec4& NuclearEngine::Graphics::ImGui::GetStyleColorVec4(ImGuiCol idx)
 {
     ImGuiStyle& style = GImGui->Style;
     return style.Colors[idx];
 }
 
-ImU32 ImGui::GetColorU32(ImU32 col)
+ImU32 NuclearEngine::Graphics::ImGui::GetColorU32(ImU32 col)
 {
     float style_alpha = GImGui->Style.Alpha;
     if (style_alpha >= 1.0f)
@@ -2082,8 +2087,8 @@ ImGuiTextFilter::ImGuiTextFilter(const char* default_filter)
 bool ImGuiTextFilter::Draw(const char* label, float width)
 {
     if (width != 0.0f)
-        ImGui::SetNextItemWidth(width);
-    bool value_changed = ImGui::InputText(label, InputBuf, IM_ARRAYSIZE(InputBuf));
+        NuclearEngine::Graphics::ImGui::SetNextItemWidth(width);
+    bool value_changed = NuclearEngine::Graphics::ImGui::InputText(label, InputBuf, IM_ARRAYSIZE(InputBuf));
     if (value_changed)
         Build();
     return value_changed;
@@ -2241,8 +2246,8 @@ static void SetCursorPosYAndSetupDummyPrevLine(float pos_y, float line_height)
     // Set cursor position and a few other things so that SetScrollHereY() and Columns() can work when seeking cursor.
     // FIXME: It is problematic that we have to do that here, because custom/equivalent end-user code would stumble on the same issue.
     // The clipper should probably have a 4th step to display the last item in a regular manner.
-    ImGui::SetCursorPosY(pos_y);
-    ImGuiWindow* window = ImGui::GetCurrentWindow();
+    NuclearEngine::Graphics::ImGui::SetCursorPosY(pos_y);
+    ImGuiWindow* window = NuclearEngine::Graphics::ImGui::GetCurrentWindow();
     window->DC.CursorPosPrevLine.y = window->DC.CursorPos.y - line_height;      // Setting those fields so that SetScrollHereY() can properly function after the end of our clipper usage.
     window->DC.PrevLineSize.y = (line_height - GImGui->Style.ItemSpacing.y);    // If we end up needing more accurate data (to e.g. use SameLine) we may as well make the clipper have a fourth step to let user process and display the last item in their list.
     if (window->DC.CurrentColumns)
@@ -2254,14 +2259,14 @@ static void SetCursorPosYAndSetupDummyPrevLine(float pos_y, float line_height)
 // FIXME-LEGACY: Ideally we should remove the Begin/End functions but they are part of the legacy API we still support. This is why some of the code in Step() calling Begin() and reassign some fields, spaghetti style.
 void ImGuiListClipper::Begin(int count, float items_height)
 {
-    StartPosY = ImGui::GetCursorPosY();
+    StartPosY = NuclearEngine::Graphics::ImGui::GetCursorPosY();
     ItemsHeight = items_height;
     ItemsCount = count;
     StepNo = 0;
     DisplayEnd = DisplayStart = -1;
     if (ItemsHeight > 0.0f)
     {
-        ImGui::CalcListClipping(ItemsCount, ItemsHeight, &DisplayStart, &DisplayEnd); // calculate how many to clip/display
+        NuclearEngine::Graphics::ImGui::CalcListClipping(ItemsCount, ItemsHeight, &DisplayStart, &DisplayEnd); // calculate how many to clip/display
         if (DisplayStart > 0)
             SetCursorPosYAndSetupDummyPrevLine(StartPosY + DisplayStart * ItemsHeight, ItemsHeight); // advance cursor
         StepNo = 2;
@@ -2272,7 +2277,7 @@ void ImGuiListClipper::End()
 {
     if (ItemsCount < 0)
         return;
-    // In theory here we should assert that ImGui::GetCursorPosY() == StartPosY + DisplayEnd * ItemsHeight, but it feels saner to just seek at the end and not assert/crash the user.
+    // In theory here we should assert that NuclearEngine::Graphics::ImGui::GetCursorPosY() == StartPosY + DisplayEnd * ItemsHeight, but it feels saner to just seek at the end and not assert/crash the user.
     if (ItemsCount < INT_MAX)
         SetCursorPosYAndSetupDummyPrevLine(StartPosY + ItemsCount * ItemsHeight, ItemsHeight); // advance cursor
     ItemsCount = -1;
@@ -2281,7 +2286,7 @@ void ImGuiListClipper::End()
 
 bool ImGuiListClipper::Step()
 {
-    if (ItemsCount == 0 || ImGui::GetCurrentWindowRead()->SkipItems)
+    if (ItemsCount == 0 || NuclearEngine::Graphics::ImGui::GetCurrentWindowRead()->SkipItems)
     {
         ItemsCount = -1;
         return false;
@@ -2290,14 +2295,14 @@ bool ImGuiListClipper::Step()
     {
         DisplayStart = 0;
         DisplayEnd = 1;
-        StartPosY = ImGui::GetCursorPosY();
+        StartPosY = NuclearEngine::Graphics::ImGui::GetCursorPosY();
         StepNo = 1;
         return true;
     }
     if (StepNo == 1) // Step 1: the clipper infer height from first element, calculate the actual range of elements to display, and position the cursor before the first element.
     {
         if (ItemsCount == 1) { ItemsCount = -1; return false; }
-        float items_height = ImGui::GetCursorPosY() - StartPosY;
+        float items_height = NuclearEngine::Graphics::ImGui::GetCursorPosY() - StartPosY;
         IM_ASSERT(items_height > 0.0f);   // If this triggers, it means Item 0 hasn't moved the cursor vertically
         Begin(ItemsCount-1, items_height);
         DisplayStart++;
@@ -2319,10 +2324,10 @@ bool ImGuiListClipper::Step()
 //-----------------------------------------------------------------------------
 // [SECTION] RENDER HELPERS
 // Those (internal) functions are currently quite a legacy mess - their signature and behavior will change.
-// Also see imgui_draw.cpp for some more which have been reworked to not rely on ImGui:: state.
+// Also see imgui_draw.cpp for some more which have been reworked to not rely on NuclearEngine::Graphics::ImGui:: state.
 //-----------------------------------------------------------------------------
 
-const char* ImGui::FindRenderedTextEnd(const char* text, const char* text_end)
+const char* NuclearEngine::Graphics::ImGui::FindRenderedTextEnd(const char* text, const char* text_end)
 {
     const char* text_display_end = text;
     if (!text_end)
@@ -2335,7 +2340,7 @@ const char* ImGui::FindRenderedTextEnd(const char* text, const char* text_end)
 
 // Internal ImGui functions to render text
 // RenderText***() functions calls ImDrawList::AddText() calls ImBitmapFont::RenderText()
-void ImGui::RenderText(ImVec2 pos, const char* text, const char* text_end, bool hide_text_after_hash)
+void NuclearEngine::Graphics::ImGui::RenderText(ImVec2 pos, const char* text, const char* text_end, bool hide_text_after_hash)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2361,7 +2366,7 @@ void ImGui::RenderText(ImVec2 pos, const char* text, const char* text_end, bool 
     }
 }
 
-void ImGui::RenderTextWrapped(ImVec2 pos, const char* text, const char* text_end, float wrap_width)
+void NuclearEngine::Graphics::ImGui::RenderTextWrapped(ImVec2 pos, const char* text, const char* text_end, float wrap_width)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2379,7 +2384,7 @@ void ImGui::RenderTextWrapped(ImVec2 pos, const char* text, const char* text_end
 
 // Default clip_rect uses (pos_min,pos_max)
 // Handle clipping on CPU immediately (vs typically let the GPU clip the triangles that are overlapping the clipping rectangle edges)
-void ImGui::RenderTextClippedEx(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_display_end, const ImVec2* text_size_if_known, const ImVec2& align, const ImRect* clip_rect)
+void NuclearEngine::Graphics::ImGui::RenderTextClippedEx(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_display_end, const ImVec2* text_size_if_known, const ImVec2& align, const ImRect* clip_rect)
 {
     // Perform CPU side clipping for single clipped element to avoid using scissor state
     ImVec2 pos = pos_min;
@@ -2407,7 +2412,7 @@ void ImGui::RenderTextClippedEx(ImDrawList* draw_list, const ImVec2& pos_min, co
     }
 }
 
-void ImGui::RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_end, const ImVec2* text_size_if_known, const ImVec2& align, const ImRect* clip_rect)
+void NuclearEngine::Graphics::ImGui::RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_end, const ImVec2* text_size_if_known, const ImVec2& align, const ImRect* clip_rect)
 {
     // Hide anything after a '##' string
     const char* text_display_end = FindRenderedTextEnd(text, text_end);
@@ -2426,7 +2431,7 @@ void ImGui::RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, cons
 // Another overly complex function until we reorganize everything into a nice all-in-one helper.
 // This is made more complex because we have dissociated the layout rectangle (pos_min..pos_max) which define _where_ the ellipsis is, from actual clipping of text and limit of the ellipsis display.
 // This is because in the context of tabs we selectively hide part of the text when the Close Button appears, but we don't want the ellipsis to move. 
-void    ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, float clip_max_x, float ellipsis_max_x, const char* text, const char* text_end_full, const ImVec2* text_size_if_known)
+void    NuclearEngine::Graphics::ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, const ImVec2& pos_max, float clip_max_x, float ellipsis_max_x, const char* text, const char* text_end_full, const ImVec2* text_size_if_known)
 {
     ImGuiContext& g = *GImGui;
     if (text_end_full == NULL)
@@ -2477,7 +2482,7 @@ void    ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, 
 }
 
 // Render a rectangle shaped with optional rounding and borders
-void ImGui::RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool border, float rounding)
+void NuclearEngine::Graphics::ImGui::RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool border, float rounding)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2490,7 +2495,7 @@ void ImGui::RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool border,
     }
 }
 
-void ImGui::RenderFrameBorder(ImVec2 p_min, ImVec2 p_max, float rounding)
+void NuclearEngine::Graphics::ImGui::RenderFrameBorder(ImVec2 p_min, ImVec2 p_max, float rounding)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2503,7 +2508,7 @@ void ImGui::RenderFrameBorder(ImVec2 p_min, ImVec2 p_max, float rounding)
 }
 
 // Render an arrow aimed to be aligned with text (p_min is a position in the same space text would be positioned). To e.g. denote expanded/collapsed state
-void ImGui::RenderArrow(ImDrawList* draw_list, ImVec2 pos, ImU32 col, ImGuiDir dir, float scale)
+void NuclearEngine::Graphics::ImGui::RenderArrow(ImDrawList* draw_list, ImVec2 pos, ImU32 col, ImGuiDir dir, float scale)
 {
     const float h = draw_list->_Data->FontSize * 1.00f;
     float r = h * 0.40f * scale;
@@ -2534,12 +2539,12 @@ void ImGui::RenderArrow(ImDrawList* draw_list, ImVec2 pos, ImU32 col, ImGuiDir d
     draw_list->AddTriangleFilled(center + a, center + b, center + c, col);
 }
 
-void ImGui::RenderBullet(ImDrawList* draw_list, ImVec2 pos, ImU32 col)
+void NuclearEngine::Graphics::ImGui::RenderBullet(ImDrawList* draw_list, ImVec2 pos, ImU32 col)
 {
     draw_list->AddCircleFilled(pos, draw_list->_Data->FontSize * 0.20f, col, 8);
 }
 
-void ImGui::RenderCheckMark(ImVec2 pos, ImU32 col, float sz)
+void NuclearEngine::Graphics::ImGui::RenderCheckMark(ImVec2 pos, ImU32 col, float sz)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2557,7 +2562,7 @@ void ImGui::RenderCheckMark(ImVec2 pos, ImU32 col, float sz)
     window->DrawList->PathStroke(col, false, thickness);
 }
 
-void ImGui::RenderNavHighlight(const ImRect& bb, ImGuiID id, ImGuiNavHighlightFlags flags)
+void NuclearEngine::Graphics::ImGui::RenderNavHighlight(const ImRect& bb, ImGuiID id, ImGuiNavHighlightFlags flags)
 {
     ImGuiContext& g = *GImGui;
     if (id != g.NavId)
@@ -2665,7 +2670,7 @@ ImGuiID ImGuiWindow::GetID(const char* str, const char* str_end)
 {
     ImGuiID seed = IDStack.back();
     ImGuiID id = ImHashStr(str, str_end ? (str_end - str) : 0, seed);
-    ImGui::KeepAliveID(id);
+    NuclearEngine::Graphics::ImGui::KeepAliveID(id);
     return id;
 }
 
@@ -2673,7 +2678,7 @@ ImGuiID ImGuiWindow::GetID(const void* ptr)
 {
     ImGuiID seed = IDStack.back();
     ImGuiID id = ImHashData(&ptr, sizeof(void*), seed);
-    ImGui::KeepAliveID(id);
+    NuclearEngine::Graphics::ImGui::KeepAliveID(id);
     return id;
 }
 
@@ -2681,7 +2686,7 @@ ImGuiID ImGuiWindow::GetID(int n)
 {
     ImGuiID seed = IDStack.back();
     ImGuiID id = ImHashData(&n, sizeof(n), seed);
-    ImGui::KeepAliveID(id);
+    NuclearEngine::Graphics::ImGui::KeepAliveID(id);
     return id;
 }
 
@@ -2709,7 +2714,7 @@ ImGuiID ImGuiWindow::GetIDFromRectangle(const ImRect& r_abs)
     ImGuiID seed = IDStack.back();
     const int r_rel[4] = { (int)(r_abs.Min.x - Pos.x), (int)(r_abs.Min.y - Pos.y), (int)(r_abs.Max.x - Pos.x), (int)(r_abs.Max.y - Pos.y) };
     ImGuiID id = ImHashData(&r_rel, sizeof(r_rel), seed);
-    ImGui::KeepAliveID(id);
+    NuclearEngine::Graphics::ImGui::KeepAliveID(id);
     return id;
 }
 
@@ -2721,7 +2726,7 @@ static void SetCurrentWindow(ImGuiWindow* window)
         g.FontSize = g.DrawListSharedData.FontSize = window->CalcFontSize();
 }
 
-void ImGui::SetNavID(ImGuiID id, int nav_layer)
+void NuclearEngine::Graphics::ImGui::SetNavID(ImGuiID id, int nav_layer)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.NavWindow);
@@ -2730,7 +2735,7 @@ void ImGui::SetNavID(ImGuiID id, int nav_layer)
     g.NavWindow->NavLastIds[nav_layer] = id;
 }
 
-void ImGui::SetNavIDWithRectRel(ImGuiID id, int nav_layer, const ImRect& rect_rel)
+void NuclearEngine::Graphics::ImGui::SetNavIDWithRectRel(ImGuiID id, int nav_layer, const ImRect& rect_rel)
 {
     ImGuiContext& g = *GImGui;
     SetNavID(id, nav_layer);
@@ -2740,7 +2745,7 @@ void ImGui::SetNavIDWithRectRel(ImGuiID id, int nav_layer, const ImRect& rect_re
     g.NavDisableMouseHover = true;
 }
 
-void ImGui::SetActiveID(ImGuiID id, ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::SetActiveID(ImGuiID id, ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
     g.ActiveIdIsJustActivated = (g.ActiveId != id);
@@ -2769,7 +2774,7 @@ void ImGui::SetActiveID(ImGuiID id, ImGuiWindow* window)
 }
 
 // FIXME-NAV: The existence of SetNavID/SetNavIDWithRectRel/SetFocusID is incredibly messy and confusing and needs some explanation or refactoring.
-void ImGui::SetFocusID(ImGuiID id, ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::SetFocusID(ImGuiID id, ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(id != 0);
@@ -2791,12 +2796,12 @@ void ImGui::SetFocusID(ImGuiID id, ImGuiWindow* window)
         g.NavDisableHighlight = true;
 }
 
-void ImGui::ClearActiveID()
+void NuclearEngine::Graphics::ImGui::ClearActiveID()
 {
     SetActiveID(0, NULL);
 }
 
-void ImGui::SetHoveredID(ImGuiID id)
+void NuclearEngine::Graphics::ImGui::SetHoveredID(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     g.HoveredId = id;
@@ -2805,13 +2810,13 @@ void ImGui::SetHoveredID(ImGuiID id)
         g.HoveredIdTimer = g.HoveredIdNotActiveTimer = 0.0f;
 }
 
-ImGuiID ImGui::GetHoveredID()
+ImGuiID NuclearEngine::Graphics::ImGui::GetHoveredID()
 {
     ImGuiContext& g = *GImGui;
     return g.HoveredId ? g.HoveredId : g.HoveredIdPreviousFrame;
 }
 
-void ImGui::KeepAliveID(ImGuiID id)
+void NuclearEngine::Graphics::ImGui::KeepAliveID(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     if (g.ActiveId == id)
@@ -2820,7 +2825,7 @@ void ImGui::KeepAliveID(ImGuiID id)
         g.ActiveIdPreviousFrameIsAlive = true;
 }
 
-void ImGui::MarkItemEdited(ImGuiID id)
+void NuclearEngine::Graphics::ImGui::MarkItemEdited(ImGuiID id)
 {
     // This marking is solely to be able to provide info for IsItemDeactivatedAfterEdit().
     // ActiveId might have been released by the time we call this (as in the typical press/release button behavior) but still need need to fill the data.
@@ -2854,7 +2859,7 @@ static inline bool IsWindowContentHoverable(ImGuiWindow* window, ImGuiHoveredFla
 }
 
 // Advance cursor given item size for layout.
-void ImGui::ItemSize(const ImVec2& size, float text_offset_y)
+void NuclearEngine::Graphics::ImGui::ItemSize(const ImVec2& size, float text_offset_y)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2882,7 +2887,7 @@ void ImGui::ItemSize(const ImVec2& size, float text_offset_y)
         SameLine();
 }
 
-void ImGui::ItemSize(const ImRect& bb, float text_offset_y)
+void NuclearEngine::Graphics::ImGui::ItemSize(const ImRect& bb, float text_offset_y)
 {
     ItemSize(bb.GetSize(), text_offset_y);
 }
@@ -2890,7 +2895,7 @@ void ImGui::ItemSize(const ImRect& bb, float text_offset_y)
 // Declare item bounding box for clipping and interaction.
 // Note that the size can be different than the one provided to ItemSize(). Typically, widgets that spread over available surface
 // declare their minimum size requirement to ItemSize() and then use a larger region for drawing/interaction, which is passed to ItemAdd().
-bool ImGui::ItemAdd(const ImRect& bb, ImGuiID id, const ImRect* nav_bb_arg)
+bool NuclearEngine::Graphics::ImGui::ItemAdd(const ImRect& bb, ImGuiID id, const ImRect* nav_bb_arg)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2938,7 +2943,7 @@ bool ImGui::ItemAdd(const ImRect& bb, ImGuiID id, const ImRect* nav_bb_arg)
 // This is roughly matching the behavior of internal-facing ItemHoverable()
 // - we allow hovering to be true when ActiveId==window->MoveID, so that clicking on non-interactive items such as a Text() item still returns true with IsItemHovered()
 // - this should work even for non-interactive items that have no ID, so we cannot use LastItemId
-bool ImGui::IsItemHovered(ImGuiHoveredFlags flags)
+bool NuclearEngine::Graphics::ImGui::IsItemHovered(ImGuiHoveredFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -2980,7 +2985,7 @@ bool ImGui::IsItemHovered(ImGuiHoveredFlags flags)
 }
 
 // Internal facing ItemHoverable() used when submitting widgets. Differs slightly from IsItemHovered().
-bool ImGui::ItemHoverable(const ImRect& bb, ImGuiID id)
+bool NuclearEngine::Graphics::ImGui::ItemHoverable(const ImRect& bb, ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     if (g.HoveredId != 0 && g.HoveredId != id && !g.HoveredIdAllowOverlap)
@@ -3002,7 +3007,7 @@ bool ImGui::ItemHoverable(const ImRect& bb, ImGuiID id)
     return true;
 }
 
-bool ImGui::IsClippedEx(const ImRect& bb, ImGuiID id, bool clip_even_when_logged)
+bool NuclearEngine::Graphics::ImGui::IsClippedEx(const ImRect& bb, ImGuiID id, bool clip_even_when_logged)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -3014,7 +3019,7 @@ bool ImGui::IsClippedEx(const ImRect& bb, ImGuiID id, bool clip_even_when_logged
 }
 
 // Process TAB/Shift+TAB. Be mindful that this function may _clear_ the ActiveID when tabbing out.
-bool ImGui::FocusableItemRegister(ImGuiWindow* window, ImGuiID id)
+bool NuclearEngine::Graphics::ImGui::FocusableItemRegister(ImGuiWindow* window, ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
 
@@ -3051,13 +3056,13 @@ bool ImGui::FocusableItemRegister(ImGuiWindow* window, ImGuiID id)
     return false;
 }
 
-void ImGui::FocusableItemUnregister(ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::FocusableItemUnregister(ImGuiWindow* window)
 {
     window->DC.FocusCounterAll--;
     window->DC.FocusCounterTab--;
 }
 
-float ImGui::CalcWrapWidthForPos(const ImVec2& pos, float wrap_pos_x)
+float NuclearEngine::Graphics::ImGui::CalcWrapWidthForPos(const ImVec2& pos, float wrap_pos_x)
 {
     if (wrap_pos_x < 0.0f)
         return 0.0f;
@@ -3071,16 +3076,16 @@ float ImGui::CalcWrapWidthForPos(const ImVec2& pos, float wrap_pos_x)
     return ImMax(wrap_pos_x - pos.x, 1.0f);
 }
 
-// IM_ALLOC() == ImGui::MemAlloc()
-void* ImGui::MemAlloc(size_t size)
+// IM_ALLOC() == NuclearEngine::Graphics::ImGui::MemAlloc()
+void* NuclearEngine::Graphics::ImGui::MemAlloc(size_t size)
 {
     if (ImGuiContext* ctx = GImGui)
         ctx->IO.MetricsActiveAllocations++;
     return GImAllocatorAllocFunc(size, GImAllocatorUserData);
 }
 
-// IM_FREE() == ImGui::MemFree()
-void ImGui::MemFree(void* ptr)
+// IM_FREE() == NuclearEngine::Graphics::ImGui::MemFree()
+void NuclearEngine::Graphics::ImGui::MemFree(void* ptr)
 {
     if (ptr)
         if (ImGuiContext* ctx = GImGui)
@@ -3088,30 +3093,30 @@ void ImGui::MemFree(void* ptr)
     return GImAllocatorFreeFunc(ptr, GImAllocatorUserData);
 }
 
-const char* ImGui::GetClipboardText()
+const char* NuclearEngine::Graphics::ImGui::GetClipboardText()
 {
     return GImGui->IO.GetClipboardTextFn ? GImGui->IO.GetClipboardTextFn(GImGui->IO.ClipboardUserData) : "";
 }
 
-void ImGui::SetClipboardText(const char* text)
+void NuclearEngine::Graphics::ImGui::SetClipboardText(const char* text)
 {
     if (GImGui->IO.SetClipboardTextFn)
         GImGui->IO.SetClipboardTextFn(GImGui->IO.ClipboardUserData, text);
 }
 
-const char* ImGui::GetVersion()
+const char* NuclearEngine::Graphics::ImGui::GetVersion()
 {
     return IMGUI_VERSION;
 }
 
 // Internal state access - if you want to share Dear ImGui state between modules (e.g. DLL) or allocate it yourself
 // Note that we still point to some static data and members (such as GFontAtlas), so the state instance you end up using will point to the static data within its module
-ImGuiContext* ImGui::GetCurrentContext()
+ImGuiContext* NuclearEngine::Graphics::ImGui::GetCurrentContext()
 {
     return GImGui;
 }
 
-void ImGui::SetCurrentContext(ImGuiContext* ctx)
+void NuclearEngine::Graphics::ImGui::SetCurrentContext(ImGuiContext* ctx)
 {
 #ifdef IMGUI_SET_CURRENT_CONTEXT_FUNC
     IMGUI_SET_CURRENT_CONTEXT_FUNC(ctx); // For custom thread-based hackery you may want to have control over this.
@@ -3125,7 +3130,7 @@ void ImGui::SetCurrentContext(ImGuiContext* ctx)
 // If the user has inconsistent compilation settings, imgui configuration #define, packing pragma, etc. your user code
 // may see different structures than what imgui.cpp sees, which is problematic.
 // We usually require settings to be in imconfig.h to make sure that they are accessible to all compilation units involved with Dear ImGui.
-bool ImGui::DebugCheckVersionAndDataLayout(const char* version, size_t sz_io, size_t sz_style, size_t sz_vec2, size_t sz_vec4, size_t sz_vert, size_t sz_idx)
+bool NuclearEngine::Graphics::ImGui::DebugCheckVersionAndDataLayout(const char* version, size_t sz_io, size_t sz_style, size_t sz_vec2, size_t sz_vec4, size_t sz_vert, size_t sz_idx)
 {
     bool error = false;
     if (strcmp(version, IMGUI_VERSION)!=0) { error = true; IM_ASSERT(strcmp(version,IMGUI_VERSION)==0 && "Mismatched version string!");  }
@@ -3138,14 +3143,14 @@ bool ImGui::DebugCheckVersionAndDataLayout(const char* version, size_t sz_io, si
     return !error;
 }
 
-void ImGui::SetAllocatorFunctions(void* (*alloc_func)(size_t sz, void* user_data), void (*free_func)(void* ptr, void* user_data), void* user_data)
+void NuclearEngine::Graphics::ImGui::SetAllocatorFunctions(void* (*alloc_func)(size_t sz, void* user_data), void (*free_func)(void* ptr, void* user_data), void* user_data)
 {
     GImAllocatorAllocFunc = alloc_func;
     GImAllocatorFreeFunc = free_func;
     GImAllocatorUserData = user_data;
 }
 
-ImGuiContext* ImGui::CreateContext(ImFontAtlas* shared_font_atlas)
+ImGuiContext* NuclearEngine::Graphics::ImGui::CreateContext(ImFontAtlas* shared_font_atlas)
 {
     ImGuiContext* ctx = IM_NEW(ImGuiContext)(shared_font_atlas);
     if (GImGui == NULL)
@@ -3154,7 +3159,7 @@ ImGuiContext* ImGui::CreateContext(ImFontAtlas* shared_font_atlas)
     return ctx;
 }
 
-void ImGui::DestroyContext(ImGuiContext* ctx)
+void NuclearEngine::Graphics::ImGui::DestroyContext(ImGuiContext* ctx)
 {
     if (ctx == NULL)
         ctx = GImGui;
@@ -3164,36 +3169,36 @@ void ImGui::DestroyContext(ImGuiContext* ctx)
     IM_DELETE(ctx);
 }
 
-ImGuiIO& ImGui::GetIO()
+ImGuiIO& NuclearEngine::Graphics::ImGui::GetIO()
 {
-    IM_ASSERT(GImGui != NULL && "No current context. Did you call ImGui::CreateContext() and ImGui::SetCurrentContext() ?");
+    IM_ASSERT(GImGui != NULL && "No current context. Did you call NuclearEngine::Graphics::ImGui::CreateContext() and NuclearEngine::Graphics::ImGui::SetCurrentContext() ?");
     return GImGui->IO;
 }
 
-ImGuiStyle& ImGui::GetStyle()
+ImGuiStyle& NuclearEngine::Graphics::ImGui::GetStyle()
 {
-    IM_ASSERT(GImGui != NULL && "No current context. Did you call ImGui::CreateContext() and ImGui::SetCurrentContext() ?");
+    IM_ASSERT(GImGui != NULL && "No current context. Did you call NuclearEngine::Graphics::ImGui::CreateContext() and NuclearEngine::Graphics::ImGui::SetCurrentContext() ?");
     return GImGui->Style;
 }
 
 // Same value as passed to the old io.RenderDrawListsFn function. Valid after Render() and until the next call to NewFrame()
-ImDrawData* ImGui::GetDrawData()
+ImDrawData* NuclearEngine::Graphics::ImGui::GetDrawData()
 {
     ImGuiContext& g = *GImGui;
     return g.DrawData.Valid ? &g.DrawData : NULL;
 }
 
-double ImGui::GetTime()
+double NuclearEngine::Graphics::ImGui::GetTime()
 {
     return GImGui->Time;
 }
 
-int ImGui::GetFrameCount()
+int NuclearEngine::Graphics::ImGui::GetFrameCount()
 {
     return GImGui->FrameCount;
 }
 
-ImDrawList* ImGui::GetBackgroundDrawList()
+ImDrawList* NuclearEngine::Graphics::ImGui::GetBackgroundDrawList()
 {
     return &GImGui->BackgroundDrawList;
 }
@@ -3204,17 +3209,17 @@ static ImDrawList* GetForegroundDrawList(ImGuiWindow*)
     return &GImGui->ForegroundDrawList;
 }
 
-ImDrawList* ImGui::GetForegroundDrawList()
+ImDrawList* NuclearEngine::Graphics::ImGui::GetForegroundDrawList()
 {
     return &GImGui->ForegroundDrawList;
 }
 
-ImDrawListSharedData* ImGui::GetDrawListSharedData()
+ImDrawListSharedData* NuclearEngine::Graphics::ImGui::GetDrawListSharedData()
 {
     return &GImGui->DrawListSharedData;
 }
 
-void ImGui::StartMouseMovingWindow(ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::StartMouseMovingWindow(ImGuiWindow* window)
 {
     // Set ActiveId even if the _NoMove flag is set. Without it, dragging away from a window with _NoMove would activate hover on other windows.
     // We _also_ call this when clicking in a window empty space when io.ConfigWindowsMoveFromTitleBarOnly is set, but clear g.MovingWindow afterward.
@@ -3234,7 +3239,7 @@ void ImGui::StartMouseMovingWindow(ImGuiWindow* window)
 
 // Handle mouse moving window
 // Note: moving window with the navigation keys (Square + d-pad / CTRL+TAB + Arrows) are processed in NavUpdateWindowing()
-void ImGui::UpdateMouseMovingWindowNewFrame()
+void NuclearEngine::Graphics::ImGui::UpdateMouseMovingWindowNewFrame()
 {
     ImGuiContext& g = *GImGui;
     if (g.MovingWindow != NULL)
@@ -3273,7 +3278,7 @@ void ImGui::UpdateMouseMovingWindowNewFrame()
 }
 
 // Initiate moving window, handle left-click and right-click focus
-void ImGui::UpdateMouseMovingWindowEndFrame()
+void NuclearEngine::Graphics::ImGui::UpdateMouseMovingWindowEndFrame()
 {
     // Initiate moving window
     ImGuiContext& g = *GImGui;
@@ -3329,7 +3334,7 @@ static bool IsWindowActiveAndVisible(ImGuiWindow* window)
     return (window->Active) && (!window->Hidden);
 }
 
-static void ImGui::UpdateMouseInputs()
+static void NuclearEngine::Graphics::ImGui::UpdateMouseInputs()
 {
     ImGuiContext& g = *GImGui;
 
@@ -3386,7 +3391,7 @@ static void ImGui::UpdateMouseInputs()
     }
 }
 
-void ImGui::UpdateMouseWheel()
+void NuclearEngine::Graphics::ImGui::UpdateMouseWheel()
 {
     ImGuiContext& g = *GImGui;
     if (!g.HoveredWindow || g.HoveredWindow->Collapsed)
@@ -3443,7 +3448,7 @@ void ImGui::UpdateMouseWheel()
 }
 
 // The reason this is exposed in imgui_internal.h is: on touch-based system that don't have hovering, we want to dispatch inputs to the right target (imgui vs imgui+app)
-void ImGui::UpdateHoveredWindowAndCaptureFlags()
+void NuclearEngine::Graphics::ImGui::UpdateHoveredWindowAndCaptureFlags()
 {
     ImGuiContext& g = *GImGui;
 
@@ -3501,9 +3506,9 @@ void ImGui::UpdateHoveredWindowAndCaptureFlags()
     g.IO.WantTextInput = (g.WantTextInputNextFrame != -1) ? (g.WantTextInputNextFrame != 0) : false;
 }
 
-void ImGui::NewFrame()
+void NuclearEngine::Graphics::ImGui::NewFrame()
 {
-    IM_ASSERT(GImGui != NULL && "No current context. Did you call ImGui::CreateContext() and ImGui::SetCurrentContext() ?");
+    IM_ASSERT(GImGui != NULL && "No current context. Did you call NuclearEngine::Graphics::ImGui::CreateContext() and NuclearEngine::Graphics::ImGui::SetCurrentContext() ?");
     ImGuiContext& g = *GImGui;
 
 #ifdef IMGUI_ENABLE_TEST_ENGINE
@@ -3716,7 +3721,7 @@ void ImGui::NewFrame()
 
     // Create implicit/fallback window - which we will only render it if the user has added something to it.
     // We don't use "Debug" to avoid colliding with user trying to create a "Debug" window with custom flags.
-    // This fallback is particularly important as it avoid ImGui:: calls from crashing.
+    // This fallback is particularly important as it avoid NuclearEngine::Graphics::ImGui:: calls from crashing.
     SetNextWindowSize(ImVec2(400,400), ImGuiCond_FirstUseEver);
     Begin("Debug##Default");
     g.FrameScopePushedImplicitWindow = true;
@@ -3726,7 +3731,7 @@ void ImGui::NewFrame()
 #endif
 }
 
-void ImGui::Initialize(ImGuiContext* context)
+void NuclearEngine::Graphics::ImGui::Initialize(ImGuiContext* context)
 {
     ImGuiContext& g = *context;
     IM_ASSERT(!g.Initialized && !g.SettingsLoaded);
@@ -3744,7 +3749,7 @@ void ImGui::Initialize(ImGuiContext* context)
 }
 
 // This function is merely here to free heap allocations.
-void ImGui::Shutdown(ImGuiContext* context)
+void NuclearEngine::Graphics::ImGui::Shutdown(ImGuiContext* context)
 {
     // The fonts atlas can be used prior to calling NewFrame(), so we clear it even if g.Initialized is FALSE (which would happen if we never called NewFrame)
     ImGuiContext& g = *context;
@@ -3921,7 +3926,7 @@ void ImDrawDataBuilder::FlattenIntoSingleLayer()
 
 static void SetupDrawData(ImVector<ImDrawList*>* draw_lists, ImDrawData* draw_data)
 {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     draw_data->Valid = true;
     draw_data->CmdLists = (draw_lists->Size > 0) ? draw_lists->Data : NULL;
     draw_data->CmdListsCount = draw_lists->Size;
@@ -3937,14 +3942,14 @@ static void SetupDrawData(ImVector<ImDrawList*>* draw_lists, ImDrawData* draw_da
 }
 
 // When using this function it is sane to ensure that float are perfectly rounded to integer values, to that e.g. (int)(max.x-min.x) in user's render produce correct result.
-void ImGui::PushClipRect(const ImVec2& clip_rect_min, const ImVec2& clip_rect_max, bool intersect_with_current_clip_rect)
+void NuclearEngine::Graphics::ImGui::PushClipRect(const ImVec2& clip_rect_min, const ImVec2& clip_rect_max, bool intersect_with_current_clip_rect)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DrawList->PushClipRect(clip_rect_min, clip_rect_max, intersect_with_current_clip_rect);
     window->ClipRect = window->DrawList->_ClipRectStack.back();
 }
 
-void ImGui::PopClipRect()
+void NuclearEngine::Graphics::ImGui::PopClipRect()
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DrawList->PopClipRect();
@@ -3952,13 +3957,13 @@ void ImGui::PopClipRect()
 }
 
 // This is normally called by Render(). You may want to call it directly if you want to avoid calling Render() but the gain will be very minimal.
-void ImGui::EndFrame()
+void NuclearEngine::Graphics::ImGui::EndFrame()
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.Initialized);
     if (g.FrameCountEnded == g.FrameCount)          // Don't process EndFrame() multiple times.
         return;
-    IM_ASSERT(g.FrameScopeActive && "Forgot to call ImGui::NewFrame()?");
+    IM_ASSERT(g.FrameScopeActive && "Forgot to call NuclearEngine::Graphics::ImGui::NewFrame()?");
 
     // Notify OS when our Input Method Editor cursor has moved (e.g. CJK inputs using Microsoft IME)
     if (g.IO.ImeSetInputScreenPosFn && (g.PlatformImeLastPos.x == FLT_MAX || ImLengthSqr(g.PlatformImeLastPos - g.PlatformImePos) > 0.0001f))
@@ -4043,7 +4048,7 @@ void ImGui::EndFrame()
     memset(g.IO.NavInputs, 0, sizeof(g.IO.NavInputs));
 }
 
-void ImGui::Render()
+void NuclearEngine::Graphics::ImGui::Render()
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.Initialized);
@@ -4093,7 +4098,7 @@ void ImGui::Render()
 
 // Calculate text size. Text can be multi-line. Optionally ignore text after a ## marker.
 // CalcTextSize("") should return ImVec2(0.0f, GImGui->FontSize)
-ImVec2 ImGui::CalcTextSize(const char* text, const char* text_end, bool hide_text_after_double_hash, float wrap_width)
+ImVec2 NuclearEngine::Graphics::ImGui::CalcTextSize(const char* text, const char* text_end, bool hide_text_after_double_hash, float wrap_width)
 {
     ImGuiContext& g = *GImGui;
 
@@ -4118,7 +4123,7 @@ ImVec2 ImGui::CalcTextSize(const char* text, const char* text_end, bool hide_tex
 // Helper to calculate coarse clipping of large list of evenly sized items.
 // NB: Prefer using the ImGuiListClipper higher-level helper if you can! Read comments and instructions there on how those use this sort of pattern.
 // NB: 'items_count' is only used to clamp the result, if you don't know your count you can use INT_MAX
-void ImGui::CalcListClipping(int items_count, float items_height, int* out_items_display_start, int* out_items_display_end)
+void NuclearEngine::Graphics::ImGui::CalcListClipping(int items_count, float items_height, int* out_items_display_start, int* out_items_display_end)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -4202,7 +4207,7 @@ static void FindHoveredWindow()
 // Test if mouse cursor is hovering given rectangle
 // NB- Rectangle is clipped by our current clip setting
 // NB- Expand the rectangle to be generous on imprecise inputs systems (g.Style.TouchExtraPadding)
-bool ImGui::IsMouseHoveringRect(const ImVec2& r_min, const ImVec2& r_max, bool clip)
+bool NuclearEngine::Graphics::ImGui::IsMouseHoveringRect(const ImVec2& r_min, const ImVec2& r_max, bool clip)
 {
     ImGuiContext& g = *GImGui;
 
@@ -4218,21 +4223,21 @@ bool ImGui::IsMouseHoveringRect(const ImVec2& r_min, const ImVec2& r_max, bool c
     return true;
 }
 
-int ImGui::GetKeyIndex(ImGuiKey imgui_key)
+int NuclearEngine::Graphics::ImGui::GetKeyIndex(ImGuiKey imgui_key)
 {
     IM_ASSERT(imgui_key >= 0 && imgui_key < ImGuiKey_COUNT);
     return GImGui->IO.KeyMap[imgui_key];
 }
 
 // Note that imgui doesn't know the semantic of each entry of io.KeysDown[]. Use your own indices/enums according to how your back-end/engine stored them into io.KeysDown[]!
-bool ImGui::IsKeyDown(int user_key_index)
+bool NuclearEngine::Graphics::ImGui::IsKeyDown(int user_key_index)
 {
     if (user_key_index < 0) return false;
     IM_ASSERT(user_key_index >= 0 && user_key_index < IM_ARRAYSIZE(GImGui->IO.KeysDown));
     return GImGui->IO.KeysDown[user_key_index];
 }
 
-int ImGui::CalcTypematicPressedRepeatAmount(float t, float t_prev, float repeat_delay, float repeat_rate)
+int NuclearEngine::Graphics::ImGui::CalcTypematicPressedRepeatAmount(float t, float t_prev, float repeat_delay, float repeat_rate)
 {
     if (t == 0.0f)
         return 1;
@@ -4242,7 +4247,7 @@ int ImGui::CalcTypematicPressedRepeatAmount(float t, float t_prev, float repeat_
     return (count > 0) ? count : 0;
 }
 
-int ImGui::GetKeyPressedAmount(int key_index, float repeat_delay, float repeat_rate)
+int NuclearEngine::Graphics::ImGui::GetKeyPressedAmount(int key_index, float repeat_delay, float repeat_rate)
 {
     ImGuiContext& g = *GImGui;
     if (key_index < 0)
@@ -4252,7 +4257,7 @@ int ImGui::GetKeyPressedAmount(int key_index, float repeat_delay, float repeat_r
     return CalcTypematicPressedRepeatAmount(t, t - g.IO.DeltaTime, repeat_delay, repeat_rate);
 }
 
-bool ImGui::IsKeyPressed(int user_key_index, bool repeat)
+bool NuclearEngine::Graphics::ImGui::IsKeyPressed(int user_key_index, bool repeat)
 {
     ImGuiContext& g = *GImGui;
     if (user_key_index < 0)
@@ -4266,7 +4271,7 @@ bool ImGui::IsKeyPressed(int user_key_index, bool repeat)
     return false;
 }
 
-bool ImGui::IsKeyReleased(int user_key_index)
+bool NuclearEngine::Graphics::ImGui::IsKeyReleased(int user_key_index)
 {
     ImGuiContext& g = *GImGui;
     if (user_key_index < 0) return false;
@@ -4274,14 +4279,14 @@ bool ImGui::IsKeyReleased(int user_key_index)
     return g.IO.KeysDownDurationPrev[user_key_index] >= 0.0f && !g.IO.KeysDown[user_key_index];
 }
 
-bool ImGui::IsMouseDown(int button)
+bool NuclearEngine::Graphics::ImGui::IsMouseDown(int button)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
     return g.IO.MouseDown[button];
 }
 
-bool ImGui::IsAnyMouseDown()
+bool NuclearEngine::Graphics::ImGui::IsAnyMouseDown()
 {
     ImGuiContext& g = *GImGui;
     for (int n = 0; n < IM_ARRAYSIZE(g.IO.MouseDown); n++)
@@ -4290,7 +4295,7 @@ bool ImGui::IsAnyMouseDown()
     return false;
 }
 
-bool ImGui::IsMouseClicked(int button, bool repeat)
+bool NuclearEngine::Graphics::ImGui::IsMouseClicked(int button, bool repeat)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
@@ -4309,21 +4314,21 @@ bool ImGui::IsMouseClicked(int button, bool repeat)
     return false;
 }
 
-bool ImGui::IsMouseReleased(int button)
+bool NuclearEngine::Graphics::ImGui::IsMouseReleased(int button)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
     return g.IO.MouseReleased[button];
 }
 
-bool ImGui::IsMouseDoubleClicked(int button)
+bool NuclearEngine::Graphics::ImGui::IsMouseDoubleClicked(int button)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
     return g.IO.MouseDoubleClicked[button];
 }
 
-bool ImGui::IsMouseDragging(int button, float lock_threshold)
+bool NuclearEngine::Graphics::ImGui::IsMouseDragging(int button, float lock_threshold)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
@@ -4334,13 +4339,13 @@ bool ImGui::IsMouseDragging(int button, float lock_threshold)
     return g.IO.MouseDragMaxDistanceSqr[button] >= lock_threshold * lock_threshold;
 }
 
-ImVec2 ImGui::GetMousePos()
+ImVec2 NuclearEngine::Graphics::ImGui::GetMousePos()
 {
     return GImGui->IO.MousePos;
 }
 
 // NB: prefer to call right after BeginPopup(). At the time Selectable/MenuItem is activated, the popup is already closed!
-ImVec2 ImGui::GetMousePosOnOpeningCurrentPopup()
+ImVec2 NuclearEngine::Graphics::ImGui::GetMousePosOnOpeningCurrentPopup()
 {
     ImGuiContext& g = *GImGui;
     if (g.BeginPopupStack.Size > 0)
@@ -4349,7 +4354,7 @@ ImVec2 ImGui::GetMousePosOnOpeningCurrentPopup()
 }
 
 // We typically use ImVec2(-FLT_MAX,-FLT_MAX) to denote an invalid mouse position.
-bool ImGui::IsMousePosValid(const ImVec2* mouse_pos)
+bool NuclearEngine::Graphics::ImGui::IsMousePosValid(const ImVec2* mouse_pos)
 {
     // The assert is only to silence a false-positive in XCode Static Analysis.
     // Because GImGui is not dereferenced in every code path, the static analyzer assume that it may be NULL (which it doesn't for other functions).
@@ -4362,7 +4367,7 @@ bool ImGui::IsMousePosValid(const ImVec2* mouse_pos)
 // Return the delta from the initial clicking position while the mouse button is clicked or was just released.
 // This is locked and return 0.0f until the mouse moves past a distance threshold at least once.
 // NB: This is only valid if IsMousePosValid(). Back-ends in theory should always keep mouse position valid when dragging even outside the client window.
-ImVec2 ImGui::GetMouseDragDelta(int button, float lock_threshold)
+ImVec2 NuclearEngine::Graphics::ImGui::GetMouseDragDelta(int button, float lock_threshold)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
@@ -4375,7 +4380,7 @@ ImVec2 ImGui::GetMouseDragDelta(int button, float lock_threshold)
     return ImVec2(0.0f, 0.0f);
 }
 
-void ImGui::ResetMouseDragDelta(int button)
+void NuclearEngine::Graphics::ImGui::ResetMouseDragDelta(int button)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
@@ -4383,27 +4388,27 @@ void ImGui::ResetMouseDragDelta(int button)
     g.IO.MouseClickedPos[button] = g.IO.MousePos;
 }
 
-ImGuiMouseCursor ImGui::GetMouseCursor()
+ImGuiMouseCursor NuclearEngine::Graphics::ImGui::GetMouseCursor()
 {
     return GImGui->MouseCursor;
 }
 
-void ImGui::SetMouseCursor(ImGuiMouseCursor cursor_type)
+void NuclearEngine::Graphics::ImGui::SetMouseCursor(ImGuiMouseCursor cursor_type)
 {
     GImGui->MouseCursor = cursor_type;
 }
 
-void ImGui::CaptureKeyboardFromApp(bool capture)
+void NuclearEngine::Graphics::ImGui::CaptureKeyboardFromApp(bool capture)
 {
     GImGui->WantCaptureKeyboardNextFrame = capture ? 1 : 0;
 }
 
-void ImGui::CaptureMouseFromApp(bool capture)
+void NuclearEngine::Graphics::ImGui::CaptureMouseFromApp(bool capture)
 {
     GImGui->WantCaptureMouseNextFrame = capture ? 1 : 0;
 }
 
-bool ImGui::IsItemActive()
+bool NuclearEngine::Graphics::ImGui::IsItemActive()
 {
     ImGuiContext& g = *GImGui;
     if (g.ActiveId)
@@ -4414,7 +4419,7 @@ bool ImGui::IsItemActive()
     return false;
 }
 
-bool ImGui::IsItemActivated()
+bool NuclearEngine::Graphics::ImGui::IsItemActivated()
 {
     ImGuiContext& g = *GImGui;
     if (g.ActiveId)
@@ -4426,7 +4431,7 @@ bool ImGui::IsItemActivated()
     return false;
 }
 
-bool ImGui::IsItemDeactivated()
+bool NuclearEngine::Graphics::ImGui::IsItemDeactivated()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -4435,13 +4440,13 @@ bool ImGui::IsItemDeactivated()
     return (g.ActiveIdPreviousFrame == window->DC.LastItemId && g.ActiveIdPreviousFrame != 0 && g.ActiveId != window->DC.LastItemId);
 }
 
-bool ImGui::IsItemDeactivatedAfterEdit()
+bool NuclearEngine::Graphics::ImGui::IsItemDeactivatedAfterEdit()
 {
     ImGuiContext& g = *GImGui;
     return IsItemDeactivated() && (g.ActiveIdPreviousFrameHasBeenEditedBefore || (g.ActiveId == 0 && g.ActiveIdHasBeenEditedBefore));
 }
 
-bool ImGui::IsItemFocused()
+bool NuclearEngine::Graphics::ImGui::IsItemFocused()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -4451,49 +4456,49 @@ bool ImGui::IsItemFocused()
     return true;
 }
 
-bool ImGui::IsItemClicked(int mouse_button)
+bool NuclearEngine::Graphics::ImGui::IsItemClicked(int mouse_button)
 {
     return IsMouseClicked(mouse_button) && IsItemHovered(ImGuiHoveredFlags_None);
 }
 
-bool ImGui::IsItemToggledSelection()
+bool NuclearEngine::Graphics::ImGui::IsItemToggledSelection()
 {
     ImGuiContext& g = *GImGui;
     return (g.CurrentWindow->DC.LastItemStatusFlags & ImGuiItemStatusFlags_ToggledSelection) ? true : false;
 }
 
-bool ImGui::IsAnyItemHovered()
+bool NuclearEngine::Graphics::ImGui::IsAnyItemHovered()
 {
     ImGuiContext& g = *GImGui;
     return g.HoveredId != 0 || g.HoveredIdPreviousFrame != 0;
 }
 
-bool ImGui::IsAnyItemActive()
+bool NuclearEngine::Graphics::ImGui::IsAnyItemActive()
 {
     ImGuiContext& g = *GImGui;
     return g.ActiveId != 0;
 }
 
-bool ImGui::IsAnyItemFocused()
+bool NuclearEngine::Graphics::ImGui::IsAnyItemFocused()
 {
     ImGuiContext& g = *GImGui;
     return g.NavId != 0 && !g.NavDisableHighlight;
 }
 
-bool ImGui::IsItemVisible()
+bool NuclearEngine::Graphics::ImGui::IsItemVisible()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->ClipRect.Overlaps(window->DC.LastItemRect);
 }
 
-bool ImGui::IsItemEdited()
+bool NuclearEngine::Graphics::ImGui::IsItemEdited()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return (window->DC.LastItemStatusFlags & ImGuiItemStatusFlags_Edited) != 0;
 }
 
 // Allow last item to be overlapped by a subsequent item. Both may be activated during the same frame before the later one takes priority.
-void ImGui::SetItemAllowOverlap()
+void NuclearEngine::Graphics::ImGui::SetItemAllowOverlap()
 {
     ImGuiContext& g = *GImGui;
     if (g.HoveredId == g.CurrentWindow->DC.LastItemId)
@@ -4502,19 +4507,19 @@ void ImGui::SetItemAllowOverlap()
         g.ActiveIdAllowOverlap = true;
 }
 
-ImVec2 ImGui::GetItemRectMin()
+ImVec2 NuclearEngine::Graphics::ImGui::GetItemRectMin()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.LastItemRect.Min;
 }
 
-ImVec2 ImGui::GetItemRectMax()
+ImVec2 NuclearEngine::Graphics::ImGui::GetItemRectMax()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.LastItemRect.Max;
 }
 
-ImVec2 ImGui::GetItemRectSize()
+ImVec2 NuclearEngine::Graphics::ImGui::GetItemRectSize()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.LastItemRect.GetSize();
@@ -4526,7 +4531,7 @@ static ImRect GetViewportRect()
     return ImRect(0.0f, 0.0f, g.IO.DisplaySize.x, g.IO.DisplaySize.y);
 }
 
-static bool ImGui::BeginChildEx(const char* name, ImGuiID id, const ImVec2& size_arg, bool border, ImGuiWindowFlags flags)
+static bool NuclearEngine::Graphics::ImGui::BeginChildEx(const char* name, ImGuiID id, const ImVec2& size_arg, bool border, ImGuiWindowFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* parent_window = g.CurrentWindow;
@@ -4577,19 +4582,19 @@ static bool ImGui::BeginChildEx(const char* name, ImGuiID id, const ImVec2& size
     return ret;
 }
 
-bool ImGui::BeginChild(const char* str_id, const ImVec2& size_arg, bool border, ImGuiWindowFlags extra_flags)
+bool NuclearEngine::Graphics::ImGui::BeginChild(const char* str_id, const ImVec2& size_arg, bool border, ImGuiWindowFlags extra_flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     return BeginChildEx(str_id, window->GetID(str_id), size_arg, border, extra_flags);
 }
 
-bool ImGui::BeginChild(ImGuiID id, const ImVec2& size_arg, bool border, ImGuiWindowFlags extra_flags)
+bool NuclearEngine::Graphics::ImGui::BeginChild(ImGuiID id, const ImVec2& size_arg, bool border, ImGuiWindowFlags extra_flags)
 {
     IM_ASSERT(id != 0);
     return BeginChildEx(NULL, id, size_arg, border, extra_flags);
 }
 
-void ImGui::EndChild()
+void NuclearEngine::Graphics::ImGui::EndChild()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -4629,7 +4634,7 @@ void ImGui::EndChild()
 }
 
 // Helper to create a child window / scrolling region that looks like a normal widget frame.
-bool ImGui::BeginChildFrame(ImGuiID id, const ImVec2& size, ImGuiWindowFlags extra_flags)
+bool NuclearEngine::Graphics::ImGui::BeginChildFrame(ImGuiID id, const ImVec2& size, ImGuiWindowFlags extra_flags)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
@@ -4643,7 +4648,7 @@ bool ImGui::BeginChildFrame(ImGuiID id, const ImVec2& size, ImGuiWindowFlags ext
     return ret;
 }
 
-void ImGui::EndChildFrame()
+void NuclearEngine::Graphics::ImGui::EndChildFrame()
 {
     EndChild();
 }
@@ -4671,13 +4676,13 @@ static void SetWindowConditionAllowFlags(ImGuiWindow* window, ImGuiCond flags, b
     window->SetWindowCollapsedAllowFlags = enabled ? (window->SetWindowCollapsedAllowFlags | flags) : (window->SetWindowCollapsedAllowFlags & ~flags);
 }
 
-ImGuiWindow* ImGui::FindWindowByID(ImGuiID id)
+ImGuiWindow* NuclearEngine::Graphics::ImGui::FindWindowByID(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     return (ImGuiWindow*)g.WindowsById.GetVoidPtr(id);
 }
 
-ImGuiWindow* ImGui::FindWindowByName(const char* name)
+ImGuiWindow* NuclearEngine::Graphics::ImGui::FindWindowByName(const char* name)
 {
     ImGuiID id = ImHashStr(name);
     return FindWindowByID(id);
@@ -4697,7 +4702,7 @@ static ImGuiWindow* CreateNewWindow(const char* name, ImVec2 size, ImGuiWindowFl
 
     // User can disable loading and saving of settings. Tooltip and child windows also don't store settings.
     if (!(flags & ImGuiWindowFlags_NoSavedSettings))
-        if (ImGuiWindowSettings* settings = ImGui::FindWindowSettings(window->ID))
+        if (ImGuiWindowSettings* settings = NuclearEngine::Graphics::ImGui::FindWindowSettings(window->ID))
         {
             // Retrieve settings from .ini file
             window->SettingsIdx = g.SettingsWindows.index_from_ptr(settings);
@@ -4813,7 +4818,7 @@ static ImVec2 CalcSizeAutoFit(ImGuiWindow* window, const ImVec2& size_contents)
     }
 }
 
-ImVec2 ImGui::CalcWindowExpectedSize(ImGuiWindow* window)
+ImVec2 NuclearEngine::Graphics::ImGui::CalcWindowExpectedSize(ImGuiWindow* window)
 {
     ImVec2 size_contents = CalcContentSize(window);
     return CalcSizeAfterConstraint(window, CalcSizeAutoFit(window, size_contents));
@@ -4900,7 +4905,7 @@ static ImRect GetResizeBorderRect(ImGuiWindow* window, int border_n, float perp_
 
 // Handle resize for: Resize Grips, Borders, Gamepad
 // Return true when using auto-fit (double click on resize grip)
-static bool ImGui::UpdateManualResize(ImGuiWindow* window, const ImVec2& size_auto_fit, int* border_held, int resize_grip_count, ImU32 resize_grip_col[4])
+static bool NuclearEngine::Graphics::ImGui::UpdateManualResize(ImGuiWindow* window, const ImVec2& size_auto_fit, int* border_held, int resize_grip_count, ImU32 resize_grip_col[4])
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindowFlags flags = window->Flags;
@@ -5029,7 +5034,7 @@ static inline void ClampWindowRect(ImGuiWindow* window, const ImRect& rect, cons
     window->Pos = ImMin(rect.Max - padding, ImMax(window->Pos + size_for_clamping, rect.Min + padding) - size_for_clamping);
 }
 
-static void ImGui::RenderWindowOuterBorders(ImGuiWindow* window)
+static void NuclearEngine::Graphics::ImGui::RenderWindowOuterBorders(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
     float rounding = window->WindowRounding;
@@ -5066,7 +5071,7 @@ static void ImGui::RenderWindowOuterBorders(ImGuiWindow* window)
     }
 }
 
-void ImGui::RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar_rect, bool title_bar_is_highlight, int resize_grip_count, const ImU32 resize_grip_col[4], float resize_grip_draw_size)
+void NuclearEngine::Graphics::ImGui::RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar_rect, bool title_bar_is_highlight, int resize_grip_count, const ImU32 resize_grip_col[4], float resize_grip_draw_size)
 {
     ImGuiContext& g = *GImGui;
     ImGuiStyle& style = g.Style;
@@ -5142,7 +5147,7 @@ void ImGui::RenderWindowDecorations(ImGuiWindow* window, const ImRect& title_bar
 }
 
 // Render title text, collapse button, close button
-void ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& title_bar_rect, const char* name, bool* p_open)
+void NuclearEngine::Graphics::ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& title_bar_rect, const char* name, bool* p_open)
 {
     ImGuiContext& g = *GImGui;
     ImGuiStyle& style = g.Style;
@@ -5226,7 +5231,7 @@ void ImGui::RenderWindowTitleBarContents(ImGuiWindow* window, const ImRect& titl
     }
 }
 
-void ImGui::UpdateWindowParentAndRootLinks(ImGuiWindow* window, ImGuiWindowFlags flags, ImGuiWindow* parent_window)
+void NuclearEngine::Graphics::ImGui::UpdateWindowParentAndRootLinks(ImGuiWindow* window, ImGuiWindowFlags flags, ImGuiWindow* parent_window)
 {
     window->ParentWindow = parent_window;
     window->RootWindow = window->RootWindowForTitleBarHighlight = window->RootWindowForNav = window;
@@ -5246,15 +5251,15 @@ void ImGui::UpdateWindowParentAndRootLinks(ImGuiWindow* window, ImGuiWindowFlags
 // - Begin/End can be called multiple times during the frame with the same window name to append content.
 // - The window name is used as a unique identifier to preserve window information across frames (and save rudimentary information to the .ini file).
 //   You can use the "##" or "###" markers to use the same label with different id, or same id with different label. See documentation at the top of this file.
-// - Return false when window is collapsed, so you can early out in your code. You always need to call ImGui::End() even if false is returned.
+// - Return false when window is collapsed, so you can early out in your code. You always need to call NuclearEngine::Graphics::ImGui::End() even if false is returned.
 // - Passing 'bool* p_open' displays a Close button on the upper-right corner of the window, the pointed value will be set to false when the button is pressed.
-bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
+bool NuclearEngine::Graphics::ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
     IM_ASSERT(name != NULL && name[0] != '\0');     // Window name required
-    IM_ASSERT(g.FrameScopeActive);                  // Forgot to call ImGui::NewFrame()
-    IM_ASSERT(g.FrameCountEnded != g.FrameCount);   // Called ImGui::Render() or ImGui::EndFrame() and haven't called ImGui::NewFrame() again yet
+    IM_ASSERT(g.FrameScopeActive);                  // Forgot to call NuclearEngine::Graphics::ImGui::NewFrame()
+    IM_ASSERT(g.FrameCountEnded != g.FrameCount);   // Called NuclearEngine::Graphics::ImGui::Render() or NuclearEngine::Graphics::ImGui::EndFrame() and haven't called NuclearEngine::Graphics::ImGui::NewFrame() again yet
 
     // Find or create
     ImGuiWindow* window = FindWindowByName(name);
@@ -5841,7 +5846,7 @@ bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
 
 // Old Begin() API with 5 parameters, avoid calling this version directly! Use SetNextWindowSize()/SetNextWindowBgAlpha() + Begin() instead.
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-bool ImGui::Begin(const char* name, bool* p_open, const ImVec2& size_first_use, float bg_alpha_override, ImGuiWindowFlags flags)
+bool NuclearEngine::Graphics::ImGui::Begin(const char* name, bool* p_open, const ImVec2& size_first_use, float bg_alpha_override, ImGuiWindowFlags flags)
 {
     // Old API feature: we could pass the initial window size as a parameter. This was misleading because it only had an effect if the window didn't have data in the .ini file.
     if (size_first_use.x != 0.0f || size_first_use.y != 0.0f)
@@ -5855,7 +5860,7 @@ bool ImGui::Begin(const char* name, bool* p_open, const ImVec2& size_first_use, 
 }
 #endif // IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
-void ImGui::End()
+void NuclearEngine::Graphics::ImGui::End()
 {
     ImGuiContext& g = *GImGui;
 
@@ -5884,7 +5889,7 @@ void ImGui::End()
     SetCurrentWindow(g.CurrentWindowStack.empty() ? NULL : g.CurrentWindowStack.back());
 }
 
-void ImGui::BringWindowToFocusFront(ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::BringWindowToFocusFront(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
     if (g.WindowsFocusOrder.back() == window)
@@ -5898,7 +5903,7 @@ void ImGui::BringWindowToFocusFront(ImGuiWindow* window)
         }
 }
 
-void ImGui::BringWindowToDisplayFront(ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::BringWindowToDisplayFront(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* current_front_window = g.Windows.back();
@@ -5913,7 +5918,7 @@ void ImGui::BringWindowToDisplayFront(ImGuiWindow* window)
         }
 }
 
-void ImGui::BringWindowToDisplayBack(ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::BringWindowToDisplayBack(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
     if (g.Windows[0] == window)
@@ -5928,7 +5933,7 @@ void ImGui::BringWindowToDisplayBack(ImGuiWindow* window)
 }
 
 // Moving window to front of display and set focus (which happens to be back of our sorted list)
-void ImGui::FocusWindow(ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::FocusWindow(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
 
@@ -5966,7 +5971,7 @@ void ImGui::FocusWindow(ImGuiWindow* window)
         BringWindowToDisplayFront(window);
 }
 
-void ImGui::FocusTopMostWindowUnderOne(ImGuiWindow* under_this_window, ImGuiWindow* ignore_window)
+void NuclearEngine::Graphics::ImGui::FocusTopMostWindowUnderOne(ImGuiWindow* under_this_window, ImGuiWindow* ignore_window)
 {
     ImGuiContext& g = *GImGui;
 
@@ -5992,14 +5997,14 @@ void ImGui::FocusTopMostWindowUnderOne(ImGuiWindow* under_this_window, ImGuiWind
     FocusWindow(NULL);
 }
 
-void ImGui::SetNextItemWidth(float item_width)
+void NuclearEngine::Graphics::ImGui::SetNextItemWidth(float item_width)
 {
     ImGuiContext& g = *GImGui;
     g.NextItemData.Flags |= ImGuiNextItemDataFlags_HasWidth;
     g.NextItemData.Width = item_width;
 }
 
-void ImGui::PushItemWidth(float item_width)
+void NuclearEngine::Graphics::ImGui::PushItemWidth(float item_width)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -6008,7 +6013,7 @@ void ImGui::PushItemWidth(float item_width)
     g.NextItemData.Flags &= ~ImGuiNextItemDataFlags_HasWidth;
 }
 
-void ImGui::PushMultiItemsWidths(int components, float w_full)
+void NuclearEngine::Graphics::ImGui::PushMultiItemsWidths(int components, float w_full)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -6022,7 +6027,7 @@ void ImGui::PushMultiItemsWidths(int components, float w_full)
     g.NextItemData.Flags &= ~ImGuiNextItemDataFlags_HasWidth;
 }
 
-void ImGui::PopItemWidth()
+void NuclearEngine::Graphics::ImGui::PopItemWidth()
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.ItemWidthStack.pop_back();
@@ -6031,7 +6036,7 @@ void ImGui::PopItemWidth()
 
 // Calculate default item width given value passed to PushItemWidth() or SetNextItemWidth().
 // The SetNextItemWidth() data is generally cleared/consumed by ItemAdd() or NextItemData.ClearFlags()
-float ImGui::CalcItemWidth()
+float NuclearEngine::Graphics::ImGui::CalcItemWidth()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -6053,7 +6058,7 @@ float ImGui::CalcItemWidth()
 // Those two functions CalcItemWidth vs CalcItemSize are awkwardly named because they are not fully symmetrical.
 // Note that only CalcItemWidth() is publicly exposed.
 // The 4.0f here may be changed to match CalcItemWidth() and/or BeginChild() (right now we have a mismatch which is harmless but undesirable)
-ImVec2 ImGui::CalcItemSize(ImVec2 size, float default_w, float default_h)
+ImVec2 NuclearEngine::Graphics::ImGui::CalcItemSize(ImVec2 size, float default_w, float default_h)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
 
@@ -6074,7 +6079,7 @@ ImVec2 ImGui::CalcItemSize(ImVec2 size, float default_w, float default_h)
     return size;
 }
 
-void ImGui::SetCurrentFont(ImFont* font)
+void NuclearEngine::Graphics::ImGui::SetCurrentFont(ImFont* font)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(font && font->IsLoaded());    // Font Atlas not created. Did you call io.Fonts->GetTexDataAsRGBA32 / GetTexDataAsAlpha8 ?
@@ -6089,7 +6094,7 @@ void ImGui::SetCurrentFont(ImFont* font)
     g.DrawListSharedData.FontSize = g.FontSize;
 }
 
-void ImGui::PushFont(ImFont* font)
+void NuclearEngine::Graphics::ImGui::PushFont(ImFont* font)
 {
     ImGuiContext& g = *GImGui;
     if (!font)
@@ -6099,7 +6104,7 @@ void ImGui::PushFont(ImFont* font)
     g.CurrentWindow->DrawList->PushTextureID(font->ContainerAtlas->TexID);
 }
 
-void  ImGui::PopFont()
+void  NuclearEngine::Graphics::ImGui::PopFont()
 {
     ImGuiContext& g = *GImGui;
     g.CurrentWindow->DrawList->PopTextureID();
@@ -6107,7 +6112,7 @@ void  ImGui::PopFont()
     SetCurrentFont(g.FontStack.empty() ? GetDefaultFont() : g.FontStack.back());
 }
 
-void ImGui::PushItemFlag(ImGuiItemFlags option, bool enabled)
+void NuclearEngine::Graphics::ImGui::PushItemFlag(ImGuiItemFlags option, bool enabled)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (enabled)
@@ -6117,7 +6122,7 @@ void ImGui::PushItemFlag(ImGuiItemFlags option, bool enabled)
     window->DC.ItemFlagsStack.push_back(window->DC.ItemFlags);
 }
 
-void ImGui::PopItemFlag()
+void NuclearEngine::Graphics::ImGui::PopItemFlag()
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.ItemFlagsStack.pop_back();
@@ -6125,34 +6130,34 @@ void ImGui::PopItemFlag()
 }
 
 // FIXME: Look into renaming this once we have settled the new Focus/Activation/TabStop system.
-void ImGui::PushAllowKeyboardFocus(bool allow_keyboard_focus)
+void NuclearEngine::Graphics::ImGui::PushAllowKeyboardFocus(bool allow_keyboard_focus)
 {
     PushItemFlag(ImGuiItemFlags_NoTabStop, !allow_keyboard_focus);
 }
 
-void ImGui::PopAllowKeyboardFocus()
+void NuclearEngine::Graphics::ImGui::PopAllowKeyboardFocus()
 {
     PopItemFlag();
 }
 
-void ImGui::PushButtonRepeat(bool repeat)
+void NuclearEngine::Graphics::ImGui::PushButtonRepeat(bool repeat)
 {
     PushItemFlag(ImGuiItemFlags_ButtonRepeat, repeat);
 }
 
-void ImGui::PopButtonRepeat()
+void NuclearEngine::Graphics::ImGui::PopButtonRepeat()
 {
     PopItemFlag();
 }
 
-void ImGui::PushTextWrapPos(float wrap_pos_x)
+void NuclearEngine::Graphics::ImGui::PushTextWrapPos(float wrap_pos_x)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.TextWrapPos = wrap_pos_x;
     window->DC.TextWrapPosStack.push_back(wrap_pos_x);
 }
 
-void ImGui::PopTextWrapPos()
+void NuclearEngine::Graphics::ImGui::PopTextWrapPos()
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.TextWrapPosStack.pop_back();
@@ -6160,7 +6165,7 @@ void ImGui::PopTextWrapPos()
 }
 
 // FIXME: This may incur a round-trip (if the end user got their data from a float4) but eventually we aim to store the in-flight colors as ImU32
-void ImGui::PushStyleColor(ImGuiCol idx, ImU32 col)
+void NuclearEngine::Graphics::ImGui::PushStyleColor(ImGuiCol idx, ImU32 col)
 {
     ImGuiContext& g = *GImGui;
     ImGuiColorMod backup;
@@ -6170,7 +6175,7 @@ void ImGui::PushStyleColor(ImGuiCol idx, ImU32 col)
     g.Style.Colors[idx] = ColorConvertU32ToFloat4(col);
 }
 
-void ImGui::PushStyleColor(ImGuiCol idx, const ImVec4& col)
+void NuclearEngine::Graphics::ImGui::PushStyleColor(ImGuiCol idx, const ImVec4& col)
 {
     ImGuiContext& g = *GImGui;
     ImGuiColorMod backup;
@@ -6180,7 +6185,7 @@ void ImGui::PushStyleColor(ImGuiCol idx, const ImVec4& col)
     g.Style.Colors[idx] = col;
 }
 
-void ImGui::PopStyleColor(int count)
+void NuclearEngine::Graphics::ImGui::PopStyleColor(int count)
 {
     ImGuiContext& g = *GImGui;
     while (count > 0)
@@ -6234,7 +6239,7 @@ static const ImGuiStyleVarInfo* GetStyleVarInfo(ImGuiStyleVar idx)
     return &GStyleVarInfo[idx];
 }
 
-void ImGui::PushStyleVar(ImGuiStyleVar idx, float val)
+void NuclearEngine::Graphics::ImGui::PushStyleVar(ImGuiStyleVar idx, float val)
 {
     const ImGuiStyleVarInfo* var_info = GetStyleVarInfo(idx);
     if (var_info->Type == ImGuiDataType_Float && var_info->Count == 1)
@@ -6248,7 +6253,7 @@ void ImGui::PushStyleVar(ImGuiStyleVar idx, float val)
     IM_ASSERT(0 && "Called PushStyleVar() float variant but variable is not a float!");
 }
 
-void ImGui::PushStyleVar(ImGuiStyleVar idx, const ImVec2& val)
+void NuclearEngine::Graphics::ImGui::PushStyleVar(ImGuiStyleVar idx, const ImVec2& val)
 {
     const ImGuiStyleVarInfo* var_info = GetStyleVarInfo(idx);
     if (var_info->Type == ImGuiDataType_Float && var_info->Count == 2)
@@ -6262,7 +6267,7 @@ void ImGui::PushStyleVar(ImGuiStyleVar idx, const ImVec2& val)
     IM_ASSERT(0 && "Called PushStyleVar() ImVec2 variant but variable is not a ImVec2!");
 }
 
-void ImGui::PopStyleVar(int count)
+void NuclearEngine::Graphics::ImGui::PopStyleVar(int count)
 {
     ImGuiContext& g = *GImGui;
     while (count > 0)
@@ -6278,7 +6283,7 @@ void ImGui::PopStyleVar(int count)
     }
 }
 
-const char* ImGui::GetStyleColorName(ImGuiCol idx)
+const char* NuclearEngine::Graphics::ImGui::GetStyleColorName(ImGuiCol idx)
 {
     // Create switch-case from enum with regexp: ImGuiCol_{.*}, --> case ImGuiCol_\1: return "\1";
     switch (idx)
@@ -6336,7 +6341,7 @@ const char* ImGui::GetStyleColorName(ImGuiCol idx)
     return "Unknown";
 }
 
-bool ImGui::IsWindowChildOf(ImGuiWindow* window, ImGuiWindow* potential_parent)
+bool NuclearEngine::Graphics::ImGui::IsWindowChildOf(ImGuiWindow* window, ImGuiWindow* potential_parent)
 {
     if (window->RootWindow == potential_parent)
         return true;
@@ -6349,7 +6354,7 @@ bool ImGui::IsWindowChildOf(ImGuiWindow* window, ImGuiWindow* potential_parent)
     return false;
 }
 
-bool ImGui::IsWindowHovered(ImGuiHoveredFlags flags)
+bool NuclearEngine::Graphics::ImGui::IsWindowHovered(ImGuiHoveredFlags flags)
 {
     IM_ASSERT((flags & ImGuiHoveredFlags_AllowWhenOverlapped) == 0);   // Flags not supported by this function
     ImGuiContext& g = *GImGui;
@@ -6390,7 +6395,7 @@ bool ImGui::IsWindowHovered(ImGuiHoveredFlags flags)
     return true;
 }
 
-bool ImGui::IsWindowFocused(ImGuiFocusedFlags flags)
+bool NuclearEngine::Graphics::ImGui::IsWindowFocused(ImGuiFocusedFlags flags)
 {
     ImGuiContext& g = *GImGui;
 
@@ -6414,41 +6419,41 @@ bool ImGui::IsWindowFocused(ImGuiFocusedFlags flags)
 // Can we focus this window with CTRL+TAB (or PadMenu + PadFocusPrev/PadFocusNext)
 // Note that NoNavFocus makes the window not reachable with CTRL+TAB but it can still be focused with mouse or programmaticaly.
 // If you want a window to never be focused, you may use the e.g. NoInputs flag.
-bool ImGui::IsWindowNavFocusable(ImGuiWindow* window)
+bool NuclearEngine::Graphics::ImGui::IsWindowNavFocusable(ImGuiWindow* window)
 {
     return window->Active && window == window->RootWindow && !(window->Flags & ImGuiWindowFlags_NoNavFocus);
 }
 
-float ImGui::GetWindowWidth()
+float NuclearEngine::Graphics::ImGui::GetWindowWidth()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->Size.x;
 }
 
-float ImGui::GetWindowHeight()
+float NuclearEngine::Graphics::ImGui::GetWindowHeight()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->Size.y;
 }
 
-ImVec2 ImGui::GetWindowPos()
+ImVec2 NuclearEngine::Graphics::ImGui::GetWindowPos()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
     return window->Pos;
 }
 
-void ImGui::SetWindowScrollX(ImGuiWindow* window, float new_scroll_x)
+void NuclearEngine::Graphics::ImGui::SetWindowScrollX(ImGuiWindow* window, float new_scroll_x)
 {
     window->Scroll.x = new_scroll_x;
 }
 
-void ImGui::SetWindowScrollY(ImGuiWindow* window, float new_scroll_y)
+void NuclearEngine::Graphics::ImGui::SetWindowScrollY(ImGuiWindow* window, float new_scroll_y)
 {
     window->Scroll.y = new_scroll_y;
 }
 
-void ImGui::SetWindowPos(ImGuiWindow* window, const ImVec2& pos, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowPos(ImGuiWindow* window, const ImVec2& pos, ImGuiCond cond)
 {
     // Test condition (NB: bit 0 is always true) and clear flags for next time
     if (cond && (window->SetWindowPosAllowFlags & cond) == 0)
@@ -6467,25 +6472,25 @@ void ImGui::SetWindowPos(ImGuiWindow* window, const ImVec2& pos, ImGuiCond cond)
     window->DC.CursorStartPos += offset;
 }
 
-void ImGui::SetWindowPos(const ImVec2& pos, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowPos(const ImVec2& pos, ImGuiCond cond)
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     SetWindowPos(window, pos, cond);
 }
 
-void ImGui::SetWindowPos(const char* name, const ImVec2& pos, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowPos(const char* name, const ImVec2& pos, ImGuiCond cond)
 {
     if (ImGuiWindow* window = FindWindowByName(name))
         SetWindowPos(window, pos, cond);
 }
 
-ImVec2 ImGui::GetWindowSize()
+ImVec2 NuclearEngine::Graphics::ImGui::GetWindowSize()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->Size;
 }
 
-void ImGui::SetWindowSize(ImGuiWindow* window, const ImVec2& size, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowSize(ImGuiWindow* window, const ImVec2& size, ImGuiCond cond)
 {
     // Test condition (NB: bit 0 is always true) and clear flags for next time
     if (cond && (window->SetWindowSizeAllowFlags & cond) == 0)
@@ -6517,18 +6522,18 @@ void ImGui::SetWindowSize(ImGuiWindow* window, const ImVec2& size, ImGuiCond con
     }
 }
 
-void ImGui::SetWindowSize(const ImVec2& size, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowSize(const ImVec2& size, ImGuiCond cond)
 {
     SetWindowSize(GImGui->CurrentWindow, size, cond);
 }
 
-void ImGui::SetWindowSize(const char* name, const ImVec2& size, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowSize(const char* name, const ImVec2& size, ImGuiCond cond)
 {
     if (ImGuiWindow* window = FindWindowByName(name))
         SetWindowSize(window, size, cond);
 }
 
-void ImGui::SetWindowCollapsed(ImGuiWindow* window, bool collapsed, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowCollapsed(ImGuiWindow* window, bool collapsed, ImGuiCond cond)
 {
     // Test condition (NB: bit 0 is always true) and clear flags for next time
     if (cond && (window->SetWindowCollapsedAllowFlags & cond) == 0)
@@ -6539,35 +6544,35 @@ void ImGui::SetWindowCollapsed(ImGuiWindow* window, bool collapsed, ImGuiCond co
     window->Collapsed = collapsed;
 }
 
-void ImGui::SetWindowCollapsed(bool collapsed, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowCollapsed(bool collapsed, ImGuiCond cond)
 {
     SetWindowCollapsed(GImGui->CurrentWindow, collapsed, cond);
 }
 
-bool ImGui::IsWindowCollapsed()
+bool NuclearEngine::Graphics::ImGui::IsWindowCollapsed()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->Collapsed;
 }
 
-bool ImGui::IsWindowAppearing()
+bool NuclearEngine::Graphics::ImGui::IsWindowAppearing()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->Appearing;
 }
 
-void ImGui::SetWindowCollapsed(const char* name, bool collapsed, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetWindowCollapsed(const char* name, bool collapsed, ImGuiCond cond)
 {
     if (ImGuiWindow* window = FindWindowByName(name))
         SetWindowCollapsed(window, collapsed, cond);
 }
 
-void ImGui::SetWindowFocus()
+void NuclearEngine::Graphics::ImGui::SetWindowFocus()
 {
     FocusWindow(GImGui->CurrentWindow);
 }
 
-void ImGui::SetWindowFocus(const char* name)
+void NuclearEngine::Graphics::ImGui::SetWindowFocus(const char* name)
 {
     if (name)
     {
@@ -6580,7 +6585,7 @@ void ImGui::SetWindowFocus(const char* name)
     }
 }
 
-void ImGui::SetNextWindowPos(const ImVec2& pos, ImGuiCond cond, const ImVec2& pivot)
+void NuclearEngine::Graphics::ImGui::SetNextWindowPos(const ImVec2& pos, ImGuiCond cond, const ImVec2& pivot)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(cond == 0 || ImIsPowerOfTwo(cond)); // Make sure the user doesn't attempt to combine multiple condition flags.
@@ -6590,7 +6595,7 @@ void ImGui::SetNextWindowPos(const ImVec2& pos, ImGuiCond cond, const ImVec2& pi
     g.NextWindowData.PosCond = cond ? cond : ImGuiCond_Always;
 }
 
-void ImGui::SetNextWindowSize(const ImVec2& size, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetNextWindowSize(const ImVec2& size, ImGuiCond cond)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(cond == 0 || ImIsPowerOfTwo(cond)); // Make sure the user doesn't attempt to combine multiple condition flags.
@@ -6599,7 +6604,7 @@ void ImGui::SetNextWindowSize(const ImVec2& size, ImGuiCond cond)
     g.NextWindowData.SizeCond = cond ? cond : ImGuiCond_Always;
 }
 
-void ImGui::SetNextWindowSizeConstraints(const ImVec2& size_min, const ImVec2& size_max, ImGuiSizeCallback custom_callback, void* custom_callback_user_data)
+void NuclearEngine::Graphics::ImGui::SetNextWindowSizeConstraints(const ImVec2& size_min, const ImVec2& size_max, ImGuiSizeCallback custom_callback, void* custom_callback_user_data)
 {
     ImGuiContext& g = *GImGui;
     g.NextWindowData.Flags |= ImGuiNextWindowDataFlags_HasSizeConstraint;
@@ -6610,14 +6615,14 @@ void ImGui::SetNextWindowSizeConstraints(const ImVec2& size_min, const ImVec2& s
 
 // Content size = inner scrollable rectangle, padded with WindowPadding.
 // SetNextWindowContentSize(ImVec2(100,100) + ImGuiWindowFlags_AlwaysAutoResize will always allow submitting a 100x100 item.
-void ImGui::SetNextWindowContentSize(const ImVec2& size)
+void NuclearEngine::Graphics::ImGui::SetNextWindowContentSize(const ImVec2& size)
 {
     ImGuiContext& g = *GImGui;
     g.NextWindowData.Flags |= ImGuiNextWindowDataFlags_HasContentSize;
     g.NextWindowData.ContentSizeVal = size;
 }
 
-void ImGui::SetNextWindowCollapsed(bool collapsed, ImGuiCond cond)
+void NuclearEngine::Graphics::ImGui::SetNextWindowCollapsed(bool collapsed, ImGuiCond cond)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(cond == 0 || ImIsPowerOfTwo(cond)); // Make sure the user doesn't attempt to combine multiple condition flags.
@@ -6626,13 +6631,13 @@ void ImGui::SetNextWindowCollapsed(bool collapsed, ImGuiCond cond)
     g.NextWindowData.CollapsedCond = cond ? cond : ImGuiCond_Always;
 }
 
-void ImGui::SetNextWindowFocus()
+void NuclearEngine::Graphics::ImGui::SetNextWindowFocus()
 {
     ImGuiContext& g = *GImGui;
     g.NextWindowData.Flags |= ImGuiNextWindowDataFlags_HasFocus;
 }
 
-void ImGui::SetNextWindowBgAlpha(float alpha)
+void NuclearEngine::Graphics::ImGui::SetNextWindowBgAlpha(float alpha)
 {
     ImGuiContext& g = *GImGui;
     g.NextWindowData.Flags |= ImGuiNextWindowDataFlags_HasBgAlpha;
@@ -6640,7 +6645,7 @@ void ImGui::SetNextWindowBgAlpha(float alpha)
 }
 
 // FIXME: This is in window space (not screen space!). We should try to obsolete all those functions.
-ImVec2 ImGui::GetContentRegionMax()
+ImVec2 NuclearEngine::Graphics::ImGui::GetContentRegionMax()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     ImVec2 mx = window->ContentsRegionRect.Max - window->Pos;
@@ -6650,7 +6655,7 @@ ImVec2 ImGui::GetContentRegionMax()
 }
 
 // [Internal] Absolute coordinate. Saner. This is not exposed until we finishing refactoring work rect features.
-ImVec2 ImGui::GetContentRegionMaxAbs()
+ImVec2 NuclearEngine::Graphics::ImGui::GetContentRegionMaxAbs()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     ImVec2 mx = window->ContentsRegionRect.Max;
@@ -6659,77 +6664,77 @@ ImVec2 ImGui::GetContentRegionMaxAbs()
     return mx;
 }
 
-ImVec2 ImGui::GetContentRegionAvail()
+ImVec2 NuclearEngine::Graphics::ImGui::GetContentRegionAvail()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return GetContentRegionMaxAbs() - window->DC.CursorPos;
 }
 
 // In window space (not screen space!)
-ImVec2 ImGui::GetWindowContentRegionMin()
+ImVec2 NuclearEngine::Graphics::ImGui::GetWindowContentRegionMin()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->ContentsRegionRect.Min - window->Pos;
 }
 
-ImVec2 ImGui::GetWindowContentRegionMax()
+ImVec2 NuclearEngine::Graphics::ImGui::GetWindowContentRegionMax()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->ContentsRegionRect.Max - window->Pos;
 }
 
-float ImGui::GetWindowContentRegionWidth()
+float NuclearEngine::Graphics::ImGui::GetWindowContentRegionWidth()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->ContentsRegionRect.GetWidth();
 }
 
-float ImGui::GetTextLineHeight()
+float NuclearEngine::Graphics::ImGui::GetTextLineHeight()
 {
     ImGuiContext& g = *GImGui;
     return g.FontSize;
 }
 
-float ImGui::GetTextLineHeightWithSpacing()
+float NuclearEngine::Graphics::ImGui::GetTextLineHeightWithSpacing()
 {
     ImGuiContext& g = *GImGui;
     return g.FontSize + g.Style.ItemSpacing.y;
 }
 
-float ImGui::GetFrameHeight()
+float NuclearEngine::Graphics::ImGui::GetFrameHeight()
 {
     ImGuiContext& g = *GImGui;
     return g.FontSize + g.Style.FramePadding.y * 2.0f;
 }
 
-float ImGui::GetFrameHeightWithSpacing()
+float NuclearEngine::Graphics::ImGui::GetFrameHeightWithSpacing()
 {
     ImGuiContext& g = *GImGui;
     return g.FontSize + g.Style.FramePadding.y * 2.0f + g.Style.ItemSpacing.y;
 }
 
-ImDrawList* ImGui::GetWindowDrawList()
+ImDrawList* NuclearEngine::Graphics::ImGui::GetWindowDrawList()
 {
     ImGuiWindow* window = GetCurrentWindow();
     return window->DrawList;
 }
 
-ImFont* ImGui::GetFont()
+ImFont* NuclearEngine::Graphics::ImGui::GetFont()
 {
     return GImGui->Font;
 }
 
-float ImGui::GetFontSize()
+float NuclearEngine::Graphics::ImGui::GetFontSize()
 {
     return GImGui->FontSize;
 }
 
-ImVec2 ImGui::GetFontTexUvWhitePixel()
+ImVec2 NuclearEngine::Graphics::ImGui::GetFontTexUvWhitePixel()
 {
     return GImGui->DrawListSharedData.TexUvWhitePixel;
 }
 
-void ImGui::SetWindowFontScale(float scale)
+void NuclearEngine::Graphics::ImGui::SetWindowFontScale(float scale)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -6739,103 +6744,103 @@ void ImGui::SetWindowFontScale(float scale)
 
 // User generally sees positions in window coordinates. Internally we store CursorPos in absolute screen coordinates because it is more convenient.
 // Conversion happens as we pass the value to user, but it makes our naming convention confusing because GetCursorPos() == (DC.CursorPos - window.Pos). May want to rename 'DC.CursorPos'.
-ImVec2 ImGui::GetCursorPos()
+ImVec2 NuclearEngine::Graphics::ImGui::GetCursorPos()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.CursorPos - window->Pos + window->Scroll;
 }
 
-float ImGui::GetCursorPosX()
+float NuclearEngine::Graphics::ImGui::GetCursorPosX()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.CursorPos.x - window->Pos.x + window->Scroll.x;
 }
 
-float ImGui::GetCursorPosY()
+float NuclearEngine::Graphics::ImGui::GetCursorPosY()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.CursorPos.y - window->Pos.y + window->Scroll.y;
 }
 
-void ImGui::SetCursorPos(const ImVec2& local_pos)
+void NuclearEngine::Graphics::ImGui::SetCursorPos(const ImVec2& local_pos)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.CursorPos = window->Pos - window->Scroll + local_pos;
     window->DC.CursorMaxPos = ImMax(window->DC.CursorMaxPos, window->DC.CursorPos);
 }
 
-void ImGui::SetCursorPosX(float x)
+void NuclearEngine::Graphics::ImGui::SetCursorPosX(float x)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.CursorPos.x = window->Pos.x - window->Scroll.x + x;
     window->DC.CursorMaxPos.x = ImMax(window->DC.CursorMaxPos.x, window->DC.CursorPos.x);
 }
 
-void ImGui::SetCursorPosY(float y)
+void NuclearEngine::Graphics::ImGui::SetCursorPosY(float y)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.CursorPos.y = window->Pos.y - window->Scroll.y + y;
     window->DC.CursorMaxPos.y = ImMax(window->DC.CursorMaxPos.y, window->DC.CursorPos.y);
 }
 
-ImVec2 ImGui::GetCursorStartPos()
+ImVec2 NuclearEngine::Graphics::ImGui::GetCursorStartPos()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.CursorStartPos - window->Pos;
 }
 
-ImVec2 ImGui::GetCursorScreenPos()
+ImVec2 NuclearEngine::Graphics::ImGui::GetCursorScreenPos()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.CursorPos;
 }
 
-void ImGui::SetCursorScreenPos(const ImVec2& pos)
+void NuclearEngine::Graphics::ImGui::SetCursorScreenPos(const ImVec2& pos)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.CursorPos = pos;
     window->DC.CursorMaxPos = ImMax(window->DC.CursorMaxPos, window->DC.CursorPos);
 }
 
-float ImGui::GetScrollX()
+float NuclearEngine::Graphics::ImGui::GetScrollX()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->Scroll.x;
 }
 
-float ImGui::GetScrollY()
+float NuclearEngine::Graphics::ImGui::GetScrollY()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->Scroll.y;
 }
 
-float ImGui::GetScrollMaxX()
+float NuclearEngine::Graphics::ImGui::GetScrollMaxX()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->ScrollMax.x;
 }
 
-float ImGui::GetScrollMaxY()
+float NuclearEngine::Graphics::ImGui::GetScrollMaxY()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->ScrollMax.y;
 }
 
-void ImGui::SetScrollX(float scroll_x)
+void NuclearEngine::Graphics::ImGui::SetScrollX(float scroll_x)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->ScrollTarget.x = scroll_x;
     window->ScrollTargetCenterRatio.x = 0.0f;
 }
 
-void ImGui::SetScrollY(float scroll_y)
+void NuclearEngine::Graphics::ImGui::SetScrollY(float scroll_y)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->ScrollTarget.y = scroll_y;
     window->ScrollTargetCenterRatio.y = 0.0f;
 }
 
-void ImGui::SetScrollFromPosY(float local_y, float center_y_ratio)
+void NuclearEngine::Graphics::ImGui::SetScrollFromPosY(float local_y, float center_y_ratio)
 {
     // We store a target position so centering can occur on the next frame when we are guaranteed to have a known window size
     ImGuiWindow* window = GetCurrentWindow();
@@ -6845,7 +6850,7 @@ void ImGui::SetScrollFromPosY(float local_y, float center_y_ratio)
 }
 
 // center_y_ratio: 0.0f top of last item, 0.5f vertical center of last item, 1.0f bottom of last item.
-void ImGui::SetScrollHereY(float center_y_ratio)
+void NuclearEngine::Graphics::ImGui::SetScrollHereY(float center_y_ratio)
 {
     ImGuiWindow* window = GetCurrentWindow();
     float target_y = window->DC.CursorPosPrevLine.y - window->Pos.y; // Top of last item, in window space
@@ -6853,13 +6858,13 @@ void ImGui::SetScrollHereY(float center_y_ratio)
     SetScrollFromPosY(target_y, center_y_ratio);
 }
 
-void ImGui::ActivateItem(ImGuiID id)
+void NuclearEngine::Graphics::ImGui::ActivateItem(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     g.NavNextActivateId = id;
 }
 
-void ImGui::SetKeyboardFocusHere(int offset)
+void NuclearEngine::Graphics::ImGui::SetKeyboardFocusHere(int offset)
 {
     IM_ASSERT(offset >= -1);    // -1 is allowed but not below
     ImGuiContext& g = *GImGui;
@@ -6869,7 +6874,7 @@ void ImGui::SetKeyboardFocusHere(int offset)
     g.FocusRequestNextCounterTab = INT_MAX;
 }
 
-void ImGui::SetItemDefaultFocus()
+void NuclearEngine::Graphics::ImGui::SetItemDefaultFocus()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -6886,87 +6891,87 @@ void ImGui::SetItemDefaultFocus()
     }
 }
 
-void ImGui::SetStateStorage(ImGuiStorage* tree)
+void NuclearEngine::Graphics::ImGui::SetStateStorage(ImGuiStorage* tree)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     window->DC.StateStorage = tree ? tree : &window->StateStorage;
 }
 
-ImGuiStorage* ImGui::GetStateStorage()
+ImGuiStorage* NuclearEngine::Graphics::ImGui::GetStateStorage()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->DC.StateStorage;
 }
 
-void ImGui::PushID(const char* str_id)
+void NuclearEngine::Graphics::ImGui::PushID(const char* str_id)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     window->IDStack.push_back(window->GetIDNoKeepAlive(str_id));
 }
 
-void ImGui::PushID(const char* str_id_begin, const char* str_id_end)
+void NuclearEngine::Graphics::ImGui::PushID(const char* str_id_begin, const char* str_id_end)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     window->IDStack.push_back(window->GetIDNoKeepAlive(str_id_begin, str_id_end));
 }
 
-void ImGui::PushID(const void* ptr_id)
+void NuclearEngine::Graphics::ImGui::PushID(const void* ptr_id)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     window->IDStack.push_back(window->GetIDNoKeepAlive(ptr_id));
 }
 
-void ImGui::PushID(int int_id)
+void NuclearEngine::Graphics::ImGui::PushID(int int_id)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     window->IDStack.push_back(window->GetIDNoKeepAlive(int_id));
 }
 
 // Push a given id value ignoring the ID stack as a seed.
-void ImGui::PushOverrideID(ImGuiID id)
+void NuclearEngine::Graphics::ImGui::PushOverrideID(ImGuiID id)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     window->IDStack.push_back(id);
 }
 
-void ImGui::PopID()
+void NuclearEngine::Graphics::ImGui::PopID()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     window->IDStack.pop_back();
 }
 
-ImGuiID ImGui::GetID(const char* str_id)
+ImGuiID NuclearEngine::Graphics::ImGui::GetID(const char* str_id)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->GetID(str_id);
 }
 
-ImGuiID ImGui::GetID(const char* str_id_begin, const char* str_id_end)
+ImGuiID NuclearEngine::Graphics::ImGui::GetID(const char* str_id_begin, const char* str_id_end)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->GetID(str_id_begin, str_id_end);
 }
 
-ImGuiID ImGui::GetID(const void* ptr_id)
+ImGuiID NuclearEngine::Graphics::ImGui::GetID(const void* ptr_id)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->GetID(ptr_id);
 }
 
-bool ImGui::IsRectVisible(const ImVec2& size)
+bool NuclearEngine::Graphics::ImGui::IsRectVisible(const ImVec2& size)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->ClipRect.Overlaps(ImRect(window->DC.CursorPos, window->DC.CursorPos + size));
 }
 
-bool ImGui::IsRectVisible(const ImVec2& rect_min, const ImVec2& rect_max)
+bool NuclearEngine::Graphics::ImGui::IsRectVisible(const ImVec2& rect_min, const ImVec2& rect_max)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     return window->ClipRect.Overlaps(ImRect(rect_min, rect_max));
 }
 
 // Lock horizontal starting position + capture group bounding box into one "item" (so you can use IsItemHovered() or layout primitives such as SameLine() on whole group, etc.)
-void ImGui::BeginGroup()
+void NuclearEngine::Graphics::ImGui::BeginGroup()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -6991,7 +6996,7 @@ void ImGui::BeginGroup()
         g.LogLinePosY = -FLT_MAX; // To enforce Log carriage return
 }
 
-void ImGui::EndGroup()
+void NuclearEngine::Graphics::ImGui::EndGroup()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -7050,7 +7055,7 @@ void ImGui::EndGroup()
 //      offset_from_start_x != 0 : align to specified x position (relative to window/group left)
 //      spacing_w < 0            : use default spacing if pos_x == 0, no spacing if pos_x != 0
 //      spacing_w >= 0           : enforce spacing amount
-void ImGui::SameLine(float offset_from_start_x, float spacing_w)
+void NuclearEngine::Graphics::ImGui::SameLine(float offset_from_start_x, float spacing_w)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -7073,7 +7078,7 @@ void ImGui::SameLine(float offset_from_start_x, float spacing_w)
     window->DC.CurrLineTextBaseOffset = window->DC.PrevLineTextBaseOffset;
 }
 
-void ImGui::Indent(float indent_w)
+void NuclearEngine::Graphics::ImGui::Indent(float indent_w)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -7081,7 +7086,7 @@ void ImGui::Indent(float indent_w)
     window->DC.CursorPos.x = window->Pos.x + window->DC.Indent.x + window->DC.ColumnsOffset.x;
 }
 
-void ImGui::Unindent(float indent_w)
+void NuclearEngine::Graphics::ImGui::Unindent(float indent_w)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -7093,7 +7098,7 @@ void ImGui::Unindent(float indent_w)
 // [SECTION] TOOLTIPS
 //-----------------------------------------------------------------------------
 
-void ImGui::BeginTooltip()
+void NuclearEngine::Graphics::ImGui::BeginTooltip()
 {
     ImGuiContext& g = *GImGui;
     if (g.DragDropWithinSourceOrTarget)
@@ -7115,7 +7120,7 @@ void ImGui::BeginTooltip()
 }
 
 // Not exposed publicly as BeginTooltip() because bool parameters are evil. Let's see if other needs arise first.
-void ImGui::BeginTooltipEx(ImGuiWindowFlags extra_flags, bool override_previous_tooltip)
+void NuclearEngine::Graphics::ImGui::BeginTooltipEx(ImGuiWindowFlags extra_flags, bool override_previous_tooltip)
 {
     ImGuiContext& g = *GImGui;
     char window_name[16];
@@ -7133,13 +7138,13 @@ void ImGui::BeginTooltipEx(ImGuiWindowFlags extra_flags, bool override_previous_
     Begin(window_name, NULL, flags | extra_flags);
 }
 
-void ImGui::EndTooltip()
+void NuclearEngine::Graphics::ImGui::EndTooltip()
 {
     IM_ASSERT(GetCurrentWindowRead()->Flags & ImGuiWindowFlags_Tooltip);   // Mismatched BeginTooltip()/EndTooltip() calls
     End();
 }
 
-void ImGui::SetTooltipV(const char* fmt, va_list args)
+void NuclearEngine::Graphics::ImGui::SetTooltipV(const char* fmt, va_list args)
 {
     ImGuiContext& g = *GImGui;
     if (g.DragDropWithinSourceOrTarget)
@@ -7150,7 +7155,7 @@ void ImGui::SetTooltipV(const char* fmt, va_list args)
     EndTooltip();
 }
 
-void ImGui::SetTooltip(const char* fmt, ...)
+void NuclearEngine::Graphics::ImGui::SetTooltip(const char* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -7162,19 +7167,19 @@ void ImGui::SetTooltip(const char* fmt, ...)
 // [SECTION] POPUPS
 //-----------------------------------------------------------------------------
 
-bool ImGui::IsPopupOpen(ImGuiID id)
+bool NuclearEngine::Graphics::ImGui::IsPopupOpen(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     return g.OpenPopupStack.Size > g.BeginPopupStack.Size && g.OpenPopupStack[g.BeginPopupStack.Size].PopupId == id;
 }
 
-bool ImGui::IsPopupOpen(const char* str_id)
+bool NuclearEngine::Graphics::ImGui::IsPopupOpen(const char* str_id)
 {
     ImGuiContext& g = *GImGui;
     return g.OpenPopupStack.Size > g.BeginPopupStack.Size && g.OpenPopupStack[g.BeginPopupStack.Size].PopupId == g.CurrentWindow->GetID(str_id);
 }
 
-ImGuiWindow* ImGui::GetFrontMostPopupModal()
+ImGuiWindow* NuclearEngine::Graphics::ImGui::GetFrontMostPopupModal()
 {
     ImGuiContext& g = *GImGui;
     for (int n = g.OpenPopupStack.Size-1; n >= 0; n--)
@@ -7184,7 +7189,7 @@ ImGuiWindow* ImGui::GetFrontMostPopupModal()
     return NULL;
 }
 
-void ImGui::OpenPopup(const char* str_id)
+void NuclearEngine::Graphics::ImGui::OpenPopup(const char* str_id)
 {
     ImGuiContext& g = *GImGui;
     OpenPopupEx(g.CurrentWindow->GetID(str_id));
@@ -7194,7 +7199,7 @@ void ImGui::OpenPopup(const char* str_id)
 // Popups are closed when user click outside, or activate a pressable item, or CloseCurrentPopup() is called within a BeginPopup()/EndPopup() block.
 // Popup identifiers are relative to the current ID-stack (so OpenPopup and BeginPopup needs to be at the same level).
 // One open popup per level of the popup hierarchy (NB: when assigning we reset the Window member of ImGuiPopupRef to NULL)
-void ImGui::OpenPopupEx(ImGuiID id)
+void NuclearEngine::Graphics::ImGui::OpenPopupEx(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* parent_window = g.CurrentWindow;
@@ -7236,7 +7241,7 @@ void ImGui::OpenPopupEx(ImGuiID id)
     }
 }
 
-bool ImGui::OpenPopupOnItemClick(const char* str_id, int mouse_button)
+bool NuclearEngine::Graphics::ImGui::OpenPopupOnItemClick(const char* str_id, int mouse_button)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     if (IsMouseReleased(mouse_button) && IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
@@ -7249,7 +7254,7 @@ bool ImGui::OpenPopupOnItemClick(const char* str_id, int mouse_button)
     return false;
 }
 
-void ImGui::ClosePopupsOverWindow(ImGuiWindow* ref_window, bool restore_focus_to_window_under_popup)
+void NuclearEngine::Graphics::ImGui::ClosePopupsOverWindow(ImGuiWindow* ref_window, bool restore_focus_to_window_under_popup)
 {
     ImGuiContext& g = *GImGui;
     if (g.OpenPopupStack.empty())
@@ -7287,7 +7292,7 @@ void ImGui::ClosePopupsOverWindow(ImGuiWindow* ref_window, bool restore_focus_to
     }
 }
 
-void ImGui::ClosePopupToLevel(int remaining, bool restore_focus_to_window_under_popup)
+void NuclearEngine::Graphics::ImGui::ClosePopupToLevel(int remaining, bool restore_focus_to_window_under_popup)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(remaining >= 0 && remaining < g.OpenPopupStack.Size);
@@ -7312,7 +7317,7 @@ void ImGui::ClosePopupToLevel(int remaining, bool restore_focus_to_window_under_
 }
 
 // Close the popup we have begin-ed into.
-void ImGui::CloseCurrentPopup()
+void NuclearEngine::Graphics::ImGui::CloseCurrentPopup()
 {
     ImGuiContext& g = *GImGui;
     int popup_idx = g.BeginPopupStack.Size - 1;
@@ -7342,7 +7347,7 @@ void ImGui::CloseCurrentPopup()
         window->DC.NavHideHighlightOneFrame = true;
 }
 
-bool ImGui::BeginPopupEx(ImGuiID id, ImGuiWindowFlags extra_flags)
+bool NuclearEngine::Graphics::ImGui::BeginPopupEx(ImGuiID id, ImGuiWindowFlags extra_flags)
 {
     ImGuiContext& g = *GImGui;
     if (!IsPopupOpen(id))
@@ -7364,7 +7369,7 @@ bool ImGui::BeginPopupEx(ImGuiID id, ImGuiWindowFlags extra_flags)
     return is_open;
 }
 
-bool ImGui::BeginPopup(const char* str_id, ImGuiWindowFlags flags)
+bool NuclearEngine::Graphics::ImGui::BeginPopup(const char* str_id, ImGuiWindowFlags flags)
 {
     ImGuiContext& g = *GImGui;
     if (g.OpenPopupStack.Size <= g.BeginPopupStack.Size) // Early out for performance
@@ -7378,7 +7383,7 @@ bool ImGui::BeginPopup(const char* str_id, ImGuiWindowFlags flags)
 
 // If 'p_open' is specified for a modal popup window, the popup will have a regular close button which will close the popup.
 // Note that popup visibility status is owned by Dear ImGui (and manipulated with e.g. OpenPopup) so the actual value of *p_open is meaningless here.
-bool ImGui::BeginPopupModal(const char* name, bool* p_open, ImGuiWindowFlags flags)
+bool NuclearEngine::Graphics::ImGui::BeginPopupModal(const char* name, bool* p_open, ImGuiWindowFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -7406,7 +7411,7 @@ bool ImGui::BeginPopupModal(const char* name, bool* p_open, ImGuiWindowFlags fla
     return is_open;
 }
 
-void ImGui::EndPopup()
+void NuclearEngine::Graphics::ImGui::EndPopup()
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.CurrentWindow->Flags & ImGuiWindowFlags_Popup);  // Mismatched BeginPopup()/EndPopup() calls
@@ -7421,7 +7426,7 @@ void ImGui::EndPopup()
 // This is a helper to handle the simplest case of associating one named popup to one given widget.
 // You may want to handle this on user side if you have specific needs (e.g. tweaking IsItemHovered() parameters).
 // You can pass a NULL str_id to use the identifier of the last item.
-bool ImGui::BeginPopupContextItem(const char* str_id, int mouse_button)
+bool NuclearEngine::Graphics::ImGui::BeginPopupContextItem(const char* str_id, int mouse_button)
 {
     ImGuiWindow* window = GImGui->CurrentWindow;
     if (window->SkipItems)
@@ -7433,7 +7438,7 @@ bool ImGui::BeginPopupContextItem(const char* str_id, int mouse_button)
     return BeginPopupEx(id, ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoSavedSettings);
 }
 
-bool ImGui::BeginPopupContextWindow(const char* str_id, int mouse_button, bool also_over_items)
+bool NuclearEngine::Graphics::ImGui::BeginPopupContextWindow(const char* str_id, int mouse_button, bool also_over_items)
 {
     if (!str_id)
         str_id = "window_context";
@@ -7444,7 +7449,7 @@ bool ImGui::BeginPopupContextWindow(const char* str_id, int mouse_button, bool a
     return BeginPopupEx(id, ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoSavedSettings);
 }
 
-bool ImGui::BeginPopupContextVoid(const char* str_id, int mouse_button)
+bool NuclearEngine::Graphics::ImGui::BeginPopupContextVoid(const char* str_id, int mouse_button)
 {
     if (!str_id)
         str_id = "void_context";
@@ -7456,7 +7461,7 @@ bool ImGui::BeginPopupContextVoid(const char* str_id, int mouse_button)
 
 // r_avoid = the rectangle to avoid (e.g. for tooltip it is a rectangle around the mouse cursor which we want to avoid. for popups it's a small point around the cursor.)
 // r_outer = the visible area rectangle, minus safe area padding. If our popup size won't fit because of safe area padding we ignore it.
-ImVec2 ImGui::FindBestWindowPosForPopupEx(const ImVec2& ref_pos, const ImVec2& size, ImGuiDir* last_dir, const ImRect& r_outer, const ImRect& r_avoid, ImGuiPopupPositionPolicy policy)
+ImVec2 NuclearEngine::Graphics::ImGui::FindBestWindowPosForPopupEx(const ImVec2& ref_pos, const ImVec2& size, ImGuiDir* last_dir, const ImRect& r_outer, const ImRect& r_avoid, ImGuiPopupPositionPolicy policy)
 {
     ImVec2 base_pos_clamped = ImClamp(ref_pos, r_outer.Min, r_outer.Max - size);
     //GetForegroundDrawList()->AddRect(r_avoid.Min, r_avoid.Max, IM_COL32(255,0,0,255));
@@ -7509,7 +7514,7 @@ ImVec2 ImGui::FindBestWindowPosForPopupEx(const ImVec2& ref_pos, const ImVec2& s
     return pos;
 }
 
-ImRect ImGui::GetWindowAllowedExtentRect(ImGuiWindow* window)
+ImRect NuclearEngine::Graphics::ImGui::GetWindowAllowedExtentRect(ImGuiWindow* window)
 {
     IM_UNUSED(window);
     ImVec2 padding = GImGui->Style.DisplaySafeAreaPadding;
@@ -7518,7 +7523,7 @@ ImRect ImGui::GetWindowAllowedExtentRect(ImGuiWindow* window)
     return r_screen;
 }
 
-ImVec2 ImGui::FindBestWindowPosForPopup(ImGuiWindow* window)
+ImVec2 NuclearEngine::Graphics::ImGui::FindBestWindowPosForPopup(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
 
@@ -7660,22 +7665,22 @@ static bool NavScoreItem(ImGuiNavMoveResult* result, ImRect cand)
 
 #if IMGUI_DEBUG_NAV_SCORING
     char buf[128];
-    if (ImGui::IsMouseHoveringRect(cand.Min, cand.Max))
+    if (NuclearEngine::Graphics::ImGui::IsMouseHoveringRect(cand.Min, cand.Max))
     {
         ImFormatString(buf, IM_ARRAYSIZE(buf), "dbox (%.2f,%.2f->%.4f)\ndcen (%.2f,%.2f->%.4f)\nd (%.2f,%.2f->%.4f)\nnav %c, quadrant %c", dbx, dby, dist_box, dcx, dcy, dist_center, dax, day, dist_axial, "WENS"[g.NavMoveDir], "WENS"[quadrant]);
-        ImDrawList* draw_list = ImGui::GetForegroundDrawList(window);
+        ImDrawList* draw_list = NuclearEngine::Graphics::ImGui::GetForegroundDrawList(window);
         draw_list->AddRect(curr.Min, curr.Max, IM_COL32(255,200,0,100));
         draw_list->AddRect(cand.Min, cand.Max, IM_COL32(255,255,0,200));
-        draw_list->AddRectFilled(cand.Max-ImVec2(4,4), cand.Max+ImGui::CalcTextSize(buf)+ImVec2(4,4), IM_COL32(40,0,0,150));
+        draw_list->AddRectFilled(cand.Max-ImVec2(4,4), cand.Max+NuclearEngine::Graphics::ImGui::CalcTextSize(buf)+ImVec2(4,4), IM_COL32(40,0,0,150));
         draw_list->AddText(g.IO.FontDefault, 13.0f, cand.Max, ~0U, buf);
     }
     else if (g.IO.KeyCtrl) // Hold to preview score in matching quadrant. Press C to rotate.
     {
-        if (ImGui::IsKeyPressedMap(ImGuiKey_C)) { g.NavMoveDirLast = (ImGuiDir)((g.NavMoveDirLast + 1) & 3); g.IO.KeysDownDuration[g.IO.KeyMap[ImGuiKey_C]] = 0.01f; }
+        if (NuclearEngine::Graphics::ImGui::IsKeyPressedMap(ImGuiKey_C)) { g.NavMoveDirLast = (ImGuiDir)((g.NavMoveDirLast + 1) & 3); g.IO.KeysDownDuration[g.IO.KeyMap[ImGuiKey_C]] = 0.01f; }
         if (quadrant == g.NavMoveDir)
         {
             ImFormatString(buf, IM_ARRAYSIZE(buf), "%.0f/%.0f", dist_box, dist_center);
-            ImDrawList* draw_list = ImGui::GetForegroundDrawList(window);
+            ImDrawList* draw_list = NuclearEngine::Graphics::ImGui::GetForegroundDrawList(window);
             draw_list->AddRectFilled(cand.Min, cand.Max, IM_COL32(255, 0, 0, 200));
             draw_list->AddText(g.IO.FontDefault, 13.0f, cand.Min, IM_COL32(255, 255, 255, 255), buf);
         }
@@ -7729,7 +7734,7 @@ static bool NavScoreItem(ImGuiNavMoveResult* result, ImRect cand)
 }
 
 // We get there when either NavId == id, or when g.NavAnyRequest is set (which is updated by NavUpdateAnyRequestFlag above)
-static void ImGui::NavProcessItem(ImGuiWindow* window, const ImRect& nav_bb, const ImGuiID id)
+static void NuclearEngine::Graphics::ImGui::NavProcessItem(ImGuiWindow* window, const ImRect& nav_bb, const ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     //if (!g.IO.NavActive)  // [2017/10/06] Removed this possibly redundant test but I am not sure of all the side-effects yet. Some of the feature here will need to work regardless of using a _NoNavInputs flag.
@@ -7799,24 +7804,24 @@ static void ImGui::NavProcessItem(ImGuiWindow* window, const ImRect& nav_bb, con
     }
 }
 
-bool ImGui::NavMoveRequestButNoResultYet()
+bool NuclearEngine::Graphics::ImGui::NavMoveRequestButNoResultYet()
 {
     ImGuiContext& g = *GImGui;
     return g.NavMoveRequest && g.NavMoveResultLocal.ID == 0 && g.NavMoveResultOther.ID == 0;
 }
 
-void ImGui::NavMoveRequestCancel()
+void NuclearEngine::Graphics::ImGui::NavMoveRequestCancel()
 {
     ImGuiContext& g = *GImGui;
     g.NavMoveRequest = false;
     NavUpdateAnyRequestFlag();
 }
 
-void ImGui::NavMoveRequestForward(ImGuiDir move_dir, ImGuiDir clip_dir, const ImRect& bb_rel, ImGuiNavMoveFlags move_flags)
+void NuclearEngine::Graphics::ImGui::NavMoveRequestForward(ImGuiDir move_dir, ImGuiDir clip_dir, const ImRect& bb_rel, ImGuiNavMoveFlags move_flags)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.NavMoveRequestForward == ImGuiNavForward_None);
-    ImGui::NavMoveRequestCancel();
+    NuclearEngine::Graphics::ImGui::NavMoveRequestCancel();
     g.NavMoveDir = move_dir;
     g.NavMoveClipDir = clip_dir;
     g.NavMoveRequestForward = ImGuiNavForward_ForwardQueued;
@@ -7824,7 +7829,7 @@ void ImGui::NavMoveRequestForward(ImGuiDir move_dir, ImGuiDir clip_dir, const Im
     g.NavWindow->NavRectRel[g.NavLayer] = bb_rel;
 }
 
-void ImGui::NavMoveRequestTryWrapping(ImGuiWindow* window, ImGuiNavMoveFlags move_flags)
+void NuclearEngine::Graphics::ImGui::NavMoveRequestTryWrapping(ImGuiWindow* window, ImGuiNavMoveFlags move_flags)
 {
     ImGuiContext& g = *GImGui;
     if (g.NavWindow != window || !NavMoveRequestButNoResultYet() || g.NavMoveRequestForward != ImGuiNavForward_None || g.NavLayer != 0)
@@ -7861,7 +7866,7 @@ void ImGui::NavMoveRequestTryWrapping(ImGuiWindow* window, ImGuiNavMoveFlags mov
 
 // FIXME: This could be replaced by updating a frame number in each window when (window == NavWindow) and (NavLayer == 0).
 // This way we could find the last focused window among our children. It would be much less confusing this way?
-static void ImGui::NavSaveLastChildNavWindowIntoParent(ImGuiWindow* nav_window)
+static void NuclearEngine::Graphics::ImGui::NavSaveLastChildNavWindowIntoParent(ImGuiWindow* nav_window)
 {
     ImGuiWindow* parent_window = nav_window;
     while (parent_window && (parent_window->Flags & ImGuiWindowFlags_ChildWindow) != 0 && (parent_window->Flags & (ImGuiWindowFlags_Popup | ImGuiWindowFlags_ChildMenu)) == 0)
@@ -7872,7 +7877,7 @@ static void ImGui::NavSaveLastChildNavWindowIntoParent(ImGuiWindow* nav_window)
 
 // Restore the last focused child.
 // Call when we are expected to land on the Main Layer (0) after FocusWindow()
-static ImGuiWindow* ImGui::NavRestoreLastChildNavWindow(ImGuiWindow* window)
+static ImGuiWindow* NuclearEngine::Graphics::ImGui::NavRestoreLastChildNavWindow(ImGuiWindow* window)
 {
     return window->NavLastChildNavWindow ? window->NavLastChildNavWindow : window;
 }
@@ -7882,14 +7887,14 @@ static void NavRestoreLayer(ImGuiNavLayer layer)
     ImGuiContext& g = *GImGui;
     g.NavLayer = layer;
     if (layer == 0)
-        g.NavWindow = ImGui::NavRestoreLastChildNavWindow(g.NavWindow);
+        g.NavWindow = NuclearEngine::Graphics::ImGui::NavRestoreLastChildNavWindow(g.NavWindow);
     if (layer == 0 && g.NavWindow->NavLastIds[0] != 0)
-        ImGui::SetNavIDWithRectRel(g.NavWindow->NavLastIds[0], layer, g.NavWindow->NavRectRel[0]);
+        NuclearEngine::Graphics::ImGui::SetNavIDWithRectRel(g.NavWindow->NavLastIds[0], layer, g.NavWindow->NavRectRel[0]);
     else
-        ImGui::NavInitWindow(g.NavWindow, true);
+        NuclearEngine::Graphics::ImGui::NavInitWindow(g.NavWindow, true);
 }
 
-static inline void ImGui::NavUpdateAnyRequestFlag()
+static inline void NuclearEngine::Graphics::ImGui::NavUpdateAnyRequestFlag()
 {
     ImGuiContext& g = *GImGui;
     g.NavAnyRequest = g.NavMoveRequest || g.NavInitRequest || (IMGUI_DEBUG_NAV_SCORING && g.NavWindow != NULL);
@@ -7898,7 +7903,7 @@ static inline void ImGui::NavUpdateAnyRequestFlag()
 }
 
 // This needs to be called before we submit any widget (aka in or before Begin)
-void ImGui::NavInitWindow(ImGuiWindow* window, bool force_reinit)
+void NuclearEngine::Graphics::ImGui::NavInitWindow(ImGuiWindow* window, bool force_reinit)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(window == g.NavWindow);
@@ -7921,7 +7926,7 @@ void ImGui::NavInitWindow(ImGuiWindow* window, bool force_reinit)
     }
 }
 
-static ImVec2 ImGui::NavCalcPreferredRefPos()
+static ImVec2 NuclearEngine::Graphics::ImGui::NavCalcPreferredRefPos()
 {
     ImGuiContext& g = *GImGui;
     if (g.NavDisableHighlight || !g.NavDisableMouseHover || !g.NavWindow)
@@ -7941,7 +7946,7 @@ static ImVec2 ImGui::NavCalcPreferredRefPos()
     }
 }
 
-float ImGui::GetNavInputAmount(ImGuiNavInput n, ImGuiInputReadMode mode)
+float NuclearEngine::Graphics::ImGui::GetNavInputAmount(ImGuiNavInput n, ImGuiInputReadMode mode)
 {
     ImGuiContext& g = *GImGui;
     if (mode == ImGuiInputReadMode_Down)
@@ -7963,7 +7968,7 @@ float ImGui::GetNavInputAmount(ImGuiNavInput n, ImGuiInputReadMode mode)
     return 0.0f;
 }
 
-ImVec2 ImGui::GetNavInputAmount2d(ImGuiNavDirSourceFlags dir_sources, ImGuiInputReadMode mode, float slow_factor, float fast_factor)
+ImVec2 NuclearEngine::Graphics::ImGui::GetNavInputAmount2d(ImGuiNavDirSourceFlags dir_sources, ImGuiInputReadMode mode, float slow_factor, float fast_factor)
 {
     ImVec2 delta(0.0f, 0.0f);
     if (dir_sources & ImGuiNavDirSourceFlags_Keyboard)
@@ -8011,7 +8016,7 @@ static void NavScrollToBringItemIntoView(ImGuiWindow* window, const ImRect& item
     }
 }
 
-static void ImGui::NavUpdate()
+static void NuclearEngine::Graphics::ImGui::NavUpdate()
 {
     ImGuiContext& g = *GImGui;
     g.IO.WantSetMousePos = false;
@@ -8288,7 +8293,7 @@ static void ImGui::NavUpdate()
 }
 
 // Apply result from previous frame navigation directional move request
-static void ImGui::NavUpdateMoveResult()
+static void NuclearEngine::Graphics::ImGui::NavUpdateMoveResult()
 {
     ImGuiContext& g = *GImGui;
     if (g.NavMoveResultLocal.ID == 0 && g.NavMoveResultOther.ID == 0)
@@ -8344,7 +8349,7 @@ static void ImGui::NavUpdateMoveResult()
     g.NavMoveFromClampedRefRect = false;
 }
 
-static float ImGui::NavUpdatePageUpPageDown(int allowed_dir_flags)
+static float NuclearEngine::Graphics::ImGui::NavUpdatePageUpPageDown(int allowed_dir_flags)
 {
     ImGuiContext& g = *GImGui;
     if (g.NavMoveDir == ImGuiDir_None && g.NavWindow && !(g.NavWindow->Flags & ImGuiWindowFlags_NoNavInputs) && !g.NavWindowingTarget && g.NavLayer == 0)
@@ -8388,7 +8393,7 @@ static float ImGui::NavUpdatePageUpPageDown(int allowed_dir_flags)
     return 0.0f;
 }
 
-static int ImGui::FindWindowFocusIndex(ImGuiWindow* window) // FIXME-OPT O(N)
+static int NuclearEngine::Graphics::ImGui::FindWindowFocusIndex(ImGuiWindow* window) // FIXME-OPT O(N)
 {
     ImGuiContext& g = *GImGui;
     for (int i = g.WindowsFocusOrder.Size-1; i >= 0; i--)
@@ -8401,7 +8406,7 @@ static ImGuiWindow* FindWindowNavFocusable(int i_start, int i_stop, int dir) // 
 {
     ImGuiContext& g = *GImGui;
     for (int i = i_start; i >= 0 && i < g.WindowsFocusOrder.Size && i != i_stop; i += dir)
-        if (ImGui::IsWindowNavFocusable(g.WindowsFocusOrder[i]))
+        if (NuclearEngine::Graphics::ImGui::IsWindowNavFocusable(g.WindowsFocusOrder[i]))
             return g.WindowsFocusOrder[i];
     return NULL;
 }
@@ -8413,7 +8418,7 @@ static void NavUpdateWindowingHighlightWindow(int focus_change_dir)
     if (g.NavWindowingTarget->Flags & ImGuiWindowFlags_Modal)
         return;
 
-    const int i_current = ImGui::FindWindowFocusIndex(g.NavWindowingTarget);
+    const int i_current = NuclearEngine::Graphics::ImGui::FindWindowFocusIndex(g.NavWindowingTarget);
     ImGuiWindow* window_target = FindWindowNavFocusable(i_current + focus_change_dir, -INT_MAX, focus_change_dir);
     if (!window_target)
         window_target = FindWindowNavFocusable((focus_change_dir < 0) ? (g.WindowsFocusOrder.Size - 1) : 0, i_current, focus_change_dir);
@@ -8425,7 +8430,7 @@ static void NavUpdateWindowingHighlightWindow(int focus_change_dir)
 // Windowing management mode
 // Keyboard: CTRL+Tab (change focus/move/resize), Alt (toggle menu layer)
 // Gamepad:  Hold Menu/Square (change focus/move/resize), Tap Menu/Square (toggle menu layer)
-static void ImGui::NavUpdateWindowing()
+static void NuclearEngine::Graphics::ImGui::NavUpdateWindowing()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* apply_focus_window = NULL;
@@ -8577,7 +8582,7 @@ static const char* GetFallbackWindowNameForWindowingList(ImGuiWindow* window)
 }
 
 // Overlay displayed when using CTRL+TAB. Called by EndFrame().
-void ImGui::NavUpdateWindowingList()
+void NuclearEngine::Graphics::ImGui::NavUpdateWindowingList()
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.NavWindowingTarget != NULL);
@@ -8610,7 +8615,7 @@ void ImGui::NavUpdateWindowingList()
 // In the current version, Columns are very weak. Needs to be replaced with a more full-featured system.
 //-----------------------------------------------------------------------------
 
-void ImGui::NextColumn()
+void NuclearEngine::Graphics::ImGui::NextColumn()
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems || window->DC.CurrentColumns == NULL)
@@ -8654,13 +8659,13 @@ void ImGui::NextColumn()
     PushItemWidth(GetColumnWidth() * 0.65f);  // FIXME-COLUMNS: Move on columns setup
 }
 
-int ImGui::GetColumnIndex()
+int NuclearEngine::Graphics::ImGui::GetColumnIndex()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.CurrentColumns ? window->DC.CurrentColumns->Current : 0;
 }
 
-int ImGui::GetColumnsCount()
+int NuclearEngine::Graphics::ImGui::GetColumnsCount()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     return window->DC.CurrentColumns ? window->DC.CurrentColumns->Count : 1;
@@ -8688,14 +8693,14 @@ static float GetDraggedColumnOffset(ImGuiColumns* columns, int column_index)
     IM_ASSERT(g.ActiveId == columns->ID + ImGuiID(column_index));
 
     float x = g.IO.MousePos.x - g.ActiveIdClickOffset.x + COLUMNS_HIT_RECT_HALF_WIDTH - window->Pos.x;
-    x = ImMax(x, ImGui::GetColumnOffset(column_index - 1) + g.Style.ColumnsMinSpacing);
+    x = ImMax(x, NuclearEngine::Graphics::ImGui::GetColumnOffset(column_index - 1) + g.Style.ColumnsMinSpacing);
     if ((columns->Flags & ImGuiColumnsFlags_NoPreserveWidths))
-        x = ImMin(x, ImGui::GetColumnOffset(column_index + 1) - g.Style.ColumnsMinSpacing);
+        x = ImMin(x, NuclearEngine::Graphics::ImGui::GetColumnOffset(column_index + 1) - g.Style.ColumnsMinSpacing);
 
     return x;
 }
 
-float ImGui::GetColumnOffset(int column_index)
+float NuclearEngine::Graphics::ImGui::GetColumnOffset(int column_index)
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     ImGuiColumns* columns = window->DC.CurrentColumns;
@@ -8723,7 +8728,7 @@ static float GetColumnWidthEx(ImGuiColumns* columns, int column_index, bool befo
     return OffsetNormToPixels(columns, offset_norm);
 }
 
-float ImGui::GetColumnWidth(int column_index)
+float NuclearEngine::Graphics::ImGui::GetColumnWidth(int column_index)
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     ImGuiColumns* columns = window->DC.CurrentColumns;
@@ -8734,7 +8739,7 @@ float ImGui::GetColumnWidth(int column_index)
     return OffsetNormToPixels(columns, columns->Columns[column_index + 1].OffsetNorm - columns->Columns[column_index].OffsetNorm);
 }
 
-void ImGui::SetColumnOffset(int column_index, float offset)
+void NuclearEngine::Graphics::ImGui::SetColumnOffset(int column_index, float offset)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -8756,7 +8761,7 @@ void ImGui::SetColumnOffset(int column_index, float offset)
         SetColumnOffset(column_index + 1, offset + ImMax(g.Style.ColumnsMinSpacing, width));
 }
 
-void ImGui::SetColumnWidth(int column_index, float width)
+void NuclearEngine::Graphics::ImGui::SetColumnWidth(int column_index, float width)
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     ImGuiColumns* columns = window->DC.CurrentColumns;
@@ -8767,7 +8772,7 @@ void ImGui::SetColumnWidth(int column_index, float width)
     SetColumnOffset(column_index + 1, GetColumnOffset(column_index) + width);
 }
 
-void ImGui::PushColumnClipRect(int column_index)
+void NuclearEngine::Graphics::ImGui::PushColumnClipRect(int column_index)
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     ImGuiColumns* columns = window->DC.CurrentColumns;
@@ -8779,7 +8784,7 @@ void ImGui::PushColumnClipRect(int column_index)
 }
 
 // Get into the columns background draw command (which is generally the same draw command as before we called BeginColumns)
-void ImGui::PushColumnsBackground()
+void NuclearEngine::Graphics::ImGui::PushColumnsBackground()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     ImGuiColumns* columns = window->DC.CurrentColumns;
@@ -8790,7 +8795,7 @@ void ImGui::PushColumnsBackground()
     IM_ASSERT(cmd_size == window->DrawList->CmdBuffer.Size); // Being in channel 0 this should not have created an ImDrawCmd
 }
 
-void ImGui::PopColumnsBackground()
+void NuclearEngine::Graphics::ImGui::PopColumnsBackground()
 {
     ImGuiWindow* window = GetCurrentWindowRead();
     ImGuiColumns* columns = window->DC.CurrentColumns;
@@ -8798,7 +8803,7 @@ void ImGui::PopColumnsBackground()
     PopClipRect();
 }
 
-ImGuiColumns* ImGui::FindOrCreateColumns(ImGuiWindow* window, ImGuiID id)
+ImGuiColumns* NuclearEngine::Graphics::ImGui::FindOrCreateColumns(ImGuiWindow* window, ImGuiID id)
 {
     // We have few columns per window so for now we don't need bother much with turning this into a faster lookup.
     for (int n = 0; n < window->ColumnsStorage.Size; n++)
@@ -8811,7 +8816,7 @@ ImGuiColumns* ImGui::FindOrCreateColumns(ImGuiWindow* window, ImGuiID id)
     return columns;
 }
 
-ImGuiID ImGui::GetColumnsID(const char* str_id, int columns_count)
+ImGuiID NuclearEngine::Graphics::ImGui::GetColumnsID(const char* str_id, int columns_count)
 {
     ImGuiWindow* window = GetCurrentWindow();
 
@@ -8824,7 +8829,7 @@ ImGuiID ImGui::GetColumnsID(const char* str_id, int columns_count)
     return id;
 }
 
-void ImGui::BeginColumns(const char* str_id, int columns_count, ImGuiColumnsFlags flags)
+void NuclearEngine::Graphics::ImGui::BeginColumns(const char* str_id, int columns_count, ImGuiColumnsFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -8887,7 +8892,7 @@ void ImGui::BeginColumns(const char* str_id, int columns_count, ImGuiColumnsFlag
     PushItemWidth(GetColumnWidth() * 0.65f);
 }
 
-void ImGui::EndColumns()
+void NuclearEngine::Graphics::ImGui::EndColumns()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -8962,7 +8967,7 @@ void ImGui::EndColumns()
 }
 
 // [2018-03: This is currently the only public API, while we are working on making BeginColumns/EndColumns user-facing]
-void ImGui::Columns(int columns_count, const char* id, bool border)
+void NuclearEngine::Graphics::ImGui::Columns(int columns_count, const char* id, bool border)
 {
     ImGuiWindow* window = GetCurrentWindow();
     IM_ASSERT(columns_count >= 1);
@@ -8985,7 +8990,7 @@ void ImGui::Columns(int columns_count, const char* id, bool border)
 // [SECTION] DRAG AND DROP
 //-----------------------------------------------------------------------------
 
-void ImGui::ClearDragDrop()
+void NuclearEngine::Graphics::ImGui::ClearDragDrop()
 {
     ImGuiContext& g = *GImGui;
     g.DragDropActive = false;
@@ -9001,7 +9006,7 @@ void ImGui::ClearDragDrop()
 
 // Call when current ID is active.
 // When this returns true you need to: a) call SetDragDropPayload() exactly once, b) you may render the payload visual/description, c) call EndDragDropSource()
-bool ImGui::BeginDragDropSource(ImGuiDragDropFlags flags)
+bool NuclearEngine::Graphics::ImGui::BeginDragDropSource(ImGuiDragDropFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -9099,7 +9104,7 @@ bool ImGui::BeginDragDropSource(ImGuiDragDropFlags flags)
     return false;
 }
 
-void ImGui::EndDragDropSource()
+void NuclearEngine::Graphics::ImGui::EndDragDropSource()
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.DragDropActive);
@@ -9115,7 +9120,7 @@ void ImGui::EndDragDropSource()
 }
 
 // Use 'cond' to choose to submit payload on drag start or every frame
-bool ImGui::SetDragDropPayload(const char* type, const void* data, size_t data_size, ImGuiCond cond)
+bool NuclearEngine::Graphics::ImGui::SetDragDropPayload(const char* type, const void* data, size_t data_size, ImGuiCond cond)
 {
     ImGuiContext& g = *GImGui;
     ImGuiPayload& payload = g.DragDropPayload;
@@ -9158,7 +9163,7 @@ bool ImGui::SetDragDropPayload(const char* type, const void* data, size_t data_s
     return (g.DragDropAcceptFrameCount == g.FrameCount) || (g.DragDropAcceptFrameCount == g.FrameCount - 1);
 }
 
-bool ImGui::BeginDragDropTargetCustom(const ImRect& bb, ImGuiID id)
+bool NuclearEngine::Graphics::ImGui::BeginDragDropTargetCustom(const ImRect& bb, ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     if (!g.DragDropActive)
@@ -9184,7 +9189,7 @@ bool ImGui::BeginDragDropTargetCustom(const ImRect& bb, ImGuiID id)
 // 1) we use LastItemRectHoveredRect which handles items that pushes a temporarily clip rectangle in their code. Calling BeginDragDropTargetCustom(LastItemRect) would not handle them.
 // 2) and it's faster. as this code may be very frequently called, we want to early out as fast as we can.
 // Also note how the HoveredWindow test is positioned differently in both functions (in both functions we optimize for the cheapest early out case)
-bool ImGui::BeginDragDropTarget()
+bool NuclearEngine::Graphics::ImGui::BeginDragDropTarget()
 {
     ImGuiContext& g = *GImGui;
     if (!g.DragDropActive)
@@ -9210,13 +9215,13 @@ bool ImGui::BeginDragDropTarget()
     return true;
 }
 
-bool ImGui::IsDragDropPayloadBeingAccepted()
+bool NuclearEngine::Graphics::ImGui::IsDragDropPayloadBeingAccepted()
 {
     ImGuiContext& g = *GImGui;
     return g.DragDropActive && g.DragDropAcceptIdPrev != 0;
 }
 
-const ImGuiPayload* ImGui::AcceptDragDropPayload(const char* type, ImGuiDragDropFlags flags)
+const ImGuiPayload* NuclearEngine::Graphics::ImGui::AcceptDragDropPayload(const char* type, ImGuiDragDropFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -9259,14 +9264,14 @@ const ImGuiPayload* ImGui::AcceptDragDropPayload(const char* type, ImGuiDragDrop
     return &payload;
 }
 
-const ImGuiPayload* ImGui::GetDragDropPayload()
+const ImGuiPayload* NuclearEngine::Graphics::ImGui::GetDragDropPayload()
 {
     ImGuiContext& g = *GImGui;
     return g.DragDropActive ? &g.DragDropPayload : NULL;
 }
 
 // We don't really use/need this now, but added it for the sake of consistency and because we might need it later.
-void ImGui::EndDragDropTarget()
+void NuclearEngine::Graphics::ImGui::EndDragDropTarget()
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.DragDropActive);
@@ -9283,7 +9288,7 @@ void ImGui::EndDragDropTarget()
 //-----------------------------------------------------------------------------
 
 // Pass text data straight to log (without being displayed)
-void ImGui::LogText(const char* fmt, ...)
+void NuclearEngine::Graphics::ImGui::LogText(const char* fmt, ...)
 {
     ImGuiContext& g = *GImGui;
     if (!g.LogEnabled)
@@ -9300,7 +9305,7 @@ void ImGui::LogText(const char* fmt, ...)
 
 // Internal version that takes a position to decide on newline placement and pad items according to their depth.
 // We split text into individual lines to add current tree level padding
-void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char* text_end)
+void NuclearEngine::Graphics::ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char* text_end)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -9351,7 +9356,7 @@ void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char*
 }
 
 // Start logging/capturing text output
-void ImGui::LogBegin(ImGuiLogType type, int auto_open_depth)
+void NuclearEngine::Graphics::ImGui::LogBegin(ImGuiLogType type, int auto_open_depth)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -9366,7 +9371,7 @@ void ImGui::LogBegin(ImGuiLogType type, int auto_open_depth)
     g.LogLineFirstItem = true;
 }
 
-void ImGui::LogToTTY(int auto_open_depth)
+void NuclearEngine::Graphics::ImGui::LogToTTY(int auto_open_depth)
 {
     ImGuiContext& g = *GImGui;
     if (g.LogEnabled)
@@ -9376,7 +9381,7 @@ void ImGui::LogToTTY(int auto_open_depth)
 }
 
 // Start logging/capturing text output to given file
-void ImGui::LogToFile(int auto_open_depth, const char* filename)
+void NuclearEngine::Graphics::ImGui::LogToFile(int auto_open_depth, const char* filename)
 {
     ImGuiContext& g = *GImGui;
     if (g.LogEnabled)
@@ -9401,7 +9406,7 @@ void ImGui::LogToFile(int auto_open_depth, const char* filename)
 }
 
 // Start logging/capturing text output to clipboard
-void ImGui::LogToClipboard(int auto_open_depth)
+void NuclearEngine::Graphics::ImGui::LogToClipboard(int auto_open_depth)
 {
     ImGuiContext& g = *GImGui;
     if (g.LogEnabled)
@@ -9409,7 +9414,7 @@ void ImGui::LogToClipboard(int auto_open_depth)
     LogBegin(ImGuiLogType_Clipboard, auto_open_depth);
 }
 
-void ImGui::LogToBuffer(int auto_open_depth)
+void NuclearEngine::Graphics::ImGui::LogToBuffer(int auto_open_depth)
 {
     ImGuiContext& g = *GImGui;
     if (g.LogEnabled)
@@ -9417,7 +9422,7 @@ void ImGui::LogToBuffer(int auto_open_depth)
     LogBegin(ImGuiLogType_Buffer, auto_open_depth);
 }
 
-void ImGui::LogFinish()
+void NuclearEngine::Graphics::ImGui::LogFinish()
 {
     ImGuiContext& g = *GImGui;
     if (!g.LogEnabled)
@@ -9451,7 +9456,7 @@ void ImGui::LogFinish()
 
 // Helper to display logging buttons
 // FIXME-OBSOLETE: We should probably obsolete this and let the user have their own helper (this is one of the oldest function alive!)
-void ImGui::LogButtons()
+void NuclearEngine::Graphics::ImGui::LogButtons()
 {
     ImGuiContext& g = *GImGui;
 
@@ -9478,14 +9483,14 @@ void ImGui::LogButtons()
 // [SECTION] SETTINGS
 //-----------------------------------------------------------------------------
 
-void ImGui::MarkIniSettingsDirty()
+void NuclearEngine::Graphics::ImGui::MarkIniSettingsDirty()
 {
     ImGuiContext& g = *GImGui;
     if (g.SettingsDirtyTimer <= 0.0f)
         g.SettingsDirtyTimer = g.IO.IniSavingRate;
 }
 
-void ImGui::MarkIniSettingsDirty(ImGuiWindow* window)
+void NuclearEngine::Graphics::ImGui::MarkIniSettingsDirty(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
     if (!(window->Flags & ImGuiWindowFlags_NoSavedSettings))
@@ -9493,7 +9498,7 @@ void ImGui::MarkIniSettingsDirty(ImGuiWindow* window)
             g.SettingsDirtyTimer = g.IO.IniSavingRate;
 }
 
-ImGuiWindowSettings* ImGui::CreateNewWindowSettings(const char* name)
+ImGuiWindowSettings* NuclearEngine::Graphics::ImGui::CreateNewWindowSettings(const char* name)
 {
     ImGuiContext& g = *GImGui;
     g.SettingsWindows.push_back(ImGuiWindowSettings());
@@ -9503,7 +9508,7 @@ ImGuiWindowSettings* ImGui::CreateNewWindowSettings(const char* name)
     return settings;
 }
 
-ImGuiWindowSettings* ImGui::FindWindowSettings(ImGuiID id)
+ImGuiWindowSettings* NuclearEngine::Graphics::ImGui::FindWindowSettings(ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     for (int i = 0; i != g.SettingsWindows.Size; i++)
@@ -9512,14 +9517,14 @@ ImGuiWindowSettings* ImGui::FindWindowSettings(ImGuiID id)
     return NULL;
 }
 
-ImGuiWindowSettings* ImGui::FindOrCreateWindowSettings(const char* name)
+ImGuiWindowSettings* NuclearEngine::Graphics::ImGui::FindOrCreateWindowSettings(const char* name)
 {
     if (ImGuiWindowSettings* settings = FindWindowSettings(ImHashStr(name)))
         return settings;
     return CreateNewWindowSettings(name);
 }
 
-void ImGui::LoadIniSettingsFromDisk(const char* ini_filename)
+void NuclearEngine::Graphics::ImGui::LoadIniSettingsFromDisk(const char* ini_filename)
 {
     size_t file_data_size = 0;
     char* file_data = (char*)ImFileLoadToMemory(ini_filename, "rb", &file_data_size);
@@ -9529,7 +9534,7 @@ void ImGui::LoadIniSettingsFromDisk(const char* ini_filename)
     IM_FREE(file_data);
 }
 
-ImGuiSettingsHandler* ImGui::FindSettingsHandler(const char* type_name)
+ImGuiSettingsHandler* NuclearEngine::Graphics::ImGui::FindSettingsHandler(const char* type_name)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiID type_hash = ImHashStr(type_name);
@@ -9540,7 +9545,7 @@ ImGuiSettingsHandler* ImGui::FindSettingsHandler(const char* type_name)
 }
 
 // Zero-tolerance, no error reporting, cheap .ini parsing
-void ImGui::LoadIniSettingsFromMemory(const char* ini_data, size_t ini_size)
+void NuclearEngine::Graphics::ImGui::LoadIniSettingsFromMemory(const char* ini_data, size_t ini_size)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(g.Initialized);
@@ -9601,7 +9606,7 @@ void ImGui::LoadIniSettingsFromMemory(const char* ini_data, size_t ini_size)
     g.SettingsLoaded = true;
 }
 
-void ImGui::SaveIniSettingsToDisk(const char* ini_filename)
+void NuclearEngine::Graphics::ImGui::SaveIniSettingsToDisk(const char* ini_filename)
 {
     ImGuiContext& g = *GImGui;
     g.SettingsDirtyTimer = 0.0f;
@@ -9618,7 +9623,7 @@ void ImGui::SaveIniSettingsToDisk(const char* ini_filename)
 }
 
 // Call registered handlers (e.g. SettingsHandlerWindow_WriteAll() + custom handlers) to write their stuff into a text buffer
-const char* ImGui::SaveIniSettingsToMemory(size_t* out_size)
+const char* NuclearEngine::Graphics::ImGui::SaveIniSettingsToMemory(size_t* out_size)
 {
     ImGuiContext& g = *GImGui;
     g.SettingsDirtyTimer = 0.0f;
@@ -9636,9 +9641,9 @@ const char* ImGui::SaveIniSettingsToMemory(size_t* out_size)
 
 static void* SettingsHandlerWindow_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
 {
-    ImGuiWindowSettings* settings = ImGui::FindWindowSettings(ImHashStr(name));
+    ImGuiWindowSettings* settings = NuclearEngine::Graphics::ImGui::FindWindowSettings(ImHashStr(name));
     if (!settings)
-        settings = ImGui::CreateNewWindowSettings(name);
+        settings = NuclearEngine::Graphics::ImGui::CreateNewWindowSettings(name);
     return (void*)settings;
 }
 
@@ -9664,10 +9669,10 @@ static void SettingsHandlerWindow_WriteAll(ImGuiContext* ctx, ImGuiSettingsHandl
         if (window->Flags & ImGuiWindowFlags_NoSavedSettings)
             continue;
 
-        ImGuiWindowSettings* settings = (window->SettingsIdx != -1) ? &g.SettingsWindows[window->SettingsIdx] : ImGui::FindWindowSettings(window->ID);
+        ImGuiWindowSettings* settings = (window->SettingsIdx != -1) ? &g.SettingsWindows[window->SettingsIdx] : NuclearEngine::Graphics::ImGui::FindWindowSettings(window->ID);
         if (!settings)
         {
-            settings = ImGui::CreateNewWindowSettings(window->Name);
+            settings = NuclearEngine::Graphics::ImGui::CreateNewWindowSettings(window->Name);
             window->SettingsIdx = g.SettingsWindows.index_from_ptr(settings);
         }
         IM_ASSERT(settings->ID == window->ID);
@@ -9881,11 +9886,11 @@ static void ImeSetInputScreenPosFn_DefaultImpl(int, int) {}
 // [SECTION] METRICS/DEBUG WINDOW
 //-----------------------------------------------------------------------------
 
-void ImGui::ShowMetricsWindow(bool* p_open)
+void NuclearEngine::Graphics::ImGui::ShowMetricsWindow(bool* p_open)
 {
-    if (!ImGui::Begin("Dear ImGui Metrics", p_open))
+    if (!NuclearEngine::Graphics::ImGui::Begin("Dear ImGui Metrics", p_open))
     {
-        ImGui::End();
+        NuclearEngine::Graphics::ImGui::End();
         return;
     }
 
@@ -9895,13 +9900,13 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     static int  show_windows_rect_type = RT_WorkRect;
     static bool show_drawcmd_clip_rects = true;
 
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui::Text("Dear ImGui %s", ImGui::GetVersion());
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-    ImGui::Text("%d vertices, %d indices (%d triangles)", io.MetricsRenderVertices, io.MetricsRenderIndices, io.MetricsRenderIndices / 3);
-    ImGui::Text("%d active windows (%d visible)", io.MetricsActiveWindows, io.MetricsRenderWindows);
-    ImGui::Text("%d active allocations", io.MetricsActiveAllocations);
-    ImGui::Separator();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
+    NuclearEngine::Graphics::ImGui::Text("Dear ImGui %s", NuclearEngine::Graphics::ImGui::GetVersion());
+    NuclearEngine::Graphics::ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+    NuclearEngine::Graphics::ImGui::Text("%d vertices, %d indices (%d triangles)", io.MetricsRenderVertices, io.MetricsRenderIndices, io.MetricsRenderIndices / 3);
+    NuclearEngine::Graphics::ImGui::Text("%d active windows (%d visible)", io.MetricsActiveWindows, io.MetricsRenderWindows);
+    NuclearEngine::Graphics::ImGui::Text("%d active allocations", io.MetricsActiveAllocations);
+    NuclearEngine::Graphics::ImGui::Separator();
 
     struct Funcs
     {
@@ -9920,12 +9925,12 @@ void ImGui::ShowMetricsWindow(bool* p_open)
 
         static void NodeDrawList(ImGuiWindow* window, ImDrawList* draw_list, const char* label)
         {
-            bool node_open = ImGui::TreeNode(draw_list, "%s: '%s' %d vtx, %d indices, %d cmds", label, draw_list->_OwnerName ? draw_list->_OwnerName : "", draw_list->VtxBuffer.Size, draw_list->IdxBuffer.Size, draw_list->CmdBuffer.Size);
-            if (draw_list == ImGui::GetWindowDrawList())
+            bool node_open = NuclearEngine::Graphics::ImGui::TreeNode(draw_list, "%s: '%s' %d vtx, %d indices, %d cmds", label, draw_list->_OwnerName ? draw_list->_OwnerName : "", draw_list->VtxBuffer.Size, draw_list->IdxBuffer.Size, draw_list->CmdBuffer.Size);
+            if (draw_list == NuclearEngine::Graphics::ImGui::GetWindowDrawList())
             {
-                ImGui::SameLine();
-                ImGui::TextColored(ImVec4(1.0f,0.4f,0.4f,1.0f), "CURRENTLY APPENDING"); // Can't display stats for active draw list! (we don't have the data double-buffered)
-                if (node_open) ImGui::TreePop();
+                NuclearEngine::Graphics::ImGui::SameLine();
+                NuclearEngine::Graphics::ImGui::TextColored(ImVec4(1.0f,0.4f,0.4f,1.0f), "CURRENTLY APPENDING"); // Can't display stats for active draw list! (we don't have the data double-buffered)
+                if (node_open) NuclearEngine::Graphics::ImGui::TreePop();
                 return;
             }
 
@@ -9942,15 +9947,15 @@ void ImGui::ShowMetricsWindow(bool* p_open)
                     continue;
                 if (pcmd->UserCallback)
                 {
-                    ImGui::BulletText("Callback %p, user_data %p", pcmd->UserCallback, pcmd->UserCallbackData);
+                    NuclearEngine::Graphics::ImGui::BulletText("Callback %p, user_data %p", pcmd->UserCallback, pcmd->UserCallbackData);
                     continue;
                 }
                 ImDrawIdx* idx_buffer = (draw_list->IdxBuffer.Size > 0) ? draw_list->IdxBuffer.Data : NULL;
                 char buf[300];
                 ImFormatString(buf, IM_ARRAYSIZE(buf), "Draw %4d triangles, tex 0x%p, clip_rect (%4.0f,%4.0f)-(%4.0f,%4.0f)",
                     pcmd->ElemCount/3, (void*)(intptr_t)pcmd->TextureId, pcmd->ClipRect.x, pcmd->ClipRect.y, pcmd->ClipRect.z, pcmd->ClipRect.w);
-                bool pcmd_node_open = ImGui::TreeNode((void*)(pcmd - draw_list->CmdBuffer.begin()), "%s", buf);
-                if (show_drawcmd_clip_rects && fg_draw_list && ImGui::IsItemHovered())
+                bool pcmd_node_open = NuclearEngine::Graphics::ImGui::TreeNode((void*)(pcmd - draw_list->CmdBuffer.begin()), "%s", buf);
+                if (show_drawcmd_clip_rects && fg_draw_list && NuclearEngine::Graphics::ImGui::IsItemHovered())
                 {
                     ImRect clip_rect = pcmd->ClipRect;
                     ImRect vtxs_rect;
@@ -9963,7 +9968,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
                     continue;
 
                 // Display individual triangles/vertices. Hover on to get the corresponding triangle highlighted.
-                ImGui::Text("ElemCount: %d, ElemCount/3: %d, VtxOffset: +%d, IdxOffset: +%d", pcmd->ElemCount, pcmd->ElemCount/3, pcmd->VtxOffset, pcmd->IdxOffset);
+                NuclearEngine::Graphics::ImGui::Text("ElemCount: %d, ElemCount/3: %d, VtxOffset: +%d, IdxOffset: +%d", pcmd->ElemCount, pcmd->ElemCount/3, pcmd->VtxOffset, pcmd->IdxOffset);
                 ImGuiListClipper clipper(pcmd->ElemCount/3); // Manually coarse clip our print out of individual vertices to save CPU, only items that may be visible.
                 while (clipper.Step())
                     for (int prim = clipper.DisplayStart, idx_i = elem_offset + clipper.DisplayStart*3; prim < clipper.DisplayEnd; prim++)
@@ -9978,8 +9983,8 @@ void ImGui::ShowMetricsWindow(bool* p_open)
                             buf_p += ImFormatString(buf_p, buf_end - buf_p, "%s %04d: pos (%8.2f,%8.2f), uv (%.6f,%.6f), col %08X\n",
                                 (n == 0) ? "elem" : "    ", idx_i, v.pos.x, v.pos.y, v.uv.x, v.uv.y, v.col);
                         }
-                        ImGui::Selectable(buf, false);
-                        if (fg_draw_list && ImGui::IsItemHovered())
+                        NuclearEngine::Graphics::ImGui::Selectable(buf, false);
+                        if (fg_draw_list && NuclearEngine::Graphics::ImGui::IsItemHovered())
                         {
                             ImDrawListFlags backup_flags = fg_draw_list->Flags;
                             fg_draw_list->Flags &= ~ImDrawListFlags_AntiAliasedLines; // Disable AA on triangle outlines at is more readable for very large and thin triangles.
@@ -9987,61 +9992,61 @@ void ImGui::ShowMetricsWindow(bool* p_open)
                             fg_draw_list->Flags = backup_flags;
                         }
                     }
-                ImGui::TreePop();
+                NuclearEngine::Graphics::ImGui::TreePop();
             }
-            ImGui::TreePop();
+            NuclearEngine::Graphics::ImGui::TreePop();
         }
 
         static void NodeColumns(const ImGuiColumns* columns)
         {
-            if (!ImGui::TreeNode((void*)(uintptr_t)columns->ID, "Columns Id: 0x%08X, Count: %d, Flags: 0x%04X", columns->ID, columns->Count, columns->Flags))
+            if (!NuclearEngine::Graphics::ImGui::TreeNode((void*)(uintptr_t)columns->ID, "Columns Id: 0x%08X, Count: %d, Flags: 0x%04X", columns->ID, columns->Count, columns->Flags))
                 return;
-            ImGui::BulletText("Width: %.1f (MinX: %.1f, MaxX: %.1f)", columns->OffMaxX - columns->OffMinX, columns->OffMinX, columns->OffMaxX);
+            NuclearEngine::Graphics::ImGui::BulletText("Width: %.1f (MinX: %.1f, MaxX: %.1f)", columns->OffMaxX - columns->OffMinX, columns->OffMinX, columns->OffMaxX);
             for (int column_n = 0; column_n < columns->Columns.Size; column_n++)
-                ImGui::BulletText("Column %02d: OffsetNorm %.3f (= %.1f px)", column_n, columns->Columns[column_n].OffsetNorm, OffsetNormToPixels(columns, columns->Columns[column_n].OffsetNorm));
-            ImGui::TreePop();
+                NuclearEngine::Graphics::ImGui::BulletText("Column %02d: OffsetNorm %.3f (= %.1f px)", column_n, columns->Columns[column_n].OffsetNorm, OffsetNormToPixels(columns, columns->Columns[column_n].OffsetNorm));
+            NuclearEngine::Graphics::ImGui::TreePop();
         }
 
         static void NodeWindows(ImVector<ImGuiWindow*>& windows, const char* label)
         {
-            if (!ImGui::TreeNode(label, "%s (%d)", label, windows.Size))
+            if (!NuclearEngine::Graphics::ImGui::TreeNode(label, "%s (%d)", label, windows.Size))
                 return;
             for (int i = 0; i < windows.Size; i++)
                 Funcs::NodeWindow(windows[i], "Window");
-            ImGui::TreePop();
+            NuclearEngine::Graphics::ImGui::TreePop();
         }
 
         static void NodeWindow(ImGuiWindow* window, const char* label)
         {
-            if (!ImGui::TreeNode(window, "%s '%s', %d @ 0x%p", label, window->Name, window->Active || window->WasActive, window))
+            if (!NuclearEngine::Graphics::ImGui::TreeNode(window, "%s '%s', %d @ 0x%p", label, window->Name, window->Active || window->WasActive, window))
                 return;
             ImGuiWindowFlags flags = window->Flags;
             NodeDrawList(window, window->DrawList, "DrawList");
-            ImGui::BulletText("Pos: (%.1f,%.1f), Size: (%.1f,%.1f), ContentSize (%.1f,%.1f)", window->Pos.x, window->Pos.y, window->Size.x, window->Size.y, window->ContentSize.x, window->ContentSize.y);
-            ImGui::BulletText("Flags: 0x%08X (%s%s%s%s%s%s%s%s%s..)", flags,
+            NuclearEngine::Graphics::ImGui::BulletText("Pos: (%.1f,%.1f), Size: (%.1f,%.1f), ContentSize (%.1f,%.1f)", window->Pos.x, window->Pos.y, window->Size.x, window->Size.y, window->ContentSize.x, window->ContentSize.y);
+            NuclearEngine::Graphics::ImGui::BulletText("Flags: 0x%08X (%s%s%s%s%s%s%s%s%s..)", flags,
                 (flags & ImGuiWindowFlags_ChildWindow)  ? "Child " : "",      (flags & ImGuiWindowFlags_Tooltip)     ? "Tooltip "   : "",  (flags & ImGuiWindowFlags_Popup) ? "Popup " : "",
                 (flags & ImGuiWindowFlags_Modal)        ? "Modal " : "",      (flags & ImGuiWindowFlags_ChildMenu)   ? "ChildMenu " : "",  (flags & ImGuiWindowFlags_NoSavedSettings) ? "NoSavedSettings " : "",
                 (flags & ImGuiWindowFlags_NoMouseInputs)? "NoMouseInputs":"", (flags & ImGuiWindowFlags_NoNavInputs) ? "NoNavInputs" : "", (flags & ImGuiWindowFlags_AlwaysAutoResize) ? "AlwaysAutoResize" : "");
-            ImGui::BulletText("Scroll: (%.2f/%.2f,%.2f/%.2f)", window->Scroll.x, window->ScrollMax.x, window->Scroll.y, window->ScrollMax.y);
-            ImGui::BulletText("Active: %d/%d, WriteAccessed: %d, BeginOrderWithinContext: %d", window->Active, window->WasActive, window->WriteAccessed, (window->Active || window->WasActive) ? window->BeginOrderWithinContext : -1);
-            ImGui::BulletText("Appearing: %d, Hidden: %d (CanSkip %d Cannot %d), SkipItems: %d", window->Appearing, window->Hidden, window->HiddenFramesCanSkipItems, window->HiddenFramesCannotSkipItems, window->SkipItems);
-            ImGui::BulletText("NavLastIds: 0x%08X,0x%08X, NavLayerActiveMask: %X", window->NavLastIds[0], window->NavLastIds[1], window->DC.NavLayerActiveMask);
-            ImGui::BulletText("NavLastChildNavWindow: %s", window->NavLastChildNavWindow ? window->NavLastChildNavWindow->Name : "NULL");
+            NuclearEngine::Graphics::ImGui::BulletText("Scroll: (%.2f/%.2f,%.2f/%.2f)", window->Scroll.x, window->ScrollMax.x, window->Scroll.y, window->ScrollMax.y);
+            NuclearEngine::Graphics::ImGui::BulletText("Active: %d/%d, WriteAccessed: %d, BeginOrderWithinContext: %d", window->Active, window->WasActive, window->WriteAccessed, (window->Active || window->WasActive) ? window->BeginOrderWithinContext : -1);
+            NuclearEngine::Graphics::ImGui::BulletText("Appearing: %d, Hidden: %d (CanSkip %d Cannot %d), SkipItems: %d", window->Appearing, window->Hidden, window->HiddenFramesCanSkipItems, window->HiddenFramesCannotSkipItems, window->SkipItems);
+            NuclearEngine::Graphics::ImGui::BulletText("NavLastIds: 0x%08X,0x%08X, NavLayerActiveMask: %X", window->NavLastIds[0], window->NavLastIds[1], window->DC.NavLayerActiveMask);
+            NuclearEngine::Graphics::ImGui::BulletText("NavLastChildNavWindow: %s", window->NavLastChildNavWindow ? window->NavLastChildNavWindow->Name : "NULL");
             if (!window->NavRectRel[0].IsInverted())
-                ImGui::BulletText("NavRectRel[0]: (%.1f,%.1f)(%.1f,%.1f)", window->NavRectRel[0].Min.x, window->NavRectRel[0].Min.y, window->NavRectRel[0].Max.x, window->NavRectRel[0].Max.y);
+                NuclearEngine::Graphics::ImGui::BulletText("NavRectRel[0]: (%.1f,%.1f)(%.1f,%.1f)", window->NavRectRel[0].Min.x, window->NavRectRel[0].Min.y, window->NavRectRel[0].Max.x, window->NavRectRel[0].Max.y);
             else
-                ImGui::BulletText("NavRectRel[0]: <None>");
+                NuclearEngine::Graphics::ImGui::BulletText("NavRectRel[0]: <None>");
             if (window->RootWindow != window) NodeWindow(window->RootWindow, "RootWindow");
             if (window->ParentWindow != NULL) NodeWindow(window->ParentWindow, "ParentWindow");
             if (window->DC.ChildWindows.Size > 0) NodeWindows(window->DC.ChildWindows, "ChildWindows");
-            if (window->ColumnsStorage.Size > 0 && ImGui::TreeNode("Columns", "Columns sets (%d)", window->ColumnsStorage.Size))
+            if (window->ColumnsStorage.Size > 0 && NuclearEngine::Graphics::ImGui::TreeNode("Columns", "Columns sets (%d)", window->ColumnsStorage.Size))
             {
                 for (int n = 0; n < window->ColumnsStorage.Size; n++)
                     NodeColumns(&window->ColumnsStorage[n]);
-                ImGui::TreePop();
+                NuclearEngine::Graphics::ImGui::TreePop();
             }
-            ImGui::BulletText("Storage: %d bytes", window->StateStorage.Data.Size * (int)sizeof(ImGuiStorage::Pair));
-            ImGui::TreePop();
+            NuclearEngine::Graphics::ImGui::BulletText("Storage: %d bytes", window->StateStorage.Data.Size * (int)sizeof(ImGuiStorage::Pair));
+            NuclearEngine::Graphics::ImGui::TreePop();
         }
 
         static void NodeTabBar(ImGuiTabBar* tab_bar)
@@ -10050,19 +10055,19 @@ void ImGui::ShowMetricsWindow(bool* p_open)
             char buf[256];
             char* p = buf;
             const char* buf_end = buf + IM_ARRAYSIZE(buf);
-            ImFormatString(p, buf_end - p, "TabBar (%d tabs)%s", tab_bar->Tabs.Size, (tab_bar->PrevFrameVisible < ImGui::GetFrameCount() - 2) ? " *Inactive*" : "");
-            if (ImGui::TreeNode(tab_bar, "%s", buf))
+            ImFormatString(p, buf_end - p, "TabBar (%d tabs)%s", tab_bar->Tabs.Size, (tab_bar->PrevFrameVisible < NuclearEngine::Graphics::ImGui::GetFrameCount() - 2) ? " *Inactive*" : "");
+            if (NuclearEngine::Graphics::ImGui::TreeNode(tab_bar, "%s", buf))
             {
                 for (int tab_n = 0; tab_n < tab_bar->Tabs.Size; tab_n++)
                 {
                     const ImGuiTabItem* tab = &tab_bar->Tabs[tab_n];
-                    ImGui::PushID(tab);
-                    if (ImGui::SmallButton("<")) { TabBarQueueChangeTabOrder(tab_bar, tab, -1); } ImGui::SameLine(0, 2);
-                    if (ImGui::SmallButton(">")) { TabBarQueueChangeTabOrder(tab_bar, tab, +1); } ImGui::SameLine();
-                    ImGui::Text("%02d%c Tab 0x%08X", tab_n, (tab->ID == tab_bar->SelectedTabId) ? '*' : ' ', tab->ID);
-                    ImGui::PopID();
+                    NuclearEngine::Graphics::ImGui::PushID(tab);
+                    if (NuclearEngine::Graphics::ImGui::SmallButton("<")) { TabBarQueueChangeTabOrder(tab_bar, tab, -1); } NuclearEngine::Graphics::ImGui::SameLine(0, 2);
+                    if (NuclearEngine::Graphics::ImGui::SmallButton(">")) { TabBarQueueChangeTabOrder(tab_bar, tab, +1); } NuclearEngine::Graphics::ImGui::SameLine();
+                    NuclearEngine::Graphics::ImGui::Text("%02d%c Tab 0x%08X", tab_n, (tab->ID == tab_bar->SelectedTabId) ? '*' : ' ', tab->ID);
+                    NuclearEngine::Graphics::ImGui::PopID();
                 }
-                ImGui::TreePop();
+                NuclearEngine::Graphics::ImGui::TreePop();
             }
         }
     };
@@ -10070,71 +10075,71 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     // Access private state, we are going to display the draw lists from last frame
     ImGuiContext& g = *GImGui;
     Funcs::NodeWindows(g.Windows, "Windows");
-    if (ImGui::TreeNode("DrawList", "Active DrawLists (%d)", g.DrawDataBuilder.Layers[0].Size))
+    if (NuclearEngine::Graphics::ImGui::TreeNode("DrawList", "Active DrawLists (%d)", g.DrawDataBuilder.Layers[0].Size))
     {
         for (int i = 0; i < g.DrawDataBuilder.Layers[0].Size; i++)
             Funcs::NodeDrawList(NULL, g.DrawDataBuilder.Layers[0][i], "DrawList");
-        ImGui::TreePop();
+        NuclearEngine::Graphics::ImGui::TreePop();
     }
 
-    if (ImGui::TreeNode("Popups", "Popups (%d)", g.OpenPopupStack.Size))
+    if (NuclearEngine::Graphics::ImGui::TreeNode("Popups", "Popups (%d)", g.OpenPopupStack.Size))
     {
         for (int i = 0; i < g.OpenPopupStack.Size; i++)
         {
             ImGuiWindow* window = g.OpenPopupStack[i].Window;
-            ImGui::BulletText("PopupID: %08x, Window: '%s'%s%s", g.OpenPopupStack[i].PopupId, window ? window->Name : "NULL", window && (window->Flags & ImGuiWindowFlags_ChildWindow) ? " ChildWindow" : "", window && (window->Flags & ImGuiWindowFlags_ChildMenu) ? " ChildMenu" : "");
+            NuclearEngine::Graphics::ImGui::BulletText("PopupID: %08x, Window: '%s'%s%s", g.OpenPopupStack[i].PopupId, window ? window->Name : "NULL", window && (window->Flags & ImGuiWindowFlags_ChildWindow) ? " ChildWindow" : "", window && (window->Flags & ImGuiWindowFlags_ChildMenu) ? " ChildMenu" : "");
         }
-        ImGui::TreePop();
+        NuclearEngine::Graphics::ImGui::TreePop();
     }
 
-    if (ImGui::TreeNode("TabBars", "Tab Bars (%d)", g.TabBars.Data.Size))
+    if (NuclearEngine::Graphics::ImGui::TreeNode("TabBars", "Tab Bars (%d)", g.TabBars.Data.Size))
     {
         for (int n = 0; n < g.TabBars.Data.Size; n++)
             Funcs::NodeTabBar(g.TabBars.GetByIndex(n));
-        ImGui::TreePop();
+        NuclearEngine::Graphics::ImGui::TreePop();
     }
 
-    if (ImGui::TreeNode("Internal state"))
+    if (NuclearEngine::Graphics::ImGui::TreeNode("Internal state"))
     {
         const char* input_source_names[] = { "None", "Mouse", "Nav", "NavKeyboard", "NavGamepad" }; IM_ASSERT(IM_ARRAYSIZE(input_source_names) == ImGuiInputSource_COUNT);
-        ImGui::Text("HoveredWindow: '%s'", g.HoveredWindow ? g.HoveredWindow->Name : "NULL");
-        ImGui::Text("HoveredRootWindow: '%s'", g.HoveredRootWindow ? g.HoveredRootWindow->Name : "NULL");
-        ImGui::Text("HoveredId: 0x%08X/0x%08X (%.2f sec), AllowOverlap: %d", g.HoveredId, g.HoveredIdPreviousFrame, g.HoveredIdTimer, g.HoveredIdAllowOverlap); // Data is "in-flight" so depending on when the Metrics window is called we may see current frame information or not
-        ImGui::Text("ActiveId: 0x%08X/0x%08X (%.2f sec), AllowOverlap: %d, Source: %s", g.ActiveId, g.ActiveIdPreviousFrame, g.ActiveIdTimer, g.ActiveIdAllowOverlap, input_source_names[g.ActiveIdSource]);
-        ImGui::Text("ActiveIdWindow: '%s'", g.ActiveIdWindow ? g.ActiveIdWindow->Name : "NULL");
-        ImGui::Text("MovingWindow: '%s'", g.MovingWindow ? g.MovingWindow->Name : "NULL");
-        ImGui::Text("NavWindow: '%s'", g.NavWindow ? g.NavWindow->Name : "NULL");
-        ImGui::Text("NavId: 0x%08X, NavLayer: %d", g.NavId, g.NavLayer);
-        ImGui::Text("NavInputSource: %s", input_source_names[g.NavInputSource]);
-        ImGui::Text("NavActive: %d, NavVisible: %d", g.IO.NavActive, g.IO.NavVisible);
-        ImGui::Text("NavActivateId: 0x%08X, NavInputId: 0x%08X", g.NavActivateId, g.NavInputId);
-        ImGui::Text("NavDisableHighlight: %d, NavDisableMouseHover: %d", g.NavDisableHighlight, g.NavDisableMouseHover);
-        ImGui::Text("NavWindowingTarget: '%s'", g.NavWindowingTarget ? g.NavWindowingTarget->Name : "NULL");
-        ImGui::Text("DragDrop: %d, SourceId = 0x%08X, Payload \"%s\" (%d bytes)", g.DragDropActive, g.DragDropPayload.SourceId, g.DragDropPayload.DataType, g.DragDropPayload.DataSize);
-        ImGui::TreePop();
+        NuclearEngine::Graphics::ImGui::Text("HoveredWindow: '%s'", g.HoveredWindow ? g.HoveredWindow->Name : "NULL");
+        NuclearEngine::Graphics::ImGui::Text("HoveredRootWindow: '%s'", g.HoveredRootWindow ? g.HoveredRootWindow->Name : "NULL");
+        NuclearEngine::Graphics::ImGui::Text("HoveredId: 0x%08X/0x%08X (%.2f sec), AllowOverlap: %d", g.HoveredId, g.HoveredIdPreviousFrame, g.HoveredIdTimer, g.HoveredIdAllowOverlap); // Data is "in-flight" so depending on when the Metrics window is called we may see current frame information or not
+        NuclearEngine::Graphics::ImGui::Text("ActiveId: 0x%08X/0x%08X (%.2f sec), AllowOverlap: %d, Source: %s", g.ActiveId, g.ActiveIdPreviousFrame, g.ActiveIdTimer, g.ActiveIdAllowOverlap, input_source_names[g.ActiveIdSource]);
+        NuclearEngine::Graphics::ImGui::Text("ActiveIdWindow: '%s'", g.ActiveIdWindow ? g.ActiveIdWindow->Name : "NULL");
+        NuclearEngine::Graphics::ImGui::Text("MovingWindow: '%s'", g.MovingWindow ? g.MovingWindow->Name : "NULL");
+        NuclearEngine::Graphics::ImGui::Text("NavWindow: '%s'", g.NavWindow ? g.NavWindow->Name : "NULL");
+        NuclearEngine::Graphics::ImGui::Text("NavId: 0x%08X, NavLayer: %d", g.NavId, g.NavLayer);
+        NuclearEngine::Graphics::ImGui::Text("NavInputSource: %s", input_source_names[g.NavInputSource]);
+        NuclearEngine::Graphics::ImGui::Text("NavActive: %d, NavVisible: %d", g.IO.NavActive, g.IO.NavVisible);
+        NuclearEngine::Graphics::ImGui::Text("NavActivateId: 0x%08X, NavInputId: 0x%08X", g.NavActivateId, g.NavInputId);
+        NuclearEngine::Graphics::ImGui::Text("NavDisableHighlight: %d, NavDisableMouseHover: %d", g.NavDisableHighlight, g.NavDisableMouseHover);
+        NuclearEngine::Graphics::ImGui::Text("NavWindowingTarget: '%s'", g.NavWindowingTarget ? g.NavWindowingTarget->Name : "NULL");
+        NuclearEngine::Graphics::ImGui::Text("DragDrop: %d, SourceId = 0x%08X, Payload \"%s\" (%d bytes)", g.DragDropActive, g.DragDropPayload.SourceId, g.DragDropPayload.DataType, g.DragDropPayload.DataSize);
+        NuclearEngine::Graphics::ImGui::TreePop();
     }
 
-    if (ImGui::TreeNode("Tools"))
+    if (NuclearEngine::Graphics::ImGui::TreeNode("Tools"))
     {
-        ImGui::Checkbox("Show windows begin order", &show_windows_begin_order);
-        ImGui::Checkbox("Show windows rectangles", &show_windows_rects);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(ImGui::GetFontSize() * 12);
+        NuclearEngine::Graphics::ImGui::Checkbox("Show windows begin order", &show_windows_begin_order);
+        NuclearEngine::Graphics::ImGui::Checkbox("Show windows rectangles", &show_windows_rects);
+        NuclearEngine::Graphics::ImGui::SameLine();
+        NuclearEngine::Graphics::ImGui::SetNextItemWidth(NuclearEngine::Graphics::ImGui::GetFontSize() * 12);
         const char* rects_names[RT_Count] = { "OuterRect", "OuterRectClipped", "InnerRect", "InnerClipRect", "WorkRect", "Contents", "ContentsRegionRect" };
-        show_windows_rects |= ImGui::Combo("##rects_type", &show_windows_rect_type, rects_names, RT_Count);
+        show_windows_rects |= NuclearEngine::Graphics::ImGui::Combo("##rects_type", &show_windows_rect_type, rects_names, RT_Count);
         if (show_windows_rects && g.NavWindow)
         {
-            ImGui::BulletText("'%s':", g.NavWindow->Name);
-            ImGui::Indent();
+            NuclearEngine::Graphics::ImGui::BulletText("'%s':", g.NavWindow->Name);
+            NuclearEngine::Graphics::ImGui::Indent();
             for (int n = 0; n < RT_Count; n++)
             {
                 ImRect r = Funcs::GetRect(g.NavWindow, n);
-                ImGui::Text("(%6.1f,%6.1f) (%6.1f,%6.1f) Size (%6.1f,%6.1f) %s", r.Min.x, r.Min.y, r.Max.x, r.Max.y, r.GetWidth(), r.GetHeight(), rects_names[n]);
+                NuclearEngine::Graphics::ImGui::Text("(%6.1f,%6.1f) (%6.1f,%6.1f) Size (%6.1f,%6.1f) %s", r.Min.x, r.Min.y, r.Max.x, r.Max.y, r.GetWidth(), r.GetHeight(), rects_names[n]);
             }
-            ImGui::Unindent();
+            NuclearEngine::Graphics::ImGui::Unindent();
         }
-        ImGui::Checkbox("Show clipping rectangle when hovering ImDrawCmd node", &show_drawcmd_clip_rects);
-        ImGui::TreePop();
+        NuclearEngine::Graphics::ImGui::Checkbox("Show clipping rectangle when hovering ImDrawCmd node", &show_drawcmd_clip_rects);
+        NuclearEngine::Graphics::ImGui::TreePop();
     }
 
     if (show_windows_rects || show_windows_begin_order)
@@ -10154,13 +10159,13 @@ void ImGui::ShowMetricsWindow(bool* p_open)
             {
                 char buf[32];
                 ImFormatString(buf, IM_ARRAYSIZE(buf), "%d", window->BeginOrderWithinContext);
-                float font_size = ImGui::GetFontSize();
+                float font_size = NuclearEngine::Graphics::ImGui::GetFontSize();
                 draw_list->AddRectFilled(window->Pos, window->Pos + ImVec2(font_size, font_size), IM_COL32(200, 100, 100, 255));
                 draw_list->AddText(window->Pos, IM_COL32(255, 255, 255, 255), buf);
             }
         }
     }
-    ImGui::End();
+    NuclearEngine::Graphics::ImGui::End();
 }
 
 //-----------------------------------------------------------------------------

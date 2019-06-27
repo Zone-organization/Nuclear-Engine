@@ -1,7 +1,5 @@
 #pragma once
 #include "Common.h"
-#include <ImGUI/imgui_impl.h>
-#include <ImGUI/imgui_impl_glfw.h>
 
 class Sample1 : public Core::Game
 {
@@ -82,7 +80,7 @@ class Sample1 : public Core::Game
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
-
+	bool isMouseDisabled = false;
 
 	void SetupLights()
 	{
@@ -224,32 +222,31 @@ class Sample1 : public Core::Game
 		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
 		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
 
-		ImGui::CreateContext();
-		ImGui_ImplGlfw_Init(Core::Application::GetMainWindow()->GetRawWindowPtr(), true);
-		ImGui_Impl_Init();
-		ImGui_Impl_CreateDeviceObjects();
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 
 	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
-		float xpos = static_cast<float>(xpos_a);
-		float ypos = static_cast<float>(ypos_a);
-
-		if (firstMouse)
+		if (!isMouseDisabled)
 		{
+			float xpos = static_cast<float>(xpos_a);
+			float ypos = static_cast<float>(ypos_a);
+
+			if (firstMouse)
+			{
+				lastX = xpos;
+				lastY = ypos;
+				firstMouse = false;
+			}
+
+			float xoffset = xpos - lastX;
+			float yoffset = lastY - ypos;
+
 			lastX = xpos;
 			lastY = ypos;
-			firstMouse = false;
+
+			Camera.ProcessEye(xoffset, yoffset);
 		}
-
-		float xoffset = xpos - lastX;
-		float yoffset = lastY - ypos;
-
-		lastX = xpos;
-		lastY = ypos;
-
-		Camera.ProcessEye(xoffset, yoffset);
 	}
 
 	void Update(float deltatime) override
@@ -270,34 +267,21 @@ class Sample1 : public Core::Game
 			Camera.MovementSpeed = 4.5;
 
 		//Change Mouse Mode
-		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_T) == Core::Input::KeyboardKeyStatus::Pressed
-			|| Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
+		{
+			isMouseDisabled = true;
 			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
-
-		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_Y) == Core::Input::KeyboardKeyStatus::Pressed)
+		}
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_M) == Core::Input::KeyboardKeyStatus::Pressed)
+		{
+			isMouseDisabled = false;
 			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
-
-
-		//Visualize Light positions
-		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_Z) == Core::Input::KeyboardKeyStatus::Pressed)
-			Renderer->VisualizePointLightsPositions = true;
-		else
-			Renderer->VisualizePointLightsPositions = false;
-
-		//Change Rendering Pipeline
-		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_1) == Core::Input::KeyboardKeyStatus::Pressed)
-			Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
-		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_2) == Core::Input::KeyboardKeyStatus::Pressed)
-			Renderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
+		}
 
 		Camera.Update();
 	}
 	void Render(float dt) override
 	{
-		ImGui_Impl_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -310,31 +294,30 @@ class Sample1 : public Core::Game
 
 
 		{
-			static float f = 0.0f;
-			static int counter = 0;
+			using namespace Graphics;
+			ImGui::Begin("Sample1 Control Box");
 
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+			ImGui::Text("Active Rendering Pipeline:");
+			static int e = 0;
+			ImGui::RadioButton("DiffuseOnly", &e, 0);
+			ImGui::RadioButton("BlinnPhong", &e, 1);
 
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			//Change Rendering Pipeline
+			if (e == 0)
+				Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+			else if (e == 1)
+				Renderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
 
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
-			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
+
+			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
+
 		}
 
-
-
-
-		ImGui::Render();
-		ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
-
-
-		Graphics::Context::GetSwapChain()->Present();
 	}
 };

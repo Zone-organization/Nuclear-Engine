@@ -8,8 +8,8 @@
 #include <Engine\Assets\DefaultMeshes.h>
 
 //#include <FMOD\includer.h> 
-//#include <Engine\Graphics\ImGui_Binding.h>
-//#include <Engine\Graphics\ImGui_Renderer.h>
+#include "..\Engine\Graphics\ImGUI\imgui_impl_glfw.h"
+#include "..\Engine\Graphics\ImGUI\imgui_impl.h"
 
 //Dependencies Linking
 #pragma comment(lib,"assimp-vc140-mt.lib")
@@ -67,8 +67,12 @@ namespace NuclearEngine {
 
 			Assets::DefaultMeshes::Initialize();
 
-			//Graphics::ImGui_Binding::Initialize(Application::MainWindow);
-			//Graphics::ImGui_Renderer::Initialize();
+
+			Graphics::ImGui::CreateContext();
+			ImGui_ImplGlfw_Init(Core::Application::GetMainWindow()->GetRawWindowPtr(), true);
+			ImGui_Impl_Init();
+			ImGui_Impl_CreateDeviceObjects();
+			Log.Info("[Engine] ImGUI Initalized.\n");
 
 			//if(desc.InitAudioEngine)
 			//	Audio::AudioEngine::Initialize();
@@ -142,6 +146,10 @@ namespace NuclearEngine {
 				lastFrame = currentFrame;
 				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
 
+				ImGui_Impl_NewFrame();
+				ImGui_ImplGlfw_NewFrame();
+				Graphics::ImGui::NewFrame();
+
 				//Mouse Movement Callback
 				double MousePosX, MousePosY;
 				Core::Application::GetMainWindow()->GetInput()->GetMousePosition(&MousePosX, &MousePosY);
@@ -154,6 +162,10 @@ namespace NuclearEngine {
 
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);
+
+				Graphics::ImGui::Render();
+				ImGui_Impl_RenderDrawData(Graphics::ImGui::GetDrawData());
+				Graphics::Context::GetSwapChain()->Present();
 			}
 		}
 

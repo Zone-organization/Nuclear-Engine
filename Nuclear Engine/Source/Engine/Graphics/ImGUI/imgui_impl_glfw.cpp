@@ -7,7 +7,7 @@
 //  [X] Platform: Clipboard support.
 //  [X] Platform: Gamepad support. Enable with 'io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad'.
 //  [x] Platform: Mouse cursor shape and visibility. Disable with 'io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange'. FIXME: 3 cursors types are missing from GLFW.
-//  [X] Platform: Keyboard arrays indexed using GLFW_KEY_* codes, e.g. ImGui::IsKeyPressed(GLFW_KEY_SPACE).
+//  [X] Platform: Keyboard arrays indexed using GLFW_KEY_* codes, e.g. NuclearEngine::Graphics::ImGui::IsKeyPressed(GLFW_KEY_SPACE).
 
 // You can copy and use unmodified imgui_impl_* files in your project. See main.cpp for an example of using this.
 // If you are new to dear imgui, read examples/README.txt and read the documentation at the top of imgui.cpp.
@@ -23,8 +23,8 @@
 //  2018-06-29: Inputs: Added support for the ImGuiMouseCursor_Hand cursor.
 //  2018-06-08: Misc: Extracted imgui_impl_glfw.cpp/.h away from the old combined GLFW+OpenGL/Vulkan examples.
 //  2018-03-20: Misc: Setup io.BackendFlags ImGuiBackendFlags_HasMouseCursors flag + honor ImGuiConfigFlags_NoMouseCursorChange flag.
-//  2018-02-20: Inputs: Added support for mouse cursors (ImGui::GetMouseCursor() value, passed to glfwSetCursor()).
-//  2018-02-06: Misc: Removed call to ImGui::Shutdown() which is not available from 1.60 WIP, user needs to call CreateContext/DestroyContext themselves.
+//  2018-02-20: Inputs: Added support for mouse cursors (NuclearEngine::Graphics::ImGui::GetMouseCursor() value, passed to glfwSetCursor()).
+//  2018-02-06: Misc: Removed call to NuclearEngine::Graphics::ImGui::Shutdown() which is not available from 1.60 WIP, user needs to call CreateContext/DestroyContext themselves.
 //  2018-02-06: Inputs: Added mapping for ImGuiKey_Space.
 //  2018-01-25: Inputs: Added gamepad support if ImGuiConfigFlags_NavEnableGamepad is set.
 //  2018-01-25: Inputs: Honoring the io.WantSetMousePos by repositioning the mouse (when using navigation and ImGuiConfigFlags_NavMoveMouse is set).
@@ -33,7 +33,7 @@
 //  2017-08-25: Inputs: MousePos set to -FLT_MAX,-FLT_MAX when mouse is unavailable/missing (instead of -1,-1).
 //  2016-10-15: Misc: Added a void* user_data parameter to Clipboard function handlers.
 
-#include "ImGUI/imgui_impl_glfw.h"
+#include "imgui_impl_glfw.h"
 
 // GLFW
 #include <GLFW/include/GLFW/glfw3.h>
@@ -82,7 +82,7 @@ void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yo
     if (g_PrevUserCallbackScroll != NULL)
         g_PrevUserCallbackScroll(window, xoffset, yoffset);
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     io.MouseWheelH += (float)xoffset;
     io.MouseWheel += (float)yoffset;
 }
@@ -92,7 +92,7 @@ void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode, int a
     if (g_PrevUserCallbackKey != NULL)
         g_PrevUserCallbackKey(window, key, scancode, action, mods);
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     if (action == GLFW_PRESS)
         io.KeysDown[key] = true;
     if (action == GLFW_RELEASE)
@@ -110,7 +110,7 @@ void ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c)
     if (g_PrevUserCallbackChar != NULL)
         g_PrevUserCallbackChar(window, c);
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     io.AddInputCharacter(c);
 }
 
@@ -120,7 +120,7 @@ bool ImGui_ImplGlfw_Init(GLFWwindow* window, bool install_callbacks)
     g_Time = 0.0;
 
     // Setup back-end capabilities flags
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;          // We can honor io.WantSetMousePos requests (optional, rarely used)
     io.BackendPlatformName = "imgui_impl_glfw";
@@ -192,7 +192,7 @@ void ImGui_ImplGlfw_Shutdown()
 static void ImGui_ImplGlfw_UpdateMousePosAndButtons()
 {
     // Update buttons
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
     {
         // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
@@ -225,11 +225,11 @@ static void ImGui_ImplGlfw_UpdateMousePosAndButtons()
 
 static void ImGui_ImplGlfw_UpdateMouseCursor()
 {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     if ((io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) || glfwGetInputMode(g_Window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
         return;
 
-    ImGuiMouseCursor imgui_cursor = ImGui::GetMouseCursor();
+    ImGuiMouseCursor imgui_cursor = NuclearEngine::Graphics::ImGui::GetMouseCursor();
     if (imgui_cursor == ImGuiMouseCursor_None || io.MouseDrawCursor)
     {
         // Hide OS mouse cursor if imgui is drawing it or if it wants no cursor
@@ -246,7 +246,7 @@ static void ImGui_ImplGlfw_UpdateMouseCursor()
 
 static void ImGui_ImplGlfw_UpdateGamepads()
 {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     memset(io.NavInputs, 0, sizeof(io.NavInputs));
     if ((io.ConfigFlags & ImGuiConfigFlags_NavEnableGamepad) == 0)
         return;
@@ -283,7 +283,7 @@ static void ImGui_ImplGlfw_UpdateGamepads()
 
 void ImGui_ImplGlfw_NewFrame()
 {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     IM_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer back-end. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
 
     // Setup display size (every frame to accommodate for window resizing)

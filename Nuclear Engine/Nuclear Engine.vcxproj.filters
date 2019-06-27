@@ -240,14 +240,14 @@
     <ClInclude Include="include\Engine\Assets\Common.h" />
     <ClInclude Include="include\Engine\Importers\Common.h" />
     <ClInclude Include="include\Engine\Audio\Audio.h" />
-    <ClInclude Include="include\ImGUI\imconfig.h" />
-    <ClInclude Include="include\ImGUI\imgui.h" />
-    <ClInclude Include="Source\ImGUI\imgui_internal.h" />
-    <ClInclude Include="Source\ImGUI\imstb_rectpack.h" />
-    <ClInclude Include="Source\ImGUI\imstb_textedit.h" />
-    <ClInclude Include="Source\ImGUI\imstb_truetype.h" />
-    <ClInclude Include="include\ImGUI\imgui_impl.h" />
-    <ClInclude Include="include\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="include\Engine\Graphics\imconfig.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_impl.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_internal.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\Engine\Graphics\ImGui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -303,12 +303,11 @@
     <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />
     <ClCompile Include="Source\Core\Parsers\XMLParser.cpp" />
-    <ClCompile Include="Source\ImGUI\imgui.cpp" />
-    <ClCompile Include="Source\ImGUI\imgui_demo.cpp" />
-    <ClCompile Include="Source\ImGUI\imgui_draw.cpp" />
-    <ClCompile Include="Source\ImGUI\imgui_impl.cpp" />
-    <ClCompile Include="Source\ImGUI\imgui_widgets.cpp" />
-    <ClCompile Include="Source\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

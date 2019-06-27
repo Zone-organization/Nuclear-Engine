@@ -1,11 +1,9 @@
 // dear imgui: Renderer for Diligent
 
-#include "ImGUI\imgui_impl.h"
+#include "imgui_impl.h"
 #include "Engine/Assets/Assets.h"
 #include <Engine\Graphics\Context.h>
 #include "Diligent\Graphics\GraphicsTools\include\GraphicsUtilities.h"
-
-// DirectX
 #include <stdio.h>
 
 using namespace NuclearEngine;
@@ -26,7 +24,7 @@ struct VERTEX_CONSTANT_BUFFER
 };
 
 // Render function
-// (this used to be set in io.RenderDrawListsFn and called by ImGui::Render(), but you can now call this directly from your main loop)
+// (this used to be set in io.RenderDrawListsFn and called by NuclearEngine::Graphics::ImGui::Render(), but you can now call this directly from your main loop)
 void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 {
     // Avoid rendering when minimized
@@ -122,11 +120,6 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 	Graphics::Context::GetContext()->SetIndexBuffer(g_pIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 	Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &g_pVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
-
-	//IMGUI_NOTE
-	//ctx->IASetVertexBuffers(0, 1, &g_pVB, &stride, &offset);
-
-
     // Render command lists
     // (Because we merged all buffers into a single one, we maintain our own offset into them)
     int global_idx_offset = 0;
@@ -163,7 +156,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 static void ImGui_Impl_CreateFontsTexture()
 {
     // Build texture atlas
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     unsigned char* pixels;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
@@ -358,31 +351,31 @@ bool    ImGui_Impl_CreateDeviceObjects()
     return true;
 }
 
-void    ImGui_Impl_InvalidateDeviceObjects()
+void ImGui_Impl_InvalidateDeviceObjects()
 {
-    //if (!g_pd3dDevice)
-    //    return;
+	if (g_pVB)
+		g_pVB->Release();
 
-    //if (g_pFontSampler) { g_pFontSampler->Release(); g_pFontSampler = NULL; }
-    //if (g_pFontTextureView) { g_pFontTextureView->Release(); g_pFontTextureView = NULL; ImGui::GetIO().Fonts->TexID = NULL; } // We copied g_pFontTextureView to io.Fonts->TexID so let's clear that as well.
-    //if (g_pIB) { g_pIB->Release(); g_pIB = NULL; }
-    //if (g_pVB) { g_pVB->Release(); g_pVB = NULL; }
+	if (g_pIB)
+		g_pIB->Release();
 
-    //if (g_pBlendState) { g_pBlendState->Release(); g_pBlendState = NULL; }
-    //if (g_pDepthStencilState) { g_pDepthStencilState->Release(); g_pDepthStencilState = NULL; }
-    //if (g_pRasterizerState) { g_pRasterizerState->Release(); g_pRasterizerState = NULL; }
-    //if (g_pPixelShader) { g_pPixelShader->Release(); g_pPixelShader = NULL; }
-    //if (g_pPixelShaderBlob) { g_pPixelShaderBlob->Release(); g_pPixelShaderBlob = NULL; }
-    //if (g_pVertexConstantBuffer) { g_pVertexConstantBuffer->Release(); g_pVertexConstantBuffer = NULL; }
-    //if (g_pInputLayout) { g_pInputLayout->Release(); g_pInputLayout = NULL; }
-    //if (g_pVertexShader) { g_pVertexShader->Release(); g_pVertexShader = NULL; }
-    //if (g_pVertexShaderBlob) { g_pVertexShaderBlob->Release(); g_pVertexShaderBlob = NULL; }
+	if (g_pPSO)
+		g_pPSO->Release();
+
+	if (g_pVertexConstantBuffer)
+		g_pVertexConstantBuffer->Release();
+
+	if (g_pSRB)
+		g_pSRB->Release();
+
+	if (g_pFontTexture.mTextureView)
+		g_pFontTexture.mTextureView.Release();
 }
 
-bool    ImGui_Impl_Init()
+bool ImGui_Impl_Init()
 {
     // Setup back-end capabilities flags
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
     io.BackendRendererName = "Nuclear_Engine::DiligentAPI";
     io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
 
@@ -392,14 +385,11 @@ bool    ImGui_Impl_Init()
 
 void ImGui_Impl_Shutdown()
 {
-    //ImGui_Impl_InvalidateDeviceObjects();
-    //if (g_pFactory) { g_pFactory->Release(); g_pFactory = NULL; }
-    //if (g_pd3dDevice) { g_pd3dDevice->Release(); g_pd3dDevice = NULL; }
-    //if (g_pd3dDeviceContext) { g_pd3dDeviceContext->Release(); g_pd3dDeviceContext = NULL; }
+    ImGui_Impl_InvalidateDeviceObjects();
 }
 
 void ImGui_Impl_NewFrame()
 {
-    //if (!g_pFontSampler)
-    //    ImGui_Impl_CreateDeviceObjects();
+    if (!g_pFontTexture.mTextureView)
+       ImGui_Impl_CreateDeviceObjects();
 }

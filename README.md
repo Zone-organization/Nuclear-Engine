@@ -2,8 +2,7 @@
 
 # To-dos 
   - W.I.P:
-	- Test all the working engine features and list them [70%]
-	- Support ImGUI. [70%]
+	- Test all the working engine features and list them [80%]
 
   - Planned:
     - Bloom effect.
@@ -47,6 +46,7 @@
 - __Graphics__
   - Support for Abstracted RenderAPI called Diligent that supports DirectX 11, DirectX 12, Vulkan backends.
   - Support for HLSL Shaders which can be Cross Compiled to GLSL or SPIR-V.
+  - Supports dear ImGui.
   
 - __Rendering__
   - Features Easy-to-use RenderSystem that create material and manage lighting by itself.
