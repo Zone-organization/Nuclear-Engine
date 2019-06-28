@@ -2,8 +2,8 @@
 
 # To-dos 
   - W.I.P:
-	- Test all the working engine features and list them [80%]
-
+	- Test all the working engine features and list them [90%]
+	
   - Planned:
     - Bloom effect.
     - PBR Renderer.
@@ -11,9 +11,9 @@
     - Restore Skybox support.
     - Restore Post Processing Effects support.
     - PhysX 4 Support
-	- Replace stb_image for a faster alernative.
 	- C# Scripting through .Net Core
-
+    - Window Resize.
+	
   - On Hold:
     - Full Audio Support with FMOD.		 [50%]
 	
@@ -32,7 +32,7 @@
   
 - __Managers__  
   - AssetManager
-    - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using stb_image library).
+    - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using Freeimage library).
     - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
 	- Support for OGG, FLAC, WAV, MP3 and many more audio formats (using FMOD library).
   - ShaderManager

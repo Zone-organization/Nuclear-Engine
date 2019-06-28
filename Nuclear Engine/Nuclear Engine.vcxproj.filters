@@ -198,7 +198,6 @@
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_round_up.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42_check.h" />
-    <ClInclude Include="Source\ThirdParty\stb_image.h" />
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
     <ClInclude Include="include\Core\ApplicationDesc.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
@@ -212,7 +211,6 @@
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
-    <ClInclude Include="include\Engine\Importers\StbImageImporter.h" />
     <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
     <ClInclude Include="include\Engine\Importers\Importers.h" />
     <ClInclude Include="include\Core\Input.h" />
@@ -248,6 +246,7 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui.h" />
+    <ClInclude Include="include\Engine\Importers\FreeImageImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -287,7 +286,6 @@
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp" />
-    <ClCompile Include="Source\Engine\Importers\StbImageImporter.cpp" />
     <ClCompile Include="Source\Engine\Assets\Texture.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
@@ -308,6 +306,7 @@
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

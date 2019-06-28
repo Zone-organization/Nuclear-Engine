@@ -2,10 +2,10 @@
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
 
-#define EXPOSE_STB_IMAGE_IMPORTER
+#define EXPOSE_FREEIMAGE_IMPORTER
 #define EXPOSE_ASSIMP_IMPORTER
 #include <Engine\Importers\AssimpImporter.h>
-#include <Engine\Importers\StbImageImporter.h>
+#include <Engine\Importers\FreeImageImporter.h>
 #include <utility>
 #include "CreateTextureFromRawImage.h"
 
@@ -27,7 +27,7 @@ namespace NuclearEngine {
 			mHashedMaterialsPaths = std::unordered_map<Uint32, std::string>();
 
 
-			mTextureImporter = Importers::TextureImporterDelegate::create<&Importers::StbImageLoad>();
+			mTextureImporter = Importers::TextureImporterDelegate::create<&Importers::FreeImageLoad>();
 			mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
 		}
 

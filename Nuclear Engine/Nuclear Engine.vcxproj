@@ -333,7 +333,7 @@
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
-    <ClInclude Include="include\Engine\Importers\StbImageImporter.h" />
+    <ClInclude Include="include\Engine\Importers\FreeImageImporter.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
@@ -347,7 +347,6 @@
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_round_up.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42_check.h" />
-    <ClInclude Include="Source\ThirdParty\stb_image.h" />
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
@@ -386,7 +385,7 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
-    <ClCompile Include="Source\Engine\Importers\StbImageImporter.cpp" />
+    <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
