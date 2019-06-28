@@ -63,16 +63,15 @@ namespace NuclearEngine
 				FreeImageInitalized = true;
 			}
 
-			FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 			FIBITMAP* dib = nullptr;
 
-			fif = FreeImage_GetFileType(Path.c_str(), 0);
-			if (fif == FIF_UNKNOWN)
-			{
-				Log.Error("[FreeImageImporter] Unknown Image type.\n");
-			}
-			dib = FreeImage_Load(fif, Path.c_str());
+			dib = FreeImage_Load(FreeImage_GetFileType(Path.c_str(), 0), Path.c_str());
 
+			if (!dib)
+			{
+				Log.Error("[FreeImageImporter] Failed To Load: " + Path +  ".\n");
+				return image;
+			}
 			if(Desc.mFlipY_Axis)
 				FreeImage_FlipVertical(dib);
 
@@ -81,8 +80,11 @@ namespace NuclearEngine
 
 
 
-			if(!SwapRedBlue32(bitmap))
-				Log.Error("[FreeImageImporter] SwapRedBlue32 Failed.\n");
+			if (!SwapRedBlue32(bitmap))
+			{
+				Log.Error("[FreeImageImporter] Failed To Load: " + Path + " , SwapRedBlue32 Failed..\n");
+				return image;
+			}
 
 			image.mData = FreeImage_GetBits(bitmap);
 			image.mWidth = FreeImage_GetWidth(bitmap);

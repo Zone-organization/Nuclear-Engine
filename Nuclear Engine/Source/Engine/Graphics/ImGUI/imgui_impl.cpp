@@ -181,11 +181,11 @@ static void ImGui_Impl_CreateFontsTexture()
 		TextureData TexData;
 		TexData.pSubResources = &pSubResource;
 		TexData.NumSubresources = 1;
+		RefCntAutoPtr<ITexture> mTexture;
+		Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
-		Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &g_pFontTexture.mTexture);
-
-		if (g_pFontTexture.mTexture.RawPtr() != nullptr)
-			g_pFontTexture.mTextureView = g_pFontTexture.mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+		if (mTexture.RawPtr() != nullptr)
+			g_pFontTexture.mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
     }
 
     // Store our identifier

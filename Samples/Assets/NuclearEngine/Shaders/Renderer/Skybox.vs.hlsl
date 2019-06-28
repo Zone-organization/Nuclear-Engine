@@ -1,6 +1,6 @@
 struct VertexInputType
 {
-    float4 Position : POSITION;
+    float4 Position : ATTRIB0;
 };
 
 struct PixelInputType

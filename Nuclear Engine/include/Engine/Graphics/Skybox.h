@@ -7,6 +7,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
+#include <Engine/Assets/Image.h>
 
 namespace NuclearEngine
 {
@@ -22,9 +23,7 @@ namespace NuclearEngine
 			Skybox();
 			~Skybox();
 
-			//void Initialize(Components::CameraComponent* Camera, ITexture* data);
-			//void Initialize(Components::CameraComponent* Camera, const std::array<LLGL::SrcImageDescriptor, 6>& data);
-			void Initialize(Components::CameraComponent* Camera, const std::array<std::string, 6>& paths);
+			void Initialize(Components::CameraComponent* Camera, const std::array<Assets::Image, 6>& data);
 
 			void Release();
 			void Render();
@@ -34,8 +33,7 @@ namespace NuclearEngine
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IBuffer> mVBuffer;
 			RefCntAutoPtr<ISampler> mSampler;
-			//RefCntAutoPtr<DepthStencilStateDesc> mDepthState;
-			RefCntAutoPtr<ITexture> mTexture;
+			RefCntAutoPtr<ITextureView> mTextureSRV;
 			bool ReleaseTex = false;
 		};
 	}

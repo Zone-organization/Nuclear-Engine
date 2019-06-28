@@ -151,17 +151,27 @@ class Sample1 : public Core::Game
 		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
 
 		//Create The skybox
-		//std::array<std::string, 6> SkyBoxTexturePaths
-		//{
-		//	std::string("Assets/Common/Skybox/right.jpg"),
-		//	std::string("Assets/Common/Skybox/left.jpg"),
-		//	std::string("Assets/Common/Skybox/top.jpg"),
-		//	std::string("Assets/Common/Skybox/bottom.jpg"),
-		//	std::string("Assets/Common/Skybox/front.jpg"),
-		//	std::string("Assets/Common/Skybox/back.jpg")
-		//};
+		std::array<std::string, 6> SkyBoxTexturePaths
+		{
+			std::string("Assets/Common/Skybox/right.jpg"),
+			std::string("Assets/Common/Skybox/left.jpg"),
+			std::string("Assets/Common/Skybox/top.jpg"),
+			std::string("Assets/Common/Skybox/bottom.jpg"),
+			std::string("Assets/Common/Skybox/front.jpg"),
+			std::string("Assets/Common/Skybox/back.jpg")
+		};
 
-		//Skybox.Initialize(&Camera, SkyBoxTexturePaths);
+	/*	void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<std::string, 6> & paths)
+		{
+			ReleaseTex = true;
+			TextureLoadingDesc Desc;
+			Desc.format = LLGL::Format::RGBA8UNorm;
+			Desc.type = LLGL::TextureType::Texture2D;
+			return Initialize(Camera, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));
+		}*/
+		Importers::TextureLoadingDesc SkyboxDesc;
+		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+		Skybox.Initialize(&Camera, AssetLoader.LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
 	}
 
 	void SetupEntities()

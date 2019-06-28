@@ -65,10 +65,10 @@ namespace NuclearEngine {
 			bool DoesTextureExist(Uint32 hashedname, Assets::Texture* texture);
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<ITexture*, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const Importers::TextureLoadingDesc& Desc);
+			std::array<Assets::Image, 6> LoadTextureCubeFromFile(const std::array<std::string, 6 >& Paths, const Importers::TextureLoadingDesc& Desc);
 		private:
 			AssetManagerDesc mDesc;
-			ITexture* TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc);
+			Assets::Image TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc);
 		};
 	}
 }

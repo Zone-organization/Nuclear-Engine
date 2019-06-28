@@ -3,13 +3,13 @@
 # To-dos 
   - W.I.P:
 	- Test all the working engine features and list them [90%]
+	- Restore Skybox support.
+    - Restore Post Processing Effects support.
 	
   - Planned:
     - Bloom effect.
     - PBR Renderer.
     - Basic Physics support with PhysX 4.
-    - Restore Skybox support.
-    - Restore Post Processing Effects support.
     - PhysX 4 Support
 	- C# Scripting through .Net Core
     - Window Resize.
@@ -35,6 +35,9 @@
     - Support for PNG, JPEG, BMP, DDS, GIF, HDR, PSD and many more image formats (using Freeimage library).
     - Support for OBJ, FBX, Blend, 3DS, CAD, GLtf and many more 3D model formats (using Assimp library).
 	- Support for OGG, FLAC, WAV, MP3 and many more audio formats (using FMOD library).
+	- Prevention of repeated loading of a texture or mesh.
+	- Provides access to all the created Textures and Meshes thorugh their hashed name.
+	
   - ShaderManager
     - Support for automated shader creation instead of Re-Writing them
 

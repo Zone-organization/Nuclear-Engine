@@ -209,11 +209,11 @@ namespace NuclearEngine
 				TextureData TexData;
 				TexData.pSubResources = pSubResources.data();
 				TexData.NumSubresources = TexDesc.MipLevels;
-
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &result.mTexture);
-				if (result.mTexture.RawPtr() != nullptr)
+				RefCntAutoPtr<ITexture> mTexture;
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
+				if (mTexture.RawPtr() != nullptr)
 				{
-					result.mTextureView = result.mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+					result.mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
 					if (result.mTextureView.RawPtr() != nullptr)
 						return true;

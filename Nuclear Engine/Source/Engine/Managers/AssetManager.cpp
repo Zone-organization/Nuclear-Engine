@@ -117,13 +117,13 @@ namespace NuclearEngine {
 			return { MeshPtr , &mImportedMaterials[hashedname] };
 		}
 					
-		ITexture * AssetManager::TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc)
+		Assets::Image AssetManager::TextureCube_Load(const std::string& Path, const Importers::TextureLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path);
 
 			auto Data = mTextureImporter(Path, Desc);
 
-			/*if (Data.mData == NULL)
+			if (Data.mData == NULL)
 			{
 				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture2D (For CubeMap): " + Path + '\n'));
 				return Data;
@@ -131,9 +131,7 @@ namespace NuclearEngine {
 	
 			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture2D (For CubeMap): " + Path + '\n'));
 
-			return Data;*/
-
-			return nullptr;
+			return Data;
 		}
 		bool AssetManager::DoesTextureExist(Uint32 hashedname, Assets::Texture* texture)
 		{
@@ -147,9 +145,9 @@ namespace NuclearEngine {
 			texture = nullptr;
 			return false;
 		}
-		std::array< ITexture *, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const Importers::TextureLoadingDesc& desc)
+		std::array<Assets::Image, 6> AssetManager::LoadTextureCubeFromFile(const std::array<std::string, 6>& Paths, const Importers::TextureLoadingDesc& desc)
 		{
-			ITexture *data1, *data2, *data3, *data4, *data5, *data6;
+			Assets::Image data1, data2, data3, data4, data5, data6;
 			Importers::TextureLoadingDesc Desc = desc;
 			//Desc.FlipY_Axis = false;
 			data1 = TextureCube_Load(Paths.at(0), Desc);
@@ -159,7 +157,7 @@ namespace NuclearEngine {
 			data5 = TextureCube_Load(Paths.at(4), Desc);
 			data6 = TextureCube_Load(Paths.at(5), Desc);
 			
-			std::array<ITexture *, 6> result = { data1, data2, data3, data4, data5, data6 };
+			std::array<Assets::Image, 6> result = { data1, data2, data3, data4, data5, data6 };
 
 			return result;
 		}
