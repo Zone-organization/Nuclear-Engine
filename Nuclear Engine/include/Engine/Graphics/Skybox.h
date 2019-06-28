@@ -29,11 +29,11 @@ namespace NuclearEngine
 			void Render();
 
 		private:
-			//RefCntAutoPtr
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IBuffer> mVBuffer;
 			RefCntAutoPtr<ISampler> mSampler;
 			RefCntAutoPtr<ITextureView> mTextureSRV;
+			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 			bool ReleaseTex = false;
 		};
 	}

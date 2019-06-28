@@ -161,14 +161,6 @@ class Sample1 : public Core::Game
 			std::string("Assets/Common/Skybox/back.jpg")
 		};
 
-	/*	void Skybox::Initialize(Components::CameraComponent * Camera, const std::array<std::string, 6> & paths)
-		{
-			ReleaseTex = true;
-			TextureLoadingDesc Desc;
-			Desc.format = LLGL::Format::RGBA8UNorm;
-			Desc.type = LLGL::TextureType::Texture2D;
-			return Initialize(Camera, Managers::AssetManager::LoadTextureCubeFromFile(paths, Desc));
-		}*/
 		Importers::TextureLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		Skybox.Initialize(&Camera, AssetLoader.LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
@@ -302,6 +294,7 @@ class Sample1 : public Core::Game
 
 		Renderer->Update(SampleScene.Entities, SampleScene.Events, dt);
 
+		Skybox.Render();
 
 		{
 			using namespace Graphics;

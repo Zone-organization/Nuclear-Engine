@@ -9,7 +9,7 @@ struct PixelInputType
 	float3 Tex : TEXCOORD;
 };
 
-cbuffer NE_Camera : register(b0)
+cbuffer NEStatic_Camera : register(b0)
 {
     matrix Model;
     matrix ModelInvTranspose;

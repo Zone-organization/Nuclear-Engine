@@ -15,7 +15,7 @@ namespace NuclearEngine
 		IShader * ShaderManager::CreateShader(const std::string& source, SHADER_TYPE type)
 		{
 			ShaderCreateInfo CreationAttribs;
-			IShader* result;
+			IShader* result = nullptr;
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.ShaderType = type;

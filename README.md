@@ -2,8 +2,7 @@
 
 # To-dos 
   - W.I.P:
-	- Test all the working engine features and list them [90%]
-	- Restore Skybox support.
+	- Test all the working engine features and list them [95%]
     - Restore Post Processing Effects support.
 	
   - Planned:
@@ -50,7 +49,7 @@
   - Support for Abstracted RenderAPI called Diligent that supports DirectX 11, DirectX 12, Vulkan backends.
   - Support for HLSL Shaders which can be Cross Compiled to GLSL or SPIR-V.
   - Supports dear ImGui.
-  
+  - Basic Diffuse only SkyBox.
 - __Rendering__
   - Features Easy-to-use RenderSystem that create material and manage lighting by itself.
   - The RenderSystem support what is called "Rendering Pipelines", that allow rendering large number of meshes
