@@ -66,7 +66,11 @@ namespace NuclearEngine
 						{
 							if (mPShaderTextures.at(i).at(j).mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
 							{
-								TexSetCopy.erase(TexSetCopy.begin() + j);
+								for (int t = 0; t < TexSetCopy.size(); t++)
+								{
+									if (TexSetCopy.at(t).mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
+										TexSetCopy.erase(TexSetCopy.begin()  + t);
+								}
 							}
 						}
 					}

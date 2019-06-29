@@ -41,6 +41,7 @@ class Sample1 : public Core::Game
 
 	Graphics::DiffuseOnly DiffuseRP;
 	Graphics::BlinnPhong BlinnPhongRP;
+	Graphics::BlinnPhong BlinnPhongWithNormalMapRP = Graphics::BlinnPhong(true);
 
 	//ECS
 	ECS::Scene SampleScene;
@@ -122,7 +123,7 @@ class Sample1 : public Core::Game
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		ModelDesc.LoadNormalTextures = true;
-
+		ModelDesc.UseTangents = true;
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 
@@ -136,6 +137,9 @@ class Sample1 : public Core::Game
 		Assets::TextureSet CubeSet;
 		CubeSet.push_back({ 0, DiffuseTex });
 		CubeSet.push_back({ 1, SpecularTex });
+		SpecularTex.SetUsageType(Assets::TextureUsageType::Normal);
+		CubeSet.push_back({ 2, SpecularTex });
+
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
 		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
@@ -186,8 +190,8 @@ class Sample1 : public Core::Game
 
 		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(&Camera);
 		SampleScene.Systems.Configure();
-
 		Renderer->AddRenderingPipeline(&BlinnPhongRP);
+		Renderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 
 		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
@@ -306,13 +310,15 @@ class Sample1 : public Core::Game
 			static int e = 0;
 			ImGui::RadioButton("DiffuseOnly", &e, 0);
 			ImGui::RadioButton("BlinnPhong", &e, 1);
+			ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
 
 			//Change Rendering Pipeline
 			if (e == 0)
 				Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
 			else if (e == 1)
 				Renderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
-
+			else if (e == 2)
+				Renderer->SetActiveRenderingPipeline(BlinnPhongWithNormalMapRP.GetID());
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 

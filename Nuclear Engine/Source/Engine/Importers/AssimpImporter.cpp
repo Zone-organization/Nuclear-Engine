@@ -15,7 +15,7 @@ namespace NuclearEngine {
 			mManager = desc.mManager;
 
 			Assimp::Importer importer;
-			const aiScene* scene = importer.ReadFile(desc.mPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+			const aiScene* scene = importer.ReadFile(desc.mPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -67,7 +67,7 @@ namespace NuclearEngine {
 			}
 			if (mLoadingDesc.LoadNormalTextures)
 			{
-				auto NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DISPLACEMENT);
+				auto NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_HEIGHT);
 				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
 			}
 
@@ -145,7 +145,7 @@ namespace NuclearEngine {
 				return Assets::TextureUsageType::Diffuse;
 			case aiTextureType_SPECULAR:
 				return Assets::TextureUsageType::Specular;
-			case aiTextureType_DISPLACEMENT:
+			case aiTextureType_HEIGHT:
 				return Assets::TextureUsageType::Normal;
 			}
 

@@ -6,9 +6,14 @@ namespace NuclearEngine
 {
 	namespace Graphics
 	{
-		BlinnPhong::BlinnPhong()
+		BlinnPhong::BlinnPhong(bool NormalMaps)
 		{
-			mID = Utilities::Hash("NE_BlinnPhong");
+			if(NormalMaps)
+				mID = Utilities::Hash("NE_BlinnPhong");
+			else
+				mID = Utilities::Hash("NE_BlinnPhong_Normal");
+
+			mNormalMaps = NormalMaps;
 		}
 		bool BlinnPhong::Bake(const RenderingPipelineDesc& desc)
 		{		
@@ -34,7 +39,7 @@ namespace NuclearEngine
 			{
 				Managers::AutoVertexShaderDesc VertShaderDesc;
 				VertShaderDesc.Name = "BlinnPhongVS";
-				if (desc.UseNormalMaps == true) { VertShaderDesc.InTangents = true; }
+				VertShaderDesc.InTangents = true;
 
 				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 			}
@@ -54,7 +59,7 @@ namespace NuclearEngine
 				if (desc.DirLights > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(desc.DirLights)); }
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
-				if (desc.UseNormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+				if (mNormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
 
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();

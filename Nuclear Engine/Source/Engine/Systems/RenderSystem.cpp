@@ -113,7 +113,6 @@ namespace NuclearEngine
 			RPDesc.DirLights = mLightingSystem.DirLights.size();
 			RPDesc.SpotLights = mLightingSystem.SpotLights.size();
 			RPDesc.PointLights = mLightingSystem.PointLights.size();
-			RPDesc.UseNormalMaps = false;
 			RPDesc.CameraBufferPtr = ActiveCamera->GetCBuffer();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 

@@ -37,6 +37,8 @@ namespace NuclearEngine
 				Managers::AutoVertexShaderDesc VertShaderDesc;
 				VertShaderDesc.Name = "DiffuseOnlyVS";
 				VertShaderDesc.OutFragPos = false;
+				VertShaderDesc.InTangents = true;
+
 				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 			}
 

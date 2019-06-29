@@ -16,7 +16,7 @@ static RefCntAutoPtr<IBuffer> g_pVertexConstantBuffer;
 static RefCntAutoPtr<IShaderResourceBinding> g_pSRB;
 
 static Assets::Texture g_pFontTexture;
-static int                      g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
+static int g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
 
 struct VERTEX_CONSTANT_BUFFER
 {

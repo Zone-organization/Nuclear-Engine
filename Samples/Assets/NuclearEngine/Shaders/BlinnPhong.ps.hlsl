@@ -12,22 +12,22 @@ struct PixelInputType
     float3 Normal : NORMAL0;
     float3 FragPos : TEXCOORD1;
 
-//#ifdef NE_USE_NORMAL_MAPS
-//    float3x3 TBN : TANGENT0;
-//#endif
+#ifdef NE_USE_NORMAL_MAPS
+    float3x3 TBN : TANGENT0;
+#endif
 };
 
 Texture2D NEMat_Diffuse1 : register(t0);
 Texture2D NEMat_Specular1 : register(t1);
-//#ifdef NE_USE_NORMAL_MAPS
-//Texture2D NEMat_Normal1 : register(t2);
-//#endif
+#ifdef NE_USE_NORMAL_MAPS
+Texture2D NEMat_Normal1 : register(t2);
+#endif
 
 SamplerState NEMat_Diffuse1_sampler : register(s0);
 SamplerState NEMat_Specular1_sampler : register(s1);
-//#ifdef NE_USE_NORMAL_MAPS
-//SamplerState NEMat_Normal1_sampler : register(s2);
-//#endif
+#ifdef NE_USE_NORMAL_MAPS
+SamplerState NEMat_Normal1_sampler : register(s2);
+#endif
 
 struct DirLight
 {

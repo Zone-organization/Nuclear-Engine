@@ -24,11 +24,11 @@ namespace NuclearEngine
 		class NEAPI BlinnPhong : public RenderingPipeline
 		{
 		public:
-			BlinnPhong();
+			BlinnPhong(bool NormalMaps = false);
 			bool Bake(const RenderingPipelineDesc& desc) override;
 
 		private:
-
+			bool mNormalMaps;
 		};
 
 	}

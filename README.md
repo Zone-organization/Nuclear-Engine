@@ -2,7 +2,7 @@
 
 # To-dos 
   - W.I.P:
-	- Test all the working engine features and list them [95%]
+    - Test all the working engine features and list them [95%]
     - Restore Post Processing Effects support.
 	
   - Planned:
@@ -10,7 +10,7 @@
     - PBR Renderer.
     - Basic Physics support with PhysX 4.
     - PhysX 4 Support
-	- C# Scripting through .Net Core
+    - C# Scripting through .Net Core
     - Window Resize.
 	
   - On Hold:
@@ -50,6 +50,11 @@
   - Support for HLSL Shaders which can be Cross Compiled to GLSL or SPIR-V.
   - Supports dear ImGui.
   - Basic Diffuse only SkyBox.
+  - Available Rendering Pipelines:
+    - Diffuse Only
+	- BlinnPhong (Diffuse/Specualr only)
+	- BlinnPhong with Normal maps
+
 - __Rendering__
   - Features Easy-to-use RenderSystem that create material and manage lighting by itself.
   - The RenderSystem support what is called "Rendering Pipelines", that allow rendering large number of meshes
