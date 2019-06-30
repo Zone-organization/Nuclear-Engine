@@ -167,6 +167,9 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Sample1.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\NuclearEngine\Shaders\PBR.ps.hlsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -4,10 +4,10 @@
   - W.I.P:
     - Test all the working engine features and list them [95%]
     - Restore Post Processing Effects support.
+	- PBR Rendering Pipeline.
 	
   - Planned:
     - Bloom effect.
-    - PBR Renderer.
     - Basic Physics support with PhysX 4.
     - PhysX 4 Support
     - C# Scripting through .Net Core

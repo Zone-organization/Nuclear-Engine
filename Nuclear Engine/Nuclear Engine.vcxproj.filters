@@ -247,6 +247,7 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui.h" />
     <ClInclude Include="include\Engine\Importers\FreeImageImporter.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\PBR.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -307,6 +308,7 @@
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\PBR.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
