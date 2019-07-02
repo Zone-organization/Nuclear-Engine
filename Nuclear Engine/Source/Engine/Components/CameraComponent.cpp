@@ -3,7 +3,6 @@
 #include <Core\Engine.h>
 #include <Engine/ECS\Scene.h>
 #include <Engine\Graphics\Context.h>
-#include "Diligent\Graphics\GraphicsEngine\interface\MapHelper.h"
 #include <Diligent/Graphics/GraphicsTools/include/CommonlyUsedStates.h>
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
@@ -24,13 +23,7 @@ namespace NuclearEngine
 			
 			position = __position;
 
-			BufferDesc CBDesc;
-			CBDesc.Name = "CameraCB";
-			CBDesc.uiSizeInBytes = sizeof(_CameraBuffer);
-			CBDesc.Usage = USAGE_DYNAMIC;
-			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
-			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &BufferData(), &ConstantBuffer);
+
 		}
 	
 		CameraComponent::~CameraComponent()
@@ -39,7 +32,7 @@ namespace NuclearEngine
 	
 		void CameraComponent::Initialize(Math::Matrix4 projectionMatrix)
 		{
-			_CameraBuffer.Projection = projectionMatrix;
+			mCameraData.Projection = projectionMatrix;
 			Update();
 		}
 
@@ -60,32 +53,27 @@ namespace NuclearEngine
 			Right = normalize(Math::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 			Up = normalize(Math::cross(Right, Front));
 
-			_CameraBuffer.View = Math::lookAt(position, position + Front, Up);
+			mCameraData.View = Math::lookAt(position, position + Front, Up);
 
-			UpdateMatricesOnly();
+			mCameraData.ModelViewProjection = mCameraData.Projection * mCameraData.View * mCameraData.Model;
+			mCameraData.ModelInvTranspose = Math::inverseTranspose(mCameraData.Model);
 
-			Diligent::MapHelper<CameraBuffer> CBConstants(Graphics::Context::GetContext(), ConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
-			*CBConstants = _CameraBuffer;
 		}
-		void CameraComponent::UpdateMatricesOnly()
-		{
-			_CameraBuffer.ModelViewProjection = _CameraBuffer.Projection * _CameraBuffer.View * _CameraBuffer.Model;
-			_CameraBuffer.ModelInvTranspose = Math::inverseTranspose(_CameraBuffer.Model);
-		}
+
 		void CameraComponent::SetModelMatrix(Math::Matrix4 modelMatrix)
 		{
-			_CameraBuffer.Model = modelMatrix;
+			mCameraData.Model = modelMatrix;
 			Update();
 		}
 		void CameraComponent::SetViewMatrix(Math::Matrix4 viewMatrix)
 		{
-			_CameraBuffer.View = viewMatrix;
+			mCameraData.View = viewMatrix;
 			Update();
 
 		}
 		void CameraComponent::SetProjectionMatrix(Math::Matrix4 projectionMatrix)
 		{
-			_CameraBuffer.Projection = projectionMatrix;
+			mCameraData.Projection = projectionMatrix;
 			Update();
 
 		}
@@ -93,30 +81,21 @@ namespace NuclearEngine
 		{
 			this->position = cameraposition;
 		}
-		void CameraComponent::SetActive()
-		{
-			//Ugly hack prone to errors dont look
-			Core::Engine::GetGame()->GetActiveScene()->SetActiveCamera(this);
-		}
 		Math::Matrix4 CameraComponent::GetModelMatrix()
 		{
-			return _CameraBuffer.Model;
+			return mCameraData.Model;
 		}
 		Math::Matrix4 CameraComponent::GetViewMatrix()
 		{
-			return this->_CameraBuffer.Model;
+			return this->mCameraData.Model;
 		}
 		Math::Matrix4 CameraComponent::GetProjectionMatrix()
 		{
-			return _CameraBuffer.Projection;
+			return mCameraData.Projection;
 		}
 		Math::Vector3 CameraComponent::GetPosition()
 		{
 			return position;
-		}
-		IBuffer* CameraComponent::GetCBuffer()
-		{
-			return ConstantBuffer;
 		}
 
 		Graphics::RenderTarget* CameraComponent::GetCameraRT()

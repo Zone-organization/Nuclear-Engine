@@ -39,7 +39,7 @@ namespace NuclearEngine
 				}
 				else
 				{
-					Log.Error("[FileSystem] Couldn't Read File: " + Filepath.mPath);
+					Log.Error("[FileSystem] Couldn't Read Shader File: " + Filepath.mPath + "\n");
 					return std::string("NoString");
 				}
 				if (reverseorder = false)

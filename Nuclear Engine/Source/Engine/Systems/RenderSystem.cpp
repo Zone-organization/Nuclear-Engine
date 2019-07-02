@@ -7,6 +7,7 @@
 #include <Engine\Assets\Material.h>
 #include <Engine\Assets\DefaultTextures.h>
 #include <Engine\Assets\DefaultMeshes.h>
+#include <Engine\Managers\CameraManager.h>
 #include <Core\Engine.h>
 #include <cstring>
 
@@ -14,9 +15,9 @@ namespace NuclearEngine
 {
 	namespace Systems
 	{
-		RenderSystem::RenderSystem(Components::CameraComponent* camera)
+		RenderSystem::RenderSystem(Managers::CameraManager* CameraManager)
 		{
-			ActiveCamera = camera;
+			mCameraManager = CameraManager;
 			mStatus = RenderSystemStatus::RequireBaking;
 			mActiveRenderingPipeline = nullptr;
 		}
@@ -55,16 +56,6 @@ namespace NuclearEngine
 			}
 			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID)+ ") is not found, while setting it active.\n");
 		}
-
-		void RenderSystem::SetCamera(Components::CameraComponent * camera)
-		{
-			this->ActiveCamera = camera;
-		}
-		Components::CameraComponent* RenderSystem::GetCamera()
-		{
-			return this->ActiveCamera;
-		}
-
 		void RenderSystem::AddLight(Components::DirectionalLight * light)
 		{
 			mLightingSystem.DirLights.push_back(light);
@@ -107,14 +98,14 @@ namespace NuclearEngine
 		void RenderSystem::Bake(bool AllPipelines)
 		{
 			mLightingSystem.BakeBuffer();
-			mLightingSystem.UpdateBuffer(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
+			mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
 
 			Graphics::RenderingPipelineDesc RPDesc;
 			
 			RPDesc.DirLights = static_cast<Uint32>(mLightingSystem.DirLights.size());
 			RPDesc.SpotLights = static_cast<Uint32>(mLightingSystem.SpotLights.size());
 			RPDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
-			RPDesc.CameraBufferPtr = ActiveCamera->GetCBuffer();
+			RPDesc.CameraBufferPtr = mCameraManager->GetCameraCB();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 
 			if(AllPipelines)
@@ -148,14 +139,16 @@ namespace NuclearEngine
 				if (!MeshObject.Get()->mMultiRender)
 				{
 					//entity.GetTransform()->Update();
-					ActiveCamera->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->GetTransformMatrix());
+					mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->GetTransformMatrix());
+					mCameraManager->UpdateBuffer();
 					InstantRender(MeshObject.Get());
 				}
 				else 
 				{
 					for (auto i : MeshObject.Get()->mMultiRenderTransforms)
 					{
-						ActiveCamera->SetModelMatrix(i);
+						mCameraManager->GetMainCamera()->SetModelMatrix(i);
+						mCameraManager->UpdateBuffer();
 						InstantRender(MeshObject.Get());
 					}
 				}
@@ -166,7 +159,7 @@ namespace NuclearEngine
 			Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
 
 			UpdateMeshes(es);
-			mLightingSystem.UpdateBuffer(Math::Vector4(ActiveCamera->GetPosition(), 1.0f));
+			mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
 
 			if (VisualizePointLightsPositions)
 			{
@@ -175,7 +168,7 @@ namespace NuclearEngine
 					Math::Matrix4 model(1.0f);
 					model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
 					model = Math::scale(model, Math::Vector3(0.25f));
-					ActiveCamera->SetModelMatrix(model);
+					mCameraManager->GetMainCamera()->SetModelMatrix(model);
 
 					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
 

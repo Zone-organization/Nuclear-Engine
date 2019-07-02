@@ -13,19 +13,12 @@ namespace NuclearEngine
 			Scene();
 			~Scene();
 
-			void SetActiveCamera(Components::CameraComponent* camera);
-			Components::CameraComponent* GetActiveCamera();
-
-
 			//Creates a new entity and assign a transform component to it automatically
 			Entity CreateEntity();
 
 			EventManager Events;
 			EntityManager Entities;
 			SystemManager Systems;
-
-		private:
-			Components::CameraComponent *ActiveCamera;
 		};
 	}
 }

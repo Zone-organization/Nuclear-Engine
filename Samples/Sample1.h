@@ -10,6 +10,7 @@ class Sample1 : public Core::Game
 
 	//Asset Manager (Loader)
 	Managers::AssetManager AssetLoader;
+	Managers::CameraManager SceneCameraManager;
 
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
@@ -159,7 +160,7 @@ class Sample1 : public Core::Game
 
 		Importers::TextureLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		Skybox.Initialize(&Camera, AssetLoader.LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
+		Skybox.Initialize(SceneCameraManager.GetCameraCB(), AssetLoader.LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
 	}
 
 	void SetupEntities()
@@ -179,14 +180,15 @@ class Sample1 : public Core::Game
 	void Load()
 	{
 		Assets::DefaultTextures::Initalize(&AssetLoader);
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		SceneCameraManager.Initialize(&Camera);
 
-		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(&Camera);
+		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
 		SampleScene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&BlinnPhongRP);
 		Renderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 
-		Renderer->GetCamera()->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->AddLight(&spotLight);
 		Renderer->AddLight(&pointlight1);
 		Renderer->AddLight(&pointlight2);
@@ -277,6 +279,7 @@ class Sample1 : public Core::Game
 		}
 
 		Camera.Update();
+		SceneCameraManager.UpdateBuffer();
 	}
 	void Render(float dt) override
 	{

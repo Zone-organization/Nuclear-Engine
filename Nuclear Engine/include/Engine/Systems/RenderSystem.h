@@ -16,10 +16,9 @@ namespace NuclearEngine
 	}
 
 	namespace Components {
-		class CameraComponent;
 		class MeshComponent;
 	}
-
+	namespace Managers { class CameraManager; }
 	namespace Systems
 	{
 		enum class NEAPI RenderSystemStatus
@@ -30,14 +29,11 @@ namespace NuclearEngine
 
 		class NEAPI RenderSystem : public ECS::System<RenderSystem> {
 		public:
-			RenderSystem(Components::CameraComponent* camera = nullptr);
+			RenderSystem(Managers::CameraManager* CameraManager);
 			~RenderSystem();
 
 			void AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
 			void SetActiveRenderingPipeline(Uint32 PipelineID);
-
-			void SetCamera(Components::CameraComponent* camera);
-			Components::CameraComponent* GetCamera();
 
 			void AddLight(Components::DirectionalLight* light);
 			void AddLight(Components::PointLight* light);
@@ -65,9 +61,7 @@ namespace NuclearEngine
 
 		private:
 			LightingSubSystem mLightingSystem;
-
-			Components::CameraComponent* ActiveCamera;
-
+			Managers::CameraManager* mCameraManager;
 			bool PipelineDirty = true;
 
 			RenderSystemStatus mStatus;

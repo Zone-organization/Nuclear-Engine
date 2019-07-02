@@ -63,7 +63,7 @@ namespace NuclearEngine
 		
 		}
 
-		void Skybox::Initialize(Components::CameraComponent* Camera, const std::array<Assets::Image, 6> & data)
+		void Skybox::Initialize(IBuffer* CameraConstantBuffer, const std::array<Assets::Image, 6> & data)
 		{
 			TextureDesc TexDesc;
 			TexDesc.Name = "SkyBox_TextureCube";
@@ -146,7 +146,7 @@ namespace NuclearEngine
 			PSODesc.ResourceLayout.NumStaticSamplers = _countof(StaticSamplers);
 
 			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Camera->GetCBuffer());
+			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(CameraConstantBuffer);
 
 
 			mPipeline->CreateShaderResourceBinding(&mSRB, true);

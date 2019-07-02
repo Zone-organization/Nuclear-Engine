@@ -1,8 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Graphics\RenderTarget.h>
 #include <Engine\ECS\Entity.h>
 
@@ -34,6 +32,17 @@ namespace NuclearEngine
 			bool Bloom = false;
 		};
 
+
+		struct CameraBuffer
+		{
+			Math::Matrix4 Model = Math::Matrix4(1.0f);
+			Math::Matrix4 ModelInvTranspose = Math::Matrix4(1.0f);
+			Math::Matrix4 ModelViewProjection = Math::Matrix4(1.0f);
+
+			Math::Matrix4 View = Math::Matrix4(1.0f);
+			Math::Matrix4 Projection = Math::Matrix4(1.0f);
+		};
+
 		class NEAPI CameraComponent : public ECS::Component<CameraComponent>
 		{
 		public:
@@ -50,25 +59,18 @@ namespace NuclearEngine
 			void Initialize(Math::Matrix4 projectionMatrix);
 
 			void Bake(const CameraBakingOptions& Opt);
-			void RenderSceneToit();
 			void Update();
-			//Note: Doesn't update the constant buffer, it calculates the ModelInvTranspose, ModelViewProjection
-			void UpdateMatricesOnly();
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
 			void SetProjectionMatrix(Math::Matrix4 projectionMatrix);
 			void SetPosition(Math::Vector3 cameraposition);
 
-			void SetActive();
-
 			Math::Matrix4 GetModelMatrix();
 			Math::Matrix4 GetViewMatrix();
 			Math::Matrix4 GetProjectionMatrix();
 			Math::Vector3 GetPosition();
 
-			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
-			IBuffer* GetCBuffer();
 			Graphics::RenderTarget* GetCameraRT();
 			IPipelineState * GetPipeline();
 
@@ -77,6 +79,7 @@ namespace NuclearEngine
 			float MouseSensitivity;
 			float Zoom;
 
+			CameraBuffer mCameraData;
 		protected:
 			Graphics::RenderTarget CameraRT;
 			RefCntAutoPtr<IPipelineState> mPSO;
@@ -87,19 +90,6 @@ namespace NuclearEngine
 			float Pitch;
 
 			Math::Vector3 Front, Up, Right, WorldUp;
-
-			struct CameraBuffer
-			{
-				Math::Matrix4 Model = Math::Matrix4(1.0f);
-				Math::Matrix4 ModelInvTranspose = Math::Matrix4(1.0f);
-				Math::Matrix4 ModelViewProjection = Math::Matrix4(1.0f);
-
-				//Needed for some objects (as skybox & 2D Sprites & etc)
-				Math::Matrix4 View = Math::Matrix4(1.0f);
-				Math::Matrix4 Projection = Math::Matrix4(1.0f);
-			}_CameraBuffer;
-
-			RefCntAutoPtr<IBuffer> ConstantBuffer;
 
 			Math::Vector3 position, direction;
 
