@@ -118,7 +118,8 @@ namespace NuclearEngine {
 
 		struct Vertex
 		{
-			Vertex() {}
+			Vertex()
+				: Position(Math::Vector3(0.0f)), Normal(Math::Vector3(0.0f)), Tangents(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f)) {}
 			Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector2& uv)
 				: Position(p), Normal(n), Tangents(t), UV(uv) {}
 			Vertex(

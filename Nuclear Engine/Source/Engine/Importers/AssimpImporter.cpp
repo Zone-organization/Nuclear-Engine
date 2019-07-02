@@ -85,6 +85,10 @@ namespace NuclearEngine {
 		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{
 			Assets::Mesh::SubMesh::SubMeshData result;
+			result.Positions.reserve(mesh->mNumVertices);
+			result.UV.reserve(mesh->mNumVertices);
+			result.Normals.reserve(mesh->mNumVertices);
+			result.Tangents.reserve(mesh->mNumVertices);
 
 			// Walk through each of the mesh's vertices
 			for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -103,24 +107,20 @@ namespace NuclearEngine {
 					result.UV.push_back(Math::Vector2(0.0f, 0.0f));
 				}
 				// normals
-				if (mLoadingDesc.UseNormals == true)
-				{
-					if (mesh->mNormals != NULL)
-						result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
-					else
-						result.Normals.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
-				}
+				if (mesh->mNormals != NULL)
+					result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
+				else
+					result.Normals.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
 
 				//tangents
-				if (mLoadingDesc.UseTangents == true)
-				{
-					if (mesh->mTangents != NULL)
-						result.Tangents.push_back(Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z));
-					else
-						result.Tangents.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
-				}
+				if (mesh->mTangents != NULL)
+					result.Tangents.push_back(Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z));
+				else
+					result.Tangents.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
+
 			}
-			// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+
+			result.indices.reserve(mesh->mNumVertices);
 			for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 			{
 				aiFace face = mesh->mFaces[i];

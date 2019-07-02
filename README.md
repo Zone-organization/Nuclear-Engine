@@ -3,9 +3,9 @@
 # To-dos 
   - W.I.P:
     - Test all the working engine features and list them [95%]
-    - Restore Post Processing Effects support.
-	- PBR Rendering Pipeline.
-	
+	- Basic PBR Rendering Pipeline.
+	- Improve CameraSystem to Restore Post Processing Effects support.
+	- Replace the logger with spdlog.
   - Planned:
     - Bloom effect.
     - Basic Physics support with PhysX 4.

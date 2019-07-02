@@ -11,10 +11,6 @@ class Sample1 : public Core::Game
 	//Asset Manager (Loader)
 	Managers::AssetManager AssetLoader;
 
-	//Assets
-	Assets::Texture DiffuseTex;
-	Assets::Texture SpecularTex;
-
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
 
@@ -82,7 +78,7 @@ class Sample1 : public Core::Game
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
-
+	bool renderSkybox = true;
 	void SetupLights()
 	{
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -123,22 +119,18 @@ class Sample1 : public Core::Game
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		ModelDesc.LoadNormalTextures = true;
-		ModelDesc.UseTangents = true;
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		DiffuseTex = AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
-		SpecularTex = AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular);
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.push_back({ 0, DiffuseTex });
-		CubeSet.push_back({ 1, SpecularTex });
-		SpecularTex.SetUsageType(Assets::TextureUsageType::Normal);
-		CubeSet.push_back({ 2, SpecularTex });
+		CubeSet.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
+		CubeSet.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
+		CubeSet.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -298,7 +290,8 @@ class Sample1 : public Core::Game
 
 		Renderer->Update(SampleScene.Entities, SampleScene.Events, dt);
 
-		Skybox.Render();
+		if(renderSkybox)
+			Skybox.Render();
 
 		{
 			using namespace Graphics;
@@ -322,6 +315,7 @@ class Sample1 : public Core::Game
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
+			ImGui::Checkbox("Render Skybox", &renderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();

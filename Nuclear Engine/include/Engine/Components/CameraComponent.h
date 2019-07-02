@@ -50,7 +50,7 @@ namespace NuclearEngine
 			void Initialize(Math::Matrix4 projectionMatrix);
 
 			void Bake(const CameraBakingOptions& Opt);
-
+			void RenderSceneToit();
 			void Update();
 			//Note: Doesn't update the constant buffer, it calculates the ModelInvTranspose, ModelViewProjection
 			void UpdateMatricesOnly();

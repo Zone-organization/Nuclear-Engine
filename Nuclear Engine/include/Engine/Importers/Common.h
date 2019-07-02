@@ -15,9 +15,6 @@ namespace NuclearEngine
 	{
 		struct MeshLoadingDesc
 		{
-			bool UseTexCoords = true;
-			bool UseNormals = true;
-			bool UseTangents = false;
 			bool LoadDiffuseTextures = true;
 			bool LoadSpecularTextures = false;
 			bool LoadNormalTextures = false;

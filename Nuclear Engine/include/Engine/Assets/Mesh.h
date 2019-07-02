@@ -16,7 +16,7 @@ namespace NuclearEngine {
 		{
 			bool TexCoord = true;
 			bool Normals = true;
-			bool Tangents = false;
+			bool Tangents = true;
 		};
 
 		class NEAPI Mesh : public Asset<Mesh>

@@ -1,5 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
+#include <Engine/Components/CameraComponent.h>
 
 namespace NuclearEngine
 {
@@ -15,8 +16,11 @@ namespace NuclearEngine
 
 
 
-			//LLGL::Buffer** GetCameraCB();
+		private:
 
+			std::vector<Components::Camera*> RegisteredCameras;
+			std::vector<Components::Camera*> ActiveCameras;
+			Components::Camera* MainCamera;
 		};
 	}
 }
