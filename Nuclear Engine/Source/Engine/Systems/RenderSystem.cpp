@@ -7,6 +7,7 @@
 #include <Engine\Assets\Material.h>
 #include <Engine\Assets\DefaultTextures.h>
 #include <Engine\Assets\DefaultMeshes.h>
+#include <Core\Engine.h>
 #include <cstring>
 
 namespace NuclearEngine
@@ -110,9 +111,9 @@ namespace NuclearEngine
 
 			Graphics::RenderingPipelineDesc RPDesc;
 			
-			RPDesc.DirLights = mLightingSystem.DirLights.size();
-			RPDesc.SpotLights = mLightingSystem.SpotLights.size();
-			RPDesc.PointLights = mLightingSystem.PointLights.size();
+			RPDesc.DirLights = static_cast<Uint32>(mLightingSystem.DirLights.size());
+			RPDesc.SpotLights = static_cast<Uint32>(mLightingSystem.SpotLights.size());
+			RPDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
 			RPDesc.CameraBufferPtr = ActiveCamera->GetCBuffer();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 
@@ -184,20 +185,23 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{
-			if (object == nullptr)
+			if (Core::Engine::isDebug())
 			{
-				Log.Error("[RenderSystem] Skipped Rendering invalid MeshComponent...\n");
-				return;
-			}
-			if (object->mMesh == nullptr)
-			{
-				Log.Error("[RenderSystem] Skipped Rendering invalid Mesh...\n");
-				return;
-			}
-			if (object->mMaterial == nullptr)
-			{
-				Log.Error("[RenderSystem] Skipped Rendering Mesh with invalid Material...\n");
-				return;
+				if (object == nullptr)
+				{
+					Log.Error("[RenderSystem DEBUG] Skipped Rendering invalid MeshComponent...\n");
+					return;
+				}
+				if (object->mMesh == nullptr)
+				{
+					Log.Error("[RenderSystem DEBUG] Skipped Rendering invalid Mesh...\n");
+					return;
+				}
+				if (object->mMaterial == nullptr)
+				{
+					Log.Error("[RenderSystem DEBUG] Skipped Rendering Mesh with invalid Material...\n");
+					return;
+				}
 			}
 
 			InstantRender(object->mMesh, object->mMaterial);

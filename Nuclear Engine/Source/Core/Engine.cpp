@@ -50,6 +50,7 @@ namespace NuclearEngine {
 		static Game Defaultgame;
 
 		static Engine::State Engine_State;
+		static bool g_isDebug = DEBUG_TRUE_BOOL;
 
 		void PrintIntroLog();
 
@@ -60,8 +61,12 @@ namespace NuclearEngine {
 			//Create platform specific app (window)
 			Application::Start(desc.mAppdesc);
 			Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
-			Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc);
-
+			
+			if (!Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc))
+			{
+				Log.FatalError("[Engine] GraphicsEngine Failed to initalize...\n");
+				return false;
+			}
 			//Initialize Context
 			Graphics::Context::Initialize(desc.mAppdesc, desc.mGraphicsEngineDesc);
 
@@ -77,7 +82,11 @@ namespace NuclearEngine {
 			//if(desc.InitAudioEngine)
 			//	Audio::AudioEngine::Initialize();
 
+			g_isDebug = desc.Debug;
+
 			GamePtr = &Defaultgame;
+
+			Log.Info("[Engine] Nuclear Engine has been initalized successfully!\n");
 			return true;
 		}
 
@@ -122,6 +131,11 @@ namespace NuclearEngine {
 		bool Engine::ShouldClose()
 		{
 			return Core::Application::GetMainWindow()->ShouldClose();
+		}
+
+		bool Engine::isDebug()
+		{
+			return g_isDebug;
 		}
 
 		Game * Engine::GetGame()

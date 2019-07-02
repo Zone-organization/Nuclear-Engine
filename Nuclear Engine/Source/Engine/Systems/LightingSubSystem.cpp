@@ -27,7 +27,7 @@ namespace NuclearEngine
 
 			BufferDesc CBDesc;
 			CBDesc.Name = "LightCB";
-			CBDesc.uiSizeInBytes = NE_Light_CB_Size;
+			CBDesc.uiSizeInBytes = static_cast<Uint32>(NE_Light_CB_Size);
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;

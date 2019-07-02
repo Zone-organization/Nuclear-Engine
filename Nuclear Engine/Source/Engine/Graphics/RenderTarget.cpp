@@ -41,18 +41,5 @@ namespace NuclearEngine
 			mDepthDSV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
 
 		}
-		void RenderTarget::Release()
-		{
-			mColorRTV->Release();
-			mDepthDSV->Release();
-		}
-		ITextureView* RenderTarget::GetColorRTV()
-		{
-			return mColorRTV.RawPtr();
-		}
-		ITextureView* RenderTarget::GetDepthDSV()
-		{
-			return mDepthDSV.RawPtr();
-		}
 	}
 }

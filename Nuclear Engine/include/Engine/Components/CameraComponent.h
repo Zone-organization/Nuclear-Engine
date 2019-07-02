@@ -69,6 +69,8 @@ namespace NuclearEngine
 
 			//Note: Shader CBuffer name is "NE_Camera", Binding Index Must be Zero!!
 			IBuffer* GetCBuffer();
+			Graphics::RenderTarget* GetCameraRT();
+			IPipelineState * GetPipeline();
 
 			// Camera options
 			float MovementSpeed;

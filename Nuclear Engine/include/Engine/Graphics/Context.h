@@ -28,6 +28,7 @@ namespace NuclearEngine
 			
 			static void ResizeSwapChain(Uint32 Width, Uint32 Height);
 
+
 			static IRenderDevice* GetDevice();
 			static IDeviceContext* GetContext();
 			static ISwapChain* GetSwapChain();

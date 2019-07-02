@@ -13,6 +13,9 @@ namespace NuclearEngine
 			ApplicationDesc mAppdesc;
 			Graphics::GraphicsEngineDesc mGraphicsEngineDesc;
 			bool InitAudioEngine = true;
+
+			//Enables some debugging options that slows down performance in runtime
+			bool Debug = DEBUG_TRUE_BOOL;
 		};
 
 		class NEAPI Engine
@@ -29,6 +32,8 @@ namespace NuclearEngine
 			static void SetState(const State& state);
 
 			static bool ShouldClose();
+
+			static bool isDebug();
 
 			static Game *GetGame();
 

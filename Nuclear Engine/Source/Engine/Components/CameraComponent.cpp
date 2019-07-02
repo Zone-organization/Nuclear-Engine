@@ -119,6 +119,16 @@ namespace NuclearEngine
 			return ConstantBuffer;
 		}
 
+		Graphics::RenderTarget* CameraComponent::GetCameraRT()
+		{
+			return &CameraRT;
+		}
+
+		IPipelineState* CameraComponent::GetPipeline()
+		{
+			return mPSO.RawPtr();
+		}
+
 		void CameraComponent::BakeRenderTarget(const CameraBakingOptions& Desc)
 		{
 			Graphics::RenderTargetDesc RTDesc;

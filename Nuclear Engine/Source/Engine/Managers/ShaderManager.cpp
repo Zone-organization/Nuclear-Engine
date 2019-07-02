@@ -101,13 +101,13 @@ namespace NuclearEngine
 			bool AutoCreateSamplersDesc,
 			const std::vector<StaticSamplerDesc>& StaticSamplers)
 		{
-			PSODesc.ResourceLayout.NumVariables = Resources.size();
+			PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Resources.size());
 			PSODesc.ResourceLayout.Variables = Resources.data();
 			std::vector<StaticSamplerDesc> GeneratedSamplerDesc;
 
 			if (!AutoCreateSamplersDesc)
 			{
-				PSODesc.ResourceLayout.NumStaticSamplers = StaticSamplers.size();
+				PSODesc.ResourceLayout.NumStaticSamplers = static_cast<Uint32>(StaticSamplers.size());
 				PSODesc.ResourceLayout.StaticSamplers = StaticSamplers.data();
 			}
 			else 
@@ -126,7 +126,7 @@ namespace NuclearEngine
 					}
 				}
 
-				PSODesc.ResourceLayout.NumStaticSamplers = GeneratedSamplerDesc.size();
+				PSODesc.ResourceLayout.NumStaticSamplers = static_cast<Uint32>(GeneratedSamplerDesc.size());
 				PSODesc.ResourceLayout.StaticSamplers = GeneratedSamplerDesc.data();
 			}
 

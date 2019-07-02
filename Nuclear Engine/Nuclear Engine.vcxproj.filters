@@ -248,6 +248,7 @@
     <ClInclude Include="include\Engine\Graphics\ImGui.h" />
     <ClInclude Include="include\Engine\Importers\FreeImageImporter.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\PBR.h" />
+    <ClInclude Include="include\Engine\Systems\CameraSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

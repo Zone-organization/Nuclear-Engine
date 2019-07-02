@@ -25,11 +25,7 @@ namespace NuclearEngine
 			~RenderTarget();
 
 			void Create(const RenderTargetDesc& Desc);
-			void Release();
 
-			ITextureView* GetColorRTV();
-			ITextureView* GetDepthDSV();
-		private:
 			RefCntAutoPtr<ITextureView> mColorRTV;
 			RefCntAutoPtr<ITextureView> mDepthDSV;
 		};

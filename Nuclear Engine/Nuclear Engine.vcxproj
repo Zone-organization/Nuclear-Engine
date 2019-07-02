@@ -292,6 +292,7 @@
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\BlinnPhong.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
+    <ClInclude Include="include\Engine\Systems\CameraSystem.h" />
     <ClInclude Include="include\Engine\Systems\LightingSubSystem.h" />
     <ClInclude Include="include\Engine\Systems\Systems.h" />
     <ClInclude Include="include\Engine\Graphics\imconfig.h" />
