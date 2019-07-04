@@ -10,8 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Samples", "Samples\Samples.
 		{1E657253-3D76-4C77-A747-4D85EEFA91DA} = {1E657253-3D76-4C77-A747-4D85EEFA91DA}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclear Editor", "Nuclear Editor\Nuclear Editor.vcxproj", "{E37E9AA5-A9E3-41B0-A52E-5B20615FEA13}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,10 +24,6 @@ Global
 		{2C26B9B9-5974-4E9E-BA97-7107056F82AC}.Debug|x64.Build.0 = Debug|x64
 		{2C26B9B9-5974-4E9E-BA97-7107056F82AC}.Release|x64.ActiveCfg = Release|x64
 		{2C26B9B9-5974-4E9E-BA97-7107056F82AC}.Release|x64.Build.0 = Release|x64
-		{E37E9AA5-A9E3-41B0-A52E-5B20615FEA13}.Debug|x64.ActiveCfg = Debug|x64
-		{E37E9AA5-A9E3-41B0-A52E-5B20615FEA13}.Debug|x64.Build.0 = Debug|x64
-		{E37E9AA5-A9E3-41B0-A52E-5B20615FEA13}.Release|x64.ActiveCfg = Release|x64
-		{E37E9AA5-A9E3-41B0-A52E-5B20615FEA13}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

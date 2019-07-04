@@ -1,9 +1,35 @@
 #pragma once
 #include "Common.h"
 
+
+void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
+{
+	using namespace Graphics;
+	std::string name = Manager->mHashedMaterialsPaths[material->GetName()] + Utilities::int_to_hex<Uint32>(material->GetName());
+
+	if (Manager)
+		name = Manager->mHashedMaterialsPaths[material->GetName()] + Utilities::int_to_hex<Uint32>(material->GetName());
+	else
+		name = Utilities::int_to_hex<Uint32>(material->GetName()).c_str();
+
+	ImGui::Begin(name.c_str());
+
+	for (int i = 0; i < material->mPixelShaderTextures.size(); i++)
+	{
+		ImGui::Text(std::string("TextureSet Index: " + std::to_string(i)).c_str());
+		for (int j = 0; j < material->mPixelShaderTextures.at(i).size(); j++)
+		{
+			ImGui::Image(&material->mPixelShaderTextures.at(i).at(j).mTex, ImVec2(128, 128));
+			ImGui::SameLine();
+		}
+		ImGui::NewLine();
+	}
+	ImGui::End();
+}
 class Sample1 : public Core::Game
 {
-	std::shared_ptr<Systems::RenderSystem> Renderer;
+	std::shared_ptr<Systems::RenderSystem> ModelsRenderer;
+	std::shared_ptr<Systems::RenderSystem> SponzaRenderer;
 	Core::Input Input;
 
 	RefCntAutoPtr<IShaderResourceBinding> mSRB;
@@ -14,10 +40,12 @@ class Sample1 : public Core::Game
 
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
+	Assets::Mesh* SponzaAsset;
 
 	Assets::Material CubeMaterial;
 	Assets::Material* NanosuitMaterial;
 	Assets::Material* CyborgMaterial;
+	Assets::Material* SponzaMaterial;
 
 	Components::CameraComponent Camera;
 
@@ -41,11 +69,14 @@ class Sample1 : public Core::Game
 	Graphics::BlinnPhong BlinnPhongWithNormalMapRP = Graphics::BlinnPhong(true);
 
 	//ECS
-	ECS::Scene SampleScene;
+	ECS::Scene ModelsScene;
 	ECS::Entity ESkybox;
 	ECS::Entity ECube;
 	ECS::Entity ECyborg;
 	ECS::Entity ENanosuit;
+
+	ECS::Scene SponzaScene;
+	ECS::Entity ESponza;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] =
@@ -80,6 +111,9 @@ class Sample1 : public Core::Game
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
 	bool renderSkybox = true;
+	int s = 0;
+
+	Assets::Texture Fuck;
 	void SetupLights()
 	{
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -112,20 +146,25 @@ class Sample1 : public Core::Game
 		pointlight9.SetPosition(pointLightPositions[8]);
 		pointlight9.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
 	}
-
 	void SetupAssets()
 	{
-		//NanoSuit Creation
+
 		Importers::MeshLoadingDesc ModelDesc;
 		ModelDesc.LoadDiffuseTextures = true;
 		ModelDesc.LoadSpecularTextures = true;
 		ModelDesc.LoadNormalTextures = true;
+		//Load Nanosuit Model
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		//Load Cyborg Model
 		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		//Load Sponza Model
+		std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+
+		Fuck = AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse);
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
@@ -135,9 +174,10 @@ class Sample1 : public Core::Game
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
-		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
-		Renderer->CreateMaterialForAllPipelines(NanosuitMaterial);
-		Renderer->CreateMaterialForAllPipelines(CyborgMaterial);
+		ModelsRenderer->CreateMaterialForAllPipelines(&CubeMaterial);
+		ModelsRenderer->CreateMaterialForAllPipelines(NanosuitMaterial);
+		ModelsRenderer->CreateMaterialForAllPipelines(CyborgMaterial);
+		SponzaRenderer->CreateMaterialForAllPipelines(SponzaMaterial);
 
 		CubeSet.clear();
 
@@ -162,19 +202,63 @@ class Sample1 : public Core::Game
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		Skybox.Initialize(SceneCameraManager.GetCameraCB(), AssetLoader.LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
 	}
-
 	void SetupEntities()
 	{
 		//Create Entities
-		ECube = SampleScene.CreateEntity();
-		ENanosuit = SampleScene.CreateEntity();
-		ECyborg = SampleScene.CreateEntity();
+		ECube = ModelsScene.CreateEntity();
+		ENanosuit = ModelsScene.CreateEntity();
+		ECyborg = ModelsScene.CreateEntity();
+		ESponza = SponzaScene.CreateEntity();
 
 		//Assign Components
 		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
+		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
+	}
 
+	void InitModelsRenderer()
+	{
+		ModelsRenderer = ModelsScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+		ModelsScene.Systems.Configure();
+		ModelsRenderer->AddRenderingPipeline(&BlinnPhongRP);
+		ModelsRenderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
+		ModelsRenderer->AddRenderingPipeline(&DiffuseRP);
+
+		ModelsRenderer->AddLight(&spotLight);
+		ModelsRenderer->AddLight(&pointlight1);
+		ModelsRenderer->AddLight(&pointlight2);
+		ModelsRenderer->AddLight(&pointlight3);
+		ModelsRenderer->AddLight(&pointlight4);
+		ModelsRenderer->AddLight(&pointlight5);
+		ModelsRenderer->AddLight(&pointlight6);
+		ModelsRenderer->AddLight(&pointlight7);
+		ModelsRenderer->AddLight(&pointlight8);
+		ModelsRenderer->AddLight(&pointlight9);
+		ModelsRenderer->AddLight(&dirlight);
+		ModelsRenderer->Bake();
+	}
+
+	void InitSponzaRenderer()
+	{
+		SponzaRenderer = SponzaScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+		SponzaScene.Systems.Configure();
+		SponzaRenderer->AddRenderingPipeline(&BlinnPhongRP);
+		SponzaRenderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
+		SponzaRenderer->AddRenderingPipeline(&DiffuseRP);
+
+		SponzaRenderer->AddLight(&spotLight);
+		SponzaRenderer->AddLight(&pointlight1);
+		SponzaRenderer->AddLight(&pointlight2);
+		SponzaRenderer->AddLight(&pointlight3);
+		SponzaRenderer->AddLight(&pointlight4);
+		SponzaRenderer->AddLight(&pointlight5);
+		SponzaRenderer->AddLight(&pointlight6);
+		SponzaRenderer->AddLight(&pointlight7);
+		SponzaRenderer->AddLight(&pointlight8);
+		SponzaRenderer->AddLight(&pointlight9);
+		SponzaRenderer->AddLight(&dirlight);
+		SponzaRenderer->Bake();
 	}
 
 	void Load()
@@ -183,24 +267,10 @@ class Sample1 : public Core::Game
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);
 
-		Renderer = SampleScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
-		SampleScene.Systems.Configure();
-		Renderer->AddRenderingPipeline(&BlinnPhongRP);
-		Renderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
-		Renderer->AddRenderingPipeline(&DiffuseRP);
 
-		Renderer->AddLight(&spotLight);
-		Renderer->AddLight(&pointlight1);
-		Renderer->AddLight(&pointlight2);
-		Renderer->AddLight(&pointlight3);
-		Renderer->AddLight(&pointlight4);
-		Renderer->AddLight(&pointlight5);
-		Renderer->AddLight(&pointlight6);
-		Renderer->AddLight(&pointlight7);
-		Renderer->AddLight(&pointlight8);
-		Renderer->AddLight(&pointlight9);
-		Renderer->AddLight(&dirlight);
-		Renderer->Bake();
+		InitModelsRenderer();
+
+		InitSponzaRenderer();
 
 		SetupLights();
 
@@ -222,9 +292,12 @@ class Sample1 : public Core::Game
 		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
 		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
 
+		Math::Matrix4 TSponza(1.0f);
+		TSponza = Math::scale(TSponza, Math::Vector3(0.01f));
+		ESponza.GetComponent<Components::TransformComponent>()->SetTransform(TSponza);
+
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
-
 	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
 		if (!isMouseDisabled)
@@ -248,7 +321,6 @@ class Sample1 : public Core::Game
 			Camera.ProcessEye(xoffset, yoffset);
 		}
 	}
-
 	void Update(float deltatime) override
 	{
 		//Movement
@@ -291,7 +363,10 @@ class Sample1 : public Core::Game
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
 
-		Renderer->Update(SampleScene.Entities, SampleScene.Events, dt);
+		if(s == 0)
+			ModelsRenderer->Update(ModelsScene.Entities, ModelsScene.Events, dt);
+		else
+			SponzaRenderer->Update(SponzaScene.Entities, SponzaScene.Events, dt);
 
 		if(renderSkybox)
 			Skybox.Render();
@@ -309,14 +384,30 @@ class Sample1 : public Core::Game
 			ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
 
 			//Change Rendering Pipeline
-			if (e == 0)
-				Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
-			else if (e == 1)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
-			else if (e == 2)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongWithNormalMapRP.GetID());
+			if (s == 0)
+			{
+				if (e == 0)
+					ModelsRenderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+				else if (e == 1)
+					ModelsRenderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
+				else if (e == 2)
+					ModelsRenderer->SetActiveRenderingPipeline(BlinnPhongWithNormalMapRP.GetID());
+			}
+			else
+			{
+				if (e == 0)
+					SponzaRenderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+				else if (e == 1)
+					SponzaRenderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
+				else if (e == 2)
+					SponzaRenderer->SetActiveRenderingPipeline(BlinnPhongWithNormalMapRP.GetID());
+			}
 
-			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+			ImGui::Text("Active Scene:");
+			ImGui::RadioButton("ModelsScene", &s, 0);
+			ImGui::RadioButton("SponzaScene", &s, 1);
+
+			ImGui::Checkbox("Visualize Pointlights", &ModelsRenderer->VisualizePointLightsPositions);
 
 			ImGui::Checkbox("Render Skybox", &renderSkybox);
 
@@ -324,6 +415,7 @@ class Sample1 : public Core::Game
 			ImGui::End();
 
 		}
+		//ViewMaterialInfo(NanosuitMaterial, &AssetLoader);
 
 	}
 };

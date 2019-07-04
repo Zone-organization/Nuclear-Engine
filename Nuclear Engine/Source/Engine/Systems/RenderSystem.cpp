@@ -112,12 +112,14 @@ namespace NuclearEngine
 			{ 
 				for (auto it : mRenderingPipelines)
 				{
-					it.second->Bake(RPDesc);
+					if(it.second->GetStatus() != Graphics::BakeStatus::Baked)
+						it.second->Bake(RPDesc);
 				}
 			}
 			else
 			{
-				mActiveRenderingPipeline->Bake(RPDesc);
+				if (mActiveRenderingPipeline->GetStatus() != Graphics::BakeStatus::Baked)
+					mActiveRenderingPipeline->Bake(RPDesc);
 			}
 
 			//TODO: Move!
@@ -169,6 +171,7 @@ namespace NuclearEngine
 					model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
 					model = Math::scale(model, Math::Vector3(0.25f));
 					mCameraManager->GetMainCamera()->SetModelMatrix(model);
+					mCameraManager->UpdateBuffer();
 
 					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
 

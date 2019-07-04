@@ -5,10 +5,31 @@ namespace NuclearEngine
 {
 	namespace Systems
 	{
+		bool LightingSubSystem::RequiresBaking()
+		{
+			if (Baked_DirLights_Size == DirLights.size() && Baked_PointLights_Size == PointLights.size() && Baked_SpotLights_Size == SpotLights.size())
+				return true;
+
+			return false;
+		}
 		void LightingSubSystem::BakeBuffer()
 		{
+			if (HasbeenBakedBefore)
+			{
+				if (!RequiresBaking())
+				{
+					Log.Warning("[LightingSubSystem] No need for baking the sub system!\n");
+				}
+			}
+
+			HasbeenBakedBefore = true;
+
 			NE_Light_CB_Size = sizeof(Math::Vector4);
 			NUM_OF_LIGHT_VECS = 1;
+			Baked_DirLights_Size = DirLights.size();
+			Baked_PointLights_Size = PointLights.size();
+			Baked_SpotLights_Size = SpotLights.size();
+
 			if (DirLights.size() > 0)
 			{
 				NE_Light_CB_Size = NE_Light_CB_Size + (DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
@@ -25,6 +46,10 @@ namespace NuclearEngine
 				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (SpotLights.size() * 5);
 			}
 
+			if (mPSLightCB.RawPtr() != nullptr)
+			{
+				mPSLightCB.Release();
+			}
 			BufferDesc CBDesc;
 			CBDesc.Name = "LightCB";
 			CBDesc.uiSizeInBytes = static_cast<Uint32>(NE_Light_CB_Size);

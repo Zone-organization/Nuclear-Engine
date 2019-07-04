@@ -68,5 +68,9 @@ namespace NuclearEngine
 			}
 			return Assets::DefaultTextures::DefaultBlackTex;
 		}
+		BakeStatus RenderingPipeline::GetStatus()
+		{
+			return mStatus;
+		}
 	}
 }

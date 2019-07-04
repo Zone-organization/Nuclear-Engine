@@ -82,6 +82,8 @@ namespace NuclearEngine
 
 			ReflectPixelShaderData();
 
+			mStatus = BakeStatus::Baked;
+
 			return true;
 		}
 	}

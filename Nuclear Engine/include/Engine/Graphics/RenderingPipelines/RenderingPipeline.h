@@ -7,6 +7,7 @@
 #include <Engine\Components\Light.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
+#include <Engine/Graphics/BakeStatus.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
@@ -41,11 +42,14 @@ namespace NuclearEngine
 
 			virtual Assets::Texture GetDefaultTextureFromType(Uint8 Type);
 			
+			virtual BakeStatus GetStatus();
+
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
 			std::vector<Assets::ShaderTexture> mPixelShaderTextureInfo;
 		protected:
 			RefCntAutoPtr<IPipelineState> mPipeline;
+			BakeStatus mStatus = BakeStatus::NotInitalized;
 			Uint32 mID = 0;
 		};
 

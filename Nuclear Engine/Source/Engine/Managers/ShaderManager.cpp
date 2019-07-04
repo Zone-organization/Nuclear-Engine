@@ -32,7 +32,7 @@ namespace NuclearEngine
 			IShader* pVS = nullptr;
 			Layout->clear();
 
-			Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, False));
+			Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
@@ -46,17 +46,17 @@ namespace NuclearEngine
 			if (desc.InTexCoords)
 			{
 				defines.push_back("NE_USE_UV");
-				Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, False));
+				Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
 			}
 			if (desc.InNormals)
 			{
 				defines.push_back("NE_USE_NORMALS");
-				Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, False));
+				Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));
 			}
 			if (desc.InTangents)
 			{
 				defines.push_back("NE_USE_TANGENTS");
-				Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, False));
+				Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));
 			}
 			if (desc.Use_Camera)
 				defines.push_back("NE_USE_DEF_CAMERA");

@@ -8,7 +8,7 @@ namespace NuclearEngine
 	{
 
 		template <class T>
-		class NEAPI Asset
+		class Asset
 		{
 		public:
 			const char* GetType()

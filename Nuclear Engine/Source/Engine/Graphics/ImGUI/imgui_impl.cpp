@@ -137,7 +137,9 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 			Graphics::Context::GetContext()->SetScissorRects(1, &r, 0, 0);
 
 			// Bind texture, Draw
-			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(((Assets::Texture*)pcmd->TextureId)->mTextureView);
+			Assets::Texture* Tex = static_cast<Assets::Texture*>(pcmd->TextureId);
+
+			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(Tex->mTextureView);
 			Graphics::Context::GetContext()->CommitShaderResources(g_pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			DrawAttribs DrawAttrs;
@@ -323,7 +325,7 @@ bool    ImGui_Impl_CreateDeviceObjects()
 	// to change on a per-instance basis
 	ShaderResourceVariableDesc Vars[] =
 	{
-		{SHADER_TYPE_PIXEL, "Tex0", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE}
+		{SHADER_TYPE_PIXEL, "Tex0", SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC}
 	};
 	PSODesc.ResourceLayout.Variables = Vars;
 	PSODesc.ResourceLayout.NumVariables = _countof(Vars);

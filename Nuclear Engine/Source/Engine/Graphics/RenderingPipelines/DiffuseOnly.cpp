@@ -62,6 +62,7 @@ namespace NuclearEngine
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
 
 			ReflectPixelShaderData();
+			mStatus = BakeStatus::Baked;
 
 			return true;
 		}

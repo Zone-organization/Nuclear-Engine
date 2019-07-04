@@ -19,6 +19,8 @@ namespace NuclearEngine
 			std::vector<Components::PointLight*> PointLights;
 			std::vector<Components::SpotLight*> SpotLights;
 
+			bool RequiresBaking();
+
 			void BakeBuffer();
 
 			//Update Functions
@@ -31,6 +33,13 @@ namespace NuclearEngine
 
 			size_t NE_Light_CB_Size;
 			size_t NUM_OF_LIGHT_VECS;
+
+		private:
+			size_t Baked_DirLights_Size = 0;
+			size_t Baked_PointLights_Size = 0;
+			size_t Baked_SpotLights_Size = 0;
+
+			bool HasbeenBakedBefore = false;
 		};
 
 	}
