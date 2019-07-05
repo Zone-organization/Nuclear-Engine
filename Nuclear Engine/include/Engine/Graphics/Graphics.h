@@ -5,3 +5,5 @@
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <Engine\Graphics\RenderingPipelines\DiffuseOnly.h>
 #include <Engine\Graphics\RenderingPipelines\BlinnPhong.h>
+#include <Engine\Graphics\RenderingPipelines\WireFrame.h>
+#include <Engine\Graphics\RenderingPipelines\PBR.h>

@@ -6,13 +6,25 @@
 #include <Engine/Assets/Common.h>
 #include <vector>
 
-namespace NuclearEngine {
-	namespace Assets {
+namespace NuclearEngine
+{
+	namespace Assets
+	{
+
+
+
 		enum TextureUsageType : Uint8
 		{
-			Diffuse = 1,
-			Specular = 2,
-			Normal = 3,
+			Diffuse = 0,
+			Albedo = 0,
+
+			Specular = 1,
+			Metallic = 1,
+
+			Normal = 2,
+
+			Roughness = 3,
+			AO = 4,
 
 			Unknown = 255
 		};

@@ -16,11 +16,18 @@ namespace NuclearEngine
 		{
 			if (name.find("Diffuse") == 0)
 				return Assets::TextureUsageType::Diffuse;
+			else if (name.find("Albedo") == 0)
+				return Assets::TextureUsageType::Albedo;
 			else if (name.find("Specular") == 0)
 				return Assets::TextureUsageType::Specular;
+			else if (name.find("Metallic") == 0)
+				return Assets::TextureUsageType::Metallic;
 			else if (name.find("Normal") == 0)
 				return Assets::TextureUsageType::Normal;
-
+			else if (name.find("Roughness") == 0)
+				return Assets::TextureUsageType::Roughness;
+			else if (name.find("AO") == 0)
+				return Assets::TextureUsageType::AO;
 			return Assets::TextureUsageType::Unknown;
 		}
 

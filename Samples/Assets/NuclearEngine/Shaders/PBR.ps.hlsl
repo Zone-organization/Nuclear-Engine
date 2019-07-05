@@ -6,24 +6,24 @@
 struct PixelInputType
 {
 	float4 Position : SV_POSITION;
-	float2 TexCoords : TEX_COORD;
+	float2 TexCoords : TEXCOORD0;
 	float3 Normal : NORMAL0;
 	float3 FragPos : TEXCOORD1;
 	float3x3 TBN : TANGENT0;
 };
 
 
-Texture2D NE_Albedo;
-Texture2D NE_Normal;
-Texture2D NE_Metallic;
-Texture2D NE_Roughness;
-Texture2D NE_AmbientO;
+Texture2D NEMat_Albedo;
+Texture2D NEMat_Metallic;
+Texture2D NEMat_Normal;
+Texture2D NEMat_Roughness;
+Texture2D NEMat_AO;
 
-SamplerState NE_Albedo_sampler;
-SamplerState NE_Normal_sampler;
-SamplerState NE_Metallic_sampler;
-SamplerState NE_Roughness_sampler;
-SamplerState NE_AmbientO_sampler;
+SamplerState NEMat_Albedo_sampler;
+SamplerState NEMat_Metallic_sampler;
+SamplerState NEMat_Normal_sampler;
+SamplerState NEMat_Roughness_sampler;
+SamplerState NEMat_AO_sampler;
 
 struct DirLight
 {
@@ -60,7 +60,7 @@ cbuffer NEStatic_Lights
 
 };
 
-const float PI = 3.14159265359;
+#define PI 3.14159265359
 
 // ----------------------------------------------------------------------------
 float DistributionGGX(float3 N, float3 H, float roughness)
@@ -103,35 +103,75 @@ float3 fresnelSchlick(float cosTheta, float3 F0)
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 // ----------------------------------------------------------------------------
-float4 main(PixelInputType input) : SV_TARGET
-
+float3 CalcPointLight(PointLight light, float3 N, float3 WorldPos, float3 V, float3 F0, float3 albedo, float metallic, float roughness)
 {
-	float3 albedo = pow(NE_Albedo.Sample(NE_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
-	float metallic = NE_Metallic.Sample(NE_Metallic_sampler, input.TexCoords).x;
-	float roughness = NE_Roughness.Sample(NE_Roughness_sampler, input.TexCoords).x;
-	float ao = NE_AmbientO.Sample(NE_AmbientO_sampler, input.TexCoords).x;
+	// calculate per-light radiance
+	float3 L = normalize(light.Position.xyz - WorldPos);
+	float3 H = normalize(V + L);
+	float distance = length(light.Position.xyz - WorldPos);
+	float attenuation = 1.0 / (distance * distance);
+	float3 radiance = light.Color.xyz * attenuation;
 
-	float3 N = NE_Normal.Sample(NE_Normal_sampler, input.TexCoords).xyz;
+	// Cook-Torrance BRDF
+	float NDF = DistributionGGX(N, H, roughness);
+	float G = GeometrySmith(N, V, L, roughness);
+	float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+	float3 nominator = NDF * G * F;
+	float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+	float3 specular = nominator / denominator;
+
+	// kS is equal to Fresnel
+	float3 kS = F;
+	// for energy conservation, the diffuse and specular light can't
+	// be above 1.0 (unless the surface emits light); to preserve this
+	// relationship the diffuse component (kD) should equal 1.0 - kS.
+	float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
+	// multiply kD by the inverse metalness such that only non-metals 
+	// have diffuse lighting, or a linear blend if partly metal (pure metals
+	// have no diffuse light).
+	kD *= 1.0 - metallic;
+
+	// scale light by NdotL
+	float NdotL = max(dot(N, L), 0.0);
+
+	// add to outgoing radiance Lo
+	return float3( (kD * albedo / PI + specular) * radiance * NdotL);
+
+}
+// ----------------------------------------------------------------------------
+
+
+float4 main(PixelInputType input) : SV_TARGET
+{
+	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
+	float metallic = NEMat_Metallic.Sample(NEMat_Metallic_sampler, input.TexCoords).x;
+	float roughness = NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).x;
+	float ao = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoords).x;
+
+	float3 N = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz;
 	N = normalize(mul(N, 2.0f) - 1.0f);
 	N = normalize(mul(N, input.TBN));
 
-	//float3 V = normalize(ViewPos - WorldPos);
+	float3 V = normalize(ViewPos - input.FragPos);
 
 	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
 	// of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
 	float3 F0 = float3(0.04f, 0.04f, 0.04f);
-	//F0 = mix(F0, albedo, metallic);
+	lerp(F0, albedo, metallic);
 
 	// reflectance equation
 	float3 Lo = float3(0.0f, 0.0f, 0.0f);
-	for (int i = 0; i < 4; ++i)
+
+#ifdef NE_POINT_LIGHTS_NUM  
+	// phase 2: point lights
+	for (int i = 0; i < NE_POINT_LIGHTS_NUM; i++)
 	{
-		// calculate per-light radiance
-		float3 L = normalize(lightPositions[i] - WorldPos);
+		float3 L = normalize(PointLights[i].Position.xyz - input.FragPos);
 		float3 H = normalize(V + L);
-		float distance = length(lightPositions[i] - WorldPos);
+		float distance = length(PointLights[i].Position.xyz - input.FragPos);
 		float attenuation = 1.0 / (distance * distance);
-		float3 radiance = lightColors[i] * attenuation;
+		float3 radiance = PointLights[i].Color.xyz * attenuation;
 
 		// Cook-Torrance BRDF
 		float NDF = DistributionGGX(N, H, roughness);
@@ -147,7 +187,7 @@ float4 main(PixelInputType input) : SV_TARGET
 		// for energy conservation, the diffuse and specular light can't
 		// be above 1.0 (unless the surface emits light); to preserve this
 		// relationship the diffuse component (kD) should equal 1.0 - kS.
-		float3 kD = float3(1.0) - kS;
+		float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
 		// multiply kD by the inverse metalness such that only non-metals 
 		// have diffuse lighting, or a linear blend if partly metal (pure metals
 		// have no diffuse light).
@@ -157,8 +197,11 @@ float4 main(PixelInputType input) : SV_TARGET
 		float NdotL = max(dot(N, L), 0.0);
 
 		// add to outgoing radiance Lo
-		Lo += (kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+
+		//Lo += CalcPointLight(PointLights[i1], N, input.FragPos, V, F0, albedo, metallic, roughness);
 	}
+#endif
 
 	// ambient lighting (note that the next IBL tutorial will replace 
 	// this ambient lighting with environment lighting).

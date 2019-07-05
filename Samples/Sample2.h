@@ -1,46 +1,18 @@
 #pragma once
 #include "Common.h"
 
-
-void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
-{
-	using namespace Graphics;
-	std::string name = Manager->mHashedMaterialsPaths[material->GetName()] + Utilities::int_to_hex<Uint32>(material->GetName());
-
-	if (Manager)
-		name = Manager->mHashedMaterialsPaths[material->GetName()] + Utilities::int_to_hex<Uint32>(material->GetName());
-	else
-		name = Utilities::int_to_hex<Uint32>(material->GetName()).c_str();
-
-	ImGui::Begin(name.c_str());
-
-	for (int i = 0; i < material->mPixelShaderTextures.size(); i++)
-	{
-		ImGui::Text(std::string("TextureSet Index: " + std::to_string(i)).c_str());
-		for (int j = 0; j < material->mPixelShaderTextures.at(i).size(); j++)
-		{
-			ImGui::Image(&material->mPixelShaderTextures.at(i).at(j).mTex, ImVec2(128, 128));
-			ImGui::SameLine();
-		}
-		ImGui::NewLine();
-	}
-	ImGui::End();
-}
-class Sample1 : public Core::Game
+class Sample2 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	Core::Input Input;
-
 	//Asset Manager (Loader)
 	Managers::AssetManager AssetLoader;
 	Managers::CameraManager SceneCameraManager;
 
-	Assets::Mesh* NanosuitAsset;
-	Assets::Mesh* CyborgAsset;
+	Assets::Mesh* SponzaAsset;
 
-	Assets::Material CubeMaterial;
-	Assets::Material* NanosuitMaterial;
-	Assets::Material* CyborgMaterial;
+	Assets::Material SphereMaterial;
+	Assets::Material* SponzaMaterial;
 
 	Components::CameraComponent Camera;
 
@@ -59,17 +31,14 @@ class Sample1 : public Core::Game
 
 	Graphics::Skybox Skybox;
 
+	Graphics::PBR PBR;
 	Graphics::DiffuseOnly DiffuseRP;
 	Graphics::WireFrame WireFrameRP;
-	Graphics::BlinnPhong BlinnPhongRP;
-	Graphics::BlinnPhong BlinnPhongWithNormalMapRP = Graphics::BlinnPhong(true);
 
 	//ECS
-	ECS::Scene ModelsScene;
-	ECS::Entity ESkybox;
-	ECS::Entity ECube;
-	ECS::Entity ECyborg;
-	ECS::Entity ENanosuit;
+	ECS::Scene PBRScene;
+	ECS::Entity ESponza;
+	ECS::Entity ESphere;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] =
@@ -139,34 +108,28 @@ class Sample1 : public Core::Game
 	}
 	void SetupAssets()
 	{
-
 		Importers::MeshLoadingDesc ModelDesc;
-		ModelDesc.LoadDiffuseTextures = true;
-		ModelDesc.LoadSpecularTextures = true;
-		ModelDesc.LoadNormalTextures = true;
-		//Load Nanosuit Model
-		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
-		//Load Cyborg Model
-		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+
+		//Load Sponza Model
+		std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
-		Assets::TextureSet CubeSet;
-		CubeSet.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
-		CubeSet.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
-		CubeSet.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
+		Assets::TextureSet PBRSphereSet;
+		PBRSphereSet.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/albedo.png", Assets::TextureUsageType::Diffuse) });
+		PBRSphereSet.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Assets::TextureUsageType::Specular) });
+		PBRSphereSet.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/normal.png", Assets::TextureUsageType::Normal) });
+		PBRSphereSet.push_back({ 3, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Assets::TextureUsageType::Roughness) });
+		PBRSphereSet.push_back({ 4, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Assets::TextureUsageType::AO) });
 
-		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
+		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
+		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
+		Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
 
-		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
-		Renderer->CreateMaterialForAllPipelines(NanosuitMaterial);
-		Renderer->CreateMaterialForAllPipelines(CyborgMaterial);
-
-		CubeSet.clear();
-
+		PBRSphereSet.clear();
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
 
@@ -191,23 +154,19 @@ class Sample1 : public Core::Game
 	void SetupEntities()
 	{
 		//Create Entities
-		ECube = ModelsScene.CreateEntity();
-		ENanosuit = ModelsScene.CreateEntity();
-		ECyborg = ModelsScene.CreateEntity();
+		ESphere = PBRScene.CreateEntity();
+		ESponza = PBRScene.CreateEntity();
 
 		//Assign Components
-		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
-		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
-		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
+		ESphere.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &SphereMaterial);
+		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
 	}
 
 	void InitRenderer()
 	{
-		Renderer = ModelsScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
-		ModelsScene.Systems.Configure();
-
-		Renderer->AddRenderingPipeline(&BlinnPhongRP);
-		Renderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
+		Renderer = PBRScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+		PBRScene.Systems.Configure();
+		Renderer->AddRenderingPipeline(&PBR);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
 
@@ -240,18 +199,13 @@ class Sample1 : public Core::Game
 		SetupEntities();
 
 		//Setup positions
-		Math::Matrix4 TNanosuit(1.0f);
-		TNanosuit = Math::translate(TNanosuit, Math::Vector3(0.0f, -1.75f, 0.0f));
-		TNanosuit = Math::scale(TNanosuit, Math::Vector3(0.3f, 0.3f, 0.3f));
-		ENanosuit.GetComponent<Components::TransformComponent>()->SetTransform(TNanosuit);
+		Math::Matrix4 TSphere(1.0f);
+		TSphere = Math::translate(TSphere, Math::Vector3(2.0f, -1.75f, 2.0f));
+		ESphere.GetComponent<Components::TransformComponent>()->SetTransform(TSphere);
 
-		Math::Matrix4 TCyborg(1.0f);
-		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
-		ECyborg.GetComponent<Components::TransformComponent>()->SetTransform(TCyborg);
-
-		Math::Matrix4 TCube(1.0f);
-		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
-		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
+		Math::Matrix4 TSponza(1.0f);
+		TSponza = Math::scale(TSponza, Math::Vector3(0.01f));
+		ESponza.GetComponent<Components::TransformComponent>()->SetTransform(TSponza);
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -278,6 +232,9 @@ class Sample1 : public Core::Game
 			Camera.ProcessEye(xoffset, yoffset);
 		}
 	}
+
+	bool RenderSponza = false;
+
 	void Update(float deltatime) override
 	{
 		//Movement
@@ -319,39 +276,36 @@ class Sample1 : public Core::Game
 
 		spotLight.SetPosition(Camera.GetPosition());
 		spotLight.SetDirection(Camera.GetFrontView());
-
-		Renderer->Update(ModelsScene.Entities, ModelsScene.Events, dt);
+		
+		Renderer->Update(PBRScene.Entities, PBRScene.Events, dt);
 
 		if (renderSkybox)
 			Skybox.Render();
 
 		{
 			using namespace Graphics;
-			ImGui::Begin("Sample1 Control Box");
+			ImGui::Begin("Sample2 Control Box");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
 			ImGui::Text("Active Rendering Pipeline:");
 			static int e = 0;
-			ImGui::RadioButton("DiffuseOnly", &e, 0);
-			ImGui::RadioButton("BlinnPhong", &e, 1);
-			ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
-			ImGui::RadioButton("WireFrame", &e, 3);
+			ImGui::RadioButton("PBR", &e, 0);
+			ImGui::RadioButton("DiffuseOnly", &e, 1);
+			ImGui::RadioButton("WireFrame", &e, 2);
 
 			//Change Rendering Pipeline
-
 			if (e == 0)
-				Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+					Renderer->SetActiveRenderingPipeline(PBR.GetID());
 			else if (e == 1)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongRP.GetID());
+					Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
 			else if (e == 2)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongWithNormalMapRP.GetID());
-			else if (e == 3)
 				Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
-
+			
+			ESponza.GetComponent<Components::MeshComponent>()->mRender = RenderSponza;
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
-
+			ImGui::Checkbox("Render Sponza", &RenderSponza);
 			ImGui::Checkbox("Render Skybox", &renderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

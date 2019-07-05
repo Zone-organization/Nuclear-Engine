@@ -1,5 +1,6 @@
 ﻿#include "Common.h"
 #include "Sample1.h"
+#include "Sample2.h"
 #include <iostream>
 
 Core::RenderAPI SelectRenderer()
@@ -42,16 +43,33 @@ int main(int argc, char* argv[])
 		Core::EngineStartupDesc desc;
 		desc.mAppdesc.Renderer = SelectRenderer();
 		Core::Engine::Start(desc);
-		Sample1 demo;
-		Core::Engine::RunGame(&demo);
+
 	}
 	else
 	{
 		Core::EngineStartupDesc desc;
 		Core::Engine::Start(desc);
+
+	}
+
+	std::cout << "Select Sample:\n"
+		<< "1) Sample1 : BlinnPhong rendering of some models \n"
+		<< "2) Sample2 : PBR Rendering \n";
+
+	std::cin >> i;
+	if (i == 1)
+	{
 		Sample1 demo;
 		Core::Engine::RunGame(&demo);
 	}
+	else
+	{
+		Sample2 demo;
+		Core::Engine::RunGame(&demo);
+	}
+
+
+
 	Core::Engine::Shutdown();
 
 	return 0;

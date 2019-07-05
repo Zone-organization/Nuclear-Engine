@@ -15,6 +15,10 @@ namespace NuclearEngine
 	{
 		struct MeshLoadingDesc
 		{
+			bool LoadAllTexturesAvailable = true;
+
+			// LoadAllTexturesAvailable must be false
+			// TODO: Redo these settings
 			bool LoadDiffuseTextures = true;
 			bool LoadSpecularTextures = false;
 			bool LoadNormalTextures = false;

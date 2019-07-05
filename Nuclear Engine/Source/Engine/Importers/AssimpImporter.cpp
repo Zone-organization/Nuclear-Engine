@@ -55,18 +55,30 @@ namespace NuclearEngine {
 
 			// process materials
 			aiMaterial* mMaterial = scene->mMaterials[mesh->mMaterialIndex];
-			if (mLoadingDesc.LoadDiffuseTextures)
+			if (!mLoadingDesc.LoadAllTexturesAvailable)
+			{
+				if (mLoadingDesc.LoadDiffuseTextures)
+				{
+					auto DiffuseMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DIFFUSE);
+					TexSet.insert(TexSet.end(), DiffuseMaps.begin(), DiffuseMaps.end());
+				}
+				if (mLoadingDesc.LoadSpecularTextures)
+				{
+					auto SpecularMaps = ProcessMaterialTexture(mMaterial, aiTextureType_SPECULAR);
+					TexSet.insert(TexSet.end(), SpecularMaps.begin(), SpecularMaps.end());
+				}
+				if (mLoadingDesc.LoadNormalTextures)
+				{
+					auto NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_HEIGHT);
+					TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
+				}
+			}
+			else
 			{
 				auto DiffuseMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DIFFUSE);
 				TexSet.insert(TexSet.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-			}
-			if (mLoadingDesc.LoadSpecularTextures)
-			{
 				auto SpecularMaps = ProcessMaterialTexture(mMaterial, aiTextureType_SPECULAR);
 				TexSet.insert(TexSet.end(), SpecularMaps.begin(), SpecularMaps.end());
-			}
-			if (mLoadingDesc.LoadNormalTextures)
-			{
 				auto NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_HEIGHT);
 				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
 			}

@@ -1,4 +1,4 @@
-#include <Engine\Graphics\RenderingPipelines\DiffuseOnly.h>
+#include <Engine\Graphics\RenderingPipelines\WireFrame.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 #include <Base/Utilities/Hash.h>
@@ -7,16 +7,16 @@ namespace NuclearEngine
 {
 	namespace Graphics
 	{
-		DiffuseOnly::DiffuseOnly()
+		WireFrame::WireFrame()
 		{
-			mID  = Utilities::Hash("NE_Diffuse_Only");
+			mID = Utilities::Hash("NE_WireFrame");
 		}
 
-		bool DiffuseOnly::Bake(const RenderingPipelineDesc& desc)
+		bool WireFrame::Bake(const RenderingPipelineDesc& desc)
 		{
 			PipelineStateDesc PSODesc;
 
-			PSODesc.Name = "DiffuseOnly PSO";
+			PSODesc.Name = "WireFrame PSO";
 			PSODesc.IsComputePipeline = false;
 			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
 			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
@@ -24,7 +24,8 @@ namespace NuclearEngine
 			PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 			PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			PSODesc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+			PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+			PSODesc.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_WIREFRAME;
 			PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = True;
 
 			//Create Shaders
@@ -34,14 +35,14 @@ namespace NuclearEngine
 
 			//Create Vertex Shader
 			Managers::AutoVertexShaderDesc VertShaderDesc;
-			VertShaderDesc.Name = "DiffuseOnlyVS";
+			VertShaderDesc.Name = "WireFrameVS";
 			VertShaderDesc.OutFragPos = false;
 			VertShaderDesc.InTangents = true;
 			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 
 			//Create Pixel Shader
 			Managers::AutoPixelShaderDesc PixelShaderDesc;
-			PixelShaderDesc.Name = "DiffuseOnlyPS";
+			PixelShaderDesc.Name = "WireFramePS";
 			PSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoPixelShader(PixelShaderDesc);
 
 			PSODesc.GraphicsPipeline.pVS = VSShader;

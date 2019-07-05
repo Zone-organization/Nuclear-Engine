@@ -16,7 +16,7 @@ namespace NuclearEngine
 			mNormalMaps = NormalMaps;
 		}
 		bool BlinnPhong::Bake(const RenderingPipelineDesc& desc)
-		{		
+		{
 			PipelineStateDesc PSODesc;
 
 			PSODesc.Name = "RenderSystem PSO";
@@ -36,13 +36,12 @@ namespace NuclearEngine
 			std::vector<LayoutElement> LayoutElems;
 
 			//Create Vertex Shader
-			{
-				Managers::AutoVertexShaderDesc VertShaderDesc;
-				VertShaderDesc.Name = "BlinnPhongVS";
-				VertShaderDesc.InTangents = true;
+			Managers::AutoVertexShaderDesc VertShaderDesc;
+			VertShaderDesc.Name = "BlinnPhongVS";
+			VertShaderDesc.InTangents = true;
 
-				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
-			}
+			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+
 
 			//Create Pixel Shader
 			{
@@ -74,7 +73,7 @@ namespace NuclearEngine
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSODesc, Vars, true);
 
 
-			if(desc.CameraBufferPtr)
+			if (desc.CameraBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
 
 			if (desc.LightsBufferPtr)

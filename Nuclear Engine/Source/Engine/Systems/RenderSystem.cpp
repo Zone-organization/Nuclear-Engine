@@ -138,20 +138,23 @@ namespace NuclearEngine
 			ECS::ComponentHandle<Components::MeshComponent> MeshObject;
 			for (ECS::Entity entity : es.entities_with_components(MeshObject))
 			{
-				if (!MeshObject.Get()->mMultiRender)
+				if (MeshObject.Get()->mRender)
 				{
-					//entity.GetTransform()->Update();
-					mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->GetTransformMatrix());
-					mCameraManager->UpdateBuffer();
-					InstantRender(MeshObject.Get());
-				}
-				else 
-				{
-					for (auto i : MeshObject.Get()->mMultiRenderTransforms)
+					if (!MeshObject.Get()->mMultiRender)
 					{
-						mCameraManager->GetMainCamera()->SetModelMatrix(i);
+						//entity.GetTransform()->Update();
+						mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->GetTransformMatrix());
 						mCameraManager->UpdateBuffer();
 						InstantRender(MeshObject.Get());
+					}
+					else
+					{
+						for (auto i : MeshObject.Get()->mMultiRenderTransforms)
+						{
+							mCameraManager->GetMainCamera()->SetModelMatrix(i);
+							mCameraManager->UpdateBuffer();
+							InstantRender(MeshObject.Get());
+						}
 					}
 				}
 			}
