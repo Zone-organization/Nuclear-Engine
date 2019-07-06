@@ -7,7 +7,6 @@
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\DefaultMeshes.h>
 
-//#include <FMOD\includer.h> 
 #include "..\Engine\Graphics\ImGUI\imgui_impl_glfw.h"
 #include "..\Engine\Graphics\ImGUI\imgui_impl.h"
 
@@ -79,8 +78,8 @@ namespace NuclearEngine {
 			ImGui_Impl_CreateDeviceObjects();
 			Log.Info("[Engine] ImGUI Initalized.\n");
 
-			//if(desc.InitAudioEngine)
-			//	Audio::AudioEngine::Initialize();
+			if(desc.InitAudioEngine)
+				Audio::AudioEngine::Initialize();
 
 			g_isDebug = desc.Debug;
 
@@ -248,18 +247,6 @@ namespace NuclearEngine {
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)
 #endif
-
-#ifndef FMOD_NOT_INCLUDED
-			Log.Info("[Engine] Built With FMOD AudioEngine\n");
-#else
-			Log.Warning("[Engine] Engine built without FMOD AudioEngine.\n");
-#endif
-#ifndef PHYSX_NOT_INCLUDED
-			Log.Info("[Engine] Built With NVIDIA PhysX\n");
-#else
-			Log.Warning("[Engine] Engine built without NVIDIA PhysX.\n");
-#endif
 		}
-
 	}
 }

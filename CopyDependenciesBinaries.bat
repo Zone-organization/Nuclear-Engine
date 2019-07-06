@@ -2,6 +2,11 @@ mkdir Bin\DebugX64
 mkdir Bin\ReleaseX64
 
 
+::FMod
+
+copy External\FMOD\lib\x64\fmodL.dll	 Bin\DebugX64
+copy External\FMOD\lib\x64\fmodL_vc.lib	 Bin\DebugX64
+
 ::Assimp Debug
 
 copy External\CmakeProjects\Assimp\code\Debug\assimp-vc140-mt.dll	 Bin\DebugX64

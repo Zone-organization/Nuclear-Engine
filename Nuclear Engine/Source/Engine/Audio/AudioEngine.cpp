@@ -1,11 +1,8 @@
 #include <Engine\Audio\AudioEngine.h>
-//#include <FMOD\includer.h> 
-
-#ifdef FMOD_NOT_INCLUDED
-#include <FMOD\inc\fmod.hpp>
+#include "FMOD/inc/fmod.hpp"
 #define FMOD_ERRCHK_IMPL
 #include "FMODError.h"
-#pragma comment (lib, "FMOD/lib/fmodL_vc.lib")
+#pragma comment (lib, "fmodL_vc.lib")
 #include <Engine\Audio\Channel.h>
 
 namespace NuclearEngine
@@ -65,28 +62,3 @@ namespace NuclearEngine
 		}
 	}
 }
-#else
-
-namespace NuclearEngine
-{
-	namespace Audio
-	{
-
-		bool AudioEngine::Initialize(unsigned int MaxChannels)
-		{
-			Log.Error("[AudioEngine] Engine Was compiled without FMOD!\n");
-			return false;
-		}
-		FMOD::System * AudioEngine::GetSystem()
-		{
-			return nullptr;
-		}
-		void AudioEngine::Shutdown()
-		{
-		}
-		void AudioEngine::Update(Channel * channel)
-		{
-		}
-	}
-}
-#endif

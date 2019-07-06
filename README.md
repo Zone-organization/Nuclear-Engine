@@ -2,8 +2,8 @@
 
 # To-dos 
   - W.I.P:
-    - Restore Audio Support
-
+    - Optimizations.
+	
   - Planned:
   	- Improve CameraSystem to Restore Post Processing Effects support.
     - Bloom effect.
