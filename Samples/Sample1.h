@@ -17,9 +17,9 @@ void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manage
 	for (int i = 0; i < material->mPixelShaderTextures.size(); i++)
 	{
 		ImGui::Text(std::string("TextureSet Index: " + std::to_string(i)).c_str());
-		for (int j = 0; j < material->mPixelShaderTextures.at(i).size(); j++)
+		for (int j = 0; j < material->mPixelShaderTextures.at(i).mData.size(); j++)
 		{
-			ImGui::Image(&material->mPixelShaderTextures.at(i).at(j).mTex, ImVec2(128, 128));
+			ImGui::Image(&material->mPixelShaderTextures.at(i).mData.at(j).mTex, ImVec2(128, 128));
 			ImGui::SameLine();
 		}
 		ImGui::NewLine();
@@ -141,9 +141,7 @@ class Sample1 : public Core::Game
 	{
 
 		Importers::MeshLoadingDesc ModelDesc;
-		ModelDesc.LoadDiffuseTextures = true;
-		ModelDesc.LoadSpecularTextures = true;
-		ModelDesc.LoadNormalTextures = true;
+
 		//Load Nanosuit Model
 		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		//Load Cyborg Model
@@ -155,9 +153,9 @@ class Sample1 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
-		CubeSet.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
-		CubeSet.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
+		CubeSet.mData.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
+		CubeSet.mData.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -165,7 +163,7 @@ class Sample1 : public Core::Game
 		Renderer->CreateMaterialForAllPipelines(NanosuitMaterial);
 		Renderer->CreateMaterialForAllPipelines(CyborgMaterial);
 
-		CubeSet.clear();
+		CubeSet.mData.clear();
 
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);

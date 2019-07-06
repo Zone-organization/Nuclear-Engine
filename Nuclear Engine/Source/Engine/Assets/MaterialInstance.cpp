@@ -33,7 +33,7 @@ namespace NuclearEngine
 			for (auto TexSet : PixelShaderTextures)
 			{
 				TextureSet NewTexSet;
-				for (auto TexSetTexture : TexSet)
+				for (auto TexSetTexture : TexSet.mData)
 				{
 					for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
 					{
@@ -42,7 +42,7 @@ namespace NuclearEngine
 						{
 							ShaderTexture NewTex(TexSetTexture);
 							NewTex.mSlot = ShaderTexinfo.mSlot;
-							NewTexSet.push_back(NewTex);
+							NewTexSet.mData.push_back(NewTex);
 						}
 					}
 				}
@@ -54,7 +54,7 @@ namespace NuclearEngine
 			for (int i = 0; i < mPShaderTextures.size(); i++)
 			{
 				//Check if a texture is missing
-				if (mPShaderTextures.at(i).size() != mRenderingPipeline->mPixelShaderTextureInfo.size())
+				if (mPShaderTextures.at(i).mData.size() != mRenderingPipeline->mPixelShaderTextureInfo.size())
 				{				
 					//Stage 2A
 					//Generate a copy of the texture set that doesnt contain duplicated textures.
@@ -62,9 +62,9 @@ namespace NuclearEngine
 
 					for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
 					{
-						for (int j = 0; j < mPShaderTextures.at(i).size(); j++)
+						for (int j = 0; j < mPShaderTextures.at(i).mData.size(); j++)
 						{
-							if (mPShaderTextures.at(i).at(j).mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
+							if (mPShaderTextures.at(i).mData.at(j).mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
 							{
 								for (int t = 0; t < TexSetCopy.size(); t++)
 								{
@@ -79,41 +79,17 @@ namespace NuclearEngine
 					//Fill the orignal tex set with the missing textures from the copy.
 					for (auto MissingTex : TexSetCopy)
 					{
-						mPShaderTextures.at(i).push_back(MissingTex);
+						mPShaderTextures.at(i).mData.push_back(MissingTex);
 					}
 				}
 			}
 			
 		}
-		void MaterialInstance::ExtractTextureSetInfo(const std::vector<TextureSet>& data)
-		{
-			Log.Info("====   TexSet Info Begin...   ====\n");
-			Log.Info("Tex Set Size: " + std::to_string(data.size()) + " \n");
-
-			for (int i = 0; i < data.size(); i++)
-			{
-				Log.Info("-TexSet Index [" + std::to_string(i) + "] Size: " + std::to_string(data[i].size()) + " Begin: \n");
-
-				for (int j = 0; j < data[i].size(); j++)
-				{
-					Log.Info("---Texture Index [" + std::to_string(j) + " Info:\n");
-					Log.Info("-----Texture Slot [" + std::to_string(data[i][j].mSlot) + "] \n");
-					Log.Info("-----Texture Type [" + std::to_string(data[i][j].mTex.GetUsageType()) + "] \n");
-
-				}
-
-				Log.Info("-TexSet Index [" + std::to_string(i) + "] END... \n");
-
-			}
-
-			Log.Info("====   TexSet Info End...   ====\n");
-
-		}
 		void MaterialInstance::BindTexSet(Uint32 index)
 		{
 			if (!mPShaderTextures.empty())
 			{
-				for (auto tex : mPShaderTextures.at(index))
+				for (auto tex : mPShaderTextures.at(index).mData)
 				{
 					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.mTextureView);
 				}

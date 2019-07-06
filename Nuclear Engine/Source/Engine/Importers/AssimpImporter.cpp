@@ -49,48 +49,32 @@ namespace NuclearEngine {
 				ProcessNode(node->mChildren[i], scene);
 			}
 		}
-		unsigned int AssimpImporter::ProcessMaterial(aiMesh * mesh, const aiScene * scene)
+		unsigned int AssimpImporter::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
 		{
 			Assets::TextureSet TexSet;
 
 			// process materials
-			aiMaterial* mMaterial = scene->mMaterials[mesh->mMaterialIndex];
-			if (!mLoadingDesc.LoadAllTexturesAvailable)
-			{
-				if (mLoadingDesc.LoadDiffuseTextures)
-				{
-					auto DiffuseMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DIFFUSE);
-					TexSet.insert(TexSet.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-				}
-				if (mLoadingDesc.LoadSpecularTextures)
-				{
-					auto SpecularMaps = ProcessMaterialTexture(mMaterial, aiTextureType_SPECULAR);
-					TexSet.insert(TexSet.end(), SpecularMaps.begin(), SpecularMaps.end());
-				}
-				if (mLoadingDesc.LoadNormalTextures)
-				{
-					auto NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_HEIGHT);
-					TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
-				}
-			}
-			else
-			{
-				auto DiffuseMaps = ProcessMaterialTexture(mMaterial, aiTextureType_DIFFUSE);
-				TexSet.insert(TexSet.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-				auto SpecularMaps = ProcessMaterialTexture(mMaterial, aiTextureType_SPECULAR);
-				TexSet.insert(TexSet.end(), SpecularMaps.begin(), SpecularMaps.end());
-				auto NormalMaps = ProcessMaterialTexture(mMaterial, aiTextureType_HEIGHT);
-				TexSet.insert(TexSet.end(), NormalMaps.begin(), NormalMaps.end());
-			}
+			aiMaterial* MeshMat = scene->mMaterials[mesh->mMaterialIndex];
+			
+			auto DiffuseMaps = ProcessMaterialTexture(MeshMat, aiTextureType_DIFFUSE);
+			TexSet.mData.insert(TexSet.mData.end(), DiffuseMaps.mData.begin(), DiffuseMaps.mData.end());
+			auto SpecularMaps = ProcessMaterialTexture(MeshMat, aiTextureType_SPECULAR);
+			TexSet.mData.insert(TexSet.mData.end(), SpecularMaps.mData.begin(), SpecularMaps.mData.end());
+			auto NormalMaps = ProcessMaterialTexture(MeshMat, aiTextureType_HEIGHT);
+			TexSet.mData.insert(TexSet.mData.end(), NormalMaps.mData.begin(), NormalMaps.mData.end());
 
-			if (!TexSet.empty())
+
+			if (!TexSet.mData.empty())
 			{
+				auto MeshName = std::string(MeshMat->GetName().C_Str());
+				TexSet.mHashedName = Utilities::Hash(MeshName);
+				if (mLoadingDesc.SaveMaterialNames == true)
+				{
+					TexSet.mName = MeshName;
+				}
 				this->mMaterial.mPixelShaderTextures.push_back(TexSet);
+				
 				return (this->mMaterial.mPixelShaderTextures.size() - 1);
-			}
-			else
-			{
-				return 0;
 			}
 			return 0;
 		}
@@ -186,7 +170,7 @@ namespace NuclearEngine {
 				}
 				texture = mManager->Import(filename, GetTextureType(type), desc);
 
-				textures.push_back({ 0, texture });
+				textures.mData.push_back({ 0, texture });
 			}
 			return textures;
 		}

@@ -124,8 +124,8 @@ namespace NuclearEngine
 
 			//TODO: Move!
 			Assets::TextureSet CubeSet;
-			CubeSet.push_back({ 0, Assets::DefaultTextures::DefaultDiffuseTex });
-			CubeSet.push_back({ 1, Assets::DefaultTextures::DefaultSpecularTex });
+			CubeSet.mData.push_back({ 0, Assets::DefaultTextures::DefaultDiffuseTex });
+			CubeSet.mData.push_back({ 1, Assets::DefaultTextures::DefaultSpecularTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
 		}

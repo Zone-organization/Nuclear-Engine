@@ -8,6 +8,9 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
+
+
+
 		class NEAPI Material : public Asset<Material>
 		{
 		public:
@@ -20,6 +23,7 @@ namespace NuclearEngine
 
 			std::vector<TextureSet> mPixelShaderTextures;
 
+			std::string mName = std::string();
 		private:
 			std::unordered_map<Uint32, Assets::MaterialInstance> mMaterialInstances;
 		};

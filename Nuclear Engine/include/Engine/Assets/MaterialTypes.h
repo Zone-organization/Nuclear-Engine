@@ -13,6 +13,11 @@ namespace NuclearEngine
 			Assets::Texture mTex;
 		};
 
-		typedef	std::vector<ShaderTexture> TextureSet;
+		struct TextureSet
+		{
+			std::vector<ShaderTexture> mData = std::vector<ShaderTexture>();
+			Uint32 mHashedName = 0;
+			std::string mName = std::string();
+		};
 	}
 }

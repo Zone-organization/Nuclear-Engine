@@ -2,17 +2,15 @@
 
 # To-dos 
   - W.I.P:
-    - Test all the working engine features and list them [95%]
-	- Improve CameraSystem to Restore Post Processing Effects support.
 	- Replace the logger with spdlog.
+	- Window Resize.
+
   - Planned:
+  	- Improve CameraSystem to Restore Post Processing Effects support.
     - Bloom effect.
     - Basic Physics support with PhysX 4.
     - PhysX 4 Support
     - C# Scripting through .Net Core
-    - Window Resize.
-	
-  - On Hold:
     - Full Audio Support with FMOD.		 [50%]
 	
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):

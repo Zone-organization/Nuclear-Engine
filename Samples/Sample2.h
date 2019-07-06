@@ -62,17 +62,17 @@ class Sample2 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet PBRSphereSet;
-		PBRSphereSet.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/albedo.png", Assets::TextureUsageType::Diffuse) });
-		PBRSphereSet.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Assets::TextureUsageType::Specular) });
-		PBRSphereSet.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/normal.png", Assets::TextureUsageType::Normal) });
-		PBRSphereSet.push_back({ 3, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Assets::TextureUsageType::Roughness) });
-		PBRSphereSet.push_back({ 4, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Assets::TextureUsageType::AO) });
+		PBRSphereSet.mData.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/albedo.png", Assets::TextureUsageType::Diffuse) });
+		PBRSphereSet.mData.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Assets::TextureUsageType::Specular) });
+		PBRSphereSet.mData.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/normal.png", Assets::TextureUsageType::Normal) });
+		PBRSphereSet.mData.push_back({ 3, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Assets::TextureUsageType::Roughness) });
+		PBRSphereSet.mData.push_back({ 4, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Assets::TextureUsageType::AO) });
 
 		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
 		Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
 
-		PBRSphereSet.clear();
+		PBRSphereSet.mData.clear();
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
 
@@ -118,10 +118,6 @@ class Sample2 : public Core::Game
 
 		SetupEntities();
 
-		//Setup positions
-		//Math::Matrix4 TSphere(1.0f);
-		//TSphere = Math::translate(TSphere, Math::Vector3(2.0f, -1.75f, 2.0f));
-		//ESphere.GetComponent<Components::TransformComponent>()->SetTransform(TSphere);
 		int nrRows = 7;
 		int nrColumns = 7;
 		float spacing = 2.5;
@@ -246,6 +242,14 @@ class Sample2 : public Core::Game
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 			ImGui::Checkbox("Render Sponza", &RenderSponza);
+
+			static ImVec4 Lightcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+			static float f = 1.0f;
+			ImGui::SliderFloat("PointLight Intensity", &f, 1.0f, 100.0f);
+			ImGui::ColorEdit3("PointLight Color", (float*)& Lightcolor);
+
+			pointlight1.SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+			pointlight1.SetIntensity(f);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
