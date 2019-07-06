@@ -5,6 +5,8 @@ namespace NuclearEngine
 {
 	namespace Core 
 	{
+		
+
 		bool Window::Create(Window * window, const WindowDesc & Desc)
 		{
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);

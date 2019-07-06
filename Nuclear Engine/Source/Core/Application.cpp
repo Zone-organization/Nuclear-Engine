@@ -8,17 +8,23 @@ namespace NuclearEngine
 	namespace Core
 	{		
 		Window MainWindow;
+		void ResizeCallback(GLFWwindow* window, int Width, int Height)
+		{
+			Core::Engine::GetGame()->OnWindowResize(Width, Height);
+		}
+
 
 		bool Application::Start(const ApplicationDesc & Desc)
 		{
 			glfwInit();
 
-			if(!Window::Create(&MainWindow, {Desc.WindowWidth, Desc.WindowHeight, Desc.FullScreen, Desc.Title}))
+			if(!Window::Create(&MainWindow, { Desc.WindowWidth, Desc.WindowHeight, Desc.FullScreen, Desc.Title }))
 			{
 				Log.FatalError("[Application] Creating Main Window Failed!\n");
 				glfwTerminate();
 				return false;
 			}
+			glfwSetFramebufferSizeCallback(MainWindow.GetRawWindowPtr(), ResizeCallback);
 
 			return true;
 		}

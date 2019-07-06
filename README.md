@@ -2,8 +2,7 @@
 
 # To-dos 
   - W.I.P:
-	- Replace the logger with spdlog.
-	- Window Resize.
+    - Restore Audio Support
 
   - Planned:
   	- Improve CameraSystem to Restore Post Processing Effects support.
@@ -11,7 +10,6 @@
     - Basic Physics support with PhysX 4.
     - PhysX 4 Support
     - C# Scripting through .Net Core
-    - Full Audio Support with FMOD.		 [50%]
 	
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.
