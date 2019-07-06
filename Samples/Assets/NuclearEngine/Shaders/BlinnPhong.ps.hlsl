@@ -141,7 +141,7 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return (ambient + diffuse);
+    return (ambient + diffuse + specular);
 }
 
 float4 DoLighting(PixelInputType input)

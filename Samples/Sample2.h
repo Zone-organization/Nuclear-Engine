@@ -18,18 +18,8 @@ class Sample2 : public Core::Game
 
 	Components::DirectionalLight dirlight;
 	Components::PointLight pointlight1;
-	Components::PointLight pointlight2;
-	Components::PointLight pointlight3;
-	Components::PointLight pointlight4;
-	Components::PointLight pointlight5;
-	Components::PointLight pointlight6;
-	Components::PointLight pointlight7;
-	Components::PointLight pointlight8;
-	Components::PointLight pointlight9;
 
 	Components::SpotLight spotLight;
-
-	Graphics::Skybox Skybox;
 
 	Graphics::PBR PBR;
 	Graphics::DiffuseOnly DiffuseRP;
@@ -40,39 +30,15 @@ class Sample2 : public Core::Game
 	ECS::Entity ESponza;
 	ECS::Entity ESphere;
 
-	// positions all containers
-	Math::Vector3 cubePositions[10] =
-	{
-		Math::Vector3(0.0f,  0.0f,  0.0f),
-		Math::Vector3(2.0f,  5.0f, -15.0f),
-		Math::Vector3(-1.5f, -2.2f, -2.5f),
-		Math::Vector3(-3.8f, -2.0f, -12.3f),
-		Math::Vector3(2.4f, -0.4f, -3.5f),
-		Math::Vector3(-1.7f,  3.0f, -7.5f),
-		Math::Vector3(1.3f, -2.0f, -2.5f),
-		Math::Vector3(1.5f,  2.0f, -2.5f),
-		Math::Vector3(1.5f,  0.2f, -1.5f),
-		Math::Vector3(-1.3f,  1.0f, -1.5f)
-	};
-
 	// positions of the point lights
 	Math::Vector3 pointLightPositions[9] =
 	{
-		Math::Vector3(0.7f,  0.2f,  2.0f),
-		Math::Vector3(2.3f, -3.3f, -4.0f),
-		Math::Vector3(-4.0f,  2.0f, -12.0f),
-		Math::Vector3(0.0f,  0.0f, -3.0f),
-		Math::Vector3(4.0f,  3.0f, -2.0f),
-		Math::Vector3(6.2f, 2.0f, 0.0f),
-		Math::Vector3(6.2f, -2.0f, 0.0f),
-		Math::Vector3(-6.2f, 2.0f, 0.0f),
-		Math::Vector3(-6.2f, -2.0f, 0.0f)
+		Math::Vector3(0.0f,  0.0f,  10.0f),
 	};
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
-	bool renderSkybox = true;
 
 	void SetupLights()
 	{
@@ -81,30 +47,7 @@ class Sample2 : public Core::Game
 
 		pointlight1.SetPosition(pointLightPositions[0]);
 		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-
-		pointlight2.SetPosition(pointLightPositions[1]);
-		pointlight2.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight3.SetPosition(pointLightPositions[2]);
-		pointlight3.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight4.SetPosition(pointLightPositions[3]);
-		pointlight4.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight5.SetPosition(pointLightPositions[4]);
-		pointlight5.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight6.SetPosition(pointLightPositions[5]);
-		pointlight6.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight7.SetPosition(pointLightPositions[6]);
-		pointlight7.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight8.SetPosition(pointLightPositions[7]);
-		pointlight8.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight9.SetPosition(pointLightPositions[8]);
-		pointlight9.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
+		pointlight1.SetIntensity(10.0f);
 	}
 	void SetupAssets()
 	{
@@ -135,21 +78,6 @@ class Sample2 : public Core::Game
 
 		//NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
-
-		//Create The skybox
-		std::array<std::string, 6> SkyBoxTexturePaths
-		{
-			std::string("Assets/Common/Skybox/right.jpg"),
-			std::string("Assets/Common/Skybox/left.jpg"),
-			std::string("Assets/Common/Skybox/top.jpg"),
-			std::string("Assets/Common/Skybox/bottom.jpg"),
-			std::string("Assets/Common/Skybox/front.jpg"),
-			std::string("Assets/Common/Skybox/back.jpg")
-		};
-
-		Importers::TextureLoadingDesc SkyboxDesc;
-		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		Skybox.Initialize(SceneCameraManager.GetCameraCB(), AssetLoader.LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
 	}
 	void SetupEntities()
 	{
@@ -172,14 +100,6 @@ class Sample2 : public Core::Game
 
 		Renderer->AddLight(&spotLight);
 		Renderer->AddLight(&pointlight1);
-		Renderer->AddLight(&pointlight2);
-		Renderer->AddLight(&pointlight3);
-		Renderer->AddLight(&pointlight4);
-		Renderer->AddLight(&pointlight5);
-		Renderer->AddLight(&pointlight6);
-		Renderer->AddLight(&pointlight7);
-		Renderer->AddLight(&pointlight8);
-		Renderer->AddLight(&pointlight9);
 		Renderer->AddLight(&dirlight);
 		Renderer->Bake();
 	}
@@ -199,9 +119,31 @@ class Sample2 : public Core::Game
 		SetupEntities();
 
 		//Setup positions
-		Math::Matrix4 TSphere(1.0f);
-		TSphere = Math::translate(TSphere, Math::Vector3(2.0f, -1.75f, 2.0f));
-		ESphere.GetComponent<Components::TransformComponent>()->SetTransform(TSphere);
+		//Math::Matrix4 TSphere(1.0f);
+		//TSphere = Math::translate(TSphere, Math::Vector3(2.0f, -1.75f, 2.0f));
+		//ESphere.GetComponent<Components::TransformComponent>()->SetTransform(TSphere);
+		int nrRows = 7;
+		int nrColumns = 7;
+		float spacing = 2.5;
+		Math::Matrix4 model;
+		for (int row = 0; row < nrRows; ++row)
+		{
+			for (int col = 0; col < nrColumns; ++col)
+			{
+				model = Math::Matrix4(1.0);
+				model = Math::translate(model, Math::Vector3(
+					(float)(col - (nrColumns / 2)) * spacing,
+					(float)(row - (nrRows / 2)) * spacing,
+					0.0f
+				));
+				model = Math::scale(model, Math::Vector3(2.0f));
+
+				ESphere.GetComponent<Components::MeshComponent>()->mMultiRenderTransforms.push_back(model);
+			}
+		}
+
+		ESphere.GetComponent<Components::MeshComponent>()->mMultiRender = true;
+
 
 		Math::Matrix4 TSponza(1.0f);
 		TSponza = Math::scale(TSponza, Math::Vector3(0.01f));
@@ -270,7 +212,7 @@ class Sample2 : public Core::Game
 	void Render(float dt) override
 	{
 		// Clear the back buffer 
-		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
+		const float ClearColor[] = { 0.1f,  0.1f,  0.1f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
@@ -279,8 +221,6 @@ class Sample2 : public Core::Game
 		
 		Renderer->Update(PBRScene.Entities, PBRScene.Events, dt);
 
-		if (renderSkybox)
-			Skybox.Render();
 
 		{
 			using namespace Graphics;
@@ -306,7 +246,6 @@ class Sample2 : public Core::Game
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 			ImGui::Checkbox("Render Sponza", &RenderSponza);
-			ImGui::Checkbox("Render Skybox", &renderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();

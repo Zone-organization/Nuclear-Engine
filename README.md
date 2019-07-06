@@ -3,7 +3,6 @@
 # To-dos 
   - W.I.P:
     - Test all the working engine features and list them [95%]
-	- Basic PBR Rendering Pipeline.
 	- Improve CameraSystem to Restore Post Processing Effects support.
 	- Replace the logger with spdlog.
   - Planned:
@@ -54,7 +53,7 @@
     - Diffuse Only
 	- BlinnPhong (Diffuse/Specualr only)
 	- BlinnPhong with Normal maps
-
+    - Basic Textured PBR (No IBL)
 - __Rendering__
   - Features Easy-to-use RenderSystem that create material and manage lighting by itself.
   - The RenderSystem support what is called "Rendering Pipelines", that allow rendering large number of meshes

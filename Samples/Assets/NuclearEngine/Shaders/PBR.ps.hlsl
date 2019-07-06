@@ -60,7 +60,7 @@ cbuffer NEStatic_Lights
 
 };
 
-#define PI 3.14159265359
+#define PI 3.14159265359f
 
 // ----------------------------------------------------------------------------
 float DistributionGGX(float3 N, float3 H, float roughness)
@@ -74,7 +74,7 @@ float DistributionGGX(float3 N, float3 H, float roughness)
 	float denom = (NdotH2 * (a2 - 1.0) + 1.0);
 	denom = PI * denom * denom;
 
-	return nom / denom;
+	return nom / max(denom, 0.001);
 }
 // ----------------------------------------------------------------------------
 float GeometrySchlickGGX(float NdotV, float roughness)
@@ -103,13 +103,18 @@ float3 fresnelSchlick(float cosTheta, float3 F0)
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 // ----------------------------------------------------------------------------
+float DoQuadraticAttenuation(float4 Intensity_Attenuation, float3 lightposition, float3 fragPos)
+{
+	float distance = length(lightposition - fragPos);
+	return Intensity_Attenuation.x / (Intensity_Attenuation.y + Intensity_Attenuation.z * distance + Intensity_Attenuation.w * (distance * distance));
+}
+// ----------------------------------------------------------------------------
 float3 CalcPointLight(PointLight light, float3 N, float3 WorldPos, float3 V, float3 F0, float3 albedo, float metallic, float roughness)
 {
 	// calculate per-light radiance
 	float3 L = normalize(light.Position.xyz - WorldPos);
 	float3 H = normalize(V + L);
-	float distance = length(light.Position.xyz - WorldPos);
-	float attenuation = 1.0 / (distance * distance);
+	float attenuation = DoQuadraticAttenuation(light.Intensity_Attenuation, light.Position.xyz, WorldPos);
 	float3 radiance = light.Color.xyz * attenuation;
 
 	// Cook-Torrance BRDF
@@ -140,6 +145,83 @@ float3 CalcPointLight(PointLight light, float3 N, float3 WorldPos, float3 V, flo
 
 }
 // ----------------------------------------------------------------------------
+float3 CalcDirLight(DirLight light, float3 N, float3 WorldPos, float3 V, float3 F0, float3 albedo, float metallic, float roughness)
+{
+	// calculate per-light radiance
+	float3 L = normalize(-light.Direction.xyz);
+	float3 H = normalize(V + L);
+	float3 radiance = light.Color.xyz;
+
+	// Cook-Torrance BRDF
+	float NDF = DistributionGGX(N, H, roughness);
+	float G = GeometrySmith(N, V, L, roughness);
+	float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+	float3 nominator = NDF * G * F;
+	float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+	float3 specular = nominator / denominator;
+
+	// kS is equal to Fresnel
+	float3 kS = F;
+	// for energy conservation, the diffuse and specular light can't
+	// be above 1.0 (unless the surface emits light); to preserve this
+	// relationship the diffuse component (kD) should equal 1.0 - kS.
+	float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
+	// multiply kD by the inverse metalness such that only non-metals 
+	// have diffuse lighting, or a linear blend if partly metal (pure metals
+	// have no diffuse light).
+	kD *= 1.0 - metallic;
+
+	// scale light by NdotL
+	float NdotL = max(dot(N, L), 0.0);
+
+	// add to outgoing radiance Lo
+	return float3((kD * albedo / PI + specular) * radiance * NdotL);
+
+}
+// ----------------------------------------------------------------------------
+float3 CalcSpotLight(SpotLight light, float3 N, float3 WorldPos, float3 V, float3 F0, float3 albedo, float metallic, float roughness)
+{
+	// calculate per-light radiance
+	float3 L = normalize(light.Position.xyz - WorldPos);
+	float3 H = normalize(V + L);
+	float attenuation = DoQuadraticAttenuation(light.Intensity_Attenuation, light.Position.xyz, WorldPos);
+
+	// spotlight intensity
+	float theta = dot(L, normalize(-light.Direction.xyz));
+	float epsilon = light.InnerCutOf_OuterCutoff.x - light.InnerCutOf_OuterCutoff.y;
+	float intensity = clamp((theta - light.InnerCutOf_OuterCutoff.y) / epsilon, 0.0, 1.0);
+
+	float3 radiance = light.Color.xyz * attenuation * intensity;
+
+	// Cook-Torrance BRDF
+	float NDF = DistributionGGX(N, H, roughness);
+	float G = GeometrySmith(N, V, L, roughness);
+	float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+	float3 nominator = NDF * G * F;
+	float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+	float3 specular = nominator / denominator;
+
+	// kS is equal to Fresnel
+	float3 kS = F;
+	// for energy conservation, the diffuse and specular light can't
+	// be above 1.0 (unless the surface emits light); to preserve this
+	// relationship the diffuse component (kD) should equal 1.0 - kS.
+	float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
+	// multiply kD by the inverse metalness such that only non-metals 
+	// have diffuse lighting, or a linear blend if partly metal (pure metals
+	// have no diffuse light).
+	kD *= 1.0 - metallic;
+
+	// scale light by NdotL
+	float NdotL = max(dot(N, L), 0.0);
+
+	// add to outgoing radiance Lo
+	return float3((kD * albedo / PI + specular) * radiance * NdotL);
+
+}
+
 
 
 float4 main(PixelInputType input) : SV_TARGET
@@ -162,52 +244,37 @@ float4 main(PixelInputType input) : SV_TARGET
 
 	// reflectance equation
 	float3 Lo = float3(0.0f, 0.0f, 0.0f);
-
+#ifdef NE_DIR_LIGHTS_NUM
+	// phase 1: directional lighting
+	for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
+	{
+		Lo += CalcDirLight(DirLights[i0], N, input.FragPos, V, F0, albedo, metallic, roughness);
+	}
+#endif
 #ifdef NE_POINT_LIGHTS_NUM  
 	// phase 2: point lights
-	for (int i = 0; i < NE_POINT_LIGHTS_NUM; i++)
+	for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
 	{
-		float3 L = normalize(PointLights[i].Position.xyz - input.FragPos);
-		float3 H = normalize(V + L);
-		float distance = length(PointLights[i].Position.xyz - input.FragPos);
-		float attenuation = 1.0 / (distance * distance);
-		float3 radiance = PointLights[i].Color.xyz * attenuation;
-
-		// Cook-Torrance BRDF
-		float NDF = DistributionGGX(N, H, roughness);
-		float G = GeometrySmith(N, V, L, roughness);
-		float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
-
-		float3 nominator = NDF * G * F;
-		float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
-		float3 specular = nominator / denominator;
-
-		// kS is equal to Fresnel
-		float3 kS = F;
-		// for energy conservation, the diffuse and specular light can't
-		// be above 1.0 (unless the surface emits light); to preserve this
-		// relationship the diffuse component (kD) should equal 1.0 - kS.
-		float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
-		// multiply kD by the inverse metalness such that only non-metals 
-		// have diffuse lighting, or a linear blend if partly metal (pure metals
-		// have no diffuse light).
-		kD *= 1.0 - metallic;
-
-		// scale light by NdotL
-		float NdotL = max(dot(N, L), 0.0);
-
-		// add to outgoing radiance Lo
-		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
-
-		//Lo += CalcPointLight(PointLights[i1], N, input.FragPos, V, F0, albedo, metallic, roughness);
+		Lo += CalcPointLight(PointLights[i1], N, input.FragPos, V, F0, albedo, metallic, roughness);
+	}
+#endif
+#ifdef NE_SPOT_LIGHTS_NUM
+	// phase 3: spot light
+	for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
+	{
+		Lo += CalcSpotLight(SpotLights[i2], N, input.FragPos, V, F0, albedo, metallic, roughness);
 	}
 #endif
 
-	// ambient lighting (note that the next IBL tutorial will replace 
-	// this ambient lighting with environment lighting).
 	float3 ambient = float3(0.03f, 0.03f, 0.03f) * albedo * ao;
 
 	float3 color = ambient + Lo;
+
+	// HDR tonemapping
+	color = color / (color + float3(1.0f, 1.0f, 1.0f));
+	// gamma correct
+	float GammaCorrect = 1.0f / 2.2f;
+	color = pow(color, float3(GammaCorrect, GammaCorrect, GammaCorrect));
 
 	return float4(color,1.0f);
 }
