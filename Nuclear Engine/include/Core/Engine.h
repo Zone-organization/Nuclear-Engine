@@ -2,6 +2,7 @@
 #include <Core\Game.h>
 #include <Core\ApplicationDesc.h>
 #include <Engine\Graphics\GraphicsEngine.h>
+#include <Engine\PhysX\PhysXEngine.h>
 
 namespace NuclearEngine
 {
@@ -12,7 +13,9 @@ namespace NuclearEngine
 		{
 			ApplicationDesc mAppdesc;
 			Graphics::GraphicsEngineDesc mGraphicsEngineDesc;
-			bool InitAudioEngine = true;
+			PhysX::PhysXEngineDesc mPhysXEngineDesc;
+			bool AutoInitAudioEngine = true;
+			bool AutoInitPhysXEngine = true;
 
 			//Enables some debugging options that slows down performance in runtime
 			bool Debug = DEBUG_TRUE_BOOL;

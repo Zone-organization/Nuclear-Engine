@@ -3,7 +3,6 @@
 #include <Base\Utilities\Timer.h>
 #include <Core\Application.h>
 #include <Engine\Audio\AudioEngine.h>
-#include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\DefaultMeshes.h>
 
@@ -68,7 +67,6 @@ namespace NuclearEngine {
 			}
 			//Initialize Context
 			Graphics::Context::Initialize(desc.mAppdesc, desc.mGraphicsEngineDesc);
-
 			Assets::DefaultMeshes::Initialize();
 
 
@@ -78,9 +76,18 @@ namespace NuclearEngine {
 			ImGui_Impl_CreateDeviceObjects();
 			Log.Info("[Engine] ImGUI Initalized.\n");
 
-			if(desc.InitAudioEngine)
+
+			if(desc.AutoInitAudioEngine)
 				Audio::AudioEngine::Initialize();
 
+			if (desc.AutoInitPhysXEngine)
+			{
+				if (!PhysX::PhysXEngine::Initialize(desc.mPhysXEngineDesc))
+				{
+					Log.FatalError("[Engine] PhysXEngine Failed to auto Initialize!\n");
+					return false;
+				}
+			}
 			g_isDebug = desc.Debug;
 
 			GamePtr = &Defaultgame;

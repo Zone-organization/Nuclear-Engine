@@ -20,3 +20,4 @@ _____________/BOOOM\_____________
 #include <Engine/Importers/Importers.h>
 #include <Engine/Audio/Audio.h>
 #include <Engine/Systems/Systems.h>
+#include <Engine/PhysX/PhysX.h>

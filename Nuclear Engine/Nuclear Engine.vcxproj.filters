@@ -251,6 +251,7 @@
     <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\WireFrame.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysX.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
