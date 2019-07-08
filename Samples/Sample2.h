@@ -54,7 +54,7 @@ class Sample2 : public Core::Game
 		Importers::MeshLoadingDesc ModelDesc;
 
 		//Load Sponza Model
-		std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
+		std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/Cerberus.FBX", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
@@ -142,7 +142,7 @@ class Sample2 : public Core::Game
 
 
 		Math::Matrix4 TSponza(1.0f);
-		TSponza = Math::scale(TSponza, Math::Vector3(0.01f));
+		TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
 		ESponza.GetComponent<Components::TransformComponent>()->SetTransform(TSponza);
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
@@ -214,7 +214,7 @@ class Sample2 : public Core::Game
 	void Render(float dt) override
 	{
 		// Clear the back buffer 
-		const float ClearColor[] = { 0.1f,  0.1f,  0.1f, 1.0f };
+		const float ClearColor[] = { 0.3f,  0.3f,  0.3f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
@@ -245,6 +245,7 @@ class Sample2 : public Core::Game
 				Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
 			
 			ESponza.GetComponent<Components::MeshComponent>()->mRender = RenderSponza;
+			ESphere.GetComponent<Components::MeshComponent>()->mRender = !RenderSponza;
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 			ImGui::Checkbox("Render Sponza", &RenderSponza);

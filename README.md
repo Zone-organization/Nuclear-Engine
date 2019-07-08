@@ -3,14 +3,14 @@
 # To-dos 
   - W.I.P:
     - Optimizations.
-	
+	- PhysX 4 Support
+	 
   - Planned:
-  	- Improve CameraSystem to Restore Post Processing Effects support.
+    - Restore & Test render to texture feature (Render Target)
     - Bloom effect.
     - Basic Physics support with PhysX 4.
-    - PhysX 4 Support
     - C# Scripting through .Net Core
-	
+	- Mesh Animations
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.
     - Android Support (Mobile devices in general).

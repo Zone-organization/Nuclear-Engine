@@ -62,13 +62,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS;PLATFORM_WIN32;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;..\External\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BasicRuntimeChecks />
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -85,11 +87,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED;PLATFORM_WIN32;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;..\External\PhysX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -294,6 +297,7 @@
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
     <ClInclude Include="include\Engine\Systems\LightingSubSystem.h" />
     <ClInclude Include="include\Engine\Systems\Systems.h" />
     <ClInclude Include="include\Engine\Graphics\imconfig.h" />
@@ -391,6 +395,7 @@
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />

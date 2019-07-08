@@ -55,14 +55,26 @@ namespace NuclearEngine {
 
 			// process materials
 			aiMaterial* MeshMat = scene->mMaterials[mesh->mMaterialIndex];
-			
-			auto DiffuseMaps = ProcessMaterialTexture(MeshMat, aiTextureType_DIFFUSE);
-			TexSet.mData.insert(TexSet.mData.end(), DiffuseMaps.mData.begin(), DiffuseMaps.mData.end());
-			auto SpecularMaps = ProcessMaterialTexture(MeshMat, aiTextureType_SPECULAR);
-			TexSet.mData.insert(TexSet.mData.end(), SpecularMaps.mData.begin(), SpecularMaps.mData.end());
-			auto NormalMaps = ProcessMaterialTexture(MeshMat, aiTextureType_HEIGHT);
-			TexSet.mData.insert(TexSet.mData.end(), NormalMaps.mData.begin(), NormalMaps.mData.end());
 
+			std::vector<aiTextureType> LoadTypes{ 
+				aiTextureType_DIFFUSE,				
+				aiTextureType_SPECULAR,
+				aiTextureType_AMBIENT,
+				aiTextureType_EMISSIVE,
+				aiTextureType_HEIGHT,
+				aiTextureType_NORMALS ,
+				aiTextureType_SHININESS,
+				aiTextureType_OPACITY,
+				aiTextureType_DISPLACEMENT,
+				aiTextureType_LIGHTMAP,
+				aiTextureType_REFLECTION,
+				aiTextureType_UNKNOWN
+			};
+			for (auto i : LoadTypes)
+			{
+				auto Textures = ProcessMaterialTexture(MeshMat, i);
+				TexSet.mData.insert(TexSet.mData.end(), Textures.mData.begin(), Textures.mData.end());
+			}
 
 			if (!TexSet.mData.empty())
 			{
@@ -145,8 +157,7 @@ namespace NuclearEngine {
 				return Assets::TextureUsageType::Normal;
 			}
 
-			//Unsupported types treated as diffuse
-			return Assets::TextureUsageType::Diffuse;
+			return Assets::TextureUsageType::Unknown;
 		}
 		Assets::TextureSet AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
 		{

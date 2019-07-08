@@ -250,6 +250,7 @@
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\WireFrame.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -312,6 +313,7 @@
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\PBR.cpp" />
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\WireFrame.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
