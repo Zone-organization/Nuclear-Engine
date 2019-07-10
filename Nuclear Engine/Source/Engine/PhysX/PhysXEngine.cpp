@@ -1,5 +1,5 @@
 #include "Engine\PhysX\PhysXEngine.h"
-#include<Engine\Components\RigidActorComponent.h>
+#include "Engine\Components\ColliderComponent.h"
 
 using namespace physx;
 PxDefaultAllocator		gAllocator;
@@ -67,11 +67,6 @@ namespace NuclearEngine
 		PxCpuDispatcher* PhysXEngine::GetCPUDispatcher()
 		{
 			return gDispatcher;
-		}
-
-		void PhysXEngine::CreatePlane(Components::RigidActorComponent* Component, const PxPlane& plane)
-		{
-			Component->mStaticActor = PxCreatePlane(*gPhysics, plane, *Component->mMaterial);
 		}
 	}
 }

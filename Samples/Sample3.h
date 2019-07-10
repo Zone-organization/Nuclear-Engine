@@ -56,11 +56,20 @@ class Sample3 : public Core::Game
 		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
 
 
-		ECube.Assign<Components::RigidActorComponent>();
-		ECube.GetComponent<Components::RigidActorComponent>()->mMaterial = PhysX::PhysXEngine::GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
+		EPlane.Assign<Components::ColliderComponent>();
+		EPlane.GetComponent<Components::ColliderComponent>()->mMaterial = PhysX::PhysXEngine::GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
 
-		PhysX::PhysXEngine::CreatePlane(ECube.GetComponent<Components::RigidActorComponent>().Get(), PhysX::PxPlane(0, 1, 0, 0));		
-		mPhysXSystem->AddActor(ECube);
+		ECube.Assign<Components::ColliderComponent>();
+		ECube.Assign<Components::RigidBodyComponent>();
+		ECube.GetComponent<Components::ColliderComponent>()->mMaterial = PhysX::PhysXEngine::GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
+
+		mPhysXSystem->CreatePlaneCollider(EPlane.GetComponent<Components::ColliderComponent>().Get(), PhysX::PxPlane(0, 1, 0, 0));
+		mPhysXSystem->CreateBoxCollider(ECube.GetComponent<Components::ColliderComponent>().Get(), PhysX::PxTransform(PhysX::PxVec3(0.0f, 3.0f, 0.0f)), PhysX::PxBoxGeometry(0.5f, 0.5f, 0.5f));
+		mPhysXSystem->CreateRigidBody(ECube.GetComponent<Components::RigidBodyComponent>().Get(), PhysX::PxTransform(PhysX::PxVec3(0.0f, 3.0f, 0.0f)));
+
+		ECube.GetComponent<Components::RigidBodyComponent>()->mDynamicActor->attachShape(*ECube.GetComponent<Components::ColliderComponent>()->mShape);
+
+
 	}
 	void InitRenderer()
 	{
@@ -167,6 +176,9 @@ class Sample3 : public Core::Game
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);
+
+		ECube.GetComponent<Components::TransformComponent>()->SetTransform(*(glm::mat4*)&PhysX::PxMat44(ECube.GetComponent<Components::RigidBodyComponent>()->mDynamicActor->getGlobalPose()));
+		
 		Renderer->Update(Scene.Entities, Scene.Events, dt);
 
 

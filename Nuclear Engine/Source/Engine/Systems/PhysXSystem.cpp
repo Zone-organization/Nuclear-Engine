@@ -1,4 +1,6 @@
 #include <Engine\Systems\PhysXSystem.h>
+#include <Engine\Components\ColliderComponent.h>
+#include <Engine\Components\RigidBodyComponent.h>
 
 namespace NuclearEngine
 {
@@ -13,21 +15,32 @@ namespace NuclearEngine
 		PhysXSystem::~PhysXSystem()
 		{
 		}
-		void PhysXSystem::AddActor(ECS::Entity entity)
+		void PhysXSystem::CreatePlaneCollider(Components::ColliderComponent* Component, const PhysX::PxPlane& plane)
 		{
-			auto Actor = entity.GetComponent<Components::RigidActorComponent>();
-			if (Actor.Valid())
-			{
-				mScene->GetPhysXScene()->addActor(*Actor->GetActor());
-			}
+			Component->mStaticActor = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), plane, *Component->mMaterial);
+
+			mScene->GetPhysXScene()->addActor(*Component->mStaticActor);
 		}
+		void PhysXSystem::CreateBoxCollider(Components::ColliderComponent* Component, const PhysX::PxTransform& t, const PhysX::PxBoxGeometry& geometry)
+		{
+			Component->mShape = PhysX::PhysXEngine::GetPhysics()->createShape(geometry, *Component->mMaterial);
+			Component->mStaticActor = PxCreateStatic(*PhysX::PhysXEngine::GetPhysics(), t, *Component->mShape);
+			mScene->GetPhysXScene()->addActor(*Component->mStaticActor);
+		}
+		void PhysXSystem::CreateRigidBody(Components::RigidBodyComponent* Component, const PhysX::PxTransform& t)
+		{
+			Component->mDynamicActor = PhysX::PhysXEngine::GetPhysics()->createRigidDynamic(t);
+
+			mScene->GetPhysXScene()->addActor(*Component->mDynamicActor);
+		}
+		
 		void PhysXSystem::BeginSimulation(ECS::TimeDelta dt)
 		{
 			mScene->GetPhysXScene()->simulate(dt);
 		}
 		void PhysXSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
 		{
-			mScene->GetPhysXScene()->fetchResults(false);
+			mScene->GetPhysXScene()->fetchResults(true);
 		}
 	}
 }

@@ -4,7 +4,6 @@
 #include <Engine\ECS/System.h>
 #include <Engine\ECS\Scene.h>
 #include "Engine\PhysX\PhysXEngine.h"
-#include<Engine\Components\RigidActorComponent.h>
 
 namespace NuclearEngine
 {
@@ -15,7 +14,9 @@ namespace NuclearEngine
 			PhysXSystem(ECS::Scene* scene, PhysX::PxSceneDesc sceneDesc);
 			~PhysXSystem();
 
-			void AddActor(ECS::Entity entity);
+			void CreatePlaneCollider(Components::ColliderComponent* Component, const PhysX::PxPlane& plane);
+			void CreateBoxCollider(Components::ColliderComponent* Component, const PhysX::PxTransform& t, const PhysX::PxBoxGeometry& geometry);
+			void CreateRigidBody(Components::RigidBodyComponent* Component, const PhysX::PxTransform& t);
 
 			//Must Be called before update!
 			void BeginSimulation(ECS::TimeDelta dt);

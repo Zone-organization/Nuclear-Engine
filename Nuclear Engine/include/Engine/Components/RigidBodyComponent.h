@@ -11,19 +11,13 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		class NEAPI RigidActorComponent : public ECS::Component<RigidActorComponent>
+		class NEAPI RigidBodyComponent : public ECS::Component<RigidBodyComponent>
 		{
 		public:
-			RigidActorComponent();
-			~RigidActorComponent();
+			RigidBodyComponent();
+			~RigidBodyComponent();
 
-			bool GetType();
-			PhysX::PxRigidActor* GetActor();
-
-			PhysX::PxMaterial* mMaterial = nullptr;
-			PhysX::PxRigidStatic* mStaticActor = nullptr;
 			PhysX::PxRigidDynamic* mDynamicActor = nullptr;
-			bool Type = RigidActorStatic;
 		};
 	}
 }
