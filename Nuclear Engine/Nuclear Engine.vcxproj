@@ -159,6 +159,7 @@
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="include\Core\Window.h" />
     <ClInclude Include="include\Engine\Assets\Assets.h" />
+    <ClInclude Include="include\Engine\Assets\AudioClip.h" />
     <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
     <ClInclude Include="include\Engine\Assets\DefaultTextures.h" />
     <ClInclude Include="include\Engine\Assets\Common.h" />
@@ -169,8 +170,7 @@
     <ClInclude Include="include\Engine\Assets\Texture.h" />
     <ClInclude Include="include\Engine\Audio\Audio.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
-    <ClInclude Include="include\Engine\Audio\Channel.h" />
-    <ClInclude Include="include\Engine\Audio\Sound.h" />
+    <ClInclude Include="include\Engine\Components\AudioSourceComponent.h" />
     <ClInclude Include="include\Engine\Components\CameraComponent.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Engine\Components\Components.h" />
@@ -344,6 +344,7 @@
     <ClInclude Include="include\Engine\Managers\Managers.h" />
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
+    <ClInclude Include="include\Engine\Systems\AudioSystem.h" />
     <ClInclude Include="include\Engine\Systems\LightingSubSystem.h" />
     <ClInclude Include="include\Engine\Systems\PhysXSystem.h" />
     <ClInclude Include="include\Engine\Systems\Systems.h" />
@@ -415,10 +416,9 @@
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
+    <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
     <ClCompile Include="Source\Engine\Assets\Texture.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
-    <ClCompile Include="Source\Engine\Audio\Channel.cpp" />
-    <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Engine\Components\RigidActorComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />

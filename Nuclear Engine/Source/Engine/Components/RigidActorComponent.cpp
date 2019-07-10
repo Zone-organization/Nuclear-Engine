@@ -18,13 +18,9 @@ namespace NuclearEngine
 		PhysX::PxRigidActor* RigidActorComponent::GetActor()
 		{
 			if (Type == RigidActorStatic)
-				return StaticPtr;
+				return mStaticActor;
 			else
-				return DynamicPtr;
-		}
-		PhysX::PxMaterial* RigidActorComponent::GetMaterial()
-		{
-			return MaterialPtr;
+				return mDynamicActor;
 		}
 	}
 }

@@ -19,11 +19,10 @@ namespace NuclearEngine
 
 			bool GetType();
 			PhysX::PxRigidActor* GetActor();
-			PhysX::PxMaterial* GetMaterial();
 
-			PhysX::PxMaterial* MaterialPtr;
-			PhysX::PxRigidStatic* StaticPtr;
-			PhysX::PxRigidDynamic* DynamicPtr;
+			PhysX::PxMaterial* mMaterial = nullptr;
+			PhysX::PxRigidStatic* mStaticActor = nullptr;
+			PhysX::PxRigidDynamic* mDynamicActor = nullptr;
 			bool Type = RigidActorStatic;
 		};
 	}

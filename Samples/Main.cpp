@@ -53,6 +53,9 @@ int main(int argc, char* argv[])
 	//}
 	//else
 	//{
+
+	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
+
 		Core::EngineStartupDesc desc;
 		Core::Engine::Start(desc);
 

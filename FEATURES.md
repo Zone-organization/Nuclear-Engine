@@ -21,7 +21,6 @@
 - ___Audio___
   - Support for FMOD LowLevel API
   - Support for Preloading audio files to memory then playing them 			"Sound"
-  - Support for streaming large audio files and playing them 				"Stream"  --Soon™
 
 - __Graphics__
   - Support for Abstracted RenderAPI called Diligent that supports DirectX 11, DirectX 12, Vulkan backends.

@@ -13,6 +13,14 @@ namespace NuclearEngine
 		PhysXSystem::~PhysXSystem()
 		{
 		}
+		void PhysXSystem::AddActor(ECS::Entity entity)
+		{
+			auto Actor = entity.GetComponent<Components::RigidActorComponent>();
+			if (Actor.Valid())
+			{
+				mScene->GetPhysXScene()->addActor(*Actor->GetActor());
+			}
+		}
 		void PhysXSystem::BeginSimulation(ECS::TimeDelta dt)
 		{
 			mScene->GetPhysXScene()->simulate(dt);

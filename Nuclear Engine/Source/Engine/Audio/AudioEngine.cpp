@@ -1,9 +1,7 @@
 #include <Engine\Audio\AudioEngine.h>
-#include "FMOD/inc/fmod.hpp"
 #define FMOD_ERRCHK_IMPL
 #include "FMODError.h"
 #pragma comment (lib, "fmodL_vc.lib")
-#include <Engine\Audio\Channel.h>
 
 namespace NuclearEngine
 {
@@ -41,14 +39,14 @@ namespace NuclearEngine
 		{
 			return system;
 		}
-		void AudioEngine::Update(Channel * channel)
+		void AudioEngine::Update(FMOD::Channel * channel)
 		{
 			system->update();
 
 			if (channel)
 			{
 				bool playing = 0;
-				auto result = channel->GetChannel()->isPlaying(&playing);
+				auto result = channel->isPlaying(&playing);
 				if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
 				{
 					if (result != FMOD_OK)

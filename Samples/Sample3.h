@@ -57,8 +57,10 @@ class Sample3 : public Core::Game
 
 
 		ECube.Assign<Components::RigidActorComponent>();
-		//ECube.GetComponent<Components::RigidActorComponent>()->StaticPtr = PhysX::PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), PhysX::PxPlane(0, 5, 0, 0), *ECube.GetComponent<Components::RigidActorComponent>()->MaterialPtr);
-		//gScene->addActor(*groundPlane);
+		ECube.GetComponent<Components::RigidActorComponent>()->mMaterial = PhysX::PhysXEngine::GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
+
+		PhysX::PhysXEngine::CreatePlane(ECube.GetComponent<Components::RigidActorComponent>().Get(), PhysX::PxPlane(0, 1, 0, 0));		
+		mPhysXSystem->AddActor(ECube);
 	}
 	void InitRenderer()
 	{
@@ -157,11 +159,14 @@ class Sample3 : public Core::Game
 	}
 	void Render(float dt) override
 	{
+		mPhysXSystem->BeginSimulation(dt);
+
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.3f,  0.3f,  0.3f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);
 		Renderer->Update(Scene.Entities, Scene.Events, dt);
 
 

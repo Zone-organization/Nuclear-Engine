@@ -5,6 +5,7 @@
 namespace NuclearEngine
 {
 	namespace ECS { class Scene; }
+	namespace Components { class RigidActorComponent; }
 
 	namespace PhysX
 	{
@@ -25,8 +26,7 @@ namespace NuclearEngine
 			static PxPvd* GetPvd();
 			static PxCpuDispatcher* GetCPUDispatcher();
 
-
-			//Factory
+			static void CreatePlane(Components::RigidActorComponent* Component, const PxPlane& plane);
 		};
 	}
 }

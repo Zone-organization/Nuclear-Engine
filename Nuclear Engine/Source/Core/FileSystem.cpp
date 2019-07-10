@@ -9,7 +9,7 @@ namespace NuclearEngine
 	
 			std::string FileSystem::LoadFileToString(const Path& Filepath)
 			{
-				std::ifstream file(Filepath.mPath, std::ios::in);
+				std::ifstream file(Filepath.mRealPath, std::ios::in);
 				std::string data = "", line = "";
 
 				if (file.is_open())
@@ -19,7 +19,7 @@ namespace NuclearEngine
 				}
 				else
 				{
-					Log.Error("[FileSystem] Couldn't Read File: " + Filepath.mPath + "\n");
+					Log.Error("[FileSystem] Couldn't Read File: " + Filepath.mRealPath + "\n");
 					return std::string("NoString");
 				}
 				return data;
@@ -27,7 +27,7 @@ namespace NuclearEngine
 
 			std::string FileSystem::LoadShader(const Path& Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder)
 			{
-				std::ifstream file(Filepath.mPath, std::ios::in);
+				std::ifstream file(Filepath.mRealPath, std::ios::in);
 				std::string data = "", line = "";
 
 				if (file.is_open())
@@ -39,7 +39,7 @@ namespace NuclearEngine
 				}
 				else
 				{
-					Log.Error("[FileSystem] Couldn't Read Shader File: " + Filepath.mPath + "\n");
+					Log.Error("[FileSystem] Couldn't Read Shader File: " + Filepath.mRealPath + "\n");
 					return std::string("NoString");
 				}
 				if (reverseorder = false)

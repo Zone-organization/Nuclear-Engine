@@ -11,8 +11,6 @@ namespace NuclearEngine
 	namespace Assets
 	{
 
-
-
 		enum TextureUsageType : Uint8
 		{
 			Diffuse = 0,

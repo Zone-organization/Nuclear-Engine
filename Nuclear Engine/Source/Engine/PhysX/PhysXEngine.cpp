@@ -1,4 +1,5 @@
 #include "Engine\PhysX\PhysXEngine.h"
+#include<Engine\Components\RigidActorComponent.h>
 
 using namespace physx;
 PxDefaultAllocator		gAllocator;
@@ -10,6 +11,7 @@ PxPvd* gPvd = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 
 #pragma comment(lib,"PhysX_64.lib")
+#pragma comment(lib,"PhysXCommon_64.lib")
 #pragma comment(lib,"PhysXFoundation_64.lib")
 #pragma comment(lib,"PhysXExtensions_static_64.lib")
 #pragma comment(lib,"PhysXPvdSDK_static_64.lib")
@@ -65,6 +67,11 @@ namespace NuclearEngine
 		PxCpuDispatcher* PhysXEngine::GetCPUDispatcher()
 		{
 			return gDispatcher;
+		}
+
+		void PhysXEngine::CreatePlane(Components::RigidActorComponent* Component, const PxPlane& plane)
+		{
+			Component->mStaticActor = PxCreatePlane(*gPhysics, plane, *Component->mMaterial);
 		}
 	}
 }

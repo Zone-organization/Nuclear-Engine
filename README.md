@@ -5,13 +5,14 @@
   - W.I.P:
     - Optimizations.
 	- PhysX 4 Support
-	 
+	- Port AudioSystem to ECS.
+	- Mesh Animations
+
   - Planned:
     - Restore & Test render to texture feature (Render Target)
     - Bloom effect.
     - Basic Physics support with PhysX 4.
     - C# Scripting through .Net Core
-	- Mesh Animations
 	
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.

@@ -5,10 +5,10 @@
 void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
 {
 	using namespace Graphics;
-	std::string name = Manager->mHashedMaterialsPaths[material->GetName()] + Utilities::int_to_hex<Uint32>(material->GetName());
+	std::string name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
 
 	if (Manager)
-		name = Manager->mHashedMaterialsPaths[material->GetName()] + Utilities::int_to_hex<Uint32>(material->GetName());
+		name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
 	else
 		name = Utilities::int_to_hex<Uint32>(material->GetName()).c_str();
 
@@ -143,9 +143,9 @@ class Sample1 : public Core::Game
 		Importers::MeshLoadingDesc ModelDesc;
 
 		//Load Nanosuit Model
-		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		//Load Cyborg Model
-		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
@@ -153,9 +153,9 @@ class Sample1 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
-		CubeSet.mData.push_back({ 1, AssetLoader.Import("Assets/Common/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
-		CubeSet.mData.push_back({ 2, AssetLoader.Import("Assets/Common/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
+		CubeSet.mData.push_back({ 0, AssetLoader.Import("@CommonAssets@/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 1, AssetLoader.Import("@CommonAssets@/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
+		CubeSet.mData.push_back({ 2, AssetLoader.Import("@CommonAssets@/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -172,14 +172,14 @@ class Sample1 : public Core::Game
 		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
 
 		//Create The skybox
-		std::array<std::string, 6> SkyBoxTexturePaths
+		std::array<Core::Path, 6> SkyBoxTexturePaths
 		{
-			std::string("Assets/Common/Skybox/right.jpg"),
-			std::string("Assets/Common/Skybox/left.jpg"),
-			std::string("Assets/Common/Skybox/top.jpg"),
-			std::string("Assets/Common/Skybox/bottom.jpg"),
-			std::string("Assets/Common/Skybox/front.jpg"),
-			std::string("Assets/Common/Skybox/back.jpg")
+			Core::Path("@CommonAssets@/Skybox/right.jpg"),
+			Core::Path("@CommonAssets@/Skybox/left.jpg"),
+			Core::Path("@CommonAssets@/Skybox/top.jpg"),
+			Core::Path("@CommonAssets@/Skybox/bottom.jpg"),
+			Core::Path("@CommonAssets@/Skybox/front.jpg"),
+			Core::Path("@CommonAssets@/Skybox/back.jpg")
 		};
 
 		Importers::TextureLoadingDesc SkyboxDesc;

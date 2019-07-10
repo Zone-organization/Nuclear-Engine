@@ -1,13 +1,11 @@
 #pragma once
 #include <Base\NE_Common.h>
-
-namespace FMOD { class System; }
+#include <FMOD/inc/fmod.hpp>
 
 namespace NuclearEngine
 {
 	namespace Audio
 	{
-		class Channel;
 		class NEAPI AudioEngine
 		{
 		public:
@@ -17,7 +15,7 @@ namespace NuclearEngine
 
 			static FMOD::System *GetSystem();
 
-			static void Update(Channel * ch);
+			static void Update(FMOD::Channel * ch);
 		};
 	}
 }

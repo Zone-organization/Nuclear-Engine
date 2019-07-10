@@ -24,8 +24,6 @@
     <ClInclude Include="include\Engine\Components\Light.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
-    <ClInclude Include="include\Engine\Audio\Channel.h" />
-    <ClInclude Include="include\Engine\Audio\Sound.h" />
     <ClInclude Include="include\Engine\Assets\Material.h" />
     <ClInclude Include="include\Engine\Assets\Mesh.h" />
     <ClInclude Include="include\Base\Utilities\Accessor.h" />
@@ -254,6 +252,9 @@
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
     <ClInclude Include="include\Engine\Systems\PhysXSystem.h" />
     <ClInclude Include="include\Engine\Components\RigidActorComponent.h" />
+    <ClInclude Include="include\Engine\Systems\AudioSystem.h" />
+    <ClInclude Include="include\Engine\Components\AudioSourceComponent.h" />
+    <ClInclude Include="include\Engine\Assets\AudioClip.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -274,8 +275,6 @@
     <ClCompile Include="Source\Engine\Components\Light.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
-    <ClCompile Include="Source\Engine\Audio\Channel.cpp" />
-    <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Base\Utilities\Timer.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
@@ -319,6 +318,7 @@
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\RigidActorComponent.cpp" />
+    <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
