@@ -9,10 +9,9 @@ namespace NuclearEngine
 {
 	namespace Systems
 	{
-
 		class NEAPI PhysXSystem : public ECS::System<PhysXSystem> {
 		public:
-			PhysXSystem(ECS::Scene* ParentScene, const PhysX::PxSceneDesc& sceneDesc);
+			PhysXSystem(ECS::Scene* scene, PhysX::PxSceneDesc sceneDesc);
 			~PhysXSystem();
 
 
@@ -20,7 +19,6 @@ namespace NuclearEngine
 			void BeginSimulation(ECS::TimeDelta dt);
 
 			void Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt) override;
-
 
 		private:
 			ECS::Scene* mScene = nullptr;

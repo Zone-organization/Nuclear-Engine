@@ -12,6 +12,7 @@ namespace NuclearEngine
 
 			static Assets::Mesh* GetCubeAsset();
 			static Assets::Mesh* GetSphereAsset();
+			static Assets::Mesh* GetPlaneAsset();
 		};
 	}
 }

@@ -4,10 +4,10 @@ namespace NuclearEngine
 {
 	namespace Systems
 	{
-		PhysXSystem::PhysXSystem(ECS::Scene* ParentScene, const PhysX::PxSceneDesc& sceneDesc)
-			: mScene(ParentScene)
+		PhysXSystem::PhysXSystem(ECS::Scene* scene, PhysX::PxSceneDesc sceneDesc)
+			: mScene(scene)
 		{
-
+	
 			mScene->SetPhysXScene(PhysX::PhysXEngine::GetPhysics()->createScene(sceneDesc));
 		}
 		PhysXSystem::~PhysXSystem()

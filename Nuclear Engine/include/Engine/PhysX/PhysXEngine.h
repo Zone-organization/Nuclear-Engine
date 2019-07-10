@@ -24,6 +24,9 @@ namespace NuclearEngine
 			static PxPhysics* GetPhysics();
 			static PxPvd* GetPvd();
 			static PxCpuDispatcher* GetCPUDispatcher();
+
+
+			//Factory
 		};
 	}
 }

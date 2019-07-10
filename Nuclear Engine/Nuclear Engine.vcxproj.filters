@@ -318,6 +318,7 @@
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\WireFrame.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
+    <ClCompile Include="Source\Engine\Components\RigidActorComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

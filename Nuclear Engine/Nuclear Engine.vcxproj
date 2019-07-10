@@ -420,6 +420,7 @@
     <ClCompile Include="Source\Engine\Audio\Channel.cpp" />
     <ClCompile Include="Source\Engine\Audio\Sound.cpp" />
     <ClCompile Include="Source\Core\Editor.cpp" />
+    <ClCompile Include="Source\Engine\Components\RigidActorComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />

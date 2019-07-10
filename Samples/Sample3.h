@@ -4,6 +4,8 @@
 class Sample3 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
+	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
+
 	Core::Input Input;
 
 	Managers::AssetManager AssetLoader;
@@ -27,17 +29,49 @@ class Sample3 : public Core::Game
 
 	void SetupEntities()
 	{
+		Assets::TextureSet CubeSet;
+		CubeSet.mData.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
+
+		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
+
+		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
+
+		Assets::TextureSet PlaneSet;
+		PlaneSet.mData.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Assets::TextureUsageType::Diffuse) });
+
+		PlaneMaterial.mPixelShaderTextures.push_back(PlaneSet);
+
+		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
+
 		//Create Entities
 		EPlane = Scene.CreateEntity();
 		ECube = Scene.CreateEntity();
 
 		//Assign Components
-		EPlane.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &PlaneMaterial);
-		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &CubeMaterial);
+		EPlane.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetPlaneAsset(), &PlaneMaterial);
+		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
+
+		Math::Matrix4 TCube(1.0f);
+		TCube = Math::translate(TCube, Math::Vector3(0.0f, 3.0f, 0.0f));
+		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
+
+
+		ECube.Assign<Components::RigidActorComponent>();
+		//ECube.GetComponent<Components::RigidActorComponent>()->StaticPtr = PhysX::PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), PhysX::PxPlane(0, 5, 0, 0), *ECube.GetComponent<Components::RigidActorComponent>()->MaterialPtr);
+		//gScene->addActor(*groundPlane);
 	}
 	void InitRenderer()
 	{
 		Renderer = Scene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+
+	
+		PhysX::PxSceneDesc sceneDesc(PhysX::PhysXEngine::GetPhysics()->getTolerancesScale());
+		sceneDesc.gravity = PhysX::PxVec3(0.0f, -9.81f, 0.0f);
+		sceneDesc.cpuDispatcher = PhysX::PhysXEngine::GetCPUDispatcher();
+		sceneDesc.filterShader = PhysX::PxDefaultSimulationFilterShader;
+
+		mPhysXSystem = Scene.Systems.Add<Systems::PhysXSystem>(&Scene, sceneDesc);
+
 		Scene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->Bake();

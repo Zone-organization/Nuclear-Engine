@@ -1,7 +1,13 @@
 ﻿#include "Common.h"
 #include "Sample1.h"
 #include "Sample2.h"
+#include "Sample3.h"
 #include <iostream>
+
+#pragma comment(lib,"PhysX_64.lib")
+#pragma comment(lib,"PhysXFoundation_64.lib")
+#pragma comment(lib,"PhysXExtensions_static_64.lib")
+#pragma comment(lib,"PhysXPvdSDK_static_64.lib")
 
 //Core::RenderAPI SelectRenderer()
 //{
@@ -52,9 +58,10 @@ int main(int argc, char* argv[])
 
 	//}
 
-	std::cout << "Select Sample:\n"
-		<< "1) Sample1 : BlinnPhong rendering of some models \n"
-		<< "2) Sample2 : PBR Rendering \n";
+		std::cout << "Select Sample:\n"
+			<< "1) Sample1 : BlinnPhong rendering of some models \n"
+			<< "2) Sample2 : PBR Rendering \n"
+			<< "3) Sample3 : PhysX Integration\n";
 
 	std::cin >> i;
 	if (i == 1)
@@ -62,12 +69,15 @@ int main(int argc, char* argv[])
 		Sample1 demo;
 		Core::Engine::RunGame(&demo);
 	}
-	else
+	else if (i == 2)
 	{
 		Sample2 demo;
 		Core::Engine::RunGame(&demo);
 	}
-
+	else {
+		Sample3 demo;
+		Core::Engine::RunGame(&demo);
+	}
 
 
 	Core::Engine::Shutdown();
