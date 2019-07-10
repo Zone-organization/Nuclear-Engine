@@ -325,7 +325,7 @@ class Sample1 : public Core::Game
 
 		{
 			using namespace Graphics;
-			ImGui::Begin("Sample1 Control Box");
+			ImGui::Begin("Sample1: Basic Rendering");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 

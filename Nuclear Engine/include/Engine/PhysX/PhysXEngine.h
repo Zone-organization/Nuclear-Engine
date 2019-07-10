@@ -4,6 +4,8 @@
 
 namespace NuclearEngine
 {
+	namespace ECS { class Scene; }
+
 	namespace PhysX
 	{
 		using namespace physx;
@@ -21,7 +23,7 @@ namespace NuclearEngine
 			static PxFoundation* GetFoundation();
 			static PxPhysics* GetPhysics();
 			static PxPvd* GetPvd();
-		protected:
+			static PxCpuDispatcher* GetCPUDispatcher();
 		};
 	}
 }

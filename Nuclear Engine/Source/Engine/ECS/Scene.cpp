@@ -20,5 +20,13 @@ namespace NuclearEngine
 			entity.Assign<Components::TransformComponent>();
 			return entity;
 		}
+		void Scene::SetPhysXScene(physx::PxScene* scene)
+		{
+			mScene = scene;
+		}
+		physx::PxScene* Scene::GetPhysXScene()
+		{
+			return mScene;
+		}
 	}
 }

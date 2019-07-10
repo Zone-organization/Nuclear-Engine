@@ -174,7 +174,7 @@
     <ClInclude Include="include\Engine\Components\CameraComponent.h" />
     <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Engine\Components\Components.h" />
-    <ClInclude Include="include\Engine\Components\RigidBody.h" />
+    <ClInclude Include="include\Engine\Components\RigidActorComponent.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />
@@ -345,6 +345,7 @@
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
     <ClInclude Include="include\Engine\Systems\LightingSubSystem.h" />
+    <ClInclude Include="include\Engine\Systems\PhysXSystem.h" />
     <ClInclude Include="include\Engine\Systems\Systems.h" />
     <ClInclude Include="include\Engine\Graphics\imconfig.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui.h" />
@@ -444,6 +445,7 @@
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
+    <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />

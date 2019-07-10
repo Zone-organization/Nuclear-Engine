@@ -30,11 +30,6 @@ class Sample2 : public Core::Game
 	ECS::Entity ESponza;
 	ECS::Entity ESphere;
 
-	// positions of the point lights
-	Math::Vector3 pointLightPositions[9] =
-	{
-		Math::Vector3(0.0f,  0.0f,  10.0f),
-	};
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -45,7 +40,7 @@ class Sample2 : public Core::Game
 		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		dirlight.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		pointlight1.SetPosition(pointLightPositions[0]);
+		pointlight1.SetPosition(Math::Vector3(0.0f, 0.0f, 10.0f));
 		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		pointlight1.SetIntensity(10.0f);
 	}
@@ -89,7 +84,6 @@ class Sample2 : public Core::Game
 		ESphere.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &SphereMaterial);
 		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
 	}
-
 	void InitRenderer()
 	{
 		Renderer = PBRScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
@@ -226,7 +220,7 @@ class Sample2 : public Core::Game
 
 		{
 			using namespace Graphics;
-			ImGui::Begin("Sample2 Control Box");
+			ImGui::Begin("Sample2: PBR Rendering");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
