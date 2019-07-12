@@ -45,11 +45,10 @@ class Sample3 : public Core::Game
 
 		//Create Entities
 		EPlane = Scene.CreateEntity();
-		ECube = Scene.CreateEntity();
+		ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), &CubeMaterial, true);
 
 		//Assign Components
 		EPlane.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetPlaneAsset(), &PlaneMaterial);
-		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
 
 		Math::Matrix4 TCube(1.0f);
 		TCube = Math::translate(TCube, Math::Vector3(0.0f, 3.0f, 0.0f));
@@ -59,17 +58,8 @@ class Sample3 : public Core::Game
 		EPlane.Assign<Components::ColliderComponent>();
 		EPlane.GetComponent<Components::ColliderComponent>()->mMaterial = PhysX::PhysXEngine::GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
 
-		ECube.Assign<Components::ColliderComponent>();
-		ECube.Assign<Components::RigidBodyComponent>();
-		ECube.GetComponent<Components::ColliderComponent>()->mMaterial = PhysX::PhysXEngine::GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
 
 		mPhysXSystem->CreatePlaneCollider(EPlane.GetComponent<Components::ColliderComponent>().Get(), PhysX::PxPlane(0, 1, 0, 0));
-		mPhysXSystem->CreateBoxCollider(ECube.GetComponent<Components::ColliderComponent>().Get(), PhysX::PxTransform(PhysX::PxVec3(0.0f, 3.0f, 0.0f)), PhysX::PxBoxGeometry(0.5f, 0.5f, 0.5f));
-		mPhysXSystem->CreateRigidBody(ECube.GetComponent<Components::RigidBodyComponent>().Get(), PhysX::PxTransform(PhysX::PxVec3(0.0f, 3.0f, 0.0f)));
-
-		ECube.GetComponent<Components::RigidBodyComponent>()->mDynamicActor->attachShape(*ECube.GetComponent<Components::ColliderComponent>()->mShape);
-
-
 	}
 	void InitRenderer()
 	{

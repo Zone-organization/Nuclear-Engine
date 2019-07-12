@@ -3,7 +3,8 @@
 
 # To-dos 
   - W.I.P:
-	- PhysX 4 Support (25%)
+	- PhysX 4 Support (35%)
+	- Fix Transform class
 	- Port AudioSystem to ECS.
 	- Mesh Animations
 

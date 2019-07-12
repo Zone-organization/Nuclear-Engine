@@ -8,7 +8,7 @@ namespace NuclearEngine
 	namespace ECS
 	{
 		Scene::Scene()
-			: Entities(Events),Systems(Entities, Events)
+			: Entities(Events),Systems(Entities, Events), mScene(nullptr), Factory(this)
 		{
 		}
 		Scene::~Scene()

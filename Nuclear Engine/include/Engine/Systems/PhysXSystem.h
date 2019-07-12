@@ -18,6 +18,8 @@ namespace NuclearEngine
 			void CreateBoxCollider(Components::ColliderComponent* Component, const PhysX::PxTransform& t, const PhysX::PxBoxGeometry& geometry);
 			void CreateRigidBody(Components::RigidBodyComponent* Component, const PhysX::PxTransform& t);
 
+			void SetColliderForRigidBody(ECS::Entity entity);
+
 			//Must Be called before update!
 			void BeginSimulation(ECS::TimeDelta dt);
 

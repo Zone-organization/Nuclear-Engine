@@ -2,6 +2,7 @@
 #include <Base\NE_Common.h>
 #include <Engine\ECS/Entity.h>
 #include <Engine\ECS/System.h>
+#include <Engine/ECS/EntityFactory.h>
 
 namespace physx { class PxScene; };
 
@@ -24,7 +25,7 @@ namespace NuclearEngine
 			EventManager Events;
 			EntityManager Entities;
 			SystemManager Systems;
-
+			EntityFactory Factory;
 		private:
 			physx::PxScene* mScene;
 		};

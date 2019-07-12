@@ -425,6 +425,7 @@
     <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\RigidBodyComponent.cpp" />
+    <ClCompile Include="Source\Engine\ECS\EntityFactory.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />

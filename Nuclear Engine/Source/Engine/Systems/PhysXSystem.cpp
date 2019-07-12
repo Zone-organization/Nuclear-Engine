@@ -35,6 +35,22 @@ namespace NuclearEngine
 
 			mScene->GetPhysXScene()->addActor(*Component->mDynamicActor);
 		}
+
+		void PhysXSystem::SetColliderForRigidBody(ECS::Entity entity)
+		{
+			//Check if entity is valid
+			if (entity.Valid())
+			{
+				auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
+				auto ColliderComponent = entity.GetComponent<Components::ColliderComponent>();
+
+				if (RigidComponent.Valid() && ColliderComponent.Valid())
+				{
+					RigidComponent->mDynamicActor->attachShape(*ColliderComponent->mShape);
+				}
+
+			}
+		}
 		
 		void PhysXSystem::BeginSimulation(ECS::TimeDelta dt)
 		{

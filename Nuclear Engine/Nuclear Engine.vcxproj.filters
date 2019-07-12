@@ -323,6 +323,7 @@
     <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
     <ClCompile Include="Source\Engine\Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
+    <ClCompile Include="Source\Engine\ECS\EntityFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
