@@ -18,7 +18,7 @@
   - ShaderManager
     - Support for automated shader creation instead of Re-Writing them
 
-- ___Audio___
+- ___Audio___ Note: It is working but needs ECS integration.
   - Support for FMOD LowLevel API
   - Support for Preloading audio files to memory then playing them 			"Sound"
 
@@ -40,3 +40,9 @@
   - Render System and Render pipeline can be extended easily through simply inheriting from base class.
   - Material are auto-created and auto-configured for each pipeline without user intervention.
   
+  
+- __Physics__ Note: It is working but needs ECS integration.
+  - Using PhysX4.
+  - Supports Collider & RigidBody.
+
+ 

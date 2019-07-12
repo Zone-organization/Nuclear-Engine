@@ -256,6 +256,8 @@
     <ClInclude Include="include\Engine\Assets\AudioClip.h" />
     <ClInclude Include="include\Engine\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Engine\Components\ColliderComponent.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXTypes.h" />
+    <ClInclude Include="include\Engine\ECS\EntityFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />

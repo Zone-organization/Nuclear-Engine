@@ -175,10 +175,7 @@ class Sample3 : public Core::Game
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);
-
-		ECube.GetComponent<Components::TransformComponent>()->SetTransform(*(glm::mat4*)&PhysX::PxMat44(ECube.GetComponent<Components::RigidBodyComponent>()->mDynamicActor->getGlobalPose()));
-		
+		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);		
 		Renderer->Update(Scene.Entities, Scene.Events, dt);
 
 

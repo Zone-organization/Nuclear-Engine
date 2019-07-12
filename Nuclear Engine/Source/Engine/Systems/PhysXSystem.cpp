@@ -1,6 +1,8 @@
 #include <Engine\Systems\PhysXSystem.h>
 #include <Engine\Components\ColliderComponent.h>
 #include <Engine\Components\RigidBodyComponent.h>
+#include <Engine\Components\TransformComponent.h>
+#include <Engine/PhysX/PhysXTypes.h>
 
 namespace NuclearEngine
 {
@@ -41,6 +43,13 @@ namespace NuclearEngine
 		void PhysXSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
 		{
 			mScene->GetPhysXScene()->fetchResults(true);
+
+			//Update Entities transforms
+			ECS::ComponentHandle<Components::RigidBodyComponent> RigidBodyObj;
+			for (ECS::Entity entity : es.entities_with_components(RigidBodyObj))
+			{
+				entity.GetComponent<Components::TransformComponent>().Get()->SetTransform(PhysX::From(RigidBodyObj->mDynamicActor->getGlobalPose()));
+			}
 		}
 	}
 }

@@ -3,8 +3,7 @@
 
 # To-dos 
   - W.I.P:
-    - Optimizations.
-	- PhysX 4 Support
+	- PhysX 4 Support (25%)
 	- Port AudioSystem to ECS.
 	- Mesh Animations
 
