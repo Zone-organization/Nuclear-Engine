@@ -3,6 +3,7 @@
 #include <Base\Math\Math.h>
 #include <Engine\ECS\Entity.h>
 #include <Engine/PhysX/PhysXEngine.h>
+#include <Engine/PhysX/PhysXMaterial.h>
 
 namespace NuclearEngine
 {
@@ -18,10 +19,12 @@ namespace NuclearEngine
 		{
 		public:
 			ColliderComponent();
+			ColliderComponent(PhysX::PhysXMaterial Pmat);
 			~ColliderComponent();
 
+			PhysX::PhysXMaterial mMaterial;
+
 			PhysX::PxShape* mShape = nullptr;
-			PhysX::PxMaterial* mMaterial = nullptr;
 			PhysX::PxRigidStatic* mStaticActor = nullptr;
 		};
 	}

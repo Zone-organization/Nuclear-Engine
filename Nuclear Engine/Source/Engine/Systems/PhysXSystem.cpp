@@ -19,13 +19,13 @@ namespace NuclearEngine
 		}
 		void PhysXSystem::CreatePlaneCollider(Components::ColliderComponent* Component, const PhysX::PxPlane& plane)
 		{
-			Component->mStaticActor = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), plane, *Component->mMaterial);
+			Component->mStaticActor = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), plane, *Component->mMaterial.GetPtr());
 
 			mScene->GetPhysXScene()->addActor(*Component->mStaticActor);
 		}
 		void PhysXSystem::CreateBoxCollider(Components::ColliderComponent* Component, const PhysX::PxTransform& t, const PhysX::PxBoxGeometry& geometry)
 		{
-			Component->mShape = PhysX::PhysXEngine::GetPhysics()->createShape(geometry, *Component->mMaterial);
+			Component->mShape = PhysX::PhysXEngine::GetPhysics()->createShape(geometry, *Component->mMaterial.GetPtr());
 			Component->mStaticActor = PxCreateStatic(*PhysX::PhysXEngine::GetPhysics(), t, *Component->mShape);
 			mScene->GetPhysXScene()->addActor(*Component->mStaticActor);
 		}

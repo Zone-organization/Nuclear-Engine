@@ -258,6 +258,7 @@
     <ClInclude Include="include\Engine\Components\ColliderComponent.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXTypes.h" />
     <ClInclude Include="include\Engine\ECS\EntityFactory.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -324,6 +325,7 @@
     <ClCompile Include="Source\Engine\Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
     <ClCompile Include="Source\Engine\ECS\EntityFactory.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\PhysXMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

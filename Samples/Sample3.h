@@ -13,14 +13,13 @@ class Sample3 : public Core::Game
 
 	Assets::Material PlaneMaterial;
 	Assets::Material CubeMaterial;
-
+	PhysX::PhysXMaterial BoxPhysXMat;
 	Components::CameraComponent Camera;
 
 	Graphics::DiffuseOnly DiffuseRP;
 
 	ECS::Scene Scene;
 	ECS::Entity EPlane;
-	ECS::Entity ECube;		
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -43,21 +42,16 @@ class Sample3 : public Core::Game
 
 		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
 
+		BoxPhysXMat.Create();
+
 		//Create Entities
 		EPlane = Scene.CreateEntity();
-		ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), &CubeMaterial, true);
+
 
 		//Assign Components
 		EPlane.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetPlaneAsset(), &PlaneMaterial);
 
-		Math::Matrix4 TCube(1.0f);
-		TCube = Math::translate(TCube, Math::Vector3(0.0f, 3.0f, 0.0f));
-		ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
-
-
-		EPlane.Assign<Components::ColliderComponent>();
-		EPlane.GetComponent<Components::ColliderComponent>()->mMaterial = PhysX::PhysXEngine::GetPhysics()->createMaterial(0.5f, 0.5f, 0.6f);
-
+		EPlane.Assign<Components::ColliderComponent>(BoxPhysXMat);
 
 		mPhysXSystem->CreatePlaneCollider(EPlane.GetComponent<Components::ColliderComponent>().Get(), PhysX::PxPlane(0, 1, 0, 0));
 	}
@@ -168,6 +162,14 @@ class Sample3 : public Core::Game
 		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);		
 		Renderer->Update(Scene.Entities, Scene.Events, dt);
 
+
+		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_SPACE) == Core::Input::KeyboardKeyStatus::Pressed)
+		{
+			auto ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), BoxPhysXMat, &CubeMaterial, true);
+			Math::Matrix4 TCube(1.0f);
+			TCube = Math::translate(TCube, Math::Vector3(0.0f, 3.0f, 0.0f));
+			ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
+		}
 
 		{
 			using namespace Graphics;
