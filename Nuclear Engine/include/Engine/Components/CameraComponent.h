@@ -8,11 +8,11 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		enum Camera_Movement {
-			FORWARD,
-			BACKWARD,
-			LEFT,
-			RIGHT
+		enum CAMERA_MOVEMENT {
+			CAMERA_MOVEMENT_FORWARD,
+			CAMERA_MOVEMENT_BACKWARD,
+			CAMERA_MOVEMENT_LEFT,
+			CAMERA_MOVEMENT_RIGHT
 		};
 
 		// Default camera values
@@ -51,7 +51,7 @@ namespace NuclearEngine
 			~CameraComponent();
 
 			void ProcessEye(float xoffset, float yoffset, bool constrainPitch = true);
-			void ProcessMovement(Camera_Movement direction, float deltaTime);
+			void ProcessMovement(CAMERA_MOVEMENT direction, float deltaTime);
 			void ProcessZoom(float yoffset);
 
 			Math::Vector3 GetFrontView();

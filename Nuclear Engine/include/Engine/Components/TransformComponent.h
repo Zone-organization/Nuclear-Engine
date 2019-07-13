@@ -12,6 +12,8 @@ namespace NuclearEngine
 		{
 		public:
 			TransformComponent();
+			TransformComponent(Math::Matrix4 Transform);
+			TransformComponent(Math::Vector3 position, Math::Quaternion rotation);
 			~TransformComponent();
 
 			//Get the transform

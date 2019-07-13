@@ -36,7 +36,7 @@ class Sample3 : public Core::Game
 		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
 
 		Assets::TextureSet PlaneSet;
-		PlaneSet.mData.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Assets::TextureUsageType::Diffuse) });
+		PlaneSet.mData.push_back({ 0, Assets::DefaultTextures::DefaultGreyTex });
 
 		PlaneMaterial.mPixelShaderTextures.push_back(PlaneSet);
 
@@ -47,9 +47,10 @@ class Sample3 : public Core::Game
 		//Create Entities
 		EPlane = Scene.CreateEntity();
 
-
+		static Assets::Mesh gPlane;
+		Assets::Mesh::CreatePlane(&gPlane, Assets::MeshVertexDesc(), 100.0f, 100.0f);
 		//Assign Components
-		EPlane.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetPlaneAsset(), &PlaneMaterial);
+		EPlane.Assign<Components::MeshComponent>(&gPlane, &PlaneMaterial);
 
 		EPlane.Assign<Components::ColliderComponent>(BoxPhysXMat);
 
@@ -122,13 +123,13 @@ class Sample3 : public Core::Game
 	{
 		//Movement
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.MovementSpeed = 10;
@@ -165,9 +166,9 @@ class Sample3 : public Core::Game
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_SPACE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
-			auto ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), BoxPhysXMat, &CubeMaterial, true);
+			auto ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), BoxPhysXMat, &Components::TransformComponent(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)), &CubeMaterial, true);
 			Math::Matrix4 TCube(1.0f);
-			TCube = Math::translate(TCube, Math::Vector3(0.0f, 3.0f, 0.0f));
+			TCube = Math::translate(TCube, Camera.GetPosition());
 			ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
 		}
 

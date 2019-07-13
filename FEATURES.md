@@ -41,7 +41,7 @@
   - Material are auto-created and auto-configured for each pipeline without user intervention.
   
   
-- __Physics__ Note: It is working but needs ECS integration.
+- __Physics__
   - Using PhysX4.
   - Supports Collider & RigidBody.
 

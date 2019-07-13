@@ -196,16 +196,16 @@ namespace NuclearEngine
 					Pitch = -89.0f;
 			}
 		}
-		void CameraComponent::ProcessMovement(Camera_Movement direction, float deltaTime)
+		void CameraComponent::ProcessMovement(CAMERA_MOVEMENT direction, float deltaTime)
 		{
 			float velocity = MovementSpeed * deltaTime;
-			if (direction == FORWARD)
+			if (direction == CAMERA_MOVEMENT_FORWARD)
 				position += Front * velocity;
-			if (direction == BACKWARD)
+			if (direction == CAMERA_MOVEMENT_BACKWARD)
 				position -= Front * velocity;
-			if (direction == LEFT)
+			if (direction == CAMERA_MOVEMENT_LEFT)
 				position -= Right * velocity;
-			if (direction == RIGHT)
+			if (direction == CAMERA_MOVEMENT_RIGHT)
 				position += Right * velocity;
 		}
 		void CameraComponent::ProcessZoom(float yoffset)

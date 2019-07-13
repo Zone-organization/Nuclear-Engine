@@ -280,13 +280,13 @@ class Sample1 : public Core::Game
 	{
 		//Movement
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::FORWARD, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::LEFT, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::BACKWARD, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::Camera_Movement::RIGHT, deltatime);
+			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.MovementSpeed = 10;

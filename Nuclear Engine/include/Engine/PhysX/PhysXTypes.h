@@ -4,6 +4,7 @@
 #include <PhysX/include/foundation/PxVec3.h>
 #include <PhysX/include/foundation/PxVec4.h>
 #include <PhysX/include/foundation/PxTransform.h>
+#include <Engine\Components\TransformComponent.h>
 #include <Base/Math/Math.h>
 
 namespace NuclearEngine
@@ -23,6 +24,20 @@ namespace NuclearEngine
 		inline const physx::PxMat44& To(const Math::Matrix4& mat)
 		{
 			return *(physx::PxMat44*) & mat;
+		}
+		inline const physx::PxQuat& To(const Math::Quaternion& quat)
+		{
+			return *(physx::PxQuat*) & quat;
+		}
+
+		inline physx::PxTransform To(const Math::Vector3& pos, const Math::Quaternion& quat)
+		{
+			return physx::PxTransform(To(pos), To(quat));
+		}
+
+		inline physx::PxTransform To(Components::TransformComponent* trans)
+		{
+			return physx::PxTransform(To(trans->GetWorldPosition()));
 		}
 
 		inline const  Math::Vector3& From(const physx::PxVec3& vec)

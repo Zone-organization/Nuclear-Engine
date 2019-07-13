@@ -17,6 +17,23 @@ namespace NuclearEngine
 			mWorldScale = Math::Vector3(0.0f);
 		}
 
+		TransformComponent::TransformComponent(Math::Matrix4 Transform)
+		{
+			mTransform = Transform;
+		}
+
+		TransformComponent::TransformComponent(Math::Vector3 position, Math::Quaternion rotation)
+		{
+			mTransform = Math::Matrix4(1.0f);
+			mPosition = position;
+			mRotation = rotation;
+			mScale = Math::Vector3(0.0f);
+
+			mWorldPosition = Math::Vector3(0.0f);
+			mWorldRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+			mWorldScale = Math::Vector3(0.0f);
+		}
+
 		TransformComponent::~TransformComponent()
 		{
 		}
@@ -93,17 +110,14 @@ namespace NuclearEngine
 		{
 			if (mDirty)
 			{
-				//mTransform = Math::translate(mPosition)*Math::toMat4(mRotation)*Math::scale(mScale);
-
-				//mTransform = Math::translate(mTransform, mPosition);
-				//mTransform = Math::scale(mTransform, mScale);
-				//mTransform *= Math::toMat4(mRotation);
+				mTransform = Math::translate(mTransform, mPosition);
+				mTransform = Math::scale(mTransform, mScale);
+				mTransform *= Math::toMat4(mRotation);
 				mDirty = false;
 			}
 		}
 		void TransformComponent::Update(Math::Matrix4 parent)
 		{
-			//Todo: find a better way to update the transform since we double check if dirty!
 			Update();
 			if (mDirty)
 			{
