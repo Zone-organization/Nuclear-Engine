@@ -16,10 +16,10 @@ class Sample2 : public Core::Game
 
 	Components::CameraComponent Camera;
 
-	Components::DirectionalLight dirlight;
-	Components::PointLight pointlight1;
+	Components::DirLightComponent dirlight;
+	Components::PointLightComponent pointlight1;
 
-	Components::SpotLight spotLight;
+	Components::SpotLightComponent spotLight;
 
 	Graphics::PBR PBR;
 	Graphics::DiffuseOnly DiffuseRP;

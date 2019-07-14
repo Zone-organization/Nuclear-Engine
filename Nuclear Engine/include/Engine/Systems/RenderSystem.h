@@ -35,9 +35,9 @@ namespace NuclearEngine
 			void AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
 			void SetActiveRenderingPipeline(Uint32 PipelineID);
 
-			void AddLight(Components::DirectionalLight* light);
-			void AddLight(Components::PointLight* light);
-			void AddLight(Components::SpotLight* light);
+			void AddLight(Components::DirLightComponent* light);
+			void AddLight(Components::PointLightComponent* light);
+			void AddLight(Components::SpotLightComponent* light);
 
 			void CreateMaterialForAllPipelines(Assets::Material* material);
 

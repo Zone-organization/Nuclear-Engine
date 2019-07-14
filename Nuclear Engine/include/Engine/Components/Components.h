@@ -4,4 +4,6 @@
 #include <Engine/Components/MeshComponent.h>
 #include <Engine/Components/ColliderComponent.h>
 #include <Engine/Components/RigidBodyComponent.h>
-#include <Engine/Components/Light.h>
+#include <Engine\Components\DirLightComponent.h>
+#include <Engine\Components\PointLightComponent.h>
+#include <Engine\Components\SpotLightComponent.h>

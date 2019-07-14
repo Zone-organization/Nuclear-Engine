@@ -4,7 +4,9 @@
 #include <Engine\ECS/System.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Components\CameraComponent.h>
-#include <Engine\Components\Light.h>
+#include <Engine\Components\DirLightComponent.h>
+#include <Engine\Components\PointLightComponent.h>
+#include <Engine\Components\SpotLightComponent.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>

@@ -2,7 +2,9 @@
 #include <Base\NE_Common.h>
 #include <Engine\ECS/Entity.h>
 #include <Engine\ECS/System.h>
-#include <Engine\Components\Light.h>
+#include <Engine\Components\DirLightComponent.h>
+#include <Engine\Components\PointLightComponent.h>
+#include <Engine\Components\SpotLightComponent.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
@@ -15,9 +17,9 @@ namespace NuclearEngine
 		class NEAPI LightingSubSystem 
 		{
 		public:
-			std::vector<Components::DirectionalLight*> DirLights;
-			std::vector<Components::PointLight*> PointLights;
-			std::vector<Components::SpotLight*> SpotLights;
+			std::vector<Components::DirLightComponent*> DirLights;
+			std::vector<Components::PointLightComponent*> PointLights;
+			std::vector<Components::SpotLightComponent*> SpotLights;
 
 			bool RequiresBaking();
 

@@ -12,10 +12,12 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		enum Shape
+		enum COLLIDER_SHAPE
 		{
+			COLLIDER_SHAPE_UNKNOWN,
 			COLLIDER_SHAPE_BOX,
-			COLLIFER_SHAPE_PLANE
+			COLLIDER_SHAPE_PLANE,
+			COLLIDER_SHAPE_SPHERE
 		};
 
 		class NEAPI ColliderComponent : public ECS::Component<ColliderComponent>
@@ -24,8 +26,10 @@ namespace NuclearEngine
 			ColliderComponent();
 			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::BoxGeometry& Geo);
 			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::PlaneGeometry& Geo);
+			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::SphereGeometry& Geo);
 			~ColliderComponent();
 
+			COLLIDER_SHAPE mType = COLLIDER_SHAPE_UNKNOWN;
 			PhysX::PhysXMaterial mMaterial;
 			PhysX::PhysXShape mShape;
 			PhysX::RigidStatic mStaticActor;

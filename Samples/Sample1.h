@@ -44,18 +44,18 @@ class Sample1 : public Core::Game
 
 	Components::CameraComponent Camera;
 
-	Components::DirectionalLight dirlight;
-	Components::PointLight pointlight1;
-	Components::PointLight pointlight2;
-	Components::PointLight pointlight3;
-	Components::PointLight pointlight4;
-	Components::PointLight pointlight5;
-	Components::PointLight pointlight6;
-	Components::PointLight pointlight7;
-	Components::PointLight pointlight8;
-	Components::PointLight pointlight9;
+	Components::DirLightComponent dirlight;
+	Components::PointLightComponent pointlight1;
+	Components::PointLightComponent pointlight2;
+	Components::PointLightComponent pointlight3;
+	Components::PointLightComponent pointlight4;
+	Components::PointLightComponent pointlight5;
+	Components::PointLightComponent pointlight6;
+	Components::PointLightComponent pointlight7;
+	Components::PointLightComponent pointlight8;
+	Components::PointLightComponent pointlight9;
 
-	Components::SpotLight spotLight;
+	Components::SpotLightComponent spotLight;
 
 	Graphics::Skybox Skybox;
 

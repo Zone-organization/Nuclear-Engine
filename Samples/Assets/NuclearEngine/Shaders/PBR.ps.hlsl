@@ -222,8 +222,6 @@ float3 CalcSpotLight(SpotLight light, float3 N, float3 WorldPos, float3 V, float
 
 }
 
-
-
 float4 main(PixelInputType input) : SV_TARGET
 {
 	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));

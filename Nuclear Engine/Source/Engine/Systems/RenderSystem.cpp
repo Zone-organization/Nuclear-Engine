@@ -56,15 +56,15 @@ namespace NuclearEngine
 			}
 			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID)+ ") is not found, while setting it active.\n");
 		}
-		void RenderSystem::AddLight(Components::DirectionalLight * light)
+		void RenderSystem::AddLight(Components::DirLightComponent* light)
 		{
 			mLightingSystem.DirLights.push_back(light);
 		}
-		void RenderSystem::AddLight(Components::PointLight * light)
+		void RenderSystem::AddLight(Components::PointLightComponent* light)
 		{
 			mLightingSystem.PointLights.push_back(light);
 		}
-		void RenderSystem::AddLight(Components::SpotLight * light)
+		void RenderSystem::AddLight(Components::SpotLightComponent* light)
 		{
 			mLightingSystem.SpotLights.push_back(light);
 		}
