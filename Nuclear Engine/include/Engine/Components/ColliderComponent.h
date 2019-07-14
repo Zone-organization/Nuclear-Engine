@@ -4,6 +4,9 @@
 #include <Engine\ECS\Entity.h>
 #include <Engine/PhysX/PhysXEngine.h>
 #include <Engine/PhysX/PhysXMaterial.h>
+#include <Engine/PhysX/PhysXShape.h>
+#include <Engine/PhysX/RigidStatic.h>
+#include <Engine/PhysX/Geometry.h>
 
 namespace NuclearEngine
 {
@@ -19,13 +22,13 @@ namespace NuclearEngine
 		{
 		public:
 			ColliderComponent();
-			ColliderComponent(PhysX::PhysXMaterial Pmat);
+			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::BoxGeometry& Geo);
+			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::PlaneGeometry& Geo);
 			~ColliderComponent();
 
 			PhysX::PhysXMaterial mMaterial;
-
-			PhysX::PxShape* mShape = nullptr;
-			PhysX::PxRigidStatic* mStaticActor = nullptr;
+			PhysX::PhysXShape mShape;
+			PhysX::RigidStatic mStaticActor;
 		};
 	}
 }

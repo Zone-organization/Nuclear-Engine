@@ -2,39 +2,44 @@
 #include <Engine\Components\ColliderComponent.h>
 #include <Engine\Components\RigidBodyComponent.h>
 #include <Engine\Components\TransformComponent.h>
-#include <Engine/PhysX/PhysXTypes.h>
+#include "..\PhysX\PhysXTypes.h"
 
 namespace NuclearEngine
 {
 	namespace Systems
 	{
-		PhysXSystem::PhysXSystem(ECS::Scene* scene, PhysX::PxSceneDesc sceneDesc)
+		PhysXSystem::PhysXSystem(ECS::Scene* scene,const PhysXSystemDesc &sceneDesc)
 			: mScene(scene)
 		{
+			
+			PhysX::PxSceneDesc SceneDesc(PhysX::PhysXEngine::GetPhysics()->getTolerancesScale());
+			SceneDesc.gravity = PhysX::To(sceneDesc.mGravity);
+			SceneDesc.cpuDispatcher = PhysX::PhysXEngine::GetCPUDispatcher();
+			SceneDesc.filterShader = PhysX::PxDefaultSimulationFilterShader;
 	
-			mScene->SetPhysXScene(PhysX::PhysXEngine::GetPhysics()->createScene(sceneDesc));
+			mScene->SetPhysXScene(PhysX::PhysXEngine::GetPhysics()->createScene(SceneDesc));
 		}
 		PhysXSystem::~PhysXSystem()
 		{
 		}
-		void PhysXSystem::CreatePlaneCollider(Components::ColliderComponent* Component, const PhysX::PxPlane& plane)
-		{
-			Component->mStaticActor = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), plane, *Component->mMaterial.GetPtr());
+		//void PhysXSystem::CreatePlaneCollider(Components::ColliderComponent* Component, const PhysX::PxPlane& plane)
+		//{
+		//	Component->mStaticActor.mPtr = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), plane, *Component->mMaterial.GetPtr());
 
-			mScene->GetPhysXScene()->addActor(*Component->mStaticActor);
-		}
-		void PhysXSystem::CreateBoxCollider(Components::ColliderComponent* Component, const PhysX::PxTransform& t, const PhysX::PxBoxGeometry& geometry)
-		{
-			Component->mShape = PhysX::PhysXEngine::GetPhysics()->createShape(geometry, *Component->mMaterial.GetPtr());
-			Component->mStaticActor = PxCreateStatic(*PhysX::PhysXEngine::GetPhysics(), t, *Component->mShape);
-			mScene->GetPhysXScene()->addActor(*Component->mStaticActor);
-		}
-		void PhysXSystem::CreateRigidBody(Components::RigidBodyComponent* Component, const PhysX::PxTransform& t)
-		{
-			Component->mDynamicActor = PhysX::PhysXEngine::GetPhysics()->createRigidDynamic(t);
+		//	mScene->GetPhysXScene()->addActor(*Component->mStaticActor.mPtr);
+		//}
+		//void PhysXSystem::CreateBoxCollider(Components::ColliderComponent* Component, ECS::Transform& t, const PhysX::PxBoxGeometry& geometry)
+		//{
+		//	Component->mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(geometry, *Component->mMaterial.GetPtr());
+		//	Component->mStaticActor.mPtr = PxCreateStatic(*PhysX::PhysXEngine::GetPhysics(), PhysX::To(t), *Component->mShape.mPtr);
+		//	mScene->GetPhysXScene()->addActor(*Component->mStaticActor.mPtr);
+		//}
+		//void PhysXSystem::CreateRigidBody(Components::RigidBodyComponent* Component, ECS::Transform& t)
+		//{
+		//	Component->mDynamicActor.mPtr = PhysX::PhysXEngine::GetPhysics()->createRigidDynamic(PhysX::To(t));
 
-			mScene->GetPhysXScene()->addActor(*Component->mDynamicActor);
-		}
+		//	mScene->GetPhysXScene()->addActor(*Component->mDynamicActor.mPtr);
+		//}
 
 		void PhysXSystem::SetColliderForRigidBody(ECS::Entity entity)
 		{
@@ -46,7 +51,7 @@ namespace NuclearEngine
 
 				if (RigidComponent.Valid() && ColliderComponent.Valid())
 				{
-					RigidComponent->mDynamicActor->attachShape(*ColliderComponent->mShape);
+					RigidComponent->mDynamicActor.mPtr->attachShape(*ColliderComponent->mShape.mPtr);
 				}
 
 			}
@@ -56,6 +61,23 @@ namespace NuclearEngine
 		{
 			mScene->GetPhysXScene()->simulate(dt);
 		}
+		void PhysXSystem::Bake(ECS::EntityManager& es)
+		{
+			ECS::ComponentHandle<Components::ColliderComponent> Obj;
+			for (ECS::Entity entity : es.entities_with_components(Obj))
+			{
+				auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
+				if (RigidComponent.Valid())
+				{		
+					RigidComponent->mDynamicActor.mPtr->attachShape(*Obj->mShape.mPtr);
+					mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
+				}
+				else {
+					mScene->GetPhysXScene()->addActor(*Obj->mStaticActor.mPtr);
+				}
+			}
+		}
+
 		void PhysXSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
 		{
 			mScene->GetPhysXScene()->fetchResults(true);
@@ -64,7 +86,7 @@ namespace NuclearEngine
 			ECS::ComponentHandle<Components::RigidBodyComponent> RigidBodyObj;
 			for (ECS::Entity entity : es.entities_with_components(RigidBodyObj))
 			{
-				entity.GetComponent<Components::TransformComponent>().Get()->SetTransform(PhysX::From(RigidBodyObj->mDynamicActor->getGlobalPose()));
+				entity.GetComponent<Components::TransformComponent>().Get()->mTransform.SetTransform(PhysX::From(RigidBodyObj->mDynamicActor.mPtr->getGlobalPose()));
 			}
 		}
 	}

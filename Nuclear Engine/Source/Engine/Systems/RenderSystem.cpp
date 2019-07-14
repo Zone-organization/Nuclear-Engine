@@ -143,7 +143,7 @@ namespace NuclearEngine
 					if (!MeshObject.Get()->mMultiRender)
 					{
 						//entity.GetTransform()->Update();
-						mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->GetTransformMatrix());
+						mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->mTransform.GetTransform());
 						mCameraManager->UpdateBuffer();
 						InstantRender(MeshObject.Get());
 					}

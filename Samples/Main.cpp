@@ -4,11 +4,6 @@
 #include "Sample3.h"
 #include <iostream>
 
-#pragma comment(lib,"PhysX_64.lib")
-#pragma comment(lib,"PhysXFoundation_64.lib")
-#pragma comment(lib,"PhysXExtensions_static_64.lib")
-#pragma comment(lib,"PhysXPvdSDK_static_64.lib")
-
 //Core::RenderAPI SelectRenderer()
 //{
 //	std::cout << "Select Renderer: \n"

@@ -1,5 +1,6 @@
 #include "Engine\PhysX\PhysXEngine.h"
 #include "Engine\Components\ColliderComponent.h"
+#include <PhysX/include/PxPhysicsAPI.h>
 
 using namespace physx;
 PxDefaultAllocator		gAllocator;

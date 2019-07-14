@@ -51,20 +51,14 @@ class Sample3 : public Core::Game
 		Assets::Mesh::CreatePlane(&gPlane, Assets::MeshVertexDesc(), 100.0f, 100.0f);
 		//Assign Components
 		EPlane.Assign<Components::MeshComponent>(&gPlane, &PlaneMaterial);
-
-		EPlane.Assign<Components::ColliderComponent>(BoxPhysXMat);
-
-		mPhysXSystem->CreatePlaneCollider(EPlane.GetComponent<Components::ColliderComponent>().Get(), PhysX::PxPlane(0, 1, 0, 0));
+		EPlane.Assign<Components::ColliderComponent>(BoxPhysXMat, PhysX::PlaneGeometry(ECS::Transform()));
 	}
 	void InitRenderer()
 	{
 		Renderer = Scene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
-
-	
-		PhysX::PxSceneDesc sceneDesc(PhysX::PhysXEngine::GetPhysics()->getTolerancesScale());
-		sceneDesc.gravity = PhysX::PxVec3(0.0f, -9.81f, 0.0f);
-		sceneDesc.cpuDispatcher = PhysX::PhysXEngine::GetCPUDispatcher();
-		sceneDesc.filterShader = PhysX::PxDefaultSimulationFilterShader;
+		Systems::PhysXSystemDesc sceneDesc;
+		
+		sceneDesc.mGravity = Math::Vector3(0.0f, -9.81f, 0.0f);
 
 		mPhysXSystem = Scene.Systems.Add<Systems::PhysXSystem>(&Scene, sceneDesc);
 
@@ -84,7 +78,7 @@ class Sample3 : public Core::Game
 		InitRenderer();
 
 		SetupEntities();
-
+		mPhysXSystem->Bake(Scene.Entities);
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -166,10 +160,10 @@ class Sample3 : public Core::Game
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_SPACE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
-			auto ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), BoxPhysXMat, &Components::TransformComponent(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)), &CubeMaterial, true);
+			auto ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), BoxPhysXMat, ECS::Transform(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)), &CubeMaterial, true);
 			Math::Matrix4 TCube(1.0f);
 			TCube = Math::translate(TCube, Camera.GetPosition());
-			ECube.GetComponent<Components::TransformComponent>()->SetTransform(TCube);
+			ECube.GetComponent<Components::TransformComponent>()->mTransform.SetTransform(TCube);
 		}
 
 		{

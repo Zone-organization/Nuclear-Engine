@@ -1,7 +1,12 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <PhysX/include/PxPhysicsAPI.h>
 
+namespace physx {
+	class PxFoundation;
+	class PxPhysics;
+	class PxPvd;
+	class PxCpuDispatcher;
+}
 namespace NuclearEngine
 {
 	namespace ECS { class Scene; }

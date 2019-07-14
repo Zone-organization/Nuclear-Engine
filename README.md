@@ -3,16 +3,17 @@
 
 # To-dos 
   - W.I.P:
-	- PhysX 4 Support (40%)
+	- Basic PhysX 4 Support (75%)
 	- Port AudioSystem to ECS.
-	- Mesh Animations
-
+	- Port Light to ECS.
+	- Abstract FMOD implementations and provide interfaces for them (to prevent extra linking and better docs in the future)
+	
   - Planned:
     - Restore & Test render to texture feature (Render Target)
     - Bloom effect.
-    - Basic Physics support with PhysX 4.
     - C# Scripting through .Net Core
-	
+	- Mesh Animations
+
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.
     - Android Support (Mobile devices in general).
@@ -33,7 +34,7 @@ Some Dependencies such as FMOD & PhysX & FreeImage needs to be downloaded and bu
   - Assimp
   - DiligentCore
   - FMOD SDK
-  - PhysX
+  - PhysX 4.1
   - Freeimage
   - GLFW
   

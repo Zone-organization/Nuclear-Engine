@@ -5,7 +5,7 @@
 #include <Engine\Components\RigidBodyComponent.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/DefaultMeshes.h>
-#include <Engine/PhysX/PhysXTypes.h>
+#include "..\PhysX\PhysXTypes.h"
 
 namespace NuclearEngine
 {
@@ -15,15 +15,14 @@ namespace NuclearEngine
 			: mScene(ParentScene)
 		{
 		}
-		Entity EntityFactory::CreateBox(Systems::PhysXSystem* System, PhysX::PhysXMaterial PMat, Components::TransformComponent* t, Assets::Material* material, bool EnablePhysics)
+		Entity EntityFactory::CreateBox(Systems::PhysXSystem* System, PhysX::PhysXMaterial PMat, ECS::Transform t, Assets::Material* material, bool EnablePhysics)
 		{
 			Entity Result = mScene->CreateEntity();
 			Result.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), material);
-			Result.Assign<Components::ColliderComponent>(PMat);
-			Result.Assign<Components::RigidBodyComponent>();
+			Result.Assign<Components::ColliderComponent>(PMat, PhysX::BoxGeometry(Math::Vector3(0.5f, 0.5f, 0.5f), t));
+			Result.Assign<Components::RigidBodyComponent>(t);
 
-			System->CreateBoxCollider(Result.GetComponent<Components::ColliderComponent>().Get(), PhysX::To(t), PhysX::PxBoxGeometry(0.5f, 0.5f, 0.5f));
-			System->CreateRigidBody(Result.GetComponent<Components::RigidBodyComponent>().Get(), PhysX::To(t));
+			mScene->GetPhysXScene()->addActor(*Result.GetComponent<Components::RigidBodyComponent>()->mDynamicActor.mPtr);
 			System->SetColliderForRigidBody(Result);
 
 			return Result;

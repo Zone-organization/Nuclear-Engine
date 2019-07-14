@@ -191,6 +191,7 @@
     <ClInclude Include="include\Engine\Graphics\RenderTarget.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
+    <ClInclude Include="include\Engine\ECS\Transform.h" />
     <ClInclude Include="include\Engine\Importers\Common.h" />
     <ClInclude Include="include\Engine\Importers\Importers.h" />
     <ClInclude Include="include\Base\Math\common.hpp" />
@@ -344,10 +345,14 @@
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
+    <ClInclude Include="include\Engine\PhysX\Geometry.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXMaterial.h" />
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
-    <ClInclude Include="include\Engine\PhysX\PhysXTypes.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXShape.h" />
+    <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
+    <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
+    <ClInclude Include="include\Engine\PhysX\RigidStatic.h" />
     <ClInclude Include="include\Engine\Systems\AudioSystem.h" />
     <ClInclude Include="include\Engine\Systems\LightingSubSystem.h" />
     <ClInclude Include="include\Engine\Systems\PhysXSystem.h" />
@@ -427,6 +432,7 @@
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Source\Engine\ECS\EntityFactory.cpp" />
+    <ClCompile Include="Source\Engine\ECS\Transform.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
@@ -450,8 +456,11 @@
     <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\PhysXShape.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\RigidStatic.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXMaterial.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\RigidDynamic.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
