@@ -44,19 +44,6 @@ class Sample1 : public Core::Game
 
 	Components::CameraComponent Camera;
 
-	Components::DirLightComponent dirlight;
-	Components::PointLightComponent pointlight1;
-	Components::PointLightComponent pointlight2;
-	Components::PointLightComponent pointlight3;
-	Components::PointLightComponent pointlight4;
-	Components::PointLightComponent pointlight5;
-	Components::PointLightComponent pointlight6;
-	Components::PointLightComponent pointlight7;
-	Components::PointLightComponent pointlight8;
-	Components::PointLightComponent pointlight9;
-
-	Components::SpotLightComponent spotLight;
-
 	Graphics::Skybox Skybox;
 
 	Graphics::DiffuseOnly DiffuseRP;
@@ -70,6 +57,9 @@ class Sample1 : public Core::Game
 	ECS::Entity ECube;
 	ECS::Entity ECyborg;
 	ECS::Entity ENanosuit;
+
+	ECS::Entity ECamera;
+	ECS::Entity ELights;
 
 	// positions all containers
 	Math::Vector3 cubePositions[10] =
@@ -105,38 +95,6 @@ class Sample1 : public Core::Game
 	bool isMouseDisabled = false;
 	bool renderSkybox = true;
 
-	void SetupLights()
-	{
-		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		dirlight.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
-
-		pointlight1.SetPosition(pointLightPositions[0]);
-		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-
-		pointlight2.SetPosition(pointLightPositions[1]);
-		pointlight2.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight3.SetPosition(pointLightPositions[2]);
-		pointlight3.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight4.SetPosition(pointLightPositions[3]);
-		pointlight4.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight5.SetPosition(pointLightPositions[4]);
-		pointlight5.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight6.SetPosition(pointLightPositions[5]);
-		pointlight6.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight7.SetPosition(pointLightPositions[6]);
-		pointlight7.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight8.SetPosition(pointLightPositions[7]);
-		pointlight8.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-
-		pointlight9.SetPosition(pointLightPositions[8]);
-		pointlight9.SetColor(Graphics::Color(0.8f, 0.8f, 0.8f, 0.0f));
-	}
 	void SetupAssets()
 	{
 
@@ -192,11 +150,24 @@ class Sample1 : public Core::Game
 		ECube = ModelsScene.CreateEntity();
 		ENanosuit = ModelsScene.CreateEntity();
 		ECyborg = ModelsScene.CreateEntity();
+		ECamera = ModelsScene.CreateEntity();
+		ELights = ModelsScene.CreateEntity();
 
 		//Assign Components
 		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
+
+		//ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
+		ELights.Assign<Components::DirLightComponent>();
+		ELights.Assign<Components::PointLightComponent>();
+		ECamera.Assign<Components::SpotLightComponent>();
+
+		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+
+		ELights.GetComponent<Components::PointLightComponent>()->SetPosition(pointLightPositions[0]);
+		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 	}
 
 	void InitRenderer()
@@ -209,18 +180,9 @@ class Sample1 : public Core::Game
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
 
-		Renderer->AddLight(&spotLight);
-		Renderer->AddLight(&pointlight1);
-		Renderer->AddLight(&pointlight2);
-		Renderer->AddLight(&pointlight3);
-		Renderer->AddLight(&pointlight4);
-		Renderer->AddLight(&pointlight5);
-		Renderer->AddLight(&pointlight6);
-		Renderer->AddLight(&pointlight7);
-		Renderer->AddLight(&pointlight8);
-		Renderer->AddLight(&pointlight9);
-		Renderer->AddLight(&dirlight);
-		Renderer->Bake();
+		SetupEntities();
+
+		Renderer->Bake(ModelsScene.Entities);
 	}
 
 	void Load()
@@ -229,13 +191,11 @@ class Sample1 : public Core::Game
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);
 
-		InitRenderer();
 
-		SetupLights();
+		InitRenderer();
 
 		SetupAssets();
 
-		SetupEntities();
 
 		//Setup positions
 		Math::Matrix4 TNanosuit(1.0f);
@@ -315,8 +275,8 @@ class Sample1 : public Core::Game
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-		spotLight.SetPosition(Camera.GetPosition());
-		spotLight.SetDirection(Camera.GetFrontView());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 		Renderer->Update(ModelsScene.Entities, ModelsScene.Events, dt);
 

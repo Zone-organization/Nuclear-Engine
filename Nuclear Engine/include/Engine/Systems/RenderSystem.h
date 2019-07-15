@@ -35,15 +35,11 @@ namespace NuclearEngine
 			void AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
 			void SetActiveRenderingPipeline(Uint32 PipelineID);
 
-			void AddLight(Components::DirLightComponent* light);
-			void AddLight(Components::PointLightComponent* light);
-			void AddLight(Components::SpotLightComponent* light);
-
 			void CreateMaterialForAllPipelines(Assets::Material* material);
 
 			void CreateMaterial(Assets::Material* material, Uint32 PipelineID);
 
-			void Bake(bool AllPipelines = true);
+			void Bake(ECS::EntityManager& es, bool AllPipelines = true);
 
 			IPipelineState* GetPipeline();
 

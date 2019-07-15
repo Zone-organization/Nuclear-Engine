@@ -56,18 +56,6 @@ namespace NuclearEngine
 			}
 			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID)+ ") is not found, while setting it active.\n");
 		}
-		void RenderSystem::AddLight(Components::DirLightComponent* light)
-		{
-			mLightingSystem.DirLights.push_back(light);
-		}
-		void RenderSystem::AddLight(Components::PointLightComponent* light)
-		{
-			mLightingSystem.PointLights.push_back(light);
-		}
-		void RenderSystem::AddLight(Components::SpotLightComponent* light)
-		{
-			mLightingSystem.SpotLights.push_back(light);
-		}
 
 		void RenderSystem::CreateMaterialForAllPipelines(Assets::Material* material)
 		{
@@ -95,8 +83,26 @@ namespace NuclearEngine
 			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID) + ") is not found, while creating material instance from it.\n");
 		}
 
-		void RenderSystem::Bake(bool AllPipelines)
+		void RenderSystem::Bake(ECS::EntityManager& es, bool AllPipelines)
 		{
+			ECS::ComponentHandle<Components::DirLightComponent> DirLight;
+			for (ECS::Entity entity : es.entities_with_components(DirLight))
+			{
+				mLightingSystem.DirLights.push_back(DirLight.Get());
+			}
+
+			ECS::ComponentHandle<Components::SpotLightComponent> SpotLight;
+			for (ECS::Entity entity : es.entities_with_components(SpotLight))
+			{
+				mLightingSystem.SpotLights.push_back(SpotLight.Get());
+			}
+
+			ECS::ComponentHandle<Components::PointLightComponent> PointLight;
+			for (ECS::Entity entity : es.entities_with_components(PointLight))
+			{
+				mLightingSystem.PointLights.push_back(PointLight.Get());
+			}
+
 			mLightingSystem.BakeBuffer();
 			mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
 

@@ -64,7 +64,7 @@ class Sample3 : public Core::Game
 
 		Scene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&DiffuseRP);
-		Renderer->Bake();
+		Renderer->Bake(Scene.Entities);
 
 		Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
 	}

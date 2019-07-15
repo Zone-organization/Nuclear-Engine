@@ -16,11 +16,6 @@ class Sample2 : public Core::Game
 
 	Components::CameraComponent Camera;
 
-	Components::DirLightComponent dirlight;
-	Components::PointLightComponent pointlight1;
-
-	Components::SpotLightComponent spotLight;
-
 	Graphics::PBR PBR;
 	Graphics::DiffuseOnly DiffuseRP;
 	Graphics::WireFrame WireFrameRP;
@@ -30,20 +25,14 @@ class Sample2 : public Core::Game
 	ECS::Entity ESponza;
 	ECS::Entity ESphere;
 
+	ECS::Entity ECamera;
+	ECS::Entity ELights;
+
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
 
-	void SetupLights()
-	{
-		dirlight.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		dirlight.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
-
-		pointlight1.SetPosition(Math::Vector3(0.0f, 0.0f, 10.0f));
-		pointlight1.SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		pointlight1.SetIntensity(10.0f);
-	}
 	void SetupAssets()
 	{
 		Importers::MeshLoadingDesc ModelDesc;
@@ -83,6 +72,18 @@ class Sample2 : public Core::Game
 		//Assign Components
 		ESphere.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &SphereMaterial);
 		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
+
+		ELights.Assign<Components::DirLightComponent>();
+		ELights.Assign<Components::PointLightComponent>();
+		ECamera.Assign<Components::SpotLightComponent>();
+
+		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+
+		ELights.GetComponent<Components::PointLightComponent>()->SetPosition(Math::Vector3(0.0f, 0.0f, 10.0f));
+		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
+
 	}
 	void InitRenderer()
 	{
@@ -92,10 +93,7 @@ class Sample2 : public Core::Game
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
 
-		Renderer->AddLight(&spotLight);
-		Renderer->AddLight(&pointlight1);
-		Renderer->AddLight(&dirlight);
-		Renderer->Bake();
+		Renderer->Bake(PBRScene.Entities);
 	}
 
 	void Load()
@@ -104,13 +102,11 @@ class Sample2 : public Core::Game
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);
 
+		SetupEntities();
+
 		InitRenderer();
 
-		SetupLights();
-
 		SetupAssets();
-
-		SetupEntities();
 
 		int nrRows = 7;
 		int nrColumns = 7;
@@ -212,8 +208,8 @@ class Sample2 : public Core::Game
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-		spotLight.SetPosition(Camera.GetPosition());
-		spotLight.SetDirection(Camera.GetFrontView());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 		
 		Renderer->Update(PBRScene.Entities, PBRScene.Events, dt);
 
@@ -249,8 +245,8 @@ class Sample2 : public Core::Game
 			ImGui::SliderFloat("PointLight Intensity", &f, 1.0f, 100.0f);
 			ImGui::ColorEdit3("PointLight Color", (float*)& Lightcolor);
 
-			pointlight1.SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
-			pointlight1.SetIntensity(f);
+			ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+			ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(f);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();

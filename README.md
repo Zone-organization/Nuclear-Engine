@@ -4,8 +4,7 @@
 # To-dos 
   - W.I.P:
 	- Basic PhysX 4 Support (75%)
-	- Port AudioSystem to ECS.
-	- Port Light to ECS.
+	- Port All Components to ECS (75%)
 	- Abstract FMOD implementations and provide interfaces for them (to prevent extra linking and better docs in the future)
 	
   - Planned:
@@ -17,6 +16,9 @@
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.
     - Android Support (Mobile devices in general).
+
+## Known Bugs
+  - Rendering any model with mirrored UVs seems to be broken.
 
 ### Building
 The project has three building configuration:
