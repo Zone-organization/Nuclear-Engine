@@ -92,7 +92,7 @@ namespace NuclearEngine {
 			return Tex;
 		}
 
-		Assets::AudioClip& AssetManager::Import(const Core::Path& Path, int mode)
+		Assets::AudioClip& AssetManager::Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode)
 		{
 			Log.Info("[AssetManager : " + mDesc.mName + "] Loading: " + Path.mInputPath + "\n");
 			Assets::AudioClip clip;

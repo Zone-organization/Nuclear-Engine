@@ -2,6 +2,7 @@
 #include <Engine\Audio\AudioEngine.h>
 #include <FMOD\inc\fmod.hpp>
 #include "..\Audio\FMODError.h"
+#include <FMOD/inc/fmod.hpp>
 
 namespace NuclearEngine
 {

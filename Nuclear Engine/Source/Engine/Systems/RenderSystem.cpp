@@ -158,8 +158,9 @@ namespace NuclearEngine
 				{
 					if (!MeshObject.Get()->mMultiRender)
 					{
-						//entity.GetTransform()->Update();
-						mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::EntityInfoComponent>().Get()->mTransform.GetTransform());
+
+						auto EntityInfo = entity.GetComponent<Components::EntityInfoComponent>().Get();
+						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo->mTransform.GetTransform());
 						mCameraManager->UpdateBuffer();
 						InstantRender(MeshObject.Get());
 					}

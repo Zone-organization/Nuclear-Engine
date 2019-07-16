@@ -1,7 +1,12 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Engine/Assets/Common.h>
-#include <FMOD/inc/fmod.hpp>
+
+namespace FMOD
+{
+	class Sound;
+	class Channel;
+}
 
 namespace NuclearEngine
 {

@@ -16,6 +16,8 @@ namespace NuclearEngine
 			EntityInfoComponent(Math::Vector3 position, Math::Quaternion rotation);
 			~EntityInfoComponent();
 
+			ECS::Entity mOwnerEntity;
+			ECS::Entity mParentEntity;
 			ECS::Transform mTransform;
 		};
 	}

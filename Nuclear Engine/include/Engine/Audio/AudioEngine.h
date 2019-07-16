@@ -1,6 +1,11 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <FMOD/inc/fmod.hpp>
+
+namespace FMOD
+{
+	class System;
+	class Channel;
+}
 
 namespace NuclearEngine
 {

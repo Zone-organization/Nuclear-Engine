@@ -415,6 +415,7 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIFile.cpp" />
     <ClCompile Include="Source\Core\Parsers\INIParserClass.cpp" />

@@ -337,6 +337,7 @@
     <ClCompile Include="Source\Engine\Components\PointLightComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\SpotLightComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\EntityInfoComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

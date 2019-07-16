@@ -3,9 +3,7 @@
 
 # To-dos 
   - W.I.P:
-	- Basic PhysX 4 Support (75%)
-	- Port All Components to ECS (75%)
-	- Abstract FMOD implementations and provide interfaces for them (to prevent extra linking and better docs in the future)
+	- Port All Components to ECS (80%)
 	
   - Planned:
     - Restore & Test render to texture feature (Render Target)

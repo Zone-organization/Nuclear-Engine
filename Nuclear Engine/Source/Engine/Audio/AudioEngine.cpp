@@ -1,4 +1,5 @@
 #include <Engine\Audio\AudioEngine.h>
+#include <FMOD/inc/fmod.hpp>
 #define FMOD_ERRCHK_IMPL
 #include "FMODError.h"
 #pragma comment (lib, "fmodL_vc.lib")
@@ -21,7 +22,7 @@ namespace NuclearEngine
 			}
 
 
-			result = system->init(MaxChannels, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
+			result = system->init(MaxChannels, FMOD_INIT_NORMAL, 0);
 			if (result != FMOD_OK)
 			{
 				Log.Error("[AudioEngine] Failed to initialize FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");

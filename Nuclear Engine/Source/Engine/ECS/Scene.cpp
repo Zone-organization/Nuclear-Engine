@@ -18,6 +18,7 @@ namespace NuclearEngine
 		{
 			auto entity = Entities.Create();
 			entity.Assign<Components::EntityInfoComponent>();
+			entity.GetComponent<Components::EntityInfoComponent>().Get()->mOwnerEntity = entity;
 			return entity;
 		}
 		void Scene::SetPhysXScene(physx::PxScene* scene)
