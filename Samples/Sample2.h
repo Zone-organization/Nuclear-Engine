@@ -56,6 +56,9 @@ class Sample2 : public Core::Game
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
 		Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
 
+		ESphere.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &SphereMaterial);
+		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
+
 		PBRSphereSet.mData.clear();
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
@@ -68,11 +71,11 @@ class Sample2 : public Core::Game
 		//Create Entities
 		ESphere = PBRScene.CreateEntity();
 		ESponza = PBRScene.CreateEntity();
+		ELights = PBRScene.CreateEntity();
+		ECamera = PBRScene.CreateEntity();
 
 		//Assign Components
-		ESphere.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &SphereMaterial);
-		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
-
+	
 		ELights.Assign<Components::DirLightComponent>();
 		ELights.Assign<Components::PointLightComponent>();
 		ECamera.Assign<Components::SpotLightComponent>();

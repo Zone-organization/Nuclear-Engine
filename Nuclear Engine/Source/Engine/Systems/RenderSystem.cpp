@@ -18,7 +18,6 @@ namespace NuclearEngine
 		RenderSystem::RenderSystem(Managers::CameraManager* CameraManager)
 		{
 			mCameraManager = CameraManager;
-			mStatus = RenderSystemStatus::RequireBaking;
 			mActiveRenderingPipeline = nullptr;
 		}
 		RenderSystem::~RenderSystem()
@@ -83,8 +82,19 @@ namespace NuclearEngine
 			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID) + ") is not found, while creating material instance from it.\n");
 		}
 
+		bool RenderSystem::NeedsBaking()
+		{
+			if (mStatus.BakeLighting || mStatus.BakePipelines)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		void RenderSystem::Bake(ECS::EntityManager& es, bool AllPipelines)
 		{
+
 			ECS::ComponentHandle<Components::DirLightComponent> DirLight;
 			for (ECS::Entity entity : es.entities_with_components(DirLight))
 			{

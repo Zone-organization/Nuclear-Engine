@@ -21,10 +21,11 @@ namespace NuclearEngine
 	namespace Managers { class CameraManager; }
 	namespace Systems
 	{
-		enum class NEAPI RenderSystemStatus
+
+		struct RenderSystemBakeStatus
 		{
-			Ready,
-			RequireBaking
+			bool BakeLighting = true;
+			bool BakePipelines = true;
 		};
 
 		class NEAPI RenderSystem : public ECS::System<RenderSystem> {
@@ -38,6 +39,8 @@ namespace NuclearEngine
 			void CreateMaterialForAllPipelines(Assets::Material* material);
 
 			void CreateMaterial(Assets::Material* material, Uint32 PipelineID);
+
+			bool NeedsBaking();
 
 			void Bake(ECS::EntityManager& es, bool AllPipelines = true);
 
@@ -60,7 +63,7 @@ namespace NuclearEngine
 			Managers::CameraManager* mCameraManager;
 			bool PipelineDirty = true;
 
-			RenderSystemStatus mStatus;
+			RenderSystemBakeStatus mStatus;
 
 			Assets::Material LightSphereMaterial;
 			Graphics::RenderingPipeline* mActiveRenderingPipeline;

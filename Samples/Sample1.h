@@ -97,7 +97,6 @@ class Sample1 : public Core::Game
 
 	void SetupAssets()
 	{
-
 		Importers::MeshLoadingDesc ModelDesc;
 
 		//Load Nanosuit Model
@@ -122,6 +121,10 @@ class Sample1 : public Core::Game
 		Renderer->CreateMaterialForAllPipelines(CyborgMaterial);
 
 		CubeSet.mData.clear();
+
+		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
+		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
+		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
 
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
@@ -153,11 +156,6 @@ class Sample1 : public Core::Game
 		ECamera = ModelsScene.CreateEntity();
 		ELights = ModelsScene.CreateEntity();
 
-		//Assign Components
-		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
-		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
-		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
-
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ELights.Assign<Components::DirLightComponent>();
 		ELights.Assign<Components::PointLightComponent>();
@@ -179,10 +177,8 @@ class Sample1 : public Core::Game
 		Renderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
-
-		SetupEntities();
-
 		Renderer->Bake(ModelsScene.Entities);
+
 	}
 
 	void Load()
@@ -191,11 +187,11 @@ class Sample1 : public Core::Game
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);
 
+		SetupEntities();
 
 		InitRenderer();
 
 		SetupAssets();
-
 
 		//Setup positions
 		Math::Matrix4 TNanosuit(1.0f);
