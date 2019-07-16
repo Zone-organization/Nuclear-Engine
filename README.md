@@ -4,7 +4,8 @@
 # To-dos 
   - W.I.P:
 	- Port All Components to ECS (80%)
-	
+	- Basic Editor support (Nuclear Editor).
+
   - Planned:
     - Restore & Test render to texture feature (Render Target)
     - Bloom effect.
