@@ -163,7 +163,7 @@ class Sample3 : public Core::Game
 			auto ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), BoxPhysXMat, ECS::Transform(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)), &CubeMaterial, true);
 			Math::Matrix4 TCube(1.0f);
 			TCube = Math::translate(TCube, Camera.GetPosition());
-			ECube.GetComponent<Components::TransformComponent>()->mTransform.SetTransform(TCube);
+			ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCube);
 		}
 
 		{

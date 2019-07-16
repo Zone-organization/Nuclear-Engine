@@ -1,6 +1,6 @@
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Graphics\Context.h>
-#include <Engine\Components/TransformComponent.h>
+#include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
@@ -159,7 +159,7 @@ namespace NuclearEngine
 					if (!MeshObject.Get()->mMultiRender)
 					{
 						//entity.GetTransform()->Update();
-						mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::TransformComponent>().Get()->mTransform.GetTransform());
+						mCameraManager->GetMainCamera()->SetModelMatrix(entity.GetComponent<Components::EntityInfoComponent>().Get()->mTransform.GetTransform());
 						mCameraManager->UpdateBuffer();
 						InstantRender(MeshObject.Get());
 					}

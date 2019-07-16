@@ -1,7 +1,7 @@
 #include <Engine\Systems\PhysXSystem.h>
 #include <Engine\Components\ColliderComponent.h>
 #include <Engine\Components\RigidBodyComponent.h>
-#include <Engine\Components\TransformComponent.h>
+#include <Engine\Components\EntityInfoComponent.h>
 #include "..\PhysX\PhysXTypes.h"
 
 namespace NuclearEngine
@@ -86,7 +86,7 @@ namespace NuclearEngine
 			ECS::ComponentHandle<Components::RigidBodyComponent> RigidBodyObj;
 			for (ECS::Entity entity : es.entities_with_components(RigidBodyObj))
 			{
-				entity.GetComponent<Components::TransformComponent>().Get()->mTransform.SetTransform(PhysX::From(RigidBodyObj->mDynamicActor.mPtr->getGlobalPose()));
+				entity.GetComponent<Components::EntityInfoComponent>().Get()->mTransform.SetTransform(PhysX::From(RigidBodyObj->mDynamicActor.mPtr->getGlobalPose()));
 			}
 		}
 	}

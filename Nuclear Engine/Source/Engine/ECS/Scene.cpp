@@ -1,7 +1,7 @@
 #include <Engine\ECS\Scene.h>
 #include <Engine\ECS\ComponentDependency.h>
 #include <Engine\Components\MeshComponent.h>
-#include <Engine\Components\TransformComponent.h>
+#include <Engine\Components\EntityInfoComponent.h>
 
 namespace NuclearEngine
 {
@@ -17,7 +17,7 @@ namespace NuclearEngine
 		Entity Scene::CreateEntity()
 		{
 			auto entity = Entities.Create();
-			entity.Assign<Components::TransformComponent>();
+			entity.Assign<Components::EntityInfoComponent>();
 			return entity;
 		}
 		void Scene::SetPhysXScene(physx::PxScene* scene)

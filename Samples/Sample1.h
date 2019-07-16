@@ -197,15 +197,15 @@ class Sample1 : public Core::Game
 		Math::Matrix4 TNanosuit(1.0f);
 		TNanosuit = Math::translate(TNanosuit, Math::Vector3(0.0f, -1.75f, 0.0f));
 		TNanosuit = Math::scale(TNanosuit, Math::Vector3(0.3f, 0.3f, 0.3f));
-		ENanosuit.GetComponent<Components::TransformComponent>()->mTransform.SetTransform(TNanosuit);
+		ENanosuit.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TNanosuit);
 
 		Math::Matrix4 TCyborg(1.0f);
 		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
-		ECyborg.GetComponent<Components::TransformComponent>()->mTransform.SetTransform(TCyborg);
+		ECyborg.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCyborg);
 
 		Math::Matrix4 TCube(1.0f);
 		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
-		ECube.GetComponent<Components::TransformComponent>()->mTransform.SetTransform(TCube);
+		ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCube);
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}

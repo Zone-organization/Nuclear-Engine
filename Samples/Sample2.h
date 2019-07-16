@@ -136,7 +136,7 @@ class Sample2 : public Core::Game
 
 		Math::Matrix4 TSponza(1.0f);
 		TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
-		ESponza.GetComponent<Components::TransformComponent>()->mTransform.SetTransform(TSponza);
+		ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
