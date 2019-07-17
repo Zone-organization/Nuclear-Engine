@@ -803,7 +803,7 @@ namespace NuclearEngine {
 			template <typename C>
 			void unpack(Entity::Id id, ComponentHandle<C> &a) {
 				assert_Valid(id);
-				a = component<C>(id);
+				a = this->component<C>(id);
 			}
 
 			/**
@@ -820,7 +820,7 @@ namespace NuclearEngine {
 			template <typename A, typename ... Args>
 			void unpack(Entity::Id id, ComponentHandle<A> &a, ComponentHandle<Args> & ... args) {
 				assert_Valid(id);
-				a = component<A>(id);
+				a = this->component<A>(id);
 				unpack<Args ...>(id, args ...);
 			}
 
@@ -961,7 +961,7 @@ namespace NuclearEngine {
 		template <typename C, typename ... Args>
 		ComponentHandle<C> Entity::Replace(Args && ... args) {
 			assert(Valid());
-			auto handle = component<C>();
+			auto handle = this->component<C>();
 			if (handle) {
 				*(handle.Get()) = C(std::forward<Args>(args) ...);
 			}

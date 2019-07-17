@@ -1,6 +1,9 @@
 #pragma once
 #include <ThirdParty\crc32c.h>
 #include <Base\NE_PrivateCommon.h>
+#include <string>
+#include <sstream>
+
 namespace NuclearEngine
 {
 	namespace Utilities
