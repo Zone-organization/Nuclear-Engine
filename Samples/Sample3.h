@@ -81,6 +81,14 @@ class Sample3 : public Core::Game
 		mPhysXSystem->Bake(Scene.Entities);
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
+
+
+	void OnWindowResize(int width, int height) override
+	{
+		Graphics::Context::GetSwapChain()->Resize(width, height);
+		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+	}
+
 	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
 		if (!isMouseDisabled)

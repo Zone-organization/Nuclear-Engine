@@ -4,27 +4,30 @@ namespace NuclearEngine
 	namespace Assets
 	{
 
-		static Assets::Mesh gCube;
-		static Assets::Mesh gSphere;
-		static Assets::Mesh gPlane;
+		static Assets::Mesh* gCube;
+		static Assets::Mesh* gSphere;
+		static Assets::Mesh* gPlane;
 
 		void DefaultMeshes::Initialize()
 		{
-			Assets::Mesh::CreateCube(&gCube);
-			Assets::Mesh::CreateSphere(&gSphere);
-			Assets::Mesh::CreatePlane(&gPlane);
+			gCube = new Assets::Mesh();
+			gSphere = new Assets::Mesh();
+			gPlane = new Assets::Mesh();
+			Assets::Mesh::CreateCube(gCube);
+			Assets::Mesh::CreateSphere(gSphere);
+			Assets::Mesh::CreatePlane(gPlane);
 		}
 		Assets::Mesh* DefaultMeshes::GetCubeAsset()
 		{
-			return &gCube;
+			return gCube;
 		}
 		Assets::Mesh* DefaultMeshes::GetSphereAsset()
 		{
-			return &gSphere;
+			return gSphere;
 		}
 		Assets::Mesh* DefaultMeshes::GetPlaneAsset()
 		{
-			return &gPlane;
+			return gPlane;
 		}
 	}
 }

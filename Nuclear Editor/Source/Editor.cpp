@@ -1,4 +1,4 @@
-#include "Sample1.h"
+#include "CNuclearEditor.h"
 
 namespace NuclearEditor
 {
@@ -6,8 +6,8 @@ namespace NuclearEditor
 	{
 		Core::EngineStartupDesc desc;
 		Core::Engine::Start(desc);
-		Sample1 demo;
-		Core::Engine::RunGame(&demo);
+		CNuclearEditor Editor;
+		Core::Engine::RunGame(&Editor);
 		Core::Engine::Shutdown();
 	}
 }

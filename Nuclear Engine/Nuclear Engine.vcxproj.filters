@@ -7,7 +7,6 @@
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Core\Application.h" />
-    <ClInclude Include="include\Core\Editor.h" />
     <ClInclude Include="include\Engine\Managers\AssetManager.h" />
     <ClInclude Include="include\Engine\Managers\ShaderManager.h" />
     <ClInclude Include="include\Engine\Graphics\Background.h" />
@@ -272,7 +271,6 @@
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Core\Editor.cpp" />
     <ClCompile Include="Source\Base\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Core\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
