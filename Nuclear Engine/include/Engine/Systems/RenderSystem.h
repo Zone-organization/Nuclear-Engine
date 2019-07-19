@@ -65,6 +65,7 @@ namespace NuclearEngine
 
 			RenderSystemBakeStatus mStatus;
 
+			Assets::Mesh CameraScreenQuad;
 			Assets::Material LightSphereMaterial;
 			Graphics::RenderingPipeline* mActiveRenderingPipeline;
 			std::unordered_map<Uint32, Graphics::RenderingPipeline*> mRenderingPipelines;

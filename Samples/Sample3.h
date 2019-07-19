@@ -115,12 +115,6 @@ class Sample3 : public Core::Game
 
 	bool RenderSponza = false;
 
-	void OnWindowResize(int width, int height) override
-	{
-		Graphics::Context::GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-	}
-
 	void Update(float deltatime) override
 	{
 		//Movement

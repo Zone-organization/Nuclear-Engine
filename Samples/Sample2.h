@@ -137,6 +137,17 @@ class Sample2 : public Core::Game
 		Math::Matrix4 TSponza(1.0f);
 		TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
 		ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
+		Components::CameraBakingOptions Desc;
+		Desc.RTWidth = _Width_;
+		Desc.RTHeight = _Height_;
+		Camera.Bake(Desc);
+
+
+		//Graphics::RenderTargetDesc Desc;
+		//Desc.Width = _Width_;
+		//Desc.Height = _Height_;
+
+		//mRT.Create(Desc);
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -208,15 +219,16 @@ class Sample2 : public Core::Game
 	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.3f,  0.3f,  0.3f, 1.0f };
-		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Camera.GetCameraRT()->SetActive(ClearColor);
 
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 		
 		Renderer->Update(PBRScene.Entities, PBRScene.Events, dt);
 
-
+		Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample2: PBR Rendering");

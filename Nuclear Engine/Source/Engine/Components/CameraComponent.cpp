@@ -149,7 +149,8 @@ namespace NuclearEngine
 			if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
 			if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
 
-			CreationAttribs.Source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true).c_str();
+			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl", defines, std::vector<std::string>(), true);
+			CreationAttribs.Source = source.c_str();
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PShader);
 
 			PipelineStateDesc PSODesc;

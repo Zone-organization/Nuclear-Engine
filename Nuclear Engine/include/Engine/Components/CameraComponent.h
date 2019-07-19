@@ -83,7 +83,6 @@ namespace NuclearEngine
 		protected:
 			Graphics::RenderTarget CameraRT;
 			RefCntAutoPtr<IPipelineState> mPSO;
-			//Assets::Mesh PPScreenQuad;
 
 			// Eular Angles
 			float Yaw;

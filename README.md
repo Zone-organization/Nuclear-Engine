@@ -5,9 +5,9 @@
   - W.I.P:
 	- Port All Components to ECS (80%)
 	- Basic Editor support (Nuclear Editor).
+    - Restore & Test render to texture feature (Render Target)
 
   - Planned:
-    - Restore & Test render to texture feature (Render Target)
     - Bloom effect.
     - C# Scripting through .Net Core
 	- Mesh Animations
