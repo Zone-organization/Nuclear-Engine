@@ -3,13 +3,13 @@
 
 # To-dos 
   - W.I.P:
-	- Port All Components to ECS (90%)
-	- Basic Editor support (Nuclear Editor).
+    - Restore Postprocessing Effects.
 
   - Planned:
     - Bloom effect.
     - C# Scripting through .Net Core
 	- Mesh Animations
+	- Basic Editor support (Nuclear Editor).
 
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.

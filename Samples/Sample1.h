@@ -53,7 +53,6 @@ class Sample1 : public Core::Game
 
 	//ECS
 	ECS::Scene ModelsScene;
-	ECS::Entity ESkybox;
 	ECS::Entity ECube;
 	ECS::Entity ECyborg;
 	ECS::Entity ENanosuit;
@@ -93,7 +92,6 @@ class Sample1 : public Core::Game
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
-	bool renderSkybox = true;
 
 	void SetupAssets()
 	{
@@ -207,6 +205,11 @@ class Sample1 : public Core::Game
 		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
 		ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCube);
 
+		Components::CameraBakingOptions Desc;
+		Desc.RTWidth = _Width_;
+		Desc.RTHeight = _Height_;
+		Camera.Bake(Desc);
+		Camera.mSkybox = &Skybox;
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -238,6 +241,7 @@ class Sample1 : public Core::Game
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
 		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.ResizeRenderTarget(width, height);
 	}
 	void Update(float deltatime) override
 	{
@@ -275,16 +279,11 @@ class Sample1 : public Core::Game
 	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
-		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 		Renderer->Update(ModelsScene.Entities, ModelsScene.Events, dt);
-
-		if (renderSkybox)
-			Skybox.Render();
 
 		{
 			using namespace Graphics;
@@ -313,7 +312,9 @@ class Sample1 : public Core::Game
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			ImGui::Checkbox("Render Skybox", &renderSkybox);
+			ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
+
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();

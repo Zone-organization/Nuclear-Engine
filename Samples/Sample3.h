@@ -79,6 +79,10 @@ class Sample3 : public Core::Game
 
 		SetupEntities();
 		mPhysXSystem->Bake(Scene.Entities);
+		Components::CameraBakingOptions Desc;
+		Desc.RTWidth = _Width_;
+		Desc.RTHeight = _Height_;
+		Camera.Bake(Desc);
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 
@@ -87,6 +91,7 @@ class Sample3 : public Core::Game
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
 		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.ResizeRenderTarget(width, height);
 	}
 
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -153,8 +158,6 @@ class Sample3 : public Core::Game
 
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.3f,  0.3f,  0.3f, 1.0f };
-		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);		
 		Renderer->Update(Scene.Entities, Scene.Events, dt);
@@ -173,7 +176,7 @@ class Sample3 : public Core::Game
 			ImGui::Begin("Sample3: PhysX Integration");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
-
+			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera.RTClearColor);
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 

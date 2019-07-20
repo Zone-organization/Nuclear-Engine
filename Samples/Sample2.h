@@ -141,14 +141,6 @@ class Sample2 : public Core::Game
 		Desc.RTWidth = _Width_;
 		Desc.RTHeight = _Height_;
 		Camera.Bake(Desc);
-
-
-		//Graphics::RenderTargetDesc Desc;
-		//Desc.Width = _Width_;
-		//Desc.Height = _Height_;
-
-		//mRT.Create(Desc);
-
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -259,6 +251,8 @@ class Sample2 : public Core::Game
 
 			ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
 			ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(f);
+
+			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera.RTClearColor);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();

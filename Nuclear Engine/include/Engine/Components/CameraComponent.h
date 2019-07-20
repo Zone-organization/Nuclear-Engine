@@ -3,6 +3,8 @@
 #include <Base\Math\Math.h>
 #include <Engine\Graphics\RenderTarget.h>
 #include <Engine\ECS\Entity.h>
+#include <Engine\Graphics\Color.h>
+#include <Engine\Graphics\Skybox.h>
 
 namespace NuclearEngine
 {
@@ -83,6 +85,9 @@ namespace NuclearEngine
 
 			CameraBuffer mCameraData;
 			CameraBakingOptions mCameraBakingOpts;
+			Graphics::Color RTClearColor;
+			Graphics::Skybox* mSkybox = nullptr;
+			bool RenderSkybox = false;
 		protected:
 			Graphics::RenderTarget CameraRT;
 			RefCntAutoPtr<IPipelineState> mPSO;

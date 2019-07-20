@@ -183,7 +183,7 @@ namespace NuclearEngine
 			//Render Scene from each avtive camera perspective
 			for (auto Camera : mCameraManager->ActiveCameras)
 			{
-				Camera->GetCameraRT()->SetActive(nullptr);
+				Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
 
 				Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
 
@@ -203,6 +203,11 @@ namespace NuclearEngine
 						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
 
 					}
+				}
+
+				if (Camera->RenderSkybox == true && Camera->mSkybox != nullptr)
+				{
+					Camera->mSkybox->Render();
 				}
 			}
 
