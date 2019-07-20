@@ -144,6 +144,8 @@ namespace NuclearEngine
 			CubeSet.mData.push_back({ 1, Assets::DefaultTextures::DefaultSpecularTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
+
+			Assets::Mesh::CreateScreenQuad(&CameraScreenQuad);
 		}
 		IPipelineState * RenderSystem::GetPipeline()
 		{
@@ -177,27 +179,51 @@ namespace NuclearEngine
 			}
 		}
 		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
-		{
-			Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
-
-			UpdateMeshes(es);
-			mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
-
-			if (VisualizePointLightsPositions)
+		{	
+			//Render Scene from each avtive camera perspective
+			for (auto Camera : mCameraManager->ActiveCameras)
 			{
-				for (unsigned int i = 0; i < mLightingSystem.PointLights.size(); i++)
+				Camera->GetCameraRT()->SetActive(nullptr);
+
+				Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
+
+				UpdateMeshes(es);
+				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
+
+				if (VisualizePointLightsPositions)
 				{
-					Math::Matrix4 model(1.0f);
-					model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
-					model = Math::scale(model, Math::Vector3(0.25f));
-					mCameraManager->GetMainCamera()->SetModelMatrix(model);
-					mCameraManager->UpdateBuffer();
+					for (unsigned int i = 0; i < mLightingSystem.PointLights.size(); i++)
+					{
+						Math::Matrix4 model(1.0f);
+						model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
+						model = Math::scale(model, Math::Vector3(0.25f));
+						Camera->SetModelMatrix(model);
+						mCameraManager->UpdateBuffer();
 
-					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
 
+					}
 				}
-
 			}
+
+			//Render Main camera view to screen
+			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(nullptr, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			auto MainCameraPtr = mCameraManager->GetMainCamera();
+			Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetPipeline());
+			Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			Uint32 offset = 0;
+			Graphics::Context::GetContext()->SetIndexBuffer(CameraScreenQuad.mSubMeshes.at(0).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &CameraScreenQuad.mSubMeshes.at(0).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+			
+			DrawAttribs DrawAttrs;
+			DrawAttrs.IsIndexed = true;
+			DrawAttrs.IndexType = VT_UINT32;
+			DrawAttrs.NumIndices = CameraScreenQuad.mSubMeshes.at(0).mIndicesCount;
+			Graphics::Context::GetContext()->Draw(DrawAttrs);
 		}
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{

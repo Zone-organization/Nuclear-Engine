@@ -38,8 +38,21 @@ namespace NuclearEngine
 
 		void CameraComponent::Bake(const CameraBakingOptions& Opt)
 		{
-			BakeRenderTarget(Opt);
+			mCameraBakingOpts = Opt;
+			BakeRenderTarget(mCameraBakingOpts);
 			BakePipeline(Opt);
+			GetSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
+		}
+
+		void CameraComponent::ResizeRenderTarget(Uint32 Width, Uint32 Height)
+		{
+			mCameraBakingOpts.RTWidth = Width;
+			mCameraBakingOpts.RTHeight = Height;
+			BakeRenderTarget(mCameraBakingOpts);
+
+			mSRB.Release();
+			mPSO->CreateShaderResourceBinding(&mSRB, true);
+			GetSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
 		}
 
 		void CameraComponent::Update()
@@ -106,6 +119,11 @@ namespace NuclearEngine
 		IPipelineState* CameraComponent::GetPipeline()
 		{
 			return mPSO.RawPtr();
+		}
+
+		IShaderResourceBinding* CameraComponent::GetSRB()
+		{
+			return mSRB.RawPtr();
 		}
 
 		void CameraComponent::BakeRenderTarget(const CameraBakingOptions& Desc)
@@ -177,7 +195,13 @@ namespace NuclearEngine
 			std::vector<StaticSamplerDesc> StaticSamplers;
 			StaticSamplers.push_back({ SHADER_TYPE_PIXEL, "ScreenTex", Sam_LinearClamp });
 
-			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPSO, PSODesc, Vars, false, StaticSamplers);
+			PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Vars.size());
+			PSODesc.ResourceLayout.Variables = Vars.data();
+			PSODesc.ResourceLayout.NumStaticSamplers = static_cast<Uint32>(StaticSamplers.size());
+			PSODesc.ResourceLayout.StaticSamplers = StaticSamplers.data();
+
+			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPSO);
+			mPSO->CreateShaderResourceBinding(&mSRB, true);
 		}
 
 		void CameraComponent::ProcessEye(float xoffset, float yoffset, bool constrainPitch)

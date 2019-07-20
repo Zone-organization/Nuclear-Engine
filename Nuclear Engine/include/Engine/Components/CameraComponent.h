@@ -59,6 +59,7 @@ namespace NuclearEngine
 			void Initialize(Math::Matrix4 projectionMatrix);
 
 			void Bake(const CameraBakingOptions& Opt);
+			void ResizeRenderTarget(Uint32 Width, Uint32 Height);
 			void Update();
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
@@ -72,7 +73,8 @@ namespace NuclearEngine
 			Math::Vector3 GetPosition();
 
 			Graphics::RenderTarget* GetCameraRT();
-			IPipelineState * GetPipeline();
+			IPipelineState* GetPipeline();
+			IShaderResourceBinding* GetSRB();
 
 			// Camera options
 			float MovementSpeed;
@@ -80,9 +82,11 @@ namespace NuclearEngine
 			float Zoom;
 
 			CameraBuffer mCameraData;
+			CameraBakingOptions mCameraBakingOpts;
 		protected:
 			Graphics::RenderTarget CameraRT;
 			RefCntAutoPtr<IPipelineState> mPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 
 			// Eular Angles
 			float Yaw;

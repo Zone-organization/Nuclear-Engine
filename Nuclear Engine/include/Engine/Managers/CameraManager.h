@@ -29,9 +29,10 @@ namespace NuclearEngine
 			Components::Camera* GetMainCamera();
 
 			IBuffer* GetCameraCB();
-		private:
+
 			std::vector<Components::Camera*> RegisteredCameras;
 			std::vector<Components::Camera*> ActiveCameras;
+		private:
 			Components::Camera* MainCamera = nullptr;
 
 			//Main camera constant buffer

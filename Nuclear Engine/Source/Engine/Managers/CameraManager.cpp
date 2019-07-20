@@ -23,6 +23,7 @@ namespace NuclearEngine
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &BufferData(), &mCameraCB);
 
 			SetMainCamera(Camera);
+			ActiveCameras.push_back(Camera);
 		}
 		void CameraManager::UpdateBuffer()
 		{

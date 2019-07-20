@@ -8,7 +8,7 @@ struct PixelInputType
     float2 Tex : TEXCOORD;
 };
 
-Texture2D ScreenTex : register(t0);;
+Texture2D ScreenTex : register(t0);
 SamplerState ScreenTex_sampler : register(s0);
 
 //#ifdef NE_POST_PROCESS_SETTINGS

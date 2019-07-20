@@ -28,6 +28,7 @@ namespace NuclearEngine
 
 			Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTColor);
 			mColorRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
+			mShaderRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
 			//Create Depth Texture
 			RefCntAutoPtr<ITexture> pRTDepth;
@@ -41,6 +42,7 @@ namespace NuclearEngine
 			mDepthDSV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
 
 		}
+
 		void RenderTarget::SetActive(const float* RGBA)
 		{		
 			Graphics::Context::GetContext()->SetRenderTargets(1, mColorRTV.GetRawDblPtr(), mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

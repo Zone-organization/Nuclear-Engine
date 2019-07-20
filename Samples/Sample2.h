@@ -181,6 +181,7 @@ class Sample2 : public Core::Game
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
 		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.ResizeRenderTarget(width, height);
 	}
 
 	void Update(float deltatime) override
@@ -219,16 +220,12 @@ class Sample2 : public Core::Game
 	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.3f,  0.3f,  0.3f, 1.0f };
-		Camera.GetCameraRT()->SetActive(ClearColor);
 
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 		
 		Renderer->Update(PBRScene.Entities, PBRScene.Events, dt);
 
-		Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample2: PBR Rendering");

@@ -26,7 +26,9 @@ namespace NuclearEngine
 
 			void Create(const RenderTargetDesc& Desc);
 			void SetActive(const float* RGBA);
+
 			RefCntAutoPtr<ITextureView> mColorRTV;
+			RefCntAutoPtr<ITextureView> mShaderRTV;
 			RefCntAutoPtr<ITextureView> mDepthDSV;
 		};
 	}
