@@ -4,7 +4,8 @@
 # To-dos 
   - W.I.P:
     - Restore Postprocessing Effects.
-
+    - Complete DemoGame (5%)  "Completing it would be a milesone for the engine"
+	
   - Planned:
     - Bloom effect.
     - C# Scripting through .Net Core

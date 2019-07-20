@@ -54,5 +54,26 @@ class CNuclearEditor : public Core::Game
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 		Graphics::Context::GetContext()->ClearRenderTarget(nullptr, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		{			
+			using namespace Graphics;
+			if (ImGui::BeginMainMenuBar())
+			{
+				if (ImGui::BeginMenu("File"))
+				{
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("Edit"))
+				{
+					if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+					if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+					ImGui::Separator();
+					if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+					if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+					if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+					ImGui::EndMenu();
+				}
+				ImGui::EndMainMenuBar();
+			}
+		}
 	}
 };

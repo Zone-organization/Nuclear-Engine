@@ -26,8 +26,8 @@ namespace NuclearEngine
 
 		struct CameraBakingOptions
 		{
-			Uint32 RTWidth;
-			Uint32 RTHeight;
+			Uint32 RTWidth = 0;
+			Uint32 RTHeight = 0;
 			bool PostProcessingEnabled = false;
 			bool HDR = false;
 			bool GammaCorrection = false;
