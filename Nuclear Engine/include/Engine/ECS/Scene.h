@@ -3,6 +3,7 @@
 #include <Engine\ECS/Entity.h>
 #include <Engine\ECS/System.h>
 #include <Engine/ECS/EntityFactory.h>
+#include <Core\Path.h>
 
 namespace physx { class PxScene; };
 
@@ -29,5 +30,15 @@ namespace NuclearEngine
 		private:
 			physx::PxScene* mScene;
 		};
+
+		class NEAPI SceneLoader {
+		public:
+			SceneLoader();
+			~SceneLoader();
+
+			Scene* LoadScene(Core::Path path);
+		};
+
+
 	}
 }

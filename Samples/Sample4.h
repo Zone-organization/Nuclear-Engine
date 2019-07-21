@@ -1,32 +1,7 @@
 #pragma once
 #include "Common.h"
 
-
-void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
-{
-	using namespace Graphics;
-	std::string name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
-
-	if (Manager)
-		name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
-	else
-		name = Utilities::int_to_hex<Uint32>(material->GetName()).c_str();
-
-	ImGui::Begin(name.c_str());
-
-	for (int i = 0; i < material->mPixelShaderTextures.size(); i++)
-	{
-		ImGui::Text(std::string("TextureSet Index: " + std::to_string(i)).c_str());
-		for (int j = 0; j < material->mPixelShaderTextures.at(i).mData.size(); j++)
-		{
-			ImGui::Image(&material->mPixelShaderTextures.at(i).mData.at(j).mTex, ImVec2(128, 128));
-			ImGui::SameLine();
-		}
-		ImGui::NewLine();
-	}
-	ImGui::End();
-}
-class Sample1 : public Core::Game
+class Sample4 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	Core::Input Input;
@@ -287,7 +262,7 @@ class Sample1 : public Core::Game
 
 		{
 			using namespace Graphics;
-			ImGui::Begin("Sample1: Basic Rendering");
+			ImGui::Begin("Sample4: Scene Loading");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
@@ -314,17 +289,13 @@ class Sample1 : public Core::Game
 
 			ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera.RTClearColor);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 
 		}
+		//ViewMaterialInfo(NanosuitMaterial, &AssetLoader);
 
-		for (auto material : AssetLoader.mImportedMaterials)
-		{
-			auto MaterialPtr = material.second;
-			ViewMaterialInfo(&MaterialPtr, &AssetLoader);
-		}
 	}
 };

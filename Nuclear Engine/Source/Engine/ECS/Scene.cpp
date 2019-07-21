@@ -2,6 +2,7 @@
 #include <Engine\ECS\ComponentDependency.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Components\EntityInfoComponent.h>
+#include<Core\Parsers\XMLParser.h>
 
 namespace NuclearEngine
 {
@@ -28,6 +29,23 @@ namespace NuclearEngine
 		physx::PxScene* Scene::GetPhysXScene()
 		{
 			return mScene;
+		}
+		SceneLoader::SceneLoader()
+		{
+		}
+		SceneLoader::~SceneLoader()
+		{
+		}
+		Scene* SceneLoader::LoadScene(Core::Path path)
+		{
+			using namespace Core::Parsers;
+			XMLDocument SceneDoc;
+			SceneDoc.LoadFile(path.mRealPath.c_str());
+
+			XMLElement* root = SceneDoc.FirstChildElement();
+			//root.
+
+			return nullptr;
 		}
 	}
 }

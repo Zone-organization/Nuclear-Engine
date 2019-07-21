@@ -23,7 +23,7 @@ float4 main(PixelInputType input) : SV_TARGET
 
     float GammaCorrectionValue = 1.0f / 2.2f;
     
-#define NE_ENABLE_POSTPROCESSING
+#ifdef NE_ENABLE_POSTPROCESSING
 
     if (HDR_Enabled == 1)
     {

@@ -37,7 +37,7 @@ namespace NuclearEngine
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
-			RefCntAutoPtr<ITextureView>  mTextureView;
+			RefCntAutoPtr<ITextureView> mTextureView;
 
 		private:
 			Uint8 mUsageType;
