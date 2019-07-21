@@ -268,12 +268,6 @@ float4 main(PixelInputType input) : SV_TARGET
 
 	float3 color = ambient + Lo;
 
-	// HDR tonemapping
-	color = color / (color + float3(1.0f, 1.0f, 1.0f));
-	// gamma correct
-	float GammaCorrect = 1.0f / 2.2f;
-	color = pow(color, float3(GammaCorrect, GammaCorrect, GammaCorrect));
-
 	return float4(color,1.0f);
 }
 
