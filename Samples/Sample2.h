@@ -142,6 +142,7 @@ class Sample2 : public Core::Game
 		Desc.RTHeight = _Height_;
 		Desc.HDR = true;
 		Desc.GammaCorrection = true;
+		Desc.Bloom = true;
 		Camera.Bake(Desc);
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}

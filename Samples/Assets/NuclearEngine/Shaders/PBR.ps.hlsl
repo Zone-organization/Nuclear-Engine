@@ -12,7 +12,6 @@ struct PixelInputType
 	float3x3 TBN : TANGENT0;
 };
 
-
 Texture2D NEMat_Albedo;
 Texture2D NEMat_Metallic;
 Texture2D NEMat_Normal;
@@ -221,7 +220,7 @@ float3 CalcSpotLight(SpotLight light, float3 N, float3 WorldPos, float3 V, float
 	return float3((kD * albedo / PI + specular) * radiance * NdotL);
 
 }
-
+// ----------------------------------------------------------------------------
 float4 main(PixelInputType input) : SV_TARGET
 {
 	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));

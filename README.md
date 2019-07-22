@@ -3,11 +3,13 @@
 
 # To-dos 
   - W.I.P:
-    - Restore Postprocessing Effects.
-    - Complete DemoGame (5%)  "Completing it would be a milesone for the engine"
+    - Bloom effect.
+	- ShaderInstances & PSO Instances (Dynamic Shader Model).
+	
+  - Milestone 0.01 Alpha
+	- Complete DemoGame
 	
   - Planned:
-    - Bloom effect.
     - C# Scripting through .Net Core
 	- Mesh Animations
 	- Basic Editor support (Nuclear Editor).

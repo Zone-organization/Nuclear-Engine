@@ -92,6 +92,9 @@ namespace NuclearEngine
 			RefCntAutoPtr<IPipelineState> mPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 
+			RefCntAutoPtr<IPipelineState> mBloomPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mBloomSRB;
+
 			// Eular Angles
 			float Yaw;
 			float Pitch;
