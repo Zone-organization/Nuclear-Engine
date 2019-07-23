@@ -184,6 +184,7 @@
     <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
+    <ClInclude Include="include\Engine\Graphics\DynamicPipelineState.h" />
     <ClInclude Include="include\Engine\Graphics\Graphics.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\DiffuseOnly.h" />

@@ -264,6 +264,7 @@
     <ClInclude Include="include\Engine\Components\SpotLightComponent.h" />
     <ClInclude Include="include\Engine\Components\DirLightComponent.h" />
     <ClInclude Include="include\Engine\Components\EntityInfoComponent.h" />
+    <ClInclude Include="include\Engine\Graphics\DynamicPipelineState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
