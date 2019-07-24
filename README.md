@@ -4,8 +4,8 @@
 # To-dos 
   - W.I.P:
     - Bloom effect.
-	- ShaderInstances & PSO Instances (Dynamic Shader Model).
-	
+	- Dynamic instancing of PSOs & SRBs (Dynamic Shader Model).
+
   - Milestone 0.01 Alpha
 	- Complete DemoGame
 	
