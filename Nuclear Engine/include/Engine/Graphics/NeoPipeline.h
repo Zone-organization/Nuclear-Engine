@@ -16,7 +16,12 @@ namespace NuclearEngine
 			std::string KeyPrefix = "NE_ENABLE_";
 			bool CreateSRB = true;
 			bool InitSRBStaticResources = true;
+
+			//AUTO FILLED ON CREATING NEOPIPELINE
+			Uint32 mHashedName = 0;
 		};
+
+		typedef std::vector<PipelineKey> KeyChain;
 
 		struct NeoPipelineDesc
 		{
@@ -25,10 +30,11 @@ namespace NuclearEngine
 			Core::Path mVShaderPath;
 			Core::Path mPShaderPath;
 
-			std::vector<PipelineKey> mKeys;
+			std::vector<KeyChain> mKeyChain;
 			std::vector<std::string> mConstDefines;
 
-			bool SaveKeysInfo = DEBUG_TRUE_BOOL;
+			//Increases memory cosumptions as it stores KeyChain information
+			bool SaveKeyChainsInfo = DEBUG_TRUE_BOOL;
 
 			GraphicsPipelineDesc GraphicsPipeline;
 		};
@@ -42,14 +48,12 @@ namespace NuclearEngine
 		class NEAPI NeoPipeline
 		{
 		public:
-
-			bool Create(NeoPipelineDesc& Desc);
+			std::vector<KeyChain> Create(const NeoPipelineDesc& Desc);
 
 			Uint32 GetHashedKey(const std::string Key);
 			PipelineWithSRB GetPipeline(Uint32 Key);
-
 		private:
-			std::vector<PipelineKey> mKeys;
+			std::vector<KeyChain> mKeyChain;
 			std::unordered_map<Uint32, PipelineWithSRB> mPipelineStates;
 		};
 	}

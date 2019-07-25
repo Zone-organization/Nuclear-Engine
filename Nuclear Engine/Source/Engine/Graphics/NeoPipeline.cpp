@@ -25,45 +25,53 @@ namespace NuclearEngine
 			return str;
 		}
 
-		bool NeoPipeline::Create(NeoPipelineDesc& Desc)
+		std::vector<KeyChain> NeoPipeline::Create(const NeoPipelineDesc& Desc)
 		{
+			/*
+			W.I.P
+			*/
+
 			std::string VShaderSource = Core::FileSystem::LoadShader(Desc.mVShaderPath, Desc.mConstDefines);
 			std::string PShaderSource = Core::FileSystem::LoadShader(Desc.mPShaderPath, Desc.mConstDefines);
-
-			for (auto Key : Desc.mKeys)
+			std::vector<std::string> RequiredInstances;
+			//Phase 1: Process Keychains
+			for (auto KeyChain : Desc.mKeyChain)
 			{
-				Uint32 KeyHash = Utilities::Hash(Key.KeyName);
-				RefCntAutoPtr<IShader> VShader;
-				RefCntAutoPtr<IShader> PShader;
-				RefCntAutoPtr<IPipelineState> Pipeline;
-
-				VShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(VShaderSource, Key.KeyPrefix + Key.KeyName), SHADER_TYPE_VERTEX);
-				PShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(PShaderSource, Key.KeyPrefix + Key.KeyName), SHADER_TYPE_PIXEL);
-
-				PipelineStateDesc PSODesc;
-				PSODesc.Name = std::string(Desc.mName + "_KEY_" + Key.KeyName).c_str();
-				PSODesc.IsComputePipeline = false;
-				PSODesc.GraphicsPipeline = Desc.GraphicsPipeline;
-				PSODesc.GraphicsPipeline.pVS = VShader;
-				PSODesc.GraphicsPipeline.pPS = PShader;
-				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VShader, PShader);
-				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&Pipeline, PSODesc, Vars, true);
-
-				PipelineWithSRB GeneratedPSO;
-				GeneratedPSO.PSO = Pipeline;
-				if (Key.CreateSRB)
+				for (auto Key : KeyChain)
 				{
-					RefCntAutoPtr<IShaderResourceBinding> SRB;
-					Pipeline->CreateShaderResourceBinding(&SRB, Key.InitSRBStaticResources);
-					GeneratedPSO.SRB = SRB;
+
 				}
-				mPipelineStates[KeyHash] = GeneratedPSO;
 			}
 
-			if (Desc.SaveKeysInfo)
-				mKeys = Desc.mKeys;
+			//Phase 2: Create Pipelines
+					//Uint32 KeyHash = Utilities::Hash(Key.KeyName);
+					//RefCntAutoPtr<IShader> VShader;
+					//RefCntAutoPtr<IShader> PShader;
+					//RefCntAutoPtr<IPipelineState> Pipeline;
 
-			return true;
+					//VShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(VShaderSource, Key.KeyPrefix + Key.KeyName), SHADER_TYPE_VERTEX);
+					//PShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(PShaderSource, Key.KeyPrefix + Key.KeyName), SHADER_TYPE_PIXEL);
+
+					//PipelineStateDesc PSODesc;
+					//PSODesc.Name = std::string(Desc.mName + "_KEY_" + Key.KeyName).c_str();
+					//PSODesc.IsComputePipeline = false;
+					//PSODesc.GraphicsPipeline = Desc.GraphicsPipeline;
+					//PSODesc.GraphicsPipeline.pVS = VShader;
+					//PSODesc.GraphicsPipeline.pPS = PShader;
+					//auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VShader, PShader);
+					//Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&Pipeline, PSODesc, Vars, true);
+
+					//PipelineWithSRB GeneratedPSO;
+					//GeneratedPSO.PSO = Pipeline;
+					//if (Key.CreateSRB)
+					//{
+					//	RefCntAutoPtr<IShaderResourceBinding> SRB;
+					//	Pipeline->CreateShaderResourceBinding(&SRB, Key.InitSRBStaticResources);
+					//	GeneratedPSO.SRB = SRB;
+					//}
+					//mPipelineStates[KeyHash] = GeneratedPSO;
+
+			//return true;
 		}
 		Uint32 NeoPipeline::GetHashedKey(const std::string Key)
 		{
