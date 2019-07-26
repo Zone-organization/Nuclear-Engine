@@ -101,6 +101,30 @@ class Sample2 : public Core::Game
 
 	void Load()
 	{
+		Graphics::NeoPipeline Pipe;
+
+		Graphics::NeoPipelineDesc desc;
+		Graphics::KeyChain Chain1, Chain2, Chain3;
+
+		Chain1.push_back(Graphics::PipelineKey("PBR"));
+		Chain1.push_back(Graphics::PipelineKey("BLINN"));
+		Chain1.push_back(Graphics::PipelineKey("IBL"));
+
+		Chain2.push_back(Graphics::PipelineKey("RED"));
+		Chain2.push_back(Graphics::PipelineKey("GREEN"));
+		Chain2.push_back(Graphics::PipelineKey("BLUE"));
+
+		Chain3.push_back(Graphics::PipelineKey("LOW"));
+		Chain3.push_back(Graphics::PipelineKey("MED"));
+		Chain3.push_back(Graphics::PipelineKey("HIGH"));
+
+
+		desc.mKeyChains.push_back(Chain1);
+		desc.mKeyChains.push_back(Chain2);
+		desc.mKeyChains.push_back(Chain3);
+
+		Pipe.Create(desc);
+
 		Assets::DefaultTextures::Initalize(&AssetLoader);
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);

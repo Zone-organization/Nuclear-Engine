@@ -12,10 +12,15 @@ namespace NuclearEngine
 	{
 		struct PipelineKey
 		{
+			PipelineKey(std::string KeyName_, std::string KeyPrefix_ = "NE_ENABLE_", bool CreateSRB_ = true, bool InitSRBStaticResources_ = true)
+				: KeyName(KeyName_), KeyPrefix(KeyPrefix_), CreateSRB(CreateSRB_), InitSRBStaticResources(InitSRBStaticResources_)
+			{
+
+			}
 			std::string KeyName;
-			std::string KeyPrefix = "NE_ENABLE_";
-			bool CreateSRB = true;
-			bool InitSRBStaticResources = true;
+			std::string KeyPrefix;
+			bool CreateSRB;
+			bool InitSRBStaticResources;
 
 			//AUTO FILLED ON CREATING NEOPIPELINE
 			Uint32 mHashedName = 0;
@@ -30,7 +35,7 @@ namespace NuclearEngine
 			Core::Path mVShaderPath;
 			Core::Path mPShaderPath;
 
-			std::vector<KeyChain> mKeyChain;
+			std::vector<KeyChain> mKeyChains;
 			std::vector<std::string> mConstDefines;
 
 			//Increases memory cosumptions as it stores KeyChain information
