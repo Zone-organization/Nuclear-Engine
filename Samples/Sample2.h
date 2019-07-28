@@ -104,24 +104,10 @@ class Sample2 : public Core::Game
 		Graphics::NeoPipeline Pipe;
 
 		Graphics::NeoPipelineDesc desc;
-		Graphics::KeyChain Chain1, Chain2, Chain3;
 
-		Chain1.push_back(Graphics::PipelineKey("PBR"));
-		Chain1.push_back(Graphics::PipelineKey("BLINN"));
-		Chain1.push_back(Graphics::PipelineKey("IBL"));
-
-		Chain2.push_back(Graphics::PipelineKey("RED"));
-		Chain2.push_back(Graphics::PipelineKey("GREEN"));
-		Chain2.push_back(Graphics::PipelineKey("BLUE"));
-
-		Chain3.push_back(Graphics::PipelineKey("LOW"));
-		Chain3.push_back(Graphics::PipelineKey("MED"));
-		Chain3.push_back(Graphics::PipelineKey("HIGH"));
-
-
-		desc.mKeyChains.push_back(Chain1);
-		desc.mKeyChains.push_back(Chain2);
-		desc.mKeyChains.push_back(Chain3);
+		desc.Switches.push_back(Graphics::PipelineSwitch("BLOOM"));
+		desc.Switches.push_back(Graphics::PipelineSwitch("HDR"));
+		desc.Switches.push_back(Graphics::PipelineSwitch("GAMMA"));
 
 		Pipe.Create(desc);
 
