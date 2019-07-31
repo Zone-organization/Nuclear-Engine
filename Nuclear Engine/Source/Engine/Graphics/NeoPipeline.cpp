@@ -70,8 +70,8 @@ namespace NuclearEngine
 			}
 
 			//Phase 2: Create Pipelines
-			std::string VShaderSource = Core::FileSystem::LoadShader(Desc.mVShaderPath, Desc.mConstDefines);
-			std::string PShaderSource = Core::FileSystem::LoadShader(Desc.mPShaderPath, Desc.mConstDefines);
+			std::string VShaderSource = Core::FileSystem::LoadShader(Desc.mVShaderPath, Desc.mVSConstDefines);
+			std::string PShaderSource = Core::FileSystem::LoadShader(Desc.mPShaderPath, Desc.mPSConstDefines);
 			
 			if (VShaderSource == "NoString" || PShaderSource == "NoString")
 			{

@@ -5,6 +5,7 @@
 #include <Engine\ECS\Entity.h>
 #include <Engine\Graphics\Color.h>
 #include <Engine\Graphics\Skybox.h>
+#include <Engine\Graphics\NeoPipeline.h>
 
 namespace NuclearEngine
 {
@@ -89,7 +90,10 @@ namespace NuclearEngine
 			bool RenderSkybox = false;
 		protected:
 			Graphics::RenderTarget CameraRT;
-			RefCntAutoPtr<IPipelineState> mPSO;
+
+			Graphics::NeoPipeline mPipeline;
+
+			//RefCntAutoPtr<IPipelineState> mPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 
 			RefCntAutoPtr<IPipelineState> mBloomPSO;

@@ -43,7 +43,8 @@ namespace NuclearEngine
 			Core::Path mPShaderPath;
 
 			std::vector<PipelineSwitch> Switches;
-			std::vector<std::string> mConstDefines;
+			std::vector<std::string> mVSConstDefines;
+			std::vector<std::string> mPSConstDefines;
 
 			//Increases memory cosumptions as it stores KeyChain information
 			bool SaveKeyChainsInfo = DEBUG_TRUE_BOOL;
