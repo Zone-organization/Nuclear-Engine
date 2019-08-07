@@ -29,11 +29,18 @@ namespace NuclearEngine
 		{
 			Uint32 RTWidth = 0;
 			Uint32 RTHeight = 0;
+
+			bool Disable_HDR_Varient = false;
+			bool Disable_GammaCorrection_Varient = false;
+			bool Disable_Bloom_Varient = false;
+		};
+
+		struct CameraPostProcessingOptions
+		{
 			bool HDR = false;
 			bool GammaCorrection = false;
 			bool Bloom = false;
 		};
-
 
 		struct CameraBuffer
 		{
@@ -62,6 +69,9 @@ namespace NuclearEngine
 
 			void Bake(const CameraBakingOptions& Opt);
 			void ResizeRenderTarget(Uint32 Width, Uint32 Height);
+
+			void SetPostProcessingOptions(const CameraPostProcessingOptions& Options);
+
 			void Update();
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
@@ -93,8 +103,8 @@ namespace NuclearEngine
 
 			Graphics::NeoPipeline mPipeline;
 
-			//RefCntAutoPtr<IPipelineState> mPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mSRB;
+			RefCntAutoPtr<IPipelineState> mActivePSO;
+			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
 			RefCntAutoPtr<IPipelineState> mBloomPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mBloomSRB;

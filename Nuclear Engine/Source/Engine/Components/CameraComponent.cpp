@@ -50,9 +50,14 @@ namespace NuclearEngine
 			mCameraBakingOpts.RTHeight = Height;
 			BakeRenderTarget(mCameraBakingOpts);
 
-			mSRB.Release();
-			mPSO->CreateShaderResourceBinding(&mSRB, true);
+			mActiveSRB.Release();
+			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
 			GetSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
+		}
+
+		void CameraComponent::SetPostProcessingOptions(const CameraPostProcessingOptions& Options)
+		{
+			//W.I.P
 		}
 
 		void CameraComponent::Update()
@@ -118,12 +123,12 @@ namespace NuclearEngine
 
 		IPipelineState* CameraComponent::GetPipeline()
 		{
-			return mPSO.RawPtr();
+			return mActivePSO.RawPtr();
 		}
 
 		IShaderResourceBinding* CameraComponent::GetSRB()
 		{
-			return mSRB.RawPtr();
+			return mActiveSRB.RawPtr();
 		}
 
 		void CameraComponent::BakeRenderTarget(const CameraBakingOptions& Desc)
@@ -131,12 +136,7 @@ namespace NuclearEngine
 			Graphics::RenderTargetDesc RTDesc;
 			RTDesc.Width = Desc.RTWidth;
 			RTDesc.Height = Desc.RTHeight;
-
-			if (Desc.HDR == true)
-				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-			else
-				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
-
+			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 			CameraRT.Create(RTDesc);
 		}
@@ -148,15 +148,11 @@ namespace NuclearEngine
 		
 			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-
-
-
-
 			Graphics::NeoPipelineDesc PSODesc;
 
-			PSODesc.Switches.push_back(Graphics::PipelineSwitch("BLOOM"));
-			PSODesc.Switches.push_back(Graphics::PipelineSwitch("HDR"));
-			PSODesc.Switches.push_back(Graphics::PipelineSwitch("GAMMA"));
+			if (!Desc.Disable_Bloom_Varient) { PSODesc.Switches.push_back(Graphics::PipelineSwitch("BLOOM")); }
+			if (!Desc.Disable_HDR_Varient) {	PSODesc.Switches.push_back(Graphics::PipelineSwitch("HDR"));	}
+			if (!Desc.Disable_GammaCorrection_Varient) {	PSODesc.Switches.push_back(Graphics::PipelineSwitch("GAMMA")); }
 	
 			PSODesc.mVShaderPath = "Assets/NuclearEngine/Shaders/Camera.vs.hlsl";
 			PSODesc.mPShaderPath = "Assets/NuclearEngine/Shaders/Camera.ps.hlsl";
@@ -179,63 +175,19 @@ namespace NuclearEngine
 
 			mPipeline.Create(PSODesc);
 
-
-			////Create Camera Pipeline
-			//{
-			//	RefCntAutoPtr<IShader> PShader;
-
-			//	ShaderCreateInfo CreationAttribs;
-			//	CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			//	CreationAttribs.UseCombinedTextureSamplers = true;
-			//	CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-			//	CreationAttribs.Desc.Name = "CameraPP_PS";
-
-			//	std::vector<std::string> defines;
-
-			//	if (Desc.GammaCorrection == true) { defines.push_back("NE_GAMMA_CORRECTION_ENABLED"); }
-			//	if (Desc.HDR == true) { defines.push_back("NE_HDR_ENABLED"); }
-			//	if (Desc.Bloom == true) { defines.push_back("NE_BLOOM_ENABLED"); }
-
-			//	auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Camera.hlsl", defines, std::vector<std::string>(), true);
-			//	CreationAttribs.Source = source.c_str();
-			//	Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PShader);
-
-			//	PipelineStateDesc PSODesc;
-
-			//	PSODesc.Name = "CameraPP_PSO";
-			//	PSODesc.IsComputePipeline = false;
-			//	PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-			//	PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-			//	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			//	PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-			//	PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-			//	PSODesc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			//	PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			//	PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-			//	PSODesc.GraphicsPipeline.pVS = VShader;
-			//	PSODesc.GraphicsPipeline.pPS = PShader;
-			//	PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-			//	PSODesc.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
-			//	PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
-
-			//	std::vector<ShaderResourceVariableDesc> Vars;
-			//	Vars.push_back({ SHADER_TYPE_PIXEL, "SceneTexture", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE });
-
-			//	std::vector<StaticSamplerDesc> StaticSamplers;
-			//	StaticSamplers.push_back({ SHADER_TYPE_PIXEL, "SceneTexture", Sam_LinearClamp });
-
-			//	PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Vars.size());
-			//	PSODesc.ResourceLayout.Variables = Vars.data();
-			//	PSODesc.ResourceLayout.NumStaticSamplers = static_cast<Uint32>(StaticSamplers.size());
-			//	PSODesc.ResourceLayout.StaticSamplers = StaticSamplers.data();
-
-			//	Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPSO);
-			//	mPSO->CreateShaderResourceBinding(&mSRB, true);
-			//}
-
 			//Create Blur pipeline
-			if (Desc.Bloom == true)
+			if (!Desc.Disable_Bloom_Varient)
 			{
+				Managers::AutoVertexShaderDesc VertShaderDesc;
+				VertShaderDesc.Use_Camera = false;
+				VertShaderDesc.InNormals = false;
+				VertShaderDesc.OutFragPos = false;
+				VertShaderDesc.Name = "Bloom_VS";
+
+				std::vector<LayoutElement> LayoutElems;
+				RefCntAutoPtr<IShader> VShader;
+				VShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 				CreationAttribs.UseCombinedTextureSamplers = true;

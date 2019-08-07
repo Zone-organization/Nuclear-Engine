@@ -62,6 +62,8 @@ namespace NuclearEngine
 		{
 		public:
 			NeoPipeline();
+			~NeoPipeline();
+
 			std::vector<PipelineInstanceInfo> Create(const NeoPipelineDesc& Desc);
 
 			Uint32 GetHashedKey(const std::string Key);

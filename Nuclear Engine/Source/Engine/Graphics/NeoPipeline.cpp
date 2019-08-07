@@ -29,6 +29,10 @@ namespace NuclearEngine
 		{
 		}
 
+		NeoPipeline::~NeoPipeline()
+		{
+		}
+
 		std::vector<PipelineInstanceInfo> NeoPipeline::Create(const NeoPipelineDesc& Desc)
 		{
 			std::vector<PipelineInstanceInfo> InstancesInfo;
