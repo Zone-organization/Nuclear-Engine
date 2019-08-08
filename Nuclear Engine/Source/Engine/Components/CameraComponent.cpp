@@ -41,7 +41,6 @@ namespace NuclearEngine
 			mCameraBakingOpts = Opt;
 			BakeRenderTarget(mCameraBakingOpts);
 			BakePipeline(Opt);
-			GetSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
 		}
 
 		void CameraComponent::ResizeRenderTarget(Uint32 Width, Uint32 Height)
@@ -52,12 +51,7 @@ namespace NuclearEngine
 
 			mActiveSRB.Release();
 			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
-			GetSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
-		}
-
-		void CameraComponent::SetPostProcessingOptions(const CameraPostProcessingOptions& Options)
-		{
-			//W.I.P
+			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
 		}
 
 		void CameraComponent::Update()
@@ -75,6 +69,37 @@ namespace NuclearEngine
 
 			mCameraData.ModelViewProjection = mCameraData.Projection * mCameraData.View * mCameraData.Model;
 			mCameraData.ModelInvTranspose = Math::inverseTranspose(mCameraData.Model);
+
+		}
+
+		void CameraComponent::UpdatePSO(bool ForceDirty)
+		{
+			int Dirty = 0;
+
+			if(HDR_Enabled != HDR) { Dirty = Dirty + 1; }
+			if(GammaCorrection_Enabled != GammaCorrection) { Dirty = Dirty + 1; }
+			if(Bloom_Enabled != Bloom) { Dirty = Dirty + 1; }
+
+			if (Dirty != 0 || ForceDirty == true)
+			{
+				RequiredHash = 0;
+
+				if(HDR) { RequiredHash = RequiredHash + Utilities::Hash("NE_ENABLE_HDR"); }
+				if(GammaCorrection) { RequiredHash = RequiredHash + Utilities::Hash("NE_ENABLE_GAMMA"); }
+				if(Bloom) { RequiredHash = RequiredHash + Utilities::Hash("NE_ENABLE_BLOOM"); }
+
+
+				auto PSO_SRB = mPipeline.GetPipeline(RequiredHash);
+
+				mActivePSO = PSO_SRB.PSO;
+				mActiveSRB = PSO_SRB.SRB;
+
+				HDR_Enabled = HDR;
+				GammaCorrection_Enabled = GammaCorrection;
+				Bloom_Enabled = Bloom;
+
+				mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
+			}
 
 		}
 
@@ -121,12 +146,12 @@ namespace NuclearEngine
 			return &CameraRT;
 		}
 
-		IPipelineState* CameraComponent::GetPipeline()
+		IPipelineState* CameraComponent::GetActivePipeline()
 		{
 			return mActivePSO.RawPtr();
 		}
 
-		IShaderResourceBinding* CameraComponent::GetSRB()
+		IShaderResourceBinding* CameraComponent::GetActiveSRB()
 		{
 			return mActiveSRB.RawPtr();
 		}
@@ -150,9 +175,9 @@ namespace NuclearEngine
 			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
 			Graphics::NeoPipelineDesc PSODesc;
 
-			if (!Desc.Disable_Bloom_Varient) { PSODesc.Switches.push_back(Graphics::PipelineSwitch("BLOOM")); }
-			if (!Desc.Disable_HDR_Varient) {	PSODesc.Switches.push_back(Graphics::PipelineSwitch("HDR"));	}
-			if (!Desc.Disable_GammaCorrection_Varient) {	PSODesc.Switches.push_back(Graphics::PipelineSwitch("GAMMA")); }
+			if (!Desc.Disable_HDR_Varient) { PSODesc.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_HDR")); }
+			if (!Desc.Disable_GammaCorrection_Varient) { PSODesc.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_GAMMA")); }
+			if (!Desc.Disable_Bloom_Varient) { PSODesc.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_BLOOM")); }
 	
 			PSODesc.mVShaderPath = "Assets/NuclearEngine/Shaders/Camera.vs.hlsl";
 			PSODesc.mPShaderPath = "Assets/NuclearEngine/Shaders/Camera.ps.hlsl";
@@ -233,6 +258,7 @@ namespace NuclearEngine
 				mBloomPSO->CreateShaderResourceBinding(&mBloomSRB, true);
 			}
 
+			UpdatePSO(true);
 		}
 
 		void CameraComponent::ProcessEye(float xoffset, float yoffset, bool constrainPitch)

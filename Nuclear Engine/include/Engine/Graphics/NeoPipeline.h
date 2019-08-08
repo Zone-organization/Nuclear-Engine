@@ -13,13 +13,12 @@ namespace NuclearEngine
 	{
 		struct PipelineSwitch
 		{
-			PipelineSwitch(std::string KeyName_, std::string KeyPrefix_ = "NE_ENABLE_", bool CreateSRB_ = true, bool InitSRBStaticResources_ = true)
-				: KeyName(KeyName_), KeyPrefix(KeyPrefix_), CreateSRB(CreateSRB_), InitSRBStaticResources(InitSRBStaticResources_)
+			PipelineSwitch(std::string KeyName_, bool CreateSRB_ = true, bool InitSRBStaticResources_ = true)
+				: KeyName(KeyName_), CreateSRB(CreateSRB_), InitSRBStaticResources(InitSRBStaticResources_)
 			{
 
 			}
 			std::string KeyName;
-			std::string KeyPrefix;
 			bool CreateSRB;
 			bool InitSRBStaticResources;
 
@@ -31,8 +30,8 @@ namespace NuclearEngine
 		{
 			std::set<std::string> Defines;
 			Uint32 mHashKey = 0;
-			bool CreateSRB;
-			bool InitStaticResources;
+			bool CreateSRB = false;
+			bool InitStaticResources = false;
 		};
 
 		struct NeoPipelineDesc
@@ -43,6 +42,10 @@ namespace NuclearEngine
 			Core::Path mPShaderPath;
 
 			std::vector<PipelineSwitch> Switches;
+
+			bool ZeroInstanceCreateSRB = true;
+			bool ZeroInstanceInitSRBStaticResources = true;
+
 			std::vector<std::string> mVSConstDefines;
 			std::vector<std::string> mPSConstDefines;
 

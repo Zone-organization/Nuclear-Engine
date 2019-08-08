@@ -101,16 +101,6 @@ class Sample2 : public Core::Game
 
 	void Load()
 	{
-		Graphics::NeoPipeline Pipe;
-
-		Graphics::NeoPipelineDesc desc;
-
-		desc.Switches.push_back(Graphics::PipelineSwitch("BLOOM"));
-		desc.Switches.push_back(Graphics::PipelineSwitch("HDR"));
-		desc.Switches.push_back(Graphics::PipelineSwitch("GAMMA"));
-
-		Pipe.Create(desc);
-
 		Assets::DefaultTextures::Initalize(&AssetLoader);
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);
@@ -150,9 +140,7 @@ class Sample2 : public Core::Game
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
 		Desc.RTHeight = _Height_;
-		Desc.HDR = true;
-		Desc.GammaCorrection = true;
-		Desc.Bloom = true;
+		Desc.Disable_Bloom_Varient = true;
 		Camera.Bake(Desc);
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -220,6 +208,8 @@ class Sample2 : public Core::Game
 
 		Camera.Update();
 		SceneCameraManager.UpdateBuffer();
+
+		Camera.UpdatePSO();
 	}
 	void Render(float dt) override
 	{
@@ -266,6 +256,11 @@ class Sample2 : public Core::Game
 			ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(f);
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera.RTClearColor);
+
+			ImGui::Checkbox("HDR", &Camera.HDR);
+			ImGui::Checkbox("GammaCorrection", &Camera.GammaCorrection);
+
+
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();

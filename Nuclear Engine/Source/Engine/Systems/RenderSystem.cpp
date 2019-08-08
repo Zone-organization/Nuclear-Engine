@@ -217,8 +217,8 @@ namespace NuclearEngine
 			Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			auto MainCameraPtr = mCameraManager->GetMainCamera();
-			Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetPipeline());
-			Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetActivePipeline());
+			Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			Uint32 offset = 0;
 			Graphics::Context::GetContext()->SetIndexBuffer(CameraScreenQuad.mSubMeshes.at(0).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

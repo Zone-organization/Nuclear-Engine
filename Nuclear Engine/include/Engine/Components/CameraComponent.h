@@ -35,13 +35,6 @@ namespace NuclearEngine
 			bool Disable_Bloom_Varient = false;
 		};
 
-		struct CameraPostProcessingOptions
-		{
-			bool HDR = false;
-			bool GammaCorrection = false;
-			bool Bloom = false;
-		};
-
 		struct CameraBuffer
 		{
 			Math::Matrix4 Model = Math::Matrix4(1.0f);
@@ -70,9 +63,11 @@ namespace NuclearEngine
 			void Bake(const CameraBakingOptions& Opt);
 			void ResizeRenderTarget(Uint32 Width, Uint32 Height);
 
-			void SetPostProcessingOptions(const CameraPostProcessingOptions& Options);
-
 			void Update();
+
+			//Call on the beginning of every frame
+			void UpdatePSO(bool ForceDirty  = false);
+
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
@@ -85,13 +80,18 @@ namespace NuclearEngine
 			Math::Vector3 GetPosition();
 
 			Graphics::RenderTarget* GetCameraRT();
-			IPipelineState* GetPipeline();
-			IShaderResourceBinding* GetSRB();
+			IPipelineState* GetActivePipeline();
+			IShaderResourceBinding* GetActiveSRB();
 
 			// Camera options
 			float MovementSpeed;
 			float MouseSensitivity;
 			float Zoom;
+
+			//Postprocessing
+			bool HDR = false;
+			bool GammaCorrection = false;
+			bool Bloom = false;
 
 			CameraBuffer mCameraData;
 			CameraBakingOptions mCameraBakingOpts;
@@ -116,6 +116,11 @@ namespace NuclearEngine
 			Math::Vector3 Front, Up, Right, WorldUp;
 
 			Math::Vector3 position, direction;
+
+			bool HDR_Enabled = false;
+			bool GammaCorrection_Enabled = false;
+			bool Bloom_Enabled = false;
+			Uint32 RequiredHash = 0;
 
 		private:
 			void BakeRenderTarget(const CameraBakingOptions& Desc);

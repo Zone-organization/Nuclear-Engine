@@ -7,21 +7,20 @@ namespace NuclearEngine
 	namespace Graphics
 	{
 
-		std::string MergeCode(std::string shadersource, std::set<std::string> defines)
+		std::string MergeCode(const std::string& shadersource, const std::set<std::string>& defines)
 		{
 			std::vector<std::string> MergedCode;
 
-			std::string firstLine = shadersource.substr(0, shadersource.find("\n"));
-
 			for (auto i : defines)
 			{
-				std::string define = "#define " + i + "\n";
-				MergedCode.push_back(define);
+				MergedCode.push_back("#define " + i + "\n");
 			}
 			std::string str;
-			for (unsigned int i = 0; i < MergedCode.size(); ++i)
-				str = str + MergedCode[i].c_str();
-
+			MergedCode.push_back(shadersource);
+			for (auto i : MergedCode)
+			{
+				str = str + i;
+			}
 			return str;
 		}
 
@@ -37,6 +36,13 @@ namespace NuclearEngine
 		{
 			std::vector<PipelineInstanceInfo> InstancesInfo;
 
+			PipelineInstanceInfo ZeroInstance;
+			ZeroInstance.mHashKey = 0;
+			ZeroInstance.CreateSRB = Desc.ZeroInstanceCreateSRB;
+			ZeroInstance.InitStaticResources = Desc.ZeroInstanceInitSRBStaticResources;
+
+			InstancesInfo.push_back(ZeroInstance);
+			
 			//Phase 1: Process Switches
 			for (Uint32 ISwitch = 0; ISwitch < Desc.Switches.size(); ISwitch++)
 			{
@@ -45,16 +51,18 @@ namespace NuclearEngine
 					for (Uint32 NextSwitch2 = 0; NextSwitch2 < Desc.Switches.size(); NextSwitch2++)
 					{
 						PipelineInstanceInfo Info_;
-						Info_.Defines.insert(Desc.Switches.at(ISwitch).KeyPrefix + Desc.Switches.at(ISwitch).KeyName);
-						Info_.Defines.insert(Desc.Switches.at(NextSwitch).KeyPrefix + Desc.Switches.at(NextSwitch).KeyName);
-						Info_.Defines.insert(Desc.Switches.at(NextSwitch2).KeyPrefix + Desc.Switches.at(NextSwitch2).KeyName);
-						
-						std::string Key;
+						Info_.Defines.insert(Desc.Switches.at(ISwitch).KeyName);
+						Info_.Defines.insert(Desc.Switches.at(NextSwitch).KeyName);
+						Info_.Defines.insert(Desc.Switches.at(NextSwitch2).KeyName);
+						Info_.CreateSRB = Desc.Switches.at(ISwitch).CreateSRB;
+						Info_.InitStaticResources = Desc.Switches.at(ISwitch).InitSRBStaticResources;
+
 						for (auto i : Info_.Defines)
 						{
-							Key = Key + i;
+							auto iHash = Utilities::Hash(i);
+							Info_.mHashKey = Info_.mHashKey + iHash;
 						}
-						Info_.mHashKey = Utilities::Hash(Key);
+
 						int Found = 0;
 
 						for (auto i : InstancesInfo)
@@ -84,7 +92,6 @@ namespace NuclearEngine
 			}
 			for (auto Info : InstancesInfo)
 			{
-				//Uint32 KeyHash = Utilities::Hash(Key.KeyName);
 				RefCntAutoPtr<IShader> VShader;
 				RefCntAutoPtr<IShader> PShader;
 				RefCntAutoPtr<IPipelineState> Pipeline;
