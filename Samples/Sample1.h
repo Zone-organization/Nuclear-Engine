@@ -321,10 +321,10 @@ class Sample1 : public Core::Game
 
 		}
 
-		for (auto material : AssetLoader.mImportedMaterials)
-		{
-			auto MaterialPtr = material.second;
-			ViewMaterialInfo(&MaterialPtr, &AssetLoader);
-		}
+		//for (auto material : AssetLoader.mImportedMaterials)
+		//{
+		//	auto MaterialPtr = material.second;
+		//	ViewMaterialInfo(&MaterialPtr, &AssetLoader);
+		//}
 	}
 };

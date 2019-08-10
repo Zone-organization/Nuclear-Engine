@@ -4,7 +4,6 @@
 # To-dos 
   - W.I.P:
     - Bloom effect.
-	- Dynamic instancing of PSOs & SRBs (Dynamic Shader Model).
 
   - Milestone 0.01 Alpha
 	- Complete DemoGame
@@ -17,9 +16,6 @@
   - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
     - Multithreading.
     - Android Support (Mobile devices in general).
-
-## Known Bugs
-  - Rendering any model with mirrored UVs seems to be broken.
 
 ### Building
 The project has three building configuration:

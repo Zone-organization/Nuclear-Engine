@@ -120,7 +120,7 @@ namespace NuclearEngine
 					if (name.find("NEMat_") != std::string::npos)
 					{
 						SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
-							TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
+							TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP);
 						StaticSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearClampDesc);
 						GeneratedSamplerDesc.push_back(desc);
 					}
