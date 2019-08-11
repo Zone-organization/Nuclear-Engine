@@ -10,13 +10,17 @@ class Sample2 : public Core::Game
 	Managers::CameraManager SceneCameraManager;
 
 	Assets::Mesh* SponzaAsset;
+	Assets::Material* SponzaMaterial;
+
+	Assets::Mesh* CerberusAsset;
+	Assets::Material* CerberusMaterial;
 
 	Assets::Material SphereMaterial;
-	Assets::Material* SponzaMaterial;
 
 	Components::CameraComponent Camera;
 
 	Graphics::PBR PBR;
+	Graphics::BlinnPhong BlinnPhong;
 	Graphics::DiffuseOnly DiffuseRP;
 	Graphics::WireFrame WireFrameRP;
 
@@ -24,6 +28,7 @@ class Sample2 : public Core::Game
 	ECS::Scene PBRScene;
 	ECS::Entity ESponza;
 	ECS::Entity ESphere;
+	ECS::Entity ECerberus;
 
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
@@ -37,8 +42,9 @@ class Sample2 : public Core::Game
 	{
 		Importers::MeshLoadingDesc ModelDesc;
 
-		//Load Sponza Model
-		std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/Cerberus.FBX", ModelDesc);
+		//Load Models
+		std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
+		std::tie(CerberusAsset, CerberusMaterial) = AssetLoader.Import("Assets/Common/Models/Cerberus/Cerberus.FBX", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
@@ -55,9 +61,11 @@ class Sample2 : public Core::Game
 		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
 		Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
+		Renderer->CreateMaterialForAllPipelines(CerberusMaterial);
 
 		ESphere.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &SphereMaterial);
 		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
+		ECerberus.Assign<Components::MeshComponent>(CerberusAsset, CerberusMaterial);
 
 		PBRSphereSet.mData.clear();
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
@@ -73,6 +81,7 @@ class Sample2 : public Core::Game
 		ESponza = PBRScene.CreateEntity();
 		ELights = PBRScene.CreateEntity();
 		ECamera = PBRScene.CreateEntity();
+		ECerberus = PBRScene.CreateEntity();
 
 		//Assign Components
 	
@@ -93,6 +102,7 @@ class Sample2 : public Core::Game
 		Renderer = PBRScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
 		PBRScene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&PBR);
+		Renderer->AddRenderingPipeline(&BlinnPhong);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
 
@@ -137,11 +147,20 @@ class Sample2 : public Core::Game
 		Math::Matrix4 TSponza(1.0f);
 		TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
 		ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
+
+		Math::Matrix4 TCerberus(1.0f);
+		TCerberus = Math::scale(TCerberus, Math::Vector3(0.05f));
+		ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
+
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
 		Desc.RTHeight = _Height_;
 		Desc.Disable_Bloom_Varient = true;
 		Camera.Bake(Desc);
+
+		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
+
+
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -167,9 +186,6 @@ class Sample2 : public Core::Game
 			Camera.ProcessEye(xoffset, yoffset);
 		}
 	}
-
-	bool RenderSponza = false;
-
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
@@ -213,9 +229,6 @@ class Sample2 : public Core::Game
 	}
 	void Render(float dt) override
 	{
-		// Clear the back buffer 
-		const float ClearColor[] = { 0.3f,  0.3f,  0.3f, 1.0f };
-
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 		
@@ -223,31 +236,57 @@ class Sample2 : public Core::Game
 
 		{
 			using namespace Graphics;
-			ImGui::Begin("Sample2: PBR Rendering");
+			ImGui::Begin("Sample2: Advanced Rendering");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
 			ImGui::Text("Active Rendering Pipeline:");
 			static int e = 0;
 			ImGui::RadioButton("PBR", &e, 0);
-			ImGui::RadioButton("DiffuseOnly", &e, 1);
-			ImGui::RadioButton("WireFrame", &e, 2);
+			ImGui::RadioButton("BlinnPhong", &e, 1);
+			ImGui::RadioButton("DiffuseOnly", &e, 2);
+			ImGui::RadioButton("WireFrame", &e, 3);
 
 			//Change Rendering Pipeline
 			if (e == 0)
-					Renderer->SetActiveRenderingPipeline(PBR.GetID());
+				Renderer->SetActiveRenderingPipeline(PBR.GetID());
 			else if (e == 1)
-					Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+				Renderer->SetActiveRenderingPipeline(BlinnPhong.GetID());
 			else if (e == 2)
+				Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+			else if (e == 3)
 				Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
-			
-			ESponza.GetComponent<Components::MeshComponent>()->mRender = RenderSponza;
-			ESphere.GetComponent<Components::MeshComponent>()->mRender = !RenderSponza;
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
-			ImGui::Checkbox("Render Sponza", &RenderSponza);
 
-			static ImVec4 Lightcolor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+			static int er = 0;
+			ImGui::RadioButton("Spheres", &er, 0);
+			ImGui::RadioButton("Sponza", &er, 1);
+			ImGui::RadioButton("Cerberus", &er, 2);
+
+
+			switch (er)
+			{
+			case 0:
+				ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
+				ESphere.GetComponent<Components::MeshComponent>()->mRender = true;
+				ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
+				break;
+			case 1:
+				ESponza.GetComponent<Components::MeshComponent>()->mRender = true;
+				ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
+				ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
+				break;
+			case 2:
+				ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
+				ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
+				ECerberus.GetComponent<Components::MeshComponent>()->mRender = true;
+				break;
+			default:
+				break;
+			}
+
+			static ImVec4 Lightcolor = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
 			static float f = 1.0f;
 			ImGui::SliderFloat("PointLight Intensity", &f, 1.0f, 100.0f);
 			ImGui::ColorEdit3("PointLight Color", (float*)& Lightcolor);

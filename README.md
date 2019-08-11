@@ -4,7 +4,8 @@
 # To-dos 
   - W.I.P:
     - Bloom effect.
-
+    - ShadowMaps (Through Diligent Component).
+	
   - Milestone 0.01 Alpha
 	- Complete DemoGame
 	

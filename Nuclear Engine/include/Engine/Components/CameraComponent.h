@@ -32,7 +32,7 @@ namespace NuclearEngine
 
 			bool Disable_HDR_Varient = false;
 			bool Disable_GammaCorrection_Varient = false;
-			bool Disable_Bloom_Varient = false;
+			bool Disable_Bloom_Varient = true;
 		};
 
 		struct CameraBuffer

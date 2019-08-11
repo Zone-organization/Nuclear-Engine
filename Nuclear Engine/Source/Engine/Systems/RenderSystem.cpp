@@ -114,7 +114,7 @@ namespace NuclearEngine
 			}
 
 			mLightingSystem.BakeBuffer();
-			mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
+			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
 
 			Graphics::RenderingPipelineDesc RPDesc;
 			
@@ -184,11 +184,11 @@ namespace NuclearEngine
 			for (auto Camera : mCameraManager->ActiveCameras)
 			{
 				Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
+				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
 				Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
 
 				UpdateMeshes(es);
-				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
 				if (VisualizePointLightsPositions)
 				{

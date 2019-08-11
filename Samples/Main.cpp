@@ -33,47 +33,47 @@ Core::RenderAPI SelectRenderer()
 int main(int argc, char* argv[])
 {
 
-	std::cout << "Auto Initialize? \n"
-		<< "1) Yes \n"
-		<< "2) No \n";
+	//std::cout << "Auto Initialize? \n"
+	//	<< "1) Yes \n"
+	//	<< "2) No \n";
 
-	int i;
-	std::cin >> i;
-	if (i == 2)
-	{
-		Core::EngineStartupDesc desc;
-		desc.mAppdesc.Renderer = SelectRenderer();
-		Core::Engine::Start(desc);
+	//int i;
+	//std::cin >> i;
+	//if (i == 2)
+	//{
+	//	Core::EngineStartupDesc desc;
+	//	desc.mAppdesc.Renderer = SelectRenderer();
+	//	Core::Engine::Start(desc);
 
-	}
-	else
-	{
+	//}
+	//else
+	//{
 		Core::EngineStartupDesc desc;
 		Core::Engine::Start(desc);
-	}
+	//}
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
 
-	std::cout << "Select Sample:\n"
-			<< "1) Sample1 : BlinnPhong rendering of some models \n"
-			<< "2) Sample2 : PBR Rendering \n"
-			<< "3) Sample3 : PhysX Integration\n";
+	//std::cout << "Select Sample:\n"
+	//		<< "1) Sample1 : BlinnPhong rendering of some models \n"
+	//		<< "2) Sample2 : Advanced Rendering \n"
+	//		<< "3) Sample3 : PhysX Integration\n";
 
-	std::cin >> i;
-	if (i == 1)
-	{
-		Sample1 demo;
-		Core::Engine::RunGame(&demo);
-	}
-	else if (i == 2)
-	{
+	//std::cin >> i;
+	//if (i == 1)
+	//{
+	//	Sample1 demo;
+	//	Core::Engine::RunGame(&demo);
+	//}
+	//else if (i == 2)
+	//{
 		Sample2 demo;
 		Core::Engine::RunGame(&demo);
-	}
-	else {
-		Sample3 demo;
-		Core::Engine::RunGame(&demo);
-	}
+	//}
+	//else {
+	//	Sample3 demo;
+	//	Core::Engine::RunGame(&demo);
+	//}
 
 
 	Core::Engine::Shutdown();
