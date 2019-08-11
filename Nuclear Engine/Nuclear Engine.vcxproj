@@ -352,6 +352,7 @@
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXShape.h" />
+    <ClInclude Include="include\Engine\Systems\ShadowingSubSystem.h" />
     <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
     <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
     <ClInclude Include="include\Engine\PhysX\RigidStatic.h" />
@@ -469,6 +470,7 @@
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\Engine\Systems\ShadowingSubSystem.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />

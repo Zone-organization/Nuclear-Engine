@@ -265,6 +265,7 @@
     <ClInclude Include="include\Engine\Components\DirLightComponent.h" />
     <ClInclude Include="include\Engine\Components\EntityInfoComponent.h" />
     <ClInclude Include="include\Engine\Graphics\NeoPipeline.h" />
+    <ClInclude Include="include\Engine\Systems\ShadowingSubSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -338,6 +339,7 @@
     <ClCompile Include="Source\Engine\Components\EntityInfoComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\NeoPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Systems\ShadowingSubSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

@@ -68,11 +68,6 @@ class Sample2 : public Core::Game
 		ECerberus.Assign<Components::MeshComponent>(CerberusAsset, CerberusMaterial);
 
 		PBRSphereSet.mData.clear();
-		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
-
-		//NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
 	}
 	void SetupEntities()
 	{
@@ -239,67 +234,74 @@ class Sample2 : public Core::Game
 			ImGui::Begin("Sample2: Advanced Rendering");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
-
-			ImGui::Text("Active Rendering Pipeline:");
-			static int e = 0;
-			ImGui::RadioButton("PBR", &e, 0);
-			ImGui::RadioButton("BlinnPhong", &e, 1);
-			ImGui::RadioButton("DiffuseOnly", &e, 2);
-			ImGui::RadioButton("WireFrame", &e, 3);
-
-			//Change Rendering Pipeline
-			if (e == 0)
-				Renderer->SetActiveRenderingPipeline(PBR.GetID());
-			else if (e == 1)
-				Renderer->SetActiveRenderingPipeline(BlinnPhong.GetID());
-			else if (e == 2)
-				Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
-			else if (e == 3)
-				Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
-
-			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
-
-			static int er = 0;
-			ImGui::RadioButton("Spheres", &er, 0);
-			ImGui::RadioButton("Sponza", &er, 1);
-			ImGui::RadioButton("Cerberus", &er, 2);
-
-
-			switch (er)
+			if (ImGui::TreeNode("Rendering"))
 			{
-			case 0:
-				ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
-				ESphere.GetComponent<Components::MeshComponent>()->mRender = true;
-				ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
-				break;
-			case 1:
-				ESponza.GetComponent<Components::MeshComponent>()->mRender = true;
-				ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
-				ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
-				break;
-			case 2:
-				ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
-				ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
-				ECerberus.GetComponent<Components::MeshComponent>()->mRender = true;
-				break;
-			default:
-				break;
+				ImGui::Text("Active Rendering Pipeline:");
+				static int e = 0;
+				ImGui::RadioButton("PBR", &e, 0);
+				ImGui::RadioButton("BlinnPhong", &e, 1);
+				ImGui::RadioButton("DiffuseOnly", &e, 2);
+				ImGui::RadioButton("WireFrame", &e, 3);
+
+				//Change Rendering Pipeline
+				if (e == 0)
+					Renderer->SetActiveRenderingPipeline(PBR.GetID());
+				else if (e == 1)
+					Renderer->SetActiveRenderingPipeline(BlinnPhong.GetID());
+				else if (e == 2)
+					Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+				else if (e == 3)
+					Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
+
+				static int er = 0;
+				ImGui::RadioButton("Spheres", &er, 0);
+				ImGui::RadioButton("Sponza", &er, 1);
+				ImGui::RadioButton("Cerberus", &er, 2);
+
+				switch (er)
+				{
+				case 0:
+					ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
+					ESphere.GetComponent<Components::MeshComponent>()->mRender = true;
+					ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
+					break;
+				case 1:
+					ESponza.GetComponent<Components::MeshComponent>()->mRender = true;
+					ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
+					ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
+					break;
+				case 2:
+					ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
+					ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
+					ECerberus.GetComponent<Components::MeshComponent>()->mRender = true;
+					break;
+				default:
+					break;
+				}
+
+				ImGui::TreePop();
 			}
+			if (ImGui::TreeNode("Lights"))
+			{
+				static ImVec4 Lightcolor = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+				static float f = 1.0f;
+				ImGui::SliderFloat("PointLight Intensity", &f, 0.0f, 25.0f, "%.4f", 2.0f);
+				ImGui::ColorEdit3("PointLight Color", (float*)& Lightcolor);
+				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			static ImVec4 Lightcolor = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
-			static float f = 1.0f;
-			ImGui::SliderFloat("PointLight Intensity", &f, 1.0f, 100.0f);
-			ImGui::ColorEdit3("PointLight Color", (float*)& Lightcolor);
+				ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+				ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(f);
 
-			ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
-			ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(f);
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Camera"))
+			{
+				ImGui::ColorEdit3("RenderTarget ClearColor", (float*)& Camera.RTClearColor);
+				ImGui::Checkbox("HDR", &Camera.HDR);
+				ImGui::Checkbox("GammaCorrection", &Camera.GammaCorrection);
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera.RTClearColor);
-
-			ImGui::Checkbox("HDR", &Camera.HDR);
-			ImGui::Checkbox("GammaCorrection", &Camera.GammaCorrection);
-
-
+				ImGui::TreePop();
+			}
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
