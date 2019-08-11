@@ -429,7 +429,7 @@ namespace NuclearEngine
 						VertShaderCI.Desc.ShaderType = SHADER_TYPE_VERTEX;
 						VertShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 						VertShaderCI.UseCombinedTextureSamplers = true;
-						VertShaderCI.Source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/FullScreenTriangleVS.fx").c_str();
+						VertShaderCI.Source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Shadowing/FullScreenTriangleVS.fx").c_str();
 						VertShaderCI.EntryPoint = "FullScreenTriangleVS";
 						VertShaderCI.Desc.Name = "FullScreenTriangleVS";
 						m_pDevice->CreateShader(VertShaderCI, &pScreenSizeTriVS);
@@ -441,7 +441,7 @@ namespace NuclearEngine
 					ShaderCI.Desc.ShaderType = SHADER_TYPE_PIXEL;
 					ShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 					ShaderCI.UseCombinedTextureSamplers = true;
-					ShaderCI.Source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShadowConversions.fx").c_str();
+					ShaderCI.Source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Shadowing/ShadowConversions.fx").c_str();
 					if (mode == SHADOW_MODE_VSM)
 					{
 						ShaderCI.EntryPoint = "VSMHorzPS";
