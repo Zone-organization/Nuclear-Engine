@@ -10,11 +10,11 @@
 #include "..\Engine\Graphics\ImGUI\imgui_impl.h"
 
 //Dependencies Linking
-#pragma comment(lib,"assimp-vc140-mt.lib")
+#pragma comment(lib,"assimp-vc142-mt.lib")
 #pragma comment(lib,"glfw3.lib")
 
 //Diligent Linking
-#pragma comment(lib,"Common.lib")
+#pragma comment(lib,"Diligent-Common.lib")
 
 #ifdef _DEBUG
 #pragma comment(lib,"GraphicsEngineD3D11_64d.lib")
@@ -28,10 +28,10 @@
 #pragma comment(lib,"GraphicsEngineVK_64r.lib")
 #endif
 
-#pragma comment(lib,"GraphicsAccessories.lib")
-#pragma comment(lib,"GraphicsTools.lib")
-#pragma comment(lib,"BasicPlatform.lib")
-#pragma comment(lib,"Win32Platform.lib")
+#pragma comment(lib,"Diligent-GraphicsAccessories.lib")
+#pragma comment(lib,"Diligent-GraphicsTools.lib")
+#pragma comment(lib,"Diligent-BasicPlatform.lib")
+#pragma comment(lib,"Diligent-Win32Platform.lib")
 
 
 namespace NuclearEngine {

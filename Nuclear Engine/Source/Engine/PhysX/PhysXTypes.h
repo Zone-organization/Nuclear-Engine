@@ -1,9 +1,9 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <PhysX/include/PxPhysicsAPI.h>
-#include <PhysX/include/foundation/PxVec3.h>
-#include <PhysX/include/foundation/PxVec4.h>
-#include <PhysX/include/foundation/PxTransform.h>
+#include <foundation/PxVec3.h>
+#include <foundation/PxVec4.h>
+#include <foundation/PxTransform.h>
 #include <Engine\ECS\Transform.h>
 #include <Base/Math/Math.h>
 
