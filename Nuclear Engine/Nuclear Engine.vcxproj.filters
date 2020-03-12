@@ -266,6 +266,26 @@
     <ClInclude Include="include\Engine\Components\EntityInfoComponent.h" />
     <ClInclude Include="include\Engine\Graphics\NeoPipeline.h" />
     <ClInclude Include="include\Engine\Systems\ShadowingSubSystem.h" />
+    <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
+    <ClInclude Include="Source\Engine\Scripting\autowrapper\aswrappedcall.h" />
+    <ClInclude Include="Source\Engine\Scripting\contextmgr\contextmgr.h" />
+    <ClInclude Include="Source\Engine\Scripting\datetime\datetime.h" />
+    <ClInclude Include="Source\Engine\Scripting\debugger\debugger.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptany\scriptany.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptarray\scriptarray.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptbuilder\scriptbuilder.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptdictionary\scriptdictionary.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptfile\scriptfile.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptfile\scriptfilesystem.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptgrid\scriptgrid.h" />
+    <ClInclude Include="Source\Engine\Scripting\scripthandle\scripthandle.h" />
+    <ClInclude Include="Source\Engine\Scripting\scripthelper\scripthelper.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptmath\scriptmath.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptmath\scriptmathcomplex.h" />
+    <ClInclude Include="Source\Engine\Scripting\scriptstdstring\scriptstdstring.h" />
+    <ClInclude Include="Source\Engine\Scripting\serializer\serializer.h" />
+    <ClInclude Include="Source\Engine\Scripting\weakref\weakref.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -340,6 +360,26 @@
     <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Engine\Graphics\NeoPipeline.cpp" />
     <ClCompile Include="Source\Engine\Systems\ShadowingSubSystem.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\ScriptingEngine.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\autowrapper\generator\generateheader.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\contextmgr\contextmgr.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\datetime\datetime.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\debugger\debugger.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptany\scriptany.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptarray\scriptarray.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptbuilder\scriptbuilder.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptdictionary\scriptdictionary.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptfile\scriptfile.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptfile\scriptfilesystem.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptgrid\scriptgrid.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scripthandle\scripthandle.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scripthelper\scripthelper.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptmath\scriptmath.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptmath\scriptmathcomplex.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptstdstring\scriptstdstring.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\scriptstdstring\scriptstdstring_utils.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\serializer\serializer.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\weakref\weakref.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
