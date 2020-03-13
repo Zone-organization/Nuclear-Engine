@@ -41,3 +41,5 @@
 /Samples/Assets/Common/Models
 /Nuclear Editor/Build/DebugX64/Nuclear Editor.vcxproj.FileListAbsolute.txt
 /Nuclear Editor/Build/DebugX64
+/ScriptTest/bin/Debug/netcoreapp3.1
+/ScriptTest/obj

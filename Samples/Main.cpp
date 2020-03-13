@@ -1,6 +1,7 @@
 ﻿#include "Common.h"
 #include "SampleSelector.h"
 #include <iostream>
+#include "Engine\Scripting\ScriptingEngine.h"
 
 Core::RenderAPI SelectRenderer()
 {
@@ -51,6 +52,8 @@ int main(int argc, char* argv[])
 	//}
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
+
+	bool haha = NuclearEngine::Scripting::ScriptingEngine::Initialize();
 
 	SampleSelector selector;
 	Core::Engine::RunGame(&selector);

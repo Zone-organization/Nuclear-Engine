@@ -5,7 +5,7 @@
   - W.I.P:
     - Bloom effect.
     - ShadowMaps (Through Diligent Component).
-	- Scripting through AngelScript
+	- C# Scripting through DotNetCore (Hosting a runtime)
 	
   - Milestone 0.01 Alpha
 	- Complete DemoGame
@@ -37,7 +37,7 @@ Some Dependencies needs to be downloaded and built manually.
   - PhysX 4.1
   - Freeimage
   - GLFW
-  - AngelScript
+  - .Net Core
   
   
   

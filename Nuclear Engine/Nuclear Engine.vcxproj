@@ -406,6 +406,9 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
+    <ClInclude Include="Source\Engine\Scripting\coreclr_delegates.h" />
+    <ClInclude Include="Source\Engine\Scripting\hostfxr.h" />
+    <ClInclude Include="Source\Engine\Scripting\nethost.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_config.h" />

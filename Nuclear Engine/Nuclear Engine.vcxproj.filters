@@ -268,6 +268,9 @@
     <ClInclude Include="include\Engine\Systems\ShadowingSubSystem.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
+    <ClInclude Include="Source\Engine\Scripting\coreclr_delegates.h" />
+    <ClInclude Include="Source\Engine\Scripting\hostfxr.h" />
+    <ClInclude Include="Source\Engine\Scripting\nethost.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
