@@ -111,27 +111,48 @@ namespace NuclearEngine {
 			Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
 		}
 
+		void Engine::BeginFrame()
+		{	
+			ImGui_Impl_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			Graphics::ImGui::NewFrame();
+		}
+
+		void Engine::EndFrame()
+		{
+			Graphics::ImGui::Render();
+			ImGui_Impl_RenderDrawData(Graphics::ImGui::GetDrawData());
+			Graphics::Context::GetSwapChain()->Present();
+		}
+
 		void Engine::RunGame(Game * _YourGame)
 		{
 			GamePtr = _YourGame;
-			Log.Info("[Engine] Running Game.\n");
-
-			if (GamePtr->GetGameInfo() != nullptr)
+			if (GamePtr != nullptr)
 			{
-				Log.Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetGameInfo()->Name) + "\n"));
-				Log.Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetGameInfo()->Version) + "\n"));
-				Log.Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetGameInfo()->Developer) + "\n"));
-			}
+				Log.Info("[Engine] Running Game.\n");
 
-			SetState(Engine::State::Initializing);
-			GamePtr->Initialize();
-			SetState(Engine::State::Loading);
-			GamePtr->Load();			
-			Engine::Game_Loop_Render();
-			SetState(Engine::State::ExitingRendering);
-			GamePtr->ExitRendering();
-			SetState(Engine::State::Shuttingdown);
-			GamePtr->Shutdown();
+				if (GamePtr->GetGameInfo() != nullptr)
+				{
+					Log.Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetGameInfo()->Name) + "\n"));
+					Log.Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetGameInfo()->Version) + "\n"));
+					Log.Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetGameInfo()->Developer) + "\n"));
+				}
+
+				SetState(Engine::State::Initializing);
+				GamePtr->Initialize();
+				SetState(Engine::State::Loading);
+				GamePtr->Load();
+				Engine::Game_Loop_Render();
+				if (GamePtr != nullptr)
+				{
+					SetState(Engine::State::ExitingRendering);
+					GamePtr->ExitRendering();
+					SetState(Engine::State::Shuttingdown);
+					GamePtr->Shutdown();
+				}
+				GamePtr = nullptr;
+			}
 		}
 		
 		bool Engine::ShouldClose()
@@ -166,9 +187,7 @@ namespace NuclearEngine {
 				lastFrame = currentFrame;
 				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
 
-				ImGui_Impl_NewFrame();
-				ImGui_ImplGlfw_NewFrame();
-				Graphics::ImGui::NewFrame();
+				BeginFrame();
 
 				//Mouse Movement Callback
 				double MousePosX, MousePosY;
@@ -183,9 +202,7 @@ namespace NuclearEngine {
 				GamePtr->Update(deltaTime);
 				GamePtr->Render(deltaTime);
 
-				Graphics::ImGui::Render();
-				ImGui_Impl_RenderDrawData(Graphics::ImGui::GetDrawData());
-				Graphics::Context::GetSwapChain()->Present();
+				EndFrame();
 			}
 		}
 

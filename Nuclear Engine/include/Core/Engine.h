@@ -30,6 +30,10 @@ namespace NuclearEngine
 
 			static void Shutdown();
 
+			static void BeginFrame();
+
+			static void EndFrame();
+
 			static void RunGame(Game *YourGame);
 
 			static void SetState(const State& state);

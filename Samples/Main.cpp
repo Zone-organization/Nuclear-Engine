@@ -1,7 +1,5 @@
 ﻿#include "Common.h"
-#include "Sample1.h"
-#include "Sample2.h"
-#include "Sample3.h"
+#include "SampleSelector.h"
 #include <iostream>
 
 Core::RenderAPI SelectRenderer()
@@ -54,27 +52,8 @@ int main(int argc, char* argv[])
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
 
-	std::cout << "Select Sample:\n"
-			<< "1) Sample1 : BlinnPhong rendering of some models \n"
-			<< "2) Sample2 : Advanced Rendering \n"
-			<< "3) Sample3 : PhysX Integration\n";
-
-	std::cin >> i;
-	if (i == 1)
-	{
-		Sample1 demo;
-		Core::Engine::RunGame(&demo);
-	}
-	else if (i == 2)
-	{
-		Sample2 demo;
-		Core::Engine::RunGame(&demo);
-	}
-	else {
-		Sample3 demo;
-		Core::Engine::RunGame(&demo);
-	}
-
+	SampleSelector selector;
+	Core::Engine::RunGame(&selector);
 
 	Core::Engine::Shutdown();
 
