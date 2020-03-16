@@ -352,6 +352,7 @@
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXShape.h" />
+    <ClInclude Include="include\Engine\Scripting\Script.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="include\Engine\Systems\ShadowingSubSystem.h" />
@@ -406,9 +407,6 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
-    <ClInclude Include="Source\Engine\Scripting\coreclr_delegates.h" />
-    <ClInclude Include="Source\Engine\Scripting\hostfxr.h" />
-    <ClInclude Include="Source\Engine\Scripting\nethost.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_config.h" />
@@ -471,6 +469,7 @@
     <ClCompile Include="Source\Engine\PhysX\PhysXMaterial.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\Engine\PhysX\RigidDynamic.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\Script.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingEngine.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />

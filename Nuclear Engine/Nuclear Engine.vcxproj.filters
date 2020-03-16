@@ -268,9 +268,7 @@
     <ClInclude Include="include\Engine\Systems\ShadowingSubSystem.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
-    <ClInclude Include="Source\Engine\Scripting\coreclr_delegates.h" />
-    <ClInclude Include="Source\Engine\Scripting\hostfxr.h" />
-    <ClInclude Include="Source\Engine\Scripting\nethost.h" />
+    <ClInclude Include="include\Engine\Scripting\Script.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -346,6 +344,7 @@
     <ClCompile Include="Source\Engine\Graphics\NeoPipeline.cpp" />
     <ClCompile Include="Source\Engine\Systems\ShadowingSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingEngine.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
