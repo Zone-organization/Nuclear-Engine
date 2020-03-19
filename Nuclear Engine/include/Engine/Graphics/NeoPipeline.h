@@ -2,7 +2,7 @@
 #include <Base\NE_Common.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <unordered_map>
 #include <Core\Path.h>
 #include <set>

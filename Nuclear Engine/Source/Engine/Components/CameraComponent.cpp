@@ -3,7 +3,7 @@
 #include <Core\Engine.h>
 #include <Engine/ECS\Scene.h>
 #include <Engine\Graphics\Context.h>
-#include <Diligent/Graphics/GraphicsTools/include/CommonlyUsedStates.h>
+#include <Diligent/Graphics/GraphicsTools/interface/CommonlyUsedStates.h>
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
 

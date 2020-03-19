@@ -1,5 +1,5 @@
 #pragma once
-#include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.h>
+#include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine/Importers/Importers.h>

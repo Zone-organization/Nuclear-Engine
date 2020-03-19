@@ -32,8 +32,8 @@ https://github.com/DiligentGraphics/DiligentFX/blob/master/Components/interface/
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
-#include <Diligent/Common/interface/BasicMath.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
+#include <Diligent/Common/interface/BasicMath.hpp>
 
 #define MAX_CASCADES 8
 #define SHADOW_MODE_PCF 1

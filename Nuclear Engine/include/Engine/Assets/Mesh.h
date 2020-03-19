@@ -2,7 +2,7 @@
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
 #include <Engine/Assets/Texture.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine/Assets/Common.h>

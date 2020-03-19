@@ -40,8 +40,10 @@ namespace NuclearEngine
 			for (Uint32 i = 0; i < TempSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
 			{
 				auto variable = TempSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
-				std::string VarName(variable->GetResourceDesc().Name);
-				auto VarType = variable->GetResourceDesc().Type;
+				ShaderResourceDesc VarDesc;
+				variable->GetResourceDesc(VarDesc);
+				std::string VarName(VarDesc.Name);
+				auto VarType = VarDesc.Type;
 				if(VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
 				{
 					VarName.erase(0, 6);

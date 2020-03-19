@@ -1,6 +1,6 @@
 #include <Engine\Managers\CameraManager.h>
 #include <Engine\Graphics\Context.h>
-#include "Diligent\Graphics\GraphicsEngine\interface\MapHelper.h"
+#include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 
 namespace NuclearEngine
 {

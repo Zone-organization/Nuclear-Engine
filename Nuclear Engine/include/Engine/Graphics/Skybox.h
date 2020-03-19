@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>

@@ -27,10 +27,10 @@ https://github.com/DiligentGraphics/DiligentFX/blob/master/Components/src/Shadow
 
 
 #include <Engine\Systems\ShadowingSubSystem.h>
-#include <Diligent/Common/interface/AdvancedMath.h>
-#include <Diligent/Graphics/GraphicsTools/include/GraphicsUtilities.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/MapHelper.h>
-#include <Diligent/Graphics/GraphicsTools/include/CommonlyUsedStates.h>
+#include <Diligent/Common/interface/AdvancedMath.hpp>
+#include <Diligent/Graphics/GraphicsTools/interface/GraphicsUtilities.h>
+#include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
+#include <Diligent/Graphics/GraphicsTools/interface/CommonlyUsedStates.h>
 #include <Core\FileSystem.h>
 
 namespace NuclearEngine

@@ -149,23 +149,27 @@ namespace NuclearEngine
 			std::vector<ShaderResourceVariableDesc> resources;
 			for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
 			{
-				if (!CheckSampler(VShader->GetResource(i).Name))
+				ShaderResourceDesc RsrcDesc;
+				VShader->GetResourceDesc(i, RsrcDesc);
+				if (!CheckSampler(RsrcDesc.Name))
 				{
 					ShaderResourceVariableDesc Desc;
-					Desc.Name = VShader->GetResource(i).Name;
-					Desc.Type = ParseNameToGetType(VShader->GetResource(i).Name);
+					Desc.Name = RsrcDesc.Name;
+					Desc.Type = ParseNameToGetType(RsrcDesc.Name);
 					Desc.ShaderStages = VShader->GetDesc().ShaderType;
 					resources.push_back(Desc);
 				}
 			}
 			for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
 			{
-				if (!CheckSampler(PShader->GetResource(i).Name))
+				ShaderResourceDesc RsrcDesc;
+				PShader->GetResourceDesc(i, RsrcDesc);
+				if (!CheckSampler(RsrcDesc.Name))
 				{
-					std::string name(PShader->GetResource(i).Name);
+					std::string name(RsrcDesc.Name);
 					ShaderResourceVariableDesc Desc;
-					Desc.Name = PShader->GetResource(i).Name;
-					Desc.Type = ParseNameToGetType(PShader->GetResource(i).Name);
+					Desc.Name = RsrcDesc.Name;
+					Desc.Type = ParseNameToGetType(RsrcDesc.Name);
 					Desc.ShaderStages = PShader->GetDesc().ShaderType;
 					resources.push_back(Desc);
 				}

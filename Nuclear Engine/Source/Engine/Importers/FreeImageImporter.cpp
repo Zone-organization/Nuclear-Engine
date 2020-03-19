@@ -1,7 +1,7 @@
 #define EXPOSE_FREEIMAGE_IMPORTER
 #include <Engine\Importers\FreeImageImporter.h>
 #include <FreeImage\Source\FreeImage.h>
-#include <Diligent/Common/interface/Align.h>
+#include <Diligent/Common/interface/Align.hpp>
 
 #pragma comment(lib,"Freeimage.lib")
 

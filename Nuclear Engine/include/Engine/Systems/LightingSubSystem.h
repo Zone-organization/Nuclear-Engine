@@ -5,7 +5,7 @@
 #include <Engine\Components\DirLightComponent.h>
 #include <Engine\Components\PointLightComponent.h>
 #include <Engine\Components\SpotLightComponent.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <vector>

@@ -12,20 +12,20 @@
 #include <GLFW/include/GLFW/glfw3native.h>
 namespace NuclearEngine 
 {
-	void DiligentMassageCallback(DebugMessageSeverity Severity, const Char* Message, const char* Function, const char* File, int Line)
+	void DiligentMassageCallback(DEBUG_MESSAGE_SEVERITY Severity, const Char* Message, const char* Function, const char* File, int Line)
 	{
 		switch (Severity)
 		{
-		case DebugMessageSeverity::Info:
+		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_INFO:
 			Log.Info("[GraphicsEngine] " + std::string(Message) + '\n');
 			return;
-		case DebugMessageSeverity::Warning:
+		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_WARNING:
 			Log.Warning("[GraphicsEngine] " + std::string(Message) + '\n');
 			return;
-		case DebugMessageSeverity::Error:
+		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_ERROR:
 			Log.Error("[GraphicsEngine] " + std::string(Message) + '\n');
 			return;
-		case DebugMessageSeverity::FatalError:
+		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_FATAL_ERROR:
 			Log.FatalError("[GraphicsEngine] " + std::string(Message) + '\n');
 			return;
 		default:
@@ -35,7 +35,7 @@ namespace NuclearEngine
 	}
 
 	bool InitializeDiligentEngineWin32(GLFWwindow* window,
-		const DeviceType& type,
+		const RENDER_DEVICE_TYPE& type,
 		IRenderDevice** device,
 		IDeviceContext** context,
 		ISwapChain** swapchain,
@@ -45,13 +45,12 @@ namespace NuclearEngine
 		Uint32 NumDeferredCtx = 0;
 
 		FullScreenModeDesc FSDesc;
-
-
-		HWND NativeWindowHandle = glfwGetWin32Window(window);
+		NativeWindow DLWindow;
+		DLWindow.hWnd = glfwGetWin32Window(window);
 
 		switch (type)
 		{
-		case DeviceType::D3D11:
+		case RENDER_DEVICE_TYPE_D3D11:
 		{
 			EngineD3D11CreateInfo DeviceCreateInfo;
 			DeviceCreateInfo.DebugMessageCallback = DiligentMassageCallback;
@@ -64,11 +63,11 @@ namespace NuclearEngine
 			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceCreateInfo, device,
 				context);
 			pFactoryD3D11->CreateSwapChainD3D11(*device, *context,
-				SCDesc, FSDesc, NativeWindowHandle, swapchain);
+				SCDesc, FSDesc, DLWindow, swapchain);
 		}
 		break;
 
-		case DeviceType::D3D12:
+		case RENDER_DEVICE_TYPE_D3D12:
 		{
 #if ENGINE_DLL
 			GetEngineFactoryD3D12Type GetEngineFactoryD3D12 = nullptr;
@@ -82,11 +81,11 @@ namespace NuclearEngine
 			pFactoryD3D12->CreateDeviceAndContextsD3D12(EngD3D12CreateInfo, device,
 				context);
 			pFactoryD3D12->CreateSwapChainD3D12(*device, *context,
-				SCDesc, FSDesc, NativeWindowHandle, swapchain);
+				SCDesc, FSDesc, DLWindow, swapchain);
 		}
 		break;
 
-		case DeviceType::OpenGL:
+		case RENDER_DEVICE_TYPE_GL:
 		{
 
 #if ENGINE_DLL
@@ -98,13 +97,13 @@ namespace NuclearEngine
 			auto *pFactoryOpenGL = GetEngineFactoryOpenGL();
 			EngineGLCreateInfo CreationCreateInfo;
 			CreationCreateInfo.DebugMessageCallback = DiligentMassageCallback;
-			CreationCreateInfo.pNativeWndHandle = NativeWindowHandle;
+			CreationCreateInfo.Window = DLWindow;
 			pFactoryOpenGL->CreateDeviceAndSwapChainGL(
 				CreationCreateInfo, device, context, SCDesc, swapchain);
 		}
 		break;
 
-		case DeviceType::Vulkan:
+		case RENDER_DEVICE_TYPE_VULKAN:
 		{
 #if ENGINE_DLL
 			GetEngineFactoryVkType GetEngineFactoryVk = nullptr;
@@ -118,7 +117,7 @@ namespace NuclearEngine
 			pFactoryVk->CreateDeviceAndContextsVk(EngVkCreateInfo, device,
 				context);
 			pFactoryVk->CreateSwapChainVk(*device, *context,
-				SCDesc, NativeWindowHandle, swapchain);
+				SCDesc, DLWindow, swapchain);
 		}
 		break;
 

@@ -15,8 +15,12 @@ class SampleSelector : public Core::Game
 	{
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 
-		Graphics::Context::GetContext()->ClearRenderTarget(Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV(), ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearDepthStencil(Graphics::Context::GetSwapChain()->GetDepthBufferDSV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
+		auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
+
+		Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetContext()->ClearRenderTarget(RTV, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		using namespace Graphics;
 		ImGui::Begin("SampleSelector");

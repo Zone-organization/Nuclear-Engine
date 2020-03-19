@@ -1,7 +1,7 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Engine\Assets\MaterialTypes.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 

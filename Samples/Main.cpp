@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 	//	<< "1) Yes \n"
 	//	<< "2) No \n";
 
-	int i;
+	//int i;
 	//std::cin >> i;
 	//if (i == 2)
 	//{

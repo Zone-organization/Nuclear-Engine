@@ -3,7 +3,7 @@
 #include "imgui_impl.h"
 #include "Engine/Assets/Assets.h"
 #include <Engine\Graphics\Context.h>
-#include "Diligent\Graphics\GraphicsTools\include\GraphicsUtilities.h"
+#include "Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h"
 #include <stdio.h>
 
 using namespace NuclearEngine;
@@ -142,13 +142,12 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(Tex->mTextureView);
 			Graphics::Context::GetContext()->CommitShaderResources(g_pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			DrawAttribs DrawAttrs;
-			DrawAttrs.IsIndexed = true;
+			DrawIndexedAttribs DrawAttrs;
 			DrawAttrs.IndexType = sizeof(ImDrawIdx) == 2 ? VT_UINT16 : VT_UINT32;
 			DrawAttrs.NumIndices = pcmd->ElemCount;
 			DrawAttrs.FirstIndexLocation = pcmd->IdxOffset + global_idx_offset;
 			DrawAttrs.BaseVertex = pcmd->VtxOffset + global_vtx_offset;
-			Graphics::Context::GetContext()->Draw(DrawAttrs);
+			Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
 		}
         global_idx_offset += cmd_list->IdxBuffer.Size;
         global_vtx_offset += cmd_list->VtxBuffer.Size;

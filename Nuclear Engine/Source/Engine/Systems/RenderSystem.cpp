@@ -210,11 +210,12 @@ namespace NuclearEngine
 					Camera->mSkybox->Render();
 				}
 			}
-
 			//Render Main camera view to screen
-			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(nullptr, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(nullptr, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
+			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
+			Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			auto MainCameraPtr = mCameraManager->GetMainCamera();
 			Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetActivePipeline());
@@ -224,11 +225,10 @@ namespace NuclearEngine
 			Graphics::Context::GetContext()->SetIndexBuffer(CameraScreenQuad.mSubMeshes.at(0).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &CameraScreenQuad.mSubMeshes.at(0).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 			
-			DrawAttribs DrawAttrs;
-			DrawAttrs.IsIndexed = true;
+			DrawIndexedAttribs DrawAttrs;
 			DrawAttrs.IndexType = VT_UINT32;
 			DrawAttrs.NumIndices = CameraScreenQuad.mSubMeshes.at(0).mIndicesCount;
-			Graphics::Context::GetContext()->Draw(DrawAttrs);
+			Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
 		}
 		void RenderSystem::InstantRender(Components::MeshComponent * object)
 		{
@@ -264,11 +264,10 @@ namespace NuclearEngine
 				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 				
-				DrawAttribs DrawAttrs;
-				DrawAttrs.IsIndexed = true;
+				DrawIndexedAttribs  DrawAttrs;
 				DrawAttrs.IndexType = VT_UINT32;
 				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
-				Graphics::Context::GetContext()->Draw(DrawAttrs);
+				Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
 			}
 		}	
 	}

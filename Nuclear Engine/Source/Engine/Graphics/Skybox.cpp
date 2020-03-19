@@ -172,7 +172,6 @@ namespace NuclearEngine
 			Graphics::Context::GetContext()->SetVertexBuffers(0, 1,&mVBuffer, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 			DrawAttribs DrawAttrs;
-			DrawAttrs.IsIndexed = false;
 			DrawAttrs.NumVertices = 36;
 			Graphics::Context::GetContext()->Draw(DrawAttrs);
 		}

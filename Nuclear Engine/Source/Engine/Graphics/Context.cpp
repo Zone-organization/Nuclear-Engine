@@ -27,7 +27,7 @@ namespace NuclearEngine
 			{
 				SCDesc.ColorBufferFormat = TEX_FORMAT_RGBA8_UNORM;
 			}
-			bool Result = InitializeDiligentEngineWin32(Core::Application::GetMainWindow()->GetRawWindowPtr(),static_cast<DeviceType>(AppDesc.Renderer), &gDevice, &gContext, &gSwapChain, SCDesc);
+			bool Result = InitializeDiligentEngineWin32(Core::Application::GetMainWindow()->GetRawWindowPtr(),static_cast<RENDER_DEVICE_TYPE>(AppDesc.Renderer), &gDevice, &gContext, &gSwapChain, SCDesc);
 
 			if(Result)
 				Log.Info("[Context] Diligent Graphics API Initialized.\n");
