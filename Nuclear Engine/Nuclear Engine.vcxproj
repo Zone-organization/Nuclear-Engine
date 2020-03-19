@@ -347,6 +347,7 @@
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
+    <ClInclude Include="include\ThirdParty\ShadowMapManager\ShadowMapManager.h" />
     <ClInclude Include="include\Engine\PhysX\Geometry.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXMaterial.h" />
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
@@ -355,7 +356,6 @@
     <ClInclude Include="include\Engine\Scripting\Script.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
-    <ClInclude Include="include\Engine\Systems\ShadowingSubSystem.h" />
     <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
     <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
     <ClInclude Include="include\Engine\PhysX\RigidStatic.h" />
@@ -475,7 +475,6 @@
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
-    <ClCompile Include="Source\Engine\Systems\ShadowingSubSystem.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
@@ -496,6 +495,7 @@
     <ClCompile Include="Source\Core\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Source\Base\Utilities\Logger.cpp" />
+    <ClCompile Include="Source\ThirdParty\ShadowMapManager\ShadowMapManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />
