@@ -90,90 +90,97 @@ namespace NuclearEngine
 			Data.NumSubresources = 6;
 			Data.pSubResources = &subData[0];
 			Graphics::Context::GetDevice()->CreateTexture(TexDesc, &Data, &TexCube);
-			mTextureSRV = TexCube->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-
-			PipelineStateDesc PSODesc;
-			PSODesc.Name = "SkyBox_PSO";
-			PSODesc.IsComputePipeline = false;
-			PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-			PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-			PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-			PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-			PSODesc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
-			PSODesc.GraphicsPipeline.DepthStencilDesc.DepthFunc = COMPARISON_FUNC_LESS_EQUAL;
-			PSODesc.GraphicsPipeline.DepthStencilDesc.DepthWriteEnable = false;
-			PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
-
-			//Create Shaders
-			RefCntAutoPtr<IShader> VSShader;
-			RefCntAutoPtr<IShader> PSShader;
-			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl"), SHADER_TYPE_VERTEX);
-			PSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.Ps.hlsl"), SHADER_TYPE_PIXEL);
-
-			
-			LayoutElement LayoutElems[] =
+			if (TexCube != nullptr)
 			{
-				// Attribute 0 - vertex position
-				LayoutElement{0, 0, 3, VT_FLOAT32, False,0},
-			};
+				mTextureSRV = TexCube->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-			PSODesc.GraphicsPipeline.pVS = VSShader;
-			PSODesc.GraphicsPipeline.pPS = PSShader;
-			PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems;
-			PSODesc.GraphicsPipeline.InputLayout.NumElements = _countof(LayoutElems);
-			PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
+				PipelineStateDesc PSODesc;
+				PSODesc.Name = "SkyBox_PSO";
+				PSODesc.IsComputePipeline = false;
+				PSODesc.GraphicsPipeline.NumRenderTargets = 1;
+				PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+				PSODesc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+				PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
+				PSODesc.GraphicsPipeline.DepthStencilDesc.DepthFunc = COMPARISON_FUNC_LESS_EQUAL;
+				PSODesc.GraphicsPipeline.DepthStencilDesc.DepthWriteEnable = false;
+				PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
 
-			ShaderResourceVariableDesc Vars[] =
-			{
-				{SHADER_TYPE_PIXEL, "NE_Skybox", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE}
-			};
-			PSODesc.ResourceLayout.Variables = Vars;
-			PSODesc.ResourceLayout.NumVariables = _countof(Vars);
-			
-			// Define static sampler for g_Texture. Static samplers should be used whenever possible
-			SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
-				TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
-
-			SamLinearClampDesc.ComparisonFunc = COMPARISON_FUNC_ALWAYS;
-			StaticSamplerDesc StaticSamplers[] =
-			{
-				{SHADER_TYPE_PIXEL, "NE_Skybox", SamLinearClampDesc}
-			};
-			PSODesc.ResourceLayout.StaticSamplers = StaticSamplers;
-			PSODesc.ResourceLayout.NumStaticSamplers = _countof(StaticSamplers);
-
-			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(CameraConstantBuffer);
+				//Create Shaders
+				RefCntAutoPtr<IShader> VSShader;
+				RefCntAutoPtr<IShader> PSShader;
+				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl"), SHADER_TYPE_VERTEX);
+				PSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.Ps.hlsl"), SHADER_TYPE_PIXEL);
 
 
-			mPipeline->CreateShaderResourceBinding(&mSRB, true);
-			mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mTextureSRV);
+				LayoutElement LayoutElems[] =
+				{
+					// Attribute 0 - vertex position
+					LayoutElement{0, 0, 3, VT_FLOAT32, False,0},
+				};
 
-			BufferDesc VertBuffDesc;
-			VertBuffDesc.Usage = USAGE_STATIC;
-			VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
-			VertBuffDesc.uiSizeInBytes = sizeof(skyboxVertices);
+				PSODesc.GraphicsPipeline.pVS = VSShader;
+				PSODesc.GraphicsPipeline.pPS = PSShader;
+				PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems;
+				PSODesc.GraphicsPipeline.InputLayout.NumElements = _countof(LayoutElems);
+				PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
 
-			BufferData VBData;
-			VBData.pData = skyboxVertices;
-			VBData.DataSize = sizeof(skyboxVertices);
-			Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVBuffer);
+				ShaderResourceVariableDesc Vars[] =
+				{
+					{SHADER_TYPE_PIXEL, "NE_Skybox", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE}
+				};
+				PSODesc.ResourceLayout.Variables = Vars;
+				PSODesc.ResourceLayout.NumVariables = _countof(Vars);
+
+				// Define static sampler for g_Texture. Static samplers should be used whenever possible
+				SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
+					TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
+
+				SamLinearClampDesc.ComparisonFunc = COMPARISON_FUNC_ALWAYS;
+				StaticSamplerDesc StaticSamplers[] =
+				{
+					{SHADER_TYPE_PIXEL, "NE_Skybox", SamLinearClampDesc}
+				};
+				PSODesc.ResourceLayout.StaticSamplers = StaticSamplers;
+				PSODesc.ResourceLayout.NumStaticSamplers = _countof(StaticSamplers);
+
+				Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(CameraConstantBuffer);
+
+
+				mPipeline->CreateShaderResourceBinding(&mSRB, true);
+				mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mTextureSRV);
+
+				BufferDesc VertBuffDesc;
+				VertBuffDesc.Usage = USAGE_STATIC;
+				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
+				VertBuffDesc.uiSizeInBytes = sizeof(skyboxVertices);
+
+				BufferData VBData;
+				VBData.pData = skyboxVertices;
+				VBData.DataSize = sizeof(skyboxVertices);
+				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVBuffer);
+				Valid = true;
+			}
 		}
 	
 
 		void Skybox::Render()
 		{
-			Graphics::Context::GetContext()->SetPipelineState(mPipeline);
-			Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			if (Valid)
+			{
+				Graphics::Context::GetContext()->SetPipelineState(mPipeline);
+				Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			Graphics::Context::GetContext()->SetVertexBuffers(0, 1,&mVBuffer, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mVBuffer, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
-			DrawAttribs DrawAttrs;
-			DrawAttrs.NumVertices = 36;
-			Graphics::Context::GetContext()->Draw(DrawAttrs);
+				DrawAttribs DrawAttrs;
+				DrawAttrs.NumVertices = 36;
+				Graphics::Context::GetContext()->Draw(DrawAttrs);
+			}
 		}
 
 	}

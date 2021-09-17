@@ -34,6 +34,7 @@ namespace NuclearEngine
 			RefCntAutoPtr<ITextureView> mTextureSRV;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 			bool ReleaseTex = false;
+			bool Valid = false;
 		};
 	}
 }
