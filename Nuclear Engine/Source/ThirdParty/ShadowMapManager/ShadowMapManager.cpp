@@ -136,8 +136,8 @@ namespace Diligent
         VERIFY(Info.pLightDir, "Light direction must not be null");
         VERIFY(m_pDevice, "Shadow map manager is not initialized");
 
-        const auto& DevCaps = m_pDevice->GetDeviceCaps();
-        const auto  IsGL = DevCaps.IsGLDevice();
+        const auto& DevInfo = m_pDevice->GetDeviceInfo();
+        const auto  IsGL = DevInfo.IsGLDevice();
         const auto& SMDesc = m_pShadowMapSRV->GetTexture()->GetDesc();
 
         float2 f2ShadowMapSize = float2(static_cast<float>(SMDesc.Width), static_cast<float>(SMDesc.Height));
@@ -342,7 +342,7 @@ namespace Diligent
             float2 f2Extension = f2Margin * 2.f;
 
             // We need to remap the whole extent N x N to (N-ext) x (N-ext)
-            VERIFY_EXPR(f2ShadowMapSize.x > f2Extension.x&& f2ShadowMapSize.y > f2Extension.y);
+            VERIFY_EXPR(f2ShadowMapSize.x > f2Extension.x && f2ShadowMapSize.y > f2Extension.y);
             f3CascadeExtent.x *= f2ShadowMapSize.x / (f2ShadowMapSize.x - f2Extension.x);
             f3CascadeExtent.y *= f2ShadowMapSize.y / (f2ShadowMapSize.y - f2Extension.y);
 
@@ -391,7 +391,7 @@ namespace Diligent
             float4x4& WorldToLightProjSpaceMatr = m_CascadeTransforms[iCascade].WorldToLightProjSpace;
             WorldToLightProjSpaceMatr = WorldToLightViewSpaceMatr * CascadeProjMatr;
 
-            const auto& NDCAttribs = DevCaps.GetNDCAttribs();
+            const auto& NDCAttribs = DevInfo.GetNDCAttribs();
             float4x4    ProjToUVScale = float4x4::Scale(0.5f, NDCAttribs.YtoVScale, NDCAttribs.ZtoDepthScale);
             float4x4    ProjToUVBias = float4x4::Translation(0.5f, 0.5f, NDCAttribs.GetZtoDepthBias());
 
@@ -419,7 +419,7 @@ namespace Diligent
 
             if (Tech.PSO)
             {
-                if (Tech.PSO->GetDesc().GraphicsPipeline.RTVFormats[0] != FilterableShadowMapFmt)
+                if (Tech.PSO->GetGraphicsPipelineDesc().RTVFormats[0] != FilterableShadowMapFmt)
                     Tech = ShadowConversionTechnique();
                 else
                     continue; // Already up to date
@@ -431,13 +431,14 @@ namespace Diligent
                 VertShaderCI.Desc.ShaderType = SHADER_TYPE_VERTEX;
                 VertShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
                 VertShaderCI.UseCombinedTextureSamplers = true;
-                VertShaderCI.Source = NuclearEngine::Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Shadowing/FullScreenTriangleVS.fx").c_str();
+                VertShaderCI.Source = VertShaderCI.Source = NuclearEngine::Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Shadowing/FullScreenTriangleVS.fx").c_str();
                 VertShaderCI.EntryPoint = "FullScreenTriangleVS";
                 VertShaderCI.Desc.Name = "FullScreenTriangleVS";
                 m_pDevice->CreateShader(VertShaderCI, &pScreenSizeTriVS);
             }
 
-            PipelineStateDesc PSODesc;
+            GraphicsPipelineStateCreateInfo PSOCreateInfo;
+            PipelineStateDesc& PSODesc = PSOCreateInfo.PSODesc;
 
             ShaderCreateInfo ShaderCI;
             ShaderCI.Desc.ShaderType = SHADER_TYPE_PIXEL;
@@ -469,36 +470,36 @@ namespace Diligent
                 {SHADER_TYPE_PIXEL, "g_tex2DShadowMap", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE} //
             };
 
-            StaticSamplerDesc StaticSamplers[] =
+            ImmutableSamplerDesc ImtblSampler[] =
             {
                 {SHADER_TYPE_PIXEL, "g_tex2DShadowMap", Sam_LinearClamp} //
             };
 
-            if (m_pDevice->GetDeviceCaps().IsGLDevice())
+            if (m_pDevice->GetDeviceInfo().IsGLDevice())
             {
                 // Even though textures are never sampled in the shader, OpenGL requires proper
                 // sampler to be set even when texelFetch is used.
-                PSODesc.ResourceLayout.StaticSamplers = StaticSamplers;
-                PSODesc.ResourceLayout.NumStaticSamplers = _countof(StaticSamplers);
+                PSODesc.ResourceLayout.ImmutableSamplers = ImtblSampler;
+                PSODesc.ResourceLayout.NumImmutableSamplers = _countof(ImtblSampler);
             }
             PSODesc.ResourceLayout.Variables = Variables;
             PSODesc.ResourceLayout.NumVariables = _countof(Variables);
 
-            auto& GraphicsPipeline = PSODesc.GraphicsPipeline;
+            auto& GraphicsPipeline = PSOCreateInfo.GraphicsPipeline;
 
             GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
             GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
             GraphicsPipeline.DepthStencilDesc.DepthEnable = False;
-            GraphicsPipeline.pVS = pScreenSizeTriVS;
-            GraphicsPipeline.pPS = pVSMHorzPS;
+            PSOCreateInfo.pVS = pScreenSizeTriVS;
+            PSOCreateInfo.pPS = pVSMHorzPS;
             GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
             GraphicsPipeline.NumRenderTargets = 1;
             GraphicsPipeline.RTVFormats[0] = FilterableShadowMapFmt;
 
-            m_pDevice->CreatePipelineState(PSODesc, &Tech.PSO);
+            m_pDevice->CreateGraphicsPipelineState(PSOCreateInfo, &Tech.PSO);
             Tech.PSO->GetStaticVariableByName(SHADER_TYPE_PIXEL, "cbConversionAttribs")->Set(m_pConversionAttribsBuffer);
 
-            if (m_BlurVertTech.PSO && m_BlurVertTech.PSO->GetDesc().GraphicsPipeline.RTVFormats[0] != FilterableShadowMapFmt)
+            if (m_BlurVertTech.PSO && m_BlurVertTech.PSO->GetGraphicsPipelineDesc().RTVFormats[0] != FilterableShadowMapFmt)
                 m_BlurVertTech.PSO.Release();
 
             if (!m_BlurVertTech.PSO)
@@ -508,8 +509,8 @@ namespace Diligent
                 PSODesc.Name = "Vertical blur pass PSO";
                 RefCntAutoPtr<IShader> pVertBlurPS;
                 m_pDevice->CreateShader(ShaderCI, &pVertBlurPS);
-                GraphicsPipeline.pPS = pVertBlurPS;
-                m_pDevice->CreatePipelineState(PSODesc, &m_BlurVertTech.PSO);
+                PSOCreateInfo.pPS = pVertBlurPS;
+                m_pDevice->CreateGraphicsPipelineState(PSOCreateInfo, &m_BlurVertTech.PSO);
                 m_BlurVertTech.PSO->GetStaticVariableByName(SHADER_TYPE_PIXEL, "cbConversionAttribs")->Set(m_pConversionAttribsBuffer);
             }
         }

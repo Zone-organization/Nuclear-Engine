@@ -52,11 +52,12 @@ namespace NuclearEngine
 			}
 			BufferDesc CBDesc;
 			CBDesc.Name = "LightCB";
-			CBDesc.uiSizeInBytes = static_cast<Uint32>(NE_Light_CB_Size);
+			CBDesc.Size = static_cast<Uint32>(NE_Light_CB_Size);
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &BufferData(), mPSLightCB.GetRawDblPtr());
+			BufferData DATA;
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
 		}
 		void LightingSubSystem::UpdateBuffer(const Math::Vector4& CameraPos)
 		{

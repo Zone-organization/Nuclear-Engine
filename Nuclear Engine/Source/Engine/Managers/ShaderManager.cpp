@@ -96,19 +96,19 @@ namespace NuclearEngine
 
 		bool ShaderManager::ProcessAndCreatePipeline(
 			IPipelineState** PipelineState,
-			PipelineStateDesc& PSODesc,
+			GraphicsPipelineStateCreateInfo& PSOCreateInfo,
 			const std::vector<ShaderResourceVariableDesc>& Resources,
 			bool AutoCreateSamplersDesc,
-			const std::vector<StaticSamplerDesc>& StaticSamplers)
+			const std::vector<ImmutableSamplerDesc>& StaticSamplers)
 		{
-			PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Resources.size());
-			PSODesc.ResourceLayout.Variables = Resources.data();
-			std::vector<StaticSamplerDesc> GeneratedSamplerDesc;
+			PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Resources.size());
+			PSOCreateInfo.PSODesc.ResourceLayout.Variables = Resources.data();
+			std::vector<ImmutableSamplerDesc> GeneratedSamplerDesc;
 
 			if (!AutoCreateSamplersDesc)
 			{
-				PSODesc.ResourceLayout.NumStaticSamplers = static_cast<Uint32>(StaticSamplers.size());
-				PSODesc.ResourceLayout.StaticSamplers = StaticSamplers.data();
+				PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(StaticSamplers.size());
+				PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers.data();
 			}
 			else 
 			{
@@ -121,17 +121,16 @@ namespace NuclearEngine
 					{
 						SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
 							TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP);
-						StaticSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearClampDesc);
+						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearClampDesc);
 						GeneratedSamplerDesc.push_back(desc);
 					}
 				}
 
-				PSODesc.ResourceLayout.NumStaticSamplers = static_cast<Uint32>(GeneratedSamplerDesc.size());
-				PSODesc.ResourceLayout.StaticSamplers = GeneratedSamplerDesc.data();
+				PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(GeneratedSamplerDesc.size());
+				PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = GeneratedSamplerDesc.data();
 			}
 
-
-			Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, PipelineState);
+			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, PipelineState);
 
 			return true;
 		}

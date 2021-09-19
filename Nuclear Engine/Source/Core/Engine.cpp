@@ -10,7 +10,7 @@
 #include "..\Engine\Graphics\ImGUI\imgui_impl.h"
 
 //Dependencies Linking
-#pragma comment(lib,"assimp-vc142-mt.lib")
+#pragma comment(lib,"assimp-vc142-mtd.lib")
 #pragma comment(lib,"glfw3.lib")
 
 //Diligent Linking

@@ -41,7 +41,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 		VertBuffDesc.Usage = USAGE_DYNAMIC;
 		VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
 		VertBuffDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-		VertBuffDesc.uiSizeInBytes = g_VertexBufferSize * sizeof(ImDrawVert);
+		VertBuffDesc.Size = g_VertexBufferSize * sizeof(ImDrawVert);
 
 		Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, NULL, &g_pVB);
 
@@ -55,7 +55,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 		IndBuffDesc.Usage = USAGE_DYNAMIC;
 		IndBuffDesc.BindFlags = BIND_INDEX_BUFFER;
 		IndBuffDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-		IndBuffDesc.uiSizeInBytes = g_IndexBufferSize * sizeof(ImDrawIdx);
+		IndBuffDesc.Size = g_IndexBufferSize * sizeof(ImDrawIdx);
 
 
 		Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, NULL, &g_pIB);
@@ -118,7 +118,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 
 
 	Graphics::Context::GetContext()->SetIndexBuffer(g_pIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-	Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &g_pVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+	Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &g_pVB, (const Uint64 *)offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
     // Render command lists
     // (Because we merged all buffers into a single one, we maintain our own offset into them)
@@ -193,42 +193,43 @@ static void ImGui_Impl_CreateFontsTexture()
     io.Fonts->TexID = (ImTextureID)&g_pFontTexture;
 }
 
-bool    ImGui_Impl_CreateDeviceObjects()
+bool ImGui_Impl_CreateDeviceObjects()
 {
     ImGui_Impl_InvalidateDeviceObjects();
 
-	PipelineStateDesc PSODesc;
-	PSODesc.Name = "IMGUI_PSO";
-	PSODesc.IsComputePipeline = false;
-	PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-	PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-	PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-	PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-	PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+
+	GraphicsPipelineStateCreateInfo PSOCreateInfo;
+	PSOCreateInfo.PSODesc.Name = "IMGUI_PSO";
+
+	PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+	PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+	PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+	PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 
 	//Depth Stencil Desc
-	PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-	PSODesc.GraphicsPipeline.DepthStencilDesc.DepthWriteEnable = true;
-	PSODesc.GraphicsPipeline.DepthStencilDesc.DepthFunc = COMPARISON_FUNC_ALWAYS;
-	PSODesc.GraphicsPipeline.DepthStencilDesc.StencilEnable = false;
-	PSODesc.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilFailOp = PSODesc.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilDepthFailOp = PSODesc.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilPassOp = STENCIL_OP_KEEP;
-	PSODesc.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilFunc = COMPARISON_FUNC_ALWAYS;
-	PSODesc.GraphicsPipeline.DepthStencilDesc.BackFace = PSODesc.GraphicsPipeline.DepthStencilDesc.FrontFace;
+	PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+	PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthWriteEnable = true;
+	PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthFunc = COMPARISON_FUNC_ALWAYS;
+	PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.StencilEnable = false;
+	PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilFailOp = PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilDepthFailOp = PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilPassOp = STENCIL_OP_KEEP;
+	PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.FrontFace.StencilFunc = COMPARISON_FUNC_ALWAYS;
+	PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.BackFace = PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.FrontFace;
 	//Blend State Desc
-	PSODesc.GraphicsPipeline.BlendDesc.AlphaToCoverageEnable = false;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = true;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].SrcBlend = BLEND_FACTOR_SRC_ALPHA;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].DestBlend = BLEND_FACTOR_INV_SRC_ALPHA;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendOp = BLEND_OPERATION_ADD;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].SrcBlendAlpha = BLEND_FACTOR_INV_SRC_ALPHA;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].DestBlendAlpha = BLEND_FACTOR_ZERO;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendOpAlpha = BLEND_OPERATION_ADD;
-	PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].RenderTargetWriteMask = COLOR_MASK_ALL;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.AlphaToCoverageEnable = false;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = true;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].SrcBlend = BLEND_FACTOR_SRC_ALPHA;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].DestBlend = BLEND_FACTOR_INV_SRC_ALPHA;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendOp = BLEND_OPERATION_ADD;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].SrcBlendAlpha = BLEND_FACTOR_INV_SRC_ALPHA;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].DestBlendAlpha = BLEND_FACTOR_ZERO;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendOpAlpha = BLEND_OPERATION_ADD;
+	PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].RenderTargetWriteMask = COLOR_MASK_ALL;
 	//Rasterizer Desc
-	PSODesc.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
-	PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
-	PSODesc.GraphicsPipeline.RasterizerDesc.ScissorEnable = true;
-	PSODesc.GraphicsPipeline.RasterizerDesc.DepthClipEnable = true;
+	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
+	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.ScissorEnable = true;
+	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = true;
 
 	ShaderCreateInfo ShaderCI;
 	ShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
@@ -312,13 +313,13 @@ bool    ImGui_Impl_CreateDeviceObjects()
 		LayoutElement{2, 0, 4, VT_UINT8, True, IM_OFFSETOF(ImDrawVert, col)}
 	};
 
-	PSODesc.GraphicsPipeline.pVS = pVS;
-	PSODesc.GraphicsPipeline.pPS = pPS;
-	PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems;
-	PSODesc.GraphicsPipeline.InputLayout.NumElements = _countof(LayoutElems);
+	PSOCreateInfo.pVS = pVS;
+	PSOCreateInfo.pPS = pPS;
+	PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems;
+	PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = _countof(LayoutElems);
 
 	// Define variable type that will be used by default
-	PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
+	PSOCreateInfo.PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
 
 	// Shader variables should typically be mutable, which means they are expected
 	// to change on a per-instance basis
@@ -326,22 +327,22 @@ bool    ImGui_Impl_CreateDeviceObjects()
 	{
 		{SHADER_TYPE_PIXEL, "Tex0", SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC}
 	};
-	PSODesc.ResourceLayout.Variables = Vars;
-	PSODesc.ResourceLayout.NumVariables = _countof(Vars);
+	PSOCreateInfo.PSODesc.ResourceLayout.Variables = Vars;
+	PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = _countof(Vars);
 
 	// Define static sampler for g_Texture. Static samplers should be used whenever possible
 	SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
 		TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP);
 
 	SamLinearClampDesc.ComparisonFunc = COMPARISON_FUNC_ALWAYS;
-	StaticSamplerDesc StaticSamplers[] =
+	ImmutableSamplerDesc StaticSamplers[] =
 	{
 		{SHADER_TYPE_PIXEL, "Tex0", SamLinearClampDesc}
 	};
-	PSODesc.ResourceLayout.StaticSamplers = StaticSamplers;
-	PSODesc.ResourceLayout.NumStaticSamplers = _countof(StaticSamplers);
+	PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers;
+	PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = _countof(StaticSamplers);
 
-	Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &g_pPSO);
+	Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &g_pPSO);
 
 	g_pPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "vertexBuffer")->Set(g_pVertexConstantBuffer);
 

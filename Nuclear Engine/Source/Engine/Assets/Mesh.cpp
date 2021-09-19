@@ -48,9 +48,9 @@ namespace NuclearEngine {
 			
 			{
 				BufferDesc VertBuffDesc;
-				VertBuffDesc.Usage = USAGE_STATIC;
+				VertBuffDesc.Usage = USAGE_IMMUTABLE;
 				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
-				VertBuffDesc.uiSizeInBytes = (unsigned int)verticesdata.size() * sizeof(float);
+				VertBuffDesc.Size = (unsigned int)verticesdata.size() * sizeof(float);
 
 				BufferData VBData;
 				VBData.pData = verticesdata.data();
@@ -62,9 +62,9 @@ namespace NuclearEngine {
 			{				
 				// Create index buffer
 				BufferDesc IndBuffDesc;
-				IndBuffDesc.Usage = USAGE_STATIC;
+				IndBuffDesc.Usage = USAGE_IMMUTABLE;
 				IndBuffDesc.BindFlags = BIND_INDEX_BUFFER;
-				IndBuffDesc.uiSizeInBytes = (unsigned int)data.indices.size() * sizeof(Uint32);
+				IndBuffDesc.Size = (unsigned int)data.indices.size() * sizeof(Uint32);
 
 				BufferData IBData;
 				IBData.pData = data.indices.data();

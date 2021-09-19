@@ -98,7 +98,7 @@ namespace NuclearEngine
 
 			FreeImage_Unload(dib);
 
-			image.mRowStride = Align(static_cast<Uint32>(image.mWidth * image.mNumComponents), 4u);
+			image.mRowStride = AlignUp(static_cast<Uint32>(image.mWidth * image.mNumComponents), 4u);
 
 			return image;
 		}

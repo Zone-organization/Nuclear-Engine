@@ -1,7 +1,8 @@
-![Nuclear Engine Logo](logo.png "Nuclear Engine Logo") 
+# Nuclear Engine
+
 * [Engine features](https://github.com/Zone-organization/Nuclear-Engine/blob/master/FEATURES.md) - A list of all working features.
 
-# To-dos 
+## To-dos 
   - W.I.P:
     - Bloom effect.
     - ShadowMaps (Through Diligent Component).

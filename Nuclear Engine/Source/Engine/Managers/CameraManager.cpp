@@ -16,7 +16,7 @@ namespace NuclearEngine
 		{
 			BufferDesc CBDesc;
 			CBDesc.Name = "CameraCB";
-			CBDesc.uiSizeInBytes = sizeof(Components::CameraBuffer);
+			CBDesc.Size = sizeof(Components::CameraBuffer);
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;

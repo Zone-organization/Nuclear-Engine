@@ -99,14 +99,16 @@ namespace NuclearEngine
 				VShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(VShaderSource, Info.Defines), SHADER_TYPE_VERTEX);
 				PShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(PShaderSource, Info.Defines), SHADER_TYPE_PIXEL);
 
-				PipelineStateDesc PSODesc;
-				PSODesc.Name = std::string(Desc.mName + "_ID_" + std::to_string(Info.mHashKey)).c_str();
-				PSODesc.IsComputePipeline = false;
-				PSODesc.GraphicsPipeline = Desc.GraphicsPipeline;
-				PSODesc.GraphicsPipeline.pVS = VShader;
-				PSODesc.GraphicsPipeline.pPS = PShader;
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+				PSOCreateInfo.PSODesc.Name = std::string(Desc.mName + "_ID_" + std::to_string(Info.mHashKey)).c_str();
+				PSOCreateInfo.GraphicsPipeline = Desc.GraphicsPipeline;
+				PSOCreateInfo.pVS = VShader;
+				PSOCreateInfo.pPS = PShader;
+
+				
+
 				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VShader, PShader);
-				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&Pipeline, PSODesc, Vars, true);
+				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&Pipeline, PSOCreateInfo, Vars, true);
 
 				PipelineWithSRB GeneratedPSO;
 				GeneratedPSO.PSO = Pipeline;

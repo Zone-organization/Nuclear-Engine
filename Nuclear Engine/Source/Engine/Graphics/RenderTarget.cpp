@@ -45,7 +45,7 @@ namespace NuclearEngine
 
 		void RenderTarget::SetActive(const float* RGBA)
 		{		
-			Graphics::Context::GetContext()->SetRenderTargets(1, mColorRTV.GetRawDblPtr(), mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(1, mColorRTV.RawDblPtr(), mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearRenderTarget(mColorRTV.RawPtr(), RGBA, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearDepthStencil(mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}

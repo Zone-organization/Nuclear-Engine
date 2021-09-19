@@ -70,7 +70,7 @@ namespace NuclearEngine
 
 			TextureLoadingDesc() :
 				mPath(""),
-				mUsage(USAGE_STATIC),
+				mUsage(USAGE_IMMUTABLE),
 				mBindFlags(BIND_SHADER_RESOURCE),
 				mMipLevels(0),
 				mCPUAccessFlags(CPU_ACCESS_NONE),

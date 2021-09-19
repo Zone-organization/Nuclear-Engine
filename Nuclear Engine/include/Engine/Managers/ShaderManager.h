@@ -42,10 +42,10 @@ namespace NuclearEngine
 
 			bool ProcessAndCreatePipeline(
 				IPipelineState** PipelineState,
-				PipelineStateDesc& Desc,
+				GraphicsPipelineStateCreateInfo& Desc,
 				const std::vector<ShaderResourceVariableDesc>& Resources,
 				bool AutoCreateSamplersDesc = true,
-				const std::vector<StaticSamplerDesc>& StaticSamplers = std::vector<StaticSamplerDesc>());
+				const std::vector<ImmutableSamplerDesc>& StaticSamplers = std::vector<ImmutableSamplerDesc>());
 
 			std::vector<ShaderResourceVariableDesc> ReflectShaderVariables(IShader* VShader, IShader* PShader);
 

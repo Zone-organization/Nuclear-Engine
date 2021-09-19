@@ -221,7 +221,7 @@ namespace NuclearEngine
 			Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetActivePipeline());
 			Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			Uint32 offset = 0;
+			Uint64 offset = 0;
 			Graphics::Context::GetContext()->SetIndexBuffer(CameraScreenQuad.mSubMeshes.at(0).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &CameraScreenQuad.mSubMeshes.at(0).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 			
@@ -255,7 +255,7 @@ namespace NuclearEngine
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
 		{
-			Uint32 offset = 0;
+			Uint64 offset = 0;
 
 			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)
 			{

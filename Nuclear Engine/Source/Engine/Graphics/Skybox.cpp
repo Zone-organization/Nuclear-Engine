@@ -94,20 +94,19 @@ namespace NuclearEngine
 			{
 				mTextureSRV = TexCube->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-				PipelineStateDesc PSODesc;
-				PSODesc.Name = "SkyBox_PSO";
-				PSODesc.IsComputePipeline = false;
-				PSODesc.GraphicsPipeline.NumRenderTargets = 1;
-				PSODesc.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-				PSODesc.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-				PSODesc.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-				PSODesc.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-				PSODesc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-				PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-				PSODesc.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
-				PSODesc.GraphicsPipeline.DepthStencilDesc.DepthFunc = COMPARISON_FUNC_LESS_EQUAL;
-				PSODesc.GraphicsPipeline.DepthStencilDesc.DepthWriteEnable = false;
-				PSODesc.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+				PSOCreateInfo.PSODesc.Name = "SkyBox_PSO";
+				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthFunc = COMPARISON_FUNC_LESS_EQUAL;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthWriteEnable = false;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
 
 				//Create Shaders
 				RefCntAutoPtr<IShader> VSShader;
@@ -122,32 +121,32 @@ namespace NuclearEngine
 					LayoutElement{0, 0, 3, VT_FLOAT32, False,0},
 				};
 
-				PSODesc.GraphicsPipeline.pVS = VSShader;
-				PSODesc.GraphicsPipeline.pPS = PSShader;
-				PSODesc.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems;
-				PSODesc.GraphicsPipeline.InputLayout.NumElements = _countof(LayoutElems);
-				PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
+				PSOCreateInfo.pVS = VSShader;
+				PSOCreateInfo.pPS = PSShader;
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems;
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = _countof(LayoutElems);
+				PSOCreateInfo.PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
 
 				ShaderResourceVariableDesc Vars[] =
 				{
 					{SHADER_TYPE_PIXEL, "NE_Skybox", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE}
 				};
-				PSODesc.ResourceLayout.Variables = Vars;
-				PSODesc.ResourceLayout.NumVariables = _countof(Vars);
+				PSOCreateInfo.PSODesc.ResourceLayout.Variables = Vars;
+				PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = _countof(Vars);
 
 				// Define static sampler for g_Texture. Static samplers should be used whenever possible
 				SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
 					TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
 
 				SamLinearClampDesc.ComparisonFunc = COMPARISON_FUNC_ALWAYS;
-				StaticSamplerDesc StaticSamplers[] =
+				ImmutableSamplerDesc StaticSamplers[] =
 				{
 					{SHADER_TYPE_PIXEL, "NE_Skybox", SamLinearClampDesc}
 				};
-				PSODesc.ResourceLayout.StaticSamplers = StaticSamplers;
-				PSODesc.ResourceLayout.NumStaticSamplers = _countof(StaticSamplers);
+				PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers;
+				PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = _countof(StaticSamplers);
+				Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPipeline);
 
-				Graphics::Context::GetDevice()->CreatePipelineState(PSODesc, &mPipeline);
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(CameraConstantBuffer);
 
 
@@ -155,9 +154,9 @@ namespace NuclearEngine
 				mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mTextureSRV);
 
 				BufferDesc VertBuffDesc;
-				VertBuffDesc.Usage = USAGE_STATIC;
+				VertBuffDesc.Usage = USAGE_IMMUTABLE;
 				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
-				VertBuffDesc.uiSizeInBytes = sizeof(skyboxVertices);
+				VertBuffDesc.Size = sizeof(skyboxVertices);
 
 				BufferData VBData;
 				VBData.pData = skyboxVertices;
