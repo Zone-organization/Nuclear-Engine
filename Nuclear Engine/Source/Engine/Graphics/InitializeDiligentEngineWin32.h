@@ -39,6 +39,7 @@ namespace NuclearEngine
 		IRenderDevice** device,
 		IDeviceContext** context,
 		ISwapChain** swapchain,
+		IEngineFactory** factory,
 		const SwapChainDesc& SCDesc
 	)
 	{
@@ -60,6 +61,7 @@ namespace NuclearEngine
 			LoadGraphicsEngineD3D11(GetEngineFactoryD3D11);
 #endif
 			auto *pFactoryD3D11 = GetEngineFactoryD3D11();
+			*factory = pFactoryD3D11;
 			pFactoryD3D11->CreateDeviceAndContextsD3D11(DeviceCreateInfo, device,
 				context);
 			pFactoryD3D11->CreateSwapChainD3D11(*device, *context,
@@ -78,6 +80,8 @@ namespace NuclearEngine
 			EngD3D12CreateInfo.DebugMessageCallback = DiligentMassageCallback;
 
 			auto *pFactoryD3D12 = GetEngineFactoryD3D12();
+			*factory = pFactoryD3D12;
+
 			pFactoryD3D12->CreateDeviceAndContextsD3D12(EngD3D12CreateInfo, device,
 				context);
 			pFactoryD3D12->CreateSwapChainD3D12(*device, *context,
@@ -95,6 +99,8 @@ namespace NuclearEngine
 			LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL);
 #endif
 			auto *pFactoryOpenGL = GetEngineFactoryOpenGL();
+			*factory = pFactoryOpenGL;
+
 			EngineGLCreateInfo CreationCreateInfo;
 			CreationCreateInfo.DebugMessageCallback = DiligentMassageCallback;
 			CreationCreateInfo.Window = DLWindow;
@@ -114,6 +120,8 @@ namespace NuclearEngine
 			EngVkCreateInfo.DebugMessageCallback = DiligentMassageCallback;
 
 			auto *pFactoryVk = GetEngineFactoryVk();
+			*factory = pFactoryVk;
+
 			pFactoryVk->CreateDeviceAndContextsVk(EngVkCreateInfo, device,
 				context);
 			pFactoryVk->CreateSwapChainVk(*device, *context,

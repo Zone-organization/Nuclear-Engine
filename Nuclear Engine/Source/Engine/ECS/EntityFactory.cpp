@@ -27,5 +27,17 @@ namespace NuclearEngine
 
 			return Result;
 		}
+		Entity EntityFactory::CreateSphere(Systems::PhysXSystem* System, PhysX::PhysXMaterial PMat, ECS::Transform t, Assets::Material* material, bool EnablePhysics)
+		{
+			Entity Result = mScene->CreateEntity();
+			Result.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), material);
+			Result.Assign<Components::ColliderComponent>(PMat, PhysX::SphereGeometry(0.5f, t));
+			Result.Assign<Components::RigidBodyComponent>(t);
+
+			mScene->GetPhysXScene()->addActor(*Result.GetComponent<Components::RigidBodyComponent>()->mDynamicActor.mPtr);
+			System->SetColliderForRigidBody(Result);
+
+			return Result;
+		}
 	}
 }

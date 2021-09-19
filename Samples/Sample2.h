@@ -4,18 +4,25 @@
 class Sample2 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
+	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
+
 	Core::Input Input;
 	//Asset Manager (Loader)
 	Managers::AssetManager AssetLoader;
 	Managers::CameraManager SceneCameraManager;
 
-	Assets::Mesh* SponzaAsset;
-	Assets::Material* SponzaMaterial;
+	//Assets::Mesh* SponzaAsset;
+	//Assets::Material* SponzaMaterial;
 
-	Assets::Mesh* CerberusAsset;
-	Assets::Material* CerberusMaterial;
+	//Assets::Mesh* CerberusAsset;
+	//Assets::Material* CerberusMaterial;
 
 	Assets::Material SphereMaterial;
+
+	Assets::Material PlaneMaterial;
+	PhysX::PhysXMaterial BoxPhysXMat;
+	PhysX::PhysXMaterial SpherePhysXMat;
+
 
 	Components::CameraComponent Camera;
 
@@ -25,10 +32,11 @@ class Sample2 : public Core::Game
 	Graphics::WireFrame WireFrameRP;
 
 	//ECS
-	ECS::Scene PBRScene;
-	ECS::Entity ESponza;
-	ECS::Entity ESphere;
-	ECS::Entity ECerberus;
+	ECS::Scene Scene;
+	//ECS::Entity ESponza;
+	//ECS::Entity _ESphere;
+	//ECS::Entity ECerberus;
+	ECS::Entity EPlane;
 
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
@@ -43,8 +51,8 @@ class Sample2 : public Core::Game
 		Importers::MeshLoadingDesc ModelDesc;
 
 		//Load Models
-		std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
-		std::tie(CerberusAsset, CerberusMaterial) = AssetLoader.Import("Assets/Common/Models/Cerberus/Cerberus.FBX", ModelDesc);
+		//std::tie(SponzaAsset, SponzaMaterial) = AssetLoader.Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
+		//std::tie(CerberusAsset, CerberusMaterial) = AssetLoader.Import("Assets/Common/Models/Cerberus/Cerberus.FBX", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
@@ -60,23 +68,30 @@ class Sample2 : public Core::Game
 
 		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
-		Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
-		Renderer->CreateMaterialForAllPipelines(CerberusMaterial);
+		//Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
+		//Renderer->CreateMaterialForAllPipelines(CerberusMaterial);
 
-		ESphere.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), &SphereMaterial);
-		ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
-		ECerberus.Assign<Components::MeshComponent>(CerberusAsset, CerberusMaterial);
+		//ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
+		//ECerberus.Assign<Components::MeshComponent>(CerberusAsset, CerberusMaterial);
+
+		Assets::TextureSet PlaneSet;
+		PlaneSet.mData.push_back({ 0, Assets::DefaultTextures::DefaultGreyTex });
+
+		PlaneMaterial.mPixelShaderTextures.push_back(PlaneSet);
+
+		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
 
 		PBRSphereSet.mData.clear();
 	}
 	void SetupEntities()
 	{
 		//Create Entities
-		ESphere = PBRScene.CreateEntity();
-		ESponza = PBRScene.CreateEntity();
-		ELights = PBRScene.CreateEntity();
-		ECamera = PBRScene.CreateEntity();
-		ECerberus = PBRScene.CreateEntity();
+		//ESphere = Scene.CreateEntity();
+		//ESponza = Scene.CreateEntity();
+		ELights = Scene.CreateEntity();
+		ECamera = Scene.CreateEntity();
+		//ECerberus = Scene.CreateEntity();
+		EPlane = Scene.CreateEntity();
 
 		//Assign Components
 	
@@ -94,14 +109,18 @@ class Sample2 : public Core::Game
 	}
 	void InitRenderer()
 	{
-		Renderer = PBRScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
-		PBRScene.Systems.Configure();
+		Renderer = Scene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+		Systems::PhysXSystemDesc sceneDesc;
+		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
+		mPhysXSystem = Scene.Systems.Add<Systems::PhysXSystem>(&Scene, sceneDesc);
+
+		Scene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&PBR);
 		Renderer->AddRenderingPipeline(&BlinnPhong);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
 
-		Renderer->Bake(PBRScene.Entities);
+		Renderer->Bake(Scene.Entities);
 	}
 
 	void Load()
@@ -115,6 +134,7 @@ class Sample2 : public Core::Game
 		InitRenderer();
 
 		SetupAssets();
+		SpherePhysXMat.Create();
 
 		int nrRows = 7;
 		int nrColumns = 7;
@@ -132,20 +152,18 @@ class Sample2 : public Core::Game
 				));
 				model = Math::scale(model, Math::Vector3(2.0f));
 
-				ESphere.GetComponent<Components::MeshComponent>()->mMultiRenderTransforms.push_back(model);
+
+				auto ESphere = Scene.Factory.CreateSphere(&(*mPhysXSystem), SpherePhysXMat, model, &SphereMaterial, true);
 			}
 		}
 
-		ESphere.GetComponent<Components::MeshComponent>()->mMultiRender = true;
-
-
 		Math::Matrix4 TSponza(1.0f);
 		TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
-		ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
+		//ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
 
 		Math::Matrix4 TCerberus(1.0f);
 		TCerberus = Math::scale(TCerberus, Math::Vector3(0.05f));
-		ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
+		//ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
 
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
@@ -155,6 +173,18 @@ class Sample2 : public Core::Game
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
+		static Assets::Mesh gPlane;
+		Assets::Mesh::CreatePlane(&gPlane, Assets::MeshVertexDesc(), 100.0f, 100.0f);
+
+		BoxPhysXMat.Create();
+
+		//Assign Components
+		EPlane.Assign<Components::MeshComponent>(&gPlane, &PlaneMaterial);
+		EPlane.Assign<Components::ColliderComponent>(BoxPhysXMat, PhysX::PlaneGeometry(ECS::Transform()));
+
+		mPhysXSystem->Bake(Scene.Entities);
+		Camera.GammaCorrection = true;
+		Camera.HDR = true;
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -224,10 +254,13 @@ class Sample2 : public Core::Game
 	}
 	void Render(float dt) override
 	{
+		mPhysXSystem->BeginSimulation(dt);
+		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);
+
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 		
-		Renderer->Update(PBRScene.Entities, PBRScene.Events, dt);
+		Renderer->Update(Scene.Entities, Scene.Events, dt);
 
 		{
 			using namespace Graphics;
@@ -252,40 +285,13 @@ class Sample2 : public Core::Game
 					Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
 				else if (e == 3)
 					Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
-
-				static int er = 0;
-				ImGui::RadioButton("Spheres", &er, 0);
-				ImGui::RadioButton("Sponza", &er, 1);
-				ImGui::RadioButton("Cerberus", &er, 2);
-
-				switch (er)
-				{
-				case 0:
-					ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
-					ESphere.GetComponent<Components::MeshComponent>()->mRender = true;
-					ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
-					break;
-				case 1:
-					ESponza.GetComponent<Components::MeshComponent>()->mRender = true;
-					ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
-					ECerberus.GetComponent<Components::MeshComponent>()->mRender = false;
-					break;
-				case 2:
-					ESponza.GetComponent<Components::MeshComponent>()->mRender = false;
-					ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
-					ECerberus.GetComponent<Components::MeshComponent>()->mRender = true;
-					break;
-				default:
-					break;
-				}
-
 				ImGui::TreePop();
 			}
 			if (ImGui::TreeNode("Lights"))
 			{
 				static ImVec4 Lightcolor = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
 				static float f = 1.0f;
-				ImGui::SliderFloat("PointLight Intensity", &f, 0.0f, 25.0f, "%.4f", 2.0f);
+				ImGui::SliderFloat("PointLight Intensity", &f, 0.0f, 100.0f, "%.4f", 2.0f);
 				ImGui::ColorEdit3("PointLight Color", (float*)& Lightcolor);
 				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 

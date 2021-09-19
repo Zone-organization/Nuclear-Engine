@@ -18,6 +18,7 @@ namespace NuclearEngine
 
 
 			Entity CreateBox(Systems::PhysXSystem* System, PhysX::PhysXMaterial PMat,ECS::Transform t, Assets::Material* material, bool EnablePhysics = false);
+			Entity CreateSphere(Systems::PhysXSystem* System, PhysX::PhysXMaterial PMat, ECS::Transform t, Assets::Material* material, bool EnablePhysics = false);
 
 		protected:
 			ECS::Scene* mScene;

@@ -1,5 +1,3 @@
-#pragma once
-
 struct VertexInputType
 {
 	float4 Position : ATTRIB0;	

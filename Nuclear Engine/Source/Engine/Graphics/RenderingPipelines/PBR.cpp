@@ -54,9 +54,13 @@ namespace NuclearEngine
 				if (desc.DirLights > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(desc.DirLights)); }
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
-
+				
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
+				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
 			}
 

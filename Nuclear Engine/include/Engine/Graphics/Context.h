@@ -5,6 +5,8 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/EngineFactory.h>
+
 #include "Engine\Graphics\GraphicsEngine.h"
 
 namespace NuclearEngine
@@ -32,6 +34,8 @@ namespace NuclearEngine
 			static IRenderDevice* GetDevice();
 			static IDeviceContext* GetContext();
 			static ISwapChain* GetSwapChain();
+			static IEngineFactory* GetEngineFactory();
+
 		};
 	}
 }

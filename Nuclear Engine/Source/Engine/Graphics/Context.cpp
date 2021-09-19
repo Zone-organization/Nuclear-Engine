@@ -9,6 +9,8 @@ namespace NuclearEngine
 		static IRenderDevice* gDevice;
 		static IDeviceContext* gContext;
 		static ISwapChain* gSwapChain;
+		static IEngineFactory* gEngineFactory;
+
 		bool OpenGL = false;
 		bool Vulkan = false;
 		bool Direct3D = false;
@@ -27,7 +29,7 @@ namespace NuclearEngine
 			{
 				SCDesc.ColorBufferFormat = TEX_FORMAT_RGBA8_UNORM;
 			}
-			bool Result = InitializeDiligentEngineWin32(Core::Application::GetMainWindow()->GetRawWindowPtr(),static_cast<RENDER_DEVICE_TYPE>(AppDesc.Renderer), &gDevice, &gContext, &gSwapChain, SCDesc);
+			bool Result = InitializeDiligentEngineWin32(Core::Application::GetMainWindow()->GetRawWindowPtr(),static_cast<RENDER_DEVICE_TYPE>(AppDesc.Renderer), &gDevice, &gContext, &gSwapChain,&gEngineFactory, SCDesc);
 
 			if(Result)
 				Log.Info("[Context] Diligent Graphics API Initialized.\n");
@@ -81,6 +83,10 @@ namespace NuclearEngine
 		ISwapChain * Context::GetSwapChain()
 		{
 			return gSwapChain;
+		}
+		IEngineFactory* Context::GetEngineFactory()
+		{
+			return gEngineFactory;
 		}
 	}
 }

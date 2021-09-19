@@ -4,6 +4,7 @@
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
 //#define NE_SHADOWS_ENABLED
+#include "LightTypes.hlsli"
 
 struct PixelInputType
 {
@@ -29,40 +30,6 @@ SamplerState NEMat_Specular1_sampler : register(s1);
 SamplerState NEMat_Normal1_sampler : register(s2);
 #endif
 
-struct DirLight
-{
-    float4 Direction;
-    float4 Color;
-};
-struct PointLight
-{
-    float4 Position;
-    float4 Intensity_Attenuation;
-    float4 Color;
-};
-struct SpotLight
-{
-    float4 Position;
-    float4 Direction;
-    float4 Intensity_Attenuation;
-    float4 InnerCutOf_OuterCutoff;
-    float4 Color;
-};
-cbuffer NEStatic_Lights
-{  
-    float4 ViewPos;
-#ifdef NE_DIR_LIGHTS_NUM
-    DirLight DirLights[NE_DIR_LIGHTS_NUM];
-#endif
-#ifdef NE_POINT_LIGHTS_NUM
-    PointLight PointLights[NE_POINT_LIGHTS_NUM];
-#endif
-
-#ifdef NE_SPOT_LIGHTS_NUM
-    SpotLight SpotLights[NE_SPOT_LIGHTS_NUM];
-#endif
-
-};
 //cbuffer NEDynamic_Material
 //{
 //	float3 ModelColor;

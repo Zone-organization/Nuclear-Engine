@@ -34,7 +34,7 @@ class SampleSelector : public Core::Game
 			Sample1 demo;
 			return Core::Engine::RunGame(&demo);
 		}
-		if (ImGui::Button("Sample2 : Advanced Rendering "))
+		if (ImGui::Button("Sample2 : Advanced Rendering & PhysX"))
 		{
 			ImGui::End();
 			Core::Engine::EndFrame();

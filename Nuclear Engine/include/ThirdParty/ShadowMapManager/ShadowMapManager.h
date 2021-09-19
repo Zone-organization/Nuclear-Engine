@@ -34,12 +34,10 @@
 #include "Diligent/Graphics/GraphicsEngine/interface/TextureView.h"
 #include "Diligent/Common/interface/RefCntAutoPtr.hpp"
 #include "Diligent/Common/interface/BasicMath.hpp"
+#include "BasicStructures.h"
 
 namespace Diligent
 {
-
-#include "BasicStructures.h"
-
     class ShadowMapManager
     {
     public:
