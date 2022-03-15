@@ -7,7 +7,9 @@
 
 namespace NuclearEngine
 {
-	namespace Systems { class PhysXSystem; }
+	namespace Systems { 
+		class PhysXSystem;
+	}
 	namespace ECS
 	{
 		class Scene;
@@ -17,10 +19,18 @@ namespace NuclearEngine
 			EntityFactory(ECS::Scene* ParentScene);
 
 
-			Entity CreateBox(Systems::PhysXSystem* System, PhysX::PhysXMaterial PMat,ECS::Transform t, Assets::Material* material, bool EnablePhysics = false);
-			Entity CreateSphere(Systems::PhysXSystem* System, PhysX::PhysXMaterial PMat, ECS::Transform t, Assets::Material* material, bool EnablePhysics = false);
+			Entity CreateBox(Assets::Material* material, ECS::Transform t , PhysX::PhysXMaterial* PMat = GetDefaultBoxMaterial());
 
+			Entity CreateSphere(Assets::Material* material, ECS::Transform t, PhysX::PhysXMaterial* PMat = GetDefaultSphereMaterial());
+
+			Entity CreatePlane(Assets::Material* material, ECS::Transform t, PhysX::PhysXMaterial* PMat = GetDefaultPlaneMaterial());
+
+			static PhysX::PhysXMaterial* GetDefaultBoxMaterial();
+			static PhysX::PhysXMaterial* GetDefaultSphereMaterial();
+			static PhysX::PhysXMaterial* GetDefaultPlaneMaterial();
+			static void InitializeDefaultPhysxMaterials();
 		protected:
+
 			ECS::Scene* mScene;
 		};
 	}

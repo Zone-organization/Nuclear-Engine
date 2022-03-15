@@ -8,8 +8,8 @@ namespace NuclearEngine
 {
 	namespace ECS
 	{
-		Scene::Scene()
-			: Entities(Events),Systems(Entities, Events), mScene(nullptr), Factory(this)
+		Scene::Scene(const std::string& name)
+			: mName(name), Entities(Events),Systems(Entities, Events), mPhysXScene(nullptr), Factory(this)
 		{
 		}
 		Scene::~Scene()
@@ -22,13 +22,26 @@ namespace NuclearEngine
 			entity.GetComponent<Components::EntityInfoComponent>().Get()->mOwnerEntity = entity;
 			return entity;
 		}
+		Entity Scene::CreateEntity(const char* name)
+		{
+			auto entity = Entities.Create();
+			entity.Assign<Components::EntityInfoComponent>();
+			entity.GetComponent<Components::EntityInfoComponent>().Get()->mOwnerEntity = entity;
+			entity.GetComponent<Components::EntityInfoComponent>().Get()->mName = name;
+
+			return entity;
+		}
+		std::string Scene::GetName()
+		{
+			return mName;
+		}
 		void Scene::SetPhysXScene(physx::PxScene* scene)
 		{
-			mScene = scene;
+			mPhysXScene = scene;
 		}
 		physx::PxScene* Scene::GetPhysXScene()
 		{
-			return mScene;
+			return mPhysXScene;
 		}
 		SceneLoader::SceneLoader()
 		{

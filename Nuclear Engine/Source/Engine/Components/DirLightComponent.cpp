@@ -12,9 +12,17 @@ namespace NuclearEngine
 		DirLightComponent::~DirLightComponent()
 		{
 		}
+		Graphics::Color DirLightComponent::GetColor()
+		{
+			return Graphics::Color(data.Color.r, data.Color.g, data.Color.b, data.Color.w);
+		}
 		void DirLightComponent::SetColor(Graphics::Color color)
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
+		}
+		Math::Vector3 DirLightComponent::GetDirection()
+		{
+			return Math::Vector3(data.Direction);
 		}
 		void DirLightComponent::SetDirection(Math::Vector3 dir)
 		{

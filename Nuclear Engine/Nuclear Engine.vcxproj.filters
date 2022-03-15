@@ -271,6 +271,7 @@
     <ClInclude Include="include\ThirdParty\ShadowMapManager\ShadowMapManager.h" />
     <ClInclude Include="include\Engine\Systems\ShadowSystem.h" />
     <ClInclude Include="include\ThirdParty\ShadowMapManager\BasicStructures.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imconfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -348,6 +349,7 @@
     <ClCompile Include="Source\Engine\Scripting\Script.cpp" />
     <ClCompile Include="Source\ThirdParty\ShadowMapManager\ShadowMapManager.cpp" />
     <ClCompile Include="Source\Engine\Systems\ShadowSystem.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_tables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

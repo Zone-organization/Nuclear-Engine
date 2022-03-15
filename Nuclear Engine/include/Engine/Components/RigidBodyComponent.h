@@ -21,6 +21,16 @@ namespace NuclearEngine
 			~RigidBodyComponent();
 
 			PhysX::RigidDynamic mDynamicActor;
+
+			bool isKinematic;
+
+			void SetisKinematic(bool value);
+
+			bool GetisKinematic();
+
+			bool GetInternalisKinematic();
+		private: 
+			bool InternalisKinematic;
 		};
 	}
 }

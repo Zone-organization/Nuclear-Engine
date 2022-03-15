@@ -40,11 +40,7 @@ namespace NuclearEngine {
 		static std::string MajorVersion = "0";
 		static std::string MinorVersion = "001";
 
-		// timing
-		static float deltaTime = 0.0f;	// time between current frame and last frame
-		static float lastFrame = 0.0f;
-
-		static Game * GamePtr;
+		static Game* GamePtr;
 		static Game Defaultgame;
 
 		static Engine::State Engine_State;
@@ -59,7 +55,7 @@ namespace NuclearEngine {
 			//Create platform specific app (window)
 			Application::Start(desc.mAppdesc);
 			Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
-			
+
 			if (!Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc))
 			{
 				Log.FatalError("[Engine] GraphicsEngine Failed to initalize...\n");
@@ -70,14 +66,14 @@ namespace NuclearEngine {
 			Assets::DefaultMeshes::Initialize();
 
 
-			Graphics::ImGui::CreateContext();
-			ImGui_ImplGlfw_Init(Core::Application::GetMainWindow()->GetRawWindowPtr(), true);
+			ImGui::CreateContext();
+			ImGui_ImplGlfw_InitForOther(Core::Application::GetMainWindow()->GetRawWindowPtr(), true);
 			ImGui_Impl_Init();
 			ImGui_Impl_CreateDeviceObjects();
 			Log.Info("[Engine] ImGUI Initalized.\n");
 
 
-			if(desc.AutoInitAudioEngine)
+			if (desc.AutoInitAudioEngine)
 				Audio::AudioEngine::Initialize();
 
 			if (desc.AutoInitPhysXEngine)
@@ -112,49 +108,66 @@ namespace NuclearEngine {
 		}
 
 		void Engine::BeginFrame()
-		{	
+		{
 			ImGui_Impl_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
-			Graphics::ImGui::NewFrame();
+			ImGui::NewFrame();
 		}
 
 		void Engine::EndFrame()
 		{
-			Graphics::ImGui::Render();
-			ImGui_Impl_RenderDrawData(Graphics::ImGui::GetDrawData());
+			ImGui::Render();
+			ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
 			Graphics::Context::GetSwapChain()->Present();
 		}
-
-		void Engine::RunGame(Game * _YourGame)
+		void Engine::SetGame(Game* YourGame)
 		{
-			GamePtr = _YourGame;
+			GamePtr = YourGame;
+		}
+		void Engine::LoadGame()
+		{
 			if (GamePtr != nullptr)
 			{
-				Log.Info("[Engine] Running Game.\n");
-
 				if (GamePtr->GetGameInfo() != nullptr)
 				{
-					Log.Info(std::string("[Engine] Game Name: " + std::string(GamePtr->GetGameInfo()->Name) + "\n"));
-					Log.Info(std::string("[Engine] Game Version: " + std::string(GamePtr->GetGameInfo()->Version) + "\n"));
-					Log.Info(std::string("[Engine] Game Developer: " + std::string(GamePtr->GetGameInfo()->Developer) + "\n"));
+					Log.Info(std::string(
+						"[Engine] Loading Game: " + std::string(GamePtr->GetGameInfo()->Name)
+						+ " - Ver: " + std::string(GamePtr->GetGameInfo()->Version)
+						+ " - Dev: " + std::string(GamePtr->GetGameInfo()->Developer) + "\n"));
 				}
+				else {
+					Log.Info("[Engine] Loading Unnamed Game.\n");
 
+				}
 				SetState(Engine::State::Initializing);
 				GamePtr->Initialize();
 				SetState(Engine::State::Loading);
 				GamePtr->Load();
-				Engine::Game_Loop_Render();
-				if (GamePtr != nullptr)
-				{
-					SetState(Engine::State::ExitingRendering);
-					GamePtr->ExitRendering();
-					SetState(Engine::State::Shuttingdown);
-					GamePtr->Shutdown();
-				}
-				GamePtr = nullptr;
 			}
 		}
-		
+
+		void Engine::RunGame()
+		{
+			if (GamePtr != nullptr)
+			{
+				Log.Info("[Engine] Running Game.\n");
+
+				Engine::Game_Loop_Render();
+			}
+		}
+
+		void Engine::EndGame()
+		{
+			if (GamePtr != nullptr)
+			{
+				SetState(Engine::State::ExitingRendering);
+				GamePtr->ExitRendering();
+				SetState(Engine::State::Shuttingdown);
+				GamePtr->Shutdown();
+			}
+			GamePtr = nullptr;
+		}
+
 		bool Engine::ShouldClose()
 		{
 			return Core::Application::GetMainWindow()->ShouldClose();
@@ -165,11 +178,11 @@ namespace NuclearEngine {
 			return g_isDebug;
 		}
 
-		Game * Engine::GetGame()
+		Game* Engine::GetGame()
 		{
 			return GamePtr;
 		}
-	
+
 		void Engine::Game_Loop_Render()
 		{
 			SetState(Engine::State::Rendering);
@@ -178,13 +191,14 @@ namespace NuclearEngine {
 
 			double SavedX = 0, SavedY = 0;
 
+
 			//Main Game Loop
-			while (!Core::Application::PollEvents())
+			while (!Core::Application::PollEvents() && GamePtr != nullptr)
 			{
 				// per-frame time logic (ensure speed is constant through all platforms)
 				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
-				deltaTime = currentFrame - lastFrame;
-				lastFrame = currentFrame;
+				GamePtr->DeltaTime = currentFrame - GamePtr->LastFrame;
+				GamePtr->LastFrame = currentFrame;
 				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
 
 				BeginFrame();
@@ -199,13 +213,13 @@ namespace NuclearEngine {
 					GamePtr->OnMouseMovement(static_cast<int>(SavedX), static_cast<int>(SavedY));
 				}
 
-				GamePtr->Update(deltaTime);
-				GamePtr->Render(deltaTime);
+				GamePtr->Update(GamePtr->DeltaTime);
+				GamePtr->Render(GamePtr->DeltaTime);
 
 				EndFrame();
 			}
 		}
-
+		
 		void Engine::SetState(const State & state)
 		{
 			Engine_State = state;

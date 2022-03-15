@@ -5,18 +5,18 @@ namespace NuclearEngine {
 	namespace Core {
 		Game::Game()
 		{
-			gameinfo = nullptr;
+			mGameinfo = nullptr;
 		}
 		Game::Game(GameInfo * yourinfo)
 		{
-			gameinfo = yourinfo;
+			mGameinfo = yourinfo;
 		}
 		Game::~Game()
 		{
 		}
 		GameInfo * Game::GetGameInfo()
 		{
-			return gameinfo;
+			return mGameinfo;
 		}
 		void Game::Initialize()
 		{
@@ -60,6 +60,16 @@ namespace NuclearEngine {
 		ECS::Scene * Game::GetActiveScene()
 		{
 			return mScene;
+		}
+
+		void Game::SetDefaultAssetManager(Managers::AssetManager* assetmanager)
+		{
+			mAssetManager = assetmanager;
+		}
+
+		Managers::AssetManager* Game::GetDefaultAssetManager()
+		{
+			return mAssetManager;
 		}
 	
 	}

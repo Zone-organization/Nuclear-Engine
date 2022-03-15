@@ -34,7 +34,11 @@ namespace NuclearEngine
 
 			static void EndFrame();
 
-			static void RunGame(Game *YourGame);
+			static void SetGame(Game* YourGame);
+
+			static void LoadGame();
+			static void RunGame();
+			static void EndGame();
 
 			static void SetState(const State& state);
 

@@ -54,7 +54,6 @@ namespace NuclearEngine
 		case RENDER_DEVICE_TYPE_D3D11:
 		{
 			EngineD3D11CreateInfo DeviceCreateInfo;
-			DeviceCreateInfo.DebugMessageCallback = DiligentMassageCallback;
 #if ENGINE_DLL
 			GetEngineFactoryD3D11Type GetEngineFactoryD3D11 = nullptr;
 			// Load the dll and import GetEngineFactoryD3D11() function
@@ -77,7 +76,6 @@ namespace NuclearEngine
 			LoadGraphicsEngineD3D12(GetEngineFactoryD3D12);
 #endif
 			EngineD3D12CreateInfo EngD3D12CreateInfo;
-			EngD3D12CreateInfo.DebugMessageCallback = DiligentMassageCallback;
 
 			auto *pFactoryD3D12 = GetEngineFactoryD3D12();
 			*factory = pFactoryD3D12;
@@ -102,7 +100,6 @@ namespace NuclearEngine
 			*factory = pFactoryOpenGL;
 
 			EngineGLCreateInfo CreationCreateInfo;
-			CreationCreateInfo.DebugMessageCallback = DiligentMassageCallback;
 			CreationCreateInfo.Window = DLWindow;
 			pFactoryOpenGL->CreateDeviceAndSwapChainGL(
 				CreationCreateInfo, device, context, SCDesc, swapchain);
@@ -117,7 +114,6 @@ namespace NuclearEngine
 			LoadGraphicsEngineVk(GetEngineFactoryVk);
 #endif
 			EngineVkCreateInfo EngVkCreateInfo;
-			EngVkCreateInfo.DebugMessageCallback = DiligentMassageCallback;
 
 			auto *pFactoryVk = GetEngineFactoryVk();
 			*factory = pFactoryVk;

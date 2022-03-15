@@ -24,9 +24,12 @@ namespace NuclearEngine
 			DirLightComponent();
 			~DirLightComponent();
 
+			Graphics::Color GetColor();
 			void SetColor(Graphics::Color color);
 
+			Math::Vector3 GetDirection();
 			void SetDirection(Math::Vector3 dir);
+
 
 			Internal::Shader_DirLight_Struct GetInternalData();
 		protected:

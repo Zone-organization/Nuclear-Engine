@@ -26,16 +26,22 @@ namespace NuclearEngine
 			SpotLightComponent();
 			~SpotLightComponent();
 
+			Graphics::Color GetColor();
 			void SetColor(Graphics::Color color);
 
+			Math::Vector3 GetPosition();
 			void SetPosition(Math::Vector3 pos);
 
+			Math::Vector3 GetDirection();
 			void SetDirection(Math::Vector3 dir);
 
+			float GetIntensity();
 			void SetIntensity(float intensity);
 
+			Math::Vector3 GetAttenuation();
 			void SetAttenuation(Math::Vector3 att);
 
+			Math::Vector2 GetSpotlightCone();
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
 
 			Internal::Shader_SpotLight_Struct GetInternalData();

@@ -19,6 +19,7 @@ namespace NuclearEngine
 			ECS::Entity mOwnerEntity;
 			ECS::Entity mParentEntity;
 			ECS::Transform mTransform;
+			std::string mName;
 		};
 	}
 }

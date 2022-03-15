@@ -4,11 +4,45 @@
 #include "Sample2.h"
 #include "Sample3.h"
 
+
+
+
 class SampleSelector : public Core::Game
 {
+public:
+	//static SampleSelector* Instance;
+	// 
+	//Asset Manager (Loader) for all samples
+	Managers::AssetManager AssetLoader;
+
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
+	}
+	SampleSelector()
+	{
+	//	Instance = this;
+	}
+	void StartSample()
+	{
+		ImGui::End();
+		Core::Engine::EndFrame();
+
+		Core::Engine::GetGame()->SetDefaultAssetManager(&AssetLoader);
+		Core::Engine::LoadGame();
+		Core::Engine::RunGame();
+		Core::Engine::EndGame();
+
+		if (Core::Engine::GetGame() != this)
+		{
+			Core::Engine::SetGame(this);
+			Core::Engine::RunGame();
+		}
+	}
+
+	void Load()
+	{
+		Assets::DefaultTextures::Initalize(&AssetLoader);
 	}
 
 	void Render(float dt) override
@@ -29,29 +63,26 @@ class SampleSelector : public Core::Game
 
 		if (ImGui::Button("Sample1 : BlinnPhong rendering of some models"))
 		{
-			ImGui::End();
-			Core::Engine::EndFrame();
 			Sample1 demo;
-			return Core::Engine::RunGame(&demo);
+			Core::Engine::SetGame(&demo);
+			return StartSample();
 		}
 		if (ImGui::Button("Sample2 : Advanced Rendering & PhysX"))
 		{
-			ImGui::End();
-			Core::Engine::EndFrame();
 			Sample2 demo;
-			return Core::Engine::RunGame(&demo);
+			Core::Engine::SetGame(&demo);
+			return StartSample();
 		}
 		if (ImGui::Button("Sample3 : PhysX Integration"))
 		{
-			ImGui::End();
-			Core::Engine::EndFrame();
 			Sample3 demo;
-			return Core::Engine::RunGame(&demo);
+			Core::Engine::SetGame(&demo);
+			return StartSample();
 		}
+
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
-
 
 	}
 };

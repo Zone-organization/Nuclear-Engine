@@ -14,12 +14,14 @@ namespace NuclearEngine
 	{
 		class NEAPI Scene {
 		public:
-			Scene();
+			Scene(const std::string& name = "scene");
 			~Scene();
 
 			//Creates a new entity and assign a transform component to it automatically
 			Entity CreateEntity();
+			Entity CreateEntity(const char* name);
 
+			std::string GetName();
 			physx::PxScene* GetPhysXScene();
 			void SetPhysXScene(physx::PxScene* scene);
 
@@ -28,7 +30,8 @@ namespace NuclearEngine
 			SystemManager Systems;
 			EntityFactory Factory;
 		private:
-			physx::PxScene* mScene;
+			physx::PxScene* mPhysXScene;
+			std::string mName;
 		};
 
 		class NEAPI SceneLoader {

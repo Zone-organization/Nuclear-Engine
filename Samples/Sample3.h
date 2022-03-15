@@ -8,12 +8,10 @@ class Sample3 : public Core::Game
 
 	Core::Input Input;
 
-	Managers::AssetManager AssetLoader;
 	Managers::CameraManager SceneCameraManager;
 
 	Assets::Material PlaneMaterial;
 	Assets::Material CubeMaterial;
-	PhysX::PhysXMaterial BoxPhysXMat;
 	Components::CameraComponent Camera;
 
 	Graphics::DiffuseOnly DiffuseRP;
@@ -29,7 +27,7 @@ class Sample3 : public Core::Game
 	void SetupEntities()
 	{
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, AssetLoader.Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -41,8 +39,7 @@ class Sample3 : public Core::Game
 		PlaneMaterial.mPixelShaderTextures.push_back(PlaneSet);
 
 		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
-
-		BoxPhysXMat.Create();
+		Scene.Factory.InitializeDefaultPhysxMaterials();
 
 		//Create Entities
 		EPlane = Scene.CreateEntity();
@@ -51,7 +48,8 @@ class Sample3 : public Core::Game
 		Assets::Mesh::CreatePlane(&gPlane, Assets::MeshVertexDesc(), 100.0f, 100.0f);
 		//Assign Components
 		EPlane.Assign<Components::MeshComponent>(&gPlane, &PlaneMaterial);
-		EPlane.Assign<Components::ColliderComponent>(BoxPhysXMat, PhysX::PlaneGeometry(ECS::Transform()));
+		EPlane.Assign<Components::ColliderComponent>(Scene.Factory.GetDefaultPlaneMaterial(), PhysX::PlaneGeometry(ECS::Transform()));
+		mPhysXSystem->AddActor(EPlane);
 	}
 	void InitRenderer()
 	{
@@ -71,14 +69,12 @@ class Sample3 : public Core::Game
 
 	void Load()
 	{
-		Assets::DefaultTextures::Initalize(&AssetLoader);
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);
 
 		InitRenderer();
 
 		SetupEntities();
-		mPhysXSystem->Bake(Scene.Entities);
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
 		Desc.RTHeight = _Height_;
@@ -165,7 +161,7 @@ class Sample3 : public Core::Game
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_SPACE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
-			auto ECube = Scene.Factory.CreateBox(&(*mPhysXSystem), BoxPhysXMat, ECS::Transform(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)), &CubeMaterial, true);
+			auto ECube = Scene.Factory.CreateBox(&CubeMaterial, ECS::Transform(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)));
 			Math::Matrix4 TCube(1.0f);
 			TCube = Math::translate(TCube, Camera.GetPosition());
 			ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCube);
@@ -178,6 +174,12 @@ class Sample3 : public Core::Game
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera.RTClearColor);
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+			if (ImGui::Button("End Game"))
+			{
+				ImGui::End();
+				return Core::Engine::EndGame();
+			}
 			ImGui::End();
 
 		}

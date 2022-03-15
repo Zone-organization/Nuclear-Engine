@@ -17,6 +17,10 @@ namespace NuclearEngine
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
 		}
+		Math::Vector3 PointLightComponent::GetPosition()
+		{
+			return Math::Vector3(data.Position);
+		}
 		void PointLightComponent::SetPosition(Math::Vector3 pos)
 		{
 			data.Position = Math::Vector4(pos, 1.0f);
@@ -24,6 +28,18 @@ namespace NuclearEngine
 		void PointLightComponent::SetIntensity(float intensity)
 		{
 			data.Intensity_Attenuation.x = intensity;
+		}
+		Graphics::Color PointLightComponent::GetColor()
+		{
+			return Graphics::Color(data.Color.r, data.Color.g, data.Color.b, data.Color.a);
+		}
+		float PointLightComponent::GetIntensity()
+		{
+			return data.Intensity_Attenuation.x;
+		}
+		Math::Vector3 PointLightComponent::GetAttenuation()
+		{
+			return Math::Vector3(data.Intensity_Attenuation.y, data.Intensity_Attenuation.z, data.Intensity_Attenuation.w);
 		}
 		void PointLightComponent::SetAttenuation(Math::Vector3 att)
 		{

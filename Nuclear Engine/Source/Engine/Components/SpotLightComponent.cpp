@@ -40,6 +40,30 @@ namespace NuclearEngine
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cutoff_outercutoff.x, cutoff_outercutoff.y, 0.0f, 0.0f);
 
 		}
+		Graphics::Color SpotLightComponent::GetColor()
+		{
+			return Graphics::Color(data.Color.r, data.Color.g, data.Color.b, data.Color.a);
+		}
+		Math::Vector3 SpotLightComponent::GetPosition()
+		{
+			return Math::Vector3(data.Position);
+		}
+		Math::Vector3 SpotLightComponent::GetDirection()
+		{
+			return Math::Vector3(data.Direction);
+		}
+		float SpotLightComponent::GetIntensity()
+		{
+			return data.Intensity_Attenuation.x;
+		}
+		Math::Vector3 SpotLightComponent::GetAttenuation()
+		{
+			return Math::Vector3(data.Intensity_Attenuation.y, data.Intensity_Attenuation.z, data.Intensity_Attenuation.w);
+		}
+		Math::Vector2 SpotLightComponent::GetSpotlightCone()
+		{
+			return Math::Vector2(data.InnerCutOf_OuterCutoff);
+		}
 		Internal::Shader_SpotLight_Struct SpotLightComponent::GetInternalData()
 		{
 			return data;

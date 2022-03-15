@@ -6,8 +6,6 @@ class Sample4 : public Core::Game
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	Core::Input Input;
 
-	//Asset Manager (Loader)
-	Managers::AssetManager AssetLoader;
 	Managers::CameraManager SceneCameraManager;
 
 	Assets::Mesh* NanosuitAsset;
@@ -73,9 +71,9 @@ class Sample4 : public Core::Game
 		Importers::MeshLoadingDesc ModelDesc;
 
 		//Load Nanosuit Model
-		std::tie(NanosuitAsset, NanosuitMaterial) = AssetLoader.Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		std::tie(NanosuitAsset, NanosuitMaterial) = mAssetManager->Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		//Load Cyborg Model
-		std::tie(CyborgAsset, CyborgMaterial) = AssetLoader.Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		std::tie(CyborgAsset, CyborgMaterial) = mAssetManager->Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
@@ -83,9 +81,9 @@ class Sample4 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, AssetLoader.Import("@CommonAssets@/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
-		CubeSet.mData.push_back({ 1, AssetLoader.Import("@CommonAssets@/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
-		CubeSet.mData.push_back({ 2, AssetLoader.Import("@CommonAssets@/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
+		CubeSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
+		CubeSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -118,7 +116,7 @@ class Sample4 : public Core::Game
 
 		Importers::TextureLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		Skybox.Initialize(SceneCameraManager.GetCameraCB(), AssetLoader.LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
+		Skybox.Initialize(SceneCameraManager.GetCameraCB(), mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
 	}
 	void SetupEntities()
 	{
@@ -156,7 +154,6 @@ class Sample4 : public Core::Game
 
 	void Load()
 	{
-		Assets::DefaultTextures::Initalize(&AssetLoader);
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(&Camera);
 

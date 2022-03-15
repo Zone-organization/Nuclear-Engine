@@ -39,6 +39,19 @@ namespace NuclearEngine {
 
 		void AssetManager::FlushContainers(ASSET_MANAGER_FLUSH_FLAGS flag)
 		{
+			/*for (auto& it : mImportedMaterials) {
+				 Do stuff
+
+				for (auto& it1 : it.second.mPixelShaderTextures) {
+					for (auto& it2 : it1.mData) {
+						it2.mTex.mTextureView.RawPtr()->Release
+
+						it2.mTex.mTextureView.Release();
+					}
+				}
+				it.second.mTextureView.Release();
+			}*/
+		//
 			mImportedTextures.clear();
 			mHashedTexturesPaths.clear();
 

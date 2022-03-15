@@ -18,10 +18,16 @@ namespace NuclearEngine
 
 			Uint32 GetName() { return 	mHashedName; }
 			void SetName(Uint32 name) { mHashedName = name; }
-			void SetName(const std::string& str) { mHashedName = Utilities::Hash(str); }
+			std::string GetStringName() { return mName; }
+
+			void SetName(const std::string& str) {
+				mHashedName = Utilities::Hash(str);
+				mName = str;
+			}
 			bool isValid = false;
 		protected:
 			Uint32 mHashedName = 0;
+			std::string mName;
 		};
 	}
 }

@@ -25,12 +25,16 @@ namespace NuclearEngine
 			PointLightComponent();
 			~PointLightComponent();
 
+			Graphics::Color GetColor();
 			void SetColor(Graphics::Color color);
 
+			Math::Vector3 GetPosition();
 			void SetPosition(Math::Vector3 pos);
 
+			float GetIntensity();
 			void SetIntensity(float intensity);
 
+			Math::Vector3 GetAttenuation();
 			void SetAttenuation(Math::Vector3 att);
 
 			Internal::Shader_PointLight_Struct GetInternalData();

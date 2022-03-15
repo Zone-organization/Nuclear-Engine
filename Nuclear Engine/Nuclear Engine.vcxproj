@@ -25,21 +25,21 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Checked|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -358,6 +358,7 @@
     <ClInclude Include="include\Engine\Scripting\Script.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imconfig.h" />
     <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
     <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
     <ClInclude Include="include\Engine\PhysX\RigidStatic.h" />
@@ -446,6 +447,7 @@
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_tables.cpp" />
     <ClCompile Include="Source\Engine\Graphics\NeoPipeline.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\BlinnPhong.cpp" />

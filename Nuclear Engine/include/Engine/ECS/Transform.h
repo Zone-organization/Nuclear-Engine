@@ -32,7 +32,9 @@ namespace NuclearEngine
 
 			void Update();
 
-			void Update(Math::Matrix4 parent);
+			//void Update(Math::Matrix4 parent);
+
+			float* GetWorldPositionPtr();
 
 		private:
 			Math::Matrix4 mTransformMatrix = Math::Matrix4(1.0f);

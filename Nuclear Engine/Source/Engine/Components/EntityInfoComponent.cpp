@@ -6,17 +6,17 @@ namespace NuclearEngine
 	namespace Components
 	{
 		EntityInfoComponent::EntityInfoComponent()
+			: mName("Entity")
 		{
-
 		}
 
 		EntityInfoComponent::EntityInfoComponent(Math::Matrix4 Transform)
-			: mTransform(Transform)
+			: mName("Entity"), mTransform(Transform)
 		{
 		}
 
 		EntityInfoComponent::EntityInfoComponent(Math::Vector3 position, Math::Quaternion rotation)
-			: mTransform(position, rotation)
+			: mName("Entity"), mTransform(position, rotation)
 		{
 		}
 

@@ -12,6 +12,10 @@ namespace NuclearEngine
 		}
 		PhysXMaterial::~PhysXMaterial()
 		{
+			if (mMaterial)
+			{
+				mMaterial->release();
+			}
 		}
 		void PhysXMaterial::Create(float staticFriction, float dynamicFriction, float restitution)
 		{

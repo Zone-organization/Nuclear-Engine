@@ -157,7 +157,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 static void ImGui_Impl_CreateFontsTexture()
 {
     // Build texture atlas
-    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
+    ImGuiIO& io = ImGui::GetIO();
     unsigned char* pixels;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
@@ -377,7 +377,7 @@ void ImGui_Impl_InvalidateDeviceObjects()
 bool ImGui_Impl_Init()
 {
     // Setup back-end capabilities flags
-    ImGuiIO& io = NuclearEngine::Graphics::ImGui::GetIO();
+    ImGuiIO& io = ImGui::GetIO();
     io.BackendRendererName = "Nuclear_Engine::DiligentAPI";
     io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
 

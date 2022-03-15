@@ -16,6 +16,11 @@ namespace NuclearEngine
 			Assets::Mesh::CreateCube(gCube);
 			Assets::Mesh::CreateSphere(gSphere);
 			Assets::Mesh::CreatePlane(gPlane);
+
+			gCube->SetName("Default Cube");
+			gSphere->SetName("Default Sphere");
+			gPlane->SetName("Default Plane");
+
 		}
 		Assets::Mesh* DefaultMeshes::GetCubeAsset()
 		{

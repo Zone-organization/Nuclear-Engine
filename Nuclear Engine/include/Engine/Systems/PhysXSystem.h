@@ -5,6 +5,8 @@
 #include <Engine\ECS\Scene.h>
 #include <Engine\ECS\Transform.h>
 #include "Engine\PhysX\PhysXEngine.h"
+#include <Engine\Components\RigidBodyComponent.h>
+#include <Engine\Components\ColliderComponent.h>
 
 namespace NuclearEngine
 {
@@ -27,6 +29,16 @@ namespace NuclearEngine
 			void BeginSimulation(ECS::TimeDelta dt);
 
 			void Bake(ECS::EntityManager& es);
+
+			void AddunAssignedActors(ECS::EntityManager& es);
+
+			bool AddActor(ECS::Entity entity);
+
+			//void AddActor(Components::ColliderComponent collider);
+
+			//void AddActor(Components::RigidBodyComponent rigidbody);
+
+			//void AddActor(Components::RigidBodyComponent rigidbody);
 
 			void Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt) override;
 		private:

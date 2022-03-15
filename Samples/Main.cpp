@@ -56,8 +56,10 @@ int main(int argc, char* argv[])
 	bool haha = NuclearEngine::Scripting::ScriptingEngine::Initialize();
 
 	SampleSelector selector;
-	Core::Engine::RunGame(&selector);
-
+	Core::Engine::SetGame(&selector);
+	Core::Engine::LoadGame();
+	Core::Engine::RunGame();
+	Core::Engine::EndGame();
 	Core::Engine::Shutdown();
 
 	return 0;

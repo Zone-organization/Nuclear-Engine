@@ -24,15 +24,16 @@ namespace NuclearEngine
 		{
 		public:
 			ColliderComponent();
-			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::BoxGeometry& Geo);
-			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::PlaneGeometry& Geo);
-			ColliderComponent(PhysX::PhysXMaterial PMat, PhysX::SphereGeometry& Geo);
+			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::BoxGeometry& Geo);
+			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::PlaneGeometry& Geo);
+			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::SphereGeometry& Geo);
 			~ColliderComponent();
 
 			COLLIDER_SHAPE mType = COLLIDER_SHAPE_UNKNOWN;
-			PhysX::PhysXMaterial mMaterial;
+			PhysX::PhysXMaterial* mMaterial;
 			PhysX::PhysXShape mShape;
 			PhysX::RigidStatic mStaticActor;
+			bool mAddedtoPhysxScene = false;
 		};
 	}
 }

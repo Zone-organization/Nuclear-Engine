@@ -63,19 +63,65 @@ namespace NuclearEngine
 		}
 		void PhysXSystem::Bake(ECS::EntityManager& es)
 		{
+			//ECS::ComponentHandle<Components::ColliderComponent> Obj;
+			//for (ECS::Entity entity : es.entities_with_components(Obj))
+			//{
+			//	auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
+			//	if (RigidComponent.Valid())
+			//	{		
+			//		RigidComponent->mDynamicActor.mPtr->attachShape(*Obj->mShape.mPtr);
+			//		mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
+			//	}
+			//	else {
+			//		mScene->GetPhysXScene()->addActor(*Obj->mStaticActor.mPtr);
+			//	}
+			//}
+		}
+
+		void PhysXSystem::AddunAssignedActors(ECS::EntityManager& es)
+		{
 			ECS::ComponentHandle<Components::ColliderComponent> Obj;
 			for (ECS::Entity entity : es.entities_with_components(Obj))
 			{
-				auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
-				if (RigidComponent.Valid())
-				{		
-					RigidComponent->mDynamicActor.mPtr->attachShape(*Obj->mShape.mPtr);
-					mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
-				}
-				else {
-					mScene->GetPhysXScene()->addActor(*Obj->mStaticActor.mPtr);
+				if (!Obj->mAddedtoPhysxScene)
+				{
+					auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
+					if (RigidComponent.Valid())
+					{
+						RigidComponent->mDynamicActor.mPtr->attachShape(*Obj->mShape.mPtr);
+						mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
+					}
+					else {
+						mScene->GetPhysXScene()->addActor(*Obj->mStaticActor.mPtr);
+					}
+					Obj->mAddedtoPhysxScene = true;
 				}
 			}
+		}
+
+		bool PhysXSystem::AddActor(ECS::Entity entity)
+		{
+			//Check if entity is valid
+			if (entity.Valid())
+			{
+				auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
+				auto ColliderComponent = entity.GetComponent<Components::ColliderComponent>();
+
+				if (RigidComponent.Valid() && ColliderComponent.Valid())
+				{
+					mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
+
+					return true;
+				}
+
+				if (ColliderComponent.Valid())
+				{
+					mScene->GetPhysXScene()->addActor(*ColliderComponent->mStaticActor.mPtr);
+
+					return true;
+				}
+			}
+			return false;
 		}
 
 		void PhysXSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
@@ -86,6 +132,11 @@ namespace NuclearEngine
 			ECS::ComponentHandle<Components::RigidBodyComponent> RigidBodyObj;
 			for (ECS::Entity entity : es.entities_with_components(RigidBodyObj))
 			{
+				if (RigidBodyObj.Get()->GetInternalisKinematic() != RigidBodyObj.Get()->isKinematic)
+				{
+					RigidBodyObj.Get()->SetisKinematic(RigidBodyObj.Get()->isKinematic);
+				}
+
 				entity.GetComponent<Components::EntityInfoComponent>().Get()->mTransform.SetTransform(PhysX::From(RigidBodyObj->mDynamicActor.mPtr->getGlobalPose()));
 			}
 		}

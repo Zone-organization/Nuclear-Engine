@@ -11,7 +11,7 @@ namespace NuclearEngine
 			mPosition = Math::Vector3(0.0f);
 			mRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 			mScale = Math::Vector3(0.0f);
-
+			mDirty = true;
 			mWorldPosition = Math::Vector3(0.0f);
 			mWorldRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 			mWorldScale = Math::Vector3(0.0f);
@@ -19,6 +19,7 @@ namespace NuclearEngine
 
 		Transform::Transform(Math::Matrix4 Transform)
 		{
+			mDirty = true;
 			mTransformMatrix = Transform;
 		}
 
@@ -28,7 +29,7 @@ namespace NuclearEngine
 			mPosition = position;
 			mRotation = rotation;
 			mScale = Math::Vector3(0.0f);
-
+			mDirty = true;
 			mWorldPosition = Math::Vector3(0.0f);
 			mWorldRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 			mWorldScale = Math::Vector3(0.0f);
@@ -85,7 +86,8 @@ namespace NuclearEngine
 		{
 			Math::Matrix4 transform = GetTransform();
 			Math::Vector4 pos = transform * Math::Vector4(mPosition, 1.0f);
-			return Math::Vector3(pos.x, pos.y, pos.z);
+			mWorldPosition = Math::Vector3(pos.x, pos.y, pos.z);
+			return mWorldPosition;
 		}
 
 		Math::Quaternion Transform::GetWorldRotation()
@@ -100,7 +102,8 @@ namespace NuclearEngine
 			if (scale.x < 0.0f) scale.x *= -1.0f;
 			if (scale.y < 0.0f) scale.y *= -1.0f;
 			if (scale.z < 0.0f) scale.z *= -1.0f;
-			return scale;
+			mWorldScale = scale;
+			return mWorldScale;
 		}
 		void Transform::SetTransform(Math::Matrix4 _Transform)
 		{
@@ -113,16 +116,22 @@ namespace NuclearEngine
 				mTransformMatrix = Math::translate(mTransformMatrix, mPosition);
 				mTransformMatrix = Math::scale(mTransformMatrix, mScale);
 				mTransformMatrix *= Math::toMat4(mRotation);
+				mWorldPosition = GetWorldPosition();
+				mWorldScale = GetWorldScale();
 				mDirty = false;
 			}
 		}
-		void Transform::Update(Math::Matrix4 parent)
+		float* Transform::GetWorldPositionPtr()
+		{
+			return (float*)&mWorldPosition;
+		}
+		/*void Transform::Update(Math::Matrix4 parent)
 		{
 			Update();
 			if (mDirty)
 			{
 				mTransformMatrix = parent * mTransformMatrix;
 			}
-		}
+		}*/
 	}
 }

@@ -2,10 +2,8 @@
 #include <Base\NE_PrivateCommon.h>
 
 namespace NuclearEngine {
-	namespace ECS
-	{
-		class Scene;
-	}
+	namespace ECS {	class Scene;}
+	namespace Managers { class AssetManager; }
 
 	namespace Core {
 
@@ -43,10 +41,18 @@ namespace NuclearEngine {
 			void SetActiveScene(ECS::Scene* scene);
 			ECS::Scene* GetActiveScene();
 
+			void SetDefaultAssetManager(Managers::AssetManager* assetmanager);
+			Managers::AssetManager* GetDefaultAssetManager();
+
 			float FPS, FrameTime, ClockTime;
+
+			float DeltaTime = 0.0f;	// time between current frame and last frame
+			float LastFrame = 0.0f;
 		protected:
-			GameInfo *gameinfo;
+			GameInfo *mGameinfo;
 			ECS::Scene* mScene;
+			Managers::AssetManager* mAssetManager;
+
 		};
 
 	}
