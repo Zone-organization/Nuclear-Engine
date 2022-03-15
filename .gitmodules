@@ -7,12 +7,12 @@
 [submodule "External/Assimp"]
 	path = External/Assimp
 	url = https://github.com/Zone-organization/assimp
-[submodule "External/ImGui"]
-path = External/ImGui
-url = https://github.com/Zone-organization/imgui
 [submodule "External/Freeimage"]
 	path = External/Freeimage
 	url = https://github.com/WinMerge/freeimage
 [submodule "External/PhysX"]
 	path = External/PhysX
 	url = https://github.com/NVIDIAGameWorks/PhysX
+[submodule "External/ImGui"]
+	path = External/ImGui
+	url = https://github.com/Zone-organization/imgui.git
