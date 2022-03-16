@@ -631,10 +631,10 @@ class Sample2 : public Core::Game
 	{
 		//Create Entities
 		//ESponza = Scene.CreateEntity();
-		ELights = Scene.CreateEntity();
+		ELights = Scene.CreateEntity("Lights");
 		ECamera = Scene.CreateEntity("Controller");
 		//ECerberus = Scene.CreateEntity();
-		EPlane = Scene.CreateEntity();
+		EPlane = Scene.CreateEntity("Plane");
 
 		//Assign Components
 	
@@ -732,6 +732,7 @@ class Sample2 : public Core::Game
 
 		Camera->GammaCorrection = true;
 		Camera->HDR = true;
+		Camera->MovementSpeed = 15;
 
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -776,11 +777,6 @@ class Sample2 : public Core::Game
 			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
-
-		//if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
-		//	Camera->MovementSpeed += 10;
-		//else if(Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Repeated)
-		//	Camera->MovementSpeed -= 10;
 
 		//Change Mouse Mode
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
@@ -835,10 +831,29 @@ class Sample2 : public Core::Game
 				else if (e == 3)
 					Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
 
+				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+
 				ImGui::TreePop();
 			}
 
-			 
+			PhysX::RaycastHit hit;
+			ImGui::Begin("Raycast Info");
+
+			if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
+			{
+
+				if (mPhysXSystem->Raycast(Camera.Get()->GetPosition(), Camera.Get()->GetFrontView(), 100.f, hit))
+				{
+					auto entity = hit.HitEntity;
+					ECS::ComponentHandle<Components::EntityInfoComponent> Einfo = entity.GetComponent<Components::EntityInfoComponent>();
+					ImGui::Text((char*)Einfo.Get()->mName.c_str());
+				}
+			}
+
+
+			ImGui::End();
+
+
 			//if (ImGui::TreeNode("Physics"))
 			//{
 			//	ImGui::Checkbox("iskinematic", &iskinematic);

@@ -5,8 +5,11 @@
 #include <Engine\ECS\Scene.h>
 #include <Engine\ECS\Transform.h>
 #include "Engine\PhysX\PhysXEngine.h"
+#include "Engine\PhysX\RaycastHit.h"
 #include <Engine\Components\RigidBodyComponent.h>
 #include <Engine\Components\ColliderComponent.h>
+
+namespace physx { class PxScene; };
 
 namespace NuclearEngine
 {
@@ -26,6 +29,9 @@ namespace NuclearEngine
 			void SetColliderForRigidBody(ECS::Entity entity);
 
 			//Must Be called before update!
+			physx::PxScene* GetPhysXScene();
+			void SetPhysXScene(physx::PxScene* scene);
+
 			void BeginSimulation(ECS::TimeDelta dt);
 
 			void Bake(ECS::EntityManager& es);
@@ -34,14 +40,24 @@ namespace NuclearEngine
 
 			bool AddActor(ECS::Entity entity);
 
-			//void AddActor(Components::ColliderComponent collider);
+			/*	const PxVec3& origin;
+	const PxVec3& unitDir;
+		const PxReal 	distance,
+		PxRaycastCallback& hitCall,
+		PxHitFlags 	hitFlags = PxHitFlags(PxHitFlag::eDEFAULT),
+		const PxQueryFilterData& filterData = PxQueryFilterData(),
+		PxQueryFilterCallback* filterCall = NULL,
+		const PxQueryCache* cache = NULL
+		*/
 
-			//void AddActor(Components::RigidBodyComponent rigidbody);
-
-			//void AddActor(Components::RigidBodyComponent rigidbody);
+			bool Raycast(const Math::Vector3& Origin, const Math::Vector3& UnitDir, const Float32& distance,
+				PhysX::RaycastHit& hit
+			);
 
 			void Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt) override;
 		private:
+			physx::PxScene* mPhysXScene;
+
 			ECS::Scene* mScene = nullptr;
 		};
 

@@ -12,17 +12,17 @@ struct PixelInputType
 	float3x3 TBN : TANGENT0;
 };
 
-Texture2D NEMat_Albedo;
-Texture2D NEMat_Metallic;
-Texture2D NEMat_Normal;
-Texture2D NEMat_Roughness;
-Texture2D NEMat_AO;
+Texture2D NEMat_Albedo : register(t0);
+Texture2D NEMat_Metallic : register(t1);
+Texture2D NEMat_Normal : register(t2); 
+Texture2D NEMat_Roughness : register(t3);
+Texture2D NEMat_AO : register(t4);
 
-SamplerState NEMat_Albedo_sampler;
-SamplerState NEMat_Metallic_sampler;
-SamplerState NEMat_Normal_sampler;
-SamplerState NEMat_Roughness_sampler;
-SamplerState NEMat_AO_sampler;
+SamplerState NEMat_Albedo_sampler : register(s0);
+SamplerState NEMat_Metallic_sampler : register(s1);
+SamplerState NEMat_Normal_sampler : register(s2);
+SamplerState NEMat_Roughness_sampler : register(s3);
+SamplerState NEMat_AO_sampler : register(s4);
 
 
 #define PI 3.14159265359f

@@ -9,7 +9,7 @@ namespace NuclearEngine
 	namespace ECS
 	{
 		Scene::Scene(const std::string& name)
-			: mName(name), Entities(Events),Systems(Entities, Events), mPhysXScene(nullptr), Factory(this)
+			: mName(name), Entities(Events),Systems(Entities, Events), Factory(this)
 		{
 		}
 		Scene::~Scene()
@@ -35,14 +35,7 @@ namespace NuclearEngine
 		{
 			return mName;
 		}
-		void Scene::SetPhysXScene(physx::PxScene* scene)
-		{
-			mPhysXScene = scene;
-		}
-		physx::PxScene* Scene::GetPhysXScene()
-		{
-			return mPhysXScene;
-		}
+
 		SceneLoader::SceneLoader()
 		{
 		}

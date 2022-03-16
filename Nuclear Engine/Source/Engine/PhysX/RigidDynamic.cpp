@@ -1,4 +1,4 @@
-#include "..\..\..\include\Engine\PhysX\RigidDynamic.h"
+#include <Engine\PhysX\RigidDynamic.h>
 namespace NuclearEngine
 {
 	namespace PhysX

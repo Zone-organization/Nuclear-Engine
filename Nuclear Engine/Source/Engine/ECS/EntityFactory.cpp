@@ -26,10 +26,11 @@ namespace NuclearEngine
 			Result.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), material);
 			Result.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(t.GetTransform());
 
+
+			auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
 			if (PMat != nullptr)
 			{
-				auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
-				if (System.get() != nullptr && mScene->GetPhysXScene() != nullptr)
+				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
 				{
 					Result.Assign<Components::ColliderComponent>(PMat, PhysX::BoxGeometry(Math::Vector3(0.5f, 0.5f, 0.5f), t));
 					Result.Assign<Components::RigidBodyComponent>(t);
@@ -45,10 +46,11 @@ namespace NuclearEngine
 			Entity Result = mScene->CreateEntity("Sphere");
 			Result.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), material);
 			Result.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(t.GetTransform());
+
+			auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
 			if (PMat != nullptr)
 			{
-				auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
-				if (System.get() != nullptr && mScene->GetPhysXScene() != nullptr)
+				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
 				{
 					Result.Assign<Components::ColliderComponent>(PMat, PhysX::SphereGeometry(0.5f, t));
 					Result.Assign<Components::RigidBodyComponent>(t);

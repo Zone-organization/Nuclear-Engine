@@ -347,6 +347,7 @@
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
+    <ClInclude Include="include\Engine\PhysX\RaycastHit.h" />
     <ClInclude Include="include\Engine\Systems\ShadowSystem.h" />
     <ClInclude Include="include\ThirdParty\ShadowMapManager\BasicStructures.h" />
     <ClInclude Include="include\ThirdParty\ShadowMapManager\ShadowMapManager.h" />
@@ -469,6 +470,7 @@
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXShape.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\RaycastHit.cpp" />
     <ClCompile Include="Source\Engine\PhysX\RigidStatic.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXMaterial.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />

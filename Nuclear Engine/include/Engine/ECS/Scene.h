@@ -5,8 +5,6 @@
 #include <Engine/ECS/EntityFactory.h>
 #include <Core\Path.h>
 
-namespace physx { class PxScene; };
-
 namespace NuclearEngine
 {
 	namespace Components { class CameraComponent; }
@@ -22,15 +20,12 @@ namespace NuclearEngine
 			Entity CreateEntity(const char* name);
 
 			std::string GetName();
-			physx::PxScene* GetPhysXScene();
-			void SetPhysXScene(physx::PxScene* scene);
 
 			EventManager Events;
 			EntityManager Entities;
 			SystemManager Systems;
 			EntityFactory Factory;
 		private:
-			physx::PxScene* mPhysXScene;
 			std::string mName;
 		};
 

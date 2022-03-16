@@ -3,6 +3,7 @@
 #include <Engine\Components\RigidBodyComponent.h>
 #include <Engine\Components\EntityInfoComponent.h>
 #include "..\PhysX\PhysXTypes.h"
+#include <PhysX/include/PxPhysicsAPI.h>
 
 namespace NuclearEngine
 {
@@ -17,7 +18,7 @@ namespace NuclearEngine
 			SceneDesc.cpuDispatcher = PhysX::PhysXEngine::GetCPUDispatcher();
 			SceneDesc.filterShader = PhysX::PxDefaultSimulationFilterShader;
 	
-			mScene->SetPhysXScene(PhysX::PhysXEngine::GetPhysics()->createScene(SceneDesc));
+			mPhysXScene = PhysX::PhysXEngine::GetPhysics()->createScene(SceneDesc);
 		}
 		PhysXSystem::~PhysXSystem()
 		{
@@ -26,19 +27,19 @@ namespace NuclearEngine
 		//{
 		//	Component->mStaticActor.mPtr = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), plane, *Component->mMaterial.GetPtr());
 
-		//	mScene->GetPhysXScene()->addActor(*Component->mStaticActor.mPtr);
+		//	mPhysXScene->addActor(*Component->mStaticActor.mPtr);
 		//}
 		//void PhysXSystem::CreateBoxCollider(Components::ColliderComponent* Component, ECS::Transform& t, const PhysX::PxBoxGeometry& geometry)
 		//{
 		//	Component->mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(geometry, *Component->mMaterial.GetPtr());
 		//	Component->mStaticActor.mPtr = PxCreateStatic(*PhysX::PhysXEngine::GetPhysics(), PhysX::To(t), *Component->mShape.mPtr);
-		//	mScene->GetPhysXScene()->addActor(*Component->mStaticActor.mPtr);
+		//	mPhysXScene->addActor(*Component->mStaticActor.mPtr);
 		//}
 		//void PhysXSystem::CreateRigidBody(Components::RigidBodyComponent* Component, ECS::Transform& t)
 		//{
 		//	Component->mDynamicActor.mPtr = PhysX::PhysXEngine::GetPhysics()->createRigidDynamic(PhysX::To(t));
 
-		//	mScene->GetPhysXScene()->addActor(*Component->mDynamicActor.mPtr);
+		//	mPhysXScene->addActor(*Component->mDynamicActor.mPtr);
 		//}
 
 		void PhysXSystem::SetColliderForRigidBody(ECS::Entity entity)
@@ -57,9 +58,19 @@ namespace NuclearEngine
 			}
 		}
 		
+		physx::PxScene* PhysXSystem::GetPhysXScene()
+		{
+			return mPhysXScene;
+		}
+
+		void PhysXSystem::SetPhysXScene(physx::PxScene* scene)
+		{
+			mPhysXScene = scene;
+		}
+
 		void PhysXSystem::BeginSimulation(ECS::TimeDelta dt)
 		{
-			mScene->GetPhysXScene()->simulate(dt);
+			mPhysXScene->simulate(dt);
 		}
 		void PhysXSystem::Bake(ECS::EntityManager& es)
 		{
@@ -70,10 +81,10 @@ namespace NuclearEngine
 			//	if (RigidComponent.Valid())
 			//	{		
 			//		RigidComponent->mDynamicActor.mPtr->attachShape(*Obj->mShape.mPtr);
-			//		mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
+			//		mPhysXScene->addActor(*RigidComponent->mDynamicActor.mPtr);
 			//	}
 			//	else {
-			//		mScene->GetPhysXScene()->addActor(*Obj->mStaticActor.mPtr);
+			//		mPhysXScene->addActor(*Obj->mStaticActor.mPtr);
 			//	}
 			//}
 		}
@@ -89,10 +100,10 @@ namespace NuclearEngine
 					if (RigidComponent.Valid())
 					{
 						RigidComponent->mDynamicActor.mPtr->attachShape(*Obj->mShape.mPtr);
-						mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
+						mPhysXScene->addActor(*RigidComponent->mDynamicActor.mPtr);
 					}
 					else {
-						mScene->GetPhysXScene()->addActor(*Obj->mStaticActor.mPtr);
+						mPhysXScene->addActor(*Obj->mStaticActor.mPtr);
 					}
 					Obj->mAddedtoPhysxScene = true;
 				}
@@ -109,24 +120,58 @@ namespace NuclearEngine
 
 				if (RigidComponent.Valid() && ColliderComponent.Valid())
 				{
-					mScene->GetPhysXScene()->addActor(*RigidComponent->mDynamicActor.mPtr);
-
+					mPhysXScene->addActor(*RigidComponent->mDynamicActor.mPtr);
+					RigidComponent->mDynamicActor.mPtr->userData = (void*)entity.id().id();
+					ColliderComponent->mStaticActor.mPtr->userData = (void*)entity.id().id();
 					return true;
 				}
 
 				if (ColliderComponent.Valid())
 				{
-					mScene->GetPhysXScene()->addActor(*ColliderComponent->mStaticActor.mPtr);
-
+					mPhysXScene->addActor(*ColliderComponent->mStaticActor.mPtr);
+					ColliderComponent->mStaticActor.mPtr->userData = (void*)entity.id().id();
 					return true;
 				}
 			}
 			return false;
 		}
 
+		//bool PhysXSystem::Raycast()
+		//{
+		//	PxReal
+		///*	const PxVec3& origin;
+		//	const PxVec3& unitDir;
+		//		const PxReal 	distance,
+		//		PxRaycastCallback& hitCall,
+		//		PxHitFlags 	hitFlags = PxHitFlags(PxHitFlag::eDEFAULT),
+		//		const PxQueryFilterData& filterData = PxQueryFilterData(),
+		//		PxQueryFilterCallback* filterCall = NULL,
+		//		const PxQueryCache* cache = NULL
+		//		*/
+		//	return mPhysXScene->raycast();
+		//}
+
+		bool PhysXSystem::Raycast(const Math::Vector3& Origin, const Math::Vector3& UnitDir, const Float32& distance, PhysX::RaycastHit& outhit)
+		{
+			physx::PxRaycastBuffer hit;
+
+			if (mPhysXScene->raycast(PhysX::To(Origin), PhysX::To(UnitDir), distance, hit))
+			{
+				outhit.position = PhysX::From(hit.block.position);
+				outhit.normal = PhysX::From(hit.block.normal);
+				outhit.distance = hit.block.distance;
+				outhit.HitEntity = mScene->Entities.Get(ECS::Entity::Id((uint64_t)hit.block.actor->userData));
+				outhit.valid = true;
+				return true;
+			}
+
+			return false;
+		}
+
 		void PhysXSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
 		{
-			mScene->GetPhysXScene()->fetchResults(true);
+
+			mPhysXScene->fetchResults(true);
 
 			//Update Entities transforms
 			ECS::ComponentHandle<Components::RigidBodyComponent> RigidBodyObj;

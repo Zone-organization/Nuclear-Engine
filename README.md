@@ -1,22 +1,19 @@
 # Nuclear Engine
 
-* [Engine features](https://github.com/Zone-organization/Nuclear-Engine/blob/master/FEATURES.md) - A list of all working features.
+* [OLD Engine features](https://github.com/Zone-organization/Nuclear-Engine/blob/master/FEATURES.md) - A list of all working features.
 
 ## To-dos 
   - W.I.P:
-    - Bloom effect.
     - ShadowMaps (Through Diligent Component).
-	
+	- Improving PhysX Implementaion
+	- Basic Editor support (Nuclear Editor).
+
   - Milestone 0.01 Alpha
 	- Complete DemoGame
 	
   - Planned:
 	- Mesh Animations
-	- Basic Editor support (Nuclear Editor).
-
-  - Pretty much far (Due to lack of knowledge how to achieve them or requiring full engine restructure):
-    - Multithreading.
-    - Android Support (Mobile devices in general).
+	- GLTF PBR Renderer (Through Diligent Component).
 
 ### Building
 The project has three building configuration:
@@ -27,7 +24,7 @@ Release: Provides maximum performance, use it if you are publishing your game.
 Some Dependencies needs to be downloaded and built manually.
 
 - __Requirements__
-  - Visual Studio 2019
+  - Visual Studio 2022
   - CMake
 
 - __Dependencies__
