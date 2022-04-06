@@ -1,20 +1,19 @@
 #pragma once
 #include <Base\NE_Common.h>
+#include "Engine\Assets\Script.h"
+
 
 namespace NuclearEngine
 {
 	namespace Scripting
 	{
-		class NEAPI Script
+		//Script Scope
+		class ScriptingModule
 		{
 		public:
-			Script();
-			~Script();
+	
 
-			bool Initialize();
-
-			void Shutdown();
-
+			void* ScriptingModulePtr;
 		};
 	}
 }

@@ -6,6 +6,7 @@
   - W.I.P:
     - ShadowMaps (Through Diligent Component).
 	- Improving PhysX Implementaion
+	- Scripting support (through AngelScript)
 	- Basic Editor support (Nuclear Editor).
 
   - Milestone 0.01 Alpha

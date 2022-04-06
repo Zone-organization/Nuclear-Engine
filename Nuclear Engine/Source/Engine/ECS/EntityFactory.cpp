@@ -32,7 +32,8 @@ namespace NuclearEngine
 			{
 				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
 				{
-					Result.Assign<Components::ColliderComponent>(PMat, PhysX::BoxGeometry(Math::Vector3(0.5f, 0.5f, 0.5f), t));
+					PhysX::BoxGeometry box(Math::Vector3(0.5f, 0.5f, 0.5f), t);
+					Result.Assign<Components::ColliderComponent>(PMat, box);
 					Result.Assign<Components::RigidBodyComponent>(t);
 					System->AddActor(Result);
 					System->SetColliderForRigidBody(Result);
@@ -52,7 +53,8 @@ namespace NuclearEngine
 			{
 				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
 				{
-					Result.Assign<Components::ColliderComponent>(PMat, PhysX::SphereGeometry(0.5f, t));
+					PhysX::SphereGeometry sphere(0.5f, t);
+					Result.Assign<Components::ColliderComponent>(PMat, sphere);
 					Result.Assign<Components::RigidBodyComponent>(t);
 					System->AddActor(Result);
 					System->SetColliderForRigidBody(Result);

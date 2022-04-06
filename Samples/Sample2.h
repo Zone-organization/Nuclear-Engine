@@ -5,7 +5,7 @@ void EntityView(ECS::Entity& entity, ECS::ComponentHandle<Components::EntityInfo
 
 void EntityExplorer(ECS::Scene* scene)
 {
-	ImGui::ShowStackToolWindow();
+	//ImGui::ShowStackToolWindow();
 
 	ECS::Entity Entityview;
 	ImGui::Begin("Entity Explorer");
@@ -833,26 +833,34 @@ class Sample2 : public Core::Game
 
 				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
+
 				ImGui::TreePop();
 			}
 
+
+
 			PhysX::RaycastHit hit;
-			ImGui::Begin("Raycast Info");
-
-			if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
+			if (ImGui::TreeNode("Raycast Info"))
 			{
-
-				if (mPhysXSystem->Raycast(Camera.Get()->GetPosition(), Camera.Get()->GetFrontView(), 100.f, hit))
+				if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
 				{
-					auto entity = hit.HitEntity;
-					ECS::ComponentHandle<Components::EntityInfoComponent> Einfo = entity.GetComponent<Components::EntityInfoComponent>();
-					ImGui::Text((char*)Einfo.Get()->mName.c_str());
+
+					if (mPhysXSystem->Raycast(Camera.Get()->GetPosition(), Camera.Get()->GetFrontView(), 100.f, hit))
+					{
+						auto entity = hit.HitEntity;
+						ECS::ComponentHandle<Components::EntityInfoComponent> Einfo = entity.GetComponent<Components::EntityInfoComponent>();
+						ImGui::Text((char*)Einfo.Get()->mName.c_str());
+					}
+					else
+					{
+						ImGui::Text("No hit");
+					}
 				}
+				else
+					ImGui::Text("Press F");
+
+				ImGui::TreePop();
 			}
-
-
-			ImGui::End();
-
 
 			//if (ImGui::TreeNode("Physics"))
 			//{

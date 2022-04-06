@@ -73,7 +73,7 @@ public:
 			Core::Engine::SetGame(&demo);
 			return StartSample();
 		}
-		if (ImGui::Button("Sample3 : PhysX Integration"))
+		if (ImGui::Button("Sample3 : Script Test"))
 		{
 			Sample3 demo;
 			Core::Engine::SetGame(&demo);

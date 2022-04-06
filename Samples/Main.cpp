@@ -53,8 +53,6 @@ int main(int argc, char* argv[])
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
 
-	bool haha = NuclearEngine::Scripting::ScriptingEngine::Initialize();
-
 	SampleSelector selector;
 	Core::Engine::SetGame(&selector);
 	Core::Engine::LoadGame();

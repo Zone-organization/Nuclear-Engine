@@ -156,8 +156,8 @@ namespace NuclearEngine {
 			template <typename C>
 			bool HasComponent() const;
 
-			template <typename A, typename ... Args>
-			void unpack(ComponentHandle<A> &a, ComponentHandle<Args> & ... args);
+			//template <typename A, typename ... Args>
+			//void unpack(ComponentHandle<A> &a, ComponentHandle<Args> & ... args);
 
 			/**
 			 * Destroy and InValidate this Entity.
@@ -800,11 +800,11 @@ namespace NuclearEngine {
 				return DebugView(this);
 			}
 
-			template <typename C>
-			void unpack(Entity::Id id, ComponentHandle<C> &a) {
-				assert_Valid(id);
-				a = this->component<C>(id);
-			}
+			//template <typename C>
+			//void unpack(Entity::Id id, ComponentHandle<C> &a) {
+			//	assert_Valid(id);
+			//	a = this->component<C>(id);
+			//}
 
 			/**
 			 * Unpack components directly into pointers.
@@ -817,12 +817,12 @@ namespace NuclearEngine {
 			 * ComponentHandle<Direction> d;
 			 * unpack<Position, Direction>(e, p, d);
 			 */
-			template <typename A, typename ... Args>
-			void unpack(Entity::Id id, ComponentHandle<A> &a, ComponentHandle<Args> & ... args) {
-				assert_Valid(id);
-				a = this->component<A>(id);
-				unpack<Args ...>(id, args ...);
-			}
+			//template <typename A, typename ... Args>
+			//void unpack(Entity::Id id, ComponentHandle<A> &a, ComponentHandle<Args> & ... args) {
+			//	assert_Valid(id);
+			//	a = this->component<A>(id);
+			//	unpack<Args ...>(id, args ...);
+			//}
 
 			/**
 			 * Destroy all entities and reset the EntityManager.
@@ -958,18 +958,18 @@ namespace NuclearEngine {
 			return manager_->Assign<C>(id_, std::forward<const C &>(component));
 		}
 
-		template <typename C, typename ... Args>
-		ComponentHandle<C> Entity::Replace(Args && ... args) {
-			assert(Valid());
-			auto handle = this->component<C>();
-			if (handle) {
-				*(handle.Get()) = C(std::forward<Args>(args) ...);
-			}
-			else {
-				handle = manager_->Assign<C>(id_, std::forward<Args>(args) ...);
-			}
-			return handle;
-		}
+		//template <typename C, typename ... Args>
+		//ComponentHandle<C> Entity::Replace(Args && ... args) {
+		//	assert(Valid());
+		//	auto handle = this->component<C>();
+		//	if (handle) {
+		//		*(handle.Get()) = C(std::forward<Args>(args) ...);
+		//	}
+		//	else {
+		//		handle = manager_->Assign<C>(id_, std::forward<Args>(args) ...);
+		//	}
+		//	return handle;
+		//}
 
 		template <typename C>
 		void Entity::Remove() {
@@ -1008,11 +1008,11 @@ namespace NuclearEngine {
 			return manager_->HasComponent<C>(id_);
 		}
 
-		template <typename A, typename ... Args>
-		void Entity::unpack(ComponentHandle<A> &a, ComponentHandle<Args> & ... args) {
-			assert(Valid());
-			manager_->unpack(id_, a, args ...);
-		}
+		//template <typename A, typename ... Args>
+		//void Entity::unpack(ComponentHandle<A> &a, ComponentHandle<Args> & ... args) {
+		//	assert(Valid());
+		//	manager_->unpack(id_, a, args ...);
+		//}
 
 		inline bool Entity::Valid() const {
 			return manager_ && manager_->Valid(id_);

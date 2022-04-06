@@ -5,6 +5,7 @@ class Sample3 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
+	std::shared_ptr<Systems::ScriptingSystem> ScriptSystem;
 
 	Core::Input Input;
 
@@ -53,12 +54,24 @@ class Sample3 : public Core::Game
 	}
 	void InitRenderer()
 	{
-		Renderer = Scene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
 		Systems::PhysXSystemDesc sceneDesc;
 		
 		sceneDesc.mGravity = Math::Vector3(0.0f, -9.81f, 0.0f);
 
+		Renderer = Scene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+		ScriptSystem = Scene.Systems.Add<Systems::ScriptingSystem>();
 		mPhysXSystem = Scene.Systems.Add<Systems::PhysXSystem>(&Scene, sceneDesc);
+
+		ScriptSystem->Initialize();
+
+		Assets::Script script;
+
+		Scripting::ScriptingModule smodule;
+
+		ScriptSystem->GetScriptingEngine()->CreateScriptingModule(&smodule, {"Main" , Scripting::ScriptModuleCreationFlags::ALWAYS_CREATE});
+
+		ScriptSystem->GetScriptingEngine()->CreateScript(&script, Core::FileSystem::LoadFileToString("Assets/script.as"), &smodule);
+
 
 		Scene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&DiffuseRP);

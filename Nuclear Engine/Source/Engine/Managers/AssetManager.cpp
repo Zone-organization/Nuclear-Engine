@@ -2,6 +2,7 @@
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
 #include <Engine\Audio\AudioEngine.h>
+#include <Engine\Assets\DefaultTextures.h>
 
 #define EXPOSE_FREEIMAGE_IMPORTER
 #define EXPOSE_ASSIMP_IMPORTER
@@ -9,6 +10,7 @@
 #include <Engine\Importers\FreeImageImporter.h>
 #include <utility>
 #include "CreateTextureFromRawImage.h"
+#include <Core\FileSystem.h>
 
 namespace NuclearEngine {
 	namespace Managers {
@@ -79,7 +81,7 @@ namespace NuclearEngine {
 			if (Data.mData == NULL)
 			{
 				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
-				return Assets::Texture();
+				return Assets::DefaultTextures::DefaultBlackTex;
 			}
 
 
@@ -123,7 +125,7 @@ namespace NuclearEngine {
 			std::tie(submeshes, Material) = mMeshImporter({ Path.mRealPath, desc, this });
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
-			Log.Info("[AssetManager : " + mDesc.mName +  "] Loaded Mesh & Material at: " + Path.mInputPath + "\n");
+			Log.Info("[AssetManager : " + mDesc.mName +  "] Loaded Model: " + Path.mInputPath + "\n");
 
 			mImportedMaterials[hashedname] = Material;
 			mImportedMeshes[hashedname] = Assets::Mesh();
@@ -181,6 +183,15 @@ namespace NuclearEngine {
 			data6 = TextureCube_Load(Paths.at(5), Desc);
 			
 			std::array<Assets::Image, 6> result = { data1, data2, data3, data4, data5, data6 };
+
+			return result;
+		}
+
+		Assets::Script& AssetManager::ImportScript(const Core::Path& Path)
+		{
+			Assets::Script result;
+
+			//result.ScriptCode = Core::FileSystem::LoadFileToString(Path);
 
 			return result;
 		}

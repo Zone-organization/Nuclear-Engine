@@ -2,6 +2,7 @@
 #include <Engine/Graphics/Color.h>
 #include <Engine/Importers/Common.h>
 #include <Engine\Assets\AudioClip.h>
+#include <Engine\Assets\Script.h>
 #include <FMOD/inc/fmod.hpp>
 #include <Core/Path.h>
 #include <unordered_map>
@@ -97,7 +98,6 @@ namespace NuclearEngine
 			Assets::Texture& Import(const Core::Path& Path, const Assets::TextureUsageType& type, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
 			Assets::Texture& Import(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
 
-
 			Assets::AudioClip& Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
 			std::tuple<Assets::Mesh*, Assets::Material*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
@@ -106,6 +106,11 @@ namespace NuclearEngine
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
 			std::array<Assets::Image, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::TextureLoadingDesc& Desc);
+
+
+			Assets::Script& ImportScript(const Core::Path& Path);
+
+
 		private:
 			AssetManagerDesc mDesc;
 			Assets::Image TextureCube_Load(const Core::Path& Path, const Importers::TextureLoadingDesc& Desc);

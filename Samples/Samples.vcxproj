@@ -137,6 +137,9 @@
     <ClInclude Include="Sample4.h" />
     <ClInclude Include="SampleSelector.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\script.as" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

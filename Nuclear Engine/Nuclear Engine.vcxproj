@@ -88,7 +88,7 @@
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BasicRuntimeChecks />
     </ClCompile>
@@ -177,6 +177,7 @@
     <ClInclude Include="include\Engine\Components\DirLightComponent.h" />
     <ClInclude Include="include\Engine\Components\PointLightComponent.h" />
     <ClInclude Include="include\Engine\Components\RigidBodyComponent.h" />
+    <ClInclude Include="include\Engine\Components\ScriptComponent.h" />
     <ClInclude Include="include\Engine\Components\SpotLightComponent.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
     <ClInclude Include="include\Engine\ECS\EntityFactory.h" />
@@ -348,6 +349,9 @@
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
     <ClInclude Include="include\Engine\PhysX\RaycastHit.h" />
+    <ClInclude Include="include\Engine\Scripting\Scripting.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingModule.h" />
     <ClInclude Include="include\Engine\Systems\ShadowSystem.h" />
     <ClInclude Include="include\ThirdParty\ShadowMapManager\BasicStructures.h" />
     <ClInclude Include="include\ThirdParty\ShadowMapManager\ShadowMapManager.h" />
@@ -356,8 +360,7 @@
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXShape.h" />
-    <ClInclude Include="include\Engine\Scripting\Script.h" />
-    <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
+    <ClInclude Include="include\Engine\Assets\Script.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imconfig.h" />
     <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
@@ -411,6 +414,45 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
+    <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\include\angelscript.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_array.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_atomic.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_builder.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_bytecode.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_callfunc.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_compiler.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_config.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_configgroup.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_context.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_criticalsection.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_datatype.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_debug.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_gc.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_generic.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_map.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_memory.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_module.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_namespace.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_objecttype.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_outputbuffer.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_parser.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_property.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_restore.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptcode.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptengine.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptfunction.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptnode.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptobject.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_string.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_string_util.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_symboltable.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_texts.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_thread.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_tokendef.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_tokenizer.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_typeinfo.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_variablescope.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_config.h" />
@@ -442,6 +484,7 @@
     <ClCompile Include="Source\Engine\Components\DirLightComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\PointLightComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\RigidBodyComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\ScriptComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\SpotLightComponent.cpp" />
     <ClCompile Include="Source\Engine\ECS\EntityFactory.cpp" />
     <ClCompile Include="Source\Engine\ECS\Transform.cpp" />
@@ -475,13 +518,53 @@
     <ClCompile Include="Source\Engine\PhysX\PhysXMaterial.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\Engine\PhysX\RigidDynamic.cpp" />
-    <ClCompile Include="Source\Engine\Scripting\Script.cpp" />
-    <ClCompile Include="Source\Engine\Scripting\ScriptingEngine.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Script.cpp" />
+    <ClCompile Include="Source\Engine\Systems\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Engine\Systems\ShadowSystem.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_atomic.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_builder.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_bytecode.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_arm.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_arm64.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_mips.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_ppc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_ppc_64.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_sh4.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_gcc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_mingw.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_msvc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x86.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_xenon.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_compiler.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_configgroup.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_context.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_datatype.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_gc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_generic.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_globalproperty.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_memory.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_module.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_objecttype.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_outputbuffer.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_parser.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_restore.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptcode.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptengine.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptfunction.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptnode.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptobject.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_string.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_string_util.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_thread.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_tokenizer.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_typeinfo.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_variablescope.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
@@ -621,6 +704,17 @@
     <None Include="include\Base\Math\gtx\vector_angle.inl" />
     <None Include="include\Base\Math\gtx\vector_query.inl" />
     <None Include="include\Base\Math\gtx\wrap.inl" />
+    <None Include="Source\ThirdParty\angelscript\source\as_callfunc_arm64_msvc.asm" />
+    <None Include="Source\ThirdParty\angelscript\source\as_callfunc_arm_msvc.asm" />
+    <CustomBuild Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_msvc_asm.asm">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ml64.exe /c  /nologo /Fo"Build\DebugX64\as_callfunc_x64_msvc_asm.obj" /W3 /Zi /Ta "%(RootDir)%(Directory)\%(Filename)%(Extension)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64.exe /c  /nologo /Fo$(OutDir)\as_callfunc_x64_msvc_asm.obj /W3 /Zi /Ta $(InputDir)\$(InputFileName)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">ml64.exe /c  /nologo /Fo$(OutDir)\as_callfunc_x64_msvc_asm.obj /W3 /Zi /Ta $(InputDir)\$(InputFileName)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Build\DebugX64\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">$(Configuration)\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

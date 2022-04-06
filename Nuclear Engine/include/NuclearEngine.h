@@ -21,3 +21,5 @@ _____________/BOOOM\_____________
 #include <Engine/Audio/Audio.h>
 #include <Engine/Systems/Systems.h>
 #include <Engine/PhysX/PhysX.h>
+#include <Engine/Scripting/Scripting.h>
+

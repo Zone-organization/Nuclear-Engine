@@ -3,6 +3,7 @@
 #include <Base\NE_PrivateCommon.h>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 namespace NuclearEngine
 {
