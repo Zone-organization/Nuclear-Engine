@@ -1,4 +1,8 @@
-void main()
+
+namespace Script1
 {
-    print();
+    void Start()
+    {
+        print();
+    }
 }

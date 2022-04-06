@@ -64,14 +64,18 @@ class Sample3 : public Core::Game
 
 		ScriptSystem->Initialize();
 
+
+
+
 		Assets::Script script;
+		script.SetName("Script1");
+		Scripting::ScriptingModule* smodule;
 
-		Scripting::ScriptingModule smodule;
+		smodule = ScriptSystem->CreateScriptingModule({"Main" , Scripting::ScriptModuleCreationFlags::ALWAYS_CREATE});
 
-		ScriptSystem->GetScriptingEngine()->CreateScriptingModule(&smodule, {"Main" , Scripting::ScriptModuleCreationFlags::ALWAYS_CREATE});
+		ScriptSystem->GetScriptingEngine()->CreateScript(&script, Core::FileSystem::LoadFileToString("Assets/script.as"),smodule);
 
-		ScriptSystem->GetScriptingEngine()->CreateScript(&script, Core::FileSystem::LoadFileToString("Assets/script.as"), &smodule);
-
+		ScriptSystem->GetScriptingEngine()->BuildScriptingModule(smodule);
 
 		Scene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&DiffuseRP);
@@ -170,6 +174,7 @@ class Sample3 : public Core::Game
 
 		mPhysXSystem->Update(Scene.Entities, Scene.Events, dt);		
 		Renderer->Update(Scene.Entities, Scene.Events, dt);
+		ScriptSystem->Update(Scene.Entities, Scene.Events, dt);
 
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_SPACE) == Core::Input::KeyboardKeyStatus::Pressed)

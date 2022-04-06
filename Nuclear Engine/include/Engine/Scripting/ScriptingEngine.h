@@ -1,6 +1,5 @@
 #pragma once
-#include <Base\NE_Common.h>
-#include "Engine\Assets\Script.h"
+#include <Engine/Scripting/ScriptingContext.h>
 
 namespace NuclearEngine
 {
@@ -25,7 +24,7 @@ namespace NuclearEngine
 			ScriptModuleCreationFlags mFlags;
 		};
 
-		class ScriptingEngine
+		class NEAPI ScriptingEngine
 		{
 		public:
 			virtual bool Initialize() = 0;
@@ -36,6 +35,9 @@ namespace NuclearEngine
 
 			virtual void CreateScriptingModule(Scripting::ScriptingModule* scriptmodule, ScriptModuleCreationDesc desc) = 0;
 
+			virtual bool BuildScriptingModule(Scripting::ScriptingModule* scriptmodule) = 0;
+
+			virtual ScriptingContext* GetContext() = 0;
 		};
 	}
 }

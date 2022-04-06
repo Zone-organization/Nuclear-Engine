@@ -3,6 +3,7 @@
 #include "Engine\Assets\Script.h"
 #include "Engine\Scripting\ScriptingEngine.h"
 #include "Engine\Scripting\ScriptingModule.h"
+#include "AngelScriptingContext.h"
 
 class asIScriptEngine;
 class asIScriptModule;
@@ -14,7 +15,7 @@ namespace NuclearEngine
 	{
 		namespace Internal
 		{
-			class AngelScriptEngine : public ScriptingEngine
+			class NEAPI AngelScriptEngine : public ScriptingEngine
 			{
 			public:
 				bool Initialize() override;
@@ -25,9 +26,12 @@ namespace NuclearEngine
 				
 				void CreateScriptingModule(Scripting::ScriptingModule* scriptmodule,  ScriptModuleCreationDesc desc) override;
 
+				bool BuildScriptingModule(Scripting::ScriptingModule* scriptmodule) override;
+
+				ScriptingContext* GetContext() override;
+
 			private:
-			//	asIScriptModule* MainModule;
-				//asIScriptContext* MainContext;
+				AngelScriptingContext MainContext;
 			};
 		}
 	}

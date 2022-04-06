@@ -12,10 +12,6 @@ namespace NuclearEngine
 			Script();
 			~Script();
 
-			void* internalScriptPtr;
-
-			bool HasStartFunc = false;
-			bool HasUpdateFunc = false;
 
 		};
 	}

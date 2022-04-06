@@ -1,6 +1,5 @@
 #include "AngelScriptEngine.h"
 #include "..\Source\ThirdParty\angelscript\include\angelscript.h" 
-
 #include <assert.h>
 namespace NuclearEngine
 {
@@ -51,12 +50,15 @@ namespace NuclearEngine
 					r = ASEngine->RegisterGlobalFunction("void print()", asFUNCTION(print), asCALL_CDECL);
 				}
 		
-				if (r == 0)
+				if (r < 0)
 				{
-					Log.Info("[AngelScriptEngine] Initialized Successfully...\n");
-					return true;
+					return false;
 				}
-				return false;
+
+
+				MainContext._context = ASEngine->CreateContext();
+
+				return true;
 
 			}
 			void AngelScriptEngine::Shutdown()
@@ -66,45 +68,50 @@ namespace NuclearEngine
 			{
 				// Create a new script module
 				asIScriptModule* ptr = static_cast<asIScriptModule*>(scriptmodule->ScriptingModulePtr);
-				ptr->AddScriptSection(script->GetStringName().c_str(), scriptcode.c_str());
-
-				// Build the module
-				int r = ptr->Build();
+				int r = ptr->AddScriptSection(script->GetStringName().c_str(), scriptcode.c_str());
 
 				if (r < 0)
 				{
 					return false;
 				}
 
+				ScriptData data;
+				data.mScriptParent = script;
+				scriptmodule->mImportedScripts[script] = data;
 
-				asIScriptFunction* func = ptr->GetFunctionByDecl("void main()");
-				if (func == 0)
-				{
-					// The function couldn't be found. Instruct the script writer
-					// to include the expected function in the script.
-					printf("The script must have the function 'void main()'. Please add it and try again.\n");
-					return false;
-				}
-
-				// Create our context, prepare it, and then execute
-				asIScriptContext* MainContext = ASEngine->CreateContext();
-				MainContext->Prepare(func);
-				r = MainContext->Execute();
-				if (r != asEXECUTION_FINISHED)
-				{
-					// The execution didn't complete as expected. Determine what happened.
-					if (r == asEXECUTION_EXCEPTION)
-					{
-						// An exception occurred, let the script writer know what happened so it can be corrected.
-						printf("An exception '%s' occurred. Please correct the code and try again.\n", MainContext->GetExceptionString());
-					}
-				}
 
 				return true;
 			}
 			void AngelScriptEngine::CreateScriptingModule(Scripting::ScriptingModule* scriptmodule, ScriptModuleCreationDesc desc)
 			{
 				scriptmodule->ScriptingModulePtr = ASEngine->GetModule(desc.mName.c_str(), (asEGMFlags)desc.mFlags);
+			}
+			bool AngelScriptEngine::BuildScriptingModule(Scripting::ScriptingModule* scriptmodule)
+			{		
+				// Build the module
+				asIScriptModule* ptr = static_cast<asIScriptModule*>(scriptmodule->ScriptingModulePtr);
+				int r = ptr->Build();
+
+				if (r < 0)
+					return false;
+				
+
+				for (auto i : scriptmodule->mImportedScripts)
+				{
+					std::string str = "void " + i.first->GetStringName() + "::";
+
+					auto dataptr = &scriptmodule->mImportedScripts.at(i.first);
+					dataptr->mStartfun = ptr->GetFunctionByDecl((str + "Start()").c_str());
+
+					dataptr->mUpdateFun = ptr->GetFunctionByDecl((str + "Update()").c_str());
+
+				}
+
+				return true;
+			}
+			ScriptingContext* AngelScriptEngine::GetContext()
+			{
+				return &MainContext;
 			}
 		}
 	}

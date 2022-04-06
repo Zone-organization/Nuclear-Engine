@@ -349,7 +349,9 @@
     <ClInclude Include="include\Engine\Managers\CameraManager.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
     <ClInclude Include="include\Engine\PhysX\RaycastHit.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptData.h" />
     <ClInclude Include="include\Engine\Scripting\Scripting.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingContext.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingModule.h" />
     <ClInclude Include="include\Engine\Systems\ShadowSystem.h" />
@@ -415,6 +417,7 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
     <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" />
+    <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h" />
     <ClInclude Include="Source\ThirdParty\angelscript\include\angelscript.h" />
     <ClInclude Include="Source\ThirdParty\angelscript\source\as_array.h" />
     <ClInclude Include="Source\ThirdParty\angelscript\source\as_atomic.h" />
@@ -520,6 +523,8 @@
     <ClCompile Include="Source\Engine\PhysX\RigidDynamic.cpp" />
     <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.cpp" />
     <ClCompile Include="Source\Engine\Assets\Script.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\ScriptData.cpp" />
     <ClCompile Include="Source\Engine\Systems\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />

@@ -2,7 +2,7 @@
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
 #include <Engine\ECS\Entity.h>
-#include <Engine/PhysX/PhysXEngine.h>
+#include <Engine/Assets/Script.h>
 
 namespace NuclearEngine
 {
@@ -14,7 +14,7 @@ namespace NuclearEngine
 		public:
 			ScriptComponent();
 			
-
+			Assets::Script* script;
 		};
 	}
 }

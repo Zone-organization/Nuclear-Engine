@@ -31,10 +31,11 @@ namespace NuclearEngine
 			bool Initialize();
 
 			Scripting::ScriptingEngine* GetScriptingEngine();
-
+			Scripting::ScriptingModule* CreateScriptingModule(const Scripting::ScriptModuleCreationDesc& desc);
 			void Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt) override;
 		private:
 			Scripting::ScriptingEngine* mScriptEngine;
+			std::vector<Scripting::ScriptingModule> _modules;
 			ScriptingBackend mBackend;
 		};
 

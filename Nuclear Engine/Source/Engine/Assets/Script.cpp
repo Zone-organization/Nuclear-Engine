@@ -5,7 +5,7 @@ namespace NuclearEngine
 	{
 		Script::Script()
 		{
-			internalScriptPtr = nullptr;
+
 		}
 	
 		Script::~Script()
