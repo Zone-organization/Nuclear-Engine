@@ -3,7 +3,7 @@
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
 #include <Engine/Assets/Image.h>
-#include <Engine/Assets/Animation.h>
+#include <Engine/Assets/Animations.h>
 #include <Base\Utilities\Delegate.h>
 #include <string>
 #include <tuple>
@@ -90,7 +90,7 @@ namespace NuclearEngine
 			Managers::AssetManager* mManager = nullptr;
 		};
 
-		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::Material*, Assets::Animation*)> MeshImporterDelegate;
+		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::Material*, Assets::Animations*)> MeshImporterDelegate;
 		typedef Utilities::Delegate<Assets::Image& (const std::string& Path, const TextureLoadingDesc& Desc)> TextureImporterDelegate;
 	}
 }

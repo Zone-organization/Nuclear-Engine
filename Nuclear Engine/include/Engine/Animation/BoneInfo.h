@@ -3,7 +3,7 @@
 
 namespace NuclearEngine
 {
-	namespace Animations
+	namespace Animation
 	{
 		struct BoneInfo
 		{

@@ -16,7 +16,7 @@ namespace NuclearEngine
 
 	}
 
-	namespace Animations
+	namespace Animation
 	{
 		class Animator;
 

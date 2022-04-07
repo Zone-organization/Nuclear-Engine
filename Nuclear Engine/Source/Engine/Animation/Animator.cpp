@@ -1,17 +1,17 @@
-#include "Engine/Animations/Animator.h"
+#include "Engine/Animation/Animator.h"
 
 namespace NuclearEngine
 {
-	namespace Animations
+	namespace Animation
 	{
 		Animator::Animator()
 		{
 		}
-		inline Animator::Animator(Assets::Animation* animation)
+		inline Animator::Animator(Animation::AnimationClip* animation)
 		{
 			Initialize(animation);
 		}
-		void Animator::Initialize(Assets::Animation* animation)
+		void Animator::Initialize(Animation::AnimationClip* animation)
 		{
 			m_CurrentTime = 0.0;
 			m_CurrentAnimation = animation;
@@ -31,12 +31,12 @@ namespace NuclearEngine
 				CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), Math::Matrix4(1.0f));
 			}
 		}
-		inline void Animator::PlayAnimation(Assets::Animation* pAnimation)
+		inline void Animator::PlayAnimation(Animation::AnimationClip* pAnimation)
 		{
 			m_CurrentAnimation = pAnimation;
 			m_CurrentTime = 0.0f;
 		}
-		inline void Animator::CalculateBoneTransform(const Assets::AnimationNodeData* node, Math::Matrix4 parentTransform)
+		inline void Animator::CalculateBoneTransform(const Animation::ClipNodeData* node, Math::Matrix4 parentTransform)
 		{
 			std::string nodeName = node->name;
 			Math::Matrix4 nodeTransform = node->transformation;

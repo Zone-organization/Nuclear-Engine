@@ -34,11 +34,20 @@ class Sample1 : public Core::Game
 
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
+	Assets::Mesh* BobAsset;
+	Assets::Mesh* VampireAsset;
 
 	Assets::Material CubeMaterial;
 	Assets::Material* NanosuitMaterial;
 	Assets::Material* CyborgMaterial;
-	Animations::Animator Animator;
+	Assets::Material* BobMaterial;
+	Assets::Material* VampireMaterial;
+
+	Animation::Animator BobAnimator;
+	Animation::Animator VampireAnimator;
+
+	Assets::Animations* BobAnimation;
+	Assets::Animations* VampireAnimation;
 
 	Components::CameraComponent Camera;
 
@@ -54,6 +63,8 @@ class Sample1 : public Core::Game
 	ECS::Entity ECube;
 	ECS::Entity ECyborg;
 	ECS::Entity ENanosuit;
+	ECS::Entity EBob;
+	ECS::Entity EVampire;
 
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
@@ -94,13 +105,23 @@ class Sample1 : public Core::Game
 	void SetupAssets()
 	{
 		Importers::MeshLoadingDesc ModelDesc;
-		Assets::Animation* anim;
-		//Load Nanosuit Model
-		std::tie(NanosuitAsset, NanosuitMaterial, anim) = mAssetManager->Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
-		//Load Cyborg Model
-		std::tie(CyborgAsset, CyborgMaterial, anim) = mAssetManager->Import("@CommonAssets@/Models/CrytekCyborg/boblampclean.md5mesh", ModelDesc);
+		Assets::Animations* Placeholder;
 
-		Animator.Initialize(anim);
+		//Load Nanosuit Model
+		std::tie(NanosuitAsset, NanosuitMaterial, Placeholder) = mAssetManager->Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		
+		//Load Cyborg Model
+		std::tie(CyborgAsset, CyborgMaterial, Placeholder) = mAssetManager->Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		
+		//Load Bob Model
+		std::tie(BobAsset, BobMaterial, BobAnimation) = mAssetManager->Import("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
+
+		//Load Bob Model
+		std::tie(VampireAsset, VampireMaterial, VampireAnimation) = mAssetManager->Import("@CommonAssets@/Models/vampire/dancing_vampire.dae", ModelDesc);
+
+		BobAnimator.Initialize(&BobAnimation->mClips.at(0));
+		VampireAnimator.Initialize(&VampireAnimation->mClips.at(0));
+
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
@@ -116,13 +137,20 @@ class Sample1 : public Core::Game
 		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
 		Renderer->CreateMaterialForAllPipelines(NanosuitMaterial);
 		Renderer->CreateMaterialForAllPipelines(CyborgMaterial);
+		Renderer->CreateMaterialForAllPipelines(BobMaterial);
+		Renderer->CreateMaterialForAllPipelines(VampireMaterial);
 
 		CubeSet.mData.clear();
 
 		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
-		ECyborg.Assign<Components::AnimatorComponent>(&Animator);
+
+		EBob.Assign<Components::MeshComponent>(BobAsset, BobMaterial);
+		EBob.Assign<Components::AnimatorComponent>(&BobAnimator);
+
+		EVampire.Assign<Components::MeshComponent>(VampireAsset, VampireMaterial);
+		EVampire.Assign<Components::AnimatorComponent>(&VampireAnimator);
 
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
@@ -153,6 +181,8 @@ class Sample1 : public Core::Game
 		ECube = ModelsScene.CreateEntity();
 		ENanosuit = ModelsScene.CreateEntity();
 		ECyborg = ModelsScene.CreateEntity();
+		EBob = ModelsScene.CreateEntity();
+		EVampire = ModelsScene.CreateEntity();
 		ECamera = ModelsScene.CreateEntity();
 		ELights = ModelsScene.CreateEntity();
 
@@ -200,8 +230,17 @@ class Sample1 : public Core::Game
 
 		Math::Matrix4 TCyborg(1.0f);
 		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
-		TCyborg = Math::scale(TCyborg, Math::Vector3(0.1f, 0.1f, 0.1f));
 		ECyborg.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCyborg);
+
+		Math::Matrix4 TBob(1.0f);
+		TBob = Math::translate(TBob, Math::Vector3(-4.0f, -1.75f, 0.0f));
+		TBob = Math::scale(TBob, Math::Vector3(0.07f, 0.07f, 0.07f));
+		EBob.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TBob);
+
+		Math::Matrix4 TVampire(1.0f);
+		TVampire = Math::translate(TVampire, Math::Vector3(-4.0f, -1.75f, 4.0f));
+		//TVampire = Math::scale(TVampire, Math::Vector3(0.03f, 0.03f, 0.03f));
+		EVampire.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TVampire);
 
 		Math::Matrix4 TCube(1.0f);
 		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
@@ -281,7 +320,9 @@ class Sample1 : public Core::Game
 	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
-		Animator.UpdateAnimation(dt);
+		BobAnimator.UpdateAnimation(dt);
+		VampireAnimator.UpdateAnimation(dt);
+
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 

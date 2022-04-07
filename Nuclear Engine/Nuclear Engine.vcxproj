@@ -158,11 +158,12 @@
     <ClInclude Include="include\Core\Parsers\XMLParser.h" />
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="include\Core\Window.h" />
-    <ClInclude Include="include\Engine\Animations\Animations.h" />
-    <ClInclude Include="include\Engine\Animations\Animator.h" />
-    <ClInclude Include="include\Engine\Animations\Bone.h" />
-    <ClInclude Include="include\Engine\Animations\BoneInfo.h" />
-    <ClInclude Include="include\Engine\Assets\Animation.h" />
+    <ClInclude Include="include\Engine\Animation\AnimationClip.h" />
+    <ClInclude Include="include\Engine\Animation\Animation.h" />
+    <ClInclude Include="include\Engine\Animation\Animator.h" />
+    <ClInclude Include="include\Engine\Animation\Bone.h" />
+    <ClInclude Include="include\Engine\Animation\BoneInfo.h" />
+    <ClInclude Include="include\Engine\Assets\Animations.h" />
     <ClInclude Include="include\Engine\Assets\Assets.h" />
     <ClInclude Include="include\Engine\Assets\AudioClip.h" />
     <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
@@ -475,9 +476,10 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Animation\AnimationClip.cpp" />
     <ClCompile Include="Source\Engine\Animation\Animator.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
-    <ClCompile Include="Source\Engine\Assets\Animation.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Animations.cpp" />
     <ClCompile Include="Source\Engine\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />

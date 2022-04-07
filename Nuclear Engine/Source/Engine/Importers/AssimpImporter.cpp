@@ -15,7 +15,7 @@ namespace NuclearEngine {
 			vertex.BoneIDs = Math::Vector4i(boneID);
 		}
 
-		bool AssimpImporter::Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animation* anim)
+		bool AssimpImporter::Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim)
 		{
 			std::string path = desc.mPath;
 			Log.Info("[AssimpImporter] Loading Mesh: " + path + "\n");
@@ -36,18 +36,10 @@ namespace NuclearEngine {
 			mDirectory = path.substr(0, path.find_last_of('/'));
 			ProcessNode(scene->mRootNode, scene);
 
-			if (mLoadingDesc.LoadAnimation)
+			if (mLoadingDesc.LoadAnimation && scene->mAnimations != nullptr)
 			{
-				if (scene->mAnimations != nullptr)
-				{
-					auto animation = scene->mAnimations[0];
-					mAnimation->m_Duration = animation->mDuration;
-					mAnimation->m_TicksPerSecond = animation->mTicksPerSecond;
-					aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-					globalTransformation = globalTransformation.Inverse();
-					ReadHeirarchyData(mAnimation->mRootNode, scene->mRootNode);
-					ReadMissingBones(animation);
-				}
+				LoadAnimations();
+				mAnimation->isValid = true;
 			}
 
 			auto hashedname = Utilities::Hash(path);
@@ -158,7 +150,7 @@ namespace NuclearEngine {
 			// process mMaterial		
 			result->TexSetIndex = ProcessMaterial(mesh, scene);
 
-			if (mLoadingDesc.LoadAnimation)
+			if (mLoadingDesc.LoadAnimation && scene->mAnimations != nullptr)
 			{
 				ExtractBoneWeightForVertices(result, mesh, scene);
 			}
@@ -206,6 +198,26 @@ namespace NuclearEngine {
 			return textures;
 		}
 
+		void AssimpImporter::LoadAnimations()
+		{
+			mAnimation->mClips.reserve(scene->mNumAnimations);
+			for (Uint32 i = 0; i < scene->mNumAnimations; i++)
+			{			
+				mAnimation->mClips.push_back(Animation::AnimationClip());
+				auto clipptr = &mAnimation->mClips.at(0);
+				auto animation = scene->mAnimations[i];
+
+				clipptr->m_Duration = animation->mDuration;
+				clipptr->m_TicksPerSecond = animation->mTicksPerSecond;
+
+				aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
+				globalTransformation = globalTransformation.Inverse();
+				ReadHeirarchyData(&clipptr->mRootNode, scene->mRootNode);
+				ReadMissingBones(animation, clipptr);
+				return;
+			}
+		}
+
 		void AssimpImporter::ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene)
 		{
 			auto& boneInfoMap = mMesh->mBoneInfoMap;
@@ -217,7 +229,7 @@ namespace NuclearEngine {
 				std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
 				if (boneInfoMap.find(boneName) == boneInfoMap.end())
 				{
-					Animations::BoneInfo newBoneInfo;
+					Animation::BoneInfo newBoneInfo;
 					newBoneInfo.id = boneCount;
 					newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
 					boneInfoMap[boneName] = newBoneInfo;
@@ -242,7 +254,7 @@ namespace NuclearEngine {
 			}
 		}
 
-		void AssimpImporter::ReadMissingBones(const aiAnimation* animation)
+		void AssimpImporter::ReadMissingBones(const aiAnimation* animation, Animation::AnimationClip* clip)
 		{
 			int size = animation->mNumChannels;
 
@@ -250,6 +262,7 @@ namespace NuclearEngine {
 			int& boneCount = mMesh->mBoneCounter; //getting the m_BoneCounter from Model class
 
 												   //reading channels(bones engaged in an animation and their keyframes)
+			clip->mBones.reserve(size);
 			for (int i = 0; i < size; i++)
 			{
 				auto channel = animation->mChannels[i];
@@ -260,39 +273,41 @@ namespace NuclearEngine {
 					boneInfoMap[boneName].id = boneCount;
 					boneCount++;
 				}
-				mAnimation->mBones.push_back(Animations::Bone(channel->mNodeName.data,
-					boneInfoMap[channel->mNodeName.data].id, InitBoneData(channel)));
+				Animation::Bone bone(channel->mNodeName.data, boneInfoMap[channel->mNodeName.data].id);
+				InitBoneData(channel, bone.mData);
+				clip->mBones.push_back(bone);
 			}
 
-			mAnimation->mBoneInfoMap = boneInfoMap;
+			clip->mBoneInfoMap = boneInfoMap;
 		}
 
-		void AssimpImporter::ReadHeirarchyData(Assets::AnimationNodeData& dest, const aiNode* src)
+		void AssimpImporter::ReadHeirarchyData(Animation::ClipNodeData* dest, const aiNode* src)
 		{
 			assert(src);
 
-			dest.name = src->mName.data;
-			dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
-			dest.childrenCount = src->mNumChildren;
+			dest->name = src->mName.data;
+			dest->transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
+			dest->childrenCount = src->mNumChildren;
 
+			dest->children.reserve(src->mNumChildren);
 			for (int i = 0; i < src->mNumChildren; i++)
 			{
-				Assets::AnimationNodeData newData;
-				ReadHeirarchyData(newData, src->mChildren[i]);
-				dest.children.push_back(newData);
+				//dest->mRootNode.children.push_back(Animation::ClipNodeData());
+				//dest->mRootNode.children.back();
+				dest->children.push_back(Animation::ClipNodeData());
+				ReadHeirarchyData(&dest->children.back(), src->mChildren[i]);
 			}
 		}
 
-		Animations::BoneData AssimpImporter::InitBoneData(const aiNodeAnim* channel)
+		void AssimpImporter::InitBoneData(const aiNodeAnim* channel, Animation::BoneData& result)
 		{
-			Animations::BoneData result;
 			result.m_NumPositions = channel->mNumPositionKeys;
 
 			for (int positionIndex = 0; positionIndex < result.m_NumPositions; ++positionIndex)
 			{
 				aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
 				float timeStamp = channel->mPositionKeys[positionIndex].mTime;
-				Animations::KeyPosition data;
+				Animation::KeyPosition data;
 				data.position = AssimpGLMHelpers::GetGLMVec(aiPosition);
 				data.timeStamp = timeStamp;
 				result.m_Positions.push_back(data);
@@ -303,7 +318,7 @@ namespace NuclearEngine {
 			{
 				aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
 				float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
-				Animations::KeyRotation data;
+				Animation::KeyRotation data;
 				data.orientation = AssimpGLMHelpers::GetGLMQuat(aiOrientation);
 				data.timeStamp = timeStamp;
 				result.m_Rotations.push_back(data);
@@ -314,16 +329,15 @@ namespace NuclearEngine {
 			{
 				aiVector3D scale = channel->mScalingKeys[keyIndex].mValue;
 				float timeStamp = channel->mScalingKeys[keyIndex].mTime;
-				Animations::KeyScale data;
+				Animation::KeyScale data;
 				data.scale = AssimpGLMHelpers::GetGLMVec(scale);
 				data.timeStamp = timeStamp;
 				result.m_Scales.push_back(data);
 			}
-			return result;
 		}
 
 
-		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animation* anim)
+		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim)
 		{
 			AssimpImporter importer;
 			return importer.Load(desc,mesh,material,anim);

@@ -3,7 +3,7 @@
 #include <Engine/Importers/Common.h>
 #include <Engine\Assets\AudioClip.h>
 #include <Engine\Assets\Script.h>
-#include <Engine\Assets\Animation.h>
+#include <Engine\Assets\Animations.h>
 #include <FMOD/inc/fmod.hpp>
 #include <Core/Path.h>
 #include <unordered_map>
@@ -87,7 +87,7 @@ namespace NuclearEngine
 			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
 
 
-			std::unordered_map<Uint32, Assets::Animation> mImportedAnimations; //All imported materials with their hashed names with crc32c (always saved)
+			std::unordered_map<Uint32, Assets::Animations> mImportedAnimations; //All imported materials with their hashed names with crc32c (always saved)
 			std::unordered_map<Uint32, Core::Path> mHashedAnimationsPaths; //Real pre-hashed materials paths (conditionally saved see mSaveMaterialPaths)
 			bool mSaveAnimationsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
 
@@ -106,7 +106,7 @@ namespace NuclearEngine
 
 			Assets::AudioClip& Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
-			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animation*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
+			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
 
 			bool DoesTextureExist(Uint32 hashedname, Assets::Texture* texture);
 

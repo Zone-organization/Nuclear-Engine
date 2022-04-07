@@ -29,6 +29,8 @@ namespace NuclearEngine {
 			mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
 			mHashedMaterialsPaths = std::unordered_map<Uint32, Core::Path>();
 
+			mImportedAnimations = std::unordered_map<Uint32, Assets::Animations>();
+			mHashedAnimationsPaths = std::unordered_map<Uint32, Core::Path>();
 
 			mTextureImporter = Importers::TextureImporterDelegate::create<&Importers::FreeImageLoad>();
 			mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
@@ -116,15 +118,13 @@ namespace NuclearEngine {
 			return clip;
 		}
 
-		std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animation*> AssetManager::Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc)
+
+		std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> AssetManager::Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
-			Assets::Animation* Anim = nullptr;
-			if (desc.LoadAnimation)
-			{
-				mImportedAnimations[hashedname] = Assets::Animation();
-				Anim = &mImportedAnimations[hashedname];
-			}
+			Assets::Animations Animation;
+			Assets::Animations* anim = nullptr;
+		
 			mImportedMeshes[hashedname] = Assets::Mesh();
 			mImportedMaterials[hashedname] = Assets::Material();
 
@@ -133,9 +133,23 @@ namespace NuclearEngine {
 			Assets::Material* Material = &mImportedMaterials[hashedname];
 
 
-			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, Anim))
+
+
+			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, &Animation))
 			{
-				//return false;
+				Log.Error("[AssetManager : " + mDesc.mName + "] Loading Model: " + Path.mInputPath + "\n");
+				return { Mesh , Material, anim };
+			}
+
+			if (desc.LoadAnimation)
+			{
+				if (Animation.isValid == true)
+				{
+					mImportedAnimations[hashedname] = Animation;
+					anim = &mImportedAnimations[hashedname];
+					if (mSaveAnimationsPaths)
+						mHashedAnimationsPaths[hashedname] = Path;
+				}
 			}
 
 			Log.Info("[AssetManager : " + mDesc.mName + "] Loaded Model: " + Path.mInputPath + "\n");
@@ -148,14 +162,8 @@ namespace NuclearEngine {
 			if (mSaveMaterialsPaths)
 				mHashedMaterialsPaths[hashedname] = Path;
 
-			if (desc.LoadAnimation)
-			{
-				if (mSaveAnimationsPaths)
-					mHashedAnimationsPaths[hashedname] = Path;
 
-			}
-
-			return { Mesh , Material, Anim };
+			return { Mesh , Material, anim };
 		}
 
 					

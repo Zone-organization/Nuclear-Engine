@@ -7,7 +7,7 @@ namespace NuclearEngine
 		AnimatorComponent::AnimatorComponent()
 		{
 		}
-		AnimatorComponent::AnimatorComponent(Animations::Animator* animator)
+		AnimatorComponent::AnimatorComponent(Animation::Animator* animator)
 		{
 			mAnimator = animator;
 		}

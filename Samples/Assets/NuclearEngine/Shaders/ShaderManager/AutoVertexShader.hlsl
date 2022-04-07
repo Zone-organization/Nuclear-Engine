@@ -45,7 +45,7 @@ cbuffer NEStatic_Camera : register(b0)
 
 cbuffer NEStatic_Animation : register(b1)
 {
-    matrix finalBonesMatrices[MAX_BONES];
+    matrix BoneTransforms[MAX_BONES];
 };
 
 PixelInputType main(VertexInputType input)
@@ -54,30 +54,30 @@ PixelInputType main(VertexInputType input)
 
 #ifdef NE_USE_DEF_CAMERA
 
-    float4 totalPosition = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 FinalPos = float4(input.Position.xyz, 1.0f);
+    float4 FinalNorm = float4(input.Normals.xyz, 0.0f);
+
     for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
     {
         if (input.BoneIDs[i] == -1)
         {
-            totalPosition = input.Position;
             continue;
         }
         if (input.BoneIDs[i] >= MAX_BONES)
         {
-            totalPosition = input.Position;
             break;
         }
-        float4 localPosition = mul(finalBonesMatrices[input.BoneIDs[i]], float4(input.Position.x , input.Position.y, input.Position.z,1.0f));
-        totalPosition += localPosition * input.Weights[i];
-        float3 localNormal = mul((float3x3)finalBonesMatrices[input.BoneIDs[i]], input.Normals);
+        FinalPos = float4(0.0f,0.0f,0.0f, 0.0f);
+        FinalNorm = float4(0.0f, 0.0f, 0.0f, 0.0f);
+        float4 localPosition = mul(BoneTransforms[input.BoneIDs[i]], float4(input.Position.xyz, 1.0f));
+        FinalPos += mul(input.Weights[i], float4(localPosition.xyz, 1.0f));
 
+        float3 localNormal = mul((float3x3)BoneTransforms[input.BoneIDs[i]], input.Normals);
+        FinalNorm += mul(input.Weights[i], float4(localNormal, 0.0f));
     }
 
-    output.Position = mul(ModelViewProjection, totalPosition);
+    output.Position = mul(ModelViewProjection, FinalPos);
 
-
-    // Calculate the position of the vertex against the world, view, and projection matrices.
-    //output.Position = mul(ModelViewProjection, input.Position);
 #else
     output.Position = input.Position;
 #endif
@@ -86,18 +86,18 @@ PixelInputType main(VertexInputType input)
 
 
 #if defined(NE_USE_DEF_CAMERA)
-    output.Normals = mul((float3x3)ModelInvTranspose, input.Normals);
+    output.Normals = mul((float3x3)ModelInvTranspose, FinalNorm.xyz);
 #else
-    output.Normals = input.Normals;
+    output.Normals = FinalNorm.xyz;
 #endif
 
 
 #ifdef NE_OUT_FRAG_POS
-    output.FragPos = mul(Model, input.Position).xyz;
+    output.FragPos = mul(Model, FinalPos).xyz;
 #endif
 
     float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
-    float3 N = normalize(mul(float4(input.Normals.xyz, 0.0f), Model).xyz);
+    float3 N = normalize(mul(float4(FinalNorm.xyz, 0.0f), Model).xyz);
     //Gram-Schmidt process
     // re-orthogonalize T with respect to N
     T = normalize(T - dot(T, N) * N);

@@ -6,7 +6,7 @@
 
 namespace NuclearEngine
 {
-	namespace Animations
+	namespace Animation
 	{
 		struct KeyPosition
 		{
@@ -28,18 +28,19 @@ namespace NuclearEngine
 
 		struct BoneData
 		{
-			std::vector<KeyPosition> m_Positions;
-			std::vector<KeyRotation> m_Rotations;
-			std::vector<KeyScale> m_Scales;
-			int m_NumPositions;
-			int m_NumRotations;
-			int m_NumScalings;
+			std::vector<KeyPosition> m_Positions = std::vector<KeyPosition>();
+			std::vector<KeyRotation> m_Rotations = std::vector<KeyRotation>();
+			std::vector<KeyScale> m_Scales = std::vector<KeyScale>();
+			int m_NumPositions = 0;
+			int m_NumRotations = 0;
+			int m_NumScalings = 0;
 		};
 
 		class NEAPI Bone
 		{
 		public:
-			Bone(const std::string& name, int ID, const BoneData& data);
+			Bone(const std::string& name, int ID);
+			Bone(const std::string& name, int ID, BoneData data);
 
 			void Update(float animationTime);
 			Math::Matrix4 GetLocalTransform();
@@ -54,6 +55,7 @@ namespace NuclearEngine
 
 			int GetScaleIndex(float animationTime);
 
+			BoneData mData;
 
 		private:
 
@@ -64,13 +66,6 @@ namespace NuclearEngine
 			Math::Matrix4 InterpolateRotation(float animationTime);
 
 			Math::Matrix4 InterpolateScaling(float animationTime);
-
-			std::vector<KeyPosition> m_Positions;
-			std::vector<KeyRotation> m_Rotations;
-			std::vector<KeyScale> m_Scales;
-			int m_NumPositions;
-			int m_NumRotations;
-			int m_NumScalings;
 
 			Math::Matrix4 m_LocalTransform;
 			std::string m_Name;

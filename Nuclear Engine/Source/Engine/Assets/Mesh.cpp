@@ -99,7 +99,7 @@ namespace NuclearEngine {
 			mIB->Release();
 		}
 
-		Mesh::Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animations::BoneInfo> BoneInfoMap, int BoneCounter)
+		Mesh::Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animation::BoneInfo> BoneInfoMap, int BoneCounter)
 			:mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
 		{
 		}

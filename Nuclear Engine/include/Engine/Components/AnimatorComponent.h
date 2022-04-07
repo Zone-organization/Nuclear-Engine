@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace NuclearEngine {
-	namespace Animations
+	namespace Animation
 	{
 		class Animator;
 	}
@@ -16,11 +16,11 @@ namespace NuclearEngine {
 		{
 		public:
 			AnimatorComponent();
-			AnimatorComponent(Animations::Animator* animator);
+			AnimatorComponent(Animation::Animator* animator);
 			~AnimatorComponent();
 
 
-			Animations::Animator* mAnimator = nullptr;
+			Animation::Animator* mAnimator = nullptr;
 		};
 
 	}

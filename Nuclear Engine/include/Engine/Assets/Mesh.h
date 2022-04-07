@@ -6,7 +6,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine/Assets/Common.h>
-#include <Engine/Animations/BoneInfo.h>
+#include <Engine/Animation/BoneInfo.h>
 #include <vector>
 #include <string>
 #include <unordered_map>
@@ -68,7 +68,7 @@ namespace NuclearEngine {
 				RefCntAutoPtr<IBuffer> mVB;
 			};
 
-			Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animations::BoneInfo> BoneInfoMap, int BoneCounter);
+			Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animation::BoneInfo> BoneInfoMap, int BoneCounter);
 
 			Mesh();
 			~Mesh();
@@ -85,7 +85,7 @@ namespace NuclearEngine {
 
 
 
-			std::unordered_map<std::string, Animations::BoneInfo> mBoneInfoMap;
+			std::unordered_map<std::string, Animation::BoneInfo> mBoneInfoMap;
 			int mBoneCounter = 0;
 			std::vector<SubMesh> mSubMeshes;
 		};

@@ -12,7 +12,7 @@
 #include <Core\Engine.h>
 #include <cstring>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
-#include "Engine/Animations/Animator.h"
+#include "Engine/Animation/Animator.h"
 
 namespace NuclearEngine
 {
