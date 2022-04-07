@@ -1,7 +1,6 @@
 #pragma once
 #include "Common.h"
 
-
 void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
 {
 	using namespace Graphics;
@@ -39,6 +38,7 @@ class Sample1 : public Core::Game
 	Assets::Material CubeMaterial;
 	Assets::Material* NanosuitMaterial;
 	Assets::Material* CyborgMaterial;
+	Animations::Animator Animator;
 
 	Components::CameraComponent Camera;
 
@@ -94,12 +94,13 @@ class Sample1 : public Core::Game
 	void SetupAssets()
 	{
 		Importers::MeshLoadingDesc ModelDesc;
-
+		Assets::Animation* anim;
 		//Load Nanosuit Model
-		std::tie(NanosuitAsset, NanosuitMaterial) = mAssetManager->Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		std::tie(NanosuitAsset, NanosuitMaterial, anim) = mAssetManager->Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		//Load Cyborg Model
-		std::tie(CyborgAsset, CyborgMaterial) = mAssetManager->Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		std::tie(CyborgAsset, CyborgMaterial, anim) = mAssetManager->Import("@CommonAssets@/Models/CrytekCyborg/boblampclean.md5mesh", ModelDesc);
 
+		Animator.Initialize(anim);
 		//Load some textures manually
 		Importers::TextureLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
@@ -121,12 +122,15 @@ class Sample1 : public Core::Game
 		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
 		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
+		ECyborg.Assign<Components::AnimatorComponent>(&Animator);
 
 		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
 
 		//NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
 		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
+
+
 
 		//Create The skybox
 		std::array<Core::Path, 6> SkyBoxTexturePaths
@@ -196,6 +200,7 @@ class Sample1 : public Core::Game
 
 		Math::Matrix4 TCyborg(1.0f);
 		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
+		TCyborg = Math::scale(TCyborg, Math::Vector3(0.1f, 0.1f, 0.1f));
 		ECyborg.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCyborg);
 
 		Math::Matrix4 TCube(1.0f);
@@ -276,7 +281,7 @@ class Sample1 : public Core::Game
 	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
-
+		Animator.UpdateAnimation(dt);
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 

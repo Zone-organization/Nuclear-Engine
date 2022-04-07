@@ -29,6 +29,7 @@ namespace NuclearEngine
 			Uint32 PointLights = 0;
 
 			IBuffer* CameraBufferPtr = nullptr;
+			IBuffer* AnimationBufferPtr = nullptr;
 			IBuffer* LightsBufferPtr = nullptr;
 		};
 

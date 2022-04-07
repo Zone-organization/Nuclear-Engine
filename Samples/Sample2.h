@@ -720,7 +720,7 @@ class Sample2 : public Core::Game
 		Camera->RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
 		static Assets::Mesh gPlane;
-		Assets::Mesh::CreatePlane(&gPlane, Assets::MeshVertexDesc(), 100.0f, 100.0f);
+		Assets::Mesh::CreatePlane(&gPlane, 100.0f, 100.0f);
 
 		BoxPhysXMat.Create();
 

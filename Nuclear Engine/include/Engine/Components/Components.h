@@ -7,3 +7,4 @@
 #include <Engine\Components\DirLightComponent.h>
 #include <Engine\Components\PointLightComponent.h>
 #include <Engine\Components\SpotLightComponent.h>
+#include <Engine\Components\AnimatorComponent.h>

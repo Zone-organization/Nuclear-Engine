@@ -21,7 +21,7 @@ namespace NuclearEngine {
 
 		void Mesh::SubMesh::Create()
 		{
-			std::vector<float> verticesdata;
+			/*std::vector<float> verticesdata;
 			for (unsigned int i = 0; i < data.Positions.size(); ++i)
 			{
 				verticesdata.push_back(data.Positions[i].x);
@@ -44,17 +44,33 @@ namespace NuclearEngine {
 					verticesdata.push_back(data.Tangents[i].y);
 					verticesdata.push_back(data.Tangents[i].z);
 				}
-			}
+				if (data.BoneIDs.size() > 0)
+				{
+					verticesdata.push_back(data.BoneIDs[i].x);
+					verticesdata.push_back(data.BoneIDs[i].y);
+					verticesdata.push_back(data.BoneIDs[i].z);
+					verticesdata.push_back(data.BoneIDs[i].w);
+				}
+				if (data.Weights.size() > 0)
+				{
+					verticesdata.push_back(data.Weights[i].x);
+					verticesdata.push_back(data.Weights[i].y);
+					verticesdata.push_back(data.Weights[i].z);
+					verticesdata.push_back(data.Weights[i].w);
+				}
+			}*/
 			
 			{
 				BufferDesc VertBuffDesc;
 				VertBuffDesc.Usage = USAGE_IMMUTABLE;
 				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
-				VertBuffDesc.Size = (unsigned int)verticesdata.size() * sizeof(float);
+				VertBuffDesc.Size = (unsigned int)data.Vertices.size() * sizeof(Vertex);
+				//VertBuffDesc.Size = (unsigned int)VertexData.size() * sizeof(float);
 
 				BufferData VBData;
-				VBData.pData = verticesdata.data();
-				VBData.DataSize = (unsigned int)verticesdata.size() * sizeof(float);
+				VBData.pData = data.Vertices.data();
+				VBData.DataSize = (unsigned int)data.Vertices.size() * sizeof(Vertex);
+				//VBData.DataSize = (unsigned int)verticesdata.size() * sizeof(float);
 				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
 
 			}
@@ -73,10 +89,7 @@ namespace NuclearEngine {
 			}
 			mIndicesCount = static_cast<Uint32>(data.indices.size());			
 
-			data.Positions.clear();
-			data.UV.clear();
-			data.Normals.clear();
-			data.Tangents.clear();
+			data.Vertices.clear();
 			data.indices.clear();
 		}
 
@@ -84,6 +97,11 @@ namespace NuclearEngine {
 		{
 			mVB->Release();
 			mIB->Release();
+		}
+
+		Mesh::Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animations::BoneInfo> BoneInfoMap, int BoneCounter)
+			:mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
+		{
 		}
 
 		Mesh::Mesh()
@@ -116,28 +134,31 @@ namespace NuclearEngine {
 			isValid = false;
 		}
 
-		struct Vertex
-		{
-			Vertex()
-				: Position(Math::Vector3(0.0f)), Normal(Math::Vector3(0.0f)), Tangents(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f)) {}
-			Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector2& uv)
-				: Position(p), Normal(n), Tangents(t), UV(uv) {}
-			Vertex(
-				float px, float py, float pz,
-				float nx, float ny, float nz,
-				float tx, float ty, float tz,
-				float u, float v)
-				: Position(px, py, pz), Normal(nx, ny, nz),
-				Tangents(tx, ty, tz), UV(u, v) {}
+		//struct Vertex
+		//{
+		//	Vertex()
+		//		: Position(Math::Vector3(0.0f)), Normal(Math::Vector3(0.0f)), Tangents(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f)) {}
+		//	Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector2& uv)
+		//		: Position(p), Normal(n), Tangents(t), UV(uv) {}
+		//	Vertex(
+		//		float px, float py, float pz,
+		//		float nx, float ny, float nz,
+		//		float tx, float ty, float tz,
+		//		float u, float v)
+		//		: Position(px, py, pz), Normal(nx, ny, nz),
+		//		Tangents(tx, ty, tz), UV(u, v) {}
 
-			Math::Vector3 Position;
-			Math::Vector2 UV;
-			Math::Vector3 Normal;
-			Math::Vector3 Tangents;
-		};
+		//	Math::Vector3 Position;
+		//	Math::Vector2 UV;
+		//	Math::Vector3 Normal;
+		//	Math::Vector3 Tangents;
+		//	Math::Vector4i BoneIDs = Math::Vector4i(-1);
+		//	Math::Vector4 Weights = Math::Vector4(0.0f);
+
+		//};
 
 		//Todo rework this since we do alot of unnecessery looping
-		void Mesh::CreateCube(Mesh* model, const MeshVertexDesc& desc, float width, float height, float depth)
+		void Mesh::CreateCube(Mesh* model, float width, float height, float depth)
 		{
 			Vertex v[24];
 
@@ -181,21 +202,11 @@ namespace NuclearEngine {
 			v[22] = Vertex(+w2, +h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 			v[23] = Vertex(+w2, -h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
-			std::vector<Vertex> vertices;
-			vertices.assign(&v[0], &v[24]);
 
 			SubMesh::SubMeshData meshData;
 
-			for (Vertex vert : vertices)
-			{
-				meshData.Positions.push_back(vert.Position);
-				if (desc.TexCoord == true)
-					meshData.UV.push_back(vert.UV);
-				if (desc.Normals == true)
-					meshData.Normals.push_back(vert.Normal);
-				if (desc.Tangents == true)
-					meshData.Tangents.push_back(vert.Tangents);
-			}
+			meshData.Vertices.assign(&v[0], &v[24]);
+
 			// Create the indices.			
 			Uint32 i[36];
 			// Fill in the front face index data
@@ -227,15 +238,14 @@ namespace NuclearEngine {
 			model->Create();
 		}
 
-		void Mesh::CreateSphere(Mesh * model, const MeshVertexDesc& desc, float radius, unsigned int sliceCount, unsigned int stackCount)
+		void Mesh::CreateSphere(Mesh * model, float radius, unsigned int sliceCount, unsigned int stackCount)
 		{
 			SubMesh::SubMeshData meshData;
 
 			Vertex topVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 			Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-			std::vector<Vertex> vertices;
 
-			vertices.push_back(topVertex);
+			meshData.Vertices.push_back(topVertex);
 
 			float phiStep = MathPI / stackCount;
 			float thetaStep = 2.0f * MathPI / sliceCount;
@@ -271,11 +281,13 @@ namespace NuclearEngine {
 					v.UV.x = theta / (2 * MathPI);
 					v.UV.y = phi / MathPI;
 
-					vertices.push_back(v);
+				
+
+					meshData.Vertices.push_back(v);
 				}
 			}
 
-			vertices.push_back(bottomVertex);
+			meshData.Vertices.push_back(bottomVertex);
 
 			for (Uint32 i = 1; i <= sliceCount; ++i)
 			{
@@ -299,7 +311,7 @@ namespace NuclearEngine {
 				}
 			}
 
-			Uint32 southPoleIndex = (Uint32)vertices.size() - 1;
+			Uint32 southPoleIndex = (Uint32)meshData.Vertices.size() - 1;
 
 			// Offset the indices to the index of the first vertex in the last ring.
 			baseIndex = southPoleIndex - ringVertexCount;
@@ -312,26 +324,16 @@ namespace NuclearEngine {
 			}
 			//meshData.textures = Textures;
 
-			for (Vertex vert : vertices)
-			{
-				meshData.Positions.push_back(vert.Position);
-				if (desc.TexCoord == true)
-					meshData.UV.push_back(vert.UV);
-				if (desc.Normals == true)
-					meshData.Normals.push_back(vert.Normal);
-				if (desc.Tangents == true)
-					meshData.Tangents.push_back(vert.Tangents);
-			}
 			model->mSubMeshes.push_back(meshData);
 			model->Create();
 		}
 
-		void Mesh::CreatePlane(Mesh * model, const MeshVertexDesc & desc, float width, float depth)
+		void Mesh::CreatePlane(Mesh * model, float width, float depth)
 		{
-			return CreateGrid(model, desc, width, depth,2,2);
+			return CreateGrid(model, width, depth,2,2);
 		}
 
-		void Mesh::CreateGrid(Mesh * model, const MeshVertexDesc & desc, float width, float depth, unsigned int m, unsigned int n)
+		void Mesh::CreateGrid(Mesh * model,float width, float depth, unsigned int m, unsigned int n)
 		{
 			SubMesh::SubMeshData meshData;
 			std::vector<Vertex> Vertices;
@@ -395,30 +397,31 @@ namespace NuclearEngine {
 				}
 			}
 
-			for (Vertex vert : Vertices)
-			{
-				meshData.Positions.push_back(vert.Position);
-				if (desc.TexCoord == true)
-					meshData.UV.push_back(vert.UV);
-				if (desc.Normals == true)
-					meshData.Normals.push_back(vert.Normal);
-				if (desc.Tangents == true)
-					meshData.Tangents.push_back(vert.Tangents);
-			}
 			meshData.indices = Indices;
-
+			meshData.Vertices = Vertices;
 			model->mSubMeshes.push_back(meshData);
 			model->Create();
 		}
+		struct ScreenVertex
+		{
+			ScreenVertex()
+				:Position(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f))
+			{
 
+			}
+			ScreenVertex(const Math::Vector3& p, const Math::Vector2& uv)
+				: Position(p), UV(uv)
+			{
+
+			}
+			Math::Vector3 Position;
+			Math::Vector2 UV;
+		};
 		void Mesh::CreateScreenQuad(Mesh * model)
 		{
-			std::vector<Vertex> Vertices;
+			std::vector<ScreenVertex> Vertices;
 			std::vector<Uint32> Indices;
 
-			SubMesh::SubMeshData meshData;
-
-			Vertices.resize(4);
 			Indices.resize(6);
 
 			float VTexCoord = +1.0f;
@@ -428,29 +431,22 @@ namespace NuclearEngine {
 				VTexCoord = -1.0f;
 			}
 			// Position coordinates specified in NDC space.
-			Vertices[0] = Vertex(
-				-1.0f, -1.0f, 0.0f,
-				0.0f, 0.0f, -1.0f,
-				1.0f, 0.0f, 0.0f,
-				0.0f, VTexCoord);
 
-			Vertices[1] = Vertex(
-				-1.0f, +1.0f, 0.0f,
-				0.0f, 0.0f, -1.0f,
-				1.0f, 0.0f, 0.0f,
-				0.0f, 0.0f);
+			Vertices.push_back(ScreenVertex(
+				Math::Vector3(-1.0f, -1.0f, 0.0f),
+				Math::Vector2(0.0f, VTexCoord)));
 
-			Vertices[2] = Vertex(
-				+1.0f, +1.0f, 0.0f,
-				0.0f, 0.0f, -1.0f,
-				1.0f, 0.0f, 0.0f,
-				1.0f, 0.0f);
+			Vertices.push_back(ScreenVertex(
+				Math::Vector3(- 1.0f, +1.0f, 0.0f),
+				Math::Vector2(0.0f, 0.0f)));
 
-			Vertices[3] = Vertex(
-				+1.0f, -1.0f, 0.0f,
-				0.0f, 0.0f, -1.0f,
-				1.0f, 0.0f, 0.0f,
-				1.0f, VTexCoord);
+			Vertices.push_back(ScreenVertex(
+				Math::Vector3(+ 1.0f, +1.0f, 0.0f),
+				Math::Vector2(1.0f, 0.0f)));
+
+			Vertices.push_back(ScreenVertex(
+				Math::Vector3(+ 1.0f, -1.0f, 0.0f),
+				Math::Vector2(1.0f, VTexCoord)));
 
 			Indices[0] = 0;
 			Indices[1] = 1;
@@ -460,15 +456,38 @@ namespace NuclearEngine {
 			Indices[4] = 2;
 			Indices[5] = 3;
 
-			for (Vertex vert : Vertices)
-			{
-				meshData.Positions.push_back(vert.Position);
-				meshData.UV.push_back(vert.UV);
-			}
-			meshData.indices = Indices;
+			model->mSubMeshes.push_back(SubMesh::SubMeshData());
+			auto submesh = &model->mSubMeshes.at(0);
 
-			model->mSubMeshes.push_back(meshData);
-			model->Create();
+			{
+				BufferDesc VertBuffDesc;
+				VertBuffDesc.Usage = USAGE_IMMUTABLE;
+				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
+				VertBuffDesc.Size = (unsigned int)Vertices.size() * sizeof(ScreenVertex);
+
+				BufferData VBData;
+				VBData.pData = Vertices.data();
+				VBData.DataSize = (unsigned int)Vertices.size() * sizeof(ScreenVertex);
+				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &submesh->mVB);
+
+			}
+
+			{
+				// Create index buffer
+				BufferDesc IndBuffDesc;
+				IndBuffDesc.Usage = USAGE_IMMUTABLE;
+				IndBuffDesc.BindFlags = BIND_INDEX_BUFFER;
+				IndBuffDesc.Size = (unsigned int)Indices.size() * sizeof(Uint32);
+
+				BufferData IBData;
+				IBData.pData = Indices.data();
+				IBData.DataSize = (unsigned int)Indices.size() * sizeof(Uint32);
+				Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &submesh->mIB);
+			}
+			submesh->mIndicesCount = static_cast<Uint32>(Indices.size());
+
+			;
+
 		}
 
 	}

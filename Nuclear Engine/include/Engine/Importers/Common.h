@@ -3,6 +3,7 @@
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
 #include <Engine/Assets/Image.h>
+#include <Engine/Assets/Animation.h>
 #include <Base\Utilities\Delegate.h>
 #include <string>
 #include <tuple>
@@ -47,6 +48,7 @@ namespace NuclearEngine
 		struct MeshLoadingDesc
 		{
 			bool SaveMaterialNames = true;
+			bool LoadAnimation = true;
 		};
 		struct TextureLoadingDesc
 		{
@@ -83,12 +85,12 @@ namespace NuclearEngine
 
 		struct MeshImporterDesc
 		{
-			std::string mPath;
-			MeshLoadingDesc mMeshDesc;
+			const char* mPath;
+			MeshLoadingDesc mMeshDesc = MeshLoadingDesc();
 			Managers::AssetManager* mManager = nullptr;
 		};
 
-		typedef Utilities::Delegate<std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material>(const MeshImporterDesc& desc)> MeshImporterDelegate;
+		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::Material*, Assets::Animation*)> MeshImporterDelegate;
 		typedef Utilities::Delegate<Assets::Image& (const std::string& Path, const TextureLoadingDesc& Desc)> TextureImporterDelegate;
 	}
 }

@@ -37,7 +37,6 @@ namespace NuclearEngine
 			//Create Vertex Shader
 			Managers::AutoVertexShaderDesc VertShaderDesc;
 			VertShaderDesc.Name = "BlinnPhongVS";
-			VertShaderDesc.InTangents = true;
 
 			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 
@@ -77,6 +76,9 @@ namespace NuclearEngine
 
 			if (desc.CameraBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
+
+			if (desc.AnimationBufferPtr)
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 
 			if (desc.LightsBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);

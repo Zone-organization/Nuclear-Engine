@@ -2,6 +2,7 @@
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
+#include <Engine\Components\AnimatorComponent.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\Material.h>
@@ -10,6 +11,8 @@
 #include <Engine\Managers\CameraManager.h>
 #include <Core\Engine.h>
 #include <cstring>
+#include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
+#include "Engine/Animations/Animator.h"
 
 namespace NuclearEngine
 {
@@ -115,6 +118,13 @@ namespace NuclearEngine
 
 			mLightingSystem.BakeBuffer();
 			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
+			BufferDesc CBDesc;
+			CBDesc.Name = "NEStatic_Animation";
+			CBDesc.Size = sizeof(Math::Matrix4) * 100;
+			CBDesc.Usage = USAGE_DYNAMIC;
+			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
+			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &animCB);
 
 			Graphics::RenderingPipelineDesc RPDesc;
 			
@@ -123,7 +133,7 @@ namespace NuclearEngine
 			RPDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
 			RPDesc.CameraBufferPtr = mCameraManager->GetCameraCB();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
-
+			RPDesc.AnimationBufferPtr = animCB;
 			if(AllPipelines)
 			{ 
 				for (auto it : mRenderingPipelines)
@@ -146,6 +156,7 @@ namespace NuclearEngine
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
 
 			Assets::Mesh::CreateScreenQuad(&CameraScreenQuad);
+
 		}
 		IPipelineState * RenderSystem::GetPipeline()
 		{
@@ -154,6 +165,8 @@ namespace NuclearEngine
 		void RenderSystem::UpdateMeshes(ECS::EntityManager & es)
 		{
 			ECS::ComponentHandle<Components::MeshComponent> MeshObject;
+			ECS::ComponentHandle<Components::AnimatorComponent> AnimatorComponent;
+
 			for (ECS::Entity entity : es.entities_with_components(MeshObject))
 			{
 				if (MeshObject.Get()->mRender)
@@ -164,7 +177,29 @@ namespace NuclearEngine
 						auto EntityInfo = entity.GetComponent<Components::EntityInfoComponent>().Get();
 						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo->mTransform.GetTransform());
 						mCameraManager->UpdateBuffer();
+
+						AnimatorComponent = entity.GetComponent<Components::AnimatorComponent>();
+
+						if (AnimatorComponent.Valid())
+						{
+							std::vector<Math::Matrix4> ok;
+							ok.reserve(100);
+
+							auto transforms = AnimatorComponent->mAnimator->GetFinalBoneMatrices();
+							for (int i = 0; i < transforms.size(); ++i)
+							{
+								ok.push_back(transforms[i]);
+							}
+
+							PVoid data;
+							Graphics::Context::GetContext()->MapBuffer(animCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+							data = memcpy(data, ok.data(), ok.size()* sizeof(Math::Matrix4));
+							Graphics::Context::GetContext()->UnmapBuffer(animCB, MAP_WRITE);
+
+						}
+
 						InstantRender(MeshObject.Get());
+
 					}
 					else
 					{
@@ -257,17 +292,18 @@ namespace NuclearEngine
 		{
 			Uint64 offset = 0;
 
-			for (size_t i = 0; i< mesh->mSubMeshes.size(); i++)
+			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
 			{
 				material->GetMaterialInstance(mActiveRenderingPipeline->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
 				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
-				
+
 				DrawIndexedAttribs  DrawAttrs;
 				DrawAttrs.IndexType = VT_UINT32;
 				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
 				Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
+
 			}
 		}	
 	}

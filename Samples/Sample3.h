@@ -46,7 +46,7 @@ class Sample3 : public Core::Game
 		EPlane = Scene.CreateEntity();
 
 		static Assets::Mesh gPlane;
-		Assets::Mesh::CreatePlane(&gPlane, Assets::MeshVertexDesc(), 100.0f, 100.0f);
+		Assets::Mesh::CreatePlane(&gPlane, 100.0f, 100.0f);
 		//Assign Components
 		EPlane.Assign<Components::MeshComponent>(&gPlane, &PlaneMaterial);
 		EPlane.Assign<Components::ColliderComponent>(Scene.Factory.GetDefaultPlaneMaterial(), PhysX::PlaneGeometry(ECS::Transform()));

@@ -116,22 +116,31 @@ namespace NuclearEngine {
 			return clip;
 		}
 
-		std::tuple<Assets::Mesh*, Assets::Material*> AssetManager::Import(const Core::Path & Path, const Importers::MeshLoadingDesc & desc)
+		std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animation*> AssetManager::Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc)
 		{
-			std::vector<Assets::Mesh::SubMesh> submeshes;
-			Assets::Mesh* MeshPtr;
-			Assets::Material Material;
-
-			std::tie(submeshes, Material) = mMeshImporter({ Path.mRealPath, desc, this });
 			auto hashedname = Utilities::Hash(Path.mInputPath);
-
-			Log.Info("[AssetManager : " + mDesc.mName +  "] Loaded Model: " + Path.mInputPath + "\n");
-
-			mImportedMaterials[hashedname] = Material;
+			Assets::Animation* Anim = nullptr;
+			if (desc.LoadAnimation)
+			{
+				mImportedAnimations[hashedname] = Assets::Animation();
+				Anim = &mImportedAnimations[hashedname];
+			}
 			mImportedMeshes[hashedname] = Assets::Mesh();
-			MeshPtr = &mImportedMeshes[hashedname];
-			MeshPtr->mSubMeshes = submeshes;
-			MeshPtr->Create();
+			mImportedMaterials[hashedname] = Assets::Material();
+
+		
+			Assets::Mesh* Mesh = &mImportedMeshes[hashedname];
+			Assets::Material* Material = &mImportedMaterials[hashedname];
+
+
+			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, Anim))
+			{
+				//return false;
+			}
+
+			Log.Info("[AssetManager : " + mDesc.mName + "] Loaded Model: " + Path.mInputPath + "\n");
+
+			Mesh->Create();
 			
 			if (mSaveMeshesPaths)
 				mHashedMeshesPaths[hashedname] = Path;
@@ -139,8 +148,16 @@ namespace NuclearEngine {
 			if (mSaveMaterialsPaths)
 				mHashedMaterialsPaths[hashedname] = Path;
 
-			return { MeshPtr , &mImportedMaterials[hashedname] };
+			if (desc.LoadAnimation)
+			{
+				if (mSaveAnimationsPaths)
+					mHashedAnimationsPaths[hashedname] = Path;
+
+			}
+
+			return { Mesh , Material, Anim };
 		}
+
 					
 		Assets::Image AssetManager::TextureCube_Load(const Core::Path& Path, const Importers::TextureLoadingDesc& Desc)
 		{

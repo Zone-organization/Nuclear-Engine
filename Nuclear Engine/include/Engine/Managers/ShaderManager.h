@@ -14,11 +14,6 @@ namespace NuclearEngine
 		{
 			const char* Name = "AutoVS";
 			bool Use_Camera = true;
-
-			bool InTexCoords = true;
-			bool InNormals = true;
-			bool InTangents = false;
-
 			bool OutFragPos = true;
 		};
 		struct AutoPixelShaderDesc

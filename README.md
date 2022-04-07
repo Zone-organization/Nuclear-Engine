@@ -4,16 +4,15 @@
 
 ## To-dos 
   - W.I.P:
-    - ShadowMaps (Through Diligent Component).
 	- Improving PhysX Implementaion
-	- Scripting support (through AngelScript)
+	- Improving Scripting support (through AngelScript)
+	- Improving Mesh Animation Implementaion
+
+  - TODO:
+	- ShadowMaps (Through Diligent Component).
 	- Basic Editor support (Nuclear Editor).
 
-  - Milestone 0.01 Alpha
-	- Complete DemoGame
-	
   - Planned:
-	- Mesh Animations
 	- GLTF PBR Renderer (Through Diligent Component).
 
 ### Building

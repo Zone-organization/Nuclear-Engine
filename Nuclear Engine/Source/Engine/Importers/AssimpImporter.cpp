@@ -4,34 +4,54 @@
 #include "Engine\Graphics\GraphicsEngine.h"
 #include <Engine\Assets\Material.h>
 #include <Base\Utilities\Hash.h>
+#include "AssimpGLMHelpers.h"
 
 namespace NuclearEngine {
 	namespace Importers {
 
-		std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material> AssimpImporter::Load(const MeshImporterDesc& desc)
+		void SetVertexBoneData(Assets::Mesh::Vertex& vertex, int boneID, float weight)
 		{
-			Log.Info("[AssimpImporter] Loading Mesh: " + desc.mPath + "\n");
+			vertex.Weights = Math::Vector4(weight);
+			vertex.BoneIDs = Math::Vector4i(boneID);
+		}
+
+		bool AssimpImporter::Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animation* anim)
+		{
+			std::string path = desc.mPath;
+			Log.Info("[AssimpImporter] Loading Mesh: " + path + "\n");
 			mLoadingDesc = desc.mMeshDesc;
 			mManager = desc.mManager;
-
+			mMesh = mesh;
+			mMaterial = material;
+			mAnimation = anim;
 			Assimp::Importer importer;
-			const aiScene* scene = importer.ReadFile(desc.mPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+			scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
-				Log.Error("[AssimpImporter] Assimp Failed to load mesh: " + desc.mPath + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
-				return std::tuple< std::vector<Assets::Mesh::SubMesh>, Assets::Material>();
+				Log.Error("[AssimpImporter] Assimp Failed to load mesh: " + path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
+				return false;
 			}
-			mDirectory = desc.mPath.substr(0, desc.mPath.find_last_of('/'));
+			mDirectory = path.substr(0, path.find_last_of('/'));
 			ProcessNode(scene->mRootNode, scene);
 
-			for (unsigned int i = 0; i < mMeshesLoaded.size(); i++)
+			if (mLoadingDesc.LoadAnimation)
 			{
-				mMesh.push_back(Assets::Mesh::SubMesh(mMeshesLoaded.at(i)));
+				if (scene->mAnimations != nullptr)
+				{
+					auto animation = scene->mAnimations[0];
+					mAnimation->m_Duration = animation->mDuration;
+					mAnimation->m_TicksPerSecond = animation->mTicksPerSecond;
+					aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
+					globalTransformation = globalTransformation.Inverse();
+					ReadHeirarchyData(mAnimation->mRootNode, scene->mRootNode);
+					ReadMissingBones(animation);
+				}
 			}
-			auto hashedname = Utilities::Hash(desc.mPath);
-			return { mMesh , mMaterial };
+
+			auto hashedname = Utilities::Hash(path);
+			return true;
 		}
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
 		{
@@ -41,7 +61,7 @@ namespace NuclearEngine {
 				// the node object only contains indices to index the actual objects in the scene. 
 				// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-				mMeshesLoaded.push_back(ProcessMesh(mesh, scene));
+				ProcessMesh(mesh, scene);
 			}
 			// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 			for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -84,65 +104,65 @@ namespace NuclearEngine {
 				{
 					TexSet.mName = MeshName;
 				}
-				this->mMaterial.mPixelShaderTextures.push_back(TexSet);
+				this->mMaterial->mPixelShaderTextures.push_back(TexSet);
 				
-				return (this->mMaterial.mPixelShaderTextures.size() - 1);
+				return (this->mMaterial->mPixelShaderTextures.size() - 1);
 			}
 			return 0;
 		}
-		Assets::Mesh::SubMesh::SubMeshData AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
+
+		void AssimpImporter::ProcessMesh(aiMesh * mesh, const aiScene * scene)
 		{
-			Assets::Mesh::SubMesh::SubMeshData result;
-			result.Positions.reserve(mesh->mNumVertices);
-			result.UV.reserve(mesh->mNumVertices);
-			result.Normals.reserve(mesh->mNumVertices);
-			result.Tangents.reserve(mesh->mNumVertices);
+			assert(mMesh);
+			mMesh->mSubMeshes.push_back(Assets::Mesh::SubMesh::SubMeshData());
+
+			Assets::Mesh::SubMesh::SubMeshData* result  = &mMesh->mSubMeshes.back().data;
+			result->Vertices.reserve(mesh->mNumVertices);
+
 
 			// Walk through each of the mesh's vertices
 			for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 			{
-				// positions
-				result.Positions.push_back(Math::Vector3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z));
-				// texture coordinates
+				Assets::Mesh::Vertex Vert;
+				Vert.Position = Math::Vector3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+
 				if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-				{
-					// a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-					// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-					result.UV.push_back(Math::Vector2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y));
-				}
-				else
-				{
-					result.UV.push_back(Math::Vector2(0.0f, 0.0f));
-				}
+					Vert.UV = Math::Vector2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);		
+				else	
+					Vert.UV = Math::Vector2(0.0f, 0.0f);
+				
 				// normals
 				if (mesh->mNormals != NULL)
-					result.Normals.push_back(Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
+					Vert.Normal = Math::Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 				else
-					result.Normals.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
+					Vert.Normal = Math::Vector3(0.0f, 0.0f, 0.0f);
 
 				//tangents
 				if (mesh->mTangents != NULL)
-					result.Tangents.push_back(Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z));
+					Vert.Tangents = Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 				else
-					result.Tangents.push_back(Math::Vector3(0.0f, 0.0f, 0.0f));
-
+					Vert.Tangents = Math::Vector3(0.0f, 0.0f, 0.0f);
+				result->Vertices.push_back(Vert);
 			}
 
-			result.indices.reserve(mesh->mNumVertices);
+			result->indices.reserve(mesh->mNumVertices);
 			for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 			{
 				aiFace face = mesh->mFaces[i];
 				for (unsigned int j = 0; j < face.mNumIndices; j++)
 				{
-					result.indices.push_back(face.mIndices[j]);
+					result->indices.push_back(face.mIndices[j]);
 				}
 			}
 
 			// process mMaterial		
-			result.TexSetIndex = ProcessMaterial(mesh, scene);
+			result->TexSetIndex = ProcessMaterial(mesh, scene);
 
-			// return a mesh object created from the extracted mesh data
-			return result;
+			if (mLoadingDesc.LoadAnimation)
+			{
+				ExtractBoneWeightForVertices(result, mesh, scene);
+			}
+
 		}
 
 		Assets::TextureUsageType GetTextureType(aiTextureType type)
@@ -186,10 +206,127 @@ namespace NuclearEngine {
 			return textures;
 		}
 
-		std::tuple<std::vector<Assets::Mesh::SubMesh>, Assets::Material> AssimpLoadMesh(const MeshImporterDesc& desc)
+		void AssimpImporter::ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene)
+		{
+			auto& boneInfoMap = mMesh->mBoneInfoMap;
+			int& boneCount = mMesh->mBoneCounter;
+
+			for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+			{
+				int boneID = -1;
+				std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+				if (boneInfoMap.find(boneName) == boneInfoMap.end())
+				{
+					Animations::BoneInfo newBoneInfo;
+					newBoneInfo.id = boneCount;
+					newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+					boneInfoMap[boneName] = newBoneInfo;
+					boneID = boneCount;
+					boneCount++;
+				}
+				else
+				{
+					boneID = boneInfoMap[boneName].id;
+				}
+				assert(boneID != -1);
+				auto weights = mesh->mBones[boneIndex]->mWeights;
+				int numWeights = mesh->mBones[boneIndex]->mNumWeights;
+
+				for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+				{
+					int vertexId = weights[weightIndex].mVertexId;
+					float weight = weights[weightIndex].mWeight;
+					assert(vertexId <= meshdata->Vertices.size());
+					SetVertexBoneData(meshdata->Vertices[vertexId], boneID, weight);
+				}
+			}
+		}
+
+		void AssimpImporter::ReadMissingBones(const aiAnimation* animation)
+		{
+			int size = animation->mNumChannels;
+
+			auto& boneInfoMap = mMesh->mBoneInfoMap;//getting m_BoneInfoMap from Model class
+			int& boneCount = mMesh->mBoneCounter; //getting the m_BoneCounter from Model class
+
+												   //reading channels(bones engaged in an animation and their keyframes)
+			for (int i = 0; i < size; i++)
+			{
+				auto channel = animation->mChannels[i];
+				std::string boneName = channel->mNodeName.data;
+
+				if (boneInfoMap.find(boneName) == boneInfoMap.end())
+				{
+					boneInfoMap[boneName].id = boneCount;
+					boneCount++;
+				}
+				mAnimation->mBones.push_back(Animations::Bone(channel->mNodeName.data,
+					boneInfoMap[channel->mNodeName.data].id, InitBoneData(channel)));
+			}
+
+			mAnimation->mBoneInfoMap = boneInfoMap;
+		}
+
+		void AssimpImporter::ReadHeirarchyData(Assets::AnimationNodeData& dest, const aiNode* src)
+		{
+			assert(src);
+
+			dest.name = src->mName.data;
+			dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
+			dest.childrenCount = src->mNumChildren;
+
+			for (int i = 0; i < src->mNumChildren; i++)
+			{
+				Assets::AnimationNodeData newData;
+				ReadHeirarchyData(newData, src->mChildren[i]);
+				dest.children.push_back(newData);
+			}
+		}
+
+		Animations::BoneData AssimpImporter::InitBoneData(const aiNodeAnim* channel)
+		{
+			Animations::BoneData result;
+			result.m_NumPositions = channel->mNumPositionKeys;
+
+			for (int positionIndex = 0; positionIndex < result.m_NumPositions; ++positionIndex)
+			{
+				aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
+				float timeStamp = channel->mPositionKeys[positionIndex].mTime;
+				Animations::KeyPosition data;
+				data.position = AssimpGLMHelpers::GetGLMVec(aiPosition);
+				data.timeStamp = timeStamp;
+				result.m_Positions.push_back(data);
+			}
+
+			result.m_NumRotations = channel->mNumRotationKeys;
+			for (int rotationIndex = 0; rotationIndex < result.m_NumRotations; ++rotationIndex)
+			{
+				aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
+				float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
+				Animations::KeyRotation data;
+				data.orientation = AssimpGLMHelpers::GetGLMQuat(aiOrientation);
+				data.timeStamp = timeStamp;
+				result.m_Rotations.push_back(data);
+			}
+
+			result.m_NumScalings = channel->mNumScalingKeys;
+			for (int keyIndex = 0; keyIndex < result.m_NumScalings; ++keyIndex)
+			{
+				aiVector3D scale = channel->mScalingKeys[keyIndex].mValue;
+				float timeStamp = channel->mScalingKeys[keyIndex].mTime;
+				Animations::KeyScale data;
+				data.scale = AssimpGLMHelpers::GetGLMVec(scale);
+				data.timeStamp = timeStamp;
+				result.m_Scales.push_back(data);
+			}
+			return result;
+		}
+
+
+		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animation* anim)
 		{
 			AssimpImporter importer;
-			return importer.Load(desc);
+			return importer.Load(desc,mesh,material,anim);
 		}
 	}
 }

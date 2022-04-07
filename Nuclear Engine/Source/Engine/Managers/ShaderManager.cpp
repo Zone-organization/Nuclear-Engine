@@ -26,7 +26,7 @@ namespace NuclearEngine
 
 			return result;
 		}
-		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc & desc, std::vector<LayoutElement>* Layout)
+		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc& desc, std::vector<LayoutElement>* Layout)
 		{
 			ShaderCreateInfo CreationAttribs;
 			IShader* pVS = nullptr;
@@ -39,25 +39,17 @@ namespace NuclearEngine
 			CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Desc.Name = desc.Name;
-			
+
 
 			std::vector<std::string> defines;
 
-			if (desc.InTexCoords)
-			{
-				defines.push_back("NE_USE_UV");
-				Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-			}
-			if (desc.InNormals)
-			{
-				defines.push_back("NE_USE_NORMALS");
-				Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));
-			}
-			if (desc.InTangents)
-			{
-				defines.push_back("NE_USE_TANGENTS");
-				Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));
-			}
+
+			Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //POS
+			Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //UV
+			Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //NORMAL
+			Layout->push_back(LayoutElement(4, 0, 4, VT_INT32, false));    //BONE ID
+			Layout->push_back(LayoutElement(5, 0, 4, VT_FLOAT32, false));  //WEIGHT
+
 			if (desc.Use_Camera)
 				defines.push_back("NE_USE_DEF_CAMERA");
 
@@ -68,7 +60,7 @@ namespace NuclearEngine
 			CreationAttribs.Source = source.c_str();
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pVS);
-			
+
 			return pVS;
 		}
 		IShader* ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)

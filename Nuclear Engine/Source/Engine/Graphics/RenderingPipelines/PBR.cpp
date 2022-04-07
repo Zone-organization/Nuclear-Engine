@@ -34,7 +34,6 @@ namespace NuclearEngine
 			{
 				Managers::AutoVertexShaderDesc VertShaderDesc;
 				VertShaderDesc.Name = "PBR_VS";
-				VertShaderDesc.InTangents = true;
 
 				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 			}
@@ -77,6 +76,9 @@ namespace NuclearEngine
 
 			if (desc.LightsBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
+
+			if (desc.AnimationBufferPtr)
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 
 			ReflectPixelShaderData();
 

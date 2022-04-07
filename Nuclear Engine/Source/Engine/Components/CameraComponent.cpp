@@ -204,9 +204,9 @@ namespace NuclearEngine
 			if (!Desc.Disable_Bloom_Varient)
 			{
 				Managers::AutoVertexShaderDesc VertShaderDesc;
-				VertShaderDesc.Use_Camera = false;
-				VertShaderDesc.InNormals = false;
-				VertShaderDesc.OutFragPos = false;
+				//VertShaderDesc.Use_Camera = false;
+				//VertShaderDesc.InNormals = false;
+				//VertShaderDesc.OutFragPos = false;
 				VertShaderDesc.Name = "Bloom_VS";
 
 				std::vector<LayoutElement> LayoutElems;

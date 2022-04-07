@@ -36,7 +36,7 @@ namespace NuclearEngine
 			Managers::AutoVertexShaderDesc VertShaderDesc;
 			VertShaderDesc.Name = "WireFrameVS";
 			VertShaderDesc.OutFragPos = false;
-			VertShaderDesc.InTangents = true;
+
 			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
 
 			//Create Pixel Shader
@@ -53,6 +53,9 @@ namespace NuclearEngine
 
 			if (desc.CameraBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
+
+			if (desc.AnimationBufferPtr)
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 
 			ReflectPixelShaderData();
 			mStatus = BakeStatus::Baked;

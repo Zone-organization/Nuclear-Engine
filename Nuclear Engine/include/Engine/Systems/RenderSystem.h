@@ -13,10 +13,18 @@ namespace NuclearEngine
 	{
 		class Mesh;
 		class Material;
+
+	}
+
+	namespace Animations
+	{
+		class Animator;
+
 	}
 
 	namespace Components {
 		class MeshComponent;
+		class AnimatorComponent;
 	}
 	namespace Managers { class CameraManager; }
 	namespace Systems
@@ -48,6 +56,7 @@ namespace NuclearEngine
 
 			// Render A MeshComponent Component instantly
 			void InstantRender(Components::MeshComponent* object);
+
 			// Render A Mesh instantly
 			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
@@ -64,6 +73,7 @@ namespace NuclearEngine
 			bool PipelineDirty = true;
 
 			RenderSystemBakeStatus mStatus;
+			RefCntAutoPtr<IBuffer> animCB;
 
 			Assets::Mesh CameraScreenQuad;
 			Assets::Material LightSphereMaterial;
