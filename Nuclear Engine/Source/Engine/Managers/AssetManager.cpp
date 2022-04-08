@@ -20,8 +20,8 @@ namespace NuclearEngine {
 			: mDesc(desc)
 		{
 			//Initialize Containers
-			mImportedTextures = std::unordered_map<Uint32, Assets::Texture>();
-			mHashedTexturesPaths = std::unordered_map<Uint32, Core::Path>();
+			mImportedImages = std::unordered_map<Uint32, Assets::Image>();
+			mHashedImagesPaths = std::unordered_map<Uint32, Core::Path>();
 
 			mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();
 			mHashedMeshesPaths = std::unordered_map<Uint32, Core::Path>();
@@ -35,7 +35,7 @@ namespace NuclearEngine {
 			mImportedAudioClips = std::unordered_map<Uint32, Assets::AudioClip>();
 			mHashedAudioClipsPaths = std::unordered_map<Uint32, Core::Path>();
 
-			mTextureImporter = Importers::TextureImporterDelegate::create<&Importers::FreeImageLoad>();
+			mImageImporter = Importers::ImageImporterDelegate::create<&Importers::FreeImageLoad>();
 			mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
 		}
 
@@ -59,58 +59,82 @@ namespace NuclearEngine {
 				it.second.mTextureView.Release();
 			}*/
 		//
-			mImportedTextures.clear();
-			mHashedTexturesPaths.clear();
+			mImportedImages.clear();
+			mHashedImagesPaths.clear();
 
 			mImportedMeshes.clear();
 			mHashedMeshesPaths.clear();
 		}
 
-		Assets::Texture AssetManager::Import(const Core::Path & Path, const Importers::TextureLoadingDesc & Desc)
+		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Importers::ImageLoadingDesc& Desc)
 		{
-			return Import(Path, Assets::TextureUsageType::Unknown, Desc);
+			return Import(Path, Graphics::TextureUsageType::Unknown, Desc);
 		}
 
-		Assets::Texture AssetManager::Import(const Core::Path & Path, const Assets::TextureUsageType & type, const Importers::TextureLoadingDesc & Desc)
+		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Graphics::TextureUsageType & type, const Importers::ImageLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
+			Graphics::Texture result;
 
-			auto it = mImportedTextures.find(hashedname);
-			if (it != mImportedTextures.end())
+			//Check if exists
+			auto it = mImportedImages.find(hashedname);
+			if (it != mImportedImages.end())
 			{
-				return it->second;
+				result.SetImage(&it->second);
+				return result;
 			}
 
-			auto Data = mTextureImporter(Path.mRealPath, Desc);
+			Assets::Image image;
 
-			if (Data.mData == NULL)
+			//Load
+			if (!mImageImporter(Path.mRealPath, Desc, &image))
 			{
 				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
 				return Assets::DefaultTextures::DefaultBlackTex;
 			}
 
+			//Create
+			if (!Internal::CreateTextureViewFromRawImage(&image, Desc))
+			{
+				Log.Error(std::string("[AssetManager] Failed To Create Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+				return Assets::DefaultTextures::DefaultBlackTex;
+			}
 
 			if (mSaveTexturesPaths)
 			{
-				mHashedTexturesPaths[hashedname] = Path;
+				mHashedImagesPaths[hashedname] = Path;
 			}
 
-			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+			image.SetName(hashedname);
+			mImportedImages[hashedname] = image;
 
-			Assets::Texture Tex;
-			Internal::CreateTextureFromRawImage(Data, Desc, &Tex);
-			Tex.SetName(hashedname);
-			Tex.SetUsageType(type);
+			result.SetImage(&mImportedImages[hashedname]);
+			result.SetUsageType(type);
 
-			return mImportedTextures[hashedname] = Tex;
+			Log.Info(std::string("[AssetManager : " + mDesc.mName + "] Loaded Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+			return result;
 		}
 
-		Assets::Texture AssetManager::Import(const Assets::Image & Image, const Importers::TextureLoadingDesc & Desc)
-		{
-			Assets::Texture Tex;
-			Internal::CreateTextureFromRawImage(Image, Desc, &Tex);
-			return Tex;
-		}
+		//Assets::Image* AssetManager::Import(const Assets::ImageData& Image , const Importers::ImageLoadingDesc & Desc)
+		//{
+		//	//if (Desc.mPath != std::string(""))
+		//	//{
+		//	//	auto hashedname = Utilities::Hash(Desc.mPath);
+
+		//	//	
+		//	//	Internal::CreateTextureViewFromRawImage(Image, Desc, &mImportedImages[hashedname]);
+
+		//	//}
+
+		//	if (AddToLibrary)
+		//	{
+
+		//	}
+
+		//	Assets::Texture Tex;
+		//	Internal::CreateTextureViewFromRawImage(Image, Desc, &Tex);
+		//	return Tex;
+		//}
 
 		Assets::AudioClip* AssetManager::Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode)
 		{
@@ -174,47 +198,43 @@ namespace NuclearEngine {
 		}
 
 					
-		Assets::Image AssetManager::TextureCube_Load(const Core::Path& Path, const Importers::TextureLoadingDesc& Desc)
+		Assets::Image* AssetManager::TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
-			auto Data = mTextureImporter(Path.mRealPath, Desc);
+			Assets::Image result;
 
-			if (Data.mData == NULL)
+			if (!mImageImporter(Path.mRealPath, Desc, &result))
 			{
 				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture2D (For CubeMap): " + Path.mInputPath + '\n'));
-				return Data;
+				return nullptr;
 			}
-	
+			mImportedImages[hashedname] = result;
 			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture2D (For CubeMap): " + Path.mInputPath + '\n'));
 
-			return Data;
+			return &mImportedImages[hashedname];
 		}
-		bool AssetManager::DoesTextureExist(Uint32 hashedname, Assets::Texture* texture)
+		Assets::Image* AssetManager::DoesImageExist(Uint32 hashedname)
 		{
 			//Check if Texture has been loaded before
-			auto it = mImportedTextures.find(hashedname);
-			if (it != mImportedTextures.end())
+			auto it = mImportedImages.find(hashedname);
+			if (it != mImportedImages.end())
 			{
-				texture = &it->second;
-				return true;
+				return &it->second;
 			}
-			texture = nullptr;
-			return false;
+			return nullptr;
 		}
-		std::array<Assets::Image, 6> AssetManager::LoadTextureCubeFromFile(const std::array<Core::Path, 6>& Paths, const Importers::TextureLoadingDesc& desc)
+		std::array<Assets::Image*, 6> AssetManager::LoadTextureCubeFromFile(const std::array<Core::Path, 6>& Paths, const Importers::ImageLoadingDesc& desc)
 		{
-			Assets::Image data1, data2, data3, data4, data5, data6;
-			Importers::TextureLoadingDesc Desc = desc;
+			Importers::ImageLoadingDesc Desc = desc;
 			//Desc.FlipY_Axis = false;
-			data1 = TextureCube_Load(Paths.at(0), Desc);
-			data2 = TextureCube_Load(Paths.at(1), Desc);
-			data3 = TextureCube_Load(Paths.at(2), Desc);
-			data4 = TextureCube_Load(Paths.at(3), Desc);
-			data5 = TextureCube_Load(Paths.at(4), Desc);
-			data6 = TextureCube_Load(Paths.at(5), Desc);
-			
-			std::array<Assets::Image, 6> result = { data1, data2, data3, data4, data5, data6 };
+
+			std::array<Assets::Image*, 6> result = { TextureCube_Load(Paths.at(0), Desc),
+				TextureCube_Load(Paths.at(1), Desc), 
+				TextureCube_Load(Paths.at(2), Desc), 
+				TextureCube_Load(Paths.at(3), Desc),
+				TextureCube_Load(Paths.at(4), Desc),
+				TextureCube_Load(Paths.at(5), Desc) };
 
 			return result;
 		}

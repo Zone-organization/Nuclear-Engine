@@ -63,15 +63,15 @@ namespace NuclearEngine
 		
 		}
 
-		void Skybox::Initialize(IBuffer* CameraConstantBuffer, const std::array<Assets::Image, 6> & data)
+		void Skybox::Initialize(IBuffer* CameraConstantBuffer, const std::array<Assets::Image*, 6> & data)
 		{
 			TextureDesc TexDesc;
 			TexDesc.Name = "SkyBox_TextureCube";
 			TexDesc.Type = RESOURCE_DIM_TEX_CUBE;
 			TexDesc.Usage = USAGE_DEFAULT;
 			TexDesc.BindFlags = BIND_SHADER_RESOURCE;
-			TexDesc.Width = data.at(0).mWidth;
-			TexDesc.Height = data.at(0).mHeight;
+			TexDesc.Width = data.at(0)->mData.mWidth;
+			TexDesc.Height = data.at(0)->mData.mHeight;
 			TexDesc.Format = TEX_FORMAT_RGBA8_UNORM;
 			TexDesc.ArraySize = 6;
 			TexDesc.MipLevels = 1;
@@ -83,8 +83,8 @@ namespace NuclearEngine
 			TextureSubResData subData[6];
 			for (unsigned int i = 0; i < data.size(); i++)
 			{
-				subData[i].pData = data[i].mData;
-				subData[i].Stride = data[i].mWidth * 4;
+				subData[i].pData = data[i]->mData.mData;
+				subData[i].Stride = data[i]->mData.mWidth * 4;
 			}
 
 			Data.NumSubresources = 6;

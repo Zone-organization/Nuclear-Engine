@@ -74,8 +74,8 @@ namespace NuclearEngine
 			AssetManager(AssetManagerDesc desc = AssetManagerDesc());
 			~AssetManager();
 
-			std::unordered_map<Uint32, Assets::Texture> mImportedTextures; //All loaded textures with their hashed names with crc32c (always saved)
-			std::unordered_map<Uint32, Core::Path> mHashedTexturesPaths; //Real pre-hashed texture paths (conditionally saved see SaveTexturePaths)
+			std::unordered_map<Uint32, Assets::Image> mImportedImages; //All loaded textures with their hashed names with crc32c (always saved)
+			std::unordered_map<Uint32, Core::Path> mHashedImagesPaths; //Real pre-hashed texture paths (conditionally saved see SaveTexturePaths)
 			bool mSaveTexturesPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
 
 			std::unordered_map<Uint32, Assets::Mesh> mImportedMeshes; //All imported meshes with their hashed names with crc32c (always saved)
@@ -97,24 +97,26 @@ namespace NuclearEngine
 
 			bool mMultithreadMeshTextureLoading = true;
 
-			Importers::TextureImporterDelegate mTextureImporter;
+			Importers::ImageImporterDelegate mImageImporter;
 			Importers::MeshImporterDelegate mMeshImporter;
 
 			//Note: Automatically called on Destruction
 			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
 
-			Assets::Texture Import(const Core::Path& Path, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
-			Assets::Texture Import(const Core::Path& Path, const Assets::TextureUsageType& type, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
-			Assets::Texture Import(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
+			Graphics::Texture Import(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
+			Graphics::Texture Import(const Core::Path& Path, const Graphics::TextureUsageType& type, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
+
+			Assets::Image* Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
+			//Assets::Image Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
 
 			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
 			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
 
-			bool DoesTextureExist(Uint32 hashedname, Assets::Texture* texture);
+			Assets::Image* DoesImageExist(Uint32 hashedname);
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<Assets::Image, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::TextureLoadingDesc& Desc);
+			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::ImageLoadingDesc& Desc);
 
 
 			Assets::Script& ImportScript(const Core::Path& Path);
@@ -122,7 +124,7 @@ namespace NuclearEngine
 
 		private:
 			AssetManagerDesc mDesc;
-			Assets::Image TextureCube_Load(const Core::Path& Path, const Importers::TextureLoadingDesc& Desc);
+			Assets::Image* TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc);
 		};
 	}
 }

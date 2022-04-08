@@ -28,7 +28,7 @@ class Sample3 : public Core::Game
 	void SetupEntities()
 	{
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/crate_diffuse.png", Graphics::TextureUsageType::Diffuse) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 

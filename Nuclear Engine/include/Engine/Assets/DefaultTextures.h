@@ -1,5 +1,5 @@
 #pragma once
-#include <Engine/Assets/Texture.h>
+#include <Engine/Graphics/Texture.h>
 #include <Engine\Managers\AssetManager.h>
 
 namespace NuclearEngine
@@ -12,13 +12,13 @@ namespace NuclearEngine
 
 			static void Initalize(Managers::AssetManager* Manager);
 
-			static Texture DefaultBlackTex;
-			static Texture DefaultGreyTex;
-			static Texture DefaultWhiteTex;
+			static Graphics::Texture DefaultBlackTex;
+			static Graphics::Texture DefaultGreyTex;
+			static Graphics::Texture DefaultWhiteTex;
 
-			static Texture DefaultDiffuseTex;
-			static Texture DefaultSpecularTex;
-			static Texture DefaultNormalTex;
+			static Graphics::Texture DefaultDiffuseTex;
+			static Graphics::Texture DefaultSpecularTex;
+			static Graphics::Texture DefaultNormalTex;
 
 		};
 	}

@@ -6,7 +6,7 @@ namespace NuclearEngine
 {
 	namespace Importers
 	{
-		Assets::Image& FreeImageLoad(const std::string& Path, const Importers::TextureLoadingDesc & Desc);
+		bool FreeImageLoad(const std::string& Path, const Importers::ImageLoadingDesc & Desc, Assets::Image* result);
 	}
 }
 #endif

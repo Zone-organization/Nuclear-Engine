@@ -5,19 +5,19 @@ namespace NuclearEngine
 	namespace Assets
 	{
 
-		Texture DefaultTextures::DefaultBlackTex;
-		Texture DefaultTextures::DefaultGreyTex;
-		Texture DefaultTextures::DefaultWhiteTex;
+		Graphics::Texture DefaultTextures::DefaultBlackTex;
+		Graphics::Texture DefaultTextures::DefaultGreyTex;
+		Graphics::Texture DefaultTextures::DefaultWhiteTex;
 
-		Texture DefaultTextures::DefaultDiffuseTex;
-		Texture DefaultTextures::DefaultSpecularTex;
-		Texture DefaultTextures::DefaultNormalTex;
+		Graphics::Texture DefaultTextures::DefaultDiffuseTex;
+		Graphics::Texture DefaultTextures::DefaultSpecularTex;
+		Graphics::Texture DefaultTextures::DefaultNormalTex;
 
 		void DefaultTextures::Initalize(Managers::AssetManager* AssetLoader)
 		{
-			DefaultBlackTex = AssetLoader->Import("Assets/NuclearEngine/DefaultTextures/Black32x32.png", Assets::TextureUsageType::Unknown);
-			DefaultGreyTex = AssetLoader->Import("Assets/NuclearEngine/DefaultTextures/Grey32x32.png", Assets::TextureUsageType::Diffuse);
-			DefaultWhiteTex = AssetLoader->Import("Assets/NuclearEngine/DefaultTextures/White32x32.png", Assets::TextureUsageType::Specular);
+			DefaultBlackTex = AssetLoader->Import("Assets/NuclearEngine/DefaultTextures/Black32x32.png", Graphics::TextureUsageType::Unknown);
+			DefaultGreyTex = AssetLoader->Import("Assets/NuclearEngine/DefaultTextures/Grey32x32.png", Graphics::TextureUsageType::Diffuse);
+			DefaultWhiteTex = AssetLoader->Import("Assets/NuclearEngine/DefaultTextures/White32x32.png", Graphics::TextureUsageType::Specular);
 
 			DefaultDiffuseTex = DefaultGreyTex;
 			DefaultSpecularTex = DefaultWhiteTex;

@@ -169,11 +169,10 @@
     <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
     <ClInclude Include="include\Engine\Assets\DefaultTextures.h" />
     <ClInclude Include="include\Engine\Assets\Common.h" />
-    <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Assets\Material.h" />
     <ClInclude Include="include\Engine\Assets\MaterialInstance.h" />
     <ClInclude Include="include\Engine\Assets\MaterialTypes.h" />
-    <ClInclude Include="include\Engine\Assets\Texture.h" />
+    <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Audio\Audio.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
     <ClInclude Include="include\Engine\Components\AnimatorComponent.h" />
@@ -202,6 +201,7 @@
     <ClInclude Include="include\Engine\Graphics\RenderTarget.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Engine\ECS\Transform.h" />
+    <ClInclude Include="include\Engine\Graphics\Texture.h" />
     <ClInclude Include="include\Engine\Importers\Common.h" />
     <ClInclude Include="include\Engine\Importers\Importers.h" />
     <ClInclude Include="include\Base\Math\common.hpp" />
@@ -480,6 +480,7 @@
     <ClCompile Include="Source\Engine\Animation\Animator.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
     <ClCompile Include="Source\Engine\Assets\Animations.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Image.cpp" />
     <ClCompile Include="Source\Engine\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />
@@ -494,7 +495,7 @@
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
-    <ClCompile Include="Source\Engine\Assets\Texture.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\DirLightComponent.cpp" />

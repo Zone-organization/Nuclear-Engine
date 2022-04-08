@@ -23,7 +23,7 @@ namespace NuclearEngine
 			Skybox();
 			~Skybox();
 
-			void Initialize(IBuffer* CameraConstantBuffer, const std::array<Assets::Image, 6>& data);
+			void Initialize(IBuffer* CameraConstantBuffer, const std::array<Assets::Image*, 6>& data);
 
 			void Render();
 

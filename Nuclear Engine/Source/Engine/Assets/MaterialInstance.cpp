@@ -91,7 +91,7 @@ namespace NuclearEngine
 			{
 				for (auto tex : mPShaderTextures.at(index).mData)
 				{
-					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.mTextureView);
+					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView);
 				}
 			}
 

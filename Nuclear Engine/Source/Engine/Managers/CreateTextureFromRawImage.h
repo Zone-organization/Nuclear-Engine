@@ -96,14 +96,12 @@ namespace NuclearEngine
 					}
 			}
 
-			bool CreateTextureFromRawImage(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc, Assets::Texture* result)
+			bool CreateTextureViewFromRawImage(Assets::Image* Image, const Importers::ImageLoadingDesc& Desc)
 			{	
-				assert(result);
-
 				TextureDesc TexDesc;
 				TexDesc.Type = RESOURCE_DIM_TEX_2D;
-				TexDesc.Width = Image.mWidth;
-				TexDesc.Height = Image.mHeight;
+				TexDesc.Width = Image->mData.mWidth;
+				TexDesc.Height = Image->mData.mHeight;
 				TexDesc.MipLevels = ComputeMipLevelsCount(TexDesc.Width, TexDesc.Height);
 				if (Desc.mMipLevels > 0)
 					TexDesc.MipLevels = std::min(TexDesc.MipLevels, Desc.mMipLevels);
@@ -112,10 +110,10 @@ namespace NuclearEngine
 				TexDesc.Format = Desc.mFormat;
 				TexDesc.CPUAccessFlags = Desc.mCPUAccessFlags;
 
-				auto ChannelDepth = Image.mBitsPerPixel / Image.mNumComponents;
-				Uint32 NumComponents = Image.mNumComponents == 3 ? 4 : Image.mNumComponents;
+				auto ChannelDepth = Image->mData.mBitsPerPixel / Image->mData.mNumComponents;
+				Uint32 NumComponents = Image->mData.mNumComponents == 3 ? 4 : Image->mData.mNumComponents;
 
-				bool IsSRGB = (Image.mNumComponents >= 3 && ChannelDepth == 8) ? Desc.mIsSRGB : false;
+				bool IsSRGB = (Image->mData.mNumComponents >= 3 && ChannelDepth == 8) ? Desc.mIsSRGB : false;
 				if (TexDesc.Format == TEX_FORMAT_UNKNOWN)
 				{
 					if (ChannelDepth == 8)
@@ -125,7 +123,7 @@ namespace NuclearEngine
 						case 1: TexDesc.Format = TEX_FORMAT_R8_UNORM; break;
 						case 2: TexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
 						case 4: TexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
-						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Image.mNumComponents, ")");
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Image->mData.mNumComponents, ")");
 						}
 					}
 					else if (ChannelDepth == 16)
@@ -135,7 +133,7 @@ namespace NuclearEngine
 						case 1: TexDesc.Format = TEX_FORMAT_R16_UNORM; break;
 						case 2: TexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
 						case 4: TexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
-						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Image.mNumComponents, ")");
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Image->mData.mNumComponents, ")");
 						}
 					}
 					else
@@ -145,7 +143,7 @@ namespace NuclearEngine
 				{
 					const auto& TexFmtDesc = GetTextureFormatAttribs(TexDesc.Format);
 					if (TexFmtDesc.NumComponents != NumComponents)
-						LOG_ERROR_AND_THROW("Incorrect number of components ", Image.mNumComponents, ") for texture format ", TexFmtDesc.Name);
+						LOG_ERROR_AND_THROW("Incorrect number of components ", Image->mData.mNumComponents, ") for texture format ", TexFmtDesc.Name);
 					if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
 						LOG_ERROR_AND_THROW("Incorrect channel size ", ChannelDepth, ") for texture format ", TexFmtDesc.Name);
 				}
@@ -154,27 +152,27 @@ namespace NuclearEngine
 				std::vector<TextureSubResData> pSubResources(TexDesc.MipLevels);
 				std::vector< std::vector<Uint8> > Mips(TexDesc.MipLevels);
 
-				if (Image.mNumComponents == 3)
+				if (Image->mData.mNumComponents == 3)
 				{
 					VERIFY_EXPR(NumComponents == 4);
-					auto RGBAStride = Image.mWidth * NumComponents * ChannelDepth / 8;
+					auto RGBAStride = Image->mData.mWidth * NumComponents * ChannelDepth / 8;
 					RGBAStride = (RGBAStride + 3) & (-4);
-					Mips[0].resize(size_t{ RGBAStride } *size_t{ Image.mHeight });
+					Mips[0].resize(size_t{ RGBAStride } *size_t{ Image->mData.mHeight });
 					pSubResources[0].pData = Mips[0].data();
 					pSubResources[0].Stride = RGBAStride;
 					if (ChannelDepth == 8)
-						RGBToRGBA<Uint8>(Image.mData, Image.mRowStride,
+						RGBToRGBA<Uint8>(Image->mData.mData, Image->mData.mRowStride,
 							Mips[0].data(), RGBAStride,
-							Image.mWidth, Image.mHeight);
+							Image->mData.mWidth, Image->mData.mHeight);
 					else if (ChannelDepth == 16)
-						RGBToRGBA<Uint16>(Image.mData, Image.mRowStride,
+						RGBToRGBA<Uint16>(Image->mData.mData, Image->mData.mRowStride,
 							Mips[0].data(), RGBAStride,
-							Image.mWidth , Image.mHeight);
+							Image->mData.mWidth , Image->mData.mHeight);
 				}
 				else
 				{
-					pSubResources[0].pData = Image.mData;
-					pSubResources[0].Stride = Image.mRowStride;
+					pSubResources[0].pData = Image->mData.mData;
+					pSubResources[0].Stride = Image->mData.mRowStride;
 				}
 
 				auto MipWidth = TexDesc.Width;
@@ -213,13 +211,15 @@ namespace NuclearEngine
 				TexData.NumSubresources = TexDesc.MipLevels;
 				RefCntAutoPtr<ITexture> mTexture;
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
+
 				if (mTexture.RawPtr() != nullptr)
 				{
-					result->mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+					Image->mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-					if (result->mTextureView.RawPtr() != nullptr)
+					if (Image->mTextureView.RawPtr() != nullptr)
 						return true;
 				}
+
 				return false;
 			}
 		}

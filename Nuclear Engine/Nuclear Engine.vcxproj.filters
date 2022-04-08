@@ -197,12 +197,11 @@
     <ClInclude Include="include\Core\ApplicationDesc.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Engine\Assets\DefaultTextures.h" />
-    <ClInclude Include="include\Engine\Assets\Texture.h" />
+    <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
-    <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
     <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
     <ClInclude Include="include\Engine\Importers\Importers.h" />
@@ -326,6 +325,7 @@
     <ClInclude Include="include\Engine\Animation\Animation.h" />
     <ClInclude Include="include\Engine\Components\AnimatorComponent.h" />
     <ClInclude Include="include\Engine\Animation\AnimationClip.h" />
+    <ClInclude Include="include\Engine\Graphics\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -358,7 +358,7 @@
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp" />
-    <ClCompile Include="Source\Engine\Assets\Texture.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
@@ -453,6 +453,7 @@
     <ClCompile Include="Source\Engine\Animation\Animator.cpp" />
     <ClCompile Include="Source\Engine\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Source\Engine\Animation\AnimationClip.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

@@ -1,6 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine/Assets\Texture.h>
+#include <Engine/Graphics/Texture.h>
 #include <vector>
 
 namespace NuclearEngine
@@ -10,7 +10,7 @@ namespace NuclearEngine
 		struct ShaderTexture
 		{
 			Uint32 mSlot = 0;
-			Assets::Texture mTex;
+			Graphics::Texture mTex;
 		};
 
 		struct TextureSet

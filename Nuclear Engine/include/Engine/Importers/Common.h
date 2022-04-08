@@ -1,5 +1,4 @@
 #pragma once
-#include <Engine/Assets/Texture.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
 #include <Engine/Assets/Image.h>
@@ -50,7 +49,7 @@ namespace NuclearEngine
 			bool SaveMaterialNames = true;
 			bool LoadAnimation = true;
 		};
-		struct TextureLoadingDesc
+		struct ImageLoadingDesc
 		{
 			std::string mPath;
 
@@ -70,7 +69,7 @@ namespace NuclearEngine
 
 			TEXTURE_FORMAT mFormat;
 
-			TextureLoadingDesc() :
+			ImageLoadingDesc() :
 				mPath(""),
 				mUsage(USAGE_IMMUTABLE),
 				mBindFlags(BIND_SHADER_RESOURCE),
@@ -91,6 +90,6 @@ namespace NuclearEngine
 		};
 
 		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::Material*, Assets::Animations*)> MeshImporterDelegate;
-		typedef Utilities::Delegate<Assets::Image& (const std::string& Path, const TextureLoadingDesc& Desc)> TextureImporterDelegate;
+		typedef Utilities::Delegate<bool(const std::string& Path, const ImageLoadingDesc& Desc, Assets::Image*)> ImageImporterDelegate;
 	}
 }

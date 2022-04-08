@@ -123,14 +123,14 @@ class Sample1 : public Core::Game
 		VampireAnimator.Initialize(&VampireAnimation->mClips.at(0));
 
 		//Load some textures manually
-		Importers::TextureLoadingDesc desc;
+		Importers::ImageLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png", Assets::TextureUsageType::Diffuse) });
-		CubeSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/crate_specular.png", Assets::TextureUsageType::Specular) });
-		CubeSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/crate_normal.png", Assets::TextureUsageType::Normal) });
+		CubeSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png", Graphics::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/crate_specular.png", Graphics::TextureUsageType::Specular) });
+		CubeSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/crate_normal.png", Graphics::TextureUsageType::Normal) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -171,7 +171,7 @@ class Sample1 : public Core::Game
 			Core::Path("@CommonAssets@/Skybox/back.jpg")
 		};
 
-		Importers::TextureLoadingDesc SkyboxDesc;
+		Importers::ImageLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		Skybox.Initialize(SceneCameraManager.GetCameraCB(), mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
 	}

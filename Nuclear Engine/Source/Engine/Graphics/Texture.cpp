@@ -1,9 +1,9 @@
-#include <Engine/Assets/Texture.h>
+#include <Engine/Graphics/Texture.h>
 #include <Base\Utilities\Hash.h>
 
 namespace NuclearEngine
 {
-	namespace Assets 
+	namespace Graphics
 	{
 		Texture::Texture()
 			: mUsageType(Unknown)

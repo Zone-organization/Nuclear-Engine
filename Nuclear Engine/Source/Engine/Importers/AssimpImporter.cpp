@@ -159,19 +159,19 @@ namespace NuclearEngine {
 
 		}
 
-		Assets::TextureUsageType GetTextureType(aiTextureType type)
+		Graphics::TextureUsageType GetTextureType(aiTextureType type)
 		{
 			switch (type)
 			{
 			case aiTextureType_DIFFUSE:
-				return Assets::TextureUsageType::Diffuse;
+				return Graphics::TextureUsageType::Diffuse;
 			case aiTextureType_SPECULAR:
-				return Assets::TextureUsageType::Specular;
+				return Graphics::TextureUsageType::Specular;
 			case aiTextureType_HEIGHT:
-				return Assets::TextureUsageType::Normal;
+				return Graphics::TextureUsageType::Normal;
 			}
 
-			return Assets::TextureUsageType::Unknown;
+			return Graphics::TextureUsageType::Unknown;
 		}
 		Assets::TextureSet AssimpImporter::ProcessMaterialTexture(aiMaterial * mat,const aiTextureType& type)
 		{
@@ -181,11 +181,11 @@ namespace NuclearEngine {
 				aiString str;
 				mat->GetTexture(type, i, &str);
 
-				Assets::Texture texture;
+				Graphics::Texture texture;
 
 				std::string filename = str.C_Str();
 				filename = mDirectory + '/' + filename;
-				Importers::TextureLoadingDesc desc;
+				Importers::ImageLoadingDesc desc;
 				if (Graphics::GraphicsEngine::isGammaCorrect())
 				{
 					desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;

@@ -43,7 +43,7 @@ namespace NuclearEngine
 
 			Uint32 GetID();
 
-			virtual Assets::Texture GetDefaultTextureFromType(Uint8 Type);
+			virtual Texture GetDefaultTextureFromType(Uint8 Type);
 			
 			virtual BakeStatus GetStatus();
 

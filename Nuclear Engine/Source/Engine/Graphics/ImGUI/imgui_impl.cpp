@@ -15,7 +15,7 @@ static RefCntAutoPtr<IPipelineState> g_pPSO;
 static RefCntAutoPtr<IBuffer> g_pVertexConstantBuffer;
 static RefCntAutoPtr<IShaderResourceBinding> g_pSRB;
 
-static Assets::Texture g_pFontTexture;
+static Assets::Image g_pFontTexture;
 static int g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
 
 struct VERTEX_CONSTANT_BUFFER
@@ -137,7 +137,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 			Graphics::Context::GetContext()->SetScissorRects(1, &r, 0, 0);
 
 			// Bind texture, Draw
-			Assets::Texture* Tex = static_cast<Assets::Texture*>(pcmd->TextureId);
+			Assets::Image* Tex = static_cast<Assets::Image*>(pcmd->TextureId);
 
 			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(Tex->mTextureView);
 			Graphics::Context::GetContext()->CommitShaderResources(g_pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

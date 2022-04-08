@@ -12,23 +12,23 @@ namespace NuclearEngine
 			return mPipeline.RawPtr();
 		}
 
-		Assets::TextureUsageType ParseTexUsageFromName(std::string& name)
+		TextureUsageType ParseTexUsageFromName(std::string& name)
 		{
 			if (name.find("Diffuse") == 0)
-				return Assets::TextureUsageType::Diffuse;
+				return TextureUsageType::Diffuse;
 			else if (name.find("Albedo") == 0)
-				return Assets::TextureUsageType::Albedo;
+				return TextureUsageType::Albedo;
 			else if (name.find("Specular") == 0)
-				return Assets::TextureUsageType::Specular;
+				return TextureUsageType::Specular;
 			else if (name.find("Metallic") == 0)
-				return Assets::TextureUsageType::Metallic;
+				return TextureUsageType::Metallic;
 			else if (name.find("Normal") == 0)
-				return Assets::TextureUsageType::Normal;
+				return TextureUsageType::Normal;
 			else if (name.find("Roughness") == 0)
-				return Assets::TextureUsageType::Roughness;
+				return TextureUsageType::Roughness;
 			else if (name.find("AO") == 0)
-				return Assets::TextureUsageType::AO;
-			return Assets::TextureUsageType::Unknown;
+				return TextureUsageType::AO;
+			return TextureUsageType::Unknown;
 		}
 
 		void RenderingPipeline::ReflectPixelShaderData()
@@ -60,17 +60,17 @@ namespace NuclearEngine
 		{
 			return mID;
 		}
-		Assets::Texture RenderingPipeline::GetDefaultTextureFromType(Uint8 Type)
+		Texture RenderingPipeline::GetDefaultTextureFromType(Uint8 Type)
 		{
 			//TODO: Improve
 
 			switch (Type)
 			{
-			case Assets::TextureUsageType::Diffuse:
+			case TextureUsageType::Diffuse:
 				Assets::DefaultTextures::DefaultDiffuseTex;
-			case Assets::TextureUsageType::Specular:
+			case TextureUsageType::Specular:
 				Assets::DefaultTextures::DefaultSpecularTex;
-			case Assets::TextureUsageType::Normal:
+			case TextureUsageType::Normal:
 				Assets::DefaultTextures::DefaultNormalTex;
 			default:
 				break;
