@@ -19,6 +19,7 @@ class Sample3 : public Core::Game
 
 	ECS::Scene Scene;
 	ECS::Entity EPlane;
+	Assets::Mesh gPlane;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -28,7 +29,7 @@ class Sample3 : public Core::Game
 	void SetupEntities()
 	{
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/crate_diffuse.png", Graphics::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/crate_diffuse.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -45,7 +46,6 @@ class Sample3 : public Core::Game
 		//Create Entities
 		EPlane = Scene.CreateEntity();
 
-		static Assets::Mesh gPlane;
 		Assets::Mesh::CreatePlane(&gPlane, 100.0f, 100.0f);
 		//Assign Components
 		EPlane.Assign<Components::MeshComponent>(&gPlane, &PlaneMaterial);

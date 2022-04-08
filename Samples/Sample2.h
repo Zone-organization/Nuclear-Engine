@@ -319,6 +319,8 @@ class Sample2 : public Core::Game
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
 
+	Assets::Mesh gPlane;
+
 	std::vector<ECS::Entity> boxes;
 
 	float lastX = _Width_ / 2.0f;
@@ -340,11 +342,11 @@ class Sample2 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet PBRSphereSet;
-		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png", Graphics::TextureUsageType::Diffuse) });
-		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Graphics::TextureUsageType::Specular) });
-		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png", Graphics::TextureUsageType::Normal) });
-		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Graphics::TextureUsageType::Roughness) });
-		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Graphics::TextureUsageType::AO) });
+		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
 
 		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
@@ -455,7 +457,6 @@ class Sample2 : public Core::Game
 
 		Camera->RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		static Assets::Mesh gPlane;
 		Assets::Mesh::CreatePlane(&gPlane, 100.0f, 100.0f);
 
 		BoxPhysXMat.Create();

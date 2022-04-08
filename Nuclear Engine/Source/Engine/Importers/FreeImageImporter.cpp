@@ -64,7 +64,20 @@ namespace NuclearEngine
 
 			FIBITMAP* dib = nullptr;
 
-			dib = FreeImage_Load(FreeImage_GetFileType(Path.c_str(), 0), Path.c_str());
+
+			if (Desc.mLoadFromMemory == true)
+			{
+				FIMEMORY* memBuff;
+				memBuff = FreeImage_OpenMemory((Byte*)Desc.mMemData, Desc.mMemSize);
+
+				auto type = FreeImage_GetFileTypeFromMemory(memBuff,0);
+				dib = FreeImage_LoadFromMemory(type, memBuff);
+				FreeImage_CloseMemory(memBuff);
+			}
+			else
+			{
+				dib = FreeImage_Load(FreeImage_GetFileType(Path.c_str(), 0), Path.c_str());
+			}
 
 			if (!dib)
 			{

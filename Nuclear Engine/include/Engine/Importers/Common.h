@@ -67,6 +67,12 @@ namespace NuclearEngine
 
 			bool mFlipY_Axis;
 
+			bool mLoadFromMemory;
+
+			void* mMemData;
+
+			Uint32 mMemSize;
+
 			TEXTURE_FORMAT mFormat;
 
 			ImageLoadingDesc() :
@@ -78,7 +84,10 @@ namespace NuclearEngine
 				mIsSRGB(false),
 				mGenerateMips(true),
 				mFlipY_Axis(true),
-				mFormat(TEX_FORMAT_UNKNOWN)
+				mFormat(TEX_FORMAT_UNKNOWN),
+				mLoadFromMemory(false),
+				mMemData(nullptr),
+				mMemSize(0)
 			{}
 		};
 

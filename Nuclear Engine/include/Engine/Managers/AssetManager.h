@@ -103,10 +103,9 @@ namespace NuclearEngine
 			//Note: Automatically called on Destruction
 			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
 
-			Graphics::Texture Import(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
-			Graphics::Texture Import(const Core::Path& Path, const Graphics::TextureUsageType& type, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
+			Graphics::Texture Import(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 
-			Assets::Image* Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
+			Graphics::Texture Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
 			//Assets::Image Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
 
 			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);

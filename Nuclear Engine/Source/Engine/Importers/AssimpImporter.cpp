@@ -181,21 +181,57 @@ namespace NuclearEngine {
 				aiString str;
 				mat->GetTexture(type, i, &str);
 
+				Importers::ImageLoadingDesc desc;
 				Graphics::Texture texture;
 
-				std::string filename = str.C_Str();
-				filename = mDirectory + '/' + filename;
-				Importers::ImageLoadingDesc desc;
-				if (Graphics::GraphicsEngine::isGammaCorrect())
+				if (auto embeddedtex = scene->GetEmbeddedTexture(str.C_Str()))
 				{
-					desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
+					//Embedded Texture
+
+					desc.mPath = embeddedtex->mFilename.C_Str();
+
+					if (embeddedtex->mHeight != 0)
+					{
+						Assets::ImageData data;
+						data.mWidth = embeddedtex->mWidth;
+						data.mHeight = embeddedtex->mHeight;
+						data.mData = (Byte*)embeddedtex->pcData;
+
+						if (Graphics::GraphicsEngine::isGammaCorrect())
+							desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
+						else 
+							desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+
+						texture = mManager->Import(data, desc);
+						texture.SetUsageType(GetTextureType(type));
+					}
+					else
+					{
+						desc.mLoadFromMemory = true;
+						desc.mMemData = (Byte*)embeddedtex->pcData;
+						desc.mMemSize = embeddedtex->mWidth;
+						texture = mManager->Import(desc.mPath, desc, GetTextureType(type));
+					}
+
 				}
-				else {
-					desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+				else
+				{
+					//Load Texture
+
+					std::string filename = str.C_Str();
+					filename = mDirectory + '/' + filename;
+					if (Graphics::GraphicsEngine::isGammaCorrect())
+					{
+						desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
+					}
+					else {
+						desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+					}
+					texture = mManager->Import(filename, desc, GetTextureType(type));
 				}
-				texture = mManager->Import(filename, GetTextureType(type), desc);
 
 				textures.mData.push_back({ 0, texture });
+
 			}
 			return textures;
 		}

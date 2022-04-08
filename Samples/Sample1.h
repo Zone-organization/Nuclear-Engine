@@ -128,9 +128,9 @@ class Sample1 : public Core::Game
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png", Graphics::TextureUsageType::Diffuse) });
-		CubeSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/crate_specular.png", Graphics::TextureUsageType::Specular) });
-		CubeSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/crate_normal.png", Graphics::TextureUsageType::Normal) });
+		CubeSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/crate_specular.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Specular) });
+		CubeSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/crate_normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
 
 		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
 
@@ -239,7 +239,7 @@ class Sample1 : public Core::Game
 
 		Math::Matrix4 TVampire(1.0f);
 		TVampire = Math::translate(TVampire, Math::Vector3(-4.0f, -1.75f, 4.0f));
-		//TVampire = Math::scale(TVampire, Math::Vector3(0.03f, 0.03f, 0.03f));
+		TVampire = Math::scale(TVampire, Math::Vector3(0.02f, 0.02f, 0.02f));
 		EVampire.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TVampire);
 
 		Math::Matrix4 TCube(1.0f);
@@ -376,5 +376,10 @@ class Sample1 : public Core::Game
 		//	auto MaterialPtr = material.second;
 		//	ViewMaterialInfo(&MaterialPtr, &AssetLoader);
 		//}
+	}
+
+	void Shutdown() override
+	{
+		mAssetManager->FlushContainers();
 	}
 };

@@ -212,6 +212,7 @@ namespace NuclearEngine
 				RefCntAutoPtr<ITexture> mTexture;
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
+				Image->mData.mData = nullptr;
 				if (mTexture.RawPtr() != nullptr)
 				{
 					Image->mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);

@@ -41,7 +41,7 @@ namespace NuclearEngine {
 
 		AssetManager::~AssetManager()
 		{
-			FlushContainers(mDesc.mFlushFlagOnShutdown);
+		//	FlushContainers(mDesc.mFlushFlagOnShutdown);
 		}
 
 		void AssetManager::FlushContainers(ASSET_MANAGER_FLUSH_FLAGS flag)
@@ -59,19 +59,23 @@ namespace NuclearEngine {
 				it.second.mTextureView.Release();
 			}*/
 		//
+			mImportedMeshes.clear();
+			mHashedMeshesPaths.clear();
+
 			mImportedImages.clear();
 			mHashedImagesPaths.clear();
 
-			mImportedMeshes.clear();
-			mHashedMeshesPaths.clear();
+			mImportedMaterials.clear();
+			mHashedMaterialsPaths.clear();
+
+			mImportedAnimations.clear();
+			mHashedAnimationsPaths.clear();
+
+			mImportedAudioClips.clear();
+			mHashedAudioClipsPaths.clear();
 		}
 
-		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Importers::ImageLoadingDesc& Desc)
-		{
-			return Import(Path, Graphics::TextureUsageType::Unknown, Desc);
-		}
-
-		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Graphics::TextureUsageType & type, const Importers::ImageLoadingDesc& Desc)
+		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Importers::ImageLoadingDesc& Desc, const Graphics::TextureUsageType& type)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 			Graphics::Texture result;
@@ -112,7 +116,30 @@ namespace NuclearEngine {
 			result.SetUsageType(type);
 
 			Log.Info(std::string("[AssetManager : " + mDesc.mName + "] Loaded Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+		
 			return result;
+		}
+
+		Graphics::Texture AssetManager::Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc)
+		{
+			assert(Desc.mPath != std::string(""));
+
+			Graphics::Texture result;
+			auto hashedname = Utilities::Hash(Desc.mPath);
+
+			Assets::Image image;
+			if(Internal::CreateTextureViewFromRawImage(&image, Desc))
+			{
+				mImportedImages[hashedname] = image;
+
+				result.SetImage(&mImportedImages[hashedname]);
+
+				Log.Info(std::string("[AssetManager] Imported Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+				return result;
+			}
+
+			Log.Error(std::string("[AssetManager] Failed To Import Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+			return Assets::DefaultTextures::DefaultBlackTex;
 		}
 
 		//Assets::Image* AssetManager::Import(const Assets::ImageData& Image , const Importers::ImageLoadingDesc & Desc)
@@ -153,6 +180,21 @@ namespace NuclearEngine {
 		std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> AssetManager::Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
+
+			//Check if exists
+			auto itmesh = mImportedMeshes.find(hashedname);
+			if (itmesh != mImportedMeshes.end())
+			{
+				Assets::Animations* anim = nullptr;
+				auto itanim = mImportedAnimations.find(hashedname);
+				if (itanim != mImportedAnimations.end())
+				{
+					anim = &itanim->second;
+				}
+
+				return { &itmesh->second, &mImportedMaterials[hashedname], anim };
+			}
+
 			Assets::Animations Animation;
 			Assets::Animations* anim = nullptr;
 		
@@ -201,6 +243,11 @@ namespace NuclearEngine {
 		Assets::Image* AssetManager::TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
+			auto doesitexist = DoesImageExist(hashedname);
+			if (doesitexist != nullptr)
+			{
+				return doesitexist;
+			}
 
 			Assets::Image result;
 
