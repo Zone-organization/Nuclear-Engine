@@ -191,7 +191,7 @@ namespace NuclearEngine
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = Layout.size();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 			std::vector<ShaderResourceVariableDesc> Vars;
 			Vars.push_back({ SHADER_TYPE_PIXEL, "SceneTexture", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE });
 
@@ -239,7 +239,7 @@ namespace NuclearEngine
 				PSOCreateInfo.pVS = VShader;
 				PSOCreateInfo.pPS = PShader;
 				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 				PSOCreateInfo.PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
 
 				std::vector<ShaderResourceVariableDesc> Vars;

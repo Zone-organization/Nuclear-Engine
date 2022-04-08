@@ -117,7 +117,7 @@ class Sample1 : public Core::Game
 		std::tie(BobAsset, BobMaterial, BobAnimation) = mAssetManager->Import("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
 
 		//Load Bob Model
-		std::tie(VampireAsset, VampireMaterial, VampireAnimation) = mAssetManager->Import("@CommonAssets@/Models/vampire/dancing_vampire.dae", ModelDesc);
+		std::tie(VampireAsset, VampireMaterial, VampireAnimation) = mAssetManager->Import("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
 
 		BobAnimator.Initialize(&BobAnimation->mClips.at(0));
 		VampireAnimator.Initialize(&VampireAnimation->mClips.at(0));

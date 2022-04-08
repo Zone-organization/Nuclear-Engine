@@ -1,4 +1,6 @@
-#include "AngelScriptEngine.h"
+#define EXPOSE_ANGELSCRIPT_ENGINE
+
+#include "Engine/Scripting/AngelScriptEngine/AngelScriptEngine.h"
 #include "..\Source\ThirdParty\angelscript\include\angelscript.h" 
 #include <assert.h>
 namespace NuclearEngine

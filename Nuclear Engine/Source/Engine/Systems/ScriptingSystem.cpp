@@ -1,5 +1,6 @@
 #include "Engine\Systems\ScriptingSystem.h"
-#include "..\Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" 
+#define EXPOSE_ANGELSCRIPT_ENGINE
+#include <Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h>
 #include "Engine\Components\ScriptComponent.h"
 
 namespace NuclearEngine

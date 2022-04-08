@@ -32,6 +32,9 @@ namespace NuclearEngine {
 			mImportedAnimations = std::unordered_map<Uint32, Assets::Animations>();
 			mHashedAnimationsPaths = std::unordered_map<Uint32, Core::Path>();
 
+			mImportedAudioClips = std::unordered_map<Uint32, Assets::AudioClip>();
+			mHashedAudioClipsPaths = std::unordered_map<Uint32, Core::Path>();
+
 			mTextureImporter = Importers::TextureImporterDelegate::create<&Importers::FreeImageLoad>();
 			mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
 		}
@@ -63,12 +66,12 @@ namespace NuclearEngine {
 			mHashedMeshesPaths.clear();
 		}
 
-		Assets::Texture & AssetManager::Import(const Core::Path & Path, const Importers::TextureLoadingDesc & Desc)
+		Assets::Texture AssetManager::Import(const Core::Path & Path, const Importers::TextureLoadingDesc & Desc)
 		{
 			return Import(Path, Assets::TextureUsageType::Unknown, Desc);
 		}
 
-		Assets::Texture & AssetManager::Import(const Core::Path & Path, const Assets::TextureUsageType & type, const Importers::TextureLoadingDesc & Desc)
+		Assets::Texture AssetManager::Import(const Core::Path & Path, const Assets::TextureUsageType & type, const Importers::TextureLoadingDesc & Desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
@@ -95,27 +98,31 @@ namespace NuclearEngine {
 			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
 
 			Assets::Texture Tex;
-			Internal::CreateTextureFromRawImage(Data, Desc, Tex);
+			Internal::CreateTextureFromRawImage(Data, Desc, &Tex);
 			Tex.SetName(hashedname);
 			Tex.SetUsageType(type);
 
 			return mImportedTextures[hashedname] = Tex;
 		}
 
-		Assets::Texture & AssetManager::Import(const Assets::Image & Image, const Importers::TextureLoadingDesc & Desc)
+		Assets::Texture AssetManager::Import(const Assets::Image & Image, const Importers::TextureLoadingDesc & Desc)
 		{
 			Assets::Texture Tex;
-			Internal::CreateTextureFromRawImage(Image, Desc, Tex);
+			Internal::CreateTextureFromRawImage(Image, Desc, &Tex);
 			return Tex;
 		}
 
-		Assets::AudioClip& AssetManager::Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode)
+		Assets::AudioClip* AssetManager::Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode)
 		{
-			Log.Info("[AssetManager : " + mDesc.mName + "] Loading: " + Path.mInputPath + "\n");
-			Assets::AudioClip clip;
-			Audio::AudioEngine::GetSystem()->createSound(Path.mRealPath.c_str(), mode, 0, &clip.mSound);
+			auto hashedname = Utilities::Hash(Path.mInputPath);
+			Log.Info("[AssetManager : " + mDesc.mName + "] Loading: " + Path.mInputPath +" Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n');
 
-			return clip;
+
+			mImportedAudioClips[hashedname] = Assets::AudioClip();
+			auto result = &mImportedAudioClips[hashedname];
+			Audio::AudioEngine::GetSystem()->createSound(Path.mRealPath.c_str(), mode, 0, &result->mSound);
+
+			return result;
 		}
 
 

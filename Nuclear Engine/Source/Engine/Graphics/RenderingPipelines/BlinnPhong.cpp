@@ -69,7 +69,7 @@ namespace NuclearEngine
 			PSOCreateInfo.pVS = VSShader;
 			PSOCreateInfo.pPS = PSShader;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = LayoutElems.size();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSOCreateInfo, Vars, true);
 

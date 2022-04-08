@@ -311,13 +311,13 @@
     <ClInclude Include="Source\ThirdParty\angelscript\source\as_typeinfo.h" />
     <ClInclude Include="Source\ThirdParty\angelscript\source\as_variablescope.h" />
     <ClInclude Include="include\Engine\Components\ScriptComponent.h" />
-    <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" />
+    <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingModule.h" />
     <ClInclude Include="include\Engine\Scripting\Scripting.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptData.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingContext.h" />
-    <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h" />
+    <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h" />
     <ClInclude Include="include\Engine\Assets\Animations.h" />
     <ClInclude Include="include\Engine\Animation\Bone.h" />
     <ClInclude Include="include\Engine\Animation\BoneInfo.h" />

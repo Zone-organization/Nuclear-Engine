@@ -43,8 +43,10 @@ namespace NuclearEngine {
 			}
 
 			auto hashedname = Utilities::Hash(path);
+
 			return true;
 		}
+
 		void AssimpImporter::ProcessNode(aiNode * node, const aiScene * scene)
 		{
 			// process each mesh located at the current node
@@ -61,7 +63,7 @@ namespace NuclearEngine {
 				ProcessNode(node->mChildren[i], scene);
 			}
 		}
-		unsigned int AssimpImporter::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
+		Uint32 AssimpImporter::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
 		{
 			Assets::TextureSet TexSet;
 
@@ -98,7 +100,7 @@ namespace NuclearEngine {
 				}
 				this->mMaterial->mPixelShaderTextures.push_back(TexSet);
 				
-				return (this->mMaterial->mPixelShaderTextures.size() - 1);
+				return static_cast<Uint32>(this->mMaterial->mPixelShaderTextures.size() - 1);
 			}
 			return 0;
 		}
@@ -171,7 +173,7 @@ namespace NuclearEngine {
 
 			return Assets::TextureUsageType::Unknown;
 		}
-		Assets::TextureSet AssimpImporter::ProcessMaterialTexture(aiMaterial * mat, aiTextureType type)
+		Assets::TextureSet AssimpImporter::ProcessMaterialTexture(aiMaterial * mat,const aiTextureType& type)
 		{
 			Assets::TextureSet textures;
 			for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -223,7 +225,7 @@ namespace NuclearEngine {
 			auto& boneInfoMap = mMesh->mBoneInfoMap;
 			int& boneCount = mMesh->mBoneCounter;
 
-			for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+			for (Uint32 boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
 			{
 				int boneID = -1;
 				std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
@@ -290,7 +292,7 @@ namespace NuclearEngine {
 			dest->childrenCount = src->mNumChildren;
 
 			dest->children.reserve(src->mNumChildren);
-			for (int i = 0; i < src->mNumChildren; i++)
+			for (Uint32 i = 0; i < src->mNumChildren; i++)
 			{
 				//dest->mRootNode.children.push_back(Animation::ClipNodeData());
 				//dest->mRootNode.children.back();
@@ -306,7 +308,7 @@ namespace NuclearEngine {
 			for (int positionIndex = 0; positionIndex < result.m_NumPositions; ++positionIndex)
 			{
 				aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
-				float timeStamp = channel->mPositionKeys[positionIndex].mTime;
+				Float64 timeStamp = channel->mPositionKeys[positionIndex].mTime;
 				Animation::KeyPosition data;
 				data.position = AssimpGLMHelpers::GetGLMVec(aiPosition);
 				data.timeStamp = timeStamp;
@@ -317,7 +319,7 @@ namespace NuclearEngine {
 			for (int rotationIndex = 0; rotationIndex < result.m_NumRotations; ++rotationIndex)
 			{
 				aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
-				float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
+				Float64 timeStamp = channel->mRotationKeys[rotationIndex].mTime;
 				Animation::KeyRotation data;
 				data.orientation = AssimpGLMHelpers::GetGLMQuat(aiOrientation);
 				data.timeStamp = timeStamp;
@@ -328,7 +330,7 @@ namespace NuclearEngine {
 			for (int keyIndex = 0; keyIndex < result.m_NumScalings; ++keyIndex)
 			{
 				aiVector3D scale = channel->mScalingKeys[keyIndex].mValue;
-				float timeStamp = channel->mScalingKeys[keyIndex].mTime;
+				Float64 timeStamp = channel->mScalingKeys[keyIndex].mTime;
 				Animation::KeyScale data;
 				data.scale = AssimpGLMHelpers::GetGLMVec(scale);
 				data.timeStamp = timeStamp;

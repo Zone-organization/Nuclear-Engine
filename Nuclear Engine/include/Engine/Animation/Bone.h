@@ -11,19 +11,19 @@ namespace NuclearEngine
 		struct KeyPosition
 		{
 			Math::Vector3 position;
-			float timeStamp;
+			Float64 timeStamp;
 		};
 
 		struct KeyRotation
 		{
 			Math::Quaternion orientation;
-			float timeStamp;
+			Float64 timeStamp;
 		};
 
 		struct KeyScale
 		{
 			Math::Vector3 scale;
-			float timeStamp;
+			Float64 timeStamp;
 		};
 
 		struct BoneData

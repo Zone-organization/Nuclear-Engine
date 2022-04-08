@@ -1,62 +1,40 @@
 # Nuclear Engine
 
-* [OLD Engine features](https://github.com/Zone-organization/Nuclear-Engine/blob/master/FEATURES.md) - A list of all working features.
-
-## To-dos 
+## Current To-dos 
   - W.I.P:
 	- Improving PhysX Implementaion
 	- Improving Scripting support (through AngelScript)
 	- Improving Mesh Animation Implementaion
-
+    - Improving README.md
+	
   - TODO:
-	- ShadowMaps (Through Diligent Component).
+    - Graphical Improvement to the available Pipelines (ShadowMaps & bloom & ...)
 	- Basic Editor support (Nuclear Editor).
 
-  - Planned:
-	- GLTF PBR Renderer (Through Diligent Component).
+# Getting started
 
-### Building
-The project has three building configuration:
-Debug: Which is used in internal engine development.
-Checked: Use it if you are developing a game.
-Release: Provides maximum performance, use it if you are publishing your game.
+Follow the instructions below to compile and run the engine from source.
 
-Some Dependencies needs to be downloaded and built manually.
+## Windows
 
-- __Requirements__
-  - Visual Studio 2022
-  - CMake
+* Visual Studio 2022 or newer is required
+* Clone repo & submodules
+* Run **RunCmakeForDependencies.bat**
+* Compile Assimp & Diligent & GLFW found in External/CmakeProjects
+* Download and compile the remaining dependencies (PHYSX & FreeImage & FMOD)
+* Run **CopyDependenciesBinaries.bat**
+* Open `Nuclear Engine.sln` and set your solution configuration and platform
+* Compile 
 
-- __Dependencies__
-  - Assimp
-  - DiligentCore
-  - FMOD SDK
-  - PhysX 4.1
-  - Freeimage
-  - GLFW 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+| Dependencies | Type |
+| ------ | ------ |
+| Assimp | Submodule & built with cmake |
+| DiligentCore | Submodule & built with cmake |
+| GLFW | Submodule & built with cmake |
+| AngelScript | included |
+| IMGUI | included |
+| stb_truetype | included |
+| FMOD SDK | External 'Download it through their site' |
+| PhysX 4.1 | submodule |
+| Freeimage | submodule |

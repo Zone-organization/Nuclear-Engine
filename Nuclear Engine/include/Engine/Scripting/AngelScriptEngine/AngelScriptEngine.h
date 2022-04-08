@@ -1,4 +1,7 @@
 #pragma once
+
+#ifdef EXPOSE_ANGELSCRIPT_ENGINE
+
 #include <Base\NE_Common.h>
 #include "Engine\Assets\Script.h"
 #include "Engine\Scripting\ScriptingEngine.h"
@@ -36,3 +39,5 @@ namespace NuclearEngine
 		}
 	}
 }
+
+#endif

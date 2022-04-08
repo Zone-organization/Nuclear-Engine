@@ -96,8 +96,10 @@ namespace NuclearEngine
 					}
 			}
 
-			bool CreateTextureFromRawImage(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc, Assets::Texture& result)
+			bool CreateTextureFromRawImage(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc, Assets::Texture* result)
 			{	
+				assert(result);
+
 				TextureDesc TexDesc;
 				TexDesc.Type = RESOURCE_DIM_TEX_2D;
 				TexDesc.Width = Image.mWidth;
@@ -189,12 +191,12 @@ namespace NuclearEngine
 					{
 						if (ChannelDepth == 8)
 							ComputeCoarseMip<Uint8>(NumComponents, IsSRGB,
-								pSubResources[m - 1].pData, pSubResources[m - 1].Stride,
+								pSubResources[m - 1].pData, static_cast<Uint32>(pSubResources[m - 1].Stride),
 								Mips[m].data(), CoarseMipStride,
 								CoarseMipWidth, CoarseMipHeight);
 						else if (ChannelDepth == 16)
 							ComputeCoarseMip<Uint16>(NumComponents, IsSRGB,
-								pSubResources[m - 1].pData, pSubResources[m - 1].Stride,
+								pSubResources[m - 1].pData, static_cast<Uint32>(pSubResources[m - 1].Stride),
 								Mips[m].data(), CoarseMipStride,
 								CoarseMipWidth, CoarseMipHeight);
 					}
@@ -213,9 +215,9 @@ namespace NuclearEngine
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 				if (mTexture.RawPtr() != nullptr)
 				{
-					result.mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+					result->mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-					if (result.mTextureView.RawPtr() != nullptr)
+					if (result->mTextureView.RawPtr() != nullptr)
 						return true;
 				}
 				return false;

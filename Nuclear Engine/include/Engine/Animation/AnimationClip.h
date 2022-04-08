@@ -26,8 +26,9 @@ namespace NuclearEngine
 			Animation::Bone* FindBone(const std::string& name);
 
 
-			inline float GetTicksPerSecond() { return m_TicksPerSecond; }
-			inline float GetDuration() { return m_Duration; }
+			inline Float64 GetTicksPerSecond() { return m_TicksPerSecond; }
+			inline Float64 GetDuration() { return m_Duration; }
+
 			inline const ClipNodeData& GetRootNode() { return mRootNode; }
 			inline const std::unordered_map<std::string, Animation::BoneInfo>& GetBoneIDMap()
 			{
@@ -36,8 +37,8 @@ namespace NuclearEngine
 
 			//private:
 
-			float m_Duration;
-			int m_TicksPerSecond;
+			Float64 m_Duration;
+			Float64 m_TicksPerSecond;
 			std::vector<Animation::Bone> mBones;
 			ClipNodeData mRootNode;
 			std::unordered_map<std::string, Animation::BoneInfo> mBoneInfoMap;

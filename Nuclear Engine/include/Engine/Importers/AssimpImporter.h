@@ -17,11 +17,10 @@ namespace NuclearEngine
 		class AssimpImporter {
 		public:
 			bool Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim);
-
 		private:
-			Assets::TextureSet ProcessMaterialTexture(aiMaterial *mat, aiTextureType type);
+			Assets::TextureSet ProcessMaterialTexture(aiMaterial *mat, const aiTextureType& type);
 			void ProcessMesh(aiMesh *mesh, const aiScene *scene);
-			unsigned int ProcessMaterial(aiMesh * mesh, const aiScene * scene);
+			Uint32 ProcessMaterial(aiMesh * mesh, const aiScene * scene);
 			void ProcessNode(aiNode *node, const aiScene *scene);
 
 			std::vector<std::string> TexturePaths;

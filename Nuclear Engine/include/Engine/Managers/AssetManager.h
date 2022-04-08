@@ -91,6 +91,9 @@ namespace NuclearEngine
 			std::unordered_map<Uint32, Core::Path> mHashedAnimationsPaths; //Real pre-hashed materials paths (conditionally saved see mSaveMaterialPaths)
 			bool mSaveAnimationsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
 
+			std::unordered_map<Uint32, Assets::AudioClip> mImportedAudioClips; //All imported materials with their hashed names with crc32c (always saved)
+			std::unordered_map<Uint32, Core::Path> mHashedAudioClipsPaths; //Real pre-hashed materials paths (conditionally saved see mSaveMaterialPaths)
+			bool mSaveAudioClipsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
 
 			bool mMultithreadMeshTextureLoading = true;
 
@@ -100,11 +103,11 @@ namespace NuclearEngine
 			//Note: Automatically called on Destruction
 			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
 
-			Assets::Texture& Import(const Core::Path& Path, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
-			Assets::Texture& Import(const Core::Path& Path, const Assets::TextureUsageType& type, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
-			Assets::Texture& Import(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
+			Assets::Texture Import(const Core::Path& Path, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
+			Assets::Texture Import(const Core::Path& Path, const Assets::TextureUsageType& type, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
+			Assets::Texture Import(const Assets::Image& Image, const Importers::TextureLoadingDesc& Desc = Importers::TextureLoadingDesc());
 
-			Assets::AudioClip& Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
+			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
 			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
 

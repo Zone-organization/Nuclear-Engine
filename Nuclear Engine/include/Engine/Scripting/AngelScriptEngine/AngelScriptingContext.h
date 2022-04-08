@@ -1,4 +1,6 @@
 #pragma once
+#ifdef EXPOSE_ANGELSCRIPT_ENGINE
+
 #include "Engine\Scripting\ScriptingContext.h"
 
 class asIScriptContext;
@@ -27,3 +29,5 @@ namespace NuclearEngine
 		}
 	}
 }
+
+#endif

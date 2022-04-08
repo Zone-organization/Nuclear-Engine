@@ -368,7 +368,7 @@ namespace NuclearEngine {
 			/// An iterator over a view of the entities in an EntityManager.
 			/// If All is true it will iterate over all Valid entities and will ignore the entity mask.
 			template <class Delegate, bool All = false>
-			class ViewIterator : public std::iterator<std::input_iterator_tag, Entity::Id> {
+			class ViewIterator {
 			public:
 				Delegate & operator ++() {
 					++i_;
@@ -380,6 +380,8 @@ namespace NuclearEngine {
 				Entity operator * () { return Entity(manager_, manager_->Create_id(i_)); }
 				const Entity operator * () const { return Entity(manager_, manager_->Create_id(i_)); }
 
+				std::input_iterator_tag iterator;
+				Entity::Id id;
 			protected:
 				ViewIterator(EntityManager *manager, uint32_t index)
 					: manager_(manager), i_(index), capacity_(manager_->capacity()), free_cursor_(~0UL) {
