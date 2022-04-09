@@ -18,16 +18,12 @@ namespace NuclearEngine
 		public:
 			EntityFactory(ECS::Scene* ParentScene);
 
-			Entity CreateBox(Assets::Material* material, ECS::Transform t , PhysX::PhysXMaterial* PMat = GetDefaultBoxMaterial());
+			Entity CreateBox(Assets::Material* material, ECS::Transform t);
 
-			Entity CreateSphere(Assets::Material* material, ECS::Transform t, PhysX::PhysXMaterial* PMat = GetDefaultSphereMaterial());
+			Entity CreateSphere(Assets::Material* material, ECS::Transform t);
 
-			Entity CreatePlane(Assets::Material* material, ECS::Transform t, PhysX::PhysXMaterial* PMat = GetDefaultPlaneMaterial());
+			Entity CreatePlane(Assets::Material* material, ECS::Transform t);
 
-			static PhysX::PhysXMaterial* GetDefaultBoxMaterial();
-			static PhysX::PhysXMaterial* GetDefaultSphereMaterial();
-			static PhysX::PhysXMaterial* GetDefaultPlaneMaterial();
-			static void InitializeDefaultPhysxMaterials();
 		protected:
 
 			ECS::Scene* mScene;

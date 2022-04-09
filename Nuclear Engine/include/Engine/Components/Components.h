@@ -8,3 +8,4 @@
 #include <Engine\Components\PointLightComponent.h>
 #include <Engine\Components\SpotLightComponent.h>
 #include <Engine\Components\AnimatorComponent.h>
+#include <Engine\Components\ScriptComponent.h>

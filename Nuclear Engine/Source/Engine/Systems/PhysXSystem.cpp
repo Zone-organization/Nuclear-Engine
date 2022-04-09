@@ -21,6 +21,7 @@ namespace NuclearEngine
 		}
 		PhysXSystem::~PhysXSystem()
 		{
+			mPhysXScene->release();
 		}
 
 		void PhysXSystem::SetColliderForRigidBody(ECS::Entity entity)
@@ -31,7 +32,7 @@ namespace NuclearEngine
 
 			if (RigidComponent && ColliderComponent)
 			{
-				RigidComponent->mDynamicActor.mPtr->attachShape(*ColliderComponent->mShape.mPtr);
+				RigidComponent->GetActor().mPtr->attachShape(*ColliderComponent->GetShape().mPtr);
 			}
 		}
 		
@@ -59,11 +60,11 @@ namespace NuclearEngine
 				auto RigidComponent = mScene->GetRegistry().try_get<Components::RigidBodyComponent>(entity);
 				if (RigidComponent)
 				{		
-					RigidComponent->mDynamicActor.mPtr->attachShape(*Obj.mShape.mPtr);
-					mPhysXScene->addActor(*RigidComponent->mDynamicActor.mPtr);
+					RigidComponent->GetActor().mPtr->attachShape(*Obj.GetShape().mPtr);
+					mPhysXScene->addActor(*RigidComponent->GetActor().mPtr);
 				}
 				else {
-					mPhysXScene->addActor(*Obj.mStaticActor.mPtr);
+					mPhysXScene->addActor(*Obj.GetActor().mPtr);
 				}
 			}
 		}
@@ -74,19 +75,19 @@ namespace NuclearEngine
 			for (auto entity : eView)
 			{
 				auto& Obj = eView.get<Components::ColliderComponent>(entity);
-				if (!Obj.mAddedtoPhysxScene)
+				if (!Obj.isValid())
 				{
 					auto RigidComponent = mScene->GetRegistry().try_get<Components::RigidBodyComponent>(entity);
 					if (RigidComponent)
 					{
-						RigidComponent->mDynamicActor.mPtr->attachShape(*Obj.mShape.mPtr);
-						mPhysXScene->addActor(*RigidComponent->mDynamicActor.mPtr);
+						RigidComponent->GetActor().mPtr->attachShape(*Obj.GetShape().mPtr);
+						mPhysXScene->addActor(*RigidComponent->GetActor().mPtr);
 					}
 					else {
-						mPhysXScene->addActor(*Obj.mStaticActor.mPtr);
+						mPhysXScene->addActor(*Obj.GetActor().mPtr);
 					}
 
-					Obj.mAddedtoPhysxScene = true;
+					Obj.SetValid(true);
 				}
 			}
 		}
@@ -98,16 +99,16 @@ namespace NuclearEngine
 
 			if (RigidComponent && ColliderComponent)
 			{
-				mPhysXScene->addActor(*RigidComponent->mDynamicActor.mPtr);
-				RigidComponent->mDynamicActor.mPtr->userData = (void*)entity.entity;
-				ColliderComponent->mStaticActor.mPtr->userData = (void*)entity.entity;
+				mPhysXScene->addActor(*RigidComponent->GetActor().mPtr);
+				RigidComponent->GetActor().mPtr->userData = (void*)entity.entity;
+				ColliderComponent->GetActor().mPtr->userData = (void*)entity.entity;
 				return true;
 			}
 
 			if (ColliderComponent)
 			{
-				mPhysXScene->addActor(*ColliderComponent->mStaticActor.mPtr);
-				ColliderComponent->mStaticActor.mPtr->userData = (void*)entity.entity;
+				mPhysXScene->addActor(*ColliderComponent->GetActor().mPtr);
+				ColliderComponent->GetActor().mPtr->userData = (void*)entity.entity;
 				return true;
 			}
 
@@ -166,7 +167,7 @@ namespace NuclearEngine
 				{
 					RigidBodyObj.SetisKinematic(RigidBodyObj.isKinematic);
 				}
-				mScene->GetRegistry().try_get<Components::EntityInfoComponent>(entity)->mTransform.SetTransform(PhysX::From(RigidBodyObj.mDynamicActor.mPtr->getGlobalPose()));
+				mScene->GetRegistry().try_get<Components::EntityInfoComponent>(entity)->mTransform.SetTransform(PhysX::From(RigidBodyObj.GetActor().mPtr->getGlobalPose()));
 			}
 		}
 	}

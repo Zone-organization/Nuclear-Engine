@@ -20,6 +20,10 @@ namespace NuclearEngine
 		RigidBodyComponent::~RigidBodyComponent()
 		{
 		}
+		PhysX::RigidDynamic& RigidBodyComponent::GetActor()
+		{
+			return mDynamicActor;
+		}
 		void RigidBodyComponent::SetisKinematic(bool value)
 		{
 

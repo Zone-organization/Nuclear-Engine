@@ -1,7 +1,10 @@
 #include "Engine\Systems\ScriptingSystem.h"
 #define EXPOSE_ANGELSCRIPT_ENGINE
 #include <Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h>
+#include <Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h>
 #include "Engine\Components\ScriptComponent.h"
+#include "Engine\ECS\Scene.h"
+#include "..\Source\ThirdParty\angelscript\include\angelscript.h" 
 
 namespace NuclearEngine
 {
@@ -46,22 +49,44 @@ namespace NuclearEngine
 			return &_modules.back();
 		}
 
-		//void ScriptingSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
-		//{
-		//	//ECS::ComponentHandle<Components::ScriptComponent> script;
-		//	//for (ECS::Entity entity : es.entities_with_components(script))
-		//	//{
-		//		for (auto it : _modules)
-		//		{
-		//			for (auto it2 : it.mImportedScripts)
-		//			{
-		//				GetScriptingEngine()->GetContext()->Prepare(it.mImportedScripts[it2.first].mStartfun);
-		//				GetScriptingEngine()->GetContext()->Execute();
-		//				GetScriptingEngine()->GetContext()->UnPrepare();
-		//			}
-		//		}
-		//	//}
-		//}
+		void ScriptingSystem::Load()
+		{
+			auto view = mScene->GetRegistry().view<Components::ScriptComponent>();
+
+			for (auto entity : view)
+			{
+				auto& script = view.get<Components::ScriptComponent>(entity);
+				for (auto it : _modules)
+				{
+					for (auto it2 : it.mImportedScripts)
+					{
+						GetScriptingEngine()->GetContext()->Prepare(it.mImportedScripts[it2.first].mLoadfun);
+						GetScriptingEngine()->GetContext()->SetObject(it.mImportedScripts[it2.first].mObjectInstance);
+						GetScriptingEngine()->GetContext()->Execute();
+					}
+				}
+			}
+		}
+
+		void ScriptingSystem::Update(ECS::TimeDelta dt)
+		{
+			auto view = mScene->GetRegistry().view<Components::ScriptComponent>();
+
+			for (auto entity : view)
+			{
+				auto& script = view.get<Components::ScriptComponent>(entity);
+				for (auto it : _modules)
+				{
+					for (auto it2 : it.mImportedScripts)
+					{
+						GetScriptingEngine()->GetContext()->Prepare(it.mImportedScripts[it2.first].mUpdateFun);
+						GetScriptingEngine()->GetContext()->SetObject(it.mImportedScripts[it2.first].mObjectInstance);
+						GetScriptingEngine()->GetContext()->SetArgFloat(0, dt);
+						GetScriptingEngine()->GetContext()->Execute();
+					}
+				}
+			}
+		}
 
 	}
 }

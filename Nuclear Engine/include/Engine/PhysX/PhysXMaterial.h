@@ -8,7 +8,7 @@ namespace NuclearEngine
 	namespace PhysX
 	{
 		//Wraps around physx::PxMaterial
-		class NEAPI PhysXMaterial
+		/*class NEAPI PhysXMaterial
 		{
 		public:
 			PhysXMaterial();
@@ -31,6 +31,6 @@ namespace NuclearEngine
 			physx::PxMaterial* GetPtr();
 		private:
 			physx::PxMaterial* mMaterial;
-		};
+		};*/
 	}
 }

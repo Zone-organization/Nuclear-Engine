@@ -1,7 +1,7 @@
 
-class Script1
+abstract class ScriptBase
 {
-    Script1()
+    ScriptBase()
     {
         print("Constructor\n");
     }
@@ -13,6 +13,5 @@ class Script1
 
     void Update(float dt)
     {
-        print("Update\n" + dt);
     }
 };

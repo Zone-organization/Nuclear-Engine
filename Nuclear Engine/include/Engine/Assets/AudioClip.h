@@ -14,12 +14,13 @@ namespace NuclearEngine
 
 	namespace Assets
 	{
-		class NEAPI AudioClip 
+		class NEAPI AudioClip : public Asset<AudioClip>
 		{
 		public:
+			AudioClip();
+			~AudioClip();
 
-			void Play(FMOD::Channel* channel = nullptr, bool paused = false);
-
+		//private:
 			FMOD::Sound* mSound;
 		};
 	}

@@ -11,25 +11,39 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		enum COLLIDER_SHAPE
+		enum class ColliderShape
 		{
-			COLLIDER_SHAPE_UNKNOWN,
-			COLLIDER_SHAPE_BOX,
-			COLLIDER_SHAPE_PLANE,
-			COLLIDER_SHAPE_SPHERE
+			Unknown,
+			Box,
+			Plane,
+			Sphere
+		};
+
+		struct NEAPI ColliderDesc
+		{
+			float mStaticFriction = 0.5f;
+			float mDynamicFriction = 0.5f;
+			float mRestitution = 0.5f;
+			ColliderShape mShape = ColliderShape::Unknown;
+			PhysX::PhysicsGeometry* mGeo = nullptr;
 		};
 
 		class NEAPI ColliderComponent
 		{
 		public:
 			ColliderComponent();
-			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::BoxGeometry Geo);
-			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::PlaneGeometry Geo);
-			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::SphereGeometry Geo);
+			ColliderComponent(const ColliderDesc& desc);
 			~ColliderComponent();
 
-			COLLIDER_SHAPE mType = COLLIDER_SHAPE_UNKNOWN;
-			PhysX::PhysXMaterial* mMaterial;
+			void Create(const ColliderDesc& desc);
+			bool isValid();
+			void SetValid(bool value);
+
+			PhysX::PhysXShape& GetShape();
+			PhysX::RigidStatic& GetActor();
+		private:
+			ColliderShape mType = ColliderShape::Unknown;
+			//PhysX::PhysXMaterial* mMaterial;
 			PhysX::PhysXShape mShape;
 			PhysX::RigidStatic mStaticActor;
 			bool mAddedtoPhysxScene = false;

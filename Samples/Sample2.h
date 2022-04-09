@@ -1,6 +1,9 @@
 #pragma once
 #include "Common.h"
 
+void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInfoComponent& Einfo);
+void EntityExplorer(ECS::Scene* scene);
+
 class Sample2 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
@@ -18,8 +21,6 @@ class Sample2 : public Core::Game
 
 	Assets::Material SphereMaterial;
 	Assets::Material PlaneMaterial;
-
-	PhysX::PhysXMaterial BoxPhysXMat;
 
 	Components::CameraComponent* Camera;
 
@@ -138,7 +139,6 @@ public:
 		InitRenderer();
 
 		SetupAssets();
-		Scene.GetFactory().InitializeDefaultPhysxMaterials();
 
 		int nrRows = 7;
 		int nrColumns = 7;
@@ -182,11 +182,13 @@ public:
 
 		Assets::Mesh::CreatePlane(&gPlane, 100.0f, 100.0f);
 
-		BoxPhysXMat.Create();
-
 		//Assign Components
 		EPlane.AddComponent<Components::MeshComponent>(&gPlane, &PlaneMaterial);
-		EPlane.AddComponent<Components::ColliderComponent>(&BoxPhysXMat, PhysX::PlaneGeometry(ECS::Transform()));
+		Components::ColliderDesc desc;
+		desc.mShape = Components::ColliderShape::Plane;
+		auto geo =	PhysX::PlaneGeometry(ECS::Transform());
+		desc.mGeo = &geo;
+		EPlane.AddComponent<Components::ColliderComponent>(desc);
 
 		mPhysXSystem->AddActor(EPlane);
 
@@ -341,7 +343,7 @@ public:
 			}
 
 			ImGui::End();
-			//EntityExplorer(&Scene);
+			EntityExplorer(&Scene);
 
 		}
 		//ViewMaterialInfo(NanosuitMaterial, &AssetLoader);
@@ -354,286 +356,281 @@ public:
 	}
 };
 
+void EntityExplorer(ECS::Scene* scene)
+{
+	//ImGui::ShowStackToolWindow();
+	ImGui::Begin("Entity Explorer");
+	if (ImGui::TreeNode(scene->GetName().c_str()))
+	{
+		auto view = scene->GetRegistry().view<Components::EntityInfoComponent>();
 
-//void EntityView(ECS::Entity& entity, ECS::ComponentHandle<Components::EntityInfoComponent>& Einfo);
-//
-//void EntityExplorer(ECS::Scene* scene)
-//{
-//	//ImGui::ShowStackToolWindow();
-//
-//	ECS::Entity Entityview;
-//	ImGui::Begin("Entity Explorer");
-//	if (ImGui::TreeNode(scene->GetName().c_str()))
-//	{
-//		ECS::ComponentHandle<Components::EntityInfoComponent> Einfo;
-//
-//		for (ECS::Entity entity : scene->Entities.entities_with_components(Einfo))
-//		{
-//			auto index = entity.id().index();
-//			ECS::ComponentHandle<Components::EntityInfoComponent> Einfo = entity.GetComponent<Components::EntityInfoComponent>();
-//
-//			if (!Einfo.Valid()) 
-//				assert("Entity with no info");
-//
-//			ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-//
-//			static int selectedindex = 0;
-//
-//			if (selectedindex == index)
-//			{
-//				node_flags |= ImGuiTreeNodeFlags_Selected;
-//				EntityView(entity, Einfo);
-//			}
-//
-//			ImGui::PushID(entity.id().id());
-//
-//
-//			ImGui::TreeNodeEx(Einfo.Get()->mName.c_str(), node_flags);
-//			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-//			{
-//				selectedindex = index;
-//			}
-//
-//			ImGui::PopID();
-//		}
-//		ImGui::TreePop();
-//	}
-//	ImGui::End();
-//
-//
-//
-//}
-//
-//void EntityView(ECS::Entity& entity, ECS::ComponentHandle<Components::EntityInfoComponent>& Einfo)
-//{
-//	auto index = entity.id().index();
-//
-//	using namespace Graphics;
-//	ImGui::Begin("Entity View");
-//	{
-//		ImGui::PushID(index);           // Push i to the id tack
-//
-//		ImGui::InputText("Name", (char*)Einfo.Get()->mName.c_str(), Einfo.Get()->mName.capacity() + 1);
-//
-//		if (ImGui::CollapsingHeader("Transform"))
-//		{
-//			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
-//			if (ImGui::BeginTabBar("Transformtab", tab_bar_flags))
-//			{
-//				if (ImGui::BeginTabItem("Local"))
-//				{
-//					ImGui::DragFloat3("Position", (float*)&Einfo->mTransform.GetLocalPosition());
-//					ImGui::DragFloat3("Rotation", (float*)&Einfo->mTransform.GetLocalRotation());
-//					ImGui::DragFloat3("Scale", (float*)&Einfo->mTransform.GetLocalScale());
-//					ImGui::EndTabItem();
-//				}
-//				if (ImGui::BeginTabItem("World"))
-//				{
-//					Math::Vector3 pos = Einfo->mTransform.GetWorldPosition();
-//					ImGui::DragFloat3("Position", (float*)&pos);
-//					//auto test = Einfo.Get();
-//					//test->mTransform.SetTransform(Math::translate(test->mTransform.GetTransform(), pos));
-//
-//					ImGui::DragFloat3("Rotation", (float*)&Einfo->mTransform.GetWorldRotation());
-//					ImGui::DragFloat3("Scale", (float*)&Einfo->mTransform.GetWorldScale());
-//					ImGui::EndTabItem();
-//				}
-//				ImGui::EndTabBar();
-//			}
-//		}
-//
-//		//Collider
-//		{
-//			ECS::ComponentHandle<Components::ColliderComponent> colliderbody = entity.GetComponent<Components::ColliderComponent>();
-//			if (colliderbody.Valid())
-//			{
-//				if (ImGui::CollapsingHeader("Collider"))
-//				{
-//					//ImGui::Checkbox("iskinematic", &rigidbody->isKinematic);
-//
-//
-//				}
-//			}
-//		}
-//
-//		//Rigid Body
-//		{
-//			ECS::ComponentHandle<Components::RigidBodyComponent> rigidbody = entity.GetComponent<Components::RigidBodyComponent>();
-//			if (rigidbody.Valid())
-//			{
-//				if (ImGui::CollapsingHeader("Rigidbody"))
-//				{
-//					ImGui::Checkbox("iskinematic", &rigidbody->isKinematic);
-//
-//
-//				}
-//			}
-//		}
-//		//Camera
-//		{
-//			ECS::ComponentHandle<Components::CameraComponent> camera = entity.GetComponent<Components::CameraComponent>();
-//			if (camera.Valid())
-//			{
-//				if (ImGui::CollapsingHeader("Camera"))
-//				{
-//					ImGui::ColorEdit3("RenderTarget ClearColor", (float*)&camera->RTClearColor);
-//					ImGui::Checkbox("HDR", &camera->HDR);
-//					ImGui::Checkbox("GammaCorrection", &camera->GammaCorrection);
-//
-//					ImGui::DragFloat("Movement Speed", &camera->MovementSpeed);
-//					ImGui::DragFloat("Mouse Sensitivity", &camera->MouseSensitivity);
-//					ImGui::DragFloat("Zoom", &camera->Zoom);
-//
-//
-//				}
-//			}
-//		}
-//
-//		//DirLight
-//		{
-//			ECS::ComponentHandle<Components::DirLightComponent> light = entity.GetComponent<Components::DirLightComponent>();
-//			if (light.Valid())
-//			{
-//				if (ImGui::CollapsingHeader("Directional Light"))
-//				{
-//					Graphics::Color oldcolor = light->GetColor();
-//					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-//					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
-//					{
-//						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
-//					}
-//
-//					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
-//					if (ImGui::DragFloat3("Direction", (float*)&lighdir))
-//					{
-//						light->SetDirection(Math::Vector3(lighdir.x, lighdir.y, lighdir.z));
-//					}
-//
-//
-//				}
-//			}
-//		}
-//
-//		//PointLight
-//		{
-//			ECS::ComponentHandle<Components::PointLightComponent> light = entity.GetComponent<Components::PointLightComponent>();
-//			if (light.Valid())
-//			{
-//				if (ImGui::CollapsingHeader("Point Light"))
-//				{
-//					ImVec4 lighpos = ImVec4(light->GetPosition().x, light->GetPosition().y, light->GetPosition().z, 1.00f);
-//					if (ImGui::DragFloat3("Position", (float*)&lighpos))
-//					{
-//						light->SetPosition(Math::Vector3(lighpos.x, lighpos.y, lighpos.z));
-//					}
-//
-//					Graphics::Color oldcolor = light->GetColor();
-//					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-//					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
-//					{
-//						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
-//					}
-//
-//					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
-//					if (ImGui::DragFloat3("Attenuation", (float*)&att))
-//					{
-//						light->SetAttenuation(Math::Vector3(att.x, att.y, att.z));
-//					}
-//
-//					float f = light->GetIntensity();
-//					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.4f", ImGuiSliderFlags_None))
-//					{
-//						light->SetIntensity(f);
-//					}
-//
-//				}
-//			}
-//		}
-//
-//		//SpotLight
-//		{
-//			ECS::ComponentHandle<Components::SpotLightComponent> light = entity.GetComponent<Components::SpotLightComponent>();
-//			if (light.Valid())
-//			{
-//				if (ImGui::CollapsingHeader("Spot Light"))
-//				{
-//					ImVec4 lighpos = ImVec4(light->GetPosition().x, light->GetPosition().y, light->GetPosition().z, 1.00f);
-//					if (ImGui::DragFloat3("Position", (float*)&lighpos))
-//					{
-//						light->SetPosition(Math::Vector3(lighpos.x, lighpos.y, lighpos.z));
-//					}
-//
-//					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
-//					if (ImGui::DragFloat3("Direction", (float*)&lighdir))
-//					{
-//						light->SetDirection(Math::Vector3(lighdir.x, lighdir.y, lighdir.z));
-//					}
-//
-//					ImVec2 cone = ImVec2(light->GetSpotlightCone().x, light->GetSpotlightCone().y);
-//					if (ImGui::DragFloat2("Spotlight Cone", (float*)&cone))
-//					{
-//						light->SetSpotlightCone(Math::Vector2(cone.x, cone.y));
-//					}
-//
-//					Graphics::Color oldcolor = light->GetColor();
-//					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-//					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
-//					{
-//						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
-//					}
-//
-//					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
-//					if (ImGui::DragFloat3("Attenuation", (float*)&att))
-//					{
-//						light->SetAttenuation(Math::Vector3(att.x, att.y, att.z));
-//					}
-//
-//					float f = light->GetIntensity();
-//					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.4f", ImGuiSliderFlags_None))
-//					{
-//						light->SetIntensity(f);
-//					}
-//
-//				}
-//			}
-//		}
-//
-//		//Mesh
-//		{
-//			ECS::ComponentHandle<Components::MeshComponent> meshcomponent = entity.GetComponent<Components::MeshComponent>();
-//			if (meshcomponent.Valid()) {
-//
-//				if (ImGui::CollapsingHeader("Mesh"))
-//				{
-//					ImGui::Checkbox("Render", &meshcomponent->mRender);
-//					ImGui::Checkbox("Multi Render", &meshcomponent->mMultiRender);
-//
-//					if (meshcomponent->mMesh != nullptr)
-//					{
-//						if (meshcomponent->mMesh->GetStringName() != std::string(""))
-//						{
-//							ImGui::Text(meshcomponent->mMesh->GetStringName().c_str());
-//						}
-//						else {
-//							ImGui::Text("Unnamed Mesh");
-//						}
-//					}
-//					if (meshcomponent->mMaterial != nullptr)
-//					{
-//						if (meshcomponent->mMaterial->GetStringName() != std::string(""))
-//						{
-//							ImGui::Text(meshcomponent->mMaterial->GetStringName().c_str());
-//						}
-//						else {
-//							ImGui::Text("Unnamed Material");
-//						}
-//					}
-//
-//				}
-//			}
-//		}
-//
-//		ImGui::PopID();
-//	}
-//	ImGui::End();
-//}
+		for (auto entity : view)
+		{
+			auto& Einfo = view.get<Components::EntityInfoComponent>(entity);
+
+			auto index = (Uint32)entity;
+
+			ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+			static int selectedindex = 0;
+
+			if (selectedindex == index)
+			{
+				node_flags |= ImGuiTreeNodeFlags_Selected;
+				EntityView(entity,scene->GetRegistry(), Einfo);
+			}
+
+			ImGui::PushID(index);
+
+
+			ImGui::TreeNodeEx(Einfo.mName.c_str(), node_flags);
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+			{
+				selectedindex = index;
+			}
+
+			ImGui::PopID();
+		}
+		ImGui::TreePop();
+	}
+	ImGui::End();
+
+
+
+}
+
+void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInfoComponent& Einfo)
+{
+	auto index = (Uint32)entity;
+
+	using namespace Graphics;
+	ImGui::Begin("Entity View");
+	{
+		ImGui::PushID(index);           // Push i to the id tack
+
+		ImGui::InputText("Name", (char*)Einfo.mName.c_str(), Einfo.mName.capacity() + 1);
+		if (ImGui::CollapsingHeader("Transform"))
+		{
+			//auto* transform = &Einfo.mTransform;
+
+			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+			if (ImGui::BeginTabBar("Transformtab", tab_bar_flags))
+			{
+				if (ImGui::BeginTabItem("Local"))
+				{
+					/*ImGui::DragFloat3("Position", (float*)&transform->GetLocalPosition());
+					ImGui::DragFloat3("Rotation", (float*)&transform->GetLocalRotation());
+					ImGui::DragFloat3("Scale", (float*)&transform->GetLocalScale());*/
+					ImGui::EndTabItem();
+				}
+				if (ImGui::BeginTabItem("World"))
+				{
+					//Math::Vector3 pos = transform->GetWorldPosition();
+					//ImGui::DragFloat3("Position", (float*)&pos);
+					//auto test = Einfo.Get();
+					//test->mTransform.SetTransform(Math::translate(test->mTransform.GetTransform(), pos));
+
+					/*ImGui::DragFloat3("Rotation", (float*)&transform->GetWorldRotation());
+					ImGui::DragFloat3("Scale", (float*)&transform->GetWorldScale());*/
+					ImGui::EndTabItem();
+				}
+				ImGui::EndTabBar();
+			}
+		}
+
+		//Collider
+		{
+			Components::ColliderComponent* colliderbody = reg.try_get< Components::ColliderComponent>(entity);
+			if (colliderbody)
+			{
+				if (ImGui::CollapsingHeader("Collider"))
+				{
+					//ImGui::Checkbox("iskinematic", &rigidbody->isKinematic);
+
+
+				}
+			}
+		}
+		
+		//Rigid Body
+		{
+
+			Components::RigidBodyComponent* rigidbody = reg.try_get< Components::RigidBodyComponent>(entity);
+			if (rigidbody)
+			{
+				if (ImGui::CollapsingHeader("Rigidbody"))
+				{
+					ImGui::Checkbox("iskinematic", &rigidbody->isKinematic);
+
+
+				}
+			}
+		}
+		//Camera
+		{
+			Components::CameraComponent* camera = reg.try_get< Components::CameraComponent>(entity);
+			if (camera)
+			{
+				if (ImGui::CollapsingHeader("Camera"))
+				{
+					ImGui::ColorEdit3("RenderTarget ClearColor", (float*)&camera->RTClearColor);
+					ImGui::Checkbox("HDR", &camera->HDR);
+					ImGui::Checkbox("GammaCorrection", &camera->GammaCorrection);
+
+					ImGui::DragFloat("Movement Speed", &camera->MovementSpeed);
+					ImGui::DragFloat("Mouse Sensitivity", &camera->MouseSensitivity);
+					ImGui::DragFloat("Zoom", &camera->Zoom);
+
+
+				}
+			}
+		}
+
+		//DirLight
+		{
+			Components::DirLightComponent* light = reg.try_get< Components::DirLightComponent>(entity);
+			if (light)
+			{
+				if (ImGui::CollapsingHeader("Directional Light"))
+				{
+					Graphics::Color oldcolor = light->GetColor();
+					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
+					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
+					{
+						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+					}
+
+					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
+					if (ImGui::DragFloat3("Direction", (float*)&lighdir))
+					{
+						light->SetDirection(Math::Vector3(lighdir.x, lighdir.y, lighdir.z));
+					}
+
+
+				}
+			}
+		}
+
+		//PointLight
+		{
+			Components::PointLightComponent* light = reg.try_get< Components::PointLightComponent>(entity);
+			if (light)
+			{
+				if (ImGui::CollapsingHeader("Point Light"))
+				{
+					ImVec4 lighpos = ImVec4(light->GetPosition().x, light->GetPosition().y, light->GetPosition().z, 1.00f);
+					if (ImGui::DragFloat3("Position", (float*)&lighpos))
+					{
+						light->SetPosition(Math::Vector3(lighpos.x, lighpos.y, lighpos.z));
+					}
+
+					Graphics::Color oldcolor = light->GetColor();
+					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
+					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
+					{
+						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+					}
+
+					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
+					if (ImGui::DragFloat3("Attenuation", (float*)&att))
+					{
+						light->SetAttenuation(Math::Vector3(att.x, att.y, att.z));
+					}
+
+					float f = light->GetIntensity();
+					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.4f", ImGuiSliderFlags_None))
+					{
+						light->SetIntensity(f);
+					}
+
+				}
+			}
+		}
+
+		//SpotLight
+		{
+			Components::SpotLightComponent* light = reg.try_get< Components::SpotLightComponent>(entity);
+			if (light)
+			{
+				if (ImGui::CollapsingHeader("Spot Light"))
+				{
+					ImVec4 lighpos = ImVec4(light->GetPosition().x, light->GetPosition().y, light->GetPosition().z, 1.00f);
+					if (ImGui::DragFloat3("Position", (float*)&lighpos))
+					{
+						light->SetPosition(Math::Vector3(lighpos.x, lighpos.y, lighpos.z));
+					}
+
+					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
+					if (ImGui::DragFloat3("Direction", (float*)&lighdir))
+					{
+						light->SetDirection(Math::Vector3(lighdir.x, lighdir.y, lighdir.z));
+					}
+
+					ImVec2 cone = ImVec2(light->GetSpotlightCone().x, light->GetSpotlightCone().y);
+					if (ImGui::DragFloat2("Spotlight Cone", (float*)&cone))
+					{
+						light->SetSpotlightCone(Math::Vector2(cone.x, cone.y));
+					}
+
+					Graphics::Color oldcolor = light->GetColor();
+					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
+					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
+					{
+						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+					}
+
+					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
+					if (ImGui::DragFloat3("Attenuation", (float*)&att))
+					{
+						light->SetAttenuation(Math::Vector3(att.x, att.y, att.z));
+					}
+
+					float f = light->GetIntensity();
+					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.4f", ImGuiSliderFlags_None))
+					{
+						light->SetIntensity(f);
+					}
+
+				}
+			}
+		}
+
+		//Mesh
+		{
+			Components::MeshComponent* meshcomponent = reg.try_get< Components::MeshComponent>(entity);
+			if (meshcomponent) {
+
+				if (ImGui::CollapsingHeader("Mesh"))
+				{
+					ImGui::Checkbox("Render", &meshcomponent->mRender);
+					ImGui::Checkbox("Multi Render", &meshcomponent->mMultiRender);
+
+					if (meshcomponent->mMesh != nullptr)
+					{
+						if (meshcomponent->mMesh->GetStringName() != std::string(""))
+						{
+							ImGui::Text(meshcomponent->mMesh->GetStringName().c_str());
+						}
+						else {
+							ImGui::Text("Unnamed Mesh");
+						}
+					}
+					if (meshcomponent->mMaterial != nullptr)
+					{
+						if (meshcomponent->mMaterial->GetStringName() != std::string(""))
+						{
+							ImGui::Text(meshcomponent->mMaterial->GetStringName().c_str());
+						}
+						else {
+							ImGui::Text("Unnamed Material");
+						}
+					}
+
+				}
+			}
+		}
+
+		ImGui::PopID();
+	}
+	ImGui::End();
+}

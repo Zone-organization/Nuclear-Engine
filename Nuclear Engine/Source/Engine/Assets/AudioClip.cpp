@@ -8,9 +8,17 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-		void AudioClip::Play(FMOD::Channel* channel, bool paused)
+		AudioClip::AudioClip()
 		{
-			FMODCALL(Audio::AudioEngine::GetSystem()->playSound(mSound, 0, paused, &channel));
+
 		}
+		AudioClip::~AudioClip()
+		{
+
+		}
+		//void AudioClip::Play(FMOD::Channel* channel, bool paused)
+		//{
+		//	FMODCALL(Audio::AudioEngine::GetSystem()->playSound(mSound, 0, paused, &channel));
+		//}
 	}
 }

@@ -166,6 +166,7 @@
     <ClInclude Include="include\Engine\Assets\Animations.h" />
     <ClInclude Include="include\Engine\Assets\Assets.h" />
     <ClInclude Include="include\Engine\Assets\AudioClip.h" />
+    <ClInclude Include="include\Engine\Assets\AudioFile.h" />
     <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
     <ClInclude Include="include\Engine\Assets\Common.h" />
     <ClInclude Include="include\Engine\Assets\ImageData.h" />
@@ -423,6 +424,7 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" />
     <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h" />
+    <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\scriptstdstring.h" />
     <ClInclude Include="Source\ThirdParty\angelscript\include\angelscript.h" />
     <ClInclude Include="Source\ThirdParty\angelscript\source\as_array.h" />
     <ClInclude Include="Source\ThirdParty\angelscript\source\as_atomic.h" />
@@ -477,6 +479,7 @@
     <ClCompile Include="Source\Engine\Animation\Animator.cpp" />
     <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
     <ClCompile Include="Source\Engine\Assets\Animations.cpp" />
+    <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
     <ClCompile Include="Source\Engine\Assets\Image.cpp" />
     <ClCompile Include="Source\Engine\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
@@ -490,7 +493,6 @@
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
-    <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
@@ -534,6 +536,7 @@
     <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.cpp" />
     <ClCompile Include="Source\Engine\Assets\Script.cpp" />
     <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\scriptstdstring.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptData.cpp" />
     <ClCompile Include="Source\Engine\Systems\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />

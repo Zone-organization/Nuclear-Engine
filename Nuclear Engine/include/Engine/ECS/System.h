@@ -21,6 +21,7 @@ namespace NuclearEngine
 
 			virtual ~BaseSystem();
 
+			virtual void Load() { }
 
 			virtual void Update(TimeDelta dt) = 0;
 

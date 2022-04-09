@@ -1,6 +1,7 @@
 #include "Engine\Components\ColliderComponent.h"
 #include <PhysX/include/PxPhysicsAPI.h>
 #include "..\PhysX\PhysXTypes.h"
+#include "Engine\PhysX\PhysXEngine.h"
 
 namespace NuclearEngine
 {
@@ -8,35 +9,67 @@ namespace NuclearEngine
 	{
 		ColliderComponent::ColliderComponent()
 		{
-			mType = COLLIDER_SHAPE_UNKNOWN;
 		}
-		ColliderComponent::ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::BoxGeometry Geo)
-		{		
-			mMaterial = PMat;
-			mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(physx::PxBoxGeometry(Geo.mHalfExtents.x, Geo.mHalfExtents.y, Geo.mHalfExtents.z), *mMaterial->GetPtr());
-			mStaticActor.mPtr = PhysX::PhysXEngine::GetPhysics()->createRigidStatic(PhysX::To(Geo.mTransform));
-			mStaticActor.mPtr->attachShape(*mShape.mPtr);
-			mType = COLLIDER_SHAPE_BOX;
-		}
-
-		ColliderComponent::ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::PlaneGeometry Geo)
+		ColliderComponent::ColliderComponent(const ColliderDesc& desc)
 		{
-			mMaterial = PMat;
-			mStaticActor.mPtr = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), PhysX::PxPlane(0, 1, 0, 0), *mMaterial->GetPtr());
-			mType = COLLIDER_SHAPE_PLANE;
-		}
-
-		ColliderComponent::ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::SphereGeometry Geo)
-		{
-			mMaterial = PMat;
-			mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(physx::PxSphereGeometry(Geo.radius),*mMaterial->GetPtr());
-			mStaticActor.mPtr = PhysX::PhysXEngine::GetPhysics()->createRigidStatic(PhysX::To(Geo.mTransform));
-			mStaticActor.mPtr->attachShape(*mShape.mPtr);
-			mType = COLLIDER_SHAPE_SPHERE;
+			Create(desc);
 		}
 
 		ColliderComponent::~ColliderComponent()
 		{
+		}
+		void ColliderComponent::Create(const ColliderDesc& desc)
+		{
+			mType = desc.mShape;
+			physx::PxMaterial* material = PhysX::PhysXEngine::GetPhysics()->createMaterial(desc.mStaticFriction, desc.mDynamicFriction, desc.mRestitution);
+
+			if (mType == ColliderShape::Box)
+			{
+				PhysX::BoxGeometry* Geo = (PhysX::BoxGeometry*)desc.mGeo;
+
+				mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(
+					physx::PxBoxGeometry(Geo->mHalfExtents.x, Geo->mHalfExtents.y, Geo->mHalfExtents.z), *material);
+
+				mStaticActor.mPtr = PhysX::PhysXEngine::GetPhysics()->createRigidStatic(PhysX::To(Geo->mTransform));
+				mStaticActor.mPtr->attachShape(*mShape.mPtr);
+			}
+			else if (mType == ColliderShape::Plane)
+			{
+				//PhysX::BoxGeometry* Geo = (PhysX::BoxGeometry*)desc.mGeo;
+				//PhysX::PlaneGeometry* Geo = (PhysX::PlaneGeometry*)desc.mGeo;
+				mStaticActor.mPtr = PxCreatePlane(*PhysX::PhysXEngine::GetPhysics(), PhysX::PxPlane(0, 1, 0, 0), *material);
+			}
+			else if (mType == ColliderShape::Sphere)
+			{
+				PhysX::SphereGeometry* Geo = (PhysX::SphereGeometry*)desc.mGeo;
+
+				mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(physx::PxSphereGeometry(Geo->radius), *material);
+				mStaticActor.mPtr = PhysX::PhysXEngine::GetPhysics()->createRigidStatic(PhysX::To(Geo->mTransform));
+				mStaticActor.mPtr->attachShape(*mShape.mPtr);
+			}
+			else
+			{
+				assert(true);
+			}
+
+			material->release();
+		}
+		bool ColliderComponent::isValid()
+		{
+			return mAddedtoPhysxScene;
+		}
+		void ColliderComponent::SetValid(bool value)
+		{
+			mAddedtoPhysxScene = value;
+		}
+		PhysX::PhysXShape& ColliderComponent::GetShape()
+		{
+			return	mShape;
+		}
+		PhysX::RigidStatic& ColliderComponent::GetActor()
+		{
+			return mStaticActor;
+				
 		}
 	}
 }

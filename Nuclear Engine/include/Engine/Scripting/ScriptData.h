@@ -1,11 +1,15 @@
 #pragma once
 #include <Engine\Assets\Script.h>
 
+class asIScriptObject;
+
 namespace NuclearEngine
 {
 	namespace Scripting
 	{
 		typedef void* ScriptFunction;
+		typedef asIScriptObject* ScriptObject;
+
 		//Describes script data in single module
 		class NEAPI ScriptData
 		{
@@ -15,8 +19,9 @@ namespace NuclearEngine
 
 
 			Assets::Script* mScriptParent = nullptr;
-			ScriptFunction mStartfun = nullptr;
+			ScriptFunction mLoadfun = nullptr;
 			ScriptFunction mUpdateFun = nullptr;
+			ScriptObject mObjectInstance = nullptr;
 		};
 	}
 }

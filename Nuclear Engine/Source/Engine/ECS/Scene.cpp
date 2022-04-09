@@ -33,7 +33,7 @@ namespace NuclearEngine
 			result.parent = &Registry;
 			auto &einfo = result.AddComponent<Components::EntityInfoComponent>();
 			einfo.mOwnerEntity = result;
-			//einfo.mName = name;
+			einfo.mName = name;
 
 			return result;
 		}

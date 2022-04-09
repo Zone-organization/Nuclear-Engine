@@ -1,7 +1,9 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include "Engine\Scripting\ScriptingEngine.h"
+#include "Engine\ECS\System.h"
 #include <vector>
+
 namespace NuclearEngine
 {
 	//namespace Scripting
@@ -20,7 +22,7 @@ namespace NuclearEngine
 			//CSharp
 		};
 
-		class NEAPI ScriptingSystem 
+		class NEAPI ScriptingSystem : public ECS::System<ScriptingSystem>
 		{
 		public:
 			ScriptingSystem(ScriptingBackend backend = ScriptingBackend::AngelScript);
@@ -30,7 +32,9 @@ namespace NuclearEngine
 
 			Scripting::ScriptingEngine* GetScriptingEngine();
 			Scripting::ScriptingModule* CreateScriptingModule(const Scripting::ScriptModuleCreationDesc& desc);
-			//void Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt) override;
+
+			void Load() override;
+			void Update(ECS::TimeDelta dt) override;
 		private:
 			Scripting::ScriptingEngine* mScriptEngine;
 			std::vector<Scripting::ScriptingModule> _modules;

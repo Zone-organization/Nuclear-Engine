@@ -1,7 +1,7 @@
 #define EXPOSE_ANGELSCRIPT_ENGINE
 
 #include "Engine/Scripting/AngelScriptEngine/AngelScriptEngine.h"
-#include "..\Source\ThirdParty\angelscript\include\angelscript.h" 
+#include "scriptstdstring.h"
 #include <assert.h>
 namespace NuclearEngine
 {
@@ -11,11 +11,11 @@ namespace NuclearEngine
 		{
 			asIScriptEngine* ASEngine = nullptr;
 
-			// Print the script string to the standard output stream
-			void print()
+			void print(std::string& msg)
 			{
-				printf("\nhello world\n");
+				printf("%s", msg.c_str());
 			}
+
 
 			// Implement a simple message callback function
 			void MessageCallback(const asSMessageInfo* msg, void* param)
@@ -47,9 +47,11 @@ namespace NuclearEngine
 					ASEngine = asCreateScriptEngine();
 					r = ASEngine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL); assert(r >= 0);
 
+					RegisterStdString(ASEngine);
+
 
 					// Register the function that we want the scripts to call 
-					r = ASEngine->RegisterGlobalFunction("void print()", asFUNCTION(print), asCALL_CDECL);
+					r = ASEngine->RegisterGlobalFunction("void print(const string &in)", asFUNCTION(print), asCALL_CDECL);
 				}
 		
 				if (r < 0)
@@ -97,15 +99,24 @@ namespace NuclearEngine
 				if (r < 0)
 					return false;
 				
-
 				for (auto i : scriptmodule->mImportedScripts)
 				{
 					std::string str = "void " + i.first->GetStringName() + "::";
 
+					asITypeInfo* type = ptr->GetTypeInfoByDecl(i.first->GetStringName().c_str());
 					auto dataptr = &scriptmodule->mImportedScripts.at(i.first);
-					dataptr->mStartfun = ptr->GetFunctionByDecl((str + "Start()").c_str());
 
-					dataptr->mUpdateFun = ptr->GetFunctionByDecl((str + "Update()").c_str());
+					auto constructor = type->GetFactoryByDecl("Script1 @Script1()");
+					MainContext.Prepare(constructor);
+					MainContext.Execute();
+
+					// Get the object that was created
+					dataptr->mObjectInstance = *(asIScriptObject**)MainContext._context->GetAddressOfReturnValue();
+					dataptr->mObjectInstance->AddRef();
+
+					dataptr->mLoadfun = type->GetMethodByDecl("void Load()");
+
+					dataptr->mUpdateFun = type->GetMethodByDecl("void Update(float)");
 
 				}
 

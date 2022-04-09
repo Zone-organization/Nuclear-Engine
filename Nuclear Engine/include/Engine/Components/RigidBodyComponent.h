@@ -19,7 +19,7 @@ namespace NuclearEngine
 			RigidBodyComponent(ECS::Transform trans);
 			~RigidBodyComponent();
 
-			PhysX::RigidDynamic mDynamicActor;
+			PhysX::RigidDynamic& GetActor();
 
 			bool isKinematic;
 
@@ -29,6 +29,8 @@ namespace NuclearEngine
 
 			bool GetInternalisKinematic();
 		private: 
+			PhysX::RigidDynamic mDynamicActor;
+
 			bool InternalisKinematic;
 		};
 	}
