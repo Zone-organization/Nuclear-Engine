@@ -13,7 +13,7 @@ namespace NuclearEngine
 		ColliderComponent::ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::BoxGeometry Geo)
 		{		
 			mMaterial = PMat;
-			mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(physx::PxBoxGeometry(Geo.mHalfExtents.x, Geo.mHalfExtents.y, Geo.mHalfExtents.z), *mMaterial->GetPtr());	
+			mShape.mPtr = PhysX::PhysXEngine::GetPhysics()->createShape(physx::PxBoxGeometry(Geo.mHalfExtents.x, Geo.mHalfExtents.y, Geo.mHalfExtents.z), *mMaterial->GetPtr());
 			mStaticActor.mPtr = PhysX::PhysXEngine::GetPhysics()->createRigidStatic(PhysX::To(Geo.mTransform));
 			mStaticActor.mPtr->attachShape(*mShape.mPtr);
 			mType = COLLIDER_SHAPE_BOX;

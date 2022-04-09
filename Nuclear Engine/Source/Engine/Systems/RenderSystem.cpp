@@ -97,7 +97,7 @@ namespace NuclearEngine
 
 		void RenderSystem::Bake(bool AllPipelines)
 		{
-			auto DirLightView = mScene->Registry.view<Components::DirLightComponent>();
+			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
 			for (auto entity : DirLightView)
 			{
 				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
@@ -105,14 +105,14 @@ namespace NuclearEngine
 				mLightingSystem.DirLights.push_back(&DirLight);
 			}
 
-			auto SpotLightView = mScene->Registry.view<Components::SpotLightComponent>();
+			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
 			for (auto entity : SpotLightView)
 			{
 				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
 				mLightingSystem.SpotLights.push_back(&SpotLight);
 			}
 
-			auto PointLightView = mScene->Registry.view<Components::PointLightComponent>();
+			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
 			for (auto entity : PointLightView)
 			{
 				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
@@ -167,7 +167,7 @@ namespace NuclearEngine
 		}
 		void RenderSystem::RenderMeshes()
 		{
-			auto view = mScene->Registry.view<Components::MeshComponent>();
+			auto view = mScene->GetRegistry().view<Components::MeshComponent>();
 
 			for (auto entity : view)
 			{
@@ -176,11 +176,11 @@ namespace NuclearEngine
 				{
 					if (!MeshObject.mMultiRender)
 					{
-						auto& EntityInfo = mScene->Registry.get<Components::EntityInfoComponent>(entity);
+						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetTransform());
 						mCameraManager->UpdateBuffer();
 
-						auto AnimatorComponent = mScene->Registry.try_get<Components::AnimatorComponent>(entity);
+						auto AnimatorComponent = mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
 
 						if (AnimatorComponent != nullptr)
 						{

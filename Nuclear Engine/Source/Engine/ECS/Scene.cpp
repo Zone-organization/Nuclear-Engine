@@ -42,6 +42,26 @@ namespace NuclearEngine
 			return mName;
 		}
 
+		void Scene::Update(ECS::TimeDelta dt)
+		{
+			Systems.Update_All(dt);
+		}
+
+		SystemManager& Scene::GetSystemManager()
+		{
+			return Systems;
+		}
+
+		entt::registry& Scene::GetRegistry()
+		{
+			return Registry;
+		}
+
+		EntityFactory& Scene::GetFactory()
+		{
+			return Factory;
+		}
+
 		SceneLoader::SceneLoader()
 		{
 		}

@@ -32,6 +32,7 @@ namespace NuclearEngine
 			}
 		}gErrorCallback;
 
+		PxMaterial* gDefaultMaterial;
 
 		bool PhysXEngine::Initialize(const PhysXEngineDesc& desc)
 		{
@@ -43,7 +44,12 @@ namespace NuclearEngine
 			PxU32 numCores = 4;
 			gDispatcher = PxDefaultCpuDispatcherCreate(numCores == 0 ? 0 : numCores - 1);
 			
-
+			// setup default material...
+			gDefaultMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.1f);
+			if (!gDefaultMaterial)
+			{
+				Log.FatalError("[PhysXEngine] createMaterial failed\n");
+			}
 			Log.Info("[PhysXEngine] PhysX has been initalized succesfully!\n");
 			return true;
 		}
@@ -68,6 +74,10 @@ namespace NuclearEngine
 		PxCpuDispatcher* PhysXEngine::GetCPUDispatcher()
 		{
 			return gDispatcher;
+		}
+		PxMaterial& PhysXEngine::GetDefaultMaterial()
+		{
+			return *gDefaultMaterial;
 		}
 	}
 }

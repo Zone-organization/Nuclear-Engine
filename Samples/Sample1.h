@@ -197,7 +197,7 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = ModelsScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>(&SceneCameraManager);
 		//ModelsScene.Systems.Configure();
 
 		Renderer->AddRenderingPipeline(&BlinnPhongRP);
@@ -328,8 +328,7 @@ public:
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera->GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera->GetFrontView());
 
-		Renderer->Update(dt);
-
+		ModelsScene.Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample1: Basic Rendering");

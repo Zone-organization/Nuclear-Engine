@@ -6,6 +6,7 @@ namespace physx {
 	class PxPhysics;
 	class PxPvd;
 	class PxCpuDispatcher;
+	class PxMaterial;
 }
 namespace NuclearEngine
 {
@@ -32,6 +33,8 @@ namespace NuclearEngine
 			static PxPhysics* GetPhysics();
 			static PxPvd* GetPvd();
 			static PxCpuDispatcher* GetCPUDispatcher();
+
+			static PxMaterial& GetDefaultMaterial();
 		};
 	}
 }

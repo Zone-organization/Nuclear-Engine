@@ -51,12 +51,12 @@ namespace NuclearEngine
 		}
 		void PhysXSystem::Bake()
 		{
-			auto eView = mScene->Registry.view<Components::ColliderComponent>();
+			auto eView = mScene->GetRegistry().view<Components::ColliderComponent>();
 			for (auto entity : eView)
 			{
 				auto& Obj = eView.get<Components::ColliderComponent>(entity);
 
-				auto RigidComponent = mScene->Registry.try_get<Components::RigidBodyComponent>(entity);
+				auto RigidComponent = mScene->GetRegistry().try_get<Components::RigidBodyComponent>(entity);
 				if (RigidComponent)
 				{		
 					RigidComponent->mDynamicActor.mPtr->attachShape(*Obj.mShape.mPtr);
@@ -70,13 +70,13 @@ namespace NuclearEngine
 
 		void PhysXSystem::AddunAssignedActors()
 		{
-			auto eView = mScene->Registry.view<Components::ColliderComponent>();
+			auto eView = mScene->GetRegistry().view<Components::ColliderComponent>();
 			for (auto entity : eView)
 			{
 				auto& Obj = eView.get<Components::ColliderComponent>(entity);
 				if (!Obj.mAddedtoPhysxScene)
 				{
-					auto RigidComponent = mScene->Registry.try_get<Components::RigidBodyComponent>(entity);
+					auto RigidComponent = mScene->GetRegistry().try_get<Components::RigidBodyComponent>(entity);
 					if (RigidComponent)
 					{
 						RigidComponent->mDynamicActor.mPtr->attachShape(*Obj.mShape.mPtr);
@@ -140,7 +140,7 @@ namespace NuclearEngine
 				outhit.distance = hit.block.distance;
 				//(entt::entity)hit.block.actor->userData;
 
-				outhit.HitEntity.parent = &mScene->Registry;
+				outhit.HitEntity.parent = &mScene->GetRegistry();
 				outhit.HitEntity.entity = (entt::entity&)hit.block.actor->userData;
 					
 				//outhit.HitEntity = mScene->Entities.Get(ECS::Entity::Id((uint64_t)hit.block.actor->userData));
@@ -153,10 +153,11 @@ namespace NuclearEngine
 
 		void PhysXSystem::Update(ECS::TimeDelta dt)
 		{
+			mPhysXScene->simulate(dt);
 			mPhysXScene->fetchResults(true);
 
 			//Update Entities transforms
-			auto eView = mScene->Registry.view<Components::RigidBodyComponent>();
+			auto eView = mScene->GetRegistry().view<Components::RigidBodyComponent>();
 			for (auto entity : eView)
 			{
 				auto& RigidBodyObj = eView.get<Components::RigidBodyComponent>(entity);
@@ -165,7 +166,7 @@ namespace NuclearEngine
 				{
 					RigidBodyObj.SetisKinematic(RigidBodyObj.isKinematic);
 				}
-				mScene->Registry.try_get<Components::EntityInfoComponent>(entity)->mTransform.SetTransform(PhysX::From(RigidBodyObj.mDynamicActor.mPtr->getGlobalPose()));
+				mScene->GetRegistry().try_get<Components::EntityInfoComponent>(entity)->mTransform.SetTransform(PhysX::From(RigidBodyObj.mDynamicActor.mPtr->getGlobalPose()));
 			}
 		}
 	}

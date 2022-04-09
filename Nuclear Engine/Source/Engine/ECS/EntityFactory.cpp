@@ -27,7 +27,7 @@ namespace NuclearEngine
 			Result.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), material);
 			Result.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(t.GetTransform());
 
-			auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
+			auto System = mScene->GetSystemManager().GetSystem<Systems::PhysXSystem>();
 			if (PMat != nullptr)
 			{
 				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
@@ -48,7 +48,7 @@ namespace NuclearEngine
 			Result.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), material);
 			Result.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(t.GetTransform());
 
-			auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
+			auto System = mScene->GetSystemManager().GetSystem<Systems::PhysXSystem>();
 			if (PMat != nullptr)
 			{
 				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)

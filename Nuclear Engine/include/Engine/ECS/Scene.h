@@ -22,11 +22,18 @@ namespace NuclearEngine
 
 			std::string GetName();
 
-			entt::registry Registry;
-			SystemManager Systems;
-			EntityFactory Factory;
+			void Update(ECS::TimeDelta dt);
+
+			SystemManager& GetSystemManager();
+			entt::registry& GetRegistry();
+			EntityFactory& GetFactory();
+
 		private:
 			std::string mName;
+			EntityFactory Factory;
+			entt::registry Registry;
+			SystemManager Systems;
+
 		};
 
 		class NEAPI SceneLoader {

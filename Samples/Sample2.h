@@ -116,10 +116,10 @@ public:
 	}
 	void InitRenderer()
 	{
-		Renderer = Scene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&SceneCameraManager);
 		Systems::PhysXSystemDesc sceneDesc;
 		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
-		mPhysXSystem = Scene.Systems.Add<Systems::PhysXSystem>(sceneDesc);
+		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
 		//Scene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&PBR);
@@ -138,7 +138,7 @@ public:
 		InitRenderer();
 
 		SetupAssets();
-		Scene.Factory.InitializeDefaultPhysxMaterials();
+		Scene.GetFactory().InitializeDefaultPhysxMaterials();
 
 		int nrRows = 7;
 		int nrColumns = 7;
@@ -156,8 +156,8 @@ public:
 				));
 				model = Math::scale(model, Math::Vector3(2.0f));
 				model = Math::translate(model, Math::Vector3(1.0f,5.0f,1.0f));
-				Scene.Factory.CreateSphere(&SphereMaterial, Math::translate(model, Math::Vector3(1.0f, 5.0f, 1.0f)));
-				boxes.push_back(Scene.Factory.CreateBox(&SphereMaterial, model));
+				Scene.GetFactory().CreateSphere(&SphereMaterial, Math::translate(model, Math::Vector3(1.0f, 5.0f, 1.0f)));
+				boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, model));
 			}
 		}
 		for (auto it : boxes)
@@ -259,13 +259,11 @@ public:
 
 	void Render(float dt) override
 	{
-		mPhysXSystem->BeginSimulation(dt);
-		mPhysXSystem->Update(dt);
+		Scene.Update(dt);
 
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera->GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera->GetFrontView());
 
-		Renderer->Update(dt);
 
 		{
 			using namespace Graphics;
@@ -308,7 +306,7 @@ public:
 					{
 						auto entity = hit.HitEntity;
 
-						ImGui::Text((char*)Scene.Registry.try_get<Components::EntityInfoComponent>(entity.entity)->mName.c_str());
+						ImGui::Text((char*)Scene.GetRegistry().try_get<Components::EntityInfoComponent>(entity.entity)->mName.c_str());
 					}
 					else
 					{
