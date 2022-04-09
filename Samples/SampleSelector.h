@@ -33,16 +33,16 @@ public:
 		Core::Engine::RunGame();
 		Core::Engine::EndGame();
 
-		if (Core::Engine::GetGame() != this)
-		{
-			Core::Engine::SetGame(this);
-			Core::Engine::RunGame();
-		}
+		//if (Core::Engine::GetGame() != this)
+		//{
+		//	Core::Engine::SetGame(this);
+		//	Core::Engine::RunGame();
+		//}
 	}
 
 	void Load()
 	{
-		Assets::DefaultTextures::Initalize(&AssetLoader);
+		AssetLoader.Initialize();
 	}
 
 	void Render(float dt) override
@@ -73,16 +73,14 @@ public:
 			Core::Engine::SetGame(&demo);
 			return StartSample();
 		}
-		if (ImGui::Button("Sample3 : Script Test"))
+		/*if (ImGui::Button("Sample3 : Script Test"))
 		{
 			Sample3 demo;
 			Core::Engine::SetGame(&demo);
 			return StartSample();
-		}
-
+		}*/
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
-
 	}
 };

@@ -6,9 +6,9 @@
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\Material.h>
-#include <Engine\Assets\DefaultTextures.h>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Managers\CameraManager.h>
+#include <Engine\Managers\AssetManager.h>
 #include <Core\Engine.h>
 #include <cstring>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
@@ -95,25 +95,28 @@ namespace NuclearEngine
 			return false;
 		}
 
-		void RenderSystem::Bake(ECS::EntityManager& es, bool AllPipelines)
+		void RenderSystem::Bake(bool AllPipelines)
 		{
-
-			ECS::ComponentHandle<Components::DirLightComponent> DirLight;
-			for (ECS::Entity entity : es.entities_with_components(DirLight))
+			auto DirLightView = mScene->Registry.view<Components::DirLightComponent>();
+			for (auto entity : DirLightView)
 			{
-				mLightingSystem.DirLights.push_back(DirLight.Get());
+				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
+
+				mLightingSystem.DirLights.push_back(&DirLight);
 			}
 
-			ECS::ComponentHandle<Components::SpotLightComponent> SpotLight;
-			for (ECS::Entity entity : es.entities_with_components(SpotLight))
+			auto SpotLightView = mScene->Registry.view<Components::SpotLightComponent>();
+			for (auto entity : SpotLightView)
 			{
-				mLightingSystem.SpotLights.push_back(SpotLight.Get());
+				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
+				mLightingSystem.SpotLights.push_back(&SpotLight);
 			}
 
-			ECS::ComponentHandle<Components::PointLightComponent> PointLight;
-			for (ECS::Entity entity : es.entities_with_components(PointLight))
+			auto PointLightView = mScene->Registry.view<Components::PointLightComponent>();
+			for (auto entity : PointLightView)
 			{
-				mLightingSystem.PointLights.push_back(PointLight.Get());
+				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
+				mLightingSystem.PointLights.push_back(&PointLight);
 			}
 
 			mLightingSystem.BakeBuffer();
@@ -150,8 +153,8 @@ namespace NuclearEngine
 
 			//TODO: Move!
 			Assets::TextureSet CubeSet;
-			CubeSet.mData.push_back({ 0, Assets::DefaultTextures::DefaultDiffuseTex });
-			CubeSet.mData.push_back({ 1, Assets::DefaultTextures::DefaultSpecularTex });
+			CubeSet.mData.push_back({ 0, Managers::AssetManager::DefaultDiffuseTex });
+			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultSpecularTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
 
@@ -162,25 +165,24 @@ namespace NuclearEngine
 		{
 			return mActiveRenderingPipeline->GetPipeline();
 		}
-		void RenderSystem::UpdateMeshes(ECS::EntityManager & es)
+		void RenderSystem::RenderMeshes()
 		{
-			ECS::ComponentHandle<Components::MeshComponent> MeshObject;
-			ECS::ComponentHandle<Components::AnimatorComponent> AnimatorComponent;
+			auto view = mScene->Registry.view<Components::MeshComponent>();
 
-			for (ECS::Entity entity : es.entities_with_components(MeshObject))
+			for (auto entity : view)
 			{
-				if (MeshObject.Get()->mRender)
+				auto& MeshObject = view.get<Components::MeshComponent>(entity);
+				if (MeshObject.mRender)
 				{
-					if (!MeshObject.Get()->mMultiRender)
+					if (!MeshObject.mMultiRender)
 					{
-
-						auto EntityInfo = entity.GetComponent<Components::EntityInfoComponent>().Get();
-						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo->mTransform.GetTransform());
+						auto& EntityInfo = mScene->Registry.get<Components::EntityInfoComponent>(entity);
+						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetTransform());
 						mCameraManager->UpdateBuffer();
 
-						AnimatorComponent = entity.GetComponent<Components::AnimatorComponent>();
+						auto AnimatorComponent = mScene->Registry.try_get<Components::AnimatorComponent>(entity);
 
-						if (AnimatorComponent.Valid())
+						if (AnimatorComponent != nullptr)
 						{
 							std::vector<Math::Matrix4> ok;
 							ok.reserve(100);
@@ -193,27 +195,27 @@ namespace NuclearEngine
 
 							PVoid data;
 							Graphics::Context::GetContext()->MapBuffer(animCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-							data = memcpy(data, ok.data(), ok.size()* sizeof(Math::Matrix4));
+							data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
 							Graphics::Context::GetContext()->UnmapBuffer(animCB, MAP_WRITE);
 
 						}
 
-						InstantRender(MeshObject.Get());
+						InstantRender(MeshObject);
 
 					}
 					else
 					{
-						for (auto i : MeshObject.Get()->mMultiRenderTransforms)
+						for (auto i : MeshObject.mMultiRenderTransforms)
 						{
 							mCameraManager->GetMainCamera()->SetModelMatrix(i);
 							mCameraManager->UpdateBuffer();
-							InstantRender(MeshObject.Get());
+							InstantRender(MeshObject);
 						}
 					}
 				}
 			}
 		}
-		void RenderSystem::Update(ECS::EntityManager & es, ECS::EventManager & events, ECS::TimeDelta dt)
+		void RenderSystem::Update(ECS::TimeDelta dt)
 		{	
 			//Render Scene from each avtive camera perspective
 			for (auto Camera : mCameraManager->ActiveCameras)
@@ -223,7 +225,7 @@ namespace NuclearEngine
 
 				Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
 
-				UpdateMeshes(es);
+				RenderMeshes();
 
 				if (VisualizePointLightsPositions)
 				{
@@ -265,28 +267,24 @@ namespace NuclearEngine
 			DrawAttrs.NumIndices = CameraScreenQuad.mSubMeshes.at(0).mIndicesCount;
 			Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
 		}
-		void RenderSystem::InstantRender(Components::MeshComponent * object)
+
+		void RenderSystem::InstantRender(const Components::MeshComponent &object)
 		{
 			if (Core::Engine::isDebug())
 			{
-				if (object == nullptr)
-				{
-					Log.Error("[RenderSystem DEBUG] Skipped Rendering invalid MeshComponent...\n");
-					return;
-				}
-				if (object->mMesh == nullptr)
+				if (object.mMesh == nullptr)
 				{
 					Log.Error("[RenderSystem DEBUG] Skipped Rendering invalid Mesh...\n");
 					return;
 				}
-				if (object->mMaterial == nullptr)
+				if (object.mMaterial == nullptr)
 				{
 					Log.Error("[RenderSystem DEBUG] Skipped Rendering Mesh with invalid Material...\n");
 					return;
 				}
 			}
 
-			InstantRender(object->mMesh, object->mMaterial);
+			InstantRender(object.mMesh, object.mMaterial);
 		}
 		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
 		{

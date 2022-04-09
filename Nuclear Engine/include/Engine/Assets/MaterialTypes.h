@@ -15,9 +15,20 @@ namespace NuclearEngine
 
 		struct TextureSet
 		{
-			std::vector<ShaderTexture> mData = std::vector<ShaderTexture>();
-			Uint32 mHashedName = 0;
-			std::string mName = std::string();
+			TextureSet()
+				: mData(std::vector<ShaderTexture>()), mHashedName(0), mName(std::string())
+			{
+
+			}
+			~TextureSet()
+			{
+				mData.clear();
+				mHashedName = 0;
+				mName = std::string();
+			}
+			std::vector<ShaderTexture> mData;
+			Uint32 mHashedName;
+			std::string mName;
 		};
 	}
 }

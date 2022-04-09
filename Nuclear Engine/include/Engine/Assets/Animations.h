@@ -16,7 +16,7 @@ namespace NuclearEngine
 		public:
 			Animations();
 			~Animations();
-;
+
 			std::vector<Animation::AnimationClip> mClips;
 		};
 

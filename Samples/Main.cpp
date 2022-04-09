@@ -53,12 +53,12 @@ int main(int argc, char* argv[])
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
 
-	SampleSelector selector;
-	Core::Engine::SetGame(&selector);
-	Core::Engine::LoadGame();
-	Core::Engine::RunGame();
-	Core::Engine::EndGame();
-	Core::Engine::Shutdown();
-
+	while (!Core::Application::PollEvents())
+	{
+		SampleSelector selector;
+		Core::Engine::SetGame(&selector);
+		Core::Engine::LoadGame();
+		Core::Engine::RunGame();
+	}
 	return 0;
 }

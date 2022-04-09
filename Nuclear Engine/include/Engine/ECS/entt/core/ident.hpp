@@ -1,17 +1,14 @@
 #ifndef ENTT_CORE_IDENT_HPP
 #define ENTT_CORE_IDENT_HPP
 
-
 #include <cstddef>
-#include <utility>
 #include <type_traits>
+#include <utility>
 #include "../config/config.h"
 #include "fwd.hpp"
 #include "type_traits.hpp"
 
-
 namespace entt {
-
 
 /**
  * @brief Types identifiers.
@@ -43,7 +40,7 @@ namespace entt {
 template<typename... Types>
 class identifier {
     template<typename Type, std::size_t... Index>
-    [[nodiscard]] static constexpr id_type get(std::index_sequence<Index...>) {
+    [[nodiscard]] static constexpr id_type get(std::index_sequence<Index...>) ENTT_NOEXCEPT {
         static_assert(std::disjunction_v<std::is_same<Type, Types>...>, "Invalid type");
         return (0 + ... + (std::is_same_v<Type, type_list_element_t<Index, type_list<std::decay_t<Types>...>>> ? id_type{Index} : id_type{}));
     }
@@ -57,8 +54,6 @@ public:
     static constexpr identifier_type type = get<std::decay_t<Type>>(std::index_sequence_for<Types...>{});
 };
 
-
-}
-
+} // namespace entt
 
 #endif

@@ -1,6 +1,6 @@
 #pragma once
-#include <Engine\ECS/Entity.h>
-#include <Engine\ECS/System.h>
+#include <Engine\ECS/Common.h>
+#include <Engine\ECS\Entity.h>
 #include <Engine/Assets/Material.h>
 #include <Engine\PhysX\PhysXMaterial.h>
 #include <Engine\ECS\Transform.h>
@@ -17,7 +17,6 @@ namespace NuclearEngine
 		{
 		public:
 			EntityFactory(ECS::Scene* ParentScene);
-
 
 			Entity CreateBox(Assets::Material* material, ECS::Transform t , PhysX::PhysXMaterial* PMat = GetDefaultBoxMaterial());
 

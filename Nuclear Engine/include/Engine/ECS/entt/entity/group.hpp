@@ -1,21 +1,20 @@
 #ifndef ENTT_ENTITY_GROUP_HPP
 #define ENTT_ENTITY_GROUP_HPP
 
-
 #include <tuple>
-#include <utility>
 #include <type_traits>
+#include <utility>
 #include "../config/config.h"
+#include "../core/iterator.hpp"
 #include "../core/type_traits.hpp"
+#include "component.hpp"
 #include "entity.hpp"
 #include "fwd.hpp"
 #include "sparse_set.hpp"
 #include "storage.hpp"
 #include "utility.hpp"
 
-
 namespace entt {
-
 
 /**
  * @brief Group.
@@ -25,7 +24,6 @@ namespace entt {
  */
 template<typename, typename, typename, typename>
 class basic_group;
-
 
 /**
  * @brief Non-owning group.
@@ -64,108 +62,108 @@ class basic_group;
  * @tparam Exclude Types of components used to filter the group.
  */
 template<typename Entity, typename... Get, typename... Exclude>
-class basic_group<Entity, owned_t<>, get_t<Get...>, exclude_t<Exclude...>> final {
+class basic_group<Entity, owned_t<>, get_t<Get...>, exclude_t<Exclude...>> {
     /*! @brief A registry is allowed to create groups. */
     friend class basic_registry<Entity>;
 
-    template<typename Component>
-    using storage_type = constness_as_t<typename storage_traits<Entity, std::remove_const_t<Component>>::storage_type, Component>;
+    template<typename Comp>
+    using storage_type = constness_as_t<typename storage_traits<Entity, std::remove_const_t<Comp>>::storage_type, Comp>;
 
     using basic_common_type = std::common_type_t<typename storage_type<Get>::base_type...>;
 
-    class iterable final {
-        template<typename It>
-        struct iterable_iterator final {
-            using difference_type = std::ptrdiff_t;
-            using value_type = decltype(std::tuple_cat(std::tuple<Entity>{}, std::declval<basic_group>().get({})));
-            using pointer = void;
-            using reference = value_type;
-            using iterator_category = std::input_iterator_tag;
+    struct extended_group_iterator final {
+        using difference_type = std::ptrdiff_t;
+        using value_type = decltype(std::tuple_cat(std::tuple<Entity>{}, std::declval<basic_group>().get({})));
+        using pointer = input_iterator_pointer<value_type>;
+        using reference = value_type;
+        using iterator_category = std::input_iterator_tag;
 
-            template<typename... Args>
-            iterable_iterator(It from, const std::tuple<storage_type<Get> *...> &args) ENTT_NOEXCEPT
-                : it{from},
-                  pools{args}
-            {}
+        extended_group_iterator() = default;
 
-            iterable_iterator & operator++() ENTT_NOEXCEPT {
-                return ++it, *this;
-            }
+        extended_group_iterator(typename basic_common_type::iterator from, const std::tuple<storage_type<Get> *...> &args)
+            : it{from},
+              pools{args} {}
 
-            iterable_iterator operator++(int) ENTT_NOEXCEPT {
-                iterable_iterator orig = *this;
-                return ++(*this), orig;
-            }
-
-            [[nodiscard]] reference operator*() const ENTT_NOEXCEPT {
-                const auto entt = *it;
-                return std::tuple_cat(std::make_tuple(entt), std::get<storage_type<Get> *>(pools)->get_as_tuple(entt)...);
-            }
-
-            [[nodiscard]] bool operator==(const iterable_iterator &other) const ENTT_NOEXCEPT {
-                return other.it == it;
-            }
-
-            [[nodiscard]] bool operator!=(const iterable_iterator &other) const ENTT_NOEXCEPT {
-                return !(*this == other);
-            }
-
-        private:
-            It it;
-            std::tuple<storage_type<Get> *...> pools;
-        };
-
-    public:
-        using iterator = iterable_iterator<typename basic_common_type::iterator>;
-        using reverse_iterator = iterable_iterator<typename basic_common_type::reverse_iterator>;
-
-        iterable(basic_common_type * const ref, const std::tuple<storage_type<Get> *...> &cpools)
-            : handler{ref},
-              pools{cpools}
-        {}
-
-        [[nodiscard]] iterator begin() const ENTT_NOEXCEPT {
-            return handler ? iterator{handler->begin(), pools} : iterator{{}, pools};
+        extended_group_iterator &operator++() ENTT_NOEXCEPT {
+            return ++it, *this;
         }
 
-        [[nodiscard]] iterator end() const ENTT_NOEXCEPT {
-            return handler ? iterator{handler->end(), pools} : iterator{{}, pools};
+        extended_group_iterator operator++(int) ENTT_NOEXCEPT {
+            extended_group_iterator orig = *this;
+            return ++(*this), orig;
         }
 
-        [[nodiscard]] reverse_iterator rbegin() const ENTT_NOEXCEPT {
-            return handler ? reverse_iterator{handler->rbegin(), pools} : reverse_iterator{{}, pools};
+        [[nodiscard]] reference operator*() const ENTT_NOEXCEPT {
+            const auto entt = *it;
+            return std::tuple_cat(std::make_tuple(entt), std::get<storage_type<Get> *>(pools)->get_as_tuple(entt)...);
         }
 
-        [[nodiscard]] reverse_iterator rend() const ENTT_NOEXCEPT {
-            return handler ? reverse_iterator{handler->rend(), pools} : reverse_iterator{{}, pools};
+        [[nodiscard]] pointer operator->() const ENTT_NOEXCEPT {
+            return operator*();
+        }
+
+        [[nodiscard]] bool operator==(const extended_group_iterator &other) const ENTT_NOEXCEPT {
+            return other.it == it;
+        }
+
+        [[nodiscard]] bool operator!=(const extended_group_iterator &other) const ENTT_NOEXCEPT {
+            return !(*this == other);
         }
 
     private:
-        basic_common_type * const handler;
-        const std::tuple<storage_type<Get> *...> pools;
+        typename basic_common_type::iterator it;
+        std::tuple<storage_type<Get> *...> pools;
     };
 
-    basic_group(basic_common_type &ref, storage_type<Get> &... gpool) ENTT_NOEXCEPT
+    basic_group(basic_common_type &ref, storage_type<Get> &...gpool) ENTT_NOEXCEPT
         : handler{&ref},
-          pools{&gpool...}
-    {}
+          pools{&gpool...} {}
 
 public:
     /*! @brief Underlying entity identifier. */
     using entity_type = Entity;
     /*! @brief Unsigned integer type. */
     using size_type = std::size_t;
+    /*! @brief Common type among all storage types. */
+    using base_type = basic_common_type;
     /*! @brief Random access iterator type. */
-    using iterator = typename basic_common_type::iterator;
+    using iterator = typename base_type::iterator;
     /*! @brief Reversed iterator type. */
-    using reverse_iterator = typename basic_common_type::reverse_iterator;
+    using reverse_iterator = typename base_type::reverse_iterator;
     /*! @brief Iterable group type. */
-    using iterable_group = iterable;
+    using iterable = iterable_adaptor<extended_group_iterator>;
 
     /*! @brief Default constructor to use to create empty, invalid groups. */
     basic_group() ENTT_NOEXCEPT
-        : handler{}
-    {}
+        : handler{} {}
+
+    /**
+     * @brief Returns a const reference to the underlying handler.
+     * @return A const reference to the underlying handler.
+     */
+    const base_type &handle() const ENTT_NOEXCEPT {
+        return *handler;
+    }
+
+    /**
+     * @brief Returns the storage for a given component type.
+     * @tparam Comp Type of component of which to return the storage.
+     * @return The storage for the given component type.
+     */
+    template<typename Comp>
+    [[nodiscard]] decltype(auto) storage() const ENTT_NOEXCEPT {
+        return *std::get<storage_type<Comp> *>(pools);
+    }
+
+    /**
+     * @brief Returns the storage for a given component type.
+     * @tparam Comp Index of component of which to return the storage.
+     * @return The storage for the given component type.
+     */
+    template<std::size_t Comp>
+    [[nodiscard]] decltype(auto) storage() const ENTT_NOEXCEPT {
+        return *std::get<Comp>(pools);
+    }
 
     /**
      * @brief Returns the number of entities that have the given components.
@@ -197,18 +195,6 @@ public:
      */
     [[nodiscard]] bool empty() const ENTT_NOEXCEPT {
         return !*this || handler->empty();
-    }
-
-    /**
-     * @brief Direct access to the list of entities.
-     *
-     * The returned pointer is such that range `[data(), data() + size())` is
-     * always a valid range, even if the container is empty.
-     *
-     * @return A pointer to the array of entities.
-     */
-    [[nodiscard]] auto data() const ENTT_NOEXCEPT {
-        return *this ? handler->data() : nullptr;
     }
 
     /**
@@ -269,7 +255,7 @@ public:
      * @return The first entity of the group if one exists, the null entity
      * otherwise.
      */
-    [[nodiscard]] entity_type front() const {
+    [[nodiscard]] entity_type front() const ENTT_NOEXCEPT {
         const auto it = begin();
         return it != end() ? *it : null;
     }
@@ -279,7 +265,7 @@ public:
      * @return The last entity of the group if one exists, the null entity
      * otherwise.
      */
-    [[nodiscard]] entity_type back() const {
+    [[nodiscard]] entity_type back() const ENTT_NOEXCEPT {
         const auto it = rbegin();
         return it != rend() ? *it : null;
     }
@@ -290,7 +276,7 @@ public:
      * @return An iterator to the given entity if it's found, past the end
      * iterator otherwise.
      */
-    [[nodiscard]] iterator find(const entity_type entt) const {
+    [[nodiscard]] iterator find(const entity_type entt) const ENTT_NOEXCEPT {
         const auto it = *this ? handler->find(entt) : iterator{};
         return it != end() && *it == entt ? it : end();
     }
@@ -317,7 +303,7 @@ public:
      * @param entt A valid identifier.
      * @return True if the group contains the given entity, false otherwise.
      */
-    [[nodiscard]] bool contains(const entity_type entt) const {
+    [[nodiscard]] bool contains(const entity_type entt) const ENTT_NOEXCEPT {
         return *this && handler->contains(entt);
     }
 
@@ -332,20 +318,20 @@ public:
      * error. Attempting to use an entity that doesn't belong to the group
      * results in undefined behavior.
      *
-     * @tparam Component Types of components to get.
+     * @tparam Comp Types of components to get.
      * @param entt A valid identifier.
      * @return The components assigned to the entity.
      */
-    template<typename... Component>
+    template<typename... Comp>
     [[nodiscard]] decltype(auto) get(const entity_type entt) const {
         ENTT_ASSERT(contains(entt), "Group does not contain entity");
 
-        if constexpr(sizeof...(Component) == 0) {
+        if constexpr(sizeof...(Comp) == 0) {
             return std::tuple_cat(std::get<storage_type<Get> *>(pools)->get_as_tuple(entt)...);
-        } else if constexpr(sizeof...(Component) == 1) {
-            return (std::get<storage_type<Component> *>(pools)->get(entt), ...);
+        } else if constexpr(sizeof...(Comp) == 1) {
+            return (std::get<storage_type<Comp> *>(pools)->get(entt), ...);
         } else {
-            return std::tuple_cat(std::get<storage_type<Component> *>(pools)->get_as_tuple(entt)...);
+            return std::tuple_cat(std::get<storage_type<Comp> *>(pools)->get_as_tuple(entt)...);
         }
     }
 
@@ -383,7 +369,7 @@ public:
     }
 
     /**
-     * @brief Returns an iterable object to use to _visit_ the group.
+     * @brief Returns an iterable object to use to _visit_ a group.
      *
      * The iterable object returns tuples that contain the current entity and a
      * set of references to its non-empty components. The _constness_ of the
@@ -395,8 +381,9 @@ public:
      *
      * @return An iterable object to use to _visit_ the group.
      */
-    [[nodiscard]] iterable_group each() const ENTT_NOEXCEPT {
-        return iterable_group{handler, pools};
+    [[nodiscard]] iterable each() const ENTT_NOEXCEPT {
+        return handler ? iterable{extended_group_iterator{handler->begin(), pools}, extended_group_iterator{handler->end(), pools}}
+                       : iterable{extended_group_iterator{{}, pools}, extended_group_iterator{{}, pools}};
     }
 
     /**
@@ -420,14 +407,14 @@ public:
      * Moreover, the comparison function object shall induce a
      * _strict weak ordering_ on the values.
      *
-     * The sort function oject must offer a member function template
+     * The sort function object must offer a member function template
      * `operator()` that accepts three arguments:
      *
      * * An iterator to the first element of the range to sort.
      * * An iterator past the last element of the range to sort.
      * * A comparison function to use to compare the elements.
      *
-     * @tparam Component Optional types of components to compare.
+     * @tparam Comp Optional types of components to compare.
      * @tparam Compare Type of comparison function object.
      * @tparam Sort Type of sort function object.
      * @tparam Args Types of arguments to forward to the sort function object.
@@ -435,20 +422,22 @@ public:
      * @param algo A valid sort function object.
      * @param args Arguments to forward to the sort function object, if any.
      */
-    template<typename... Component, typename Compare, typename Sort = std_sort, typename... Args>
-    void sort(Compare compare, Sort algo = Sort{}, Args &&... args) {
+    template<typename... Comp, typename Compare, typename Sort = std_sort, typename... Args>
+    void sort(Compare compare, Sort algo = Sort{}, Args &&...args) {
         if(*this) {
-            if constexpr(sizeof...(Component) == 0) {
+            if constexpr(sizeof...(Comp) == 0) {
                 static_assert(std::is_invocable_v<Compare, const entity_type, const entity_type>, "Invalid comparison function");
                 handler->sort(std::move(compare), std::move(algo), std::forward<Args>(args)...);
-            }  else if constexpr(sizeof...(Component) == 1) {
-                handler->sort([this, compare = std::move(compare)](const entity_type lhs, const entity_type rhs) {
-                    return compare((std::get<storage_type<Component> *>(pools)->get(lhs), ...), (std::get<storage_type<Component> *>(pools)->get(rhs), ...));
-                }, std::move(algo), std::forward<Args>(args)...);
             } else {
-                handler->sort([this, compare = std::move(compare)](const entity_type lhs, const entity_type rhs) {
-                    return compare(std::forward_as_tuple(std::get<storage_type<Component> *>(pools)->get(lhs)...), std::forward_as_tuple(std::get<storage_type<Component> *>(pools)->get(rhs)...));
-                }, std::move(algo), std::forward<Args>(args)...);
+                auto comp = [this, &compare](const entity_type lhs, const entity_type rhs) {
+                    if constexpr(sizeof...(Comp) == 1) {
+                        return compare((std::get<storage_type<Comp> *>(pools)->get(lhs), ...), (std::get<storage_type<Comp> *>(pools)->get(rhs), ...));
+                    } else {
+                        return compare(std::forward_as_tuple(std::get<storage_type<Comp> *>(pools)->get(lhs)...), std::forward_as_tuple(std::get<storage_type<Comp> *>(pools)->get(rhs)...));
+                    }
+                };
+
+                handler->sort(std::move(comp), std::move(algo), std::forward<Args>(args)...);
             }
         }
     }
@@ -467,20 +456,19 @@ public:
      * can quickly ruin the order imposed to the pool of entities shared between
      * the non-owning groups.
      *
-     * @tparam Component Type of component to use to impose the order.
+     * @tparam Comp Type of component to use to impose the order.
      */
-    template<typename Component>
+    template<typename Comp>
     void sort() const {
         if(*this) {
-            handler->respect(*std::get<storage_type<Component> *>(pools));
+            handler->respect(*std::get<storage_type<Comp> *>(pools));
         }
     }
 
 private:
-    basic_common_type * const handler;
+    base_type *const handler;
     const std::tuple<storage_type<Get> *...> pools;
 };
-
 
 /**
  * @brief Owning group.
@@ -529,138 +517,113 @@ private:
  * @tparam Exclude Types of components used to filter the group.
  */
 template<typename Entity, typename... Owned, typename... Get, typename... Exclude>
-class basic_group<Entity, owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>> final {
+class basic_group<Entity, owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>> {
     /*! @brief A registry is allowed to create groups. */
     friend class basic_registry<Entity>;
 
-    template<typename Component>
-    using storage_type = constness_as_t<typename storage_traits<Entity, std::remove_const_t<Component>>::storage_type, Component>;
+    template<typename Comp>
+    using storage_type = constness_as_t<typename storage_traits<Entity, std::remove_const_t<Comp>>::storage_type, Comp>;
 
     using basic_common_type = std::common_type_t<typename storage_type<Owned>::base_type..., typename storage_type<Get>::base_type...>;
 
-    class iterable final {
-        template<typename, typename>
-        struct iterable_iterator;
-
-        template<typename It, typename... OIt>
-        struct iterable_iterator<It, type_list<OIt...>> final {
-            using difference_type = std::ptrdiff_t;
-            using value_type = decltype(std::tuple_cat(std::tuple<Entity>{}, std::declval<basic_group>().get({})));
-            using pointer = void;
-            using reference = value_type;
-            using iterator_category = std::input_iterator_tag;
-
-            template<typename... Other>
-            iterable_iterator(It from, const std::tuple<Other...> &other, const std::tuple<storage_type<Get> *...> &cpools) ENTT_NOEXCEPT
-                : it{from},
-                  owned{std::get<OIt>(other)...},
-                  get{cpools}
-            {}
-
-            iterable_iterator & operator++() ENTT_NOEXCEPT {
-                return ++it, (++std::get<OIt>(owned), ...), *this;
+    class extended_group_iterator final {
+        template<typename Type>
+        auto index_to_element(storage_type<Type> &cpool) const {
+            if constexpr(ignore_as_empty_v<std::remove_const_t<Type>>) {
+                return std::make_tuple();
+            } else {
+                return std::forward_as_tuple(cpool.rbegin()[it.index()]);
             }
-
-            iterable_iterator operator++(int) ENTT_NOEXCEPT {
-                iterable_iterator orig = *this;
-                return ++(*this), orig;
-            }
-
-            [[nodiscard]] reference operator*() const ENTT_NOEXCEPT {
-                return std::tuple_cat(
-                    std::make_tuple(*it),
-                    std::forward_as_tuple(*std::get<OIt>(owned)...),
-                    std::get<storage_type<Get> *>(get)->get_as_tuple(*it)...
-                );
-            }
-
-            [[nodiscard]] bool operator==(const iterable_iterator &other) const ENTT_NOEXCEPT {
-                return other.it == it;
-            }
-
-            [[nodiscard]] bool operator!=(const iterable_iterator &other) const ENTT_NOEXCEPT {
-                return !(*this == other);
-            }
-
-        private:
-            It it;
-            std::tuple<OIt...> owned;
-            std::tuple<storage_type<Get> *...> get;
-        };
+        }
 
     public:
-        using iterator = iterable_iterator<
-            typename basic_common_type::iterator,
-            type_list_cat_t<std::conditional_t<ignore_as_empty_v<std::remove_const_t<Owned>>, type_list<>, type_list<decltype(std::declval<storage_type<Owned>>().end())>>...>
-        >;
-        using reverse_iterator = iterable_iterator<
-            typename basic_common_type::reverse_iterator,
-            type_list_cat_t<std::conditional_t<ignore_as_empty_v<std::remove_const_t<Owned>>, type_list<>, type_list<decltype(std::declval<storage_type<Owned>>().rbegin())>>...>
-        >;
+        using difference_type = std::ptrdiff_t;
+        using value_type = decltype(std::tuple_cat(std::tuple<Entity>{}, std::declval<basic_group>().get({})));
+        using pointer = input_iterator_pointer<value_type>;
+        using reference = value_type;
+        using iterator_category = std::input_iterator_tag;
 
-        iterable(std::tuple<storage_type<Owned> *..., storage_type<Get> *...> cpools, const std::size_t * const extent)
-            : pools{cpools},
-              length{extent}
-        {}
+        extended_group_iterator() = default;
 
-        [[nodiscard]] iterator begin() const ENTT_NOEXCEPT {
-            return length ? iterator{
-                std::get<0>(pools)->basic_common_type::end() - *length,
-                std::make_tuple((std::get<storage_type<Owned> *>(pools)->end() - *length)...),
-                std::make_tuple(std::get<storage_type<Get> *>(pools)...)
-            } : iterator{{}, std::make_tuple(decltype(std::get<storage_type<Owned> *>(pools)->end()){}...), std::make_tuple(std::get<storage_type<Get> *>(pools)...)};
+        template<typename... Other>
+        extended_group_iterator(typename basic_common_type::iterator from, const std::tuple<storage_type<Owned> *..., storage_type<Get> *...> &cpools)
+            : it{from},
+              pools{cpools} {}
+
+        extended_group_iterator &operator++() ENTT_NOEXCEPT {
+            return ++it, *this;
         }
 
-        [[nodiscard]] iterator end() const ENTT_NOEXCEPT {
-            return length ? iterator{
-                std::get<0>(pools)->basic_common_type::end(),
-                std::make_tuple((std::get<storage_type<Owned> *>(pools)->end())...),
-                std::make_tuple(std::get<storage_type<Get> *>(pools)...)
-            } : iterator{{}, std::make_tuple(decltype(std::get<storage_type<Owned> *>(pools)->end()){}...), std::make_tuple(std::get<storage_type<Get> *>(pools)...)};
+        extended_group_iterator operator++(int) ENTT_NOEXCEPT {
+            extended_group_iterator orig = *this;
+            return ++(*this), orig;
         }
 
-        [[nodiscard]] reverse_iterator rbegin() const ENTT_NOEXCEPT {
-            return length ? reverse_iterator{
-                std::get<0>(pools)->basic_common_type::rbegin(),
-                std::make_tuple((std::get<storage_type<Owned> *>(pools)->rbegin())...),
-                std::make_tuple(std::get<storage_type<Get> *>(pools)...)
-            } : reverse_iterator{{}, std::make_tuple(decltype(std::get<storage_type<Owned> *>(pools)->rbegin()){}...), std::make_tuple(std::get<storage_type<Get> *>(pools)...)};
+        [[nodiscard]] reference operator*() const ENTT_NOEXCEPT {
+            return std::tuple_cat(
+                std::make_tuple(*it),
+                index_to_element<Owned>(*std::get<storage_type<Owned> *>(pools))...,
+                std::get<storage_type<Get> *>(pools)->get_as_tuple(*it)...);
         }
 
-        [[nodiscard]] reverse_iterator rend() const ENTT_NOEXCEPT {
-            return length ? reverse_iterator{
-                std::get<0>(pools)->basic_common_type::rbegin() + *length,
-                std::make_tuple((std::get<storage_type<Owned> *>(pools)->rbegin() + *length)...),
-                std::make_tuple(std::get<storage_type<Get> *>(pools)...)
-            } : reverse_iterator{{}, std::make_tuple(decltype(std::get<storage_type<Owned> *>(pools)->rbegin()){}...), std::make_tuple(std::get<storage_type<Get> *>(pools)...)};
+        [[nodiscard]] pointer operator->() const ENTT_NOEXCEPT {
+            return operator*();
+        }
+
+        [[nodiscard]] bool operator==(const extended_group_iterator &other) const ENTT_NOEXCEPT {
+            return other.it == it;
+        }
+
+        [[nodiscard]] bool operator!=(const extended_group_iterator &other) const ENTT_NOEXCEPT {
+            return !(*this == other);
         }
 
     private:
-        const std::tuple<storage_type<Owned> *..., storage_type<Get> *...> pools;
-        const std::size_t * const length;
+        typename basic_common_type::iterator it;
+        std::tuple<storage_type<Owned> *..., storage_type<Get> *...> pools;
     };
 
-    basic_group(const std::size_t &extent, storage_type<Owned> &... opool, storage_type<Get> &... gpool) ENTT_NOEXCEPT
+    basic_group(const std::size_t &extent, storage_type<Owned> &...opool, storage_type<Get> &...gpool) ENTT_NOEXCEPT
         : pools{&opool..., &gpool...},
-          length{&extent}
-    {}
+          length{&extent} {}
 
 public:
     /*! @brief Underlying entity identifier. */
     using entity_type = Entity;
     /*! @brief Unsigned integer type. */
     using size_type = std::size_t;
+    /*! @brief Common type among all storage types. */
+    using base_type = basic_common_type;
     /*! @brief Random access iterator type. */
-    using iterator = typename basic_common_type::iterator;
+    using iterator = typename base_type::iterator;
     /*! @brief Reversed iterator type. */
-    using reverse_iterator = typename basic_common_type::reverse_iterator;
+    using reverse_iterator = typename base_type::reverse_iterator;
     /*! @brief Iterable group type. */
-    using iterable_group = iterable;
+    using iterable = iterable_adaptor<extended_group_iterator>;
 
     /*! @brief Default constructor to use to create empty, invalid groups. */
     basic_group() ENTT_NOEXCEPT
-        : length{}
-    {}
+        : length{} {}
+
+    /**
+     * @brief Returns the storage for a given component type.
+     * @tparam Comp Type of component of which to return the storage.
+     * @return The storage for the given component type.
+     */
+    template<typename Comp>
+    [[nodiscard]] decltype(auto) storage() const ENTT_NOEXCEPT {
+        return *std::get<storage_type<Comp> *>(pools);
+    }
+
+    /**
+     * @brief Returns the storage for a given component type.
+     * @tparam Comp Index of component of which to return the storage.
+     * @return The storage for the given component type.
+     */
+    template<std::size_t Comp>
+    [[nodiscard]] decltype(auto) storage() const ENTT_NOEXCEPT {
+        return *std::get<Comp>(pools);
+    }
 
     /**
      * @brief Returns the number of entities that have the given components.
@@ -679,34 +642,6 @@ public:
     }
 
     /**
-     * @brief Direct access to the raw representation offered by the storage.
-     *
-     * @warning
-     * This function is only available for owned types.
-     *
-     * @tparam Component Type of component in which one is interested.
-     * @return A pointer to the array of components.
-     */
-    template<typename Component>
-    [[nodiscard]] auto raw() const ENTT_NOEXCEPT {
-        static_assert((std::is_same_v<Component, Owned> || ...), "Non-owned type");
-        auto *cpool = std::get<storage_type<Component> *>(pools);
-        return cpool ? cpool->raw() : decltype(cpool->raw()){};
-    }
-
-    /**
-     * @brief Direct access to the list of entities.
-     *
-     * The returned pointer is such that range `[data(), data() + size())` is
-     * always a valid range, even if the container is empty.
-     *
-     * @return A pointer to the array of entities.
-     */
-    [[nodiscard]] auto data() const ENTT_NOEXCEPT {
-        return *this ? std::get<0>(pools)->data() : nullptr;
-    }
-
-    /**
      * @brief Returns an iterator to the first entity of the group.
      *
      * The returned iterator points to the first entity of the group. If the
@@ -715,7 +650,7 @@ public:
      * @return An iterator to the first entity of the group.
      */
     [[nodiscard]] iterator begin() const ENTT_NOEXCEPT {
-        return *this ? (std::get<0>(pools)->basic_common_type::end() - *length) : iterator{};
+        return *this ? (std::get<0>(pools)->base_type::end() - *length) : iterator{};
     }
 
     /**
@@ -729,7 +664,7 @@ public:
      * group.
      */
     [[nodiscard]] iterator end() const ENTT_NOEXCEPT {
-        return *this ? std::get<0>(pools)->basic_common_type::end() : iterator{};
+        return *this ? std::get<0>(pools)->base_type::end() : iterator{};
     }
 
     /**
@@ -741,7 +676,7 @@ public:
      * @return An iterator to the first entity of the reversed group.
      */
     [[nodiscard]] reverse_iterator rbegin() const ENTT_NOEXCEPT {
-        return *this ? std::get<0>(pools)->basic_common_type::rbegin() : reverse_iterator{};
+        return *this ? std::get<0>(pools)->base_type::rbegin() : reverse_iterator{};
     }
 
     /**
@@ -756,7 +691,7 @@ public:
      * reversed group.
      */
     [[nodiscard]] reverse_iterator rend() const ENTT_NOEXCEPT {
-        return *this ? (std::get<0>(pools)->basic_common_type::rbegin() + *length) : reverse_iterator{};
+        return *this ? (std::get<0>(pools)->base_type::rbegin() + *length) : reverse_iterator{};
     }
 
     /**
@@ -764,7 +699,7 @@ public:
      * @return The first entity of the group if one exists, the null entity
      * otherwise.
      */
-    [[nodiscard]] entity_type front() const {
+    [[nodiscard]] entity_type front() const ENTT_NOEXCEPT {
         const auto it = begin();
         return it != end() ? *it : null;
     }
@@ -774,7 +709,7 @@ public:
      * @return The last entity of the group if one exists, the null entity
      * otherwise.
      */
-    [[nodiscard]] entity_type back() const {
+    [[nodiscard]] entity_type back() const ENTT_NOEXCEPT {
         const auto it = rbegin();
         return it != rend() ? *it : null;
     }
@@ -785,7 +720,7 @@ public:
      * @return An iterator to the given entity if it's found, past the end
      * iterator otherwise.
      */
-    [[nodiscard]] iterator find(const entity_type entt) const {
+    [[nodiscard]] iterator find(const entity_type entt) const ENTT_NOEXCEPT {
         const auto it = *this ? std::get<0>(pools)->find(entt) : iterator{};
         return it != end() && it >= begin() && *it == entt ? it : end();
     }
@@ -812,7 +747,7 @@ public:
      * @param entt A valid identifier.
      * @return True if the group contains the given entity, false otherwise.
      */
-    [[nodiscard]] bool contains(const entity_type entt) const {
+    [[nodiscard]] bool contains(const entity_type entt) const ENTT_NOEXCEPT {
         return *this && std::get<0>(pools)->contains(entt) && (std::get<0>(pools)->index(entt) < (*length));
     }
 
@@ -827,20 +762,20 @@ public:
      * error. Attempting to use an entity that doesn't belong to the group
      * results in undefined behavior.
      *
-     * @tparam Component Types of components to get.
+     * @tparam Comp Types of components to get.
      * @param entt A valid identifier.
      * @return The components assigned to the entity.
      */
-    template<typename... Component>
+    template<typename... Comp>
     [[nodiscard]] decltype(auto) get(const entity_type entt) const {
         ENTT_ASSERT(contains(entt), "Group does not contain entity");
 
-        if constexpr(sizeof...(Component) == 0) {
+        if constexpr(sizeof...(Comp) == 0) {
             return std::tuple_cat(std::get<storage_type<Owned> *>(pools)->get_as_tuple(entt)..., std::get<storage_type<Get> *>(pools)->get_as_tuple(entt)...);
-        } else if constexpr(sizeof...(Component) == 1) {
-            return (std::get<storage_type<Component> *>(pools)->get(entt), ...);
+        } else if constexpr(sizeof...(Comp) == 1) {
+            return (std::get<storage_type<Comp> *>(pools)->get(entt), ...);
         } else {
-            return std::tuple_cat(std::get<storage_type<Component> *>(pools)->get_as_tuple(entt)...);
+            return std::tuple_cat(std::get<storage_type<Comp> *>(pools)->get_as_tuple(entt)...);
         }
     }
 
@@ -872,13 +807,13 @@ public:
             if constexpr(is_applicable_v<Func, decltype(std::tuple_cat(std::tuple<entity_type>{}, std::declval<basic_group>().get({})))>) {
                 std::apply(func, args);
             } else {
-                std::apply([&func](auto, auto &&... less) { func(std::forward<decltype(less)>(less)...); }, args);
+                std::apply([&func](auto, auto &&...less) { func(std::forward<decltype(less)>(less)...); }, args);
             }
         }
     }
 
     /**
-     * @brief Returns an iterable object to use to _visit_ the group.
+     * @brief Returns an iterable object to use to _visit_ a group.
      *
      * The iterable object returns tuples that contain the current entity and a
      * set of references to its non-empty components. The _constness_ of the
@@ -890,8 +825,9 @@ public:
      *
      * @return An iterable object to use to _visit_ the group.
      */
-    [[nodiscard]] iterable_group each() const ENTT_NOEXCEPT {
-        return iterable_group{pools, length};
+    [[nodiscard]] iterable each() const ENTT_NOEXCEPT {
+        iterator last = length ? std::get<0>(pools)->basic_common_type::end() : iterator{};
+        return {extended_group_iterator{last - *length, pools}, extended_group_iterator{last, pools}};
     }
 
     /**
@@ -916,14 +852,14 @@ public:
      * Moreover, the comparison function object shall induce a
      * _strict weak ordering_ on the values.
      *
-     * The sort function oject must offer a member function template
+     * The sort function object must offer a member function template
      * `operator()` that accepts three arguments:
      *
      * * An iterator to the first element of the range to sort.
      * * An iterator past the last element of the range to sort.
      * * A comparison function to use to compare the elements.
      *
-     * @tparam Component Optional types of components to compare.
+     * @tparam Comp Optional types of components to compare.
      * @tparam Compare Type of comparison function object.
      * @tparam Sort Type of sort function object.
      * @tparam Args Types of arguments to forward to the sort function object.
@@ -931,24 +867,26 @@ public:
      * @param algo A valid sort function object.
      * @param args Arguments to forward to the sort function object, if any.
      */
-    template<typename... Component, typename Compare, typename Sort = std_sort, typename... Args>
-    void sort(Compare compare, Sort algo = Sort{}, Args &&... args) const {
+    template<typename... Comp, typename Compare, typename Sort = std_sort, typename... Args>
+    void sort(Compare compare, Sort algo = Sort{}, Args &&...args) const {
         auto *cpool = std::get<0>(pools);
 
-        if constexpr(sizeof...(Component) == 0) {
+        if constexpr(sizeof...(Comp) == 0) {
             static_assert(std::is_invocable_v<Compare, const entity_type, const entity_type>, "Invalid comparison function");
             cpool->sort_n(*length, std::move(compare), std::move(algo), std::forward<Args>(args)...);
-        } else if constexpr(sizeof...(Component) == 1) {
-            cpool->sort_n(*length, [this, compare = std::move(compare)](const entity_type lhs, const entity_type rhs) {
-                return compare((std::get<storage_type<Component> *>(pools)->get(lhs), ...), (std::get<storage_type<Component> *>(pools)->get(rhs), ...));
-            }, std::move(algo), std::forward<Args>(args)...);
         } else {
-            cpool->sort_n(*length, [this, compare = std::move(compare)](const entity_type lhs, const entity_type rhs) {
-                return compare(std::forward_as_tuple(std::get<storage_type<Component> *>(pools)->get(lhs)...), std::forward_as_tuple(std::get<storage_type<Component> *>(pools)->get(rhs)...));
-            }, std::move(algo), std::forward<Args>(args)...);
+            auto comp = [this, &compare](const entity_type lhs, const entity_type rhs) {
+                if constexpr(sizeof...(Comp) == 1) {
+                    return compare((std::get<storage_type<Comp> *>(pools)->get(lhs), ...), (std::get<storage_type<Comp> *>(pools)->get(rhs), ...));
+                } else {
+                    return compare(std::forward_as_tuple(std::get<storage_type<Comp> *>(pools)->get(lhs)...), std::forward_as_tuple(std::get<storage_type<Comp> *>(pools)->get(rhs)...));
+                }
+            };
+
+            cpool->sort_n(*length, std::move(comp), std::move(algo), std::forward<Args>(args)...);
         }
 
-        [this](auto *head, auto *... other) {
+        [this](auto *head, auto *...other) {
             for(auto next = *length; next; --next) {
                 const auto pos = next - 1;
                 [[maybe_unused]] const auto entt = head->data()[pos];
@@ -959,11 +897,9 @@ public:
 
 private:
     const std::tuple<storage_type<Owned> *..., storage_type<Get> *...> pools;
-    const size_type * const length;
+    const size_type *const length;
 };
 
-
-}
-
+} // namespace entt
 
 #endif

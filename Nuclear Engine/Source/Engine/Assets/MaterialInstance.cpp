@@ -1,6 +1,5 @@
 #include <Engine\Assets\MaterialInstance.h>
 #include <Base\Utilities\Hash.h>
-#include <Engine/Assets/DefaultTextures.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 
@@ -14,6 +13,8 @@ namespace NuclearEngine
 		}
 		MaterialInstance::~MaterialInstance()
 		{
+			mPShaderTextures.clear();
+			mRenderingPipeline = nullptr;
 		}
 		void MaterialInstance::Create(Graphics::RenderingPipeline* Pipeline)
 		{
@@ -91,12 +92,16 @@ namespace NuclearEngine
 			{
 				for (auto tex : mPShaderTextures.at(index).mData)
 				{
-					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView);
+					auto zzz = tex.mTex.GetImage()->mTextureView.RawPtr();
+					if (!tex.mTex.GetImage()->mTextureView.RawPtr())
+					{
+						Log.Error("ghjrffg");
+					}
+					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
 				}
 			}
 
 			Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		}
-	
+		}	
 	}
 }

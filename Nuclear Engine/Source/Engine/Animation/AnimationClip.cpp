@@ -9,6 +9,10 @@ namespace NuclearEngine
 		}
 		AnimationClip::~AnimationClip()
 		{
+			m_Duration = 0;
+			m_TicksPerSecond = 0;
+			mBones.clear();
+			mBoneInfoMap.clear();
 		}
 
 		inline Animation::Bone* AnimationClip::FindBone(const std::string& name)

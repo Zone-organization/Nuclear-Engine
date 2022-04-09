@@ -46,22 +46,22 @@ namespace NuclearEngine
 			return &_modules.back();
 		}
 
-		void ScriptingSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
-		{
-			//ECS::ComponentHandle<Components::ScriptComponent> script;
-			//for (ECS::Entity entity : es.entities_with_components(script))
-			//{
-				for (auto it : _modules)
-				{
-					for (auto it2 : it.mImportedScripts)
-					{
-						GetScriptingEngine()->GetContext()->Prepare(it.mImportedScripts[it2.first].mStartfun);
-						GetScriptingEngine()->GetContext()->Execute();
-						GetScriptingEngine()->GetContext()->UnPrepare();
-					}
-				}
-			//}
-		}
+		//void ScriptingSystem::Update(ECS::EntityManager& es, ECS::EventManager& events, ECS::TimeDelta dt)
+		//{
+		//	//ECS::ComponentHandle<Components::ScriptComponent> script;
+		//	//for (ECS::Entity entity : es.entities_with_components(script))
+		//	//{
+		//		for (auto it : _modules)
+		//		{
+		//			for (auto it2 : it.mImportedScripts)
+		//			{
+		//				GetScriptingEngine()->GetContext()->Prepare(it.mImportedScripts[it2.first].mStartfun);
+		//				GetScriptingEngine()->GetContext()->Execute();
+		//				GetScriptingEngine()->GetContext()->UnPrepare();
+		//			}
+		//		}
+		//	//}
+		//}
 
 	}
 }

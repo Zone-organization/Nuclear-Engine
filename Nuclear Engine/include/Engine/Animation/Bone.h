@@ -28,6 +28,15 @@ namespace NuclearEngine
 
 		struct BoneData
 		{
+			~BoneData()
+			{
+				m_Positions.clear();
+				m_Rotations.clear();
+				m_Scales.clear();
+				m_NumPositions = 0;
+				m_NumRotations = 0;
+				m_NumScalings = 0;
+			}
 			std::vector<KeyPosition> m_Positions = std::vector<KeyPosition>();
 			std::vector<KeyRotation> m_Rotations = std::vector<KeyRotation>();
 			std::vector<KeyScale> m_Scales = std::vector<KeyScale>();
@@ -41,6 +50,7 @@ namespace NuclearEngine
 		public:
 			Bone(const std::string& name, int ID);
 			Bone(const std::string& name, int ID, BoneData data);
+			~Bone();
 
 			void Update(float animationTime);
 			Math::Matrix4 GetLocalTransform();

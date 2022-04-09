@@ -1,8 +1,8 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine\ECS/Entity.h>
-#include <Engine\ECS/System.h>
 #include <Engine/ECS/EntityFactory.h>
+#include <Engine/ECS/Entity.h>
+#include <Engine/ECS/System.h>
 #include <Core\Path.h>
 
 namespace NuclearEngine
@@ -10,6 +10,7 @@ namespace NuclearEngine
 	namespace Components { class CameraComponent; }
 	namespace ECS
 	{
+
 		class NEAPI Scene {
 		public:
 			Scene(const std::string& name = "scene");
@@ -21,8 +22,7 @@ namespace NuclearEngine
 
 			std::string GetName();
 
-			EventManager Events;
-			EntityManager Entities;
+			entt::registry Registry;
 			SystemManager Systems;
 			EntityFactory Factory;
 		private:

@@ -9,6 +9,7 @@ namespace NuclearEngine
 		}
 		Animations::~Animations()
 		{
+			mClips.clear();
 		}
 	}
 }

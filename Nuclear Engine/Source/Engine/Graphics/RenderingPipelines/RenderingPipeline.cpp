@@ -1,8 +1,7 @@
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
-#include <Engine/Assets/DefaultTextures.h>
-
+#include <Engine/Managers/AssetManager.h>
 namespace NuclearEngine
 {
 	namespace Graphics
@@ -48,7 +47,7 @@ namespace NuclearEngine
 				{
 					VarName.erase(0, 6);
 					Assets::ShaderTexture ReflectedTex;
-					ReflectedTex.mTex = Assets::DefaultTextures::DefaultBlackTex;
+					ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
 					ReflectedTex.mTex.SetName(VarName);
 					ReflectedTex.mSlot = i;
 					ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
@@ -67,15 +66,15 @@ namespace NuclearEngine
 			switch (Type)
 			{
 			case TextureUsageType::Diffuse:
-				Assets::DefaultTextures::DefaultDiffuseTex;
+				Managers::AssetManager::DefaultDiffuseTex;
 			case TextureUsageType::Specular:
-				Assets::DefaultTextures::DefaultSpecularTex;
+				Managers::AssetManager::DefaultSpecularTex;
 			case TextureUsageType::Normal:
-				Assets::DefaultTextures::DefaultNormalTex;
+				Managers::AssetManager::DefaultNormalTex;
 			default:
 				break;
 			}
-			return Assets::DefaultTextures::DefaultBlackTex;
+			return Managers::AssetManager::DefaultBlackTex;
 		}
 		BakeStatus RenderingPipeline::GetStatus()
 		{

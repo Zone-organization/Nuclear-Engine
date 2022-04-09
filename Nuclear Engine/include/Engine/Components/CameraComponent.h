@@ -2,7 +2,6 @@
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
 #include <Engine\Graphics\RenderTarget.h>
-#include <Engine\ECS\Entity.h>
 #include <Engine\Graphics\Color.h>
 #include <Engine\Graphics\Skybox.h>
 #include <Engine\Graphics\NeoPipeline.h>
@@ -45,7 +44,7 @@ namespace NuclearEngine
 			Math::Matrix4 Projection = Math::Matrix4(1.0f);
 		};
 
-		class NEAPI CameraComponent : public ECS::Component<CameraComponent>
+		class NEAPI CameraComponent
 		{
 		public:
 			CameraComponent();

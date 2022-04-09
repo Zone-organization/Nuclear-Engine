@@ -23,9 +23,9 @@ namespace NuclearEngine
 		Entity EntityFactory::CreateBox(Assets::Material* material, ECS::Transform t, PhysX::PhysXMaterial* PMat)
 		{
 			Entity Result = mScene->CreateEntity("Box");
-			Result.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), material);
-			Result.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(t.GetTransform());
 
+			Result.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), material);
+			Result.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(t.GetTransform());
 
 			auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
 			if (PMat != nullptr)
@@ -33,8 +33,8 @@ namespace NuclearEngine
 				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
 				{
 					PhysX::BoxGeometry box(Math::Vector3(0.5f, 0.5f, 0.5f), t);
-					Result.Assign<Components::ColliderComponent>(PMat, box);
-					Result.Assign<Components::RigidBodyComponent>(t);
+					Result.AddComponent<Components::ColliderComponent>(PMat, box);
+					Result.AddComponent<Components::RigidBodyComponent>(t);
 					System->AddActor(Result);
 					System->SetColliderForRigidBody(Result);
 					Result.GetComponent<Components::ColliderComponent>()->mAddedtoPhysxScene = true;
@@ -45,7 +45,7 @@ namespace NuclearEngine
 		Entity EntityFactory::CreateSphere(Assets::Material* material, ECS::Transform t, PhysX::PhysXMaterial* PMat)
 		{
 			Entity Result = mScene->CreateEntity("Sphere");
-			Result.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), material);
+			Result.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetSphereAsset(), material);
 			Result.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(t.GetTransform());
 
 			auto System = mScene->Systems.GetSystem<Systems::PhysXSystem>();
@@ -54,8 +54,8 @@ namespace NuclearEngine
 				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
 				{
 					PhysX::SphereGeometry sphere(0.5f, t);
-					Result.Assign<Components::ColliderComponent>(PMat, sphere);
-					Result.Assign<Components::RigidBodyComponent>(t);
+					Result.AddComponent<Components::ColliderComponent>(PMat, sphere);
+					Result.AddComponent<Components::RigidBodyComponent>(t);
 					System->AddActor(Result);
 					System->SetColliderForRigidBody(Result);
 					Result.GetComponent<Components::ColliderComponent>()->mAddedtoPhysxScene = true;

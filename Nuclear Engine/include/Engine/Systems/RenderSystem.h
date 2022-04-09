@@ -1,12 +1,17 @@
 #pragma once
-#include <Base\NE_Common.h>
-#include <Engine\ECS/Entity.h>
-#include <Engine\ECS/System.h>
+#include <Engine\ECS\System.h>
+#include <Engine\ECS/Common.h>
+#include <Engine\ECS/Scene.h>
 #include <Engine\Systems\LightingSubSystem.h>
+#include <Engine\ECS\System.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <vector>
 #include <unordered_map>
 
+/*
+#include <Engine/ECS/entt/entt.hpp>
+#include <Engine/ECS/Entity.h>
+*/
 namespace NuclearEngine
 {
 	namespace Assets
@@ -36,7 +41,8 @@ namespace NuclearEngine
 			bool BakePipelines = true;
 		};
 
-		class NEAPI RenderSystem : public ECS::System<RenderSystem> {
+		class NEAPI RenderSystem : public ECS::System<RenderSystem>
+		{
 		public:
 			RenderSystem(Managers::CameraManager* CameraManager);
 			~RenderSystem();
@@ -50,24 +56,25 @@ namespace NuclearEngine
 
 			bool NeedsBaking();
 
-			void Bake(ECS::EntityManager& es, bool AllPipelines = true);
+			void Bake(bool AllPipelines = true);
 
 			IPipelineState* GetPipeline();
 
 			// Render A MeshComponent Component instantly
-			void InstantRender(Components::MeshComponent* object);
+			void InstantRender(const Components::MeshComponent& object);
 
 			// Render A Mesh instantly
 			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
 			//Update Functions
-			void Update(ECS::EntityManager &es, ECS::EventManager &events, ECS::TimeDelta dt) override;
-			void UpdateMeshes(ECS::EntityManager & es);
+			void Update(ECS::TimeDelta dt) override;
 
 			//Debug Only
 			bool VisualizePointLightsPositions = false;
 
 		private:
+			void RenderMeshes();
+
 			LightingSubSystem mLightingSystem;
 			Managers::CameraManager* mCameraManager;
 			bool PipelineDirty = true;

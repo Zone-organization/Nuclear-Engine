@@ -2,7 +2,6 @@
 #include <Base\NE_Common.h>
 #include <Engine/Graphics/Color.h>
 #include <Base\Math\Math.h>
-#include <Engine\ECS\Entity.h>
 
 namespace NuclearEngine 
 {
@@ -18,7 +17,7 @@ namespace NuclearEngine
 			};
 		}
 
-		struct NEAPI DirLightComponent : public ECS::Component<DirLightComponent>
+		struct NEAPI DirLightComponent
 		{
 		public:
 			DirLightComponent();

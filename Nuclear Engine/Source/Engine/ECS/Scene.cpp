@@ -1,5 +1,4 @@
 #include <Engine\ECS\Scene.h>
-#include <Engine\ECS\ComponentDependency.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Components\EntityInfoComponent.h>
 #include<Core\Parsers\XMLParser.h>
@@ -9,27 +8,34 @@ namespace NuclearEngine
 	namespace ECS
 	{
 		Scene::Scene(const std::string& name)
-			: mName(name), Entities(Events),Systems(Entities, Events), Factory(this)
+			: mName(name), Factory(this), Systems(this)
 		{
+
 		}
 		Scene::~Scene()
 		{
+		//	Entities.reset();
 		}
 		Entity Scene::CreateEntity()
 		{
-			auto entity = Entities.Create();
-			entity.Assign<Components::EntityInfoComponent>();
-			entity.GetComponent<Components::EntityInfoComponent>().Get()->mOwnerEntity = entity;
-			return entity;
+			Entity result;
+			result.entity = Registry.create();
+			result.parent = &Registry;
+			auto& einfo = result.AddComponent<Components::EntityInfoComponent>();
+			einfo.mOwnerEntity = result;
+
+			return result;
 		}
 		Entity Scene::CreateEntity(const char* name)
 		{
-			auto entity = Entities.Create();
-			entity.Assign<Components::EntityInfoComponent>();
-			entity.GetComponent<Components::EntityInfoComponent>().Get()->mOwnerEntity = entity;
-			entity.GetComponent<Components::EntityInfoComponent>().Get()->mName = name;
+			Entity result;
+			result.entity = Registry.create();
+			result.parent = &Registry;
+			auto &einfo = result.AddComponent<Components::EntityInfoComponent>();
+			einfo.mOwnerEntity = result;
+			//einfo.mName = name;
 
-			return entity;
+			return result;
 		}
 		std::string Scene::GetName()
 		{

@@ -1,14 +1,14 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
-#include <Engine\ECS\Entity.h>
 #include <Engine/ECS/Transform.h>
+#include <Engine/ECS/Entity.h>
 
 namespace NuclearEngine
 {
 	namespace Components
 	{
-		class NEAPI EntityInfoComponent : public ECS::Component<EntityInfoComponent>
+		class NEAPI EntityInfoComponent
 		{
 		public:
 			EntityInfoComponent();

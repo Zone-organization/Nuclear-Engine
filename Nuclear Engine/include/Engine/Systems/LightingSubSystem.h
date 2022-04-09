@@ -1,7 +1,5 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine\ECS/Entity.h>
-#include <Engine\ECS/System.h>
 #include <Engine\Components\DirLightComponent.h>
 #include <Engine\Components\PointLightComponent.h>
 #include <Engine\Components\SpotLightComponent.h>

@@ -1,7 +1,6 @@
 #ifndef ENTT_POLY_POLY_HPP
 #define ENTT_POLY_POLY_HPP
 
-
 #include <cstddef>
 #include <functional>
 #include <tuple>
@@ -13,9 +12,7 @@
 #include "../core/type_traits.hpp"
 #include "fwd.hpp"
 
-
 namespace entt {
-
 
 /*! @brief Inspector class used to infer the type of the virtual table. */
 struct poly_inspector {
@@ -23,7 +20,7 @@ struct poly_inspector {
      * @brief Generic conversion operator (definition only).
      * @tparam Type Type to which conversion is requested.
      */
-    template <class Type>
+    template<class Type>
     operator Type &&() const;
 
     /**
@@ -33,14 +30,13 @@ struct poly_inspector {
      * @param args The arguments to pass to the function.
      * @return A poly inspector convertible to any type.
      */
-    template<auto Member, typename... Args>
-    poly_inspector invoke(Args &&... args) const;
+    template<std::size_t Member, typename... Args>
+    poly_inspector invoke(Args &&...args) const;
 
     /*! @copydoc invoke */
-    template<auto Member, typename... Args>
-    poly_inspector invoke(Args &&... args);
+    template<std::size_t Member, typename... Args>
+    poly_inspector invoke(Args &&...args);
 };
-
 
 /**
  * @brief Static virtual table factory.
@@ -53,35 +49,35 @@ class poly_vtable {
     using inspector = typename Concept::template type<poly_inspector>;
 
     template<typename Ret, typename... Args>
-    static auto vtable_entry(Ret(*)(inspector &, Args...)) -> Ret(*)(basic_any<Len, Align> &, Args...);
+    static auto vtable_entry(Ret (*)(inspector &, Args...)) -> Ret (*)(basic_any<Len, Align> &, Args...);
 
     template<typename Ret, typename... Args>
-    static auto vtable_entry(Ret(*)(const inspector &, Args...)) -> Ret(*)(const basic_any<Len, Align> &, Args...);
+    static auto vtable_entry(Ret (*)(const inspector &, Args...)) -> Ret (*)(const basic_any<Len, Align> &, Args...);
 
     template<typename Ret, typename... Args>
-    static auto vtable_entry(Ret(*)(Args...)) -> Ret(*)(const basic_any<Len, Align> &, Args...);
+    static auto vtable_entry(Ret (*)(Args...)) -> Ret (*)(const basic_any<Len, Align> &, Args...);
 
     template<typename Ret, typename... Args>
-    static auto vtable_entry(Ret(inspector:: *)(Args...)) -> Ret(*)(basic_any<Len, Align> &, Args...);
+    static auto vtable_entry(Ret (inspector::*)(Args...)) -> Ret (*)(basic_any<Len, Align> &, Args...);
 
     template<typename Ret, typename... Args>
-    static auto vtable_entry(Ret(inspector:: *)(Args...) const) -> Ret(*)(const basic_any<Len, Align> &, Args...);
+    static auto vtable_entry(Ret (inspector::*)(Args...) const) -> Ret (*)(const basic_any<Len, Align> &, Args...);
 
     template<auto... Candidate>
-    static auto make_vtable(value_list<Candidate...>)
-    -> decltype(std::make_tuple(vtable_entry(Candidate)...));
+    static auto make_vtable(value_list<Candidate...>) ENTT_NOEXCEPT
+        -> decltype(std::make_tuple(vtable_entry(Candidate)...));
 
     template<typename... Func>
-    [[nodiscard]] static constexpr auto make_vtable(type_list<Func...>)  {
+    [[nodiscard]] static constexpr auto make_vtable(type_list<Func...>) ENTT_NOEXCEPT {
         if constexpr(sizeof...(Func) == 0u) {
             return decltype(make_vtable(typename Concept::template impl<inspector>{})){};
         } else if constexpr((std::is_function_v<Func> && ...)) {
-            return decltype(std::make_tuple(vtable_entry(std::declval<Func inspector:: *>())...)){};
+            return decltype(std::make_tuple(vtable_entry(std::declval<Func inspector::*>())...)){};
         }
     }
 
     template<typename Type, auto Candidate, typename Ret, typename Any, typename... Args>
-    static void fill_vtable_entry(Ret(* &entry)(Any &, Args...)) {
+    static void fill_vtable_entry(Ret (*&entry)(Any &, Args...)) ENTT_NOEXCEPT {
         if constexpr(std::is_invocable_r_v<Ret, decltype(Candidate), Args...>) {
             entry = +[](Any &, Args... args) -> Ret {
                 return std::invoke(Candidate, std::forward<Args>(args)...);
@@ -94,7 +90,7 @@ class poly_vtable {
     }
 
     template<typename Type, auto... Index>
-    [[nodiscard]] static auto fill_vtable(std::index_sequence<Index...>) {
+    [[nodiscard]] static auto fill_vtable(std::index_sequence<Index...>) ENTT_NOEXCEPT {
         vtable_type impl{};
         (fill_vtable_entry<Type, value_list_element_v<Index, typename Concept::template impl<Type>>>(std::get<Index>(impl)), ...);
         return impl;
@@ -113,7 +109,7 @@ public:
      * @return A static virtual table for the given concept and type.
      */
     template<typename Type>
-    [[nodiscard]] static type instance() {
+    [[nodiscard]] static type instance() ENTT_NOEXCEPT {
         static_assert(std::is_same_v<Type, std::decay_t<Type>>, "Type differs from its decayed form");
         static const vtable_type vtable = fill_vtable<Type>(std::make_index_sequence<Concept::template impl<Type>::size>{});
 
@@ -124,7 +120,6 @@ public:
         }
     }
 };
-
 
 /**
  * @brief Poly base class used to inject functionalities into concepts.
@@ -140,8 +135,8 @@ struct poly_base {
      * @param args The arguments to pass to the function.
      * @return The return value of the invoked function, if any.
      */
-    template<auto Member, typename... Args>
-    [[nodiscard]] decltype(auto) invoke(const poly_base &self, Args &&... args) const {
+    template<std::size_t Member, typename... Args>
+    [[nodiscard]] decltype(auto) invoke(const poly_base &self, Args &&...args) const {
         const auto &poly = static_cast<const Poly &>(self);
 
         if constexpr(std::is_function_v<std::remove_pointer_t<decltype(poly.vtable)>>) {
@@ -152,18 +147,18 @@ struct poly_base {
     }
 
     /*! @copydoc invoke */
-    template<auto Member, typename... Args>
-    [[nodiscard]] decltype(auto) invoke(poly_base &self, Args &&... args) {
+    template<std::size_t Member, typename... Args>
+    [[nodiscard]] decltype(auto) invoke(poly_base &self, Args &&...args) {
         auto &poly = static_cast<Poly &>(self);
 
         if constexpr(std::is_function_v<std::remove_pointer_t<decltype(poly.vtable)>>) {
+            static_assert(Member == 0u, "Unknown member");
             return poly.vtable(poly.storage, std::forward<Args>(args)...);
         } else {
             return std::get<Member>(*poly.vtable)(poly.storage, std::forward<Args>(args)...);
         }
     }
 };
-
 
 /**
  * @brief Shortcut for calling `poly_base<Type>::invoke`.
@@ -174,11 +169,10 @@ struct poly_base {
  * @param args The arguments to pass to the function.
  * @return The return value of the invoked function, if any.
  */
-template<auto Member, typename Poly, typename... Args>
-decltype(auto) poly_call(Poly &&self, Args &&... args) {
+template<std::size_t Member, typename Poly, typename... Args>
+decltype(auto) poly_call(Poly &&self, Args &&...args) {
     return std::forward<Poly>(self).template invoke<Member>(self, std::forward<Args>(args)...);
 }
-
 
 /**
  * @brief Static polymorphism made simple and within everyone's reach.
@@ -209,8 +203,7 @@ public:
     /*! @brief Default constructor. */
     basic_poly() ENTT_NOEXCEPT
         : storage{},
-          vtable{}
-    {}
+          vtable{} {}
 
     /**
      * @brief Constructs a poly by directly initializing the new object.
@@ -219,10 +212,9 @@ public:
      * @param args Parameters to use to construct the instance.
      */
     template<typename Type, typename... Args>
-    explicit basic_poly(std::in_place_type_t<Type>, Args &&... args)
+    explicit basic_poly(std::in_place_type_t<Type>, Args &&...args)
         : storage{std::in_place_type<Type>, std::forward<Args>(args)...},
-          vtable{poly_vtable<Concept, Len, Align>::template instance<std::remove_const_t<std::remove_reference_t<Type>>>()}
-    {}
+          vtable{poly_vtable<Concept, Len, Align>::template instance<std::remove_const_t<std::remove_reference_t<Type>>>()} {}
 
     /**
      * @brief Constructs a poly from a given value.
@@ -231,14 +223,13 @@ public:
      */
     template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::remove_cv_t<std::remove_reference_t<Type>>, basic_poly>>>
     basic_poly(Type &&value) ENTT_NOEXCEPT
-        : basic_poly{std::in_place_type<std::remove_cv_t<std::remove_reference_t<Type>>>, std::forward<Type>(value)}
-    {}
+        : basic_poly{std::in_place_type<std::remove_cv_t<std::remove_reference_t<Type>>>, std::forward<Type>(value)} {}
 
     /**
      * @brief Returns the object type if any, `type_id<void>()` otherwise.
      * @return The object type if any, `type_id<void>()` otherwise.
      */
-    [[nodiscard]] type_info type() const ENTT_NOEXCEPT {
+    [[nodiscard]] const type_info &type() const ENTT_NOEXCEPT {
         return storage.type();
     }
 
@@ -246,12 +237,12 @@ public:
      * @brief Returns an opaque pointer to the contained instance.
      * @return An opaque pointer the contained instance, if any.
      */
-    [[nodiscard]] const void * data() const ENTT_NOEXCEPT {
+    [[nodiscard]] const void *data() const ENTT_NOEXCEPT {
         return storage.data();
     }
 
     /*! @copydoc data */
-    [[nodiscard]] void * data() ENTT_NOEXCEPT {
+    [[nodiscard]] void *data() ENTT_NOEXCEPT {
         return storage.data();
     }
 
@@ -262,7 +253,7 @@ public:
      * @param args Parameters to use to construct the instance.
      */
     template<typename Type, typename... Args>
-    void emplace(Args &&... args) {
+    void emplace(Args &&...args) {
         storage.template emplace<Type>(std::forward<Args>(args)...);
         vtable = poly_vtable<Concept, Len, Align>::template instance<std::remove_const_t<std::remove_reference_t<Type>>>();
     }
@@ -285,12 +276,12 @@ public:
      * @brief Returns a pointer to the underlying concept.
      * @return A pointer to the underlying concept.
      */
-    [[nodiscard]] concept_type * operator->() ENTT_NOEXCEPT {
+    [[nodiscard]] concept_type *operator->() ENTT_NOEXCEPT {
         return this;
     }
 
     /*! @copydoc operator-> */
-    [[nodiscard]] const concept_type * operator->() const ENTT_NOEXCEPT {
+    [[nodiscard]] const concept_type *operator->() const ENTT_NOEXCEPT {
         return this;
     }
 
@@ -318,8 +309,6 @@ private:
     vtable_type vtable;
 };
 
-
-}
-
+} // namespace entt
 
 #endif

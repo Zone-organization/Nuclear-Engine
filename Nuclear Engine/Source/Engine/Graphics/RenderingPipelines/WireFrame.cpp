@@ -37,18 +37,18 @@ namespace NuclearEngine
 			VertShaderDesc.Name = "WireFrameVS";
 			VertShaderDesc.OutFragPos = false;
 
-			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(), &LayoutElems);
 
 			//Create Pixel Shader
 			Managers::AutoPixelShaderDesc PixelShaderDesc;
 			PixelShaderDesc.Name = "WireFramePS";
-			PSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoPixelShader(PixelShaderDesc);
+			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoPixelShader(PixelShaderDesc, PSShader.RawDblPtr());
 
 			PSOCreateInfo.pVS = VSShader;
 			PSOCreateInfo.pPS = PSShader;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader.RawPtr());
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSOCreateInfo, Vars, true);
 
 			if (desc.CameraBufferPtr)

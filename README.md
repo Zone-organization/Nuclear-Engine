@@ -35,6 +35,7 @@ Follow the instructions below to compile and run the engine from source.
 | AngelScript | included |
 | IMGUI | included |
 | stb_truetype | included |
+| entt | included |
 | FMOD SDK | External 'Download it through their site' |
 | PhysX 4.1 | submodule |
 | Freeimage | submodule |

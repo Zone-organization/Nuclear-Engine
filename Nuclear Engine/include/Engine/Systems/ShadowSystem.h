@@ -1,7 +1,5 @@
 #pragma once
 #include <Base\NE_Common.h>
-#include <Engine\ECS/Entity.h>
-#include <Engine\ECS/System.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>

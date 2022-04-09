@@ -9,7 +9,7 @@
 namespace NuclearEngine {
 	namespace Importers {
 
-		void SetVertexBoneData(Assets::Mesh::Vertex& vertex, int boneID, float weight)
+		inline void SetVertexBoneData(Assets::Mesh::Vertex& vertex, int boneID, float weight)
 		{
 			vertex.Weights = Math::Vector4(weight);
 			vertex.BoneIDs = Math::Vector4i(boneID);

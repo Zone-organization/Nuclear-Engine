@@ -111,8 +111,8 @@ namespace NuclearEngine
 				//Create Shaders
 				RefCntAutoPtr<IShader> VSShader;
 				RefCntAutoPtr<IShader> PSShader;
-				VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl"), SHADER_TYPE_VERTEX);
-				PSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.Ps.hlsl"), SHADER_TYPE_PIXEL);
+				Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
+				Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Renderer/Skybox.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 
 				LayoutElement LayoutElems[] =

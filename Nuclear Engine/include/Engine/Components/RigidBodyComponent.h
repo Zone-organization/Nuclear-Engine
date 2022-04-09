@@ -1,7 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
-#include <Engine\ECS\Entity.h>
 #include <Engine\ECS\Transform.h>
 #include <Engine/PhysX/PhysXEngine.h>
 #include <Engine/PhysX/RigidDynamic.h>
@@ -13,7 +12,7 @@ namespace NuclearEngine
 {
 	namespace Components
 	{
-		class NEAPI RigidBodyComponent : public ECS::Component<RigidBodyComponent>
+		class NEAPI RigidBodyComponent
 		{
 		public:
 			RigidBodyComponent();

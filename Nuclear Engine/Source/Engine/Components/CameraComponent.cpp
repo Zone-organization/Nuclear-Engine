@@ -56,7 +56,7 @@ namespace NuclearEngine
 
 		void CameraComponent::Update()
 		{
-			Vector3 front;
+			Math::Vector3 front;
 			front.x = cos(radians(Yaw)) * cos(radians(Pitch));
 			front.y = sin(radians(Pitch));
 			front.z = sin(radians(Yaw)) * cos(radians(Pitch));
@@ -211,7 +211,7 @@ namespace NuclearEngine
 
 				std::vector<LayoutElement> LayoutElems;
 				RefCntAutoPtr<IShader> VShader;
-				VShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+				Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VShader.RawDblPtr(), &LayoutElems);
 
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;

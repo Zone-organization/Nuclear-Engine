@@ -30,6 +30,8 @@ namespace NuclearEngine
 
 		NeoPipeline::~NeoPipeline()
 		{
+			mKeyChain.clear();
+			mPipelineStates.clear();
 		}
 
 		std::vector<PipelineInstanceInfo> NeoPipeline::Create(const NeoPipelineDesc& Desc)
@@ -96,8 +98,8 @@ namespace NuclearEngine
 				RefCntAutoPtr<IShader> PShader;
 				RefCntAutoPtr<IPipelineState> Pipeline;
 
-				VShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(VShaderSource, Info.Defines), SHADER_TYPE_VERTEX);
-				PShader = GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(PShaderSource, Info.Defines), SHADER_TYPE_PIXEL);
+				GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(VShaderSource, Info.Defines), VShader.RawDblPtr(), SHADER_TYPE_VERTEX);
+				GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(PShaderSource, Info.Defines), PShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 				GraphicsPipelineStateCreateInfo PSOCreateInfo;
 				PSOCreateInfo.PSODesc.Name = std::string(Desc.mName + "_ID_" + std::to_string(Info.mHashKey)).c_str();

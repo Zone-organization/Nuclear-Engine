@@ -49,7 +49,7 @@ class Sample1 : public Core::Game
 	Assets::Animations* BobAnimation;
 	Assets::Animations* VampireAnimation;
 
-	Components::CameraComponent Camera;
+	Components::CameraComponent* Camera;
 
 	Graphics::Skybox Skybox;
 
@@ -102,6 +102,11 @@ class Sample1 : public Core::Game
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
 
+public:
+	Sample1()
+	{
+
+	}
 	void SetupAssets()
 	{
 		Importers::MeshLoadingDesc ModelDesc;
@@ -142,23 +147,15 @@ class Sample1 : public Core::Game
 
 		CubeSet.mData.clear();
 
-		ECube.Assign<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
-		ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
-		ECyborg.Assign<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
+		ECube.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
+		ENanosuit.AddComponent<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
+		ECyborg.AddComponent<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
 
-		EBob.Assign<Components::MeshComponent>(BobAsset, BobMaterial);
-		EBob.Assign<Components::AnimatorComponent>(&BobAnimator);
+		EBob.AddComponent<Components::MeshComponent>(BobAsset, BobMaterial);
+		EBob.AddComponent<Components::AnimatorComponent>(&BobAnimator);
 
-		EVampire.Assign<Components::MeshComponent>(VampireAsset, VampireMaterial);
-		EVampire.Assign<Components::AnimatorComponent>(&VampireAnimator);
-
-		//CubeMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-		//CubeMaterial.SetMaterialVariable("Shininess", 64.0f);
-
-		//NanosuitMaterial.SetMaterialVariable("ModelColor", Math::Vector3(1.0f, 1.0f, 1.0f));
-		//NanosuitMaterial.SetMaterialVariable("Shininess", 64.0f);
-
-
+		EVampire.AddComponent<Components::MeshComponent>(VampireAsset, VampireMaterial);
+		EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);
 
 		//Create The skybox
 		std::array<Core::Path, 6> SkyBoxTexturePaths
@@ -173,7 +170,8 @@ class Sample1 : public Core::Game
 
 		Importers::ImageLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		Skybox.Initialize(SceneCameraManager.GetCameraCB(), mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc));
+		auto test = mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
+		Skybox.Initialize(SceneCameraManager.GetCameraCB(), test);
 	}
 	void SetupEntities()
 	{
@@ -183,13 +181,12 @@ class Sample1 : public Core::Game
 		ECyborg = ModelsScene.CreateEntity();
 		EBob = ModelsScene.CreateEntity();
 		EVampire = ModelsScene.CreateEntity();
-		ECamera = ModelsScene.CreateEntity();
 		ELights = ModelsScene.CreateEntity();
 
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
-		ELights.Assign<Components::DirLightComponent>();
-		ELights.Assign<Components::PointLightComponent>();
-		ECamera.Assign<Components::SpotLightComponent>();
+		ELights.AddComponent<Components::DirLightComponent>();
+		ELights.AddComponent<Components::PointLightComponent>();
+
 
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
@@ -201,20 +198,25 @@ class Sample1 : public Core::Game
 	void InitRenderer()
 	{
 		Renderer = ModelsScene.Systems.Add<Systems::RenderSystem>(&SceneCameraManager);
-		ModelsScene.Systems.Configure();
+		//ModelsScene.Systems.Configure();
 
 		Renderer->AddRenderingPipeline(&BlinnPhongRP);
 		Renderer->AddRenderingPipeline(&BlinnPhongWithNormalMapRP);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
-		Renderer->Bake(ModelsScene.Entities);
-
+		Renderer->Bake();
 	}
 
 	void Load()
 	{
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		SceneCameraManager.Initialize(&Camera);
+		mAssetManager->Initialize();
+
+		ECamera = ModelsScene.CreateEntity();
+		ECamera.AddComponent<Components::SpotLightComponent>();
+		Camera = &ECamera.AddComponent<Components::CameraComponent>();
+
+		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		SceneCameraManager.Initialize(Camera);
 
 		SetupEntities();
 
@@ -231,12 +233,12 @@ class Sample1 : public Core::Game
 		Math::Matrix4 TCyborg(1.0f);
 		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
 		ECyborg.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCyborg);
-
+		
 		Math::Matrix4 TBob(1.0f);
 		TBob = Math::translate(TBob, Math::Vector3(-4.0f, -1.75f, 0.0f));
 		TBob = Math::scale(TBob, Math::Vector3(0.07f, 0.07f, 0.07f));
 		EBob.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TBob);
-
+		
 		Math::Matrix4 TVampire(1.0f);
 		TVampire = Math::translate(TVampire, Math::Vector3(-4.0f, -1.75f, 4.0f));
 		TVampire = Math::scale(TVampire, Math::Vector3(0.02f, 0.02f, 0.02f));
@@ -249,8 +251,8 @@ class Sample1 : public Core::Game
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
 		Desc.RTHeight = _Height_;
-		Camera.Bake(Desc);
-		Camera.mSkybox = &Skybox;
+		Camera->Bake(Desc);
+		Camera->mSkybox = &Skybox;
 		Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -273,7 +275,7 @@ class Sample1 : public Core::Game
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera.ProcessEye(xoffset, yoffset);
+			Camera->ProcessEye(xoffset, yoffset);
 		}
 	}
 
@@ -281,25 +283,25 @@ class Sample1 : public Core::Game
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Camera.ResizeRenderTarget(width, height);
+		Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Application::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera->ResizeRenderTarget(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.MovementSpeed = 10;
+			Camera->MovementSpeed = 10;
 		else
-			Camera.MovementSpeed = 4.5;
+			Camera->MovementSpeed = 4.5;
 
 		//Change Mouse Mode
 		if (Core::Application::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
@@ -313,7 +315,7 @@ class Sample1 : public Core::Game
 			Core::Application::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 		}
 
-		Camera.Update();
+		Camera->Update();
 		SceneCameraManager.UpdateBuffer();
 	}
 	void Render(float dt) override
@@ -323,10 +325,10 @@ class Sample1 : public Core::Game
 		BobAnimator.UpdateAnimation(dt);
 		VampireAnimator.UpdateAnimation(dt);
 
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera->GetPosition());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera->GetFrontView());
 
-		Renderer->Update(ModelsScene.Entities, ModelsScene.Events, dt);
+		Renderer->Update(dt);
 
 		{
 			using namespace Graphics;
@@ -355,9 +357,9 @@ class Sample1 : public Core::Game
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
+			ImGui::Checkbox("Render Skybox", &Camera->RenderSkybox);
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera->RTClearColor);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

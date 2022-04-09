@@ -3,11 +3,15 @@
 #include <Engine/Importers/Common.h>
 #include <Engine\Assets\AudioClip.h>
 #include <Engine\Assets\Script.h>
-#include <Engine\Assets\Animations.h>
+#include <Engine/Assets/Mesh.h>
+#include <Engine/Assets/Material.h>
+#include <Engine/Assets/Animations.h>
 #include <FMOD/inc/fmod.hpp>
 #include <Core/Path.h>
 #include <unordered_map>
+#include <map>
 #include <array>
+
 #define MAX_BONE_INFLUENCE 4
 namespace NuclearEngine 
 {
@@ -74,7 +78,7 @@ namespace NuclearEngine
 			AssetManager(AssetManagerDesc desc = AssetManagerDesc());
 			~AssetManager();
 
-			std::unordered_map<Uint32, Assets::Image> mImportedImages; //All loaded textures with their hashed names with crc32c (always saved)
+			std::map<Uint32, Assets::Image> mImportedImages; //All loaded textures with their hashed names with crc32c (always saved)
 			std::unordered_map<Uint32, Core::Path> mHashedImagesPaths; //Real pre-hashed texture paths (conditionally saved see SaveTexturePaths)
 			bool mSaveTexturesPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
 
@@ -102,6 +106,7 @@ namespace NuclearEngine
 
 			//Note: Automatically called on Destruction
 			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
+			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
 			Graphics::Texture Import(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 
@@ -118,9 +123,15 @@ namespace NuclearEngine
 			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::ImageLoadingDesc& Desc);
 
 
-			Assets::Script& ImportScript(const Core::Path& Path);
+			//Assets::Script& ImportScript(const Core::Path& Path);
 
+			static Graphics::Texture DefaultBlackTex;
+			static Graphics::Texture DefaultGreyTex;
+			static Graphics::Texture DefaultWhiteTex;
 
+			static Graphics::Texture DefaultDiffuseTex;
+			static Graphics::Texture DefaultSpecularTex;
+			static Graphics::Texture DefaultNormalTex;
 		private:
 			AssetManagerDesc mDesc;
 			Assets::Image* TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc);

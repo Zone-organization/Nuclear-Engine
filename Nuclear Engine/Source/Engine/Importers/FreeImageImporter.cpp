@@ -39,7 +39,7 @@ namespace NuclearEngine
 		}
 
 		static bool FreeImageInitalized = false;
-		bool FreeImageLoad(const std::string& Path, const Importers::ImageLoadingDesc& Desc, Assets::Image* result)
+		Assets::ImageData FreeImageLoad(const std::string& Path, const Importers::ImageLoadingDesc& Desc)
 		{
 			int ReqNumComponents = 0, Channels = 8;
 			switch (Desc.mFormat)
@@ -82,7 +82,7 @@ namespace NuclearEngine
 			if (!dib)
 			{
 				Log.Error("[FreeImageImporter] Failed To Load: " + Path +  ".\n");
-				return false;
+				return Assets::ImageData();
 			}
 			if(Desc.mFlipY_Axis)
 				FreeImage_FlipVertical(dib);
@@ -95,24 +95,24 @@ namespace NuclearEngine
 			if (!SwapRedBlue32(bitmap))
 			{
 				Log.Error("[FreeImageImporter] Failed To Load: " + Path + " , SwapRedBlue32 Failed..\n");
-				return false;
+				return Assets::ImageData();
 			}
-
-			result->mData.mData = FreeImage_GetBits(bitmap);
-			result->mData.mWidth = FreeImage_GetWidth(bitmap);
-			result->mData.mHeight = FreeImage_GetHeight(bitmap);
-			result->mData.mBitsPerPixel = FreeImage_GetBPP(bitmap);
+			Assets::ImageData result;
+			result.mData = FreeImage_GetBits(bitmap);
+			result.mWidth = FreeImage_GetWidth(bitmap);
+			result.mHeight = FreeImage_GetHeight(bitmap);
+			result.mBitsPerPixel = FreeImage_GetBPP(bitmap);
 
 			if (ReqNumComponents == 0)
-				result->mData.mNumComponents = result->mData.mBitsPerPixel / Channels;
+				result.mNumComponents = result.mBitsPerPixel / Channels;
 			else
-				result->mData.mNumComponents = ReqNumComponents;
+				result.mNumComponents = ReqNumComponents;
 
 			FreeImage_Unload(dib);
 
-			result->mData.mRowStride = AlignUp(static_cast<Uint32>(result->mData.mWidth * result->mData.mNumComponents), 4u);
+			result.mRowStride = AlignUp(static_cast<Uint32>(result.mWidth * result.mNumComponents), 4u);
 
-			return true;
+			return result;
 		}
 	}
 }

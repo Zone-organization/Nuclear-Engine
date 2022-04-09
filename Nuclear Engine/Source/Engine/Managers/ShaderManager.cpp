@@ -12,24 +12,20 @@ namespace NuclearEngine
 		ShaderManager::~ShaderManager()
 		{
 		}
-		IShader * ShaderManager::CreateShader(const std::string& source, SHADER_TYPE type)
+		void ShaderManager::CreateShader(const std::string& source, IShader** result, SHADER_TYPE type)
 		{
 			ShaderCreateInfo CreationAttribs;
-			IShader* result = nullptr;
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.ShaderType = type;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Source = source.c_str();
 
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &result);
-
-			return result;
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, result);
 		}
-		IShader* ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc& desc, std::vector<LayoutElement>* Layout)
+		void ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc& desc, IShader** shader, std::vector<LayoutElement>* Layout)
 		{
 			ShaderCreateInfo CreationAttribs;
-			IShader* pVS = nullptr;
 			Layout->clear();
 
 			Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
@@ -59,14 +55,11 @@ namespace NuclearEngine
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
 
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pVS);
-
-			return pVS;
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
 		}
-		IShader* ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc)
+		void ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc, IShader** shader)
 		{
 			ShaderCreateInfo CreationAttribs;
-			IShader* pPS = nullptr;
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
@@ -81,9 +74,7 @@ namespace NuclearEngine
 
 			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
 			CreationAttribs.Source = source.c_str();
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &pPS);
-
-			return pPS;
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
 		}
 
 		bool ShaderManager::ProcessAndCreatePipeline(

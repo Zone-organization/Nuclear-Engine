@@ -2,25 +2,31 @@
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
 #include <Engine\Audio\AudioEngine.h>
-#include <Engine\Assets\DefaultTextures.h>
+#include "Engine\Graphics\GraphicsEngine.h"
 
 #define EXPOSE_FREEIMAGE_IMPORTER
 #define EXPOSE_ASSIMP_IMPORTER
 #include <Engine\Importers\AssimpImporter.h>
 #include <Engine\Importers\FreeImageImporter.h>
 #include <utility>
-#include "CreateTextureFromRawImage.h"
 #include <Core\FileSystem.h>
 
 namespace NuclearEngine {
 	namespace Managers {
-		
+
+		Graphics::Texture AssetManager::DefaultBlackTex;
+		Graphics::Texture AssetManager::DefaultGreyTex;
+		Graphics::Texture AssetManager::DefaultWhiteTex;
+
+		Graphics::Texture AssetManager::DefaultDiffuseTex;
+		Graphics::Texture AssetManager::DefaultSpecularTex;
+		Graphics::Texture AssetManager::DefaultNormalTex;
 	
 		AssetManager::AssetManager(AssetManagerDesc desc)
 			: mDesc(desc)
 		{
 			//Initialize Containers
-			mImportedImages = std::unordered_map<Uint32, Assets::Image>();
+			mImportedImages = std::map<Uint32, Assets::Image>();
 			mHashedImagesPaths = std::unordered_map<Uint32, Core::Path>();
 
 			mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();
@@ -75,6 +81,18 @@ namespace NuclearEngine {
 			mHashedAudioClipsPaths.clear();
 		}
 
+		void AssetManager::Initialize(AssetManagerDesc desc)
+		{
+			mDesc = desc;
+			DefaultBlackTex = Import("Assets/NuclearEngine/DefaultTextures/Black32x32.png", Importers::ImageLoadingDesc());
+			DefaultGreyTex = Import("Assets/NuclearEngine/DefaultTextures/Grey32x32.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse);
+			DefaultWhiteTex = Import("Assets/NuclearEngine/DefaultTextures/White32x32.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Specular);
+
+			DefaultDiffuseTex = DefaultGreyTex;
+			DefaultSpecularTex = DefaultWhiteTex;
+			DefaultNormalTex = DefaultBlackTex;
+		}
+
 		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Importers::ImageLoadingDesc& Desc, const Graphics::TextureUsageType& type)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
@@ -88,21 +106,24 @@ namespace NuclearEngine {
 				return result;
 			}
 
-			Assets::Image image;
 
 			//Load
-			if (!mImageImporter(Path.mRealPath, Desc, &image))
+			Assets::ImageData imagedata = mImageImporter(Path.mRealPath, Desc);
+			if (imagedata.mData == nullptr)
 			{
 				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
-				return Assets::DefaultTextures::DefaultBlackTex;
+				return DefaultBlackTex;
 			}
 
 			//Create
-			if (!Internal::CreateTextureViewFromRawImage(&image, Desc))
+			Assets::Image image(imagedata, Desc);
+			
+			if (image.mTextureView == nullptr)
 			{
 				Log.Error(std::string("[AssetManager] Failed To Create Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
-				return Assets::DefaultTextures::DefaultBlackTex;
+				return DefaultBlackTex;
 			}
+			image.mData.mData = NULL;
 
 			if (mSaveTexturesPaths)
 			{
@@ -120,26 +141,28 @@ namespace NuclearEngine {
 			return result;
 		}
 
-		Graphics::Texture AssetManager::Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc)
+		Graphics::Texture AssetManager::Import(const Assets::ImageData& imagedata, const Importers::ImageLoadingDesc& Desc)
 		{
 			assert(Desc.mPath != std::string(""));
 
 			Graphics::Texture result;
 			auto hashedname = Utilities::Hash(Desc.mPath);
 
-			Assets::Image image;
-			if(Internal::CreateTextureViewFromRawImage(&image, Desc))
+			//Create
+			Assets::Image image(imagedata, Desc);
+
+			if (image.mTextureView == nullptr)
 			{
-				mImportedImages[hashedname] = image;
-
-				result.SetImage(&mImportedImages[hashedname]);
-
-				Log.Info(std::string("[AssetManager] Imported Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
-				return result;
+				Log.Error(std::string("[AssetManager] Failed To Create Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+				return DefaultBlackTex;
 			}
+			image.mData.mData = NULL;
+			mImportedImages[hashedname] = image;
+			result.SetImage(&mImportedImages[hashedname]);
 
-			Log.Error(std::string("[AssetManager] Failed To Import Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
-			return Assets::DefaultTextures::DefaultBlackTex;
+			Log.Info(std::string("[AssetManager] Imported Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+
+			return result;
 		}
 
 		//Assets::Image* AssetManager::Import(const Assets::ImageData& Image , const Importers::ImageLoadingDesc & Desc)
@@ -250,15 +273,17 @@ namespace NuclearEngine {
 			}
 
 			Assets::Image result;
-
-			if (!mImageImporter(Path.mRealPath, Desc, &result))
+			Assets::ImageData imagedata = mImageImporter(Path.mRealPath, Desc);
+			if (imagedata.mData == nullptr)
 			{
-				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture2D (For CubeMap): " + Path.mInputPath + '\n'));
+				Log.Error(std::string("[AssetManager : " + mDesc.mName + "] Failed To Load Texture2D (For CubeMap): " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
 				return nullptr;
 			}
+			result.mData = imagedata;
+
 			mImportedImages[hashedname] = result;
 			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture2D (For CubeMap): " + Path.mInputPath + '\n'));
-
+			
 			return &mImportedImages[hashedname];
 		}
 		Assets::Image* AssetManager::DoesImageExist(Uint32 hashedname)
@@ -286,13 +311,13 @@ namespace NuclearEngine {
 			return result;
 		}
 
-		Assets::Script& AssetManager::ImportScript(const Core::Path& Path)
-		{
-			Assets::Script result;
+		//Assets::Script& AssetManager::ImportScript(const Core::Path& Path)
+		//{
+		//	Assets::Script result;
 
-			//result.ScriptCode = Core::FileSystem::LoadFileToString(Path);
+		//	//result.ScriptCode = Core::FileSystem::LoadFileToString(Path);
 
-			return result;
-		}
+		//	return result;
+		//}
 	}
 }

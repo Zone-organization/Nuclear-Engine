@@ -1,6 +1,5 @@
 #include <Engine\Assets\Material.h>
 #include <Base\Utilities\Hash.h>
-#include <Engine/Assets/DefaultTextures.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 
@@ -14,6 +13,9 @@ namespace NuclearEngine
 		}
 		Material::~Material()
 		{
+			mPixelShaderTextures.clear();
+			mMaterialInstances.clear();
+			mName = std::string();
 		}
 		void Material::CreateInstance(Graphics::RenderingPipeline* Pipeline)
 		{

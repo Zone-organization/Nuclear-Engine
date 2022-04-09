@@ -16,7 +16,11 @@ namespace NuclearEngine {
 
 		Mesh::SubMesh::~SubMesh()
 		{
-
+			data.Vertices.clear();
+			data.indices.clear();
+			data.TexSetIndex = 0;
+			mIndicesCount = 0;
+			mIndicesOffset = 0;
 		}
 
 		void Mesh::SubMesh::Create()
@@ -93,12 +97,6 @@ namespace NuclearEngine {
 			data.indices.clear();
 		}
 
-		void Mesh::SubMesh::Release()
-		{
-			mVB->Release();
-			mIB->Release();
-		}
-
 		Mesh::Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animation::BoneInfo> BoneInfoMap, int BoneCounter)
 			:mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
 		{
@@ -111,6 +109,10 @@ namespace NuclearEngine {
 
 		Mesh::~Mesh()
 		{
+			mSubMeshes.clear();
+			mBoneInfoMap.clear();
+			mBoneCounter = 0;
+			isValid = false;
 		}
 
 		void Mesh::Create()
@@ -121,17 +123,6 @@ namespace NuclearEngine {
 			}
 
 			isValid = true;
-		}
-
-		void Mesh::Release()
-		{
-			for (unsigned int i = 0; i < mSubMeshes.size(); i++)
-			{
-				mSubMeshes.at(i).Release();
-			}
-			mSubMeshes.clear();
-
-			isValid = false;
 		}
 
 		//struct Vertex
@@ -486,7 +477,7 @@ namespace NuclearEngine {
 			}
 			submesh->mIndicesCount = static_cast<Uint32>(Indices.size());
 
-			;
+			
 
 		}
 

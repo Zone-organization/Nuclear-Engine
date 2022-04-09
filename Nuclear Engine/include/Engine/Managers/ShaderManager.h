@@ -30,10 +30,10 @@ namespace NuclearEngine
 			ShaderManager();
 			~ShaderManager();
 
-			IShader* CreateShader(const std::string& source, SHADER_TYPE type);
+			void CreateShader(const std::string& source, IShader** shader, SHADER_TYPE type);
 
-			IShader* CreateAutoVertexShader(const AutoVertexShaderDesc& desc, std::vector<LayoutElement>* Layout);
-			IShader* CreateAutoPixelShader(const AutoPixelShaderDesc& desc);
+			void CreateAutoVertexShader(const AutoVertexShaderDesc& desc, IShader** shader, std::vector<LayoutElement>* Layout);
+			void CreateAutoPixelShader(const AutoPixelShaderDesc& desc, IShader** shader);
 
 			bool ProcessAndCreatePipeline(
 				IPipelineState** PipelineState,

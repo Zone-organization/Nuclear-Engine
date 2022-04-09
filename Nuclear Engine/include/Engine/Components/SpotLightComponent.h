@@ -2,7 +2,6 @@
 #include <Base\NE_Common.h>
 #include <Engine/Graphics/Color.h>
 #include <Base\Math\Math.h>
-#include <Engine\ECS\Entity.h>
 
 namespace NuclearEngine
 {
@@ -20,7 +19,7 @@ namespace NuclearEngine
 			};
 		}
 
-		struct NEAPI SpotLightComponent : public ECS::Component<SpotLightComponent>
+		struct NEAPI SpotLightComponent
 		{
 		public:
 			SpotLightComponent();

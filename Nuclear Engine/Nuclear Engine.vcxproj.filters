@@ -12,13 +12,9 @@
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Skybox.h" />
-    <ClInclude Include="include\Engine\ECS\ComponentDependency.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
-    <ClInclude Include="include\Engine\ECS\ECSConfig.h" />
-    <ClInclude Include="include\Engine\ECS\Entity.h" />
-    <ClInclude Include="include\Engine\ECS\Event.h" />
+    <ClInclude Include="include\Engine\ECS\Common.h" />
     <ClInclude Include="include\Engine\ECS\Scene.h" />
-    <ClInclude Include="include\Engine\ECS\System.h" />
     <ClInclude Include="include\Engine\Components\CameraComponent.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
@@ -196,14 +192,12 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
     <ClInclude Include="include\Core\ApplicationDesc.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
-    <ClInclude Include="include\Engine\Assets\DefaultTextures.h" />
     <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
-    <ClInclude Include="Source\Engine\Managers\CreateTextureFromRawImage.h" />
     <ClInclude Include="include\Engine\Importers\Importers.h" />
     <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Core\Window.h" />
@@ -326,6 +320,9 @@
     <ClInclude Include="include\Engine\Components\AnimatorComponent.h" />
     <ClInclude Include="include\Engine\Animation\AnimationClip.h" />
     <ClInclude Include="include\Engine\Graphics\Texture.h" />
+    <ClInclude Include="include\Engine\Assets\ImageData.h" />
+    <ClInclude Include="include\Engine\ECS\Entity.h" />
+    <ClInclude Include="include\Engine\ECS\System.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -351,10 +348,7 @@
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_sse42.cc" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
-    <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
-    <ClCompile Include="Source\Engine\ECS\Event.cpp" />
     <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
-    <ClCompile Include="Source\Engine\ECS\System.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp" />
@@ -366,7 +360,6 @@
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\BlinnPhong.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\DiffuseOnly.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
-    <ClCompile Include="Source\Engine\Assets\DefaultTextures.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
@@ -454,6 +447,7 @@
     <ClCompile Include="Source\Engine\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Source\Engine\Animation\AnimationClip.cpp" />
     <ClCompile Include="Source\Engine\Assets\Image.cpp" />
+    <ClCompile Include="Source\Engine\ECS\System.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Base\Math\detail\func_common.inl" />

@@ -1,7 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
-#include <Engine\ECS\Entity.h>
 #include <vector>
 
 namespace NuclearEngine {
@@ -13,7 +12,7 @@ namespace NuclearEngine {
 	namespace Components 
 	{
 
-		class NEAPI MeshComponent : public ECS::Component<MeshComponent>
+		class NEAPI MeshComponent
 		{
 		public:			
 			MeshComponent();

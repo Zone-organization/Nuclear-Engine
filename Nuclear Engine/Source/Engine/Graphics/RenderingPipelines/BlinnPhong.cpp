@@ -38,7 +38,7 @@ namespace NuclearEngine
 			Managers::AutoVertexShaderDesc VertShaderDesc;
 			VertShaderDesc.Name = "BlinnPhongVS";
 
-			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(), &LayoutElems);
 
 
 			//Create Pixel Shader

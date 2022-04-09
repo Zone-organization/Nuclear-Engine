@@ -1,5 +1,7 @@
 #include "Engine\Graphics\GraphicsEngine.h"
 #include <Engine\Graphics\Context.h>
+#include <Engine\Managers\AssetManager.h>
+
 
 namespace NuclearEngine
 {
@@ -40,5 +42,6 @@ namespace NuclearEngine
 			else
 				return false;
 		}
+		
 	}
 }

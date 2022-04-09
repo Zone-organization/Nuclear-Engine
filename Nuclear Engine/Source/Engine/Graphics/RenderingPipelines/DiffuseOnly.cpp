@@ -36,12 +36,12 @@ namespace NuclearEngine
 			VertShaderDesc.Name = "DiffuseOnlyVS";
 			VertShaderDesc.OutFragPos = false;
 
-			VSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, &LayoutElems);
+			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(), &LayoutElems);
 
 			//Create Pixel Shader
 			Managers::AutoPixelShaderDesc PixelShaderDesc;
 			PixelShaderDesc.Name = "DiffuseOnlyPS";
-			PSShader = Graphics::GraphicsEngine::GetShaderManager()->CreateAutoPixelShader(PixelShaderDesc);
+			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoPixelShader(PixelShaderDesc, PSShader.RawDblPtr());
 
 			PSOCreateInfo.pVS = VSShader;
 			PSOCreateInfo.pPS = PSShader;

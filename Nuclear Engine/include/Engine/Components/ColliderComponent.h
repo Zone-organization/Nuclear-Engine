@@ -1,7 +1,6 @@
 #pragma once
 #include <Base\NE_Common.h>
 #include <Base\Math\Math.h>
-#include <Engine\ECS\Entity.h>
 #include <Engine/PhysX/PhysXEngine.h>
 #include <Engine/PhysX/PhysXMaterial.h>
 #include <Engine/PhysX/PhysXShape.h>
@@ -20,13 +19,13 @@ namespace NuclearEngine
 			COLLIDER_SHAPE_SPHERE
 		};
 
-		class NEAPI ColliderComponent : public ECS::Component<ColliderComponent>
+		class NEAPI ColliderComponent
 		{
 		public:
 			ColliderComponent();
-			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::BoxGeometry& Geo);
-			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::PlaneGeometry& Geo);
-			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::SphereGeometry& Geo);
+			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::BoxGeometry Geo);
+			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::PlaneGeometry Geo);
+			ColliderComponent(PhysX::PhysXMaterial* PMat, PhysX::SphereGeometry Geo);
 			~ColliderComponent();
 
 			COLLIDER_SHAPE mType = COLLIDER_SHAPE_UNKNOWN;

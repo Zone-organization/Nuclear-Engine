@@ -22,6 +22,11 @@ namespace NuclearEngine
 			mData(data)
 		{
 		}
+		Bone::~Bone()
+		{
+			m_Name = std::string();
+			m_ID = 0;
+		}
 		inline void Bone::Update(float animationTime)
 		{
 			Math::Matrix4 translation = InterpolatePosition(animationTime);

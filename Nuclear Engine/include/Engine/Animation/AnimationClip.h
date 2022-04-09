@@ -12,6 +12,12 @@ namespace NuclearEngine
 	{
 		struct ClipNodeData
 		{
+			~ClipNodeData()
+			{
+				childrenCount = 0;
+				name = std::string();
+				children.clear();
+			}
 			Math::Matrix4 transformation;
 			std::string name;
 			int childrenCount;

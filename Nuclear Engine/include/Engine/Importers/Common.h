@@ -1,14 +1,17 @@
 #pragma once
-#include <Engine/Assets/Mesh.h>
-#include <Engine/Assets/Material.h>
-#include <Engine/Assets/Image.h>
-#include <Engine/Assets/Animations.h>
+#include <Engine/Assets/ImageData.h>
 #include <Base\Utilities\Delegate.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
 #include <string>
 #include <tuple>
 
 namespace NuclearEngine
 {
+	namespace Assets {
+		class Mesh;
+		class Material;
+		class Animations;
+	}
 	namespace Managers { class AssetManager; }
 
 	namespace Importers
@@ -99,6 +102,6 @@ namespace NuclearEngine
 		};
 
 		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::Material*, Assets::Animations*)> MeshImporterDelegate;
-		typedef Utilities::Delegate<bool(const std::string& Path, const ImageLoadingDesc& Desc, Assets::Image*)> ImageImporterDelegate;
+		typedef Utilities::Delegate<Assets::ImageData(const std::string& Path, const ImageLoadingDesc& Desc)> ImageImporterDelegate;
 	}
 }

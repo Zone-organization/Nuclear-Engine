@@ -9,6 +9,9 @@
 #include <Assimp\include\assimp\scene.h>
 #include <Assimp\include\assimp\postprocess.h>
 #include "Engine\Animation\Bone.h"
+#include <Engine/Assets/Mesh.h>
+#include <Engine/Assets/Material.h>
+#include <Engine/Assets/Animations.h>
 
 namespace NuclearEngine 
 {
