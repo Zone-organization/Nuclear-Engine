@@ -1,6 +1,6 @@
 #include "Engine\Components/EntityInfoComponent.h"
 #define GLM_ENABLE_EXPERIMENTAL
-#include <Base/Math/gtx/quaternion.hpp>
+#include <Core/Math/gtx/quaternion.hpp>
 namespace NuclearEngine
 {
 	namespace Components

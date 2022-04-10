@@ -1,7 +1,7 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Engine/Graphics/Color.h>
-#include <Base\Math\Math.h>
+#include <Core\Math\Math.h>
 
 namespace NuclearEngine
 {

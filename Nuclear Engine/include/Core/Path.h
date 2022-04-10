@@ -1,5 +1,5 @@
 #pragma once
-#include <Base\NE_PrivateCommon.h>
+#include <Core\NE_PrivateCommon.h>
 #include <string>
 #include <unordered_map>
 

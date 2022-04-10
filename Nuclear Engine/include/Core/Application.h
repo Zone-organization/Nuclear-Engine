@@ -1,10 +1,9 @@
 #pragma once
 #include <Core\ApplicationDesc.h>
-#include <Core\Window.h>
 
 namespace NuclearEngine {
 	namespace Core {
-
+		class Window;
 		class NEAPI Application
 		{
 		public:

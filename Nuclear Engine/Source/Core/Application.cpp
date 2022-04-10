@@ -1,6 +1,6 @@
 #include <Core\Application.h>
+#include <Core\Window.h>
 #include <Core\Engine.h>
-#include <Engine\Graphics\Context.h>
 #include <GLFW/include/GLFW/glfw3.h>
 
 namespace NuclearEngine
@@ -31,7 +31,6 @@ namespace NuclearEngine
 		void Application::Shutdown()
 		{
 			Window::Destroy(&MainWindow);
-			Graphics::Context::ShutDown();
 		}
 
 		bool Application::PollEvents()

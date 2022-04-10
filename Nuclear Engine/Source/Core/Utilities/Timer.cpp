@@ -1,6 +1,6 @@
-#include <Base\Utilities\Timer.h>
+#include <Core\Utilities\Timer.h>
 namespace NuclearEngine {
-	namespace Base {
+	namespace Core {
 		namespace Utilities {
 			using namespace std;
 			using namespace std::chrono;

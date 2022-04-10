@@ -1,5 +1,5 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Engine/Assets/Common.h>
 #include <Engine\Assets\MaterialInstance.h>
 #include <unordered_map>

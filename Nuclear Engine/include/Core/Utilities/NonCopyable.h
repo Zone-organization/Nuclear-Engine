@@ -1,10 +1,11 @@
 #pragma once
+#include <Core/NE_PrivateCommon.h>
 
 namespace NuclearEngine
 {
 	namespace Utilities
 	{
-		class NonCopyable {
+		class NEAPI NonCopyable {
 		protected:
 			NonCopyable() = default;
 			~NonCopyable() = default;

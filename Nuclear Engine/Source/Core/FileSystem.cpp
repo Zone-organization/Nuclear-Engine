@@ -1,12 +1,11 @@
 #include "Core\FileSystem.h"
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <fstream>
 
 namespace NuclearEngine
 {
 	namespace Core
 	{
-	
 			std::string FileSystem::LoadFileToString(const Path& Filepath)
 			{
 				std::ifstream file(Filepath.mRealPath, std::ios::in);

@@ -1,6 +1,6 @@
 #pragma once
-#include <Base\NE_Common.h>
-#include <Base\Utilities\Hash.h>
+#include <Core\NE_Common.h>
+#include <Core\Utilities\Hash.h>
 
 namespace NuclearEngine
 {

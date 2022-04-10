@@ -1,5 +1,5 @@
 #include "Engine/Components\CameraComponent.h"
-#include "Base/Math/gtc/matrix_inverse.hpp"
+#include "Core/Math/gtc/matrix_inverse.hpp"
 #include <Core\Engine.h>
 #include <Engine/ECS\Scene.h>
 #include <Engine\Graphics\Context.h>

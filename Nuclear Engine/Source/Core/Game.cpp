@@ -1,5 +1,4 @@
 #include <Core/Game.h>
-#include <Core/Application.h>
 
 namespace NuclearEngine {
 	namespace Core {

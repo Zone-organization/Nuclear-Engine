@@ -1,5 +1,4 @@
 #pragma once
-#include <Base\NE_Common.h>
 #include "Engine\Scripting\ScriptingEngine.h"
 #include "Engine\ECS\System.h"
 #include <vector>

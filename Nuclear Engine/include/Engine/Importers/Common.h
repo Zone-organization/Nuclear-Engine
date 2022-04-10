@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine/Assets/ImageData.h>
-#include <Base\Utilities\Delegate.h>
+#include <Core\Utilities\Delegate.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
 #include <string>
 #include <tuple>

@@ -1,5 +1,5 @@
 #include <Engine\Assets\MaterialInstance.h>
-#include <Base\Utilities\Hash.h>
+#include <Core\Utilities\Hash.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 

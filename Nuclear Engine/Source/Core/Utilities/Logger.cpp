@@ -1,13 +1,13 @@
-#include <Base\Utilities/Logger.h>
+#include <Core\Utilities/Logger.h>
 #include <codecvt>
 #include <locale>
 #include <iostream>
 #ifdef WIN32
 #include <Windows.h>
 #endif
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 namespace NuclearEngine {
-	namespace Base {
+	namespace Core {
 		namespace Utilities {
 			std::wstring String2WSTR(const std::string& s)
 			{

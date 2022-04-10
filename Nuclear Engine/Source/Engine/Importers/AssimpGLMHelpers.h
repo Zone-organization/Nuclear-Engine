@@ -3,7 +3,7 @@
 #include<assimp/quaternion.h>
 #include<assimp/vector3.h>
 #include<assimp/matrix4x4.h>
-#include <Base/Math/Math.h>
+#include <Core/Math/Math.h>
 
 
 class AssimpGLMHelpers

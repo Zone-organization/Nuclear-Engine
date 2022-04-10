@@ -1,5 +1,5 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Engine/ECS/EntityFactory.h>
 #include <Engine/ECS/Entity.h>
 #include <Engine/ECS/System.h>

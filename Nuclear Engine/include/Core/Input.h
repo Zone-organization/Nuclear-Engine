@@ -1,5 +1,5 @@
 #pragma once
-#include <Core\Game.h>
+#include <Core\NE_Common.h>
 
 namespace NuclearEngine
 {

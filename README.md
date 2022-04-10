@@ -2,6 +2,7 @@
 
 ## Current To-dos 
   - W.I.P:
+    - Improving Engine structure.
 	- Improving PhysX Implementaion
 	- Improving Scripting support (through AngelScript)
 	- Improving Mesh Animation Implementaion

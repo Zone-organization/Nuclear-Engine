@@ -1,9 +1,9 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <chrono>
 
 namespace NuclearEngine {
-	namespace Base {
+	namespace Core {
 		namespace Utilities {
 			class NEAPI Timer
 			{

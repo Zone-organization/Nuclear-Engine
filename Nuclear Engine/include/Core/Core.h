@@ -4,6 +4,7 @@
 #include <Core/Input.h>
 #include <Core/Application.h>
 #include <Core/ApplicationDesc.h>
+#include <Core/Window.h>
 #include <Core/Path.h>
 #include <Core/FileSystem.h>
 #include <Core/Parsers/XMLParser.h>

@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------------
 
 #pragma once
-#include <Base/NE_Common.h>
+#include <Core/NE_Common.h>
 
 //---- Define assertion handler. Defaults to calling assert().
 //#define IM_ASSERT(_EXPR)  MyAssert(_EXPR)

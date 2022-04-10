@@ -1,5 +1,5 @@
 #include <Engine/Graphics/Texture.h>
-#include <Base\Utilities\Hash.h>
+#include <Core\Utilities\Hash.h>
 
 namespace NuclearEngine
 {

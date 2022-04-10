@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine\Graphics\Skybox.h>
-#include <Base\Math\Math.h>
+#include <Core\Math\Math.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Graphics\Color.h>
 

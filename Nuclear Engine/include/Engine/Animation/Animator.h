@@ -1,6 +1,6 @@
 #pragma once
-#include <Base\NE_Common.h>
-#include <Base\Math\Math.h>
+#include <Core\NE_Common.h>
+#include <Core\Math\Math.h>
 #include <map>
 #include <vector>
 //#include <Engine/Assets/Animation.h>

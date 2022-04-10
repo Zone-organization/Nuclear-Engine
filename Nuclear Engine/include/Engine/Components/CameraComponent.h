@@ -1,6 +1,6 @@
 #pragma once
-#include <Base\NE_Common.h>
-#include <Base\Math\Math.h>
+#include <Core\NE_Common.h>
+#include <Core\Math\Math.h>
 #include <Engine\Graphics\RenderTarget.h>
 #include <Engine\Graphics\Color.h>
 #include <Engine\Graphics\Skybox.h>

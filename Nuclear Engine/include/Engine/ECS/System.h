@@ -1,12 +1,12 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Engine\ECS/Common.h>
 #include <cstdint>
 #include <unordered_map>
 #include <utility>
 #include <cassert>
 #include <memory>
-#include "Base\Utilities/NonCopyable.h"
+#include "Core\Utilities/NonCopyable.h"
 
 
 namespace NuclearEngine

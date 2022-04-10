@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef EXPOSE_ASSIMP_IMPORTER
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
 #include <Engine/Importers/Common.h>

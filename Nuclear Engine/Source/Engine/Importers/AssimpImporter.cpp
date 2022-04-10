@@ -3,7 +3,7 @@
 #include <Engine\Managers\AssetManager.h>
 #include "Engine\Graphics\GraphicsEngine.h"
 #include <Engine\Assets\Material.h>
-#include <Base\Utilities\Hash.h>
+#include <Core\Utilities\Hash.h>
 #include "AssimpGLMHelpers.h"
 
 namespace NuclearEngine {

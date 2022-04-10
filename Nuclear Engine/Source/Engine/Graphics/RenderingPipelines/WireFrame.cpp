@@ -1,7 +1,7 @@
 #include <Engine\Graphics\RenderingPipelines\WireFrame.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
-#include <Base/Utilities/Hash.h>
+#include <Core/Utilities/Hash.h>
 
 namespace NuclearEngine
 {

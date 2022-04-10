@@ -1,6 +1,6 @@
 #pragma once
 #include <FMOD\inc\fmod_errors.h>
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line);
 
 #define FMODCALL(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)

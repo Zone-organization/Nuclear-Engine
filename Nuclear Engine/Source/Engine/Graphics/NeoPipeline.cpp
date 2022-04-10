@@ -1,7 +1,7 @@
 #include <Engine\Graphics\NeoPipeline.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Core\FileSystem.h>
-#include <Base/Utilities/Hash.h>
+#include <Core/Utilities/Hash.h>
 namespace NuclearEngine
 {
 	namespace Graphics

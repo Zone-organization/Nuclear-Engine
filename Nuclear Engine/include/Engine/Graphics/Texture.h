@@ -1,5 +1,5 @@
 #pragma once
-#include <Base\Math\Math.h>
+#include <Core\Math\Math.h>
 #include <Engine/Assets/Image.h>
 
 namespace NuclearEngine

@@ -1,6 +1,4 @@
 #pragma once
-#include <Base/NE_Common.h>
-#include <Base/Math/Math.h>
 #include <Engine/ECS/Transform.h>
 
 namespace NuclearEngine

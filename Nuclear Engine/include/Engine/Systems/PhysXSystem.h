@@ -1,5 +1,5 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Engine\ECS/Common.h>
 #include <Engine\ECS\Scene.h>
 #include <Engine\ECS\Transform.h>

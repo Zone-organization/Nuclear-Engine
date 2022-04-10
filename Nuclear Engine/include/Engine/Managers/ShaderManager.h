@@ -1,5 +1,5 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/InputLayout.h>

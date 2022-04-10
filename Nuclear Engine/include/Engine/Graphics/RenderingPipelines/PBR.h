@@ -1,5 +1,5 @@
 #pragma once
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\DirLightComponent.h>

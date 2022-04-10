@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine/Assets/Common.h>
-#include <Base\Math\Math.h>
+#include <Core\Math\Math.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Engine/Importers/Common.h>

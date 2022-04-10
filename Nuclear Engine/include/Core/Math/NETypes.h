@@ -1,7 +1,7 @@
 #pragma once
-#include <Base\Math\detail\type_vec.hpp>
-#include <Base\Math\detail\type_mat.hpp>
-#include <Base/Math/gtc/quaternion.hpp>
+#include <Core\Math\detail\type_vec.hpp>
+#include <Core\Math\detail\type_mat.hpp>
+#include <Core/Math/gtc/quaternion.hpp>
 
 namespace glm 
 {

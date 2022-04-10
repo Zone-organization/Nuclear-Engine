@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include <Base\NE_Common.h>
+#include <Core\NE_Common.h>
 
 namespace NuclearEngine {
 	namespace Core {

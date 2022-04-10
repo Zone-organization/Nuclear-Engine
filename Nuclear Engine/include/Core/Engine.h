@@ -6,12 +6,13 @@
 
 namespace NuclearEngine
 {
-
 	namespace Core
 	{
 		struct EngineStartupDesc
 		{
 			ApplicationDesc mAppdesc;
+
+			//TODO: Move
 			Graphics::GraphicsEngineDesc mGraphicsEngineDesc;
 			PhysX::PhysXEngineDesc mPhysXEngineDesc;
 			bool AutoInitAudioEngine = true;

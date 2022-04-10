@@ -1,7 +1,8 @@
 #include <Core\Engine.h>
-#include <Base\NE_Common.h>
-#include <Base\Utilities\Timer.h>
+#include <Core\Utilities\Timer.h>
 #include <Core\Application.h>
+#include <Core\Window.h>
+
 #include <Engine\Audio\AudioEngine.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\DefaultMeshes.h>
@@ -97,6 +98,7 @@ namespace NuclearEngine {
 			Log.Info("[Engine] Shutting Down Engine.\n");
 
 			GamePtr = &Defaultgame;
+			Graphics::Context::ShutDown();
 			Core::Application::Shutdown();
 			Audio::AudioEngine::Shutdown();
 			Graphics::GraphicsEngine::Shutdown();
@@ -187,7 +189,7 @@ namespace NuclearEngine {
 		{
 			SetState(Engine::State::Rendering);
 
-			Base::Utilities::Timer timer;
+			Core::Utilities::Timer timer;
 
 			double SavedX = 0, SavedY = 0;
 
