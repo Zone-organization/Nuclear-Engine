@@ -1,7 +1,6 @@
 #pragma once
 #include <Core\NE_Common.h>
 #include <Engine/ECS/EntityFactory.h>
-#include <Engine/ECS/Entity.h>
 #include <Engine/ECS/System.h>
 #include <Core\Path.h>
 

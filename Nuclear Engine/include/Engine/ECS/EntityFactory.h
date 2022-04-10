@@ -2,7 +2,6 @@
 #include <Engine\ECS/Common.h>
 #include <Engine\ECS\Entity.h>
 #include <Engine/Assets/Material.h>
-#include <Engine\PhysX\PhysXMaterial.h>
 #include <Engine\ECS\Transform.h>
 
 namespace NuclearEngine

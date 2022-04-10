@@ -57,8 +57,6 @@ namespace NuclearEngine
 			std::string GetBoneName() const;
 			int GetBoneID();
 
-
-
 			int GetPositionIndex(float animationTime);
 
 			int GetRotationIndex(float animationTime);

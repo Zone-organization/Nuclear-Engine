@@ -1,6 +1,4 @@
 #pragma once
-#include <Core\NE_Common.h>
-#include <Core\Math\Math.h>
 #include <Engine\ECS\Transform.h>
 #include <Engine/PhysX/PhysXEngine.h>
 #include <Engine/PhysX/RigidDynamic.h>

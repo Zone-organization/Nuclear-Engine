@@ -2,6 +2,8 @@
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Core\FileSystem.h>
 #include <Core/Utilities/Hash.h>
+#include <Core\Logger.h>
+
 namespace NuclearEngine
 {
 	namespace Graphics

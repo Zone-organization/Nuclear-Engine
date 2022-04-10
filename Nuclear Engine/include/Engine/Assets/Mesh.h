@@ -1,12 +1,9 @@
 #pragma once
-#include <Core\NE_Common.h>
-#include <Core\Math\Math.h>
-#include <Engine/Assets/Image.h>
+#include <Engine/Assets/Common.h>
+#include <Engine/Animation/BoneInfo.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Engine/Assets/Common.h>
-#include <Engine/Animation/BoneInfo.h>
 #include <vector>
 #include <string>
 #include <unordered_map>

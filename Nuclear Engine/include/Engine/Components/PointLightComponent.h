@@ -1,11 +1,8 @@
 #pragma once
-#include <Core\NE_Common.h>
 #include <Engine/Graphics/Color.h>
-#include <Core\Math\Math.h>
 
 namespace NuclearEngine
 {
-
 	namespace Components
 	{
 		namespace Internal

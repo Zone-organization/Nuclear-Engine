@@ -1,6 +1,7 @@
 #include <Core\Application.h>
 #include <Core\Window.h>
 #include <Core\Engine.h>
+#include <Core\Logger.h>
 #include <GLFW/include/GLFW/glfw3.h>
 
 namespace NuclearEngine

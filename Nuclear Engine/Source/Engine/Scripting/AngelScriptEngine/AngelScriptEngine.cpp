@@ -3,6 +3,8 @@
 #include "Engine/Scripting/AngelScriptEngine/AngelScriptEngine.h"
 #include "scriptstdstring.h"
 #include <assert.h>
+#include <Core\Logger.h>
+
 namespace NuclearEngine
 {
 	namespace Scripting

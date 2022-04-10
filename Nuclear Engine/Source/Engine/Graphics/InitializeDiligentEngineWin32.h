@@ -1,5 +1,5 @@
 #pragma once
-#include <Core\NE_Common.h>
+#include <Core\Logger.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>

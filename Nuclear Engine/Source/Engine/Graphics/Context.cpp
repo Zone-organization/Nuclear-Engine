@@ -2,6 +2,7 @@
 #include <Core/Application.h>
 #include <Core/Window.h>
 #include "InitializeDiligentEngineWin32.h"
+#include <Core\Logger.h>
 
 namespace NuclearEngine
 {

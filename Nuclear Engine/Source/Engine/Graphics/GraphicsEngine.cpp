@@ -1,7 +1,7 @@
 #include "Engine\Graphics\GraphicsEngine.h"
 #include <Engine\Graphics\Context.h>
 #include <Engine\Managers\AssetManager.h>
-
+#include <Core\Logger.h>
 
 namespace NuclearEngine
 {

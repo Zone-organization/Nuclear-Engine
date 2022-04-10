@@ -1,10 +1,8 @@
 #pragma once
-#include <Core\NE_Common.h>
-#include <Core\Math\Math.h>
-#include <vector>
-#include <unordered_map>
 #include <Engine/Animation/BoneInfo.h>
 #include <Engine/Animation/Bone.h>
+#include <vector>
+#include <unordered_map>
 
 namespace NuclearEngine
 {

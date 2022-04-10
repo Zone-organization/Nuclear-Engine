@@ -1,5 +1,4 @@
 #pragma once
-#include <Core\NE_Common.h>
 #include <Engine\Assets\MaterialTypes.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>

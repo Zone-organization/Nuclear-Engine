@@ -1,5 +1,4 @@
 #pragma once
-#include <Core\NE_Common.h>
 #include <Engine/Assets/Common.h>
 
 namespace NuclearEngine

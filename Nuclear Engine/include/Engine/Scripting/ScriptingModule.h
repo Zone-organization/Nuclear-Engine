@@ -1,6 +1,4 @@
 #pragma once
-#include <Core\NE_Common.h>
-#include "Engine\Assets\Script.h"
 #include <Engine/Scripting/ScriptData.h>
 #include <unordered_map>
 

@@ -3,7 +3,6 @@ namespace NuclearEngine
 {
 	namespace Assets
 	{
-
 		static Assets::Mesh* gCube;
 		static Assets::Mesh* gSphere;
 		static Assets::Mesh* gPlane;

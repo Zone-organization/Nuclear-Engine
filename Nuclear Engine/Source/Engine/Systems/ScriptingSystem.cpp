@@ -5,6 +5,7 @@
 #include "Engine\Components\ScriptComponent.h"
 #include "Engine\ECS\Scene.h"
 #include "..\Source\ThirdParty\angelscript\include\angelscript.h" 
+#include <Core\Logger.h>
 
 namespace NuclearEngine
 {

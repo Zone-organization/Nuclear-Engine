@@ -1,26 +1,14 @@
 #pragma once
 #include <Engine\ECS\System.h>
-#include <Engine\ECS/Common.h>
-#include <Engine\ECS/Scene.h>
 #include <Engine\Systems\LightingSubSystem.h>
-#include <Engine\ECS\System.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
 #include <vector>
 #include <unordered_map>
+#include <Engine/Assets/Mesh.h>
+#include <Engine/Assets/Material.h>
 
-/*
-#include <Engine/ECS/entt/entt.hpp>
-#include <Engine/ECS/Entity.h>
-*/
 namespace NuclearEngine
 {
-	namespace Assets
-	{
-		class Mesh;
-		class Material;
-
-	}
-
 	namespace Animation
 	{
 		class Animator;

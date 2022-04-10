@@ -1,6 +1,5 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Core\Math\Math.h>
 #include <Engine\Assets\AudioClip.h>
 
 namespace NuclearEngine

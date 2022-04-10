@@ -5,14 +5,15 @@
 #include <Engine\Components\AnimatorComponent.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
-#include <Engine\Assets\Material.h>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Managers\CameraManager.h>
 #include <Engine\Managers\AssetManager.h>
+#include <Engine\ECS\Scene.h>
 #include <Core\Engine.h>
 #include <cstring>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include "Engine/Animation/Animator.h"
+#include <Core\Logger.h>
 
 namespace NuclearEngine
 {

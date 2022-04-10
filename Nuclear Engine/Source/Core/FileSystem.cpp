@@ -1,5 +1,5 @@
 #include "Core\FileSystem.h"
-#include <Core\NE_Common.h>
+#include <Core\Logger.h>
 #include <fstream>
 
 namespace NuclearEngine

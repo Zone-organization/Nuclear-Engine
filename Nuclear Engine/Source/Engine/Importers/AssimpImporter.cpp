@@ -5,6 +5,7 @@
 #include <Engine\Assets\Material.h>
 #include <Core\Utilities\Hash.h>
 #include "AssimpGLMHelpers.h"
+#include <Core\Logger.h>
 
 namespace NuclearEngine {
 	namespace Importers {

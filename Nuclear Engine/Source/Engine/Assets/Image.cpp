@@ -1,5 +1,4 @@
 #include <Engine/Assets/Image.h>
-#include <Core\Utilities\Hash.h>
 #include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp>
 #include <Engine\Graphics\Context.h>
 

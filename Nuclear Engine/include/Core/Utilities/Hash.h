@@ -1,6 +1,6 @@
 #pragma once
 #include <ThirdParty\crc32c.h>
-#include <Core\NE_PrivateCommon.h>
+#include <Core\NE_Common.h>
 #include <string>
 #include <sstream>
 #include <iomanip>

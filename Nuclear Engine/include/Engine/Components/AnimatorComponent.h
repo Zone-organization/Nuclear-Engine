@@ -1,7 +1,5 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Core\Math\Math.h>
-#include <vector>
 
 namespace NuclearEngine {
 	namespace Animation

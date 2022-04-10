@@ -1,4 +1,5 @@
 #include <Engine\Audio\AudioEngine.h>
+#include <Core\Logger.h>
 #include <FMOD/inc/fmod.hpp>
 #define FMOD_ERRCHK_IMPL
 #include "FMODError.h"

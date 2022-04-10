@@ -3,6 +3,7 @@
 #include <Engine\Assets\Material.h>
 #include <Engine\Audio\AudioEngine.h>
 #include "Engine\Graphics\GraphicsEngine.h"
+#include <Core\Logger.h>
 
 #define EXPOSE_FREEIMAGE_IMPORTER
 #define EXPOSE_ASSIMP_IMPORTER

@@ -2,6 +2,7 @@
 #include <Core\Utilities\Hash.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Core\Logger.h>
 
 namespace NuclearEngine
 {

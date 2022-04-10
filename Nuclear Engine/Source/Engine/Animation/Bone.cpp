@@ -1,7 +1,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "Engine\Animation\Bone.h"
-#include "..\Source\Engine\Importers\AssimpGLMHelpers.h"
 #include "Core/Math/gtx/quaternion.hpp"
+
 namespace NuclearEngine
 {
 	namespace Animation

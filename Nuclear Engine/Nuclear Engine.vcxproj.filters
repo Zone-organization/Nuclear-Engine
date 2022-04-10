@@ -23,7 +23,7 @@
     <ClInclude Include="include\Core\Utilities\Accessor.h" />
     <ClInclude Include="include\Core\Utilities\Delegate.h" />
     <ClInclude Include="include\Core\Utilities\Hash.h" />
-    <ClInclude Include="include\Core\Utilities\Logger.h" />
+    <ClInclude Include="include\Core\Logger.h" />
     <ClInclude Include="include\Core\Utilities\NonCopyable.h" />
     <ClInclude Include="include\Core\Utilities\Pool.h" />
     <ClInclude Include="include\Core\Utilities\Signal.h" />
@@ -173,10 +173,9 @@
     <ClInclude Include="include\Core\Math\vec3.hpp" />
     <ClInclude Include="include\Core\Math\vec4.hpp" />
     <ClInclude Include="include\Core\Math\vector_relational.hpp" />
-    <ClInclude Include="include\Core\NE_Common.h" />
     <ClInclude Include="include\Core\BuildConfig.h" />
     <ClInclude Include="include\Core\NE_Exception.h" />
-    <ClInclude Include="include\Core\NE_PrivateCommon.h" />
+    <ClInclude Include="include\Core\NE_Common.h" />
     <ClInclude Include="Source\Engine\Audio\FMODError.h" />
     <ClInclude Include="include\Core\Utilities\Timer.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
@@ -332,7 +331,7 @@
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Core\Utilities\Logger.cpp" />
+    <ClCompile Include="Source\Core\Logger.cpp" />
     <ClCompile Include="Source\Core\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />

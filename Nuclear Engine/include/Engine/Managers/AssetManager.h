@@ -1,11 +1,6 @@
 #pragma once
-#include <Engine/Graphics/Color.h>
 #include <Engine/Importers/Common.h>
-#include <Engine\Assets\AudioClip.h>
-#include <Engine\Assets\Script.h>
-#include <Engine/Assets/Mesh.h>
-#include <Engine/Assets/Material.h>
-#include <Engine/Assets/Animations.h>
+#include <Engine\Assets\Assets.h>
 #include <FMOD/inc/fmod.hpp>
 #include <Core/Path.h>
 #include <unordered_map>

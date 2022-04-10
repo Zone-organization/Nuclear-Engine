@@ -1,5 +1,6 @@
 #include <Engine\Systems\LightingSubSystem.h>
 #include <Engine\Graphics\Context.h>
+#include <Core\Logger.h>
 
 namespace NuclearEngine
 {

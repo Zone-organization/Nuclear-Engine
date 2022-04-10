@@ -2,6 +2,7 @@
 #include <Core\Utilities\Timer.h>
 #include <Core\Application.h>
 #include <Core\Window.h>
+#include <Core\Logger.h>
 
 #include <Engine\Audio\AudioEngine.h>
 #include <Engine\Graphics\Context.h>

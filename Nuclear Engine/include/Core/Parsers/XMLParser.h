@@ -24,7 +24,7 @@ distribution.
 #ifndef TINYXML2_INCLUDED
 #define TINYXML2_INCLUDED
 
-#include <Core\NE_PrivateCommon.h>
+#include <Core\NE_Common.h>
 
 #if defined(ANDROID_NDK) || defined(__BORLANDC__) || defined(__QNXNTO__)
 #   include <ctype.h>

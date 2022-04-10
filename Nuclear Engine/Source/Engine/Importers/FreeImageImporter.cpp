@@ -2,6 +2,7 @@
 #include <Engine\Importers\FreeImageImporter.h>
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
+#include <Core\Logger.h>
 
 #pragma comment(lib,"Freeimage.lib")
 

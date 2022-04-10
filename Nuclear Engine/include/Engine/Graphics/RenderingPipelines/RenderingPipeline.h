@@ -1,18 +1,18 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Engine\Components\MeshComponent.h>
-#include <Engine\Components\CameraComponent.h>
-#include <Engine\Components\DirLightComponent.h>
-#include <Engine\Components\PointLightComponent.h>
-#include <Engine\Components\SpotLightComponent.h>
-#include <Engine\Assets\Mesh.h>
-#include <Engine\Assets\Material.h>
+#include <Engine/Assets/MaterialTypes.h>
+
+//#include <Engine\Components\MeshComponent.h>
+//#include <Engine\Components\CameraComponent.h>
+//#include <Engine\Components\DirLightComponent.h>
+//#include <Engine\Components\PointLightComponent.h>
+//#include <Engine\Components\SpotLightComponent.h>
 #include <Engine/Graphics/BakeStatus.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
-#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
+//#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
+//#include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
+//#include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
+//#include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <vector>
 

@@ -1,5 +1,4 @@
 #pragma once
-#include <Core\NE_Common.h>
 #include <Engine/Components/CameraComponent.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
