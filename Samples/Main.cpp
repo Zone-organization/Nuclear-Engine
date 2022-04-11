@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Engine\Scripting\ScriptingEngine.h"
 
+#pragma comment(lib,"Nuclear.Core.lib")
+
 Core::RenderAPI SelectRenderer()
 {
 	std::cout << "Select Renderer: \n"
@@ -52,8 +54,8 @@ int main(int argc, char* argv[])
 	//}
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
-
-	while (!Core::Application::PollEvents())
+	Core::Engine::PollEvents();
+	while (!Core::Engine::GetMainWindow()->ShouldClose())
 	{
 		SampleSelector selector;
 		Core::Engine::SetGame(&selector);

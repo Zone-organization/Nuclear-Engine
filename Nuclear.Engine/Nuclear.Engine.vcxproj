@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Checked|x64">
+      <Configuration>Checked</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1E657253-3D76-4C77-A747-4D85EEFA91DA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Nuclear.Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Nuclear.Engine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Checked|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Checked|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\DebugX64\</OutDir>
+    <IntDir>Build\DebugX64\</IntDir>
+    <TargetName>Nuclear.Engine</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\CheckedX64\</OutDir>
+    <IntDir>Build\CheckedX64\</IntDir>
+    <TargetName>Nuclear.Engine</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\ReleaseX64\</OutDir>
+    <IntDir>Build\ReleaseX64\</IntDir>
+    <TargetName>Nuclear.Engine</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS;PLATFORM_WIN32;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;..\External\PhysX\;..\External\PhysX\pxshared\include;..\Nuclear.Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BasicRuntimeChecks />
+    </ClCompile>
+    <Link>
+      <SubSystem>NotSet</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\DebugX64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;NUCLEARENGINE_EXPORTS;PLATFORM_WIN32;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;..\External\PhysX\;..\External\PhysX\pxshared\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>
+      </BasicRuntimeChecks>
+    </ClCompile>
+    <Link>
+      <SubSystem>NotSet</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\DebugX64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;D3D11_SUPPORTED;D3D12_SUPPORTED;GL_SUPPORTED;VULKAN_SUPPORTED;PLATFORM_WIN32;NUCLEARENGINE_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\External\;..\External\Assimp\include;..\External\CmakeProjects\Assimp\include;include;..\External\PhysX\;..\External\PhysX\pxshared\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4103;4251;</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>NotSet</SubSystem>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\ReleaseX64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Engine\Animation\AnimationClip.h" />
+    <ClInclude Include="include\Engine\Animation\Animation.h" />
+    <ClInclude Include="include\Engine\Animation\Animator.h" />
+    <ClInclude Include="include\Engine\Animation\Bone.h" />
+    <ClInclude Include="include\Engine\Animation\BoneInfo.h" />
+    <ClInclude Include="include\Engine\Assets\Animations.h" />
+    <ClInclude Include="include\Engine\Assets\Assets.h" />
+    <ClInclude Include="include\Engine\Assets\AudioClip.h" />
+    <ClInclude Include="include\Engine\Assets\AudioFile.h" />
+    <ClInclude Include="include\Engine\Assets\DefaultMeshes.h" />
+    <ClInclude Include="include\Engine\Assets\Common.h" />
+    <ClInclude Include="include\Engine\Assets\ImageData.h" />
+    <ClInclude Include="include\Engine\Assets\Material.h" />
+    <ClInclude Include="include\Engine\Assets\MaterialInstance.h" />
+    <ClInclude Include="include\Engine\Assets\MaterialTypes.h" />
+    <ClInclude Include="include\Engine\Assets\Image.h" />
+    <ClInclude Include="include\Engine\Audio\Audio.h" />
+    <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
+    <ClInclude Include="include\Engine\Components\AnimatorComponent.h" />
+    <ClInclude Include="include\Engine\Components\AudioSourceComponent.h" />
+    <ClInclude Include="include\Engine\Components\ColliderComponent.h" />
+    <ClInclude Include="include\Engine\Components\CameraComponent.h" />
+    <ClInclude Include="include\Engine\Components\Components.h" />
+    <ClInclude Include="include\Engine\Components\DirLightComponent.h" />
+    <ClInclude Include="include\Engine\Components\PointLightComponent.h" />
+    <ClInclude Include="include\Engine\Components\RigidBodyComponent.h" />
+    <ClInclude Include="include\Engine\Components\ScriptComponent.h" />
+    <ClInclude Include="include\Engine\Components\SpotLightComponent.h" />
+    <ClInclude Include="include\Engine\ECS\ECS.h" />
+    <ClInclude Include="include\Engine\ECS\Entity.h" />
+    <ClInclude Include="include\Engine\ECS\EntityFactory.h" />
+    <ClInclude Include="include\Engine\Graphics\Background.h" />
+    <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />
+    <ClInclude Include="include\Engine\Graphics\Color.h" />
+    <ClInclude Include="include\Engine\Graphics\Context.h" />
+    <ClInclude Include="include\Engine\Graphics\NeoPipeline.h" />
+    <ClInclude Include="include\Engine\Graphics\Graphics.h" />
+    <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\DiffuseOnly.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\PBR.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\Skybox.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\WireFrame.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderTarget.h" />
+    <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
+    <ClInclude Include="include\Engine\ECS\Transform.h" />
+    <ClInclude Include="include\Engine\Graphics\Texture.h" />
+    <ClInclude Include="include\Engine\Importers\Common.h" />
+    <ClInclude Include="include\Engine\Importers\Importers.h" />
+    <ClInclude Include="include\Engine\Assets\Mesh.h" />
+    <ClInclude Include="include\Engine\Components\MeshComponent.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\BlinnPhong.h" />
+    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\RenderingPipeline.h" />
+    <ClInclude Include="include\Engine\Managers\CameraManager.h" />
+    <ClInclude Include="include\Engine\Managers\Managers.h" />
+    <ClInclude Include="include\Engine\PhysX\RaycastHit.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptData.h" />
+    <ClInclude Include="include\Engine\Scripting\Scripting.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingContext.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingEngine.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingModule.h" />
+    <ClInclude Include="include\Engine\Systems\ShadowSystem.h" />
+    <ClInclude Include="include\Engine\ECS\System.h" />
+    <ClInclude Include="include\ThirdParty\ShadowMapManager\BasicStructures.h" />
+    <ClInclude Include="include\ThirdParty\ShadowMapManager\ShadowMapManager.h" />
+    <ClInclude Include="include\Engine\PhysX\Geometry.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXMaterial.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysX.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
+    <ClInclude Include="include\Engine\PhysX\PhysXShape.h" />
+    <ClInclude Include="include\Engine\Assets\Script.h" />
+    <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imconfig.h" />
+    <ClInclude Include="Source\Engine\Importers\AssimpGLMHelpers.h" />
+    <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
+    <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
+    <ClInclude Include="include\Engine\PhysX\RigidStatic.h" />
+    <ClInclude Include="include\Engine\Systems\AudioSystem.h" />
+    <ClInclude Include="include\Engine\Systems\LightingSubSystem.h" />
+    <ClInclude Include="include\Engine\Systems\PhysXSystem.h" />
+    <ClInclude Include="include\Engine\Systems\Systems.h" />
+    <ClInclude Include="include\Engine\Graphics\imconfig.h" />
+    <ClInclude Include="include\Engine\Graphics\ImGui.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_impl.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_internal.h" />
+    <ClInclude Include="include\ThirdParty\crc32c.h" />
+    <ClInclude Include="include\Engine\Components\EntityInfoComponent.h" />
+    <ClInclude Include="include\Engine\Graphics\Skybox.h" />
+    <ClInclude Include="include\Engine\ECS\Common.h" />
+    <ClInclude Include="include\Engine\ECS\Scene.h" />
+    <ClInclude Include="include\NuclearEngine.h" />
+    <ClInclude Include="include\Engine.h" />
+    <ClInclude Include="include\Engine\Managers\AssetManager.h" />
+    <ClInclude Include="include\Engine\Managers\ShaderManager.h" />
+    <ClInclude Include="include\Engine\Systems\RenderSystem.h" />
+    <ClInclude Include="Source\Engine\Audio\FMODError.h" />
+    <ClInclude Include="Source\Engine\Graphics\InitializeDiligentEngineWin32.h" />
+    <ClInclude Include="include\Engine\Importers\AssimpImporter.h" />
+    <ClInclude Include="include\Engine\Importers\FreeImageImporter.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" />
+    <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h" />
+    <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\scriptstdstring.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\include\angelscript.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_array.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_atomic.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_builder.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_bytecode.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_callfunc.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_compiler.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_config.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_configgroup.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_context.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_criticalsection.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_datatype.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_debug.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_gc.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_generic.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_map.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_memory.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_module.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_namespace.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_objecttype.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_outputbuffer.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_parser.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_property.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_restore.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptcode.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptengine.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptfunction.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptnode.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptobject.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_string.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_string_util.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_symboltable.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_texts.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_thread.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_tokendef.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_tokenizer.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_typeinfo.h" />
+    <ClInclude Include="Source\ThirdParty\angelscript\source\as_variablescope.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_config.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_internal.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_prefetch.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_read_le.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_round_up.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42.h" />
+    <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42_check.h" />
+    <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Engine\Animation\AnimationClip.cpp" />
+    <ClCompile Include="Source\Engine\Animation\Animator.cpp" />
+    <ClCompile Include="Source\Engine\Animation\Bone.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Animations.cpp" />
+    <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Image.cpp" />
+    <ClCompile Include="Source\Engine\Components\AnimatorComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
+    <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Material.cpp" />
+    <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />
+    <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
+    <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\DirLightComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\PointLightComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\RigidBodyComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\ScriptComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\SpotLightComponent.cpp" />
+    <ClCompile Include="Source\Engine\ECS\EntityFactory.cpp" />
+    <ClCompile Include="Source\Engine\ECS\Transform.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Background.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_tables.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\NeoPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\BlinnPhong.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\DiffuseOnly.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\PBR.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\RenderingPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderingPipelines\WireFrame.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderTarget.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
+    <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
+    <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\PhysXShape.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\RaycastHit.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\RigidStatic.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\PhysXMaterial.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
+    <ClCompile Include="Source\Engine\PhysX\RigidDynamic.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Script.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\scriptstdstring.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\ScriptData.cpp" />
+    <ClCompile Include="Source\Engine\Systems\ScriptingSystem.cpp" />
+    <ClCompile Include="Source\Engine\Systems\LightingSubSystem.cpp" />
+    <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
+    <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
+    <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
+    <ClCompile Include="Source\Engine\Systems\ShadowSystem.cpp" />
+    <ClCompile Include="Source\Engine\ECS\System.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_atomic.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_builder.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_bytecode.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_arm.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_arm64.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_mips.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_ppc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_ppc_64.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_sh4.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_gcc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_mingw.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_msvc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x86.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_xenon.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_compiler.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_configgroup.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_context.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_datatype.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_gc.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_generic.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_globalproperty.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_memory.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_module.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_objecttype.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_outputbuffer.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_parser.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_restore.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptcode.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptengine.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptfunction.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptnode.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptobject.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_string.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_string_util.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_thread.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_tokenizer.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_typeinfo.cpp" />
+    <ClCompile Include="Source\ThirdParty\angelscript\source\as_variablescope.cpp" />
+    <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
+    <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
+    <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
+    <ClCompile Include="Source\ThirdParty\crc32c\crc32c_sse42.cc" />
+    <ClCompile Include="Source\Engine\Components\EntityInfoComponent.cpp" />
+    <ClCompile Include="Source\Engine.cpp" />
+    <ClCompile Include="Source\Engine\Components\CameraComponent.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Skybox.cpp" />
+    <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
+    <ClCompile Include="Source\NE_Common.cpp" />
+    <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
+    <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />
+    <ClCompile Include="Source\ThirdParty\ShadowMapManager\ShadowMapManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\ThirdParty\angelscript\source\as_callfunc_arm64_msvc.asm" />
+    <None Include="Source\ThirdParty\angelscript\source\as_callfunc_arm_msvc.asm" />
+    <CustomBuild Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_msvc_asm.asm">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ml64.exe /c  /nologo /Fo"Build\DebugX64\as_callfunc_x64_msvc_asm.obj" /W3 /Zi /Ta "%(RootDir)%(Directory)\%(Filename)%(Extension)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64.exe /c  /nologo /Fo$(OutDir)\as_callfunc_x64_msvc_asm.obj /W3 /Zi /Ta $(InputDir)\$(InputFileName)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">ml64.exe /c  /nologo /Fo$(OutDir)\as_callfunc_x64_msvc_asm.obj /W3 /Zi /Ta $(InputDir)\$(InputFileName)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Build\DebugX64\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">$(Configuration)\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

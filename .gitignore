@@ -35,7 +35,8 @@
 /External/CmakeProjects
 /Samples/Assets/Common/Models/CrytekCyborg
 /Samples/Build/DebugX64
-/Nuclear Engine/Build/DebugX64
+/Nuclear.Engine/Build/
+/Nuclear.Core/Build/
 /External/FMOD
 /External/PhysX/include
 /Samples/Assets/Common/Models
