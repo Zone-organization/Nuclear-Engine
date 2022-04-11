@@ -1,4 +1,4 @@
-#include <Engine\Graphics\RenderingPipelines\WireFrame.h>
+#include <Framework\Graphics\RenderingPipelines\WireFrame.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 #include <Core/Utilities/Hash.h>

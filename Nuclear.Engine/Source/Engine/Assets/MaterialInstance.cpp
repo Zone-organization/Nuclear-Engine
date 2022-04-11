@@ -1,7 +1,7 @@
 #include <Engine\Assets\MaterialInstance.h>
 #include <Core\Utilities\Hash.h>
 #include <Engine\Graphics\Context.h>
-#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Engine\Graphics\RenderingPipeline.h>
 #include <Core\Logger.h>
 
 namespace Nuclear

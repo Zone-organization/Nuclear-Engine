@@ -1,4 +1,4 @@
-#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Engine\Graphics\RenderingPipeline.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 #include <Engine/Managers/AssetManager.h>

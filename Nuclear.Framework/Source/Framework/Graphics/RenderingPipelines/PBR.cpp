@@ -1,4 +1,4 @@
-#include <Engine\Graphics\RenderingPipelines\BlinnPhong.h>
+#include <Framework\Graphics\RenderingPipelines\PBR.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 
@@ -6,20 +6,16 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		BlinnPhong::BlinnPhong(bool NormalMaps)
+		PBR::PBR()
 		{
-			if(NormalMaps)
-				mID = Utilities::Hash("NE_BlinnPhong");
-			else
-				mID = Utilities::Hash("NE_BlinnPhong_Normal");
-
-			mNormalMaps = NormalMaps;
+			mID = Utilities::Hash("NE_PBR_NO_IBL");
 		}
-		bool BlinnPhong::Bake(const RenderingPipelineDesc& desc)
+		bool PBR::Bake(const RenderingPipelineDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
-			PSOCreateInfo.PSODesc.Name = "RenderSystem PSO";
+			PSOCreateInfo.PSODesc.Name = "PBR_PSO";
+
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
@@ -35,11 +31,12 @@ namespace Nuclear
 			std::vector<LayoutElement> LayoutElems;
 
 			//Create Vertex Shader
-			Managers::AutoVertexShaderDesc VertShaderDesc;
-			VertShaderDesc.Name = "BlinnPhongVS";
+			{
+				Managers::AutoVertexShaderDesc VertShaderDesc;
+				VertShaderDesc.Name = "PBR_VS";
 
-			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(), &LayoutElems);
-
+				Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(),&LayoutElems);
+			}
 
 			//Create Pixel Shader
 			{
@@ -48,7 +45,7 @@ namespace Nuclear
 				CreationAttribs.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 				CreationAttribs.EntryPoint = "main";
-				CreationAttribs.Desc.Name = "BlinnPhongPS";
+				CreationAttribs.Desc.Name = "PBR_PS";
 
 
 				std::vector<std::string> defines;
@@ -56,13 +53,13 @@ namespace Nuclear
 				if (desc.DirLights > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(desc.DirLights)); }
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
-				if (mNormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
-
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
+				
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
 				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
 			}
 
@@ -77,16 +74,15 @@ namespace Nuclear
 			if (desc.CameraBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
 
-			if (desc.AnimationBufferPtr)
-				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
-
 			if (desc.LightsBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
+
+			if (desc.AnimationBufferPtr)
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 
 			ReflectPixelShaderData();
 
 			mStatus = BakeStatus::Baked;
-
 			return true;
 		}
 	}

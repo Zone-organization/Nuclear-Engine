@@ -1,5 +1,5 @@
 #include <Engine\Assets\Material.h>
-#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Engine\Graphics\RenderingPipeline.h>
 #include <Core\Logger.h>
 
 namespace Nuclear

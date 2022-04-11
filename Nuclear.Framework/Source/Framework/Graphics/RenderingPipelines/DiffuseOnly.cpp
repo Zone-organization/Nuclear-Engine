@@ -1,21 +1,22 @@
-#include <Engine\Graphics\RenderingPipelines\PBR.h>
+#include <Framework\Graphics\RenderingPipelines\DiffuseOnly.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
+#include <Core/Utilities/Hash.h>
 
 namespace Nuclear
 {
 	namespace Graphics
 	{
-		PBR::PBR()
+		DiffuseOnly::DiffuseOnly()
 		{
-			mID = Utilities::Hash("NE_PBR_NO_IBL");
+			mID  = Utilities::Hash("NE_Diffuse_Only");
 		}
-		bool PBR::Bake(const RenderingPipelineDesc& desc)
+
+		bool DiffuseOnly::Bake(const RenderingPipelineDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
-			PSOCreateInfo.PSODesc.Name = "PBR_PSO";
-
+			PSOCreateInfo.PSODesc.Name = "DiffuseOnly PSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
@@ -31,37 +32,16 @@ namespace Nuclear
 			std::vector<LayoutElement> LayoutElems;
 
 			//Create Vertex Shader
-			{
-				Managers::AutoVertexShaderDesc VertShaderDesc;
-				VertShaderDesc.Name = "PBR_VS";
+			Managers::AutoVertexShaderDesc VertShaderDesc;
+			VertShaderDesc.Name = "DiffuseOnlyVS";
+			VertShaderDesc.OutFragPos = false;
 
-				Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(),&LayoutElems);
-			}
+			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(), &LayoutElems);
 
 			//Create Pixel Shader
-			{
-				ShaderCreateInfo CreationAttribs;
-				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-				CreationAttribs.EntryPoint = "main";
-				CreationAttribs.Desc.Name = "PBR_PS";
-
-
-				std::vector<std::string> defines;
-
-				if (desc.DirLights > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(desc.DirLights)); }
-				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
-				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
-				
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR.ps.hlsl", defines, std::vector<std::string>(), true);
-				CreationAttribs.Source = source.c_str();
-				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
-				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
-
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
-			}
+			Managers::AutoPixelShaderDesc PixelShaderDesc;
+			PixelShaderDesc.Name = "DiffuseOnlyPS";
+			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoPixelShader(PixelShaderDesc, PSShader.RawDblPtr());
 
 			PSOCreateInfo.pVS = VSShader;
 			PSOCreateInfo.pPS = PSShader;
@@ -70,19 +50,15 @@ namespace Nuclear
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mPipeline, PSOCreateInfo, Vars, true);
 
-
 			if (desc.CameraBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
-
-			if (desc.LightsBufferPtr)
-				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
 
 			if (desc.AnimationBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 
 			ReflectPixelShaderData();
-
 			mStatus = BakeStatus::Baked;
+
 			return true;
 		}
 	}

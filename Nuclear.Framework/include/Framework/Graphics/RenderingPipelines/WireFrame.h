@@ -1,5 +1,5 @@
 #pragma once
-#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Engine\Graphics\RenderingPipeline.h>
 #include <vector>
 
 namespace Nuclear
@@ -7,10 +7,11 @@ namespace Nuclear
 	namespace Graphics
 	{
 
-		class NEAPI PBR : public RenderingPipeline
+		class WireFrame : public RenderingPipeline
 		{
 		public:
-			PBR();
+			WireFrame();
+
 			bool Bake(const RenderingPipelineDesc& desc) override;
 
 		private:

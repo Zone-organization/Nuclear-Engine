@@ -4,7 +4,7 @@
 #include <Engine\Components\SpotLightComponent.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Engine\Graphics\RenderingPipeline.h>
 #include <vector>
 
 namespace Nuclear

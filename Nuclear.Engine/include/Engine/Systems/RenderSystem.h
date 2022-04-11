@@ -1,7 +1,7 @@
 #pragma once
 #include <Engine\ECS\System.h>
 #include <Engine\Systems\LightingSubSystem.h>
-#include <Engine\Graphics\RenderingPipelines\RenderingPipeline.h>
+#include <Engine\Graphics\RenderingPipeline.h>
 #include <vector>
 #include <unordered_map>
 #include <Engine/Assets/Mesh.h>
