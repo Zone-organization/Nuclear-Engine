@@ -4,32 +4,33 @@
 #include "Engine\Scripting\ScriptingEngine.h"
 
 #pragma comment(lib,"Nuclear.Core.lib")
+#pragma comment(lib,"glfw3.lib")
 
-Core::RenderAPI SelectRenderer()
-{
-	std::cout << "Select Renderer: \n"
-		<< "1) DirectX 11 \n"
-		<< "2) DirectX 12 \n"
-		<< "3) OpenGL 4 \n"
-		<< "4) Vulkan \n";
-
-	int i;
-	std::cin >> i;
-
-	switch (i)
-	{
-	case 1:
-		return Core::RenderAPI::DirectX11;
-	case 2:
-		return Core::RenderAPI::DirectX12;
-	case 3:
-		return Core::RenderAPI::OpenGL;
-	case 4:
-		return Core::RenderAPI::Vulkan;
-	}
-
-	return Core::RenderAPI::DirectX12;
-}
+//Core::RenderAPI SelectRenderer()
+//{
+//	std::cout << "Select Renderer: \n"
+//		<< "1) DirectX 11 \n"
+//		<< "2) DirectX 12 \n"
+//		<< "3) OpenGL 4 \n"
+//		<< "4) Vulkan \n";
+//
+//	int i;
+//	std::cin >> i;
+//
+//	switch (i)
+//	{
+//	case 1:
+//		return Core::RenderAPI::DirectX11;
+//	case 2:
+//		return Core::RenderAPI::DirectX12;
+//	case 3:
+//		return Core::RenderAPI::OpenGL;
+//	case 4:
+//		return Core::RenderAPI::Vulkan;
+//	}
+//
+//	return Core::RenderAPI::DirectX12;
+//}
 
 int main(int argc, char* argv[])
 {
@@ -44,23 +45,29 @@ int main(int argc, char* argv[])
 	//{
 	//	Core::EngineStartupDesc desc;
 	//	desc.mAppdesc.Renderer = SelectRenderer();
-	//	Core::Engine::Start(desc);
+	//	Core::Engine::GetInstance()->Start(desc);
 
 	//}
 	//else
 	//{
-		Core::EngineStartupDesc desc;
-		Core::Engine::Start(desc);
+	//	Core::EngineStartupDesc desc;
+	//	Core::Engine::GetInstance()->Start(desc);
 	//}
+
+	Core::EngineStartupDesc desc;
+	desc.mEngineWindowDesc.WindowWidth = 1280;
+	desc.mEngineWindowDesc.WindowHeight = 720;
+
+	Core::Engine::GetInstance()->Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
-	Core::Engine::PollEvents();
-	while (!Core::Engine::GetMainWindow()->ShouldClose())
+
+	while (!Core::Engine::GetInstance()->ShouldClose())
 	{
 		SampleSelector selector;
-		Core::Engine::SetGame(&selector);
-		Core::Engine::LoadGame();
-		Core::Engine::RunGame();
+		Core::Engine::GetInstance()->SetGame(&selector);
+		Core::Engine::GetInstance()->LoadGame();
+		Core::Engine::GetInstance()->RunGame();
 	}
 	return 0;
 }

@@ -156,13 +156,10 @@ namespace Nuclear
 				Repeated = 2
 			};
 
-			void Initialize(Window* window);
-			KeyboardKeyStatus GetKeyStatus(KeyboardKey key);
-			void SetMouseInputMode(const MouseInputMode& mode);
+			virtual KeyboardKeyStatus GetKeyStatus(KeyboardKey key) = 0;
+			virtual void SetMouseInputMode(const MouseInputMode& mode) = 0;
 
-			void GetMousePosition(double* xpos, double* ypos);
-		private:
-			Window* mParentWindow;
+			virtual void GetMousePosition(double* xpos, double* ypos) = 0;
 		};
 
 	}

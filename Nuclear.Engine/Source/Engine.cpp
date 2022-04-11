@@ -1,6 +1,5 @@
 #include <Engine.h>
 #include <Core\Utilities\Timer.h>
-#include <Core\Application.h>
 #include <Core\Window.h>
 #include <Core\Logger.h>
 
@@ -10,6 +9,7 @@
 
 #include "Engine\Graphics\ImGUI\imgui_impl_glfw.h"
 #include "Engine\Graphics\ImGUI\imgui_impl.h"
+#include <GLFW/include/GLFW/glfw3.h>
 
 //Dependencies Linking
 #pragma comment(lib,"Nuclear.Core.lib")
@@ -43,27 +43,30 @@ namespace Nuclear {
 		static std::string MajorVersion = "0";
 		static std::string MinorVersion = "001";
 
-		static Game* GamePtr;
-		static Game Defaultgame;
-		static Core::Window MainWindow;
-
-		static Engine::State Engine_State;
-		static bool g_isDebug = DEBUG_TRUE_BOOL;
+		static Engine* engine = nullptr;
 
 		void PrintIntroLog();
-
+		void ResizeCallback(GLFWwindow* window, int Width, int Height)
+		{
+			Core::Engine::GetInstance()->GetMainWindow()->UpdateSize();
+			Core::Engine::GetInstance()->GetGame()->OnWindowResize(Width, Height);
+		}
 		bool Engine::Start(const EngineStartupDesc& desc)
 		{
 			PrintIntroLog();
 
 			//Create platform specific app (window)
 			Core::Window::InitializeGLFW();
-			if (!MainWindow.Create({ desc.mAppdesc.WindowWidth, desc.mAppdesc.WindowHeight, desc.mAppdesc.FullScreen, desc.mAppdesc.Title }))
+
+			if (!MainWindow.Create(desc.mEngineWindowDesc))
 			{
 				Log.FatalError("[Engine] Failed To Create Window...\n");
 			}
 			//Application::Start(desc.mAppdesc);
-			MainWindow.GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
+
+			glfwSetFramebufferSizeCallback(MainWindow.GetRawWindowPtr(), ResizeCallback);
+
+			MainWindow.SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 
 			if (!Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc))
 			{
@@ -71,7 +74,7 @@ namespace Nuclear {
 				return false;
 			}
 			//Initialize Context
-			Graphics::Context::Initialize(desc.mAppdesc, desc.mGraphicsEngineDesc);
+			Graphics::Context::Initialize(desc.Renderer, desc.mGraphicsEngineDesc);
 			Assets::DefaultMeshes::Initialize();
 
 
@@ -85,6 +88,8 @@ namespace Nuclear {
 			if (desc.AutoInitAudioEngine)
 				Audio::AudioEngine::Initialize();
 
+
+
 			if (desc.AutoInitPhysXEngine)
 			{
 				if (!PhysX::PhysXEngine::Initialize(desc.mPhysXEngineDesc))
@@ -93,12 +98,24 @@ namespace Nuclear {
 					return false;
 				}
 			}
-			g_isDebug = desc.Debug;
-
+			gisDebug = desc.Debug;
 			GamePtr = &Defaultgame;
+
+			int width2, height2;
+			GetMainWindow()->GetSize(width2, height2);
 
 			Log.Info("[Engine] Nuclear Engine has been initalized successfully!\n");
 			return true;
+		}
+
+		Engine* Engine::GetInstance()
+		{
+			if (engine == nullptr)
+			{
+				engine = new Engine();
+			}
+			return engine;
+
 		}
 
 		void Engine::Shutdown()
@@ -128,10 +145,6 @@ namespace Nuclear {
 			ImGui::Render();
 			ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
 			Graphics::Context::GetSwapChain()->Present();
-		}
-		void Engine::PollEvents()
-		{
-			return MainWindow.PollEventsGLFW();
 		}
 		Window* Engine::GetMainWindow()
 		{
@@ -192,7 +205,7 @@ namespace Nuclear {
 
 		bool Engine::isDebug()
 		{
-			return g_isDebug;
+			return gisDebug;
 		}
 
 		Game* Engine::GetGame()
@@ -208,10 +221,13 @@ namespace Nuclear {
 
 			double SavedX = 0, SavedY = 0;
 
-			PollEvents();
 			//Main Game Loop
 			while (!MainWindow.ShouldClose() && GamePtr != nullptr)
 			{
+				MainWindow.PollEvents();
+
+				MainWindow.UpdateSize();
+
 				// per-frame time logic (ensure speed is constant through all platforms)
 				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
 				GamePtr->DeltaTime = currentFrame - GamePtr->LastFrame;
@@ -222,7 +238,7 @@ namespace Nuclear {
 
 				//Mouse Movement Callback
 				double MousePosX, MousePosY;
-				MainWindow.GetInput()->GetMousePosition(&MousePosX, &MousePosY);
+				MainWindow.GetMousePosition(&MousePosX, &MousePosY);
 				if (SavedX != MousePosX || SavedY != MousePosY)
 				{
 					SavedX = MousePosX;

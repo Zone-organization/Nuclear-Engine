@@ -26,17 +26,17 @@ public:
 	void StartSample()
 	{
 		ImGui::End();
-		Core::Engine::EndFrame();
+		Core::Engine::GetInstance()->EndFrame();
 
-		Core::Engine::GetGame()->SetDefaultAssetManager(&AssetLoader);
-		Core::Engine::LoadGame();
-		Core::Engine::RunGame();
-		Core::Engine::EndGame();
+		Core::Engine::GetInstance()->GetGame()->SetDefaultAssetManager(&AssetLoader);
+		Core::Engine::GetInstance()->LoadGame();
+		Core::Engine::GetInstance()->RunGame();
+		Core::Engine::GetInstance()->EndGame();
 
-		//if (Core::Engine::GetGame() != this)
+		//if (Core::Engine::GetInstance()->GetGame() != this)
 		//{
-		//	Core::Engine::SetGame(this);
-		//	Core::Engine::RunGame();
+		//	Core::Engine::GetInstance()->SetGame(this);
+		//	Core::Engine::GetInstance()->RunGame();
 		//}
 	}
 
@@ -64,19 +64,19 @@ public:
 		if (ImGui::Button("Sample1 : BlinnPhong rendering of some models"))
 		{
 			Sample1 demo;
-			Core::Engine::SetGame(&demo);
+			Core::Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 		if (ImGui::Button("Sample2 : Advanced Rendering & PhysX"))
 		{
 			Sample2 demo;
-			Core::Engine::SetGame(&demo);
+			Core::Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 		if (ImGui::Button("Sample3 : Script Test"))
 		{
 			Sample3 demo;
-			Core::Engine::SetGame(&demo);
+			Core::Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 

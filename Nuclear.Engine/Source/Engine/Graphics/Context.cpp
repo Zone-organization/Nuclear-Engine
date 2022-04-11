@@ -19,7 +19,7 @@ namespace Nuclear
 		bool Metal = false;
 
 
-		bool Context::Initialize(const Core::ApplicationDesc& AppDesc, const Graphics::GraphicsEngineDesc& GraphicsDesc)
+		bool Context::Initialize(RENDER_DEVICE_TYPE renderapi, const Graphics::GraphicsEngineDesc& GraphicsDesc)
 		{
 			SwapChainDesc SCDesc(GraphicsDesc.SCDesc);
 
@@ -31,7 +31,7 @@ namespace Nuclear
 			{
 				SCDesc.ColorBufferFormat = TEX_FORMAT_RGBA8_UNORM;
 			}
-			bool Result = InitializeDiligentEngineWin32(Core::Engine::GetMainWindow()->GetRawWindowPtr(),static_cast<RENDER_DEVICE_TYPE>(AppDesc.Renderer), &gDevice, &gContext, &gSwapChain,&gEngineFactory, SCDesc);
+			bool Result = InitializeDiligentEngineWin32(Core::Engine::GetInstance()->GetMainWindow()->GetRawWindowPtr(),renderapi, &gDevice, &gContext, &gSwapChain,&gEngineFactory, SCDesc);
 
 			if(Result)
 				Log.Info("[Context] Diligent Graphics API Initialized.\n");

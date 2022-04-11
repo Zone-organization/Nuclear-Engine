@@ -1,8 +1,9 @@
 #pragma once
 #include <Core\Game.h>
-#include <Core\ApplicationDesc.h>
+#include <Core\Window.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\PhysX\PhysXEngine.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
 
 namespace Nuclear
 {
@@ -11,7 +12,12 @@ namespace Nuclear
 		class Window;
 		struct EngineStartupDesc
 		{
-			ApplicationDesc mAppdesc;
+			WindowDesc mEngineWindowDesc  = WindowDesc();
+			Uint32 Samples = 2;
+			RENDER_DEVICE_TYPE Renderer = RENDER_DEVICE_TYPE::RENDER_DEVICE_TYPE_D3D11;
+			bool DebugRenderAPI = false;
+			bool VSync = true;
+			bool AutoSelectRenderer = true;
 
 			//TODO: Move
 			Graphics::GraphicsEngineDesc mGraphicsEngineDesc;
@@ -26,35 +32,45 @@ namespace Nuclear
 		class NEAPI Engine
 		{
 		public:
+			//Engine(Engine const&) = delete;
+			//void operator=(Engine const&) = delete;
+
 			enum class State { Initializing, Loading, Rendering, ExitingRendering, Shuttingdown };
 
-			static bool Start(const EngineStartupDesc& desc);
+			bool Start(const EngineStartupDesc& desc);
 
-			static void Shutdown();
+			static Engine* GetInstance();
 
-			static void BeginFrame();
+			void Shutdown();
 
-			static void EndFrame();
+			void BeginFrame();
 
-			static void PollEvents();
+			void EndFrame();
 
-			static Window* GetMainWindow();
-			static void SetGame(Game* YourGame);
+			Window* GetMainWindow();
+			void SetGame(Game* YourGame);
 
-			static void LoadGame();
-			static void RunGame();
-			static void EndGame();
+			void LoadGame();
+			void RunGame();
+			void EndGame();
 
-			static void SetState(const State& state);
+			void SetState(const State& state);
 
-			static bool ShouldClose();
+			bool ShouldClose();
 
-			static bool isDebug();
+			bool isDebug();
 
-			static Game *GetGame();
+			Game *GetGame();
 
 		private:
-			static void Game_Loop_Render();
+			//Engine() {}
+			Game* GamePtr;
+			Game Defaultgame;
+			Core::Window MainWindow;
+
+			Engine::State Engine_State;
+			bool gisDebug = DEBUG_TRUE_BOOL;
+			void Game_Loop_Render();
 		};
 
 	}

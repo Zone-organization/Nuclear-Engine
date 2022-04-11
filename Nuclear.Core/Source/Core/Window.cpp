@@ -21,15 +21,12 @@ namespace Nuclear
 				return false;
 			}
 
-			mInput.Initialize(this);
-
 			return true;
 		}
 		void Window::Destroy()
 		{
 			glfwDestroyWindow(mWindow);
 		}
-
 
 		void Window::Display(bool show)
 		{
@@ -50,18 +47,26 @@ namespace Nuclear
 		}
 		void Window::GetSize(int& width, int& height)
 		{
-			glfwGetWindowSize(mWindow, &width, &height);
+			width = mWidth;
+			height = mHeight;
 		}
+
 		Float32 Window::GetAspectRatioF32()
 		{
 			int width = 800, height = 600;
 			GetSize(width, height);
-			return static_cast<float>(width) / static_cast<float>(height);
+			return  static_cast<float>(width) / static_cast<float>(height);
+		}
+
+		void Window::UpdateSize()
+		{
+			glfwGetWindowSize(mWindow, &mWidth, &mHeight);
 		}
 
 		void Window::SetSize(Uint32 width, Uint32 height)
 		{
 			glfwSetWindowSize(mWindow, width, height);
+			UpdateSize();
 		}
 		void Window::SetTitle(const std::string& title)
 		{
@@ -80,14 +85,30 @@ namespace Nuclear
 		{
 			return glfwTerminate();
 		}
-		void Window::PollEventsGLFW()
+		void Window::PollEvents()
 		{
 			return glfwPollEvents();
 		}
 
-		Input * Window::GetInput()
+		Window::KeyboardKeyStatus Window::GetKeyStatus(KeyboardKey key)
 		{
-			return &mInput;
+			return static_cast<KeyboardKeyStatus>(glfwGetKey(mWindow, static_cast<int>(key)));
+		}
+		void Window::SetMouseInputMode(const MouseInputMode& mode)
+		{
+			switch (mode)
+			{
+			case MouseInputMode::Normal:
+				return glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			case MouseInputMode::Virtual:
+				return glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			case MouseInputMode::Hidden:
+				return glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			}
+		}
+		void Window::GetMousePosition(double* xpos, double* ypos)
+		{
+			glfwGetCursorPos(mWindow, xpos, ypos);
 		}
 		GLFWwindow * Window::GetRawWindowPtr()
 		{

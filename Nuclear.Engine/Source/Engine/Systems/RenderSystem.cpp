@@ -271,7 +271,7 @@ namespace Nuclear
 
 		void RenderSystem::InstantRender(const Components::MeshComponent &object)
 		{
-			if (Core::Engine::isDebug())
+			if (Core::Engine::GetInstance()->isDebug())
 			{
 				if (object.mMesh == nullptr)
 				{

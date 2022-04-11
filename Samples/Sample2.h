@@ -9,8 +9,6 @@ class Sample2 : public Core::Game
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 
-
-	Core::Input Input;
 	Managers::CameraManager SceneCameraManager;
 
 	//Assets::Mesh* SponzaAsset;
@@ -104,7 +102,7 @@ public:
 		ECamera.AddComponent<Components::SpotLightComponent>();
 		Camera = &ECamera.AddComponent<Components::CameraComponent>();
 
-		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		SceneCameraManager.Initialize(Camera);
 
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -196,7 +194,7 @@ public:
 		Camera->HDR = true;
 		Camera->MovementSpeed = 15;
 
-		Core::Engine::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
+		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
@@ -223,33 +221,33 @@ public:
 	}
 	void OnWindowResize(int width, int height) override
 	{
-		Graphics::Context::GetSwapChain()->Resize(width, height);
-		Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Camera->ResizeRenderTarget(width, height);
+		//Graphics::Context::GetSwapChain()->Resize(width, height);
+		//Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), 0.0f, 0.1f, 100.0f));
+		//Camera->ResizeRenderTarget(width, height);
 	}
 
 	void Update(float deltatime) override
 	{
 		//Movement
-		if (Core::Engine::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Core::Engine::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Core::Engine::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Core::Engine::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//Change Mouse Mode
-		if (Core::Engine::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
 			isMouseDisabled = true;
-			Core::Engine::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
+			Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 		}
-		if (Core::Engine::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_M) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_M) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
 			isMouseDisabled = false;
-			Core::Engine::GetMainWindow()->GetInput()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
+			Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 		}
 
 		Camera->Update();
@@ -301,7 +299,7 @@ public:
 			PhysX::RaycastHit hit;
 			if (ImGui::TreeNode("Raycast Info"))
 			{
-				if (Core::Engine::GetMainWindow()->GetInput()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
+				if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
 				{
 
 					if (mPhysXSystem->Raycast(Camera->GetPosition(), Camera->GetFrontView(), 100.f, hit))
@@ -339,7 +337,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::EndGame();
+				return Core::Engine::GetInstance()->EndGame();
 			}
 
 			ImGui::End();

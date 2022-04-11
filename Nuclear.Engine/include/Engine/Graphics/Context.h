@@ -1,12 +1,11 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Core/ApplicationDesc.h>
+#include <Core\Window.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/EngineFactory.h>
-
 #include "Engine\Graphics\GraphicsEngine.h"
 
 namespace Nuclear
@@ -16,7 +15,7 @@ namespace Nuclear
 		class NEAPI Context
 		{
 		public:
-			static bool Initialize(const Core::ApplicationDesc & AppDesc, const Graphics::GraphicsEngineDesc& GraphicsDesc);
+			static bool Initialize(RENDER_DEVICE_TYPE renderapi, const Graphics::GraphicsEngineDesc& GraphicsDesc);
 
 			static void ShutDown();
 

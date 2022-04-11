@@ -1,6 +1,6 @@
 #pragma once
-#include <Core\ApplicationDesc.h>
 #include <Core\Input.h>
+#include <string>
 
 struct GLFWwindow;
 namespace Nuclear
@@ -16,12 +16,12 @@ namespace Nuclear
 			std::string Title = "NuclearEngine";
 		};
 
-		class Window
+		class Window : Input
 		{
 		public:
 			static bool InitializeGLFW();
 			static void ShutdownGLFW();
-			static void PollEventsGLFW();
+			void PollEvents();
 
 			bool Create(const WindowDesc& desc);
 			void Destroy();
@@ -32,16 +32,22 @@ namespace Nuclear
 			void GetSize(int& width, int& height);
 			Float32 GetAspectRatioF32();
 
+			void UpdateSize();
 			void SetSize(Uint32 width, Uint32 height);
 			void SetTitle(const std::string& title);
 
 			bool ShouldClose();
 
-			Input* GetInput();
+			KeyboardKeyStatus GetKeyStatus(KeyboardKey key) override;
+
+			void SetMouseInputMode(const MouseInputMode& mode) override;
+
+			void GetMousePosition(double* xpos, double* ypos) override;
+
 			GLFWwindow* GetRawWindowPtr();
 		private:
 			GLFWwindow* mWindow;
-			Input mInput;
+			int mWidth, mHeight;
 		};
 	}
 }
