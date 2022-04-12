@@ -9,9 +9,7 @@ namespace Nuclear
 		class NEAPI EntityInfoComponent
 		{
 		public:
-			EntityInfoComponent();
-			EntityInfoComponent(Math::Matrix4 Transform);
-			EntityInfoComponent(Math::Vector3 position, Math::Quaternion rotation);
+			EntityInfoComponent(const ECS::Transform& Transform = ECS::Transform(), const std::string& name = "Entity");
 			~EntityInfoComponent();
 
 			ECS::Entity mOwnerEntity;

@@ -10,44 +10,45 @@ namespace Nuclear
 		class NEAPI Transform
 		{
 		public:
-			Transform();
-			Transform(Math::Matrix4 Transform);
-			Transform(Math::Vector3 position, Math::Quaternion rotation);
+			enum TransformChanged : Byte
+			{
+				NONE = 0,
+				TRANSLATION = 1,
+				ROTATION = 2,
+				SCALE = 4,
+				ALL = 7
+			};
+
+			Transform(Math::Vector3 position = Math::Vector3(0.0f), Math::Vector3 scale = Math::Vector3(1.0f), Math::Quaternion rotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
 			~Transform();
 
 			void SetPosition(Math::Vector3 position);
 			void SetRotation(Math::Quaternion rotation);
+			void SetRotation(const Math::Vector3& axis, float angle);
+			void SetRotation(const Math::Vector3& eular);
+
 			void SetScale(Math::Vector3 scale);
-			void SetScale(float scale);
+
 			Math::Vector3 GetLocalPosition();
 			Math::Quaternion GetLocalRotation();
+			Math::Vector3 GetLocalRotationEular();
 			Math::Vector3 GetLocalScale();
 
 			Math::Vector3 GetWorldPosition();
-			Math::Quaternion GetWorldRotation();
-			Math::Vector3 GetWorldScale();
 
-			void SetTransform(Math::Matrix4 _Transform);
-			Math::Matrix4 GetTransform();
+			Math::Matrix4 GetWorldMatrix();
 
 			void Update();
-
-			//void Update(Math::Matrix4 parent);
-
-			float* GetWorldPositionPtr();
-
 		private:
-			Math::Matrix4 mTransformMatrix = Math::Matrix4(1.0f);
 
-			Math::Vector3 mPosition = Math::Vector3(0.0f);
-			Math::Quaternion mRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			Math::Vector3 mScale = Math::Vector3(.0f);
+			Math::Vector3 mLocalPosition;
+			Math::Quaternion mLocalRotation;
+			Math::Vector3 mLocalScale;
 
 			Math::Vector3 mWorldPosition = Math::Vector3(0.0f);
-			Math::Quaternion mWorldRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			Math::Vector3 mWorldScale = Math::Vector3(0.0f);
 
-			bool mDirty;
+			Math::Matrix4 mWorldMatrix = Math::Matrix4(1.0f);
+			Byte mDirty = NONE;
 		};
 	}
 }

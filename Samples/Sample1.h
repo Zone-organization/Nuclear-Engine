@@ -175,12 +175,27 @@ public:
 	void SetupEntities()
 	{
 		//Create Entities
-		ECube = ModelsScene.CreateEntity();
-		ENanosuit = ModelsScene.CreateEntity();
-		ECyborg = ModelsScene.CreateEntity();
-		EBob = ModelsScene.CreateEntity();
-		EVampire = ModelsScene.CreateEntity();
-		ELights = ModelsScene.CreateEntity();
+		ECS::Transform TNansosuit, TCyborg, TBob, TVampire, TCube;
+		TNansosuit.SetPosition(Math::Vector3(0.0f, -1.75f, 0.0f));
+		TNansosuit.SetScale(Math::Vector3(0.3f, 0.3f, 0.3f));
+
+		TCyborg.SetPosition(Math::Vector3(4.0f, -1.75f, 0.0f));
+
+		TBob.SetPosition(Math::Vector3(-4.0f, -1.75f, 0.0f));
+		TBob.SetScale(Math::Vector3(0.07f, 0.07f, 0.07f));
+
+		TVampire.SetPosition(Math::Vector3(-4.0f, -1.75f, 4.0f));
+		TVampire.SetScale(Math::Vector3(0.02f, 0.02f, 0.02f));
+
+		TCube.SetPosition(Math::Vector3(2.0f, -1.75f, 2.0f));
+		TCube.SetScale(Math::Vector3(2.f, 2.f, 2.f));
+
+		ECube = ModelsScene.CreateEntity("Cube", TCube);
+		ENanosuit = ModelsScene.CreateEntity("Nanosuit", TNansosuit);
+		ECyborg = ModelsScene.CreateEntity("Cyborg", TCyborg);
+		EBob = ModelsScene.CreateEntity("Bob", TBob);
+		EVampire = ModelsScene.CreateEntity("Vampire" , TVampire);
+		ELights = ModelsScene.CreateEntity("Lights");
 
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ELights.AddComponent<Components::DirLightComponent>();
@@ -222,30 +237,6 @@ public:
 		InitRenderer();
 
 		SetupAssets();
-
-		//Setup positions
-		Math::Matrix4 TNanosuit(1.0f);
-		TNanosuit = Math::translate(TNanosuit, Math::Vector3(0.0f, -1.75f, 0.0f));
-		TNanosuit = Math::scale(TNanosuit, Math::Vector3(0.3f, 0.3f, 0.3f));
-		ENanosuit.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TNanosuit);
-
-		Math::Matrix4 TCyborg(1.0f);
-		TCyborg = Math::translate(TCyborg, Math::Vector3(4.0f, -1.75f, 0.0f));
-		ECyborg.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCyborg);
-		
-		Math::Matrix4 TBob(1.0f);
-		TBob = Math::translate(TBob, Math::Vector3(-4.0f, -1.75f, 0.0f));
-		TBob = Math::scale(TBob, Math::Vector3(0.07f, 0.07f, 0.07f));
-		EBob.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TBob);
-		
-		Math::Matrix4 TVampire(1.0f);
-		TVampire = Math::translate(TVampire, Math::Vector3(-4.0f, -1.75f, 4.0f));
-		TVampire = Math::scale(TVampire, Math::Vector3(0.02f, 0.02f, 0.02f));
-		EVampire.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TVampire);
-
-		Math::Matrix4 TCube(1.0f);
-		TCube = Math::translate(TCube, Math::Vector3(2.0f, -1.75f, 2.0f));
-		ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCube);
 
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;

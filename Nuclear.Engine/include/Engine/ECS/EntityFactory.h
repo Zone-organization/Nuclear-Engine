@@ -17,11 +17,11 @@ namespace Nuclear
 		public:
 			EntityFactory(ECS::Scene* ParentScene);
 
-			Entity CreateBox(Assets::Material* material, ECS::Transform t);
+			Entity CreateBox(Assets::Material* material,const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 
-			Entity CreateSphere(Assets::Material* material, ECS::Transform t);
+			Entity CreateSphere(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 
-			Entity CreatePlane(Assets::Material* material, ECS::Transform t);
+			Entity CreatePlane(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 
 		protected:
 

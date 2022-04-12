@@ -139,12 +139,9 @@ namespace Nuclear
 				outhit.position = PhysX::From(hit.block.position);
 				outhit.normal = PhysX::From(hit.block.normal);
 				outhit.distance = hit.block.distance;
-				//(entt::entity)hit.block.actor->userData;
-
 				outhit.HitEntity.parent = &mScene->GetRegistry();
 				outhit.HitEntity.entity = (entt::entity&)hit.block.actor->userData;
 					
-				//outhit.HitEntity = mScene->Entities.Get(ECS::Entity::Id((uint64_t)hit.block.actor->userData));
 				outhit.valid = true;
 				return true;
 			}
@@ -167,7 +164,13 @@ namespace Nuclear
 				{
 					RigidBodyObj.SetisKinematic(RigidBodyObj.isKinematic);
 				}
-				mScene->GetRegistry().try_get<Components::EntityInfoComponent>(entity)->mTransform.SetTransform(PhysX::From(RigidBodyObj.GetActor().mPtr->getGlobalPose()));
+				if (!RigidBodyObj.isKinematic)
+				{
+					auto Einfo = mScene->GetRegistry().try_get<Components::EntityInfoComponent>(entity);
+
+					Einfo->mTransform.SetPosition(PhysX::From(RigidBodyObj.GetActor().mPtr->getGlobalPose().p));
+					Einfo->mTransform.SetRotation(PhysX::From(RigidBodyObj.GetActor().mPtr->getGlobalPose().q));
+				}
 			}
 		}
 	}

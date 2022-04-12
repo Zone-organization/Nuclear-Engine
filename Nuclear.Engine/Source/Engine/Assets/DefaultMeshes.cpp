@@ -14,7 +14,7 @@ namespace Nuclear
 			gPlane = new Assets::Mesh();
 			Assets::Mesh::CreateCube(gCube);
 			Assets::Mesh::CreateSphere(gSphere);
-			Assets::Mesh::CreatePlane(gPlane);
+			Assets::Mesh::CreatePlane(gPlane, 50.f, 50.f);
 
 			gCube->SetName("Default Cube");
 			gSphere->SetName("Default Sphere");

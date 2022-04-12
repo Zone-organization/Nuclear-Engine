@@ -31,12 +31,9 @@ class Sample2 : public Core::Game
 	ECS::Scene Scene;
 	//ECS::Entity ESponza;
 	//ECS::Entity ECerberus;
-	ECS::Entity EPlane;
 
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
-
-	Assets::Mesh gPlane;
 
 	std::vector<ECS::Entity> boxes;
 
@@ -67,7 +64,7 @@ public:
 		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
 		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
 		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
 
 		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
@@ -77,11 +74,15 @@ public:
 		//ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
 		//ECerberus.Assign<Components::MeshComponent>(CerberusAsset, CerberusMaterial);
 
-		Assets::TextureSet PlaneSet;
-		PlaneSet.mData.push_back({ 0, Managers::AssetManager::DefaultGreyTex });
+		Assets::TextureSet PBRPlaneSet;
+		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRPlaneSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRPlaneSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRPlaneSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRPlaneSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
 
-		PlaneMaterial.mPixelShaderTextures.push_back(PlaneSet);
-
+		PlaneMaterial.mPixelShaderTextures.push_back(PBRPlaneSet);
+		PlaneMaterial.SetName("Plane Material");
 		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
 
 		PBRSphereSet.mData.clear();
@@ -93,7 +94,6 @@ public:
 		ELights = Scene.CreateEntity("Lights");
 		ECamera = Scene.CreateEntity("Controller");
 		//ECerberus = Scene.CreateEntity();
-		EPlane = Scene.CreateEntity("Plane");
 
 		//Assign Components
 	
@@ -115,10 +115,12 @@ public:
 	}
 	void InitRenderer()
 	{
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&SceneCameraManager);
 		Systems::PhysXSystemDesc sceneDesc;
 		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
 		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
+
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&SceneCameraManager);
+
 
 		//Scene.Systems.Configure();
 		Renderer->AddRenderingPipeline(&PBR);
@@ -146,29 +148,44 @@ public:
 		{
 			for (int col = 0; col < nrColumns; ++col)
 			{
-				model = Math::Matrix4(1.0);
-				model = Math::translate(model, Math::Vector3(
-					(float)(col - (nrColumns / 2)) * spacing ,
-					(float)(row - (nrRows / 2)) * spacing ,
+				//model = Math::Matrix4(1.0);
+				//model = Math::translate(model, Math::Vector3(
+				//	(float)(col - (nrColumns / 2)) * spacing ,
+				//	(float)(row - (nrRows / 2)) * spacing ,
+				//	0.0f
+				//));
+				//model = Math::scale(model, Math::Vector3(2.0f));
+				//model = Math::translate(model, Math::Vector3(1.0f,5.0f,1.0f));
+				Math::Vector3 position(
+					(float)(col - (nrColumns / 2)) * spacing,
+					((float)(row - (nrRows / 2)) * spacing) + 10.0f,
 					0.0f
-				));
-				model = Math::scale(model, Math::Vector3(2.0f));
-				model = Math::translate(model, Math::Vector3(1.0f,5.0f,1.0f));
-				Scene.GetFactory().CreateSphere(&SphereMaterial, Math::translate(model, Math::Vector3(1.0f, 5.0f, 1.0f)));
-				boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, model));
+				);
+
+
+				ECS::Transform ESphere(position, Math::Vector3(1.0f));
+
+				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere);
+				position.z += 5.0f;
+
+				ECS::Transform EBox(position, Math::Vector3(1.0f));
+
+				boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, EBox));
 			}
 		}
+
+		Scene.GetFactory().CreatePlane(&PlaneMaterial);
 		for (auto it : boxes)
 		{
 			it.GetComponent<Components::RigidBodyComponent>()->isKinematic = true;
 		}
-		Math::Matrix4 TSponza(1.0f);
-		TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
-		//ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
+		//Math::Matrix4 TSponza(1.0f);
+		//TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
+		////ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
 
-		Math::Matrix4 TCerberus(1.0f);
-		TCerberus = Math::scale(TCerberus, Math::Vector3(0.05f));
-		//ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
+		//Math::Matrix4 TCerberus(1.0f);
+		//TCerberus = Math::scale(TCerberus, Math::Vector3(0.05f));
+		////ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
 
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
@@ -177,18 +194,6 @@ public:
 		Camera->Bake(Desc);
 
 		Camera->RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
-
-		Assets::Mesh::CreatePlane(&gPlane, 100.0f, 100.0f);
-
-		//Assign Components
-		EPlane.AddComponent<Components::MeshComponent>(&gPlane, &PlaneMaterial);
-		Components::ColliderDesc desc;
-		desc.mShape = Components::ColliderShape::Plane;
-		auto geo =	PhysX::PlaneGeometry(ECS::Transform());
-		desc.mGeo = &geo;
-		EPlane.AddComponent<Components::ColliderComponent>(desc);
-
-		mPhysXSystem->AddActor(EPlane);
 
 		Camera->GammaCorrection = true;
 		Camera->HDR = true;
@@ -221,9 +226,9 @@ public:
 	}
 	void OnWindowResize(int width, int height) override
 	{
-		//Graphics::Context::GetSwapChain()->Resize(width, height);
-		//Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), 0.0f, 0.1f, 100.0f));
-		//Camera->ResizeRenderTarget(width, height);
+		Graphics::Context::GetSwapChain()->Resize(width, height);
+		Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera->ResizeRenderTarget(width, height);
 	}
 
 	void Update(float deltatime) override
@@ -409,32 +414,30 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 		ImGui::InputText("Name", (char*)Einfo.mName.c_str(), Einfo.mName.capacity() + 1);
 		if (ImGui::CollapsingHeader("Transform"))
 		{
-			//auto* transform = &Einfo.mTransform;
+			Components::EntityInfoComponent* transform = reg.try_get< Components::EntityInfoComponent>(entity);
 
-			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
-			if (ImGui::BeginTabBar("Transformtab", tab_bar_flags))
+			Math::Vector3 pos = transform->mTransform.GetLocalPosition();
+			ImGui::DragFloat3("Position", (float*)&pos, 0.2f);
+			if (pos != transform->mTransform.GetLocalPosition())
 			{
-				if (ImGui::BeginTabItem("Local"))
-				{
-					/*ImGui::DragFloat3("Position", (float*)&transform->GetLocalPosition());
-					ImGui::DragFloat3("Rotation", (float*)&transform->GetLocalRotation());
-					ImGui::DragFloat3("Scale", (float*)&transform->GetLocalScale());*/
-					ImGui::EndTabItem();
-				}
-				if (ImGui::BeginTabItem("World"))
-				{
-					//Math::Vector3 pos = transform->GetWorldPosition();
-					//ImGui::DragFloat3("Position", (float*)&pos);
-					//auto test = Einfo.Get();
-					//test->mTransform.SetTransform(Math::translate(test->mTransform.GetTransform(), pos));
+				transform->mTransform.SetPosition(pos);
+			}
 
-					/*ImGui::DragFloat3("Rotation", (float*)&transform->GetWorldRotation());
-					ImGui::DragFloat3("Scale", (float*)&transform->GetWorldScale());*/
-					ImGui::EndTabItem();
-				}
-				ImGui::EndTabBar();
+			Math::Vector3 rot = transform->mTransform.GetLocalRotationEular();
+			ImGui::DragFloat3("Rotation", (float*)&rot, 0.2f);
+			if (rot != transform->mTransform.GetLocalRotationEular())
+			{
+				transform->mTransform.SetRotation(rot);
+			}
+
+			Math::Vector3 scale = transform->mTransform.GetLocalScale();
+			ImGui::DragFloat3("Scale", (float*)&scale, 0.2f);
+			if (scale != transform->mTransform.GetLocalScale())
+			{
+				transform->mTransform.SetScale(scale);
 			}
 		}
+		
 
 		//Collider
 		{

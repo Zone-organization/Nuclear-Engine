@@ -17,7 +17,7 @@ namespace Nuclear
 
 			//Creates a new entity and assign a transform component to it automatically
 			Entity CreateEntity();
-			Entity CreateEntity(const char* name);
+			Entity CreateEntity(const std::string& name, const ECS::Transform& transform = ECS::Transform());
 
 			std::string GetName();
 

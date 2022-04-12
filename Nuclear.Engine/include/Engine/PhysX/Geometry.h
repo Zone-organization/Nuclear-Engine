@@ -8,7 +8,7 @@ namespace Nuclear
 		class NEAPI PhysicsGeometry
 		{
 		public:
-			PhysicsGeometry(ECS::Transform& Transform_)
+			PhysicsGeometry(const ECS::Transform& Transform_)
 				: mTransform(Transform_)
 			{
 
@@ -19,7 +19,7 @@ namespace Nuclear
 		class NEAPI BoxGeometry : public PhysicsGeometry
 		{
 		public:			
-			BoxGeometry(Math::Vector3 halfExtents_, ECS::Transform& Transform_) : PhysicsGeometry(Transform_), mHalfExtents(halfExtents_) {}
+			BoxGeometry(Math::Vector3 halfExtents_, const ECS::Transform& Transform_) : PhysicsGeometry(Transform_), mHalfExtents(halfExtents_) {}
 
 			Math::Vector3 mHalfExtents;
 		};
@@ -28,14 +28,14 @@ namespace Nuclear
 		{
 		public:
 
-			PlaneGeometry(ECS::Transform Transform_) : PhysicsGeometry(Transform_) {}
+			PlaneGeometry(const ECS::Transform& Transform_) : PhysicsGeometry(Transform_) {}
 		};
 
 		class NEAPI SphereGeometry : public PhysicsGeometry
 		{
 		public:
 
-			SphereGeometry(float radius_, ECS::Transform Transform_) : radius(radius_), PhysicsGeometry(Transform_) {}
+			SphereGeometry(float radius_, const ECS::Transform& Transform_) : radius(radius_), PhysicsGeometry(Transform_) {}
 
 			float radius;
 		};

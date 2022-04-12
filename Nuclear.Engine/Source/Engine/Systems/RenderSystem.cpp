@@ -178,7 +178,8 @@ namespace Nuclear
 					if (!MeshObject.mMultiRender)
 					{
 						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetTransform());
+						EntityInfo.mTransform.Update();
+						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
 						mCameraManager->UpdateBuffer();
 
 						auto AnimatorComponent = mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);

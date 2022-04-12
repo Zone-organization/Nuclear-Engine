@@ -45,6 +45,11 @@ namespace Nuclear
 			return *(Math::Vector3*)& vec;
 		}
 
+		inline const  Math::Quaternion& From(const physx::PxQuat& vec)
+		{
+			return *(Math::Quaternion*)&vec;
+		}
+
 		inline const  Math::Vector4& From(const physx::PxVec4& vec)
 		{
 			return *(Math::Vector4*)& vec;

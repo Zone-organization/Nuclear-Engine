@@ -26,14 +26,13 @@ namespace Nuclear
 
 			return result;
 		}
-		Entity Scene::CreateEntity(const char* name)
+		Entity Scene::CreateEntity(const std::string& name, const ECS::Transform& transform)
 		{
 			Entity result;
 			result.entity = Registry.create();
 			result.parent = &Registry;
-			auto &einfo = result.AddComponent<Components::EntityInfoComponent>();
+			auto& einfo = result.AddComponent<Components::EntityInfoComponent>(transform, name);
 			einfo.mOwnerEntity = result;
-			einfo.mName = name;
 
 			return result;
 		}

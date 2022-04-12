@@ -56,7 +56,7 @@ class Sample3 : public Core::Game
 
 		mPhysXSystem->AddActor(EPlane);
 
-		EScriptOwner = Scene.GetFactory().CreateBox(&CubeMaterial,ECS::Transform());
+		//EScriptOwner = Scene.GetFactory().CreateBox(&CubeMaterial,ECS::Transform());
 		auto sc = EScriptOwner.AddComponent<Components::ScriptComponent>();
 		sc.script = &script;
 
@@ -182,10 +182,8 @@ class Sample3 : public Core::Game
 
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_SPACE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
-			auto ECube = Scene.GetFactory().CreateBox(&CubeMaterial, ECS::Transform(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)));
-			Math::Matrix4 TCube(1.0f);
-			TCube = Math::translate(TCube, Camera.GetPosition());
-			ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCube);
+			//auto ECube = Scene.GetFactory().CreateBox(&CubeMaterial, ECS::Transform(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)));
+		//	ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
 		}
 
 		{

@@ -5,34 +5,21 @@ namespace Nuclear
 {
 	namespace ECS
 	{
-		Transform::Transform()
-		{
-			mTransformMatrix = Math::Matrix4(1.0f);
-			mPosition = Math::Vector3(0.0f);
-			mRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			mScale = Math::Vector3(0.0f);
-			mDirty = true;
-			mWorldPosition = Math::Vector3(0.0f);
-			mWorldRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			mWorldScale = Math::Vector3(0.0f);
-		}
+		//Transform::Transform(Math::Matrix4 Transform)
+		//{
+		//	mDirty = true;
+		//	mWorldMatrix = Transform;
+		//}
 
-		Transform::Transform(Math::Matrix4 Transform)
+		Transform::Transform(Math::Vector3 position, Math::Vector3 scale, Math::Quaternion rotation)
 		{
-			mDirty = true;
-			mTransformMatrix = Transform;
-		}
-
-		Transform::Transform(Math::Vector3 position, Math::Quaternion rotation)
-		{
-			mTransformMatrix = Math::Matrix4(1.0f);
-			mPosition = position;
-			mRotation = rotation;
-			mScale = Math::Vector3(0.0f);
-			mDirty = true;
+			mWorldMatrix = Math::Matrix4(1.0f);
+			mLocalPosition = position;
+			mLocalRotation = rotation;
+			mLocalScale = scale;
+			mDirty = ALL;
 			mWorldPosition = Math::Vector3(0.0f);
-			mWorldRotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			mWorldScale = Math::Vector3(0.0f);
+			Update();
 		}
 
 		Transform::~Transform()
@@ -41,97 +28,91 @@ namespace Nuclear
 
 		void Transform::SetPosition(Math::Vector3 position)
 		{
-			mPosition = position;
-			mDirty = true;
+			mLocalPosition = position;
+			mDirty = TRANSLATION;
+			Update();
 		}
 
 		void Transform::SetRotation(Math::Quaternion rotation)
 		{
-			mRotation = rotation;
-			mDirty = true;
+			mLocalRotation = rotation;
+			mDirty = ROTATION;
+		}
+
+		void Transform::SetRotation(const Math::Vector3& axis, float angle)
+		{
+			mLocalRotation = glm::angleAxis(glm::degrees(angle), axis);
+			mDirty = ROTATION;
+		}
+
+		void Transform::SetRotation(const Math::Vector3& eular)
+		{
+			mLocalRotation = Math::Quaternion(eular);
+			mDirty = ROTATION;
 		}
 
 		void Transform::SetScale(Math::Vector3 scale)
 		{
-			mScale = scale;
-			mDirty = true;
-		}
-
-		void Transform::SetScale(float scale)
-		{
-			mScale = Math::Vector3(scale);
-			mDirty = true;
+			mLocalScale = scale;
+			mDirty = SCALE;
 		}
 
 		Math::Vector3 Transform::GetLocalPosition()
 		{
-			return mPosition;
+			return mLocalPosition;
 		}
 
 		Math::Quaternion Transform::GetLocalRotation()
 		{
-			return mRotation;
+			return mLocalRotation;
+		}
+
+		Math::Vector3 Transform::GetLocalRotationEular()
+		{
+			return glm::eulerAngles(mLocalRotation);
 		}
 
 		Math::Vector3 Transform::GetLocalScale()
 		{
-			return mScale;
+			return mLocalScale;
 		}
 
-		Math::Matrix4 Transform::GetTransform()
-		{
-			return mTransformMatrix;
-		}
 		Math::Vector3 Transform::GetWorldPosition()
 		{
-			Math::Matrix4 transform = GetTransform();
-			Math::Vector4 pos = transform * Math::Vector4(mPosition, 1.0f);
-			mWorldPosition = Math::Vector3(pos.x, pos.y, pos.z);
 			return mWorldPosition;
 		}
 
-		Math::Quaternion Transform::GetWorldRotation()
+		Math::Matrix4 Transform::GetWorldMatrix()
 		{
-			return mWorldRotation;
+			return mWorldMatrix;
 		}
 
-		Math::Vector3 Transform::GetWorldScale()
-		{
-			Math::Matrix4 transform = GetTransform();
-			Math::Vector3 scale = Math::Vector3(transform[0][0], transform[1][1], transform[2][2]);
-			if (scale.x < 0.0f) scale.x *= -1.0f;
-			if (scale.y < 0.0f) scale.y *= -1.0f;
-			if (scale.z < 0.0f) scale.z *= -1.0f;
-			mWorldScale = scale;
-			return mWorldScale;
-		}
-		void Transform::SetTransform(Math::Matrix4 _Transform)
-		{
-			mTransformMatrix = _Transform;
-		}
 		void Transform::Update()
 		{
-			if (mDirty)
-			{
-				mTransformMatrix = Math::translate(mTransformMatrix, mPosition);
-				mTransformMatrix = Math::scale(mTransformMatrix, mScale);
-				mTransformMatrix *= Math::toMat4(mRotation);
-				mWorldPosition = GetWorldPosition();
-				mWorldScale = GetWorldScale();
-				mDirty = false;
-			}
+
+			Math::Matrix4 model(1.0f);
+			model = Math::translate(model, mLocalPosition);
+			model = Math::scale(model, mLocalScale);
+			model = model * Math::toMat4(mLocalRotation);
+
+			mWorldMatrix = model;
+
+			mWorldPosition = mWorldMatrix[3];
+
+			mDirty = TransformChanged::NONE;
 		}
-		float* Transform::GetWorldPositionPtr()
-		{
-			return (float*)&mWorldPosition;
-		}
-		/*void Transform::Update(Math::Matrix4 parent)
-		{
-			Update();
-			if (mDirty)
-			{
-				mTransformMatrix = parent * mTransformMatrix;
-			}
-		}*/
+
+		
+
+		//Math::Vector3 Transform::GetWorldScale()
+		//{
+		//	Math::Matrix4 transform = GetTransform();
+		//	Math::Vector3 scale = Math::Vector3(transform[0][0], transform[1][1], transform[2][2]);
+		//	if (scale.x < 0.0f) scale.x *= -1.0f;
+		//	if (scale.y < 0.0f) scale.y *= -1.0f;
+		//	if (scale.z < 0.0f) scale.z *= -1.0f;
+		//	mWorldScale = scale;
+		//	return mWorldScale;
+		//}
 	}
 }

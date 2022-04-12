@@ -96,7 +96,8 @@ namespace Nuclear
 			if (!SwapRedBlue32(bitmap))
 			{
 				Log.Error("[FreeImageImporter] Failed To Load: " + Path + " , SwapRedBlue32 Failed..\n");
-				return Assets::ImageData();
+				bitmap = dib;
+				//return Assets::ImageData();
 			}
 			Assets::ImageData result;
 			result.mData = FreeImage_GetBits(bitmap);
