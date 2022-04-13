@@ -5,17 +5,16 @@
 
 namespace Nuclear
 {
-	namespace Managers
+	namespace Systems
 	{
 		//Control all created camera and the main camera constant buffer
 		//Main Camera 'MUST BE' Active
-		class NEAPI CameraManager
+		class NEAPI CameraSubSystem
 		{
 		public:
-			CameraManager();
-			~CameraManager();
+			CameraSubSystem(Components::Camera* Camera);
+			~CameraSubSystem();
 
-			void Initialize(Components::Camera* Camera);
 			void UpdateBuffer();
 
 			void SetMainCamera(Components::Camera* Camera);

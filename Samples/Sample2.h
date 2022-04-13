@@ -9,8 +9,6 @@ class Sample2 : public Core::Game
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 
-	Managers::CameraManager SceneCameraManager;
-
 	//Assets::Mesh* SponzaAsset;
 	//Assets::Material* SponzaMaterial;
 
@@ -23,6 +21,7 @@ class Sample2 : public Core::Game
 	Components::CameraComponent* Camera;
 
 	Graphics::PBR PBR;
+	Graphics::PBR TestPBR;
 	Graphics::BlinnPhong BlinnPhong;
 	Graphics::DiffuseOnly DiffuseRP;
 	Graphics::WireFrame WireFrameRP;
@@ -103,7 +102,6 @@ public:
 		Camera = &ECamera.AddComponent<Components::CameraComponent>();
 
 		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		SceneCameraManager.Initialize(Camera);
 
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
@@ -119,11 +117,13 @@ public:
 		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
 		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&SceneCameraManager);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(Camera);
 
 
 		//Scene.Systems.Configure();
+		TestPBR.test = true;
 		Renderer->AddRenderingPipeline(&PBR);
+		Renderer->AddRenderingPipeline(&TestPBR);
 		Renderer->AddRenderingPipeline(&BlinnPhong);
 		Renderer->AddRenderingPipeline(&DiffuseRP);
 		Renderer->AddRenderingPipeline(&WireFrameRP);
@@ -163,14 +163,14 @@ public:
 				);
 
 
-				ECS::Transform ESphere(position, Math::Vector3(1.0f));
+				ECS::Transform ESphere(position, Math::Vector3(2.0f));
 
-				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere);
+				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere, false);
 				position.z += 5.0f;
 
-				ECS::Transform EBox(position, Math::Vector3(1.0f));
+				//ECS::Transform EBox(position, Math::Vector3(1.0f));
 
-				boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, EBox));
+				//boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, EBox));
 			}
 		}
 
@@ -190,7 +190,6 @@ public:
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
 		Desc.RTHeight = _Height_;
-		Desc.Disable_Bloom_Varient = true;
 		Camera->Bake(Desc);
 
 		Camera->RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
@@ -256,7 +255,7 @@ public:
 		}
 
 		Camera->Update();
-		SceneCameraManager.UpdateBuffer();
+		Renderer->GetCameraSubSystem().UpdateBuffer();
 
 		Camera->UpdatePSO();
 	}
@@ -283,6 +282,7 @@ public:
 				ImGui::RadioButton("BlinnPhong", &e, 1);
 				ImGui::RadioButton("DiffuseOnly", &e, 2);
 				ImGui::RadioButton("WireFrame", &e, 3);
+				ImGui::RadioButton("TestPBR", &e, 5);
 
 				//Change Rendering Pipeline
 				if (e == 0)
@@ -293,6 +293,8 @@ public:
 					Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
 				else if (e == 3)
 					Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
+				else if (e == 5)
+					Renderer->SetActiveRenderingPipeline(TestPBR.GetID());
 
 				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
@@ -496,7 +498,7 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 				{
 					Graphics::Color oldcolor = light->GetColor();
 					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
+					if (ImGui::ColorEdit4("Color", (float*)&Lightcolor))
 					{
 						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
 					}
@@ -527,7 +529,7 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 
 					Graphics::Color oldcolor = light->GetColor();
 					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
+					if (ImGui::ColorEdit4("Color", (float*)&Lightcolor))
 					{
 						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
 					}
@@ -575,7 +577,7 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 
 					Graphics::Color oldcolor = light->GetColor();
 					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-					if (ImGui::ColorEdit3("Color", (float*)&Lightcolor))
+					if (ImGui::ColorEdit4("Color", (float*)&Lightcolor))
 					{
 						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
 					}

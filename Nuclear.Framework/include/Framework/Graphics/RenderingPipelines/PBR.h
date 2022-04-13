@@ -12,7 +12,7 @@ namespace Nuclear
 		public:
 			PBR();
 			bool Bake(const RenderingPipelineDesc& desc) override;
-
+			bool test = false;
 		private:
 
 		};

@@ -183,9 +183,11 @@
     <ClInclude Include="include\Engine\ECS\EntityFactory.h" />
     <ClInclude Include="include\Engine\Graphics\Background.h" />
     <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />
+    <ClInclude Include="include\Engine\Graphics\Camera.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
-    <ClInclude Include="include\Engine\Graphics\NeoPipeline.h" />
+    <ClInclude Include="include\Engine\Graphics\ShaderEffect.h" />
+    <ClInclude Include="include\Engine\Graphics\CompoundPipeline.h" />
     <ClInclude Include="include\Engine\Graphics\Graphics.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\Skybox.h" />
@@ -198,7 +200,8 @@
     <ClInclude Include="include\Engine\Assets\Mesh.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
     <ClInclude Include="include\Engine\Graphics\RenderingPipeline.h" />
-    <ClInclude Include="include\Engine\Managers\CameraManager.h" />
+    <ClInclude Include="include\Engine\Managers\AssetLibrary.h" />
+    <ClInclude Include="include\Engine\Systems\CameraSubSystem.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
     <ClInclude Include="include\Engine\PhysX\RaycastHit.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptData.h" />
@@ -313,6 +316,8 @@
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShaderEffect.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
@@ -327,7 +332,7 @@
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Context.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_tables.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\NeoPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\CompoundPipeline.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderTarget.cpp" />
@@ -340,7 +345,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Managers\CameraManager.cpp" />
+    <ClCompile Include="Source\Engine\Systems\CameraSubSystem.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXShape.cpp" />

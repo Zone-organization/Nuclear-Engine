@@ -22,7 +22,7 @@ namespace Nuclear
 			bool CreateSRB;
 			bool InitSRBStaticResources;
 
-			//AUTO FILLED ON CREATING NEOPIPELINE
+			//AUTO FILLED ON CREATING CompoundPipeline
 			Uint32 mHashedName = 0;
 		};
 
@@ -34,7 +34,7 @@ namespace Nuclear
 			bool InitStaticResources = false;
 		};
 
-		struct NeoPipelineDesc
+		struct CompoundPipelineDesc
 		{
 			std::string mName;
 
@@ -55,25 +55,25 @@ namespace Nuclear
 			GraphicsPipelineDesc GraphicsPipeline;
 		};
 
-		struct PipelineWithSRB
+		struct PipelineVariant
 		{
 			RefCntAutoPtr<IPipelineState> PSO;
 			RefCntAutoPtr<IShaderResourceBinding> SRB;
 		};
 
-		class NEAPI NeoPipeline
+		class NEAPI CompoundPipeline
 		{
 		public:
-			NeoPipeline();
-			~NeoPipeline();
+			CompoundPipeline();
+			~CompoundPipeline();
 
-			std::vector<PipelineInstanceInfo> Create(const NeoPipelineDesc& Desc);
+			std::vector<PipelineInstanceInfo> Create(const CompoundPipelineDesc& Desc);
 
 			Uint32 GetHashedKey(const std::string Key);
-			PipelineWithSRB GetPipeline(Uint32 Key);
+			PipelineVariant GetVariant(Uint32 Key);
 		private:
 			std::vector<PipelineSwitch> mKeyChain;
-			std::unordered_map<Uint32, PipelineWithSRB> mPipelineStates;
+			std::unordered_map<Uint32, PipelineVariant> mVariants;
 		};
 	}
 }

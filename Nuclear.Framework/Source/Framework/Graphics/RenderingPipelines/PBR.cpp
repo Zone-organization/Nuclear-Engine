@@ -8,7 +8,9 @@ namespace Nuclear
 	{
 		PBR::PBR()
 		{
-			mID = Utilities::Hash("NE_PBR_NO_IBL");
+			static int id = 0;
+			mID = Utilities::Hash("NE_PBR_NO_IBL" + id);
+			id++;
 		}
 		bool PBR::Bake(const RenderingPipelineDesc& desc)
 		{
@@ -54,6 +56,11 @@ namespace Nuclear
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
 				
+
+				if (test = true) {
+					defines.push_back("TEST");
+				}
+
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;

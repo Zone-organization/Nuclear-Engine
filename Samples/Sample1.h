@@ -29,8 +29,6 @@ class Sample1 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 
-	Managers::CameraManager SceneCameraManager;
-
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
 	Assets::Mesh* BobAsset;
@@ -170,7 +168,7 @@ public:
 		Importers::ImageLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		auto test = mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
-		Skybox.Initialize(SceneCameraManager.GetCameraCB(), test);
+		Skybox.Initialize(Renderer->GetCameraSubSystem().GetCameraCB(), test);
 	}
 	void SetupEntities()
 	{
@@ -211,7 +209,7 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>(&SceneCameraManager);
+		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>(Camera);
 		//ModelsScene.Systems.Configure();
 
 		Renderer->AddRenderingPipeline(&BlinnPhongRP);
@@ -230,7 +228,6 @@ public:
 		Camera = &ECamera.AddComponent<Components::CameraComponent>();
 
 		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		SceneCameraManager.Initialize(Camera);
 
 		SetupEntities();
 
@@ -306,7 +303,7 @@ public:
 		}
 
 		Camera->Update();
-		SceneCameraManager.UpdateBuffer();
+		Renderer->GetCameraSubSystem().UpdateBuffer();
 	}
 	void Render(float dt) override
 	{

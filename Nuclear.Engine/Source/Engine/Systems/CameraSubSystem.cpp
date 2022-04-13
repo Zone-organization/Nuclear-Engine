@@ -1,18 +1,12 @@
-#include <Engine\Managers\CameraManager.h>
+#include <Engine\Systems\CameraSubSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 
 namespace Nuclear
 {
-	namespace Managers 
+	namespace Systems 
 	{
-		CameraManager::CameraManager()
-		{
-		}
-		CameraManager::~CameraManager()
-		{
-		}
-		void CameraManager::Initialize(Components::Camera* Camera)
+		CameraSubSystem::CameraSubSystem(Components::Camera* Camera)
 		{
 			BufferDesc CBDesc;
 			CBDesc.Name = "CameraCB";
@@ -25,25 +19,28 @@ namespace Nuclear
 			SetMainCamera(Camera);
 			ActiveCameras.push_back(Camera);
 		}
-		void CameraManager::UpdateBuffer()
+		CameraSubSystem::~CameraSubSystem()
+		{
+		}
+		void CameraSubSystem::UpdateBuffer()
 		{
 			Diligent::MapHelper<Components::CameraBuffer> CBConstants(Graphics::Context::GetContext(), mCameraCB, MAP_WRITE, MAP_FLAG_DISCARD);
 			*CBConstants = MainCamera->mCameraData;
 		}
-		void CameraManager::SetMainCamera(Components::Camera* Camera)
+		void CameraSubSystem::SetMainCamera(Components::Camera* Camera)
 		{
 			MainCamera = Camera;
 		}
-		void CameraManager::SetActiveCamera(Components::Camera* Camera)
+		void CameraSubSystem::SetActiveCamera(Components::Camera* Camera)
 		{
 			ActiveCameras.push_back(Camera);
 		}
-		void CameraManager::RegisterCamera(Components::Camera* Camera)
+		void CameraSubSystem::RegisterCamera(Components::Camera* Camera)
 		{
 			RegisteredCameras.push_back(Camera);
 
 		}
-		bool CameraManager::isRegisteredCamera(Components::Camera* Camera)
+		bool CameraSubSystem::isRegisteredCamera(Components::Camera* Camera)
 		{
 			for (auto it : RegisteredCameras)
 			{
@@ -52,7 +49,7 @@ namespace Nuclear
 			}
 			return false;
 		}
-		bool CameraManager::isActiveCamera(Components::Camera* Camera)
+		bool CameraSubSystem::isActiveCamera(Components::Camera* Camera)
 		{
 			for (auto it : ActiveCameras)
 			{
@@ -61,11 +58,11 @@ namespace Nuclear
 			}
 			return false;
 		}
-		Components::Camera* CameraManager::GetMainCamera()
+		Components::Camera* CameraSubSystem::GetMainCamera()
 		{
 			return MainCamera;
 		}
-		IBuffer* CameraManager::GetCameraCB()
+		IBuffer* CameraSubSystem::GetCameraCB()
 		{
 			return mCameraCB;
 		}

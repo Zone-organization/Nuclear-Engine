@@ -1,0 +1,37 @@
+#pragma once
+#include <Core\NE_Common.h>
+#include <string>
+
+
+namespace Nuclear
+{
+	namespace Graphics
+	{
+		class NEAPI ShaderEffect
+		{
+		public:
+			enum class Type {
+				CameraEffect,
+				RenderingEffect,
+				CameraAndRenderingEffect
+			};
+			ShaderEffect(const std::string& name, Type type, bool InitialValue);
+			~ShaderEffect();
+
+			void SetValue(bool value);
+			bool GetValue();
+
+			Type GetType();
+
+			std::string GetName();
+			Uint32 GetID();
+
+			bool _InternalEnabled = false;
+		private:
+			Uint32 mID = 0;
+			bool mValue;
+			std::string mName;
+			Type mType;
+		};
+	}
+}

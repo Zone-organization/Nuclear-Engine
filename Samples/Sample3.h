@@ -7,11 +7,9 @@ class Sample3 : public Core::Game
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 	std::shared_ptr<Systems::ScriptingSystem> ScriptSystem;
 
-	Managers::CameraManager SceneCameraManager;
-
 	Assets::Material PlaneMaterial;
 	Assets::Material CubeMaterial;
-	Components::CameraComponent Camera;
+	Components::CameraComponent *Camera;
 
 	Graphics::DiffuseOnly DiffuseRP;
 
@@ -56,7 +54,7 @@ class Sample3 : public Core::Game
 
 		mPhysXSystem->AddActor(EPlane);
 
-		//EScriptOwner = Scene.GetFactory().CreateBox(&CubeMaterial,ECS::Transform());
+		EScriptOwner = Scene.GetFactory().CreateBox(&CubeMaterial,ECS::Transform());
 		auto sc = EScriptOwner.AddComponent<Components::ScriptComponent>();
 		sc.script = &script;
 
@@ -65,7 +63,7 @@ class Sample3 : public Core::Game
 	}
 	void SetupSystems()
 	{
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&SceneCameraManager);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(Camera);
 		ScriptSystem = Scene.GetSystemManager().Add<Systems::ScriptingSystem>();
 
 		Systems::PhysXSystemDesc sceneDesc;
@@ -81,11 +79,10 @@ class Sample3 : public Core::Game
 
 	void Load() override
 	{
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		SceneCameraManager.Initialize(&Camera);
+		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		SetupEntities();
 
 		SetupSystems();
-		SetupEntities();
 
 
 		script;
@@ -102,7 +99,7 @@ class Sample3 : public Core::Game
 		Components::CameraBakingOptions Desc;
 		Desc.RTWidth = _Width_;
 		Desc.RTHeight = _Height_;
-		Camera.Bake(Desc);
+		Camera->Bake(Desc);
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 
@@ -110,8 +107,8 @@ class Sample3 : public Core::Game
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Camera.ResizeRenderTarget(width, height);
+		Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera->ResizeRenderTarget(width, height);
 	}
 
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -134,7 +131,7 @@ class Sample3 : public Core::Game
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera.ProcessEye(xoffset, yoffset);
+			Camera->ProcessEye(xoffset, yoffset);
 		}
 	}
 
@@ -144,18 +141,18 @@ class Sample3 : public Core::Game
 	{
 		//Movement
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
+			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera.MovementSpeed = 10;
+			Camera->MovementSpeed = 10;
 		else
-			Camera.MovementSpeed = 4.5;
+			Camera->MovementSpeed = 4.5;
 
 		//Change Mouse Mode
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
@@ -169,8 +166,8 @@ class Sample3 : public Core::Game
 			Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 		}
 
-		Camera.Update();
-		SceneCameraManager.UpdateBuffer();
+		Camera->Update();
+		Renderer->GetCameraSubSystem().UpdateBuffer();
 	}
 	void Render(float dt) override
 	{
@@ -182,8 +179,8 @@ class Sample3 : public Core::Game
 
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_SPACE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
-			//auto ECube = Scene.GetFactory().CreateBox(&CubeMaterial, ECS::Transform(Camera.GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)));
-		//	ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
+			//auto ECube = Scene.GetFactory().CreateBox(&CubeMaterial, ECS::Transform(Camera->GetPosition(), Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f)));
+		//	ECube.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera->GetPosition());
 		}
 
 		{
@@ -191,7 +188,7 @@ class Sample3 : public Core::Game
 			ImGui::Begin("Sample3: PhysX Integration");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
-			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)& Camera->RTClearColor);
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 			if (ImGui::Button("End Game"))

@@ -1,25 +1,16 @@
 #pragma once
 #include <Engine\ECS\System.h>
 #include <Engine\Systems\LightingSubSystem.h>
+#include <Engine\Systems\CameraSubSystem.h>
 #include <Engine\Graphics\RenderingPipeline.h>
-#include <vector>
-#include <unordered_map>
+#include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
+#include <vector>
+#include <unordered_map>
 
 namespace Nuclear
 {
-	namespace Animation
-	{
-		class Animator;
-
-	}
-
-	namespace Components {
-		class MeshComponent;
-		class AnimatorComponent;
-	}
-	namespace Managers { class CameraManager; }
 	namespace Systems
 	{
 
@@ -32,7 +23,7 @@ namespace Nuclear
 		class NEAPI RenderSystem : public ECS::System<RenderSystem>
 		{
 		public:
-			RenderSystem(Managers::CameraManager* CameraManager);
+			RenderSystem(Components::Camera *startingcamera);
 			~RenderSystem();
 
 			void AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
@@ -60,12 +51,13 @@ namespace Nuclear
 			//Debug Only
 			bool VisualizePointLightsPositions = false;
 
+			CameraSubSystem& GetCameraSubSystem();
+
 		private:
 			void RenderMeshes();
 
 			LightingSubSystem mLightingSystem;
-			Managers::CameraManager* mCameraManager;
-			bool PipelineDirty = true;
+			CameraSubSystem mCameraSystem;
 
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> animCB;

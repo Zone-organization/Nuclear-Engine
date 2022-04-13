@@ -3,10 +3,8 @@
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\AnimatorComponent.h>
-#include <Engine\Components\MeshComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Assets\DefaultMeshes.h>
-#include <Engine\Managers\CameraManager.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\ECS\Scene.h>
 #include <Engine.h>
@@ -19,9 +17,9 @@ namespace Nuclear
 {
 	namespace Systems
 	{
-		RenderSystem::RenderSystem(Managers::CameraManager* CameraManager)
+		RenderSystem::RenderSystem(Components::Camera* startingcamera)
+			:mCameraSystem(startingcamera)
 		{
-			mCameraManager = CameraManager;
 			mActiveRenderingPipeline = nullptr;
 		}
 		RenderSystem::~RenderSystem()
@@ -121,7 +119,7 @@ namespace Nuclear
 			}
 
 			mLightingSystem.BakeBuffer();
-			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraManager->GetMainCamera()->GetPosition(), 1.0f));
+			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraSystem.GetMainCamera()->GetPosition(), 1.0f));
 			BufferDesc CBDesc;
 			CBDesc.Name = "NEStatic_Animation";
 			CBDesc.Size = sizeof(Math::Matrix4) * 100;
@@ -135,7 +133,7 @@ namespace Nuclear
 			RPDesc.DirLights = static_cast<Uint32>(mLightingSystem.DirLights.size());
 			RPDesc.SpotLights = static_cast<Uint32>(mLightingSystem.SpotLights.size());
 			RPDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
-			RPDesc.CameraBufferPtr = mCameraManager->GetCameraCB();
+			RPDesc.CameraBufferPtr = mCameraSystem.GetCameraCB();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 			RPDesc.AnimationBufferPtr = animCB;
 			if(AllPipelines)
@@ -166,6 +164,10 @@ namespace Nuclear
 		{
 			return mActiveRenderingPipeline->GetPipeline();
 		}
+		CameraSubSystem& RenderSystem::GetCameraSubSystem()
+		{
+			return mCameraSystem;
+		}
 		void RenderSystem::RenderMeshes()
 		{
 			auto view = mScene->GetRegistry().view<Components::MeshComponent>();
@@ -179,8 +181,8 @@ namespace Nuclear
 					{
 						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 						EntityInfo.mTransform.Update();
-						mCameraManager->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						mCameraManager->UpdateBuffer();
+						mCameraSystem.GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						mCameraSystem.UpdateBuffer();
 
 						auto AnimatorComponent = mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
 
@@ -209,8 +211,8 @@ namespace Nuclear
 					{
 						for (auto i : MeshObject.mMultiRenderTransforms)
 						{
-							mCameraManager->GetMainCamera()->SetModelMatrix(i);
-							mCameraManager->UpdateBuffer();
+							mCameraSystem.GetMainCamera()->SetModelMatrix(i);
+							mCameraSystem.UpdateBuffer();
 							InstantRender(MeshObject);
 						}
 					}
@@ -220,7 +222,7 @@ namespace Nuclear
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{	
 			//Render Scene from each avtive camera perspective
-			for (auto Camera : mCameraManager->ActiveCameras)
+			for (auto Camera : mCameraSystem.ActiveCameras)
 			{
 				Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
@@ -237,7 +239,7 @@ namespace Nuclear
 						model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
 						model = Math::scale(model, Math::Vector3(0.25f));
 						Camera->SetModelMatrix(model);
-						mCameraManager->UpdateBuffer();
+						mCameraSystem.UpdateBuffer();
 
 						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
 
@@ -256,7 +258,7 @@ namespace Nuclear
 			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			auto MainCameraPtr = mCameraManager->GetMainCamera();
+			auto MainCameraPtr = mCameraSystem.GetMainCamera();
 			Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetActivePipeline());
 			Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 

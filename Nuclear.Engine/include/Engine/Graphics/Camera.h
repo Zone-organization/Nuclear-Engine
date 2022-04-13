@@ -9,7 +9,7 @@
 
 namespace Nuclear
 {
-	namespace Components
+	namespace Graphics
 	{
 		enum CAMERA_MOVEMENT {
 			CAMERA_MOVEMENT_FORWARD,
@@ -30,11 +30,10 @@ namespace Nuclear
 			Uint32 RTWidth = 0;
 			Uint32 RTHeight = 0;
 
-			std::vector<Graphics::ShaderEffect> mCameraEffects = std::vector<Graphics::ShaderEffect>();
+			std::string VS_Path;
+			std::string PS_Path;
 
-			bool HDR_Effect_Variant = true;
-			bool GammaCorrection_Effect_Variant = true;
-			bool Bloom_Effect_Variant = false;
+			std::vector<Graphics::ShaderEffect> mCameraEffects = std::vector<Graphics::ShaderEffect>();
 		};
 
 		struct CameraBuffer
@@ -47,12 +46,12 @@ namespace Nuclear
 			Math::Matrix4 Projection = Math::Matrix4(1.0f);
 		};
 
-		class NEAPI CameraComponent
+		class NEAPI Camera
 		{
 		public:
-			CameraComponent();
-			CameraComponent(Math::Vector3 __position, Math::Vector3 _Worldup = Math::Vector3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH, float speed = SPEED, float sensitivity = SENSITIVTY, float Zoom = ZOOM);
-			~CameraComponent();
+			Camera();
+			Camera(Math::Vector3 __position, Math::Vector3 _Worldup = Math::Vector3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH, float speed = SPEED, float sensitivity = SENSITIVTY, float Zoom = ZOOM);
+			~Camera();
 
 			void ProcessEye(float xoffset, float yoffset, bool constrainPitch = true);
 			void ProcessMovement(CAMERA_MOVEMENT direction, float deltaTime);
@@ -68,7 +67,7 @@ namespace Nuclear
 			void Update();
 
 			//Call on the beginning of every frame
-			void UpdatePSO(bool ForceDirty  = false);
+			void UpdatePSO(bool ForceDirty = false);
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
@@ -89,10 +88,7 @@ namespace Nuclear
 			float MouseSensitivity;
 			float Zoom;
 
-			//Postprocessing
-			bool HDR = false;
-			bool GammaCorrection = false;
-			bool Bloom = false;
+			void SetEffect(const std::string& effectname, bool value);
 
 			CameraBuffer mCameraData;
 			CameraBakingOptions mCameraBakingOpts;
@@ -107,10 +103,12 @@ namespace Nuclear
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
-			RefCntAutoPtr<IPipelineState> mBloomPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mBloomSRB;
+			//RefCntAutoPtr<IPipelineState> mBloomPSO;
+			//RefCntAutoPtr<IShaderResourceBinding> mBloomSRB;
 
 			std::vector<Graphics::ShaderEffect> mCameraEffects;
+
+			bool mPipelineDirty = true;
 
 			// Eular Angles
 			float Yaw;
@@ -120,16 +118,11 @@ namespace Nuclear
 
 			Math::Vector3 position, direction;
 
-			bool HDR_Enabled = false;
-			bool GammaCorrection_Enabled = false;
-			bool Bloom_Enabled = false;
 			Uint32 RequiredHash = 0;
 
 		private:
 			void BakeRenderTarget(const CameraBakingOptions& Desc);
 			void BakePipeline(const CameraBakingOptions& Desc);
 		};
-
-		typedef CameraComponent Camera;
 	}
 }

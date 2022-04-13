@@ -89,7 +89,7 @@ namespace Nuclear
 				if(Bloom) { RequiredHash = RequiredHash + Utilities::Hash("NE_ENABLE_BLOOM"); }
 
 
-				auto PSO_SRB = mPipeline.GetPipeline(RequiredHash);
+				auto PSO_SRB = mPipeline.GetVariant(RequiredHash);
 
 				mActivePSO = PSO_SRB.PSO;
 				mActiveSRB = PSO_SRB.SRB;
@@ -173,11 +173,11 @@ namespace Nuclear
 		
 			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-			Graphics::NeoPipelineDesc PSOCreateInfo;
+			Graphics::CompoundPipelineDesc PSOCreateInfo;
 
-			if (!Desc.Disable_HDR_Varient) { PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_HDR")); }
-			if (!Desc.Disable_GammaCorrection_Varient) { PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_GAMMA")); }
-			if (!Desc.Disable_Bloom_Varient) { PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_BLOOM")); }
+			if (Desc.HDR_Effect_Variant) { PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_HDR")); }
+			if (Desc.GammaCorrection_Effect_Variant) { PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_GAMMA")); }
+			if (Desc.Bloom_Effect_Variant) { PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch("NE_ENABLE_BLOOM")); }
 	
 			PSOCreateInfo.mVShaderPath = "Assets/NuclearEngine/Shaders/Camera.vs.hlsl";
 			PSOCreateInfo.mPShaderPath = "Assets/NuclearEngine/Shaders/Camera.ps.hlsl";
@@ -201,7 +201,7 @@ namespace Nuclear
 			mPipeline.Create(PSOCreateInfo);
 
 			//Create Blur pipeline
-			if (!Desc.Disable_Bloom_Varient)
+			if (!Desc.Bloom_Effect_Variant)
 			{
 				Managers::AutoVertexShaderDesc VertShaderDesc;
 				//VertShaderDesc.Use_Camera = false;

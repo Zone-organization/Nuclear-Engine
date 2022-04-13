@@ -1,4 +1,4 @@
-#include <Engine\Graphics\NeoPipeline.h>
+#include <Engine\Graphics\CompoundPipeline.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Core\FileSystem.h>
 #include <Core/Utilities/Hash.h>
@@ -26,17 +26,17 @@ namespace Nuclear
 			return str;
 		}
 
-		NeoPipeline::NeoPipeline()
+		CompoundPipeline::CompoundPipeline()
 		{
 		}
 
-		NeoPipeline::~NeoPipeline()
+		CompoundPipeline::~CompoundPipeline()
 		{
 			mKeyChain.clear();
-			mPipelineStates.clear();
+			mVariants.clear();
 		}
 
-		std::vector<PipelineInstanceInfo> NeoPipeline::Create(const NeoPipelineDesc& Desc)
+		std::vector<PipelineInstanceInfo> CompoundPipeline::Create(const CompoundPipelineDesc& Desc)
 		{
 			std::vector<PipelineInstanceInfo> InstancesInfo;
 
@@ -91,7 +91,7 @@ namespace Nuclear
 			
 			if (VShaderSource == "NoString" || PShaderSource == "NoString")
 			{
-				Log.Error("[NeoPipeline] Couldn't Load Shaders!\n");
+				Log.Error("[CompoundPipeline] Couldn't Load Shaders!\n");
 				return std::vector<PipelineInstanceInfo>();
 			}
 			for (auto Info : InstancesInfo)
@@ -114,7 +114,7 @@ namespace Nuclear
 				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VShader, PShader);
 				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&Pipeline, PSOCreateInfo, Vars, true);
 
-				PipelineWithSRB GeneratedPSO;
+				PipelineVariant GeneratedPSO;
 				GeneratedPSO.PSO = Pipeline;
 				if (Info.CreateSRB)
 				{
@@ -122,15 +122,15 @@ namespace Nuclear
 					Pipeline->CreateShaderResourceBinding(&SRB, Info.InitStaticResources);
 					GeneratedPSO.SRB = SRB;
 				}
-				mPipelineStates[Info.mHashKey] = GeneratedPSO;
+				mVariants[Info.mHashKey] = GeneratedPSO;
 			}
 
 			return InstancesInfo;
 		}
-		Uint32 NeoPipeline::GetHashedKey(const std::string Key)
+		Uint32 CompoundPipeline::GetHashedKey(const std::string Key)
 		{
 			auto KeyHash = Utilities::Hash(Key);
-			for (auto i : mPipelineStates)
+			for (auto i : mVariants)
 			{
 				if (i.first == KeyHash)
 				{
@@ -141,9 +141,9 @@ namespace Nuclear
 			//Error
 			return 0;
 		}
-		PipelineWithSRB NeoPipeline::GetPipeline(Uint32 Key)
+		PipelineVariant CompoundPipeline::GetVariant(Uint32 Key)
 		{
-			for (auto i : mPipelineStates)
+			for (auto i : mVariants)
 			{
 				if (i.first == Key)
 				{
@@ -151,7 +151,8 @@ namespace Nuclear
 				}
 			}
 
-			return PipelineWithSRB();
+			Log.Error("[] Variant: " + std::to_string(Key) +" Not Found!\n");
+			return PipelineVariant();
 		}
 	}
 }

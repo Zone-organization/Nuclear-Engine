@@ -85,10 +85,10 @@ float3 CalcPointLight(PointLight light, float3 N, float3 WorldPos, float3 V, flo
 	// Cook-Torrance BRDF
 	float NDF = DistributionGGX(N, H, roughness);
 	float G = GeometrySmith(N, V, L, roughness);
-	float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+	float3 F = fresnelSchlick(saturate(dot(H, V)), F0);
 
 	float3 nominator = NDF * G * F;
-	float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+	float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // 0.0001 to prevent divide by zero.
 	float3 specular = nominator / denominator;
 
 	// kS is equal to Fresnel
@@ -120,7 +120,7 @@ float3 CalcDirLight(DirLight light, float3 N, float3 WorldPos, float3 V, float3 
 	// Cook-Torrance BRDF
 	float NDF = DistributionGGX(N, H, roughness);
 	float G = GeometrySmith(N, V, L, roughness);
-	float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+	float3 F = fresnelSchlick(saturate(dot(H, V)), F0);
 
 	float3 nominator = NDF * G * F;
 	float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
@@ -194,10 +194,25 @@ float4 main(PixelInputType input) : SV_TARGET
 	float roughness = NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).x;
 	float ao = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoords).x;
 
+#ifndef TEST
 	float3 N = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz;
 	N = normalize(mul(N, 2.0f) - 1.0f);
 	N = normalize(mul(N, input.TBN));
+#else
+	float3 tangentNormal = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz * 2.0 - 1.0;
 
+	float3 Q1 = ddx(input.FragPos);
+	float3 Q2 = ddy(input.FragPos);
+	float2 st1 = ddx(input.TexCoords);
+	float2 st2 = ddy(input.TexCoords);
+
+	float3 _N = normalize(input.Normal);
+	float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
+	float3 B = -normalize(cross(_N, T));
+	float3x3 TBN = float3x3(T, B, _N);
+
+	float3 N = normalize(mul(tangentNormal, TBN));
+#endif
 	float3 V = normalize(ViewPos - input.FragPos);
 
 	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
