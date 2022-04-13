@@ -69,7 +69,7 @@ namespace Nuclear
 
 			std::vector<PipelineInstanceInfo> Create(const CompoundPipelineDesc& Desc);
 
-			Uint32 GetHashedKey(const std::string Key);
+			Uint32 GetHashedKey(const std::string& Key);
 			PipelineVariant GetVariant(Uint32 Key);
 		private:
 			std::vector<PipelineSwitch> mKeyChain;

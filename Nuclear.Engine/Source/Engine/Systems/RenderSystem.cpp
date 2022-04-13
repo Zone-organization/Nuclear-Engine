@@ -17,7 +17,7 @@ namespace Nuclear
 {
 	namespace Systems
 	{
-		RenderSystem::RenderSystem(Components::Camera* startingcamera)
+		RenderSystem::RenderSystem(Graphics::Camera* startingcamera)
 			:mCameraSystem(startingcamera)
 		{
 			mActiveRenderingPipeline = nullptr;
@@ -222,8 +222,9 @@ namespace Nuclear
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{	
 			//Render Scene from each avtive camera perspective
-			for (auto Camera : mCameraSystem.ActiveCameras)
-			{
+			//for (auto Camera : mCameraSystem.ActiveCameras)
+			//{
+			auto Camera = mCameraSystem.GetMainCamera();
 				Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
@@ -250,7 +251,7 @@ namespace Nuclear
 				{
 					Camera->mSkybox->Render();
 				}
-			}
+			//}
 			//Render Main camera view to screen
 			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
 			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();

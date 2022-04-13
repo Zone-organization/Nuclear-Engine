@@ -18,24 +18,6 @@ namespace Nuclear
 			CAMERA_MOVEMENT_RIGHT
 		};
 
-		// Default camera values
-		const float YAW = -90.0f;
-		const float PITCH = 0.0f;
-		const float SPEED = 2.5f;
-		const float SENSITIVTY = 0.05f;
-		const float ZOOM = 45.0f;
-
-		struct CameraBakingOptions
-		{
-			Uint32 RTWidth = 0;
-			Uint32 RTHeight = 0;
-
-			std::string VS_Path;
-			std::string PS_Path;
-
-			std::vector<Graphics::ShaderEffect> mCameraEffects = std::vector<Graphics::ShaderEffect>();
-		};
-
 		struct CameraBuffer
 		{
 			Math::Matrix4 Model = Math::Matrix4(1.0f);
@@ -46,11 +28,16 @@ namespace Nuclear
 			Math::Matrix4 Projection = Math::Matrix4(1.0f);
 		};
 
+		/*
+		*Only Supports
+		* HDR
+		* GAMMACORRECTION
+		* BLOOM
+		*/
 		class NEAPI Camera
 		{
 		public:
-			Camera();
-			Camera(Math::Vector3 __position, Math::Vector3 _Worldup = Math::Vector3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH, float speed = SPEED, float sensitivity = SENSITIVTY, float Zoom = ZOOM);
+			Camera(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw , float pitch , float speed , float sensitivity , float Zoom );
 			~Camera();
 
 			void ProcessEye(float xoffset, float yoffset, bool constrainPitch = true);
@@ -61,10 +48,10 @@ namespace Nuclear
 
 			void Initialize(Math::Matrix4 projectionMatrix);
 
-			void Bake(const CameraBakingOptions& Opt);
+			void Bake(Uint32 RTWidth, Uint32 RTHeight);
 			void ResizeRenderTarget(Uint32 Width, Uint32 Height);
 
-			void Update();
+			void UpdateBuffer();
 
 			//Call on the beginning of every frame
 			void UpdatePSO(bool ForceDirty = false);
@@ -90,8 +77,10 @@ namespace Nuclear
 
 			void SetEffect(const std::string& effectname, bool value);
 
+			std::vector<Graphics::ShaderEffect> mCameraEffects;
+
 			CameraBuffer mCameraData;
-			CameraBakingOptions mCameraBakingOpts;
+		
 			Graphics::Color RTClearColor;
 			Graphics::Skybox* mSkybox = nullptr;
 			bool RenderSkybox = false;
@@ -103,10 +92,6 @@ namespace Nuclear
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
-			//RefCntAutoPtr<IPipelineState> mBloomPSO;
-			//RefCntAutoPtr<IShaderResourceBinding> mBloomSRB;
-
-			std::vector<Graphics::ShaderEffect> mCameraEffects;
 
 			bool mPipelineDirty = true;
 
@@ -120,9 +105,14 @@ namespace Nuclear
 
 			Uint32 RequiredHash = 0;
 
+			std::string VS_Path = "Assets/NuclearEngine/Shaders/Camera.vs.hlsl";
+			std::string PS_Path = "Assets/NuclearEngine/Shaders/Camera.ps.hlsl";
+
+			Uint32 RTWidth = 0;
+			Uint32 RTHeight = 0;
 		private:
-			void BakeRenderTarget(const CameraBakingOptions& Desc);
-			void BakePipeline(const CameraBakingOptions& Desc);
+			void BakeRenderTarget();
+			void BakePipeline();
 		};
 	}
 }

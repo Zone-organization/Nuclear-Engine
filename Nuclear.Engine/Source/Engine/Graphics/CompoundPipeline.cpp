@@ -104,7 +104,8 @@ namespace Nuclear
 				GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(PShaderSource, Info.Defines), PShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 				GraphicsPipelineStateCreateInfo PSOCreateInfo;
-				PSOCreateInfo.PSODesc.Name = std::string(Desc.mName + "_ID_" + std::to_string(Info.mHashKey)).c_str();
+				std::string psoname(Desc.mName + "_ID_" + std::to_string(Info.mHashKey));
+				PSOCreateInfo.PSODesc.Name = psoname.c_str();
 				PSOCreateInfo.GraphicsPipeline = Desc.GraphicsPipeline;
 				PSOCreateInfo.pVS = VShader;
 				PSOCreateInfo.pPS = PShader;
@@ -127,7 +128,7 @@ namespace Nuclear
 
 			return InstancesInfo;
 		}
-		Uint32 CompoundPipeline::GetHashedKey(const std::string Key)
+		Uint32 CompoundPipeline::GetHashedKey(const std::string& Key)
 		{
 			auto KeyHash = Utilities::Hash(Key);
 			for (auto i : mVariants)
@@ -151,7 +152,7 @@ namespace Nuclear
 				}
 			}
 
-			Log.Error("[] Variant: " + std::to_string(Key) +" Not Found!\n");
+			Log.Error("[CompoundPipeline] Variant: " + std::to_string(Key) +" Not Found!\n");
 			return PipelineVariant();
 		}
 	}

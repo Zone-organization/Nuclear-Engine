@@ -23,7 +23,7 @@ namespace Nuclear
 		class NEAPI RenderSystem : public ECS::System<RenderSystem>
 		{
 		public:
-			RenderSystem(Components::Camera *startingcamera);
+			RenderSystem(Graphics::Camera *startingcamera);
 			~RenderSystem();
 
 			void AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline);

@@ -130,15 +130,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
-    <ClInclude Include="DemoGame.h" />
     <ClInclude Include="Sample1.h" />
     <ClInclude Include="Sample2.h" />
     <ClInclude Include="Sample3.h" />
-    <ClInclude Include="Sample4.h" />
     <ClInclude Include="SampleSelector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\script.as" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\NuclearEngine\Shaders\DefaultCamera.ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Checked|x64'">Pixel</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

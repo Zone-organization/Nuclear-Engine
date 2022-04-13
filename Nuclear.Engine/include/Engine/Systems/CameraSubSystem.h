@@ -1,5 +1,5 @@
 #pragma once
-#include <Engine/Components/CameraComponent.h>
+#include <Engine/Graphics/Camera.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 
@@ -12,26 +12,26 @@ namespace Nuclear
 		class NEAPI CameraSubSystem
 		{
 		public:
-			CameraSubSystem(Components::Camera* Camera);
+			CameraSubSystem(Graphics::Camera* Camera);
 			~CameraSubSystem();
 
 			void UpdateBuffer();
 
-			void SetMainCamera(Components::Camera* Camera);
-			void SetActiveCamera(Components::Camera* Camera);
-			void RegisterCamera(Components::Camera* Camera);
+			void SetMainCamera(Graphics::Camera* Camera);
+			//void SetActiveCamera(Components::Camera* Camera);
+			//void RegisterCamera(Components::Camera* Camera);
 
-			bool isRegisteredCamera(Components::Camera* Camera);
-			bool isActiveCamera(Components::Camera* Camera);
+			//bool isRegisteredCamera(Components::Camera* Camera);
+			//bool isActiveCamera(Components::Camera* Camera);
 
-			Components::Camera* GetMainCamera();
+			Graphics::Camera* GetMainCamera();
 
 			IBuffer* GetCameraCB();
 
-			std::vector<Components::Camera*> RegisteredCameras;
-			std::vector<Components::Camera*> ActiveCameras;
+			//std::vector<Components::Camera*> RegisteredCameras;
+			//std::vector<Components::Camera*> ActiveCameras;
 		private:
-			Components::Camera* MainCamera = nullptr;
+			Graphics::Camera* MainCamera = nullptr;
 
 			//Main camera constant buffer
 			RefCntAutoPtr<IBuffer> mCameraCB;

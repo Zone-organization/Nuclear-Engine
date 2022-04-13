@@ -46,7 +46,7 @@ class Sample1 : public Core::Game
 	Assets::Animations* BobAnimation;
 	Assets::Animations* VampireAnimation;
 
-	Components::CameraComponent* Camera;
+	Graphics::Camera Camera;
 
 	Graphics::Skybox Skybox;
 
@@ -101,8 +101,8 @@ class Sample1 : public Core::Game
 
 public:
 	Sample1()
+		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f),  Graphics::Framework::YAW, Graphics::Framework::PITCH, Graphics::Framework::SPEED, Graphics::Framework::SENSITIVTY, Graphics::Framework::ZOOM)
 	{
-
 	}
 	void SetupAssets()
 	{
@@ -209,7 +209,7 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>(Camera);
+		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 		//ModelsScene.Systems.Configure();
 
 		Renderer->AddRenderingPipeline(&BlinnPhongRP);
@@ -225,9 +225,9 @@ public:
 
 		ECamera = ModelsScene.CreateEntity();
 		ECamera.AddComponent<Components::SpotLightComponent>();
-		Camera = &ECamera.AddComponent<Components::CameraComponent>();
+		ECamera.AddComponent<Components::CameraComponent>(&Camera);
 
-		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
 		SetupEntities();
 
@@ -235,11 +235,9 @@ public:
 
 		SetupAssets();
 
-		Components::CameraBakingOptions Desc;
-		Desc.RTWidth = _Width_;
-		Desc.RTHeight = _Height_;
-		Camera->Bake(Desc);
-		Camera->mSkybox = &Skybox;
+		Camera.Bake(_Width_, _Height_);
+
+		Camera.mSkybox = &Skybox;
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -262,7 +260,7 @@ public:
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera->ProcessEye(xoffset, yoffset);
+			Camera.ProcessEye(xoffset, yoffset);
 		}
 	}
 
@@ -270,25 +268,25 @@ public:
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
-		Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Camera->ResizeRenderTarget(width, height);
+		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.ResizeRenderTarget(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->MovementSpeed = 10;
+			Camera.MovementSpeed = 10;
 		else
-			Camera->MovementSpeed = 4.5;
+			Camera.MovementSpeed = 4.5;
 
 		//Change Mouse Mode
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
@@ -302,7 +300,7 @@ public:
 			Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 		}
 
-		Camera->Update();
+		Camera.UpdateBuffer();
 		Renderer->GetCameraSubSystem().UpdateBuffer();
 	}
 	void Render(float dt) override
@@ -312,8 +310,8 @@ public:
 		BobAnimator.UpdateAnimation(dt);
 		VampireAnimator.UpdateAnimation(dt);
 
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera->GetPosition());
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera->GetFrontView());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 		ModelsScene.Update(dt);
 		{
@@ -343,9 +341,9 @@ public:
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			ImGui::Checkbox("Render Skybox", &Camera->RenderSkybox);
+			ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera->RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

@@ -8,7 +8,7 @@ namespace Nuclear
 		ShaderEffect::ShaderEffect(const std::string& name, Type type, bool InitialValue)
 		{
 			mName = name;
-			mID = Utilities::Hash(name);
+			mID = Utilities::Hash(mName);
 			mValue = InitialValue;
 			mType = type;
 		}

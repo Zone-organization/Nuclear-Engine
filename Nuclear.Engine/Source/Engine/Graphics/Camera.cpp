@@ -13,17 +13,11 @@ namespace Nuclear
 
 	namespace Graphics
 	{
-		Camera::Camera()
-			: Camera(Math::Vector3(0.0f, 0.0f, 0.0f))
-		{
-		}
 		Camera::Camera(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
-			: Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
+			: position(__position), Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
 		{
-
-			position = __position;
-
-
+			mCameraEffects.push_back(Graphics::ShaderEffect("HDR", Graphics::ShaderEffect::Type::CameraEffect, false));
+			mCameraEffects.push_back(Graphics::ShaderEffect("GAMMACORRECTION", Graphics::ShaderEffect::Type::CameraEffect, false));
 		}
 
 		Camera::~Camera()
@@ -33,28 +27,29 @@ namespace Nuclear
 		void Camera::Initialize(Math::Matrix4 projectionMatrix)
 		{
 			mCameraData.Projection = projectionMatrix;
-			Update();
+			UpdateBuffer();
 		}
 
-		void Camera::Bake(const CameraBakingOptions& Opt)
+		void Camera::Bake(Uint32 Width, Uint32 Height)
 		{
-			mCameraBakingOpts = Opt;
-			BakeRenderTarget(mCameraBakingOpts);
-			BakePipeline(Opt);
+			RTWidth = Width;
+			RTHeight = Height;
+			BakeRenderTarget();
+			BakePipeline();
 		}
 
 		void Camera::ResizeRenderTarget(Uint32 Width, Uint32 Height)
 		{
-			mCameraBakingOpts.RTWidth = Width;
-			mCameraBakingOpts.RTHeight = Height;
-			BakeRenderTarget(mCameraBakingOpts);
+			RTWidth = Width;
+			RTHeight = Height;
+			BakeRenderTarget();
 
 			mActiveSRB.Release();
 			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
 			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
 		}
 
-		void Camera::Update()
+		void Camera::UpdateBuffer()
 		{
 			Math::Vector3 front;
 			front.x = cos(radians(Yaw)) * cos(radians(Pitch));
@@ -74,21 +69,24 @@ namespace Nuclear
 
 		void Camera::UpdatePSO(bool ForceDirty)
 		{
+			RequiredHash = 0;
+
 			if (mPipelineDirty || ForceDirty)
 			{
 				bool _hashzeroed = false;
 
 				for (auto it : mCameraEffects)
 				{
-					if (it.GetValue() != it._InternalEnabled)
+					if (it.GetValue())
 					{
 						if (_hashzeroed)
 						{
 							RequiredHash = 0;
 							_hashzeroed = true;
 						}
-						RequiredHash = RequiredHash + it.GetID();
-						it._InternalEnabled = it.GetValue();
+						auto val = RequiredHash + it.GetID();
+
+						RequiredHash = val;
 					}
 				}
 
@@ -104,18 +102,18 @@ namespace Nuclear
 		void Camera::SetModelMatrix(Math::Matrix4 modelMatrix)
 		{
 			mCameraData.Model = modelMatrix;
-			Update();
+			UpdateBuffer();
 		}
 		void Camera::SetViewMatrix(Math::Matrix4 viewMatrix)
 		{
 			mCameraData.View = viewMatrix;
-			Update();
+			UpdateBuffer();
 
 		}
 		void Camera::SetProjectionMatrix(Math::Matrix4 projectionMatrix)
 		{
 			mCameraData.Projection = projectionMatrix;
-			Update();
+			UpdateBuffer();
 
 		}
 		void Camera::SetPosition(Math::Vector3 cameraposition)
@@ -156,37 +154,42 @@ namespace Nuclear
 
 		void Camera::SetEffect(const std::string& effectname, bool value)
 		{
+
+			for (auto it : mCameraEffects)
+			{
+				if (it.GetName() == effectname)
+				{
+					it.SetValue(value);
+				}
+			}
 			mPipelineDirty = true;
 		}
 
-		void Camera::BakeRenderTarget(const CameraBakingOptions& Desc)
+		void Camera::BakeRenderTarget()
 		{
 			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = Desc.RTWidth;
-			RTDesc.Height = Desc.RTHeight;
+			RTDesc.Width = RTWidth;
+			RTDesc.Height = RTHeight;
 			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 			CameraRT.Create(RTDesc);
 		}
 
-		void Camera::BakePipeline(const CameraBakingOptions& Desc)
+		void Camera::BakePipeline()
 		{
 			std::vector<LayoutElement> Layout;
-
 
 			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
 			Graphics::CompoundPipelineDesc PSOCreateInfo;
 
-
-			this->mCameraEffects = Desc.mCameraEffects;
 			for (auto it : mCameraEffects)
 			{
 				PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.GetName()));
 			}
 
-			PSOCreateInfo.mVShaderPath = Desc.VS_Path;
-			PSOCreateInfo.mPShaderPath = Desc.PS_Path;
+			PSOCreateInfo.mVShaderPath = VS_Path;
+			PSOCreateInfo.mPShaderPath = PS_Path;
 
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
@@ -198,11 +201,6 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
-			std::vector<ShaderResourceVariableDesc> Vars;
-			Vars.push_back({ SHADER_TYPE_PIXEL, "SceneTexture", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE });
-
-			std::vector<ImmutableSamplerDesc> StaticSamplers;
-			StaticSamplers.push_back({ SHADER_TYPE_PIXEL, "SceneTexture", Sam_LinearClamp });
 
 			mPipeline.Create(PSOCreateInfo);
 

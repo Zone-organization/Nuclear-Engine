@@ -26,12 +26,12 @@ namespace Nuclear
 			std::string GetName();
 			Uint32 GetID();
 
-			bool _InternalEnabled = false;
+			//bool _InternalEnabled = false;
 		private:
 			Uint32 mID = 0;
-			bool mValue;
 			std::string mName;
 			Type mType;
+			bool mValue;
 		};
 	}
 }

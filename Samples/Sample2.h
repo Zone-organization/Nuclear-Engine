@@ -18,7 +18,7 @@ class Sample2 : public Core::Game
 	Assets::Material SphereMaterial;
 	Assets::Material PlaneMaterial;
 
-	Components::CameraComponent* Camera;
+	Graphics::Camera Camera;
 
 	Graphics::PBR PBR;
 	Graphics::PBR TestPBR;
@@ -42,6 +42,7 @@ class Sample2 : public Core::Game
 	bool isMouseDisabled = false;
 public:
 	Sample2()
+		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::Framework::YAW, Graphics::Framework::PITCH, Graphics::Framework::SPEED, Graphics::Framework::SENSITIVTY, Graphics::Framework::ZOOM)
 	{
 
 	}
@@ -99,9 +100,9 @@ public:
 		ELights.AddComponent<Components::DirLightComponent>();
 		ELights.AddComponent<Components::PointLightComponent>();
 		ECamera.AddComponent<Components::SpotLightComponent>();
-		Camera = &ECamera.AddComponent<Components::CameraComponent>();
+		ECamera.AddComponent<Components::CameraComponent>(&Camera);
 
-		Camera->Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
@@ -117,7 +118,7 @@ public:
 		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
 		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(Camera);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 
 
 		//Scene.Systems.Configure();
@@ -143,19 +144,10 @@ public:
 		int nrRows = 7;
 		int nrColumns = 7;
 		float spacing = 2.5;
-		Math::Matrix4 model;
 		for (int row = 0; row < nrRows; ++row)
 		{
 			for (int col = 0; col < nrColumns; ++col)
 			{
-				//model = Math::Matrix4(1.0);
-				//model = Math::translate(model, Math::Vector3(
-				//	(float)(col - (nrColumns / 2)) * spacing ,
-				//	(float)(row - (nrRows / 2)) * spacing ,
-				//	0.0f
-				//));
-				//model = Math::scale(model, Math::Vector3(2.0f));
-				//model = Math::translate(model, Math::Vector3(1.0f,5.0f,1.0f));
 				Math::Vector3 position(
 					(float)(col - (nrColumns / 2)) * spacing,
 					((float)(row - (nrRows / 2)) * spacing) + 10.0f,
@@ -187,16 +179,14 @@ public:
 		//TCerberus = Math::scale(TCerberus, Math::Vector3(0.05f));
 		////ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
 
-		Components::CameraBakingOptions Desc;
-		Desc.RTWidth = _Width_;
-		Desc.RTHeight = _Height_;
-		Camera->Bake(Desc);
 
-		Camera->RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
+		Camera.Bake(_Width_, _Height_);
 
-		Camera->GammaCorrection = true;
-		Camera->HDR = true;
-		Camera->MovementSpeed = 15;
+		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
+
+		//Camera.GammaCorrection = true;
+		//Camera.HDR = true;
+		//Camera.MovementSpeed = 15;
 
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -220,27 +210,27 @@ public:
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera->ProcessEye(xoffset, yoffset);
+			Camera.ProcessEye(xoffset, yoffset);
 		}
 	}
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
-		Camera->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Camera->ResizeRenderTarget(width, height);
+		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.ResizeRenderTarget(width, height);
 	}
 
 	void Update(float deltatime) override
 	{
 		//Movement
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
-			Camera->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
+			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//Change Mouse Mode
 		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
@@ -254,10 +244,10 @@ public:
 			Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 		}
 
-		Camera->Update();
+		Camera.UpdateBuffer();
 		Renderer->GetCameraSubSystem().UpdateBuffer();
 
-		Camera->UpdatePSO();
+		Camera.UpdatePSO();
 	}
 	bool iskinematic = false;
 
@@ -265,8 +255,8 @@ public:
 	{
 		Scene.Update(dt);
 
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera->GetPosition());
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera->GetFrontView());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
+		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 
 		{
@@ -302,14 +292,33 @@ public:
 			}
 
 
+			if (ImGui::TreeNode("Camera"))
+			{
+				ImGui::ColorEdit3("RenderTarget ClearColor", (float*)&Camera.RTClearColor);
 
+
+				for (auto& it : Camera.mCameraEffects)
+				{
+					bool value = it.GetValue();
+					ImGui::Checkbox(it.GetName().c_str(), &value);
+					if (value != it.GetValue())
+					{
+						it.SetValue(value);
+					}
+				}
+				//ImGui::DragFloat("Movement Speed", &Camera.MovementSpeed);
+				//ImGui::DragFloat("Mouse Sensitivity", &Camera.MouseSensitivity);
+				//ImGui::DragFloat("Zoom", &Camera.Zoom);
+
+				ImGui::TreePop();
+			}
 			PhysX::RaycastHit hit;
 			if (ImGui::TreeNode("Raycast Info"))
 			{
 				if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
 				{
 
-					if (mPhysXSystem->Raycast(Camera->GetPosition(), Camera->GetFrontView(), 100.f, hit))
+					if (mPhysXSystem->Raycast(Camera.GetPosition(), Camera.GetFrontView(), 100.f, hit))
 					{
 						auto entity = hit.HitEntity;
 
@@ -474,18 +483,22 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 			Components::CameraComponent* camera = reg.try_get< Components::CameraComponent>(entity);
 			if (camera)
 			{
-				if (ImGui::CollapsingHeader("Camera"))
-				{
-					ImGui::ColorEdit3("RenderTarget ClearColor", (float*)&camera->RTClearColor);
-					ImGui::Checkbox("HDR", &camera->HDR);
-					ImGui::Checkbox("GammaCorrection", &camera->GammaCorrection);
-
-					ImGui::DragFloat("Movement Speed", &camera->MovementSpeed);
-					ImGui::DragFloat("Mouse Sensitivity", &camera->MouseSensitivity);
-					ImGui::DragFloat("Zoom", &camera->Zoom);
+				//if (ImGui::CollapsingHeader("Camera"))
+				//{
+				//	auto cameraptr = camera->GetCameraPtr();
+				//	ImGui::ColorEdit3("RenderTarget ClearColor", (float*)&cameraptr->RTClearColor);
 
 
-				}
+				//	for (auto it : cameraptr->GetAvailableCameraEffects())
+				//	{
+				//		ImGui::Checkbox(it.GetName().c_str(), &it.mValue);
+				//	}
+				//	//ImGui::DragFloat("Movement Speed", &Camera.MovementSpeed);
+				//	//ImGui::DragFloat("Mouse Sensitivity", &Camera.MouseSensitivity);
+				//	//ImGui::DragFloat("Zoom", &Camera.Zoom);
+
+
+				//}
 			}
 		}
 
