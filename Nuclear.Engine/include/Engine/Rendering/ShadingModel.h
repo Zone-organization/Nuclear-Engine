@@ -7,6 +7,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <vector>
+#include <unordered_map>
 
 namespace Nuclear
 {
@@ -39,16 +40,22 @@ namespace Nuclear
 			
 			virtual Graphics::BakeStatus GetStatus();
 
+			std::unordered_map<Uint32, ShaderEffect>& GetRenderingEffects();
+
+			void SetEffect(const Uint32& effectId, bool value);
+
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
 			std::vector<Assets::ShaderTexture> mPixelShaderTextureInfo;
 
+			std::string GetName();
 		protected:
-			std::vector<ShaderEffect> mRenderingEffects;
+			std::unordered_map<Uint32, ShaderEffect> mRenderingEffects;
 
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 			Uint32 mID = 0;
+			std::string mName;
 		};
 
 	}

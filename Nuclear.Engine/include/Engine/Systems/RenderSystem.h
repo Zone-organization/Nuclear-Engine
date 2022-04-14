@@ -3,6 +3,7 @@
 #include <Engine\Systems\LightingSubSystem.h>
 #include <Engine\Systems\CameraSubSystem.h>
 #include <Engine\Rendering\ShadingModel.h>
+#include <Engine\Rendering\RenderingPipeline.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
@@ -26,7 +27,7 @@ namespace Nuclear
 			RenderSystem(Graphics::Camera *startingcamera);
 			~RenderSystem();
 
-			void AddRenderingPipeline(Rendering::ShadingModel* Pipeline);
+			void AddRenderingPipeline(Rendering::RenderingPipeline* Pipeline);
 			void SetActiveRenderingPipeline(Uint32 PipelineID);
 
 			void CreateMaterialForAllPipelines(Assets::Material* material);
@@ -37,7 +38,7 @@ namespace Nuclear
 
 			void Bake(bool AllPipelines = true);
 
-			IPipelineState* GetPipeline();
+			Rendering::RenderingPipeline* GetActivePipeline();
 
 			// Render A MeshComponent Component instantly
 			void InstantRender(const Components::MeshComponent& object);
@@ -62,10 +63,13 @@ namespace Nuclear
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> animCB;
 
+
 			Assets::Mesh CameraScreenQuad;
 			Assets::Material LightSphereMaterial;
-			Rendering::ShadingModel* mActiveRenderingPipeline;
-			std::unordered_map<Uint32, Rendering::ShadingModel*> mRenderingPipelines;  //TODO: Should be moved to camera
+
+
+			Rendering::RenderingPipeline* mActiveRenderingPipeline;
+			std::unordered_map<Uint32, Rendering::RenderingPipeline*> mRenderingPipelines;  //TODO: Should be moved to camera
 		};
 
 	}

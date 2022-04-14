@@ -10,6 +10,7 @@ namespace Nuclear
 		WireFrame::WireFrame()
 		{
 			mID = Utilities::Hash("NE_WireFrame");
+			mName = "NE_WireFrame";
 		}
 
 		bool WireFrame::Bake(const ShadingModelBakingDesc& desc)

@@ -15,6 +15,7 @@ namespace Nuclear
 				RenderingEffect,
 				CameraAndRenderingEffect
 			};
+			ShaderEffect();
 			ShaderEffect(const std::string& name, Type type, bool InitialValue);
 			~ShaderEffect();
 

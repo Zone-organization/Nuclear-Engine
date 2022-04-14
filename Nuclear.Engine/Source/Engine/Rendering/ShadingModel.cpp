@@ -80,5 +80,25 @@ namespace Nuclear
 		{
 			return mStatus;
 		}
+		std::unordered_map<Uint32, ShaderEffect>& ShadingModel::GetRenderingEffects()
+		{
+			return mRenderingEffects;
+ 		}
+		void ShadingModel::SetEffect(const Uint32& effectId, bool value)
+		{
+			auto it = mRenderingEffects.find(effectId);
+			if (it != mRenderingEffects.end())
+			{
+				it->second.SetValue(value);
+			}
+			else
+			{
+				assert(false);
+			}
+		}
+		std::string ShadingModel::GetName()
+		{
+			return mName;
+ 		}
 	}
 }

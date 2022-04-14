@@ -10,6 +10,7 @@ namespace Nuclear
 		DiffuseOnly::DiffuseOnly()
 		{
 			mID  = Utilities::Hash("NE_Diffuse_Only");
+			mName = "NE_Diffuse_Only";
 		}
 
 		bool DiffuseOnly::Bake(const ShadingModelBakingDesc& desc)

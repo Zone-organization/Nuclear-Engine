@@ -26,7 +26,7 @@ namespace Nuclear
 		{
 		}
 
-		void RenderSystem::AddRenderingPipeline(Rendering::ShadingModel* Pipeline)
+		void RenderSystem::AddRenderingPipeline(Rendering::RenderingPipeline* Pipeline)
 		{
 			if (!Pipeline)
 			{
@@ -65,7 +65,7 @@ namespace Nuclear
 
 			for (auto it : mRenderingPipelines)
 			{
-				material->CreateInstance(it.second);
+				material->CreateInstance(it.second->GetShadingModel());
 			}
 		}
 
@@ -77,7 +77,7 @@ namespace Nuclear
 			auto it = mRenderingPipelines.find(PipelineID);
 			if (it != mRenderingPipelines.end())
 			{
-				material->CreateInstance(it->second);
+				material->CreateInstance(it->second->GetShadingModel());
 				return;
 			}
 
@@ -137,25 +137,27 @@ namespace Nuclear
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 			RPDesc.AnimationBufferPtr = animCB;
 
-			for (auto it : mCameraSystem.GetMainCamera()->mCameraEffects)
-			{
-				if (it.GetType() == Rendering::ShaderEffect::Type::CameraAndRenderingEffect)
-				{
-					RPDesc.mRequiredEffects.push_back(it);
-				}
-			}
+			//for (auto it : mCameraSystem.GetMainCamera()->mCameraEffects)
+			//{
+			//	if (it.GetType() == Rendering::ShaderEffect::Type::CameraAndRenderingEffect)
+			//	{
+			//		RPDesc.mRequiredEffects.push_back(it);
+			//	}
+			//}
 			if(AllPipelines)
 			{ 
 				for (auto it : mRenderingPipelines)
 				{
-					if(it.second->GetStatus() != Graphics::BakeStatus::Baked)
-						it.second->Bake(RPDesc);
+					if(it.second->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
+						it.second->GetShadingModel()->Bake(RPDesc);
 				}
+
+
 			}
 			else
 			{
-				if (mActiveRenderingPipeline->GetStatus() != Graphics::BakeStatus::Baked)
-					mActiveRenderingPipeline->Bake(RPDesc);
+				if (mActiveRenderingPipeline->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
+					mActiveRenderingPipeline->GetShadingModel()->Bake(RPDesc);
 			}
 
 			//TODO: Move!
@@ -168,9 +170,9 @@ namespace Nuclear
 			Assets::Mesh::CreateScreenQuad(&CameraScreenQuad);
 
 		}
-		IPipelineState * RenderSystem::GetPipeline()
+		Rendering::RenderingPipeline* RenderSystem::GetActivePipeline()
 		{
-			return mActiveRenderingPipeline->GetPipeline();
+			return mActiveRenderingPipeline;
 		}
 		CameraSubSystem& RenderSystem::GetCameraSubSystem()
 		{
@@ -240,7 +242,7 @@ namespace Nuclear
 				//Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
-				Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
+				Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline()->GetShadingModel()->GetPipeline());
 
 				RenderMeshes();
 
@@ -309,7 +311,7 @@ namespace Nuclear
 
 			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
 			{
-				material->GetMaterialInstance(mActiveRenderingPipeline->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
+				material->GetMaterialInstance(mActiveRenderingPipeline->GetShadingModel()->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
 				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);

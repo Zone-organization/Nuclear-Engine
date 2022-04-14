@@ -21,10 +21,15 @@ class Sample2 : public Core::Game
 	Graphics::Camera Camera;
 
 	Rendering::PBR PBR;
-	Rendering::PBR TestPBR;
+	//Rendering::PBR TestPBR;
 	Rendering::BlinnPhong BlinnPhong;
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
+
+	Rendering::RenderingPipeline PBRPipeline;
+	Rendering::RenderingPipeline BlinnPhongPipeline;
+	Rendering::RenderingPipeline DiffuseRPPipeline;
+	Rendering::RenderingPipeline WireFrameRPPipeline;
 
 	//ECS
 	ECS::Scene Scene;
@@ -42,7 +47,11 @@ class Sample2 : public Core::Game
 	bool isMouseDisabled = false;
 public:
 	Sample2()
-		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH,10.f, Graphics::SENSITIVTY, Graphics::ZOOM)
+		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH,10.f, Graphics::SENSITIVTY, Graphics::ZOOM),
+		 PBRPipeline("PBR"),
+	 BlinnPhongPipeline("BlinnPhone"),
+	DiffuseRPPipeline("DiffuseRP"),
+	 WireFrameRPPipeline("WireFrameRP")
 	{
 
 	}
@@ -120,14 +129,18 @@ public:
 
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 
+		PBRPipeline.Initialize(&PBR, &Camera);
+		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);
+		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
+		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
 
 		//Scene.Systems.Configure();
-		TestPBR.test = true;
-		Renderer->AddRenderingPipeline(&PBR);
-		Renderer->AddRenderingPipeline(&TestPBR);
-		Renderer->AddRenderingPipeline(&BlinnPhong);
-		Renderer->AddRenderingPipeline(&DiffuseRP);
-		Renderer->AddRenderingPipeline(&WireFrameRP);
+		//TestPBR.test = true;
+		Renderer->AddRenderingPipeline(&PBRPipeline);
+		//Renderer->AddRenderingPipeline(&TestPBR);
+		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
+		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
+		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
 
 		Renderer->Bake();
 	}
@@ -276,15 +289,15 @@ public:
 
 				//Change Rendering Pipeline
 				if (e == 0)
-					Renderer->SetActiveRenderingPipeline(PBR.GetID());
+					Renderer->SetActiveRenderingPipeline(PBRPipeline.GetID());
 				else if (e == 1)
-					Renderer->SetActiveRenderingPipeline(BlinnPhong.GetID());
+					Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
 				else if (e == 2)
-					Renderer->SetActiveRenderingPipeline(DiffuseRP.GetID());
+					Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
 				else if (e == 3)
-					Renderer->SetActiveRenderingPipeline(WireFrameRP.GetID());
-				else if (e == 5)
-					Renderer->SetActiveRenderingPipeline(TestPBR.GetID());
+					Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
+				//else if (e == 5)
+				//	Renderer->SetActiveRenderingPipeline(TestPBR.GetID());
 
 				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
@@ -299,11 +312,11 @@ public:
 
 				for (auto& it : Camera.mCameraEffects)
 				{
-					bool value = it.GetValue();
-					ImGui::Checkbox(it.GetName().c_str(), &value);
-					if (value != it.GetValue())
+					bool value = it.second.GetValue();
+					ImGui::Checkbox(it.second.GetName().c_str(), &value);
+					if (value != it.second.GetValue())
 					{
-						it.SetValue(value);
+						it.second.SetValue(value);
 					}
 				}
 				//ImGui::DragFloat("Movement Speed", &Camera.MovementSpeed);

@@ -5,6 +5,9 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		ShaderEffect::ShaderEffect()
+		{
+		}
 		ShaderEffect::ShaderEffect(const std::string& name, Type type, bool InitialValue)
 		{
 			mName = name;

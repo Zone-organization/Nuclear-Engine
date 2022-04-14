@@ -4,7 +4,6 @@
 #include <FMOD/inc/fmod.hpp>
 #include <Core/Path.h>
 #include <unordered_map>
-#include <map>
 #include <array>
 
 #define MAX_BONE_INFLUENCE 4
@@ -73,7 +72,7 @@ namespace Nuclear
 			AssetManager(AssetManagerDesc desc = AssetManagerDesc());
 			~AssetManager();
 
-			std::map<Uint32, Assets::Image> mImportedImages; //All loaded textures with their hashed names with crc32c (always saved)
+			std::unordered_map<Uint32, Assets::Image> mImportedImages; //All loaded textures with their hashed names with crc32c (always saved)
 			std::unordered_map<Uint32, Core::Path> mHashedImagesPaths; //Real pre-hashed texture paths (conditionally saved see SaveTexturePaths)
 			bool mSaveTexturesPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
 

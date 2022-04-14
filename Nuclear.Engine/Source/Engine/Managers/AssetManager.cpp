@@ -27,7 +27,7 @@ namespace Nuclear {
 			: mDesc(desc)
 		{
 			//Initialize Containers
-			mImportedImages = std::map<Uint32, Assets::Image>();
+			mImportedImages = std::unordered_map<Uint32, Assets::Image>();
 			mHashedImagesPaths = std::unordered_map<Uint32, Core::Path>();
 
 			mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();

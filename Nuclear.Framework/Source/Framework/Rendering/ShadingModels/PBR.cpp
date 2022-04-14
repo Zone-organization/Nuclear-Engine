@@ -11,6 +11,8 @@ namespace Nuclear
 			static int id = 0;
 			mID = Utilities::Hash("NE_PBR_NO_IBL" + id);
 			id++;
+
+			mName = "NE_PBR_NO_IBL";
 		}
 		bool PBR::Bake(const ShadingModelBakingDesc& desc)
 		{

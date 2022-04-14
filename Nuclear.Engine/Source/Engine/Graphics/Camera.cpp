@@ -16,9 +16,10 @@ namespace Nuclear
 		Camera::Camera(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
 			: position(__position), Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
 		{
-			mCameraEffects.push_back(Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::CameraEffect, false));
-			mCameraEffects.push_back(Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::CameraEffect, false));
-			mCameraEffects.push_back(Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::CameraAndRenderingEffect, false));
+			mCameraEffects[Utilities::Hash("HDR")] = Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::CameraEffect, false);
+			mCameraEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::CameraEffect, false);
+			mCameraEffects[Utilities::Hash("BLOOM")] = Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::CameraAndRenderingEffect, false);
+
 		}
 
 		Camera::~Camera()
@@ -78,14 +79,14 @@ namespace Nuclear
 
 				for (auto it : mCameraEffects)
 				{
-					if (it.GetValue())
+					if (it.second.GetValue())
 					{
 						if (_hashzeroed)
 						{
 							RequiredHash = 0;
 							_hashzeroed = true;
 						}
-						auto val = RequiredHash + it.GetID();
+						auto val = RequiredHash + it.second.GetID();
 
 						RequiredHash = val;
 					}
@@ -153,15 +154,28 @@ namespace Nuclear
 			return mActiveSRB.RawPtr();
 		}
 
-		void Camera::SetEffect(const std::string& effectname, bool value)
-		{
+		//void Camera::SetEffect(const std::string& effectname, bool value)
+		//{
 
-			for (auto it : mCameraEffects)
+		//	for (auto it : mCameraEffects)
+		//	{
+		//		if (it.GetName() == effectname)
+		//		{
+		//			it.SetValue(value);
+		//		}
+		//	}
+		//}
+
+		void Camera::SetEffect(const Uint32& effectId, bool value)
+		{
+			auto it = mCameraEffects.find(effectId);
+			if (it != mCameraEffects.end())
 			{
-				if (it.GetName() == effectname)
-				{
-					it.SetValue(value);
-				}
+				it->second.SetValue(value);
+			}
+			else
+			{
+				assert(false);
 			}
 			mPipelineDirty = true;
 		}
@@ -260,7 +274,7 @@ namespace Nuclear
 
 			for (auto it : mCameraEffects)
 			{
-				PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.GetName()));
+				PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
 			}
 
 			PSOCreateInfo.mVShaderPath = VS_Path;
@@ -282,7 +296,7 @@ namespace Nuclear
 			bool bloomincluded = false;
 			for (auto it : mCameraEffects)
 			{
-				if(it.GetName() == "BLOOM")
+				if(it.second.GetName() == "BLOOM")
 				{
 					bloomincluded = true;
 				}

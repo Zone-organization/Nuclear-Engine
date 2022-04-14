@@ -82,9 +82,9 @@ namespace Nuclear
 			float MouseSensitivity;
 			float Zoom;
 
-			void SetEffect(const std::string& effectname, bool value);
+			void SetEffect(const Uint32& effectId, bool value);
 
-			std::vector<Rendering::ShaderEffect> mCameraEffects;
+			std::unordered_map<Uint32, Rendering::ShaderEffect> mCameraEffects;
 
 			CameraBuffer mCameraData;
 		

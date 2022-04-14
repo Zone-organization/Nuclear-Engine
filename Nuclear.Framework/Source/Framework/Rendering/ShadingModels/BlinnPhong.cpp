@@ -8,12 +8,17 @@ namespace Nuclear
 	{
 		BlinnPhong::BlinnPhong(bool NormalMaps)
 		{
-			if(NormalMaps)
-				mID = Utilities::Hash("NE_BlinnPhong");
+			if (NormalMaps)
+				mName = "NE_BlinnPhong";
 			else
-				mID = Utilities::Hash("NE_BlinnPhong_Normal");
+				mName = "NE_BlinnPhong_Normal";
+
+
+			mID = Utilities::Hash(mName);
 
 			mNormalMaps = NormalMaps;
+
+			mRenderingEffects[Utilities::Hash("BLOOM")] = ShaderEffect("BLOOM", ShaderEffect::Type::CameraAndRenderingEffect, true);
 		}
 		bool BlinnPhong::Bake(const ShadingModelBakingDesc& desc)
 		{
