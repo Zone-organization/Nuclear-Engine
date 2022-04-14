@@ -11,10 +11,12 @@ struct VertexInputType
 {
     float4 Position : ATTRIB0;
     float2 TexCoord : ATTRIB1;
+#ifdef NE_USE_DEF_CAMERA
     float3 Normals : ATTRIB2;
     float3 Tangents : ATTRIB3;
     int4 BoneIDs : ATTRIB4;
     float4 Weights : ATTRIB5;
+#endif
 };
 
 
@@ -22,9 +24,11 @@ struct PixelInputType
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD0;
+#ifdef NE_USE_DEF_CAMERA
     float3 Normals : NORMAL0;
     float3 FragPos : TEXCOORD1;
     float3x3 TBN : TANGENT0;
+#endif
 };
 
 #ifdef NE_USE_DEF_CAMERA
@@ -85,10 +89,10 @@ PixelInputType main(VertexInputType input)
     output.TexCoord = input.TexCoord;
 
 
-#if defined(NE_USE_DEF_CAMERA)
+#ifdef NE_USE_DEF_CAMERA
     output.Normals = mul((float3x3)ModelInvTranspose, FinalNorm.xyz);
-#else
-    output.Normals = FinalNorm.xyz;
+//#else
+    //output.Normals = FinalNorm.xyz;
 #endif
 
 
@@ -96,6 +100,7 @@ PixelInputType main(VertexInputType input)
     output.FragPos = mul(Model, FinalPos).xyz;
 #endif
 
+#ifdef NE_USE_DEF_CAMERA
     float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
     float3 N = normalize(mul(float4(FinalNorm.xyz, 0.0f), Model).xyz);
     //Gram-Schmidt process
@@ -105,6 +110,7 @@ PixelInputType main(VertexInputType input)
     float3 B = cross(N, T);
     
     output.TBN = float3x3(T, B, N);
+#endif
 
     return output;
 }

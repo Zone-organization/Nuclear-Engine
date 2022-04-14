@@ -1,5 +1,5 @@
 #include <Engine\Assets\Material.h>
-#include <Engine\Graphics\RenderingPipeline.h>
+#include <Engine\Rendering\ShadingModel.h>
 #include <Core\Logger.h>
 
 namespace Nuclear
@@ -16,7 +16,7 @@ namespace Nuclear
 			mMaterialInstances.clear();
 			mName = std::string();
 		}
-		void Material::CreateInstance(Graphics::RenderingPipeline* Pipeline)
+		void Material::CreateInstance(Rendering::ShadingModel* Pipeline)
 		{
 			MaterialInstance Instance;
 			Instance.Create(Pipeline);

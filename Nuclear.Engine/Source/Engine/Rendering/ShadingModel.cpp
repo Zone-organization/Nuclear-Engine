@@ -1,36 +1,36 @@
-#include <Engine\Graphics\RenderingPipeline.h>
+#include <Engine\Rendering\ShadingModel.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 #include <Engine/Managers/AssetManager.h>
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
-		IPipelineState* RenderingPipeline::GetPipeline()
+		IPipelineState* ShadingModel::GetPipeline()
 		{
 			return mPipeline.RawPtr();
 		}
 
-		TextureUsageType ParseTexUsageFromName(std::string& name)
+		Graphics::TextureUsageType ParseTexUsageFromName(std::string& name)
 		{
 			if (name.find("Diffuse") == 0)
-				return TextureUsageType::Diffuse;
+				return Graphics::TextureUsageType::Diffuse;
 			else if (name.find("Albedo") == 0)
-				return TextureUsageType::Albedo;
+				return Graphics::TextureUsageType::Albedo;
 			else if (name.find("Specular") == 0)
-				return TextureUsageType::Specular;
+				return Graphics::TextureUsageType::Specular;
 			else if (name.find("Metallic") == 0)
-				return TextureUsageType::Metallic;
+				return Graphics::TextureUsageType::Metallic;
 			else if (name.find("Normal") == 0)
-				return TextureUsageType::Normal;
+				return Graphics::TextureUsageType::Normal;
 			else if (name.find("Roughness") == 0)
-				return TextureUsageType::Roughness;
+				return Graphics::TextureUsageType::Roughness;
 			else if (name.find("AO") == 0)
-				return TextureUsageType::AO;
-			return TextureUsageType::Unknown;
+				return Graphics::TextureUsageType::AO;
+			return Graphics::TextureUsageType::Unknown;
 		}
 
-		void RenderingPipeline::ReflectPixelShaderData()
+		void ShadingModel::ReflectPixelShaderData()
 		{
 			RefCntAutoPtr<IShaderResourceBinding> TempSRB;
 
@@ -55,28 +55,28 @@ namespace Nuclear
 				}
 			}
 		}
-		Uint32 RenderingPipeline::GetID()
+		Uint32 ShadingModel::GetID()
 		{
 			return mID;
 		}
-		Texture RenderingPipeline::GetDefaultTextureFromType(Uint8 Type)
+		Graphics::Texture ShadingModel::GetDefaultTextureFromType(Uint8 Type)
 		{
 			//TODO: Improve
 
 			switch (Type)
 			{
-			case TextureUsageType::Diffuse:
+			case Graphics::TextureUsageType::Diffuse:
 				Managers::AssetManager::DefaultDiffuseTex;
-			case TextureUsageType::Specular:
+			case Graphics::TextureUsageType::Specular:
 				Managers::AssetManager::DefaultSpecularTex;
-			case TextureUsageType::Normal:
+			case Graphics::TextureUsageType::Normal:
 				Managers::AssetManager::DefaultNormalTex;
 			default:
 				break;
 			}
 			return Managers::AssetManager::DefaultBlackTex;
 		}
-		BakeStatus RenderingPipeline::GetStatus()
+		Graphics::BakeStatus ShadingModel::GetStatus()
 		{
 			return mStatus;
 		}

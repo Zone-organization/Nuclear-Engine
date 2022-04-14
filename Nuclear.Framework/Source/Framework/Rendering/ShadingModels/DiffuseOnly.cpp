@@ -1,18 +1,18 @@
-#include <Framework\Graphics\RenderingPipelines\DiffuseOnly.h>
+#include <Framework\Rendering\ShadingModels\DiffuseOnly.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 #include <Core/Utilities/Hash.h>
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
 		DiffuseOnly::DiffuseOnly()
 		{
 			mID  = Utilities::Hash("NE_Diffuse_Only");
 		}
 
-		bool DiffuseOnly::Bake(const RenderingPipelineDesc& desc)
+		bool DiffuseOnly::Bake(const ShadingModelBakingDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
@@ -57,7 +57,7 @@ namespace Nuclear
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 
 			ReflectPixelShaderData();
-			mStatus = BakeStatus::Baked;
+			mStatus = Graphics::BakeStatus::Baked;
 
 			return true;
 		}

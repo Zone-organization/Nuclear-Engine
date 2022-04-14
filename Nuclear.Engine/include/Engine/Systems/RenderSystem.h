@@ -2,7 +2,7 @@
 #include <Engine\ECS\System.h>
 #include <Engine\Systems\LightingSubSystem.h>
 #include <Engine\Systems\CameraSubSystem.h>
-#include <Engine\Graphics\RenderingPipeline.h>
+#include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
@@ -26,7 +26,7 @@ namespace Nuclear
 			RenderSystem(Graphics::Camera *startingcamera);
 			~RenderSystem();
 
-			void AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline);
+			void AddRenderingPipeline(Rendering::ShadingModel* Pipeline);
 			void SetActiveRenderingPipeline(Uint32 PipelineID);
 
 			void CreateMaterialForAllPipelines(Assets::Material* material);
@@ -64,8 +64,8 @@ namespace Nuclear
 
 			Assets::Mesh CameraScreenQuad;
 			Assets::Material LightSphereMaterial;
-			Graphics::RenderingPipeline* mActiveRenderingPipeline;
-			std::unordered_map<Uint32, Graphics::RenderingPipeline*> mRenderingPipelines;
+			Rendering::ShadingModel* mActiveRenderingPipeline;
+			std::unordered_map<Uint32, Rendering::ShadingModel*> mRenderingPipelines;  //TODO: Should be moved to camera
 		};
 
 	}

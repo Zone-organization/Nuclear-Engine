@@ -28,7 +28,6 @@ namespace Nuclear
 			ShaderCreateInfo CreationAttribs;
 			Layout->clear();
 
-			Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.UseCombinedTextureSamplers = true;
@@ -39,10 +38,10 @@ namespace Nuclear
 
 			std::vector<std::string> defines;
 
-
-			Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //POS
-			Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //UV
-			Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //NORMAL
+			Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+			Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
+			Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
+			Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
 			Layout->push_back(LayoutElement(4, 0, 4, VT_INT32, false));    //BONE ID
 			Layout->push_back(LayoutElement(5, 0, 4, VT_FLOAT32, false));  //WEIGHT
 

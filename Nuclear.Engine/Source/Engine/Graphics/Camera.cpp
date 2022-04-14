@@ -16,8 +16,9 @@ namespace Nuclear
 		Camera::Camera(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
 			: position(__position), Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
 		{
-			mCameraEffects.push_back(Graphics::ShaderEffect("HDR", Graphics::ShaderEffect::Type::CameraEffect, false));
-			mCameraEffects.push_back(Graphics::ShaderEffect("GAMMACORRECTION", Graphics::ShaderEffect::Type::CameraEffect, false));
+			mCameraEffects.push_back(Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::CameraEffect, false));
+			mCameraEffects.push_back(Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::CameraEffect, false));
+			mCameraEffects.push_back(Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::CameraAndRenderingEffect, false));
 		}
 
 		Camera::~Camera()
@@ -46,7 +47,7 @@ namespace Nuclear
 
 			mActiveSRB.Release();
 			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
-			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
+			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
 		}
 
 		void Camera::UpdateBuffer()
@@ -95,7 +96,7 @@ namespace Nuclear
 				mActivePSO = PSO_SRB.PSO;
 				mActiveSRB = PSO_SRB.SRB;
 
-				mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(GetCameraRT()->mShaderRTV);
+				mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
 			}
 		}
 
@@ -137,9 +138,9 @@ namespace Nuclear
 			return position;
 		}
 
-		Graphics::RenderTarget* Camera::GetCameraRT()
+		Graphics::RenderTarget* Camera::GetSceneRT()
 		{
-			return &CameraRT;
+			return &SceneRT;
 		}
 
 		IPipelineState* Camera::GetActivePipeline()
@@ -165,6 +166,80 @@ namespace Nuclear
 			mPipelineDirty = true;
 		}
 
+		void Camera::BakeBloom()
+		{
+			RefCntAutoPtr<IShader> VShader;
+			RefCntAutoPtr<IShader> PShader;
+			std::vector<LayoutElement> LayoutElems;
+
+			{
+				LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+				LayoutElems.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false)); //UV
+
+				ShaderCreateInfo CreationAttribs;
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.Desc.Name = "BlurVS";
+				CreationAttribs.EntryPoint = "main";
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VShader);
+			}
+			{
+				ShaderCreateInfo CreationAttribs;
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+				CreationAttribs.Desc.Name = "BlurPS";
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PShader);
+			}
+			GraphicsPipelineStateCreateInfo PSOCreateInfo;
+
+			PSOCreateInfo.PSODesc.Name = "CameraBloom_PSO";
+			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+			PSOCreateInfo.pVS = VShader;
+			PSOCreateInfo.pPS = PShader;
+			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+			PSOCreateInfo.PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
+
+			std::vector<ShaderResourceVariableDesc> Vars;
+			Vars.push_back({ SHADER_TYPE_PIXEL, "Texture", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE });
+
+			std::vector<ImmutableSamplerDesc> StaticSamplers;
+			StaticSamplers.push_back({ SHADER_TYPE_PIXEL, "Texture", Sam_LinearClamp });
+
+			PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Vars.size());
+			PSOCreateInfo.PSODesc.ResourceLayout.Variables = Vars.data();
+			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(StaticSamplers.size());
+			PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers.data();
+
+			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mBloomPSO);
+
+			mBloomPSO->CreateShaderResourceBinding(&mBloomSRB, true);
+
+			Graphics::RenderTargetDesc RTDesc;
+			RTDesc.Width = RTWidth;
+			RTDesc.Height = RTHeight;
+			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+
+			BloomRT.Create(RTDesc);
+		}
+
 		void Camera::BakeRenderTarget()
 		{
 			Graphics::RenderTargetDesc RTDesc;
@@ -172,7 +247,7 @@ namespace Nuclear
 			RTDesc.Height = RTHeight;
 			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
-			CameraRT.Create(RTDesc);
+			SceneRT.Create(RTDesc);
 		}
 
 		void Camera::BakePipeline()
@@ -203,6 +278,21 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
 			mPipeline.Create(PSOCreateInfo);
+
+			bool bloomincluded = false;
+			for (auto it : mCameraEffects)
+			{
+				if(it.GetName() == "BLOOM")
+				{
+					bloomincluded = true;
+				}
+			}
+
+			//Create Blur pipeline
+			if (bloomincluded)
+			{
+				BakeBloom();
+			}
 
 			UpdatePSO(true);
 		}

@@ -30,24 +30,26 @@ namespace Nuclear
 			mColorRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
 			mShaderRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-			//Create Depth Texture
-			RefCntAutoPtr<ITexture> pRTDepth;
-			TexDesc.Format = Desc.DepthTexFormat;
-			TexDesc.ClearValue.Format = TexDesc.Format;
-			TexDesc.ClearValue.DepthStencil.Depth = 1;
-			TexDesc.ClearValue.DepthStencil.Stencil = 0;
-			TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
+			if (Desc.mCreateDepth)
+			{
+				//Create Depth Texture
+				RefCntAutoPtr<ITexture> pRTDepth;
+				TexDesc.Format = Desc.DepthTexFormat;
+				TexDesc.ClearValue.Format = TexDesc.Format;
+				TexDesc.ClearValue.DepthStencil.Depth = 1;
+				TexDesc.ClearValue.DepthStencil.Stencil = 0;
+				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
 
-			Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTDepth);
-			mDepthDSV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
-
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTDepth);
+				mDepthDSV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
+			}
 		}
 
-		void RenderTarget::SetActive(const float* RGBA)
-		{		
-			Graphics::Context::GetContext()->SetRenderTargets(1, mColorRTV.RawDblPtr(), mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(mColorRTV.RawPtr(), RGBA, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		}
+	//	void RenderTarget::SetActive(const float* RGBA)
+	//	{		
+	//		Graphics::Context::GetContext()->SetRenderTargets(1, mColorRTV.RawDblPtr(), mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+	//		Graphics::Context::GetContext()->ClearRenderTarget(mColorRTV.RawPtr(), RGBA, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+	//		Graphics::Context::GetContext()->ClearDepthStencil(mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+	//	}
 	}
 }

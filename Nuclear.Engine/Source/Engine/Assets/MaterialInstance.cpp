@@ -1,7 +1,7 @@
 #include <Engine\Assets\MaterialInstance.h>
 #include <Core\Utilities\Hash.h>
 #include <Engine\Graphics\Context.h>
-#include <Engine\Graphics\RenderingPipeline.h>
+#include <Engine\Rendering\ShadingModel.h>
 #include <Core\Logger.h>
 
 namespace Nuclear
@@ -17,7 +17,7 @@ namespace Nuclear
 			mPShaderTextures.clear();
 			mRenderingPipeline = nullptr;
 		}
-		void MaterialInstance::Create(Graphics::RenderingPipeline* Pipeline)
+		void MaterialInstance::Create(Rendering::ShadingModel* Pipeline)
 		{
 			if (!Pipeline)
 			{

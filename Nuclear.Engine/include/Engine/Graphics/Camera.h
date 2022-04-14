@@ -3,9 +3,9 @@
 #include <Core\Math\Math.h>
 #include <Engine\Graphics\RenderTarget.h>
 #include <Engine\Graphics\Color.h>
-#include <Engine\Graphics\Skybox.h>
 #include <Engine\Graphics\CompoundPipeline.h>
-#include <Engine\Graphics\ShaderEffect.h>
+#include <Engine\Rendering\ShaderEffect.h>
+#include <Engine\Rendering\Skybox.h>
 
 namespace Nuclear
 {
@@ -27,6 +27,13 @@ namespace Nuclear
 			Math::Matrix4 View = Math::Matrix4(1.0f);
 			Math::Matrix4 Projection = Math::Matrix4(1.0f);
 		};
+
+		// Default camera values
+		const float YAW = -90.0f;
+		const float PITCH = 0.0f;
+		const float SPEED = 2.5f;
+		const float SENSITIVTY = 0.05f;
+		const float ZOOM = 45.0f;
 
 		/*
 		*Only Supports
@@ -66,7 +73,7 @@ namespace Nuclear
 			Math::Matrix4 GetProjectionMatrix();
 			Math::Vector3 GetPosition();
 
-			Graphics::RenderTarget* GetCameraRT();
+			Graphics::RenderTarget* GetSceneRT();
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
 
@@ -77,21 +84,24 @@ namespace Nuclear
 
 			void SetEffect(const std::string& effectname, bool value);
 
-			std::vector<Graphics::ShaderEffect> mCameraEffects;
+			std::vector<Rendering::ShaderEffect> mCameraEffects;
 
 			CameraBuffer mCameraData;
 		
 			Graphics::Color RTClearColor;
-			Graphics::Skybox* mSkybox = nullptr;
+			Rendering::Skybox* mSkybox = nullptr;
 			bool RenderSkybox = false;
 		protected:
-			Graphics::RenderTarget CameraRT;
+			Graphics::RenderTarget SceneRT;
+			Graphics::RenderTarget BloomRT;
 
 			Graphics::CompoundPipeline mPipeline;
 
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
+			RefCntAutoPtr<IPipelineState> mBloomPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mBloomSRB;
 
 			bool mPipelineDirty = true;
 
@@ -111,6 +121,7 @@ namespace Nuclear
 			Uint32 RTWidth = 0;
 			Uint32 RTHeight = 0;
 		private:
+			void BakeBloom();
 			void BakeRenderTarget();
 			void BakePipeline();
 		};

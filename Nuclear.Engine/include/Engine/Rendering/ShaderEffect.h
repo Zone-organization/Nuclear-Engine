@@ -5,7 +5,7 @@
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
 		class NEAPI ShaderEffect
 		{

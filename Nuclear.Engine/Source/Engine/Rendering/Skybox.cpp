@@ -1,4 +1,4 @@
-#include "Engine/Graphics/Skybox.h"
+#include "Engine/Rendering/Skybox.h"
 #include <Engine/Graphics/Context.h>
 #include <Engine/Managers/AssetManager.h>
 #include <Engine/Components/CameraComponent.h>
@@ -8,7 +8,7 @@
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
 
 		float skyboxVertices[] = {

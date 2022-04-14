@@ -26,7 +26,7 @@ namespace Nuclear
 		{
 		}
 
-		void RenderSystem::AddRenderingPipeline(Graphics::RenderingPipeline* Pipeline)
+		void RenderSystem::AddRenderingPipeline(Rendering::ShadingModel* Pipeline)
 		{
 			if (!Pipeline)
 			{
@@ -128,7 +128,7 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &animCB);
 
-			Graphics::RenderingPipelineDesc RPDesc;
+			Rendering::ShadingModelBakingDesc RPDesc;
 			
 			RPDesc.DirLights = static_cast<Uint32>(mLightingSystem.DirLights.size());
 			RPDesc.SpotLights = static_cast<Uint32>(mLightingSystem.SpotLights.size());
@@ -136,6 +136,14 @@ namespace Nuclear
 			RPDesc.CameraBufferPtr = mCameraSystem.GetCameraCB();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 			RPDesc.AnimationBufferPtr = animCB;
+
+			for (auto it : mCameraSystem.GetMainCamera()->mCameraEffects)
+			{
+				if (it.GetType() == Rendering::ShaderEffect::Type::CameraAndRenderingEffect)
+				{
+					RPDesc.mRequiredEffects.push_back(it);
+				}
+			}
 			if(AllPipelines)
 			{ 
 				for (auto it : mRenderingPipelines)
@@ -223,9 +231,13 @@ namespace Nuclear
 		{	
 			//Render Scene from each avtive camera perspective
 			//for (auto Camera : mCameraSystem.ActiveCameras)
-			//{
-			auto Camera = mCameraSystem.GetMainCamera();
-				Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
+			{
+				auto Camera = mCameraSystem.GetMainCamera();
+				Graphics::Context::GetContext()->SetRenderTargets(1, Camera->GetSceneRT()->mColorRTV.RawDblPtr(), Camera->GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->ClearRenderTarget(Camera->GetSceneRT()->mColorRTV.RawPtr(), (float*)&Camera->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->ClearDepthStencil(Camera->GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+				//Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
 				Graphics::Context::GetContext()->SetPipelineState(GetPipeline());
@@ -251,7 +263,7 @@ namespace Nuclear
 				{
 					Camera->mSkybox->Render();
 				}
-			//}
+			}
 			//Render Main camera view to screen
 			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
 			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();

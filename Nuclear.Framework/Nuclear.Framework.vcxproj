@@ -19,17 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Framework\Graphics\RenderingPipelines\BlinnPhong.h" />
-    <ClInclude Include="include\Framework\Graphics\RenderingPipelines\DiffuseOnly.h" />
-    <ClInclude Include="include\Framework\Graphics\RenderingPipelines\PBR.h" />
-    <ClInclude Include="include\Framework\Graphics\RenderingPipelines\WireFrame.h" />
+    <ClInclude Include="include\Framework\Rendering\ShadingModels\BlinnPhong.h" />
+    <ClInclude Include="include\Framework\Rendering\ShadingModels\DiffuseOnly.h" />
+    <ClInclude Include="include\Framework\Rendering\ShadingModels\PBR.h" />
+    <ClInclude Include="include\Framework\Rendering\ShadingModels\WireFrame.h" />
     <ClInclude Include="include\NuclearFramework.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Framework\Graphics\RenderingPipelines\BlinnPhong.cpp" />
-    <ClCompile Include="Source\Framework\Graphics\RenderingPipelines\DiffuseOnly.cpp" />
-    <ClCompile Include="Source\Framework\Graphics\RenderingPipelines\PBR.cpp" />
-    <ClCompile Include="Source\Framework\Graphics\RenderingPipelines\WireFrame.cpp" />
+    <ClCompile Include="Source\Framework\Rendering\ShadingModels\BlinnPhong.cpp" />
+    <ClCompile Include="Source\Framework\Rendering\ShadingModels\DiffuseOnly.cpp" />
+    <ClCompile Include="Source\Framework\Rendering\ShadingModels\PBR.cpp" />
+    <ClCompile Include="Source\Framework\Rendering\ShadingModels\WireFrame.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

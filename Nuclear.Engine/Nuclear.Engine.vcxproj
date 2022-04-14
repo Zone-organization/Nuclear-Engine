@@ -186,7 +186,7 @@
     <ClInclude Include="include\Engine\Graphics\Camera.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
-    <ClInclude Include="include\Engine\Graphics\ShaderEffect.h" />
+    <ClInclude Include="include\Engine\Rendering\ShaderEffect.h" />
     <ClInclude Include="include\Engine\Graphics\CompoundPipeline.h" />
     <ClInclude Include="include\Engine\Graphics\Graphics.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
@@ -199,7 +199,7 @@
     <ClInclude Include="include\Engine\Importers\Importers.h" />
     <ClInclude Include="include\Engine\Assets\Mesh.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
-    <ClInclude Include="include\Engine\Graphics\RenderingPipeline.h" />
+    <ClInclude Include="include\Engine\Rendering\ShadingModel.h" />
     <ClInclude Include="include\Engine\Managers\AssetLibrary.h" />
     <ClInclude Include="include\Engine\Systems\CameraSubSystem.h" />
     <ClInclude Include="include\Engine\Managers\Managers.h" />
@@ -236,7 +236,7 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_internal.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="include\Engine\Components\EntityInfoComponent.h" />
-    <ClInclude Include="include\Engine\Graphics\Skybox.h" />
+    <ClInclude Include="include\Engine\Rendering\Skybox.h" />
     <ClInclude Include="include\Engine\ECS\Common.h" />
     <ClInclude Include="include\Engine\ECS\Scene.h" />
     <ClInclude Include="include\NuclearEngine.h" />
@@ -317,7 +317,7 @@
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderEffect.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\ShaderEffect.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />
@@ -334,7 +334,7 @@
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_tables.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CompoundPipeline.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\RenderingPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\ShadingModel.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_draw.cpp" />
@@ -412,7 +412,7 @@
     <ClCompile Include="Source\Engine\Components\EntityInfoComponent.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\Engine\Components\CameraComponent.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\Skybox.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\Skybox.cpp" />
     <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />

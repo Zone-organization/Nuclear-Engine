@@ -1,10 +1,10 @@
-#include <Framework\Graphics\RenderingPipelines\BlinnPhong.h>
+#include <Framework\Rendering\ShadingModels\BlinnPhong.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
 		BlinnPhong::BlinnPhong(bool NormalMaps)
 		{
@@ -15,13 +15,24 @@ namespace Nuclear
 
 			mNormalMaps = NormalMaps;
 		}
-		bool BlinnPhong::Bake(const RenderingPipelineDesc& desc)
+		bool BlinnPhong::Bake(const ShadingModelBakingDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
-
-			PSOCreateInfo.PSODesc.Name = "RenderSystem PSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			//Check for bloom
+			for (auto it : desc.mRequiredEffects)
+			{
+				if (it.GetName() == "BLOOM")
+				{
+					PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 2;
+					PSOCreateInfo.GraphicsPipeline.RTVFormats[1] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				}
+			}
+
+
+			PSOCreateInfo.PSODesc.Name = "RenderSystem PSO";
+
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -57,6 +68,10 @@ namespace Nuclear
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
 				if (mNormalMaps) { defines.push_back("NE_USE_NORMAL_MAPS"); }
+				for (auto it : desc.mRequiredEffects)
+				{
+					defines.push_back(it.GetName());
+				}
 
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
@@ -85,7 +100,7 @@ namespace Nuclear
 
 			ReflectPixelShaderData();
 
-			mStatus = BakeStatus::Baked;
+			mStatus = Graphics::BakeStatus::Baked;
 
 			return true;
 		}

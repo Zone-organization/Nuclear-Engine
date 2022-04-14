@@ -16,6 +16,7 @@ namespace Nuclear
 			TEXTURE_FORMAT ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
 			TEXTURE_FORMAT DepthTexFormat = TEX_FORMAT_D32_FLOAT;
 			OptimizedClearValue ClearValue;
+			bool mCreateDepth = true;
 		};
 
 		class NEAPI RenderTarget
@@ -25,11 +26,13 @@ namespace Nuclear
 			~RenderTarget();
 
 			void Create(const RenderTargetDesc& Desc);
-			void SetActive(const float* RGBA);
+			//void SetActive(const float* RGBA);
 
 			RefCntAutoPtr<ITextureView> mColorRTV;
 			RefCntAutoPtr<ITextureView> mShaderRTV;
 			RefCntAutoPtr<ITextureView> mDepthDSV;
+		private:
+			bool mDepthCreated =false;
 		};
 	}
 }

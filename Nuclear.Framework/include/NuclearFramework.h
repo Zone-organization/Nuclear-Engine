@@ -1,5 +1,5 @@
 #pragma once
-#include <Framework/Graphics/RenderingPipelines/WireFrame.h>
-#include <Framework/Graphics/RenderingPipelines/PBR.h>
-#include <Framework/Graphics/RenderingPipelines/BlinnPhong.h>
-#include <Framework/Graphics/RenderingPipelines/DiffuseOnly.h>
+#include <Framework/Rendering/ShadingModels/WireFrame.h>
+#include <Framework/Rendering/ShadingModels/PBR.h>
+#include <Framework/Rendering/ShadingModels/BlinnPhong.h>
+#include <Framework/Rendering/ShadingModels/DiffuseOnly.h>

@@ -1,9 +1,9 @@
-#include <Engine\Graphics\ShaderEffect.h>
+#include <Engine\Rendering\ShaderEffect.h>
 #include <Core/Utilities/Hash.h>
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
 		ShaderEffect::ShaderEffect(const std::string& name, Type type, bool InitialValue)
 		{

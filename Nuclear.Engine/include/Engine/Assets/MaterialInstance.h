@@ -6,9 +6,9 @@
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
-		class RenderingPipeline;
+		class ShadingModel;
 	}
 	namespace Assets
 	{
@@ -18,13 +18,13 @@ namespace Nuclear
 			MaterialInstance();
 			~MaterialInstance();
 
-			void Create(Graphics::RenderingPipeline* Pipeline);
+			void Create(Rendering::ShadingModel* Pipeline);
 			void Initialize(const std::vector<TextureSet>& PixelShaderTextures);
 
 			void BindTexSet(Uint32 index);
 			std::vector<TextureSet> mPShaderTextures;
 		private:
-			Graphics::RenderingPipeline* mRenderingPipeline = nullptr;
+			Rendering::ShadingModel* mRenderingPipeline = nullptr;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 		};
 	}

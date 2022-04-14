@@ -13,7 +13,7 @@ namespace Nuclear
 			Material();
 			~Material();
 
-			void CreateInstance(Graphics::RenderingPipeline* Pipeline);
+			void CreateInstance(Rendering::ShadingModel* Pipeline);
 
 			Assets::MaterialInstance* GetMaterialInstance(Uint32 PipelineID);
 

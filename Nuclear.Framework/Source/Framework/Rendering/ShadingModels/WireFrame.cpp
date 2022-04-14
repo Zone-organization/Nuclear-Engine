@@ -1,18 +1,18 @@
-#include <Framework\Graphics\RenderingPipelines\WireFrame.h>
+#include <Framework\Rendering\ShadingModels\WireFrame.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 #include <Core/Utilities/Hash.h>
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
 		WireFrame::WireFrame()
 		{
 			mID = Utilities::Hash("NE_WireFrame");
 		}
 
-		bool WireFrame::Bake(const RenderingPipelineDesc& desc)
+		bool WireFrame::Bake(const ShadingModelBakingDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
@@ -58,7 +58,7 @@ namespace Nuclear
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 
 			ReflectPixelShaderData();
-			mStatus = BakeStatus::Baked;
+			mStatus = Graphics::BakeStatus::Baked;
 
 			return true;
 		}

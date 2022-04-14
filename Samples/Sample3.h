@@ -11,7 +11,7 @@ class Sample3 : public Core::Game
 	Assets::Material CubeMaterial;
 	Graphics::Camera Camera;
 
-	Graphics::DiffuseOnly DiffuseRP;
+	Rendering::DiffuseOnly DiffuseRP;
 
 	ECS::Scene Scene;
 	ECS::Entity EPlane;
@@ -26,7 +26,7 @@ class Sample3 : public Core::Game
 	bool isMouseDisabled = false;
 public:
 	Sample3()
-		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::Framework::YAW, Graphics::Framework::PITCH, Graphics::Framework::SPEED, Graphics::Framework::SENSITIVTY, Graphics::Framework::ZOOM)
+		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 	}
 

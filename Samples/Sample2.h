@@ -20,11 +20,11 @@ class Sample2 : public Core::Game
 
 	Graphics::Camera Camera;
 
-	Graphics::PBR PBR;
-	Graphics::PBR TestPBR;
-	Graphics::BlinnPhong BlinnPhong;
-	Graphics::DiffuseOnly DiffuseRP;
-	Graphics::WireFrame WireFrameRP;
+	Rendering::PBR PBR;
+	Rendering::PBR TestPBR;
+	Rendering::BlinnPhong BlinnPhong;
+	Rendering::DiffuseOnly DiffuseRP;
+	Rendering::WireFrame WireFrameRP;
 
 	//ECS
 	ECS::Scene Scene;
@@ -42,7 +42,7 @@ class Sample2 : public Core::Game
 	bool isMouseDisabled = false;
 public:
 	Sample2()
-		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::Framework::YAW, Graphics::Framework::PITCH, Graphics::Framework::SPEED, Graphics::Framework::SENSITIVTY, Graphics::Framework::ZOOM)
+		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH,10.f, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 
 	}

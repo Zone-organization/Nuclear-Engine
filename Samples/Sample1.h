@@ -48,12 +48,12 @@ class Sample1 : public Core::Game
 
 	Graphics::Camera Camera;
 
-	Graphics::Skybox Skybox;
+	Rendering::Skybox Skybox;
 
-	Graphics::DiffuseOnly DiffuseRP;
-	Graphics::WireFrame WireFrameRP;
-	Graphics::BlinnPhong BlinnPhongRP;
-	Graphics::BlinnPhong BlinnPhongWithNormalMapRP = Graphics::BlinnPhong(true);
+	Rendering::DiffuseOnly DiffuseRP;
+	Rendering::WireFrame WireFrameRP;
+	Rendering::BlinnPhong BlinnPhongRP;
+	Rendering::BlinnPhong BlinnPhongWithNormalMapRP = Rendering::BlinnPhong(true);
 
 	//ECS
 	ECS::Scene ModelsScene;
@@ -101,7 +101,7 @@ class Sample1 : public Core::Game
 
 public:
 	Sample1()
-		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f),  Graphics::Framework::YAW, Graphics::Framework::PITCH, Graphics::Framework::SPEED, Graphics::Framework::SENSITIVTY, Graphics::Framework::ZOOM)
+		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f),  Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 	}
 	void SetupAssets()

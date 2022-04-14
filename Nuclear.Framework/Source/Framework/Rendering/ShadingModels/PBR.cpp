@@ -1,10 +1,10 @@
-#include <Framework\Graphics\RenderingPipelines\PBR.h>
+#include <Framework\Rendering\ShadingModels\PBR.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 
 namespace Nuclear
 {
-	namespace Graphics
+	namespace Rendering
 	{
 		PBR::PBR()
 		{
@@ -12,7 +12,7 @@ namespace Nuclear
 			mID = Utilities::Hash("NE_PBR_NO_IBL" + id);
 			id++;
 		}
-		bool PBR::Bake(const RenderingPipelineDesc& desc)
+		bool PBR::Bake(const ShadingModelBakingDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
@@ -89,7 +89,7 @@ namespace Nuclear
 
 			ReflectPixelShaderData();
 
-			mStatus = BakeStatus::Baked;
+			mStatus = Graphics::BakeStatus::Baked;
 			return true;
 		}
 	}

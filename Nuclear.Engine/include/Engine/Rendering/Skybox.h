@@ -15,7 +15,7 @@ namespace Nuclear
 	{
 		class CameraComponent;
 	}
-	namespace Graphics
+	namespace Rendering
 	{			
 		class NEAPI Skybox
 		{
