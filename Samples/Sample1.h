@@ -236,7 +236,7 @@ public:
 		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
 
 
-		Renderer->Bake();
+		Renderer->Bake(_Width_, _Height_);
 	}
 
 	void Load()
@@ -254,8 +254,6 @@ public:
 		InitRenderer();
 
 		SetupAssets();
-
-		Camera.Bake(_Width_, _Height_);
 
 		Camera.mSkybox = &Skybox;
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
@@ -289,7 +287,7 @@ public:
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
 		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Camera.ResizeRenderTarget(width, height);
+		Renderer->ResizeRenderTargets(width, height);
 	}
 	void Update(float deltatime) override
 	{
@@ -322,8 +320,7 @@ public:
 
 		Camera.UpdateBuffer();
 		Renderer->GetCameraSubSystem().UpdateBuffer();
-
-		Camera.UpdatePSO();
+		Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	void Render(float dt) override
 	{
@@ -362,18 +359,18 @@ public:
 
 
 
-			if (ImGui::TreeNode("Camera"))
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+
+
+			if (ImGui::TreeNode("Pipeline Effects"))
 			{
-				ImGui::ColorEdit3("RenderTarget ClearColor", (float*)&Camera.RTClearColor);
-
-
-				for (auto& it : Camera.mCameraEffects)
+				for (auto& it : Renderer->GetActivePipeline()->mPairedEffects)
 				{
 					bool value = it.second.GetValue();
 					ImGui::Checkbox(it.second.GetName().c_str(), &value);
 					if (value != it.second.GetValue())
 					{
-						it.second.SetValue(value);
+						Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
 					}
 				}
 				ImGui::TreePop();

@@ -13,6 +13,8 @@ namespace Nuclear
 			id++;
 
 			mName = "NE_PBR_NO_IBL";
+
+			mRenderingEffects[Utilities::Hash("BLOOM")] = ShaderEffect("BLOOM", ShaderEffect::Type::PostProcessingAndRenderingEffect, false);
 		}
 		bool PBR::Bake(const ShadingModelBakingDesc& desc)
 		{
@@ -28,7 +30,15 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = True;
-
+			//Check for bloom
+			for (auto it : desc.mRequiredEffects)
+			{
+				if (it.GetName() == "BLOOM")
+				{
+					PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 2;
+					PSOCreateInfo.GraphicsPipeline.RTVFormats[1] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				}
+			}
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
@@ -58,7 +68,10 @@ namespace Nuclear
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
 				
-
+				for (auto it : desc.mRequiredEffects)
+				{
+					defines.push_back(it.GetName());
+				}
 				if (test = true) {
 					defines.push_back("TEST");
 				}

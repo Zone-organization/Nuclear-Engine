@@ -186,8 +186,16 @@ float3 CalcSpotLight(SpotLight light, float3 N, float3 WorldPos, float3 V, float
 	return float3((kD * albedo / PI + specular) * radiance * NdotL);
 
 }
+struct PS_OUTPUT
+{
+	float4 Color: SV_Target0;
+#ifdef BLOOM
+	float4 Bloom: SV_Target1;
+#endif
+};
+
 // ----------------------------------------------------------------------------
-float4 main(PixelInputType input) : SV_TARGET
+PS_OUTPUT main(PixelInputType input) : SV_TARGET
 {
 	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
 	float metallic = NEMat_Metallic.Sample(NEMat_Metallic_sampler, input.TexCoords).x;
@@ -247,7 +255,18 @@ float4 main(PixelInputType input) : SV_TARGET
 	float3 ambient = float3(0.03f, 0.03f, 0.03f) * albedo * ao;
 
 	float3 color = ambient + Lo;
+	
 
-	return float4(color,1.0f);
+	PS_OUTPUT output;
+	output.Color = float4(color, 1.0f);
+
+#ifdef BLOOM
+	float brightness = dot(color, float3(0.2126, 0.7152, 0.0722));
+	if (brightness > 1.0)
+		output.Bloom = float4(color, 1.0);
+	else
+		output.Bloom = float4(0.0, 0.0, 0.0, 1.0);
+#endif
+	return output;
 }
 

@@ -13,6 +13,9 @@ namespace Nuclear
 			static Assets::Mesh* GetCubeAsset();
 			static Assets::Mesh* GetSphereAsset();
 			static Assets::Mesh* GetPlaneAsset();
+
+			static Assets::Mesh* GetScreenQuadAsset();
+			static void RenderScreenQuad();
 		};
 	}
 }

@@ -11,9 +11,9 @@ namespace Nuclear
 		{
 		public:
 			enum class Type {
-				CameraEffect,
+				PostProcessingEffect,
 				RenderingEffect,
-				CameraAndRenderingEffect
+				PostProcessingAndRenderingEffect
 			};
 			ShaderEffect();
 			ShaderEffect(const std::string& name, Type type, bool InitialValue);

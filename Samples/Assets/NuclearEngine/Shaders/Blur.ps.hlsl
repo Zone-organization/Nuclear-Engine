@@ -22,21 +22,7 @@ static float weight[5] = { 0.2270270270, 0.1945945946, 0.1216216216, 0.054054054
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-	float normalization;
-	float4 color;
-
-	// Create a normalized value to average the weights out a bit.
-	normalization = (weight[0] + 2.0f * (weight[1] + weight[2] + weight[3] + weight[4]));
-
-	// Normalize the weights.
-	weight[0] = weight[0] / normalization;
-	weight[1] = weight[1] / normalization;
-	weight[2] = weight[2] / normalization;
-	weight[3] = weight[3] / normalization;
-	weight[4] = weight[4] / normalization;
-
-	// Initialize the color to black.
-	color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// Add the nine vertical pixels to the color by the specific weight of each.
 	color += Texture.Sample(Texture_sampler, input.texCoord1) * weight[4];

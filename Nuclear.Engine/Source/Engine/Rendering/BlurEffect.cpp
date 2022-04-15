@@ -107,8 +107,6 @@ namespace Nuclear
 			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 			RTDesc.mCreateDepth = false;
 
-		//	mBlurPSO.Create(RTDesc);
-
 			BlurHorizentalRT.Create(RTDesc);
 			BlurVerticalRT.Create(RTDesc);
 		}
@@ -127,6 +125,22 @@ namespace Nuclear
 			Graphics::Context::GetContext()->SetRenderTargets(1, BlurVerticalRT.mColorRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			mVertBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(texture);
+		}
+		void BlurEffect::ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight)
+		{
+			//mHorzBlurSRB.Release();
+			//mVertBlurSRB.Release();
+			//mHorzBlurPSO->CreateShaderResourceBinding(&mHorzBlurSRB, true);
+			//mVertBlurPSO->CreateShaderResourceBinding(&mVertBlurSRB, true);
+
+			Graphics::RenderTargetDesc RTDesc;
+			RTDesc.Width = RTWidth;
+			RTDesc.Height = RTHeight;
+			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+			RTDesc.mCreateDepth = false;
+
+			BlurHorizentalRT.Create(RTDesc);
+			BlurVerticalRT.Create(RTDesc);
 		}
 	}
 }

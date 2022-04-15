@@ -20,6 +20,8 @@ namespace Nuclear
 
 			void SetVerticalPSO(ITextureView* texture);
 
+			void ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight);
+
 		//private:
 			RefCntAutoPtr<IPipelineState> mHorzBlurPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mHorzBlurSRB;

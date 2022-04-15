@@ -36,7 +36,9 @@ namespace Nuclear
 
 			bool NeedsBaking();
 
-			void Bake(bool AllPipelines = true);
+			void Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines = true);
+
+			void ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight);
 
 			Rendering::RenderingPipeline* GetActivePipeline();
 

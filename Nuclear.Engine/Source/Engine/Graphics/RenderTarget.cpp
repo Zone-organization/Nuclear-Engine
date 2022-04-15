@@ -14,6 +14,14 @@ namespace Nuclear
 		}
 		void RenderTarget::Create(const RenderTargetDesc& Desc)
 		{
+			if (mColorRTV.RawPtr() != nullptr)
+			{
+				mColorRTV.Release();
+			}
+			if (mShaderRTV.RawPtr() != nullptr)
+			{
+				mShaderRTV.Release();
+			}
 			RefCntAutoPtr<ITexture> pRTColor;
 
 			//Create Color Texture
@@ -35,6 +43,10 @@ namespace Nuclear
 
 			if (Desc.mCreateDepth)
 			{
+				if (mDepthDSV.RawPtr() != nullptr)
+				{
+					mDepthDSV.Release();
+				}
 				//Create Depth Texture
 				RefCntAutoPtr<ITexture> pRTDepth;
 				TexDesc.Format = Desc.DepthTexFormat;

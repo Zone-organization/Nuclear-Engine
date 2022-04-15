@@ -29,8 +29,6 @@ namespace Nuclear
 
 			IBuffer* GetCameraCB();
 
-			void RenderScreenQuad();
-
 			//std::vector<Components::Camera*> RegisteredCameras;
 			//std::vector<Components::Camera*> ActiveCameras;
 		private:

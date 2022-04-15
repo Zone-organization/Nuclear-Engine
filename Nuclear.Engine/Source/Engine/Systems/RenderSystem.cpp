@@ -11,6 +11,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include "Engine/Animation/Animator.h"
 #include <Core\Logger.h>
+#include <Engine\Assets\DefaultMeshes.h>
 
 namespace Nuclear
 {
@@ -93,7 +94,7 @@ namespace Nuclear
 			return false;
 		}
 
-		void RenderSystem::Bake(bool AllPipelines)
+		void RenderSystem::Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines)
 		{
 			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
 			for (auto entity : DirLightView)
@@ -147,7 +148,7 @@ namespace Nuclear
 			{ 
 				for (auto it : mRenderingPipelines)
 				{
-					it.second->Bake(RPDesc);
+					it.second->Bake(RPDesc, RTWidth, RTHeight);
 
 					//if(it.second->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
 					//	it.second->GetShadingModel()->Bake(RPDesc);
@@ -169,6 +170,9 @@ namespace Nuclear
 			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultSpecularTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
+		}
+		void RenderSystem::ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight)
+		{
 		}
 		Rendering::RenderingPipeline* RenderSystem::GetActivePipeline()
 		{
@@ -230,17 +234,12 @@ namespace Nuclear
 			}
 		}
 		void RenderSystem::Update(ECS::TimeDelta dt)
-		{	
+		{
 			//Render Scene from each avtive camera perspective
 			//for (auto Camera : mCameraSystem.ActiveCameras)
 			{
 				auto Camera = mCameraSystem.GetMainCamera();
-				Camera->SetForRender();
-			/*	Graphics::Context::GetContext()->SetRenderTargets(1, Camera->GetSceneRT()->mColorRTV.RawDblPtr(), Camera->GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetContext()->ClearRenderTarget(Camera->GetSceneRT()->mColorRTV.RawPtr(), (float*)&Camera->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetContext()->ClearDepthStencil(Camera->GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);*/
-
-				//Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
+				GetActivePipeline()->StartRendering();
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
 				Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline()->GetShadingModel()->GetPipeline());
@@ -267,19 +266,19 @@ namespace Nuclear
 					Camera->mSkybox->Render();
 				}
 			}
+			//Rendering finished apply effects
+			GetActivePipeline()->ApplyPostProcessingEffects();
+
+			//Render pipeline render targets
+			GetActivePipeline()->SetPipelineState();
+
 			//Render Main camera view to screen
 			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
 			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
 			Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-			auto MainCameraPtr = mCameraSystem.GetMainCamera();
-			//Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetActivePipeline());
-			//Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			MainCameraPtr->SetForScreenRender(&mCameraSystem);
-
-			mCameraSystem.RenderScreenQuad();
+			Assets::DefaultMeshes::RenderScreenQuad();
 		}
 
 		void RenderSystem::InstantRender(const Components::MeshComponent &object)

@@ -18,7 +18,7 @@ namespace Nuclear
 
 			mNormalMaps = NormalMaps;
 
-			mRenderingEffects[Utilities::Hash("BLOOM")] = ShaderEffect("BLOOM", ShaderEffect::Type::CameraAndRenderingEffect, true);
+			mRenderingEffects[Utilities::Hash("BLOOM")] = ShaderEffect("BLOOM", ShaderEffect::Type::PostProcessingAndRenderingEffect, false);
 		}
 		bool BlinnPhong::Bake(const ShadingModelBakingDesc& desc)
 		{

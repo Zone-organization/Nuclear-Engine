@@ -2,7 +2,6 @@
 #include "Core/Math/gtc/matrix_inverse.hpp"
 #include <Engine.h>
 #include <Engine/ECS\Scene.h>
-#include <Engine\Graphics\Context.h>
 #include <Diligent/Graphics/GraphicsTools/interface/CommonlyUsedStates.h>
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
@@ -19,10 +18,7 @@ namespace Nuclear
 		Camera::Camera(Math::Vector3 __position, Math::Vector3 _Worldup, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
 			: position(__position), Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(_Worldup), Zoom(_Zoom)
 		{
-			mCameraEffects[Utilities::Hash("HDR")] = Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::CameraEffect, false);
-			mCameraEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::CameraEffect, false);
-			mCameraEffects[Utilities::Hash("BLOOM")] = Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::CameraAndRenderingEffect, false);
-
+		
 		}
 
 		Camera::~Camera()
@@ -33,25 +29,6 @@ namespace Nuclear
 		{
 			mCameraData.Projection = projectionMatrix;
 			UpdateBuffer();
-		}
-
-		void Camera::Bake(Uint32 Width, Uint32 Height)
-		{
-			RTWidth = Width;
-			RTHeight = Height;
-			BakeRenderTarget();
-			BakePipeline();
-		}
-
-		void Camera::ResizeRenderTarget(Uint32 Width, Uint32 Height)
-		{
-			RTWidth = Width;
-			RTHeight = Height;
-			BakeRenderTarget();
-
-			mActiveSRB.Release();
-			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
-			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
 		}
 
 		void Camera::UpdateBuffer()
@@ -72,37 +49,6 @@ namespace Nuclear
 
 		}
 
-		void Camera::UpdatePSO(bool ForceDirty)
-		{
-			RequiredHash = 0;
-
-			if (mPipelineDirty || ForceDirty)
-			{
-				bool _hashzeroed = false;
-
-				for (auto it : mCameraEffects)
-				{
-					if (it.second.GetValue())
-					{
-						if (_hashzeroed)
-						{
-							RequiredHash = 0;
-							_hashzeroed = true;
-						}
-						auto val = RequiredHash + it.second.GetID();
-
-						RequiredHash = val;
-					}
-				}
-
-				auto PSO_SRB = mPipeline.GetVariant(RequiredHash);
-
-				mActivePSO = PSO_SRB.PSO;
-				mActiveSRB = PSO_SRB.SRB;
-
-				mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
-			}
-		}
 
 		void Camera::SetModelMatrix(Math::Matrix4 modelMatrix)
 		{
@@ -142,223 +88,6 @@ namespace Nuclear
 			return position;
 		}
 
-		Graphics::RenderTarget* Camera::GetSceneRT()
-		{
-			return &SceneRT;
-		}
-
-		IPipelineState* Camera::GetActivePipeline()
-		{
-			return mActivePSO.RawPtr();
-		}
-
-		IShaderResourceBinding* Camera::GetActiveSRB()
-		{
-			return mActiveSRB.RawPtr();
-		}
-
-		//void Camera::SetEffect(const std::string& effectname, bool value)
-		//{
-
-		//	for (auto it : mCameraEffects)
-		//	{
-		//		if (it.GetName() == effectname)
-		//		{
-		//			it.SetValue(value);
-		//		}
-		//	}
-		//}
-
-		void Camera::SetEffect(const Uint32& effectId, bool value)
-		{
-			auto it = mCameraEffects.find(effectId);
-			if (it != mCameraEffects.end())
-			{
-				it->second.SetValue(value);
-			}
-			else
-			{
-				assert(false);
-			}
-			mPipelineDirty = true;
-		}
-
-		void Camera::SetForRender()
-		{
-			std::vector<ITextureView*> RTargets;
-			RTargets.push_back(GetSceneRT()->mColorRTV);
-
-			//Find bloom
-			bool bloomenabled_ = false;
-			auto it = mCameraEffects.find(Utilities::Hash("BLOOM"));
-			if (it != mCameraEffects.end())
-			{
-				if (it->second.GetValue())
-				{
-					RTargets.push_back(BloomRT.mColorRTV);
-					bloomenabled_ = true;
-				}
-			}
-			
-			Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data() , GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			
-			if (bloomenabled_)
-			{
-				Graphics::Context::GetContext()->ClearRenderTarget(BloomRT.mColorRTV, (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			}
-			Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		}
-
-		void Camera::SetForScreenRender(Systems::CameraSubSystem* sys)
-		{
-			//Find bloom
-			bool bloomenabled_ = false;
-			auto it = mCameraEffects.find(Utilities::Hash("BLOOM"));
-			if (it != mCameraEffects.end())
-			{
-				if (it->second.GetValue())
-				{
-					bloomenabled_ = true;
-				}
-			}
-
-			//Apply blur
-
-			if (bloomenabled_)
-			{
-
-				bool horizontal = true, first_iteration = true, horicleared = false, verticleared = false;
-				int amount = 10;
-
-
-				for (unsigned int i = 0; i < amount; i++)
-				{
-					Math::Vector4i data;
-
-					if (horizontal)
-					{
-						mBloomBlur.SetHorizentalPSO(first_iteration ? BloomRT.mShaderRTV : mBloomBlur.BlurVerticalRT.mShaderRTV);
-					}
-					else
-					{
-						mBloomBlur.SetVerticalPSO(mBloomBlur.BlurHorizentalRT.mShaderRTV);
-					}
-
-					//X: Texture Width
-					//Y: Texutre Height
-					//Z: Padding
-					//W: Padding
-					{
-						data.x = BloomRT.GetWidth();
-						data.y = BloomRT.GetHeight();
-
-						Diligent::MapHelper<Math::Vector4i> CBConstants(Graphics::Context::GetContext(), mBloomBlur.mBlurCB, MAP_WRITE, MAP_FLAG_DISCARD);
-						*CBConstants = data;
-					}
-
-
-					if (horizontal)
-					{
-						Graphics::Context::GetContext()->CommitShaderResources(mBloomBlur.mHorzBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					}
-					else
-					{
-						Graphics::Context::GetContext()->CommitShaderResources(mBloomBlur.mVertBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					}
-
-					sys->RenderScreenQuad();
-					horizontal = !horizontal;
-					if (first_iteration)
-						first_iteration = false;
-				}
-
-			}
-			Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline());
-
-			GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
-
-			if (bloomenabled_)
-			{
-				GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mBloomBlur.BlurVerticalRT.mShaderRTV);
-			}
-
-			Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-			if (bloomenabled_)
-			{
-				auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
-				auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
-				Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				//Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				//Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			}
-		}
-
-		void Camera::BakeRenderTarget()
-		{
-			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = RTWidth;
-			RTDesc.Height = RTHeight;
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-
-			SceneRT.Create(RTDesc);
-		}
-
-		void Camera::BakePipeline()
-		{
-			std::vector<LayoutElement> Layout;
-
-			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
-			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-			Graphics::CompoundPipelineDesc PSOCreateInfo;
-
-			for (auto it : mCameraEffects)
-			{
-				PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
-			}
-
-			PSOCreateInfo.mVShaderPath = VS_Path;
-			PSOCreateInfo.mPShaderPath = PS_Path;
-
-			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
-			
-			mPipeline.Create(PSOCreateInfo);
-
-			bool bloomincluded = false;
-			for (auto it : mCameraEffects)
-			{
-				if(it.second.GetName() == "BLOOM")
-				{
-					bloomincluded = true;
-				}
-			}
-
-			//Create Blur pipeline
-			if (bloomincluded)
-			{
-				Graphics::RenderTargetDesc RTDesc;
-				RTDesc.Width = RTWidth;
-				RTDesc.Height = RTHeight;
-				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-				RTDesc.mCreateDepth = false;
-
-				BloomRT.Create(RTDesc);
-
-				mBloomBlur.Initialize(RTWidth, RTHeight);
-			}
-
-			UpdatePSO(true);
-		}
 
 		void Camera::ProcessEye(float xoffset, float yoffset, bool constrainPitch)
 		{

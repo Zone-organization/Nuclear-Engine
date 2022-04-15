@@ -61,13 +61,10 @@ namespace Nuclear
 
 			void Initialize(Math::Matrix4 projectionMatrix);
 
-			void Bake(Uint32 RTWidth, Uint32 RTHeight);
-			void ResizeRenderTarget(Uint32 Width, Uint32 Height);
+			//void Bake(Uint32 RTWidth, Uint32 RTHeight);
+			//void ResizeRenderTarget(Uint32 Width, Uint32 Height);
 
 			void UpdateBuffer();
-
-			//Call on the beginning of every frame
-			void UpdatePSO(bool ForceDirty = false);
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
@@ -79,22 +76,22 @@ namespace Nuclear
 			Math::Matrix4 GetProjectionMatrix();
 			Math::Vector3 GetPosition();
 
-			Graphics::RenderTarget* GetSceneRT();
+			/*Graphics::RenderTarget* GetSceneRT();
 			IPipelineState* GetActivePipeline();
-			IShaderResourceBinding* GetActiveSRB();
+			IShaderResourceBinding* GetActiveSRB();*/
 
 			// Camera options
 			float MovementSpeed;
 			float MouseSensitivity;
 			float Zoom;
 
-			void SetEffect(const Uint32& effectId, bool value);
+	/*		void SetEffect(const Uint32& effectId, bool value);
 
 			void SetForRender();
 
 			void SetForScreenRender(Systems::CameraSubSystem* sys);
 
-			std::unordered_map<Uint32, Rendering::ShaderEffect> mCameraEffects;
+			std::unordered_map<Uint32, Rendering::ShaderEffect> mCameraEffects;*/
 
 			CameraBuffer mCameraData;
 		
@@ -102,7 +99,7 @@ namespace Nuclear
 			Rendering::Skybox* mSkybox = nullptr;
 			bool RenderSkybox = false;
 		protected:
-			Graphics::RenderTarget SceneRT;
+			/*Graphics::RenderTarget SceneRT;
 			Graphics::RenderTarget BloomRT;
 
 			Graphics::CompoundPipeline mPipeline;
@@ -110,15 +107,9 @@ namespace Nuclear
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
-			//RefCntAutoPtr<IPipelineState> mBloomBlurPSO;
-			//RefCntAutoPtr<IShaderResourceBinding> mBloomBlurSRB;
-			//RefCntAutoPtr<IBuffer> mBloomBlurCB;
-
-			//Graphics::RenderTarget BlurPassHorizental;
-			//Graphics::RenderTarget BlurPassVertical;
 			Rendering::BlurEffect mBloomBlur;
 
-			bool mPipelineDirty = true;
+			bool mPipelineDirty = true;*/
 
 			// Eular Angles
 			float Yaw;
@@ -128,16 +119,16 @@ namespace Nuclear
 
 			Math::Vector3 position, direction;
 
-			Uint32 RequiredHash = 0;
+			//Uint32 RequiredHash = 0;
 
-			std::string VS_Path = "Assets/NuclearEngine/Shaders/Camera.vs.hlsl";
-			std::string PS_Path = "Assets/NuclearEngine/Shaders/Camera.ps.hlsl";
+			//std::string VS_Path = "Assets/NuclearEngine/Shaders/Camera.vs.hlsl";
+			//std::string PS_Path = "Assets/NuclearEngine/Shaders/Camera.ps.hlsl";
 
-			Uint32 RTWidth = 0;
-			Uint32 RTHeight = 0;
+			//Uint32 RTWidth = 0;
+			//Uint32 RTHeight = 0;
 		private:
-			void BakeRenderTarget();
-			void BakePipeline();
+			//void BakeRenderTarget();
+			//void BakePipeline();
 		};
 	}
 }
