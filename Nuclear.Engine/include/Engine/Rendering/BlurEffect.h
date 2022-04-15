@@ -15,9 +15,18 @@ namespace Nuclear
 		public:
 
 			void Initialize(Uint32 RTWidth, Uint32 RTHeight);
+
+			void SetHorizentalPSO(ITextureView* texture);
+
+			void SetVerticalPSO(ITextureView* texture);
+
 		//private:
-			RefCntAutoPtr<IPipelineState> mBlurPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mBlurSRB;
+			RefCntAutoPtr<IPipelineState> mHorzBlurPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mHorzBlurSRB;
+
+			RefCntAutoPtr<IPipelineState> mVertBlurPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mVertBlurSRB;
+
 			RefCntAutoPtr<IBuffer> mBlurCB;
 
 			Graphics::RenderTarget BlurHorizentalRT;

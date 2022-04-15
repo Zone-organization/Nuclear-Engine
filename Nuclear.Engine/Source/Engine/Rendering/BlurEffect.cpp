@@ -9,25 +9,37 @@ namespace Nuclear
 	{
 		void BlurEffect::Initialize(Uint32 RTWidth, Uint32 RTHeight)
 		{
-			RefCntAutoPtr<IShader> VShader;
+			RefCntAutoPtr<IShader> HorzVShader;
+			RefCntAutoPtr<IShader> VertVShader;
+
 			RefCntAutoPtr<IShader> PShader;
 			std::vector<LayoutElement> LayoutElems;
-
+			LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+			LayoutElems.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false)); //UV
 			{
-				LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
-				LayoutElems.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false)); //UV
-
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 				CreationAttribs.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-				CreationAttribs.Desc.Name = "BlurVS";
+				CreationAttribs.Desc.Name = "HorzBlurVS";
 				CreationAttribs.EntryPoint = "main";
-
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.vs.hlsl", { "HORIZENTAL" }, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VShader);
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &HorzVShader);
+			}
+			{
+				ShaderCreateInfo CreationAttribs;
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.Desc.Name = "VertBlurVS";
+				CreationAttribs.EntryPoint = "main";
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VertVShader);
 			}
 			{
 				ShaderCreateInfo CreationAttribs;
@@ -36,14 +48,13 @@ namespace Nuclear
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 				CreationAttribs.Desc.Name = "BlurPS";
 
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.ps.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PShader);
 			}
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
-			PSOCreateInfo.PSODesc.Name = "BlurPSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
@@ -52,7 +63,7 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-			PSOCreateInfo.pVS = VShader;
+			PSOCreateInfo.pVS = HorzVShader;
 			PSOCreateInfo.pPS = PShader;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
@@ -69,7 +80,12 @@ namespace Nuclear
 			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(StaticSamplers.size());
 			PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers.data();
 
-			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mBlurPSO);
+			PSOCreateInfo.PSODesc.Name = "HorzBlurPSO";
+			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mHorzBlurPSO);
+
+			PSOCreateInfo.pVS = VertVShader;
+			PSOCreateInfo.PSODesc.Name = "VertBlurPSO";
+			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mVertBlurPSO);
 
 			BufferDesc CBDesc;
 			CBDesc.Name = "BlurCB";
@@ -79,9 +95,11 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mBlurCB);
 
-			mBlurPSO->GetStaticVariableByName(SHADER_TYPE_PIXEL, "BlurOptions")->Set(mBlurCB);
+			mHorzBlurPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "ScreenSizeBuffer")->Set(mBlurCB);
+			mVertBlurPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "ScreenSizeBuffer")->Set(mBlurCB);
 
-			mBlurPSO->CreateShaderResourceBinding(&mBlurSRB, true);
+			mHorzBlurPSO->CreateShaderResourceBinding(&mHorzBlurSRB, true);
+			mVertBlurPSO->CreateShaderResourceBinding(&mVertBlurSRB, true);
 
 			Graphics::RenderTargetDesc RTDesc;
 			RTDesc.Width = RTWidth;
@@ -93,6 +111,22 @@ namespace Nuclear
 
 			BlurHorizentalRT.Create(RTDesc);
 			BlurVerticalRT.Create(RTDesc);
+		}
+		void BlurEffect::SetHorizentalPSO(ITextureView* texture)
+		{
+			Graphics::Context::GetContext()->SetPipelineState(mHorzBlurPSO);
+
+			Graphics::Context::GetContext()->SetRenderTargets(1, BlurHorizentalRT.mColorRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			mHorzBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(texture);
+		}
+		void BlurEffect::SetVerticalPSO(ITextureView* texture)
+		{
+			Graphics::Context::GetContext()->SetPipelineState(mVertBlurPSO);
+
+			Graphics::Context::GetContext()->SetRenderTargets(1, BlurVerticalRT.mColorRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			mVertBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(texture);
 		}
 	}
 }

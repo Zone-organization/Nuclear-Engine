@@ -227,9 +227,6 @@ namespace Nuclear
 
 			if (bloomenabled_)
 			{
-				Graphics::Context::GetContext()->SetPipelineState(mBloomBlur.mBlurPSO);
-
-				//mBloomBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(BloomRT.mShaderRTV);
 
 				bool horizontal = true, first_iteration = true, horicleared = false, verticleared = false;
 				int amount = 10;
@@ -237,63 +234,21 @@ namespace Nuclear
 
 				for (unsigned int i = 0; i < amount; i++)
 				{
-					/*glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
-					shaderBlur.setInt("horizontal", horizontal);
-					glBindTexture(
-						GL_TEXTURE_2D, first_iteration ? colorBuffers[1] : pingpongBuffers[!horizontal]
-					);
-					*/
 					Math::Vector4i data;
 
 					if (horizontal)
 					{
-						data.z = 2;
-						Graphics::Context::GetContext()->SetRenderTargets(1, mBloomBlur.BlurHorizentalRT.mColorRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-						if (!horicleared)
-						{
-							Graphics::Context::GetContext()->ClearRenderTarget(mBloomBlur.BlurHorizentalRT.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-							horicleared = true;
-						}
-						Log.Info("[SetRenderTargets] BlurPassHorizental\n");
+						mBloomBlur.SetHorizentalPSO(first_iteration ? BloomRT.mShaderRTV : mBloomBlur.BlurVerticalRT.mShaderRTV);
 					}
 					else
 					{
-						data.z = -2;
-						Graphics::Context::GetContext()->SetRenderTargets(1, mBloomBlur.BlurVerticalRT.mColorRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-						if (!verticleared)
-						{
-							Graphics::Context::GetContext()->ClearRenderTarget(mBloomBlur.BlurVerticalRT.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-							verticleared = true;
-						}
-						Log.Info("[SetRenderTargets] BlurPassVertical\n");
-
-					}
-
-
-
-					if (first_iteration)
-					{
-						mBloomBlur.mBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(BloomRT.mShaderRTV);
-						Log.Info("[mBloomBlurSRB] first_iteration\n");
-					}
-					else
-					{
-						if (horizontal)
-						{
-							mBloomBlur.mBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mBloomBlur.BlurVerticalRT.mShaderRTV);
-							Log.Info("[mBloomBlurSRB] BlurPassVertical\n");
-						}
-						else
-						{
-							mBloomBlur.mBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mBloomBlur.BlurHorizentalRT.mShaderRTV);
-							Log.Info("[mBloomBlurSRB] BlurPassHorizental\n");
-						}
+						mBloomBlur.SetVerticalPSO(mBloomBlur.BlurHorizentalRT.mShaderRTV);
 					}
 
 					//X: Texture Width
 					//Y: Texutre Height
-					//Z: Horizental Blur Enabled  (Enabled = 2.f , disabled = -2.f)
-					//W: Unused
+					//Z: Padding
+					//W: Padding
 					{
 						data.x = BloomRT.GetWidth();
 						data.y = BloomRT.GetHeight();
@@ -302,7 +257,15 @@ namespace Nuclear
 						*CBConstants = data;
 					}
 
-					Graphics::Context::GetContext()->CommitShaderResources(mBloomBlur.mBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+					if (horizontal)
+					{
+						Graphics::Context::GetContext()->CommitShaderResources(mBloomBlur.mHorzBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					}
+					else
+					{
+						Graphics::Context::GetContext()->CommitShaderResources(mBloomBlur.mVertBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					}
 
 					sys->RenderScreenQuad();
 					horizontal = !horizontal;
@@ -311,10 +274,6 @@ namespace Nuclear
 				}
 
 			}
-			//Set for render
-			//Graphics::Context::GetContext()->ClearRenderTarget(BlurPassHorizental.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			//Graphics::Context::GetContext()->ClearRenderTarget(BlurPassVertical.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
 			Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline());
 
 			GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
