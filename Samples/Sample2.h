@@ -113,7 +113,7 @@ public:
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		ELights.GetComponent<Components::PointLightComponent>()->SetPosition(Math::Vector3(0.0f, 0.0f, 10.0f));
+		ELights.GetComponent<Components::PointLightComponent>()->SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
 
@@ -167,7 +167,7 @@ public:
 
 				ECS::Transform ESphere(position, Math::Vector3(2.0f));
 
-				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere, false);
+				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere);
 				position.z += 5.0f;
 
 				//ECS::Transform EBox(position, Math::Vector3(1.0f));
@@ -196,7 +196,7 @@ public:
 		//Camera.GammaCorrection = true;
 		//Camera.HDR = true;
 		//Camera.MovementSpeed = 15;
-
+		Renderer->VisualizePointLightsPositions = true;
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override

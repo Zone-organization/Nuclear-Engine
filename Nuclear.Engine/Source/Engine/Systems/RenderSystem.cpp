@@ -137,42 +137,28 @@ namespace Nuclear
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
 			RPDesc.AnimationBufferPtr = animCB;
 
-			//for (auto it : mCameraSystem.GetMainCamera()->mCameraEffects)
-			//{
-			//	if (it.GetType() == Rendering::ShaderEffect::Type::CameraAndRenderingEffect)
-			//	{
-			//		RPDesc.mRequiredEffects.push_back(it);
-			//	}
-			//}
 			if(AllPipelines)
 			{ 
 				for (auto it : mRenderingPipelines)
 				{
 					it.second->Bake(RPDesc, RTWidth, RTHeight);
-
-					//if(it.second->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
-					//	it.second->GetShadingModel()->Bake(RPDesc);
 				}
-
-
 			}
 			else
 			{
 				assert(false);
-
-				//if (mActiveRenderingPipeline->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
-				//	mActiveRenderingPipeline->GetShadingModel()->Bake(RPDesc);
 			}
 
 			//TODO: Move!
 			Assets::TextureSet CubeSet;
-			CubeSet.mData.push_back({ 0, Managers::AssetManager::DefaultDiffuseTex });
-			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultSpecularTex });
+			CubeSet.mData.push_back({ 0, Managers::AssetManager::DefaultWhiteTex });
+			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultWhiteTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
 		}
 		void RenderSystem::ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight)
 		{
+			mActiveRenderingPipeline->ResizeRenderTarget(RTWidth, RTHeight);
 		}
 		Rendering::RenderingPipeline* RenderSystem::GetActivePipeline()
 		{
@@ -252,7 +238,7 @@ namespace Nuclear
 					{
 						Math::Matrix4 model(1.0f);
 						model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
-						model = Math::scale(model, Math::Vector3(0.25f));
+						model = Math::scale(model, Math::Vector3(0.75f));
 						Camera->SetModelMatrix(model);
 						mCameraSystem.UpdateBuffer();
 

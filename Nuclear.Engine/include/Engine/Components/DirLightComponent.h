@@ -27,7 +27,7 @@ namespace Nuclear
 			Math::Vector3 GetDirection();
 			void SetDirection(Math::Vector3 dir);
 
-
+			bool mCastShadows = false;
 			Internal::Shader_DirLight_Struct GetInternalData();
 		protected:
 			Internal::Shader_DirLight_Struct data;

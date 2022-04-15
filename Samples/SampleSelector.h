@@ -3,9 +3,7 @@
 #include "Sample1.h"
 #include "Sample2.h"
 #include "Sample3.h"
-
-
-
+#include "Sample4.h"
 
 class SampleSelector : public Core::Game
 {
@@ -79,7 +77,12 @@ public:
 		//	Core::Engine::GetInstance()->SetGame(&demo);
 		//	return StartSample();
 		//}
-
+		if (ImGui::Button("Sample4 : Sponza Scene Rendering"))
+		{
+			Sample4 demo;
+			Core::Engine::GetInstance()->SetGame(&demo);
+			return StartSample();
+		}
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}

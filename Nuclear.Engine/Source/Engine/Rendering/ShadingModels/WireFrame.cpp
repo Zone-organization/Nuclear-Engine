@@ -1,4 +1,4 @@
-#include <Framework\Rendering\ShadingModels\WireFrame.h>
+#include <Engine\Rendering\ShadingModels\WireFrame.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 #include <Core/Utilities/Hash.h>

@@ -52,7 +52,7 @@ namespace Nuclear
 				auto System = mScene->GetSystemManager().GetSystem<Systems::PhysXSystem>();
 				if (System.get() != nullptr && System->GetPhysXScene() != nullptr)
 				{
-					PhysX::SphereGeometry sphere(0.5f, transform);
+					PhysX::SphereGeometry sphere(1.0f, transform);
 					Components::ColliderDesc desc;
 					desc.mGeo = &sphere;
 					desc.mShape = Components::ColliderShape::Sphere;

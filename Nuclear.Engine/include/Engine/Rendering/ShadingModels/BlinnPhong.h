@@ -6,16 +6,14 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-
-		class DiffuseOnly : public ShadingModel
+		class NEAPI BlinnPhong : public ShadingModel
 		{
 		public:
-			DiffuseOnly();
-
+			BlinnPhong(bool NormalMaps = false);
 			bool Bake(const ShadingModelBakingDesc& desc) override;
 
 		private:
-
+			bool mNormalMaps;
 		};
 
 	}

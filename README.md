@@ -2,13 +2,9 @@
 
 ## Current To-dos 
   - W.I.P:
-	- Improving PhysX Implementaion
-	- Improving Scripting support (through AngelScript)
-	- Improving Mesh Animation Implementaion
-    - Improving README.md
-	
+	- Implement Shadow Maps.
+	- Basic deffered shading.
   - TODO:
-    - Graphical Improvement to the available Pipelines (ShadowMaps & ...)
 	- Basic Editor support (Nuclear Editor).
 
 # Getting started

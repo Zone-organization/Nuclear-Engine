@@ -405,5 +405,9 @@ namespace Nuclear
 		{
 			return mName;
 		}
+		Graphics::BakeStatus RenderingPipeline::GetStatus()
+		{
+			return mStatus;
+		}
 	}
 }

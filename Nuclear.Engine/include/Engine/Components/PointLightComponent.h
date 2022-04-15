@@ -33,8 +33,8 @@ namespace Nuclear
 			Math::Vector3 GetAttenuation();
 			void SetAttenuation(Math::Vector3 att);
 
+			bool mCastShadows = false;
 			Internal::Shader_PointLight_Struct GetInternalData();
-
 		protected:
 			Internal::Shader_PointLight_Struct data;
 		};

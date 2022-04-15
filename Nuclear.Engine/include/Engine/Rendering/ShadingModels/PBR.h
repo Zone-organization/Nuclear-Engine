@@ -7,13 +7,12 @@ namespace Nuclear
 	namespace Rendering
 	{
 
-		class WireFrame : public ShadingModel
+		class NEAPI PBR : public ShadingModel
 		{
 		public:
-			WireFrame();
-
+			PBR();
 			bool Bake(const ShadingModelBakingDesc& desc) override;
-
+			bool test = false;
 		private:
 
 		};

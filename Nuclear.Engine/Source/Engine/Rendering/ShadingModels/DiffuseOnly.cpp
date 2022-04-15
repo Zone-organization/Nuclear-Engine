@@ -1,4 +1,4 @@
-#include <Framework\Rendering\ShadingModels\DiffuseOnly.h>
+#include <Engine\Rendering\ShadingModels\DiffuseOnly.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\FileSystem.h>
 #include <Core/Utilities/Hash.h>

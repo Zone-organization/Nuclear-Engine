@@ -41,6 +41,7 @@ namespace Nuclear
 			Math::Vector2 GetSpotlightCone();
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
 
+			bool mCastShadows = false;
 			Internal::Shader_SpotLight_Struct GetInternalData();
 		protected:
 			Internal::Shader_SpotLight_Struct data;

@@ -164,12 +164,18 @@ namespace Nuclear
 				{
 					RigidBodyObj.SetisKinematic(RigidBodyObj.isKinematic);
 				}
+				auto Einfo = mScene->GetRegistry().try_get<Components::EntityInfoComponent>(entity);
+
 				if (!RigidBodyObj.isKinematic)
 				{
-					auto Einfo = mScene->GetRegistry().try_get<Components::EntityInfoComponent>(entity);
 
 					Einfo->mTransform.SetPosition(PhysX::From(RigidBodyObj.GetActor().mPtr->getGlobalPose().p));
 					Einfo->mTransform.SetRotation(PhysX::From(RigidBodyObj.GetActor().mPtr->getGlobalPose().q));
+				}
+				else {
+					PhysX::PxTransform transform(PhysX::To(Einfo->mTransform.GetLocalPosition()), PhysX::To(Einfo->mTransform.GetLocalRotation()));
+
+					RigidBodyObj.GetActor().mPtr->setGlobalPose(transform);
 				}
 			}
 		}

@@ -1,6 +1,5 @@
 #pragma once
 #include <NuclearEngine.h>
-#include <NuclearFramework.h>
 
 using namespace Nuclear;
 const int _Width_ = 1280;
@@ -146,11 +145,10 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 			{
 				if (ImGui::CollapsingHeader("Directional Light"))
 				{
-					Graphics::Color oldcolor = light->GetColor();
-					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-					if (ImGui::ColorEdit4("Color", (float*)&Lightcolor))
+					Graphics::Color color = light->GetColor();
+					if (ImGui::ColorEdit4("Dir Color", (float*)&color))
 					{
-						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+						light->SetColor(color);
 					}
 
 					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
@@ -177,11 +175,10 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						light->SetPosition(Math::Vector3(lighpos.x, lighpos.y, lighpos.z));
 					}
 
-					Graphics::Color oldcolor = light->GetColor();
-					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-					if (ImGui::ColorEdit4("Color", (float*)&Lightcolor))
+					Graphics::Color color = light->GetColor();
+					if (ImGui::ColorEdit4("Point Color", (float*)&color))
 					{
-						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+						light->SetColor(color);
 					}
 
 					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
@@ -191,7 +188,7 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 					}
 
 					float f = light->GetIntensity();
-					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.4f", ImGuiSliderFlags_None))
+					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
 					{
 						light->SetIntensity(f);
 					}
@@ -225,11 +222,10 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						light->SetSpotlightCone(Math::Vector2(cone.x, cone.y));
 					}
 
-					Graphics::Color oldcolor = light->GetColor();
-					ImVec4 Lightcolor = ImVec4(oldcolor.r, oldcolor.g, oldcolor.b, 1.00f);
-					if (ImGui::ColorEdit4("Color", (float*)&Lightcolor))
+					Graphics::Color color = light->GetColor();
+					if (ImGui::ColorEdit4("Spot Color", (float*)&color))
 					{
-						light->SetColor(Graphics::Color(Lightcolor.x, Lightcolor.y, Lightcolor.z, Lightcolor.w));
+						light->SetColor(color);
 					}
 
 					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
@@ -276,6 +272,20 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						}
 						else {
 							ImGui::Text("Unnamed Material");
+						}
+
+						for (auto &it : meshcomponent->mMaterial->mPixelShaderTextures)
+						{
+							ImGui::Text(it.mName.c_str());
+
+							for (auto& it1 : it.mData)
+							{
+								//ImGui::Text(it1.mSlot);
+								if (it1.mTex.GetImage() != nullptr)
+								{
+									ImGui::Image(it1.mTex.GetImage(), { 256.f,256.f });
+								}
+							}
 						}
 					}
 

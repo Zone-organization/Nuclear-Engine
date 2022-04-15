@@ -23,4 +23,5 @@ _____________/BOOOM\_____________
 #include <Engine/Systems/Systems.h>
 #include <Engine/PhysX/PhysX.h>
 #include <Engine/Scripting/Scripting.h>
+#include <Engine/Rendering/Rendering.h>
 

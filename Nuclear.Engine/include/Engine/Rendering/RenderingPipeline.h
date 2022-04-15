@@ -3,6 +3,7 @@
 #include <Engine/Graphics/Camera.h>
 #include <Engine/Rendering/ShaderEffect.h>
 #include <Engine/Rendering/ShadingModel.h>
+#include <Engine/Graphics/BakeStatus.h>
 #include <unordered_map>
 
 namespace Nuclear
@@ -11,6 +12,7 @@ namespace Nuclear
 	{
 
 		//A class of compatible camera and shading model
+		//Defines how to render stuff and apply effects to it
 		class NEAPI RenderingPipeline
 		{
 		public:
@@ -30,6 +32,7 @@ namespace Nuclear
 			Uint32 GetID() const;
 			std::string GetName() const;
 
+			Graphics::BakeStatus GetStatus();
 
 			//Camera stuff
 			Graphics::RenderTarget* GetSceneRT();
@@ -55,6 +58,8 @@ namespace Nuclear
 			std::string mName;
 
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
+
+			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 
 			//Camera stuff
 			Graphics::RenderTarget SceneRT;

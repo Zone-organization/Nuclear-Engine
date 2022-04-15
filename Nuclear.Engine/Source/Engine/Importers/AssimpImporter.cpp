@@ -70,9 +70,21 @@ namespace Nuclear {
 
 			// process materials
 			aiMaterial* MeshMat = scene->mMaterials[mesh->mMaterialIndex];
+			auto MeshName = std::string(MeshMat->GetName().C_Str());
+			TexSet.mHashedName = Utilities::Hash(MeshName);
 
-			std::vector<aiTextureType> LoadTypes{ 
-				aiTextureType_DIFFUSE,				
+
+			for (Uint32 i = 0; i < mMaterial->mPixelShaderTextures.size(); i++)
+			{
+				if (TexSet.mHashedName == mMaterial->mPixelShaderTextures.at(i).mHashedName)
+				{
+					return i;
+				}
+			}
+		
+
+			std::vector<aiTextureType> LoadTypes{
+				aiTextureType_DIFFUSE,
 				aiTextureType_SPECULAR,
 				aiTextureType_AMBIENT,
 				aiTextureType_EMISSIVE,
@@ -93,14 +105,15 @@ namespace Nuclear {
 
 			if (!TexSet.mData.empty())
 			{
-				auto MeshName = std::string(MeshMat->GetName().C_Str());
-				TexSet.mHashedName = Utilities::Hash(MeshName);
+				//auto MeshName = std::string(MeshMat->GetName().C_Str());
+				//TexSet.mHashedName = Utilities::Hash(MeshName);
 				if (mLoadingDesc.SaveMaterialNames == true)
 				{
 					TexSet.mName = MeshName;
 				}
+
 				this->mMaterial->mPixelShaderTextures.push_back(TexSet);
-				
+
 				return static_cast<Uint32>(this->mMaterial->mPixelShaderTextures.size() - 1);
 			}
 			return 0;
