@@ -2,6 +2,7 @@
 #include <Engine/Graphics/Camera.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
+#include <Engine\Assets\DefaultMeshes.h>
 
 namespace Nuclear
 {
@@ -28,10 +29,14 @@ namespace Nuclear
 
 			IBuffer* GetCameraCB();
 
+			void RenderScreenQuad();
+
 			//std::vector<Components::Camera*> RegisteredCameras;
 			//std::vector<Components::Camera*> ActiveCameras;
 		private:
 			Graphics::Camera* MainCamera = nullptr;
+
+			Assets::Mesh CameraScreenQuad;
 
 			//Main camera constant buffer
 			RefCntAutoPtr<IBuffer> mCameraCB;

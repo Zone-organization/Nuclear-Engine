@@ -27,11 +27,14 @@ namespace Nuclear
 
 			void Create(const RenderTargetDesc& Desc);
 			//void SetActive(const float* RGBA);
+			Uint32 GetWidth() const;
+			Uint32 GetHeight() const;
 
 			RefCntAutoPtr<ITextureView> mColorRTV;
 			RefCntAutoPtr<ITextureView> mShaderRTV;
 			RefCntAutoPtr<ITextureView> mDepthDSV;
 		private:
+			Uint32 mWidth, mHeight;
 			bool mDepthCreated =false;
 		};
 	}

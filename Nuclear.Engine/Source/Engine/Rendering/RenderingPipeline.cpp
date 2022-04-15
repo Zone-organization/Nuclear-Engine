@@ -129,6 +129,15 @@ namespace Nuclear
 		{
 			return mCamera;
 		}
+		void RenderingPipeline::Bake(ShadingModelBakingDesc& desc)
+		{
+			for (auto it : mPairedEffects)
+			{
+				desc.mRequiredEffects.push_back(it.second);
+			}
+
+			mShadingModel->Bake(desc);
+		}
 		Uint32 RenderingPipeline::GetID() const
 		{
 			return mID;

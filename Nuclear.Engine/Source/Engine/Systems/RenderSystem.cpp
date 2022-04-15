@@ -4,7 +4,6 @@
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\AnimatorComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
-#include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\ECS\Scene.h>
 #include <Engine.h>
@@ -148,16 +147,20 @@ namespace Nuclear
 			{ 
 				for (auto it : mRenderingPipelines)
 				{
-					if(it.second->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
-						it.second->GetShadingModel()->Bake(RPDesc);
+					it.second->Bake(RPDesc);
+
+					//if(it.second->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
+					//	it.second->GetShadingModel()->Bake(RPDesc);
 				}
 
 
 			}
 			else
 			{
-				if (mActiveRenderingPipeline->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
-					mActiveRenderingPipeline->GetShadingModel()->Bake(RPDesc);
+				assert(false);
+
+				//if (mActiveRenderingPipeline->GetShadingModel()->GetStatus() != Graphics::BakeStatus::Baked)
+				//	mActiveRenderingPipeline->GetShadingModel()->Bake(RPDesc);
 			}
 
 			//TODO: Move!
@@ -166,9 +169,6 @@ namespace Nuclear
 			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultSpecularTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
-
-			Assets::Mesh::CreateScreenQuad(&CameraScreenQuad);
-
 		}
 		Rendering::RenderingPipeline* RenderSystem::GetActivePipeline()
 		{
@@ -235,9 +235,10 @@ namespace Nuclear
 			//for (auto Camera : mCameraSystem.ActiveCameras)
 			{
 				auto Camera = mCameraSystem.GetMainCamera();
-				Graphics::Context::GetContext()->SetRenderTargets(1, Camera->GetSceneRT()->mColorRTV.RawDblPtr(), Camera->GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Camera->SetForRender();
+			/*	Graphics::Context::GetContext()->SetRenderTargets(1, Camera->GetSceneRT()->mColorRTV.RawDblPtr(), Camera->GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				Graphics::Context::GetContext()->ClearRenderTarget(Camera->GetSceneRT()->mColorRTV.RawPtr(), (float*)&Camera->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetContext()->ClearDepthStencil(Camera->GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->ClearDepthStencil(Camera->GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);*/
 
 				//Camera->GetCameraRT()->SetActive((float*)&Camera->RTClearColor);
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
@@ -274,17 +275,11 @@ namespace Nuclear
 			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			auto MainCameraPtr = mCameraSystem.GetMainCamera();
-			Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetActivePipeline());
-			Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			//Graphics::Context::GetContext()->SetPipelineState(MainCameraPtr->GetActivePipeline());
+			//Graphics::Context::GetContext()->CommitShaderResources(MainCameraPtr->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			MainCameraPtr->SetForScreenRender(&mCameraSystem);
 
-			Uint64 offset = 0;
-			Graphics::Context::GetContext()->SetIndexBuffer(CameraScreenQuad.mSubMeshes.at(0).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &CameraScreenQuad.mSubMeshes.at(0).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
-			
-			DrawIndexedAttribs DrawAttrs;
-			DrawAttrs.IndexType = VT_UINT32;
-			DrawAttrs.NumIndices = CameraScreenQuad.mSubMeshes.at(0).mIndicesCount;
-			Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
+			mCameraSystem.RenderScreenQuad();
 		}
 
 		void RenderSystem::InstantRender(const Components::MeshComponent &object)

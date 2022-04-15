@@ -27,6 +27,8 @@ namespace Nuclear
 			Rendering::ShadingModel* GetShadingModel();
 			Graphics::Camera* GetCamera();
 
+			void Bake(ShadingModelBakingDesc& desc);
+
 			Uint32 GetID() const;
 			std::string GetName() const;
 		protected:

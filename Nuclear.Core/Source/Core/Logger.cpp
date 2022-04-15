@@ -54,6 +54,7 @@ namespace Nuclear
 			Write(format);
 
 			va_end(args);
+			SetConsoleColor(15);
 		}
 
 		void Logger::FatalError(std::string format, ...)
@@ -83,6 +84,7 @@ namespace Nuclear
 			Write(format);
 
 			va_end(args);
+			SetConsoleColor(15);
 
 		}
 

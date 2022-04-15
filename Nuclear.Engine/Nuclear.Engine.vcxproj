@@ -186,6 +186,7 @@
     <ClInclude Include="include\Engine\Graphics\Camera.h" />
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
+    <ClInclude Include="include\Engine\Rendering\BlurEffect.h" />
     <ClInclude Include="include\Engine\Rendering\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\ShaderEffect.h" />
     <ClInclude Include="include\Engine\Graphics\CompoundPipeline.h" />
@@ -318,6 +319,7 @@
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\BlurEffect.cpp" />
     <ClCompile Include="Source\Engine\Rendering\RenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShaderEffect.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />

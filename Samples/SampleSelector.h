@@ -61,18 +61,18 @@ public:
 
 		ImGui::Text("Select Sample");
 
-		//if (ImGui::Button("Sample1 : BlinnPhong rendering of some models"))
-		//{
-		//	Sample1 demo;
-		//	Core::Engine::GetInstance()->SetGame(&demo);
-		//	return StartSample();
-		//}
-		//if (ImGui::Button("Sample2 : Advanced Rendering & PhysX"))
-	//	{
+		if (ImGui::Button("Sample1 : BlinnPhong rendering of some models"))
+		{
+			Sample1 demo;
+			Core::Engine::GetInstance()->SetGame(&demo);
+			return StartSample();
+		}
+		if (ImGui::Button("Sample2 : Advanced Rendering & PhysX"))
+		{
 			Sample2 demo;
 			Core::Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
-		//}
+		}
 		//if (ImGui::Button("Sample3 : Script Test"))
 		//{
 		//	Sample3 demo;

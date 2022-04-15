@@ -6,9 +6,15 @@
 #include <Engine\Graphics\CompoundPipeline.h>
 #include <Engine\Rendering\ShaderEffect.h>
 #include <Engine\Rendering\Skybox.h>
+#include "Engine/Rendering/BlurEffect.h"
 
 namespace Nuclear
 {
+	namespace Systems
+	{
+		class CameraSubSystem;
+	}
+
 	namespace Graphics
 	{
 		enum CAMERA_MOVEMENT {
@@ -84,6 +90,10 @@ namespace Nuclear
 
 			void SetEffect(const Uint32& effectId, bool value);
 
+			void SetForRender();
+
+			void SetForScreenRender(Systems::CameraSubSystem* sys);
+
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mCameraEffects;
 
 			CameraBuffer mCameraData;
@@ -100,8 +110,13 @@ namespace Nuclear
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
-			RefCntAutoPtr<IPipelineState> mBloomPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mBloomSRB;
+			//RefCntAutoPtr<IPipelineState> mBloomBlurPSO;
+			//RefCntAutoPtr<IShaderResourceBinding> mBloomBlurSRB;
+			//RefCntAutoPtr<IBuffer> mBloomBlurCB;
+
+			//Graphics::RenderTarget BlurPassHorizental;
+			//Graphics::RenderTarget BlurPassVertical;
+			Rendering::BlurEffect mBloomBlur;
 
 			bool mPipelineDirty = true;
 
@@ -121,7 +136,6 @@ namespace Nuclear
 			Uint32 RTWidth = 0;
 			Uint32 RTHeight = 0;
 		private:
-			void BakeBloom();
 			void BakeRenderTarget();
 			void BakePipeline();
 		};

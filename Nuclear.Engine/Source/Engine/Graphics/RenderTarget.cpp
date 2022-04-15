@@ -21,6 +21,9 @@ namespace Nuclear
 			TexDesc.Type = RESOURCE_DIM_TEX_2D;
 			TexDesc.Width = Desc.Width;
 			TexDesc.Height = Desc.Height;
+			mWidth = Desc.Width;
+			mHeight = Desc.Height;
+
 			TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
 			TexDesc.Format = Desc.ColorTexFormat;
 			TexDesc.MipLevels = 1;
@@ -43,6 +46,16 @@ namespace Nuclear
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTDepth);
 				mDepthDSV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
 			}
+		}
+
+		Uint32 RenderTarget::GetWidth() const
+		{
+			return mWidth;
+		}
+
+		Uint32 RenderTarget::GetHeight() const
+		{
+			return mHeight;
 		}
 
 	//	void RenderTarget::SetActive(const float* RGBA)

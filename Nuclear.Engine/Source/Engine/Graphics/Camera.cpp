@@ -6,6 +6,9 @@
 #include <Diligent/Graphics/GraphicsTools/interface/CommonlyUsedStates.h>
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
+#include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
+#include <Engine\Systems\CameraSubSystem.h>
+#include <Core\Logger.h>
 
 namespace Nuclear
 {
@@ -180,78 +183,157 @@ namespace Nuclear
 			mPipelineDirty = true;
 		}
 
-		void Camera::BakeBloom()
+		void Camera::SetForRender()
 		{
-			RefCntAutoPtr<IShader> VShader;
-			RefCntAutoPtr<IShader> PShader;
-			std::vector<LayoutElement> LayoutElems;
+			std::vector<ITextureView*> RTargets;
+			RTargets.push_back(GetSceneRT()->mColorRTV);
 
+			//Find bloom
+			bool bloomenabled_ = false;
+			auto it = mCameraEffects.find(Utilities::Hash("BLOOM"));
+			if (it != mCameraEffects.end())
 			{
-				LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
-				LayoutElems.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false)); //UV
-
-				ShaderCreateInfo CreationAttribs;
-				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-				CreationAttribs.Desc.Name = "BlurVS";
-				CreationAttribs.EntryPoint = "main";
-
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
-				CreationAttribs.Source = source.c_str();
-
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VShader);
+				if (it->second.GetValue())
+				{
+					RTargets.push_back(BloomRT.mColorRTV);
+					bloomenabled_ = true;
+				}
 			}
+			
+			Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data() , GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			
+			if (bloomenabled_)
 			{
-				ShaderCreateInfo CreationAttribs;
-				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-				CreationAttribs.Desc.Name = "BlurPS";
-
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
-				CreationAttribs.Source = source.c_str();
-
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PShader);
+				Graphics::Context::GetContext()->ClearRenderTarget(BloomRT.mColorRTV, (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			}
-			GraphicsPipelineStateCreateInfo PSOCreateInfo;
+			Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		}
 
-			PSOCreateInfo.PSODesc.Name = "CameraBloom_PSO";
-			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-			PSOCreateInfo.pVS = VShader;
-			PSOCreateInfo.pPS = PShader;
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-			PSOCreateInfo.PSODesc.ResourceLayout.DefaultVariableType = SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
+		void Camera::SetForScreenRender(Systems::CameraSubSystem* sys)
+		{
+			//Find bloom
+			bool bloomenabled_ = false;
+			auto it = mCameraEffects.find(Utilities::Hash("BLOOM"));
+			if (it != mCameraEffects.end())
+			{
+				if (it->second.GetValue())
+				{
+					bloomenabled_ = true;
+				}
+			}
 
-			std::vector<ShaderResourceVariableDesc> Vars;
-			Vars.push_back({ SHADER_TYPE_PIXEL, "Texture", SHADER_RESOURCE_VARIABLE_TYPE_MUTABLE });
+			//Apply blur
 
-			std::vector<ImmutableSamplerDesc> StaticSamplers;
-			StaticSamplers.push_back({ SHADER_TYPE_PIXEL, "Texture", Sam_LinearClamp });
+			if (bloomenabled_)
+			{
+				Graphics::Context::GetContext()->SetPipelineState(mBloomBlur.mBlurPSO);
 
-			PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Vars.size());
-			PSOCreateInfo.PSODesc.ResourceLayout.Variables = Vars.data();
-			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(StaticSamplers.size());
-			PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers.data();
+				//mBloomBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(BloomRT.mShaderRTV);
 
-			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mBloomPSO);
+				bool horizontal = true, first_iteration = true, horicleared = false, verticleared = false;
+				int amount = 10;
 
-			mBloomPSO->CreateShaderResourceBinding(&mBloomSRB, true);
 
-			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = RTWidth;
-			RTDesc.Height = RTHeight;
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+				for (unsigned int i = 0; i < amount; i++)
+				{
+					/*glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+					shaderBlur.setInt("horizontal", horizontal);
+					glBindTexture(
+						GL_TEXTURE_2D, first_iteration ? colorBuffers[1] : pingpongBuffers[!horizontal]
+					);
+					*/
+					Math::Vector4i data;
 
-			BloomRT.Create(RTDesc);
+					if (horizontal)
+					{
+						data.z = 2;
+						Graphics::Context::GetContext()->SetRenderTargets(1, mBloomBlur.BlurHorizentalRT.mColorRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						if (!horicleared)
+						{
+							Graphics::Context::GetContext()->ClearRenderTarget(mBloomBlur.BlurHorizentalRT.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+							horicleared = true;
+						}
+						Log.Info("[SetRenderTargets] BlurPassHorizental\n");
+					}
+					else
+					{
+						data.z = -2;
+						Graphics::Context::GetContext()->SetRenderTargets(1, mBloomBlur.BlurVerticalRT.mColorRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						if (!verticleared)
+						{
+							Graphics::Context::GetContext()->ClearRenderTarget(mBloomBlur.BlurVerticalRT.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+							verticleared = true;
+						}
+						Log.Info("[SetRenderTargets] BlurPassVertical\n");
+
+					}
+
+
+
+					if (first_iteration)
+					{
+						mBloomBlur.mBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(BloomRT.mShaderRTV);
+						Log.Info("[mBloomBlurSRB] first_iteration\n");
+					}
+					else
+					{
+						if (horizontal)
+						{
+							mBloomBlur.mBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mBloomBlur.BlurVerticalRT.mShaderRTV);
+							Log.Info("[mBloomBlurSRB] BlurPassVertical\n");
+						}
+						else
+						{
+							mBloomBlur.mBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mBloomBlur.BlurHorizentalRT.mShaderRTV);
+							Log.Info("[mBloomBlurSRB] BlurPassHorizental\n");
+						}
+					}
+
+					//X: Texture Width
+					//Y: Texutre Height
+					//Z: Horizental Blur Enabled  (Enabled = 2.f , disabled = -2.f)
+					//W: Unused
+					{
+						data.x = BloomRT.GetWidth();
+						data.y = BloomRT.GetHeight();
+
+						Diligent::MapHelper<Math::Vector4i> CBConstants(Graphics::Context::GetContext(), mBloomBlur.mBlurCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						*CBConstants = data;
+					}
+
+					Graphics::Context::GetContext()->CommitShaderResources(mBloomBlur.mBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+					sys->RenderScreenQuad();
+					horizontal = !horizontal;
+					if (first_iteration)
+						first_iteration = false;
+				}
+
+			}
+			//Set for render
+			//Graphics::Context::GetContext()->ClearRenderTarget(BlurPassHorizental.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			//Graphics::Context::GetContext()->ClearRenderTarget(BlurPassVertical.mColorRTV.RawPtr(), (float*)&RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline());
+
+			GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
+
+			if (bloomenabled_)
+			{
+				GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mBloomBlur.BlurVerticalRT.mShaderRTV);
+			}
+
+			Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			if (bloomenabled_)
+			{
+				auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
+				auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
+				Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				//Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				//Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			}
 		}
 
 		void Camera::BakeRenderTarget()
@@ -290,7 +372,7 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
-
+			
 			mPipeline.Create(PSOCreateInfo);
 
 			bool bloomincluded = false;
@@ -305,7 +387,15 @@ namespace Nuclear
 			//Create Blur pipeline
 			if (bloomincluded)
 			{
-				BakeBloom();
+				Graphics::RenderTargetDesc RTDesc;
+				RTDesc.Width = RTWidth;
+				RTDesc.Height = RTHeight;
+				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+				RTDesc.mCreateDepth = false;
+
+				BloomRT.Create(RTDesc);
+
+				mBloomBlur.Initialize(RTWidth, RTHeight);
 			}
 
 			UpdatePSO(true);

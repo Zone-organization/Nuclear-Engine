@@ -63,10 +63,7 @@ namespace Nuclear
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> animCB;
 
-
-			Assets::Mesh CameraScreenQuad;
 			Assets::Material LightSphereMaterial;
-
 
 			Rendering::RenderingPipeline* mActiveRenderingPipeline;
 			std::unordered_map<Uint32, Rendering::RenderingPipeline*> mRenderingPipelines;  //TODO: Should be moved to camera
