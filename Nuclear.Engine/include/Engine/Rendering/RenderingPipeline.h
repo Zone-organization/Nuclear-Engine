@@ -4,6 +4,9 @@
 #include <Engine/Rendering/ShaderEffect.h>
 #include <Engine/Rendering/ShadingModel.h>
 #include <Engine/Graphics/BakeStatus.h>
+#include <Engine/Rendering/CSMShadowMap.h>
+#include <Engine\Systems\CameraSubSystem.h>
+#include <Engine\ECS\Scene.h>
 #include <unordered_map>
 
 namespace Nuclear
@@ -18,7 +21,7 @@ namespace Nuclear
 		public:
 			RenderingPipeline(const std::string& name);
 
-			void Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera);
+			void Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera, bool initshadow = false);
 
 			std::unordered_map<Uint32, ShaderEffect> mPairedEffects;
 
@@ -46,10 +49,13 @@ namespace Nuclear
 
 			void SetPostProcessingEffect(const Uint32& effectId, bool value);
 
-			void StartRendering();
+			void StartRendering(ECS::Scene* mScene, Systems::CameraSubSystem* camerasystem, IBuffer* AnimCB);
 			void ApplyPostProcessingEffects();
 
 			void SetPipelineState();
+
+			// Render A Mesh instantly
+			void InstantRender(Assets::Mesh* mesh, Assets::Material* material, bool shadowpass);
 
 		protected:
 			Rendering::ShadingModel* mShadingModel;
@@ -60,6 +66,8 @@ namespace Nuclear
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
 
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
+
+			//Animation
 
 			//Camera stuff
 			Graphics::RenderTarget SceneRT;
@@ -84,6 +92,11 @@ namespace Nuclear
 
 			void BakeRenderTarget();
 			void BakePipeline();
+
+			//Shadow
+			ShadowMapManager m_ShadowMapMgr;
+			RefCntAutoPtr<ISampler> m_pComparisonSampler;
+
 		};
 	}
 }

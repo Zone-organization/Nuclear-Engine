@@ -42,11 +42,11 @@ namespace Nuclear
 
 			Rendering::RenderingPipeline* GetActivePipeline();
 
-			// Render A MeshComponent Component instantly
-			void InstantRender(const Components::MeshComponent& object);
+			//// Render A MeshComponent Component instantly
+			//void InstantRender(const Components::MeshComponent& object);
 
-			// Render A Mesh instantly
-			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
+			//// Render A Mesh instantly
+			//void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
@@ -57,13 +57,13 @@ namespace Nuclear
 			CameraSubSystem& GetCameraSubSystem();
 
 		private:
-			void RenderMeshes();
+			//void RenderMeshes();
 
 			LightingSubSystem mLightingSystem;
 			CameraSubSystem mCameraSystem;
 
 			RenderSystemBakeStatus mStatus;
-			RefCntAutoPtr<IBuffer> animCB;
+			RefCntAutoPtr<IBuffer> mAnimationCB;
 
 			Assets::Material LightSphereMaterial;
 

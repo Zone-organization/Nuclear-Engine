@@ -71,12 +71,12 @@ public:
 			Core::Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
-		//if (ImGui::Button("Sample3 : Script Test"))
-		//{
-		//	Sample3 demo;
-		//	Core::Engine::GetInstance()->SetGame(&demo);
-		//	return StartSample();
-		//}
+		if (ImGui::Button("Sample3 : Script Test"))
+		{
+			Sample3 demo;
+			Core::Engine::GetInstance()->SetGame(&demo);
+			return StartSample();
+		}
 		if (ImGui::Button("Sample4 : Sponza Scene Rendering"))
 		{
 			Sample4 demo;

@@ -187,7 +187,7 @@
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
     <ClInclude Include="include\Engine\Rendering\BlurEffect.h" />
-    <ClInclude Include="include\Engine\Rendering\DirShadowMap.h" />
+    <ClInclude Include="include\Engine\Rendering\CSMShadowMap.h" />
     <ClInclude Include="include\Engine\Rendering\Rendering.h" />
     <ClInclude Include="include\Engine\Rendering\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\BlinnPhong.h" />
@@ -219,8 +219,6 @@
     <ClInclude Include="include\Engine\Scripting\ScriptingModule.h" />
     <ClInclude Include="include\Engine\Systems\ShadowSystem.h" />
     <ClInclude Include="include\Engine\ECS\System.h" />
-    <ClInclude Include="include\ThirdParty\ShadowMapManager\BasicStructures.h" />
-    <ClInclude Include="include\ThirdParty\ShadowMapManager\ShadowMapManager.h" />
     <ClInclude Include="include\Engine\PhysX\Geometry.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXMaterial.h" />
     <ClInclude Include="include\Engine\PhysX\PhysX.h" />
@@ -326,7 +324,7 @@
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Engine\Rendering\BlurEffect.cpp" />
-    <ClCompile Include="Source\Engine\Rendering\DirShadowMap.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\CSMShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Rendering\RenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\BlinnPhong.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\DiffuseOnly.cpp" />
@@ -432,7 +430,6 @@
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />
-    <ClCompile Include="Source\ThirdParty\ShadowMapManager\ShadowMapManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\ThirdParty\angelscript\source\as_callfunc_arm64_msvc.asm" />

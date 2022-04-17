@@ -113,7 +113,7 @@ public:
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		ELights.GetComponent<Components::PointLightComponent>()->SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
+		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
 
@@ -127,7 +127,7 @@ public:
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 
 		PBRPipeline.Initialize(&PBR, &Camera);
-		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);
+		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera, true);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
 

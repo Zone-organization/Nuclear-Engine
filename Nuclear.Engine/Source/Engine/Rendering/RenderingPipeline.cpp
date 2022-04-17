@@ -4,7 +4,11 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine\Systems\CameraSubSystem.h>
 #include <Engine\Assets\DefaultMeshes.h>
-
+#include <Engine\Components/MeshComponent.h>
+#include <Engine\Components/EntityInfoComponent.h>
+#include "Engine/Animation/Animator.h"
+#include <Engine\Components\AnimatorComponent.h>
+#include <Engine.h>
 namespace Nuclear
 {
 	namespace Rendering
@@ -50,49 +54,10 @@ namespace Nuclear
 						result[it1.first] = it1.second;
 					}
 				}
-
-
-				//if (it1.second.GetType() == ShaderEffect::Type::CameraAndRenderingEffect)
-				//{
-				//	bool matchfound = false;
-				//	for (auto it2 : second)
-				//	{
-				//		if (!matchfound)
-				//		{
-				//			//Check if exists
-				//			auto it = result.find(it1.second.GetID());
-				//			if (it == result.end())
-				//			{
-				//				if (it1.second.GetID() == it2.second.GetID())
-				//				{
-				//					result[it1.second.GetID()] = it1.second;
-				//					matchfound = true;
-				//				}
-				//			}
-				//		}
-				//	}
-
-				//	if (!matchfound)
-				//	{
-				//		//Log.Warning("[RenderingPipeline] Shading Model: " + std::to_string(shadingModel->GetID()) +
-				//		//	" ShaderEffect: " + sm_it.GetName() + " Has no match\n");
-				//		Log.Warning("[RenderingPipeline] ShaderEffect: " + it1.second.GetName() + " In " + first_it_name + " has no match in " + second_it_name + "\n");
-				//	}
-				//}
-				//else 
-				//{
-				//	auto it = result.find(it1.second.GetID());
-				//	if (it != result.end())
-				//	{
-				//		assert(false);
-				//	}
-				//	//Add remaining effects
-				//	result[it1.second.GetID()] = it1.second;
-				//}
 			}
 		}
 
-		void RenderingPipeline::Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera)
+		void RenderingPipeline::Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera, bool initshadow )
 		{
 			mShadingModel = shadingModel;
 			mCamera = camera;
@@ -101,6 +66,30 @@ namespace Nuclear
 			//Step 1: Find Compatible Effects (build mPairedEffects map)
 			ParseForMatch(mShadingModel->GetRenderingEffects(), mShadingModel->GetName(), mPostProcessingEffects, "PostProcessing", mPairedEffects);
 			ParseForMatch(mPostProcessingEffects,"PostProcessing", mShadingModel->GetRenderingEffects(), mShadingModel->GetName(), mPairedEffects);
+
+
+
+			if (initshadow)
+			{
+				if (!m_pComparisonSampler)
+				{
+					SamplerDesc ComparsionSampler;
+					ComparsionSampler.ComparisonFunc = COMPARISON_FUNC_LESS;
+					// Note: anisotropic filtering requires SampleGrad to fix artifacts at
+					// cascade boundaries
+					ComparsionSampler.MinFilter = FILTER_TYPE_COMPARISON_LINEAR;
+					ComparsionSampler.MagFilter = FILTER_TYPE_COMPARISON_LINEAR;
+					ComparsionSampler.MipFilter = FILTER_TYPE_COMPARISON_LINEAR;
+					Graphics::Context::GetDevice()->CreateSampler(ComparsionSampler, &m_pComparisonSampler);
+				}
+				ShadowMapManager::InitInfo SMMgrInitInfo;
+				SMMgrInitInfo.Format = TEX_FORMAT_D16_UNORM;
+				SMMgrInitInfo.Resolution = 1024;
+				SMMgrInitInfo.NumCascades = 4;
+				SMMgrInitInfo.ShadowMode = SHADOW_MODE_PCF;
+				SMMgrInitInfo.pComparisonSampler = m_pComparisonSampler;
+				m_ShadowMapMgr.Initialize(Graphics::Context::GetDevice(), SMMgrInitInfo);
+			}
 
 		}
 
@@ -164,7 +153,7 @@ namespace Nuclear
 			mPipelineDirty = true;
 		}
 
-		void RenderingPipeline::StartRendering()
+		void RenderingPipeline::StartRendering(ECS::Scene* mScene, Systems::CameraSubSystem* camerasystem, IBuffer* AnimCB)
 		{
 			std::vector<ITextureView*> RTargets;
 			RTargets.push_back(GetSceneRT()->mColorRTV);
@@ -181,6 +170,47 @@ namespace Nuclear
 				Graphics::Context::GetContext()->ClearRenderTarget(BloomRT.mColorRTV, (float*)&mCamera->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			}
 			Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+	
+		
+			//Render Meshes
+			Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetPipeline());
+
+			auto view = mScene->GetRegistry().view<Components::MeshComponent>();
+
+			for (auto entity : view)
+			{
+				auto& MeshObject = view.get<Components::MeshComponent>(entity);
+				if (MeshObject.mRender)
+				{
+
+					auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					EntityInfo.mTransform.Update();
+					mCamera->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+					camerasystem->UpdateBuffer();
+
+					auto AnimatorComponent = mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
+
+					if (AnimatorComponent != nullptr)
+					{
+						std::vector<Math::Matrix4> ok;
+						ok.reserve(100);
+
+						auto transforms = AnimatorComponent->mAnimator->GetFinalBoneMatrices();
+						for (int i = 0; i < transforms.size(); ++i)
+						{
+							ok.push_back(transforms[i]);
+						}
+
+						PVoid data;
+						Graphics::Context::GetContext()->MapBuffer(AnimCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+						data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
+						Graphics::Context::GetContext()->UnmapBuffer(AnimCB, MAP_WRITE);
+
+					}
+
+					InstantRender(MeshObject.mMesh,MeshObject.mMaterial, false);
+				}
+			}
 		}
 
 		void RenderingPipeline::ApplyPostProcessingEffects()
@@ -248,6 +278,39 @@ namespace Nuclear
 
 			Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+		}
+
+		void RenderingPipeline::InstantRender(Assets::Mesh* mesh, Assets::Material* material, bool shadowpass)
+		{
+			if (Core::Engine::GetInstance()->isDebug())
+			{
+				if (mesh == nullptr)
+				{
+					Log.Error("[RenderSystem DEBUG] Skipped Rendering invalid Mesh...\n");
+					return;
+				}
+				if (material == nullptr)
+				{
+					Log.Error("[RenderSystem DEBUG] Skipped Rendering Mesh with invalid Material...\n");
+					return;
+				}
+			}
+
+			Uint64 offset = 0;
+
+			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
+			{
+				material->GetMaterialInstance(GetShadingModel()->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
+
+				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+
+				DrawIndexedAttribs  DrawAttrs;
+				DrawAttrs.IndexType = VT_UINT32;
+				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
+				Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
+
+			}
 		}
 
 		void RenderingPipeline::BakeRenderTarget()

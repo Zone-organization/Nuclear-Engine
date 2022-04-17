@@ -16,15 +16,12 @@ namespace Nuclear {
 		{
 		public:			
 			MeshComponent();
-			MeshComponent(Assets::Mesh *mesh , bool MultiRender = false);
-			MeshComponent(Assets::Mesh *mesh , Assets::Material * material, bool MultiRender = false);
+			MeshComponent(Assets::Mesh *mesh);
+			MeshComponent(Assets::Mesh *mesh , Assets::Material * material);
 			~MeshComponent();
 
 			//if false the RenderSystem won't render the model
 			bool mRender = true;
-
-			bool mMultiRender = false;
-			std::vector<Math::Matrix4> mMultiRenderTransforms;
 
 			Assets::Mesh * mMesh;
 			Assets::Material * mMaterial;

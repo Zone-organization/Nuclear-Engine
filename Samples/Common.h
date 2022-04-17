@@ -169,12 +169,6 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 			{
 				if (ImGui::CollapsingHeader("Point Light"))
 				{
-					ImVec4 lighpos = ImVec4(light->GetPosition().x, light->GetPosition().y, light->GetPosition().z, 1.00f);
-					if (ImGui::DragFloat3("Position", (float*)&lighpos))
-					{
-						light->SetPosition(Math::Vector3(lighpos.x, lighpos.y, lighpos.z));
-					}
-
 					Graphics::Color color = light->GetColor();
 					if (ImGui::ColorEdit4("Point Color", (float*)&color))
 					{
@@ -252,7 +246,6 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 				if (ImGui::CollapsingHeader("Mesh"))
 				{
 					ImGui::Checkbox("Render", &meshcomponent->mRender);
-					ImGui::Checkbox("Multi Render", &meshcomponent->mMultiRender);
 
 					if (meshcomponent->mMesh != nullptr)
 					{

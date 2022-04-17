@@ -86,12 +86,20 @@ namespace Nuclear {
 		{
 			mDesc = desc;
 			DefaultBlackTex = Import("Assets/NuclearEngine/DefaultTextures/Black32x32.png", Importers::ImageLoadingDesc());
-			DefaultGreyTex = Import("Assets/NuclearEngine/DefaultTextures/Grey32x32.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse);
-			DefaultWhiteTex = Import("Assets/NuclearEngine/DefaultTextures/White32x32.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Specular);
+			DefaultGreyTex = Import("Assets/NuclearEngine/DefaultTextures/Grey32x32.png", Importers::ImageLoadingDesc());
+			DefaultWhiteTex = Import("Assets/NuclearEngine/DefaultTextures/White32x32.png", Importers::ImageLoadingDesc());
 
 			DefaultDiffuseTex = DefaultGreyTex;
 			DefaultSpecularTex = DefaultWhiteTex;
 			DefaultNormalTex = DefaultBlackTex;
+
+			DefaultGreyTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
+			DefaultDiffuseTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
+
+			DefaultWhiteTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
+			DefaultSpecularTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
+
+			DefaultNormalTex.SetUsageType(Graphics::TextureUsageType::Normal);
 		}
 
 		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Importers::ImageLoadingDesc& Desc, const Graphics::TextureUsageType& type)

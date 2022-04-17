@@ -2,14 +2,12 @@
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
-#include <Engine\Components\AnimatorComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\ECS\Scene.h>
 #include <Engine.h>
 #include <cstring>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
-#include "Engine/Animation/Animator.h"
 #include <Core\Logger.h>
 #include <Engine\Assets\DefaultMeshes.h>
 
@@ -115,18 +113,21 @@ namespace Nuclear
 			for (auto entity : PointLightView)
 			{
 				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
+				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
 				mLightingSystem.PointLights.push_back(&PointLight);
 			}
 
 			mLightingSystem.BakeBuffer();
 			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraSystem.GetMainCamera()->GetPosition(), 1.0f));
+
 			BufferDesc CBDesc;
 			CBDesc.Name = "NEStatic_Animation";
 			CBDesc.Size = sizeof(Math::Matrix4) * 100;
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &animCB);
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
 
 			Rendering::ShadingModelBakingDesc RPDesc;
 			
@@ -135,7 +136,7 @@ namespace Nuclear
 			RPDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
 			RPDesc.CameraBufferPtr = mCameraSystem.GetCameraCB();
 			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
-			RPDesc.AnimationBufferPtr = animCB;
+			RPDesc.AnimationBufferPtr = mAnimationCB;
 
 			if(AllPipelines)
 			{ 
@@ -168,69 +169,25 @@ namespace Nuclear
 		{
 			return mCameraSystem;
 		}
-		void RenderSystem::RenderMeshes()
-		{
-			auto view = mScene->GetRegistry().view<Components::MeshComponent>();
 
-			for (auto entity : view)
-			{
-				auto& MeshObject = view.get<Components::MeshComponent>(entity);
-				if (MeshObject.mRender)
-				{
-					if (!MeshObject.mMultiRender)
-					{
-						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-						EntityInfo.mTransform.Update();
-						mCameraSystem.GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						mCameraSystem.UpdateBuffer();
-
-						auto AnimatorComponent = mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
-
-						if (AnimatorComponent != nullptr)
-						{
-							std::vector<Math::Matrix4> ok;
-							ok.reserve(100);
-
-							auto transforms = AnimatorComponent->mAnimator->GetFinalBoneMatrices();
-							for (int i = 0; i < transforms.size(); ++i)
-							{
-								ok.push_back(transforms[i]);
-							}
-
-							PVoid data;
-							Graphics::Context::GetContext()->MapBuffer(animCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-							data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
-							Graphics::Context::GetContext()->UnmapBuffer(animCB, MAP_WRITE);
-
-						}
-
-						InstantRender(MeshObject);
-
-					}
-					else
-					{
-						for (auto i : MeshObject.mMultiRenderTransforms)
-						{
-							mCameraSystem.GetMainCamera()->SetModelMatrix(i);
-							mCameraSystem.UpdateBuffer();
-							InstantRender(MeshObject);
-						}
-					}
-				}
-			}
-		}
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{
 			//Render Scene from each avtive camera perspective
 			//for (auto Camera : mCameraSystem.ActiveCameras)
 			{
+				//Update Lights Positions
+				auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
+				for (auto entity : PointLightView)
+				{
+					auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
+					auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+				}
+
 				auto Camera = mCameraSystem.GetMainCamera();
-				GetActivePipeline()->StartRendering();
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
-				Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline()->GetShadingModel()->GetPipeline());
-
-				RenderMeshes();
+				GetActivePipeline()->StartRendering(mScene,&mCameraSystem, mAnimationCB);
 
 				if (VisualizePointLightsPositions)
 				{
@@ -241,9 +198,7 @@ namespace Nuclear
 						model = Math::scale(model, Math::Vector3(0.75f));
 						Camera->SetModelMatrix(model);
 						mCameraSystem.UpdateBuffer();
-
-						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial);
-
+						GetActivePipeline()->InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial, false);
 					}
 				}
 
@@ -252,7 +207,7 @@ namespace Nuclear
 					Camera->mSkybox->Render();
 				}
 			}
-			//Rendering finished apply effects
+			//Rendering finished,,  apply remaining post effects
 			GetActivePipeline()->ApplyPostProcessingEffects();
 
 			//Render pipeline render targets
@@ -266,42 +221,5 @@ namespace Nuclear
 			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Assets::DefaultMeshes::RenderScreenQuad();
 		}
-
-		void RenderSystem::InstantRender(const Components::MeshComponent &object)
-		{
-			if (Core::Engine::GetInstance()->isDebug())
-			{
-				if (object.mMesh == nullptr)
-				{
-					Log.Error("[RenderSystem DEBUG] Skipped Rendering invalid Mesh...\n");
-					return;
-				}
-				if (object.mMaterial == nullptr)
-				{
-					Log.Error("[RenderSystem DEBUG] Skipped Rendering Mesh with invalid Material...\n");
-					return;
-				}
-			}
-
-			InstantRender(object.mMesh, object.mMaterial);
-		}
-		void RenderSystem::InstantRender(Assets::Mesh * mesh, Assets::Material* material)
-		{
-			Uint64 offset = 0;
-
-			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
-			{
-				material->GetMaterialInstance(mActiveRenderingPipeline->GetShadingModel()->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
-
-				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
-
-				DrawIndexedAttribs  DrawAttrs;
-				DrawAttrs.IndexType = VT_UINT32;
-				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
-				Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
-
-			}
-		}	
 	}
 }

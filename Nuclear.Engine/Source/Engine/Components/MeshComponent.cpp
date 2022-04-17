@@ -7,16 +7,14 @@ namespace Nuclear
 		MeshComponent::MeshComponent()
 		{
 		}
-		MeshComponent::MeshComponent(Assets::Mesh * mesh, bool MultiRender)
+		MeshComponent::MeshComponent(Assets::Mesh * mesh)
 		{
 			mMesh = mesh;
-			mMultiRender = MultiRender;
 		}
-		MeshComponent::MeshComponent(Assets::Mesh *mesh , Assets::Material * material, bool MultiRender)
+		MeshComponent::MeshComponent(Assets::Mesh *mesh , Assets::Material * material)
 		{
 			mMesh = mesh;
 			mMaterial = material;
-			mMultiRender = MultiRender;
 		}
 		MeshComponent::~MeshComponent()
 		{

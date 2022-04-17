@@ -1,7 +1,7 @@
 #pragma once
 #include <Engine\Rendering\RenderingPipeline.h>
 #include <Engine\Rendering\BlurEffect.h>
-#include <Engine\Rendering\DirShadowMap.h>
+#include <Engine\Rendering\CSMShadowMap.h>
 #include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Rendering\ShadingModels\BlinnPhong.h>
 #include <Engine\Rendering\ShadingModels\PBR.h>

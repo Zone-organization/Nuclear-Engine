@@ -17,11 +17,11 @@ namespace Nuclear
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
 		}
-		Math::Vector3 PointLightComponent::GetPosition()
+		Math::Vector3 PointLightComponent::GetInternalPosition()
 		{
 			return Math::Vector3(data.Position);
 		}
-		void PointLightComponent::SetPosition(Math::Vector3 pos)
+		void PointLightComponent::SetInternalPosition(Math::Vector3 pos)
 		{
 			data.Position = Math::Vector4(pos, 1.0f);
 		}

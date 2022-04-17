@@ -24,9 +24,6 @@ namespace Nuclear
 			Graphics::Color GetColor();
 			void SetColor(Graphics::Color color);
 
-			Math::Vector3 GetPosition();
-			void SetPosition(Math::Vector3 pos);
-
 			float GetIntensity();
 			void SetIntensity(float intensity);
 
@@ -35,6 +32,8 @@ namespace Nuclear
 
 			bool mCastShadows = false;
 			Internal::Shader_PointLight_Struct GetInternalData();
+			Math::Vector3 GetInternalPosition();
+			void SetInternalPosition(Math::Vector3 pos);
 		protected:
 			Internal::Shader_PointLight_Struct data;
 		};
