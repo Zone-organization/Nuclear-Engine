@@ -13,6 +13,12 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		struct RenderingPipelineBakingDesc
+		{
+			ShadingModelBakingDesc mShadingModelDesc;
+			Uint32 mRTWidth;
+			Uint32 mRTHeight;
+		};
 
 		//A class of compatible camera and shading model
 		//Defines how to render stuff and apply effects to it
@@ -21,28 +27,24 @@ namespace Nuclear
 		public:
 			RenderingPipeline(const std::string& name);
 
-			void Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera, bool initshadow = false);
-
 			std::unordered_map<Uint32, ShaderEffect> mPairedEffects;
 
 			void SetEffect(const Uint32& effectId, bool value);
 
-			Rendering::ShadingModel* GetShadingModel();
-			Graphics::Camera* GetCamera();
-
-			void Bake(ShadingModelBakingDesc& ModelDesc, Uint32 RTWidth, Uint32 RTHeight);
+			virtual void Bake(const RenderingPipelineBakingDesc& desc) = 0;
 
 			Uint32 GetID() const;
 			std::string GetName() const;
+			Rendering::ShadingModel* GetShadingModel() const;
+			Graphics::Camera* GetCamera() const;
 
-			Graphics::BakeStatus GetStatus();
+			Graphics::BakeStatus GetStatus() const;
 
 			//Camera stuff
 			Graphics::RenderTarget* GetSceneRT();
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
 
-			//void Bake(Uint32 RTWidth, Uint32 RTHeight);
 			void ResizeRenderTarget(Uint32 Width, Uint32 Height);
 
 			void UpdatePSO(bool ForceDirty = false);
@@ -58,16 +60,11 @@ namespace Nuclear
 			void InstantRender(Assets::Mesh* mesh, Assets::Material* material, bool shadowpass);
 
 		protected:
-			Rendering::ShadingModel* mShadingModel;
-			Graphics::Camera* mCamera;
-			Uint32 mID;
-			std::string mName;
-
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
 
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 
-			//Animation
+			void SetShadingModelAndCamera(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera);
 
 			//Camera stuff
 			Graphics::RenderTarget SceneRT;
@@ -78,25 +75,17 @@ namespace Nuclear
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
-			Rendering::BlurEffect mBloomBlur;
 
 			bool mPipelineDirty = true;
-			bool mBloomEnabled = false;
-			Uint32 RequiredHash = 0;
+			Uint32 mRequiredHash = 0;
+			Uint32 mRTWidth = 0;
+			Uint32 mRTHeight = 0;
 
-			std::string VS_Path = "Assets/NuclearEngine/Shaders/PostProcessing.vs.hlsl";
-			std::string PS_Path = "Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl";
-
-			Uint32 RTWidth = 0;
-			Uint32 RTHeight = 0;
-
-			void BakeRenderTarget();
-			void BakePipeline();
-
-			//Shadow
-			ShadowMapManager m_ShadowMapMgr;
-			RefCntAutoPtr<ISampler> m_pComparisonSampler;
-
+		private:
+			Rendering::ShadingModel* mShadingModel;
+			Graphics::Camera* mCamera;
+			Uint32 mID;
+			std::string mName;
 		};
 	}
 }

@@ -1,0 +1,6 @@
+namespace Nuclear
+{
+	namespace Rendering
+	{
+	}
+}

@@ -6,6 +6,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Rendering\ShadingModel.h>
 #include <vector>
+#include <Engine/Rendering/BasicShadowMapManager.h>
 
 namespace Nuclear
 {
@@ -19,6 +20,8 @@ namespace Nuclear
 			std::vector<Components::SpotLightComponent*> SpotLights;
 
 			bool RequiresBaking();
+
+			void Initialize();
 
 			void BakeBuffer();
 
@@ -39,6 +42,8 @@ namespace Nuclear
 			size_t Baked_SpotLights_Size = 0;
 
 			bool HasbeenBakedBefore = false;
+
+			Rendering::BasicShadowMapManager SpotlightsShadowManager;
 		};
 
 	}

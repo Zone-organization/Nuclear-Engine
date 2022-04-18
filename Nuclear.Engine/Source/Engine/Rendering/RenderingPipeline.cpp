@@ -17,9 +17,6 @@ namespace Nuclear
 		{
 			mName = name;
 			mID = Utilities::Hash(mName);
-			mPostProcessingEffects[Utilities::Hash("HDR")] = Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
-			mPostProcessingEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
-			mPostProcessingEffects[Utilities::Hash("BLOOM")] = Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::PostProcessingAndRenderingEffect, false);
 		}
 
 		void ParseForMatch(const std::unordered_map<Uint32, ShaderEffect>& first, const std::string& first_it_name, 
@@ -57,17 +54,9 @@ namespace Nuclear
 			}
 		}
 
-		void RenderingPipeline::Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera, bool initshadow )
+		/*void RenderingPipeline::Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera, bool initshadow)
 		{
-			mShadingModel = shadingModel;
-			mCamera = camera;
-
-
-			//Step 1: Find Compatible Effects (build mPairedEffects map)
-			ParseForMatch(mShadingModel->GetRenderingEffects(), mShadingModel->GetName(), mPostProcessingEffects, "PostProcessing", mPairedEffects);
-			ParseForMatch(mPostProcessingEffects,"PostProcessing", mShadingModel->GetRenderingEffects(), mShadingModel->GetName(), mPairedEffects);
-
-
+			SetShadingModelAndCamera(shadingModel, camera);
 
 			if (initshadow)
 			{
@@ -93,7 +82,7 @@ namespace Nuclear
 
 		}
 
-
+		*/
 
 		Graphics::RenderTarget* RenderingPipeline::GetSceneRT()
 		{
@@ -313,15 +302,17 @@ namespace Nuclear
 			}
 		}
 
-		void RenderingPipeline::BakeRenderTarget()
+		void RenderingPipeline::SetShadingModelAndCamera(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera)
 		{
-			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = RTWidth;
-			RTDesc.Height = RTHeight;
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+			mShadingModel = shadingModel;
+			mCamera = camera;
 
-			SceneRT.Create(RTDesc);
+			//Step 1: Find Compatible Effects (build mPairedEffects map)
+			ParseForMatch(mShadingModel->GetRenderingEffects(), mShadingModel->GetName(), mPostProcessingEffects, "PostProcessing", mPairedEffects);
+			ParseForMatch(mPostProcessingEffects, "PostProcessing", mShadingModel->GetRenderingEffects(), mShadingModel->GetName(), mPairedEffects);
 		}
+
+
 
 		void RenderingPipeline::UpdatePSO(bool ForceDirty)
 		{
@@ -382,67 +373,11 @@ namespace Nuclear
 			}
 		}
 
-
-		void RenderingPipeline::BakePipeline()
-		{
-			std::vector<LayoutElement> Layout;
-
-			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
-			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-			Graphics::CompoundPipelineDesc PSOCreateInfo;
-
-			for (auto it : mPostProcessingEffects)
-			{
-				PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
-			}
-
-			PSOCreateInfo.mVShaderPath = VS_Path;
-			PSOCreateInfo.mPShaderPath = PS_Path;
-
-			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
-
-			mPipeline.Create(PSOCreateInfo);
-
-			bool bloomincluded = false;
-			for (auto it : mPostProcessingEffects)
-			{
-				if (it.second.GetName() == "BLOOM")
-				{
-					bloomincluded = true;
-				}
-			}
-
-			//Create Blur pipeline
-			if (bloomincluded)
-			{
-				Graphics::RenderTargetDesc RTDesc;
-				RTDesc.Width = RTWidth;
-				RTDesc.Height = RTHeight;
-				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-				RTDesc.mCreateDepth = false;
-
-				BloomRT.Create(RTDesc);
-
-				mBloomBlur.Initialize(RTWidth, RTHeight);
-			}
-
-			UpdatePSO(true);
-		}
-
-		Rendering::ShadingModel* RenderingPipeline::GetShadingModel()
+		Rendering::ShadingModel* RenderingPipeline::GetShadingModel() const
 		{
 			return mShadingModel;
 		}
-		Graphics::Camera* RenderingPipeline::GetCamera()
+		Graphics::Camera* RenderingPipeline::GetCamera() const
 		{
 			return mCamera;
 		}
@@ -468,7 +403,7 @@ namespace Nuclear
 		{
 			return mName;
 		}
-		Graphics::BakeStatus RenderingPipeline::GetStatus()
+		Graphics::BakeStatus RenderingPipeline::GetStatus() const
 		{
 			return mStatus;
 		}
