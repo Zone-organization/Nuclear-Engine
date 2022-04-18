@@ -1,5 +1,6 @@
 #pragma once
 #include <Engine\Rendering\RenderingPipeline.h>
+#include <Engine\Rendering\ForwardRenderingPipeline.h>
 #include <Engine\Rendering\BlurEffect.h>
 #include <Engine\Rendering\CSMShadowMap.h>
 #include <Engine\Rendering\ShadingModel.h>

@@ -12,7 +12,7 @@ class Sample3 : public Core::Game
 	Graphics::Camera Camera;
 
 	Rendering::DiffuseOnly DiffuseRP;
-	Rendering::RenderingPipeline DiffuseRPPipeline;
+	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 
 	ECS::Scene Scene;
 	ECS::Entity EPlane;

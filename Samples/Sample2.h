@@ -23,10 +23,10 @@ class Sample2 : public Core::Game
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
 
-	Rendering::RenderingPipeline PBRPipeline;
-	Rendering::RenderingPipeline BlinnPhongPipeline;
-	Rendering::RenderingPipeline DiffuseRPPipeline;
-	Rendering::RenderingPipeline WireFrameRPPipeline;
+	Rendering::ForwardRenderingPipeline PBRPipeline;
+	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
+	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
+	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 
 	//ECS
 	ECS::Scene Scene;
@@ -127,7 +127,7 @@ public:
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 
 		PBRPipeline.Initialize(&PBR, &Camera);
-		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera, true);
+		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
 

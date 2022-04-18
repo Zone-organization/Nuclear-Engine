@@ -42,12 +42,6 @@ namespace Nuclear
 
 			Rendering::RenderingPipeline* GetActivePipeline();
 
-			//// Render A MeshComponent Component instantly
-			//void InstantRender(const Components::MeshComponent& object);
-
-			//// Render A Mesh instantly
-			//void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
-
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
 
@@ -55,9 +49,12 @@ namespace Nuclear
 			bool VisualizePointLightsPositions = false;
 
 			CameraSubSystem& GetCameraSubSystem();
+			LightingSubSystem& GetLightingSubSystem();
+
+			IBuffer* GetAnimationCB();
+			Assets::Material LightSphereMaterial;                     //TODO: Move
 
 		private:
-			//void RenderMeshes();
 
 			LightingSubSystem mLightingSystem;
 			CameraSubSystem mCameraSystem;
@@ -65,10 +62,9 @@ namespace Nuclear
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> mAnimationCB;
 
-			Assets::Material LightSphereMaterial;
 
 			Rendering::RenderingPipeline* mActiveRenderingPipeline;
-			std::unordered_map<Uint32, Rendering::RenderingPipeline*> mRenderingPipelines;  //TODO: Should be moved to camera
+			std::unordered_map<Uint32, Rendering::RenderingPipeline*> mRenderingPipelines;
 		};
 
 	}

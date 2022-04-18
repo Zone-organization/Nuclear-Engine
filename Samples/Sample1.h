@@ -55,10 +55,10 @@ class Sample1 : public Core::Game
 	Rendering::BlinnPhong BlinnPhongRP;
 	Rendering::BlinnPhong BlinnPhongWithNormalMapRP = Rendering::BlinnPhong(true);
 
-	Rendering::RenderingPipeline BlinnPhongPipeline;
-	Rendering::RenderingPipeline BlinnPhongNormalPipeline;
-	Rendering::RenderingPipeline DiffuseRPPipeline;
-	Rendering::RenderingPipeline WireFrameRPPipeline;
+	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
+	Rendering::ForwardRenderingPipeline BlinnPhongNormalPipeline;
+	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
+	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 
 	//ECS
 	ECS::Scene ModelsScene;

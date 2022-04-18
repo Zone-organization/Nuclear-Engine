@@ -129,20 +129,24 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
 
-			Rendering::ShadingModelBakingDesc RPDesc;
-			
-			RPDesc.DirLights = static_cast<Uint32>(mLightingSystem.DirLights.size());
-			RPDesc.SpotLights = static_cast<Uint32>(mLightingSystem.SpotLights.size());
-			RPDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
-			RPDesc.CameraBufferPtr = mCameraSystem.GetCameraCB();
-			RPDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
-			RPDesc.AnimationBufferPtr = mAnimationCB;
+			Rendering::RenderingPipelineBakingDesc bakedesc;
+			bakedesc.mRTWidth = RTWidth;
+			bakedesc.mRTHeight = RTHeight;
+
+			bakedesc.mShadingModelDesc.DirLights = static_cast<Uint32>(mLightingSystem.DirLights.size());
+			bakedesc.mShadingModelDesc.SpotLights = static_cast<Uint32>(mLightingSystem.SpotLights.size());
+			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
+			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystem.GetCameraCB();
+			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
+			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
 
 			if(AllPipelines)
 			{ 
 				for (auto it : mRenderingPipelines)
 				{
-					it.second->Bake(RPDesc, RTWidth, RTHeight);
+
+
+					it.second->Bake(bakedesc);
 				}
 			}
 			else
@@ -170,6 +174,16 @@ namespace Nuclear
 			return mCameraSystem;
 		}
 
+		LightingSubSystem& RenderSystem::GetLightingSubSystem()
+		{
+			return mLightingSystem;				
+		}
+
+		IBuffer* RenderSystem::GetAnimationCB()
+		{
+			return mAnimationCB;
+		}
+
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{
 			//Render Scene from each avtive camera perspective
@@ -187,28 +201,8 @@ namespace Nuclear
 				auto Camera = mCameraSystem.GetMainCamera();
 				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
-				GetActivePipeline()->StartRendering(mScene,&mCameraSystem, mAnimationCB);
-
-				if (VisualizePointLightsPositions)
-				{
-					for (unsigned int i = 0; i < mLightingSystem.PointLights.size(); i++)
-					{
-						Math::Matrix4 model(1.0f);
-						model = Math::translate(model, Math::Vector3(mLightingSystem.PointLights[i]->GetInternalData().Position));
-						model = Math::scale(model, Math::Vector3(0.75f));
-						Camera->SetModelMatrix(model);
-						mCameraSystem.UpdateBuffer();
-						GetActivePipeline()->InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &LightSphereMaterial, false);
-					}
-				}
-
-				if (Camera->RenderSkybox == true && Camera->mSkybox != nullptr)
-				{
-					Camera->mSkybox->Render();
-				}
+				GetActivePipeline()->StartRendering(this);
 			}
-			//Rendering finished,,  apply remaining post effects
-			GetActivePipeline()->ApplyPostProcessingEffects();
 
 			//Render pipeline render targets
 			GetActivePipeline()->SetPipelineState();

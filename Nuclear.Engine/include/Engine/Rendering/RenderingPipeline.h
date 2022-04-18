@@ -5,12 +5,15 @@
 #include <Engine/Rendering/ShadingModel.h>
 #include <Engine/Graphics/BakeStatus.h>
 #include <Engine/Rendering/CSMShadowMap.h>
-#include <Engine\Systems\CameraSubSystem.h>
 #include <Engine\ECS\Scene.h>
 #include <unordered_map>
 
 namespace Nuclear
 {
+	namespace Systems {
+		class RenderSystem;
+	}
+
 	namespace Rendering
 	{
 		struct RenderingPipelineBakingDesc
@@ -31,13 +34,10 @@ namespace Nuclear
 
 			void SetEffect(const Uint32& effectId, bool value);
 
-			virtual void Bake(const RenderingPipelineBakingDesc& desc) = 0;
-
 			Uint32 GetID() const;
 			std::string GetName() const;
 			Rendering::ShadingModel* GetShadingModel() const;
 			Graphics::Camera* GetCamera() const;
-
 			Graphics::BakeStatus GetStatus() const;
 
 			//Camera stuff
@@ -45,19 +45,20 @@ namespace Nuclear
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
 
-			void ResizeRenderTarget(Uint32 Width, Uint32 Height);
+			virtual void Bake(const RenderingPipelineBakingDesc& desc) = 0;
 
-			void UpdatePSO(bool ForceDirty = false);
+			virtual void ResizeRenderTarget(Uint32 Width, Uint32 Height) = 0;
 
-			void SetPostProcessingEffect(const Uint32& effectId, bool value);
+			virtual void SetPostProcessingEffect(const Uint32& effectId, bool value) = 0;
 
-			void StartRendering(ECS::Scene* mScene, Systems::CameraSubSystem* camerasystem, IBuffer* AnimCB);
-			void ApplyPostProcessingEffects();
+			virtual void StartRendering(Systems::RenderSystem* renderer) = 0;
 
-			void SetPipelineState();
+			virtual void SetPipelineState() = 0;
+
+			virtual void UpdatePSO(bool ForceDirty = false);
 
 			// Render A Mesh instantly
-			void InstantRender(Assets::Mesh* mesh, Assets::Material* material, bool shadowpass);
+			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
 		protected:
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
@@ -68,7 +69,6 @@ namespace Nuclear
 
 			//Camera stuff
 			Graphics::RenderTarget SceneRT;
-			Graphics::RenderTarget BloomRT;
 
 			Graphics::CompoundPipeline mPipeline;
 
