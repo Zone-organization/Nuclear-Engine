@@ -20,6 +20,7 @@ class Sample2 : public Core::Game
 	Rendering::PBR PBR;
 	//Rendering::PBR TestPBR;
 	Rendering::BlinnPhong BlinnPhong;
+	Rendering::BlinnPhong DefferedBlinnPhong;
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
 
@@ -27,6 +28,8 @@ class Sample2 : public Core::Game
 	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
+
+	Rendering::DefferedRenderingPipeline DefferedPipeline;
 
 	//ECS
 	ECS::Scene Scene;
@@ -48,7 +51,8 @@ public:
 		 PBRPipeline("PBR"),
 	 BlinnPhongPipeline("BlinnPhone"),
 	DiffuseRPPipeline("DiffuseRP"),
-	 WireFrameRPPipeline("WireFrameRP")
+	 WireFrameRPPipeline("WireFrameRP"),
+		DefferedPipeline("Deffered")
 	{
 
 	}
@@ -131,10 +135,15 @@ public:
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
 
+		Rendering::DefferedRenderingPipelineInitInfo initInfo;
+		initInfo.shadingModel = &DefferedBlinnPhong;
+		initInfo.camera = &Camera;
+		DefferedPipeline.Initialize(initInfo);
+
 		//Scene.Systems.Configure();
 		//TestPBR.test = true;
 		Renderer->AddRenderingPipeline(&PBRPipeline);
-		//Renderer->AddRenderingPipeline(&TestPBR);
+		Renderer->AddRenderingPipeline(&DefferedPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
 		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
@@ -281,7 +290,7 @@ public:
 				ImGui::RadioButton("BlinnPhong", &e, 1);
 				ImGui::RadioButton("DiffuseOnly", &e, 2);
 				ImGui::RadioButton("WireFrame", &e, 3);
-				ImGui::RadioButton("TestPBR", &e, 5);
+				ImGui::RadioButton("Deffered Blinn Phong", &e, 5);
 
 				//Change Rendering Pipeline
 				if (e == 0)
@@ -292,8 +301,8 @@ public:
 					Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
 				else if (e == 3)
 					Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-				//else if (e == 5)
-				//	Renderer->SetActiveRenderingPipeline(TestPBR.GetID());
+				else if (e == 5)
+					Renderer->SetActiveRenderingPipeline(DefferedPipeline.GetID());
 
 				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 

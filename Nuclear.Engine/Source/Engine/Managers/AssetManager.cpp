@@ -97,7 +97,7 @@ namespace Nuclear {
 			DefaultDiffuseTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
 
 			DefaultWhiteTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
-			DefaultSpecularTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
+			DefaultSpecularTex.SetUsageType(Graphics::TextureUsageType::Specular);
 
 			DefaultNormalTex.SetUsageType(Graphics::TextureUsageType::Normal);
 		}

@@ -6,6 +6,12 @@
 //#define NE_SHADOWS_ENABLED
 #include "LightTypes.hlsli"
 
+#ifdef NE_DEFFERED
+struct PixelInputType
+{
+    float2 TexCoords : TEXCOORD0;
+};
+#else
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
@@ -17,6 +23,19 @@ struct PixelInputType
     float3x3 TBN : TANGENT0;
 #endif
 };
+#endif
+
+#ifdef NE_DEFFERED
+
+Texture2D GBuffer_Position : register(t0);
+Texture2D GBuffer_Normal : register(t1);
+Texture2D GBuffer_AlbedoSpec : register(t2);
+
+SamplerState GBuffer_Position_sampler : register(s0);
+SamplerState GBuffer_Normal_sampler : register(s1);
+SamplerState GBuffer_AlbedoSpec_sampler : register(s2);
+
+#else
 
 Texture2D NEMat_Diffuse1 : register(t0);
 Texture2D NEMat_Specular1 : register(t1);
@@ -30,12 +49,7 @@ SamplerState NEMat_Specular1_sampler : register(s1);
 SamplerState NEMat_Normal1_sampler : register(s2);
 #endif
 
-//cbuffer NEDynamic_Material
-//{
-//	float3 ModelColor;
-//	float Shininess;
-//};
-
+#endif
 
 struct PS_OUTPUT
 {
@@ -71,26 +85,26 @@ float DoQuadraticAttenuation(float4 Intensity_Attenuation, float3 lightposition,
     return Intensity_Attenuation.x / (Intensity_Attenuation.y + Intensity_Attenuation.z * distance + Intensity_Attenuation.w * (distance * distance));
 }
 // calculates the color when using a directional light.
-float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float2 TexCoords)
+float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float4 albedo)
 {
     float3 lightDir = normalize(-light.Direction.xyz);
 
-    float3 ambient = 0.05f * float3(light.Color.xyz * NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, TexCoords).xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, TexCoords).xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NEMat_Specular1.Sample(NEMat_Specular1_sampler, TexCoords).xyz;
+    float3 ambient = 0.05f * (light.Color.xyz * albedo.xyz);
+    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
+    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
     return (ambient + diffuse + specular);
 }
 
 // calculates the color when using a point light.
-float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 viewDir, float2 TexCoords)
+float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo)
 {
     float3 lightDir = normalize(light.Position.xyz - fragPos);
     // attenuation
     float attenuation = DoQuadraticAttenuation(light.Intensity_Attenuation, light.Position.xyz, fragPos);
     // combine results
-    float3 ambient = 0.05f * float3(light.Color.xyz * NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, TexCoords).xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, TexCoords).xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NEMat_Specular1.Sample(NEMat_Specular1_sampler, TexCoords).xyz;
+    float3 ambient = 0.05f * float3(light.Color.xyz * albedo.xyz);
+    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
+    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
@@ -98,7 +112,7 @@ float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 vi
 }
 
 // calculates the color when using a spot light.
-float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 viewDir, float2 TexCoords)
+float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo)
 {
     float3 lightDir = normalize(light.Position.xyz - fragPos);
 
@@ -111,9 +125,9 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     float intensity = clamp((theta - light.InnerCutOf_OuterCutoff.y) / epsilon, 0.0, 1.0);
 
     // combine results
-    float3 ambient = 0.05f * float3(light.Color.xyz * NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, TexCoords).xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, TexCoords).xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * NEMat_Specular1.Sample(NEMat_Specular1_sampler, TexCoords).xyz;
+    float3 ambient = 0.05f * float3(light.Color.xyz * albedo.xyz);
+    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
+    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
@@ -122,11 +136,17 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
 
 PS_OUTPUT DoLighting(PixelInputType input)
 {
+
+#ifdef NE_DEFFERED
+    float3 FragPos = GBuffer_Position.Sample(GBuffer_Position_sampler, input.TexCoords).xyz;
+    float3 norm = GBuffer_Normal.Sample(GBuffer_Normal_sampler, input.TexCoords).xyz;
+    float4 albedo = GBuffer_AlbedoSpec.Sample(GBuffer_AlbedoSpec_sampler, input.TexCoords);
+#else
+    float3 FragPos = input.FragPos;
     // properties
     float3 norm = normalize(input.Normal);
-    float3 viewDir = normalize(ViewPos.xyz - input.FragPos);
+    float3 viewDir = normalize(ViewPos.xyz - FragPos);
     float3 result = float3(0.0f, 0.0f, 0.0f);
-
 
 #ifdef NE_USE_NORMAL_MAPS
     norm = NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz;
@@ -134,18 +154,21 @@ PS_OUTPUT DoLighting(PixelInputType input)
     norm = normalize(mul(norm, input.TBN));
 #endif
 
+    float4 albedo = float4(NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, input.TexCoords).xyz, NEMat_Specular1.Sample(NEMat_Specular1_sampler, input.TexCoords).x);
+#endif
+
 #ifdef NE_DIR_LIGHTS_NUM
   // phase 1: directional lighting
     for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
     {
-        result += CalcDirLight(DirLights[i0], norm, viewDir, input.TexCoords);
+        result += CalcDirLight(DirLights[i0], norm, viewDir, albedo);
     }
 #endif
 #ifdef NE_POINT_LIGHTS_NUM  
     // phase 2: point lights
     for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
     {
-        result += CalcPointLight(PointLights[i1], norm, input.FragPos, viewDir, input.TexCoords);
+        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo);
     }
 #endif
 #ifdef NE_SPOT_LIGHTS_NUM
@@ -153,7 +176,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
     for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
     {
     
-        result += CalcSpotLight(SpotLights[i2], norm, input.FragPos, viewDir, input.TexCoords);
+        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo);
     }
 #endif
 

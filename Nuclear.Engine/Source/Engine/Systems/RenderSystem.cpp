@@ -157,7 +157,7 @@ namespace Nuclear
 			//TODO: Move!
 			Assets::TextureSet CubeSet;
 			CubeSet.mData.push_back({ 0, Managers::AssetManager::DefaultWhiteTex });
-			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultWhiteTex });
+			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultSpecularTex });
 			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
 			CreateMaterialForAllPipelines(&LightSphereMaterial);
 		}

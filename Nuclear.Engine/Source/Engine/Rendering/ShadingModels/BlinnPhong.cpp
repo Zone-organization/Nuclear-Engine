@@ -77,7 +77,10 @@ namespace Nuclear
 				{
 					defines.push_back(it.GetName());
 				}
-
+				if (desc.mDefferedPipeline)
+				{
+					defines.push_back("NE_DEFFERED");
+				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;

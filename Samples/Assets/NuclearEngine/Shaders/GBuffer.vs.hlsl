@@ -11,12 +11,10 @@ struct VertexInputType
 {
     float4 Position : ATTRIB0;
     float2 TexCoord : ATTRIB1;
-#ifdef NE_USE_DEF_CAMERA
     float3 Normals : ATTRIB2;
     float3 Tangents : ATTRIB3;
     int4 BoneIDs : ATTRIB4;
     float4 Weights : ATTRIB5;
-#endif
 };
 
 
@@ -24,14 +22,11 @@ struct PixelInputType
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD0;
-#ifdef NE_USE_DEF_CAMERA
     float3 Normals : NORMAL0;
     float3 FragPos : TEXCOORD1;
     float3x3 TBN : TANGENT0;
-#endif
 };
 
-#ifdef NE_USE_DEF_CAMERA
 cbuffer NEStatic_Camera : register(b0)
 {
     matrix Model;
@@ -42,7 +37,6 @@ cbuffer NEStatic_Camera : register(b0)
     matrix View;
     matrix Projection;
 };
-#endif
 
 #define MAX_BONES  100
 #define MAX_BONE_INFLUENCE 4
@@ -56,7 +50,6 @@ PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
 
-#ifdef NE_USE_DEF_CAMERA
 
     float4 FinalPos = float4(input.Position.xyz, 1.0f);
     float4 FinalNorm = float4(input.Normals.xyz, 0.0f);
@@ -71,7 +64,7 @@ PixelInputType main(VertexInputType input)
         {
             break;
         }
-        FinalPos = float4(0.0f,0.0f,0.0f, 0.0f);
+        FinalPos = float4(0.0f, 0.0f, 0.0f, 0.0f);
         FinalNorm = float4(0.0f, 0.0f, 0.0f, 0.0f);
         float4 localPosition = mul(BoneTransforms[input.BoneIDs[i]], float4(input.Position.xyz, 1.0f));
         FinalPos += mul(input.Weights[i], float4(localPosition.xyz, 1.0f));
@@ -82,23 +75,12 @@ PixelInputType main(VertexInputType input)
 
     output.Position = mul(ModelViewProjection, FinalPos);
 
-#else
-    output.Position = input.Position;
-#endif
-
     output.TexCoord = input.TexCoord;
 
-
-#ifdef NE_USE_DEF_CAMERA
     output.Normals = mul((float3x3)ModelInvTranspose, FinalNorm.xyz);
-#endif
 
-
-#ifdef NE_OUT_FRAG_POS
     output.FragPos = mul(Model, FinalPos).xyz;
-#endif
 
-#ifdef NE_USE_DEF_CAMERA
     float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
     float3 N = normalize(mul(float4(FinalNorm.xyz, 0.0f), Model).xyz);
     //Gram-Schmidt process
@@ -106,9 +88,8 @@ PixelInputType main(VertexInputType input)
     T = normalize(T - dot(T, N) * N);
     // then retrieve perpendicular vector B with the cross product of T and N
     float3 B = cross(N, T);
-    
+
     output.TBN = float3x3(T, B, N);
-#endif
 
     return output;
 }

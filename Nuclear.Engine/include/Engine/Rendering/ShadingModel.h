@@ -24,6 +24,8 @@ namespace Nuclear
 			IBuffer* LightsBufferPtr = nullptr;
 
 			std::vector<ShaderEffect> mRequiredEffects;
+
+			bool mDefferedPipeline = false;
 		};
 
 		class NEAPI ShadingModel
