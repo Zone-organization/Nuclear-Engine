@@ -10,7 +10,7 @@ namespace Nuclear
 {
 	namespace Core 
 	{
-		std::wstring String2WSTR(std::string s)
+		std::wstring String2WSTR(const std::string& s)
 		{
 #ifdef _WIN32
 			int len;
@@ -45,60 +45,43 @@ namespace Nuclear
 			Write(std::string("\n"));
 		}
 
-		void Logger::Error(std::string format, ...)
+		void Logger::Error(const std::string& format)
 		{
 			SetConsoleColor(12);
 			Write(std::string("[Error] "));
-			va_list args;
-			va_start(args, format);
 			Write(format);
-
-			va_end(args);
 			SetConsoleColor(15);
 		}
 
-		void Logger::FatalError(std::string format, ...)
+		void Logger::FatalError(const std::string& format)
 		{
 			SetConsoleColor(79);
 			std::string info("Nuclear Engine has encountred a fatal error, and have to exit, please inform the developers for more support.\nDetails: ");
 
 			Write(std::string("[FATAL_ERROR] "));
-
-			va_list args;
-			va_start(args, format);
-			info = info + format;
 			Write(format);
-			va_end(args);
 #ifdef _WIN32
 			MessageBox(NULL, String2WSTR(info).c_str(), L"[FATAL_ERROR]", MB_OK | MB_ICONERROR);
 #endif
 			exit(1);
 		}
 
-		void Logger::Warning(std::string format, ...)
+		void Logger::Warning(const std::string& format)
 		{
 			SetConsoleColor(14);
 			Write(std::string("[Warning] "));
-			va_list args;
-			va_start(args, format);
 			Write(format);
-
-			va_end(args);
 			SetConsoleColor(15);
 
 		}
 
-		void Logger::Info(std::string format, ...)
+		void Logger::Info(const std::string& format)
 		{
 			SetConsoleColor(15);
-
-			va_list args;
-			va_start(args, format);
 			Write(format);
-			va_end(args);
 		}
 
-		void Logger::Write(std::string TextString)
+		void Logger::Write(const std::string& TextString)
 		{
 			printf(TextString.c_str());
 		}

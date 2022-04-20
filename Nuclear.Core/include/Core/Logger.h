@@ -17,16 +17,16 @@ namespace Nuclear {
 
 			void EndLine();
 
-			void Error(std::string format, ...);
+			void Error(const std::string& format);
 
-			void FatalError(std::string format, ...);
+			void FatalError(const std::string &format);
 
-			void Warning(std::string format, ...);
+			void Warning(const std::string& format);
 
-			void Info(std::string format, ...);
+			void Info(const std::string& format);
 
 		private:
-			void Write(std::string TextString);
+			void Write(const std::string& TextString);
 		};
 	}
 	static Core::Logger Log;
