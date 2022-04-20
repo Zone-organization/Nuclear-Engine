@@ -14,7 +14,7 @@
 //Dependencies Linking
 #pragma comment(lib,"Nuclear.Core.lib")
 
-#pragma comment(lib,"assimp-vc143-mtd.lib")
+#pragma comment(lib,"assimp-vc143-mt.lib")
 
 //Diligent Linking
 #pragma comment(lib,"Diligent-Common.lib")

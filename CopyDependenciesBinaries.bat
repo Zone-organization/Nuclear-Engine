@@ -1,11 +1,32 @@
 mkdir Bin\DebugX64
 mkdir Bin\ReleaseX64
 
-::FreeImage
+::FreeImage              (We dont use debug version for performance)
 copy External\Freeimage\Dist\x64\FreeImage.dll	 Bin\DebugX64
 copy External\Freeimage\Dist\x64\FreeImage.lib	 Bin\DebugX64
+copy External\Freeimage\Dist\x64\FreeImage.dll	 Bin\ReleaseX64
+copy External\Freeimage\Dist\x64\FreeImage.lib	 Bin\ReleaseX64
 
-::PhysX
+::Assimp (We dont use debug version for performance)
+copy External\CmakeProjects\Assimp\bin\Release\assimp-vc143-mt.dll	 Bin\DebugX64
+copy External\CmakeProjects\Assimp\lib\Release\assimp-vc143-mt.lib	 Bin\DebugX64
+
+copy External\CmakeProjects\Assimp\bin\Release\assimp-vc143-mt.dll	 Bin\ReleaseX64
+copy External\CmakeProjects\Assimp\lib\Release\assimp-vc143-mt.lib	 Bin\ReleaseX64
+
+::FMod
+copy External\FMOD\lib\x64\fmodL.dll	 Bin\DebugX64
+copy External\FMOD\lib\x64\fmodL_vc.lib	 Bin\DebugX64
+
+copy External\FMOD\lib\x64\fmodL.dll	 Bin\ReleaseX64
+copy External\FMOD\lib\x64\fmodL_vc.lib	 Bin\ReleaseX64
+
+::GLFW Debug
+copy External\CmakeProjects\GLFW\src\Debug\glfw3.lib	 Bin\DebugX64
+::GLFW Release
+copy External\CmakeProjects\GLFW\src\Release\glfw3.lib	 Bin\ReleaseX64
+
+::PhysX Debug
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysX_64.dll	 Bin\DebugX64
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysXCommon_64.dll	 Bin\DebugX64
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysXFoundation_64.dll	 Bin\DebugX64
@@ -16,17 +37,16 @@ copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysXFoundation_64.lib	 
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysXExtensions_static_64.lib	 Bin\DebugX64
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysXPvdSDK_static_64.lib	 Bin\DebugX64
 
-::FMod
-copy External\FMOD\lib\x64\fmodL.dll	 Bin\DebugX64
-copy External\FMOD\lib\x64\fmodL_vc.lib	 Bin\DebugX64
+::PhysX Release
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysX_64.dll	         Bin\ReleaseX64
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysXCommon_64.dll	     Bin\ReleaseX64
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysXFoundation_64.dll	 Bin\ReleaseX64
 
-::Assimp Debug
-copy External\CmakeProjects\Assimp\bin\Debug\assimp-vc142-mtd.dll	 Bin\DebugX64
-copy External\CmakeProjects\Assimp\bin\Debug\assimp-vc142-mtd.pdb	 Bin\DebugX64
-copy External\CmakeProjects\Assimp\lib\Debug\assimp-vc142-mtd.lib	 Bin\DebugX64
-
-::GLFW Debug
-copy External\CmakeProjects\GLFW\src\Debug\glfw3.lib	 Bin\DebugX64
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysX_64.lib	               Bin\ReleaseX64
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysXCommon_64.lib             Bin\ReleaseX64
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysXFoundation_64.lib	       Bin\ReleaseX64
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysXExtensions_static_64.lib  Bin\ReleaseX64
+copy External\PhysX\physx\bin\win.x86_64.vc142.mt\release\PhysXPvdSDK_static_64.lib	   Bin\ReleaseX64
 
 ::Diligent Debug
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Debug\GraphicsEngineD3D11_64d.lib          	 Bin\DebugX64
@@ -39,30 +59,10 @@ copy External\CmakeProjects\Diligent\Platforms\Basic\Debug\Diligent-BasicPlatfor
 copy External\CmakeProjects\Diligent\Platforms\Win32\Debug\Diligent-Win32Platform.lib      					         Bin\DebugX64
 copy External\CmakeProjects\Diligent\Common\Debug\Diligent-Common.lib            									     Bin\DebugX64
 
-copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Debug\GraphicsEngineD3D11_64d.pdb          	 Bin\DebugX64
-copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Debug\GraphicsEngineD3D12_64d.pdb          	 Bin\DebugX64
-copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.pdb   	       Bin\DebugX64
-copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Debug\GraphicsEngineVk_64d.pdb     	     	 Bin\DebugX64
-copy External\CmakeProjects\Diligent\Graphics\GraphicsAccessories\Debug\GraphicsAccessories.pdb		          	Bin\DebugX64
-copy External\CmakeProjects\Diligent\Graphics\GraphicsTools\Debug\Diligent-GraphicsTools.pdb            				     Bin\DebugX64
-copy External\CmakeProjects\Diligent\Platforms\Basic\Debug\Diligent-BasicPlatform.pdb      					             Bin\DebugX64
-copy External\CmakeProjects\Diligent\Platforms\Win32\Debug\Diligent-Win32Platform.pdb          				     	     Bin\DebugX64
-copy External\CmakeProjects\Diligent\Common\Debug\Diligent-Common.pdb            									     Bin\DebugX64
-
-
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Debug\GraphicsEngineD3D11_64d.dll          	 Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Debug\GraphicsEngineD3D12_64d.dll          	 Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.dll            Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Debug\GraphicsEngineVk_64d.dll          	     Bin\DebugX64
-
-
-
-::Assimp Release
-copy External\CmakeProjects\Assimp\bin\Release\assimp-vc142-mt.dll	 Bin\ReleaseX64
-copy External\CmakeProjects\Assimp\lib\Release\assimp-vc142-mt.lib	 Bin\ReleaseX64
-
-::GLFW Release
-copy External\CmakeProjects\GLFW\src\Release\glfw3.lib	 Bin\ReleaseX64
 
 ::Diligent Release
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Release\GraphicsEngineD3D11_64r.lib          	 Bin\ReleaseX64
