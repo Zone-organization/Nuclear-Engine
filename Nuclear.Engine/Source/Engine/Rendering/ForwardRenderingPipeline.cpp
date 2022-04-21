@@ -199,7 +199,13 @@ namespace Nuclear
 						Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
 						data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
 						Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
-
+					}
+					else {
+						Math::Matrix4 empty(0.0f);
+						PVoid data;
+						Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+						data = memcpy(data, &empty,  sizeof(Math::Matrix4));
+						Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
 					}
 
 					InstantRender(MeshObject.mMesh, MeshObject.mMaterial);

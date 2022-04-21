@@ -7,6 +7,7 @@
 #include <Engine\Components\AnimatorComponent.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Core\FileSystem.h>
+#include <Engine/Graphics/ImGui.h>
 
 namespace Nuclear
 {
@@ -53,26 +54,37 @@ namespace Nuclear
 
 
             Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), mGBuffer.pDepthBuffer->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-            //Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->mColorRTV.RawPtr(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-          //  Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            for (auto& i : RTargets)
+            {
+                Graphics::Context::GetContext()->ClearRenderTarget(i, (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            }
+
+              Graphics::Context::GetContext()->ClearDepthStencil(mGBuffer.pDepthBuffer->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
             //Render To Gbuffer
             Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetGBufferPipeline());
             RenderMeshes(renderer);
 
             //Apply Lighting
-            Graphics::Context::GetContext()->SetRenderTargets(1, SceneRT.mColorRTV.RawDblPtr(), GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-            Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->mColorRTV.RawPtr(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-            Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
             Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
+
+            Graphics::Context::GetContext()->SetRenderTargets(1, SceneRT.mColorRTV.RawDblPtr(), mGBuffer.pDepthBuffer->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->ClearRenderTarget(SceneRT.mColorRTV.RawPtr(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            //Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
             GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
             GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
             GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 2)->Set(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
             Graphics::Context::GetContext()->CommitShaderResources(GetShadingModel()->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
             Assets::DefaultMeshes::RenderScreenQuad();
-
+            ImGui::Begin("GBUFFER");
+            ImGui::Image(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), {128,128});
+            ImGui::Image(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 128,128 });
+            ImGui::Image(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 128,128 });
+            ImGui::Text("SceneRT");
+            ImGui::Image(SceneRT.mShaderRTV, { 128,128 });
+            ImGui::End();
 
         }
         void DefferedRenderingPipeline::SetPipelineState()
@@ -115,7 +127,7 @@ namespace Nuclear
             RTDesc.Width = mRTWidth;
             RTDesc.Height = mRTHeight;
             RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-
+            RTDesc.mCreateDepth = false;
             SceneRT.Create(RTDesc);
 
             //Graphics::RenderTargetDesc RTDesc;
@@ -193,6 +205,13 @@ namespace Nuclear
                         data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
                         Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
 
+                    }
+                    else {
+                        Math::Matrix4 empty(0.0f);
+                        PVoid data;
+                        Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+                        data = memcpy(data, &empty, sizeof(Math::Matrix4));
+                        Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
                     }
 
                     InstantRender(MeshObject.mMesh, MeshObject.mMaterial);

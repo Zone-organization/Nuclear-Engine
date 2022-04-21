@@ -23,7 +23,7 @@ namespace Nuclear
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM;
 			//Check for bloom
 			for (auto it : desc.mRequiredEffects)
 			{
@@ -183,7 +183,7 @@ namespace Nuclear
             PSOCreateInfo.GraphicsPipeline.RTVFormats[2] = TEX_FORMAT_RGBA8_UNORM;
             //PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
             PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
-            PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+            PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
             PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
             PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
             PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;

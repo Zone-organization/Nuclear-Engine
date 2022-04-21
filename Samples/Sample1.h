@@ -54,11 +54,13 @@ class Sample1 : public Core::Game
 	Rendering::WireFrame WireFrameRP;
 	Rendering::BlinnPhong BlinnPhongRP;
 	Rendering::BlinnPhong BlinnPhongWithNormalMapRP = Rendering::BlinnPhong(true);
+	Rendering::BlinnPhong DefferedBlinnPhong;
 
 	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
 	Rendering::ForwardRenderingPipeline BlinnPhongNormalPipeline;
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
+	Rendering::DefferedRenderingPipeline DefferedPipeline;
 
 	//ECS
 	ECS::Scene ModelsScene;
@@ -110,7 +112,8 @@ public:
 		BlinnPhongNormalPipeline("BlinnPhongNormal"),
 		BlinnPhongPipeline("BlinnPhong"),
 		DiffuseRPPipeline("DiffuseRP"),
-		WireFrameRPPipeline("WireFrameRP")
+		WireFrameRPPipeline("WireFrameRP"),
+		DefferedPipeline("Deffered")
 	{
 	}
 	void SetupAssets()
@@ -226,7 +229,11 @@ public:
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
-
+		DefferedBlinnPhong.Initialize({ true });
+		Rendering::DefferedRenderingPipelineInitInfo initInfo;
+		initInfo.shadingModel = &DefferedBlinnPhong;
+		initInfo.camera = &Camera;
+		DefferedPipeline.Initialize(initInfo);
 		//Scene.Systems.Configure();
 		//TestPBR.test = true;
 		Renderer->AddRenderingPipeline(&BlinnPhongNormalPipeline);
@@ -234,6 +241,7 @@ public:
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
 		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
+		Renderer->AddRenderingPipeline(&DefferedPipeline);
 
 
 		Renderer->Bake(_Width_, _Height_);
@@ -345,6 +353,7 @@ public:
 			ImGui::RadioButton("BlinnPhong", &e, 1);
 			ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
 			ImGui::RadioButton("WireFrame", &e, 3);
+			ImGui::RadioButton("Deffered Blinn Phong", &e, 4);
 
 			//Change Rendering Pipeline
 
@@ -356,7 +365,8 @@ public:
 				Renderer->SetActiveRenderingPipeline(BlinnPhongNormalPipeline.GetID());
 			else if (e == 3)
 				Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-
+			else if (e == 4)
+				Renderer->SetActiveRenderingPipeline(DefferedPipeline.GetID());
 
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);

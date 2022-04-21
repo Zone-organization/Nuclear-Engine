@@ -10,7 +10,7 @@
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
-    float2 TexCoords : TEXCOORD;
+    float2 TexCoords : TEXCOORD0;
 };
 #else
 struct PixelInputType
@@ -62,7 +62,7 @@ struct PS_OUTPUT
 
 PS_OUTPUT DoLighting(PixelInputType input);
 
-PS_OUTPUT main(PixelInputType input)
+PS_OUTPUT main(PixelInputType input) : SV_TARGET
 {
     return DoLighting(input);
 }

@@ -15,7 +15,7 @@ static RefCntAutoPtr<IPipelineState> g_pPSO;
 static RefCntAutoPtr<IBuffer> g_pVertexConstantBuffer;
 static RefCntAutoPtr<IShaderResourceBinding> g_pSRB;
 
-static Assets::Image g_pFontTexture;
+static RefCntAutoPtr<ITextureView> g_pFontTexture;
 static int g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
 
 struct VERTEX_CONSTANT_BUFFER
@@ -137,9 +137,9 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 			Graphics::Context::GetContext()->SetScissorRects(1, &r, 0, 0);
 
 			// Bind texture, Draw
-			Assets::Image* Tex = static_cast<Assets::Image*>(pcmd->TextureId);
+			ITextureView* Tex = static_cast<ITextureView*>(pcmd->TextureId);
 
-			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(Tex->mTextureView);
+			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(Tex);
 			Graphics::Context::GetContext()->CommitShaderResources(g_pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			DrawIndexedAttribs DrawAttrs;
@@ -186,11 +186,11 @@ static void ImGui_Impl_CreateFontsTexture()
 		Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
 		if (mTexture.RawPtr() != nullptr)
-			g_pFontTexture.mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			g_pFontTexture = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
     }
 
     // Store our identifier
-    io.Fonts->TexID = (ImTextureID)&g_pFontTexture;
+    io.Fonts->TexID = (ImTextureID)g_pFontTexture.RawPtr();
 }
 
 bool ImGui_Impl_CreateDeviceObjects()
@@ -286,8 +286,8 @@ bool ImGui_Impl_CreateDeviceObjects()
             float4 col : COLOR0;\
             float2 uv  : TEXCOORD0;\
             };\
-            sampler Tex0_sampler;\
             Texture2D Tex0;\
+            sampler Tex0_sampler;\
             \
             float4 main(PS_INPUT input) : SV_Target\
             {\
@@ -370,8 +370,8 @@ void ImGui_Impl_InvalidateDeviceObjects()
 	if (g_pSRB)
 		g_pSRB->Release();
 
-	if (g_pFontTexture.mTextureView)
-		g_pFontTexture.mTextureView.Release();
+	if (g_pFontTexture)
+		g_pFontTexture.Release();
 }
 
 bool ImGui_Impl_Init()
@@ -392,6 +392,6 @@ void ImGui_Impl_Shutdown()
 
 void ImGui_Impl_NewFrame()
 {
-    if (!g_pFontTexture.mTextureView)
+    if (!g_pFontTexture)
        ImGui_Impl_CreateDeviceObjects();
 }
