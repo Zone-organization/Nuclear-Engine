@@ -26,6 +26,7 @@ namespace Nuclear
 		private:
 			Rendering::ShadingModel* mRenderingPipeline = nullptr;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
+			bool mDefferedMaterial = false;
 		};
 	}
 }

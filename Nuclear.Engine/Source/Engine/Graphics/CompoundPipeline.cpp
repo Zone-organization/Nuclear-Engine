@@ -153,7 +153,7 @@ namespace Nuclear
 			}
 
 			Log.Error("[CompoundPipeline] Variant: " + std::to_string(Key) +" Not Found!\n");
-			return PipelineVariant();
+			return mVariants.begin()->second;
 		}
 	}
 }

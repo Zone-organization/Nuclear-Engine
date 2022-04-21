@@ -9,7 +9,8 @@
 #ifdef NE_DEFFERED
 struct PixelInputType
 {
-    float2 TexCoords : TEXCOORD0;
+    float4 Position : SV_POSITION;
+    float2 TexCoords : TEXCOORD;
 };
 #else
 struct PixelInputType
@@ -27,13 +28,13 @@ struct PixelInputType
 
 #ifdef NE_DEFFERED
 
-Texture2D GBuffer_Position : register(t0);
-Texture2D GBuffer_Normal : register(t1);
-Texture2D GBuffer_AlbedoSpec : register(t2);
+Texture2D NE_RT_GBuffer_Position : register(t0);
+Texture2D NE_RT_GBuffer_Normal : register(t1);
+Texture2D NE_RT_GBuffer_AlbedoSpec : register(t2);
 
-SamplerState GBuffer_Position_sampler : register(s0);
-SamplerState GBuffer_Normal_sampler : register(s1);
-SamplerState GBuffer_AlbedoSpec_sampler : register(s2);
+SamplerState NE_RT_GBuffer_Position_sampler : register(s0);
+SamplerState NE_RT_GBuffer_Normal_sampler : register(s1);
+SamplerState NE_RT_GBuffer_AlbedoSpec_sampler : register(s2);
 
 #else
 
@@ -136,17 +137,16 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
 
 PS_OUTPUT DoLighting(PixelInputType input)
 {
+    float3 result = float3(0.0f, 0.0f, 0.0f);
 
 #ifdef NE_DEFFERED
-    float3 FragPos = GBuffer_Position.Sample(GBuffer_Position_sampler, input.TexCoords).xyz;
-    float3 norm = GBuffer_Normal.Sample(GBuffer_Normal_sampler, input.TexCoords).xyz;
-    float4 albedo = GBuffer_AlbedoSpec.Sample(GBuffer_AlbedoSpec_sampler, input.TexCoords);
+    float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoords).xyz;
+    float3 norm = NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoords).xyz;
+    float4 albedo = NE_RT_GBuffer_AlbedoSpec.Sample(NE_RT_GBuffer_AlbedoSpec_sampler, input.TexCoords);
 #else
     float3 FragPos = input.FragPos;
     // properties
     float3 norm = normalize(input.Normal);
-    float3 viewDir = normalize(ViewPos.xyz - FragPos);
-    float3 result = float3(0.0f, 0.0f, 0.0f);
 
 #ifdef NE_USE_NORMAL_MAPS
     norm = NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz;
@@ -156,6 +156,8 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
     float4 albedo = float4(NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, input.TexCoords).xyz, NEMat_Specular1.Sample(NEMat_Specular1_sampler, input.TexCoords).x);
 #endif
+
+    float3 viewDir = normalize(ViewPos.xyz - FragPos);
 
 #ifdef NE_DIR_LIGHTS_NUM
   // phase 1: directional lighting

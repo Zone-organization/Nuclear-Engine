@@ -39,21 +39,16 @@ namespace Nuclear
 			void SetPipelineState() override;
 
 		protected:
-			Graphics::RenderTarget BloomRT;
-			Rendering::BlurEffect mBloomBlur;
+			//Graphics::RenderTarget BloomRT;
+			//Rendering::BlurEffect mBloomBlur;
 
-			Graphics::RenderTarget PositionRT;
-			Graphics::RenderTarget NormalRT;
-			Graphics::RenderTarget AlbedoRT;
+			//bool mBloomEnabled = false;
 
-
-			bool mBloomEnabled = false;
-
-			//RefCntAutoPtr<IRenderPass> mRenderPass;
+			
 		private:
 			void BakeRenderTargets();
 			void BakePipeline();
-			void ApplyPostProcessingEffects();
+			void RenderMeshes(Systems::RenderSystem* renderer);
 		};
 	}
 }

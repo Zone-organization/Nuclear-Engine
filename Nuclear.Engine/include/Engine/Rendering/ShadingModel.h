@@ -24,16 +24,26 @@ namespace Nuclear
 			IBuffer* LightsBufferPtr = nullptr;
 
 			std::vector<ShaderEffect> mRequiredEffects;
+		};
 
+		struct ShadingModelInitInfo {
 			bool mDefferedPipeline = false;
 		};
 
+		//Used for both Deffered and Forward pipelines
+		//Should provide GBuffer Pipeline Implementation.
 		class NEAPI ShadingModel
 		{
 		public:
 			virtual bool Bake(const ShadingModelBakingDesc& desc) = 0;
 
-			IPipelineState* GetPipeline();
+			virtual void Initialize(const ShadingModelInitInfo& info);
+
+			IPipelineState* GetActivePipeline();
+			IPipelineState* GetShadersPipeline();
+			IShaderResourceBinding* GetShadersPipelineSRB();
+			IPipelineState* GetGBufferPipeline();
+
 			virtual void ReflectPixelShaderData();
 
 			Uint32 GetID();
@@ -46,6 +56,8 @@ namespace Nuclear
 
 			void SetEffect(const Uint32& effectId, bool value);
 
+			bool isDeffered();
+
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
 			std::vector<Assets::ShaderTexture> mPixelShaderTextureInfo;
@@ -55,6 +67,10 @@ namespace Nuclear
 			std::unordered_map<Uint32, ShaderEffect> mRenderingEffects;
 
 			RefCntAutoPtr<IPipelineState> mPipeline;
+			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
+			RefCntAutoPtr<IPipelineState> mGBufferPipeline;
+
+			ShadingModelInitInfo mInitInfo;
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 			Uint32 mID = 0;
 			std::string mName;

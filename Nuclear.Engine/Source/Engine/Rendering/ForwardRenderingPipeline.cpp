@@ -167,7 +167,7 @@ namespace Nuclear
 
 
 			//Render Meshes
-			Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetPipeline());
+			Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
 
 			auto view = renderer->mScene->GetRegistry().view<Components::MeshComponent>();
 

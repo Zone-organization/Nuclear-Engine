@@ -14,6 +14,7 @@ namespace Nuclear
 
 		private:
 			bool mNormalMaps;
+			void BakeGBufferPipeline(const ShadingModelBakingDesc& desc);
 		};
 
 	}

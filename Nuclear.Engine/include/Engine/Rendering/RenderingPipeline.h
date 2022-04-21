@@ -58,7 +58,7 @@ namespace Nuclear
 			virtual void UpdatePSO(bool ForceDirty = false);
 
 			// Render A Mesh instantly
-			void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
+			virtual void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
 		protected:
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;

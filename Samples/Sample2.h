@@ -134,7 +134,7 @@ public:
 		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
-
+		DefferedBlinnPhong.Initialize({ true });
 		Rendering::DefferedRenderingPipelineInitInfo initInfo;
 		initInfo.shadingModel = &DefferedBlinnPhong;
 		initInfo.camera = &Camera;

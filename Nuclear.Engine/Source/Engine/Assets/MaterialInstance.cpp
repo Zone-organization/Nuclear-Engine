@@ -25,7 +25,9 @@ namespace Nuclear
 				return;
 			}
 			mRenderingPipeline =Pipeline;
-			mRenderingPipeline->GetPipeline()->CreateShaderResourceBinding(&mSRB, true);
+			mRenderingPipeline->GetActivePipeline()->CreateShaderResourceBinding(&mSRB, true);
+
+			mDefferedMaterial = Pipeline->isDeffered();
 		}
 
 		void MaterialInstance::Initialize(const std::vector<TextureSet>& PixelShaderTextures)
@@ -96,7 +98,7 @@ namespace Nuclear
 					auto zzz = tex.mTex.GetImage()->mTextureView.RawPtr();
 					if (!tex.mTex.GetImage()->mTextureView.RawPtr())
 					{
-						Log.Error("ghjrffg");
+						Log.Error("BindTexSet EROROR ");
 					}
 					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
 				}

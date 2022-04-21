@@ -43,6 +43,7 @@ cbuffer NEStatic_Camera : register(b0)
     matrix Projection;
 };
 #endif
+#ifdef NE_USE_DEF_CAMERA
 
 #define MAX_BONES  100
 #define MAX_BONE_INFLUENCE 4
@@ -51,6 +52,7 @@ cbuffer NEStatic_Animation : register(b1)
 {
     matrix BoneTransforms[MAX_BONES];
 };
+#endif
 
 PixelInputType main(VertexInputType input)
 {

@@ -6,9 +6,31 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		IPipelineState* ShadingModel::GetPipeline()
+		void ShadingModel::Initialize(const ShadingModelInitInfo& info)
+		{
+			mInitInfo = info;
+		}
+		IPipelineState* ShadingModel::GetActivePipeline()
+		{
+			if (mInitInfo.mDefferedPipeline)
+			{
+				return GetGBufferPipeline();
+			}
+			return GetShadersPipeline();
+		}
+		IPipelineState* ShadingModel::GetShadersPipeline()
 		{
 			return mPipeline.RawPtr();
+		}
+
+		IShaderResourceBinding* ShadingModel::GetShadersPipelineSRB()
+		{
+			return mPipelineSRB.RawPtr();
+		}
+
+		IPipelineState* ShadingModel::GetGBufferPipeline()
+		{
+			return mGBufferPipeline.RawPtr();
 		}
 
 		Graphics::TextureUsageType ParseTexUsageFromName(std::string& name)
@@ -32,18 +54,24 @@ namespace Nuclear
 
 		void ShadingModel::ReflectPixelShaderData()
 		{
-			RefCntAutoPtr<IShaderResourceBinding> TempSRB;
+			mPipeline->CreateShaderResourceBinding(&mPipelineSRB, true);
 
-			mPipeline->CreateShaderResourceBinding(&TempSRB, true);
-
-			for (Uint32 i = 0; i < TempSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
+			RefCntAutoPtr<IShaderResourceBinding> ActiveSRB;
+			if (mInitInfo.mDefferedPipeline)
 			{
-				auto variable = TempSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
+				mGBufferPipeline->CreateShaderResourceBinding(&ActiveSRB, true);
+			}
+			else {
+				ActiveSRB = mPipelineSRB;
+			}
+			for (Uint32 i = 0; i < ActiveSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
+			{
+				auto variable = ActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
 				ShaderResourceDesc VarDesc;
 				variable->GetResourceDesc(VarDesc);
 				std::string VarName(VarDesc.Name);
 				auto VarType = VarDesc.Type;
-				if(VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
+				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
 				{
 					VarName.erase(0, 6);
 					Assets::ShaderTexture ReflectedTex;
@@ -54,6 +82,7 @@ namespace Nuclear
 					mPixelShaderTextureInfo.push_back(ReflectedTex);
 				}
 			}
+
 		}
 		Uint32 ShadingModel::GetID()
 		{
@@ -95,6 +124,10 @@ namespace Nuclear
 			{
 				assert(false);
 			}
+		}
+		bool ShadingModel::isDeffered()
+		{
+			return mInitInfo.mDefferedPipeline;
 		}
 		std::string ShadingModel::GetName()
 		{

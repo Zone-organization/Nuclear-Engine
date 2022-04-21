@@ -1,5 +1,12 @@
 #include "Engine\Rendering\DefferedRenderingPipeline.h"
 #include <Engine\Graphics\Context.h>
+#include <Engine\Systems\RenderSystem.h>
+#include <Engine\Components/MeshComponent.h>
+#include <Engine\Components/EntityInfoComponent.h>
+#include "Engine/Animation/Animator.h"
+#include <Engine\Components\AnimatorComponent.h>
+#include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
+#include <Core\FileSystem.h>
 
 namespace Nuclear
 {
@@ -16,7 +23,7 @@ namespace Nuclear
         void DefferedRenderingPipeline::Bake(const RenderingPipelineBakingDesc& desc)
         {
             ShadingModelBakingDesc SMDesc = desc.mShadingModelDesc;
-            for (auto it : mPairedEffects)
+            for (auto& it : mPairedEffects)
             {
                 SMDesc.mRequiredEffects.push_back(it.second);
             }
@@ -28,6 +35,8 @@ namespace Nuclear
 
             BakeRenderTargets();
             BakePipeline();
+
+
         }
         void DefferedRenderingPipeline::ResizeRenderTarget(Uint32 Width, Uint32 Height)
         {
@@ -37,49 +46,110 @@ namespace Nuclear
         }
         void DefferedRenderingPipeline::StartRendering(Systems::RenderSystem* renderer)
         {
+            std::vector<ITextureView*> RTargets;
+            RTargets.push_back(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
+            RTargets.push_back(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
+            RTargets.push_back(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
+
+
+            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), mGBuffer.pDepthBuffer->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            //Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->mColorRTV.RawPtr(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+          //  Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+            //Render To Gbuffer
+            Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetGBufferPipeline());
+            RenderMeshes(renderer);
+
+            //Apply Lighting
+            Graphics::Context::GetContext()->SetRenderTargets(1, SceneRT.mColorRTV.RawDblPtr(), GetSceneRT()->mDepthDSV.RawPtr(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->mColorRTV.RawPtr(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+            Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
+            GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+            GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+            GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 2)->Set(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+            Graphics::Context::GetContext()->CommitShaderResources(GetShadingModel()->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+            Assets::DefaultMeshes::RenderScreenQuad();
+
+
         }
         void DefferedRenderingPipeline::SetPipelineState()
         {
+            Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline());
+
+            GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
+
+            Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
         }
+
         void DefferedRenderingPipeline::BakeRenderTargets()
         {
+            //Create Color Texture
+            TextureDesc TexDesc;
+            TexDesc.Type = RESOURCE_DIM_TEX_2D;
+            TexDesc.Width = mRTWidth;
+            TexDesc.Height = mRTHeight;
+
+            TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+            TexDesc.MipLevels = 1;
+
+            TexDesc.Format = TEX_FORMAT_RGBA16_FLOAT;
+            Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.mPositonBuffer);
+            Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.mNormalBuffer);
+
+            TexDesc.Format = TEX_FORMAT_RGBA8_UNORM;
+            Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.mAlbedoBuffer);
+
+
+            //Create Depth Texture
+            TexDesc.Format = TEX_FORMAT_D32_FLOAT;
+            TexDesc.ClearValue.Format = TexDesc.Format;
+            TexDesc.ClearValue.DepthStencil.Depth = 1;
+            TexDesc.ClearValue.DepthStencil.Stencil = 0;
+            TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
+
+            Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.pDepthBuffer);
             Graphics::RenderTargetDesc RTDesc;
             RTDesc.Width = mRTWidth;
             RTDesc.Height = mRTHeight;
-            RTDesc.mCreateDepth = false;
-
             RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-            PositionRT.Create(RTDesc);
-            NormalRT.Create(RTDesc);
 
-            RTDesc.ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
-            AlbedoRT.Create(RTDesc);
+            SceneRT.Create(RTDesc);
+
+            //Graphics::RenderTargetDesc RTDesc;
+            //RTDesc.Width = mRTWidth;
+            //RTDesc.Height = mRTHeight;
+            //RTDesc.mCreateDepth = false;
+
+            //RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+            //PositionRT.Create(RTDesc);
+            //NormalRT.Create(RTDesc);
+
+            //RTDesc.ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
+            //AlbedoRT.Create(RTDesc);
         }
+
         void DefferedRenderingPipeline::BakePipeline()
         {
             std::vector<LayoutElement> Layout;
 
-            Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
-            Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
-            Layout.push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
-            Layout.push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
-            Layout.push_back(LayoutElement(4, 0, 4, VT_INT32, false));    //BONE ID
-            Layout.push_back(LayoutElement(5, 0, 4, VT_FLOAT32, false));  //WEIGHT
+            Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
+            Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
             Graphics::CompoundPipelineDesc PSOCreateInfo;
 
-            for (auto it : mPostProcessingEffects)
+            for (auto &it : mPostProcessingEffects)
             {
                 PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
             }
 
-            PSOCreateInfo.mVShaderPath = "Assets/NuclearEngine/Shaders/GBuffer.vs.hlsl";
-            PSOCreateInfo.mPShaderPath = "Assets/NuclearEngine/Shaders/GBuffer.ps.hlsl";
+            PSOCreateInfo.mVShaderPath = "Assets/NuclearEngine/Shaders/PostProcessing.vs.hlsl";
+            PSOCreateInfo.mPShaderPath = "Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl";
 
-            PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 3;
-            PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA16_FLOAT;
-            PSOCreateInfo.GraphicsPipeline.RTVFormats[1] = TEX_FORMAT_RGBA16_FLOAT;
-            PSOCreateInfo.GraphicsPipeline.RTVFormats[2] = TEX_FORMAT_RGBA8_UNORM;
-            //PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+            PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+            PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+            PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
             PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
             PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
             PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
@@ -92,108 +162,42 @@ namespace Nuclear
 
             UpdatePSO(true);
         }
+        void DefferedRenderingPipeline::RenderMeshes(Systems::RenderSystem* renderer)
+        {
+            auto view = renderer->mScene->GetRegistry().view<Components::MeshComponent>();
+            for (auto entity : view)
+            {
+                auto& MeshObject = view.get<Components::MeshComponent>(entity);
+                if (MeshObject.mRender)
+                {
+                    auto& EntityInfo = renderer->mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+                    EntityInfo.mTransform.Update();
+                    GetCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+                    renderer->GetCameraSubSystem().UpdateBuffer();
+
+                    auto AnimatorComponent = renderer->mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
+
+                    if (AnimatorComponent != nullptr)
+                    {
+                        std::vector<Math::Matrix4> ok;
+                        ok.reserve(100);
+
+                        auto transforms = AnimatorComponent->mAnimator->GetFinalBoneMatrices();
+                        for (int i = 0; i < transforms.size(); ++i)
+                        {
+                            ok.push_back(transforms[i]);
+                        }
+
+                        PVoid data;
+                        Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+                        data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
+                        Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
+
+                    }
+
+                    InstantRender(MeshObject.mMesh, MeshObject.mMaterial);
+                }
+            }
+        }
 	}
 }
-
-            //// Attachment 0 - Position
-           //// Attachment 1 - Normal
-           //// Attachment 2 - Albedo (Diffuse + Specular)
-           //// Attachment 3 - Depth buffer
-           //// Attachment 4 - Final color buffer
-           //constexpr Uint32 NumAttachments = 5;
-
-           //// Prepare render pass attachment descriptions
-           //RenderPassAttachmentDesc Attachments[NumAttachments];
-           //Attachments[0].Format = TEX_FORMAT_RGBA16_FLOAT;
-           //Attachments[0].InitialState = RESOURCE_STATE_RENDER_TARGET;
-           //Attachments[0].FinalState = RESOURCE_STATE_INPUT_ATTACHMENT;
-           //Attachments[0].LoadOp = ATTACHMENT_LOAD_OP_CLEAR;
-           //Attachments[0].StoreOp = ATTACHMENT_STORE_OP_DISCARD; // We will not need the result after the end of the render pass
-
-           //Attachments[1].Format = TEX_FORMAT_RGBA16_FLOAT;
-           //Attachments[1].InitialState = RESOURCE_STATE_RENDER_TARGET;
-           //Attachments[1].FinalState = RESOURCE_STATE_INPUT_ATTACHMENT;
-           //Attachments[1].LoadOp = ATTACHMENT_LOAD_OP_CLEAR;
-           //Attachments[1].StoreOp = ATTACHMENT_STORE_OP_DISCARD; // We will not need the result after the end of the render pass
-
-           //Attachments[2].Format = TEX_FORMAT_RGBA8_UNORM;
-           //Attachments[2].InitialState = RESOURCE_STATE_RENDER_TARGET;
-           //Attachments[2].FinalState = RESOURCE_STATE_INPUT_ATTACHMENT;
-           //Attachments[2].LoadOp = ATTACHMENT_LOAD_OP_CLEAR;
-           //Attachments[2].StoreOp = ATTACHMENT_STORE_OP_DISCARD; // We will not need the result after the end of the render pass
-
-           //Attachments[3].Format = info.mDepthBufferFormat;
-           //Attachments[3].InitialState = RESOURCE_STATE_DEPTH_WRITE;
-           //Attachments[3].FinalState = RESOURCE_STATE_DEPTH_WRITE;
-           //Attachments[3].LoadOp = ATTACHMENT_LOAD_OP_CLEAR;
-           //Attachments[3].StoreOp = ATTACHMENT_STORE_OP_DISCARD; // We will not need the result after the end of the render pass
-
-           //Attachments[4].Format = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-           //Attachments[4].InitialState = RESOURCE_STATE_RENDER_TARGET;
-           //Attachments[4].FinalState = RESOURCE_STATE_RENDER_TARGET;
-           //Attachments[4].LoadOp = ATTACHMENT_LOAD_OP_CLEAR;
-           //Attachments[4].StoreOp = ATTACHMENT_STORE_OP_STORE;
-
-           //// Subpass 1 - Render G-buffer
-           //// Subpass 2 - Lighting
-           //constexpr Uint32 NumSubpasses = 2;
-
-           //// Prepar subpass descriptions
-           //SubpassDesc Subpasses[NumSubpasses];
-
-           //// Subpass 0 attachments - 3 render targets
-           //AttachmentReference RTAttachmentRefs0[] =
-           //{
-           //    {0, RESOURCE_STATE_RENDER_TARGET},
-           //    {1, RESOURCE_STATE_RENDER_TARGET},
-           //    {2, RESOURCE_STATE_RENDER_TARGET}
-           //};
-
-           //AttachmentReference DepthAttachmentRef0 = { 3, RESOURCE_STATE_DEPTH_WRITE };
-
-           //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-           //// Subpass 1 attachments - 1 render target, depth buffer, 2 input attachments
-           //AttachmentReference RTAttachmentRefs1[] =
-           //{
-           //    {4, RESOURCE_STATE_RENDER_TARGET}
-           //};
-
-           //AttachmentReference DepthAttachmentRef1 = { 3, RESOURCE_STATE_DEPTH_WRITE };
-
-           //AttachmentReference InputAttachmentRefs1[] =
-           //{
-           //    {0, RESOURCE_STATE_INPUT_ATTACHMENT},
-           //    {1, RESOURCE_STATE_INPUT_ATTACHMENT},
-           //    {2, RESOURCE_STATE_INPUT_ATTACHMENT}
-           //};
-
-           //Subpasses[0].RenderTargetAttachmentCount = _countof(RTAttachmentRefs0);
-           //Subpasses[0].pRenderTargetAttachments = RTAttachmentRefs0;
-           //Subpasses[0].pDepthStencilAttachment = &DepthAttachmentRef0;
-
-           //Subpasses[1].RenderTargetAttachmentCount = _countof(RTAttachmentRefs1);
-           //Subpasses[1].pRenderTargetAttachments = RTAttachmentRefs1;
-           //Subpasses[1].pDepthStencilAttachment = &DepthAttachmentRef1;
-           //Subpasses[1].InputAttachmentCount = _countof(InputAttachmentRefs1);
-           //Subpasses[1].pInputAttachments = InputAttachmentRefs1;
-
-           //// We need to define dependency between subpasses 0 and 1 to ensure that
-           //// all writes are complete before we use the attachments for input in subpass 1.
-           //SubpassDependencyDesc Dependencies[1];
-           //Dependencies[0].SrcSubpass = 0;
-           //Dependencies[0].DstSubpass = 1;
-           //Dependencies[0].SrcStageMask = PIPELINE_STAGE_FLAG_RENDER_TARGET;
-           //Dependencies[0].DstStageMask = PIPELINE_STAGE_FLAG_PIXEL_SHADER;
-           //Dependencies[0].SrcAccessMask = ACCESS_FLAG_RENDER_TARGET_WRITE;
-           //Dependencies[0].DstAccessMask = ACCESS_FLAG_SHADER_READ;
-
-           //RenderPassDesc RPDesc;
-           //RPDesc.Name = "Deffered Rendering Pipeline RenderPass";
-           //RPDesc.AttachmentCount = _countof(Attachments);
-           //RPDesc.pAttachments = Attachments;
-           //RPDesc.SubpassCount = _countof(Subpasses);
-           //RPDesc.pSubpasses = Subpasses;
-           //RPDesc.DependencyCount = _countof(Dependencies);
-           //RPDesc.pDependencies = Dependencies;
-
-           //Graphics::Context::GetDevice()->CreateRenderPass(RPDesc, &mRenderPass);
