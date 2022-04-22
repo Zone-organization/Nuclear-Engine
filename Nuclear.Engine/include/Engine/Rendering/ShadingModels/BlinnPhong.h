@@ -9,11 +9,10 @@ namespace Nuclear
 		class NEAPI BlinnPhong : public ShadingModel
 		{
 		public:
-			BlinnPhong(bool NormalMaps = false);
+			BlinnPhong();
 			bool Bake(const ShadingModelBakingDesc& desc) override;
 
 		private:
-			bool mNormalMaps;
 			void BakeGBufferPipeline(const ShadingModelBakingDesc& desc);
 		};
 

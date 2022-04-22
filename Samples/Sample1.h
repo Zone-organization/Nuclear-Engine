@@ -53,11 +53,9 @@ class Sample1 : public Core::Game
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
 	Rendering::BlinnPhong BlinnPhongRP;
-	Rendering::BlinnPhong BlinnPhongWithNormalMapRP = Rendering::BlinnPhong(true);
 	Rendering::BlinnPhong DefferedBlinnPhong;
 
 	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
-	Rendering::ForwardRenderingPipeline BlinnPhongNormalPipeline;
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 	Rendering::DefferedRenderingPipeline DefferedPipeline;
@@ -109,7 +107,6 @@ class Sample1 : public Core::Game
 public:
 	Sample1()
 		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f),  Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM),
-		BlinnPhongNormalPipeline("BlinnPhongNormal"),
 		BlinnPhongPipeline("BlinnPhong"),
 		DiffuseRPPipeline("DiffuseRP"),
 		WireFrameRPPipeline("WireFrameRP"),
@@ -225,7 +222,6 @@ public:
 		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 		//ModelsScene.Systems.Configure();
 
-		BlinnPhongNormalPipeline.Initialize(&BlinnPhongWithNormalMapRP, &Camera);
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
@@ -236,7 +232,6 @@ public:
 		DefferedPipeline.Initialize(initInfo);
 		//Scene.Systems.Configure();
 		//TestPBR.test = true;
-		Renderer->AddRenderingPipeline(&BlinnPhongNormalPipeline);
 		//Renderer->AddRenderingPipeline(&TestPBR);
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
@@ -351,7 +346,7 @@ public:
 			static int e = 0;
 			ImGui::RadioButton("DiffuseOnly", &e, 0);
 			ImGui::RadioButton("BlinnPhong", &e, 1);
-			ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
+			//ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
 			ImGui::RadioButton("WireFrame", &e, 3);
 			ImGui::RadioButton("Deffered Blinn Phong", &e, 4);
 
@@ -361,8 +356,8 @@ public:
 				Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
 			else if (e == 1)
 				Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
-			else if (e == 2)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongNormalPipeline.GetID());
+			//else if (e == 2)
+
 			else if (e == 3)
 				Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
 			else if (e == 4)

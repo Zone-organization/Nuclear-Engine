@@ -16,11 +16,9 @@ class Sample4 : public Core::Game
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
 	Rendering::BlinnPhong BlinnPhongRP;
-	Rendering::BlinnPhong BlinnPhongWithNormalMapRP = Rendering::BlinnPhong(true);
 
 	Rendering::ForwardRenderingPipeline PBRPipeline;
 	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
-	Rendering::ForwardRenderingPipeline BlinnPhongNormalPipeline;
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 
@@ -52,7 +50,6 @@ class Sample4 : public Core::Game
 public:
 	Sample4()
 		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM),
-		BlinnPhongNormalPipeline("BlinnPhongNormal"),
 		BlinnPhongPipeline("BlinnPhong"),
 		DiffuseRPPipeline("DiffuseRP"),
 		WireFrameRPPipeline("WireFrameRP"),
@@ -120,7 +117,6 @@ public:
 	{
 		Renderer = mScene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 
-		BlinnPhongNormalPipeline.Initialize(&BlinnPhongWithNormalMapRP, &Camera);
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
@@ -130,7 +126,6 @@ public:
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
 		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
-		Renderer->AddRenderingPipeline(&BlinnPhongNormalPipeline);
 
 		Renderer->Bake(_Width_, _Height_);
 	}
@@ -237,7 +232,7 @@ public:
 			static int e = 0;
 			ImGui::RadioButton("DiffuseOnly", &e, 0);
 			ImGui::RadioButton("BlinnPhong", &e, 1);
-			ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
+			//ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
 			ImGui::RadioButton("WireFrame", &e, 3);
 			ImGui::RadioButton("PBR", &e, 4);
 
@@ -247,8 +242,8 @@ public:
 				Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
 			else if (e == 1)
 				Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
-			else if (e == 2)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongNormalPipeline.GetID());
+			//else if (e == 2)
+			//	Renderer->SetActiveRenderingPipeline(BlinnPhongNormalPipeline.GetID());
 			else if (e == 3)
 				Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
 			else if (e == 4)

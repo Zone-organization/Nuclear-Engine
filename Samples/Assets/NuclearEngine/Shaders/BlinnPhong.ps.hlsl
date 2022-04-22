@@ -19,10 +19,8 @@ struct PixelInputType
     float2 TexCoords : TEXCOORD0;
     float3 Normal : NORMAL0;
     float3 FragPos : TEXCOORD1;
-
-#ifdef NE_USE_NORMAL_MAPS
     float3x3 TBN : TANGENT0;
-#endif
+
 };
 #endif
 
@@ -40,15 +38,11 @@ SamplerState NE_RT_GBuffer_AlbedoSpec_sampler : register(s2);
 
 Texture2D NEMat_Diffuse1 : register(t0);
 Texture2D NEMat_Specular1 : register(t1);
-#ifdef NE_USE_NORMAL_MAPS
 Texture2D NEMat_Normal1 : register(t2);
-#endif
 
 SamplerState NEMat_Diffuse1_sampler : register(s0);
 SamplerState NEMat_Specular1_sampler : register(s1);
-#ifdef NE_USE_NORMAL_MAPS
 SamplerState NEMat_Normal1_sampler : register(s2);
-#endif
 
 #endif
 
@@ -145,15 +139,10 @@ PS_OUTPUT DoLighting(PixelInputType input)
     float4 albedo = NE_RT_GBuffer_AlbedoSpec.Sample(NE_RT_GBuffer_AlbedoSpec_sampler, input.TexCoords);
 #else
     float3 FragPos = input.FragPos;
-    // properties
-    float3 norm = normalize(input.Normal);
 
-#ifdef NE_USE_NORMAL_MAPS
-    norm = normalize(NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz);
+    float3 norm = normalize(NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz);
     norm = normalize(mul(norm, 2.0f) - 1.0f);
     norm = normalize(mul(norm, input.TBN));
-#endif
-
     float4 albedo = float4(NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, input.TexCoords).xyz, NEMat_Specular1.Sample(NEMat_Specular1_sampler, input.TexCoords).x);
 #endif
 

@@ -47,11 +47,11 @@ class Sample2 : public Core::Game
 	bool isMouseDisabled = false;
 public:
 	Sample2()
-		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH,10.f, Graphics::SENSITIVTY, Graphics::ZOOM),
-		 PBRPipeline("PBR"),
-	 BlinnPhongPipeline("BlinnPhone"),
-	DiffuseRPPipeline("DiffuseRP"),
-	 WireFrameRPPipeline("WireFrameRP"),
+		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, 10.f, Graphics::SENSITIVTY, Graphics::ZOOM),
+		PBRPipeline("PBR"),
+		BlinnPhongPipeline("BlinnPhone"),
+		DiffuseRPPipeline("DiffuseRP"),
+		WireFrameRPPipeline("WireFrameRP"),
 		DefferedPipeline("Deffered")
 	{
 
