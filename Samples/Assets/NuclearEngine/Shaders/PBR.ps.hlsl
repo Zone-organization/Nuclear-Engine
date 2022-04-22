@@ -202,25 +202,10 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	float roughness = NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).x;
 	float ao = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoords).x;
 
-#ifndef TEST
 	float3 N = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz;
 	N = normalize(mul(N, 2.0f) - 1.0f);
 	N = normalize(mul(N, input.TBN));
-#else
-	float3 tangentNormal = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz * 2.0 - 1.0;
 
-	float3 Q1 = ddx(input.FragPos);
-	float3 Q2 = ddy(input.FragPos);
-	float2 st1 = ddx(input.TexCoords);
-	float2 st2 = ddy(input.TexCoords);
-
-	float3 _N = normalize(input.Normal);
-	float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
-	float3 B = -normalize(cross(_N, T));
-	float3x3 TBN = float3x3(T, B, _N);
-
-	float3 N = normalize(mul(tangentNormal, TBN));
-#endif
 	float3 V = normalize(ViewPos - input.FragPos);
 
 	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 

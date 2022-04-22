@@ -163,7 +163,7 @@ namespace Nuclear
 		}
 		void RenderSystem::ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight)
 		{
-			mActiveRenderingPipeline->ResizeRenderTarget(RTWidth, RTHeight);
+			mActiveRenderingPipeline->ResizeRenderTargets(RTWidth, RTHeight);
 		}
 		Rendering::RenderingPipeline* RenderSystem::GetActivePipeline()
 		{
@@ -205,7 +205,7 @@ namespace Nuclear
 			}
 
 			//Render pipeline render targets
-			GetActivePipeline()->SetPipelineState();
+			GetActivePipeline()->SetFinalPipelineState();
 
 			//Render Main camera view to screen
 			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();

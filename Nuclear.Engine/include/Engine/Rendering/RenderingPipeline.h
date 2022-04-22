@@ -45,15 +45,15 @@ namespace Nuclear
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
 
-			virtual void Bake(const RenderingPipelineBakingDesc& desc) = 0;
+			virtual void Bake(const RenderingPipelineBakingDesc& desc);
 
-			virtual void ResizeRenderTarget(Uint32 Width, Uint32 Height) = 0;
-
-			virtual void SetPostProcessingEffect(const Uint32& effectId, bool value) = 0;
+			virtual void ResizeRenderTargets(Uint32 Width, Uint32 Height);
 
 			virtual void StartRendering(Systems::RenderSystem* renderer) = 0;
 
-			virtual void SetPipelineState() = 0;
+			virtual void SetPostProcessingEffect(const Uint32& effectId, bool value);
+
+			virtual void SetFinalPipelineState();
 
 			virtual void UpdatePSO(bool ForceDirty = false);
 
@@ -61,16 +61,12 @@ namespace Nuclear
 			virtual void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 
 		protected:
-			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
-
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 
 			void SetShadingModelAndCamera(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera);
 
 			//Camera stuff
 			Graphics::RenderTarget SceneRT;
-
-			Graphics::CompoundPipeline mPipeline;
 
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
@@ -81,6 +77,21 @@ namespace Nuclear
 			Uint32 mRTWidth = 0;
 			Uint32 mRTHeight = 0;
 
+			//PostProcessing Effects
+			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
+			Graphics::CompoundPipeline mPostFXPipeline;
+			Graphics::RenderTarget BloomRT;
+			Rendering::BlurEffect mBloomBlur;
+
+			bool mBloomEnabled = false;
+
+			std::string PostFX_VS_Path = "Assets/NuclearEngine/Shaders/PostProcessing.vs.hlsl";
+			std::string PostFX_PS_Path = "Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl";
+
+			virtual void SetPostFXPipelineForRendering();
+			virtual void BakePostFXPipeline();
+			virtual void BakeRenderTargets();
+			virtual void ApplyPostProcessingEffects();
 		private:
 			Rendering::ShadingModel* mShadingModel;
 			Graphics::Camera* mCamera;

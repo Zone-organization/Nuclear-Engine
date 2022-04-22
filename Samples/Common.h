@@ -276,7 +276,7 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 								//ImGui::Text(it1.mSlot);
 								if (it1.mTex.GetImage() != nullptr)
 								{
-									ImGui::Image(it1.mTex.GetImage(), { 256.f,256.f });
+									ImGui::Image(it1.mTex.GetImage()->mTextureView, { 256.f,256.f });
 								}
 							}
 						}

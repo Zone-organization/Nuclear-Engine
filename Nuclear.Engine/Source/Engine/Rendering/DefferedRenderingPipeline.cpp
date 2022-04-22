@@ -21,30 +21,13 @@ namespace Nuclear
 		{
             SetShadingModelAndCamera(info.shadingModel, info.camera);
 		}
-        void DefferedRenderingPipeline::Bake(const RenderingPipelineBakingDesc& desc)
+
+        void DefferedRenderingPipeline::ResizeRenderTargets(Uint32 Width, Uint32 Height)
         {
-            ShadingModelBakingDesc SMDesc = desc.mShadingModelDesc;
-            for (auto& it : mPairedEffects)
-            {
-                SMDesc.mRequiredEffects.push_back(it.second);
-            }
 
-            GetShadingModel()->Bake(SMDesc);
-
-            mRTWidth = desc.mRTWidth;
-            mRTHeight = desc.mRTHeight;
-
-            BakeRenderTargets();
-            BakePipeline();
-
-
+            RenderingPipeline::ResizeRenderTargets(Width, Height);
         }
-        void DefferedRenderingPipeline::ResizeRenderTarget(Uint32 Width, Uint32 Height)
-        {
-        }
-        void DefferedRenderingPipeline::SetPostProcessingEffect(const Uint32& effectId, bool value)
-        {
-        }
+
         void DefferedRenderingPipeline::StartRendering(Systems::RenderSystem* renderer)
         {
             std::vector<ITextureView*> RTargets;
@@ -65,11 +48,16 @@ namespace Nuclear
             Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetGBufferPipeline());
             RenderMeshes(renderer);
 
-            //Apply Lighting
-            Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
+            if (GetCamera()->RenderSkybox == true && GetCamera()->mSkybox != nullptr)
+            {
+                GetCamera()->mSkybox->Render();
+            }
 
-            Graphics::Context::GetContext()->SetRenderTargets(1, SceneRT.mColorRTV.RawDblPtr(), mGBuffer.pDepthBuffer->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-            Graphics::Context::GetContext()->ClearRenderTarget(SceneRT.mColorRTV.RawPtr(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            //Apply Lighting
+            //Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
+            SetPostFXPipelineForRendering();
+           // Graphics::Context::GetContext()->SetRenderTargets(1, SceneRT.mColorRTV.RawDblPtr(), mGBuffer.pDepthBuffer->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+           // Graphics::Context::GetContext()->ClearRenderTarget(SceneRT.mColorRTV.RawPtr(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
             //Graphics::Context::GetContext()->ClearDepthStencil(GetSceneRT()->mDepthDSV.RawPtr(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
             GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
@@ -78,24 +66,17 @@ namespace Nuclear
             Graphics::Context::GetContext()->CommitShaderResources(GetShadingModel()->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
             Assets::DefaultMeshes::RenderScreenQuad();
+
+            ApplyPostProcessingEffects();
+
             ImGui::Begin("GBUFFER");
-            ImGui::Image(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), {128,128});
-            ImGui::Image(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 128,128 });
-            ImGui::Image(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 128,128 });
-            ImGui::Text("SceneRT");
-            ImGui::Image(SceneRT.mShaderRTV, { 128,128 });
+            ImGui::Image(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 256.f,256.f });
+            ImGui::SameLine();
+            ImGui::Image(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 256.f,256.f });
+            ImGui::Image(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 256.f,256.f });
             ImGui::End();
 
         }
-        void DefferedRenderingPipeline::SetPipelineState()
-        {
-            Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline());
-
-            GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.mShaderRTV);
-
-            Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-        }
-
         void DefferedRenderingPipeline::BakeRenderTargets()
         {
             //Create Color Texture
@@ -114,66 +95,17 @@ namespace Nuclear
             TexDesc.Format = TEX_FORMAT_RGBA8_UNORM;
             Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.mAlbedoBuffer);
 
-
             //Create Depth Texture
             TexDesc.Format = TEX_FORMAT_D32_FLOAT;
             TexDesc.ClearValue.Format = TexDesc.Format;
             TexDesc.ClearValue.DepthStencil.Depth = 1;
             TexDesc.ClearValue.DepthStencil.Stencil = 0;
             TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
-
             Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.pDepthBuffer);
-            Graphics::RenderTargetDesc RTDesc;
-            RTDesc.Width = mRTWidth;
-            RTDesc.Height = mRTHeight;
-            RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-            RTDesc.mCreateDepth = false;
-            SceneRT.Create(RTDesc);
 
-            //Graphics::RenderTargetDesc RTDesc;
-            //RTDesc.Width = mRTWidth;
-            //RTDesc.Height = mRTHeight;
-            //RTDesc.mCreateDepth = false;
-
-            //RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-            //PositionRT.Create(RTDesc);
-            //NormalRT.Create(RTDesc);
-
-            //RTDesc.ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
-            //AlbedoRT.Create(RTDesc);
+            RenderingPipeline::BakeRenderTargets();
         }
 
-        void DefferedRenderingPipeline::BakePipeline()
-        {
-            std::vector<LayoutElement> Layout;
-
-            Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
-            Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-            Graphics::CompoundPipelineDesc PSOCreateInfo;
-
-            for (auto &it : mPostProcessingEffects)
-            {
-                PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
-            }
-
-            PSOCreateInfo.mVShaderPath = "Assets/NuclearEngine/Shaders/PostProcessing.vs.hlsl";
-            PSOCreateInfo.mPShaderPath = "Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl";
-
-            PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-            PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-            PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-            PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-            PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-            PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-            PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-            PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-            PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
-            PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
-
-            mPipeline.Create(PSOCreateInfo);
-
-            UpdatePSO(true);
-        }
         void DefferedRenderingPipeline::RenderMeshes(Systems::RenderSystem* renderer)
         {
             auto view = renderer->mScene->GetRegistry().view<Components::MeshComponent>();
