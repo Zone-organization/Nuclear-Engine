@@ -123,6 +123,15 @@ namespace Nuclear
 
 			return true;
 		}
+		std::vector<Graphics::RenderTargetDesc> BlinnPhong::GetGBufferDesc()
+		{
+			std::vector<Graphics::RenderTargetDesc> result = {
+				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA16_FLOAT,TEX_FORMAT_UNKNOWN),
+				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA16_FLOAT,TEX_FORMAT_UNKNOWN),
+				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA8_UNORM, TEX_FORMAT_UNKNOWN)
+			};
+			return result;
+		}
 		void BlinnPhong::BakeGBufferPipeline(const ShadingModelBakingDesc& desc)
 		{
 	        std::vector<LayoutElement> Layout;
@@ -185,7 +194,7 @@ namespace Nuclear
             PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
             PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
             PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-            PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+            PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
             PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
             PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 

@@ -11,6 +11,7 @@ namespace Nuclear
 		public:
 			BlinnPhong();
 			bool Bake(const ShadingModelBakingDesc& desc) override;
+			std::vector<Graphics::RenderTargetDesc> GetGBufferDesc() override;
 
 		private:
 			void BakeGBufferPipeline(const ShadingModelBakingDesc& desc);

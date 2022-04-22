@@ -129,6 +129,10 @@ namespace Nuclear
 		{
 			return mInitInfo.mDefferedPipeline;
 		}
+		std::vector<Graphics::RenderTargetDesc> ShadingModel::GetGBufferDesc()
+		{
+			return std::vector<Graphics::RenderTargetDesc>();
+		}
 		std::string ShadingModel::GetName()
 		{
 			return mName;

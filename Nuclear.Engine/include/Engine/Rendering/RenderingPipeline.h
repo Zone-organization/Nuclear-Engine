@@ -67,6 +67,7 @@ namespace Nuclear
 
 			//Camera stuff
 			Graphics::RenderTarget SceneRT;
+			Graphics::RenderTarget SceneDepthRT;
 
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;

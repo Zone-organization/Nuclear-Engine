@@ -11,12 +11,17 @@ namespace Nuclear
 	{
 		struct RenderTargetDesc
 		{
+			RenderTargetDesc();
+			RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT depthTexFormat);
+			
 			Uint32 Width = 800;
 			Uint32 Height = 600;
 			TEXTURE_FORMAT ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
-			TEXTURE_FORMAT DepthTexFormat = TEX_FORMAT_D32_FLOAT;
+
+			//If it isnt equal unknown a depth RT will be created
+			TEXTURE_FORMAT DepthTexFormat = TEX_FORMAT_UNKNOWN;
+
 			OptimizedClearValue ClearValue;
-			bool mCreateDepth = true;
 		};
 
 		class NEAPI RenderTarget
@@ -30,12 +35,15 @@ namespace Nuclear
 			Uint32 GetWidth() const;
 			Uint32 GetHeight() const;
 
-			RefCntAutoPtr<ITextureView> mColorRTV;
-			RefCntAutoPtr<ITextureView> mShaderRTV;
-			RefCntAutoPtr<ITextureView> mDepthDSV;
+			ITextureView* GetShaderRTV();
+			ITextureView* GetMainRTV();
+			ITextureView** GetMainRTVDblPtr();
+
 		private:
+			RefCntAutoPtr<ITextureView> mRTV;
+			RefCntAutoPtr<ITextureView> mShaderRTV;
+
 			Uint32 mWidth, mHeight;
-			bool mDepthCreated =false;
 		};
 	}
 }

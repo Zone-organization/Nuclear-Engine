@@ -148,6 +148,7 @@
     <ClInclude Include="include\Engine\Rendering\CSMShadowMap.h" />
     <ClInclude Include="include\Engine\Rendering\DefferedRenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\ForwardRenderingPipeline.h" />
+    <ClInclude Include="include\Engine\Rendering\GBuffer.h" />
     <ClInclude Include="include\Engine\Rendering\Rendering.h" />
     <ClInclude Include="include\Engine\Rendering\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\BlinnPhong.h" />
@@ -288,6 +289,7 @@
     <ClCompile Include="Source\Engine\Rendering\CSMShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Rendering\DefferedRenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ForwardRenderingPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\GBuffer.cpp" />
     <ClCompile Include="Source\Engine\Rendering\RenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\BlinnPhong.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\DiffuseOnly.cpp" />

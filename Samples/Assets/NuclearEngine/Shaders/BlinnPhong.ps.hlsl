@@ -6,23 +6,18 @@
 //#define NE_SHADOWS_ENABLED
 #include "LightTypes.hlsli"
 
-#ifdef NE_DEFFERED
+
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
     float2 TexCoords : TEXCOORD0;
-};
-#else
-struct PixelInputType
-{
-    float4 Position : SV_POSITION;
-    float2 TexCoords : TEXCOORD0;
+#ifndef NE_DEFFERED
     float3 Normal : NORMAL0;
     float3 FragPos : TEXCOORD1;
     float3x3 TBN : TANGENT0;
+#endif
 
 };
-#endif
 
 #ifdef NE_DEFFERED
 

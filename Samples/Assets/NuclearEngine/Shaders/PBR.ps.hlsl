@@ -3,15 +3,31 @@
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
 #include "LightTypes.hlsli"
+
 struct PixelInputType
 {
 	float4 Position : SV_POSITION;
 	float2 TexCoords : TEXCOORD0;
+#ifndef NE_DEFFERED
 	float3 Normal : NORMAL0;
 	float3 FragPos : TEXCOORD1;
 	float3x3 TBN : TANGENT0;
+#endif
 };
 
+#ifdef NE_DEFFERED
+
+Texture2D NE_RT_GBuffer_Position : register(t0);
+Texture2D NE_RT_GBuffer_NormalRoughness : register(t1);
+Texture2D NE_RT_GBuffer_AlbedoMatallic : register(t2);
+Texture2D NE_RT_GBuffer_AO : register(t3);
+
+SamplerState NE_RT_GBuffer_Position_sampler : register(s0);
+SamplerState NE_RT_GBuffer_NormalRoughness_sampler : register(s1);
+SamplerState NE_RT_GBuffer_AlbedoMatallic_sampler : register(s2);
+SamplerState NE_RT_GBuffer_AO_sampler : register(s3);  //1 Component
+
+#else
 Texture2D NEMat_Albedo : register(t0);
 Texture2D NEMat_Metallic : register(t1);
 Texture2D NEMat_Normal : register(t2); 
@@ -24,6 +40,7 @@ SamplerState NEMat_Normal_sampler : register(s2);
 SamplerState NEMat_Roughness_sampler : register(s3);
 SamplerState NEMat_AO_sampler : register(s4);
 
+#endif
 
 #define PI 3.14159265359f
 
@@ -194,19 +211,29 @@ struct PS_OUTPUT
 #endif
 };
 
+
 // ----------------------------------------------------------------------------
 PS_OUTPUT main(PixelInputType input) : SV_TARGET
 {
+#ifdef NE_DEFFERED
+	float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoords).xyz;
+	float3 albedo = pow(NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
+	float metallic = NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).w;
+	float3 N = NE_RT_GBuffer_NormalRoughness.Sample(NE_RT_GBuffer_NormalRoughness_sampler, input.TexCoords).xyz;
+	float roughness = NE_RT_GBuffer_NormalRoughness.Sample(NE_RT_GBuffer_NormalRoughness_sampler, input.TexCoords).w;
+	float ao = NE_RT_GBuffer_AO.Sample(NE_RT_GBuffer_AO_sampler, input.TexCoords).x;
+#else
+	float3 FragPos = input.FragPos;
 	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
 	float metallic = NEMat_Metallic.Sample(NEMat_Metallic_sampler, input.TexCoords).x;
 	float roughness = NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).x;
 	float ao = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoords).x;
-
 	float3 N = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz;
 	N = normalize(mul(N, 2.0f) - 1.0f);
 	N = normalize(mul(N, input.TBN));
+#endif
 
-	float3 V = normalize(ViewPos - input.FragPos);
+	float3 V = normalize(ViewPos - FragPos);
 
 	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
 	// of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
@@ -219,21 +246,21 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	// phase 1: directional lighting
 	for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
 	{
-		Lo += CalcDirLight(DirLights[i0], N, input.FragPos, V, F0, albedo, metallic, roughness);
+		Lo += CalcDirLight(DirLights[i0], N, FragPos, V, F0, albedo, metallic, roughness);
 	}
 #endif
 #ifdef NE_POINT_LIGHTS_NUM  
 	// phase 2: point lights
 	for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
 	{
-		Lo += CalcPointLight(PointLights[i1], N, input.FragPos, V, F0, albedo, metallic, roughness);
+		Lo += CalcPointLight(PointLights[i1], N, FragPos, V, F0, albedo, metallic, roughness);
 	}
 #endif
 #ifdef NE_SPOT_LIGHTS_NUM
 	// phase 3: spot light
 	for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
 	{
-		Lo += CalcSpotLight(SpotLights[i2], N, input.FragPos, V, F0, albedo, metallic, roughness);
+		Lo += CalcSpotLight(SpotLights[i2], N, FragPos, V, F0, albedo, metallic, roughness);
 	}
 #endif
 

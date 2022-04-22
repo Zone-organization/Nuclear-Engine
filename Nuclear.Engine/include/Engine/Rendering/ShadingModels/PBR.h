@@ -12,9 +12,9 @@ namespace Nuclear
 		public:
 			PBR();
 			bool Bake(const ShadingModelBakingDesc& desc) override;
-			bool test = false;
+			std::vector<Graphics::RenderTargetDesc> GetGBufferDesc() override;
 		private:
-
+			void BakeGBufferPipeline(const ShadingModelBakingDesc& desc);
 		};
 
 	}

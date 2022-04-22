@@ -18,6 +18,8 @@ class Sample2 : public Core::Game
 	Graphics::Camera Camera;
 
 	Rendering::PBR PBR;
+	Rendering::PBR DefferedPBR;
+
 	//Rendering::PBR TestPBR;
 	Rendering::BlinnPhong BlinnPhong;
 	Rendering::BlinnPhong DefferedBlinnPhong;
@@ -29,7 +31,8 @@ class Sample2 : public Core::Game
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 
-	Rendering::DefferedRenderingPipeline DefferedPipeline;
+	Rendering::DefferedRenderingPipeline BlinnPhongDefferedPipeline;
+	Rendering::DefferedRenderingPipeline PBRDefferedPipeline;
 
 	//ECS
 	ECS::Scene Scene;
@@ -52,7 +55,8 @@ public:
 		BlinnPhongPipeline("BlinnPhone"),
 		DiffuseRPPipeline("DiffuseRP"),
 		WireFrameRPPipeline("WireFrameRP"),
-		DefferedPipeline("Deffered")
+		BlinnPhongDefferedPipeline("BlinnDeffered"),
+		PBRDefferedPipeline("PBRDeffered")
 	{
 
 	}
@@ -131,19 +135,26 @@ public:
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 
 		PBRPipeline.Initialize(&PBR, &Camera);
+
 		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
 		DefferedBlinnPhong.Initialize({ true });
+		DefferedPBR.Initialize({ true });
+
 		Rendering::DefferedRenderingPipelineInitInfo initInfo;
 		initInfo.shadingModel = &DefferedBlinnPhong;
 		initInfo.camera = &Camera;
-		DefferedPipeline.Initialize(initInfo);
+		BlinnPhongDefferedPipeline.Initialize(initInfo);
+
+		initInfo.shadingModel = &DefferedPBR;
+		PBRDefferedPipeline.Initialize(initInfo);
 
 		//Scene.Systems.Configure();
 		//TestPBR.test = true;
 		Renderer->AddRenderingPipeline(&PBRPipeline);
-		Renderer->AddRenderingPipeline(&DefferedPipeline);
+		Renderer->AddRenderingPipeline(&BlinnPhongDefferedPipeline);
+		Renderer->AddRenderingPipeline(&PBRDefferedPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
 		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
@@ -290,6 +301,7 @@ public:
 				ImGui::RadioButton("BlinnPhong", &e, 1);
 				ImGui::RadioButton("DiffuseOnly", &e, 2);
 				ImGui::RadioButton("WireFrame", &e, 3);
+				ImGui::RadioButton("Deffered PBR", &e, 4);
 				ImGui::RadioButton("Deffered Blinn Phong", &e, 5);
 
 				//Change Rendering Pipeline
@@ -301,8 +313,10 @@ public:
 					Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
 				else if (e == 3)
 					Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
+				else if (e == 4)
+					Renderer->SetActiveRenderingPipeline(PBRDefferedPipeline.GetID());
 				else if (e == 5)
-					Renderer->SetActiveRenderingPipeline(DefferedPipeline.GetID());
+					Renderer->SetActiveRenderingPipeline(BlinnPhongDefferedPipeline.GetID());
 
 				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <Engine/Rendering/RenderingPipeline.h>
+#include <Engine/Rendering/GBuffer.h>
 
 namespace Nuclear
 {
@@ -17,14 +18,12 @@ namespace Nuclear
 		public:
 			DefferedRenderingPipeline(const std::string& name);
 
-			struct GBuffer
-			{
-				RefCntAutoPtr<ITexture> mPositonBuffer;
-				RefCntAutoPtr<ITexture> mNormalBuffer;
-				RefCntAutoPtr<ITexture> mAlbedoBuffer;
-				RefCntAutoPtr<ITexture> pDepthBuffer;
-			};
-			GBuffer mGBuffer;
+			//struct GBuffer
+			//{
+			//	RefCntAutoPtr<ITexture> mPositonBuffer;
+			//	RefCntAutoPtr<ITexture> mNormalBuffer;
+			//	RefCntAutoPtr<ITexture> mAlbedoBuffer;
+			//};
 
 			void Initialize(const DefferedRenderingPipelineInitInfo& info);
 
@@ -35,6 +34,8 @@ namespace Nuclear
 			void StartRendering(Systems::RenderSystem* renderer) override;
 
 		private:
+			GBuffer mGBuffer;
+
 			void BakeRenderTargets() override;
 			void RenderMeshes(Systems::RenderSystem* renderer);
 		};

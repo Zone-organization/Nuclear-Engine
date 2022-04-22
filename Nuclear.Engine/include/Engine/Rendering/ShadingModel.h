@@ -8,6 +8,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <vector>
 #include <unordered_map>
+#include "Engine/Rendering/GBuffer.h"
 
 namespace Nuclear
 {
@@ -57,6 +58,8 @@ namespace Nuclear
 			void SetEffect(const Uint32& effectId, bool value);
 
 			bool isDeffered();
+
+			virtual std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
 
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
