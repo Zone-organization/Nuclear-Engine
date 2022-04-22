@@ -13,8 +13,9 @@ struct VertexInputType
     float2 TexCoord : ATTRIB1;
     float3 Normals : ATTRIB2;
     float3 Tangents : ATTRIB3;
-    int4 BoneIDs : ATTRIB4;
-    float4 Weights : ATTRIB5;
+    float3 Bitangents : ATTRIB4;
+    int4 BoneIDs : ATTRIB5;
+    float4 Weights : ATTRIB6;
 };
 
 
@@ -82,12 +83,8 @@ PixelInputType main(VertexInputType input)
     output.FragPos = mul(Model, FinalPos).xyz;
 
     float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
+    float3 B = normalize(mul(float4(input.Bitangents.xyz, 0.0f), Model).xyz);
     float3 N = normalize(mul(float4(FinalNorm.xyz, 0.0f), Model).xyz);
-    //Gram-Schmidt process
-    // re-orthogonalize T with respect to N
-    T = normalize(T - dot(T, N) * N);
-    // then retrieve perpendicular vector B with the cross product of T and N
-    float3 B = cross(N, T);
 
     output.TBN = float3x3(T, B, N);
 

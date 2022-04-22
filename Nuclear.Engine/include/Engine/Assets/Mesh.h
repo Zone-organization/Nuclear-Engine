@@ -17,21 +17,29 @@ namespace Nuclear {
 			struct Vertex
 			{
 				Vertex()
-					: Position(Math::Vector3(0.0f)), Normal(Math::Vector3(0.0f)), Tangents(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f)) {}
-				Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector2& uv)
+					: Position(Math::Vector3(0.0f)), Normal(Math::Vector3(0.0f)), Tangents(Math::Vector3(0.0f)), Bitangents(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f)) {}
+				Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector3& b, const Math::Vector2& uv)
 					: Position(p), Normal(n), Tangents(t), UV(uv) {}
 				Vertex(
 					float px, float py, float pz,
 					float nx, float ny, float nz,
 					float tx, float ty, float tz,
+					//float bx, float by ,float bz,
 					float u, float v)
 					: Position(px, py, pz), Normal(nx, ny, nz),
-					Tangents(tx, ty, tz), UV(u, v) {}
+					Tangents(tx, ty, tz), /*Bitangents(bx, by, bz),*/ UV(u, v)
+				{
+					// re-orthogonalize T with respect to N
+					auto T = glm::normalize(Tangents - glm::dot(Tangents, Normal) * Normal);
+					// then retrieve perpendicular vector B with the cross product of T and N
+					Bitangents = glm::cross(Normal, T);
+				}
 
 				Math::Vector3 Position;
 				Math::Vector2 UV;
 				Math::Vector3 Normal;
 				Math::Vector3 Tangents;
+				Math::Vector3 Bitangents;
 				Math::Vector4i BoneIDs = Math::Vector4i(-1);
 				Math::Vector4 Weights = Math::Vector4(0.0f);
 

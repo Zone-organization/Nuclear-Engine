@@ -44,8 +44,9 @@ namespace Nuclear
 			{
 				Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
 				Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
-				Layout->push_back(LayoutElement(4, 0, 4, VT_INT32, false));    //BONE ID
-				Layout->push_back(LayoutElement(5, 0, 4, VT_FLOAT32, false));  //WEIGHT
+				Layout->push_back(LayoutElement(4, 0, 3, VT_FLOAT32, false));  //Bitangents
+				Layout->push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
+				Layout->push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 				defines.push_back("NE_USE_DEF_CAMERA");
 			}
 		//	if (desc.Use_Camera)

@@ -149,7 +149,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
     float3 norm = normalize(input.Normal);
 
 #ifdef NE_USE_NORMAL_MAPS
-    norm = NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz;
+    norm = normalize(NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz);
     norm = normalize(mul(norm, 2.0f) - 1.0f);
     norm = normalize(mul(norm, input.TBN));
 #endif

@@ -150,6 +150,13 @@ namespace Nuclear {
 					Vert.Tangents = Math::Vector3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 				else
 					Vert.Tangents = Math::Vector3(0.0f, 0.0f, 0.0f);
+
+				//bitangents
+				if (mesh->mBitangents != NULL)
+					Vert.Bitangents = Math::Vector3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+				else
+					Vert.Bitangents = Math::Vector3(0.0f, 0.0f, 0.0f);
+
 				result->Vertices.push_back(Vert);
 			}
 

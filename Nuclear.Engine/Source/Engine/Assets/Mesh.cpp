@@ -25,45 +25,6 @@ namespace Nuclear {
 
 		void Mesh::SubMesh::Create()
 		{
-			/*std::vector<float> verticesdata;
-			for (unsigned int i = 0; i < data.Positions.size(); ++i)
-			{
-				verticesdata.push_back(data.Positions[i].x);
-				verticesdata.push_back(data.Positions[i].y);
-				verticesdata.push_back(data.Positions[i].z);
-				if (data.UV.size() > 0)
-				{
-					verticesdata.push_back(data.UV[i].x);
-					verticesdata.push_back(data.UV[i].y);
-				}
-				if (data.Normals.size() > 0)
-				{
-					verticesdata.push_back(data.Normals[i].x);
-					verticesdata.push_back(data.Normals[i].y);
-					verticesdata.push_back(data.Normals[i].z);
-				}
-				if (data.Tangents.size() > 0)
-				{
-					verticesdata.push_back(data.Tangents[i].x);
-					verticesdata.push_back(data.Tangents[i].y);
-					verticesdata.push_back(data.Tangents[i].z);
-				}
-				if (data.BoneIDs.size() > 0)
-				{
-					verticesdata.push_back(data.BoneIDs[i].x);
-					verticesdata.push_back(data.BoneIDs[i].y);
-					verticesdata.push_back(data.BoneIDs[i].z);
-					verticesdata.push_back(data.BoneIDs[i].w);
-				}
-				if (data.Weights.size() > 0)
-				{
-					verticesdata.push_back(data.Weights[i].x);
-					verticesdata.push_back(data.Weights[i].y);
-					verticesdata.push_back(data.Weights[i].z);
-					verticesdata.push_back(data.Weights[i].w);
-				}
-			}*/
-			
 			{
 				BufferDesc VertBuffDesc;
 				VertBuffDesc.Usage = USAGE_IMMUTABLE;
@@ -74,7 +35,6 @@ namespace Nuclear {
 				BufferData VBData;
 				VBData.pData = data.Vertices.data();
 				VBData.DataSize = (unsigned int)data.Vertices.size() * sizeof(Vertex);
-				//VBData.DataSize = (unsigned int)verticesdata.size() * sizeof(float);
 				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
 
 			}
@@ -124,30 +84,6 @@ namespace Nuclear {
 
 			isValid = true;
 		}
-
-		//struct Vertex
-		//{
-		//	Vertex()
-		//		: Position(Math::Vector3(0.0f)), Normal(Math::Vector3(0.0f)), Tangents(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f)) {}
-		//	Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector2& uv)
-		//		: Position(p), Normal(n), Tangents(t), UV(uv) {}
-		//	Vertex(
-		//		float px, float py, float pz,
-		//		float nx, float ny, float nz,
-		//		float tx, float ty, float tz,
-		//		float u, float v)
-		//		: Position(px, py, pz), Normal(nx, ny, nz),
-		//		Tangents(tx, ty, tz), UV(u, v) {}
-
-		//	Math::Vector3 Position;
-		//	Math::Vector2 UV;
-		//	Math::Vector3 Normal;
-		//	Math::Vector3 Tangents;
-		//	Math::Vector4i BoneIDs = Math::Vector4i(-1);
-		//	Math::Vector4 Weights = Math::Vector4(0.0f);
-
-		//};
-
 		//Todo rework this since we do alot of unnecessery looping
 		void Mesh::CreateCube(Mesh* model, float width, float height, float depth)
 		{
@@ -254,25 +190,30 @@ namespace Nuclear {
 					Vertex v;
 
 					// spherical to cartesian
-					v.Position.x = radius * sinf(phi)*cosf(theta);
+					v.Position.x = radius * sinf(phi) * cosf(theta);
 					v.Position.y = radius * cosf(phi);
-					v.Position.z = radius * sinf(phi)*sinf(theta);
+					v.Position.z = radius * sinf(phi) * sinf(theta);
 
 					Math::Vector3 p = v.Position;
 					v.Normal = Math::normalize(p);
 
 					// Partial derivative of P with respect to theta
-					v.Tangents.x = -radius * sinf(phi)*sinf(theta);
+					v.Tangents.x = -radius * sinf(phi) * sinf(theta);
 					v.Tangents.y = 0.0f;
-					v.Tangents.z = +radius * sinf(phi)*cosf(theta);
+					v.Tangents.z = +radius * sinf(phi) * cosf(theta);
 
 					Math::Vector3 T = v.Tangents;
 					v.Tangents = Math::normalize(T);
 
+					// re-orthogonalize T with respect to N
+					auto T1 = glm::normalize(v.Tangents - glm::dot(v.Tangents, v.Normal) * v.Normal);
+					// then retrieve perpendicular vector B with the cross product of T and N
+					v.Bitangents = glm::cross(v.Normal, T1);
+
 					v.UV.x = theta / (2 * MathPI);
 					v.UV.y = phi / MathPI;
 
-				
+
 
 					meshData.Vertices.push_back(v);
 				}
@@ -357,6 +298,11 @@ namespace Nuclear {
 					Vertices[i*n + j].Position = Math::Vector3(x, 0.0f, z);
 					Vertices[i*n + j].Normal = Math::Vector3(0.0f, 1.0f, 0.0f);
 					Vertices[i*n + j].Tangents = Math::Vector3(1.0f, 0.0f, 0.0f);
+
+					// re-orthogonalize T with respect to N
+					auto T = glm::normalize(Vertices[i * n + j].Tangents - glm::dot(Vertices[i * n + j].Tangents, Vertices[i * n + j].Normal) * Vertices[i * n + j].Normal);
+					// then retrieve perpendicular vector B with the cross product of T and N
+					Vertices[i * n + j].Bitangents = glm::cross(Vertices[i * n + j].Normal, T);
 
 					// Stretch texture over grid.
 					Vertices[i*n + j].UV.x = j * du;
