@@ -371,7 +371,7 @@ void ImGui_Impl_InvalidateDeviceObjects()
 		g_pSRB->Release();
 
 	if (g_pFontTexture)
-		g_pFontTexture.Release();
+		g_pFontTexture->Release();
 }
 
 bool ImGui_Impl_Init()

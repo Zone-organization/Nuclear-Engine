@@ -18,13 +18,6 @@ namespace Nuclear
 		public:
 			DefferedRenderingPipeline(const std::string& name);
 
-			//struct GBuffer
-			//{
-			//	RefCntAutoPtr<ITexture> mPositonBuffer;
-			//	RefCntAutoPtr<ITexture> mNormalBuffer;
-			//	RefCntAutoPtr<ITexture> mAlbedoBuffer;
-			//};
-
 			void Initialize(const DefferedRenderingPipelineInitInfo& info);
 
 			//void Bake(const RenderingPipelineBakingDesc& desc) override;

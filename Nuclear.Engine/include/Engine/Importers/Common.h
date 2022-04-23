@@ -51,6 +51,7 @@ namespace Nuclear
 		{
 			bool SaveMaterialNames = true;
 			bool LoadAnimation = true;
+			bool LoadMaterial = true;
 		};
 		struct ImageLoadingDesc
 		{

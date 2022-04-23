@@ -20,6 +20,8 @@ namespace Nuclear
 
 			void Bake(Uint32 width, Uint32 height);
 
+			void Resize(Uint32 width, Uint32 height);
+
 			void DebugIMGUI();
 
 			std::vector<Graphics::RenderTarget> mRenderTargets;

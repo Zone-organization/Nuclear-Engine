@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Sample5.h" />
     <ClInclude Include="Sample1.h" />
     <ClInclude Include="Sample2.h" />
     <ClInclude Include="Sample3.h" />

@@ -231,15 +231,13 @@ namespace Nuclear {
 			Assets::Animations* anim = nullptr;
 		
 			mImportedMeshes[hashedname] = Assets::Mesh();
-			mImportedMaterials[hashedname] = Assets::Material();
-
-		
 			Assets::Mesh* Mesh = &mImportedMeshes[hashedname];
-			Assets::Material* Material = &mImportedMaterials[hashedname];
-
-
-
-
+			Assets::Material* Material = nullptr;
+			if (desc.LoadMaterial)
+			{
+				mImportedMaterials[hashedname] = Assets::Material();
+				Material = &mImportedMaterials[hashedname];
+			}
 			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, &Animation))
 			{
 				Log.Error("[AssetManager : " + mDesc.mName + "] Loading Model: " + Path.mInputPath + "\n");
@@ -264,7 +262,7 @@ namespace Nuclear {
 			if (mSaveMeshesPaths)
 				mHashedMeshesPaths[hashedname] = Path;
 
-			if (mSaveMaterialsPaths)
+			if (mSaveMaterialsPaths && desc.LoadMaterial)
 				mHashedMaterialsPaths[hashedname] = Path;
 
 

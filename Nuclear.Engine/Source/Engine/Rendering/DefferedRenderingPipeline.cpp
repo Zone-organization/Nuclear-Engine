@@ -26,7 +26,7 @@ namespace Nuclear
 
         void DefferedRenderingPipeline::ResizeRenderTargets(Uint32 Width, Uint32 Height)
         {
-
+            mGBuffer.Resize(Width, Height);
             RenderingPipeline::ResizeRenderTargets(Width, Height);
         }
 
@@ -51,6 +51,19 @@ namespace Nuclear
             //Render To Gbuffer
             Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetGBufferPipeline());
             RenderMeshes(renderer);
+
+            if (renderer->VisualizePointLightsPositions)
+            {
+                for (unsigned int i = 0; i < renderer->GetLightingSubSystem().PointLights.size(); i++)
+                {
+                    Math::Matrix4 model(1.0f);
+                    model = Math::translate(model, Math::Vector3(renderer->GetLightingSubSystem().PointLights[i]->GetInternalData().Position));
+                    model = Math::scale(model, Math::Vector3(0.75f));
+                    GetCamera()->SetModelMatrix(model);
+                    renderer->GetCameraSubSystem().UpdateBuffer();
+                    InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &renderer->LightSphereMaterial);
+                }
+            }
 
             if (GetCamera()->RenderSkybox == true && GetCamera()->mSkybox != nullptr)
             {

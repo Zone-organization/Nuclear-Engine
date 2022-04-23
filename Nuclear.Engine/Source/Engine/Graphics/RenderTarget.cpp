@@ -14,58 +14,25 @@ namespace Nuclear
 		}
 		void RenderTarget::Create(const RenderTargetDesc& Desc)
 		{
-			if (mRTV.RawPtr() != nullptr)
-			{
-				mRTV.Release();
-			}
-			if (mShaderRTV.RawPtr() != nullptr)
-			{
-				mShaderRTV.Release();
-			}
+			mDesc = Desc;
+			CreateViews();
+		}
 
-			TextureDesc TexDesc;
-			TexDesc.Type = RESOURCE_DIM_TEX_2D;
-			TexDesc.Width = Desc.Width;
-			TexDesc.Height = Desc.Height;
-			mWidth = Desc.Width;
-			mHeight = Desc.Height;
-
-			if (Desc.DepthTexFormat != TEX_FORMAT_UNKNOWN)
-			{
-				//Create Depth Texture
-				RefCntAutoPtr<ITexture> pRTDepth;
-				TexDesc.Format = Desc.DepthTexFormat;
-				TexDesc.ClearValue.Format = TexDesc.Format;
-				TexDesc.ClearValue.DepthStencil.Depth = 1;
-				TexDesc.ClearValue.DepthStencil.Stencil = 0;
-				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
-
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTDepth);
-				mRTV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
-			}
-			else {
-
-				RefCntAutoPtr<ITexture> pRTColor;
-
-				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
-				TexDesc.Format = Desc.ColorTexFormat;
-				TexDesc.MipLevels = 1;
-				TexDesc.ClearValue = Desc.ClearValue;
-
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTColor);
-				mRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
-				mShaderRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-			}
+		void RenderTarget::Resize(Uint32 width, Uint32 height)
+		{
+			mDesc.Width = width;
+			mDesc.Height = height;
+			Create(mDesc);
 		}
 
 		Uint32 RenderTarget::GetWidth() const
 		{
-			return mWidth;
+			return mDesc.Width;
 		}
 
 		Uint32 RenderTarget::GetHeight() const
 		{
-			return mHeight;
+			return mDesc.Height;
 		}
 
 		ITextureView* RenderTarget::GetShaderRTV()
@@ -80,6 +47,49 @@ namespace Nuclear
 		ITextureView** RenderTarget::GetMainRTVDblPtr()
 		{
 			return mRTV.RawDblPtr();
+		}
+		void RenderTarget::CreateViews()
+		{
+			if (mRTV.RawPtr() != nullptr)
+			{
+				mRTV.Release();
+			}
+			if (mShaderRTV.RawPtr() != nullptr)
+			{
+				mShaderRTV.Release();
+			}
+
+			TextureDesc TexDesc;
+			TexDesc.Type = RESOURCE_DIM_TEX_2D;
+			TexDesc.Width = mDesc.Width;
+			TexDesc.Height = mDesc.Height;
+
+			if (mDesc.DepthTexFormat != TEX_FORMAT_UNKNOWN)
+			{
+				//Create Depth Texture
+				RefCntAutoPtr<ITexture> pRTDepth;
+				TexDesc.Format = mDesc.DepthTexFormat;
+				TexDesc.ClearValue.Format = TexDesc.Format;
+				TexDesc.ClearValue.DepthStencil.Depth = 1;
+				TexDesc.ClearValue.DepthStencil.Stencil = 0;
+				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
+
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTDepth);
+				mRTV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
+			}
+			else {
+
+				RefCntAutoPtr<ITexture> pRTColor;
+
+				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+				TexDesc.Format = mDesc.ColorTexFormat;
+				TexDesc.MipLevels = 1;
+				TexDesc.ClearValue = mDesc.ClearValue;
+
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTColor);
+				mRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
+				mShaderRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			}
 		}
 		RenderTargetDesc::RenderTargetDesc()
 		{

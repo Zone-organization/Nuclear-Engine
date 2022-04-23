@@ -18,14 +18,14 @@ struct PixelInputType
 #ifdef NE_DEFFERED
 
 Texture2D NE_RT_GBuffer_Position : register(t0);
-Texture2D NE_RT_GBuffer_NormalRoughness : register(t1);
+Texture2D NE_RT_GBuffer_Normal : register(t1);
 Texture2D NE_RT_GBuffer_AlbedoMatallic : register(t2);
-Texture2D NE_RT_GBuffer_AO : register(t3);
+Texture2D NE_RT_GBuffer_RoughnessAO : register(t3);
 
 SamplerState NE_RT_GBuffer_Position_sampler : register(s0);
-SamplerState NE_RT_GBuffer_NormalRoughness_sampler : register(s1);
+SamplerState NE_RT_GBuffer_Normal_sampler : register(s1);
 SamplerState NE_RT_GBuffer_AlbedoMatallic_sampler : register(s2);
-SamplerState NE_RT_GBuffer_AO_sampler : register(s3);  //1 Component
+SamplerState NE_RT_GBuffer_RoughnessAO_sampler : register(s3);  //1 Component
 
 #else
 Texture2D NEMat_Albedo : register(t0);
@@ -217,11 +217,11 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 {
 #ifdef NE_DEFFERED
 	float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoords).xyz;
-	float3 albedo = pow(NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
-	float metallic = NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).w;
-	float3 N = NE_RT_GBuffer_NormalRoughness.Sample(NE_RT_GBuffer_NormalRoughness_sampler, input.TexCoords).xyz;
-	float roughness = NE_RT_GBuffer_NormalRoughness.Sample(NE_RT_GBuffer_NormalRoughness_sampler, input.TexCoords).w;
-	float ao = NE_RT_GBuffer_AO.Sample(NE_RT_GBuffer_AO_sampler, input.TexCoords).x;
+	float3 albedo = pow(NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).rgb, float3(2.2f,2.2f,2.2f));
+	float metallic = NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).a;
+	float roughness = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).r;
+	float ao = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).g;
+	float3 N = NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoords).rgb;
 #else
 	float3 FragPos = input.FragPos;
 	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));

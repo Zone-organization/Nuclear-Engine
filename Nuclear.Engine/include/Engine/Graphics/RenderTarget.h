@@ -31,6 +31,9 @@ namespace Nuclear
 			~RenderTarget();
 
 			void Create(const RenderTargetDesc& Desc);
+
+			void Resize(Uint32 width, Uint32 height);
+
 			//void SetActive(const float* RGBA);
 			Uint32 GetWidth() const;
 			Uint32 GetHeight() const;
@@ -40,10 +43,11 @@ namespace Nuclear
 			ITextureView** GetMainRTVDblPtr();
 
 		private:
+			void CreateViews();
+
 			RefCntAutoPtr<ITextureView> mRTV;
 			RefCntAutoPtr<ITextureView> mShaderRTV;
-
-			Uint32 mWidth, mHeight;
+			RenderTargetDesc mDesc;
 		};
 	}
 }

@@ -26,10 +26,10 @@ SamplerState NEMat_AO_sampler : register(s4);
 struct PS_OUTPUT
 {
     float4 Position: SV_Target0;
-    float4 NormalRoughness : SV_Target1;
+    float4 Normal : SV_Target1;
     float4 AlbedoMatallic : SV_Target2;
 #ifdef PBR
-    float4 AO : SV_Target3;
+    float4 RoughnessAO : SV_Target3;
 #endif
 
 };
@@ -39,19 +39,19 @@ PS_OUTPUT main(PixelInputType input)
 {
     PS_OUTPUT output;
 
-    float3 norm = normalize(NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz);
+    float3 norm = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz;
     norm = normalize(mul(norm, 2.0f) - 1.0f);
     norm = normalize(mul(norm, input.TBN));
 
     // store the fragment position vector in the first gbuffer texture
     output.Position = float4(input.FragPos, 1.0f);
     // also store the per-fragment normals into the gbuffer
+    output.Normal = float4(norm, 1.0f);
 
 #ifdef PBR
-    output.NormalRoughness = float4(norm, NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).r);
-    output.AO.a = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoords).r;
-#else
-    output.NormalRoughness = float4(norm, 1.0f);
+    //output.NormalRoughness = float4(norm, NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).r);
+    output.RoughnessAO.r = NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).r;
+    output.RoughnessAO.g = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoords).r;
 #endif
 
     // and the diffuse per-fragment color

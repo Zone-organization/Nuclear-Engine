@@ -11,6 +11,7 @@ namespace Nuclear
 		}
 		void GBuffer::Bake(Uint32 width, Uint32 height)
 		{
+			mRenderTargets.clear();
 			for (auto& i : mDesc.mRTDescs)
 			{
 				Graphics::RenderTarget newrt;
@@ -18,6 +19,13 @@ namespace Nuclear
 				i.Height = height;
 				newrt.Create(i);
 				mRenderTargets.push_back(newrt);
+			}
+		}
+		void GBuffer::Resize(Uint32 width, Uint32 height)
+		{
+			for (auto& i : mRenderTargets)
+			{
+				i.Resize(width, height);
 			}
 		}
 		void GBuffer::DebugIMGUI()
@@ -33,14 +41,6 @@ namespace Nuclear
 				}
 			}
 			ImGui::End();
-
-			//ImGui::Begin("GBUFFER");
-			//ImGui::Image(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 256.f,256.f });
-			//ImGui::SameLine();
-			//ImGui::Image(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 256.f,256.f });
-			//ImGui::SameLine();
-			//ImGui::Image(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE), { 256.f,256.f });
-
 		}
 	}
 }
