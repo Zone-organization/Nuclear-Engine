@@ -28,6 +28,8 @@ void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manage
 class Sample1 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
+	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
+	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
 
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
@@ -177,7 +179,7 @@ public:
 		Importers::ImageLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		auto test = mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
-		Skybox.Initialize(Renderer->GetCameraSubSystem().GetCameraCB(), test);
+		Skybox.Initialize(mCameraSystem->GetCameraCB(), test);
 	}
 	void SetupEntities()
 	{
@@ -219,8 +221,7 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
-		//ModelsScene.Systems.Configure();
+		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
@@ -252,13 +253,19 @@ public:
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
+		mCameraSystem = ModelsScene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mLightingSystem = ModelsScene.GetSystemManager().Add<Systems::LightingSystem>();
+
 		SetupEntities();
+
+		mLightingSystem->Bake();
 
 		InitRenderer();
 
 		SetupAssets();
 
-		Camera.mSkybox = &Skybox;
+		Renderer->GetBackground().SetSkybox(&Skybox);
+
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -322,7 +329,7 @@ public:
 		}
 
 		Camera.UpdateBuffer();
-		Renderer->GetCameraSubSystem().UpdateBuffer();
+		mCameraSystem->Update(deltatime);
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	void Render(float dt) override
@@ -383,7 +390,7 @@ public:
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
+			//ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

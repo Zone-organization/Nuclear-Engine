@@ -7,23 +7,23 @@
 #include <Engine\Rendering\ShadingModel.h>
 #include <vector>
 #include <Engine/Rendering/BasicShadowMapManager.h>
+#include <Engine\ECS\System.h>
 
 namespace Nuclear
 {
 	namespace Systems
 	{
-		class NEAPI LightingSubSystem 
+
+		class CameraSystem;
+
+		class NEAPI LightingSystem : public ECS::System<LightingSystem>
 		{
 		public:
-			std::vector<Components::DirLightComponent*> DirLights;
-			std::vector<Components::PointLightComponent*> PointLights;
-			std::vector<Components::SpotLightComponent*> SpotLights;
-
 			bool RequiresBaking();
 
-			void Initialize();
+			void Bake();
 
-			void BakeBuffer();
+			void Update(ECS::TimeDelta dt) override;
 
 			//Update Functions
 			void UpdateBuffer(const Math::Vector4& CameraPos);
@@ -31,19 +31,28 @@ namespace Nuclear
 			//Debug Only
 			bool VisualizePointLightsPositions = false;
 
-			RefCntAutoPtr<IBuffer> mPSLightCB;
+			IBuffer* GetLightCB();
 
-			size_t NE_Light_CB_Size;
-			size_t NUM_OF_LIGHT_VECS;
+			size_t GetDirLightsNum();
+			size_t GetPointLightsNum();
+			size_t GetSpotLightsNum();
 
 		private:
+			void BakeBuffer();
+
 			size_t Baked_DirLights_Size = 0;
 			size_t Baked_PointLights_Size = 0;
 			size_t Baked_SpotLights_Size = 0;
+			size_t NE_Light_CB_Size;
+			size_t NUM_OF_LIGHT_VECS;
 
 			bool HasbeenBakedBefore = false;
 
-			Rendering::BasicShadowMapManager SpotlightsShadowManager;
+			RefCntAutoPtr<IBuffer> mPSLightCB;
+
+			std::vector<Components::DirLightComponent*> DirLights;
+			std::vector<Components::PointLightComponent*> PointLights;
+			std::vector<Components::SpotLightComponent*> SpotLights;
 		};
 
 	}

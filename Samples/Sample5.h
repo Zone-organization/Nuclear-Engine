@@ -4,6 +4,8 @@
 class Sample5 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
+	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
+	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
 
 	Assets::Mesh* ShaderBall;
 
@@ -109,7 +111,7 @@ public:
 		PBRGold.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/gold/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
 		PBRGold.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/gold/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
 
-		Gold.mPixelShaderTextures.push_back(PBRPlastic);
+		Gold.mPixelShaderTextures.push_back(PBRGold);
 		Gold.SetName("Gold Material");
 	}
 
@@ -164,7 +166,7 @@ public:
 	}
 	void InitRenderer()
 	{
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		PBRPipeline.Initialize(&PBR, &Camera);
 
@@ -195,7 +197,11 @@ public:
 	void Load()
 	{
 		mAssetManager->Initialize();
+
+		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
 		SetupEntities();
+		mLightingSystem->Bake();
 
 		InitRenderer();
 		ECS::Transform sphere;
@@ -274,7 +280,7 @@ public:
 		}
 
 		Camera.UpdateBuffer();
-		Renderer->GetCameraSubSystem().UpdateBuffer();
+		mCameraSystem->Update(deltatime);
 
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}
@@ -293,84 +299,95 @@ public:
 			static float rotationspeed = 0.0f;
 			static Math::Vector3 RotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 			static ECS::Entity activeentity = EShaderBall;
+			ImGui::Text("Model");
 
-			if (ImGui::TreeNode("Sample"))
+			static int f = 0;
+			if (ImGui::RadioButton("ShaderBall", &f, 0))
 			{
-				ImGui::Text("Model");
-
-				static int f = 0;
-				if (ImGui::RadioButton("ShaderBall", &f, 0))
-				{
-					activeentity = EShaderBall;
-					EShaderBall.GetComponent<Components::MeshComponent>()->mRender = true;
-					ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
-				}
-				if (ImGui::RadioButton("Sphere", &f, 1))
-				{
-					activeentity = ESphere;
-					EShaderBall.GetComponent<Components::MeshComponent>()->mRender = false;
-					ESphere.GetComponent<Components::MeshComponent>()->mRender = true;
-				}
-
-				ImGui::SliderFloat("Rotation Speed", &rotationspeed, 0.0f, 2.0f);
-
-				ImGui::SliderFloat3("Rotation Axis", (float*)&RotationAxis, 0.0f, 1.0f);
-
-				ImGui::TreePop();
+				activeentity = EShaderBall;
+				EShaderBall.GetComponent<Components::MeshComponent>()->mRender = true;
+				ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
+			}
+			if (ImGui::RadioButton("Sphere", &f, 1))
+			{
+				activeentity = ESphere;
+				EShaderBall.GetComponent<Components::MeshComponent>()->mRender = false;
+				ESphere.GetComponent<Components::MeshComponent>()->mRender = true;
 			}
 
+
+			ImGui::Text("Material");
+
+			if (ImGui::Button("Rusted Iron"))
+			{
+				activeentity.GetComponent<Components::MeshComponent>()->mMaterial = &RustedIron;
+			}
+			if (ImGui::Button("Wall"))
+			{
+				activeentity.GetComponent<Components::MeshComponent>()->mMaterial = &Wall;
+			}
+			if (ImGui::Button("Grass"))
+			{
+				activeentity.GetComponent<Components::MeshComponent>()->mMaterial = &Grass;
+			}
+			if (ImGui::Button("Gold"))
+			{
+				activeentity.GetComponent<Components::MeshComponent>()->mMaterial = &Gold;
+			}
+			if (ImGui::Button("Plastic"))
+			{
+				activeentity.GetComponent<Components::MeshComponent>()->mMaterial = &Plastic;
+			}
+
+
+			ImGui::SliderFloat("Rotation Speed", &rotationspeed, 0.0f, 2.0f);
+
+			ImGui::SliderFloat3("Rotation Axis", (float*)&RotationAxis, 0.0f, 1.0f);
+
+
 			float rotationAngle = LastFrame / 5.0f * rotationspeed;
-			activeentity.GetComponent<Components::EntityInfoComponent>()->mTransform.SetRotation(RotationAxis,rotationAngle);
+			activeentity.GetComponent<Components::EntityInfoComponent>()->mTransform.SetRotation(RotationAxis, rotationAngle);
 
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
-			if (ImGui::TreeNode("Rendering"))
-			{
-				ImGui::Text("Active Rendering Pipeline:");
-				static int e = 0;
-				ImGui::RadioButton("PBR", &e, 0);
-				ImGui::RadioButton("BlinnPhong", &e, 1);
-				ImGui::RadioButton("DiffuseOnly", &e, 2);
-				ImGui::RadioButton("WireFrame", &e, 3);
-				ImGui::RadioButton("Deffered PBR", &e, 4);
-				ImGui::RadioButton("Deffered Blinn Phong", &e, 5);
 
-				//Change Rendering Pipeline
-				if (e == 0)
-					Renderer->SetActiveRenderingPipeline(PBRPipeline.GetID());
-				else if (e == 1)
-					Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
-				else if (e == 2)
-					Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
-				else if (e == 3)
-					Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-				else if (e == 4)
-					Renderer->SetActiveRenderingPipeline(PBRDefferedPipeline.GetID());
-				else if (e == 5)
-					Renderer->SetActiveRenderingPipeline(BlinnPhongDefferedPipeline.GetID());
+			ImGui::Text("Active Rendering Pipeline:");
+			static int e = 0;
+			ImGui::RadioButton("PBR", &e, 0);
+			ImGui::RadioButton("BlinnPhong", &e, 1);
+			ImGui::RadioButton("DiffuseOnly", &e, 2);
+			ImGui::RadioButton("WireFrame", &e, 3);
+			ImGui::RadioButton("Deffered PBR", &e, 4);
+			ImGui::RadioButton("Deffered Blinn Phong", &e, 5);
 
-				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+			//Change Rendering Pipeline
+			if (e == 0)
+				Renderer->SetActiveRenderingPipeline(PBRPipeline.GetID());
+			else if (e == 1)
+				Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
+			else if (e == 2)
+				Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
+			else if (e == 3)
+				Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
+			else if (e == 4)
+				Renderer->SetActiveRenderingPipeline(PBRDefferedPipeline.GetID());
+			else if (e == 5)
+				Renderer->SetActiveRenderingPipeline(BlinnPhongDefferedPipeline.GetID());
 
-				ImGui::TreePop();
-			}
-
+			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
-
-			if (ImGui::TreeNode("Pipeline Effects"))
+			for (auto& it : Renderer->GetActivePipeline()->mPairedEffects)
 			{
-				for (auto& it : Renderer->GetActivePipeline()->mPairedEffects)
+				bool value = it.second.GetValue();
+				ImGui::Checkbox(it.second.GetName().c_str(), &value);
+				if (value != it.second.GetValue())
 				{
-					bool value = it.second.GetValue();
-					ImGui::Checkbox(it.second.GetName().c_str(), &value);
-					if (value != it.second.GetValue())
-					{
-						Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
-					}
+					Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
 				}
-				ImGui::TreePop();
 			}
+
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

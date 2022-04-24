@@ -3,6 +3,7 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Assets\DefaultMeshes.h>
+#include <Engine\ECS\System.h>
 
 namespace Nuclear
 {
@@ -10,11 +11,13 @@ namespace Nuclear
 	{
 		//Control all created camera and the main camera constant buffer
 		//Main Camera 'MUST BE' Active
-		class NEAPI CameraSubSystem
+		class NEAPI CameraSystem : public ECS::System<CameraSystem>
 		{
 		public:
-			CameraSubSystem(Graphics::Camera* Camera);
-			~CameraSubSystem();
+			CameraSystem(Graphics::Camera* Camera);
+			~CameraSystem();
+
+			void Update(ECS::TimeDelta dt) override;
 
 			void UpdateBuffer();
 

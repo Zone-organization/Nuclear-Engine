@@ -34,11 +34,23 @@ Texture2D NEMat_Normal : register(t2);
 Texture2D NEMat_Roughness : register(t3);
 Texture2D NEMat_AO : register(t4);
 
+#ifdef IBL
+TextureCube NEMat_IrradianceMap : register(t5);
+TextureCube NEMat_PrefilterMap : register(t6);
+Texture2D NEMat_BrdfLUT : register(t7);
+#endif
+
 SamplerState NEMat_Albedo_sampler : register(s0);
 SamplerState NEMat_Metallic_sampler : register(s1);
 SamplerState NEMat_Normal_sampler : register(s2);
 SamplerState NEMat_Roughness_sampler : register(s3);
 SamplerState NEMat_AO_sampler : register(s4);
+
+#ifdef IBL
+SamplerState NEMat_IrradianceMap_sampler : register(s5);
+SamplerState NEMat_PrefilterMap_sampler : register(s6);
+SamplerState NEMat_BrdfLUT_sampler : register(s7);
+#endif
 
 #endif
 

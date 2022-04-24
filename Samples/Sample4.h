@@ -4,6 +4,8 @@
 class Sample4 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
+	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
+	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
 
 	Assets::Mesh* SponzaAsset;
 	Assets::Material* SponzaMaterial;
@@ -23,7 +25,7 @@ class Sample4 : public Core::Game
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 
 	//ECS
-	ECS::Scene mScene;
+	ECS::Scene Scene;
 	ECS::Entity ESponza;
 
 	ECS::Entity ECamera;
@@ -82,15 +84,15 @@ public:
 		Importers::ImageLoadingDesc SkyboxDesc;
 		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		auto test = mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
-		Skybox.Initialize(Renderer->GetCameraSubSystem().GetCameraCB(), test);
+		Skybox.Initialize(mCameraSystem->GetCameraCB(), test);
 	}
 	void SetupEntities()
 	{
 		//Create Entities
 		ECS::Transform TSponza;
 		TSponza.SetScale(Math::Vector3(0.05f, 0.05f, 0.05f));
-		ESponza = mScene.CreateEntity("Sponza", TSponza);
-		ELights = mScene.CreateEntity("Lights");
+		ESponza = Scene.CreateEntity("Sponza", TSponza);
+		ELights = Scene.CreateEntity("Lights");
 
 		ELights.AddComponent<Components::DirLightComponent>();
 		ELights.AddComponent<Components::PointLightComponent>();
@@ -104,7 +106,7 @@ public:
 
 		for (int i = 1; i < 9; i++)
 		{
-			auto Light = mScene.CreateEntity("Light" + std::to_string(i));
+			auto Light = Scene.CreateEntity("Light" + std::to_string(i));
 			Light.AddComponent<Components::PointLightComponent>();
 			Light.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(pointLightPositions[i]);
 			Light.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
@@ -115,7 +117,7 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = mScene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
@@ -134,19 +136,22 @@ public:
 	{
 		mAssetManager->Initialize();
 
-		ECamera = mScene.CreateEntity();
+		ECamera = Scene.CreateEntity();
 		ECamera.AddComponent<Components::SpotLightComponent>();
 		ECamera.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
+		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
 		SetupEntities();
+		mLightingSystem->Bake();
 
 		InitRenderer();
 
 		SetupAssets();
 
-		Camera.mSkybox = &Skybox;
+		Renderer->GetBackground().SetSkybox(&Skybox);
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -210,7 +215,7 @@ public:
 		}
 
 		Camera.UpdateBuffer();
-		Renderer->GetCameraSubSystem().UpdateBuffer();
+		mCameraSystem->Update(deltatime);
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	void Render(float dt) override
@@ -221,7 +226,7 @@ public:
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
-		mScene.Update(dt);
+		Scene.Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample3: Sponza Rendering");
@@ -268,7 +273,7 @@ public:
 
 			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
+		//	ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
@@ -279,7 +284,7 @@ public:
 			}
 
 			ImGui::End();
-			EntityExplorer(&mScene);
+			EntityExplorer(&Scene);
 		}
 	}
 

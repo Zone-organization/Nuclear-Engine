@@ -1,7 +1,6 @@
 #include <Engine\Rendering\RenderingPipeline.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
-#include <Engine\Systems\CameraSubSystem.h>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
@@ -55,36 +54,6 @@ namespace Nuclear
 				}
 			}
 		}
-
-		/*void RenderingPipeline::Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera, bool initshadow)
-		{
-			SetShadingModelAndCamera(shadingModel, camera);
-
-			if (initshadow)
-			{
-				if (!m_pComparisonSampler)
-				{
-					SamplerDesc ComparsionSampler;
-					ComparsionSampler.ComparisonFunc = COMPARISON_FUNC_LESS;
-					// Note: anisotropic filtering requires SampleGrad to fix artifacts at
-					// cascade boundaries
-					ComparsionSampler.MinFilter = FILTER_TYPE_COMPARISON_LINEAR;
-					ComparsionSampler.MagFilter = FILTER_TYPE_COMPARISON_LINEAR;
-					ComparsionSampler.MipFilter = FILTER_TYPE_COMPARISON_LINEAR;
-					Graphics::Context::GetDevice()->CreateSampler(ComparsionSampler, &m_pComparisonSampler);
-				}
-				ShadowMapManager::InitInfo SMMgrInitInfo;
-				SMMgrInitInfo.Format = TEX_FORMAT_D16_UNORM;
-				SMMgrInitInfo.Resolution = 1024;
-				SMMgrInitInfo.NumCascades = 4;
-				SMMgrInitInfo.ShadowMode = SHADOW_MODE_PCF;
-				SMMgrInitInfo.pComparisonSampler = m_pComparisonSampler;
-				m_ShadowMapMgr.Initialize(Graphics::Context::GetDevice(), SMMgrInitInfo);
-			}
-
-		}
-
-		*/
 
 		Graphics::RenderTarget* RenderingPipeline::GetSceneRT()
 		{

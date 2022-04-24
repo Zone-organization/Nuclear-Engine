@@ -10,13 +10,14 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Core\Logger.h>
 #include <Engine\Assets\DefaultMeshes.h>
+#include <Engine\Systems\CameraSystem.h>
+#include <Engine\Systems\LightingSystem.h>
 
 namespace Nuclear
 {
 	namespace Systems
 	{
-		RenderSystem::RenderSystem(Graphics::Camera* startingcamera)
-			:mCameraSystem(startingcamera)
+		RenderSystem::RenderSystem()
 		{
 			mActiveRenderingPipeline = nullptr;
 		}
@@ -94,31 +95,11 @@ namespace Nuclear
 
 		void RenderSystem::Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines)
 		{
-			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
-			for (auto entity : DirLightView)
-			{
-				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
+		
+			mCameraSystemPtr = mScene->GetSystemManager().GetSystem<CameraSystem>();
+			mLightingSystemPtr = mScene->GetSystemManager().GetSystem<LightingSystem>();
 
-				mLightingSystem.DirLights.push_back(&DirLight);
-			}
 
-			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
-			for (auto entity : SpotLightView)
-			{
-				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-				mLightingSystem.SpotLights.push_back(&SpotLight);
-			}
-
-			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
-			for (auto entity : PointLightView)
-			{
-				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
-				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
-				mLightingSystem.PointLights.push_back(&PointLight);
-			}
-
-			mLightingSystem.BakeBuffer();
 			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraSystem.GetMainCamera()->GetPosition(), 1.0f));
 
 			BufferDesc CBDesc;
@@ -133,11 +114,11 @@ namespace Nuclear
 			bakedesc.mRTWidth = RTWidth;
 			bakedesc.mRTHeight = RTHeight;
 
-			bakedesc.mShadingModelDesc.DirLights = static_cast<Uint32>(mLightingSystem.DirLights.size());
-			bakedesc.mShadingModelDesc.SpotLights = static_cast<Uint32>(mLightingSystem.SpotLights.size());
-			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(mLightingSystem.PointLights.size());
-			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystem.GetCameraCB();
-			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystem.mPSLightCB;
+			bakedesc.mShadingModelDesc.DirLights = static_cast<Uint32>(mLightingSystemPtr->GetDirLightsNum());
+			bakedesc.mShadingModelDesc.SpotLights = static_cast<Uint32>(mLightingSystemPtr->GetSpotLightsNum());
+			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(mLightingSystemPtr->GetPointLightsNum());
+			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
+			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystemPtr->GetLightCB();
 			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
 
 			if(AllPipelines)
@@ -169,37 +150,36 @@ namespace Nuclear
 		{
 			return mActiveRenderingPipeline;
 		}
-		CameraSubSystem& RenderSystem::GetCameraSubSystem()
-		{
-			return mCameraSystem;
-		}
-
-		LightingSubSystem& RenderSystem::GetLightingSubSystem()
-		{
-			return mLightingSystem;				
-		}
-
+		
 		IBuffer* RenderSystem::GetAnimationCB()
 		{
 			return mAnimationCB;
 		}
 
+		CameraSystem* RenderSystem::GetCameraSystem()
+		{
+			return mCameraSystemPtr.get();
+		}
+
+		LightingSystem* RenderSystem::GetLightingSystem()
+		{
+			return mLightingSystemPtr.get();
+		}
+
+		Rendering::Background& RenderSystem::GetBackground()
+		{
+			return mBackground;
+		}
+
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{
-			//Render Scene from each avtive camera perspective
+			//Render Scene from each active camera perspective
 			//for (auto Camera : mCameraSystem.ActiveCameras)
-			{
-				//Update Lights Positions
-				auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
-				for (auto entity : PointLightView)
-				{
-					auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
-					auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-					PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
-				}
-
-				auto Camera = mCameraSystem.GetMainCamera();
-				mLightingSystem.UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
+			{			
+					
+				//Update light buffer
+				auto Camera = mCameraSystemPtr->GetMainCamera();
+				mLightingSystemPtr->UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
 
 				GetActivePipeline()->StartRendering(this);
 			}

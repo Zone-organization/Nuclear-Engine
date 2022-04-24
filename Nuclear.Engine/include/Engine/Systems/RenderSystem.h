@@ -1,12 +1,11 @@
 #pragma once
 #include <Engine\ECS\System.h>
-#include <Engine\Systems\LightingSubSystem.h>
-#include <Engine\Systems\CameraSubSystem.h>
 #include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Rendering\RenderingPipeline.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
+#include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
 
@@ -14,6 +13,8 @@ namespace Nuclear
 {
 	namespace Systems
 	{
+		class CameraSystem;
+		class LightingSystem;
 
 		struct RenderSystemBakeStatus
 		{
@@ -24,7 +25,7 @@ namespace Nuclear
 		class NEAPI RenderSystem : public ECS::System<RenderSystem>
 		{
 		public:
-			RenderSystem(Graphics::Camera *startingcamera);
+			RenderSystem();
 			~RenderSystem();
 
 			void AddRenderingPipeline(Rendering::RenderingPipeline* Pipeline);
@@ -48,20 +49,22 @@ namespace Nuclear
 			//Debug Only
 			bool VisualizePointLightsPositions = false;
 
-			CameraSubSystem& GetCameraSubSystem();
-			LightingSubSystem& GetLightingSubSystem();
-
 			IBuffer* GetAnimationCB();
 			Assets::Material LightSphereMaterial;                     //TODO: Move
 
-		private:
+			CameraSystem* GetCameraSystem();
+			LightingSystem* GetLightingSystem();
 
-			LightingSubSystem mLightingSystem;
-			CameraSubSystem mCameraSystem;
+			Rendering::Background& GetBackground();
+
+		private:
+			Rendering::Background mBackground;
+
+			std::shared_ptr<CameraSystem> mCameraSystemPtr;
+			std::shared_ptr<LightingSystem> mLightingSystemPtr;
 
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> mAnimationCB;
-
 
 			Rendering::RenderingPipeline* mActiveRenderingPipeline;
 			std::unordered_map<Uint32, Rendering::RenderingPipeline*> mRenderingPipelines;

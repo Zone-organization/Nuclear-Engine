@@ -1,25 +1,44 @@
-#include <Engine\Systems\LightingSubSystem.h>
+#include <Engine\Systems\LightingSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
+#include <Engine\ECS\Scene.h>
+#include <Engine\Components\EntityInfoComponent.h>
+#include <Engine\Systems\CameraSystem.h>
 
 namespace Nuclear
 {
 	namespace Systems
 	{
-		bool LightingSubSystem::RequiresBaking()
+		bool LightingSystem::RequiresBaking()
 		{
 			if (Baked_DirLights_Size == DirLights.size() && Baked_PointLights_Size == PointLights.size() && Baked_SpotLights_Size == SpotLights.size())
 				return true;
 
 			return false;
 		}
-		void LightingSubSystem::BakeBuffer()
+		IBuffer* LightingSystem::GetLightCB()
+		{
+			return mPSLightCB.RawPtr();
+		}
+		size_t LightingSystem::GetDirLightsNum()
+		{
+			return DirLights.size();
+		}
+		size_t LightingSystem::GetPointLightsNum()
+		{
+			return PointLights.size();
+		}
+		size_t LightingSystem::GetSpotLightsNum()
+		{
+			return SpotLights.size();
+		}
+		void LightingSystem::BakeBuffer()
 		{
 			if (HasbeenBakedBefore)
 			{
 				if (!RequiresBaking())
 				{
-					Log.Warning("[LightingSubSystem] No need for baking the sub system!\n");
+					Log.Warning("[LightingSystem] No need for baking the sub system!\n");
 				}
 			}
 
@@ -60,10 +79,50 @@ namespace Nuclear
 			BufferData DATA;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
 		}
-		void LightingSubSystem::UpdateBuffer(const Math::Vector4& CameraPos)
+		void LightingSystem::Bake()
+		{
+			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
+			for (auto entity : DirLightView)
+			{
+				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
+
+				DirLights.push_back(&DirLight);
+			}
+
+			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
+			for (auto entity : SpotLightView)
+			{
+				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
+				SpotLights.push_back(&SpotLight);
+			}
+
+			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
+			for (auto entity : PointLightView)
+			{
+				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
+				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+				PointLights.push_back(&PointLight);
+			}
+
+			BakeBuffer();
+		}
+		void LightingSystem::Update(ECS::TimeDelta dt)
+		{			
+			//TODO: Multiple Cameras
+			//Update Lights Positions
+			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
+			for (auto entity : PointLightView)
+			{
+				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
+				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+			}
+		}
+		void LightingSystem::UpdateBuffer(const Math::Vector4& CameraPos)
 		{
 			std::vector<Math::Vector4> LightsBuffer;
-			LightsBuffer.reserve(NUM_OF_LIGHT_VECS);
+			LightsBuffer.reserve(NUM_OF_LIGHT_VECS + 1);
 
 			LightsBuffer.push_back(CameraPos);
 

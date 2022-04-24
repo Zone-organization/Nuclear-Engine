@@ -2,8 +2,8 @@
 
 ## Current To-dos 
   - W.I.P:
-	- Implement Shadow Maps.
-	- Basic deffered shading.
+	- IBL in PBR Pipeline.
+
   - TODO:
 	- Basic Editor support (Nuclear Editor).
 

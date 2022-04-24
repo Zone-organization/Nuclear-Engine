@@ -5,6 +5,7 @@
 #include "Engine/Animation/Animator.h"
 #include <Engine\Components\AnimatorComponent.h>
 #include <Engine\Systems\RenderSystem.h>
+#include <Engine\Systems\CameraSystem.h>
 
 namespace Nuclear
 {
@@ -34,11 +35,10 @@ namespace Nuclear
 				auto& MeshObject = view.get<Components::MeshComponent>(entity);
 				if (MeshObject.mRender)
 				{
-
 					auto& EntityInfo = renderer->mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
 					GetCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-					renderer->GetCameraSubSystem().UpdateBuffer();
+					renderer->GetCameraSystem()->UpdateBuffer();
 
 					auto AnimatorComponent = renderer->mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
 
@@ -70,7 +70,7 @@ namespace Nuclear
 				}
 			}
 
-			if (renderer->VisualizePointLightsPositions)
+			/*if (renderer->VisualizePointLightsPositions)
 			{
 				for (unsigned int i = 0; i < renderer->GetLightingSubSystem().PointLights.size(); i++)
 				{
@@ -81,11 +81,11 @@ namespace Nuclear
 					renderer->GetCameraSubSystem().UpdateBuffer();
 					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &renderer->LightSphereMaterial);
 				}
-			}
+			}*/
 
-			if (GetCamera()->RenderSkybox == true && GetCamera()->mSkybox != nullptr)
+			if (renderer->GetBackground().GetSkybox() != nullptr)
 			{
-				GetCamera()->mSkybox->Render();
+				renderer->GetBackground().GetSkybox()->Render();
 			}
 
 			ApplyPostProcessingEffects();

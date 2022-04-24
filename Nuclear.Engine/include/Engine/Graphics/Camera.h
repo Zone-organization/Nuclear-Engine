@@ -5,16 +5,10 @@
 #include <Engine\Graphics\Color.h>
 #include <Engine\Graphics\CompoundPipeline.h>
 #include <Engine\Rendering\ShaderEffect.h>
-#include <Engine\Rendering\Skybox.h>
 #include "Engine/Rendering/BlurEffect.h"
 
 namespace Nuclear
 {
-	namespace Systems
-	{
-		class CameraSubSystem;
-	}
-
 	namespace Graphics
 	{
 		enum CAMERA_MOVEMENT {
@@ -41,12 +35,6 @@ namespace Nuclear
 		const float SENSITIVTY = 0.05f;
 		const float ZOOM = 45.0f;
 
-		/*
-		*Only Supports
-		* HDR
-		* GAMMACORRECTION
-		* BLOOM
-		*/
 		class NEAPI Camera
 		{
 		public:
@@ -61,9 +49,6 @@ namespace Nuclear
 
 			void Initialize(Math::Matrix4 projectionMatrix);
 
-			//void Bake(Uint32 RTWidth, Uint32 RTHeight);
-			//void ResizeRenderTarget(Uint32 Width, Uint32 Height);
-
 			void UpdateBuffer();
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
@@ -76,40 +61,17 @@ namespace Nuclear
 			Math::Matrix4 GetProjectionMatrix();
 			Math::Vector3 GetPosition();
 
-			/*Graphics::RenderTarget* GetSceneRT();
-			IPipelineState* GetActivePipeline();
-			IShaderResourceBinding* GetActiveSRB();*/
-
 			// Camera options
 			float MovementSpeed;
 			float MouseSensitivity;
 			float Zoom;
 
-	/*		void SetEffect(const Uint32& effectId, bool value);
-
-			void SetForRender();
-
-			void SetForScreenRender(Systems::CameraSubSystem* sys);
-
-			std::unordered_map<Uint32, Rendering::ShaderEffect> mCameraEffects;*/
-
 			CameraBuffer mCameraData;
 		
 			Graphics::Color RTClearColor;
-			Rendering::Skybox* mSkybox = nullptr;
-			bool RenderSkybox = false;
+			//Rendering::Skybox* mSkybox = nullptr;
+			//bool RenderSkybox = false;
 		protected:
-			/*Graphics::RenderTarget SceneRT;
-			Graphics::RenderTarget BloomRT;
-
-			Graphics::CompoundPipeline mPipeline;
-
-			RefCntAutoPtr<IPipelineState> mActivePSO;
-			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
-
-			Rendering::BlurEffect mBloomBlur;
-
-			bool mPipelineDirty = true;*/
 
 			// Eular Angles
 			float Yaw;
@@ -118,17 +80,6 @@ namespace Nuclear
 			Math::Vector3 Front, Up, Right, WorldUp;
 
 			Math::Vector3 position, direction;
-
-			//Uint32 RequiredHash = 0;
-
-			//std::string VS_Path = "Assets/NuclearEngine/Shaders/Camera.vs.hlsl";
-			//std::string PS_Path = "Assets/NuclearEngine/Shaders/Camera.ps.hlsl";
-
-			//Uint32 RTWidth = 0;
-			//Uint32 RTHeight = 0;
-		private:
-			//void BakeRenderTarget();
-			//void BakePipeline();
 		};
 	}
 }

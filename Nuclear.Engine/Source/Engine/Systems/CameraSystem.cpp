@@ -1,4 +1,4 @@
-#include <Engine\Systems\CameraSubSystem.h>
+#include <Engine\Systems\CameraSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine\Assets\DefaultMeshes.h>
@@ -7,7 +7,7 @@ namespace Nuclear
 {
 	namespace Systems 
 	{
-		CameraSubSystem::CameraSubSystem(Graphics::Camera* Camera)
+		CameraSystem::CameraSystem(Graphics::Camera* Camera)
 		{
 			BufferDesc CBDesc;
 			CBDesc.Name = "CameraCB";
@@ -20,28 +20,32 @@ namespace Nuclear
 			SetMainCamera(Camera);
 			//ActiveCameras.push_back(Camera);
 		}
-		CameraSubSystem::~CameraSubSystem()
+		CameraSystem::~CameraSystem()
 		{
 		}
-		void CameraSubSystem::UpdateBuffer()
+		void CameraSystem::Update(ECS::TimeDelta dt)
+		{
+			UpdateBuffer();
+		}
+		void CameraSystem::UpdateBuffer()
 		{
 			Diligent::MapHelper<Graphics::CameraBuffer> CBConstants(Graphics::Context::GetContext(), mCameraCB, MAP_WRITE, MAP_FLAG_DISCARD);
 			*CBConstants = MainCamera->mCameraData;
 		}
-		void CameraSubSystem::SetMainCamera(Graphics::Camera* Camera)
+		void CameraSystem::SetMainCamera(Graphics::Camera* Camera)
 		{
 			MainCamera = Camera;
 		}
-		//void CameraSubSystem::SetActiveCamera(Components::Camera* Camera)
+		//void CameraSystem::SetActiveCamera(Components::Camera* Camera)
 		//{
 		//	ActiveCameras.push_back(Camera);
 		//}
-		//void CameraSubSystem::RegisterCamera(Components::Camera* Camera)
+		//void CameraSystem::RegisterCamera(Components::Camera* Camera)
 		//{
 		//	RegisteredCameras.push_back(Camera);
 
 		//}
-		//bool CameraSubSystem::isRegisteredCamera(Components::Camera* Camera)
+		//bool CameraSystem::isRegisteredCamera(Components::Camera* Camera)
 		//{
 		//	for (auto it : RegisteredCameras)
 		//	{
@@ -50,7 +54,7 @@ namespace Nuclear
 		//	}
 		//	return false;
 		//}
-		//bool CameraSubSystem::isActiveCamera(Components::Camera* Camera)
+		//bool CameraSystem::isActiveCamera(Components::Camera* Camera)
 		//{
 		//	for (auto it : ActiveCameras)
 		//	{
@@ -59,11 +63,11 @@ namespace Nuclear
 		//	}
 		//	return false;
 		//}
-		Graphics::Camera* CameraSubSystem::GetMainCamera()
+		Graphics::Camera* CameraSystem::GetMainCamera()
 		{
 			return MainCamera;
 		}
-		IBuffer* CameraSubSystem::GetCameraCB()
+		IBuffer* CameraSystem::GetCameraCB()
 		{
 			return mCameraCB;
 		}

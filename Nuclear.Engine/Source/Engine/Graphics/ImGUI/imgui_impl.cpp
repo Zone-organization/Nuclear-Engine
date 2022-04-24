@@ -148,6 +148,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 			DrawAttrs.FirstIndexLocation = pcmd->IdxOffset + global_idx_offset;
 			DrawAttrs.BaseVertex = pcmd->VtxOffset + global_vtx_offset;
 			Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
+
 		}
         global_idx_offset += cmd_list->IdxBuffer.Size;
         global_vtx_offset += cmd_list->VtxBuffer.Size;

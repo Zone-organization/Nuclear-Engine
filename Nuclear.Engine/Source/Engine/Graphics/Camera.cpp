@@ -6,7 +6,6 @@
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
-#include <Engine\Systems\CameraSubSystem.h>
 #include <Core\Logger.h>
 
 namespace Nuclear

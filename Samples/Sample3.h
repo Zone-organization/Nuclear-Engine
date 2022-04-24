@@ -6,6 +6,8 @@ class Sample3 : public Core::Game
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 	std::shared_ptr<Systems::ScriptingSystem> ScriptSystem;
+	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
+	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
 
 	Assets::Material PlaneMaterial;
 	Assets::Material CubeMaterial;
@@ -70,8 +72,11 @@ public:
 	}
 	void SetupSystems()
 	{
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
+		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 		ScriptSystem = Scene.GetSystemManager().Add<Systems::ScriptingSystem>();
+		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
+		mLightingSystem->Bake();
 
 		Systems::PhysXSystemDesc sceneDesc;
 		sceneDesc.mGravity = Math::Vector3(0.0f, -9.81f, 0.0f);
@@ -87,10 +92,10 @@ public:
 	void Load() override
 	{
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+
 		SetupSystems();
 
 		SetupEntities();
-
 
 
 		script.SetName("Script1");
@@ -170,7 +175,7 @@ public:
 		}
 
 		Camera.UpdateBuffer();
-		Renderer->GetCameraSubSystem().UpdateBuffer();
+		mCameraSystem->Update(deltatime);
 	}
 	void Render(float dt) override
 	{

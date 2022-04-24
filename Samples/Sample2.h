@@ -5,6 +5,8 @@ class Sample2 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
+	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
+	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
 
 	Assets::Material SphereMaterial;
 	Assets::Material PlaneMaterial;
@@ -103,7 +105,7 @@ public:
 		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
 		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		PBRPipeline.Initialize(&PBR, &Camera);
 
@@ -129,7 +131,11 @@ public:
 	void Load()
 	{
 		mAssetManager->Initialize();
+
+		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
 		SetupEntities();
+		mLightingSystem->Bake();
 
 		InitRenderer();
 
@@ -227,7 +233,7 @@ public:
 		}
 
 		Camera.UpdateBuffer();
-		Renderer->GetCameraSubSystem().UpdateBuffer();
+		mCameraSystem->Update(deltatime);
 
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}

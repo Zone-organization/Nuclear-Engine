@@ -36,18 +36,18 @@ int main(int argc, char* argv[])
 {
 	Core::EngineStartupDesc desc;
 
-	std::cout << "Auto Initialize? \n"
+	/*std::cout << "Auto Initialize? \n"
 		<< "1) Yes \n"
 		<< "2) No \n";
-
-	int i;
-	std::cin >> i;
-	if (i == 2)
-	{
+	*/
+//	int i;
+//	std::cin >> i;
+//	if (i == 2)
+	//{
 		desc.Renderer = SelectRenderer();
 	//	Core::Engine::GetInstance()->Start(desc);
 
-	}
+	//}
 	//else
 	//{
 	//	Core::EngineStartupDesc desc;

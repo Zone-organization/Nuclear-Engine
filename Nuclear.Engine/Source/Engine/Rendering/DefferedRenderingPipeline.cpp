@@ -7,6 +7,7 @@
 #include <Engine\Components\AnimatorComponent.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Core\FileSystem.h>
+#include <Engine\Systems\CameraSystem.h>
 
 namespace Nuclear
 {
@@ -33,9 +34,6 @@ namespace Nuclear
         void DefferedRenderingPipeline::StartRendering(Systems::RenderSystem* renderer)
         {
             std::vector<ITextureView*> RTargets;
-            //RTargets.push_back(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
-            //RTargets.push_back(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
-            //RTargets.push_back(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET));
             for (auto& i : mGBuffer.mRenderTargets)
             {
                 RTargets.push_back(i.GetMainRTV());
@@ -43,7 +41,7 @@ namespace Nuclear
             Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), SceneDepthRT.GetMainRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
             for (auto& i : RTargets)
             {
-                Graphics::Context::GetContext()->ClearRenderTarget(i, (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr,  RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
             }
 
             Graphics::Context::GetContext()->ClearDepthStencil(SceneDepthRT.GetMainRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -52,9 +50,9 @@ namespace Nuclear
             Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetGBufferPipeline());
             RenderMeshes(renderer);
 
-            if (renderer->VisualizePointLightsPositions)
+           /* if (renderer->VisualizePointLightsPositions)
             {
-                for (unsigned int i = 0; i < renderer->GetLightingSubSystem().PointLights.size(); i++)
+                for (unsigned int i = 0; i < renderer->GetLightingSystem().PointLights.size(); i++)
                 {
                     Math::Matrix4 model(1.0f);
                     model = Math::translate(model, Math::Vector3(renderer->GetLightingSubSystem().PointLights[i]->GetInternalData().Position));
@@ -63,11 +61,11 @@ namespace Nuclear
                     renderer->GetCameraSubSystem().UpdateBuffer();
                     InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &renderer->LightSphereMaterial);
                 }
-            }
+            }*/
 
-            if (GetCamera()->RenderSkybox == true && GetCamera()->mSkybox != nullptr)
+            if (renderer->GetBackground().GetSkybox() != nullptr)
             {
-                GetCamera()->mSkybox->Render();
+                renderer->GetBackground().GetSkybox()->Render();
             }
 
             //Apply Lighting
@@ -76,9 +74,6 @@ namespace Nuclear
             {
                 GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(mGBuffer.mRenderTargets.at(i).GetShaderRTV());
             }
-            //GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mGBuffer.mPositonBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
-            //GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mGBuffer.mNormalBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
-            //GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 2)->Set(mGBuffer.mAlbedoBuffer->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
             Graphics::Context::GetContext()->CommitShaderResources(GetShadingModel()->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
             Assets::DefaultMeshes::RenderScreenQuad();
@@ -90,21 +85,6 @@ namespace Nuclear
 
         void DefferedRenderingPipeline::BakeRenderTargets()
         {
-            ////Create Color Texture
-            //TextureDesc TexDesc;
-            //TexDesc.Type = RESOURCE_DIM_TEX_2D;
-            //TexDesc.Width = mRTWidth;
-            //TexDesc.Height = mRTHeight;
-
-            //TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
-            //TexDesc.MipLevels = 1;
-
-            //TexDesc.Format = TEX_FORMAT_RGBA16_FLOAT;
-            //Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.mPositonBuffer);
-            //Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.mNormalBuffer);
-
-            //TexDesc.Format = TEX_FORMAT_RGBA8_UNORM;
-            //Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &mGBuffer.mAlbedoBuffer);
             mGBuffer.Bake(mRTWidth, mRTHeight);
             RenderingPipeline::BakeRenderTargets();
         }
@@ -120,7 +100,7 @@ namespace Nuclear
                     auto& EntityInfo = renderer->mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
                     EntityInfo.mTransform.Update();
                     GetCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-                    renderer->GetCameraSubSystem().UpdateBuffer();
+                    renderer->GetCameraSystem()->UpdateBuffer();
 
                     auto AnimatorComponent = renderer->mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
 
