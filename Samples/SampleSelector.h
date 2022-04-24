@@ -4,6 +4,7 @@
 #include "Sample2.h"
 #include "Sample3.h"
 #include "Sample4.h"
+#include "Sample5.h"
 
 class SampleSelector : public Core::Game
 {
@@ -59,13 +60,13 @@ public:
 
 		ImGui::Text("Select Sample");
 
-		if (ImGui::Button("Sample1 : BlinnPhong rendering of some models"))
+		if (ImGui::Button("Sample1 : Model Loading & Animation"))
 		{
 			Sample1 demo;
 			Core::Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
-		if (ImGui::Button("Sample2 : Advanced Rendering & PhysX"))
+		if (ImGui::Button("Sample2 : PhysX Test"))
 		{
 			Sample2 demo;
 			Core::Engine::GetInstance()->SetGame(&demo);
@@ -80,6 +81,12 @@ public:
 		if (ImGui::Button("Sample4 : Sponza Scene Rendering"))
 		{
 			Sample4 demo;
+			Core::Engine::GetInstance()->SetGame(&demo);
+			return StartSample();
+		}
+		if (ImGui::Button("Sample5 : Advanced Rendering Effects"))
+		{
+			Sample5 demo;
 			Core::Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}

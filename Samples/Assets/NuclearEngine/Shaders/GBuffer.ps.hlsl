@@ -40,13 +40,13 @@ PS_OUTPUT main(PixelInputType input)
     PS_OUTPUT output;
 
     float3 norm = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz;
-    norm = normalize(mul(norm, 2.0f) - 1.0f);
+    norm = normalize(mul(2.0f ,norm) - 1.0f);
     norm = normalize(mul(norm, input.TBN));
 
     // store the fragment position vector in the first gbuffer texture
     output.Position = float4(input.FragPos, 1.0f);
     // also store the per-fragment normals into the gbuffer
-    output.Normal = float4(norm, 1.0f);
+    output.Normal = float4(normalize(norm), 1.0f);
 
 #ifdef PBR
     //output.NormalRoughness = float4(norm, NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).r);

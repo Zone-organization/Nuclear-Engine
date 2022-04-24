@@ -82,7 +82,7 @@ float GeometrySmith(float3 N, float3 V, float3 L, float roughness)
 // ----------------------------------------------------------------------------
 float3 fresnelSchlick(float cosTheta, float3 F0)
 {
-	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+	return F0 + (1.0 - F0) * pow(saturate(1.0 - cosTheta), 5.0);
 }
 // ----------------------------------------------------------------------------
 float DoQuadraticAttenuation(float4 Intensity_Attenuation, float3 lightposition, float3 fragPos)
@@ -102,7 +102,7 @@ float3 CalcPointLight(PointLight light, float3 N, float3 WorldPos, float3 V, flo
 	// Cook-Torrance BRDF
 	float NDF = DistributionGGX(N, H, roughness);
 	float G = GeometrySmith(N, V, L, roughness);
-	float3 F = fresnelSchlick(saturate(dot(H, V)), F0);
+	float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
 	float3 nominator = NDF * G * F;
 	float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // 0.0001 to prevent divide by zero.
@@ -137,7 +137,7 @@ float3 CalcDirLight(DirLight light, float3 N, float3 WorldPos, float3 V, float3 
 	// Cook-Torrance BRDF
 	float NDF = DistributionGGX(N, H, roughness);
 	float G = GeometrySmith(N, V, L, roughness);
-	float3 F = fresnelSchlick(saturate(dot(H, V)), F0);
+	float3 F = fresnelSchlick(max(dot(H, V), 0.0f), F0);
 
 	float3 nominator = NDF * G * F;
 	float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
@@ -172,7 +172,7 @@ float3 CalcSpotLight(SpotLight light, float3 N, float3 WorldPos, float3 V, float
 	// spotlight intensity
 	float theta = dot(L, normalize(-light.Direction.xyz));
 	float epsilon = light.InnerCutOf_OuterCutoff.x - light.InnerCutOf_OuterCutoff.y;
-	float intensity = clamp((theta - light.InnerCutOf_OuterCutoff.y) / epsilon, 0.0, 1.0);
+	float intensity = saturate((theta - light.InnerCutOf_OuterCutoff.y) / epsilon);
 
 	float3 radiance = light.Color.xyz * attenuation * intensity;
 
@@ -211,7 +211,6 @@ struct PS_OUTPUT
 #endif
 };
 
-
 // ----------------------------------------------------------------------------
 PS_OUTPUT main(PixelInputType input) : SV_TARGET
 {
@@ -221,7 +220,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	float metallic = NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).a;
 	float roughness = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).r;
 	float ao = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).g;
-	float3 N = NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoords).rgb;
+	float3 N = normalize(NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoords).rgb);
 #else
 	float3 FragPos = input.FragPos;
 	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
@@ -233,12 +232,12 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	N = normalize(mul(N, input.TBN));
 #endif
 
-	float3 V = normalize(ViewPos - FragPos);
+	float3 V = normalize(ViewPos.xyz - FragPos);
 
 	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
 	// of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
 	float3 F0 = float3(0.04f, 0.04f, 0.04f);
-	lerp(F0, albedo, metallic);
+	F0 = lerp(F0, albedo, metallic);
 
 	// reflectance equation
 	float3 Lo = float3(0.0f, 0.0f, 0.0f);

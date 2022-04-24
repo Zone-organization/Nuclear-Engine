@@ -91,21 +91,22 @@ PixelInputType main(VertexInputType input)
 
     output.TexCoord = input.TexCoord;
 
-
-#ifdef NE_USE_DEF_CAMERA
-    output.Normals = mul((float3x3)ModelInvTranspose, FinalNorm.xyz);
-#endif
-
-
 #ifdef NE_OUT_FRAG_POS
     output.FragPos = mul(Model, FinalPos).xyz;
 #endif
 
 #ifdef NE_USE_DEF_CAMERA
-    float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
-    float3 B = normalize(mul(float4(input.Bitangents.xyz, 0.0f), Model).xyz);
-    float3 N = normalize(mul(float4(FinalNorm.xyz, 0.0f), Model).xyz);
+    output.Normals = normalize(mul(Model, FinalNorm).xyz);
 
+    float3 T = normalize(mul(input.Tangents, (float3x3)Model));
+    float3 B = normalize(mul(input.Bitangents, (float3x3)Model));
+    float3 N = output.Normals;
+    // TBN must form a right handed coord system.
+   // Some models have symetric UVs. Check and fix.
+    if (dot(cross(N, T), B) < 0.0)
+    {
+        T = T * -1.0;
+    }
     output.TBN = float3x3(T, B, N);
 #endif
 

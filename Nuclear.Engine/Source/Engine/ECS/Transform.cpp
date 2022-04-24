@@ -57,6 +57,11 @@ namespace Nuclear
 			mDirty = SCALE;
 		}
 
+		void Transform::SetScale(float scale)
+		{
+			SetScale(Math::Vector3(scale));
+		}
+
 		Math::Vector3 Transform::GetLocalPosition()
 		{
 			return mLocalPosition;

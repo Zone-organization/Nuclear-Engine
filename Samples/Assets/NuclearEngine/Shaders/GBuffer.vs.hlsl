@@ -47,6 +47,15 @@ cbuffer NEStatic_Animation : register(b1)
     matrix BoneTransforms[MAX_BONES];
 };
 
+inline float3x3 UnpackNormal(float3 norm, float3 tang)
+{
+    const float3 T = normalize(tang - dot(norm, tang) * norm);
+    const float3 N = normalize(norm);
+    const float3 B = normalize(cross(T, N));
+    float3x3 TBN = float3x3(T, B, N);
+    return TBN;
+}
+
 PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
@@ -78,15 +87,25 @@ PixelInputType main(VertexInputType input)
 
     output.TexCoord = input.TexCoord;
 
-    output.Normals = mul((float3x3)ModelInvTranspose, FinalNorm.xyz);
+    matrix viewModel = View * Model;
+
+    output.Normals = normalize(mul(Model, FinalNorm).xyz);
 
     output.FragPos = mul(Model, FinalPos).xyz;
 
-    float3 T = normalize(mul(float4(input.Tangents.xyz, 0.0f), Model).xyz);
-    float3 B = normalize(mul(float4(input.Bitangents.xyz, 0.0f), Model).xyz);
-    float3 N = normalize(mul(float4(FinalNorm.xyz, 0.0f), Model).xyz);
 
-    output.TBN = float3x3(T, B, N);
+    float3 T = normalize(mul(input.Tangents, (float3x3)Model));
+    float3 B = normalize(mul(input.Bitangents, (float3x3)Model));
+    float3 N = output.Normals;  
+    // TBN must form a right handed coord system.
+   // Some models have symetric UVs. Check and fix.
+    if (dot(cross(N, T), B) < 0.0)
+    {
+      T = T * -1.0;
+    }
+    float3x3 TBN = float3x3(T, B, N);
+
+    output.TBN = TBN;
 
     return output;
 }

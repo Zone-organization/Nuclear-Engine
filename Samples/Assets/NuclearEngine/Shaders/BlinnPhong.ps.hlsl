@@ -135,7 +135,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
 #else
     float3 FragPos = input.FragPos;
 
-    float3 norm = normalize(NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz);
+    float3 norm = NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz;
     norm = normalize(mul(norm, 2.0f) - 1.0f);
     norm = normalize(mul(norm, input.TBN));
     float4 albedo = float4(NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, input.TexCoords).xyz, NEMat_Specular1.Sample(NEMat_Specular1_sampler, input.TexCoords).x);

@@ -1,17 +1,17 @@
 #pragma once
 #include "Common.h"
 
-class Sample2 : public Core::Game
+class Sample5 : public Core::Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 
+	Assets::Mesh* ShaderBall;
 
-	//Assets::Mesh* CerberusAsset;
-	//Assets::Material* CerberusMaterial;
-
-	Assets::Material SphereMaterial;
-	Assets::Material PlaneMaterial;
+	Assets::Material RustedIron;
+	Assets::Material Plastic;
+	Assets::Material Grass;
+	Assets::Material Gold;
+	Assets::Material Wall;
 
 	Graphics::Camera Camera;
 
@@ -34,8 +34,8 @@ class Sample2 : public Core::Game
 
 	//ECS
 	ECS::Scene Scene;
-	//ECS::Entity ESponza;
-	//ECS::Entity ECerberus;
+	ECS::Entity EShaderBall;
+	ECS::Entity ESphere;
 
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
@@ -47,7 +47,7 @@ class Sample2 : public Core::Game
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
 public:
-	Sample2()
+	Sample5()
 		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, 10.f, Graphics::SENSITIVTY, Graphics::ZOOM),
 		PBRPipeline("PBR"),
 		BlinnPhongPipeline("BlinnPhone"),
@@ -58,66 +58,104 @@ public:
 	{
 
 	}
+
+	void LoadPBRMaterials()
+	{
+		//Initialize Materials
+		Assets::TextureSet PBRRustedIron;
+		PBRRustedIron.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRRustedIron.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRRustedIron.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRRustedIron.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRRustedIron.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+
+		RustedIron.mPixelShaderTextures.push_back(PBRRustedIron);
+		RustedIron.SetName("RustedIron Material");
+
+		Assets::TextureSet PBRPlastic;
+		PBRPlastic.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRPlastic.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRPlastic.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRPlastic.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRPlastic.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+
+		Plastic.mPixelShaderTextures.push_back(PBRPlastic);
+		Plastic.SetName("Plastic Material");
+
+		Assets::TextureSet PBRGrass;
+		PBRGrass.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/grass/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRGrass.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/grass/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRGrass.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/grass/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRGrass.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/grass/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRGrass.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/grass/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+
+		Grass.mPixelShaderTextures.push_back(PBRGrass);
+		Grass.SetName("Grass Material");
+
+		Assets::TextureSet PBRWall;
+		PBRWall.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/wall/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRWall.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/wall/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRWall.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/wall/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRWall.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/wall/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRWall.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/wall/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+
+		Wall.mPixelShaderTextures.push_back(PBRWall);
+		Wall.SetName("Wall Material");
+
+		Assets::TextureSet PBRGold;
+		PBRGold.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/gold/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRGold.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/gold/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRGold.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/gold/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRGold.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/gold/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRGold.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/gold/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+
+		Gold.mPixelShaderTextures.push_back(PBRPlastic);
+		Gold.SetName("Gold Material");
+	}
+
 	void SetupAssets()
 	{
 		Importers::MeshLoadingDesc ModelDesc;
+		ModelDesc.LoadMaterial = false;
+		Assets::Material* temp;
+		Assets::Animations* temp2;
 
 		//Load Models
-		//std::tie(SponzaAsset, SponzaMaterial) = mAssetManager->Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
-		//std::tie(CerberusAsset, CerberusMaterial) = mAssetManager->Import("Assets/Common/Models/Cerberus/Cerberus.FBX", ModelDesc);
+		std::tie(ShaderBall, temp, temp2) = mAssetManager->Import("Assets/Common/Models/shaderball/shaderball.obj", ModelDesc);
 
 		//Load some textures manually
 		Importers::ImageLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
-		//Initialize Materials
-		Assets::TextureSet PBRSphereSet;
-		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		LoadPBRMaterials();
 
-		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
-		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
-		//Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
-		//Renderer->CreateMaterialForAllPipelines(CerberusMaterial);
+		Renderer->CreateMaterialForAllPipelines(&RustedIron);
+		Renderer->CreateMaterialForAllPipelines(&Plastic);
+		Renderer->CreateMaterialForAllPipelines(&Gold);
+		Renderer->CreateMaterialForAllPipelines(&Grass);
+		Renderer->CreateMaterialForAllPipelines(&Wall);
 
-		//ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
-		//ECerberus.Assign<Components::MeshComponent>(CerberusAsset, CerberusMaterial);
-
-		Assets::TextureSet PBRPlaneSet;
-		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRPlaneSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRPlaneSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRPlaneSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRPlaneSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
-
-		PlaneMaterial.mPixelShaderTextures.push_back(PBRPlaneSet);
-		PlaneMaterial.SetName("Plane Material");
-		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
-
-		PBRSphereSet.mData.clear();
 	}
 	void SetupEntities()
 	{
 		//Create Entities
-		//ESponza = Scene.CreateEntity();
+		ECS::Transform shaderballT;
+		shaderballT.SetScale(0.5f);
+
+		EShaderBall = Scene.CreateEntity("ShaderBall" , shaderballT);
 		ELights = Scene.CreateEntity("Lights");
 		ECamera = Scene.CreateEntity("Controller");
-		//ECerberus = Scene.CreateEntity();
 
 		//Assign Components
-
-		ELights.AddComponent<Components::DirLightComponent>();
+		//ELights.AddComponent<Components::DirLightComponent>();
 		ELights.AddComponent<Components::PointLightComponent>();
-		ECamera.AddComponent<Components::SpotLightComponent>();
+		//ECamera.AddComponent<Components::SpotLightComponent>();
 		ECamera.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
-		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+		//ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		//ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
 		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
@@ -126,10 +164,6 @@ public:
 	}
 	void InitRenderer()
 	{
-		Systems::PhysXSystemDesc sceneDesc;
-		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
-		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
-
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>(&Camera);
 
 		PBRPipeline.Initialize(&PBR, &Camera);
@@ -148,8 +182,6 @@ public:
 		initInfo.shadingModel = &DefferedPBR;
 		PBRDefferedPipeline.Initialize(initInfo);
 
-		//Scene.Systems.Configure();
-		//TestPBR.test = true;
 		Renderer->AddRenderingPipeline(&PBRPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongDefferedPipeline);
 		Renderer->AddRenderingPipeline(&PBRDefferedPipeline);
@@ -166,55 +198,25 @@ public:
 		SetupEntities();
 
 		InitRenderer();
+		ECS::Transform sphere;
+		sphere.SetScale(Math::Vector3(5.0f));
+		ESphere = Scene.GetFactory().CreateSphere(&RustedIron, sphere);
 
 		SetupAssets();
 
-		int nrRows = 7;
-		int nrColumns = 7;
-		float spacing = 2.5;
-		for (int row = 0; row < nrRows; ++row)
-		{
-			for (int col = 0; col < nrColumns; ++col)
-			{
-				Math::Vector3 position(
-					(float)(col - (nrColumns / 2)) * spacing,
-					((float)(row - (nrRows / 2)) * spacing) + 10.0f,
-					0.0f
-				);
-
-
-				ECS::Transform ESphere(position, Math::Vector3(2.0f));
-
-				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere);
-				position.z += 5.0f;
-
-				//ECS::Transform EBox(position, Math::Vector3(1.0f));
-
-				//boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, EBox));
-			}
-		}
-
-		Scene.GetFactory().CreatePlane(&PlaneMaterial);
-		for (auto it : boxes)
-		{
-			it.GetComponent<Components::RigidBodyComponent>()->isKinematic = true;
-		}
-		//Math::Matrix4 TSponza(1.0f);
-		//TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
-		////ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
-
-		//Math::Matrix4 TCerberus(1.0f);
-		//TCerberus = Math::scale(TCerberus, Math::Vector3(0.05f));
-		////ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
-
-
+		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, &RustedIron);
+		EShaderBall.GetComponent<Components::MeshComponent>()->mRender = true;
+		ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		//Camera.GammaCorrection = true;
-		//Camera.HDR = true;
-		//Camera.MovementSpeed = 15;
 		Renderer->VisualizePointLightsPositions = true;
+		PBRPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		PBRPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+		PBRDefferedPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		PBRDefferedPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+
+
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -282,13 +284,44 @@ public:
 	{
 		Scene.Update(dt);
 
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
-
+		//ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
+		//ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 		{
 			using namespace Graphics;
-			ImGui::Begin("Sample2: Advanced Rendering");
+			ImGui::Begin("Sample5: Advanced Rendering");
+			static float rotationspeed = 0.0f;
+			static Math::Vector3 RotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+			static ECS::Entity activeentity = EShaderBall;
+
+			if (ImGui::TreeNode("Sample"))
+			{
+				ImGui::Text("Model");
+
+				static int f = 0;
+				if (ImGui::RadioButton("ShaderBall", &f, 0))
+				{
+					activeentity = EShaderBall;
+					EShaderBall.GetComponent<Components::MeshComponent>()->mRender = true;
+					ESphere.GetComponent<Components::MeshComponent>()->mRender = false;
+				}
+				if (ImGui::RadioButton("Sphere", &f, 1))
+				{
+					activeentity = ESphere;
+					EShaderBall.GetComponent<Components::MeshComponent>()->mRender = false;
+					ESphere.GetComponent<Components::MeshComponent>()->mRender = true;
+				}
+
+				ImGui::SliderFloat("Rotation Speed", &rotationspeed, 0.0f, 2.0f);
+
+				ImGui::SliderFloat3("Rotation Axis", (float*)&RotationAxis, 0.0f, 1.0f);
+
+				ImGui::TreePop();
+			}
+
+			float rotationAngle = LastFrame / 5.0f * rotationspeed;
+			activeentity.GetComponent<Components::EntityInfoComponent>()->mTransform.SetRotation(RotationAxis,rotationAngle);
+
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 			if (ImGui::TreeNode("Rendering"))
@@ -339,42 +372,6 @@ public:
 				ImGui::TreePop();
 			}
 
-			PhysX::RaycastHit hit;
-			if (ImGui::TreeNode("Raycast Info"))
-			{
-				if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
-				{
-
-					if (mPhysXSystem->Raycast(Camera.GetPosition(), Camera.GetFrontView(), 100.f, hit))
-					{
-						auto entity = hit.HitEntity;
-
-						ImGui::Text((char*)Scene.GetRegistry().try_get<Components::EntityInfoComponent>(entity.entity)->mName.c_str());
-					}
-					else
-					{
-						ImGui::Text("No hit");
-					}
-				}
-				else
-					ImGui::Text("Press F");
-
-				ImGui::TreePop();
-			}
-
-			//if (ImGui::TreeNode("Physics"))
-			//{
-			//	ImGui::Checkbox("iskinematic", &iskinematic);
-			//	if (ImGui::Button("Update Physics"))
-			//	{
-			//	/*	for (auto it : boxes)
-			//		{
-			//			it.GetComponent<Components::RigidBodyComponent>()->isKinematic = true;
-			//		}*/
-			//	}
-			//	ImGui::TreePop();
-			//}
-
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 			if (ImGui::Button("End Game"))
@@ -387,8 +384,6 @@ public:
 			EntityExplorer(&Scene);
 
 		}
-		//ViewMaterialInfo(NanosuitMaterial, &AssetLoader);
-
 	}
 
 	void Shutdown() override

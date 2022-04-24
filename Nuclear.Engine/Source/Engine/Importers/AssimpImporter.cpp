@@ -66,55 +66,57 @@ namespace Nuclear {
 		}
 		Uint32 AssimpImporter::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
 		{
-			Assets::TextureSet TexSet;
-
-			// process materials
-			aiMaterial* MeshMat = scene->mMaterials[mesh->mMaterialIndex];
-			auto MeshName = std::string(MeshMat->GetName().C_Str());
-			TexSet.mHashedName = Utilities::Hash(MeshName);
-
-
-			for (Uint32 i = 0; i < mMaterial->mPixelShaderTextures.size(); i++)
+			if (mLoadingDesc.LoadMaterial)
 			{
-				if (TexSet.mHashedName == mMaterial->mPixelShaderTextures.at(i).mHashedName)
+				Assets::TextureSet TexSet;
+
+				// process materials
+				aiMaterial* MeshMat = scene->mMaterials[mesh->mMaterialIndex];
+				auto MeshName = std::string(MeshMat->GetName().C_Str());
+				TexSet.mHashedName = Utilities::Hash(MeshName);
+
+
+				for (Uint32 i = 0; i < mMaterial->mPixelShaderTextures.size(); i++)
 				{
-					return i;
-				}
-			}
-		
-
-			std::vector<aiTextureType> LoadTypes{
-				aiTextureType_DIFFUSE,
-				aiTextureType_SPECULAR,
-				aiTextureType_AMBIENT,
-				aiTextureType_EMISSIVE,
-				aiTextureType_HEIGHT,
-				aiTextureType_NORMALS ,
-				aiTextureType_SHININESS,
-				aiTextureType_OPACITY,
-				aiTextureType_DISPLACEMENT,
-				aiTextureType_LIGHTMAP,
-				aiTextureType_REFLECTION,
-				aiTextureType_UNKNOWN
-			};
-			for (auto i : LoadTypes)
-			{
-				auto Textures = ProcessMaterialTexture(MeshMat, i);
-				TexSet.mData.insert(TexSet.mData.end(), Textures.mData.begin(), Textures.mData.end());
-			}
-
-			if (!TexSet.mData.empty())
-			{
-				//auto MeshName = std::string(MeshMat->GetName().C_Str());
-				//TexSet.mHashedName = Utilities::Hash(MeshName);
-				if (mLoadingDesc.SaveMaterialNames == true)
-				{
-					TexSet.mName = MeshName;
+					if (TexSet.mHashedName == mMaterial->mPixelShaderTextures.at(i).mHashedName)
+					{
+						return i;
+					}
 				}
 
-				this->mMaterial->mPixelShaderTextures.push_back(TexSet);
+				std::vector<aiTextureType> LoadTypes{
+					aiTextureType_DIFFUSE,
+					aiTextureType_SPECULAR,
+					aiTextureType_AMBIENT,
+					aiTextureType_EMISSIVE,
+					aiTextureType_HEIGHT,
+					aiTextureType_NORMALS ,
+					aiTextureType_SHININESS,
+					aiTextureType_OPACITY,
+					aiTextureType_DISPLACEMENT,
+					aiTextureType_LIGHTMAP,
+					aiTextureType_REFLECTION,
+					aiTextureType_UNKNOWN
+				};
+				for (auto i : LoadTypes)
+				{
+					auto Textures = ProcessMaterialTexture(MeshMat, i);
+					TexSet.mData.insert(TexSet.mData.end(), Textures.mData.begin(), Textures.mData.end());
+				}
 
-				return static_cast<Uint32>(this->mMaterial->mPixelShaderTextures.size() - 1);
+				if (!TexSet.mData.empty())
+				{
+					//auto MeshName = std::string(MeshMat->GetName().C_Str());
+					//TexSet.mHashedName = Utilities::Hash(MeshName);
+					if (mLoadingDesc.SaveMaterialNames == true)
+					{
+						TexSet.mName = MeshName;
+					}
+
+					this->mMaterial->mPixelShaderTextures.push_back(TexSet);
+
+					return static_cast<Uint32>(this->mMaterial->mPixelShaderTextures.size() - 1);
+				}
 			}
 			return 0;
 		}
@@ -170,7 +172,7 @@ namespace Nuclear {
 				}
 			}
 
-			// process mMaterial		
+			// process material		
 			result->TexSetIndex = ProcessMaterial(mesh, scene);
 
 			if (mLoadingDesc.LoadAnimation && scene->mAnimations != nullptr)

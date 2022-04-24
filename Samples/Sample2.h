@@ -6,12 +6,6 @@ class Sample2 : public Core::Game
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 
-	//Assets::Mesh* SponzaAsset;
-	//Assets::Material* SponzaMaterial;
-
-	//Assets::Mesh* CerberusAsset;
-	//Assets::Material* CerberusMaterial;
-
 	Assets::Material SphereMaterial;
 	Assets::Material PlaneMaterial;
 
@@ -20,24 +14,17 @@ class Sample2 : public Core::Game
 	Rendering::PBR PBR;
 	Rendering::PBR DefferedPBR;
 
-	//Rendering::PBR TestPBR;
-	Rendering::BlinnPhong BlinnPhong;
-	Rendering::BlinnPhong DefferedBlinnPhong;
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
 
 	Rendering::ForwardRenderingPipeline PBRPipeline;
-	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 
-	Rendering::DefferedRenderingPipeline BlinnPhongDefferedPipeline;
 	Rendering::DefferedRenderingPipeline PBRDefferedPipeline;
 
 	//ECS
 	ECS::Scene Scene;
-	//ECS::Entity ESponza;
-	//ECS::Entity ECerberus;
 
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
@@ -52,48 +39,35 @@ public:
 	Sample2()
 		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, 10.f, Graphics::SENSITIVTY, Graphics::ZOOM),
 		PBRPipeline("PBR"),
-		BlinnPhongPipeline("BlinnPhone"),
 		DiffuseRPPipeline("DiffuseRP"),
 		WireFrameRPPipeline("WireFrameRP"),
-		BlinnPhongDefferedPipeline("BlinnDeffered"),
 		PBRDefferedPipeline("PBRDeffered")
 	{
 
 	}
 	void SetupAssets()
 	{
-		Importers::MeshLoadingDesc ModelDesc;
-
-		//Load Models
-		//std::tie(SponzaAsset, SponzaMaterial) = mAssetManager->Import("Assets/Common/Models/CrytekSponza/sponza.obj", ModelDesc);
-		//std::tie(CerberusAsset, CerberusMaterial) = mAssetManager->Import("Assets/Common/Models/Cerberus/Cerberus.FBX", ModelDesc);
-
 		//Load some textures manually
 		Importers::ImageLoadingDesc desc;
 		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
 		Assets::TextureSet PBRSphereSet;
-		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
+		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", desc,Graphics::TextureUsageType::Specular) });
+		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",desc, Graphics::TextureUsageType::Normal) });
+		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
+		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", desc, Graphics::TextureUsageType::AO) });
 
 		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
-		//Renderer->CreateMaterialForAllPipelines(SponzaMaterial);
-		//Renderer->CreateMaterialForAllPipelines(CerberusMaterial);
-
-		//ESponza.Assign<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
-		//ECerberus.Assign<Components::MeshComponent>(CerberusAsset, CerberusMaterial);
 
 		Assets::TextureSet PBRPlaneSet;
-		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRPlaneSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRPlaneSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRPlaneSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRPlaneSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
+		PBRPlaneSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", desc,Graphics::TextureUsageType::Specular) });
+		PBRPlaneSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",desc, Graphics::TextureUsageType::Normal) });
+		PBRPlaneSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
+		PBRPlaneSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", desc, Graphics::TextureUsageType::AO) });
 
 		PlaneMaterial.mPixelShaderTextures.push_back(PBRPlaneSet);
 		PlaneMaterial.SetName("Plane Material");
@@ -104,13 +78,10 @@ public:
 	void SetupEntities()
 	{
 		//Create Entities
-		//ESponza = Scene.CreateEntity();
 		ELights = Scene.CreateEntity("Lights");
 		ECamera = Scene.CreateEntity("Controller");
-		//ECerberus = Scene.CreateEntity();
 
 		//Assign Components
-	
 		ELights.AddComponent<Components::DirLightComponent>();
 		ELights.AddComponent<Components::PointLightComponent>();
 		ECamera.AddComponent<Components::SpotLightComponent>();
@@ -136,26 +107,19 @@ public:
 
 		PBRPipeline.Initialize(&PBR, &Camera);
 
-		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
-		DefferedBlinnPhong.Initialize({ true });
 		DefferedPBR.Initialize({ true });
 
 		Rendering::DefferedRenderingPipelineInitInfo initInfo;
-		initInfo.shadingModel = &DefferedBlinnPhong;
 		initInfo.camera = &Camera;
-		BlinnPhongDefferedPipeline.Initialize(initInfo);
-
 		initInfo.shadingModel = &DefferedPBR;
 		PBRDefferedPipeline.Initialize(initInfo);
 
 		//Scene.Systems.Configure();
 		//TestPBR.test = true;
 		Renderer->AddRenderingPipeline(&PBRPipeline);
-		Renderer->AddRenderingPipeline(&BlinnPhongDefferedPipeline);
 		Renderer->AddRenderingPipeline(&PBRDefferedPipeline);
-		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
 		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
 
@@ -201,20 +165,9 @@ public:
 		{
 			it.GetComponent<Components::RigidBodyComponent>()->isKinematic = true;
 		}
-		//Math::Matrix4 TSponza(1.0f);
-		//TSponza = Math::scale(TSponza, Math::Vector3(0.05f));
-		////ESponza.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TSponza);
-
-		//Math::Matrix4 TCerberus(1.0f);
-		//TCerberus = Math::scale(TCerberus, Math::Vector3(0.05f));
-		////ECerberus.GetComponent<Components::EntityInfoComponent>()->mTransform.SetTransform(TCerberus);
-
-
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		//Camera.GammaCorrection = true;
-		//Camera.HDR = true;
 		//Camera.MovementSpeed = 15;
 		Renderer->VisualizePointLightsPositions = true;
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
@@ -298,25 +251,19 @@ public:
 				ImGui::Text("Active Rendering Pipeline:");
 				static int e = 0;
 				ImGui::RadioButton("PBR", &e, 0);
-				ImGui::RadioButton("BlinnPhong", &e, 1);
+				ImGui::RadioButton("Deffered PBR", &e, 1);
 				ImGui::RadioButton("DiffuseOnly", &e, 2);
 				ImGui::RadioButton("WireFrame", &e, 3);
-				ImGui::RadioButton("Deffered PBR", &e, 4);
-				ImGui::RadioButton("Deffered Blinn Phong", &e, 5);
 
 				//Change Rendering Pipeline
 				if (e == 0)
 					Renderer->SetActiveRenderingPipeline(PBRPipeline.GetID());
 				else if (e == 1)
-					Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
+					Renderer->SetActiveRenderingPipeline(PBRDefferedPipeline.GetID());
 				else if (e == 2)
 					Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
 				else if (e == 3)
 					Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-				else if (e == 4)
-					Renderer->SetActiveRenderingPipeline(PBRDefferedPipeline.GetID());
-				else if (e == 5)
-					Renderer->SetActiveRenderingPipeline(BlinnPhongDefferedPipeline.GetID());
 
 				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
@@ -364,19 +311,6 @@ public:
 				ImGui::TreePop();
 			}
 
-			//if (ImGui::TreeNode("Physics"))
-			//{
-			//	ImGui::Checkbox("iskinematic", &iskinematic);
-			//	if (ImGui::Button("Update Physics"))
-			//	{
-			//	/*	for (auto it : boxes)
-			//		{
-			//			it.GetComponent<Components::RigidBodyComponent>()->isKinematic = true;
-			//		}*/
-			//	}
-			//	ImGui::TreePop();
-			//}
-
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 			if (ImGui::Button("End Game"))
@@ -389,8 +323,6 @@ public:
 			EntityExplorer(&Scene);
 
 		}
-		//ViewMaterialInfo(NanosuitMaterial, &AssetLoader);
-
 	}
 
 	void Shutdown() override

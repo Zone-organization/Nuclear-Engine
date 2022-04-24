@@ -28,6 +28,7 @@ namespace Nuclear
 			void SetRotation(const Math::Vector3& eular);
 
 			void SetScale(Math::Vector3 scale);
+			void SetScale(float scale);
 
 			Math::Vector3 GetLocalPosition();
 			Math::Quaternion GetLocalRotation();

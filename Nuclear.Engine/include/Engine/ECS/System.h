@@ -69,7 +69,7 @@ namespace Nuclear
 			template <typename S>
 			std::shared_ptr<S> GetSystem() {
 				auto it = systems_.find(S::family());
-				assert(it != systems_.end());
+				//assert(it != systems_.end());
 				return it == systems_.end()
 					? std::shared_ptr<S>()
 					: std::shared_ptr<S>(std::static_pointer_cast<S>(it->second));
