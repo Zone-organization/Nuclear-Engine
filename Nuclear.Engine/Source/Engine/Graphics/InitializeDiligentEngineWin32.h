@@ -17,16 +17,18 @@ namespace Nuclear
 		switch (Severity)
 		{
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_INFO:
-			Log.Info("[GraphicsEngine] " + std::string(Message) + '\n');
+			NUCLEAR_INFO("[GraphicsEngine] '{0}'" , Message);
 			return;
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_WARNING:
-			Log.Warning("[GraphicsEngine] " + std::string(Message) + '\n');
+			NUCLEAR_WARN("[GraphicsEngine] '{0}'", Message);
+
 			return;
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_ERROR:
-			Log.Error("[GraphicsEngine] " + std::string(Message) + '\n');
+			NUCLEAR_ERROR("[GraphicsEngine] '{0}'", Message);
+
 			return;
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_FATAL_ERROR:
-			Log.FatalError("[GraphicsEngine] " + std::string(Message) + '\n');
+			NUCLEAR_FATAL("[GraphicsEngine] '{0}'", Message);
 			return;
 		default:
 			return;
@@ -126,7 +128,7 @@ namespace Nuclear
 		break;
 
 		default:
-			Log.FatalError("[InitializeDiligentEngineWin32] Unknown device type!\n");
+			NUCLEAR_FATAL("[InitializeDiligentEngineWin32] Unknown device type!");
 			return false;
 		}
 

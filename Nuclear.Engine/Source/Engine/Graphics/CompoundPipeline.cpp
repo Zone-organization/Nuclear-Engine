@@ -89,9 +89,9 @@ namespace Nuclear
 			std::string VShaderSource = Core::FileSystem::LoadShader(Desc.mVShaderPath, Desc.mVSConstDefines);
 			std::string PShaderSource = Core::FileSystem::LoadShader(Desc.mPShaderPath, Desc.mPSConstDefines);
 			
-			if (VShaderSource == "NoString" || PShaderSource == "NoString")
+			if (VShaderSource == "" || PShaderSource == "")
 			{
-				Log.Error("[CompoundPipeline] Couldn't Load Shaders!\n");
+				NUCLEAR_ERROR("[CompoundPipeline] Couldn't Load Shaders!");
 				return std::vector<PipelineInstanceInfo>();
 			}
 			for (auto Info : InstancesInfo)
@@ -152,7 +152,7 @@ namespace Nuclear
 				}
 			}
 
-			Log.Error("[CompoundPipeline] Variant: " + std::to_string(Key) +" Not Found!\n");
+			NUCLEAR_ERROR("[CompoundPipeline] Variant: '{0}' Not Found!" , Key);
 			return mVariants.begin()->second;
 		}
 	}

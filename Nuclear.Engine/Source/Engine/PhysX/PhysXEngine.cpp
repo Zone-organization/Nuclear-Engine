@@ -29,7 +29,7 @@ namespace Nuclear
 		public:
 			virtual void reportError(PxErrorCode::Enum code, const char* message, const char* file, int line) override
 			{
-				Log.Error("[PhysX] Error Code: " + std::to_string(code) + " Details: " + std::string(message) + "\n");
+				NUCLEAR_ERROR("[PhysX] Error Code: '{0}' Details: '{1}'", code , message);
 			}
 		}gErrorCallback;
 
@@ -49,9 +49,9 @@ namespace Nuclear
 			gDefaultMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.1f);
 			if (!gDefaultMaterial)
 			{
-				Log.FatalError("[PhysXEngine] createMaterial failed\n");
+				NUCLEAR_FATAL("[PhysXEngine] createMaterial failed");
 			}
-			Log.Info("[PhysXEngine] PhysX has been initalized succesfully!\n");
+			NUCLEAR_INFO("[PhysXEngine] PhysX has been initalized succesfully!");
 			return true;
 		}
 		void PhysXEngine::Shutdown()

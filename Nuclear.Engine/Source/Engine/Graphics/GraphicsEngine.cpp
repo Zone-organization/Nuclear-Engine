@@ -13,7 +13,7 @@ namespace Nuclear
 		{
 			if (desc.DefaultShaderManager == nullptr)
 			{
-				Log.Info("[GraphicsEngine] DefaultShaderManager is a nullptr, engine will auto-creating a new one.\n");
+				NUCLEAR_INFO("[GraphicsEngine] DefaultShaderManager is a nullptr, engine will auto-creating a new one.");
 				pDefaultShaderManager = new Managers::ShaderManager();
 				ShaderManagerAutoCreated = true;
 			}

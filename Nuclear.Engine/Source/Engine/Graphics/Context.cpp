@@ -34,7 +34,7 @@ namespace Nuclear
 			bool Result = InitializeDiligentEngineWin32(Core::Engine::GetInstance()->GetMainWindow()->GetRawWindowPtr(),renderapi, &gDevice, &gContext, &gSwapChain,&gEngineFactory, SCDesc);
 
 			if(Result)
-				Log.Info("[Context] Diligent Graphics API Initialized.\n");
+				NUCLEAR_INFO("[Context] Diligent Graphics API Initialized.");
 
 			return true;
 		}

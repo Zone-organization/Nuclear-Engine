@@ -53,6 +53,7 @@ namespace Nuclear {
 		}
 		bool Engine::Start(const EngineStartupDesc& desc)
 		{
+			Core::Logger::Initialize();
 			PrintIntroLog();
 
 			//Create platform specific app (window)
@@ -60,7 +61,7 @@ namespace Nuclear {
 
 			if (!MainWindow.Create(desc.mEngineWindowDesc))
 			{
-				Log.FatalError("[Engine] Failed To Create Window...\n");
+				NUCLEAR_FATAL("[Engine] Failed To Create Window...");
 			}
 			//Application::Start(desc.mAppdesc);
 
@@ -70,7 +71,7 @@ namespace Nuclear {
 
 			if (!Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc))
 			{
-				Log.FatalError("[Engine] GraphicsEngine Failed to initalize...\n");
+				NUCLEAR_FATAL("[Engine] GraphicsEngine Failed to initalize...");
 				return false;
 			}
 			//Initialize Context
@@ -82,7 +83,7 @@ namespace Nuclear {
 			ImGui_ImplGlfw_InitForOther(MainWindow.GetRawWindowPtr(), true);
 			ImGui_Impl_Init();
 			ImGui_Impl_CreateDeviceObjects();
-			Log.Info("[Engine] ImGUI Initalized.\n");
+			NUCLEAR_INFO("[Engine] ImGUI Initalized.");
 
 
 			if (desc.AutoInitAudioEngine)
@@ -94,7 +95,7 @@ namespace Nuclear {
 			{
 				if (!PhysX::PhysXEngine::Initialize(desc.mPhysXEngineDesc))
 				{
-					Log.FatalError("[Engine] PhysXEngine Failed to auto Initialize!\n");
+					NUCLEAR_FATAL("[Engine] PhysXEngine Failed to auto Initialize!");
 					return false;
 				}
 			}
@@ -104,7 +105,7 @@ namespace Nuclear {
 			int width2, height2;
 			GetMainWindow()->GetSize(width2, height2);
 
-			Log.Info("[Engine] Nuclear Engine has been initalized successfully!\n");
+			NUCLEAR_INFO("[Engine] Nuclear Engine has been initalized successfully!");
 			return true;
 		}
 
@@ -120,7 +121,7 @@ namespace Nuclear {
 
 		void Engine::Shutdown()
 		{
-			Log.Info("[Engine] Shutting Down Engine.\n");
+			NUCLEAR_INFO("[Engine] Shutting Down Engine.");
 
 			GamePtr = &Defaultgame;
 			Graphics::Context::ShutDown();
@@ -129,8 +130,8 @@ namespace Nuclear {
 			MainWindow.Destroy();
 			//Graphics::ImGui_Renderer::Shutdown();
 
-			Log.Info("------------------------ -Engine Has Shutdown- -----------------------\n");
-			Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
+			NUCLEAR_INFO("------------------------ -Engine Has Shutdown- -----------------------");
+			NUCLEAR_INFO("-------------------------- -Nuclear Engine- --------------------------");
 		}
 
 		void Engine::BeginFrame()
@@ -160,13 +161,13 @@ namespace Nuclear {
 			{
 				if (GamePtr->GetGameInfo() != nullptr)
 				{
-					Log.Info(std::string(
-						"[Engine] Loading Game: " + std::string(GamePtr->GetGameInfo()->Name)
-						+ " - Ver: " + std::string(GamePtr->GetGameInfo()->Version)
-						+ " - Dev: " + std::string(GamePtr->GetGameInfo()->Developer) + "\n"));
+					NUCLEAR_INFO("[Engine] Loading Game: '{0}' - Ver: '{1}' - Dev: '{2}'",
+						GamePtr->GetGameInfo()->Name,
+						GamePtr->GetGameInfo()->Version,
+						GamePtr->GetGameInfo()->Developer);
 				}
 				else {
-					Log.Info("[Engine] Loading Unnamed Game.\n");
+					NUCLEAR_INFO("[Engine] Loading Unnamed Game.");
 
 				}
 				SetState(Engine::State::Initializing);
@@ -180,7 +181,7 @@ namespace Nuclear {
 		{
 			if (GamePtr != nullptr)
 			{
-				Log.Info("[Engine] Running Game.\n");
+				NUCLEAR_INFO("[Engine] Running Game.");
 
 				Engine::Game_Loop_Render();
 			}
@@ -279,41 +280,33 @@ namespace Nuclear {
 					break;
 			}
 
-			Log.Info("[Engine] Game state changed to " + name + "\n");
+			NUCLEAR_INFO("[Engine] Game state changed to '{0}'" , name );
 		}
 
 		void PrintIntroLog()
 		{
-			Log.Info("-------------------------- -Nuclear Engine- --------------------------\n");
-			Log.Info("------------------------- Zone Organization --------------------------\n");
-			Log.Info("[Engine] Starting Engine...\n");
-			Log.Info("[Engine] Engine Build: ");
-			Log.Info(MajorVersion);
-			Log.Info(".");
-			Log.Info(MinorVersion);
-			Log.Info("  On: ");
-			Log.Info(__DATE__);
-			Log.Info("  At: ");
-			Log.Info(__TIME__);
-			Log.EndLine();
+			NUCLEAR_INFO("-------------------------- -Nuclear Engine- --------------------------");
+			NUCLEAR_INFO("------------------------- Zone Organization --------------------------");
+			NUCLEAR_INFO("[Engine] Starting Engine...");
+			NUCLEAR_INFO("[Engine] Engine Build: '{0}'.'{1}'  On: '{2}' At: '{3}'", MajorVersion , MinorVersion , __DATE__ , __TIME__);
 
-			Log.Info("[Engine] Built For: ");
+//			NUCLEAR_INFO("[Engine] Built For: ");
 
-#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
-			Log.Info("Windows-PC 32 Bit");
-#endif
-
-#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
-			Log.Info("Windows-PC 64 bit");
-#endif
-
-#ifdef 	_DEBUG
-			Log.Info("  [DEBUG Build]\n");
-#endif
-
-#ifdef 	NDEBUG
-			Log.Info("  [RELEASE Build]\n");
-#endif
+//#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
+//			NUCLEAR_INFO("Windows-PC 32 Bit");
+//#endif
+//
+//#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
+//			NUCLEAR_INFO("Windows-PC 64 bit");
+//#endif
+//
+//#ifdef 	_DEBUG
+//			NUCLEAR_INFO("  [DEBUG Build]\n");
+//#endif
+//
+//#ifdef 	NDEBUG
+//			NUCLEAR_INFO("  [RELEASE Build]\n");
+//#endif
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)

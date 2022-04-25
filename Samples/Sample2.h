@@ -175,7 +175,7 @@ public:
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
 		//Camera.MovementSpeed = 15;
-		Renderer->VisualizePointLightsPositions = true;
+		//Renderer->VisualizePointLightsPositions = true;
 		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -271,7 +271,7 @@ public:
 				else if (e == 3)
 					Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
 
-				ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+				//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
 				ImGui::TreePop();
 			}

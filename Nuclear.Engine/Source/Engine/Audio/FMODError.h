@@ -11,7 +11,7 @@ void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line)
 {
 	if (result != FMOD_OK)
 	{
-		Nuclear::Log.Error("[FMOD Error] File: " + std::string(file) + " Line: " + std::to_string(line) + " Error: " + std::string(FMOD_ErrorString(result)) + "\n");
+		//NUCLEAR_ERROR("[FMOD Error] File: '{0}' Line: '{1}' Error: '{3}'" , file , line , std::string(FMOD_ErrorString(result)));
 	}
 }
 #endif

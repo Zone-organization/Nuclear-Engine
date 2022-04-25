@@ -46,9 +46,6 @@ namespace Nuclear
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
 
-			//Debug Only
-			bool VisualizePointLightsPositions = false;
-
 			IBuffer* GetAnimationCB();
 			Assets::Material LightSphereMaterial;                     //TODO: Move
 

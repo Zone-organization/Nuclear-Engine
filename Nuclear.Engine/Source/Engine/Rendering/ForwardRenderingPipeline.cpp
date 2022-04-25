@@ -70,18 +70,18 @@ namespace Nuclear
 				}
 			}
 
-			/*if (renderer->VisualizePointLightsPositions)
-			{
-				for (unsigned int i = 0; i < renderer->GetLightingSubSystem().PointLights.size(); i++)
-				{
-					Math::Matrix4 model(1.0f);
-					model = Math::translate(model, Math::Vector3(renderer->GetLightingSubSystem().PointLights[i]->GetInternalData().Position));
-					model = Math::scale(model, Math::Vector3(0.75f));
-					GetCamera()->SetModelMatrix(model);
-					renderer->GetCameraSubSystem().UpdateBuffer();
-					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &renderer->LightSphereMaterial);
-				}
-			}*/
+			//if (renderer->VisualizePointLightsPositions)
+			//{
+			//	for (unsigned int i = 0; i < renderer->GetLightingSubSystem().PointLights.size(); i++)
+			//	{
+			//		Math::Matrix4 model(1.0f);
+			//		model = Math::translate(model, Math::Vector3(renderer->GetLightingSubSystem().PointLights[i]->GetInternalData().Position));
+			//		model = Math::scale(model, Math::Vector3(0.75f));
+			//		GetCamera()->SetModelMatrix(model);
+			//		renderer->GetCameraSubSystem().UpdateBuffer();
+			//		InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &renderer->LightSphereMaterial);
+			//	}
+			//}
 
 			if (renderer->GetBackground().GetSkybox() != nullptr)
 			{

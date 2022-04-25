@@ -271,7 +271,7 @@ public:
 				ImGui::TreePop();
 			}
 
-			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
 		//	ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
 

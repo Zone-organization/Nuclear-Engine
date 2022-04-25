@@ -120,7 +120,7 @@ namespace Nuclear {
 			Assets::ImageData imagedata = mImageImporter(Path.mRealPath, Desc);
 			if (imagedata.mData == nullptr)
 			{
-				Log.Error(std::string("[AssetManager : " + mDesc.mName +  "] Failed To Load Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Load Texture: '{1}' Hash: '{2}'" , mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 				return DefaultBlackTex;
 			}
 
@@ -129,7 +129,8 @@ namespace Nuclear {
 			
 			if (image.mTextureView == nullptr)
 			{
-				Log.Error(std::string("[AssetManager] Failed To Create Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Create Texture: '{1}' Hash: '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+
 				return DefaultBlackTex;
 			}
 			image.mData.mData = NULL;
@@ -145,7 +146,7 @@ namespace Nuclear {
 			result.SetImage(&mImportedImages[hashedname]);
 			result.SetUsageType(type);
 
-			Log.Info(std::string("[AssetManager : " + mDesc.mName + "] Loaded Texture: " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+			NUCLEAR_INFO("[AssetManager : '{0}'] Loaded Texture: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 		
 			return result;
 		}
@@ -162,14 +163,14 @@ namespace Nuclear {
 
 			if (image.mTextureView == nullptr)
 			{
-				Log.Error(std::string("[AssetManager] Failed To Create Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Create Texture: '{1}' Hash: '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
 				return DefaultBlackTex;
 			}
 			image.mData.mData = NULL;
 			mImportedImages[hashedname] = image;
 			result.SetImage(&mImportedImages[hashedname]);
 
-			Log.Info(std::string("[AssetManager] Imported Texture: " + Desc.mPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Texture: '{1}' : '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			return result;
 		}
@@ -198,12 +199,12 @@ namespace Nuclear {
 		Assets::AudioClip* AssetManager::Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
-			Log.Info("[AssetManager : " + mDesc.mName + "] Loading: " + Path.mInputPath +" Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n');
-
 
 			mImportedAudioClips[hashedname] = Assets::AudioClip();
 			auto result = &mImportedAudioClips[hashedname];
 			Audio::AudioEngine::GetSystem()->createSound(Path.mRealPath.c_str(), mode, 0, &result->mSound);
+
+			NUCLEAR_INFO("[AssetManager : '{0}'] Imported AudioClip: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			return result;
 		}
@@ -240,7 +241,8 @@ namespace Nuclear {
 			}
 			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, &Animation))
 			{
-				Log.Error("[AssetManager : " + mDesc.mName + "] Loading Model: " + Path.mInputPath + "\n");
+				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed to import Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+
 				return { Mesh , Material, anim };
 			}
 
@@ -254,8 +256,7 @@ namespace Nuclear {
 						mHashedAnimationsPaths[hashedname] = Path;
 				}
 			}
-
-			Log.Info("[AssetManager : " + mDesc.mName + "] Loaded Model: " + Path.mInputPath + "\n");
+			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			Mesh->Create();
 			
@@ -283,14 +284,15 @@ namespace Nuclear {
 			Assets::ImageData imagedata = mImageImporter(Path.mRealPath, Desc);
 			if (imagedata.mData == nullptr)
 			{
-				Log.Error(std::string("[AssetManager : " + mDesc.mName + "] Failed To Load Texture2D (For CubeMap): " + Path.mInputPath + " Hash: " + Utilities::int_to_hex<Uint32>(hashedname) + '\n'));
+				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Load Texture2D (For CubeMap): '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 				return nullptr;
 			}
 			result.mData = imagedata;
 
 			mImportedImages[hashedname] = result;
-			Log.Info(std::string("[AssetManager : " + mDesc.mName +  "] Loaded Texture2D (For CubeMap): " + Path.mInputPath + '\n'));
 			
+			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Texture2D (for CubeMap) : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+
 			return &mImportedImages[hashedname];
 		}
 		Assets::Image* AssetManager::DoesImageExist(Uint32 hashedname)

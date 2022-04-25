@@ -31,7 +31,7 @@ namespace Nuclear
 				return true;
 			}
 
-			Log.Error("[ScriptingSystem] Failed to initialize...\n");
+			NUCLEAR_ERROR("[ScriptingSystem] Failed to initialize...");
 			return false;
 		}
 

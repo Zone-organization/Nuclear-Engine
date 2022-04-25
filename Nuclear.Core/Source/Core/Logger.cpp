@@ -1,89 +1,31 @@
 #include <Core\Logger.h>
-#include <codecvt>
-#include <locale>
-#include <iostream>
-#ifdef _WIN32
-#include <Windows.h>
-#endif
-#include <Core\NE_Common.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+
 namespace Nuclear
 {
 	namespace Core 
 	{
-		std::wstring String2WSTR(const std::string& s)
+		std::shared_ptr<spdlog::logger> Logger::mEngineLogger;
+		std::shared_ptr<spdlog::logger> Logger::mClientLogger;
+		void Logger::Initialize()
 		{
-#ifdef _WIN32
-			int len;
-			int slength = (int)s.length() + 1;
-			len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
-			wchar_t* buf = new wchar_t[len];
-			MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
-			std::wstring r(buf);
-			delete[] buf;
-			return r;
-#endif
-		}
-		void SetConsoleColor(int colorCode)
-		{
-#ifdef _WIN32
+			std::vector<spdlog::sink_ptr> logSinks;
+			logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+			logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("NuclearEngine.log", true));
 
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-			SetConsoleTextAttribute(hConsole, colorCode);
-#endif
-		}
+			logSinks[0]->set_pattern("%^[%T] %n: %v%$");
+			logSinks[1]->set_pattern("[%T] [%l] %n: %v");
 
-		Logger::Logger()
-		{
-		}
+			mEngineLogger = std::make_shared<spdlog::logger>("NUCLEAR", begin(logSinks), end(logSinks));
+			spdlog::register_logger(mEngineLogger);
+			mEngineLogger->set_level(spdlog::level::trace);
+			mEngineLogger->flush_on(spdlog::level::trace);
 
-		Logger::~Logger()
-		{
-		}
-
-		void Logger::EndLine()
-		{
-			Write(std::string("\n"));
-		}
-
-		void Logger::Error(const std::string& format)
-		{
-			SetConsoleColor(12);
-			Write(std::string("[Error] "));
-			Write(format);
-			SetConsoleColor(15);
-		}
-
-		void Logger::FatalError(const std::string& format)
-		{
-			SetConsoleColor(79);
-			std::string info("Nuclear Engine has encountred a fatal error, and have to exit, please inform the developers for more support.\nDetails: ");
-
-			Write(std::string("[FATAL_ERROR] "));
-			Write(format);
-#ifdef _WIN32
-			MessageBox(NULL, String2WSTR(info).c_str(), L"[FATAL_ERROR]", MB_OK | MB_ICONERROR);
-#endif
-			exit(1);
-		}
-
-		void Logger::Warning(const std::string& format)
-		{
-			SetConsoleColor(14);
-			Write(std::string("[Warning] "));
-			Write(format);
-			SetConsoleColor(15);
-
-		}
-
-		void Logger::Info(const std::string& format)
-		{
-			SetConsoleColor(15);
-			Write(format);
-		}
-
-		void Logger::Write(const std::string& TextString)
-		{
-			printf(TextString.c_str());
+			mClientLogger = std::make_shared<spdlog::logger>("CLIENT", begin(logSinks), end(logSinks));
+			spdlog::register_logger(mClientLogger);
+			mClientLogger->set_level(spdlog::level::trace);
+			mClientLogger->flush_on(spdlog::level::trace);
 		}
 	}
 }

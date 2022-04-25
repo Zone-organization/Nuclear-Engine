@@ -18,8 +18,8 @@ namespace Nuclear
 				}
 				else
 				{
-					Log.Error("[FileSystem] Couldn't Read File: " + Filepath.mRealPath + "\n");
-					return std::string("NoString");
+					NUCLEAR_ERROR("[FileSystem] Couldn't Read File: '{0}'", Filepath.mRealPath);
+					return std::string("");
 				}
 				return data;
 			}
@@ -38,8 +38,8 @@ namespace Nuclear
 				}
 				else
 				{
-					Log.Error("[FileSystem] Couldn't Read Shader File: " + Filepath.mRealPath + "\n");
-					return std::string("NoString");
+					NUCLEAR_ERROR("[FileSystem] Couldn't Read Shader File: '{0}'", Filepath.mRealPath);
+					return std::string();
 				}
 				if (reverseorder == false)
 				{

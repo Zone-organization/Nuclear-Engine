@@ -30,14 +30,14 @@ namespace Nuclear
 
 				if (msg->type == asMSGTYPE_WARNING)
 				{
-					Log.Warning("[AngelScript] " + msgstr);
+					NUCLEAR_WARN("[AngelScript] '{0}'" + msgstr);
 				}
 				else if (msg->type == asMSGTYPE_INFORMATION)
 				{
-					Log.Info("[AngelScript] "+  msgstr);
+					NUCLEAR_INFO("[AngelScript] '{0}'" + msgstr);
 				}
 				else {
-					Log.Error("[AngelScript] "+ msgstr);
+					NUCLEAR_ERROR("[AngelScript] '{0}'" + msgstr);
 				}
 			}
 

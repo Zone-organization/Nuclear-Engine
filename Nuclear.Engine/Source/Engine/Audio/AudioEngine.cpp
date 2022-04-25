@@ -18,7 +18,7 @@ namespace Nuclear
 
 			if (result != FMOD_OK)
 			{
-				Log.Error("[AudioEngine] Failed to create FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");
+				NUCLEAR_ERROR("[AudioEngine] Failed to create FMOD SoundSystem! Info: '{0}'",  FMOD_ErrorString(result));
 				return false;
 			}
 
@@ -26,10 +26,10 @@ namespace Nuclear
 			result = system->init(MaxChannels, FMOD_INIT_NORMAL, 0);
 			if (result != FMOD_OK)
 			{
-				Log.Error("[AudioEngine] Failed to initialize FMOD SoundSystem! Info: " + std::string(FMOD_ErrorString(result)) + "\n");
+				NUCLEAR_ERROR("[AudioEngine] Failed to initialize FMOD SoundSystem! Info: '{0}'", FMOD_ErrorString(result));
 				return false;
 			}
-			Log.Info("[AudioEngine] Initialized FMOD SoundSystem.\n");
+			NUCLEAR_INFO("[AudioEngine] Initialized FMOD SoundSystem.");
 			return true;
 		}
 		void AudioEngine::Shutdown()
@@ -53,7 +53,7 @@ namespace Nuclear
 				{
 					if (result != FMOD_OK)
 					{
-						Log.Error("[AudioEngine] FMOD Error: " + std::string(FMOD_ErrorString(result)) + "\n");
+						NUCLEAR_ERROR("[AudioEngine] FMOD Error: '{0}'" , FMOD_ErrorString(result));
 						return;
 					}
 				}

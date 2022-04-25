@@ -29,7 +29,7 @@ namespace Nuclear
 		{
 			if (!Pipeline)
 			{
-				Log.Error("[RenderSystem] Pipeline is invalid!\n");
+				NUCLEAR_ERROR("[RenderSystem] Pipeline is invalid!");
 				return;
 			}
 			mRenderingPipelines[Pipeline->GetID()] = Pipeline;
@@ -54,7 +54,7 @@ namespace Nuclear
 				mActiveRenderingPipeline = it->second;
 				return;
 			}
-			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID)+ ") is not found, while setting it active.\n");
+			NUCLEAR_ERROR("[RenderSystem] Pipeline ID '{0}' is not found, while setting it active", Utilities::int_to_hex<Uint32>(PipelineID));
 		}
 
 		void RenderSystem::CreateMaterialForAllPipelines(Assets::Material* material)
@@ -80,7 +80,7 @@ namespace Nuclear
 				return;
 			}
 
-			Log.Error("[RenderSystem] Pipeline ID(" + Utilities::int_to_hex<Uint32>(PipelineID) + ") is not found, while creating material instance from it.\n");
+			NUCLEAR_ERROR("[RenderSystem] Pipeline ID '{0}' is not found, while creating material instance from it." , Utilities::int_to_hex<Uint32>(PipelineID));
 		}
 
 		bool RenderSystem::NeedsBaking()

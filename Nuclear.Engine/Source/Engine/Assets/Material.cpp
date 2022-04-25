@@ -33,7 +33,7 @@ namespace Nuclear
 			}
 			else
 			{
-				Log.Error("[Material] Instance registered to (" + std::to_string(PipelineID) + ") couldn't be found, falling back to first instance.\n");
+				NUCLEAR_ERROR("[Material] Instance registered to '{0}' couldn't be found, falling back to first instance.", PipelineID);
 				return &mMaterialInstances.begin()->second;
 			}
 		}

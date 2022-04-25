@@ -2,7 +2,6 @@
 #include <Engine\Importers\FreeImageImporter.h>
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
-#include <Core\Logger.h>
 
 #pragma comment(lib,"Freeimage.lib")
 
@@ -82,7 +81,7 @@ namespace Nuclear
 
 			if (!dib)
 			{
-				Log.Error("[FreeImageImporter] Failed To Load: " + Path +  ".\n");
+				//Log.Error("[FreeImageImporter] Failed To Load: " + Path +  ".\n");
 				return Assets::ImageData();
 			}
 			if(Desc.mFlipY_Axis)
@@ -95,7 +94,7 @@ namespace Nuclear
 
 			if (!SwapRedBlue32(bitmap))
 			{
-				Log.Error("[FreeImageImporter] Failed To Load: " + Path + " , SwapRedBlue32 Failed..\n");
+			//	Log.Error("[FreeImageImporter] Failed To Load: " + Path + " , SwapRedBlue32 Failed..\n");
 				bitmap = dib;
 				//return Assets::ImageData();
 			}

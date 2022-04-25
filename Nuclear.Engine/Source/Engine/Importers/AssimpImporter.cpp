@@ -19,7 +19,6 @@ namespace Nuclear {
 		bool AssimpImporter::Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim)
 		{
 			std::string path = desc.mPath;
-			Log.Info("[AssimpImporter] Loading Mesh: " + path + "\n");
 			mLoadingDesc = desc.mMeshDesc;
 			mManager = desc.mManager;
 			mMesh = mesh;
@@ -31,7 +30,7 @@ namespace Nuclear {
 			//Failed?
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
-				Log.Error("[AssimpImporter] Assimp Failed to load mesh: " + path + "\nInfo: " + std::string(importer.GetErrorString()) + "\n");
+				NUCLEAR_ERROR("[AssimpImporter] Assimp Failed to load mesh: '{0}' Info: '{1}'" , path, importer.GetErrorString());
 				return false;
 			}
 			mDirectory = path.substr(0, path.find_last_of('/'));

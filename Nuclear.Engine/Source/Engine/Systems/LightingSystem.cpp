@@ -38,7 +38,7 @@ namespace Nuclear
 			{
 				if (!RequiresBaking())
 				{
-					Log.Warning("[LightingSystem] No need for baking the sub system!\n");
+					NUCLEAR_WARN("[LightingSystem] No need for baking the sub system!");
 				}
 			}
 

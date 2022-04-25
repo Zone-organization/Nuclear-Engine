@@ -20,8 +20,8 @@ namespace Nuclear
 		void MaterialInstance::Create(Rendering::ShadingModel* Pipeline)
 		{
 			if (!Pipeline)
-			{
-				Log.Error("[MaterialInstance] Creation requires a valid Pipeline object!\n");
+			{	
+				NUCLEAR_ERROR("[MaterialInstance] Creation requires a valid Pipeline object!");
 				return;
 			}
 			mRenderingPipeline =Pipeline;
@@ -95,11 +95,6 @@ namespace Nuclear
 			{
 				for (auto tex : mPShaderTextures.at(index).mData)
 				{
-					auto zzz = tex.mTex.GetImage()->mTextureView.RawPtr();
-					if (!tex.mTex.GetImage()->mTextureView.RawPtr())
-					{
-						Log.Error("BindTexSet EROROR ");
-					}
 					mSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
 				}
 			}

@@ -17,7 +17,7 @@ namespace Nuclear
 			mWindow = glfwCreateWindow(Desc.WindowWidth, Desc.WindowHeight, Desc.Title.c_str(), NULL, NULL);
 			if (mWindow == NULL)
 			{
-				Log.Error("[Window] Creating Window  \""  + Desc.Title + "\" Failed!\n");
+				NUCLEAR_ERROR("[Window] Creating Window '{0}' Failed!", Desc.Title);
 				return false;
 			}
 

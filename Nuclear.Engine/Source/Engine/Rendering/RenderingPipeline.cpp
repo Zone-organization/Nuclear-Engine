@@ -37,8 +37,9 @@ namespace Nuclear
 						{
 							result[it1.first] = it1.second;   //Add new
 						}
-						else {                                //ID not found (mis match)
-							Log.Warning("[RenderingPipeline] ShaderEffect: " + it1.second.GetName() + " In " + first_it_name + " has no match in " + second_it_name + "\n");
+						else 
+						{                                //ID not found (mis match)
+							NUCLEAR_WARN("[RenderingPipeline] ShaderEffect: '{0}' in '{1}' has no match in '{2}'" , it1.second.GetName() , first_it_name ,  second_it_name);
 						}
 					}
 					else
@@ -158,12 +159,12 @@ namespace Nuclear
 			{
 				if (mesh == nullptr)
 				{
-					Log.Error("[RenderSystem DEBUG] Skipped Rendering invalid Mesh...\n");
+					NUCLEAR_ERROR("[RenderSystem DEBUG] Skipped Rendering invalid Mesh...");
 					return;
 				}
 				if (material == nullptr)
 				{
-					Log.Error("[RenderSystem DEBUG] Skipped Rendering Mesh with invalid Material...\n");
+					NUCLEAR_ERROR("[RenderSystem DEBUG] Skipped Rendering Mesh with invalid Material...");
 					return;
 				}
 			}

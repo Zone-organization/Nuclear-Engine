@@ -29,6 +29,7 @@ Follow the instructions below to compile and run the engine from source.
 | DiligentCore | Submodule & built with cmake |
 | GLFW | Submodule & built with cmake |
 | AngelScript | included |
+| spdlog | included |
 | IMGUI | included |
 | stb_truetype | included |
 | entt | included |

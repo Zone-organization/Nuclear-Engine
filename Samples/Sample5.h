@@ -216,7 +216,7 @@ public:
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		Renderer->VisualizePointLightsPositions = true;
+		//Renderer->VisualizePointLightsPositions = true;
 		PBRPipeline.SetEffect(Utilities::Hash("HDR"), true);
 		PBRPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
 		PBRDefferedPipeline.SetEffect(Utilities::Hash("HDR"), true);
@@ -374,7 +374,7 @@ public:
 			else if (e == 5)
 				Renderer->SetActiveRenderingPipeline(BlinnPhongDefferedPipeline.GetID());
 
-			ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
