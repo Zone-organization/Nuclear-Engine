@@ -14,12 +14,8 @@ namespace Nuclear
 			a ^= b; b ^= a; a ^= b;
 		}
 
-		BOOL SwapRedBlue32(FIBITMAP* dib) {
-			auto type = FreeImage_GetImageType(dib);
-			if (type != FIT_BITMAP) {
-				return FALSE;
-			}
-
+		BOOL SwapRedBlue32(FIBITMAP* dib)
+		{
 			const unsigned bytesperpixel = FreeImage_GetBPP(dib) / 8;
 			if (bytesperpixel > 4 || bytesperpixel < 3) {
 				return FALSE;
@@ -74,27 +70,22 @@ namespace Nuclear
 				FreeImage_FlipVertical(dib);
 
 			FIBITMAP* bitmap = nullptr;
-			bitmap = FreeImage_ConvertTo32Bits(dib);
-
 			auto type = FreeImage_GetImageType(dib);
 
-
-
-			if (!SwapRedBlue32(bitmap))
+			//Only bitmaps are loaded in BGR format in sume platforms
+			//TODO: Disable if its already RGB
+			if (type == FIT_BITMAP)
 			{
-				//FAILED
-			//	Log.Error("[FreeImageImporter] Failed To Load: " + Path + " , SwapRedBlue32 Failed..\n");
-				//bitmap = dib;
-				if (type == FIT_RGBF)
-				{
-					bitmap = FreeImage_ConvertToRGBAF(dib);
-					type = FreeImage_GetImageType(bitmap);
-				}
+				bitmap = FreeImage_ConvertTo32Bits(dib);
+				SwapRedBlue32(bitmap);
 			}
-			else
+
+			if (type == FIT_RGBF)
 			{
-				
+				bitmap = FreeImage_ConvertToRGBAF(dib);
+				type = FreeImage_GetImageType(bitmap);
 			}
+
 			Assets::ImageData result;
 			result.mData = FreeImage_GetBits(bitmap);
 			result.mWidth = FreeImage_GetWidth(bitmap);
@@ -104,21 +95,23 @@ namespace Nuclear
 			unsigned bytespp = FreeImage_GetLine(bitmap) / FreeImage_GetWidth(bitmap);
 			unsigned samples = 4;
 
-
 			switch (type)
 			{
 			case FIT_BITMAP:
 				samples = bytespp / sizeof(BYTE);
+				result.mComponentType = VT_UINT8;
 				break;
 			case FIT_UINT16:
 			case FIT_RGB16:
 			case FIT_RGBA16:
 				samples = bytespp / sizeof(WORD);
+				result.mComponentType = VT_UINT16;
 				break;
 			case FIT_FLOAT:
 			case FIT_RGBF:
 			case FIT_RGBAF:
 				samples = bytespp / sizeof(float);
+				result.mComponentType = VT_FLOAT32;
 				break;
 			}
 
@@ -126,7 +119,7 @@ namespace Nuclear
 
 			FreeImage_Unload(dib);
 
-			result.mRowStride = AlignUp(static_cast<Uint32>(result.mWidth * result.mNumComponents), 4u);
+			//result.mRowStride = AlignUp(static_cast<Uint32>(result.mWidth * result.mNumComponents), 4u);
 
 			return result;
 		}

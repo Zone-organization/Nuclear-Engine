@@ -1,5 +1,6 @@
 #pragma once
 #include <Core\NE_Common.h>
+#include <Diligent\Graphics\GraphicsEngine\interface\GraphicsTypes.h>
 
 namespace Nuclear
 {
@@ -16,6 +17,7 @@ namespace Nuclear
 				mNumComponents = 0;
 				mRowStride = 0;
 				mData = nullptr;
+				mComponentType = VT_UNDEFINED;
 			}
 			~ImageData()
 			{
@@ -25,6 +27,7 @@ namespace Nuclear
 				mNumComponents = 0;
 				mRowStride = 0;
 				mData = nullptr;
+				mComponentType = VT_UNDEFINED;
 			}
 
 			Uint32 mWidth;
@@ -36,6 +39,8 @@ namespace Nuclear
 			Uint32 mNumComponents;
 
 			Uint32 mRowStride;
+
+			VALUE_TYPE mComponentType;
 
 			Byte* mData;
 		};

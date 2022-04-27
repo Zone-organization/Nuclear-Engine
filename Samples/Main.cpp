@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 //	std::cin >> i;
 //	if (i == 2)
 	//{
-	//	desc.Renderer = SelectRenderer();
+		desc.Renderer = SelectRenderer();
 	//	Core::Engine::GetInstance()->Start(desc);
 
 	//}

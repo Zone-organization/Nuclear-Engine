@@ -120,8 +120,8 @@ public:
 
 		Importers::ImageLoadingDesc DESC;
 		DESC.mType = RESOURCE_DIM_TEX_2D;
-		DESC.mUsage = USAGE_DEFAULT;
-		DESC.mBindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+		DESC.mUsage = USAGE_IMMUTABLE;
+		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 		//DESC.mFormat = TEX_FORMAT_RGBA32_FLOAT;
 		tex = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
