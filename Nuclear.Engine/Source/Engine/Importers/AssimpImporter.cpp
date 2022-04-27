@@ -219,11 +219,11 @@ namespace Nuclear {
 						data.mHeight = embeddedtex->mHeight;
 						data.mData = (Byte*)embeddedtex->pcData;
 
-						if (Graphics::GraphicsEngine::isGammaCorrect())
+						/*if (Graphics::GraphicsEngine::isGammaCorrect())
 							desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
 						else 
 							desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-
+						*/
 						texture = mManager->Import(data, desc);
 						texture.SetUsageType(GetTextureType(type));
 					}
@@ -242,13 +242,13 @@ namespace Nuclear {
 
 					std::string filename = str.C_Str();
 					filename = mDirectory + '/' + filename;
-					if (Graphics::GraphicsEngine::isGammaCorrect())
+					/*if (Graphics::GraphicsEngine::isGammaCorrect())
 					{
 						desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
 					}
 					else {
 						desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-					}
+					}*/
 					texture = mManager->Import(filename, desc, GetTextureType(type));
 				}
 

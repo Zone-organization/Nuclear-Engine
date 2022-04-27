@@ -51,7 +51,7 @@ public:
 	{
 		//Load some textures manually
 		Importers::ImageLoadingDesc desc;
-		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+		//desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
 		Assets::TextureSet PBRSphereSet;

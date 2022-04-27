@@ -82,7 +82,7 @@ public:
 		};
 
 		Importers::ImageLoadingDesc SkyboxDesc;
-		SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+	//	SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		auto test = mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
 		Skybox.Initialize(mCameraSystem->GetCameraCB(), test);
 	}

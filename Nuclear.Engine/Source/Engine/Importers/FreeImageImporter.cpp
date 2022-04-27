@@ -15,7 +15,8 @@ namespace Nuclear
 		}
 
 		BOOL SwapRedBlue32(FIBITMAP* dib) {
-			if (FreeImage_GetImageType(dib) != FIT_BITMAP) {
+			auto type = FreeImage_GetImageType(dib);
+			if (type != FIT_BITMAP) {
 				return FALSE;
 			}
 
@@ -41,21 +42,6 @@ namespace Nuclear
 		static bool FreeImageInitalized = false;
 		Assets::ImageData FreeImageLoad(const std::string& Path, const Importers::ImageLoadingDesc& Desc)
 		{
-			int ReqNumComponents = 0, Channels = 8;
-			switch (Desc.mFormat)
-			{
-			case TEX_FORMAT_R8_UNORM:
-				ReqNumComponents = 1;
-				break;
-			case TEX_FORMAT_RG8_UNORM:
-				ReqNumComponents = 2;
-				break;
-			case TEX_FORMAT_RGBA8_UNORM:
-			case TEX_FORMAT_RGBA8_UNORM_SRGB:
-				ReqNumComponents = 4;
-				break;
-			}
-
 			if (!FreeImageInitalized)
 			{
 				FreeImage_Initialise();
@@ -90,13 +76,24 @@ namespace Nuclear
 			FIBITMAP* bitmap = nullptr;
 			bitmap = FreeImage_ConvertTo32Bits(dib);
 
+			auto type = FreeImage_GetImageType(dib);
+
 
 
 			if (!SwapRedBlue32(bitmap))
 			{
+				//FAILED
 			//	Log.Error("[FreeImageImporter] Failed To Load: " + Path + " , SwapRedBlue32 Failed..\n");
-				bitmap = dib;
-				//return Assets::ImageData();
+				//bitmap = dib;
+				if (type == FIT_RGBF)
+				{
+					bitmap = FreeImage_ConvertToRGBAF(dib);
+					type = FreeImage_GetImageType(bitmap);
+				}
+			}
+			else
+			{
+				
 			}
 			Assets::ImageData result;
 			result.mData = FreeImage_GetBits(bitmap);
@@ -104,10 +101,28 @@ namespace Nuclear
 			result.mHeight = FreeImage_GetHeight(bitmap);
 			result.mBitsPerPixel = FreeImage_GetBPP(bitmap);
 
-			if (ReqNumComponents == 0)
-				result.mNumComponents = result.mBitsPerPixel / Channels;
-			else
-				result.mNumComponents = ReqNumComponents;
+			unsigned bytespp = FreeImage_GetLine(bitmap) / FreeImage_GetWidth(bitmap);
+			unsigned samples = 4;
+
+
+			switch (type)
+			{
+			case FIT_BITMAP:
+				samples = bytespp / sizeof(BYTE);
+				break;
+			case FIT_UINT16:
+			case FIT_RGB16:
+			case FIT_RGBA16:
+				samples = bytespp / sizeof(WORD);
+				break;
+			case FIT_FLOAT:
+			case FIT_RGBF:
+			case FIT_RGBAF:
+				samples = bytespp / sizeof(float);
+				break;
+			}
+
+			result.mNumComponents = samples;
 
 			FreeImage_Unload(dib);
 

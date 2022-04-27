@@ -15,6 +15,8 @@ class Sample5 : public Core::Game
 	Assets::Material Gold;
 	Assets::Material Wall;
 
+	Graphics::Texture tex;
+
 	Graphics::Camera Camera;
 
 	Rendering::PBR PBR;
@@ -33,6 +35,8 @@ class Sample5 : public Core::Game
 
 	Rendering::DefferedRenderingPipeline BlinnPhongDefferedPipeline;
 	Rendering::DefferedRenderingPipeline PBRDefferedPipeline;
+
+	Rendering::Skybox Skybox;
 
 	//ECS
 	ECS::Scene Scene;
@@ -113,6 +117,14 @@ public:
 
 		Gold.mPixelShaderTextures.push_back(PBRGold);
 		Gold.SetName("Gold Material");
+
+		Importers::ImageLoadingDesc DESC;
+		DESC.mType = RESOURCE_DIM_TEX_2D;
+		DESC.mUsage = USAGE_DEFAULT;
+		DESC.mBindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+		DESC.mMipLevels = 1;
+		//DESC.mFormat = TEX_FORMAT_RGBA32_FLOAT;
+		tex = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
 	}
 
 	void SetupAssets()
@@ -127,7 +139,7 @@ public:
 
 		//Load some textures manually
 		Importers::ImageLoadingDesc desc;
-		desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+	//	desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		LoadPBRMaterials();
 
@@ -350,6 +362,9 @@ public:
 
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
+
+			ImGui::Image(tex.GetImage()->mTextureView, { 128,128 });
+
 
 			ImGui::Text("Active Rendering Pipeline:");
 			static int e = 0;

@@ -73,11 +73,13 @@ namespace Nuclear
 
 			bool mLoadFromMemory;
 
+			RESOURCE_DIMENSION mType;
+
 			void* mMemData;
 
 			Uint32 mMemSize;
 
-			TEXTURE_FORMAT mFormat;
+			//TEXTURE_FORMAT mFormat;
 
 			ImageLoadingDesc() :
 				mPath(""),
@@ -88,10 +90,11 @@ namespace Nuclear
 				mIsSRGB(false),
 				mGenerateMips(true),
 				mFlipY_Axis(true),
-				mFormat(TEX_FORMAT_UNKNOWN),
+			/*	mFormat(TEX_FORMAT_UNKNOWN),*/
 				mLoadFromMemory(false),
 				mMemData(nullptr),
-				mMemSize(0)
+				mMemSize(0),
+				mType(RESOURCE_DIM_TEX_2D)
 			{}
 		};
 
