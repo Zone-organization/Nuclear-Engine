@@ -5,12 +5,18 @@
 #include "Engine\Graphics\GraphicsEngine.h"
 #include <Core\Logger.h>
 
+
 #define EXPOSE_FREEIMAGE_IMPORTER
 #define EXPOSE_ASSIMP_IMPORTER
 #include <Engine\Importers\AssimpImporter.h>
 #include <Engine\Importers\FreeImageImporter.h>
 #include <utility>
 #include <Core\FileSystem.h>
+
+#include <Engine\ECS\Scene.h>
+#include <cereal/archives/json.hpp>
+#include <sstream>
+#include <Engine\Components\Components.h>
 
 namespace Nuclear {
 	namespace Managers {
@@ -318,6 +324,29 @@ namespace Nuclear {
 				TextureCube_Load(Paths.at(5), Desc) };
 
 			return result;
+		}
+
+		void AssetManager::SaveScene(ECS::Scene* scene)
+		{
+			std::stringstream storage;
+
+			{
+				// output finishes flushing its contents when it goes out of scope
+				cereal::JSONOutputArchive output{ storage };
+				entt::snapshot{ scene->GetRegistry()}.entities(output).component<
+					Components::EntityInfoComponent/*,
+					Components::CameraComponent,
+Components::MeshComponent,
+Components::ColliderComponent,
+Components::RigidBodyComponent,
+Components::DirLightComponent,
+Components::PointLightComponent,
+Components::SpotLightComponent,
+Components::AnimatorComponent,
+Components::ScriptComponent*/
+
+				>(output);
+			}
 		}
 
 		//Assets::Script& AssetManager::ImportScript(const Core::Path& Path)

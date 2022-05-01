@@ -1,5 +1,4 @@
 #pragma once
-#include <Core/Game.h>
 #include <Core/Input.h>
 #include <Core/Window.h>
 #include <Core/Path.h>

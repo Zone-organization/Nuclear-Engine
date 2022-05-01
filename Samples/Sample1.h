@@ -25,7 +25,7 @@ void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manage
 	}
 	ImGui::End();
 }
-class Sample1 : public Core::Game
+class Sample1 : public Game
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
@@ -62,14 +62,13 @@ class Sample1 : public Core::Game
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
 	Rendering::DefferedRenderingPipeline DefferedPipeline;
 
-	//ECS
-	ECS::Scene ModelsScene;
 	ECS::Entity ECube;
 	ECS::Entity ECyborg;
 	ECS::Entity ENanosuit;
 	ECS::Entity EBob;
 	ECS::Entity EVampire;
 
+	ECS::Scene Scene;
 	ECS::Entity ECamera;
 	ECS::Entity ELights;
 
@@ -199,12 +198,12 @@ public:
 		TCube.SetPosition(Math::Vector3(2.0f, -1.75f, 2.0f));
 		TCube.SetScale(Math::Vector3(2.f, 2.f, 2.f));
 
-		ECube = ModelsScene.CreateEntity("Cube", TCube);
-		ENanosuit = ModelsScene.CreateEntity("Nanosuit", TNansosuit);
-		ECyborg = ModelsScene.CreateEntity("Cyborg", TCyborg);
-		EBob = ModelsScene.CreateEntity("Bob", TBob);
-		EVampire = ModelsScene.CreateEntity("Vampire" , TVampire);
-		ELights = ModelsScene.CreateEntity("Lights");
+		ECube = Scene.CreateEntity("Cube", TCube);
+		ENanosuit = Scene.CreateEntity("Nanosuit", TNansosuit);
+		ECyborg = Scene.CreateEntity("Cyborg", TCyborg);
+		EBob = Scene.CreateEntity("Bob", TBob);
+		EVampire = Scene.CreateEntity("Vampire" , TVampire);
+		ELights = Scene.CreateEntity("Lights");
 
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
 		ELights.AddComponent<Components::DirLightComponent>();
@@ -221,7 +220,7 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = ModelsScene.GetSystemManager().Add<Systems::RenderSystem>();
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
@@ -247,14 +246,14 @@ public:
 	{
 		mAssetManager->Initialize();
 
-		ECamera = ModelsScene.CreateEntity();
+		ECamera = Scene.CreateEntity();
 		ECamera.AddComponent<Components::SpotLightComponent>();
 		ECamera.AddComponent<Components::CameraComponent>(&Camera);
 
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
-		mCameraSystem = ModelsScene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
-		mLightingSystem = ModelsScene.GetSystemManager().Add<Systems::LightingSystem>();
+		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
 
 		SetupEntities();
 
@@ -266,7 +265,7 @@ public:
 
 		Renderer->GetBackground().SetSkybox(&Skybox);
 
-		Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
+		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
@@ -296,36 +295,36 @@ public:
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->ResizeRenderTargets(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
-		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
 
-		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_LEFT_SHIFT) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.MovementSpeed = 10;
 		else
 			Camera.MovementSpeed = 4.5;
 
 		//Change Mouse Mode
-		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
 			isMouseDisabled = true;
-			Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
+			Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 		}
-		if (Core::Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_M) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_M) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
 			isMouseDisabled = false;
-			Core::Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
+			Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 		}
 
 		Camera.UpdateBuffer();
@@ -342,7 +341,7 @@ public:
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
-		ModelsScene.Update(dt);
+		Scene.Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample1: Basic Rendering");
@@ -397,11 +396,11 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::GetInstance()->EndGame();
+				return Engine::GetInstance()->EndGame();
 			}
 
 			ImGui::End();
-			EntityExplorer(&ModelsScene);
+			EntityExplorer(&Scene);
 		}
 	}
 

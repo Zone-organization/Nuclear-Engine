@@ -155,7 +155,7 @@ namespace Nuclear
 
 		void RenderingPipeline::InstantRender(Assets::Mesh* mesh, Assets::Material* material)
 		{
-			if (Core::Engine::GetInstance()->isDebug())
+			if (Engine::GetInstance()->isDebug())
 			{
 				if (mesh == nullptr)
 				{

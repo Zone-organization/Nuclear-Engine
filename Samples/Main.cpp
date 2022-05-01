@@ -34,7 +34,7 @@ RENDER_DEVICE_TYPE SelectRenderer()
 
 int main(int argc, char* argv[])
 {
-	Core::EngineStartupDesc desc;
+	EngineStartupDesc desc;
 
 	/*std::cout << "Auto Initialize? \n"
 		<< "1) Yes \n"
@@ -45,29 +45,29 @@ int main(int argc, char* argv[])
 //	if (i == 2)
 	//{
 		desc.Renderer = SelectRenderer();
-	//	Core::Engine::GetInstance()->Start(desc);
+	//	Engine::GetInstance()->Start(desc);
 
 	//}
 	//else
 	//{
-	//	Core::EngineStartupDesc desc;
-	//	Core::Engine::GetInstance()->Start(desc);
+	//	EngineStartupDesc desc;
+	//	Engine::GetInstance()->Start(desc);
 	//}
 
-	//Core::EngineStartupDesc desc;
+	//EngineStartupDesc desc;
 	desc.mEngineWindowDesc.WindowWidth = 1280;
 	desc.mEngineWindowDesc.WindowHeight = 720;
 
-	Core::Engine::GetInstance()->Start(desc);
+	Engine::GetInstance()->Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
 
-	while (!Core::Engine::GetInstance()->ShouldClose())
+	while (!Engine::GetInstance()->ShouldClose())
 	{
 		SampleSelector selector;
-		Core::Engine::GetInstance()->SetGame(&selector);
-		Core::Engine::GetInstance()->LoadGame();
-		Core::Engine::GetInstance()->RunGame();
+		Engine::GetInstance()->SetGame(&selector);
+		Engine::GetInstance()->LoadGame();
+		Engine::GetInstance()->RunGame();
 	}
 	return 0;
 }

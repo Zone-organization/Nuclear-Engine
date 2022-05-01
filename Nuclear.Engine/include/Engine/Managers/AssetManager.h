@@ -9,6 +9,10 @@
 #define MAX_BONE_INFLUENCE 4
 namespace Nuclear 
 {
+	namespace ECS
+	{
+		class Scene;
+	}
 	namespace Managers
 	{
 		enum ASSET_MANAGER_FLUSH_FLAGS
@@ -116,6 +120,8 @@ namespace Nuclear
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
 			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::ImageLoadingDesc& Desc);
 
+
+			void SaveScene(ECS::Scene* scene);
 
 			//Assets::Script& ImportScript(const Core::Path& Path);
 

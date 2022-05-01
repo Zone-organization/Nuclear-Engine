@@ -38,279 +38,275 @@
 
 
 namespace Nuclear {
-	namespace Core {
+	static std::string MajorVersion = "0";
+	static std::string MinorVersion = "001";
 
-		static std::string MajorVersion = "0";
-		static std::string MinorVersion = "001";
+	static Engine* engine = nullptr;
 
-		static Engine* engine = nullptr;
+	void PrintIntroLog();
+	void ResizeCallback(GLFWwindow* window, int Width, int Height)
+	{
+		Engine::GetInstance()->GetMainWindow()->UpdateSize();
+		Engine::GetInstance()->GetGame()->OnWindowResize(Width, Height);
+	}
+	bool Engine::Start(const EngineStartupDesc& desc)
+	{
+		Core::Logger::Initialize();
+		PrintIntroLog();
 
-		void PrintIntroLog();
-		void ResizeCallback(GLFWwindow* window, int Width, int Height)
+		//Create platform specific app (window)
+		Core::Window::InitializeGLFW();
+
+		if (!MainWindow.Create(desc.mEngineWindowDesc))
 		{
-			Core::Engine::GetInstance()->GetMainWindow()->UpdateSize();
-			Core::Engine::GetInstance()->GetGame()->OnWindowResize(Width, Height);
+			NUCLEAR_FATAL("[Engine] Failed To Create Window...");
 		}
-		bool Engine::Start(const EngineStartupDesc& desc)
+		//Application::Start(desc.mAppdesc);
+
+		glfwSetFramebufferSizeCallback(MainWindow.GetRawWindowPtr(), ResizeCallback);
+
+		MainWindow.SetMouseInputMode(Core::Input::MouseInputMode::Normal);
+
+		if (!Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc))
 		{
-			Core::Logger::Initialize();
-			PrintIntroLog();
+			NUCLEAR_FATAL("[Engine] GraphicsEngine Failed to initalize...");
+			return false;
+		}
+		//Initialize Context
+		Graphics::Context::Initialize(desc.Renderer, desc.mGraphicsEngineDesc);
+		Assets::DefaultMeshes::Initialize();
 
-			//Create platform specific app (window)
-			Core::Window::InitializeGLFW();
 
-			if (!MainWindow.Create(desc.mEngineWindowDesc))
+		ImGui::CreateContext();
+		ImGui_ImplGlfw_InitForOther(MainWindow.GetRawWindowPtr(), true);
+		ImGui_Impl_Init();
+		ImGui_Impl_CreateDeviceObjects();
+		NUCLEAR_INFO("[Engine] ImGUI Initalized.");
+
+
+		if (desc.AutoInitAudioEngine)
+			Audio::AudioEngine::Initialize();
+
+
+
+		if (desc.AutoInitPhysXEngine)
+		{
+			if (!PhysX::PhysXEngine::Initialize(desc.mPhysXEngineDesc))
 			{
-				NUCLEAR_FATAL("[Engine] Failed To Create Window...");
-			}
-			//Application::Start(desc.mAppdesc);
-
-			glfwSetFramebufferSizeCallback(MainWindow.GetRawWindowPtr(), ResizeCallback);
-
-			MainWindow.SetMouseInputMode(Core::Input::MouseInputMode::Normal);
-
-			if (!Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc))
-			{
-				NUCLEAR_FATAL("[Engine] GraphicsEngine Failed to initalize...");
+				NUCLEAR_FATAL("[Engine] PhysXEngine Failed to auto Initialize!");
 				return false;
 			}
-			//Initialize Context
-			Graphics::Context::Initialize(desc.Renderer, desc.mGraphicsEngineDesc);
-			Assets::DefaultMeshes::Initialize();
+		}
+		gisDebug = desc.Debug;
+		GamePtr = &Defaultgame;
 
+		int width2, height2;
+		GetMainWindow()->GetSize(width2, height2);
 
-			ImGui::CreateContext();
-			ImGui_ImplGlfw_InitForOther(MainWindow.GetRawWindowPtr(), true);
-			ImGui_Impl_Init();
-			ImGui_Impl_CreateDeviceObjects();
-			NUCLEAR_INFO("[Engine] ImGUI Initalized.");
+		NUCLEAR_INFO("[Engine] Nuclear Engine has been initalized successfully!");
+		return true;
+	}
 
+	Engine* Engine::GetInstance()
+	{
+		if (engine == nullptr)
+		{
+			engine = new Engine();
+		}
+		return engine;
 
-			if (desc.AutoInitAudioEngine)
-				Audio::AudioEngine::Initialize();
+	}
 
+	void Engine::Shutdown()
+	{
+		NUCLEAR_INFO("[Engine] Shutting Down Engine.");
 
+		GamePtr = &Defaultgame;
+		Graphics::Context::ShutDown();
+		Audio::AudioEngine::Shutdown();
+		Graphics::GraphicsEngine::Shutdown();
+		MainWindow.Destroy();
+		//Graphics::ImGui_Renderer::Shutdown();
 
-			if (desc.AutoInitPhysXEngine)
+		NUCLEAR_INFO("------------------- -Nuclear Engine Has Shutdown- -----------------------");
+	}
+
+	void Engine::BeginFrame()
+	{
+		ImGui_Impl_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void Engine::EndFrame()
+	{
+		ImGui::Render();
+		ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
+		Graphics::Context::GetSwapChain()->Present();
+	}
+	Core::Window* Engine::GetMainWindow()
+	{
+		return &MainWindow;
+	}
+	void Engine::SetGame(Game* YourGame)
+	{
+		GamePtr = YourGame;
+	}
+	void Engine::LoadGame()
+	{
+		if (GamePtr != nullptr)
+		{
+			if (GamePtr->GetGameInfo() != nullptr)
 			{
-				if (!PhysX::PhysXEngine::Initialize(desc.mPhysXEngineDesc))
-				{
-					NUCLEAR_FATAL("[Engine] PhysXEngine Failed to auto Initialize!");
-					return false;
-				}
+				NUCLEAR_INFO("[Engine] Loading Game: '{0}' - Ver: '{1}' - Dev: '{2}'",
+					GamePtr->GetGameInfo()->Name,
+					GamePtr->GetGameInfo()->Version,
+					GamePtr->GetGameInfo()->Developer);
 			}
-			gisDebug = desc.Debug;
-			GamePtr = &Defaultgame;
+			else {
+				NUCLEAR_INFO("[Engine] Loading Unnamed Game.");
 
-			int width2, height2;
-			GetMainWindow()->GetSize(width2, height2);
-
-			NUCLEAR_INFO("[Engine] Nuclear Engine has been initalized successfully!");
-			return true;
-		}
-
-		Engine* Engine::GetInstance()
-		{
-			if (engine == nullptr)
-			{
-				engine = new Engine();
 			}
-			return engine;
-
+			SetState(Engine::State::Initializing);
+			GamePtr->Initialize();
+			SetState(Engine::State::Loading);
+			GamePtr->Load();
 		}
+	}
 
-		void Engine::Shutdown()
+	void Engine::RunGame()
+	{
+		if (GamePtr != nullptr)
 		{
-			NUCLEAR_INFO("[Engine] Shutting Down Engine.");
+			NUCLEAR_INFO("[Engine] Running Game.");
 
-			GamePtr = &Defaultgame;
-			Graphics::Context::ShutDown();
-			Audio::AudioEngine::Shutdown();
-			Graphics::GraphicsEngine::Shutdown();
-			MainWindow.Destroy();
-			//Graphics::ImGui_Renderer::Shutdown();
+			Engine::Game_Loop_Render();
+		}
+	}
 
-			NUCLEAR_INFO("------------------------ -Engine Has Shutdown- -----------------------");
-			NUCLEAR_INFO("-------------------------- -Nuclear Engine- --------------------------");
+	void Engine::EndGame()
+	{
+		if (GamePtr != nullptr)
+		{
+			SetState(Engine::State::ExitingRendering);
+			GamePtr->ExitRendering();
+			SetState(Engine::State::Shuttingdown);
+			GamePtr->Shutdown();
 		}
+		GamePtr = nullptr;
+	}
 
-		void Engine::BeginFrame()
-		{
-			ImGui_Impl_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-		}
+	bool Engine::ShouldClose()
+	{
+		return MainWindow.ShouldClose();
+	}
 
-		void Engine::EndFrame()
+	bool Engine::isDebug()
+	{
+		return gisDebug;
+	}
+
+	Game* Engine::GetGame()
+	{
+		return GamePtr;
+	}
+
+	void Engine::Game_Loop_Render()
+	{
+		SetState(Engine::State::Rendering);
+
+		Core::Utilities::Timer timer;
+
+		double SavedX = 0, SavedY = 0;
+
+		//Main Game Loop
+		while (!MainWindow.ShouldClose() && GamePtr != nullptr)
 		{
-			ImGui::Render();
-			ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
-			Graphics::Context::GetSwapChain()->Present();
-		}
-		Window* Engine::GetMainWindow()
-		{
-			return &MainWindow;
-		}
-		void Engine::SetGame(Game* YourGame)
-		{
-			GamePtr = YourGame;
-		}
-		void Engine::LoadGame()
-		{
-			if (GamePtr != nullptr)
+			MainWindow.PollEvents();
+
+			MainWindow.UpdateSize();
+
+			// per-frame time logic (ensure speed is constant through all platforms)
+			float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
+			GamePtr->DeltaTime = currentFrame - GamePtr->LastFrame;
+			GamePtr->LastFrame = currentFrame;
+			GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
+
+			BeginFrame();
+
+			//Mouse Movement Callback
+			double MousePosX, MousePosY;
+			MainWindow.GetMousePosition(&MousePosX, &MousePosY);
+			if (SavedX != MousePosX || SavedY != MousePosY)
 			{
-				if (GamePtr->GetGameInfo() != nullptr)
-				{
-					NUCLEAR_INFO("[Engine] Loading Game: '{0}' - Ver: '{1}' - Dev: '{2}'",
-						GamePtr->GetGameInfo()->Name,
-						GamePtr->GetGameInfo()->Version,
-						GamePtr->GetGameInfo()->Developer);
-				}
-				else {
-					NUCLEAR_INFO("[Engine] Loading Unnamed Game.");
-
-				}
-				SetState(Engine::State::Initializing);
-				GamePtr->Initialize();
-				SetState(Engine::State::Loading);
-				GamePtr->Load();
-			}
-		}
-
-		void Engine::RunGame()
-		{
-			if (GamePtr != nullptr)
-			{
-				NUCLEAR_INFO("[Engine] Running Game.");
-
-				Engine::Game_Loop_Render();
-			}
-		}
-
-		void Engine::EndGame()
-		{
-			if (GamePtr != nullptr)
-			{
-				SetState(Engine::State::ExitingRendering);
-				GamePtr->ExitRendering();
-				SetState(Engine::State::Shuttingdown);
-				GamePtr->Shutdown();
-			}
-			GamePtr = nullptr;
-		}
-
-		bool Engine::ShouldClose()
-		{
-			return MainWindow.ShouldClose();
-		}
-
-		bool Engine::isDebug()
-		{
-			return gisDebug;
-		}
-
-		Game* Engine::GetGame()
-		{
-			return GamePtr;
-		}
-
-		void Engine::Game_Loop_Render()
-		{
-			SetState(Engine::State::Rendering);
-
-			Core::Utilities::Timer timer;
-
-			double SavedX = 0, SavedY = 0;
-
-			//Main Game Loop
-			while (!MainWindow.ShouldClose() && GamePtr != nullptr)
-			{
-				MainWindow.PollEvents();
-
-				MainWindow.UpdateSize();
-
-				// per-frame time logic (ensure speed is constant through all platforms)
-				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
-				GamePtr->DeltaTime = currentFrame - GamePtr->LastFrame;
-				GamePtr->LastFrame = currentFrame;
-				GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
-
-				BeginFrame();
-
-				//Mouse Movement Callback
-				double MousePosX, MousePosY;
-				MainWindow.GetMousePosition(&MousePosX, &MousePosY);
-				if (SavedX != MousePosX || SavedY != MousePosY)
-				{
-					SavedX = MousePosX;
-					SavedY = MousePosY;
-					GamePtr->OnMouseMovement(static_cast<int>(SavedX), static_cast<int>(SavedY));
-				}
-
-				GamePtr->Update(GamePtr->DeltaTime);
-				GamePtr->Render(GamePtr->DeltaTime);
-
-				EndFrame();
-			}
-		}
-		
-		void Engine::SetState(const State & state)
-		{
-			Engine_State = state;
-			std::string name;
-			switch (Engine_State)
-			{
-				case Engine::State::Initializing:
-					name = "Initializing";
-					break;
-				case Engine::State::Loading:
-					name = "Loading";
-					break;
-				case Engine::State::Rendering:
-					name = "Rendering";
-					break;
-				case Engine::State::ExitingRendering:
-					name = "Exiting Rendering";
-					break;
-				case Engine::State::Shuttingdown:
-					name = "Shutting down";
-					break;
-				default:
-					name = "Unknown";
-					break;
+				SavedX = MousePosX;
+				SavedY = MousePosY;
+				GamePtr->OnMouseMovement(static_cast<int>(SavedX), static_cast<int>(SavedY));
 			}
 
-			NUCLEAR_INFO("[Engine] Game state changed to '{0}'" , name );
+			GamePtr->Update(GamePtr->DeltaTime);
+			GamePtr->Render(GamePtr->DeltaTime);
+
+			EndFrame();
+		}
+	}
+
+	void Engine::SetState(const State& state)
+	{
+		Engine_State = state;
+		std::string name;
+		switch (Engine_State)
+		{
+		case Engine::State::Initializing:
+			name = "Initializing";
+			break;
+		case Engine::State::Loading:
+			name = "Loading";
+			break;
+		case Engine::State::Rendering:
+			name = "Rendering";
+			break;
+		case Engine::State::ExitingRendering:
+			name = "Exiting Rendering";
+			break;
+		case Engine::State::Shuttingdown:
+			name = "Shutting down";
+			break;
+		default:
+			name = "Unknown";
+			break;
 		}
 
-		void PrintIntroLog()
-		{
-			NUCLEAR_INFO("-------------------------- -Nuclear Engine- --------------------------");
-			NUCLEAR_INFO("------------------------- Zone Organization --------------------------");
-			NUCLEAR_INFO("[Engine] Starting Engine...");
-			NUCLEAR_INFO("[Engine] Engine Build: '{0}'.'{1}'  On: '{2}' At: '{3}'", MajorVersion , MinorVersion , __DATE__ , __TIME__);
+		NUCLEAR_INFO("[Engine] Game state changed to '{0}'", name);
+	}
 
-//			NUCLEAR_INFO("[Engine] Built For: ");
+	void PrintIntroLog()
+	{
+		NUCLEAR_INFO("-------------------------- -Nuclear Engine- --------------------------");
+		NUCLEAR_INFO("------------------------- Zone Organization --------------------------");
+		NUCLEAR_INFO("[Engine] Starting Engine...");
+		NUCLEAR_INFO("[Engine] Engine Build: '{0}'.'{1}'  On: '{2}' At: '{3}'", MajorVersion, MinorVersion, __DATE__, __TIME__);
 
-//#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
-//			NUCLEAR_INFO("Windows-PC 32 Bit");
-//#endif
-//
-//#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
-//			NUCLEAR_INFO("Windows-PC 64 bit");
-//#endif
-//
-//#ifdef 	_DEBUG
-//			NUCLEAR_INFO("  [DEBUG Build]\n");
-//#endif
-//
-//#ifdef 	NDEBUG
-//			NUCLEAR_INFO("  [RELEASE Build]\n");
-//#endif
+		//			NUCLEAR_INFO("[Engine] Built For: ");
+
+		//#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_32BIT
+		//			NUCLEAR_INFO("Windows-PC 32 Bit");
+		//#endif
+		//
+		//#ifdef 	NUCLEAR_PLATFORM_WINDOWS_PC_64BIT
+		//			NUCLEAR_INFO("Windows-PC 64 bit");
+		//#endif
+		//
+		//#ifdef 	_DEBUG
+		//			NUCLEAR_INFO("  [DEBUG Build]\n");
+		//#endif
+		//
+		//#ifdef 	NDEBUG
+		//			NUCLEAR_INFO("  [RELEASE Build]\n");
+		//#endif
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4067)
 #endif
-		}
 	}
 }

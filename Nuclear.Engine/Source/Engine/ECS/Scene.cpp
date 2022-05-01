@@ -1,7 +1,7 @@
 #include <Engine\ECS\Scene.h>
-#include <Engine\Components\MeshComponent.h>
+#include <cereal/archives/json.hpp>
+#include <sstream>
 #include <Engine\Components\EntityInfoComponent.h>
-#include<Core\Parsers\XMLParser.h>
 
 namespace Nuclear
 {
@@ -61,22 +61,20 @@ namespace Nuclear
 			return Factory;
 		}
 
-		SceneLoader::SceneLoader()
+		void Scene::Save()
 		{
-		}
-		SceneLoader::~SceneLoader()
-		{
-		}
-		Scene* SceneLoader::LoadScene(Core::Path path)
-		{
-			using namespace Core::Parsers;
-			XMLDocument SceneDoc;
-			SceneDoc.LoadFile(path.mRealPath.c_str());
+			std::stringstream storage;
 
-			XMLElement* root = SceneDoc.FirstChildElement();
-			//root.
+			entt::registry destination;
 
-			return nullptr;
+			{
+				// output finishes flushing its contents when it goes out of scope
+				cereal::JSONOutputArchive output{ storage };
+				entt::snapshot{ Registry }.entities(output).component<Components::EntityInfoComponent>(output);
+			}
+
+			cereal::JSONInputArchive input{ storage };
+			entt::snapshot_loader{ destination }.entities(input).component<Components::EntityInfoComponent>(input);
 		}
 	}
 }

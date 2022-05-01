@@ -6,7 +6,7 @@
 #include "Sample4.h"
 #include "Sample5.h"
 
-class SampleSelector : public Core::Game
+class SampleSelector : public Game
 {
 public:
 	//static SampleSelector* Instance;
@@ -25,17 +25,17 @@ public:
 	void StartSample()
 	{
 		ImGui::End();
-		Core::Engine::GetInstance()->EndFrame();
+		Engine::GetInstance()->EndFrame();
 
-		Core::Engine::GetInstance()->GetGame()->SetDefaultAssetManager(&AssetLoader);
-		Core::Engine::GetInstance()->LoadGame();
-		Core::Engine::GetInstance()->RunGame();
-		Core::Engine::GetInstance()->EndGame();
+		Engine::GetInstance()->GetGame()->SetDefaultAssetManager(&AssetLoader);
+		Engine::GetInstance()->LoadGame();
+		Engine::GetInstance()->RunGame();
+		Engine::GetInstance()->EndGame();
 
-		//if (Core::Engine::GetInstance()->GetGame() != this)
+		//if (Engine::GetInstance()->GetGame() != this)
 		//{
-		//	Core::Engine::GetInstance()->SetGame(this);
-		//	Core::Engine::GetInstance()->RunGame();
+		//	Engine::GetInstance()->SetGame(this);
+		//	Engine::GetInstance()->RunGame();
 		//}
 	}
 
@@ -63,31 +63,31 @@ public:
 		if (ImGui::Button("Sample1 : Model Loading & Animation"))
 		{
 			Sample1 demo;
-			Core::Engine::GetInstance()->SetGame(&demo);
+			Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 		if (ImGui::Button("Sample2 : PhysX Test"))
 		{
 			Sample2 demo;
-			Core::Engine::GetInstance()->SetGame(&demo);
+			Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 		if (ImGui::Button("Sample3 : Script Test"))
 		{
 			Sample3 demo;
-			Core::Engine::GetInstance()->SetGame(&demo);
+			Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 		if (ImGui::Button("Sample4 : Sponza Scene Rendering"))
 		{
 			Sample4 demo;
-			Core::Engine::GetInstance()->SetGame(&demo);
+			Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 		if (ImGui::Button("Sample5 : Advanced Rendering Effects"))
 		{
 			Sample5 demo;
-			Core::Engine::GetInstance()->SetGame(&demo);
+			Engine::GetInstance()->SetGame(&demo);
 			return StartSample();
 		}
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

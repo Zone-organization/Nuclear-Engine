@@ -27,6 +27,7 @@ namespace Nuclear
 			entt::registry& GetRegistry();
 			EntityFactory& GetFactory();
 
+			void Save();
 		private:
 			std::string mName;
 			EntityFactory Factory;
@@ -34,15 +35,5 @@ namespace Nuclear
 			SystemManager Systems;
 
 		};
-
-		class NEAPI SceneLoader {
-		public:
-			SceneLoader();
-			~SceneLoader();
-
-			Scene* LoadScene(Core::Path path);
-		};
-
-
 	}
 }
