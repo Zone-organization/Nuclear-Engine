@@ -6,6 +6,8 @@ namespace Nuclear
 	{
 		MeshComponent::MeshComponent()
 		{
+			mMesh = nullptr;
+			mMaterial = nullptr;
 		}
 		MeshComponent::MeshComponent(Assets::Mesh * mesh)
 		{

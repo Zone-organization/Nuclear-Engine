@@ -1,12 +1,36 @@
 #include "EditorUI.h"
 #include "Nuclear.Editor.h"
+#include <type_traits>
+#include <Engine/ECS/entt/core/type_info.hpp>
+using namespace entt::literals;
+
+#define COMPONENTS 	Components::EntityInfoComponent,\
+					Components::CameraComponent,    \
+					Components::MeshComponent,      \
+					Components::ColliderComponent,  \
+					Components::RigidBodyComponent, \
+					Components::DirLightComponent,  \
+					Components::PointLightComponent,\
+					Components::SpotLightComponent, \
+					Components::AnimatorComponent,  \
+					Components::ScriptComponent    
 
 namespace Nuclear::Editor 
 {
+	static std::vector<entt::id_type> AllComponentsIDs;
+	template <class ...Component>
+	std::vector<entt::id_type> GetAllComponentsHashes()
+	{
+		std::vector<entt::id_type> result;
+		((result.push_back(entt::type_id<Component>().hash())), ...);
+		return result;
+	}
+
 	EditorUI::EditorUI(NuclearEditor* editor)
 	{
 		mEditorInstance = editor;
 		pActiveProject = nullptr;
+		AllComponentsIDs = GetAllComponentsHashes<COMPONENTS>();
 	}
 	void EditorUI::SetProject(Project* project)
 	{
@@ -64,6 +88,92 @@ namespace Nuclear::Editor
 			ImGui::EndMainMenuBar();
 		}
 	}
+
+
+	template<typename... Components>
+	std::vector<entt::id_type> GetAvailableComponents(entt::entity& entity, entt::registry& reg)
+	{
+		std::vector<entt::id_type> all_comp_vec(AllComponentsIDs);
+
+		std::vector<entt::id_type> entity_comp_vec;
+		for (auto [id, storage] : reg.storage())
+		{
+			if (storage.contains(entity))
+			{
+				//id is hashed component 
+				entity_comp_vec.push_back(id);
+			}
+		}
+
+		//delete added components
+		for (auto j : entity_comp_vec)
+		{
+			for (auto it = all_comp_vec.begin(); it != all_comp_vec.end();)
+			{
+				if (*it == j)
+					it = all_comp_vec.erase(it);
+				else
+					++it;
+
+			}
+		}
+
+		return all_comp_vec;
+	}
+
+	template<typename Component>
+	const void AddComponentByHashImp(entt::entity& entity, entt::registry& reg, entt::id_type id)
+	{
+		if (entt::type_id<Component>().hash() == id)
+		{
+			reg.emplace<Component>(entity);
+		}
+	}
+
+	template<typename... Component>
+	const void AddComponentByHash(entt::entity& entity, entt::registry& reg, entt::id_type id)
+	{
+		( AddComponentByHashImp<Component>(entity,reg,id), ...);
+	}
+
+
+	//template<typename Component>
+	//const void AddComponentIfDoesntExist(entt::entity& entity, entt::registry& reg, Component& component)
+	//{
+	//	if (!reg.all_of<Component>(entity))
+	//	{
+	//		return reg.emplace<Component>(entity);
+	//	}
+	//}
+
+	//For display only
+	const std::string GetComponentName(entt::id_type id)
+	{
+		if (id == entt::type_id<Components::EntityInfoComponent>().hash())	
+			return "Entity Info Component";		
+		else if (id == entt::type_id<Components::CameraComponent>().hash())
+			return "Camera Component";
+		else if (id == entt::type_id<Components::MeshComponent>().hash())
+			return "Mesh Component";
+		else if (id == entt::type_id<Components::ColliderComponent>().hash())
+			return "Collider Component";
+		else if (id == entt::type_id<Components::RigidBodyComponent>().hash())
+			return "Rigid Body Component";
+		else if (id == entt::type_id<Components::DirLightComponent>().hash())
+			return "Directional Light Component";
+		else if (id == entt::type_id<Components::PointLightComponent>().hash())
+			return "Point Light Component";
+		else if (id == entt::type_id<Components::SpotLightComponent>().hash())
+			return "Spot Light Component";
+		else if (id == entt::type_id<Components::AnimatorComponent>().hash())
+			return "Animator Component";
+		else if (id == entt::type_id<Components::ScriptComponent>().hash())
+			return "Script Component";
+
+
+		return "Unknown";
+	}
+
 
 	void EditorUI::RenderEntityEditor(entt::entity& entity, entt::registry& reg, Components::EntityInfoComponent& Einfo)
 	{
@@ -306,7 +416,30 @@ namespace Nuclear::Editor
 
 				//Add Component
 				{
-					
+					// you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
+					if (ImGui::Button("Add Component.."))
+						ImGui::OpenPopup("new_component_selector");
+				//	ImGui::SameLine();
+
+					if (ImGui::BeginPopup("new_component_selector"))
+					{
+						//First build vector of available components names
+						auto avail_comps = GetAvailableComponents<COMPONENTS>(entity, reg);
+
+						ImGui::Text("Available Components:");
+						ImGui::Separator();
+
+						for (auto i : avail_comps)
+						{
+							if (ImGui::Selectable(GetComponentName(i).c_str()))
+							{
+								AddComponentByHash<COMPONENTS>(entity, reg, i);
+							}
+						}
+
+						ImGui::EndPopup();
+					}
+
 				}
 				ImGui::PopID();
 			
@@ -325,7 +458,6 @@ namespace Nuclear::Editor
 			for (auto entity : view)
 			{
 				auto& Einfo = view.get<Components::EntityInfoComponent>(entity);
-
 				auto index = (Uint32)entity;
 
 				ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
@@ -354,7 +486,7 @@ namespace Nuclear::Editor
 
 		if(ImGui::Button("Add Entity"))
 		{
-			mScene->CreateEntity();
+			auto entity = mScene->CreateEntity();	
 		}
 		ImGui::End();
 	}
