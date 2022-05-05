@@ -1,31 +1,31 @@
 #pragma once
 #include "Common.h"
-
-void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
-{
-	using namespace Graphics;
-	std::string name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
-
-	if (Manager)
-		name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
-	else
-		name = Utilities::int_to_hex<Uint32>(material->GetName()).c_str();
-
-	ImGui::Begin(name.c_str());
-
-	for (int i = 0; i < material->mPixelShaderTextures.size(); i++)
-	{
-		ImGui::Text(std::string("TextureSet Index: " + std::to_string(i)).c_str());
-		for (int j = 0; j < material->mPixelShaderTextures.at(i).mData.size(); j++)
-		{
-			ImGui::Image(&material->mPixelShaderTextures.at(i).mData.at(j).mTex, ImVec2(128, 128));
-			ImGui::SameLine();
-		}
-		ImGui::NewLine();
-	}
-	ImGui::End();
-}
-class Sample1 : public Game
+//
+//void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
+//{
+//	using namespace Graphics;
+//	std::string name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
+//
+//	if (Manager)
+//		name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
+//	else
+//		name = Utilities::int_to_hex<Uint32>(material->GetName()).c_str();
+//
+//	ImGui::Begin(name.c_str());
+//
+//	for (int i = 0; i < material->mPixelShaderTextures.size(); i++)
+//	{
+//		ImGui::Text(std::string("TextureSet Index: " + std::to_string(i)).c_str());
+//		for (int j = 0; j < material->mPixelShaderTextures.at(i).mData.size(); j++)
+//		{
+//			ImGui::Image(&material->mPixelShaderTextures.at(i).mData.at(j).mTex, ImVec2(128, 128));
+//			ImGui::SameLine();
+//		}
+//		ImGui::NewLine();
+//	}
+//	ImGui::End();
+//}
+class Sample1 : public Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
@@ -396,7 +396,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Engine::GetInstance()->EndGame();
+				return Engine::GetInstance()->EndClient();
 			}
 
 			ImGui::End();

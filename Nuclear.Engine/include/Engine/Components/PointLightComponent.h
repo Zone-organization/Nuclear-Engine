@@ -12,6 +12,14 @@ namespace Nuclear
 				Math::Vector4 Position;
 				Math::Vector4 Intensity_Attenuation;
 				Math::Vector4 Color;
+
+		/*		template<class Archive>
+				void serialize(Archive& archive)
+				{
+					archive(CEREAL_NVP(Position));
+					archive(CEREAL_NVP(Intensity_Attenuation));
+					archive(CEREAL_NVP(Color));
+				}*/
 			};
 		}
 
@@ -34,6 +42,13 @@ namespace Nuclear
 			Internal::Shader_PointLight_Struct GetInternalData();
 			Math::Vector3 GetInternalPosition();
 			void SetInternalPosition(Math::Vector3 pos);
+
+		/*	template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(CEREAL_NVP(mCastShadows));
+				archive(CEREAL_NVP(data));
+			}*/
 		protected:
 			Internal::Shader_PointLight_Struct data;
 		};

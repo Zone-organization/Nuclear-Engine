@@ -5,21 +5,29 @@
 namespace Nuclear {
 	namespace Managers { class AssetManager; }
 
-	struct NEAPI GameInfo
-	{
-		const char* Name;
-		const char* Version;
-		const char* Developer;
+	enum class ClientType {
+		Game,
+		Editor,
+		Test,
+		Unknown
 	};
 
-	class NEAPI Game
+	struct NEAPI ClientInfo
+	{
+		std::string mName;
+		std::string mVersion;
+		std::string mDeveloper;
+
+		ClientType mType = ClientType::Game;
+	};
+
+	class NEAPI Client
 	{
 	public:
-		Game();
-		Game(GameInfo* yourinfo);
-		~Game();
+		Client(const ClientInfo& yourinfo = ClientInfo());
+		~Client();
 
-		GameInfo* GetGameInfo();
+		ClientInfo GetClientInfo();
 
 		// Arranged function.
 		virtual void Initialize();	 // At Startup
@@ -36,9 +44,9 @@ namespace Nuclear {
 		// Helper Functions
 		virtual void LoadFinishUp();
 
-		void SetActiveScene(ECS::Scene* scene);
+		/*void SetActiveScene(ECS::Scene* scene);
 		ECS::Scene* GetActiveScene();
-
+		*/
 		void SetDefaultAssetManager(Managers::AssetManager* assetmanager);
 		Managers::AssetManager* GetDefaultAssetManager();
 
@@ -47,9 +55,8 @@ namespace Nuclear {
 		float DeltaTime = 0.0f;	// time between current frame and last frame
 		float LastFrame = 0.0f;
 	protected:
-		GameInfo* mGameinfo;
-		ECS::Scene*pScene;
+		ClientInfo minfo;
+		ECS::Scene* pScene;
 		Managers::AssetManager* mAssetManager;
-
 	};
 }

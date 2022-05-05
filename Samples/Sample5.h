@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 
-class Sample5 : public Game
+class Sample5 : public Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
@@ -408,7 +408,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Engine::GetInstance()->EndGame();
+				return Engine::GetInstance()->EndClient();
 			}
 
 			ImGui::End();

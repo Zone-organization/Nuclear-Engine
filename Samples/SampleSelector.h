@@ -6,7 +6,7 @@
 #include "Sample4.h"
 #include "Sample5.h"
 
-class SampleSelector : public Game
+class SampleSelector : public Client
 {
 public:
 	//static SampleSelector* Instance;
@@ -22,21 +22,14 @@ public:
 	{
 	//	Instance = this;
 	}
-	void StartSample()
+	void StartSample(Client* sample)
 	{
 		ImGui::End();
 		Engine::GetInstance()->EndFrame();
 
-		Engine::GetInstance()->GetGame()->SetDefaultAssetManager(&AssetLoader);
-		Engine::GetInstance()->LoadGame();
-		Engine::GetInstance()->RunGame();
-		Engine::GetInstance()->EndGame();
-
-		//if (Engine::GetInstance()->GetGame() != this)
-		//{
-		//	Engine::GetInstance()->SetGame(this);
-		//	Engine::GetInstance()->RunGame();
-		//}
+		sample->SetDefaultAssetManager(&AssetLoader);
+		Engine::GetInstance()->LoadClient(sample);
+		Engine::GetInstance()->EndClient();
 	}
 
 	void Load()
@@ -63,32 +56,27 @@ public:
 		if (ImGui::Button("Sample1 : Model Loading & Animation"))
 		{
 			Sample1 demo;
-			Engine::GetInstance()->SetGame(&demo);
-			return StartSample();
+			return StartSample(&demo);
 		}
 		if (ImGui::Button("Sample2 : PhysX Test"))
 		{
 			Sample2 demo;
-			Engine::GetInstance()->SetGame(&demo);
-			return StartSample();
+			return StartSample(&demo);
 		}
 		if (ImGui::Button("Sample3 : Script Test"))
 		{
 			Sample3 demo;
-			Engine::GetInstance()->SetGame(&demo);
-			return StartSample();
+			return StartSample(&demo);
 		}
 		if (ImGui::Button("Sample4 : Sponza Scene Rendering"))
 		{
 			Sample4 demo;
-			Engine::GetInstance()->SetGame(&demo);
-			return StartSample();
+			return StartSample(&demo);
 		}
 		if (ImGui::Button("Sample5 : Advanced Rendering Effects"))
 		{
 			Sample5 demo;
-			Engine::GetInstance()->SetGame(&demo);
-			return StartSample();
+			return StartSample(&demo);
 		}
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();

@@ -21,6 +21,7 @@ namespace Nuclear
 
 			std::string mName = std::string();
 		private:
+
 			std::unordered_map<Uint32, Assets::MaterialInstance> mMaterialInstances;
 		};
 	}

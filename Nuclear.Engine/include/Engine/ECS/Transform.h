@@ -1,7 +1,8 @@
 #pragma once
 #include <Core\NE_Common.h>
 #include <Core\Math\Math.h>
-#include <cereal\cereal.hpp>
+#include <cereal/access.hpp>
+
 namespace Nuclear
 {
 	namespace ECS
@@ -39,18 +40,8 @@ namespace Nuclear
 
 			Math::Matrix4 GetWorldMatrix();
 
-			template<class Archive>
-			void serialize(Archive& archive)
-			{
-				archive(CEREAL_NVP(mLocalPosition));
-				archive(CEREAL_NVP(mLocalRotation));
-				archive(CEREAL_NVP(mLocalScale));
-				archive(CEREAL_NVP(mWorldPosition));
-			}
-
 			void Update();
-		private:
-
+		protected:
 			Math::Vector3 mLocalPosition;
 			Math::Quaternion mLocalRotation;
 			Math::Vector3 mLocalScale;
@@ -59,6 +50,8 @@ namespace Nuclear
 
 			Math::Matrix4 mWorldMatrix = Math::Matrix4(1.0f);
 			Byte mDirty = NONE;
+
+			friend class cereal::access;
 		};
 	}
 }

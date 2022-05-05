@@ -1,17 +1,18 @@
 #include <Engine\ECS\Scene.h>
 #include <cereal/archives/json.hpp>
 #include <sstream>
-#include <Engine\Components\EntityInfoComponent.h>
+#include <Engine\Components\Components.h>
+#include <Engine/Serialization/ComponentsArchive.h>
 
 namespace Nuclear
 {
 	namespace ECS
 	{
-		Scene::Scene(const std::string& name)
-			: mName(name), Factory(this), Systems(this)
+		Scene::Scene()
+			: mName("UnNamed"), Factory(this), Systems(this)
 		{
-
 		}
+
 		Scene::~Scene()
 		{
 		//	Entities.reset();
@@ -70,11 +71,19 @@ namespace Nuclear
 			{
 				// output finishes flushing its contents when it goes out of scope
 				cereal::JSONOutputArchive output{ storage };
-				entt::snapshot{ Registry }.entities(output).component<Components::EntityInfoComponent>(output);
+				entt::snapshot{ Registry }.entities(output).component<
+					Components::EntityInfoComponent,
+					Components::MeshComponent
+
+				//	Components::DirLightComponent,
+				//	Components::PointLightComponent,
+				//	Components::SpotLightComponent
+				>(output);
 			}
 
 			cereal::JSONInputArchive input{ storage };
-			entt::snapshot_loader{ destination }.entities(input).component<Components::EntityInfoComponent>(input);
+			entt::snapshot_loader{ destination }.entities(input).component<Components::EntityInfoComponent, Components::MeshComponent
+			>(input);
 		}
 	}
 }

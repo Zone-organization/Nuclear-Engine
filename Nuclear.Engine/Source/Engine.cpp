@@ -47,7 +47,7 @@ namespace Nuclear {
 	void ResizeCallback(GLFWwindow* window, int Width, int Height)
 	{
 		Engine::GetInstance()->GetMainWindow()->UpdateSize();
-		Engine::GetInstance()->GetGame()->OnWindowResize(Width, Height);
+		Engine::GetInstance()->GetClient()->OnWindowResize(Width, Height);
 	}
 	bool Engine::Start(const EngineStartupDesc& desc)
 	{
@@ -98,7 +98,6 @@ namespace Nuclear {
 			}
 		}
 		gisDebug = desc.Debug;
-		GamePtr = &Defaultgame;
 
 		int width2, height2;
 		GetMainWindow()->GetSize(width2, height2);
@@ -121,7 +120,7 @@ namespace Nuclear {
 	{
 		NUCLEAR_INFO("[Engine] Shutting Down Engine.");
 
-		GamePtr = &Defaultgame;
+		pClient = nullptr;
 		Graphics::Context::ShutDown();
 		Audio::AudioEngine::Shutdown();
 		Graphics::GraphicsEngine::Shutdown();
@@ -148,52 +147,37 @@ namespace Nuclear {
 	{
 		return &MainWindow;
 	}
-	void Engine::SetGame(Game* YourGame)
-	{
-		GamePtr = YourGame;
-	}
-	void Engine::LoadGame()
-	{
-		if (GamePtr != nullptr)
-		{
-			if (GamePtr->GetGameInfo() != nullptr)
-			{
-				NUCLEAR_INFO("[Engine] Loading Game: '{0}' - Ver: '{1}' - Dev: '{2}'",
-					GamePtr->GetGameInfo()->Name,
-					GamePtr->GetGameInfo()->Version,
-					GamePtr->GetGameInfo()->Developer);
-			}
-			else {
-				NUCLEAR_INFO("[Engine] Loading Unnamed Game.");
 
-			}
+	void Engine::LoadClient(Client* client)
+	{
+		pClient = client;
+
+		if (pClient != nullptr)
+		{
+			NUCLEAR_INFO("[Engine] Loading Client: '{0}' - Ver: '{1}' - Dev: '{2}'",
+				pClient->GetClientInfo().mName,
+				pClient->GetClientInfo().mVersion,
+				pClient->GetClientInfo().mDeveloper);
+
 			SetState(Engine::State::Initializing);
-			GamePtr->Initialize();
+			pClient->Initialize();
 			SetState(Engine::State::Loading);
-			GamePtr->Load();
+			pClient->Load();
+
+			Engine::MainLoop();
 		}
 	}
 
-	void Engine::RunGame()
+	void Engine::EndClient()
 	{
-		if (GamePtr != nullptr)
-		{
-			NUCLEAR_INFO("[Engine] Running Game.");
-
-			Engine::Game_Loop_Render();
-		}
-	}
-
-	void Engine::EndGame()
-	{
-		if (GamePtr != nullptr)
+		if (pClient != nullptr)
 		{
 			SetState(Engine::State::ExitingRendering);
-			GamePtr->ExitRendering();
+			pClient->ExitRendering();
 			SetState(Engine::State::Shuttingdown);
-			GamePtr->Shutdown();
+			pClient->Shutdown();
 		}
-		GamePtr = nullptr;
+		pClient = nullptr;
 	}
 
 	bool Engine::ShouldClose()
@@ -206,12 +190,12 @@ namespace Nuclear {
 		return gisDebug;
 	}
 
-	Game* Engine::GetGame()
+	Client* Engine::GetClient()
 	{
-		return GamePtr;
+		return pClient;
 	}
 
-	void Engine::Game_Loop_Render()
+	void Engine::MainLoop()
 	{
 		SetState(Engine::State::Rendering);
 
@@ -219,8 +203,8 @@ namespace Nuclear {
 
 		double SavedX = 0, SavedY = 0;
 
-		//Main Game Loop
-		while (!MainWindow.ShouldClose() && GamePtr != nullptr)
+		//Main Client Loop
+		while (!MainWindow.ShouldClose() && pClient != nullptr)
 		{
 			MainWindow.PollEvents();
 
@@ -228,9 +212,9 @@ namespace Nuclear {
 
 			// per-frame time logic (ensure speed is constant through all platforms)
 			float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
-			GamePtr->DeltaTime = currentFrame - GamePtr->LastFrame;
-			GamePtr->LastFrame = currentFrame;
-			GamePtr->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
+			pClient->DeltaTime = currentFrame - pClient->LastFrame;
+			pClient->LastFrame = currentFrame;
+			pClient->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
 
 			BeginFrame();
 
@@ -241,11 +225,11 @@ namespace Nuclear {
 			{
 				SavedX = MousePosX;
 				SavedY = MousePosY;
-				GamePtr->OnMouseMovement(static_cast<int>(SavedX), static_cast<int>(SavedY));
+				pClient->OnMouseMovement(static_cast<int>(SavedX), static_cast<int>(SavedY));
 			}
 
-			GamePtr->Update(GamePtr->DeltaTime);
-			GamePtr->Render(GamePtr->DeltaTime);
+			pClient->Update(pClient->DeltaTime);
+			pClient->Render(pClient->DeltaTime);
 
 			EndFrame();
 		}
@@ -277,7 +261,7 @@ namespace Nuclear {
 			break;
 		}
 
-		NUCLEAR_INFO("[Engine] Game state changed to '{0}'", name);
+		NUCLEAR_INFO("[Engine] Client state changed to '{0}'", name);
 	}
 
 	void PrintIntroLog()

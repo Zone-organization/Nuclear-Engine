@@ -12,6 +12,13 @@ namespace Nuclear
 			{
 				Math::Vector4 Direction;
 				Math::Vector4 Color;
+
+				//template<class Archive>
+				//void serialize(Archive& archive)
+				//{
+				//	archive(CEREAL_NVP(Direction));
+				//	archive(CEREAL_NVP(Color));
+				//}
 			};
 		}
 
@@ -29,6 +36,13 @@ namespace Nuclear
 
 			bool mCastShadows = false;
 			Internal::Shader_DirLight_Struct GetInternalData();
+
+	/*		template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(CEREAL_NVP(mCastShadows));
+				archive(CEREAL_NVP(data));
+			}*/
 		protected:
 			Internal::Shader_DirLight_Struct data;
 		};

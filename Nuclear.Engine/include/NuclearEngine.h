@@ -12,6 +12,7 @@ _____________/BOOOM\_____________
 
 #include <Core/Core.h>
 #include <Engine.h>
+#include <Client.h>
 #include <Engine/ECS/ECS.h>
 #include <Engine/Animation/Animation.h>
 #include <Engine/Components/Components.h>

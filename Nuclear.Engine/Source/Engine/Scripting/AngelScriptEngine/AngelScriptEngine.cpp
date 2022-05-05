@@ -74,7 +74,7 @@ namespace Nuclear
 			{
 				// Create a new script module
 				asIScriptModule* ptr = static_cast<asIScriptModule*>(scriptmodule->ScriptingModulePtr);
-				int r = ptr->AddScriptSection(script->GetStringName().c_str(), scriptcode.c_str());
+				int r = ptr->AddScriptSection(script->GetName().c_str(), scriptcode.c_str());
 
 				if (r < 0)
 				{
@@ -103,9 +103,9 @@ namespace Nuclear
 				
 				for (auto i : scriptmodule->mImportedScripts)
 				{
-					std::string str = "void " + i.first->GetStringName() + "::";
+					std::string str = "void " + i.first->GetName() + "::";
 
-					asITypeInfo* type = ptr->GetTypeInfoByDecl(i.first->GetStringName().c_str());
+					asITypeInfo* type = ptr->GetTypeInfoByDecl(i.first->GetName().c_str());
 					auto dataptr = &scriptmodule->mImportedScripts.at(i.first);
 
 					auto constructor = type->GetFactoryByDecl("Script1 @Script1()");

@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 
-class Sample3 : public Game
+class Sample3 : public Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
@@ -202,7 +202,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Engine::GetInstance()->EndGame();
+				return Engine::GetInstance()->EndClient();
 			}
 			ImGui::End();
 

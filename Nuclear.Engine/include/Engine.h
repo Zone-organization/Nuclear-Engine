@@ -1,5 +1,5 @@
 #pragma once
-#include <Game.h>
+#include <Client.h>
 #include <Core\Window.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\PhysX\PhysXEngine.h>
@@ -45,11 +45,9 @@ namespace Nuclear
 		void EndFrame();
 
 		Core::Window* GetMainWindow();
-		void SetGame(Game* YourGame);
-
-		void LoadGame();
-		void RunGame();
-		void EndGame();
+	
+		void LoadClient(Client* client);
+		void EndClient();
 
 		void SetState(const State& state);
 
@@ -57,16 +55,15 @@ namespace Nuclear
 
 		bool isDebug();
 
-		Game* GetGame();
+		Client* GetClient();
 
 	private:
 		//Engine() {}
-		Game* GamePtr;
-		Game Defaultgame;
+		Client* pClient;
 		Core::Window MainWindow;
 
 		Engine::State Engine_State;
 		bool gisDebug = DEBUG_TRUE_BOOL;
-		void Game_Loop_Render();
+		void MainLoop();
 	};
 }

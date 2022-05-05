@@ -146,7 +146,7 @@ namespace Nuclear {
 				mHashedImagesPaths[hashedname] = Path;
 			}
 
-			image.SetName(hashedname);
+			image.SetName(Path.mInputPath);
 			mImportedImages[hashedname] = image;
 
 			result.SetImage(&mImportedImages[hashedname]);
@@ -332,7 +332,7 @@ namespace Nuclear {
 
 			{
 				// output finishes flushing its contents when it goes out of scope
-				cereal::JSONOutputArchive output{ storage };
+			/*	cereal::JSONOutputArchive output{storage};
 				entt::snapshot{ scene->GetRegistry()}.entities(output).component<
 					Components::EntityInfoComponent/*,
 					Components::CameraComponent,
@@ -345,7 +345,7 @@ Components::SpotLightComponent,
 Components::AnimatorComponent,
 Components::ScriptComponent*/
 
-				>(output);
+		///		>(output);
 			}
 		}
 

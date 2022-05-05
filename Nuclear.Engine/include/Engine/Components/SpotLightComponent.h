@@ -14,6 +14,16 @@ namespace Nuclear
 				Math::Vector4 Intensity_Attenuation;
 				Math::Vector4 InnerCutOf_OuterCutoff;
 				Math::Vector4 Color;
+
+				//template<class Archive>
+				//void serialize(Archive& archive)
+				//{
+				//	archive(CEREAL_NVP(Position));
+				//	archive(CEREAL_NVP(Direction));
+				//	archive(CEREAL_NVP(Intensity_Attenuation));
+				//	archive(CEREAL_NVP(InnerCutOf_OuterCutoff));
+				//	archive(CEREAL_NVP(Color));
+				//}
 			};
 		}
 
@@ -43,6 +53,13 @@ namespace Nuclear
 
 			bool mCastShadows = false;
 			Internal::Shader_SpotLight_Struct GetInternalData();
+
+			/*template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(CEREAL_NVP(mCastShadows));
+				archive(CEREAL_NVP(data));
+			}*/
 		protected:
 			Internal::Shader_SpotLight_Struct data;
 		};

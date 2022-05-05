@@ -249,9 +249,9 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 
 					if (meshcomponent->mMesh != nullptr)
 					{
-						if (meshcomponent->mMesh->GetStringName() != std::string(""))
+						if (meshcomponent->mMesh->GetName() != std::string(""))
 						{
-							ImGui::Text(meshcomponent->mMesh->GetStringName().c_str());
+							ImGui::Text(meshcomponent->mMesh->GetName().c_str());
 						}
 						else {
 							ImGui::Text("Unnamed Mesh");
@@ -259,9 +259,9 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 					}
 					if (meshcomponent->mMaterial != nullptr)
 					{
-						if (meshcomponent->mMaterial->GetStringName() != std::string(""))
+						if (meshcomponent->mMaterial->GetName() != std::string(""))
 						{
-							ImGui::Text(meshcomponent->mMaterial->GetStringName().c_str());
+							ImGui::Text(meshcomponent->mMaterial->GetName().c_str());
 						}
 						else {
 							ImGui::Text("Unnamed Material");
@@ -290,4 +290,4 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 	}
 	ImGui::End();
 }
-;
+

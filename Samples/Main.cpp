@@ -65,9 +65,7 @@ int main(int argc, char* argv[])
 	while (!Engine::GetInstance()->ShouldClose())
 	{
 		SampleSelector selector;
-		Engine::GetInstance()->SetGame(&selector);
-		Engine::GetInstance()->LoadGame();
-		Engine::GetInstance()->RunGame();
+		Engine::GetInstance()->LoadClient(&selector);
 	}
 	return 0;
 }

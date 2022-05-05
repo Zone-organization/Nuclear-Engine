@@ -12,7 +12,7 @@ namespace Nuclear
 
 		class NEAPI Scene {
 		public:
-			Scene(const std::string& name = "scene");
+			Scene();
 			~Scene();
 
 			//Creates a new entity and assign a transform component to it automatically
