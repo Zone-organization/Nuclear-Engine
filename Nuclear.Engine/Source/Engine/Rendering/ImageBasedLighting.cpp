@@ -32,10 +32,10 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
 				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
 
 				//Create Shaders
 				RefCntAutoPtr<IShader> VSShader;
@@ -104,17 +104,24 @@ namespace Nuclear
 				mCaptureDepthRT.Create(RTDesc);
 			}
 
-
+			{
+				mCaptureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
+				mCaptureViews[1] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
+				mCaptureViews[2] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+				mCaptureViews[3] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+				mCaptureViews[4] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+				mCaptureViews[5] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+			}
 			//Setup matrices
 			{
 				mCaptureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-				mCaptureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+/*				mCaptureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 				mCaptureViews[1] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 				mCaptureViews[2] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 				mCaptureViews[3] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 				mCaptureViews[4] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 				mCaptureViews[5] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-			}
+		*/	}
 			mSkybox.InitializeCube();
 		}
 
@@ -156,8 +163,8 @@ namespace Nuclear
 				PS_CaptureInfo cbdata;
 				cbdata.projection = mCaptureProjection;
 
-				Graphics::Context::GetContext()->CommitShaderResources(pERectToCubemap_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				
+				float col[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+
 				for (unsigned int i = 0; i < 6; ++i)
 				{
 					cbdata.view = mCaptureViews[i];
@@ -174,7 +181,9 @@ namespace Nuclear
 
 
 					Graphics::Context::GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+					Graphics::Context::GetContext()->CommitShaderResources(pERectToCubemap_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					mSkybox.RenderCube();
 				}
 
@@ -184,7 +193,7 @@ namespace Nuclear
 
 			// IBL: create an irradiance cubemap, and re-scale captureRT to irradiance scale.
 			{
-				TextureDesc TexDesc;
+			/*	TextureDesc TexDesc;
 				TexDesc.Name = "PBRCapture_Irradiance";
 				TexDesc.Type = RESOURCE_DIM_TEX_CUBE;
 				TexDesc.Usage = USAGE_DEFAULT;
@@ -195,7 +204,7 @@ namespace Nuclear
 				TexDesc.ArraySize = 6;
 				TexDesc.MipLevels = 0;
 
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mIrradiance);
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mIrradiance);*/
 
 				/*TexDesc.Name = "PBRCapture_Prefiltered";
 				TexDesc.Width = mDesc.mPrefilteredEnvMapDim;

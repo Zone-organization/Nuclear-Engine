@@ -3,17 +3,28 @@ struct VertexInputType
     float4 Position : ATTRIB0;
 };
 
+struct PixelInputType
+{
+    float4 Position : SV_POSITION;
+    float3 LocalPos : POSITION;
+};
+
 cbuffer NEStatic_CaptureInfo : register(b0)
 {
     matrix View;
     matrix Projection;
 };
 
-float4 main(VertexInputType input) : SV_POSITION
+PixelInputType main(VertexInputType input)
 {
-    float4 result;
-    result = mul(View, float4(input.Position.xyz , 1.0f));
-    result = mul(Projection, result);
+    PixelInputType result;
+
+    float4 OutPos;
+    OutPos = mul(View, float4(input.Position.xyz , 1.0f));
+    OutPos = mul(Projection, OutPos);
+
+    result.Position = OutPos;
+    result.LocalPos = input.Position.xyz;
 
     return result;
 }
