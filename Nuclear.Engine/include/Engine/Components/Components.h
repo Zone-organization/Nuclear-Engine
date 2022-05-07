@@ -9,3 +9,14 @@
 #include <Engine\Components\SpotLightComponent.h>
 #include <Engine\Components\AnimatorComponent.h>
 #include <Engine\Components\ScriptComponent.h>
+
+#define ALL_COMPONENTS 	Components::EntityInfoComponent,\
+					    Components::CameraComponent,    \
+						Components::MeshComponent,      \
+						Components::ColliderComponent,  \
+						Components::RigidBodyComponent, \
+						Components::DirLightComponent,  \
+						Components::PointLightComponent,\
+						Components::SpotLightComponent, \
+						Components::AnimatorComponent,  \
+						Components::ScriptComponent    

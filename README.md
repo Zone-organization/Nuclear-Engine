@@ -3,8 +3,6 @@
 ## Current To-dos 
   - W.I.P:
 	- IBL in PBR Pipeline.
-
-  - TODO:
 	- Basic Editor support (Nuclear Editor).
 
 # Getting started
@@ -33,6 +31,7 @@ Follow the instructions below to compile and run the engine from source.
 | IMGUI | included |
 | stb_truetype | included |
 | entt | included |
+| cereal | included |
 | FMOD SDK | External 'Download it through their site' |
 | PhysX 4.1 | submodule |
 | Freeimage | submodule |

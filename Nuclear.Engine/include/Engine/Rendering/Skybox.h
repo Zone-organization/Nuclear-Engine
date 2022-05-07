@@ -16,7 +16,9 @@ namespace Nuclear
 		class CameraComponent;
 	}
 	namespace Rendering
-	{			
+	{
+		class ImageBasedLighting;
+
 		class NEAPI Skybox
 		{
 		public:
@@ -27,11 +29,18 @@ namespace Nuclear
 
 			void Render();
 
+		protected:
+			friend class ImageBasedLighting;
+
+			void InitializePipeline(IBuffer* CameraConstantBuffer);
+			void InitializeCube();
+			void RenderCube();
+
+			RefCntAutoPtr<ITextureView> mTextureSRV;
 		private:
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IBuffer> mVBuffer;
 			RefCntAutoPtr<ISampler> mSampler;
-			RefCntAutoPtr<ITextureView> mTextureSRV;
 			RefCntAutoPtr<IShaderResourceBinding> mSRB;
 			bool ReleaseTex = false;
 			bool Valid = false;

@@ -1,6 +1,7 @@
 #pragma once
 #include <Common.h>
 #include <Project.h>
+#include "EntityEditor.h"
 
 class NuclearEditor;
 	
@@ -16,6 +17,7 @@ namespace Nuclear::Editor {
 
 	protected:
 		void RenderMainMenuBar();
+		EntityEditor mEditor;
 
 		Project* pActiveProject;
 		NuclearEditor* mEditorInstance;
@@ -23,7 +25,6 @@ namespace Nuclear::Editor {
 		ECS::Scene* mScene;
 		ECS::Entity mSelectedEntity;
 
-		void RenderEntityEditor(entt::entity& entity, entt::registry& reg, Components::EntityInfoComponent& Einfo);
 		void RenderEntityExplorer();
 
 	};

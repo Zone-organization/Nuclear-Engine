@@ -9,7 +9,7 @@ cbuffer NEStatic_CaptureInfo : register(b0)
     matrix Projection;
 };
 
-float4 main(VertexInputType input) : SV_POSITION;
+float4 main(VertexInputType input) : SV_POSITION
 {
     float4 result;
     result = mul(View, float4(input.Position.xyz , 1.0f));

@@ -15,12 +15,16 @@ class Sample5 : public Client
 	Assets::Material Gold;
 	Assets::Material Wall;
 
-	Graphics::Texture tex;
 
 	Graphics::Camera Camera;
 
 	Rendering::PBR PBR;
 	Rendering::PBR DefferedPBR;
+
+	//IBL
+	Rendering::ImageBasedLighting IBL;
+	Rendering::PBRCapture IBLCapture;
+	Graphics::Texture HDREnv;
 
 	Rendering::BlinnPhong BlinnPhong;
 	Rendering::BlinnPhong DefferedBlinnPhong;
@@ -123,7 +127,10 @@ public:
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 		//DESC.mFormat = TEX_FORMAT_RGBA32_FLOAT;
-		tex = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+		HDREnv = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+		Rendering::ImageBasedLightingDesc desc;
+		desc.cameraCB = mCameraSystem->GetCameraCB();
+		IBL.Initialize(desc);
 	}
 
 	void SetupAssets()
@@ -304,6 +311,8 @@ public:
 		//ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		//ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
+		IBLCapture = IBL.EquirectangularToCubemap(&HDREnv);
+
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample5: Advanced Rendering");
@@ -362,7 +371,7 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			ImGui::Image(tex.GetImage()->mTextureView, { 128,128 });
+			ImGui::Image(HDREnv.GetImage()->mTextureView, { 128,128 });
 
 
 			ImGui::Text("Active Rendering Pipeline:");

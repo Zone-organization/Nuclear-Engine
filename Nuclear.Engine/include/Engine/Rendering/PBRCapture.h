@@ -1,6 +1,7 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Engine/Assets/Image.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 
 namespace Nuclear
 {
@@ -9,8 +10,8 @@ namespace Nuclear
 		class NEAPI PBRCapture
 		{
 		public:
-			Assets::Image* mIrradiance = nullptr;
-			Assets::Image* mPrefiltered = nullptr;
+			RefCntAutoPtr<ITexture> mIrradiance;
+			RefCntAutoPtr<ITexture> mPrefiltered;
 		};
 	}
 }
