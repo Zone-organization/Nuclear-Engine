@@ -33,7 +33,7 @@
     - Diffuse Only
 	- BlinnPhong (Diffuse/Specualr only)
 	- BlinnPhong with Normal maps
-    - Basic Textured PBR (No IBL)
+    - PBR with Image based lighting
 	
 - __Rendering__
   - Features Easy-to-use RenderSystem that create material and manage lighting by itself.

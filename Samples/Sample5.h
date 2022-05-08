@@ -124,18 +124,6 @@ public:
 
 		Gold.mPixelShaderTextures.push_back(PBRGold);
 		Gold.SetName("Gold Material");
-
-		Importers::ImageLoadingDesc DESC;
-		DESC.mType = RESOURCE_DIM_TEX_2D;
-		DESC.mUsage = USAGE_IMMUTABLE;
-		DESC.mBindFlags = BIND_SHADER_RESOURCE;
-		DESC.mMipLevels = 1;
-		//DESC.mFormat = TEX_FORMAT_RGBA32_FLOAT;
-		HDREnv = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
-		Rendering::ImageBasedLightingDesc desc;
-		IBL.Initialize(desc);
-		EnvCapture = IBL.EquirectangularToCubemap(&HDREnv);
-
 	}
 
 	void SetupAssets()
@@ -192,6 +180,19 @@ public:
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		PBRPipeline.Initialize(&PBR, &Camera);
+
+		//IBL
+		Importers::ImageLoadingDesc DESC;
+		DESC.mType = RESOURCE_DIM_TEX_2D;
+		DESC.mUsage = USAGE_IMMUTABLE;
+		DESC.mBindFlags = BIND_SHADER_RESOURCE;
+		DESC.mMipLevels = 1;
+		//DESC.mFormat = TEX_FORMAT_RGBA32_FLOAT;
+		HDREnv = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+		Rendering::ImageBasedLightingDesc desc;
+		IBL.Initialize(desc);
+		EnvCapture = IBL.EquirectangularToCubemap(&HDREnv);
+		IBL.SetEnvironmentCapture(&EnvCapture);
 		PBR_IBLPipeline.Initialize(&PBR_IBL, &Camera);
 
 		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);

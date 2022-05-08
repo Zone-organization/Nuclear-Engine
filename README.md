@@ -2,9 +2,7 @@
 
 ## Current To-dos 
   - W.I.P:
-	- IBL in PBR Pipeline.
 	- Basic Editor support (Nuclear Editor).
-
 # Getting started
 
 Follow the instructions below to compile and run the engine from source.

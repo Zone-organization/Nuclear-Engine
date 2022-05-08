@@ -2,6 +2,7 @@
 #include <Core\NE_Common.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
+#include <Engine/Assets/Image.h>
 
 namespace Nuclear
 {
@@ -10,8 +11,8 @@ namespace Nuclear
 		class NEAPI PBRCapture
 		{
 		public:
-			RefCntAutoPtr<ITexture> mIrradiance;
-			RefCntAutoPtr<ITexture> mPrefiltered;
+			Assets::Image mIrradiance;
+			Assets::Image mPrefiltered;
 		};
 	}
 }

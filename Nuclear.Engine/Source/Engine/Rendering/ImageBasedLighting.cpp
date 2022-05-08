@@ -306,7 +306,7 @@ namespace Nuclear
 
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pBRDF_LUT);
 			}
-			pBRDF_LUT_SRV = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			mBRDF_LUT_Image.mTextureView = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 			pBRDF_LUT_RTV = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
 
 			{
@@ -383,6 +383,7 @@ namespace Nuclear
 			}
 
 			// IBL: create an irradiance cubemap.
+			RefCntAutoPtr<ITexture> pIrradianceTex;
 			{
 				TextureDesc TexDesc;
 				TexDesc.Name = "PBRCapture_Irradiance";
@@ -395,7 +396,7 @@ namespace Nuclear
 				TexDesc.ArraySize = 6;
 				TexDesc.MipLevels = 0;
 
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mIrradiance);
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pIrradianceTex);
 			}
 
 			//IBL: Precompute Irradiance
@@ -420,7 +421,7 @@ namespace Nuclear
 					RTVDesc.FirstArraySlice = i;
 					RTVDesc.NumArraySlices = 1;
 					RefCntAutoPtr<ITextureView> pRTV;
-					result.mIrradiance->CreateView(RTVDesc, &pRTV);
+					pIrradianceTex->CreateView(RTVDesc, &pRTV);
 
 
 					Graphics::Context::GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -433,6 +434,7 @@ namespace Nuclear
 			}
 
 			// IBL: create an prefilter cubemap.
+			RefCntAutoPtr<ITexture> pPrefilterTex;
 			{
 				TextureDesc TexDesc;
 				TexDesc.Name = "PBRCapture_Prefiltered";
@@ -445,7 +447,7 @@ namespace Nuclear
 				TexDesc.ArraySize = 6;
 				TexDesc.MipLevels = 6;
 
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mPrefiltered);
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pPrefilterTex);
 			}
 
 
@@ -459,7 +461,7 @@ namespace Nuclear
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 				pPrecomputePrefilter_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(TexCubeRTs->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
 
-				const auto& PrefilteredEnvMapDesc = result.mPrefiltered->GetDesc();
+				const auto& PrefilteredEnvMapDesc = pPrefilterTex->GetDesc();
 				for (Uint32 mip = 0; mip < PrefilteredEnvMapDesc.MipLevels; ++mip)
 				{
 
@@ -482,7 +484,7 @@ namespace Nuclear
 						RTVDesc.FirstArraySlice = face;
 						RTVDesc.NumArraySlices = 1;
 						RefCntAutoPtr<ITextureView> pRTV;
-						result.mPrefiltered->CreateView(RTVDesc, &pRTV);
+						pPrefilterTex->CreateView(RTVDesc, &pRTV);
 
 
 						Graphics::Context::GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -494,8 +496,23 @@ namespace Nuclear
 					}
 				}
 			}
-
+			result.mIrradiance.mTextureView = pIrradianceTex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			result.mPrefiltered.mTextureView = pPrefilterTex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 			return result;
+		}
+
+		void ImageBasedLighting::SetEnvironmentCapture(Rendering::PBRCapture* cap)
+		{
+			pEnvCapture = cap;
+		}
+
+		Rendering::PBRCapture* ImageBasedLighting::GetEnvironmentCapture()
+		{
+			return pEnvCapture;
+		}
+		Assets::Image* ImageBasedLighting::GetBRDF_LUT()
+		{
+			return &mBRDF_LUT_Image;
 		}
 
 	}

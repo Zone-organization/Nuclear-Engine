@@ -13,6 +13,8 @@ namespace Nuclear
 		public:
 			PBR(ImageBasedLighting* IBLContext = nullptr);
 
+			void ReflectPixelShaderData() override;
+
 			bool Bake(const ShadingModelBakingDesc& desc) override;
 			std::vector<Graphics::RenderTargetDesc> GetGBufferDesc() override;
 		private:

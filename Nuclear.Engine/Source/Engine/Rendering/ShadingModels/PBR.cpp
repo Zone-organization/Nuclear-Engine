@@ -24,6 +24,29 @@ namespace Nuclear
 
 			mRenderingEffects[Utilities::Hash("BLOOM")] = ShaderEffect("BLOOM", ShaderEffect::Type::PostProcessingAndRenderingEffect, false);
 		}
+		void PBR::ReflectPixelShaderData()
+		{
+			ShadingModel::ReflectPixelShaderData();
+
+			if (pIBLContext)
+			{
+				for (auto &i : mPixelShaderTextureInfo)
+				{
+					if (i.mTex.GetUsageType() == Graphics::TextureUsageType::IrradianceMap)
+					{
+						i.mTex.SetImage(&pIBLContext->GetEnvironmentCapture()->mIrradiance);
+					}
+					else if(i.mTex.GetUsageType() == Graphics::TextureUsageType::PreFilterMap)
+					{
+						i.mTex.SetImage(&pIBLContext->GetEnvironmentCapture()->mPrefiltered);
+					}
+					else if(i.mTex.GetUsageType() == Graphics::TextureUsageType::BRDF_LUT)
+					{
+						i.mTex.SetImage(pIBLContext->GetBRDF_LUT());
+					}
+				}
+			}
+		}
 		bool PBR::Bake(const ShadingModelBakingDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;

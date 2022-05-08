@@ -25,6 +25,10 @@ namespace Nuclear
 
 			Rendering::PBRCapture EquirectangularToCubemap(Graphics::Texture* Tex);
 
+			void SetEnvironmentCapture(Rendering::PBRCapture* cap);
+			Rendering::PBRCapture* GetEnvironmentCapture();
+
+			Assets::Image* GetBRDF_LUT();
 		protected:
 			RefCntAutoPtr<IPipelineState> pERectToCubemap_PSO;
 			RefCntAutoPtr<IShaderResourceBinding> pERectToCubemap_SRB;
@@ -41,7 +45,9 @@ namespace Nuclear
 			RefCntAutoPtr<IBuffer> pCaptureCB;
 			RefCntAutoPtr<IBuffer> pPrefilterRoughnessCB;
 
-			RefCntAutoPtr<ITextureView> pBRDF_LUT_SRV;
+			Assets::Image mBRDF_LUT_Image;
+
+			Rendering::PBRCapture* pEnvCapture;
 
 			Skybox mSkybox;
 
