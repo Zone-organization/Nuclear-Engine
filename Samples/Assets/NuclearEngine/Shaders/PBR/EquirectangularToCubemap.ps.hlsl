@@ -9,7 +9,7 @@ SamplerState NEMat_EquirectangularMap_sampler : register(s0);
 static const float2 invAtan = float2(0.1591, 0.3183);
 float2 SampleSphericalMap(float3 v)
 {
-    float2 uv = float2(atan2(v.z, v.x), asin(v.y));
+    float2 uv = float2(atan2(v.x, v.z), asin(v.y));
     uv *= invAtan;
     uv += 0.5;
     return uv;

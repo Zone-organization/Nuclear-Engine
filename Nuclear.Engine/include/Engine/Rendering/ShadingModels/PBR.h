@@ -1,5 +1,6 @@
 #pragma once
 #include <Engine\Rendering\ShadingModel.h>
+#include <Engine\Rendering\ImageBasedLighting.h>
 #include <vector>
 
 namespace Nuclear
@@ -10,11 +11,13 @@ namespace Nuclear
 		class NEAPI PBR : public ShadingModel
 		{
 		public:
-			PBR();
+			PBR(ImageBasedLighting* IBLContext = nullptr);
+
 			bool Bake(const ShadingModelBakingDesc& desc) override;
 			std::vector<Graphics::RenderTargetDesc> GetGBufferDesc() override;
 		private:
 			void BakeGBufferPipeline(const ShadingModelBakingDesc& desc);
+			ImageBasedLighting* pIBLContext;
 		};
 
 	}

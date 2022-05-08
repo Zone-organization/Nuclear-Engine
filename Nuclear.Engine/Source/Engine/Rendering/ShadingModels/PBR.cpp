@@ -6,13 +6,21 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		PBR::PBR()
+		PBR::PBR(ImageBasedLighting* ibl)
+			: pIBLContext(ibl)
 		{
+			if(pIBLContext)
+			{
+				mName = "NE_PBR_IBL";
+			}
+			else {
+				mName = "NE_PBR_NO_IBL";
+			}
+
 			static int id = 0;
-			mID = Utilities::Hash("NE_PBR_NO_IBL" + id);
+			mID = Utilities::Hash(mName.c_str() + id);
 			id++;
 
-			mName = "NE_PBR_NO_IBL";
 
 			mRenderingEffects[Utilities::Hash("BLOOM")] = ShaderEffect("BLOOM", ShaderEffect::Type::PostProcessingAndRenderingEffect, false);
 		}
@@ -77,6 +85,10 @@ namespace Nuclear
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
 				
+				if (pIBLContext)
+				{
+					defines.push_back("IBL_ENABLED");
+				}
 				for (auto it : desc.mRequiredEffects)
 				{
 					defines.push_back(it.GetName());
@@ -85,10 +97,10 @@ namespace Nuclear
 				{
 					defines.push_back("NE_DEFFERED");
 				}
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR.ps.hlsl", defines, std::vector<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/PBR.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
 				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
 
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);

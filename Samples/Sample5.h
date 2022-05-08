@@ -22,8 +22,10 @@ class Sample5 : public Client
 	Rendering::PBR DefferedPBR;
 
 	//IBL
+	Rendering::PBR PBR_IBL;
+	Rendering::ForwardRenderingPipeline PBR_IBLPipeline;
 	Rendering::ImageBasedLighting IBL;
-	Rendering::PBRCapture IBLCapture;
+	Rendering::PBRCapture EnvCapture;
 	Graphics::Texture HDREnv;
 
 	Rendering::BlinnPhong BlinnPhong;
@@ -63,7 +65,9 @@ public:
 		DiffuseRPPipeline("DiffuseRP"),
 		WireFrameRPPipeline("WireFrameRP"),
 		BlinnPhongDefferedPipeline("BlinnDeffered"),
-		PBRDefferedPipeline("PBRDeffered")
+		PBRDefferedPipeline("PBRDeffered"),
+		PBR_IBL(&IBL),
+		PBR_IBLPipeline("PBR_IBL_P")
 	{
 
 	}
@@ -129,8 +133,9 @@ public:
 		//DESC.mFormat = TEX_FORMAT_RGBA32_FLOAT;
 		HDREnv = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
 		Rendering::ImageBasedLightingDesc desc;
-		desc.cameraCB = mCameraSystem->GetCameraCB();
 		IBL.Initialize(desc);
+		EnvCapture = IBL.EquirectangularToCubemap(&HDREnv);
+
 	}
 
 	void SetupAssets()
@@ -187,6 +192,7 @@ public:
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		PBRPipeline.Initialize(&PBR, &Camera);
+		PBR_IBLPipeline.Initialize(&PBR_IBL, &Camera);
 
 		BlinnPhongPipeline.Initialize(&BlinnPhong, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
@@ -203,6 +209,7 @@ public:
 		PBRDefferedPipeline.Initialize(initInfo);
 
 		Renderer->AddRenderingPipeline(&PBRPipeline);
+		Renderer->AddRenderingPipeline(&PBR_IBLPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongDefferedPipeline);
 		Renderer->AddRenderingPipeline(&PBRDefferedPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
@@ -237,6 +244,8 @@ public:
 		//Renderer->VisualizePointLightsPositions = true;
 		PBRPipeline.SetEffect(Utilities::Hash("HDR"), true);
 		PBRPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+		PBR_IBLPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		PBR_IBLPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
 		PBRDefferedPipeline.SetEffect(Utilities::Hash("HDR"), true);
 		PBRDefferedPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
 
@@ -311,11 +320,11 @@ public:
 		//ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		//ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
-		IBLCapture = IBL.EquirectangularToCubemap(&HDREnv);
 
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample5: Advanced Rendering");
+
 			static float rotationspeed = 0.0f;
 			static Math::Vector3 RotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 			static ECS::Entity activeentity = EShaderBall;
@@ -371,9 +380,6 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			ImGui::Image(HDREnv.GetImage()->mTextureView, { 128,128 });
-
-
 			ImGui::Text("Active Rendering Pipeline:");
 			static int e = 0;
 			ImGui::RadioButton("PBR", &e, 0);
@@ -382,6 +388,7 @@ public:
 			ImGui::RadioButton("WireFrame", &e, 3);
 			ImGui::RadioButton("Deffered PBR", &e, 4);
 			ImGui::RadioButton("Deffered Blinn Phong", &e, 5);
+			ImGui::RadioButton("PBR_IBL", &e, 6);
 
 			//Change Rendering Pipeline
 			if (e == 0)
@@ -396,6 +403,8 @@ public:
 				Renderer->SetActiveRenderingPipeline(PBRDefferedPipeline.GetID());
 			else if (e == 5)
 				Renderer->SetActiveRenderingPipeline(BlinnPhongDefferedPipeline.GetID());
+			else if (e ==6)
+				Renderer->SetActiveRenderingPipeline(PBR_IBLPipeline.GetID());
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 

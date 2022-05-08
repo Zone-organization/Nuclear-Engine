@@ -19,6 +19,10 @@ namespace Nuclear
 			Roughness = 3,
 			AO = 4,
 
+			IrradianceMap = 5,
+			PreFilterMap = 6,
+			BRDF_LUT = 7,
+
 			Unknown = 255
 		};
 

@@ -2,7 +2,8 @@
 //#define NE_DIR_LIGHTS_NUM 1
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
-#include "LightTypes.hlsli"
+#include "..\LightTypes.hlsli"
+#include "Common.hlsl"
 
 struct PixelInputType
 {
@@ -34,10 +35,10 @@ Texture2D NEMat_Normal : register(t2);
 Texture2D NEMat_Roughness : register(t3);
 Texture2D NEMat_AO : register(t4);
 
-#ifdef IBL
+#ifdef IBL_ENABLED
 TextureCube NEMat_IrradianceMap : register(t5);
 TextureCube NEMat_PrefilterMap : register(t6);
-Texture2D NEMat_BrdfLUT : register(t7);
+Texture2D NEMat_BRDF_LUT : register(t7);
 #endif
 
 SamplerState NEMat_Albedo_sampler : register(s0);
@@ -46,63 +47,14 @@ SamplerState NEMat_Normal_sampler : register(s2);
 SamplerState NEMat_Roughness_sampler : register(s3);
 SamplerState NEMat_AO_sampler : register(s4);
 
-#ifdef IBL
+#ifdef IBL_ENABLED
 SamplerState NEMat_IrradianceMap_sampler : register(s5);
 SamplerState NEMat_PrefilterMap_sampler : register(s6);
-SamplerState NEMat_BrdfLUT_sampler : register(s7);
+SamplerState NEMat_BRDF_LUT_sampler : register(s7);
 #endif
 
 #endif
 
-#define PI 3.14159265359f
-
-// ----------------------------------------------------------------------------
-float DistributionGGX(float3 N, float3 H, float roughness)
-{
-	float a = roughness * roughness;
-	float a2 = a * a;
-	float NdotH = max(dot(N, H), 0.0);
-	float NdotH2 = NdotH * NdotH;
-
-	float nom = a2;
-	float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-	denom = PI * denom * denom;
-
-	return nom / max(denom, 0.001);
-}
-// ----------------------------------------------------------------------------
-float GeometrySchlickGGX(float NdotV, float roughness)
-{
-	float r = (roughness + 1.0);
-	float k = (r * r) / 8.0;
-
-	float nom = NdotV;
-	float denom = NdotV * (1.0 - k) + k;
-
-	return nom / denom;
-}
-// ----------------------------------------------------------------------------
-float GeometrySmith(float3 N, float3 V, float3 L, float roughness)
-{
-	float NdotV = max(dot(N, V), 0.0);
-	float NdotL = max(dot(N, L), 0.0);
-	float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-	float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-
-	return ggx1 * ggx2;
-}
-// ----------------------------------------------------------------------------
-float3 fresnelSchlick(float cosTheta, float3 F0)
-{
-	return F0 + (1.0 - F0) * pow(saturate(1.0 - cosTheta), 5.0);
-}
-// ----------------------------------------------------------------------------
-float DoQuadraticAttenuation(float4 Intensity_Attenuation, float3 lightposition, float3 fragPos)
-{
-	float distance = length(lightposition - fragPos);
-	return Intensity_Attenuation.x / (Intensity_Attenuation.y + Intensity_Attenuation.z * distance + Intensity_Attenuation.w * (distance * distance));
-}
-// ----------------------------------------------------------------------------
 float3 CalcPointLight(PointLight light, float3 N, float3 WorldPos, float3 V, float3 F0, float3 albedo, float metallic, float roughness)
 {
 	// calculate per-light radiance
@@ -275,12 +227,37 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	}
 #endif
 
+	PS_OUTPUT output;
+
+///////////////////////////////////////Image based Lighting///////////////////////////////////////
+#ifdef IBL_ENABLED
+	float3 R = reflect(-V, N);
+
+	// ambient lighting (we now use IBL as the ambient term)
+	float3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0f), F0, roughness);
+
+	float3 kS = F;
+	float3 kD = 1.0f - kS;
+	kD *= 1.0f - metallic;
+
+	float3 irradiance = NEMat_IrradianceMap.Sample(NEMat_IrradianceMap_sampler, N).rgb;
+	float3 diffuse = irradiance * albedo;
+	// sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
+	const float MAX_REFLECTION_LOD = 4.0;
+	float3 prefilteredColor = NEMat_PrefilterMap.SampleLevel(NEMat_PrefilterMap_sampler, R, roughness * MAX_REFLECTION_LOD).rgb;
+	float2 brdf = NEMat_BRDF_LUT.Sample(NEMat_BRDF_LUT_sampler, float2(max(dot(N, V), 0.0), roughness)).rg;
+	float3 specular = prefilteredColor * (F * brdf.x + brdf.y);
+
+	float3 ambient = (kD * diffuse + specular) * ao;
+
+	float3 color = ambient + Lo;
+#else
 	float3 ambient = float3(0.03f, 0.03f, 0.03f) * albedo * ao;
 
 	float3 color = ambient + Lo;
-	
 
-	PS_OUTPUT output;
+#endif
+
 	output.Color = float4(color, 1.0f);
 
 #ifdef BLOOM

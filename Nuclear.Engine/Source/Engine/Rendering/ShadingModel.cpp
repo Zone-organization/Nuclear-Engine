@@ -49,6 +49,15 @@ namespace Nuclear
 				return Graphics::TextureUsageType::Roughness;
 			else if (name.find("AO") == 0)
 				return Graphics::TextureUsageType::AO;
+
+			//IBL
+			else if (name.find("IrradianceMap") == 0)
+				return Graphics::TextureUsageType::IrradianceMap;
+			else if (name.find("PrefilterMap") == 0)
+				return Graphics::TextureUsageType::PreFilterMap;
+			else if (name.find("BRDF_LUT") == 0)
+				return Graphics::TextureUsageType::BRDF_LUT;
+
 			return Graphics::TextureUsageType::Unknown;
 		}
 

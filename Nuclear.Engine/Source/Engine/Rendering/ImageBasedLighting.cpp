@@ -3,6 +3,9 @@
 #include <Core\FileSystem.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine/Graphics/ImGui.h>
+#include <Engine/Assets/DefaultMeshes.h>
+
+
 namespace Nuclear
 {
 	namespace Rendering
@@ -10,8 +13,26 @@ namespace Nuclear
 		void ImageBasedLighting::Initialize(const ImageBasedLightingDesc& desc)
 		{
 			mDesc = desc;
+			//Common
+			RefCntAutoPtr<IShader> CubeVSShader;
+			{
+				ShaderCreateInfo CreationAttribs;
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "CubemapSample_VS";
 
-			//Create Capture CB
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/CubemapSample.vs.hlsl", std::vector<std::string>());
+				CreationAttribs.Source = source.c_str();
+				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
+				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &CubeVSShader);
+			}
+
+			//Create Constant buffer
 			{
 				BufferDesc CBDesc;
 				CBDesc.Name = "CaptureInfo_CB";
@@ -20,6 +41,11 @@ namespace Nuclear
 				CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 				CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 				Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pCaptureCB);
+
+				CBDesc.Name = "Roughness_CB";
+				CBDesc.Size = sizeof(Math::Vector4);
+
+				Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pPrefilterRoughnessCB);
 			}
 
 			//Create ERectToCubemap PSO
@@ -33,33 +59,13 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-				//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
 				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
 
 				//Create Shaders
-				RefCntAutoPtr<IShader> VSShader;
 				RefCntAutoPtr<IShader> PSShader;
 				std::vector<LayoutElement> LayoutElems;
 				LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
-
-				//Create Vertex Shader
-				{
-					ShaderCreateInfo CreationAttribs;
-					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
-					CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-					CreationAttribs.EntryPoint = "main";
-					CreationAttribs.Desc.Name = "ERectToCubemap_VS";
-
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/Cubemap.vs.hlsl", std::vector<std::string>());
-					CreationAttribs.Source = source.c_str();
-					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
-					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
-
-					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VSShader);
-				}
 
 				//Create Pixel Shader
 				{
@@ -79,11 +85,11 @@ namespace Nuclear
 					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
 
-				PSOCreateInfo.pVS = VSShader;
+				PSOCreateInfo.pVS = CubeVSShader;
 				PSOCreateInfo.pPS = PSShader;
 				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(CubeVSShader, PSShader);
 				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pERectToCubemap_PSO, PSOCreateInfo, Vars, true);
 
 				pERectToCubemap_PSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
@@ -92,37 +98,228 @@ namespace Nuclear
 
 			}
 
+			//Create PrecomputeIrradiance PSO
+			{
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+
+				PSOCreateInfo.PSODesc.Name = "PrecomputeIrradiance_PSO";
+
+				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+
+				//Create Shaders
+				RefCntAutoPtr<IShader> PSShader;
+				std::vector<LayoutElement> LayoutElems;
+				LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+
+				//Create Pixel Shader
+				{
+					ShaderCreateInfo CreationAttribs;
+					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+					CreationAttribs.EntryPoint = "main";
+					CreationAttribs.Desc.Name = "PrecomputeIrradiance_PS";
+
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/IrradianceConvolution.ps.hlsl", std::vector<std::string>());
+					CreationAttribs.Source = source.c_str();
+					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
+					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
+					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
+				}
+
+				PSOCreateInfo.pVS = CubeVSShader;
+				PSOCreateInfo.pPS = PSShader;
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(CubeVSShader, PSShader);
+				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pPrecomputeIrradiancePSO, PSOCreateInfo, Vars, true);
+
+				pPrecomputeIrradiancePSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
+				pPrecomputeIrradiancePSO->CreateShaderResourceBinding(&pPrecomputeIrradiance_SRB, true);
+			}
+
+			//Create PrecomputePrefilter PSO
+			{
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+
+				PSOCreateInfo.PSODesc.Name = "PrecomputePrefilter_PSO";
+
+				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+
+				//Create Shaders
+				RefCntAutoPtr<IShader> PSShader;
+				std::vector<LayoutElement> LayoutElems;
+				LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+
+				//Create Pixel Shader
+				{
+					ShaderCreateInfo CreationAttribs;
+					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+					CreationAttribs.EntryPoint = "main";
+					CreationAttribs.Desc.Name = "PrecomputePrefilter_PS";
+
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/PrefilterConvolution.ps.hlsl", std::vector<std::string>());
+					CreationAttribs.Source = source.c_str();
+					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
+					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
+					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
+				}
+
+				PSOCreateInfo.pVS = CubeVSShader;
+				PSOCreateInfo.pPS = PSShader;
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(CubeVSShader, PSShader);
+				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pPrecomputePrefilterPSO, PSOCreateInfo, Vars, true);
+
+				pPrecomputePrefilterPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
+				pPrecomputePrefilterPSO->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Roughness")->Set(pPrefilterRoughnessCB);
+				pPrecomputePrefilterPSO->CreateShaderResourceBinding(&pPrecomputePrefilter_SRB, true);
+			}
+
+
+			//Create PrecomputeBRDF PSO
+			{
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+
+				PSOCreateInfo.PSODesc.Name = "PrecomputeBRDF_PSO";
+
+				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RG16_FLOAT;
+				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+
+				//Create Shaders
+				RefCntAutoPtr<IShader> VSShader;
+				RefCntAutoPtr<IShader> PSShader;
+				std::vector<LayoutElement> LayoutElems;
+				LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+				LayoutElems.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));//TEX
+
+				//Create Vertex Shader
+				{
+					ShaderCreateInfo CreationAttribs;
+					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+					CreationAttribs.EntryPoint = "main";
+					CreationAttribs.Desc.Name = "PrecomputeBRDF_VS";
+
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::vector<std::string>());
+					CreationAttribs.Source = source.c_str();
+					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
+					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VSShader);
+				}
+
+				//Create Pixel Shader
+				{
+					ShaderCreateInfo CreationAttribs;
+					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+					CreationAttribs.EntryPoint = "main";
+					CreationAttribs.Desc.Name = "PrecomputeBRDF_PS";
+
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/BRDF.ps.hlsl", std::vector<std::string>());
+					CreationAttribs.Source = source.c_str();
+					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
+					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
+					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PSShader);
+				}
+
+				PSOCreateInfo.pVS = VSShader;
+				PSOCreateInfo.pPS = PSShader;
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pPrecomputeBRDF_PSO, PSOCreateInfo, Vars, true);
+				pPrecomputeBRDF_PSO->CreateShaderResourceBinding(&pPrecomputeBRDF_SRB, true);
+			}
+
 			//Create CaptureRT
 			{
 				Graphics::RenderTargetDesc RTDesc;
 				RTDesc.Width = 512;
 				RTDesc.Height = 512;
-				//mCaptureRT.Create(RTDesc);
-
-
 				RTDesc.DepthTexFormat = TEX_FORMAT_D24_UNORM_S8_UINT;
 				mCaptureDepthRT.Create(RTDesc);
 			}
 
-			{
-				mCaptureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
-				mCaptureViews[1] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
-				mCaptureViews[2] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-				mCaptureViews[3] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-				mCaptureViews[4] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-				mCaptureViews[5] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-			}
 			//Setup matrices
 			{
 				mCaptureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-/*				mCaptureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+				//mCaptureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+				//mCaptureViews[1] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+				//mCaptureViews[2] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+				//mCaptureViews[3] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+				//mCaptureViews[4] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+				//mCaptureViews[5] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+
+				mCaptureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 				mCaptureViews[1] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 				mCaptureViews[2] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 				mCaptureViews[3] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 				mCaptureViews[4] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 				mCaptureViews[5] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-		*/	}
-			mSkybox.InitializeCube();
+		
+			}
+
+			//IBL: generate a 2D LUT from the BRDF equations used.
+			RefCntAutoPtr<ITexture> pBRDF_LUT;
+			RefCntAutoPtr<ITextureView> pBRDF_LUT_RTV;
+
+			{
+				TextureDesc TexDesc;
+				TexDesc.Name = "BRDF_LUT";
+				TexDesc.Type = RESOURCE_DIM_TEX_2D;
+				TexDesc.Usage = USAGE_DEFAULT;
+				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+				TexDesc.Width = mDesc.mBRDF_LUTDim;
+				TexDesc.Height = mDesc.mBRDF_LUTDim;
+				TexDesc.Format = TEX_FORMAT_RG16_FLOAT;
+				TexDesc.MipLevels = 1;
+
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pBRDF_LUT);
+			}
+			pBRDF_LUT_SRV = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			pBRDF_LUT_RTV = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
+
+			{
+				Graphics::Context::GetContext()->SetPipelineState(pPrecomputeBRDF_PSO.RawPtr());
+
+				Graphics::Context::GetContext()->SetRenderTargets(1, pBRDF_LUT_RTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->ClearRenderTarget(pBRDF_LUT_RTV.RawPtr(), NULL, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+				Graphics::Context::GetContext()->CommitShaderResources(pPrecomputeBRDF_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Assets::DefaultMeshes::RenderScreenQuad();
+			}
+
+			mSkybox.InitializeCube();			
 		}
 
 		struct PS_CaptureInfo
@@ -135,7 +332,7 @@ namespace Nuclear
 			Rendering::PBRCapture result;
 			RefCntAutoPtr<ITexture> TexCubeRTs;
 
-			// IBL: setup cubemap to render to and attach to rendertarget
+			// IBL: setup cubemap to render to
 			{
 				//Create TexCube
 				TextureDesc TexDesc;
@@ -155,15 +352,12 @@ namespace Nuclear
 			// IBL: convert HDR equirectangular environment map to cubemap equivalent
 			{
 				Graphics::Context::GetContext()->SetPipelineState(pERectToCubemap_PSO.RawPtr());
-				//	Graphics::Context::GetContext()->SetRenderTargets(1, mCaptureRT.GetMainRTVDblPtr(), mCaptureDepthRT.GetMainRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				//	Graphics::Context::GetContext()->ClearRenderTarget(mCaptureRT.GetMainRTV(), NULL, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
 				pERectToCubemap_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(HDR_Env->GetImage()->mTextureView.RawPtr());
 
 				PS_CaptureInfo cbdata;
 				cbdata.projection = mCaptureProjection;
 
-				float col[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
 				for (unsigned int i = 0; i < 6; ++i)
 				{
@@ -172,7 +366,7 @@ namespace Nuclear
 						Diligent::MapHelper<PS_CaptureInfo> CBConstants(Graphics::Context::GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = cbdata;
 					}
-					TextureViewDesc RTVDesc{ "RTV", TEXTURE_VIEW_RENDER_TARGET, RESOURCE_DIM_TEX_2D_ARRAY };
+					TextureViewDesc RTVDesc{ "ERect_Cube_RTV", TEXTURE_VIEW_RENDER_TARGET, RESOURCE_DIM_TEX_2D_ARRAY };
 					RTVDesc.MostDetailedMip = 0;
 					RTVDesc.FirstArraySlice = i;
 					RTVDesc.NumArraySlices = 1;
@@ -186,14 +380,11 @@ namespace Nuclear
 					Graphics::Context::GetContext()->CommitShaderResources(pERectToCubemap_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					mSkybox.RenderCube();
 				}
-
-			//	mSkybox.mTextureSRV = TexCubeRTs->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-			//	mSkybox.InitializePipeline(mDesc.cameraCB);
 			}
 
-			// IBL: create an irradiance cubemap, and re-scale captureRT to irradiance scale.
+			// IBL: create an irradiance cubemap.
 			{
-			/*	TextureDesc TexDesc;
+				TextureDesc TexDesc;
 				TexDesc.Name = "PBRCapture_Irradiance";
 				TexDesc.Type = RESOURCE_DIM_TEX_CUBE;
 				TexDesc.Usage = USAGE_DEFAULT;
@@ -204,24 +395,108 @@ namespace Nuclear
 				TexDesc.ArraySize = 6;
 				TexDesc.MipLevels = 0;
 
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mIrradiance);*/
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mIrradiance);
+			}
 
-				/*TexDesc.Name = "PBRCapture_Prefiltered";
+			//IBL: Precompute Irradiance
+			{
+				Graphics::Context::GetContext()->SetPipelineState(pPrecomputeIrradiancePSO.RawPtr());
+
+				PS_CaptureInfo cbdata;
+				cbdata.projection = mCaptureProjection;
+
+				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+				pPrecomputeIrradiance_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(TexCubeRTs->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+
+				for (unsigned int i = 0; i < 6; ++i)
+				{
+					cbdata.view = mCaptureViews[i];
+					{
+						Diligent::MapHelper<PS_CaptureInfo> CBConstants(Graphics::Context::GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						*CBConstants = cbdata;
+					}
+					TextureViewDesc RTVDesc{ "IrradianceConvolution_RTV", TEXTURE_VIEW_RENDER_TARGET, RESOURCE_DIM_TEX_2D_ARRAY };
+					RTVDesc.MostDetailedMip = 0;
+					RTVDesc.FirstArraySlice = i;
+					RTVDesc.NumArraySlices = 1;
+					RefCntAutoPtr<ITextureView> pRTV;
+					result.mIrradiance->CreateView(RTVDesc, &pRTV);
+
+
+					Graphics::Context::GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+					Graphics::Context::GetContext()->CommitShaderResources(pPrecomputeIrradiance_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+					mSkybox.RenderCube();
+				}
+			}
+
+			// IBL: create an prefilter cubemap.
+			{
+				TextureDesc TexDesc;
+				TexDesc.Name = "PBRCapture_Prefiltered";
+				TexDesc.Type = RESOURCE_DIM_TEX_CUBE;
+				TexDesc.Usage = USAGE_DEFAULT;
+				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
 				TexDesc.Width = mDesc.mPrefilteredEnvMapDim;
 				TexDesc.Height = mDesc.mPrefilteredEnvMapDim;
 				TexDesc.Format = mDesc.mPrefilteredEnvMapFmt;
+				TexDesc.ArraySize = 6;
+				TexDesc.MipLevels = 6;
 
-				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mPrefiltered);*/
+				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &result.mPrefiltered);
+			}
 
 
-				//mCaptureDepthRT.Resize(mDesc.mIrradianceCubeDim, mDesc.mIrradianceCubeDim);
+			//IBL: Precompute Prefilter
+			{
+				Graphics::Context::GetContext()->SetPipelineState(pPrecomputePrefilterPSO.RawPtr());
+
+				PS_CaptureInfo cbdata;
+				cbdata.projection = mCaptureProjection;
+
+				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+				pPrecomputePrefilter_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(TexCubeRTs->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+
+				const auto& PrefilteredEnvMapDesc = result.mPrefiltered->GetDesc();
+				for (Uint32 mip = 0; mip < PrefilteredEnvMapDesc.MipLevels; ++mip)
+				{
+
+					float roughness = (float)mip / (float)(PrefilteredEnvMapDesc.MipLevels );
+
+					{
+						Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::Context::GetContext(), pPrefilterRoughnessCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						*CBConstants = Math::Vector4(roughness);
+					}
+
+					for (unsigned int face = 0; face < 6; ++face)
+					{
+						cbdata.view = mCaptureViews[face];
+						{
+							Diligent::MapHelper<PS_CaptureInfo> CBConstants(Graphics::Context::GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
+							*CBConstants = cbdata;
+						}
+						TextureViewDesc RTVDesc{ "PrefilterConvolution_RTV", TEXTURE_VIEW_RENDER_TARGET, RESOURCE_DIM_TEX_2D_ARRAY };
+						RTVDesc.MostDetailedMip = mip;
+						RTVDesc.FirstArraySlice = face;
+						RTVDesc.NumArraySlices = 1;
+						RefCntAutoPtr<ITextureView> pRTV;
+						result.mPrefiltered->CreateView(RTVDesc, &pRTV);
+
+
+						Graphics::Context::GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						Graphics::Context::GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+						Graphics::Context::GetContext()->CommitShaderResources(pPrecomputePrefilter_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+						mSkybox.RenderCube();
+					}
+				}
 			}
 
 			return result;
 		}
-		void ImageBasedLighting::TestRender(Rendering::PBRCapture* cap)
-		{
-			mSkybox.Render();
-		}
+
 	}
 }

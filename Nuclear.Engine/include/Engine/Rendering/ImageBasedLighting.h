@@ -14,11 +14,8 @@ namespace Nuclear
 			TEXTURE_FORMAT mIrradianceCubeFmt = TEX_FORMAT_RGBA32_FLOAT;
 			TEXTURE_FORMAT mPrefilteredEnvMapFmt = TEX_FORMAT_RGBA16_FLOAT;
 			Uint32         mIrradianceCubeDim = 32;
-			Uint32         mPrefilteredEnvMapDim = 123;
-
-
-			//TEST
-			IBuffer* cameraCB;
+			Uint32         mPrefilteredEnvMapDim = 128;
+			Uint32         mBRDF_LUTDim = 512;
 		};
 
 		class NEAPI ImageBasedLighting
@@ -28,15 +25,26 @@ namespace Nuclear
 
 			Rendering::PBRCapture EquirectangularToCubemap(Graphics::Texture* Tex);
 
-			void TestRender(Rendering::PBRCapture*);
 		protected:
 			RefCntAutoPtr<IPipelineState> pERectToCubemap_PSO;
 			RefCntAutoPtr<IShaderResourceBinding> pERectToCubemap_SRB;
+
+			RefCntAutoPtr<IPipelineState> pPrecomputeIrradiancePSO;
+			RefCntAutoPtr<IShaderResourceBinding> pPrecomputeIrradiance_SRB;
+
+			RefCntAutoPtr<IPipelineState> pPrecomputePrefilterPSO;
+			RefCntAutoPtr<IShaderResourceBinding> pPrecomputePrefilter_SRB;
+
+			RefCntAutoPtr<IPipelineState> pPrecomputeBRDF_PSO;
+			RefCntAutoPtr<IShaderResourceBinding> pPrecomputeBRDF_SRB;
+
 			RefCntAutoPtr<IBuffer> pCaptureCB;
+			RefCntAutoPtr<IBuffer> pPrefilterRoughnessCB;
+
+			RefCntAutoPtr<ITextureView> pBRDF_LUT_SRV;
 
 			Skybox mSkybox;
 
-			//Graphics::RenderTarget mCaptureRT;
 			Graphics::RenderTarget mCaptureDepthRT;
 
 			ImageBasedLightingDesc mDesc;
