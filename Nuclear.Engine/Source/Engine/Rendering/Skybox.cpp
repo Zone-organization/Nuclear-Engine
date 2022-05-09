@@ -98,6 +98,14 @@ namespace Nuclear
 				InitializeCube();
 			}
 		}
+
+		void Skybox::Initialize(IBuffer* CameraConstantBuffer, Assets::Image* tex)
+		{
+			mTextureSRV = tex->mTextureView;
+
+			InitializePipeline(CameraConstantBuffer);
+			InitializeCube();
+		}
 	
 
 		void Skybox::Render()

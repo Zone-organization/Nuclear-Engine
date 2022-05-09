@@ -27,6 +27,7 @@ class Sample5 : public Client
 	Rendering::ImageBasedLighting IBL;
 	Rendering::PBRCapture EnvCapture;
 	Graphics::Texture HDREnv;
+	Assets::Image HDR_Cube;
 
 	Rendering::BlinnPhong BlinnPhong;
 	Rendering::BlinnPhong DefferedBlinnPhong;
@@ -191,7 +192,8 @@ public:
 		HDREnv = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
 		Rendering::ImageBasedLightingDesc desc;
 		IBL.Initialize(desc);
-		EnvCapture = IBL.EquirectangularToCubemap(&HDREnv);
+		HDR_Cube = IBL.EquirectangularToCubemap(&HDREnv);
+		EnvCapture = IBL.PrecomputePBRCapture(&HDR_Cube);
 		IBL.SetEnvironmentCapture(&EnvCapture);
 		PBR_IBLPipeline.Initialize(&PBR_IBL, &Camera);
 
@@ -232,6 +234,7 @@ public:
 		InitRenderer();
 		ECS::Transform sphere;
 		sphere.SetScale(Math::Vector3(5.0f));
+		sphere.SetPosition({ -3.0, 0.0, 2.0 });
 		ESphere = Scene.GetFactory().CreateSphere(&RustedIron, sphere);
 
 		SetupAssets();
@@ -250,6 +253,8 @@ public:
 		PBRDefferedPipeline.SetEffect(Utilities::Hash("HDR"), true);
 		PBRDefferedPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
 
+		Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
+		Renderer->GetBackground().SetSkybox(&Skybox);
 
 		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}

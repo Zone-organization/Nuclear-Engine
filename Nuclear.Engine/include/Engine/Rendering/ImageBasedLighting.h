@@ -23,7 +23,10 @@ namespace Nuclear
 		public:
 			void Initialize(const ImageBasedLightingDesc& desc);
 
-			Rendering::PBRCapture EquirectangularToCubemap(Graphics::Texture* Tex);
+			//TODO Move to asset manager
+			Assets::Image EquirectangularToCubemap(Graphics::Texture* Tex);
+
+			Rendering::PBRCapture PrecomputePBRCapture(Assets::Image* cubemap);
 
 			void SetEnvironmentCapture(Rendering::PBRCapture* cap);
 			Rendering::PBRCapture* GetEnvironmentCapture();
@@ -48,14 +51,7 @@ namespace Nuclear
 			Assets::Image mBRDF_LUT_Image;
 
 			Rendering::PBRCapture* pEnvCapture;
-
-			Skybox mSkybox;
-
-			Graphics::RenderTarget mCaptureDepthRT;
-
 			ImageBasedLightingDesc mDesc;
-			Math::Matrix4 mCaptureProjection;
-			Math::Matrix4 mCaptureViews[6];
 		};
 	}
 }

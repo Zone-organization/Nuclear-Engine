@@ -27,7 +27,7 @@ float4 main(PixelInputType input) : SV_TARGET
     for (uint i = 0u; i < SAMPLE_COUNT; ++i)
     {
         float2 Xi = Hammersley(i, SAMPLE_COUNT);
-        float3 H = ImportanceSampleGGX(Xi, N, RoughnessF4.x);
+        float3 H = ImportanceSampleGGX(Xi, RoughnessF4.x, N);
         float3 L = normalize(2.0 * dot(V, H) * H - V);
 
         float NdotL = max(dot(N, L), 0.0);

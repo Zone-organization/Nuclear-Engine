@@ -1,36 +1,32 @@
-struct VertexInputType
-{
-    float4 Position : ATTRIB0;
-};
-
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
-    float3 LocalPos : POSITION;
+    float3 WorldPos : POSITION;
 };
 
 cbuffer NEStatic_CaptureInfo : register(b0)
 {
-    matrix View;
-    matrix Projection;
+    float4x4 g_Rotation;
 };
 
-PixelInputType main(VertexInputType input)
+PixelInputType main(in uint VertexId : SV_VertexID)
 {
     PixelInputType result;
 
-    float4 OutPos;
-    float4x4 aview = float4x4(
-        View._m00, View._m01, View._m02, 0.0f,
-        View._m10, View._m11, View._m12, 0.0f,
-        View._m20, View._m21, View._m22, 0.0f,
-        View._m30, View._m31, View._m32, 1.0f
-        );
-    OutPos = mul(aview, float4(input.Position.xyz , 1.0f));
-    OutPos = mul(Projection, OutPos);
+    float4 Pos;
 
-    result.Position = OutPos;
-    result.LocalPos = input.Position.xyz;
+    float2 PosXY[4];
+    PosXY[0] = float2(-1.0, -1.0);
+    PosXY[1] = float2(-1.0, +1.0);
+    PosXY[2] = float2(+1.0, -1.0);
+    PosXY[3] = float2(+1.0, +1.0);
+    Pos = float4(PosXY[VertexId], 1.0, 1.0);
+    float4 f4WorldPos = mul(g_Rotation, Pos);
+#if (defined(GLSL) || defined(GL_ES)) && !defined(VULKAN)
+    Pos.y *= -1.0;
+#endif
 
+    result.Position = Pos;
+    result.WorldPos = f4WorldPos.xyz / f4WorldPos.w;
     return result;
 }

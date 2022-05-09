@@ -82,7 +82,13 @@ namespace Nuclear
 				auto VarType = VarDesc.Type;
 				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
 				{
-					VarName.erase(0, 6);
+					if (VarName.find("NEMat_LC_") == 0)
+					{
+						VarName.erase(0, 9);
+					}
+					else {
+						VarName.erase(0, 6);
+					}
 					Assets::ShaderTexture ReflectedTex;
 					ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
 					ReflectedTex.mTex.SetName(VarName);

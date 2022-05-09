@@ -36,9 +36,9 @@ Texture2D NEMat_Roughness : register(t3);
 Texture2D NEMat_AO : register(t4);
 
 #ifdef IBL_ENABLED
-TextureCube NEMat_IrradianceMap : register(t5);
-TextureCube NEMat_PrefilterMap : register(t6);
-Texture2D NEMat_BRDF_LUT : register(t7);
+TextureCube NEMat_LC_IrradianceMap : register(t5);
+TextureCube NEMat_LC_PrefilterMap : register(t6);
+Texture2D NEMat_LC_BRDF_LUT : register(t7);
 #endif
 
 SamplerState NEMat_Albedo_sampler : register(s0);
@@ -48,9 +48,9 @@ SamplerState NEMat_Roughness_sampler : register(s3);
 SamplerState NEMat_AO_sampler : register(s4);
 
 #ifdef IBL_ENABLED
-SamplerState NEMat_IrradianceMap_sampler : register(s5);
-SamplerState NEMat_PrefilterMap_sampler : register(s6);
-SamplerState NEMat_BRDF_LUT_sampler : register(s7);
+SamplerState NEMat_LC_IrradianceMap_sampler : register(s5);
+SamplerState NEMat_LC_PrefilterMap_sampler : register(s6);
+SamplerState NEMat_LC_BRDF_LUT_sampler : register(s7);
 #endif
 
 #endif
@@ -231,7 +231,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 
 ///////////////////////////////////////Image based Lighting///////////////////////////////////////
 #ifdef IBL_ENABLED
-	float3 R = reflect(-V, N);
+	float3 R = reflect(V, N);
 
 	// ambient lighting (we now use IBL as the ambient term)
 	float3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0f), F0, roughness);
@@ -240,12 +240,12 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	float3 kD = 1.0f - kS;
 	kD *= 1.0f - metallic;
 
-	float3 irradiance = NEMat_IrradianceMap.Sample(NEMat_IrradianceMap_sampler, N).rgb;
+	float3 irradiance = NEMat_LC_IrradianceMap.Sample(NEMat_LC_IrradianceMap_sampler, N).rgb;
 	float3 diffuse = irradiance * albedo;
 	// sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
 	const float MAX_REFLECTION_LOD = 4.0;
-	float3 prefilteredColor = NEMat_PrefilterMap.SampleLevel(NEMat_PrefilterMap_sampler, R, roughness * MAX_REFLECTION_LOD).rgb;
-	float2 brdf = NEMat_BRDF_LUT.Sample(NEMat_BRDF_LUT_sampler, float2(max(dot(N, V), 0.0), roughness)).rg;
+	float3 prefilteredColor = NEMat_LC_PrefilterMap.SampleLevel(NEMat_LC_PrefilterMap_sampler, R, roughness * MAX_REFLECTION_LOD).rgb;
+	float2 brdf = NEMat_LC_BRDF_LUT.Sample(NEMat_LC_BRDF_LUT_sampler, float2(max(dot(N, V), 0.0), roughness)).rg;
 	float3 specular = prefilteredColor * (F * brdf.x + brdf.y);
 
 	float3 ambient = (kD * diffuse + specular) * ao;

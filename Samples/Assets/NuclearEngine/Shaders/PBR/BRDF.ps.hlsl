@@ -1,9 +1,9 @@
 #include "Common.hlsl"
 
-struct PixelInputType
+struct FullScreenTriangleVSOutput
 {
-    float4 Position : SV_POSITION;
-    float2 TexCoord : TEXCOORD0;
+    float4 f4PixelPos     : SV_Position;
+    float2 f2NormalizedXY : NORMALIZED_XY; // Normalized device XY coordinates [-1,1]x[-1,1]
 };
 
 float2 IntegrateBRDF(float NdotV, float roughness)
@@ -19,35 +19,38 @@ float2 IntegrateBRDF(float NdotV, float roughness)
     float3 N = float3(0.0, 0.0, 1.0);
 
     const uint SAMPLE_COUNT = 1024u;
-    for (uint i = 0u; i < SAMPLE_COUNT; ++i)
+    for (uint i = 0u; i < SAMPLE_COUNT; i++)
     {
         // generates a sample vector that's biased towards the
         // preferred alignment direction (importance sampling).
         float2 Xi = Hammersley(i, SAMPLE_COUNT);
-        float3 H = ImportanceSampleGGX(Xi, N, roughness);
-        float3 L = normalize(2.0 * dot(V, H) * H - V);
+        float3 H = ImportanceSampleGGX(Xi, roughness, N);
+       // float3 L = normalize(2.0 * dot(V, H) * H - V);
+        float3 L = normalize(reflect(-V, H));
 
-        float NdotL = max(L.z, 0.0);
-        float NdotH = max(H.z, 0.0);
-        float VdotH = max(dot(V, H), 0.0);
+        float NdotL = saturate(L.z);
+        float NdotH = saturate(H.z);
+        float VdotH = saturate(dot(V, H));
 
-        if (NdotL > 0.0)
+        if (NdotL > 0.0f)
         {
             float G = GeometrySmith(N, V, L, roughness);
-            float G_Vis = (G * VdotH) / (NdotH * NdotV);
-            float Fc = pow(1.0 - VdotH, 5.0);
+            float G_Vis = max((G * VdotH) / (NdotH * NdotV), 0.0001);
+            float Fc = pow(1.0 - VdotH, 5.0f);
 
-            A += (1.0 - Fc) * G_Vis;
+            A += (1.0f- Fc) * G_Vis;
             B += Fc * G_Vis;
         }
     }
-    A /= float(SAMPLE_COUNT);
-    B /= float(SAMPLE_COUNT);
-    return float2(A, B);
+
+    return float2(A, B) / float(SAMPLE_COUNT);
 }
 // ----------------------------------------------------------------------------
-float2 main(PixelInputType input) : SV_TARGET
-{
-    float2 integratedBRDF = IntegrateBRDF(input.TexCoord.x, input.TexCoord.y);
-    return integratedBRDF;
+float2 main(FullScreenTriangleVSOutput input) : SV_TARGET
+{ 
+    float2 UV = NormalizedDeviceXYToTexUV(input.f2NormalizedXY);
+    float NdotV = UV.x;
+    float linearRoughness = UV.y;
+
+    return IntegrateBRDF(NdotV, linearRoughness);
 }
