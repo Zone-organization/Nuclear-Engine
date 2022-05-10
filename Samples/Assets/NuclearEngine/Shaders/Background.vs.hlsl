@@ -38,6 +38,11 @@ PixelInputType main(VertexInputType input)
     VP = mul(Projection, VP);
 
 	//Set Pos to xyww instead of xyzw, so that z will always be 1 (furthest from camera)
-	output.Position = VP.xyww;    
+	output.Position = VP.xyww; 
+
+#if (defined(GLSL) || defined(GL_ES)) && !defined(VULKAN)
+    output.Position.y *= -1.0;
+#endif
+
     return output;
 }

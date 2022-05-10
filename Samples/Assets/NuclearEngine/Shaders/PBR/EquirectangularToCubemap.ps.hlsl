@@ -19,6 +19,10 @@ float2 SampleSphericalMap(float3 v)
 float4 main(PixelInputType input) : SV_TARGET
 {
     float2 uv = SampleSphericalMap(normalize(input.LocalPos));
+#if !((defined(GLSL) || defined(GL_ES)) && !defined(VULKAN))
+    uv.y *= -1.0;
+#endif
+
     float3 color = NEMat_EquirectangularMap.Sample(NEMat_EquirectangularMap_sampler, uv).rgb;
     return float4(color, 1.0f);
 }

@@ -231,7 +231,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 
 ///////////////////////////////////////Image based Lighting///////////////////////////////////////
 #ifdef IBL_ENABLED
-	float3 R = reflect(V, N);
+	float3 R = reflect(-V, N);
 
 	// ambient lighting (we now use IBL as the ambient term)
 	float3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0f), F0, roughness);
