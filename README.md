@@ -3,7 +3,14 @@
 ## Current To-dos 
   - W.I.P:
 	- Basic Editor support (Nuclear Editor).
-# Getting started
+    - Basic Shadow mapping for all 3 light types.
+
+  - TODO:
+	- Motion blur
+	- SSAO
+	- FIX BRDF generation in IBL Pipeline
+	- Clean and document Samples.
+## Getting started
 
 Follow the instructions below to compile and run the engine from source.
 

@@ -247,7 +247,6 @@ public:
 		InitRenderer();
 		ECS::Transform sphere;
 		sphere.SetScale(Math::Vector3(5.0f));
-		sphere.SetPosition({ -3.0, 0.0, 2.0 });
 		ESphere = Scene.GetFactory().CreateSphere(&RustedIron, sphere);
 
 		SetupAssets();
