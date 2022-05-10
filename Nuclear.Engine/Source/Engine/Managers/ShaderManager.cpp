@@ -98,25 +98,18 @@ namespace Nuclear
 			else 
 			{
 
-				for (auto &i : Resources)
+				for (auto& i : Resources)
 				{
 					std::string name(i.Name);
 					//Check its type
-					if (name.find("NEMat_LC_") != std::string::npos)
-					{
-						SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
-						TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
-						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearClampDesc);
-						GeneratedSamplerDesc.push_back(desc);
-					}
-					else if (name.find("NEMat_") != std::string::npos)
+					if (name.find("NEMat_") != std::string::npos)
 					{
 						SamplerDesc SamLinearWrapDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
 							TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP);
 						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearWrapDesc);
 						GeneratedSamplerDesc.push_back(desc);
 					}
-					else if (name.find("NE_RT_") != std::string::npos)
+					else if (name.find("NE_RT_") != std::string::npos || name.find("NEIBL_") != std::string::npos)
 					{
 						SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
 							TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
@@ -186,6 +179,8 @@ namespace Nuclear
 			else if (name.find("NEMat") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 			else if (name.find("NE_RT") == 0)
+				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
+			else if (name.find("NEIBL") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 
 			return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;

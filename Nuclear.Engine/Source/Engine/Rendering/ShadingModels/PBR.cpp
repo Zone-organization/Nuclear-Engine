@@ -30,7 +30,7 @@ namespace Nuclear
 
 			if (pIBLContext)
 			{
-				for (auto &i : mPixelShaderTextureInfo)
+				for (auto &i : mIBLTexturesInfo)
 				{
 					if (i.mTex.GetUsageType() == Graphics::TextureUsageType::IrradianceMap)
 					{

@@ -63,20 +63,28 @@ namespace Nuclear
                 }
             }*/
 
-            if (renderer->GetBackground().GetSkybox() != nullptr)
-            {
-                renderer->GetBackground().GetSkybox()->Render();
-            }
-
             //Apply Lighting
             SetPostFXPipelineForRendering();
             for (int i = 0; i < mGBuffer.mRenderTargets.size(); i++)
             {
                 GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(mGBuffer.mRenderTargets.at(i).GetShaderRTV());
             }
+
+            //IBL
+            for (int i = 0; i < GetShadingModel()->mIBLTexturesInfo.size(); i++)
+            {
+                GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mIBLTexturesInfo.at(i).mSlot)->Set(GetShadingModel()->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+            }
+
             Graphics::Context::GetContext()->CommitShaderResources(GetShadingModel()->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+
             Assets::DefaultMeshes::RenderScreenQuad();
+
+            if (renderer->GetBackground().GetSkybox() != nullptr)
+            {
+                renderer->GetBackground().GetSkybox()->Render();
+            }
 
             ApplyPostProcessingEffects();
 

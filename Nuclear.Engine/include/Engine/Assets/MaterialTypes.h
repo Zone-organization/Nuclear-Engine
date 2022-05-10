@@ -7,10 +7,21 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		enum class ShaderTextureType : Uint8
+		{
+			Unknown = 0,
+
+			MaterialTex = 1,
+			RenderTarget = 2,
+			IBL_Tex = 3			
+		};
+
 		struct ShaderTexture
 		{
 			Uint32 mSlot = 0;
 			Graphics::Texture mTex;
+
+			ShaderTextureType mType = ShaderTextureType::Unknown;
 		};
 
 		struct TextureSet

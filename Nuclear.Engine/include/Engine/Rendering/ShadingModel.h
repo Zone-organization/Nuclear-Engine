@@ -41,9 +41,12 @@ namespace Nuclear
 			virtual void Initialize(const ShadingModelInitInfo& info);
 
 			IPipelineState* GetActivePipeline();
+			IShaderResourceBinding* GetActiveSRB();
+
 			IPipelineState* GetShadersPipeline();
 			IShaderResourceBinding* GetShadersPipelineSRB();
 			IPipelineState* GetGBufferPipeline();
+			IShaderResourceBinding* GetGBufferPipelineSRB();
 
 			virtual void ReflectPixelShaderData();
 
@@ -63,7 +66,9 @@ namespace Nuclear
 
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
-			std::vector<Assets::ShaderTexture> mPixelShaderTextureInfo;
+			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo;
+
+			std::vector<Assets::ShaderTexture> mIBLTexturesInfo;
 
 			std::string GetName();
 		protected:
@@ -72,11 +77,14 @@ namespace Nuclear
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
 			RefCntAutoPtr<IPipelineState> mGBufferPipeline;
+			RefCntAutoPtr<IShaderResourceBinding> mGBufferSRB;
 
 			ShadingModelInitInfo mInitInfo;
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 			Uint32 mID = 0;
 			std::string mName;
+
+
 		};
 
 	}

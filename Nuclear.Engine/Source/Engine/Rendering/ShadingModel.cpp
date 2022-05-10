@@ -18,6 +18,14 @@ namespace Nuclear
 			}
 			return GetShadersPipeline();
 		}
+		IShaderResourceBinding* ShadingModel::GetActiveSRB()
+		{
+			if (mInitInfo.mDefferedPipeline)
+			{
+				return GetGBufferPipelineSRB();
+			}
+			return GetShadersPipelineSRB();
+		}
 		IPipelineState* ShadingModel::GetShadersPipeline()
 		{
 			return mPipeline.RawPtr();
@@ -31,6 +39,11 @@ namespace Nuclear
 		IPipelineState* ShadingModel::GetGBufferPipeline()
 		{
 			return mGBufferPipeline.RawPtr();
+		}
+
+		IShaderResourceBinding* ShadingModel::GetGBufferPipelineSRB()
+		{
+			return mGBufferSRB.RawPtr();
 		}
 
 		Graphics::TextureUsageType ParseTexUsageFromName(std::string& name)
@@ -61,18 +74,8 @@ namespace Nuclear
 			return Graphics::TextureUsageType::Unknown;
 		}
 
-		void ShadingModel::ReflectPixelShaderData()
+		void ReflectData(IShaderResourceBinding* ActiveSRB,const std::string& varname, std::vector<Assets::ShaderTexture>& result,const Assets::ShaderTextureType& type)
 		{
-			mPipeline->CreateShaderResourceBinding(&mPipelineSRB, true);
-
-			RefCntAutoPtr<IShaderResourceBinding> ActiveSRB;
-			if (mInitInfo.mDefferedPipeline)
-			{
-				mGBufferPipeline->CreateShaderResourceBinding(&ActiveSRB, true);
-			}
-			else {
-				ActiveSRB = mPipelineSRB;
-			}
 			for (Uint32 i = 0; i < ActiveSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
 			{
 				auto variable = ActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
@@ -80,22 +83,42 @@ namespace Nuclear
 				variable->GetResourceDesc(VarDesc);
 				std::string VarName(VarDesc.Name);
 				auto VarType = VarDesc.Type;
-				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
+				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find(varname) == 0)
 				{
-					if (VarName.find("NEMat_LC_") == 0)
-					{
-						VarName.erase(0, 9);
-					}
-					else {
-						VarName.erase(0, 6);
-					}
+					VarName.erase(0, varname.size());
+
 					Assets::ShaderTexture ReflectedTex;
 					ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
 					ReflectedTex.mTex.SetName(VarName);
 					ReflectedTex.mSlot = i;
+					ReflectedTex.mType = type;
 					ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
-					mPixelShaderTextureInfo.push_back(ReflectedTex);
+					result.push_back(ReflectedTex);
 				}
+			}
+		}
+		void ShadingModel::ReflectPixelShaderData()
+		{
+			mPipeline->CreateShaderResourceBinding(&mPipelineSRB, true);
+
+			if(mGBufferPipeline)
+			{
+				mGBufferPipeline->CreateShaderResourceBinding(&mGBufferSRB, true);
+			}
+			if (mInitInfo.mDefferedPipeline)
+			{
+				RefCntAutoPtr<IShaderResourceBinding> GBufferSRB;
+				mGBufferPipeline->CreateShaderResourceBinding(&GBufferSRB, true);
+
+				ReflectData(GBufferSRB.RawPtr(), "NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
+
+				//Handle IBL textures
+				ReflectData(mPipelineSRB.RawPtr(), "NEIBL_", mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
+			}
+			else
+			{
+				ReflectData(mPipelineSRB.RawPtr(),"NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
+				ReflectData(mPipelineSRB.RawPtr(), "NEIBL_", mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
 			}
 
 		}

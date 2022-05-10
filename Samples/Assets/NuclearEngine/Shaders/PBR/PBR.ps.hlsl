@@ -28,6 +28,17 @@ SamplerState NE_RT_GBuffer_Normal_sampler : register(s1);
 SamplerState NE_RT_GBuffer_AlbedoMatallic_sampler : register(s2);
 SamplerState NE_RT_GBuffer_RoughnessAO_sampler : register(s3);  //1 Component
 
+//#ifdef IBL_ENABLED
+//
+//TextureCube NEIBL_IrradianceMap : register(t4);
+//TextureCube NEIBL_PrefilterMap : register(t5);
+//Texture2D NEIBL_BRDF_LUT : register(t6);
+//SamplerState NEIBL_IrradianceMap_sampler : register(s4);
+//SamplerState NEIBL_PrefilterMap_sampler : register(s5);
+//SamplerState NEIBL_BRDF_LUT_sampler : register(s6);
+//
+//#endif
+
 #else
 Texture2D NEMat_Albedo : register(t0);
 Texture2D NEMat_Metallic : register(t1);
@@ -35,23 +46,24 @@ Texture2D NEMat_Normal : register(t2);
 Texture2D NEMat_Roughness : register(t3);
 Texture2D NEMat_AO : register(t4);
 
-#ifdef IBL_ENABLED
-TextureCube NEMat_LC_IrradianceMap : register(t5);
-TextureCube NEMat_LC_PrefilterMap : register(t6);
-Texture2D NEMat_LC_BRDF_LUT : register(t7);
-#endif
-
 SamplerState NEMat_Albedo_sampler : register(s0);
 SamplerState NEMat_Metallic_sampler : register(s1);
 SamplerState NEMat_Normal_sampler : register(s2);
 SamplerState NEMat_Roughness_sampler : register(s3);
 SamplerState NEMat_AO_sampler : register(s4);
 
-#ifdef IBL_ENABLED
-SamplerState NEMat_LC_IrradianceMap_sampler : register(s5);
-SamplerState NEMat_LC_PrefilterMap_sampler : register(s6);
-SamplerState NEMat_LC_BRDF_LUT_sampler : register(s7);
 #endif
+
+
+#ifdef IBL_ENABLED
+
+TextureCube NEIBL_IrradianceMap;
+TextureCube NEIBL_PrefilterMap;
+Texture2D NEIBL_BRDF_LUT;
+
+SamplerState NEIBL_IrradianceMap_sampler;
+SamplerState NEIBL_PrefilterMap_sampler;
+SamplerState NEIBL_BRDF_LUT_sampler;
 
 #endif
 
@@ -240,12 +252,12 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	float3 kD = 1.0f - kS;
 	kD *= 1.0f - metallic;
 
-	float3 irradiance = NEMat_LC_IrradianceMap.Sample(NEMat_LC_IrradianceMap_sampler, N).rgb;
+	float3 irradiance = NEIBL_IrradianceMap.Sample(NEIBL_IrradianceMap_sampler, N).rgb;
 	float3 diffuse = irradiance * albedo;
 	// sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
 	const float MAX_REFLECTION_LOD = 4.0;
-	float3 prefilteredColor = NEMat_LC_PrefilterMap.SampleLevel(NEMat_LC_PrefilterMap_sampler, R, roughness * MAX_REFLECTION_LOD).rgb;
-	float2 brdf = NEMat_LC_BRDF_LUT.Sample(NEMat_LC_BRDF_LUT_sampler, float2(max(dot(N, V), 0.0), roughness)).rg;
+	float3 prefilteredColor = NEIBL_PrefilterMap.SampleLevel(NEIBL_PrefilterMap_sampler, R, roughness * MAX_REFLECTION_LOD).rgb;
+	float2 brdf = NEIBL_BRDF_LUT.Sample(NEIBL_BRDF_LUT_sampler, float2(max(dot(N, V), 0.0), roughness)).rg;
 	float3 specular = prefilteredColor * (F * brdf.x + brdf.y);
 
 	float3 ambient = (kD * diffuse + specular) * ao;

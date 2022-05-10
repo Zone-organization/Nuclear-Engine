@@ -22,6 +22,7 @@ namespace Nuclear
 			void Initialize(const std::vector<TextureSet>& PixelShaderTextures);
 
 			void BindTexSet(Uint32 index);
+
 			std::vector<TextureSet> mPShaderTextures;
 		private:
 			Rendering::ShadingModel* mRenderingPipeline = nullptr;

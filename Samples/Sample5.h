@@ -23,7 +23,10 @@ class Sample5 : public Client
 
 	//IBL
 	Rendering::PBR PBR_IBL;
+	Rendering::PBR Deffered_IBL_SM;
 	Rendering::ForwardRenderingPipeline PBR_IBLPipeline;
+	Rendering::DefferedRenderingPipeline Deffered_IBLPipeline;
+
 	Rendering::ImageBasedLighting IBL;
 	Rendering::PBRCapture EnvCapture;
 	Graphics::Texture HDREnv;
@@ -68,7 +71,10 @@ public:
 		BlinnPhongDefferedPipeline("BlinnDeffered"),
 		PBRDefferedPipeline("PBRDeffered"),
 		PBR_IBL(&IBL),
-		PBR_IBLPipeline("PBR_IBL_P")
+		Deffered_IBL_SM(&IBL),
+		PBR_IBLPipeline("PBR_IBL_P"),
+		Deffered_IBLPipeline("Deff_PBR_IBL")
+
 	{
 
 	}
@@ -202,6 +208,7 @@ public:
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
 		DefferedBlinnPhong.Initialize({ true });
 		DefferedPBR.Initialize({ true });
+		Deffered_IBL_SM.Initialize({ true });
 
 		Rendering::DefferedRenderingPipelineInitInfo initInfo;
 		initInfo.shadingModel = &DefferedBlinnPhong;
@@ -211,8 +218,14 @@ public:
 		initInfo.shadingModel = &DefferedPBR;
 		PBRDefferedPipeline.Initialize(initInfo);
 
+		initInfo.shadingModel = &Deffered_IBL_SM;
+		initInfo.camera = &Camera;
+		Deffered_IBLPipeline.Initialize(initInfo);
+
 		Renderer->AddRenderingPipeline(&PBRPipeline);
 		Renderer->AddRenderingPipeline(&PBR_IBLPipeline);
+		Renderer->AddRenderingPipeline(&Deffered_IBLPipeline);
+		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongDefferedPipeline);
 		Renderer->AddRenderingPipeline(&PBRDefferedPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
@@ -251,7 +264,9 @@ public:
 		PBR_IBLPipeline.SetEffect(Utilities::Hash("HDR"), true);
 		PBR_IBLPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
 		PBRDefferedPipeline.SetEffect(Utilities::Hash("HDR"), true);
-		PBRDefferedPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+		PBRDefferedPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);		
+		Deffered_IBLPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		Deffered_IBLPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
 
 		Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
 		Renderer->GetBackground().SetSkybox(&Skybox);
@@ -394,7 +409,9 @@ public:
 			ImGui::RadioButton("WireFrame", &e, 3);
 			ImGui::RadioButton("Deffered PBR", &e, 4);
 			ImGui::RadioButton("Deffered Blinn Phong", &e, 5);
-			ImGui::RadioButton("PBR_IBL", &e, 6);
+			ImGui::RadioButton("PBR with IBL", &e, 6);
+			ImGui::RadioButton("Deffered PBR with IBL", &e, 7);
+
 
 			//Change Rendering Pipeline
 			if (e == 0)
@@ -411,6 +428,8 @@ public:
 				Renderer->SetActiveRenderingPipeline(BlinnPhongDefferedPipeline.GetID());
 			else if (e ==6)
 				Renderer->SetActiveRenderingPipeline(PBR_IBLPipeline.GetID());
+			else if (e == 7)
+				Renderer->SetActiveRenderingPipeline(Deffered_IBLPipeline.GetID());
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 

@@ -28,6 +28,8 @@ namespace Nuclear
 			//Render Meshes
 			Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
 
+
+
 			auto view = renderer->mScene->GetRegistry().view<Components::MeshComponent>();
 
 			for (auto entity : view)
@@ -65,7 +67,11 @@ namespace Nuclear
 						data = memcpy(data, &empty,  sizeof(Math::Matrix4));
 						Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
 					}
-
+					//IBL
+					for (int i = 0; i < GetShadingModel()->mIBLTexturesInfo.size(); i++)
+					{
+						GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mIBLTexturesInfo.at(i).mSlot)->Set(GetShadingModel()->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+					}
 					InstantRender(MeshObject.mMesh, MeshObject.mMaterial);
 				}
 			}

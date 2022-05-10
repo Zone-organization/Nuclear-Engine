@@ -28,7 +28,6 @@ namespace Nuclear
 
 		private:
 			GBuffer mGBuffer;
-
 			void BakeRenderTargets() override;
 			void RenderMeshes(Systems::RenderSystem* renderer);
 		};

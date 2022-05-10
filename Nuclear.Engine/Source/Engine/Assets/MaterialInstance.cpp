@@ -25,8 +25,7 @@ namespace Nuclear
 				return;
 			}
 			mRenderingPipeline =Pipeline;
-			mRenderingPipeline->GetActivePipeline()->CreateShaderResourceBinding(&mSRB, true);
-
+			mSRB = mRenderingPipeline->GetActiveSRB();
 			mDefferedMaterial = Pipeline->isDeffered();
 		}
 
@@ -39,7 +38,7 @@ namespace Nuclear
 				TextureSet NewTexSet;
 				for (auto TexSetTexture : TexSet.mData)
 				{
-					for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
+					for (auto ShaderTexinfo : mRenderingPipeline->mMaterialTexturesInfo)
 					{
 						//Found a match
 						if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
@@ -58,13 +57,13 @@ namespace Nuclear
 			for (int i = 0; i < mPShaderTextures.size(); i++)
 			{
 				//Check if a texture is missing
-				if (mPShaderTextures.at(i).mData.size() != mRenderingPipeline->mPixelShaderTextureInfo.size())
+				if (mPShaderTextures.at(i).mData.size() != mRenderingPipeline->mMaterialTexturesInfo.size())
 				{				
 					//Stage 2A
 					//Generate a copy of the texture set that doesnt contain duplicated textures.
-					auto TexSetCopy = mRenderingPipeline->mPixelShaderTextureInfo;
+					auto TexSetCopy = mRenderingPipeline->mMaterialTexturesInfo;
 
-					for (auto ShaderTexinfo : mRenderingPipeline->mPixelShaderTextureInfo)
+					for (auto ShaderTexinfo : mRenderingPipeline->mMaterialTexturesInfo)
 					{
 						for (int j = 0; j < mPShaderTextures.at(i).mData.size(); j++)
 						{
@@ -100,6 +99,6 @@ namespace Nuclear
 			}
 
 			Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		}	
+		}
 	}
 }
