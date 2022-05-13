@@ -3,7 +3,6 @@
 #include <Engine\Rendering\ForwardRenderingPipeline.h>
 #include <Engine\Rendering\DefferedRenderingPipeline.h>
 #include <Engine\Rendering\BlurEffect.h>
-#include <Engine\Rendering\CSMShadowMap.h>
 #include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Rendering\ShadingModels\BlinnPhong.h>
 #include <Engine\Rendering\ShadingModels\PBR.h>

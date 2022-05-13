@@ -4,7 +4,6 @@
 #include <Engine/Rendering/ShaderEffect.h>
 #include <Engine/Rendering/ShadingModel.h>
 #include <Engine/Graphics/BakeStatus.h>
-#include <Engine/Rendering/CSMShadowMap.h>
 #include <Engine\ECS\Scene.h>
 #include <unordered_map>
 
