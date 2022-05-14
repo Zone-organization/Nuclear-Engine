@@ -10,6 +10,19 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		RenderingPipeline::RenderingPipeline()
+		{
+			static int id = 0;
+			std::string name = "UnNamed_RenderingPipeline" + id;
+			id++;
+
+			mName = name;
+			mID = Utilities::Hash(mName);
+
+			mPostProcessingEffects[Utilities::Hash("HDR")] = Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
+			mPostProcessingEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
+			mPostProcessingEffects[Utilities::Hash("BLOOM")] = Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::PostProcessingAndRenderingEffect, false);
+		}
 		RenderingPipeline::RenderingPipeline(const std::string& name)
 		{
 			mName = name;

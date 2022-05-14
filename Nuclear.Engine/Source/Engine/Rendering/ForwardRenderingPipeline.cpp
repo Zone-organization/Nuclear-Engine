@@ -11,10 +11,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		ForwardRenderingPipeline::ForwardRenderingPipeline(const std::string& name)
-			: RenderingPipeline(name)
-		{
-		}
+
 		void ForwardRenderingPipeline::Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera)
 		{
 			SetShadingModelAndCamera(shadingModel, camera);

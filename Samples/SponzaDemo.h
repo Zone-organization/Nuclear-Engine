@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 
-class Sample4 : public Client
+class SponzaDemo : public Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
@@ -14,20 +14,40 @@ class Sample4 : public Client
 
 	Rendering::Skybox Skybox;
 
-	Rendering::PBR PBR;
+	//Shading models
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
-	Rendering::BlinnPhong BlinnPhongRP;
 
+	Rendering::PBR PBR;
+	Rendering::PBR PBR_IBL;
+	Rendering::PBR Deffered_PBR;
+	Rendering::PBR Deffered_IBL;
+
+	Rendering::BlinnPhong BlinnPhongRP;
+	Rendering::BlinnPhong Deffered_BlinnPhong;
+
+	//Pipelines
 	Rendering::ForwardRenderingPipeline PBRPipeline;
 	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
 	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
+	Rendering::ForwardRenderingPipeline IBLPipeline;
+
+	Rendering::DefferedRenderingPipeline Deffered_IBLPipeline;
+	Rendering::DefferedRenderingPipeline Deffered_BlinnPhongPipeline;
+	Rendering::DefferedRenderingPipeline Deffered_PBRPipeline;
+
+	//IBL Settings
+	Rendering::ImageBasedLighting IBL;
+	Rendering::PBRCapture EnvCapture;
+	Graphics::Texture HDREnv;
+	Assets::Image HDR_Cube;
+
 	ECS::Scene Scene;
 
 	ECS::Entity ESponza;
 
-	ECS::Entity ECamera;
+	ECS::Entity EController;
 	ECS::Entity ELights;
 
 	// positions of the point lights
@@ -49,12 +69,10 @@ class Sample4 : public Client
 	bool isMouseDisabled = false;
 
 public:
-	Sample4()
+	SponzaDemo()
 		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM),
-		BlinnPhongPipeline("BlinnPhong"),
-		DiffuseRPPipeline("DiffuseRP"),
-		WireFrameRPPipeline("WireFrameRP"),
-		PBRPipeline("PBR")
+		PBR_IBL(&IBL),
+		Deffered_IBL(&IBL)
 	{
 	}
 	void SetupAssets()
@@ -69,21 +87,6 @@ public:
 
 		ESponza.AddComponent<Components::MeshComponent>(SponzaAsset, SponzaMaterial);
 
-		//Create The skybox
-		std::array<Core::Path, 6> SkyBoxTexturePaths
-		{
-			Core::Path("@CommonAssets@/Skybox/right.jpg"),
-			Core::Path("@CommonAssets@/Skybox/left.jpg"),
-			Core::Path("@CommonAssets@/Skybox/top.jpg"),
-			Core::Path("@CommonAssets@/Skybox/bottom.jpg"),
-			Core::Path("@CommonAssets@/Skybox/front.jpg"),
-			Core::Path("@CommonAssets@/Skybox/back.jpg")
-		};
-
-		Importers::ImageLoadingDesc SkyboxDesc;
-	//	SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		auto test = mAssetManager->LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
-		Skybox.Initialize(mCameraSystem->GetCameraCB(), test);
 	}
 	void SetupEntities()
 	{
@@ -114,30 +117,93 @@ public:
 
 	}
 
-	void InitRenderer()
+	void InitIBL()
 	{
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
+		//IBL
+		Importers::ImageLoadingDesc DESC;
+		DESC.mType = RESOURCE_DIM_TEX_2D;
+		DESC.mUsage = USAGE_IMMUTABLE;
+		DESC.mBindFlags = BIND_SHADER_RESOURCE;
+		DESC.mMipLevels = 1;
 
+		HDREnv = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+
+		Rendering::ImageBasedLightingDesc desc;
+		IBL.Initialize(desc);
+
+		HDR_Cube = IBL.EquirectangularToCubemap(&HDREnv);
+		EnvCapture = IBL.PrecomputePBRCapture(&HDR_Cube);
+		IBL.SetEnvironmentCapture(&EnvCapture);
+	}
+
+	void InitForwardPipelines()
+	{
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
 		PBRPipeline.Initialize(&PBR, &Camera);
+		IBLPipeline.Initialize(&PBR_IBL, &Camera);
+	}
+
+	void InitDefferedPipelines()
+	{
+		Deffered_BlinnPhong.Initialize({ true });
+		Deffered_PBR.Initialize({ true });
+		Deffered_IBL.Initialize({ true });
+
+		Rendering::DefferedRenderingPipelineInitInfo initInfo;
+		initInfo.shadingModel = &Deffered_BlinnPhong;
+		initInfo.camera = &Camera;
+		Deffered_BlinnPhongPipeline.Initialize(initInfo);
+
+		initInfo.shadingModel = &Deffered_PBR;
+		Deffered_PBRPipeline.Initialize(initInfo);
+
+		initInfo.shadingModel = &Deffered_IBL;
+		initInfo.camera = &Camera;
+		Deffered_IBLPipeline.Initialize(initInfo);
+	}
+
+	void InitRenderer()
+	{
+		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
+
+		InitIBL();
+		InitForwardPipelines();
+		InitDefferedPipelines();
 
 		Renderer->AddRenderingPipeline(&PBRPipeline);
 		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
 		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
+		Renderer->AddRenderingPipeline(&IBLPipeline);
+
+		Renderer->AddRenderingPipeline(&Deffered_BlinnPhongPipeline);
+		Renderer->AddRenderingPipeline(&Deffered_IBLPipeline);
+		Renderer->AddRenderingPipeline(&Deffered_PBRPipeline);
 
 		Renderer->Bake(_Width_, _Height_);
+
+		PBRPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		PBRPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+		IBLPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		IBLPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+		Deffered_PBRPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		Deffered_PBRPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+		Deffered_IBLPipeline.SetEffect(Utilities::Hash("HDR"), true);
+		Deffered_IBLPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
+
+		Skybox.Initialize(mCameraSystem->GetCameraCB(), &HDR_Cube);
+		Renderer->GetBackground().SetSkybox(&Skybox);
 	}
 
 	void Load()
 	{
 		mAssetManager->Initialize();
 
-		ECamera = Scene.CreateEntity();
-		ECamera.AddComponent<Components::SpotLightComponent>();
-		ECamera.AddComponent<Components::CameraComponent>(&Camera);
+		EController = Scene.CreateEntity();
+		EController.AddComponent<Components::SpotLightComponent>();
+		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
@@ -215,6 +281,8 @@ public:
 
 		Camera.UpdateBuffer();
 		mCameraSystem->Update(deltatime);
+		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
+
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	void Render(float dt) override
@@ -222,8 +290,7 @@ public:
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 		Scene.Update(dt);
 		{
@@ -232,26 +299,39 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			ImGui::Text("Active Rendering Pipeline:");
 			static int e = 0;
-			ImGui::RadioButton("DiffuseOnly", &e, 0);
-			ImGui::RadioButton("BlinnPhong", &e, 1);
-			//ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
-			ImGui::RadioButton("WireFrame", &e, 3);
-			ImGui::RadioButton("PBR", &e, 4);
+			ImGui::Text("Forward Rendering Pipelines:");
+			ImGui::RadioButton("WireFrame", &e, 0);
+			ImGui::RadioButton("DiffuseOnly", &e, 1);
+			ImGui::RadioButton("BlinnPhong", &e, 2);
+			ImGui::RadioButton("PBR", &e, 3);
+			ImGui::RadioButton("PBR With IBL", &e, 4);
+
+			ImGui::Text("Deffered Rendering Pipelines:");
+
+			ImGui::RadioButton("Deffered Blinnphong", &e, 5);
+			ImGui::RadioButton("Deffered PBR", &e, 6);
+			ImGui::RadioButton("Deffered PBR With IBL", &e, 7);
 
 			//Change Rendering Pipeline
-
 			if (e == 0)
-				Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
-			else if (e == 1)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
-			//else if (e == 2)
-			//	Renderer->SetActiveRenderingPipeline(BlinnPhongNormalPipeline.GetID());
-			else if (e == 3)
 				Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-			else if (e == 4)
+			else if (e == 1)
+				Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
+			else if (e == 2)
+				Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
+			else if (e == 3)
 				Renderer->SetActiveRenderingPipeline(PBRPipeline.GetID());
+			else if (e == 4)
+				Renderer->SetActiveRenderingPipeline(IBLPipeline.GetID());
+
+			else if (e == 5)
+				Renderer->SetActiveRenderingPipeline(Deffered_BlinnPhongPipeline.GetID());
+			else if (e == 6)
+				Renderer->SetActiveRenderingPipeline(Deffered_PBRPipeline.GetID());
+			else if (e == 7)
+				Renderer->SetActiveRenderingPipeline(Deffered_IBLPipeline.GetID());
+
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
@@ -272,7 +352,7 @@ public:
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-		//	ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
+			//ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

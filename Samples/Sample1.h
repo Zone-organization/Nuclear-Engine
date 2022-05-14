@@ -1,30 +1,6 @@
 #pragma once
 #include "Common.h"
-//
-//void ViewMaterialInfo(Assets::Material* material, Managers::AssetManager* Manager)
-//{
-//	using namespace Graphics;
-//	std::string name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
-//
-//	if (Manager)
-//		name = Manager->mHashedMaterialsPaths[material->GetName()].mInputPath + Utilities::int_to_hex<Uint32>(material->GetName());
-//	else
-//		name = Utilities::int_to_hex<Uint32>(material->GetName()).c_str();
-//
-//	ImGui::Begin(name.c_str());
-//
-//	for (int i = 0; i < material->mPixelShaderTextures.size(); i++)
-//	{
-//		ImGui::Text(std::string("TextureSet Index: " + std::to_string(i)).c_str());
-//		for (int j = 0; j < material->mPixelShaderTextures.at(i).mData.size(); j++)
-//		{
-//			ImGui::Image(&material->mPixelShaderTextures.at(i).mData.at(j).mTex, ImVec2(128, 128));
-//			ImGui::SameLine();
-//		}
-//		ImGui::NewLine();
-//	}
-//	ImGui::End();
-//}
+
 class Sample1 : public Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
@@ -69,37 +45,9 @@ class Sample1 : public Client
 	ECS::Entity EVampire;
 
 	ECS::Scene Scene;
-	ECS::Entity ECamera;
+	ECS::Entity EController;
 	ECS::Entity ELights;
 
-	// positions all containers
-	Math::Vector3 cubePositions[10] =
-	{
-		Math::Vector3(0.0f,  0.0f,  0.0f),
-		Math::Vector3(2.0f,  5.0f, -15.0f),
-		Math::Vector3(-1.5f, -2.2f, -2.5f),
-		Math::Vector3(-3.8f, -2.0f, -12.3f),
-		Math::Vector3(2.4f, -0.4f, -3.5f),
-		Math::Vector3(-1.7f,  3.0f, -7.5f),
-		Math::Vector3(1.3f, -2.0f, -2.5f),
-		Math::Vector3(1.5f,  2.0f, -2.5f),
-		Math::Vector3(1.5f,  0.2f, -1.5f),
-		Math::Vector3(-1.3f,  1.0f, -1.5f)
-	};
-
-	// positions of the point lights
-	Math::Vector3 pointLightPositions[9] =
-	{
-		Math::Vector3(0.7f,  0.2f,  2.0f),
-		Math::Vector3(2.3f, -3.3f, -4.0f),
-		Math::Vector3(-4.0f,  2.0f, -12.0f),
-		Math::Vector3(0.0f,  0.0f, -3.0f),
-		Math::Vector3(4.0f,  3.0f, -2.0f),
-		Math::Vector3(6.2f, 2.0f, 0.0f),
-		Math::Vector3(6.2f, -2.0f, 0.0f),
-		Math::Vector3(-6.2f, 2.0f, 0.0f),
-		Math::Vector3(-6.2f, -2.0f, 0.0f)
-	};
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -107,11 +55,7 @@ class Sample1 : public Client
 
 public:
 	Sample1()
-		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f),  Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM),
-		BlinnPhongPipeline("BlinnPhong"),
-		DiffuseRPPipeline("DiffuseRP"),
-		WireFrameRPPipeline("WireFrameRP"),
-		DefferedPipeline("Deffered")
+		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f),  Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 	}
 	void SetupAssets()
@@ -213,7 +157,7 @@ public:
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(pointLightPositions[0]);
+		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.7f, 0.2f, 2.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.f);
 	}
@@ -246,9 +190,9 @@ public:
 	{
 		mAssetManager->Initialize();
 
-		ECamera = Scene.CreateEntity();
-		ECamera.AddComponent<Components::SpotLightComponent>();
-		ECamera.AddComponent<Components::CameraComponent>(&Camera);
+		EController = Scene.CreateEntity();
+		EController.AddComponent<Components::SpotLightComponent>();
+		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
@@ -329,6 +273,8 @@ public:
 
 		Camera.UpdateBuffer();
 		mCameraSystem->Update(deltatime);
+		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
+
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	void Render(float dt) override
@@ -338,8 +284,7 @@ public:
 		BobAnimator.UpdateAnimation(dt);
 		VampireAnimator.UpdateAnimation(dt);
 
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
-		ECamera.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 		Scene.Update(dt);
 		{

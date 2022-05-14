@@ -13,10 +13,6 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		DefferedRenderingPipeline::DefferedRenderingPipeline(const std::string& name)
-			: RenderingPipeline(name)
-		{
-		}
 		void DefferedRenderingPipeline::Initialize(const DefferedRenderingPipelineInitInfo& info)
 		{
             SetShadingModelAndCamera(info.shadingModel, info.camera);

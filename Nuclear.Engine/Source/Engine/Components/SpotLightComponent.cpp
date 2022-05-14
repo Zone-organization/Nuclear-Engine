@@ -19,10 +19,7 @@ namespace Nuclear
 		{
 			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
 		}
-		void SpotLightComponent::SetPosition(Math::Vector3 pos)
-		{
-			data.Position = Math::Vector4(pos, 1.0f);
-		}
+
 		void SpotLightComponent::SetDirection(Math::Vector3 dir)
 		{
 			data.Direction = Math::Vector4(dir, 1.0f);
@@ -40,33 +37,38 @@ namespace Nuclear
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cutoff_outercutoff.x, cutoff_outercutoff.y, 0.0f, 0.0f);
 
 		}
-		Graphics::Color SpotLightComponent::GetColor()
+		Graphics::Color SpotLightComponent::GetColor() const
 		{
 			return Graphics::Color(data.Color.r, data.Color.g, data.Color.b, data.Color.a);
 		}
-		Math::Vector3 SpotLightComponent::GetPosition()
-		{
-			return Math::Vector3(data.Position);
-		}
-		Math::Vector3 SpotLightComponent::GetDirection()
+	
+		Math::Vector3 SpotLightComponent::GetDirection() const
 		{
 			return Math::Vector3(data.Direction);
 		}
-		float SpotLightComponent::GetIntensity()
+		float SpotLightComponent::GetIntensity() const
 		{
 			return data.Intensity_Attenuation.x;
 		}
-		Math::Vector3 SpotLightComponent::GetAttenuation()
+		Math::Vector3 SpotLightComponent::GetAttenuation() const
 		{
 			return Math::Vector3(data.Intensity_Attenuation.y, data.Intensity_Attenuation.z, data.Intensity_Attenuation.w);
 		}
-		Math::Vector2 SpotLightComponent::GetSpotlightCone()
+		Math::Vector2 SpotLightComponent::GetSpotlightCone() const
 		{
 			return Math::Vector2(data.InnerCutOf_OuterCutoff);
 		}
 		Internal::Shader_SpotLight_Struct SpotLightComponent::GetInternalData()
 		{
 			return data;
+		}
+		Math::Vector3 SpotLightComponent::GetInternalPosition() const
+		{
+			return Math::Vector3(data.Position);
+		}
+		void SpotLightComponent::SetInternalPosition(Math::Vector3 pos)
+		{
+			data.Position = Math::Vector4(pos, 1.0f);
 		}
 	}
 }

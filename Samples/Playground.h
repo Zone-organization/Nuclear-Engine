@@ -1,11 +1,14 @@
 #pragma once
 #include "Common.h"
 
-class Sample3 : public Client
+
+//Current TODO:
+//Shadow test
+class Playground : public Client
 {
+	Managers::AssetManager AssetLoader;
+
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
-	std::shared_ptr<Systems::ScriptingSystem> ScriptSystem;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
 
@@ -14,35 +17,26 @@ class Sample3 : public Client
 
 	Graphics::Camera Camera;
 
-	Rendering::PBR PBR;
-	Rendering::PBR DefferedPBR;
-
 	Rendering::DiffuseOnly DiffuseRP;
-	Rendering::WireFrame WireFrameRP;
-
-	Rendering::ForwardRenderingPipeline PBRPipeline;
 	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
-	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
-
-	Rendering::DefferedRenderingPipeline PBRDefferedPipeline;
-
 
 	ECS::Scene Scene;
 
 	ECS::Entity EController;
 	ECS::Entity ELights;
 
-	std::vector<ECS::Entity> boxes;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
 	bool isMouseDisabled = false;
 public:
-	Sample3()
+	Playground()
 		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, 10.f, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
+		AssetLoader.Initialize();
 
+		mAssetManager = &AssetLoader;
 	}
 	void SetupAssets()
 	{
@@ -53,20 +47,12 @@ public:
 		//Initialize Materials
 		Assets::TextureSet PBRSphereSet;
 		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
-		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", desc,Graphics::TextureUsageType::Specular) });
-		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",desc, Graphics::TextureUsageType::Normal) });
-		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
-		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", desc, Graphics::TextureUsageType::AO) });
 
 		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
 
 		Assets::TextureSet PBRPlaneSet;
 		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
-		PBRPlaneSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", desc,Graphics::TextureUsageType::Specular) });
-		PBRPlaneSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",desc, Graphics::TextureUsageType::Normal) });
-		PBRPlaneSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
-		PBRPlaneSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", desc, Graphics::TextureUsageType::AO) });
 
 		PlaneMaterial.mPixelShaderTextures.push_back(PBRPlaneSet);
 		PlaneMaterial.SetName("Plane Material");
@@ -98,29 +84,12 @@ public:
 	}
 	void InitRenderer()
 	{
-		Systems::PhysXSystemDesc sceneDesc;
-		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
-		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
-		PBRPipeline.Initialize(&PBR, &Camera);
-
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
-		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
-		DefferedPBR.Initialize({ true });
 
-		Rendering::DefferedRenderingPipelineInitInfo initInfo;
-		initInfo.camera = &Camera;
-		initInfo.shadingModel = &DefferedPBR;
-		PBRDefferedPipeline.Initialize(initInfo);
-
-		//Scene.Systems.Configure();
-		//TestPBR.test = true;
-		Renderer->AddRenderingPipeline(&PBRPipeline);
-		Renderer->AddRenderingPipeline(&PBRDefferedPipeline);
 		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
-		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
 
 		Renderer->Bake(_Width_, _Height_);
 	}
@@ -128,9 +97,10 @@ public:
 	void Load()
 	{
 		mAssetManager->Initialize();
-
+		Systems::LightingSystemDesc desc;
+		desc.EnableShadows = true;
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
-		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
+		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>(desc);
 		SetupEntities();
 		mLightingSystem->Bake();
 
@@ -138,41 +108,35 @@ public:
 
 		SetupAssets();
 
-		int nrRows = 7;
-		int nrColumns = 7;
-		float spacing = 2.5;
-		for (int row = 0; row < nrRows; ++row)
+
+		// cubes
 		{
-			for (int col = 0; col < nrColumns; ++col)
-			{
-				Math::Vector3 position(
-					(float)(col - (nrColumns / 2)) * spacing,
-					((float)(row - (nrRows / 2)) * spacing) + 10.0f,
-					0.0f
-				);
-
-
-				ECS::Transform ESphere(position, Math::Vector3(2.0f));
-
-				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere);
-				position.z += 5.0f;
-
-				//ECS::Transform EBox(position, Math::Vector3(1.0f));
-
-				//boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, EBox));
-			}
+			ECS::Transform TSphere;
+			TSphere.SetPosition(Math::Vector3(0.0f, 1.5f, 0.0));
+		//	TSphere.SetScale(Math::Vector3(0.5f));
+			Scene.GetFactory().CreateBox(&SphereMaterial, TSphere);
 		}
+		{		
+			ECS::Transform TSphere;
 
+			TSphere.SetPosition(Math::Vector3(2.0f, 0.0f, 1.0));
+		//	TSphere.SetScale(Math::Vector3(0.5f));
+			Scene.GetFactory().CreateBox(&SphereMaterial, TSphere);
+		}
+		{		
+			ECS::Transform TSphere;
+
+			TSphere.SetPosition(Math::Vector3(-1.0f, 0.0f, 2.0));
+			TSphere.SetRotation(glm::normalize(glm::vec3(1.0, 0.0, 1.0)), glm::radians(60.0f));
+	//		TSphere.SetScale(Math::Vector3(0.25));
+			Scene.GetFactory().CreateBox(&SphereMaterial, TSphere);
+		}
 		Scene.GetFactory().CreatePlane(&PlaneMaterial);
-		for (auto it : boxes)
-		{
-			it.GetComponent<Components::RigidBodyComponent>()->isKinematic = true;
-		}
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
-		Scene.Save();
 		//Camera.MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
+		EController.GetComponent<Components::SpotLightComponent>()->mCastShadows = true;
 		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -231,7 +195,6 @@ public:
 
 		Camera.UpdateBuffer();
 		mCameraSystem->Update(deltatime);
-
 		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
 
 		Renderer->GetActivePipeline()->UpdatePSO();
@@ -242,6 +205,7 @@ public:
 	{
 		Scene.Update(dt);
 
+	//	ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 
@@ -250,30 +214,6 @@ public:
 			ImGui::Begin("Sample3: PhysX & Scripting Test");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
-			if (ImGui::TreeNode("Rendering"))
-			{
-				ImGui::Text("Active Rendering Pipeline:");
-				static int e = 0;
-				ImGui::RadioButton("PBR", &e, 0);
-				ImGui::RadioButton("Deffered PBR", &e, 1);
-				ImGui::RadioButton("DiffuseOnly", &e, 2);
-				ImGui::RadioButton("WireFrame", &e, 3);
-
-				//Change Rendering Pipeline
-				if (e == 0)
-					Renderer->SetActiveRenderingPipeline(PBRPipeline.GetID());
-				else if (e == 1)
-					Renderer->SetActiveRenderingPipeline(PBRDefferedPipeline.GetID());
-				else if (e == 2)
-					Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
-				else if (e == 3)
-					Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-
-				//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
-
-				ImGui::TreePop();
-			}
-
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
@@ -289,29 +229,6 @@ public:
 						Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
 					}
 				}
-				ImGui::TreePop();
-			}
-
-			PhysX::RaycastHit hit;
-			if (ImGui::TreeNode("Raycast Info"))
-			{
-				if (Engine::GetInstance()->GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
-				{
-
-					if (mPhysXSystem->Raycast(Camera.GetPosition(), Camera.GetFrontView(), 100.f, hit))
-					{
-						auto entity = hit.HitEntity;
-
-						ImGui::Text((char*)Scene.GetRegistry().try_get<Components::EntityInfoComponent>(entity.entity)->mName.c_str());
-					}
-					else
-					{
-						ImGui::Text("No hit");
-					}
-				}
-				else
-					ImGui::Text("Press F");
-
 				ImGui::TreePop();
 			}
 

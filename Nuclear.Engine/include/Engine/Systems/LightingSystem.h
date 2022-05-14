@@ -6,7 +6,6 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Rendering\ShadingModel.h>
 #include <vector>
-#include <Engine/Rendering/BasicShadowMapManager.h>
 #include <Engine\ECS\System.h>
 
 namespace Nuclear
@@ -15,10 +14,22 @@ namespace Nuclear
 	{
 
 		class CameraSystem;
+		struct ShadowMapInfo
+		{
+			Uint32 mResolution = 1024;
+			TEXTURE_FORMAT mFormat = TEX_FORMAT_D32_FLOAT;
+		};
 
+		struct LightingSystemDesc
+		{
+			bool EnableShadows = false;
+			ShadowMapInfo mSpotLightShadowMapInfo;
+		};
 		class NEAPI LightingSystem : public ECS::System<LightingSystem>
 		{
 		public:
+			LightingSystem(const LightingSystemDesc& desc = LightingSystemDesc());
+
 			bool RequiresBaking();
 
 			void Bake();
@@ -53,6 +64,22 @@ namespace Nuclear
 			std::vector<Components::DirLightComponent*> DirLights;
 			std::vector<Components::PointLightComponent*> PointLights;
 			std::vector<Components::SpotLightComponent*> SpotLights;
+
+			LightingSystemDesc mDesc;
+
+			//Shadows
+			RefCntAutoPtr<ITextureView> mShadowMapDSV;
+			RefCntAutoPtr<ITextureView> mShadowMapSRV;
+
+			RefCntAutoPtr<IPipelineState> mSpotShadowMapDepthPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mSpotShadowMapDepthSRB;
+			RefCntAutoPtr<IBuffer> pSpotLightInfoCB;
+
+			void RenderMeshForDepthPass(Assets::Mesh* mesh);
+			void SpotLightShadowDepthPass(const Components::SpotLightComponent& spotlight);
+
+			void InitSpotLightShadowPSO();
+			void InitSpotLightShadowMapDSV();
 		};
 
 	}

@@ -22,6 +22,8 @@ namespace Nuclear {
 
 			//if false the RenderSystem won't render the model
 			bool mRender = true;
+			bool mCastShadows = true;
+			bool mRecieveShadows = true;
 
 			Assets::Mesh * mMesh;
 			Assets::Material * mMaterial;

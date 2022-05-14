@@ -95,13 +95,14 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Playground.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="Sample5.h" />
-    <ClInclude Include="Sample1.h" />
     <ClInclude Include="Sample2.h" />
+    <ClInclude Include="Sample1.h" />
     <ClInclude Include="Sample3.h" />
+    <ClInclude Include="OLD.h" />
     <ClInclude Include="SampleSelector.h" />
-    <ClInclude Include="Sample4.h" />
+    <ClInclude Include="SponzaDemo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\script.as" />

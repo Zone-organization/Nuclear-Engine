@@ -99,9 +99,6 @@ namespace Nuclear {
 		}
 		gisDebug = desc.Debug;
 
-		int width2, height2;
-		GetMainWindow()->GetSize(width2, height2);
-
 		NUCLEAR_INFO("[Engine] Nuclear Engine has been initalized successfully!");
 		return true;
 	}

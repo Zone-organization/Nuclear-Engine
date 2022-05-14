@@ -27,6 +27,8 @@ namespace Nuclear
 		class NEAPI RenderingPipeline
 		{
 		public:
+			RenderingPipeline();
+
 			RenderingPipeline(const std::string& name);
 
 			std::unordered_map<Uint32, ShaderEffect> mPairedEffects;

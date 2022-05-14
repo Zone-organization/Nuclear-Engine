@@ -16,8 +16,6 @@ namespace Nuclear
 		class NEAPI DefferedRenderingPipeline : public RenderingPipeline
 		{
 		public:
-			DefferedRenderingPipeline(const std::string& name);
-
 			void Initialize(const DefferedRenderingPipelineInitInfo& info);
 
 			//void Bake(const RenderingPipelineBakingDesc& desc) override;

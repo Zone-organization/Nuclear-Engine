@@ -33,26 +33,25 @@ namespace Nuclear
 			SpotLightComponent();
 			~SpotLightComponent();
 
-			Graphics::Color GetColor();
+			Graphics::Color GetColor() const;
 			void SetColor(Graphics::Color color);
 
-			Math::Vector3 GetPosition();
-			void SetPosition(Math::Vector3 pos);
-
-			Math::Vector3 GetDirection();
+			Math::Vector3 GetDirection() const;
 			void SetDirection(Math::Vector3 dir);
 
-			float GetIntensity();
+			float GetIntensity() const;
 			void SetIntensity(float intensity);
 
-			Math::Vector3 GetAttenuation();
+			Math::Vector3 GetAttenuation() const;
 			void SetAttenuation(Math::Vector3 att);
 
-			Math::Vector2 GetSpotlightCone();
+			Math::Vector2 GetSpotlightCone() const;
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
 
 			bool mCastShadows = false;
 			Internal::Shader_SpotLight_Struct GetInternalData();
+			Math::Vector3 GetInternalPosition() const;
+			void SetInternalPosition(Math::Vector3 pos);
 
 			/*template<class Archive>
 			void serialize(Archive& archive)

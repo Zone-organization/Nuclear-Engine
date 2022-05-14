@@ -18,7 +18,7 @@ namespace Nuclear
 			gScreenQuad = new Assets::Mesh();
 			Assets::Mesh::CreateCube(gCube);
 			Assets::Mesh::CreateSphere(gSphere);
-			Assets::Mesh::CreatePlane(gPlane, 50.f, 50.f);
+			Assets::Mesh::CreatePlane(gPlane, 25.f, 25.f);
 			Assets::Mesh::CreateScreenQuad(gScreenQuad);
 
 			gCube->SetName("Default Cube");

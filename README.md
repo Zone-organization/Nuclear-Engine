@@ -10,6 +10,7 @@
 	- SSAO
 	- FIX BRDF generation in IBL Pipeline
 	- Clean and document Samples.
+	- Replace GLFW with SDL or SFML
 ## Getting started
 
 Follow the instructions below to compile and run the engine from source.

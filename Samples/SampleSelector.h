@@ -3,14 +3,13 @@
 #include "Sample1.h"
 #include "Sample2.h"
 #include "Sample3.h"
-#include "Sample4.h"
-#include "Sample5.h"
+#include "SponzaDemo.h"
+#include "Playground.h"
 
 class SampleSelector : public Client
 {
 public:
-	//static SampleSelector* Instance;
-	// 
+
 	//Asset Manager (Loader) for all samples
 	Managers::AssetManager AssetLoader;
 
@@ -53,31 +52,36 @@ public:
 
 		ImGui::Text("Select Sample");
 
-		if (ImGui::Button("Sample1 : Model Loading & Animation"))
+		if (ImGui::Button("Sample1 : Basic model loading & animation & rendering"))
 		{
 			Sample1 demo;
 			return StartSample(&demo);
 		}
-		if (ImGui::Button("Sample2 : PhysX Test"))
+		if (ImGui::Button("Sample3 : Introduction to rendering pipelines and shading models."))
 		{
 			Sample2 demo;
 			return StartSample(&demo);
 		}
-		if (ImGui::Button("Sample3 : Script Test"))
+		if (ImGui::Button("Sample3 : PhysX & Scripting Test ------OLD"))             //Improve
 		{
 			Sample3 demo;
 			return StartSample(&demo);
 		}
-		if (ImGui::Button("Sample4 : Sponza Scene Rendering"))
+
+		ImGui::Text("Select Demo");
+
+		if (ImGui::Button("Sponza Demo"))
 		{
-			Sample4 demo;
+			SponzaDemo demo;
 			return StartSample(&demo);
 		}
-		if (ImGui::Button("Sample5 : Advanced Rendering Effects"))
+
+		if (ImGui::Button("Playground"))
 		{
-			Sample5 demo;
+			Playground demo;
 			return StartSample(&demo);
 		}
+
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}

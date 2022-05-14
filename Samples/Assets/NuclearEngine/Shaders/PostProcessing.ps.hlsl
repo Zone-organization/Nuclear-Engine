@@ -30,7 +30,7 @@ float4 main(PixelInputType input) : SV_TARGET
 
 #ifdef GAMMACORRECTION
 	float GammaCorrectionValue = 1.0f / 2.2f;
-	SceneColor = pow(SceneColor, float3(GammaCorrectionValue, GammaCorrectionValue, GammaCorrectionValue));
+	SceneColor = pow(abs(SceneColor), float3(GammaCorrectionValue, GammaCorrectionValue, GammaCorrectionValue));
 #endif
 
     return float4(SceneColor, 1.0f);
