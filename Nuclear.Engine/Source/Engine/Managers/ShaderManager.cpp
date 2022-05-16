@@ -23,61 +23,79 @@ namespace Nuclear
 
 			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, result);
 		}
-		void ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc& desc, IShader** shader, std::vector<LayoutElement>* Layout)
+		std::vector<LayoutElement> ShaderManager::GetBasicVSLayout(bool isDeffered)
 		{
-			ShaderCreateInfo CreationAttribs;
-			Layout->clear();
+			std::vector<LayoutElement> LayoutElems;
 
+			LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+			LayoutElems.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
 
-			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-			CreationAttribs.EntryPoint = "main";
-			CreationAttribs.Desc.Name = desc.Name;
-
-
-			std::vector<std::string> defines;
-
-			Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
-			Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
-			if (desc.Use_Camera)
+			if (!isDeffered)
 			{
-				Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
-				Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
-				Layout->push_back(LayoutElement(4, 0, 3, VT_FLOAT32, false));  //Bitangents
-				Layout->push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
-				Layout->push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
-				defines.push_back("NE_USE_DEF_CAMERA");
+				LayoutElems.push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
+				LayoutElems.push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
+				LayoutElems.push_back(LayoutElement(4, 0, 3, VT_FLOAT32, false));  //Bitangents
+				LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
+				LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 			}
+
+			return LayoutElems;
+		}
+		//void ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc& desc, IShader** shader, std::vector<LayoutElement>* Layout)
+		//{
+		//	ShaderCreateInfo CreationAttribs;
+		//	Layout->clear();
+
+
+		//	CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+		//	CreationAttribs.UseCombinedTextureSamplers = true;
+		//	CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+		//	CreationAttribs.EntryPoint = "main";
+		//	CreationAttribs.Desc.Name = desc.Name;
+
+
+		//	std::vector<std::string> defines;
+
+		//	Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+		//	Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
 		//	if (desc.Use_Camera)
+		//	{
+		//		Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
+		//		Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
+		//		Layout->push_back(LayoutElement(4, 0, 3, VT_FLOAT32, false));  //Bitangents
+		//		Layout->push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
+		//		Layout->push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
+		//		defines.push_back("NE_USE_DEF_CAMERA");
+		//	}
+		////	if (desc.Use_Camera)
 
-			if (desc.OutFragPos)
-				defines.push_back("NE_OUT_FRAG_POS");
+		//	if (desc.OutFragPos)
+		//		defines.push_back("NE_OUT_FRAG_POS");
 
-			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
-			CreationAttribs.Source = source.c_str();
+		//	auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
+		//	CreationAttribs.Source = source.c_str();
 
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
-		}
-		void ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc, IShader** shader)
-		{
-			ShaderCreateInfo CreationAttribs;
+		//	Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
+		//}
+		//void ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc, IShader** shader)
+		//{
+		//	ShaderCreateInfo CreationAttribs;
 
-			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-			CreationAttribs.EntryPoint = "main";
-			CreationAttribs.Desc.Name = "AutoPixelShader";
+		//	CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+		//	CreationAttribs.UseCombinedTextureSamplers = true;
+		//	CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+		//	CreationAttribs.EntryPoint = "main";
+		//	CreationAttribs.Desc.Name = "AutoPixelShader";
 
-			std::vector<std::string> defines;
+		//	std::vector<std::string> defines;
 
-			if (desc.OutputTexture)
-				defines.push_back("NE_OUTPUT_TEXTURE");
+		//	if (desc.OutputTexture)
+		//		defines.push_back("NE_OUTPUT_TEXTURE");
 
-			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
-			CreationAttribs.Source = source.c_str();
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
-		}
+		//	auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
+		//	CreationAttribs.Source = source.c_str();
+		//	Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
+		//}
 
 		bool ShaderManager::ProcessAndCreatePipeline(
 			IPipelineState** PipelineState,

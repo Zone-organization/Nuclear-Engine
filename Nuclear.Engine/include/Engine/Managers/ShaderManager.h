@@ -10,19 +10,6 @@ namespace Nuclear
 {
 	namespace Managers
 	{
-		struct AutoVertexShaderDesc
-		{
-			const char* Name = "AutoVS";
-			bool Use_Camera = true;
-			bool OutFragPos = true;
-		};
-		struct AutoPixelShaderDesc
-		{
-			const char* Name = "AutoPS";
-
-			bool OutputTexture = true;
-		};
-
 		//This is very useful class/factory, it automates the shader creation easily, control all their Input & output, may even store them in the future.
 		class NEAPI ShaderManager
 		{
@@ -32,8 +19,7 @@ namespace Nuclear
 
 			void CreateShader(const std::string& source, IShader** shader, SHADER_TYPE type);
 
-			void CreateAutoVertexShader(const AutoVertexShaderDesc& desc, IShader** shader, std::vector<LayoutElement>* Layout);
-			void CreateAutoPixelShader(const AutoPixelShaderDesc& desc, IShader** shader);
+			std::vector<LayoutElement> GetBasicVSLayout(bool isDeffered);
 
 			bool ProcessAndCreatePipeline(
 				IPipelineState** PipelineState,

@@ -1,31 +1,12 @@
 #pragma once
+#include <Engine/Components/LightCommon.h>
 #include <Engine/Graphics/Color.h>
 
 namespace Nuclear
 {
 	namespace Components
 	{
-		namespace Internal
-		{
-			struct NEAPI Shader_SpotLight_Struct
-			{
-				Math::Vector4 Position;
-				Math::Vector4 Direction;
-				Math::Vector4 Intensity_Attenuation;
-				Math::Vector4 InnerCutOf_OuterCutoff;
-				Math::Vector4 Color;
-
-				//template<class Archive>
-				//void serialize(Archive& archive)
-				//{
-				//	archive(CEREAL_NVP(Position));
-				//	archive(CEREAL_NVP(Direction));
-				//	archive(CEREAL_NVP(Intensity_Attenuation));
-				//	archive(CEREAL_NVP(InnerCutOf_OuterCutoff));
-				//	archive(CEREAL_NVP(Color));
-				//}
-			};
-		}
+	
 
 		struct NEAPI SpotLightComponent
 		{
@@ -48,8 +29,12 @@ namespace Nuclear
 			Math::Vector2 GetSpotlightCone() const;
 			void SetSpotlightCone(Math::Vector2 cutoff_outercutoff);
 
+			LightShadowType GetShadowType() const;
+			void SetShadowType(const LightShadowType& type);
+
 			bool mCastShadows = false;
-			Internal::Shader_SpotLight_Struct GetInternalData();
+
+			Internal::Shader_SpotLight_Struct& GetInternalData();
 			Math::Vector3 GetInternalPosition() const;
 			void SetInternalPosition(Math::Vector3 pos);
 
@@ -61,6 +46,7 @@ namespace Nuclear
 			}*/
 		protected:
 			Internal::Shader_SpotLight_Struct data;
+			LightShadowType mShadowType;
 		};
 	}
 }

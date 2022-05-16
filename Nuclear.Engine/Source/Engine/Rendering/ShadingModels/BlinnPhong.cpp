@@ -51,18 +51,33 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			std::vector<LayoutElement> LayoutElems;
+
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(mInitInfo.mDefferedPipeline);
 
 			//Create Vertex Shader
-			Managers::AutoVertexShaderDesc VertShaderDesc;
-			VertShaderDesc.Name = "BlinnPhongVS";
-			if (mInitInfo.mDefferedPipeline)
 			{
-				VertShaderDesc.Use_Camera = false;
-				VertShaderDesc.OutFragPos = false;
-			}
-			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(), &LayoutElems);
 
+				ShaderCreateInfo CreationAttribs;
+
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "BlinnPhongVS";
+
+
+				std::vector<std::string> defines;
+
+				if (mInitInfo.mDefferedPipeline)
+				{
+					defines.push_back("NE_DEFFERED");
+				}
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
+			}
 
 			//Create Pixel Shader
 			{
@@ -87,6 +102,10 @@ namespace Nuclear
 				if (mInitInfo.mDefferedPipeline)
 				{
 					defines.push_back("NE_DEFFERED");
+				}
+				if (mInitInfo.ShadowingEnabled == true)
+				{
+					defines.push_back("NE_SHADOWS");
 				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();

@@ -45,7 +45,7 @@ namespace Nuclear
 		{
 			data.Intensity_Attenuation = Math::Vector4(data.Intensity_Attenuation.x, att.x, att.y, att.z);
 		}
-		Internal::Shader_PointLight_Struct PointLightComponent::GetInternalData()
+		Internal::Shader_PointLight_Struct& PointLightComponent::GetInternalData()
 		{
 			return data;
 		}

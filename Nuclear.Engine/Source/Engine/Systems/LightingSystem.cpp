@@ -102,6 +102,10 @@ namespace Nuclear
 			for (auto entity : SpotLightView)
 			{
 				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
+				if (mDesc.EnableShadows)
+				{
+
+				}
 				SpotLights.push_back(&SpotLight);
 			}
 
@@ -259,9 +263,12 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_FRONT;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
 		//	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = false;
 
 			//Create Shaders
@@ -277,16 +284,17 @@ namespace Nuclear
 			LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
 			LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 
+			auto source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShadowDepthPass.hlsl");
+
 			//Create Vertex Shader
 			{
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 				CreationAttribs.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-				CreationAttribs.EntryPoint = "SpotShadowMapDepth";
+				CreationAttribs.EntryPoint = "SpotShadowMapDepthVS";
 				CreationAttribs.Desc.Name = "Spot_ShadowMapDepthVS";
 
-				auto source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShadowDepthPass.vs.hlsl");
 				CreationAttribs.Source = source.c_str();
 
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VSShader);
@@ -298,12 +306,8 @@ namespace Nuclear
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 				CreationAttribs.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.EntryPoint = "SpotShadowMapDepthPS";
 				CreationAttribs.Desc.Name = "Spot_ShadowMapDepthPS";
-
-
-
-				auto source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/ShadowDepthPass.ps.hlsl");
 				CreationAttribs.Source = source.c_str();
 
 

@@ -29,6 +29,7 @@ namespace Nuclear
 
 		struct ShadingModelInitInfo {
 			bool mDefferedPipeline = false;
+			bool ShadowingEnabled = false;
 		};
 
 		//Used for both Deffered and Forward pipelines

@@ -161,10 +161,29 @@ PS_OUTPUT DoLighting(PixelInputType input)
     // phase 3: spot light
     for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
     {
-    
         result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo);
     }
 #endif
+
+#ifdef NE_SHADOWS
+
+#ifdef NE_SPOT_LIGHTS_NUM
+
+        //SpotLights[0]
+    
+#endif
+
+
+
+#endif
+
+
+
+
+
+
+
+
 
     PS_OUTPUT output;
     output.Color =  float4(result, 1.0f);

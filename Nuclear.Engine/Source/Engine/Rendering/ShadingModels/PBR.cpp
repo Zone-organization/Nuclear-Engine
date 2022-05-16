@@ -78,18 +78,31 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			std::vector<LayoutElement> LayoutElems;
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(mInitInfo.mDefferedPipeline);
 
 			//Create Vertex Shader
 			{
-				Managers::AutoVertexShaderDesc VertShaderDesc;
-				VertShaderDesc.Name = "PBR_VS";
+
+				ShaderCreateInfo CreationAttribs;
+
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "PBR_VS";
+
+
+				std::vector<std::string> defines;
+
 				if (mInitInfo.mDefferedPipeline)
 				{
-					VertShaderDesc.Use_Camera = false;
-					VertShaderDesc.OutFragPos = false;
+					defines.push_back("NE_DEFFERED");
 				}
-				Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(),&LayoutElems);
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 			}
 
 			//Create Pixel Shader

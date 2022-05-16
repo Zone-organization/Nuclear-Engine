@@ -1,4 +1,5 @@
 #pragma once
+#include <Engine/Components/LightCommon.h>
 #include <Engine/Graphics/Color.h>
 
 namespace Nuclear
@@ -7,20 +8,7 @@ namespace Nuclear
 	{
 		namespace Internal
 		{
-			struct NEAPI Shader_PointLight_Struct
-			{
-				Math::Vector4 Position;
-				Math::Vector4 Intensity_Attenuation;
-				Math::Vector4 Color;
-
-		/*		template<class Archive>
-				void serialize(Archive& archive)
-				{
-					archive(CEREAL_NVP(Position));
-					archive(CEREAL_NVP(Intensity_Attenuation));
-					archive(CEREAL_NVP(Color));
-				}*/
-			};
+		
 		}
 
 		struct NEAPI PointLightComponent
@@ -39,7 +27,7 @@ namespace Nuclear
 			void SetAttenuation(Math::Vector3 att);
 
 			bool mCastShadows = false;
-			Internal::Shader_PointLight_Struct GetInternalData();
+			Internal::Shader_PointLight_Struct& GetInternalData();
 			Math::Vector3 GetInternalPosition();
 			void SetInternalPosition(Math::Vector3 pos);
 

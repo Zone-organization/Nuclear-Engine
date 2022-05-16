@@ -28,7 +28,7 @@ namespace Nuclear
 		{
 			data.Direction = Math::Vector4(dir, 1.0f);
 		}
-		Internal::Shader_DirLight_Struct DirLightComponent::GetInternalData()
+		Internal::Shader_DirLight_Struct& DirLightComponent::GetInternalData()
 		{
 			return data;
 		}

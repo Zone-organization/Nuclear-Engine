@@ -11,6 +11,7 @@ namespace Nuclear
 			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::radians(12.5f)), cos(Math::radians(15.0f)), 1.0f, 1.0f);
 			data.Color = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+			mShadowType = LightShadowType::No_Shadows;
 		}
 		SpotLightComponent::~SpotLightComponent()
 		{
@@ -37,6 +38,14 @@ namespace Nuclear
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cutoff_outercutoff.x, cutoff_outercutoff.y, 0.0f, 0.0f);
 
 		}
+		LightShadowType SpotLightComponent::GetShadowType() const
+		{
+			return mShadowType;
+		}
+		void SpotLightComponent::SetShadowType(const LightShadowType& type)
+		{
+			mShadowType = type;
+		}
 		Graphics::Color SpotLightComponent::GetColor() const
 		{
 			return Graphics::Color(data.Color.r, data.Color.g, data.Color.b, data.Color.a);
@@ -58,7 +67,7 @@ namespace Nuclear
 		{
 			return Math::Vector2(data.InnerCutOf_OuterCutoff);
 		}
-		Internal::Shader_SpotLight_Struct SpotLightComponent::GetInternalData()
+		Internal::Shader_SpotLight_Struct& SpotLightComponent::GetInternalData()
 		{
 			return data;
 		}

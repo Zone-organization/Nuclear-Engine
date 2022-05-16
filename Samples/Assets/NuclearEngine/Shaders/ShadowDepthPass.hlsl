@@ -16,11 +16,15 @@ cbuffer NEStatic_LightInfo : register(b0)
 
 };
 
-float4 SpotShadowMapDepth(VertexInputType input) : SV_POSITION
+float4 SpotShadowMapDepthVS(VertexInputType input) : SV_POSITION
 {
-    float4 result;
-    result = mul(Model, float4(input.Position.xyz, 1.0f));
-    result = mul(LightSpace, result);
+    float4 pos = float4(input.Position.xyz, 1.0f);
+    pos = mul(Model, pos);
+    pos = mul(LightSpace, pos);
+    return pos;
+}
 
-	return float4(result.xyz ,1.0f);
+void SpotShadowMapDepthPS(float4 Position : SV_POSITION)
+{
+    //Do nothing
 }

@@ -1,17 +1,14 @@
 /*
 Defines:
-#define NE_USE_DEF_CAMERA
-#define NE_OUT_FRAG_POS
+NE_DEFFERED
 
 */
-//#define NE_USE_DEF_CAMERA
-//#define NE_OUT_FRAG_POS
 
 struct VertexInputType
 {
     float4 Position : ATTRIB0;
     float2 TexCoord : ATTRIB1;
-#ifdef NE_USE_DEF_CAMERA
+#ifndef NE_DEFFERED
     float3 Normals : ATTRIB2;
     float3 Tangents : ATTRIB3;
     float3 Bitangents : ATTRIB4;
@@ -25,14 +22,14 @@ struct PixelInputType
 {
     float4 Position : SV_POSITION;
     float2 TexCoord : TEXCOORD0;
-#ifdef NE_USE_DEF_CAMERA
+#ifndef NE_DEFFERED
     float3 Normals : NORMAL0;
     float3 FragPos : TEXCOORD1;
     float3x3 TBN : TANGENT0;
 #endif
 };
 
-#ifdef NE_USE_DEF_CAMERA
+#ifndef NE_DEFFERED
 cbuffer NEStatic_Camera : register(b0)
 {
     matrix Model;
@@ -43,8 +40,6 @@ cbuffer NEStatic_Camera : register(b0)
     matrix View;
     matrix Projection;
 };
-#endif
-#ifdef NE_USE_DEF_CAMERA
 
 #define MAX_BONES  100
 #define MAX_BONE_INFLUENCE 4
@@ -59,7 +54,7 @@ PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
 
-#ifdef NE_USE_DEF_CAMERA
+#ifndef NE_DEFFERED
 
     float4 FinalPos = float4(input.Position.xyz, 1.0f);
     float4 FinalNorm = float4(input.Normals.xyz, 0.0f);
@@ -84,18 +79,7 @@ PixelInputType main(VertexInputType input)
     }
 
     output.Position = mul(ModelViewProjection, FinalPos);
-
-#else
-    output.Position = input.Position;
-#endif
-
-    output.TexCoord = input.TexCoord;
-
-#ifdef NE_OUT_FRAG_POS
     output.FragPos = mul(Model, FinalPos).xyz;
-#endif
-
-#ifdef NE_USE_DEF_CAMERA
     output.Normals = normalize(mul(Model, FinalNorm).xyz);
 
     float3 T = normalize(mul(input.Tangents, (float3x3)Model));
@@ -108,7 +92,11 @@ PixelInputType main(VertexInputType input)
         T = T * -1.0;
     }
     output.TBN = float3x3(T, B, N);
+#else
+
+    output.Position = input.Position;
 #endif
+    output.TexCoord = input.TexCoord;
 
     return output;
 }

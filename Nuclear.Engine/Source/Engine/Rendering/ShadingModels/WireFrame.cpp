@@ -31,19 +31,39 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			std::vector<LayoutElement> LayoutElems;
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(false);
 
 			//Create Vertex Shader
-			Managers::AutoVertexShaderDesc VertShaderDesc;
-			VertShaderDesc.Name = "WireFrameVS";
-			VertShaderDesc.OutFragPos = false;
+			{
 
-			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoVertexShader(VertShaderDesc, VSShader.RawDblPtr(), &LayoutElems);
+				ShaderCreateInfo CreationAttribs;
+
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "WireFrameVS";
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
+			}
 
 			//Create Pixel Shader
-			Managers::AutoPixelShaderDesc PixelShaderDesc;
-			PixelShaderDesc.Name = "WireFramePS";
-			Graphics::GraphicsEngine::GetShaderManager()->CreateAutoPixelShader(PixelShaderDesc, PSShader.RawDblPtr());
+			{
+				ShaderCreateInfo CreationAttribs;
+
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "WireFramePS";
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/DiffuseOnly.ps.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
+			}
 
 			PSOCreateInfo.pVS = VSShader;
 			PSOCreateInfo.pPS = PSShader;
