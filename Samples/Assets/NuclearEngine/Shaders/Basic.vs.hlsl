@@ -4,51 +4,9 @@ NE_DEFFERED
 
 */
 
-struct VertexInputType
-{
-    float4 Position : ATTRIB0;
-    float2 TexCoord : ATTRIB1;
-#ifndef NE_DEFFERED
-    float3 Normals : ATTRIB2;
-    float3 Tangents : ATTRIB3;
-    float3 Bitangents : ATTRIB4;
-    int4 BoneIDs : ATTRIB5;
-    float4 Weights : ATTRIB6;
-#endif
-};
+#include <CommonInput.vs.hlsl>
+#include <CommonInput.ps.hlsl>
 
-
-struct PixelInputType
-{
-    float4 Position : SV_POSITION;
-    float2 TexCoord : TEXCOORD0;
-#ifndef NE_DEFFERED
-    float3 Normals : NORMAL0;
-    float3 FragPos : TEXCOORD1;
-    float3x3 TBN : TANGENT0;
-#endif
-};
-
-#ifndef NE_DEFFERED
-cbuffer NEStatic_Camera : register(b0)
-{
-    matrix Model;
-    matrix ModelInvTranspose;
-    matrix ModelViewProjection;
-
-    //Needed for some objects (as skybox & 2D Sprites & etc)
-    matrix View;
-    matrix Projection;
-};
-
-#define MAX_BONES  100
-#define MAX_BONE_INFLUENCE 4
-
-cbuffer NEStatic_Animation : register(b1)
-{
-    matrix BoneTransforms[MAX_BONES];
-};
-#endif
 
 PixelInputType main(VertexInputType input)
 {
@@ -92,6 +50,18 @@ PixelInputType main(VertexInputType input)
         T = T * -1.0;
     }
     output.TBN = float3x3(T, B, N);
+	
+#ifdef NE_SHADOWS
+
+#ifdef NE_SPOT_CASTERS
+	for (int i0 = 0; i0 < NE_SPOT_CASTERS; i0++)
+    {
+		output.SpotLight_FragPos[i0] = mul(float4(FragPos, 1.0f), Spot_LightSpace[i0]);
+    }
+#endif
+
+#endif
+	
 #else
 
     output.Position = input.Position;

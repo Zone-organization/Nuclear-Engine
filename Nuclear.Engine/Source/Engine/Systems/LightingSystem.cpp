@@ -40,6 +40,10 @@ namespace Nuclear
 		{
 			return SpotLights.size();
 		}
+		LightingSystemDesc LightingSystem::GetDesc() const
+		{
+			return mDesc;
+		}
 		void LightingSystem::BakeBuffer()
 		{
 			if (HasbeenBakedBefore)
@@ -102,7 +106,7 @@ namespace Nuclear
 			for (auto entity : SpotLightView)
 			{
 				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-				if (mDesc.EnableShadows)
+				if (!mDesc.DisableShadows)
 				{
 
 				}
@@ -120,7 +124,7 @@ namespace Nuclear
 
 			BakeBuffer();
 
-			if (mDesc.EnableShadows)
+			if (!mDesc.DisableShadows)
 			{
 				InitSpotLightShadowPSO();
 				InitSpotLightShadowMapDSV();
@@ -138,7 +142,7 @@ namespace Nuclear
 				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
 			}
 
-			if (mDesc.EnableShadows)
+			if (!mDesc.DisableShadows)
 			{
 				auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
 				for (auto entity : SpotLightView)
@@ -203,9 +207,9 @@ namespace Nuclear
 			auto Right = normalize(Math::cross(spotlight.GetDirection(), glm::vec3(0.0, 1.0, 0.0)));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 			auto Up = normalize(Math::cross(Right, spotlight.GetDirection()));
 
-			auto lightView = glm::lookAt({ -2.0f, 4.0f, -1.0f	}, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+			//auto lightView = glm::lookAt({ -2.0f, 4.0f, -1.0f	}, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 
-			//auto lightView = glm::lookAt(lightpos, lightpos +  spotlight.GetDirection(), Up);
+			auto lightView = glm::lookAt(lightpos, lightpos +  spotlight.GetDirection(), Up);
 			Math::Matrix4 lightSpaceMatrix = lightProjection * lightView;
 
 			Graphics::Context::GetContext()->SetPipelineState(mSpotShadowMapDepthPSO.RawPtr());

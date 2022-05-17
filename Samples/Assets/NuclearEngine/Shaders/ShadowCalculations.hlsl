@@ -1,14 +1,14 @@
-Texture2D ShadowMap;
-SamplerState ShadowMap_sampler;
+Texture2D NESDW_ShadowMap;
+SamplerState NESDW_ShadowMap_sampler;
 
-float SpotlightShadowCalculation(float4 fragPosLightSpace, float3 Normal, float3 FragPos)
+float SpotlightShadowCalculation(float4 fragPosLightSpace, float3 FragPos, float3 Normal, float3 lightPos)
 {
     // perform perspective divide
     float3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float4 closestDepth = ShadowMap.Sample(ShadowMap_sampler, projCoords.xy).r;
+    float4 closestDepth = NESDW_ShadowMap.Sample(NESDW_ShadowMap_sampler, projCoords.xy).r;
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)

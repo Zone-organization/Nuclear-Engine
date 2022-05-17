@@ -6,6 +6,7 @@
 #include <Engine\Components\AnimatorComponent.h>
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Systems\CameraSystem.h>
+#include <Engine\Systems\LightingSystem.h>
 
 namespace Nuclear
 {
@@ -68,6 +69,12 @@ namespace Nuclear
 					for (int i = 0; i < GetShadingModel()->mIBLTexturesInfo.size(); i++)
 					{
 						GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mIBLTexturesInfo.at(i).mSlot)->Set(GetShadingModel()->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+					}
+
+					//Shadows
+					for (int i = 0; i < GetShadingModel()->mShadowMapsInfo.size(); i++)
+					{
+						GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mShadowMapsInfo.at(i).mSlot)->Set(renderer->GetLightingSystem()->mShadowMapSRV.RawPtr());
 					}
 					InstantRender(MeshObject.mMesh, MeshObject.mMaterial);
 				}

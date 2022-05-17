@@ -18,9 +18,16 @@ struct SpotLight
 	float4 InnerCutOf_OuterCutoff;
 	float4 Color;
 };
+
+struct SpotLightWithShadow
+{
+	SpotLight LightData;
+
+};
+
 cbuffer NEStatic_Lights
 {
-	float4 ViewPos;
+	float4 ViewPos;            //Camera pos
 #ifdef NE_DIR_LIGHTS_NUM
 	DirLight DirLights[NE_DIR_LIGHTS_NUM];
 #endif

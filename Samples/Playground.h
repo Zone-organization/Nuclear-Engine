@@ -17,8 +17,8 @@ class Playground : public Client
 
 	Graphics::Camera Camera;
 
-	Rendering::DiffuseOnly DiffuseRP;
-	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
+	Rendering::BlinnPhong BlinnphongRP;
+	Rendering::ForwardRenderingPipeline FwdPipeline;
 
 	ECS::Scene Scene;
 
@@ -86,10 +86,13 @@ public:
 	{
 
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
+		Rendering::ShadingModelInitInfo info;
+		info.ShadowingEnabled = true;
+		BlinnphongRP.Initialize(info);
 
-		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
+		FwdPipeline.Initialize(&BlinnphongRP, &Camera);
 
-		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
+		Renderer->AddRenderingPipeline(&FwdPipeline);
 
 		Renderer->Bake(_Width_, _Height_);
 	}
@@ -98,7 +101,8 @@ public:
 	{
 		mAssetManager->Initialize();
 		Systems::LightingSystemDesc desc;
-		desc.EnableShadows = true;
+		desc.DisableShadows = false;
+		desc.MAX_SPOT_CASTERS = 1;
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>(desc);
 		SetupEntities();

@@ -67,15 +67,20 @@ namespace Nuclear
 
 
 				std::vector<std::string> defines;
-
 				if (mInitInfo.mDefferedPipeline)
 				{
 					defines.push_back("NE_DEFFERED");
 				}
-
+				if (mInitInfo.ShadowingEnabled == true)
+				{
+					defines.push_back("NE_SHADOWS");
+					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
+				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-
+				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 			}
 
@@ -94,6 +99,7 @@ namespace Nuclear
 				if (desc.DirLights > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(desc.DirLights)); }
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
+				if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
 
 				for (auto it : desc.mRequiredEffects)
 				{
@@ -106,6 +112,7 @@ namespace Nuclear
 				if (mInitInfo.ShadowingEnabled == true)
 				{
 					defines.push_back("NE_SHADOWS");
+					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
 				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
@@ -155,7 +162,7 @@ namespace Nuclear
 		{
 	        std::vector<LayoutElement> Layout;
 
-            Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
+            Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));  //POS
             Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
             Layout.push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
             Layout.push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents

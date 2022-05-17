@@ -5,19 +5,12 @@
 //#define NE_SPOT_LIGHTS_NUM 1
 //#define NE_SHADOWS_ENABLED
 #include "LightTypes.hlsli"
+#include <CommonInput.ps.hlsl>
 
-
-struct PixelInputType
-{
-    float4 Position : SV_POSITION;
-    float2 TexCoords : TEXCOORD0;
-#ifndef NE_DEFFERED
-    float3 Normal : NORMAL0;
-    float3 FragPos : TEXCOORD1;
-    float3x3 TBN : TANGENT0;
+#ifdef NE_SHADOWS
+#include <ShadowCalculations.hlsl>
 #endif
 
-};
 
 #ifdef NE_DEFFERED
 
@@ -75,18 +68,18 @@ float DoQuadraticAttenuation(float4 Intensity_Attenuation, float3 lightposition,
     return Intensity_Attenuation.x / (Intensity_Attenuation.y + Intensity_Attenuation.z * distance + Intensity_Attenuation.w * (distance * distance));
 }
 // calculates the color when using a directional light.
-float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float4 albedo)
+float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float4 albedo, float shadow)
 {
     float3 lightDir = normalize(-light.Direction.xyz);
 
     float3 ambient = 0.05f * (light.Color.xyz * albedo.xyz);
     float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
     float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
-    return (ambient + diffuse + specular);
+    return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
 // calculates the color when using a point light.
-float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo)
+float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo, float shadow)
 {
     float3 lightDir = normalize(light.Position.xyz - fragPos);
     // attenuation
@@ -98,11 +91,11 @@ float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 vi
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-	return (ambient + diffuse + specular);// *ModelColor;
+	return (ambient + (1.0 - shadow) * (diffuse + specular));// *ModelColor;
 }
 
 // calculates the color when using a spot light.
-float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo)
+float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo, float shadow)
 {
     float3 lightDir = normalize(light.Position.xyz - fragPos);
 
@@ -121,69 +114,60 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return (ambient + diffuse + specular);
+    return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
 PS_OUTPUT DoLighting(PixelInputType input)
 {
     float3 result = float3(0.0f, 0.0f, 0.0f);
-
+    float shadow = 0.0f;  //No shadow == 0.0f
 #ifdef NE_DEFFERED
-    float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoords).xyz;
-    float3 norm = NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoords).xyz;
-    float4 albedo = NE_RT_GBuffer_AlbedoSpec.Sample(NE_RT_GBuffer_AlbedoSpec_sampler, input.TexCoords);
+    float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoord).xyz;
+    float3 norm = NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoord).xyz;
+    float4 albedo = NE_RT_GBuffer_AlbedoSpec.Sample(NE_RT_GBuffer_AlbedoSpec_sampler, input.TexCoord);
 #else
     float3 FragPos = input.FragPos;
 
-    float3 norm = NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoords).xyz;
+    float3 norm = NEMat_Normal1.Sample(NEMat_Normal1_sampler, input.TexCoord).xyz;
     norm = normalize(mul(norm, 2.0f) - 1.0f);
     norm = normalize(mul(norm, input.TBN));
-    float4 albedo = float4(NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, input.TexCoords).xyz, NEMat_Specular1.Sample(NEMat_Specular1_sampler, input.TexCoords).x);
+    float4 albedo = float4(NEMat_Diffuse1.Sample(NEMat_Diffuse1_sampler, input.TexCoord).xyz, NEMat_Specular1.Sample(NEMat_Specular1_sampler, input.TexCoord).x);
 #endif
 
     float3 viewDir = normalize(ViewPos.xyz - FragPos);
+
+
+#ifdef NE_SHADOWS
+
+#ifdef NE_MAX_SPOT_CASTERS
+    shadow = SpotlightShadowCalculation(input.SpotLight_FragPos[0], FragPos, norm, SpotLights[0].Position.xyz);
+#endif
+
+
+
+#endif
 
 #ifdef NE_DIR_LIGHTS_NUM
   // phase 1: directional lighting
     for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
     {
-        result += CalcDirLight(DirLights[i0], norm, viewDir, albedo);
+        result += CalcDirLight(DirLights[i0], norm, viewDir, albedo, shadow);
     }
 #endif
 #ifdef NE_POINT_LIGHTS_NUM  
     // phase 2: point lights
     for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
     {
-        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo);
+        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo, shadow);
     }
 #endif
 #ifdef NE_SPOT_LIGHTS_NUM
     // phase 3: spot light
     for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
     {
-        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo);
+        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo , shadow);
     }
 #endif
-
-#ifdef NE_SHADOWS
-
-#ifdef NE_SPOT_LIGHTS_NUM
-
-        //SpotLights[0]
-    
-#endif
-
-
-
-#endif
-
-
-
-
-
-
-
-
 
     PS_OUTPUT output;
     output.Color =  float4(result, 1.0f);

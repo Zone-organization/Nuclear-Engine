@@ -23,6 +23,8 @@ namespace Nuclear
 			PreFilterMap = 6,
 			BRDF_LUT = 7,
 
+			ShadowMap = 8,
+
 			Unknown = 255
 		};
 

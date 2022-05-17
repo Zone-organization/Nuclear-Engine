@@ -13,7 +13,8 @@ namespace Nuclear
 
 			MaterialTex = 1,
 			RenderTarget = 2,
-			IBL_Tex = 3			
+			IBL_Tex = 3,		
+			ShadowMap
 		};
 
 		struct ShaderTexture

@@ -111,16 +111,26 @@ namespace Nuclear
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
 
 			Rendering::RenderingPipelineBakingDesc bakedesc;
+
+			auto lightsystemdesc = mLightingSystemPtr->GetDesc();
 			bakedesc.mRTWidth = RTWidth;
 			bakedesc.mRTHeight = RTHeight;
 
 			bakedesc.mShadingModelDesc.DirLights = static_cast<Uint32>(mLightingSystemPtr->GetDirLightsNum());
 			bakedesc.mShadingModelDesc.SpotLights = static_cast<Uint32>(mLightingSystemPtr->GetSpotLightsNum());
 			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(mLightingSystemPtr->GetPointLightsNum());
+			bakedesc.mShadingModelDesc.Max_SpotLight_Caster = static_cast<Uint32>(lightsystemdesc.MAX_SPOT_CASTERS);
 			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
 			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystemPtr->GetLightCB();
 			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
 
+			//if (lightsystemdesc.DisableShadows)
+			//{
+			//	
+			//}
+			//else {
+			//	bakedesc.mShadingModelDesc.
+			//}
 			if(AllPipelines)
 			{ 
 				for (auto it : mRenderingPipelines)

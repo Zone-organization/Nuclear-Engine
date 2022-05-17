@@ -20,6 +20,8 @@ namespace Nuclear
 			Uint32 SpotLights = 0;
 			Uint32 PointLights = 0;
 
+			Uint32 Max_SpotLight_Caster = 0;
+
 			IBuffer* CameraBufferPtr = nullptr;
 			IBuffer* AnimationBufferPtr = nullptr;
 			IBuffer* LightsBufferPtr = nullptr;
@@ -68,7 +70,7 @@ namespace Nuclear
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
 			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo;
-
+			std::vector<Assets::ShaderTexture> mShadowMapsInfo;
 			std::vector<Assets::ShaderTexture> mIBLTexturesInfo;
 
 			std::string GetName();

@@ -46,7 +46,9 @@ namespace Nuclear
 
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-
+				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 			}
 

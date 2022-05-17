@@ -71,6 +71,10 @@ namespace Nuclear
 			else if (name.find("BRDF_LUT") == 0)
 				return Graphics::TextureUsageType::BRDF_LUT;
 
+			//Shadows
+			else if (name.find("ShadowMap") == 0)
+				return Graphics::TextureUsageType::ShadowMap;
+
 			return Graphics::TextureUsageType::Unknown;
 		}
 
@@ -111,14 +115,14 @@ namespace Nuclear
 				mGBufferPipeline->CreateShaderResourceBinding(&GBufferSRB, true);
 
 				ReflectData(GBufferSRB.RawPtr(), "NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
-
-				//Handle IBL textures
 				ReflectData(mPipelineSRB.RawPtr(), "NEIBL_", mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
 			}
 			else
 			{
 				ReflectData(mPipelineSRB.RawPtr(),"NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
+				ReflectData(mPipelineSRB.RawPtr(), "NESDW_", mShadowMapsInfo, Assets::ShaderTextureType::ShadowMap);
 				ReflectData(mPipelineSRB.RawPtr(), "NEIBL_", mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
+
 			}
 
 		}

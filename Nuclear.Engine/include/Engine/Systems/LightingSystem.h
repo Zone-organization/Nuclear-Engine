@@ -22,7 +22,8 @@ namespace Nuclear
 
 		struct LightingSystemDesc
 		{
-			bool EnableShadows = false;
+			bool DisableShadows = false;
+			Uint32 MAX_SPOT_CASTERS = 0;;
 			ShadowMapInfo mSpotLightShadowMapInfo;
 		};
 		class NEAPI LightingSystem : public ECS::System<LightingSystem>
@@ -48,6 +49,10 @@ namespace Nuclear
 			size_t GetPointLightsNum();
 			size_t GetSpotLightsNum();
 
+			LightingSystemDesc GetDesc() const;
+
+			RefCntAutoPtr<ITextureView> mShadowMapSRV;
+
 		private:
 			void BakeBuffer();
 
@@ -69,7 +74,6 @@ namespace Nuclear
 
 			//Shadows
 			RefCntAutoPtr<ITextureView> mShadowMapDSV;
-			RefCntAutoPtr<ITextureView> mShadowMapSRV;
 
 			RefCntAutoPtr<IPipelineState> mSpotShadowMapDepthPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mSpotShadowMapDepthSRB;
