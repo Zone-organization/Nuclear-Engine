@@ -51,8 +51,6 @@ namespace Nuclear
 
 			LightingSystemDesc GetDesc() const;
 
-			RefCntAutoPtr<ITextureView> mShadowMapSRV;
-
 		private:
 			void BakeBuffer();
 
@@ -72,18 +70,14 @@ namespace Nuclear
 
 			LightingSystemDesc mDesc;
 
-			//Shadows
-			RefCntAutoPtr<ITextureView> mShadowMapDSV;
-
 			RefCntAutoPtr<IPipelineState> mSpotShadowMapDepthPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mSpotShadowMapDepthSRB;
 			RefCntAutoPtr<IBuffer> pSpotLightInfoCB;
 
 			void RenderMeshForDepthPass(Assets::Mesh* mesh);
-			void SpotLightShadowDepthPass(const Components::SpotLightComponent& spotlight);
+			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight);
 
 			void InitSpotLightShadowPSO();
-			void InitSpotLightShadowMapDSV();
 		};
 
 	}

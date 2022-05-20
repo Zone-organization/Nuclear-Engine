@@ -143,8 +143,6 @@ PS_OUTPUT DoLighting(PixelInputType input)
     shadow = SpotlightShadowCalculation(input.SpotLight_FragPos[0], FragPos, norm, SpotLights[0].Position.xyz);
 #endif
 
-
-
 #endif
 
 #ifdef NE_DIR_LIGHTS_NUM

@@ -5,8 +5,11 @@ float SpotlightShadowCalculation(float4 fragPosLightSpace, float3 FragPos, float
 {
     // perform perspective divide
     float3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    // transform to [0,1] range
-    projCoords = projCoords * 0.5 + 0.5;
+
+    // Transform to [0,1] range
+    projCoords.x = projCoords.x / 2 + 0.5;
+    projCoords.y = projCoords.y / -2 + 0.5;
+
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
     float4 closestDepth = NESDW_ShadowMap.Sample(NESDW_ShadowMap_sampler, projCoords.xy).r;
     // get depth of current fragment from light's perspective

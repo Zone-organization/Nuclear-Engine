@@ -108,7 +108,12 @@ namespace Nuclear
 				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
 				if (!mDesc.DisableShadows)
 				{
-
+					if (!SpotLight.GetShadowMap()->isInitialized())
+					{
+						Graphics::ShadowMapDesc desc;
+						desc.mResolution = mDesc.mSpotLightShadowMapInfo.mResolution;
+						SpotLight.GetShadowMap()->Initialize(desc);
+					}
 				}
 				SpotLights.push_back(&SpotLight);
 			}
@@ -127,7 +132,6 @@ namespace Nuclear
 			if (!mDesc.DisableShadows)
 			{
 				InitSpotLightShadowPSO();
-				InitSpotLightShadowMapDSV();
 			}
 		}
 		void LightingSystem::Update(ECS::TimeDelta dt)
@@ -197,25 +201,30 @@ namespace Nuclear
 			Math::Matrix4 LightSpace;
 		};
 
-		void LightingSystem::SpotLightShadowDepthPass(const Components::SpotLightComponent& spotlight)
+		void LightingSystem::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight)
 		{
-			float near_plane = 1.0f, far_plane = 7.5f;
+			float near_plane = 1.0f, far_plane = 100.f;
 			auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 
 			auto lightpos = spotlight.GetInternalPosition();
 			// Also re-calculate the Right and Up vector
-			auto Right = normalize(Math::cross(spotlight.GetDirection(), glm::vec3(0.0, 1.0, 0.0)));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-			auto Up = normalize(Math::cross(Right, spotlight.GetDirection()));
+		//	auto Right = normalize(Math::cross(spotlight.GetDirection(), glm::vec3(0.0, 1.0, 0.0)));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+			//auto Up = normalize(Math::cross(Right, spotlight.GetDirection()));
 
-			//auto lightView = glm::lookAt({ -2.0f, 4.0f, -1.0f	}, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+			auto lightView = glm::lookAt(lightpos, glm::vec3(0.0f, 0.0f, 0.0f) , glm::vec3(0.0, 1.0, 0.0));
+		//	auto up = glm::vec3(0.0, 1.0, 0.0);
 
-			auto lightView = glm::lookAt(lightpos, lightpos +  spotlight.GetDirection(), Up);
+
+			//auto target = lightpos + glm::vec3(0.0f);
+
+
+			//auto lightView = glm::lookAt(lightpos, target, up);
 			Math::Matrix4 lightSpaceMatrix = lightProjection * lightView;
 
 			Graphics::Context::GetContext()->SetPipelineState(mSpotShadowMapDepthPSO.RawPtr());
 
-			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, mShadowMapDSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(mShadowMapDSV, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, spotlight.GetShadowMap()->GetDSV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(spotlight.GetShadowMap()->GetDSV(), CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			Graphics::Context::GetContext()->CommitShaderResources(mSpotShadowMapDepthSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
@@ -263,17 +272,17 @@ namespace Nuclear
 
 			PSOCreateInfo.PSODesc.Name = "mSpotShadowMapDepthPSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 0;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = mDesc.mSpotLightShadowMapInfo.mFormat;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_R24G8_TYPELESS;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_FRONT;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
-		//	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = false;
+			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
+			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
+			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = false;
 
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
@@ -336,24 +345,6 @@ namespace Nuclear
 			mSpotShadowMapDepthPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_LightInfo")->Set(pSpotLightInfoCB);
 
 			mSpotShadowMapDepthPSO->CreateShaderResourceBinding(mSpotShadowMapDepthSRB.RawDblPtr(), true);
-		}
-		void LightingSystem::InitSpotLightShadowMapDSV()
-		{
-			TextureDesc ShadowMapDesc;
-			ShadowMapDesc.Name = "SpotlightShadowMap";
-			ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D;
-			ShadowMapDesc.Width = mDesc.mSpotLightShadowMapInfo.mResolution;
-			ShadowMapDesc.Height = mDesc.mSpotLightShadowMapInfo.mResolution;
-			ShadowMapDesc.MipLevels = 1;
-			ShadowMapDesc.Format = mDesc.mSpotLightShadowMapInfo.mFormat;
-			ShadowMapDesc.Usage = USAGE_DEFAULT;
-			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
-
-			RefCntAutoPtr<ITexture> ShadowMapTex2D;
-			Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &ShadowMapTex2D);
-
-			mShadowMapSRV = ShadowMapTex2D->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-			mShadowMapDSV = ShadowMapTex2D->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
 		}
 	}
 }

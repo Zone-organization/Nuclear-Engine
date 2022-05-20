@@ -73,7 +73,7 @@ namespace Nuclear
 
 			//Shadows
 			else if (name.find("ShadowMap") == 0)
-				return Graphics::TextureUsageType::ShadowMap;
+				return Graphics::TextureUsageType::ShadowTex;
 
 			return Graphics::TextureUsageType::Unknown;
 		}
@@ -120,7 +120,7 @@ namespace Nuclear
 			else
 			{
 				ReflectData(mPipelineSRB.RawPtr(),"NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
-				ReflectData(mPipelineSRB.RawPtr(), "NESDW_", mShadowMapsInfo, Assets::ShaderTextureType::ShadowMap);
+				ReflectData(mPipelineSRB.RawPtr(), "NESDW_", mShadowMapsInfo, Assets::ShaderTextureType::ShadowTex);
 				ReflectData(mPipelineSRB.RawPtr(), "NEIBL_", mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
 
 			}

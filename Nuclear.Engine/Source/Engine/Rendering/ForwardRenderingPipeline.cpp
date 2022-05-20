@@ -4,6 +4,7 @@
 #include <Engine\Components/EntityInfoComponent.h>
 #include "Engine/Animation/Animator.h"
 #include <Engine\Components\AnimatorComponent.h>
+#include <Engine\Components\SpotLightComponent.h>
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Engine\Systems\LightingSystem.h>
@@ -62,7 +63,7 @@ namespace Nuclear
 						Math::Matrix4 empty(0.0f);
 						PVoid data;
 						Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-						data = memcpy(data, &empty,  sizeof(Math::Matrix4));
+						data = memcpy(data, &empty, sizeof(Math::Matrix4));
 						Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
 					}
 					//IBL
@@ -72,10 +73,17 @@ namespace Nuclear
 					}
 
 					//Shadows
-					for (int i = 0; i < GetShadingModel()->mShadowMapsInfo.size(); i++)
+					///////////////////////////////////TODO
+					auto SpotLightView = renderer->mScene->GetRegistry().view<Components::SpotLightComponent>();
+					for (auto entity : SpotLightView)
 					{
-						GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mShadowMapsInfo.at(i).mSlot)->Set(renderer->GetLightingSystem()->mShadowMapSRV.RawPtr());
+						auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
+						for (int i = 0; i < GetShadingModel()->mShadowMapsInfo.size(); i++)
+						{
+							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mShadowMapsInfo.at(i).mSlot)->Set(SpotLight.GetShadowMap()->GetSRV());
+						}
 					}
+
 					InstantRender(MeshObject.mMesh, MeshObject.mMaterial);
 				}
 			}

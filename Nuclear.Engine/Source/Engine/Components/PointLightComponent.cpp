@@ -5,6 +5,7 @@ namespace Nuclear
 	namespace Components
 	{
 		PointLightComponent::PointLightComponent()
+			: mShadowMap(Graphics::LightType::PointLight)
 		{
 			data.Position = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);

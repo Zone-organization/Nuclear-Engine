@@ -14,10 +14,6 @@ namespace Nuclear
 		};
 
 
-
-
-
-
 		//Shader Structs
 		namespace Internal
 		{

@@ -1,12 +1,12 @@
 #pragma once
 #include <Engine/Components/LightCommon.h>
 #include <Engine/Graphics/Color.h>
+#include <Engine/Graphics/ShadowMap.h>
 
 namespace Nuclear
 {
 	namespace Components
 	{
-	
 
 		struct NEAPI SpotLightComponent
 		{
@@ -38,15 +38,12 @@ namespace Nuclear
 			Math::Vector3 GetInternalPosition() const;
 			void SetInternalPosition(Math::Vector3 pos);
 
-			/*template<class Archive>
-			void serialize(Archive& archive)
-			{
-				archive(CEREAL_NVP(mCastShadows));
-				archive(CEREAL_NVP(data));
-			}*/
+			Graphics::ShadowMap* GetShadowMap();
+
 		protected:
 			Internal::Shader_SpotLight_Struct data;
 			LightShadowType mShadowType;
+			Graphics::ShadowMap mShadowMap;
 		};
 	}
 }
