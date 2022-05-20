@@ -74,13 +74,16 @@ namespace Nuclear
 
 					//Shadows
 					///////////////////////////////////TODO
-					auto SpotLightView = renderer->mScene->GetRegistry().view<Components::SpotLightComponent>();
-					for (auto entity : SpotLightView)
+					if (GetShadingModel()->mSpotLight_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
 					{
-						auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-						for (int i = 0; i < GetShadingModel()->mShadowMapsInfo.size(); i++)
+
+						auto SpotLightView = renderer->mScene->GetRegistry().view<Components::SpotLightComponent>();
+						for (auto entity : SpotLightView)
 						{
-							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mShadowMapsInfo.at(i).mSlot)->Set(SpotLight.GetShadowMap()->GetSRV());
+							auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
+
+							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mSpotLight_ShadowmapInfo.mSlot)->Set(SpotLight.GetShadowMap()->GetSRV());
+
 						}
 					}
 

@@ -78,6 +78,7 @@ namespace Nuclear
 			return Graphics::TextureUsageType::Unknown;
 		}
 
+
 		void ReflectData(IShaderResourceBinding* ActiveSRB,const std::string& varname, std::vector<Assets::ShaderTexture>& result,const Assets::ShaderTextureType& type)
 		{
 			for (Uint32 i = 0; i < ActiveSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
@@ -120,11 +121,49 @@ namespace Nuclear
 			else
 			{
 				ReflectData(mPipelineSRB.RawPtr(),"NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
-				ReflectData(mPipelineSRB.RawPtr(), "NESDW_", mShadowMapsInfo, Assets::ShaderTextureType::ShadowTex);
 				ReflectData(mPipelineSRB.RawPtr(), "NEIBL_", mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
 
 			}
 
+			for (Uint32 i = 0; i < mPipelineSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
+			{
+				auto variable = mPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
+				ShaderResourceDesc VarDesc;
+				variable->GetResourceDesc(VarDesc);
+				std::string VarName(VarDesc.Name);
+				auto VarType = VarDesc.Type;
+				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV)
+				{
+					//Shadow Maps
+					if (VarName.find("NE_ShadowMap") == 0)
+					{
+						VarName.erase(0, 13);
+
+						Assets::ShaderTexture* tex;
+						if (VarName.find("Spot") == 0)
+						{
+							tex = &mSpotLight_ShadowmapInfo;
+						}
+						else if (VarName.find("Point") == 0)
+						{
+							tex = &mPointLight_ShadowmapInfo;
+						}
+						else if (VarName.find("Dir") == 0)
+						{
+							tex = &mDirLight_ShadowmapInfo;
+
+						}
+						else {
+							assert(false);
+						}
+						tex->mTex = Managers::AssetManager::DefaultWhiteTex;
+						tex->mTex.SetName(VarName);
+						tex->mSlot = i;
+						tex->mType = Assets::ShaderTextureType::ShadowTex;
+						tex->mTex.SetUsageType(ParseTexUsageFromName(VarName));
+					}
+				}
+			}
 		}
 		Uint32 ShadingModel::GetID()
 		{

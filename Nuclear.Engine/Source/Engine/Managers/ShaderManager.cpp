@@ -41,62 +41,7 @@ namespace Nuclear
 
 			return LayoutElems;
 		}
-		//void ShaderManager::CreateAutoVertexShader(const AutoVertexShaderDesc& desc, IShader** shader, std::vector<LayoutElement>* Layout)
-		//{
-		//	ShaderCreateInfo CreationAttribs;
-		//	Layout->clear();
-
-
-		//	CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-		//	CreationAttribs.UseCombinedTextureSamplers = true;
-		//	CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-		//	CreationAttribs.EntryPoint = "main";
-		//	CreationAttribs.Desc.Name = desc.Name;
-
-
-		//	std::vector<std::string> defines;
-
-		//	Layout->push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
-		//	Layout->push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
-		//	if (desc.Use_Camera)
-		//	{
-		//		Layout->push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
-		//		Layout->push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
-		//		Layout->push_back(LayoutElement(4, 0, 3, VT_FLOAT32, false));  //Bitangents
-		//		Layout->push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
-		//		Layout->push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
-		//		defines.push_back("NE_USE_DEF_CAMERA");
-		//	}
-		////	if (desc.Use_Camera)
-
-		//	if (desc.OutFragPos)
-		//		defines.push_back("NE_OUT_FRAG_POS");
-
-		//	auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoVertexShader.hlsl", defines, std::vector<std::string>(), true);
-		//	CreationAttribs.Source = source.c_str();
-
-		//	Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
-		//}
-		//void ShaderManager::CreateAutoPixelShader(const AutoPixelShaderDesc & desc, IShader** shader)
-		//{
-		//	ShaderCreateInfo CreationAttribs;
-
-		//	CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-		//	CreationAttribs.UseCombinedTextureSamplers = true;
-		//	CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-		//	CreationAttribs.EntryPoint = "main";
-		//	CreationAttribs.Desc.Name = "AutoPixelShader";
-
-		//	std::vector<std::string> defines;
-
-		//	if (desc.OutputTexture)
-		//		defines.push_back("NE_OUTPUT_TEXTURE");
-
-		//	auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/ShaderManager/AutoPixelShader.hlsl", defines, std::vector<std::string>(), true);
-		//	CreationAttribs.Source = source.c_str();
-		//	Graphics::Context::GetDevice()->CreateShader(CreationAttribs, shader);
-		//}
-
+	
 		bool ShaderManager::ProcessAndCreatePipeline(
 			IPipelineState** PipelineState,
 			GraphicsPipelineStateCreateInfo& PSOCreateInfo,
@@ -127,7 +72,7 @@ namespace Nuclear
 						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearWrapDesc);
 						GeneratedSamplerDesc.push_back(desc);
 					}
-					else if (name.find("NESDW_") != std::string::npos)
+					else if (name.find("NE_ShadowMap") != std::string::npos)
 					{
 						SamplerDesc SamLinearWrapDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
 							TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER);
@@ -216,7 +161,7 @@ namespace Nuclear
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 			else if (name.find("NEIBL") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
-			else if (name.find("NESDW") == 0)
+			else if (name.find("NE_ShadowMap") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 
 			return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;

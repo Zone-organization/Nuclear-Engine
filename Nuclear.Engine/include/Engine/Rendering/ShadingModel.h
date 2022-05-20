@@ -70,8 +70,11 @@ namespace Nuclear
 			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
 			//Note: It is very important to fill it in order for material creation work with the pipeline.
 			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo;
-			std::vector<Assets::ShaderTexture> mShadowMapsInfo;
 			std::vector<Assets::ShaderTexture> mIBLTexturesInfo;
+
+			Assets::ShaderTexture mSpotLight_ShadowmapInfo;         //Texture2DArray
+			Assets::ShaderTexture mPointLight_ShadowmapInfo;        //TextureCubeArray
+			Assets::ShaderTexture mDirLight_ShadowmapInfo;
 
 			std::string GetName();
 		protected:
