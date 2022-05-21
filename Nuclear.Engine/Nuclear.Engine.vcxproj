@@ -172,6 +172,7 @@
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModel.h" />
     <ClInclude Include="include\Engine\Managers\AssetLibrary.h" />
+    <ClInclude Include="include\Engine\Rendering\ShadowManager.h" />
     <ClInclude Include="include\Engine\Serialization\ComponentsArchive.h" />
     <ClInclude Include="include\Engine\Serialization\MathArchive.h" />
     <ClInclude Include="include\Engine\Systems\CameraSystem.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Rendering\ShadowManager.cpp" />
     <ClCompile Include="Source\Engine\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />

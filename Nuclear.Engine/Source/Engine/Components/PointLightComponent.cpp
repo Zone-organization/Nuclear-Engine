@@ -26,6 +26,10 @@ namespace Nuclear
 		{
 			data.Position = Math::Vector4(pos, 1.0f);
 		}
+		Graphics::ShadowMap* PointLightComponent::GetShadowMap()
+		{
+			return &mShadowMap;
+		}
 		void PointLightComponent::SetIntensity(float intensity)
 		{
 			data.Intensity_Attenuation.x = intensity;

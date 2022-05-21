@@ -31,34 +31,48 @@ namespace Nuclear
 		}
 		void ShadowMap::Initialize(const ShadowMapDesc& Desc)
 		{
+			RefCntAutoPtr<ITexture> ShadowMapTex;
+			RESOURCE_DIMENSION dimension = RESOURCE_DIM_UNDEFINED;
+			TextureDesc ShadowMapDesc;
+			ShadowMapDesc.Name = "ShadowMap";
+			ShadowMapDesc.Width = mDesc.mResolution;
+			ShadowMapDesc.Height = mDesc.mResolution;
+			ShadowMapDesc.MipLevels = 1;
+			ShadowMapDesc.SampleCount = 1;
+			ShadowMapDesc.Format = TEX_FORMAT_R24G8_TYPELESS;
+			ShadowMapDesc.Usage = USAGE_DEFAULT;
+			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
+
 			if (mType == LightType::SpotLight)
 			{
-				TextureDesc ShadowMapDesc;
-				ShadowMapDesc.Name = "Spotlight_ShadowMap";
-				ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D;
-				ShadowMapDesc.Width = mDesc.mResolution;
-				ShadowMapDesc.Height = mDesc.mResolution;
-				ShadowMapDesc.MipLevels = 1;
-				ShadowMapDesc.SampleCount = 1;
-				ShadowMapDesc.Format = TEX_FORMAT_R24G8_TYPELESS;
-				ShadowMapDesc.Usage = USAGE_DEFAULT;
-				ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
-
-				RefCntAutoPtr<ITexture> ShadowMapTex2D;
-				Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &ShadowMapTex2D);
-
-				{
-					TextureViewDesc SRVDesc{ "ShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_2D };
-					SRVDesc.Format = TEX_FORMAT_R24_UNORM_X8_TYPELESS;
-					ShadowMapTex2D->CreateView(SRVDesc, &mSRV);
-				}
-				{
-					TextureViewDesc DSVDesc{ "ShadowMap_DSV", TEXTURE_VIEW_DEPTH_STENCIL, RESOURCE_DIM_TEX_2D };
-					DSVDesc.Format = TEX_FORMAT_D24_UNORM_S8_UINT;
-					ShadowMapTex2D->CreateView(DSVDesc, &mDSV);
-				}
+				dimension = RESOURCE_DIM_TEX_2D;
 				mInitialized = true;
 			}
+			else if (mType == LightType::PointLight)
+			{
+
+				dimension = RESOURCE_DIM_TEX_CUBE;
+				ShadowMapDesc.ArraySize = 6;
+
+			}
+
+
+
+			ShadowMapDesc.Type = dimension;
+			Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &ShadowMapTex);
+
+			{
+				TextureViewDesc SRVDesc{ "ShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, dimension };
+				SRVDesc.Format = TEX_FORMAT_R24_UNORM_X8_TYPELESS;
+				ShadowMapTex->CreateView(SRVDesc, &mSRV);
+			}
+			{
+				TextureViewDesc DSVDesc{ "ShadowMap_DSV", TEXTURE_VIEW_DEPTH_STENCIL, dimension };
+				DSVDesc.Format = TEX_FORMAT_D24_UNORM_S8_UINT;
+				ShadowMapTex->CreateView(DSVDesc, &mDSV);
+			}
+			mInitialized = true;
+
 		}
 	}
 }
