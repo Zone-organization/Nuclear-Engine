@@ -46,7 +46,6 @@ namespace Nuclear
 			if (mType == LightType::SpotLight)
 			{
 				dimension = RESOURCE_DIM_TEX_2D;
-				mInitialized = true;
 			}
 			else if (mType == LightType::PointLight)
 			{

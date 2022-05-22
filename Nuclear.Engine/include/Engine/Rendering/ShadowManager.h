@@ -22,7 +22,7 @@ namespace Nuclear
 
 		struct ShadowManagerDesc
 		{
-			Uint32 MAX_SPOT_CASTERS = 0;;
+			Uint32 MAX_SPOT_CASTERS = 1;
 			ShadowMapInfo mSpotLightShadowMapInfo;
 			ShadowMapInfo mPointLightShadowMapInfo;
 
@@ -50,6 +50,9 @@ namespace Nuclear
 			//Pointlight
 			RefCntAutoPtr<IPipelineState> mPointShadowPassPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mPointShadowPassSRB;
+			RefCntAutoPtr<IBuffer> pPointShadowVS_CB;
+			RefCntAutoPtr<IBuffer> pPointShadowGS_CB;
+			RefCntAutoPtr<IBuffer> pPointShadowPS_CB;
 
 
 			void InitSpotLightShadowPSO();

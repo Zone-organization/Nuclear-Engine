@@ -9,3 +9,5 @@
 #include <Engine\Rendering\ShadingModels\DiffuseOnly.h>
 #include <Engine\Rendering\ShadingModels\WireFrame.h>
 #include <Engine\Rendering\ImageBasedLighting.h>
+#include <Engine\Rendering\ShadowManager.h>
+

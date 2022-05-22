@@ -20,6 +20,8 @@ class Playground : public Client
 	Rendering::BlinnPhong BlinnphongRP;
 	Rendering::ForwardRenderingPipeline FwdPipeline;
 
+	Rendering::ShadowManager shadowmanager;
+
 	ECS::Scene Scene;
 
 	ECS::Entity EController;
@@ -101,8 +103,7 @@ public:
 	{
 		mAssetManager->Initialize();
 		Systems::LightingSystemDesc desc;
-		desc.DisableShadows = false;
-		desc.MAX_SPOT_CASTERS = 1;
+		desc.ShadowManager = &shadowmanager;
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>(desc);
 		SetupEntities();

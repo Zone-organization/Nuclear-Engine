@@ -26,6 +26,7 @@ float4 PointShadowMapDepthVS(VertexInputType input) : SV_POSITION
 struct GSOutput
 {
     float4 FragPos : SV_POSITION;
+    uint slice : SV_RenderTargetArrayIndex;
 };
 
 cbuffer NEStatic_PointShadowGS
@@ -38,13 +39,13 @@ void PointShadowMapDepthGS(triangle float4 input[3] : SV_POSITION,  inout Triang
 {
     for (uint face = 0; face < 6; ++face)
     {
-        SV_RenderTargetArrayIndex = face; // built-in variable that specifies to which face we render.
 
         for (uint i = 0; i < 3; i++)  // for each triangle's vertices
         {
             GSOutput element;
             element.FragPos = input[i];
             element.FragPos = mul(ShadowMatrices[face], element.FragPos);
+            element.slice = face; // built-in variable that specifies to which face we render.
             output.Append(element);
         }
 
@@ -70,7 +71,7 @@ cbuffer NEStatic_PointShadowPS
     float gFarPlane;
 };
 
-void PointShadowMapDepthPS(GSOutput input)
+float PointShadowMapDepthPS(GSOutput input) : SV_Depth
 {
     float lightDistance = length(input.FragPos.xyz - gLightPos);
 
@@ -78,5 +79,5 @@ void PointShadowMapDepthPS(GSOutput input)
     lightDistance = lightDistance / gFarPlane;
 
     // write this as modified depth
-    SV_Depth = lightDistance;
+    return lightDistance;
 }

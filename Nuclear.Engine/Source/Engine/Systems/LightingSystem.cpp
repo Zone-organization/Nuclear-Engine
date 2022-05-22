@@ -125,6 +125,11 @@ namespace Nuclear
 			}
 
 			BakeBuffer();
+
+			if (pShadowManager)
+			{
+				pShadowManager->Initialize();
+			}
 		}
 		void LightingSystem::Update(ECS::TimeDelta dt)
 		{
