@@ -32,22 +32,6 @@ namespace Nuclear {
 		AssetManager::AssetManager(AssetManagerDesc desc)
 			: mDesc(desc)
 		{
-			//Initialize Containers
-			mImportedImages = std::unordered_map<Uint32, Assets::Image>();
-			mHashedImagesPaths = std::unordered_map<Uint32, Core::Path>();
-
-			mImportedMeshes = std::unordered_map<Uint32, Assets::Mesh>();
-			mHashedMeshesPaths = std::unordered_map<Uint32, Core::Path>();
-
-			mImportedMaterials = std::unordered_map<Uint32, Assets::Material>();
-			mHashedMaterialsPaths = std::unordered_map<Uint32, Core::Path>();
-
-			mImportedAnimations = std::unordered_map<Uint32, Assets::Animations>();
-			mHashedAnimationsPaths = std::unordered_map<Uint32, Core::Path>();
-
-			mImportedAudioClips = std::unordered_map<Uint32, Assets::AudioClip>();
-			mHashedAudioClipsPaths = std::unordered_map<Uint32, Core::Path>();
-
 			mImageImporter = Importers::ImageImporterDelegate::create<&Importers::FreeImageLoad>();
 			mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
 		}
@@ -59,7 +43,7 @@ namespace Nuclear {
 
 		void AssetManager::FlushContainers(ASSET_MANAGER_FLUSH_FLAGS flag)
 		{
-			/*for (auto& it : mImportedMaterials) {
+			/*for (auto& it : mDefaultLibrary.mImportedMaterials) {
 				 Do stuff
 
 				for (auto& it1 : it.second.mPixelShaderTextures) {
@@ -72,20 +56,15 @@ namespace Nuclear {
 				it.second.mTextureView.Release();
 			}*/
 		//
-			mImportedMeshes.clear();
-			mHashedMeshesPaths.clear();
+			mDefaultLibrary.mImportedMeshes.Release();
 
-			mImportedImages.clear();
-			mHashedImagesPaths.clear();
+			mDefaultLibrary.mImportedImages.Release();
 
-			mImportedMaterials.clear();
-			mHashedMaterialsPaths.clear();
+			mDefaultLibrary.mImportedMaterials.Release();
 
-			mImportedAnimations.clear();
-			mHashedAnimationsPaths.clear();
+			mDefaultLibrary.mImportedAnimations.Release();
 
-			mImportedAudioClips.clear();
-			mHashedAudioClipsPaths.clear();
+			mDefaultLibrary.mImportedAudioClips.Release();
 		}
 
 		void AssetManager::Initialize(AssetManagerDesc desc)
@@ -114,8 +93,8 @@ namespace Nuclear {
 			Graphics::Texture result;
 
 			//Check if exists
-			auto it = mImportedImages.find(hashedname);
-			if (it != mImportedImages.end())
+			auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
+			if (it != mDefaultLibrary.mImportedImages.mData.end())
 			{
 				result.SetImage(&it->second);
 				return result;
@@ -141,15 +120,12 @@ namespace Nuclear {
 			}
 			image.mData.mData = NULL;
 
-			if (mSaveTexturesPaths)
-			{
-				mHashedImagesPaths[hashedname] = Path;
-			}
+			mDefaultLibrary.mImportedImages.SavePath(hashedname, Path);
 
 			image.SetName(Path.mInputPath);
-			mImportedImages[hashedname] = image;
+			mDefaultLibrary.mImportedImages.mData[hashedname] = image;
 
-			result.SetImage(&mImportedImages[hashedname]);
+			result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
 			result.SetUsageType(type);
 
 			NUCLEAR_INFO("[AssetManager : '{0}'] Loaded Texture: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
@@ -173,8 +149,8 @@ namespace Nuclear {
 				return DefaultBlackTex;
 			}
 			image.mData.mData = NULL;
-			mImportedImages[hashedname] = image;
-			result.SetImage(&mImportedImages[hashedname]);
+			mDefaultLibrary.mImportedImages.mData[hashedname] = image;
+			result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
 
 			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Texture: '{1}' : '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
 
@@ -188,7 +164,7 @@ namespace Nuclear {
 		//	//	auto hashedname = Utilities::Hash(Desc.mPath);
 
 		//	//	
-		//	//	Internal::CreateTextureViewFromRawImage(Image, Desc, &mImportedImages[hashedname]);
+		//	//	Internal::CreateTextureViewFromRawImage(Image, Desc, &mDefaultLibrary.mImportedImages[hashedname]);
 
 		//	//}
 
@@ -206,8 +182,8 @@ namespace Nuclear {
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
-			mImportedAudioClips[hashedname] = Assets::AudioClip();
-			auto result = &mImportedAudioClips[hashedname];
+			mDefaultLibrary.mImportedAudioClips.mData[hashedname] = Assets::AudioClip();
+			auto result = &mDefaultLibrary.mImportedAudioClips.mData[hashedname];
 			Audio::AudioEngine::GetSystem()->createSound(Path.mRealPath.c_str(), mode, 0, &result->mSound);
 
 			NUCLEAR_INFO("[AssetManager : '{0}'] Imported AudioClip: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
@@ -221,29 +197,29 @@ namespace Nuclear {
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
 			//Check if exists
-			auto itmesh = mImportedMeshes.find(hashedname);
-			if (itmesh != mImportedMeshes.end())
+			auto itmesh = mDefaultLibrary.mImportedMeshes.mData.find(hashedname);
+			if (itmesh != mDefaultLibrary.mImportedMeshes.mData.end())
 			{
 				Assets::Animations* anim = nullptr;
-				auto itanim = mImportedAnimations.find(hashedname);
-				if (itanim != mImportedAnimations.end())
+				auto itanim = mDefaultLibrary.mImportedAnimations.mData.find(hashedname);
+				if (itanim != mDefaultLibrary.mImportedAnimations.mData.end())
 				{
 					anim = &itanim->second;
 				}
 
-				return { &itmesh->second, &mImportedMaterials[hashedname], anim };
+				return { &itmesh->second, &mDefaultLibrary.mImportedMaterials.mData[hashedname], anim };
 			}
 
 			Assets::Animations Animation;
 			Assets::Animations* anim = nullptr;
 		
-			mImportedMeshes[hashedname] = Assets::Mesh();
-			Assets::Mesh* Mesh = &mImportedMeshes[hashedname];
+			mDefaultLibrary.mImportedMeshes.mData[hashedname] = Assets::Mesh();
+			Assets::Mesh* Mesh = &mDefaultLibrary.mImportedMeshes.mData[hashedname];
 			Assets::Material* Material = nullptr;
 			if (desc.LoadMaterial)
 			{
-				mImportedMaterials[hashedname] = Assets::Material();
-				Material = &mImportedMaterials[hashedname];
+				mDefaultLibrary.mImportedMaterials.mData[hashedname] = Assets::Material();
+				Material = &mDefaultLibrary.mImportedMaterials.mData[hashedname];
 			}
 			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, &Animation))
 			{
@@ -256,22 +232,22 @@ namespace Nuclear {
 			{
 				if (Animation.isValid == true)
 				{
-					mImportedAnimations[hashedname] = Animation;
-					anim = &mImportedAnimations[hashedname];
-					if (mSaveAnimationsPaths)
-						mHashedAnimationsPaths[hashedname] = Path;
+					mDefaultLibrary.mImportedAnimations.mData[hashedname] = Animation;
+					anim = &mDefaultLibrary.mImportedAnimations.mData[hashedname];
+
+					mDefaultLibrary.mImportedAnimations.SavePath(hashedname, Path);
 				}
 			}
 			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			Mesh->Create();
 			
-			if (mSaveMeshesPaths)
-				mHashedMeshesPaths[hashedname] = Path;
+			mDefaultLibrary.mImportedMeshes.SavePath(hashedname, Path);
 
-			if (mSaveMaterialsPaths && desc.LoadMaterial)
-				mHashedMaterialsPaths[hashedname] = Path;
-
+			if (desc.LoadMaterial)
+			{
+				mDefaultLibrary.mImportedMaterials.SavePath(hashedname, Path);
+			}
 
 			return { Mesh , Material, anim };
 		}
@@ -295,17 +271,17 @@ namespace Nuclear {
 			}
 			result.mData = imagedata;
 
-			mImportedImages[hashedname] = result;
+			mDefaultLibrary.mImportedImages.mData[hashedname] = result;
 			
 			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Texture2D (for CubeMap) : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
-			return &mImportedImages[hashedname];
+			return &mDefaultLibrary.mImportedImages.mData[hashedname];
 		}
 		Assets::Image* AssetManager::DoesImageExist(Uint32 hashedname)
 		{
 			//Check if Texture has been loaded before
-			auto it = mImportedImages.find(hashedname);
-			if (it != mImportedImages.end())
+			auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
+			if (it != mDefaultLibrary.mImportedImages.mData.end())
 			{
 				return &it->second;
 			}

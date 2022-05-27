@@ -9,4 +9,4 @@
 #include <Engine\Assets\Animations.h>
 #include <Engine\Assets\AudioClip.h>
 #include <Engine\Assets\Script.h>
-
+#include <Engine\Assets\Font.h>

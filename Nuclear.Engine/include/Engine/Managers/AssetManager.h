@@ -1,9 +1,7 @@
 #pragma once
 #include <Engine/Importers/Common.h>
-#include <Engine\Assets\Assets.h>
+#include <Engine\Assets\AssetLibrary.h>
 #include <FMOD/inc/fmod.hpp>
-#include <Core/Path.h>
-#include <unordered_map>
 #include <array>
 
 #define MAX_BONE_INFLUENCE 4
@@ -76,26 +74,7 @@ namespace Nuclear
 			AssetManager(AssetManagerDesc desc = AssetManagerDesc());
 			~AssetManager();
 
-			std::unordered_map<Uint32, Assets::Image> mImportedImages; //All loaded textures with their hashed names with crc32c (always saved)
-			std::unordered_map<Uint32, Core::Path> mHashedImagesPaths; //Real pre-hashed texture paths (conditionally saved see SaveTexturePaths)
-			bool mSaveTexturesPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
-
-			std::unordered_map<Uint32, Assets::Mesh> mImportedMeshes; //All imported meshes with their hashed names with crc32c (always saved)
-			std::unordered_map<Uint32, Core::Path> mHashedMeshesPaths; //Real pre-hashed meshes paths (conditionally saved see mSaveMeshPaths)
-			bool mSaveMeshesPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real meshes Paths or not
-
-			std::unordered_map<Uint32, Assets::Material> mImportedMaterials; //All imported materials with their hashed names with crc32c (always saved)
-			std::unordered_map<Uint32, Core::Path> mHashedMaterialsPaths; //Real pre-hashed materials paths (conditionally saved see mSaveMaterialPaths)
-			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
-
-
-			std::unordered_map<Uint32, Assets::Animations> mImportedAnimations; //All imported materials with their hashed names with crc32c (always saved)
-			std::unordered_map<Uint32, Core::Path> mHashedAnimationsPaths; //Real pre-hashed materials paths (conditionally saved see mSaveMaterialPaths)
-			bool mSaveAnimationsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
-
-			std::unordered_map<Uint32, Assets::AudioClip> mImportedAudioClips; //All imported materials with their hashed names with crc32c (always saved)
-			std::unordered_map<Uint32, Core::Path> mHashedAudioClipsPaths; //Real pre-hashed materials paths (conditionally saved see mSaveMaterialPaths)
-			bool mSaveAudioClipsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real materials Paths or not
+			Assets::AssetLibrary mDefaultLibrary;
 
 			bool mMultithreadMeshTextureLoading = true;
 
