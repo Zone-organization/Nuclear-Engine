@@ -13,3 +13,6 @@
 [submodule "External/PhysX"]
 	path = External/PhysX
 	url = https://github.com/NVIDIAGameWorks/PhysX
+[submodule "External/msdf-atlas-gen"]
+	path = External/msdf-atlas-gen
+	url = https://github.com/Zone-organization/msdf-atlas-gen.git
