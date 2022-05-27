@@ -16,6 +16,8 @@
 
 #pragma comment(lib,"assimp-vc143-mt.lib")
 
+#pragma comment(lib,"freetype.lib")
+
 //Diligent Linking
 #pragma comment(lib,"Diligent-Common.lib")
 
@@ -78,9 +80,14 @@ namespace Nuclear {
 
 
 		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts->AddFontFromFileTTF("Assets/Common/Fonts/Roboto-Medium.ttf", 15);
 		ImGui_ImplGlfw_InitForOther(MainWindow.GetRawWindowPtr(), true);
 		ImGui_Impl_Init();
 		ImGui_Impl_CreateDeviceObjects();
+
+		//io.Fonts->GetTexDataAsAlpha8()
+
 		NUCLEAR_INFO("[Engine] ImGUI Initalized.");
 
 

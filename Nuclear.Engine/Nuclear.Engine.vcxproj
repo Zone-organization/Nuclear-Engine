@@ -192,7 +192,8 @@
     <ClInclude Include="include\Engine\Assets\Script.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="include\Client.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGUI\imconfig.h" />
+    <ClInclude Include="include\Engine\UI\Font.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Engine\Importers\AssimpGLMHelpers.h" />
     <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
     <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
@@ -289,6 +290,7 @@
     <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_freetype.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Rendering\BlurEffect.cpp" />
     <ClCompile Include="Source\Engine\Rendering\DefferedRenderingPipeline.cpp" />
@@ -349,6 +351,7 @@
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
     <ClCompile Include="Source\Client.cpp" />
+    <ClCompile Include="Source\Engine\UI\Font.cpp" />
     <ClCompile Include="Source\ThirdParty\angelscript\source\as_atomic.cpp" />
     <ClCompile Include="Source\ThirdParty\angelscript\source\as_builder.cpp" />
     <ClCompile Include="Source\ThirdParty\angelscript\source\as_bytecode.cpp" />

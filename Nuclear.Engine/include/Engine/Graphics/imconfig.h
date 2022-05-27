@@ -14,6 +14,7 @@
 #pragma once
 #include <Core/NE_Common.h>
 
+#define IMGUI_ENABLE_FREETYPE
 //---- Define assertion handler. Defaults to calling assert().
 //#define IM_ASSERT(_EXPR)  MyAssert(_EXPR)
 //#define IM_ASSERT(_EXPR)  ((void)(_EXPR))     // Disable asserts

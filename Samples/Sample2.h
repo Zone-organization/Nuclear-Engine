@@ -334,7 +334,8 @@ public:
 	void Render(float dt) override
 	{
 		Scene.Update(dt);
-		{
+		{	
+
 			using namespace Graphics;
 			ImGui::Begin("Sample5: Advanced Rendering");
 
