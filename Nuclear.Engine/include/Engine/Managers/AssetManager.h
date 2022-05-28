@@ -5,6 +5,9 @@
 #include <array>
 
 #define MAX_BONE_INFLUENCE 4
+
+typedef struct FT_LibraryRec_* FT_Library;
+namespace msdfgen { class FreetypeHandle; }
 namespace Nuclear 
 {
 	namespace ECS
@@ -85,19 +88,21 @@ namespace Nuclear
 			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
 			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
+			//Textures
 			Graphics::Texture Import(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
-
 			Graphics::Texture Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
-			//Assets::Image Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
-
-			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
-
-			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
-
+		    //Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
+			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::ImageLoadingDesc& Desc);
 			Assets::Image* DoesImageExist(Uint32 hashedname);
 
-			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::ImageLoadingDesc& Desc);
+
+			//Audio
+			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
+
+			//Mesh & Material & Animation
+			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
+
+			Assets::Font* Import(const Core::Path& Path, const Importers::FontLoadingDesc& desc);
 
 
 			void SaveScene(ECS::Scene* scene);
@@ -114,6 +119,7 @@ namespace Nuclear
 		private:
 			AssetManagerDesc mDesc;
 			Assets::Image* TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc);
+			msdfgen::FreetypeHandle* FT_Handle;
 		};
 	}
 }

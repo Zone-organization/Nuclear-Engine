@@ -7,7 +7,6 @@
   - Fast Robust Entity Component System "ECS" using entt.
   - Cross-platform Application creation through GLFW.
   - Support for XML & INI Parsers.
-  - Cross-platform ready.
   
 - __Managers__  
   - AssetManager

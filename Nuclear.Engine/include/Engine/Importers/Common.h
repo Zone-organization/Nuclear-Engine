@@ -117,7 +117,12 @@ namespace Nuclear
 				mType(RESOURCE_DIM_TEX_2D)
 			{}
 		};
+		struct FontLoadingDesc
+		{
+			Uint32 Width = 0;
+			Uint32 Height = 48;
 
+		};
 		struct MeshImporterDesc
 		{
 			const char* mPath;

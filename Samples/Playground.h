@@ -15,6 +15,8 @@ class Playground : public Client
 	Assets::Material SphereMaterial;
 	Assets::Material PlaneMaterial;
 
+	Assets::Font* ArialFont;
+
 	Graphics::Camera Camera;
 
 	Rendering::BlinnPhong BlinnphongRP;
@@ -61,6 +63,8 @@ public:
 		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
 
 		PBRSphereSet.mData.clear();
+		Importers::FontLoadingDesc fdesc;
+		ArialFont = mAssetManager->Import("Assets/Common/Fonts/arial.ttf", fdesc);
 	}
 	void SetupEntities()
 	{
@@ -219,6 +223,8 @@ public:
 			ImGui::Begin("Sample3: PhysX & Scripting Test");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
+
+			ImGui::Image(ArialFont->mTextureView, {256.f,256.f });
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 

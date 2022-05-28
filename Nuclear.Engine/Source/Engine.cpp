@@ -17,6 +17,8 @@
 #pragma comment(lib,"assimp-vc143-mt.lib")
 
 #pragma comment(lib,"freetype.lib")
+#pragma comment(lib,"msdf-atlas-gen.lib")
+#pragma comment(lib,"msdfgen.lib")
 
 //Diligent Linking
 #pragma comment(lib,"Diligent-Common.lib")
