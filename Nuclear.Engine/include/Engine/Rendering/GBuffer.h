@@ -6,6 +6,7 @@ namespace Nuclear
 	namespace Rendering
 	{
 		struct GBufferDesc {
+			std::string mGbufferName = "GBuffer";
 			Uint32 RTWidth = 800;
 			Uint32 RTHeight = 600;
 			std::vector<Graphics::RenderTargetDesc> mRTDescs;
@@ -21,8 +22,6 @@ namespace Nuclear
 			void Bake(Uint32 width, Uint32 height);
 
 			void Resize(Uint32 width, Uint32 height);
-
-			void DebugIMGUI();
 
 			std::vector<Graphics::RenderTarget> mRenderTargets;
 		private:

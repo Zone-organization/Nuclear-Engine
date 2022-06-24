@@ -6,6 +6,7 @@ class Sample1 : public Client
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
+	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
@@ -164,6 +165,7 @@ public:
 
 	void InitRenderer()
 	{
+		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
@@ -346,6 +348,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
+			mDebugSystem->ShowRendertargets();
 		}
 	}
 

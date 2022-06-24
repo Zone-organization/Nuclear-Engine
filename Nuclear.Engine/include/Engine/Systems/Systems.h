@@ -5,3 +5,4 @@
 #include <Engine/Systems\CameraSystem.h>
 #include <Engine/Systems/ScriptingSystem.h>
 #include <Engine/Systems\AudioSystem.h>
+#include <Engine/Systems\DebugSystem.h>

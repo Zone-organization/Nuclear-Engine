@@ -190,6 +190,7 @@
     <ClInclude Include="include\Engine\PhysX\PhysXEngine.h" />
     <ClInclude Include="include\Engine\PhysX\PhysXShape.h" />
     <ClInclude Include="include\Engine\Assets\Script.h" />
+    <ClInclude Include="include\Engine\Systems\DebugSystem.h" />
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="include\Client.h" />
     <ClInclude Include="include\Engine\Assets\Font.h" />
@@ -344,6 +345,7 @@
     <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.cpp" />
     <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\scriptstdstring.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptData.cpp" />
+    <ClCompile Include="Source\Engine\Systems\DebugSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\LightingSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />

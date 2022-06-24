@@ -12,8 +12,12 @@ namespace Nuclear
 		struct RenderTargetDesc
 		{
 			RenderTargetDesc();
-			RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT depthTexFormat);
-			
+			RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT depthTexFormat, std::string name = "Unnamed RT");
+
+			//Debug Only
+			std::string mName;
+			std::string mType;  
+
 			Uint32 Width = 800;
 			Uint32 Height = 600;
 			TEXTURE_FORMAT ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
@@ -42,6 +46,7 @@ namespace Nuclear
 			ITextureView* GetMainRTV();
 			ITextureView** GetMainRTVDblPtr();
 
+			RenderTargetDesc GetDesc() const;
 		private:
 			void CreateViews();
 

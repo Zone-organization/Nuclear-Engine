@@ -8,6 +8,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Core\FileSystem.h>
 #include <Engine\Systems\CameraSystem.h>
+#include <Engine\Systems\DebugSystem.h>
 
 namespace Nuclear
 {
@@ -84,7 +85,15 @@ namespace Nuclear
 
             ApplyPostProcessingEffects();
 
-            mGBuffer.DebugIMGUI();
+            //Send GBUFFER to DebugSystem
+            if (renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+            {
+                for (auto& i : mGBuffer.mRenderTargets)
+                {
+                    renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
+                }
+            }
+       //     mGBuffer.DebugIMGUI();
         }
 
         void DefferedRenderingPipeline::BakeRenderTargets()

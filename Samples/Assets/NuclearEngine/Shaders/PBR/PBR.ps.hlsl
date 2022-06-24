@@ -20,12 +20,12 @@ struct PixelInputType
 
 Texture2D NE_RT_GBuffer_Position : register(t0);
 Texture2D NE_RT_GBuffer_Normal : register(t1);
-Texture2D NE_RT_GBuffer_AlbedoMatallic : register(t2);
+Texture2D NE_RT_GBuffer_AlbedoMetallic : register(t2);
 Texture2D NE_RT_GBuffer_RoughnessAO : register(t3);
 
 SamplerState NE_RT_GBuffer_Position_sampler : register(s0);
 SamplerState NE_RT_GBuffer_Normal_sampler : register(s1);
-SamplerState NE_RT_GBuffer_AlbedoMatallic_sampler : register(s2);
+SamplerState NE_RT_GBuffer_AlbedoMetallic_sampler : register(s2);
 SamplerState NE_RT_GBuffer_RoughnessAO_sampler : register(s3);  //1 Component
 
 //#ifdef IBL_ENABLED
@@ -192,8 +192,8 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 {
 #ifdef NE_DEFFERED
 	float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoords).xyz;
-	float3 albedo = pow(NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).rgb, float3(2.2f,2.2f,2.2f));
-	float metallic = NE_RT_GBuffer_AlbedoMatallic.Sample(NE_RT_GBuffer_AlbedoMatallic_sampler, input.TexCoords).a;
+	float3 albedo = pow(NE_RT_GBuffer_AlbedoMetallic.Sample(NE_RT_GBuffer_AlbedoMetallic_sampler, input.TexCoords).rgb, float3(2.2f,2.2f,2.2f));
+	float metallic = NE_RT_GBuffer_AlbedoMetallic.Sample(NE_RT_GBuffer_AlbedoMetallic_sampler, input.TexCoords).a;
 	float roughness = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).r;
 	float ao = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).g;
 	float3 N = normalize(NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoords).rgb);

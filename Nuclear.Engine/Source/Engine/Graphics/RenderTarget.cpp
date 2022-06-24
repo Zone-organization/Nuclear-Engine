@@ -48,6 +48,10 @@ namespace Nuclear
 		{
 			return mRTV.RawDblPtr();
 		}
+		RenderTargetDesc RenderTarget::GetDesc() const
+		{
+			return mDesc;
+		}
 		void RenderTarget::CreateViews()
 		{
 			if (mRTV.RawPtr() != nullptr)
@@ -93,11 +97,15 @@ namespace Nuclear
 		}
 		RenderTargetDesc::RenderTargetDesc()
 		{
+			mName = "UnNamed";
+			mType = "UnNamed";
 		}
-		RenderTargetDesc::RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT mDepthTexFormat)
+		RenderTargetDesc::RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT mDepthTexFormat, std::string name)
 		{
 			ColorTexFormat = colorTexFormat;
 			DepthTexFormat = mDepthTexFormat;
+			mName = name;
+			mType = "UnNamed";
 		}
 	}
 }

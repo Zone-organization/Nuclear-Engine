@@ -340,7 +340,25 @@ namespace Nuclear {
 				Assets::FontCreationDesc desc;
 				fillfontdesc<1>(atlas, desc);
 
+				Uint32 x = 'f';
+
+
+				for (auto& i : glyphs)
+				{
+					Assets::FontCharacter glyph;
+					glyph.CodePoint = i.getCodepoint();
+					glyph.Advance = i.getAdvance();
+			//		i.getQuadAtlasBounds
+					auto x = i.getBoxRect();
+					double l, b, r, t;
+					i.getQuadAtlasBounds(l, b, r, t);
+					result->Characters[i.getCodepoint()] = glyph;
+
+				}
 				result->Create(desc);
+
+				NUCLEAR_INFO("[AssetManager : '{0}'] Imported Font : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+
 				// Cleanup
 				msdfgen::destroyFont(font);
 				return result;

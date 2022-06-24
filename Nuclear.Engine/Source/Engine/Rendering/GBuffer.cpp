@@ -1,5 +1,4 @@
 #include "Engine/Rendering/GBuffer.h"
-#include <Engine/Graphics/ImGui.h>
 
 namespace Nuclear
 {
@@ -17,6 +16,7 @@ namespace Nuclear
 				Graphics::RenderTarget newrt;
 				i.Width = width;
 				i.Height = height;
+				i.mType = mDesc.mGbufferName;
 				newrt.Create(i);
 				mRenderTargets.push_back(newrt);
 			}
@@ -28,19 +28,6 @@ namespace Nuclear
 				i.Resize(width, height);
 			}
 		}
-		void GBuffer::DebugIMGUI()
-		{   	
-			ImGui::Begin("GBUFFER");
 
-			for (int i = 0; i < mRenderTargets.size(); i++)
-			{			
-				ImGui::Image(mRenderTargets.at(i).GetShaderRTV(), { 256.f,256.f });
-				if (i % 2 == 0)
-				{
-					ImGui::SameLine();
-				}
-			}
-			ImGui::End();
-		}
 	}
 }

@@ -174,10 +174,10 @@ namespace Nuclear
 		std::vector<Graphics::RenderTargetDesc> PBR::GetGBufferDesc()
 		{
 			std::vector<Graphics::RenderTargetDesc> result = {
-				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA16_FLOAT,TEX_FORMAT_UNKNOWN),
-				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA16_FLOAT,TEX_FORMAT_UNKNOWN),
-				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA8_UNORM, TEX_FORMAT_UNKNOWN),
-				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA8_UNORM, TEX_FORMAT_UNKNOWN)
+				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA16_FLOAT,TEX_FORMAT_UNKNOWN, "Position"),
+				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA16_FLOAT,TEX_FORMAT_UNKNOWN, "Normal"),
+				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA8_UNORM, TEX_FORMAT_UNKNOWN, "Albedo Metallic"),
+				Graphics::RenderTargetDesc(TEX_FORMAT_RGBA8_UNORM, TEX_FORMAT_UNKNOWN, "Roughness AO")
 			};
 			return result;
 		}

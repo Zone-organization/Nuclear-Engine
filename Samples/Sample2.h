@@ -3,6 +3,8 @@
 
 class Sample2 : public Client
 {
+	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
+
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
@@ -214,6 +216,8 @@ public:
 
 	void InitRenderer()
 	{
+		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
+
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		InitIBL();
@@ -452,6 +456,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
+			mDebugSystem->ShowRendertargets();
 
 		}
 	}
