@@ -22,7 +22,7 @@ namespace Nuclear
 		void ForwardRenderingPipeline::StartRendering(Systems::RenderSystem* renderer)
 		{
 			SetPostFXPipelineForRendering();
-			Graphics::Context::GetContext()->ClearDepthStencil(SceneDepthRT.GetMainRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(SceneDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			//Render Meshes
 			Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());

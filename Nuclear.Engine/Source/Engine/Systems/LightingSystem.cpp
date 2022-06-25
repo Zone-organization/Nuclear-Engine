@@ -7,6 +7,7 @@
 #include <Engine\Components/MeshComponent.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Core\FileSystem.h>
+#include <Engine\Systems\DebugSystem.h>
 
 namespace Nuclear
 {
@@ -155,6 +156,12 @@ namespace Nuclear
 					if (SpotLight.mCastShadows)
 					{
 						pShadowManager->SpotLightShadowDepthPass(SpotLight, mScene);
+
+						//Add to debug system
+						if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+						{
+							mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(SpotLight.GetShadowMap());
+						}
 					}
 				}
 			}

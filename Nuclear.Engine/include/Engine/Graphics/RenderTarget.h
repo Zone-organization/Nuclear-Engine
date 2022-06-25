@@ -42,17 +42,21 @@ namespace Nuclear
 			Uint32 GetWidth() const;
 			Uint32 GetHeight() const;
 
-			ITextureView* GetShaderRTV();
-			ITextureView* GetMainRTV();
-			ITextureView** GetMainRTVDblPtr();
+			//Shader Resource View
+			ITextureView* GetSRV();
+			//Render Target View
+			ITextureView* GetRTV();
+
+			ITextureView** GetRTVDblPtr();
 
 			RenderTargetDesc GetDesc() const;
-		private:
+		protected:
 			void CreateViews();
 
 			RefCntAutoPtr<ITextureView> mRTV;
-			RefCntAutoPtr<ITextureView> mShaderRTV;
-			RenderTargetDesc mDesc;
+			RefCntAutoPtr<ITextureView> mSRV;
+
+			RenderTargetDesc mRTDesc;
 		};
 	}
 }

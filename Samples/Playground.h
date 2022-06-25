@@ -11,6 +11,7 @@ class Playground : public Client
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
+	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	Assets::Material SphereMaterial;
 	Assets::Material PlaneMaterial;
@@ -105,6 +106,8 @@ public:
 
 	void Load()
 	{
+		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
+
 		mAssetManager->Initialize();
 		Systems::LightingSystemDesc desc;
 		desc.ShadowManager = &shadowmanager;
@@ -253,6 +256,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
+			mDebugSystem->ShowRendertargets();
 
 		}
 	}

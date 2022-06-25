@@ -33,15 +33,15 @@ namespace Nuclear
             std::vector<ITextureView*> RTargets;
             for (auto& i : mGBuffer.mRenderTargets)
             {
-                RTargets.push_back(i.GetMainRTV());
+                RTargets.push_back(i.GetRTV());
             }
-            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), SceneDepthRT.GetMainRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), SceneDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
             for (auto& i : RTargets)
             {
                 Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr,  RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
             }
 
-            Graphics::Context::GetContext()->ClearDepthStencil(SceneDepthRT.GetMainRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->ClearDepthStencil(SceneDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
             //Render To Gbuffer
             Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetGBufferPipeline());
@@ -64,7 +64,7 @@ namespace Nuclear
             SetPostFXPipelineForRendering();
             for (int i = 0; i < mGBuffer.mRenderTargets.size(); i++)
             {
-                GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(mGBuffer.mRenderTargets.at(i).GetShaderRTV());
+                GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(mGBuffer.mRenderTargets.at(i).GetSRV());
             }
 
             //IBL

@@ -4,6 +4,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
+#include <Engine\Graphics\RenderTarget.h>
 
 namespace Nuclear
 {
@@ -26,7 +27,7 @@ namespace Nuclear
 
 		};
 
-		class NEAPI ShadowMap
+		class NEAPI ShadowMap : public RenderTarget
 		{
 		public:
 			ShadowMap(const LightType& lighttype);
@@ -34,19 +35,16 @@ namespace Nuclear
 
 			bool isInitialized();
 
-			ShadowMapDesc GetDesc() const;
-
-			ITextureView* GetDSV();
-			ITextureView* GetSRV();
+			//ShadowMapDesc GetDesc() const;
 
 		protected:
+
 			friend class Systems::LightingSystem;
 
 			void Initialize(const ShadowMapDesc& Desc);
 
 		private:
-			RefCntAutoPtr<ITextureView> mDSV;
-			RefCntAutoPtr<ITextureView> mSRV;
+			
 			ShadowMapDesc mDesc;
 			LightType mType;
 			bool mInitialized = false;

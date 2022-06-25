@@ -41,7 +41,7 @@ namespace Nuclear
 				{
 					ImGui::Text(ref->GetDesc().mName.c_str());
 					ImGui::SameLine();
-					ImGui::Image(ref->GetShaderRTV(), { 256.f,256.f });
+					ImGui::Image(ref->GetSRV(), { 256.f,256.f });
 					if (i % 2 == 0)
 					{
 						ImGui::SameLine();

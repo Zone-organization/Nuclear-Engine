@@ -17,18 +17,6 @@ namespace Nuclear
 		{
 			return mInitialized;
 		}
-		ShadowMapDesc ShadowMap::GetDesc() const
-		{
-			return mDesc;
-		}
-		ITextureView* ShadowMap::GetDSV()
-		{
-			return mDSV.RawPtr();
-		}
-		ITextureView* ShadowMap::GetSRV()
-		{
-			return mSRV.RawPtr();
-		}
 		void ShadowMap::Initialize(const ShadowMapDesc& Desc)
 		{
 			RefCntAutoPtr<ITexture> ShadowMapTex;
@@ -42,17 +30,18 @@ namespace Nuclear
 			ShadowMapDesc.Format = TEX_FORMAT_R24G8_TYPELESS;
 			ShadowMapDesc.Usage = USAGE_DEFAULT;
 			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
-
 			if (mType == LightType::SpotLight)
 			{
 				dimension = RESOURCE_DIM_TEX_2D;
+				mRTDesc.mType = "SpotLight ShadowMap";
+
 			}
 			else if (mType == LightType::PointLight)
 			{
 
 				dimension = RESOURCE_DIM_TEX_CUBE;
 				ShadowMapDesc.ArraySize = 6;
-
+				mRTDesc.mType = "PointLight ShadowMap";
 			}
 
 
@@ -68,7 +57,7 @@ namespace Nuclear
 			{
 				TextureViewDesc DSVDesc{ "ShadowMap_DSV", TEXTURE_VIEW_DEPTH_STENCIL, dimension };
 				DSVDesc.Format = TEX_FORMAT_D24_UNORM_S8_UINT;
-				ShadowMapTex->CreateView(DSVDesc, &mDSV);
+				ShadowMapTex->CreateView(DSVDesc, &mRTV);
 			}
 			mInitialized = true;
 

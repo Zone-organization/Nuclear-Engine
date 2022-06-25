@@ -50,8 +50,8 @@ namespace Nuclear
 
 			Graphics::Context::GetContext()->SetPipelineState(mSpotShadowMapDepthPSO.RawPtr());
 
-			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, spotlight.GetShadowMap()->GetDSV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(spotlight.GetShadowMap()->GetDSV(), CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, spotlight.GetShadowMap()->GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(spotlight.GetShadowMap()->GetRTV(), CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			Graphics::Context::GetContext()->CommitShaderResources(mSpotShadowMapDepthSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 

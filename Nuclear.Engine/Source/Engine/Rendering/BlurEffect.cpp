@@ -113,7 +113,7 @@ namespace Nuclear
 		{
 			Graphics::Context::GetContext()->SetPipelineState(mHorzBlurPSO);
 
-			Graphics::Context::GetContext()->SetRenderTargets(1, BlurHorizentalRT.GetMainRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(1, BlurHorizentalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			mHorzBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(texture);
 		}
@@ -121,7 +121,7 @@ namespace Nuclear
 		{
 			Graphics::Context::GetContext()->SetPipelineState(mVertBlurPSO);
 
-			Graphics::Context::GetContext()->SetRenderTargets(1, BlurVerticalRT.GetMainRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(1, BlurVerticalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			mVertBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(texture);
 		}

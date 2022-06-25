@@ -106,7 +106,7 @@ namespace Nuclear
 
 			mActiveSRB.Release();
 			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
-			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetShaderRTV());
+			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
 			auto it = mPostProcessingEffects.find(Utilities::Hash("BLOOM"));
 			if (it != mPostProcessingEffects.end())
 			{
@@ -212,18 +212,18 @@ namespace Nuclear
 		{
 			Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
 			std::vector<ITextureView*> RTargets;
-			RTargets.push_back(GetSceneRT()->GetMainRTV());
+			RTargets.push_back(GetSceneRT()->GetRTV());
 			if (mBloomEnabled)
 			{
-				RTargets.push_back(BloomRT.GetMainRTV());
+				RTargets.push_back(BloomRT.GetRTV());
 			}
 
-			Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), SceneDepthRT.GetMainRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->GetMainRTV(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), SceneDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(GetSceneRT()->GetRTV(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			if (mBloomEnabled)
 			{
-				Graphics::Context::GetContext()->ClearRenderTarget(BloomRT.GetMainRTV(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->ClearRenderTarget(BloomRT.GetRTV(), (float*)&GetCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			}
 		}
 		void RenderingPipeline::BakePostFXPipeline()
@@ -295,7 +295,7 @@ namespace Nuclear
 		{	
 
 			ImGui::Begin("PostFX");
-			ImGui::Image(SceneRT.GetShaderRTV(), { 256.f,256.f });
+			ImGui::Image(SceneRT.GetSRV(), { 256.f,256.f });
 
 			//Apply blur
 			if (mBloomEnabled)
@@ -310,11 +310,11 @@ namespace Nuclear
 
 					if (horizontal)
 					{
-						mBloomBlur.SetHorizentalPSO(first_iteration ? BloomRT.GetShaderRTV() : mBloomBlur.BlurVerticalRT.GetShaderRTV());
+						mBloomBlur.SetHorizentalPSO(first_iteration ? BloomRT.GetSRV() : mBloomBlur.BlurVerticalRT.GetSRV());
 					}
 					else
 					{
-						mBloomBlur.SetVerticalPSO(mBloomBlur.BlurHorizentalRT.GetShaderRTV());
+						mBloomBlur.SetVerticalPSO(mBloomBlur.BlurHorizentalRT.GetSRV());
 					}
 
 					//X: Texture Width
@@ -345,7 +345,7 @@ namespace Nuclear
 						first_iteration = false;
 				}
 
-				ImGui::Image(BloomRT.GetShaderRTV(), { 256.f,256.f });
+				ImGui::Image(BloomRT.GetSRV(), { 256.f,256.f });
 			}
 
 			ImGui::End();
@@ -354,9 +354,9 @@ namespace Nuclear
 		{
 			Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline());
 
-			GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetShaderRTV());
+			GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
 			if (mBloomEnabled)
-			{ GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mBloomBlur.BlurVerticalRT.GetShaderRTV()); }
+			{ GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mBloomBlur.BlurVerticalRT.GetSRV()); }
 			Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 		void RenderingPipeline::UpdatePSO(bool ForceDirty)
@@ -387,7 +387,7 @@ namespace Nuclear
 				mActivePSO = PSO_SRB.PSO;
 				mActiveSRB = PSO_SRB.SRB;
 
-				mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetShaderRTV());
+				mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
 			}
 		}
 
