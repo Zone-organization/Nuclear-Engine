@@ -25,6 +25,10 @@ namespace Nuclear
 
 			return false;
 		}
+		Rendering::ShadowManager* LightingSystem::GetShadowManager()
+		{
+			return pShadowManager;
+		}
 		IBuffer* LightingSystem::GetLightCB()
 		{
 			return mPSLightCB.RawPtr();
@@ -96,7 +100,15 @@ namespace Nuclear
 			for (auto entity : DirLightView)
 			{
 				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
-
+				if (pShadowManager)
+				{
+					if (!DirLight.GetShadowMap()->isInitialized())
+					{
+						Graphics::ShadowMapDesc desc;
+						desc.mResolution = pShadowManager->GetDesc().mDirLightShadowMapInfo.mResolution;
+						DirLight.GetShadowMap()->Initialize(desc);
+					}
+				}
 				DirLights.push_back(&DirLight);
 			}
 
@@ -135,35 +147,82 @@ namespace Nuclear
 		void LightingSystem::Update(ECS::TimeDelta dt)
 		{
 			//TODO: Multiple Cameras
-			//Update Lights Positions
+
+			std::vector<Math::Matrix4> lightspacematrices;
+
+			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
+			for (auto entity : DirLightView)
+			{
+				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
+				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				DirLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+
+				if (DirLight.mCastShadows && pShadowManager)
+				{
+					float near_plane = 1.0f, far_plane = 100.f;
+					auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+					auto lightpos = DirLight.GetInternalPosition();
+					auto lightView = glm::lookAt(lightpos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0, 1.0, 0.0));
+
+					DirLight.LightSpace = lightProjection * lightView;
+					lightspacematrices.push_back(DirLight.LightSpace);
+					pShadowManager->DirLightShadowDepthPass(DirLight, mScene);
+
+					//Add to debug system
+					if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+					{
+						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(DirLight.GetShadowMap());
+					}
+				}
+			}
+
+			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
+			for (auto entity : SpotLightView)
+			{
+				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
+				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				SpotLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+
+				if (SpotLight.mCastShadows && pShadowManager)
+				{
+					float near_plane = 1.0f, far_plane = 100.f;
+					auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+					auto lightpos = SpotLight.GetInternalPosition();
+					auto up = glm::vec3(0.0, 1.0, 0.0);
+					//	auto target = lightpos + glm::vec3(0.0f);
+					auto lightView = glm::lookAt(lightpos, lightpos + SpotLight.GetDirection(), up);
+
+					SpotLight.LightSpace = lightProjection * lightView;
+					lightspacematrices.push_back(SpotLight.LightSpace);
+
+					pShadowManager->SpotLightShadowDepthPass(SpotLight, mScene);
+
+					//Add to debug system
+					if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+					{
+						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(SpotLight.GetShadowMap());
+					}
+				}
+			}
+
 			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
 			for (auto entity : PointLightView)
 			{
 				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
 				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+
+				//Shadows WIP
 			}
 
+
+			//Update Shadow Manager CB
 			if (pShadowManager)
 			{
-				auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
-				for (auto entity : SpotLightView)
-				{
-					auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-					auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-					SpotLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
-
-					if (SpotLight.mCastShadows)
-					{
-						pShadowManager->SpotLightShadowDepthPass(SpotLight, mScene);
-
-						//Add to debug system
-						if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
-						{
-							mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(SpotLight.GetShadowMap());
-						}
-					}
-				}
+				PVoid data;
+				Graphics::Context::GetContext()->MapBuffer(pShadowManager->GetShadowCastersCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+				data = memcpy(data, lightspacematrices.data(), sizeof(Math::Matrix4) * lightspacematrices.size());
+				Graphics::Context::GetContext()->UnmapBuffer(pShadowManager->GetShadowCastersCB(), MAP_WRITE);
 			}
 		}
 		void LightingSystem::UpdateBuffer(const Math::Vector4& CameraPos)

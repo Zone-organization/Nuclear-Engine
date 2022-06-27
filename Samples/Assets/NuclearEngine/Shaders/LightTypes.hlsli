@@ -19,11 +19,11 @@ struct SpotLight
 	float4 Color;
 };
 
-struct SpotLightWithShadow
-{
-	SpotLight LightData;
-
-};
+//struct SpotLightWithShadow
+//{
+//	SpotLight LightData;
+//
+//};
 
 cbuffer NEStatic_Lights
 {

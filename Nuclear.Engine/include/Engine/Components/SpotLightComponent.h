@@ -41,6 +41,12 @@ namespace Nuclear
 			Graphics::ShadowMap* GetShadowMap();
 
 		protected:
+			friend class Rendering::ShadowManager;
+			friend class Systems::LightingSystem;
+
+			Math::Matrix4 LightSpace;
+
+		private:
 			Internal::Shader_SpotLight_Struct data;
 			LightShadowType mShadowType;
 			Graphics::ShadowMap mShadowMap;

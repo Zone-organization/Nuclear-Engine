@@ -30,7 +30,14 @@ namespace Nuclear
 			ShadowMapDesc.Format = TEX_FORMAT_R24G8_TYPELESS;
 			ShadowMapDesc.Usage = USAGE_DEFAULT;
 			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
-			if (mType == LightType::SpotLight)
+
+			if (mType == LightType::DirLight)
+			{
+				dimension = RESOURCE_DIM_TEX_2D;
+				mRTDesc.mType = "DirLight ShadowMap";
+
+			}
+			else if (mType == LightType::SpotLight)
 			{
 				dimension = RESOURCE_DIM_TEX_2D;
 				mRTDesc.mType = "SpotLight ShadowMap";

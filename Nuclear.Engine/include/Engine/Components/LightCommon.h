@@ -10,7 +10,7 @@ namespace Nuclear
 		enum class LightShadowType
 		{
 			No_Shadows,                        //Disables baking of shadow map for a light
-			Simple_Shadows
+			Simple_Shadows                     //Dir light no CSM
 		};
 
 

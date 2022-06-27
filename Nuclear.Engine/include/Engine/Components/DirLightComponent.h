@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine/Components/LightCommon.h>
 #include <Engine/Graphics/Color.h>
+#include <Engine/Graphics/ShadowMap.h>
 
 namespace Nuclear 
 {
@@ -21,14 +22,24 @@ namespace Nuclear
 			bool mCastShadows = false;
 			Internal::Shader_DirLight_Struct& GetInternalData();
 
-	/*		template<class Archive>
-			void serialize(Archive& archive)
-			{
-				archive(CEREAL_NVP(mCastShadows));
-				archive(CEREAL_NVP(data));
-			}*/
+			LightShadowType GetShadowType() const;
+			void SetShadowType(const LightShadowType& type);
+			Graphics::ShadowMap* GetShadowMap();
+			Math::Vector3 GetInternalPosition() const;
+			void SetInternalPosition(Math::Vector3 pos);
+
 		protected:
+			friend class Rendering::ShadowManager;
+			friend class Systems::LightingSystem;
+
+			Math::Matrix4 LightSpace;
+
+			Math::Vector4 _internalPos; //needed for simple shadow "not CSM"
+
+		private:
+			Graphics::ShadowMap mShadowMap;
 			Internal::Shader_DirLight_Struct data;
+			LightShadowType mShadowType;
 		};
 
 	}

@@ -76,15 +76,14 @@ namespace Nuclear
 					{
 						SamplerDesc SamLinearWrapDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
 							TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER);
-						SamLinearWrapDesc.ComparisonFunc = COMPARISON_FUNC_LESS_EQUAL;
-
+						SamLinearWrapDesc.ComparisonFunc = COMPARISON_FUNC_LESS;
 						SamLinearWrapDesc.BorderColor[0] = 1.0f;
 						SamLinearWrapDesc.BorderColor[1] = 1.0f;
 						SamLinearWrapDesc.BorderColor[2] = 1.0f;
 						SamLinearWrapDesc.BorderColor[3] = 1.0f;
 
-						SamLinearWrapDesc.MipLODBias = 0.f;
-						SamLinearWrapDesc.MaxAnisotropy = 0;
+					//	SamLinearWrapDesc.MipLODBias = 0.f;
+						//SamLinearWrapDesc.MaxAnisotropy = 0;
 						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearWrapDesc);
 						GeneratedSamplerDesc.push_back(desc);
 					}

@@ -217,7 +217,7 @@ public:
 	{
 		Scene.Update(dt);
 
-	//	ECamera.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
+		//EController.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 

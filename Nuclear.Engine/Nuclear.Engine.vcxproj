@@ -194,6 +194,9 @@
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="include\Client.h" />
     <ClInclude Include="include\Engine\Assets\Font.h" />
+    <ClInclude Include="include\Engine\Threading\Task.h" />
+    <ClInclude Include="include\Engine\Threading\TaskManager.h" />
+    <ClInclude Include="include\Engine\Threading\ThreadPool.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Engine\Importers\AssimpGLMHelpers.h" />
     <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />

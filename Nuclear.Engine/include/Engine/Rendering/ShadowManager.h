@@ -22,7 +22,13 @@ namespace Nuclear
 
 		struct ShadowManagerDesc
 		{
+			Uint32 MAX_DIR_CASTERS = 1;
 			Uint32 MAX_SPOT_CASTERS = 1;
+			//Uint32 MAX_POINT_CASTERS = 1;
+
+
+
+			ShadowMapInfo mDirLightShadowMapInfo;
 			ShadowMapInfo mSpotLightShadowMapInfo;
 			ShadowMapInfo mPointLightShadowMapInfo;
 
@@ -34,13 +40,22 @@ namespace Nuclear
 
 			void Initialize();
 
+			void DirLightShadowDepthPass(Components::DirLightComponent& dirlight, ECS::Scene* scene);
+
 			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, ECS::Scene* scene);
 			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, ECS::Scene* scene);
 
 			ShadowManagerDesc GetDesc() const;
 
+			IBuffer* GetShadowCastersCB();
 		protected:
 			ShadowManagerDesc mDesc;
+			RefCntAutoPtr<IBuffer> pVSShadowCasterBuffer;
+
+			//DirLight (simple)
+			RefCntAutoPtr<IPipelineState> mDirShadowMapDepthPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mDirShadowMapDepthSRB;
+			RefCntAutoPtr<IBuffer> pDirLightInfoCB;
 
 			//Spotlight
 			RefCntAutoPtr<IPipelineState> mSpotShadowMapDepthPSO;
@@ -54,6 +69,7 @@ namespace Nuclear
 			RefCntAutoPtr<IBuffer> pPointShadowGS_CB;
 			RefCntAutoPtr<IBuffer> pPointShadowPS_CB;
 
+			void InitDirLightSimpleShadowPassPSO();
 
 			void InitSpotLightShadowPSO();
 			void InitPointLightShadowPassPSO();

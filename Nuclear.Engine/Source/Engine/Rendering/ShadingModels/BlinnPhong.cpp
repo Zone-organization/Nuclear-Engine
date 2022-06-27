@@ -132,6 +132,9 @@ namespace Nuclear
 			if (desc.LightsBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
 
+			if (mInitInfo.ShadowingEnabled == true)
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_ShadowCasters")->Set(desc.ShadowCastersBufferPtr);
+
 			if (!mInitInfo.mDefferedPipeline)
 			{
 				if (desc.CameraBufferPtr)

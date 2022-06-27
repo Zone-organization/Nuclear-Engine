@@ -17,8 +17,11 @@ struct VertexInputType
 
 cbuffer NEStatic_ShadowCasters
 {
+#ifdef NE_MAX_DIR_CASTERS
+    matrix Dir_LightSpace[NE_MAX_DIR_CASTERS];
+#endif
 
-#ifdef NE_MAX_SPOT_CASTERS  //Spotlights that casts shadows
+#ifdef NE_MAX_SPOT_CASTERS 
 	matrix Spot_LightSpace[NE_MAX_SPOT_CASTERS];
 #endif
 

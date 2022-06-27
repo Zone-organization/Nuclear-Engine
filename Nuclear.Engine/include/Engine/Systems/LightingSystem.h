@@ -37,6 +37,8 @@ namespace Nuclear
 			//Debug Only
 			bool VisualizePointLightsPositions = false;
 
+			Rendering::ShadowManager* GetShadowManager();
+
 			IBuffer* GetLightCB();
 
 			size_t GetDirLightsNum();

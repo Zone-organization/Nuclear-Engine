@@ -25,6 +25,7 @@ namespace Nuclear
 			IBuffer* CameraBufferPtr = nullptr;
 			IBuffer* AnimationBufferPtr = nullptr;
 			IBuffer* LightsBufferPtr = nullptr;
+			IBuffer* ShadowCastersBufferPtr = nullptr;
 
 			std::vector<ShaderEffect> mRequiredEffects;
 		};

@@ -119,9 +119,13 @@ namespace Nuclear
 			bakedesc.mShadingModelDesc.DirLights = static_cast<Uint32>(mLightingSystemPtr->GetDirLightsNum());
 			bakedesc.mShadingModelDesc.SpotLights = static_cast<Uint32>(mLightingSystemPtr->GetSpotLightsNum());
 			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(mLightingSystemPtr->GetPointLightsNum());
-			//bakedesc.mShadingModelDesc.Max_SpotLight_Caster = static_cast<Uint32>(lightsystemdesc.MAX_SPOT_CASTERS);
 			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
 			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystemPtr->GetLightCB();
+			if (mLightingSystemPtr->GetShadowManager())
+			{
+				bakedesc.mShadingModelDesc.Max_SpotLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowManager()->GetDesc().MAX_SPOT_CASTERS);
+				bakedesc.mShadingModelDesc.ShadowCastersBufferPtr = mLightingSystemPtr->GetShadowManager()->GetShadowCastersCB();
+			}
 			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
 
 			//if (lightsystemdesc.DisableShadows)

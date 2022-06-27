@@ -108,7 +108,7 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     float intensity = clamp((theta - light.InnerCutOf_OuterCutoff.y) / epsilon, 0.0, 1.0);
 
     // combine results
-    float3 ambient = 0.05f * float3(light.Color.xyz * albedo.xyz);
+    float3 ambient = 0.15f * float3(light.Color.xyz * albedo.xyz);
     float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
     float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
     ambient *= attenuation * intensity;
@@ -145,27 +145,33 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
 #endif
 
-#ifdef NE_DIR_LIGHTS_NUM
-  // phase 1: directional lighting
-    for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
-    {
-        result += CalcDirLight(DirLights[i0], norm, viewDir, albedo, shadow);
-    }
-#endif
-#ifdef NE_POINT_LIGHTS_NUM  
-    // phase 2: point lights
-    for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
-    {
-        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo, shadow);
-    }
-#endif
-#ifdef NE_SPOT_LIGHTS_NUM
-    // phase 3: spot light
-    for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
-    {
-        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo , shadow);
-    }
-#endif
+       PointLight zby;
+       zby.Position = SpotLights[0].Position;
+       zby.Intensity_Attenuation = SpotLights[0].Intensity_Attenuation;
+       zby.Color = SpotLights[0].Color;
+       result += CalcPointLight(zby, norm, FragPos, viewDir, albedo, shadow);
+
+//#ifdef NE_DIR_LIGHTS_NUM
+//  // phase 1: directional lighting
+//    for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
+//    {
+//        result += CalcDirLight(DirLights[i0], norm, viewDir, albedo, shadow);
+//    }
+//#endif
+//#ifdef NE_POINT_LIGHTS_NUM  
+//    // phase 2: point lights
+//    for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
+//    {
+//        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo, shadow);
+//    }
+//#endif
+//#ifdef NE_SPOT_LIGHTS_NUM
+//    // phase 3: spot light
+//    for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
+//    {
+//        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo , shadow);
+//    }
+//#endif
 
     PS_OUTPUT output;
     output.Color =  float4(result, 1.0f);
