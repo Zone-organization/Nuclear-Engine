@@ -23,7 +23,7 @@ namespace Nuclear
 		struct ShadowManagerDesc
 		{
 			Uint32 MAX_DIR_CASTERS = 1;
-			Uint32 MAX_SPOT_CASTERS = 1;
+			Uint32 MAX_SPOT_CASTERS = 0;
 			//Uint32 MAX_POINT_CASTERS = 1;
 
 

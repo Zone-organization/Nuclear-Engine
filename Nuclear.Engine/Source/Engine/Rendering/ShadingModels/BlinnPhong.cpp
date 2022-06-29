@@ -74,6 +74,7 @@ namespace Nuclear
 				if (mInitInfo.ShadowingEnabled == true)
 				{
 					defines.push_back("NE_SHADOWS");
+					if (desc.Max_DirLight_Caster > 0) { defines.push_back("NE_MAX_DIR_CASTERS " + std::to_string(desc.Max_DirLight_Caster)); }
 					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
 				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
@@ -99,7 +100,6 @@ namespace Nuclear
 				if (desc.DirLights > 0) { defines.push_back("NE_DIR_LIGHTS_NUM " + std::to_string(desc.DirLights)); }
 				if (desc.PointLights > 0) { defines.push_back("NE_POINT_LIGHTS_NUM " + std::to_string(desc.PointLights)); }
 				if (desc.SpotLights > 0) { defines.push_back("NE_SPOT_LIGHTS_NUM " + std::to_string(desc.SpotLights)); }
-				if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
 
 				for (auto it : desc.mRequiredEffects)
 				{
@@ -112,6 +112,7 @@ namespace Nuclear
 				if (mInitInfo.ShadowingEnabled == true)
 				{
 					defines.push_back("NE_SHADOWS");
+					if (desc.Max_DirLight_Caster > 0) { defines.push_back("NE_MAX_DIR_CASTERS " + std::to_string(desc.Max_DirLight_Caster)); }
 					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
 				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);

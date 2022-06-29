@@ -5,6 +5,14 @@
 
 namespace Nuclear 
 {
+	namespace Rendering
+	{
+		class ShadowManager;
+	}
+	namespace Systems
+	{
+		class LightingSystem;
+	}
 	namespace Components 
 	{
 		struct NEAPI DirLightComponent

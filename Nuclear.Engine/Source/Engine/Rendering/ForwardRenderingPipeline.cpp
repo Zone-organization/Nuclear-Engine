@@ -73,7 +73,19 @@ namespace Nuclear
 					}
 
 					//Shadows
-					///////////////////////////////////TODO
+					////////////////////////     TODO    //////////////////////////////////////
+					if (GetShadingModel()->mDirLight_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+					{
+
+						auto DirLightView = renderer->mScene->GetRegistry().view<Components::DirLightComponent>();
+						for (auto entity : DirLightView)
+						{
+							auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
+
+							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mDirLight_ShadowmapInfo.mSlot)->Set(DirLight.GetShadowMap()->GetSRV());
+
+						}
+					}
 					if (GetShadingModel()->mSpotLight_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
 					{
 

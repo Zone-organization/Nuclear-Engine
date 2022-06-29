@@ -74,9 +74,9 @@ public:
 		EController = Scene.CreateEntity("Controller");
 
 		//Assign Components
-		ELights.AddComponent<Components::DirLightComponent>();
+		ELights.AddComponent<Components::DirLightComponent>().mCastShadows = true;
 		ELights.AddComponent<Components::PointLightComponent>();
-		EController.AddComponent<Components::SpotLightComponent>();
+		//EController.AddComponent<Components::SpotLightComponent>();
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
@@ -148,7 +148,7 @@ public:
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 		//Camera.MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
-		EController.GetComponent<Components::SpotLightComponent>()->mCastShadows = true;
+		//EController.GetComponent<Components::SpotLightComponent>()->mCastShadows = true;
 		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
@@ -218,7 +218,7 @@ public:
 		Scene.Update(dt);
 
 		//EController.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
-		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+	//	EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
 
 		{

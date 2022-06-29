@@ -24,12 +24,13 @@ namespace Nuclear
 
 		void ShadowManager::Initialize()
 		{
+			InitDirLightSimpleShadowPassPSO();
 			InitSpotLightShadowPSO();
 			InitPointLightShadowPassPSO();
 
 			BufferDesc CBDesc;
 			CBDesc.Name = "NEStatic_ShadowCasters";
-			CBDesc.Size = sizeof(Math::Matrix4) * mDesc.MAX_SPOT_CASTERS;
+			CBDesc.Size = (sizeof(Math::Matrix4) * mDesc.MAX_DIR_CASTERS) + (sizeof(Math::Matrix4) * mDesc.MAX_SPOT_CASTERS);
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
@@ -38,7 +39,7 @@ namespace Nuclear
 
 		void ShadowManager::DirLightShadowDepthPass(Components::DirLightComponent& light, ECS::Scene* scene)
 		{
-			if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
+			//if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
 			{
 				Graphics::Context::GetContext()->SetPipelineState(mDirShadowMapDepthPSO.RawPtr());
 
@@ -137,7 +138,7 @@ namespace Nuclear
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
-			PSOCreateInfo.PSODesc.Name = "mSpotShadowMapDepthPSO";
+			PSOCreateInfo.PSODesc.Name = "mDirShadowMapDepthPSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 0;
 			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_R24G8_TYPELESS;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
@@ -164,7 +165,7 @@ namespace Nuclear
 			LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
 			LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 
-			auto source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/SpotShadowDepthPass.hlsl");
+			auto source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/DirShadowDepthPass.hlsl");
 
 			//Create Vertex Shader
 			{
@@ -172,8 +173,8 @@ namespace Nuclear
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 				CreationAttribs.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-				CreationAttribs.EntryPoint = "SpotShadowMapDepthVS";
-				CreationAttribs.Desc.Name = "Spot_ShadowMapDepthVS";
+				CreationAttribs.EntryPoint = "DirShadowMapDepthVS";
+				CreationAttribs.Desc.Name = "Dir_ShadowMapDepthVS";
 
 				CreationAttribs.Source = source.c_str();
 
@@ -186,8 +187,8 @@ namespace Nuclear
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
 				CreationAttribs.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-				CreationAttribs.EntryPoint = "SpotShadowMapDepthPS";
-				CreationAttribs.Desc.Name = "Spot_ShadowMapDepthPS";
+				CreationAttribs.EntryPoint = "DirShadowMapDepthPS";
+				CreationAttribs.Desc.Name = "Dir_ShadowMapDepthPS";
 				CreationAttribs.Source = source.c_str();
 
 
@@ -199,19 +200,19 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
-			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mSpotShadowMapDepthPSO, PSOCreateInfo, Vars, true);
+			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&mDirShadowMapDepthPSO, PSOCreateInfo, Vars, true);
 
 			BufferDesc CBDesc;
-			CBDesc.Name = "SpotLightInfo_CB";
+			CBDesc.Name = "DirLightInfo_CB";
 			CBDesc.Size = sizeof(NEStatic_LightInfo);
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pSpotLightInfoCB);
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pDirLightInfoCB);
 
-			mSpotShadowMapDepthPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_LightInfo")->Set(pSpotLightInfoCB);
+			mDirShadowMapDepthPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_LightInfo")->Set(pDirLightInfoCB);
 
-			mSpotShadowMapDepthPSO->CreateShaderResourceBinding(mSpotShadowMapDepthSRB.RawDblPtr(), true);
+			mDirShadowMapDepthPSO->CreateShaderResourceBinding(mDirShadowMapDepthSRB.RawDblPtr(), true);
 		}
 
 		void ShadowManager::InitSpotLightShadowPSO()

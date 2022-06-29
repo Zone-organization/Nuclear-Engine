@@ -11,9 +11,13 @@ struct PixelInputType
 //Shadows
 #ifdef NE_SHADOWS
 
-//#ifdef NE_MAX_SPOT_CASTERS  //Spotlights that casts shadows
-	float4 SpotLight_FragPos[1] : COLOR;
-//#endif
+#ifdef NE_MAX_DIR_CASTERS  //Spotlights that casts shadows
+    float4 DirLight_FragPos[NE_MAX_DIR_CASTERS] : COLOR;
+#endif
+
+#ifdef NE_MAX_SPOT_CASTERS  //Spotlights that casts shadows
+	float4 SpotLight_FragPos[NE_MAX_SPOT_CASTERS] : COLOR;
+#endif
 
 #endif
 };

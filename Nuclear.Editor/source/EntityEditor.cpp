@@ -246,12 +246,6 @@ namespace Nuclear::Editor
 					{
 						if (ImGui::CollapsingHeader("Spot Light"))
 						{
-							ImVec4 lighpos = ImVec4(light->GetPosition().x, light->GetPosition().y, light->GetPosition().z, 1.00f);
-							if (ImGui::DragFloat3("Position", (float*)&lighpos))
-							{
-								light->SetPosition(Math::Vector3(lighpos.x, lighpos.y, lighpos.z));
-							}
-
 							ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
 							if (ImGui::DragFloat3("Direction", (float*)&lighdir))
 							{

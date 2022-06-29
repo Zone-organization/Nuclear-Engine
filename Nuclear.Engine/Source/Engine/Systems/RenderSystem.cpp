@@ -123,6 +123,7 @@ namespace Nuclear
 			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystemPtr->GetLightCB();
 			if (mLightingSystemPtr->GetShadowManager())
 			{
+				bakedesc.mShadingModelDesc.Max_DirLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowManager()->GetDesc().MAX_DIR_CASTERS);
 				bakedesc.mShadingModelDesc.Max_SpotLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowManager()->GetDesc().MAX_SPOT_CASTERS);
 				bakedesc.mShadingModelDesc.ShadowCastersBufferPtr = mLightingSystemPtr->GetShadowManager()->GetShadowCastersCB();
 			}

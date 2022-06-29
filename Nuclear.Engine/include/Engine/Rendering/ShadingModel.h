@@ -20,6 +20,7 @@ namespace Nuclear
 			Uint32 SpotLights = 0;
 			Uint32 PointLights = 0;
 
+			Uint32 Max_DirLight_Caster = 0;
 			Uint32 Max_SpotLight_Caster = 0;
 
 			IBuffer* CameraBufferPtr = nullptr;

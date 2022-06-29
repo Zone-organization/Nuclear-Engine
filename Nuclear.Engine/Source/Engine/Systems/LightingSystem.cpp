@@ -161,8 +161,9 @@ namespace Nuclear
 				{
 					float near_plane = 1.0f, far_plane = 100.f;
 					auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-					auto lightpos = DirLight.GetInternalPosition();
-					auto lightView = glm::lookAt(lightpos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0, 1.0, 0.0));
+					//auto lightpos = DirLight.GetInternalPosition();
+					glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+					auto lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0, 1.0, 0.0));
 
 					DirLight.LightSpace = lightProjection * lightView;
 					lightspacematrices.push_back(DirLight.LightSpace);

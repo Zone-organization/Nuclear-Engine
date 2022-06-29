@@ -1,6 +1,26 @@
 #pragma once
 #include "Common.h"
 
+void AssetLibraryViewer(Assets::AssetLibrary& obj)
+{
+	//Textures
+	ImGui::Begin("Assets Library Viewer");
+
+	static int count = 0;
+	for (auto& i : obj.mImportedImages.mData)
+	{
+		ImGui::Image(i.second.mTextureView, { 256.f,256.f });
+		ImGui::Text(i.second.GetName().c_str());
+		if (count % 5 == 0)
+		{
+			ImGui::SameLine();
+		}
+		count++;
+	}
+	count = 0;
+	ImGui::End();
+}
+
 class Sample3 : public Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
@@ -325,7 +345,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
-
+			AssetLibraryViewer(this->mAssetManager->mDefaultLibrary);
 		}
 	}
 
