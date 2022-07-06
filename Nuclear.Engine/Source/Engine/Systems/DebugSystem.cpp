@@ -39,21 +39,13 @@ namespace Nuclear
 				auto& ref = mRegisteredRTs.at(i);
 				if(ref->GetDesc().mType == rt_gr.at(item_current))
 				{
-					//if (i % 2 == 0)
-					//{
-					//	ImGui::Image(ref->GetSRV(), { 256.f,256.f });
-					//	//ImGui::SameLine();
-					//	ImGui::Text(ref->GetDesc().mName.c_str());
-
-					////	ImGui::SameLine();
-					//}
-					//else {
-					//	ImGui::SameLine();
-					//	ImGui::Image(ref->GetSRV(), { 256.f,256.f });
-					//	ImGui::SameLine();
-					//	ImGui::Text(ref->GetDesc().mName.c_str());
-					//}
-
+					ImGui::Text(ref->GetDesc().mName.c_str());
+					ImGui::SameLine();
+					ImGui::Image(ref->GetSRV(), { 256.f,256.f });
+					if (i % 2 == 0)
+					{
+						ImGui::SameLine();
+					}
 				}
 			}
 

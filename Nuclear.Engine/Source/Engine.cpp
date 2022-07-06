@@ -84,10 +84,11 @@ namespace Nuclear {
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.Fonts->AddFontFromFileTTF("Assets/Common/Fonts/Roboto-Medium.ttf", 15);
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigDockingWithShift = true;
 		ImGui_ImplGlfw_InitForOther(MainWindow.GetRawWindowPtr(), true);
 		ImGui_Impl_Init();
 		ImGui_Impl_CreateDeviceObjects();
-
 		//io.Fonts->GetTexDataAsAlpha8()
 
 		NUCLEAR_INFO("[Engine] ImGUI Initalized.");
