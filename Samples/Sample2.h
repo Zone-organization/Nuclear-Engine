@@ -1,6 +1,7 @@
 #pragma once
 #include "Common.h"
 
+
 class Sample2 : public Client
 {
 	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
@@ -456,6 +457,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
+
 			mDebugSystem->ShowRendertargets();
 
 		}

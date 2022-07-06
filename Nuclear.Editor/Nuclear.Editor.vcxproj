@@ -103,9 +103,11 @@
     <None Include="include\Nuclear.Editor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AssetLibraryViewer.h" />
     <ClInclude Include="include\Common.h" />
     <ClInclude Include="include\EditorUI.h" />
     <ClInclude Include="include\EntityEditor.h" />
+    <ClInclude Include="include\GameViewPort.h" />
     <ClInclude Include="include\Project.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

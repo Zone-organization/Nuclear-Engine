@@ -1,6 +1,7 @@
 #include "EditorUI.h"
 #include "Nuclear.Editor.h"
 #include <type_traits>
+
 #include <Engine/ECS/entt/core/type_info.hpp>
 using namespace entt::literals;
 
@@ -18,11 +19,35 @@ namespace Nuclear::Editor
 	}
 	void EditorUI::Render()
 	{
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable)
+		{
+			constexpr ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+			constexpr ImGuiWindowFlags   window_flags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGui::SetNextWindowPos(viewport->WorkPos);
+			ImGui::SetNextWindowSize(viewport->WorkSize);
+			ImGui::SetNextWindowViewport(viewport->ID);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+			ImGui::Begin("MainDockSpace", nullptr, window_flags);
+			ImGui::PopStyleVar(3);
+			ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+			ImGui::End();
+		}
+
 		RenderMainMenuBar();
 
 		if (mScene)
 		{
 			RenderEntityExplorer();
+		}
+		if (pActiveProject)
+		{
+			pActiveProject->ShowProjectFolderView();
 		}
 	}
 
