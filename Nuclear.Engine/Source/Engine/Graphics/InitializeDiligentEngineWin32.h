@@ -67,6 +67,8 @@ namespace Nuclear
 				context);
 			pFactoryD3D11->CreateSwapChainD3D11(*device, *context,
 				SCDesc, FSDesc, DLWindow, swapchain);
+			pFactoryD3D11->SetMessageCallback(DiligentMassageCallback);
+
 		}
 		break;
 
@@ -86,6 +88,7 @@ namespace Nuclear
 				context);
 			pFactoryD3D12->CreateSwapChainD3D12(*device, *context,
 				SCDesc, FSDesc, DLWindow, swapchain);
+			pFactoryD3D12->SetMessageCallback(DiligentMassageCallback);
 		}
 		break;
 
@@ -105,6 +108,8 @@ namespace Nuclear
 			CreationCreateInfo.Window = DLWindow;
 			pFactoryOpenGL->CreateDeviceAndSwapChainGL(
 				CreationCreateInfo, device, context, SCDesc, swapchain);
+			pFactoryOpenGL->SetMessageCallback(DiligentMassageCallback);
+
 		}
 		break;
 
@@ -124,6 +129,8 @@ namespace Nuclear
 				context);
 			pFactoryVk->CreateSwapChainVk(*device, *context,
 				SCDesc, DLWindow, swapchain);
+			pFactoryVk->SetMessageCallback(DiligentMassageCallback);
+
 		}
 		break;
 
