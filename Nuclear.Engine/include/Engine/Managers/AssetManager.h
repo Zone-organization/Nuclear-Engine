@@ -1,6 +1,8 @@
 #pragma once
 #include <Engine/Importers/Common.h>
 #include <Engine\Assets\AssetLibrary.h>
+//#include <Engine\Threading\TaskManager.h>
+
 #include <FMOD/inc/fmod.hpp>
 #include <array>
 
@@ -65,7 +67,7 @@ namespace Nuclear
 
 		struct AssetManagerDesc
 		{
-			std::string mName = "UnNamed";
+			std::string mName = "UnNamed AssetManager";
 			ASSET_MANAGER_FLUSH_FLAGS mFlushFlagOnShutdown = ASSET_MANAGER_FLUSH_ALL;
 			bool mSaveTexturePaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
 			bool mSaveMeshPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real mesh name or not
@@ -116,10 +118,17 @@ namespace Nuclear
 			static Graphics::Texture DefaultDiffuseTex;
 			static Graphics::Texture DefaultSpecularTex;
 			static Graphics::Texture DefaultNormalTex;
+
+		//	Graphics::Texture SaveToImport(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
+
 		private:
 			AssetManagerDesc mDesc;
 			Assets::Image* TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc);
 			msdfgen::FreetypeHandle* FT_Handle;
+
+		//	Threading::TaskManager ImageLoadingTMgr;
+			Assets::AssetLibrary mSavedToImport;
+
 		};
 	}
 }

@@ -206,10 +206,9 @@ namespace Nuclear {
 				Importers::ImageLoadingDesc desc;
 				Graphics::Texture texture;
 
+				//Embedded Texture
 				if (auto embeddedtex = scene->GetEmbeddedTexture(str.C_Str()))
 				{
-					//Embedded Texture
-
 					desc.mPath = embeddedtex->mFilename.C_Str();
 
 					if (embeddedtex->mHeight != 0)
@@ -238,7 +237,7 @@ namespace Nuclear {
 				}
 				else
 				{
-					//Load Texture
+					//Load Texture normally
 
 					std::string filename = str.C_Str();
 					filename = mDirectory + '/' + filename;
@@ -249,6 +248,8 @@ namespace Nuclear {
 					else {
 						desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 					}*/
+
+
 					texture = mManager->Import(filename, desc, GetTextureType(type));
 				}
 

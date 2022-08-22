@@ -96,7 +96,7 @@ namespace Nuclear {
 
 			if (FT_Handle == nullptr)
 			{
-				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Initialize FreeType library");
+				NUCLEAR_ERROR("[{0}] Failed To Initialize FreeType library");
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace Nuclear {
 			Assets::ImageData imagedata = mImageImporter(Path.mRealPath, Desc);
 			if (imagedata.mData == nullptr)
 			{
-				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Load Texture: '{1}' Hash: '{2}'" , mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+				NUCLEAR_ERROR("[{0}] Failed To Load Texture: '{1}' Hash: '{2}'" , mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 				return DefaultBlackTex;
 			}
 
@@ -127,7 +127,7 @@ namespace Nuclear {
 			
 			if (image.mTextureView == nullptr)
 			{
-				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Create Texture: '{1}' Hash: '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+				NUCLEAR_ERROR("[{0}] Failed To Create Texture: '{1}' Hash: '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 				return DefaultBlackTex;
 			}
@@ -141,7 +141,7 @@ namespace Nuclear {
 			result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
 			result.SetUsageType(type);
 
-			NUCLEAR_INFO("[AssetManager : '{0}'] Loaded Texture: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+			NUCLEAR_INFO("[{0}] Imported Texture: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 		
 			return result;
 		}
@@ -158,14 +158,14 @@ namespace Nuclear {
 
 			if (image.mTextureView == nullptr)
 			{
-				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Create Texture: '{1}' Hash: '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
+				NUCLEAR_ERROR("[{0}] Failed To Create Texture: '{1}' Hash: '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
 				return DefaultBlackTex;
 			}
 			image.mData.mData = NULL;
 			mDefaultLibrary.mImportedImages.mData[hashedname] = image;
 			result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
 
-			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Texture: '{1}' : '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
+			NUCLEAR_INFO("[{0}] Imported Texture: '{1}' : '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			return result;
 		}
@@ -199,7 +199,7 @@ namespace Nuclear {
 			auto result = &mDefaultLibrary.mImportedAudioClips.mData[hashedname];
 			Audio::AudioEngine::GetSystem()->createSound(Path.mRealPath.c_str(), mode, 0, &result->mSound);
 
-			NUCLEAR_INFO("[AssetManager : '{0}'] Imported AudioClip: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+			NUCLEAR_INFO("[{0}] Imported AudioClip: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			return result;
 		}
@@ -236,7 +236,7 @@ namespace Nuclear {
 			}
 			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, &Animation))
 			{
-				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed to import Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+				NUCLEAR_ERROR("[{0}] Failed to import Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 				return { Mesh , Material, anim };
 			}
@@ -251,7 +251,7 @@ namespace Nuclear {
 					mDefaultLibrary.mImportedAnimations.SavePath(hashedname, Path);
 				}
 			}
-			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+			NUCLEAR_INFO("[{0}] Imported Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			Mesh->Create();
 			
@@ -357,20 +357,77 @@ namespace Nuclear {
 				}
 				result->Create(desc);
 
-				NUCLEAR_INFO("[AssetManager : '{0}'] Imported Font : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+				NUCLEAR_INFO("[{0}] Imported Font : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 				// Cleanup
 				msdfgen::destroyFont(font);
 				return result;
 			}
 			else {
-				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed to import font : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+				NUCLEAR_ERROR("[{0}] Failed to import font : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 			}
 
 			return nullptr;
 		}
 
 					
+		//Graphics::Texture AssetManager::SaveToImport(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc, const Graphics::TextureUsageType& type)
+	//	{
+			//auto hashedname = Utilities::Hash(Path.mInputPath);
+			////Check if exists
+			//auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
+			//if (it != mDefaultLibrary.mImportedImages.mData.end())
+			//{
+			//	result.SetImage(&it->second);
+			//	return result;
+			//}
+
+
+
+
+			//Graphics::Texture result;
+
+			////Check if exists
+			//auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
+			//if (it != mDefaultLibrary.mImportedImages.mData.end())
+			//{
+			//	result.SetImage(&it->second);
+			//	return result;
+			//}
+
+
+			////Load
+			//Assets::ImageData imagedata = mImageImporter(Path.mRealPath, Desc);
+			//if (imagedata.mData == nullptr)
+			//{
+			//	NUCLEAR_ERROR("[{0}] Failed To Load Texture: '{1}' Hash: '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+			//	return DefaultBlackTex;
+			//}
+
+			////Create
+			//Assets::Image image(imagedata, Desc);
+
+			//if (image.mTextureView == nullptr)
+			//{
+			//	NUCLEAR_ERROR("[{0}] Failed To Create Texture: '{1}' Hash: '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+
+			//	return DefaultBlackTex;
+			//}
+			//image.mData.mData = NULL;
+
+			//mDefaultLibrary.mImportedImages.SavePath(hashedname, Path);
+
+			//image.SetName(Path.mInputPath);
+			//mDefaultLibrary.mImportedImages.mData[hashedname] = image;
+
+			//result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
+			//result.SetUsageType(type);
+
+			//NUCLEAR_INFO("[{0}] Imported Texture: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+
+			//return result;
+		//}
+
 		Assets::Image* AssetManager::TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
@@ -384,20 +441,20 @@ namespace Nuclear {
 			Assets::ImageData imagedata = mImageImporter(Path.mRealPath, Desc);
 			if (imagedata.mData == nullptr)
 			{
-				NUCLEAR_ERROR("[AssetManager : '{0}'] Failed To Load Texture2D (For CubeMap): '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+				NUCLEAR_ERROR("[{0}] Failed To Load Texture2D (For CubeMap): '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 				return nullptr;
 			}
 			result.mData = imagedata;
 
 			mDefaultLibrary.mImportedImages.mData[hashedname] = result;
 			
-			NUCLEAR_INFO("[AssetManager : '{0}'] Imported Texture2D (for CubeMap) : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
+			NUCLEAR_INFO("[{0}] Imported Texture2D (for CubeMap) : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			return &mDefaultLibrary.mImportedImages.mData[hashedname];
 		}
 		Assets::Image* AssetManager::DoesImageExist(Uint32 hashedname)
 		{
-			//Check if Texture has been loaded before
+			//Check if Texture has been Imported before
 			auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
 			if (it != mDefaultLibrary.mImportedImages.mData.end())
 			{

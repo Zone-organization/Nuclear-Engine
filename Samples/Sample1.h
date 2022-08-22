@@ -70,7 +70,10 @@ void AssetLibraryViewer(Assets::AssetLibrary& obj)
 
 			if (img)
 			{
-				ImageViewer(img);
+				if (img->isValid)
+				{
+					ImageViewer(img);
+				}
 			}
 		}
 		if (ImGui::BeginTabItem("Meshes"))
