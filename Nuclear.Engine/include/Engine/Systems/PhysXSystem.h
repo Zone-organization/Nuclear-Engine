@@ -1,11 +1,8 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Engine\ECS/Common.h>
-#include <Engine\ECS\Scene.h>
-#include <Engine\ECS\Transform.h>
+#include <Engine\ECS/ECS.h>
 #include "Engine\PhysX\PhysXEngine.h"
 #include "Engine\PhysX\RaycastHit.h"
-#include "Engine\ECS\System.h"
 #include <Engine\Components\RigidBodyComponent.h>
 #include <Engine\Components\ColliderComponent.h>
 

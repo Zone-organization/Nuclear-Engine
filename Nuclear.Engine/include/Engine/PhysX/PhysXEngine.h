@@ -10,7 +10,6 @@ namespace physx {
 }
 namespace Nuclear
 {
-	namespace ECS { class Scene; }
 	namespace Components {
 		class ColliderComponent;
 		class RigidBodyComponent;

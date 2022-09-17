@@ -138,8 +138,8 @@
     <ClInclude Include="include\Engine\Components\SpotLightComponent.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
     <ClInclude Include="include\Engine\ECS\Entity.h" />
-    <ClInclude Include="include\Engine\ECS\EntityFactory.h" />
     <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
+    <ClInclude Include="include\Engine\Managers\SceneManager.h" />
     <ClInclude Include="include\Engine\Rendering\Background.h" />
     <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />
     <ClInclude Include="include\Engine\Graphics\Camera.h" />
@@ -215,7 +215,7 @@
     <ClInclude Include="include\Engine\Components\EntityInfoComponent.h" />
     <ClInclude Include="include\Engine\Rendering\Skybox.h" />
     <ClInclude Include="include\Engine\ECS\Common.h" />
-    <ClInclude Include="include\Engine\ECS\Scene.h" />
+    <ClInclude Include="include\Engine\Assets\Scene.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\Engine.h" />
     <ClInclude Include="include\Engine\Managers\AssetManager.h" />
@@ -296,6 +296,7 @@
     <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_freetype.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
+    <ClCompile Include="Source\Engine\Managers\SceneManager.cpp" />
     <ClCompile Include="Source\Engine\Rendering\BlurEffect.cpp" />
     <ClCompile Include="Source\Engine\Rendering\DefferedRenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ForwardRenderingPipeline.cpp" />
@@ -315,7 +316,6 @@
     <ClCompile Include="Source\Engine\Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\ScriptComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\SpotLightComponent.cpp" />
-    <ClCompile Include="Source\Engine\ECS\EntityFactory.cpp" />
     <ClCompile Include="Source\Engine\ECS\Transform.cpp" />
     <ClCompile Include="Source\Engine\Rendering\Background.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Color.cpp" />
@@ -404,7 +404,7 @@
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Rendering\Skybox.cpp" />
-    <ClCompile Include="Source\Engine\ECS\Scene.cpp" />
+    <ClCompile Include="Source\Engine\Assets\Scene.cpp" />
     <ClCompile Include="Source\NE_Common.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Engine\Managers\AssetManager.cpp" />

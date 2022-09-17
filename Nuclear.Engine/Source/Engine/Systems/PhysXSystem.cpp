@@ -4,6 +4,7 @@
 #include <Engine\Components\EntityInfoComponent.h>
 #include "..\PhysX\PhysXTypes.h"
 #include <PhysX/include/PxPhysicsAPI.h>
+#include <Engine\Assets\Scene.h>
 
 namespace Nuclear
 {

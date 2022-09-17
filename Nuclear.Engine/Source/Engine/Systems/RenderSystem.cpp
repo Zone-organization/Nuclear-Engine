@@ -4,7 +4,7 @@
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Managers\AssetManager.h>
-#include <Engine\ECS\Scene.h>
+#include <Engine\Assets\Scene.h>
 #include <Engine.h>
 #include <cstring>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>

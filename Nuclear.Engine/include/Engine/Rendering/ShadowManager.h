@@ -40,10 +40,10 @@ namespace Nuclear
 
 			void Initialize();
 
-			void DirLightShadowDepthPass(Components::DirLightComponent& dirlight, ECS::Scene* scene);
+			void DirLightShadowDepthPass(Components::DirLightComponent& dirlight, Assets::Scene* scene);
 
-			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, ECS::Scene* scene);
-			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, ECS::Scene* scene);
+			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene);
+			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene);
 
 			ShadowManagerDesc GetDesc() const;
 

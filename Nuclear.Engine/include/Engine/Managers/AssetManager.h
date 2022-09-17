@@ -12,10 +12,6 @@ typedef struct FT_LibraryRec_* FT_Library;
 namespace msdfgen { class FreetypeHandle; }
 namespace Nuclear 
 {
-	namespace ECS
-	{
-		class Scene;
-	}
 	namespace Managers
 	{
 		enum ASSET_MANAGER_FLUSH_FLAGS
@@ -79,7 +75,7 @@ namespace Nuclear
 			AssetManager(AssetManagerDesc desc = AssetManagerDesc());
 			~AssetManager();
 
-			Assets::AssetLibrary mDefaultLibrary;
+			Assets::AssetLibrary mLibrary;
 
 			bool mMultithreadMeshTextureLoading = true;
 
@@ -105,9 +101,6 @@ namespace Nuclear
 			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
 
 			Assets::Font* Import(const Core::Path& Path, const Importers::FontLoadingDesc& desc);
-
-
-			void SaveScene(ECS::Scene* scene);
 
 			//Assets::Script& ImportScript(const Core::Path& Path);
 

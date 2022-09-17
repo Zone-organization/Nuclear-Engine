@@ -3,7 +3,7 @@
 #include <Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h>
 #include <Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h>
 #include "Engine\Components\ScriptComponent.h"
-#include "Engine\ECS\Scene.h"
+#include <Engine\Assets\Scene.h>
 #include "..\Source\ThirdParty\angelscript\include\angelscript.h" 
 #include <Core\Logger.h>
 

@@ -32,6 +32,9 @@ namespace Nuclear
 
 		struct NEAPI AssetLibrary
 		{
+			//Special type of asset??
+			ImportedAssetsMap<Assets::Scene> mImportedScenes;
+
 			ImportedAssetsMap<Assets::Image> mImportedImages;
 			ImportedAssetsMap<Assets::Mesh> mImportedMeshes;
 			ImportedAssetsMap<Assets::Material> mImportedMaterials;

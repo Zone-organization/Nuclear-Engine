@@ -11,9 +11,13 @@
 
 namespace Nuclear
 {
-	namespace ECS
+	namespace Assets
 	{
 		class Scene;
+	}
+
+	namespace ECS
+	{
 
 		class NEAPI BaseSystem : Utilities::NonCopyable {
 		public:
@@ -36,7 +40,7 @@ namespace Nuclear
 		public:
 			virtual ~System() {}
 
-			ECS::Scene* mScene;
+			Assets::Scene* mScene;
 
 		private:
 
@@ -50,7 +54,12 @@ namespace Nuclear
 
 		class NEAPI SystemManager : Utilities::NonCopyable {
 		public:
-			SystemManager(ECS::Scene* scene) : mScene(scene) {}
+			SystemManager() {}
+
+			void SetScene(Assets::Scene* scene)
+			{
+				mScene = scene;
+			}
 
 			template <typename S>
 			void Add(std::shared_ptr<S> system) {
@@ -90,7 +99,7 @@ namespace Nuclear
 
 		private:
 			//bool initialized_ = false;
-			ECS::Scene* mScene;
+			Assets::Scene* mScene;
 			std::unordered_map<BaseSystem::Family, std::shared_ptr<BaseSystem>> systems_;
 		};
 	}

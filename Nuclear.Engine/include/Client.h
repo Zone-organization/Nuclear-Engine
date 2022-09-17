@@ -1,9 +1,12 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Engine\ECS\Scene.h>
+#include <Engine\Assets\Scene.h>
 
 namespace Nuclear {
-	namespace Managers { class AssetManager; }
+	namespace Managers {
+		class AssetManager; 
+		class SceneManager;
+	}
 
 	enum class ClientType {
 		Game,
@@ -44,9 +47,9 @@ namespace Nuclear {
 		// Helper Functions
 		virtual void LoadFinishUp();
 
-		/*void SetActiveScene(ECS::Scene* scene);
-		ECS::Scene* GetActiveScene();
-		*/
+		void SetDefaultSceneManager(Managers::SceneManager* scenemanager);
+		Managers::SceneManager* GetDefaultSceneManager();
+
 		void SetDefaultAssetManager(Managers::AssetManager* assetmanager);
 		Managers::AssetManager* GetDefaultAssetManager();
 
@@ -56,7 +59,8 @@ namespace Nuclear {
 		float LastFrame = 0.0f;
 	protected:
 		ClientInfo minfo;
-		ECS::Scene* pScene;
+		Assets::Scene* pScene;
+		Managers::SceneManager* mSceneManager;
 		Managers::AssetManager* mAssetManager;
 	};
 }

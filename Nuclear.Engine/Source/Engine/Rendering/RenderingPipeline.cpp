@@ -5,6 +5,7 @@
 #include <Engine.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine/Graphics/ImGui.h>
+#include <Engine\Assets\Material.h>
 
 namespace Nuclear
 {

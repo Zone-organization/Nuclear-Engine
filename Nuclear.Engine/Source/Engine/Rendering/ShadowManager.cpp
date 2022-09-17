@@ -6,7 +6,7 @@
 #include <Engine\Assets/Mesh.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine\Components\EntityInfoComponent.h>
-#include <Engine\ECS\Scene.h>
+#include <Engine\Assets\Scene.h>
 
 namespace Nuclear
 {
@@ -37,7 +37,7 @@ namespace Nuclear
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pVSShadowCasterBuffer);
 		}
 
-		void ShadowManager::DirLightShadowDepthPass(Components::DirLightComponent& light, ECS::Scene* scene)
+		void ShadowManager::DirLightShadowDepthPass(Components::DirLightComponent& light, Assets::Scene* scene)
 		{
 			//if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
 			{
@@ -71,7 +71,7 @@ namespace Nuclear
 			}
 		}
 
-		void ShadowManager::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, ECS::Scene* scene)
+		void ShadowManager::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene)
 		{
 			//float near_plane = 1.0f, far_plane = 100.f;
 			//auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
@@ -120,7 +120,7 @@ namespace Nuclear
 			}
 		}
 
-		void ShadowManager::PointLightShadowDepthPass(Components::PointLightComponent& pointlight, ECS::Scene* scene)
+		void ShadowManager::PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene)
 		{
 		}
 

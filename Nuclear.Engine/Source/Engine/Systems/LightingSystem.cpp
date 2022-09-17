@@ -1,7 +1,7 @@
 #include <Engine\Systems\LightingSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
-#include <Engine\ECS\Scene.h>
+#include <Engine\Assets\Scene.h>
 #include <Engine\Components\EntityInfoComponent.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Engine\Components/MeshComponent.h>

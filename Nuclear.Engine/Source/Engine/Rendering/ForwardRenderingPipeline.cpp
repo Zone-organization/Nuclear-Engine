@@ -8,6 +8,7 @@
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Engine\Systems\LightingSystem.h>
+#include <Engine\Assets\Scene.h>
 
 namespace Nuclear
 {

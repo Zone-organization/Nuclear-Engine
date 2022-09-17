@@ -57,6 +57,16 @@ namespace Nuclear {
 	//	return pScene;
 	//}
 
+	void Client::SetDefaultSceneManager(Managers::SceneManager* scenemanager)
+	{
+		mSceneManager = scenemanager;
+	}
+
+	Managers::SceneManager* Client::GetDefaultSceneManager()
+	{
+		return mSceneManager;
+	}
+
 	void Client::SetDefaultAssetManager(Managers::AssetManager* assetmanager)
 	{
 		mAssetManager = assetmanager;

@@ -13,7 +13,6 @@
 #include <utility>
 #include <Core\FileSystem.h>
 
-#include <Engine\ECS\Scene.h>
 #include <cereal/archives/json.hpp>
 #include <sstream>
 #include <Engine\Components\Components.h>
@@ -49,7 +48,7 @@ namespace Nuclear {
 
 		void AssetManager::FlushContainers(ASSET_MANAGER_FLUSH_FLAGS flag)
 		{
-			/*for (auto& it : mDefaultLibrary.mImportedMaterials) {
+			/*for (auto& it : mLibrary.mImportedMaterials) {
 				 Do stuff
 
 				for (auto& it1 : it.second.mPixelShaderTextures) {
@@ -62,15 +61,15 @@ namespace Nuclear {
 				it.second.mTextureView.Release();
 			}*/
 		//
-			mDefaultLibrary.mImportedMeshes.Release();
+			mLibrary.mImportedMeshes.Release();
 
-			mDefaultLibrary.mImportedImages.Release();
+			mLibrary.mImportedImages.Release();
 
-			mDefaultLibrary.mImportedMaterials.Release();
+			mLibrary.mImportedMaterials.Release();
 
-			mDefaultLibrary.mImportedAnimations.Release();
+			mLibrary.mImportedAnimations.Release();
 
-			mDefaultLibrary.mImportedAudioClips.Release();
+			mLibrary.mImportedAudioClips.Release();
 		}
 
 		void AssetManager::Initialize(AssetManagerDesc desc)
@@ -106,8 +105,8 @@ namespace Nuclear {
 			Graphics::Texture result;
 
 			//Check if exists
-			auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
-			if (it != mDefaultLibrary.mImportedImages.mData.end())
+			auto it = mLibrary.mImportedImages.mData.find(hashedname);
+			if (it != mLibrary.mImportedImages.mData.end())
 			{
 				result.SetImage(&it->second);
 				return result;
@@ -133,12 +132,12 @@ namespace Nuclear {
 			}
 			image.mData.mData = NULL;
 
-			mDefaultLibrary.mImportedImages.SavePath(hashedname, Path);
+			mLibrary.mImportedImages.SavePath(hashedname, Path);
 
 			image.SetName(Path.mInputPath);
-			mDefaultLibrary.mImportedImages.mData[hashedname] = image;
+			mLibrary.mImportedImages.mData[hashedname] = image;
 
-			result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
+			result.SetImage(&mLibrary.mImportedImages.mData[hashedname]);
 			result.SetUsageType(type);
 
 			NUCLEAR_INFO("[{0}] Imported Texture: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
@@ -162,8 +161,8 @@ namespace Nuclear {
 				return DefaultBlackTex;
 			}
 			image.mData.mData = NULL;
-			mDefaultLibrary.mImportedImages.mData[hashedname] = image;
-			result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
+			mLibrary.mImportedImages.mData[hashedname] = image;
+			result.SetImage(&mLibrary.mImportedImages.mData[hashedname]);
 
 			NUCLEAR_INFO("[{0}] Imported Texture: '{1}' : '{2}'", mDesc.mName, Desc.mPath, Utilities::int_to_hex<Uint32>(hashedname));
 
@@ -177,7 +176,7 @@ namespace Nuclear {
 		//	//	auto hashedname = Utilities::Hash(Desc.mPath);
 
 		//	//	
-		//	//	Internal::CreateTextureViewFromRawImage(Image, Desc, &mDefaultLibrary.mImportedImages[hashedname]);
+		//	//	Internal::CreateTextureViewFromRawImage(Image, Desc, &mLibrary.mImportedImages[hashedname]);
 
 		//	//}
 
@@ -195,8 +194,8 @@ namespace Nuclear {
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
-			mDefaultLibrary.mImportedAudioClips.mData[hashedname] = Assets::AudioClip();
-			auto result = &mDefaultLibrary.mImportedAudioClips.mData[hashedname];
+			mLibrary.mImportedAudioClips.mData[hashedname] = Assets::AudioClip();
+			auto result = &mLibrary.mImportedAudioClips.mData[hashedname];
 			Audio::AudioEngine::GetSystem()->createSound(Path.mRealPath.c_str(), mode, 0, &result->mSound);
 
 			NUCLEAR_INFO("[{0}] Imported AudioClip: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
@@ -210,29 +209,29 @@ namespace Nuclear {
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
 			//Check if exists
-			auto itmesh = mDefaultLibrary.mImportedMeshes.mData.find(hashedname);
-			if (itmesh != mDefaultLibrary.mImportedMeshes.mData.end())
+			auto itmesh = mLibrary.mImportedMeshes.mData.find(hashedname);
+			if (itmesh != mLibrary.mImportedMeshes.mData.end())
 			{
 				Assets::Animations* anim = nullptr;
-				auto itanim = mDefaultLibrary.mImportedAnimations.mData.find(hashedname);
-				if (itanim != mDefaultLibrary.mImportedAnimations.mData.end())
+				auto itanim = mLibrary.mImportedAnimations.mData.find(hashedname);
+				if (itanim != mLibrary.mImportedAnimations.mData.end())
 				{
 					anim = &itanim->second;
 				}
 
-				return { &itmesh->second, &mDefaultLibrary.mImportedMaterials.mData[hashedname], anim };
+				return { &itmesh->second, &mLibrary.mImportedMaterials.mData[hashedname], anim };
 			}
 
 			Assets::Animations Animation;
 			Assets::Animations* anim = nullptr;
 		
-			mDefaultLibrary.mImportedMeshes.mData[hashedname] = Assets::Mesh();
-			Assets::Mesh* Mesh = &mDefaultLibrary.mImportedMeshes.mData[hashedname];
+			mLibrary.mImportedMeshes.mData[hashedname] = Assets::Mesh();
+			Assets::Mesh* Mesh = &mLibrary.mImportedMeshes.mData[hashedname];
 			Assets::Material* Material = nullptr;
 			if (desc.LoadMaterial)
 			{
-				mDefaultLibrary.mImportedMaterials.mData[hashedname] = Assets::Material();
-				Material = &mDefaultLibrary.mImportedMaterials.mData[hashedname];
+				mLibrary.mImportedMaterials.mData[hashedname] = Assets::Material();
+				Material = &mLibrary.mImportedMaterials.mData[hashedname];
 			}
 			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, &Animation))
 			{
@@ -245,21 +244,21 @@ namespace Nuclear {
 			{
 				if (Animation.isValid == true)
 				{
-					mDefaultLibrary.mImportedAnimations.mData[hashedname] = Animation;
-					anim = &mDefaultLibrary.mImportedAnimations.mData[hashedname];
+					mLibrary.mImportedAnimations.mData[hashedname] = Animation;
+					anim = &mLibrary.mImportedAnimations.mData[hashedname];
 
-					mDefaultLibrary.mImportedAnimations.SavePath(hashedname, Path);
+					mLibrary.mImportedAnimations.SavePath(hashedname, Path);
 				}
 			}
 			NUCLEAR_INFO("[{0}] Imported Model : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
 			Mesh->Create();
 			
-			mDefaultLibrary.mImportedMeshes.SavePath(hashedname, Path);
+			mLibrary.mImportedMeshes.SavePath(hashedname, Path);
 
 			if (desc.LoadMaterial)
 			{
-				mDefaultLibrary.mImportedMaterials.SavePath(hashedname, Path);
+				mLibrary.mImportedMaterials.SavePath(hashedname, Path);
 			}
 
 			return { Mesh , Material, anim };
@@ -333,9 +332,9 @@ namespace Nuclear {
 				//	success = myProject::submitAtlasBitmapAndLayout(generator.atlasStorage(), glyphs);
 				auto atlas = generator.atlasStorage();
 				
-				mDefaultLibrary.mImportedFonts.SavePath(hashedname, Path);
-				mDefaultLibrary.mImportedFonts.mData[hashedname] = Assets::Font();
-				Assets::Font* result = &mDefaultLibrary.mImportedFonts.mData[hashedname];
+				mLibrary.mImportedFonts.SavePath(hashedname, Path);
+				mLibrary.mImportedFonts.mData[hashedname] = Assets::Font();
+				Assets::Font* result = &mLibrary.mImportedFonts.mData[hashedname];
 
 				Assets::FontCreationDesc desc;
 				fillfontdesc<1>(atlas, desc);
@@ -375,8 +374,8 @@ namespace Nuclear {
 	//	{
 			//auto hashedname = Utilities::Hash(Path.mInputPath);
 			////Check if exists
-			//auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
-			//if (it != mDefaultLibrary.mImportedImages.mData.end())
+			//auto it = mLibrary.mImportedImages.mData.find(hashedname);
+			//if (it != mLibrary.mImportedImages.mData.end())
 			//{
 			//	result.SetImage(&it->second);
 			//	return result;
@@ -388,8 +387,8 @@ namespace Nuclear {
 			//Graphics::Texture result;
 
 			////Check if exists
-			//auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
-			//if (it != mDefaultLibrary.mImportedImages.mData.end())
+			//auto it = mLibrary.mImportedImages.mData.find(hashedname);
+			//if (it != mLibrary.mImportedImages.mData.end())
 			//{
 			//	result.SetImage(&it->second);
 			//	return result;
@@ -415,12 +414,12 @@ namespace Nuclear {
 			//}
 			//image.mData.mData = NULL;
 
-			//mDefaultLibrary.mImportedImages.SavePath(hashedname, Path);
+			//mLibrary.mImportedImages.SavePath(hashedname, Path);
 
 			//image.SetName(Path.mInputPath);
-			//mDefaultLibrary.mImportedImages.mData[hashedname] = image;
+			//mLibrary.mImportedImages.mData[hashedname] = image;
 
-			//result.SetImage(&mDefaultLibrary.mImportedImages.mData[hashedname]);
+			//result.SetImage(&mLibrary.mImportedImages.mData[hashedname]);
 			//result.SetUsageType(type);
 
 			//NUCLEAR_INFO("[{0}] Imported Texture: '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
@@ -446,17 +445,17 @@ namespace Nuclear {
 			}
 			result.mData = imagedata;
 
-			mDefaultLibrary.mImportedImages.mData[hashedname] = result;
+			mLibrary.mImportedImages.mData[hashedname] = result;
 			
 			NUCLEAR_INFO("[{0}] Imported Texture2D (for CubeMap) : '{1}' : '{2}'", mDesc.mName, Path.mInputPath, Utilities::int_to_hex<Uint32>(hashedname));
 
-			return &mDefaultLibrary.mImportedImages.mData[hashedname];
+			return &mLibrary.mImportedImages.mData[hashedname];
 		}
 		Assets::Image* AssetManager::DoesImageExist(Uint32 hashedname)
 		{
 			//Check if Texture has been Imported before
-			auto it = mDefaultLibrary.mImportedImages.mData.find(hashedname);
-			if (it != mDefaultLibrary.mImportedImages.mData.end())
+			auto it = mLibrary.mImportedImages.mData.find(hashedname);
+			if (it != mLibrary.mImportedImages.mData.end())
 			{
 				return &it->second;
 			}
@@ -477,11 +476,11 @@ namespace Nuclear {
 			return result;
 		}
 
-		void AssetManager::SaveScene(ECS::Scene* scene)
-		{
-			std::stringstream storage;
+		//void AssetManager::SaveScene(ECS::Scene* scene)
+	//	{
+	//		std::stringstream storage;
 
-			{
+	//		{
 				// output finishes flushing its contents when it goes out of scope
 			/*	cereal::JSONOutputArchive output{storage};
 				entt::snapshot{ scene->GetRegistry()}.entities(output).component<
@@ -497,8 +496,8 @@ Components::AnimatorComponent,
 Components::ScriptComponent*/
 
 		///		>(output);
-			}
-		}
+	//		}
+	//	}
 
 		//Assets::Script& AssetManager::ImportScript(const Core::Path& Path)
 		//{

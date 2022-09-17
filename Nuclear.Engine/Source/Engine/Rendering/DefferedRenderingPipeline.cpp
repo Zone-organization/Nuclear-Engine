@@ -9,6 +9,7 @@
 #include <Core\FileSystem.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Engine\Systems\DebugSystem.h>
+#include <Engine\Assets\Scene.h>
 
 namespace Nuclear
 {
