@@ -25,7 +25,7 @@ class Playground : public Client
 
 	Rendering::ShadowManager shadowmanager;
 
-	ECS::Scene Scene;
+	Assets::Scene Scene;
 
 	ECS::Entity EController;
 	ECS::Entity ELights;
@@ -106,6 +106,8 @@ public:
 
 	void Load()
 	{
+		mSceneManager->CreateScene(&Scene, true);
+
 		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
 
 		mAssetManager->Initialize();
@@ -126,14 +128,14 @@ public:
 			ECS::Transform TSphere;
 			TSphere.SetPosition(Math::Vector3(0.0f, 1.5f, 0.0));
 		//	TSphere.SetScale(Math::Vector3(0.5f));
-			Scene.GetFactory().CreateBox(&SphereMaterial, TSphere);
+			Scene.CreateBox(&SphereMaterial, TSphere);
 		}
 		{		
 			ECS::Transform TSphere;
 
 			TSphere.SetPosition(Math::Vector3(2.0f, 0.0f, 1.0));
 		//	TSphere.SetScale(Math::Vector3(0.5f));
-			Scene.GetFactory().CreateBox(&SphereMaterial, TSphere);
+			Scene.CreateBox(&SphereMaterial, TSphere);
 		}
 		{		
 			ECS::Transform TSphere;
@@ -141,9 +143,9 @@ public:
 			TSphere.SetPosition(Math::Vector3(-1.0f, 0.0f, 2.0));
 			TSphere.SetRotation(glm::normalize(glm::vec3(1.0, 0.0, 1.0)), glm::radians(60.0f));
 	//		TSphere.SetScale(Math::Vector3(0.25));
-			Scene.GetFactory().CreateBox(&SphereMaterial, TSphere);
+			Scene.CreateBox(&SphereMaterial, TSphere);
 		}
-		Scene.GetFactory().CreatePlane(&PlaneMaterial);
+		Scene.CreatePlane(&PlaneMaterial);
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 		//Camera.MovementSpeed = 15;
@@ -215,7 +217,7 @@ public:
 
 	void Render(float dt) override
 	{
-		Scene.Update(dt);
+		mSceneManager->Update(dt);
 
 		//EController.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
 	//	EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());

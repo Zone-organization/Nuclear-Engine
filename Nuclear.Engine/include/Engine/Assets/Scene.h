@@ -18,6 +18,7 @@ namespace Nuclear
 
 		class NEAPI Scene : public Asset<Scene>
 		{
+			friend class Managers::SceneManager;
 		public:
 			Scene();
 			~Scene();
@@ -29,8 +30,6 @@ namespace Nuclear
 			ECS::Entity CreateBox(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 			ECS::Entity CreateSphere(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 			ECS::Entity CreatePlane(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
-
-		//	void Update(ECS::TimeDelta dt);
 
 			//void Save();
 			ECS::SystemManager& GetSystemManager();

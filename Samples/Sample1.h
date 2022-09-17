@@ -140,7 +140,7 @@ class Sample1 : public Client
 	ECS::Entity EBob;
 	ECS::Entity EVampire;
 
-	ECS::Scene Scene;
+	Assets::Scene Scene;
 	ECS::Entity EController;
 	ECS::Entity ELights;
 
@@ -285,6 +285,8 @@ public:
 
 	void Load()
 	{
+		mSceneManager->CreateScene(&Scene, true);
+
 		mAssetManager->Initialize();
 
 		EController = Scene.CreateEntity();
@@ -383,7 +385,7 @@ public:
 
 		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
-		Scene.Update(dt);
+		mSceneManager->Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample1: Basic Rendering");
@@ -443,7 +445,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
-			AssetLibraryViewer(this->mAssetManager->mDefaultLibrary);
+			AssetLibraryViewer(this->mAssetManager->mLibrary);
 
 			mDebugSystem->ShowRendertargets();
 		}

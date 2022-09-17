@@ -7,9 +7,9 @@ namespace Nuclear::Editor
         //TODO : create folder for the project
         mPath = std::filesystem::absolute(std::filesystem::current_path());
     }
-    ECS::Scene* Project::GetActiveScene()
+	Assets::Scene* Project::GetActiveScene()
     {
-        return &MainScene;
+        return SceneMgr.GetActiveScene();
     }
     void Project::ShowProjectFolderView()
     {
@@ -108,6 +108,21 @@ namespace Nuclear::Editor
 		// Remove ending / if any
 		if (mPath.wstring().back() == std::filesystem::path::preferred_separator)
 			mPath = mPath.parent_path();
+	}
+
+	Assets::Scene* Project::AddNewScene()
+	{
+		auto hashedname = Utilities::Hash("UnNamed Scene");
+
+		AssetLoader.mLibrary.mImportedScenes.mData[hashedname] = Assets::Scene();
+		auto result = &AssetLoader.mLibrary.mImportedScenes.mData[hashedname];
+
+
+		//TODO
+		result->SetName("UnNamed Scene");
+		SceneMgr.CreateScene(result, (SceneMgr.GetActiveScene() == nullptr) ? true : false);
+
+		return result;
 	}
 
     //ECS::Scene* Project::AddNewScene()

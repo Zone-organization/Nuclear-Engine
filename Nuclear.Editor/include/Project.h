@@ -11,22 +11,17 @@ namespace Nuclear::Editor
 	public:
 		Project();
 
-		ECS::Scene* GetActiveScene();
+		Assets::Scene* GetActiveScene();
 
 		void ShowProjectFolderView();
 
 		void SetPath(const std::filesystem::path& path);
 
-	//	ECS::Scene* AddNewScene();
+		Assets::Scene* AddNewScene();
 	protected:
 		Managers::AssetManager AssetLoader;
-
-		ECS::Scene MainScene;
+		Managers::SceneManager SceneMgr;
 
 		std::filesystem::path mPath;
-
-		//TODO
-		//ECS::Scene* pActiveScene;
-		//std::unordered_map<Uint32, ECS::Scene> mScenes;          //Should be moved
 	};
 }

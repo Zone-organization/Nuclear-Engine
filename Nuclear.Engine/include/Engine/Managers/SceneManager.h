@@ -16,11 +16,13 @@ namespace Nuclear
 			SceneManager();
 			~SceneManager();
 
+			void CreateScene(Assets::Scene* scene, bool SetAsActive = false);
+
 			ECS::SystemManager& GetSystemManager();
 			entt::registry& GetRegistry();
+			void Update(ECS::TimeDelta dt);                  //Only update active scene
 
 			void SetActiveScene(Assets::Scene* scene);
-
 			Assets::Scene* GetActiveScene();
 
 		protected:

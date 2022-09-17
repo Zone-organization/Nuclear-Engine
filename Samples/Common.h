@@ -6,7 +6,7 @@ const int _Width_ = 1280;
 const int _Height_ = 720;
 void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInfoComponent& Einfo);
 
-void EntityExplorer(ECS::Scene* scene)
+void EntityExplorer(Assets::Scene* scene)
 {
 	//ImGui::ShowStackToolWindow();
 	ImGui::Begin("Entity Explorer");

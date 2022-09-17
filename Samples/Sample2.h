@@ -51,7 +51,7 @@ class Sample2 : public Client
 	Assets::Image HDR_Cube;
 
 	Rendering::Skybox Skybox;
-	ECS::Scene Scene;
+	Assets::Scene Scene;
 
 	ECS::Entity EShaderBall;
 	ECS::Entity ESphere;
@@ -240,6 +240,8 @@ public:
 
 	void Load()
 	{
+		mSceneManager->CreateScene(&Scene, true);
+
 		mAssetManager->Initialize();
 
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
@@ -250,7 +252,7 @@ public:
 		InitRenderer();
 		ECS::Transform sphere;
 		sphere.SetScale(Math::Vector3(5.0f));
-		ESphere = Scene.GetFactory().CreateSphere(&RustedIron, sphere);
+		ESphere = Scene.CreateSphere(&RustedIron, sphere);
 
 		SetupAssets();
 
@@ -338,7 +340,7 @@ public:
 
 	void Render(float dt) override
 	{
-		Scene.Update(dt);
+		mSceneManager->Update(dt);
 		{	
 
 			using namespace Graphics;

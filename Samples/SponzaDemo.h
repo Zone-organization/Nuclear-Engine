@@ -43,7 +43,7 @@ class SponzaDemo : public Client
 	Graphics::Texture HDREnv;
 	Assets::Image HDR_Cube;
 
-	ECS::Scene Scene;
+	Assets::Scene Scene;
 
 	ECS::Entity ESponza;
 
@@ -199,6 +199,8 @@ public:
 
 	void Load()
 	{
+		mSceneManager->CreateScene(&Scene, true);
+
 		mAssetManager->Initialize();
 
 		EController = Scene.CreateEntity();
@@ -292,7 +294,7 @@ public:
 
 		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 
-		Scene.Update(dt);
+		mSceneManager->Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample3: Sponza Rendering");

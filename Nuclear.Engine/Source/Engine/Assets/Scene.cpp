@@ -24,11 +24,12 @@ namespace Nuclear
 		{
 		//	Entities.reset();
 		}
+
 		ECS::Entity Scene::CreateEntity()
 		{
 			ECS::Entity result;
-		//	result.entity = Registry.create();
-		//	result.parent = &Registry;
+			result.entity = GetRegistry().create();
+			result.parent = &GetRegistry();
 			auto& einfo = result.AddComponent<Components::EntityInfoComponent>();
 			einfo.mOwnerEntity = result;
 
@@ -37,8 +38,8 @@ namespace Nuclear
 		ECS::Entity Scene::CreateEntity(const std::string& name, const ECS::Transform& transform)
 		{
 			ECS::Entity result;
-		//	result.entity = Registry.create();
-		//	result.parent = &Registry;
+			result.entity = GetRegistry().create();
+			result.parent = &GetRegistry();
 			auto& einfo = result.AddComponent<Components::EntityInfoComponent>(transform, name);
 			einfo.mOwnerEntity = result;
 
@@ -117,11 +118,6 @@ namespace Nuclear
 
 			return Result;
 		}
-
-		//void Scene::Update(ECS::TimeDelta dt)
-		//{
-		//	Systems.Update_All(dt);
-		//}
 
 		ECS::SystemManager& Scene::GetSystemManager()
 		{

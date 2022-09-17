@@ -22,7 +22,6 @@ namespace Nuclear::Editor {
 		Project* pActiveProject;
 		NuclearEditor* mEditorInstance;
 
-		ECS::Scene* mScene;
 		ECS::Entity mSelectedEntity;
 
 		void RenderEntityExplorer();

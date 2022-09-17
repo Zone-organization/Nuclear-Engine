@@ -12,6 +12,7 @@ public:
 
 	//Asset Manager (Loader) for all samples
 	Managers::AssetManager AssetLoader;
+	Managers::SceneManager SceneMgr;
 
 	void OnWindowResize(int width, int height) override
 	{
@@ -28,6 +29,8 @@ public:
 		Engine::GetInstance()->EndClient();
 
 		sample->SetDefaultAssetManager(&AssetLoader);
+		sample->SetDefaultSceneManager(&SceneMgr);
+
 		Engine::GetInstance()->LoadClient(sample);
 		Engine::GetInstance()->EndClient();
 	}

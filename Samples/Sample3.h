@@ -27,7 +27,7 @@ class Sample3 : public Client
 	Rendering::DefferedRenderingPipeline PBRDefferedPipeline;
 
 
-	ECS::Scene Scene;
+	Assets::Scene Scene;
 
 	ECS::Entity EController;
 	ECS::Entity ELights;
@@ -127,6 +127,8 @@ public:
 
 	void Load()
 	{
+		mSceneManager->CreateScene(&Scene, true);
+
 		mAssetManager->Initialize();
 
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
@@ -154,7 +156,7 @@ public:
 
 				ECS::Transform ESphere(position, Math::Vector3(2.0f));
 
-				auto sphere = Scene.GetFactory().CreateSphere(&SphereMaterial, ESphere);
+				auto sphere = Scene.CreateSphere(&SphereMaterial, ESphere);
 				position.z += 5.0f;
 
 				//ECS::Transform EBox(position, Math::Vector3(1.0f));
@@ -163,14 +165,14 @@ public:
 			}
 		}
 
-		Scene.GetFactory().CreatePlane(&PlaneMaterial);
+		Scene.CreatePlane(&PlaneMaterial);
 		for (auto it : boxes)
 		{
 			it.GetComponent<Components::RigidBodyComponent>()->isKinematic = true;
 		}
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
-		Scene.Save();
+		//Scene.Save();
 		//Camera.MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
 		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
@@ -240,7 +242,7 @@ public:
 
 	void Render(float dt) override
 	{
-		Scene.Update(dt);
+		mSceneManager->Update(dt);
 
 		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 

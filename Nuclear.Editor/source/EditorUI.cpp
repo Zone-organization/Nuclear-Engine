@@ -41,13 +41,10 @@ namespace Nuclear::Editor
 
 		RenderMainMenuBar();
 
-		if (mScene)
-		{
-			RenderEntityExplorer();
-		}
 		if (pActiveProject)
 		{
 			pActiveProject->ShowProjectFolderView();
+			RenderEntityExplorer();
 		}
 	}
 
@@ -60,21 +57,18 @@ namespace Nuclear::Editor
 			{
 				if (ImGui::BeginMenu("New"))
 				{
-					if (pActiveProject != nullptr)
+					if (ImGui::MenuItem("Project"))
 					{
-						if (ImGui::MenuItem("Scene"))
-						{
-							//auto sceneptr = pActiveProject->AddNewScene();
-							//if (mScene == nullptr) { mScene = sceneptr; }
-						}
-						ImGui::Separator();
+						//TODO: Multiple Projects
+						pActiveProject = &mEditorInstance->mActiveProject;
 					}
 
-					if(ImGui::MenuItem("Project"))
+					if (ImGui::MenuItem("Scene", NULL, false, (pActiveProject == nullptr) ? false : true))
 					{
-						pActiveProject = &mEditorInstance->mActiveProject;
-						mScene = pActiveProject->GetActiveScene();
+						pActiveProject->AddNewScene();
 					}
+					ImGui::Separator();
+
 					ImGui::EndMenu();
 				}
 
@@ -96,45 +90,51 @@ namespace Nuclear::Editor
 
 	void EditorUI::RenderEntityExplorer()
 	{
-		ImGui::Begin("Entity Explorer");
-		if (ImGui::TreeNode(mScene->GetName().c_str()))
-		{
-			auto view = mScene->GetRegistry().view<Components::EntityInfoComponent>();
+		auto scene = pActiveProject->GetActiveScene();
 
-			for (auto entity : view)
+		if (scene)
+		{
+			ImGui::Begin("Entity Explorer");
+
+			if (ImGui::TreeNode(scene->GetName().c_str()))
 			{
-				auto& Einfo = view.get<Components::EntityInfoComponent>(entity);
-				auto index = (Uint32)entity;
+				auto view = scene->GetRegistry().view<Components::EntityInfoComponent>();
 
-				ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-
-				static int selectedindex = 0;
-
-				if (selectedindex == index)
+				for (auto entity : view)
 				{
-					node_flags |= ImGuiTreeNodeFlags_Selected;
-					mEditor.Render(entity, mScene->GetRegistry(), Einfo);
+					auto& Einfo = view.get<Components::EntityInfoComponent>(entity);
+					auto index = (Uint32)entity;
+
+					ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+					static int selectedindex = 0;
+
+					if (selectedindex == index)
+					{
+						node_flags |= ImGuiTreeNodeFlags_Selected;
+						mEditor.Render(entity, scene->GetRegistry(), Einfo);
+					}
+
+					ImGui::PushID(index);
+
+
+					ImGui::TreeNodeEx(Einfo.mName.c_str(), node_flags);
+					if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+					{
+						selectedindex = index;
+					}
+
+					ImGui::PopID();
 				}
-
-				ImGui::PushID(index);
-
-
-				ImGui::TreeNodeEx(Einfo.mName.c_str(), node_flags);
-				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-				{
-					selectedindex = index;
-				}
-
-				ImGui::PopID();
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
-		}
 
-		if(ImGui::Button("Add Entity"))
-		{
-			auto entity = mScene->CreateEntity();	
+			if (ImGui::Button("Add Entity"))
+			{
+				auto entity = scene->CreateEntity();
+			}
+			ImGui::End();
 		}
-		ImGui::End();
 	}
 
 }
