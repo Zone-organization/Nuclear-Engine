@@ -11,7 +11,12 @@ namespace Nuclear::Editor
 	public:
 		Project();
 
+		void Initalize();
+
 		Assets::Scene* GetActiveScene();
+
+		Assets::Material* GetDefaultMaterial();
+		void SetDefaultMaterial(Assets::Material* mat);
 
 		void ShowProjectFolderView();
 
@@ -22,6 +27,7 @@ namespace Nuclear::Editor
 		Managers::AssetManager AssetLoader;
 		Managers::SceneManager SceneMgr;
 
+		Assets::Material* mDefaultMaterial = nullptr;
 		std::filesystem::path mPath;
 	};
 }

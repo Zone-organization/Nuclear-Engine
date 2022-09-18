@@ -62,12 +62,11 @@ namespace Nuclear::Editor
 						//TODO: Multiple Projects
 						pActiveProject = &mEditorInstance->mActiveProject;
 					}
-
+					ImGui::Separator();
 					if (ImGui::MenuItem("Scene", NULL, false, (pActiveProject == nullptr) ? false : true))
 					{
 						pActiveProject->AddNewScene();
 					}
-					ImGui::Separator();
 
 					ImGui::EndMenu();
 				}
@@ -84,6 +83,39 @@ namespace Nuclear::Editor
 				if (ImGui::MenuItem("Paste", "CTRL+V")) {}
 				ImGui::EndMenu();
 			}
+
+			bool addmenuacive = false;
+			if (pActiveProject)
+			{
+				if (pActiveProject->GetActiveScene())
+				{
+					addmenuacive = true;
+				}
+			}
+			if (ImGui::BeginMenu("Add", addmenuacive))
+			{
+				if (ImGui::MenuItem("Empty Entity"))
+				{
+					pActiveProject->GetActiveScene()->CreateEntity();
+				}
+				if (ImGui::MenuItem("Box")) 
+				{
+					pActiveProject->GetActiveScene()->CreateBox(pActiveProject->GetDefaultMaterial());
+				}
+
+				if (ImGui::MenuItem("Sphere"))
+				{
+					pActiveProject->GetActiveScene()->CreateSphere(pActiveProject->GetDefaultMaterial());
+				}
+
+				if (ImGui::MenuItem("Plane"))
+				{
+					pActiveProject->GetActiveScene()->CreatePlane(pActiveProject->GetDefaultMaterial());
+				}
+
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMainMenuBar();
 		}
 	}
@@ -131,7 +163,7 @@ namespace Nuclear::Editor
 
 			if (ImGui::Button("Add Entity"))
 			{
-				auto entity = scene->CreateEntity();
+				scene->CreateEntity();
 			}
 			ImGui::End();
 		}

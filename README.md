@@ -13,7 +13,6 @@
 	- Clean and document Samples.
 	- Replace GLFW with SDL or SFML
 	- GUI (basic widgets)
-	- add DebugSystem
 	
 ## Getting started
 

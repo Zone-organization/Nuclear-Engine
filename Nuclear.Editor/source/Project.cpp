@@ -7,10 +7,23 @@ namespace Nuclear::Editor
         //TODO : create folder for the project
         mPath = std::filesystem::absolute(std::filesystem::current_path());
     }
+	void Project::Initalize()
+	{
+		//TODO
+	//	mDefaultMaterial = &AssetLoader.DefaultGreyTex;
+	}
 	Assets::Scene* Project::GetActiveScene()
     {
         return SceneMgr.GetActiveScene();
     }
+	Assets::Material* Project::GetDefaultMaterial()
+	{
+		return mDefaultMaterial;
+	}
+	void Project::SetDefaultMaterial(Assets::Material* mat)
+	{
+		mDefaultMaterial = mat;
+	}
     void Project::ShowProjectFolderView()
     {
 		if (ImGui::Begin("FilePicker"))
