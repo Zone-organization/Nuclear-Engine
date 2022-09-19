@@ -12,7 +12,7 @@ namespace Nuclear::Editor {
 		EditorUI(NuclearEditor* editor);
 
 		void SetProject(Project* project);
-
+		void NewProjectWindow();
 		void Render();
 
 	protected:
@@ -25,6 +25,6 @@ namespace Nuclear::Editor {
 		ECS::Entity mSelectedEntity;
 
 		void RenderEntityExplorer();
-
+		bool mNewPrjWindowOpen = false;
 	};
 }

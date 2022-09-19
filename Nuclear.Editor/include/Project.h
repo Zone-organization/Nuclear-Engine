@@ -6,12 +6,19 @@
 namespace Nuclear::Editor
 {
 
+	struct ProjectInfo
+	{
+		std::string mProjectName;
+	};
+
 	class Project
 	{
 	public:
 		Project();
 
-		void Initalize();
+		void Initalize(const ProjectInfo& info);
+
+		ProjectInfo GetProjectInfo() const;
 
 		Assets::Scene* GetActiveScene();
 
@@ -28,6 +35,7 @@ namespace Nuclear::Editor
 		Managers::SceneManager SceneMgr;
 
 		Assets::Material* mDefaultMaterial = nullptr;
+		ProjectInfo mInfo;
 		std::filesystem::path mPath;
 	};
 }

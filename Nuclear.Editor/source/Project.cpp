@@ -7,10 +7,15 @@ namespace Nuclear::Editor
         //TODO : create folder for the project
         mPath = std::filesystem::absolute(std::filesystem::current_path());
     }
-	void Project::Initalize()
+	void Project::Initalize(const ProjectInfo& info)
 	{
+		mInfo = info;
 		//TODO
 	//	mDefaultMaterial = &AssetLoader.DefaultGreyTex;
+	}
+	ProjectInfo Project::GetProjectInfo() const
+	{
+		return mInfo;
 	}
 	Assets::Scene* Project::GetActiveScene()
     {

@@ -7,7 +7,20 @@ using namespace entt::literals;
 
 namespace Nuclear::Editor 
 {
-
+	// Helper to display a little (?) mark which shows a tooltip when hovered.
+	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.md)
+	static void HelpMarker(const char* desc)
+	{
+		ImGui::TextDisabled("(?)");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			ImGui::TextUnformatted(desc);
+			ImGui::PopTextWrapPos();
+			ImGui::EndTooltip();
+		}
+	}
 	EditorUI::EditorUI(NuclearEditor* editor)
 	{
 		mEditorInstance = editor;
@@ -16,6 +29,99 @@ namespace Nuclear::Editor
 	void EditorUI::SetProject(Project* project)
 	{
 		pActiveProject = project;
+	}
+	void EditorUI::NewProjectWindow()
+	{
+		if (ImGui::BeginPopupModal("New Project", &mNewPrjWindowOpen))
+		{
+			std::vector<std::string> ProjectTemplates;
+			ProjectTemplates.push_back("Empty 2D project");
+			ProjectTemplates.push_back("Empty 3D/2D project");
+
+			static bool firstpage = true;
+			static int selected = 0;
+
+			//Project Info
+			static char ProjectName[128] = "NewProject";
+
+
+			if (firstpage)
+			{
+				// Left
+				{
+					ImGui::BeginChild("left pane", ImVec2(150, 0), true);
+
+					ImGui::Text("Project Templates:");
+					ImGui::Separator();
+					for (int i = 0; i < ProjectTemplates.size(); i++)
+					{
+						if (ImGui::Selectable(ProjectTemplates.at(i).c_str(), selected == i))
+						{
+							selected = i;
+						}
+					}
+					ImGui::EndChild();
+				}
+				ImGui::SameLine();
+
+				// Right
+				{
+					ImGui::BeginGroup();
+					ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
+					ImGui::Text(ProjectTemplates.at(selected).c_str());
+					ImGui::Separator();
+					if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
+					{
+						if (ImGui::BeginTabItem("Description"))
+						{
+							ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
+							ImGui::EndTabItem();
+						}
+						if (ImGui::BeginTabItem("Details"))
+						{
+							ImGui::Text("ID: 0123456789");
+							ImGui::EndTabItem();
+						}
+						ImGui::EndTabBar();
+					}
+					ImGui::EndChild();
+					if (ImGui::Button("Cancel")) { mNewPrjWindowOpen = false; ImGui::CloseCurrentPopup(); }
+					ImGui::SameLine();
+					if (ImGui::Button("Next")) { firstpage = false; }
+					ImGui::EndGroup();
+				}
+			}
+			else
+			{
+				ImGui::Text("Project Name");
+				ImGui::InputText("##newprjlbl", ProjectName, IM_ARRAYSIZE(ProjectName));
+				ImGui::Separator();
+
+				if (ImGui::Button("Back")) { firstpage = true; }
+				ImGui::SameLine();
+				if (ImGui::Button("Create"))
+				{
+					pActiveProject = &mEditorInstance->mActiveProject;
+					ProjectInfo info;
+					info.mProjectName = ProjectName;
+					pActiveProject->Initalize(info);
+
+
+					//Finish close window
+					mNewPrjWindowOpen = false;
+					ImGui::CloseCurrentPopup();
+				}
+
+				//LOCATION MISSING
+			}
+
+			ImGui::EndPopup();
+		}
+
+		//if (!pActiveProject)
+		//{
+		//	pActiveProject = &mEditorInstance->mActiveProject;
+		//}
 	}
 	void EditorUI::Render()
 	{
@@ -40,6 +146,13 @@ namespace Nuclear::Editor
 		}
 
 		RenderMainMenuBar();
+		if (mNewPrjWindowOpen)
+		{
+			ImGui::OpenPopup("New Project");
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+			NewProjectWindow();
+		}
 
 		if (pActiveProject)
 		{
@@ -60,7 +173,9 @@ namespace Nuclear::Editor
 					if (ImGui::MenuItem("Project"))
 					{
 						//TODO: Multiple Projects
-						pActiveProject = &mEditorInstance->mActiveProject;
+						mNewPrjWindowOpen = true;
+						//ImGui::OpenPopup("NewProject");
+
 					}
 					ImGui::Separator();
 					if (ImGui::MenuItem("Scene", NULL, false, (pActiveProject == nullptr) ? false : true))
