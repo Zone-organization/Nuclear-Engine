@@ -1,4 +1,5 @@
 #include "Project.h"
+#include "Core\Window.h"
 
 namespace Nuclear::Editor
 {
@@ -10,6 +11,10 @@ namespace Nuclear::Editor
 	void Project::Initalize(const ProjectInfo& info)
 	{
 		mInfo = info;
+
+
+		//Engine::GetInstance()->GetMainWindow()->SetTitle("Nuclear Engine - " + mInfo.mProjectName);
+
 		//TODO
 	//	mDefaultMaterial = &AssetLoader.DefaultGreyTex;
 	}
@@ -139,6 +144,15 @@ namespace Nuclear::Editor
 		//TODO
 		result->SetName("UnNamed Scene");
 		SceneMgr.CreateScene(result, (SceneMgr.GetActiveScene() == nullptr) ? true : false);
+
+		/*auto EController = result->CreateEntity();
+		EController.AddComponent<Components::CameraComponent>(&Camera);
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+
+		result->GetSystemManager().Add<Systems::DebugSystem>();
+		result->GetSystemManager().Add<Systems::RenderSystem>();
+		result->GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		result->GetSystemManager().Add<Systems::LightingSystem>();*/
 
 		return result;
 	}

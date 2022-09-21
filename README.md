@@ -2,11 +2,14 @@
 
 ## Current To-dos 
   - W.I.P:
-	- Basic Editor support (Nuclear Editor).
     - Basic Shadow mapping for all 3 light types.
-    - Text rendering
+	- Basic Editor support (Nuclear Editor).
 	
+  - On-Hold:
+    - Text rendering
+
   - TODO:
+    - Finish Audio implementation
 	- Motion blur
 	- SSAO
 	- FIX BRDF generation in IBL Pipeline

@@ -4,7 +4,7 @@
 
 #pragma comment(lib,"Nuclear.Engine.lib")
 #pragma comment(lib,"Nuclear.Core.lib")
-#pragma comment(lib,"glfw3.lib")
+//#pragma comment(lib,"glfw3.lib")
 
 int main()
 {

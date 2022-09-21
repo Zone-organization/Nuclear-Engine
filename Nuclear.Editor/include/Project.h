@@ -37,5 +37,6 @@ namespace Nuclear::Editor
 		Assets::Material* mDefaultMaterial = nullptr;
 		ProjectInfo mInfo;
 		std::filesystem::path mPath;
+		Core::Parsers::XMLDocument mProjectXMLFile;
 	};
 }
