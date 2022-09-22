@@ -27,7 +27,7 @@ namespace Nuclear
 			ShadowMapDesc.Height = mDesc.mResolution;
 			ShadowMapDesc.MipLevels = 1;
 			ShadowMapDesc.SampleCount = 1;
-			ShadowMapDesc.Format = TEX_FORMAT_R24G8_TYPELESS;
+			ShadowMapDesc.Format = TEX_FORMAT_D32_FLOAT;
 			ShadowMapDesc.Usage = USAGE_DEFAULT;
 			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
 
@@ -58,12 +58,12 @@ namespace Nuclear
 
 			{
 				TextureViewDesc SRVDesc{ "ShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, dimension };
-				SRVDesc.Format = TEX_FORMAT_R24_UNORM_X8_TYPELESS;
+				SRVDesc.Format = TEX_FORMAT_R32_FLOAT;
 				ShadowMapTex->CreateView(SRVDesc, &mSRV);
 			}
 			{
 				TextureViewDesc DSVDesc{ "ShadowMap_DSV", TEXTURE_VIEW_DEPTH_STENCIL, dimension };
-				DSVDesc.Format = TEX_FORMAT_D24_UNORM_S8_UINT;
+				DSVDesc.Format = TEX_FORMAT_D32_FLOAT;
 				ShadowMapTex->CreateView(DSVDesc, &mRTV);
 			}
 			mInitialized = true;

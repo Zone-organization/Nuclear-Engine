@@ -7,7 +7,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		class ShadowManager;
+		class ShadowPass;
 	}
 	namespace Systems
 	{
@@ -37,7 +37,7 @@ namespace Nuclear
 			void SetInternalPosition(Math::Vector3 pos);
 
 		protected:
-			friend class Rendering::ShadowManager;
+			friend class Rendering::ShadowPass;
 			friend class Systems::LightingSystem;
 
 			Math::Matrix4 LightSpace;

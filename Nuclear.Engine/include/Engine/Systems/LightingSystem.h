@@ -5,7 +5,7 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Rendering\ShadingModel.h>
-#include <Engine\Rendering\ShadowManager.h>
+#include <Engine\Rendering\RenderPass\ShadowPass.h>
 #include <vector>
 #include <Engine\ECS\System.h>
 
@@ -16,10 +16,12 @@ namespace Nuclear
 		class CameraSystem;
 		struct LightingSystemDesc
 		{
-			Rendering::ShadowManager* ShadowManager = nullptr;
+			Rendering::ShadowPass* ShadowPass = nullptr;
 
 
 		};
+
+		//Also handles shadow mapping
 		class NEAPI LightingSystem : public ECS::System<LightingSystem>
 		{
 		public:
@@ -37,7 +39,7 @@ namespace Nuclear
 			//Debug Only
 			bool VisualizePointLightsPositions = false;
 
-			Rendering::ShadowManager* GetShadowManager();
+			Rendering::ShadowPass* GetShadowPass();
 
 			IBuffer* GetLightCB();
 
@@ -62,7 +64,7 @@ namespace Nuclear
 			std::vector<Components::PointLightComponent*> PointLights;
 			std::vector<Components::SpotLightComponent*> SpotLights;
 
-			Rendering::ShadowManager* pShadowManager = nullptr;
+			Rendering::ShadowPass* pShadowPass = nullptr;
 		};
 
 	}

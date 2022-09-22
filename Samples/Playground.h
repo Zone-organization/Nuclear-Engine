@@ -23,7 +23,7 @@ class Playground : public Client
 	Rendering::BlinnPhong BlinnphongRP;
 	Rendering::ForwardRenderingPipeline FwdPipeline;
 
-	Rendering::ShadowManager shadowmanager;
+	Rendering::ShadowPass ShadowPass;
 
 	Assets::Scene Scene;
 
@@ -81,10 +81,10 @@ public:
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
-		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(0.0, 0.0, 0.0));
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
+		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(-2.0f, 4.0f, -1.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
 
@@ -112,7 +112,7 @@ public:
 
 		mAssetManager->Initialize();
 		Systems::LightingSystemDesc desc;
-		desc.ShadowManager = &shadowmanager;
+		desc.ShadowPass = &ShadowPass;
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>(desc);
 		SetupEntities();

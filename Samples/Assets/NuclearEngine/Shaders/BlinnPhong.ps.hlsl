@@ -141,7 +141,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
 
 #ifdef NE_MAX_DIR_CASTERS
-    shadow = DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, norm, (- 2.0f, 4.0f, -1.0f));
+    shadow = DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, norm, DirLights[0].Direction.xyz);
 #endif
 
 #ifdef NE_MAX_SPOT_CASTERS

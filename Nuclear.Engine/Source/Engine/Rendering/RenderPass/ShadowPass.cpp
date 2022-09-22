@@ -1,4 +1,4 @@
-#include "Engine\Rendering\ShadowManager.h"
+#include "Engine\Rendering\RenderPass\ShadowPass.h"
 #include <Core\FileSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
@@ -17,12 +17,12 @@ namespace Nuclear
 			Math::Matrix4 LightSpace;
 		};
 
-		ShadowManager::ShadowManager(const ShadowManagerDesc& desc)
+		ShadowPass::ShadowPass(const ShadowPassDesc& desc)
 		{
 			mDesc = desc;
 		}
 
-		void ShadowManager::Initialize()
+		void ShadowPass::Initialize()
 		{
 			InitDirLightSimpleShadowPassPSO();
 			InitSpotLightShadowPSO();
@@ -37,7 +37,7 @@ namespace Nuclear
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pVSShadowCasterBuffer);
 		}
 
-		void ShadowManager::DirLightShadowDepthPass(Components::DirLightComponent& light, Assets::Scene* scene)
+		void ShadowPass::DirLightShadowDepthPass(Components::DirLightComponent& light, Assets::Scene* scene)
 		{
 			//if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
 			{
@@ -71,7 +71,7 @@ namespace Nuclear
 			}
 		}
 
-		void ShadowManager::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene)
+		void ShadowPass::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene)
 		{
 			//float near_plane = 1.0f, far_plane = 100.f;
 			//auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
@@ -120,33 +120,34 @@ namespace Nuclear
 			}
 		}
 
-		void ShadowManager::PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene)
+		void ShadowPass::PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene)
 		{
 		}
 
-		ShadowManagerDesc ShadowManager::GetDesc() const
+		ShadowPassDesc ShadowPass::GetDesc() const
 		{
 			return mDesc;
 		}
 
-		IBuffer* ShadowManager::GetShadowCastersCB()
+		IBuffer* ShadowPass::GetShadowCastersCB()
 		{
 			return pVSShadowCasterBuffer;
 		}
 
-		void ShadowManager::InitDirLightSimpleShadowPassPSO()
+		void ShadowPass::InitDirLightSimpleShadowPassPSO()
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
 			PSOCreateInfo.PSODesc.Name = "mDirShadowMapDepthPSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 0;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_R24G8_TYPELESS;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_R32_FLOAT;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
+			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.StencilEnable = false;
 			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
 			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
 			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
@@ -215,7 +216,7 @@ namespace Nuclear
 			mDirShadowMapDepthPSO->CreateShaderResourceBinding(mDirShadowMapDepthSRB.RawDblPtr(), true);
 		}
 
-		void ShadowManager::InitSpotLightShadowPSO()
+		void ShadowPass::InitSpotLightShadowPSO()
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
@@ -295,7 +296,7 @@ namespace Nuclear
 
 			mSpotShadowMapDepthPSO->CreateShaderResourceBinding(mSpotShadowMapDepthSRB.RawDblPtr(), true);
 		}
-		void ShadowManager::InitPointLightShadowPassPSO()
+		void ShadowPass::InitPointLightShadowPassPSO()
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
@@ -403,7 +404,7 @@ namespace Nuclear
 
 			mPointShadowPassPSO->CreateShaderResourceBinding(mPointShadowPassSRB.RawDblPtr(), true);
 		}
-		void ShadowManager::RenderMeshForDepthPass(Assets::Mesh* mesh)
+		void ShadowPass::RenderMeshForDepthPass(Assets::Mesh* mesh)
 		{
 			Uint64 offset = 0;
 

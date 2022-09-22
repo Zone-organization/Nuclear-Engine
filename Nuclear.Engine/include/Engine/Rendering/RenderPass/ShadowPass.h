@@ -20,7 +20,7 @@ namespace Nuclear
 			TEXTURE_FORMAT mFormat = TEX_FORMAT_D32_FLOAT;
 		};
 
-		struct ShadowManagerDesc
+		struct ShadowPassDesc
 		{
 			Uint32 MAX_DIR_CASTERS = 1;
 			Uint32 MAX_SPOT_CASTERS = 0;
@@ -33,10 +33,10 @@ namespace Nuclear
 			ShadowMapInfo mPointLightShadowMapInfo;
 
 		};
-		class NEAPI ShadowManager
+		class NEAPI ShadowPass
 		{
 		public:
-			ShadowManager(const ShadowManagerDesc& desc = ShadowManagerDesc());
+			ShadowPass(const ShadowPassDesc& desc = ShadowPassDesc());
 
 			void Initialize();
 
@@ -45,11 +45,11 @@ namespace Nuclear
 			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene);
 			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene);
 
-			ShadowManagerDesc GetDesc() const;
+			ShadowPassDesc GetDesc() const;
 
 			IBuffer* GetShadowCastersCB();
 		protected:
-			ShadowManagerDesc mDesc;
+			ShadowPassDesc mDesc;
 			RefCntAutoPtr<IBuffer> pVSShadowCasterBuffer;
 
 			//DirLight (simple)

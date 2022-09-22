@@ -4,7 +4,8 @@
   - W.I.P:
     - Basic Shadow mapping for all 3 light types.
 	- Basic Editor support (Nuclear Editor).
-	
+    - Refactor RenderSystem to support multi-shader rendering
+
   - On-Hold:
     - Text rendering
 

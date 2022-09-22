@@ -121,11 +121,11 @@ namespace Nuclear
 			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(mLightingSystemPtr->GetPointLightsNum());
 			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
 			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystemPtr->GetLightCB();
-			if (mLightingSystemPtr->GetShadowManager())
+			if (mLightingSystemPtr->GetShadowPass())
 			{
-				bakedesc.mShadingModelDesc.Max_DirLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowManager()->GetDesc().MAX_DIR_CASTERS);
-				bakedesc.mShadingModelDesc.Max_SpotLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowManager()->GetDesc().MAX_SPOT_CASTERS);
-				bakedesc.mShadingModelDesc.ShadowCastersBufferPtr = mLightingSystemPtr->GetShadowManager()->GetShadowCastersCB();
+				bakedesc.mShadingModelDesc.Max_DirLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowPass()->GetDesc().MAX_DIR_CASTERS);
+				bakedesc.mShadingModelDesc.Max_SpotLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowPass()->GetDesc().MAX_SPOT_CASTERS);
+				bakedesc.mShadingModelDesc.ShadowCastersBufferPtr = mLightingSystemPtr->GetShadowPass()->GetShadowCastersCB();
 			}
 			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
 
