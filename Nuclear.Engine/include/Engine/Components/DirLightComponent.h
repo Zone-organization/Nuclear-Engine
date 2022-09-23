@@ -27,6 +27,9 @@ namespace Nuclear
 			Math::Vector3 GetDirection();
 			void SetDirection(Math::Vector3 dir);
 
+			float GetIntensity();
+			void SetIntensity(float intensity);
+
 			bool mCastShadows = false;
 			Internal::Shader_DirLight_Struct& GetInternalData();
 

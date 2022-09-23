@@ -41,7 +41,6 @@ namespace Nuclear
 			void Initialize();
 
 			void DirLightShadowDepthPass(Components::DirLightComponent& dirlight, Assets::Scene* scene);
-
 			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene);
 			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene);
 
@@ -70,7 +69,6 @@ namespace Nuclear
 			RefCntAutoPtr<IBuffer> pPointShadowPS_CB;
 
 			void InitDirLightSimpleShadowPassPSO();
-
 			void InitSpotLightShadowPSO();
 			void InitPointLightShadowPassPSO();
 		

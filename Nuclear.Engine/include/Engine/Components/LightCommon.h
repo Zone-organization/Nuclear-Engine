@@ -36,7 +36,7 @@ namespace Nuclear
 			struct NEAPI Shader_DirLight_Struct
 			{
 				Math::Vector4 Direction;
-				Math::Vector4 Color;
+				Math::Vector4 Color_Intensity;
 
 			};
 		}

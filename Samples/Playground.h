@@ -21,7 +21,9 @@ class Playground : public Client
 	Graphics::Camera Camera;
 
 	Rendering::BlinnPhong BlinnphongRP;
-	Rendering::ForwardRenderingPipeline FwdPipeline;
+	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
+	Rendering::PBR PBR;
+	Rendering::ForwardRenderingPipeline PBRPipeline;
 
 	Rendering::ShadowPass ShadowPass;
 
@@ -50,20 +52,29 @@ public:
 		//desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
-		Assets::TextureSet PBRSphereSet;
-		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
+		Assets::TextureSet PBRRustedIron;
+		PBRRustedIron.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRRustedIron.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRRustedIron.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRRustedIron.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRRustedIron.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
 
-		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
+		SphereMaterial.mPixelShaderTextures.push_back(PBRRustedIron);
+		SphereMaterial.SetName("RustedIron Material");
+
+		Assets::TextureSet PBRPlastic;
+		PBRPlastic.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRPlastic.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRPlastic.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRPlastic.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRPlastic.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+
+		PlaneMaterial.mPixelShaderTextures.push_back(PBRPlastic);
+		PlaneMaterial.SetName("Plastic Material");
+
 		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
-
-		Assets::TextureSet PBRPlaneSet;
-		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
-
-		PlaneMaterial.mPixelShaderTextures.push_back(PBRPlaneSet);
-		PlaneMaterial.SetName("Plane Material");
 		Renderer->CreateMaterialForAllPipelines(&PlaneMaterial);
 
-		PBRSphereSet.mData.clear();
 		Importers::FontLoadingDesc fdesc;
 		ArialFont = mAssetManager->Import("Assets/Common/Fonts/arial.ttf", fdesc);
 	}
@@ -75,18 +86,19 @@ public:
 
 		//Assign Components
 		ELights.AddComponent<Components::DirLightComponent>().mCastShadows = true;
-		ELights.AddComponent<Components::PointLightComponent>();
+	//	ELights.AddComponent<Components::PointLightComponent>();
 		//EController.AddComponent<Components::SpotLightComponent>();
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 
-		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(0.0, 0.0, 0.0));
-		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+		//ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(1.f));
 
 		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(-2.0f, 4.0f, -1.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
+	//	ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		//ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
 
 	}
 	void InitRenderer()
@@ -96,10 +108,15 @@ public:
 		Rendering::ShadingModelInitInfo info;
 		info.ShadowingEnabled = true;
 		BlinnphongRP.Initialize(info);
+		
+		BlinnPhongPipeline.Initialize(&BlinnphongRP, &Camera);
 
-		FwdPipeline.Initialize(&BlinnphongRP, &Camera);
+		PBRPipeline.Initialize(&PBR, &Camera);
 
-		Renderer->AddRenderingPipeline(&FwdPipeline);
+		//FwdPipeline.Initialize(&BlinnphongRP, &Camera);
+
+		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
+		Renderer->AddRenderingPipeline(&PBRPipeline);
 
 		Renderer->Bake(_Width_, _Height_);
 	}
@@ -233,6 +250,16 @@ public:
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
+			static int e = 3;
+			ImGui::Text("Rendering Pipelines:");
+			ImGui::RadioButton("BlinnPhong", &e, 0);
+			ImGui::RadioButton("PBR", &e, 1);
+
+			//Change Rendering Pipeline
+			if (e == 0)
+				Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
+			else if (e == 1)
+				Renderer->SetActiveRenderingPipeline(PBRPipeline.GetID());
 
 			if (ImGui::TreeNode("Pipeline Effects"))
 			{

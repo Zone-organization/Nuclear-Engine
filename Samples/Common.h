@@ -151,6 +151,12 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						light->SetColor(color);
 					}
 
+					float f = light->GetIntensity();
+					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.4f", ImGuiSliderFlags_None))
+					{
+						light->SetIntensity(f);
+					}
+
 					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
 					if (ImGui::DragFloat3("Direction", (float*)&lighdir))
 					{

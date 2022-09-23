@@ -20,7 +20,7 @@ public:
 	}
 	SampleSelector()
 	{
-	//	Instance = this;
+		//	Instance = this;
 	}
 	void StartSample(Client* sample)
 	{
@@ -82,8 +82,8 @@ public:
 
 		//if (ImGui::Button("Playground"))
 		//{
-			Playground demo;
-			return StartSample(&demo);
+		Playground demo;
+		return StartSample(&demo);
 		//}
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

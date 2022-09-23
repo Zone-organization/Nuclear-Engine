@@ -158,13 +158,13 @@ public:
 		EController = Scene.CreateEntity("Controller");
 
 		//Assign Components
-		ELights.AddComponent<Components::PointLightComponent>();
+		//ELights.AddComponent<Components::PointLightComponent>();
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
+	//	ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+	//	ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
 
 	}
 	void InitIBL()

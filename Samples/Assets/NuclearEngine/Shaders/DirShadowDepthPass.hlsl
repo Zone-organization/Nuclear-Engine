@@ -17,14 +17,10 @@ cbuffer NEStatic_LightInfo : register(b0)
 };
 
 float4 DirShadowMapDepthVS(VertexInputType input) : SV_POSITION
-{
-     // float4 pos;
-//= mul(Model, float4(input.Position.xyz, 1.f));
-    //  pos = mul(LightSpace, pos);
+{ 
+     //TODO: Support animation
 
-//float4 pos = mul(Model, LightSpace);
-    float4  pos = mul(mul(LightSpace, Model), float4(input.Position.xyz, 1.f));
-
+      float4 pos = mul(mul(LightSpace, Model), float4(input.Position.xyz, 1.f));
 
       return pos;
 }

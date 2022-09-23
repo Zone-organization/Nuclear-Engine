@@ -2,7 +2,7 @@
 struct DirLight
 {
 	float4 Direction;
-	float4 Color;
+	float4 Color_Intensity;
 };
 struct PointLight
 {

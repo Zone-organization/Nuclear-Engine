@@ -237,7 +237,7 @@ namespace Nuclear
 			for (size_t i = 0; i < DirLights.size(); i++)
 			{
 				LightsBuffer.push_back(DirLights[i]->GetInternalData().Direction);
-				LightsBuffer.push_back(DirLights[i]->GetInternalData().Color);
+				LightsBuffer.push_back(DirLights[i]->GetInternalData().Color_Intensity);
 			}
 			for (size_t i = 0; i < PointLights.size(); i++)
 			{

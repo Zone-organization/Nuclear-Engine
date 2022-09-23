@@ -22,6 +22,20 @@ namespace Nuclear
 			bool BakePipelines = true;
 		};
 
+		//RenderPass WIP
+		struct NEAPI DrawCommand
+		{
+			DrawCommand(Assets::Mesh* mesh, const Math::Matrix4& transform)
+				: mMeshPtr(mesh), mTransform(transform) {}
+
+			const Math::Matrix4& GetTransform() const { return mTransform; }
+			Assets::Mesh* GetMeshComponent() const { return mMeshPtr; }
+		private:
+			Assets::Mesh* mMeshPtr;
+			Math::Matrix4 mTransform;
+		};
+
+
 		class NEAPI RenderSystem : public ECS::System<RenderSystem>
 		{
 		public:

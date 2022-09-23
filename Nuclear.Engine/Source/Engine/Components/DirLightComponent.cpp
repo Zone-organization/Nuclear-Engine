@@ -8,19 +8,29 @@ namespace Nuclear
 			: mShadowMap(Graphics::LightType::DirLight)
 		{
 			data.Direction = Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f);
-			data.Color = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+			data.Color_Intensity = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		}
 		DirLightComponent::~DirLightComponent()
 		{
 		}
 		Graphics::Color DirLightComponent::GetColor()
 		{
-			return Graphics::Color(data.Color.r, data.Color.g, data.Color.b, data.Color.w);
+			return Graphics::Color(data.Color_Intensity.r, data.Color_Intensity.g, data.Color_Intensity.b);
 		}
 		void DirLightComponent::SetColor(Graphics::Color color)
 		{
-			data.Color = Math::Vector4(color.r, color.g, color.b, 1.0f);
+			data.Color_Intensity = Math::Vector4(color.r, color.g, color.b, data.Color_Intensity.w);
 		}
+
+		float DirLightComponent::GetIntensity()
+		{
+			return data.Color_Intensity.w;
+		}
+		void DirLightComponent::SetIntensity(float intensity)
+		{
+			data.Color_Intensity.w = intensity;
+		}
+
 		Math::Vector3 DirLightComponent::GetDirection()
 		{
 			return Math::Vector3(data.Direction);

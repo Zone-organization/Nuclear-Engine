@@ -54,8 +54,12 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 
 float DoBlinnSpecular(float3 normal, float3 lightDir, float3 viewDir)
 {
-    float3 halfwayDir = normalize(lightDir + viewDir);
-    return pow(max(dot(normal, halfwayDir), 0.0f), Shininess);
+    float3 reflectDir = reflect(-lightDir, normal);
+
+    return pow(max(dot(viewDir, reflectDir), 0.0f), Shininess);
+
+    //float3 halfwayDir = normalize(lightDir + viewDir);
+    //return pow(max(dot(normal, halfwayDir), 0.0f), Shininess);
 }
 
 float DoDiffuse(float3 LightDir, float3 normal)
@@ -72,14 +76,20 @@ float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float4 albedo
 {
     float3 lightDir = normalize(-light.Direction.xyz);
 
-    float3 ambient = 0.05f * (light.Color.xyz * albedo.xyz);
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
+    float3 ambient = 0.05f * (light.Color_Intensity.xyz * albedo.xyz);
+    float3 diffuse = light.Color_Intensity.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
+    float3 specular = light.Color_Intensity.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
+   // return (ambient + diffuse + specular);
+
+    ambient *= light.Color_Intensity.w;
+    diffuse *= light.Color_Intensity.w;
+    specular *= light.Color_Intensity.w;
+
     return (ambient + (1.0 - shadow) * (diffuse + specular));
 }
 
 // calculates the color when using a point light.
-float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo, float shadow)
+float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo)
 {
     float3 lightDir = normalize(light.Position.xyz - fragPos);
     // attenuation
@@ -91,11 +101,11 @@ float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 vi
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-	return (ambient + (1.0 - shadow) * (diffuse + specular));// *ModelColor;
+	return (ambient + diffuse + specular);// *ModelColor;
 }
 
 // calculates the color when using a spot light.
-float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo, float shadow)
+float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 viewDir, float4 albedo)
 {
     float3 lightDir = normalize(light.Position.xyz - fragPos);
 
@@ -114,7 +124,7 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return (ambient + (1.0 - shadow) * (diffuse + specular));
+    return (ambient + diffuse + specular);
 }
 
 PS_OUTPUT DoLighting(PixelInputType input)
@@ -136,7 +146,6 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
     float3 viewDir = normalize(ViewPos.xyz - FragPos);
 
-
 #ifdef NE_SHADOWS
 
 
@@ -150,11 +159,6 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
 #endif
 
-     //  PointLight zby;
-       //zby.Position = SpotLights[0].Position;
-       //zby.Intensity_Attenuation = SpotLights[0].Intensity_Attenuation;
-       //zby.Color = SpotLights[0].Color;
-       //result += CalcPointLight(zby, norm, FragPos, viewDir, albedo, shadow);
 
 #ifdef NE_DIR_LIGHTS_NUM
   // phase 1: directional lighting
@@ -167,14 +171,14 @@ PS_OUTPUT DoLighting(PixelInputType input)
     // phase 2: point lights
     for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
     {
-        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo, shadow);
+        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo);
     }
 #endif
 #ifdef NE_SPOT_LIGHTS_NUM
     // phase 3: spot light
     for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
     {
-        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo , shadow);
+        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo);
     }
 #endif
 
