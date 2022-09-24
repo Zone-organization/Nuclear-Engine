@@ -103,12 +103,11 @@ public:
 	}
 	void InitRenderer()
 	{
-
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 		Rendering::ShadingModelInitInfo info;
 		info.ShadowingEnabled = true;
 		BlinnphongRP.Initialize(info);
-		
+		PBR.Initialize(info);
 		BlinnPhongPipeline.Initialize(&BlinnphongRP, &Camera);
 
 		PBRPipeline.Initialize(&PBR, &Camera);
@@ -119,13 +118,15 @@ public:
 		Renderer->AddRenderingPipeline(&PBRPipeline);
 
 		Renderer->Bake(_Width_, _Height_);
+
+		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
+		mDebugSystem->Initialize(&Camera, Renderer->GetAnimationCB());
+
 	}
 
 	void Load()
 	{
 		mSceneManager->CreateScene(&Scene, true);
-
-		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
 
 		mAssetManager->Initialize();
 		Systems::LightingSystemDesc desc;

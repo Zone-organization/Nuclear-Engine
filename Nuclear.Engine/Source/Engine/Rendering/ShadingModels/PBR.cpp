@@ -98,7 +98,12 @@ namespace Nuclear
 				{
 					defines.push_back("NE_DEFFERED");
 				}
-
+				if (mInitInfo.ShadowingEnabled == true)
+				{
+					defines.push_back("NE_SHADOWS");
+					if (desc.Max_DirLight_Caster > 0) { defines.push_back("NE_MAX_DIR_CASTERS " + std::to_string(desc.Max_DirLight_Caster)); }
+					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
+				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
@@ -135,6 +140,12 @@ namespace Nuclear
 				{
 					defines.push_back("NE_DEFFERED");
 				}
+				if (mInitInfo.ShadowingEnabled == true)
+				{
+					defines.push_back("NE_SHADOWS");
+					if (desc.Max_DirLight_Caster > 0) { defines.push_back("NE_MAX_DIR_CASTERS " + std::to_string(desc.Max_DirLight_Caster)); }
+					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
+				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/PBR.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
@@ -153,6 +164,8 @@ namespace Nuclear
 
 			if (desc.LightsBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
+			if (mInitInfo.ShadowingEnabled == true)
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_ShadowCasters")->Set(desc.ShadowCastersBufferPtr);
 
 			if (!mInitInfo.mDefferedPipeline)
 			{

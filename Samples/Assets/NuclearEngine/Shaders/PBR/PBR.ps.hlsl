@@ -5,16 +5,13 @@
 #include "..\LightTypes.hlsli"
 #include "Common.hlsl"
 
-struct PixelInputType
-{
-	float4 Position : SV_POSITION;
-	float2 TexCoords : TEXCOORD0;
-#ifndef NE_DEFFERED
-	float3 Normal : NORMAL0;
-	float3 FragPos : TEXCOORD1;
-	float3x3 TBN : TANGENT0;
+#ifdef NE_SHADOWS
+#include <..\ShadowCalculations.hlsl>
 #endif
-};
+
+
+#include <..\CommonInput.ps.hlsl>
+
 
 #ifdef NE_DEFFERED
 
@@ -110,35 +107,31 @@ struct PS_OUTPUT
 PS_OUTPUT main(PixelInputType input) : SV_TARGET
 {
 #ifdef NE_DEFFERED
-	float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoords).xyz;
-	float3 albedo = pow(NE_RT_GBuffer_AlbedoMetallic.Sample(NE_RT_GBuffer_AlbedoMetallic_sampler, input.TexCoords).rgb, float3(2.2f,2.2f,2.2f));
-	float metallic = NE_RT_GBuffer_AlbedoMetallic.Sample(NE_RT_GBuffer_AlbedoMetallic_sampler, input.TexCoords).a;
-	float roughness = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).r;
-	float ao = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoords).g;
-	float3 N = normalize(NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoords).rgb);
+	float3 FragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.TexCoord).xyz;
+	float3 albedo = pow(NE_RT_GBuffer_AlbedoMetallic.Sample(NE_RT_GBuffer_AlbedoMetallic_sampler, input.TexCoord).rgb, float3(2.2f,2.2f,2.2f));
+	float metallic = NE_RT_GBuffer_AlbedoMetallic.Sample(NE_RT_GBuffer_AlbedoMetallic_sampler, input.TexCoord).a;
+	float roughness = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoord).r;
+	float ao = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoord).g;
+	float3 N = normalize(NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoord).rgb);
 #else
 	float3 FragPos = input.FragPos;
-	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoords).xyz, float3(2.2f,2.2f,2.2f));
-	float metallic = NEMat_Metallic.Sample(NEMat_Metallic_sampler, input.TexCoords).x;
-	float roughness = NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoords).x;
-	float ao = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoords).x;
-	float3 N = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoords).xyz;
+	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoord).xyz, float3(2.2f,2.2f,2.2f));
+	float metallic = NEMat_Metallic.Sample(NEMat_Metallic_sampler, input.TexCoord).x;
+	float roughness = NEMat_Roughness.Sample(NEMat_Roughness_sampler, input.TexCoord).x;
+	float ao = NEMat_AO.Sample(NEMat_AO_sampler, input.TexCoord).x;
+	float3 N = NEMat_Normal.Sample(NEMat_Normal_sampler, input.TexCoord).xyz;
 	N = normalize(mul(N, 2.0f) - 1.0f);
 	N = normalize(mul(N, input.TBN));
 #endif
 
-	float shadow = 0.0f;  //No shadow == 0.0f
+	float dir_Shadow = 1.0f;  //No shadow == 1.0f
 
 #ifdef NE_SHADOWS
 
-
 #ifdef NE_MAX_DIR_CASTERS
-	shadow = DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, norm, DirLights[0].Direction.xyz);
+	dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, N));
 #endif
 
-#ifdef NE_MAX_SPOT_CASTERS
-	shadow = SpotlightShadowCalculation(input.SpotLight_FragPos[0], FragPos, norm, SpotLights[0].Position.xyz);
-#endif
 
 #endif
 
@@ -158,7 +151,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 		float3 L = normalize(-DirLights[i0].Direction.xyz);
 		float3 radiance = DirLights[i0].Color_Intensity.xyz * DirLights[i0].Color_Intensity.w;
 
-		Lo += CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
+		Lo += dir_Shadow * CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
 	}
 #endif
 #ifdef NE_POINT_LIGHTS_NUM  
@@ -176,7 +169,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	// phase 3: spot light
 	for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
 	{
-		Lo += CalcSpotLight(SpotLights[i2], N, FragPos, V, F0, albedo, metallic, roughness);
+	//	Lo += CalcSpotLight(SpotLights[i2], N, FragPos, V, F0, albedo, metallic, roughness);
 
 		float3 L = normalize(SpotLights[i2].Position.xyz - FragPos);
 		float attenuation = DoQuadraticAttenuation(SpotLights[i2].Intensity_Attenuation, SpotLights[i2].Position.xyz, FragPos);

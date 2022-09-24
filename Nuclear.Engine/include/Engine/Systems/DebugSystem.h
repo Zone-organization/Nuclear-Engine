@@ -8,9 +8,14 @@
 #include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
+#include <Engine\Rendering\ForwardRenderingPipeline.h>
+#include <Engine\Rendering\ShadingModels\DiffuseOnly.h>
 
 namespace Nuclear
 {
+	namespace Graphics {
+		class Camera;
+	}
 	namespace Systems
 	{
 		class CameraSystem;
@@ -22,6 +27,7 @@ namespace Nuclear
 			DebugSystem();
 			~DebugSystem();
 
+			void Initialize(Graphics::Camera* camera, IBuffer* AnimationBufferPtr );
 
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
@@ -29,6 +35,15 @@ namespace Nuclear
 			void ShowRendertargets();
 
 			std::vector<Graphics::RenderTarget*> mRegisteredRTs;
+			bool RenderLightSources = true;
+
+
+
+			void InstantRender(Assets::Mesh* mesh, Assets::Image* diffusetex);
+
+		protected:
+			Rendering::DiffuseOnly DebugRP;
+			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
 		};
 
 	}
