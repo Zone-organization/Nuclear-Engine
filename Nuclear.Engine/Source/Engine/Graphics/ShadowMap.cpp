@@ -27,7 +27,7 @@ namespace Nuclear
 			ShadowMapDesc.Height = mDesc.mResolution;
 			ShadowMapDesc.MipLevels = 1;
 			ShadowMapDesc.SampleCount = 1;
-			ShadowMapDesc.Format = TEX_FORMAT_D32_FLOAT;
+			ShadowMapDesc.Format = TEX_FORMAT_R32_TYPELESS;
 			ShadowMapDesc.Usage = USAGE_DEFAULT;
 			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
 

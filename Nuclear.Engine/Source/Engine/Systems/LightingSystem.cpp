@@ -8,6 +8,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Core\FileSystem.h>
 #include <Engine\Systems\DebugSystem.h>
+#include <Engine/Graphics/ImGui.h>
 
 namespace Nuclear
 {
@@ -144,6 +145,7 @@ namespace Nuclear
 				pShadowPass->Initialize();
 			}
 		}
+
 		void LightingSystem::Update(ECS::TimeDelta dt)
 		{
 			//TODO: Multiple Cameras
@@ -159,12 +161,38 @@ namespace Nuclear
 
 				if (DirLight.mCastShadows && pShadowPass)
 				{
-					float near_plane = 1.0f, far_plane = 7.5f;
-					auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+					static float near_plane = 1.0f, far_plane = 7.5f, ab = 10.f;
+					static bool useLightPos = true;
+
+					ImGui::Begin("LIGHT");
+
+					ImGui::DragFloat("Near plane", &near_plane, 0.5f, 0.0f, 0.0f, "%.6f");
+					ImGui::DragFloat("Far plane", &far_plane, 0.5f, 0.0f, 0.0f, "%.6f");
+
+					ImGui::DragFloat("AABB", &ab);
+
+					ImGui::Checkbox("useLightPos", &useLightPos);
+
+					ImGui::End();
+					
+					glm::vec4 aabb = glm::vec4(-ab, ab, -ab, ab);
+
 					auto lightpos = DirLight.GetInternalPosition();
 
-					auto lightdir = DirLight.GetDirection();
-					auto lightView = glm::lookAt(lightpos, lightdir, glm::vec3(0.0, 1.0, 0.0));
+					glm::vec3 lightdir;
+
+					if (useLightPos)
+					{
+						lightdir = lightpos;
+					}
+					else {
+						auto lightdir = DirLight.GetDirection();
+					}
+
+					auto lightProjection = glm::ortho(aabb.x, aabb.y, aabb.z, aabb.w, near_plane, far_plane);
+
+					auto lightView = glm::lookAt(lightdir, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+					
 
 					DirLight.LightSpace = lightProjection * lightView;
 					lightspacematrices.push_back(DirLight.LightSpace);

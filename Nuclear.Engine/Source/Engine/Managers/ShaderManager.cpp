@@ -74,9 +74,9 @@ namespace Nuclear
 					}
 					else if (name.find("NE_ShadowMap") != std::string::npos)
 					{
-						SamplerDesc SamLinearWrapDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
+						SamplerDesc SamLinearWrapDesc(FILTER_TYPE_POINT, FILTER_TYPE_POINT, FILTER_TYPE_POINT,
 							TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER);
-						SamLinearWrapDesc.ComparisonFunc = COMPARISON_FUNC_LESS;
+						//SamLinearWrapDesc.ComparisonFunc = COMPARISON_FUNC_LESS;
 						SamLinearWrapDesc.BorderColor[0] = 1.0f;
 						SamLinearWrapDesc.BorderColor[1] = 1.0f;
 						SamLinearWrapDesc.BorderColor[2] = 1.0f;

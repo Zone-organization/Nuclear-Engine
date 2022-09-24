@@ -18,6 +18,17 @@
 #include <cassert>
 #include <cstddef>
 
+#include <Core\NE_Common.h>
+
+#ifdef COORDINATE_SYSTEM_LEFT_HANDED
+#define GLM_FORCE_LEFT_HANDED
+#endif
+
+#ifdef CLIP_SPACE_DEPTH_ZERO_TO_ONE
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#endif
+
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Messages
 

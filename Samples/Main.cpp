@@ -55,8 +55,8 @@ int main(int argc, char* argv[])
 	//}
 
 	//EngineStartupDesc desc;
-	desc.mEngineWindowDesc.WindowWidth = 1280;
-	desc.mEngineWindowDesc.WindowHeight = 720;
+	desc.mEngineWindowDesc.WindowWidth = 800;
+	desc.mEngineWindowDesc.WindowHeight = 600;
 
 	Engine::GetInstance()->Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";

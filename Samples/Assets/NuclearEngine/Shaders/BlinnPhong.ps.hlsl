@@ -85,7 +85,7 @@ float3 CalcDirLight(DirLight light, float3 normal, float3 viewDir, float4 albedo
     diffuse *= light.Color_Intensity.w;
     specular *= light.Color_Intensity.w;
 
-    return (ambient + (1.0 - shadow) * (diffuse + specular));
+    return (ambient + ((1.0 - shadow) * (diffuse + specular)));
 }
 
 // calculates the color when using a point light.
@@ -150,7 +150,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
 
 #ifdef NE_MAX_DIR_CASTERS
-    shadow = DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, norm, DirLights[0].Direction.xyz);
+    shadow = DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, norm);
 #endif
 
 #ifdef NE_MAX_SPOT_CASTERS

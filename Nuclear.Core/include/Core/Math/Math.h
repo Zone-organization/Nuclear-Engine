@@ -1,8 +1,7 @@
-#include "detail/_fixes.hpp"
-
-#include "detail/setup.hpp"
-
 #pragma once
+
+#include "detail/_fixes.hpp"
+#include "detail/setup.hpp"
 
 #include <cmath>
 #include <climits>

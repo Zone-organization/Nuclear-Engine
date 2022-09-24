@@ -92,8 +92,13 @@ namespace Nuclear
 			xoffset *= MouseSensitivity;
 			yoffset *= MouseSensitivity;
 
-			Yaw += xoffset;
 			Pitch += yoffset;
+
+#ifdef COORDINATE_SYSTEM_LEFT_HANDED
+			Yaw -= xoffset;
+#else
+			Yaw += xoffset;
+#endif
 
 			// Make sure that when pitch is out of bounds, screen doesn't get flipped
 			if (constrainPitch)
@@ -111,10 +116,19 @@ namespace Nuclear
 				position += Front * velocity;
 			if (direction == CAMERA_MOVEMENT_BACKWARD)
 				position -= Front * velocity;
+
+#ifdef COORDINATE_SYSTEM_LEFT_HANDED
+			if (direction == CAMERA_MOVEMENT_LEFT)
+				position += Right * velocity;
+			if (direction == CAMERA_MOVEMENT_RIGHT)
+				position -= Right * velocity;
+#else
 			if (direction == CAMERA_MOVEMENT_LEFT)
 				position -= Right * velocity;
 			if (direction == CAMERA_MOVEMENT_RIGHT)
 				position += Right * velocity;
+#endif
+
 		}
 		void Camera::ProcessZoom(float yoffset)
 		{

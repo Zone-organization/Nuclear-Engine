@@ -20,6 +20,16 @@
 #define DEBUG_FALSE_BOOL true
 #endif
 
+//Default!!  (D3D: LH , ClipSpace Z [0,1] -- OpenGL: RH , ClipSpace Z [-1,1])
+#define COORDINATE_SYSTEM_LEFT_HANDED
+#define CLIP_SPACE_DEPTH_ZERO_TO_ONE
+
+#ifdef COORDINATE_SYSTEM_LEFT_HANDED
+#define COORDSYSTEM_LH_ENABLED true
+#else
+#define COORDSYSTEM_LH_ENABLED false
+#endif
+
 namespace Diligent{
 	typedef float Float32; ///< 32-bit float
 

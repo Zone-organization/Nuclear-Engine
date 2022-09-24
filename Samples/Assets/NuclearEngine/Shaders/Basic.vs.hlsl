@@ -56,7 +56,7 @@ PixelInputType main(VertexInputType input)
 #ifdef NE_MAX_DIR_CASTERS
     for (int i0 = 0; i0 < NE_MAX_DIR_CASTERS; i0++)
     {
-        output.DirLight_FragPos[i0] = mul(float4(output.FragPos, 1.0f), Dir_LightSpace[i0]);
+        output.DirLight_FragPos[i0] = mul(Dir_LightSpace[i0], float4(output.FragPos, 1.0f));
     }
 #endif
 
