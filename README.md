@@ -2,12 +2,14 @@
 
 ## Current To-dos 
   - W.I.P:
-    - Basic Shadow mapping for all 3 light types.
+    - Omni-Directional (pointlight) Shadow mapping/ Spotlight shadow mapping
+    - Refactor RenderSystem to support multi-shader rendering/ divide render stages to RenderPass(es)
+	- Multi-Shadow Casters support
+    - CSM
 	- Basic Editor support (Nuclear Editor).
-    - Refactor RenderSystem to support multi-shader rendering
 
   - On-Hold:
-    - Text rendering
+    - Text rendering (text tile-set creation finished)
 
   - TODO:
     - Finish Audio implementation
