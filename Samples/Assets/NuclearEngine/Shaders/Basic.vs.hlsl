@@ -63,9 +63,7 @@ PixelInputType main(VertexInputType input)
 #ifdef NE_MAX_SPOT_CASTERS
 	for (int i1 = 0; i1 < NE_MAX_SPOT_CASTERS; i1++)
     {
-        //output.SpotLight_FragPos[i0] = mul(Spot_LightSpace[i0], float4(output.FragPos, 1.0f));
-
-		output.SpotLight_FragPos[i1] = mul(float4(output.FragPos, 1.0f), Spot_LightSpace[i1]);
+        output.SpotLight_FragPos[i1] = mul(Spot_LightSpace[i1], float4(output.FragPos, 1.0f));
     }
 #endif
 

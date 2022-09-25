@@ -143,7 +143,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
     float3 viewDir = normalize(ViewPos.xyz - FragPos);
 
 
-    float dir_Shadow = 1.0f;  //No shadow == 1.0f
+    float dir_Shadow = 1.0f, spot_shadow = 1.0f;  //No shadow == 1.0f
 
 #ifdef NE_SHADOWS
 
@@ -153,7 +153,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
 #endif
 
 #ifdef NE_MAX_SPOT_CASTERS
-    shadow = SpotlightShadowCalculation(input.SpotLight_FragPos[0], FragPos, norm, SpotLights[0].Position.xyz);
+    spot_shadow = (1.0f - SpotlightShadowCalculation(input.SpotLight_FragPos[0], FragPos, norm));
 #endif
 
 #endif
@@ -181,7 +181,7 @@ PS_OUTPUT DoLighting(PixelInputType input)
     // phase 3: spot light
     for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
     {
-        result += CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo);
+        result += spot_shadow * CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo);
     }
 #endif
 

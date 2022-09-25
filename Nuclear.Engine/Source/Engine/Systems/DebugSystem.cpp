@@ -32,64 +32,69 @@ namespace Nuclear
 		}
 		void DebugSystem::Update(ECS::TimeDelta dt)
 		{
-			mRegisteredRTs.clear();
+			if (ShowRegisteredRenderTargets)
+			{
+				ShowRendertargets();
+			}
 
+			mRegisteredRTs.clear();
 
 			//Render Light Sources
 			if (RenderLightSources)
 			{
 				Graphics::Context::GetContext()->SetPipelineState(DebugRP.GetActivePipeline());
 
-				auto view = mScene->GetRegistry().view<Components::DirLightComponent>();
-				for (auto entity : view)
 				{
-					auto& dirLightComp = view.get<Components::DirLightComponent>(entity);
-					auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					auto view = mScene->GetRegistry().view<Components::DirLightComponent>();
+					for (auto entity : view)
+					{
+						auto& dirLightComp = view.get<Components::DirLightComponent>(entity);
+						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 
-					EntityInfo.mTransform.Update();
-					mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-					mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
-					auto AnimationBufferPtr = mScene->GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
+						EntityInfo.mTransform.Update();
+						mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
+						auto AnimationBufferPtr = mScene->GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
 
-					Math::Matrix4 empty(0.0f);
-					PVoid data;
-					Graphics::Context::GetContext()->MapBuffer(AnimationBufferPtr, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-					data = memcpy(data, &empty, sizeof(Math::Matrix4));
-					Graphics::Context::GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
-
-
-					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());
+						Math::Matrix4 empty(0.0f);
+						PVoid data;
+						Graphics::Context::GetContext()->MapBuffer(AnimationBufferPtr, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+						data = memcpy(data, &empty, sizeof(Math::Matrix4));
+						Graphics::Context::GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
 
 
-					//TODO: Render Cube at direction
-					/*EntityInfo.mTransform.Update();
-					mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-					mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());
 
-					InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());*/
+
+						//TODO: Render Cube at direction
+						/*EntityInfo.mTransform.Update();
+						mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
+
+						InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());*/
+					}
 				}
-
-				auto view = mScene->GetRegistry().view<Components::PointLightComponent>();
-				for (auto entity : view)
 				{
-					auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					auto view = mScene->GetRegistry().view<Components::PointLightComponent>();
+					for (auto entity : view)
+					{
+						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 
-					EntityInfo.mTransform.Update();
-					mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-					mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
-					auto AnimationBufferPtr = mScene->GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
+						EntityInfo.mTransform.Update();
+						mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
+						auto AnimationBufferPtr = mScene->GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
 
-					Math::Matrix4 empty(0.0f);
-					PVoid data;
-					Graphics::Context::GetContext()->MapBuffer(AnimationBufferPtr, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-					data = memcpy(data, &empty, sizeof(Math::Matrix4));
-					Graphics::Context::GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
+						Math::Matrix4 empty(0.0f);
+						PVoid data;
+						Graphics::Context::GetContext()->MapBuffer(AnimationBufferPtr, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+						data = memcpy(data, &empty, sizeof(Math::Matrix4));
+						Graphics::Context::GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
 
 
-					InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());
+					}
 				}
-
-
 			}
 
 		}
@@ -129,6 +134,10 @@ namespace Nuclear
 
 			ImGui::End();
 
+		}
+		void DebugSystem::AddRenderTarget(Graphics::RenderTarget* rt)
+		{
+			mRegisteredRTs.push_back(rt);
 		}
 		void DebugSystem::InstantRender(Assets::Mesh* mesh, Assets::Image* diffusetex)
 		{

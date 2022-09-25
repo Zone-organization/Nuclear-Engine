@@ -32,12 +32,15 @@ namespace Nuclear
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
 
+
+
 			void ShowRendertargets();
+			void AddRenderTarget(Graphics::RenderTarget* rt);
 
 			std::vector<Graphics::RenderTarget*> mRegisteredRTs;
 			bool RenderLightSources = true;
 
-
+			bool ShowRegisteredRenderTargets = false;
 
 			void InstantRender(Assets::Mesh* mesh, Assets::Image* diffusetex);
 

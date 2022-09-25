@@ -18,9 +18,8 @@ cbuffer NEStatic_LightInfo : register(b0)
 
 float4 SpotShadowMapDepthVS(VertexInputType input) : SV_POSITION
 {
-    float4 pos = float4(input.Position.xyz, 1.0f);
-  //  float4 pos = mul(Model, input.Position);
-    pos = mul(LightSpace, pos);
+    //TODO: Support animation
+    float4 pos = mul(mul(LightSpace, Model), float4(input.Position.xyz, 1.f));
     return pos;
 }
 

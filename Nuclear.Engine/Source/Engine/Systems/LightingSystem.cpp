@@ -201,39 +201,46 @@ namespace Nuclear
 					//Add to debug system
 					if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
 					{
-						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(DirLight.GetShadowMap());
+						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->AddRenderTarget(DirLight.GetShadowMap());
 					}
 				}
 			}
 
-			//auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
-			//for (auto entity : SpotLightView)
-			//{
-			//	auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-			//	auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-			//	SpotLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
+			for (auto entity : SpotLightView)
+			{
+				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
+				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				SpotLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
 
-			//	if (SpotLight.mCastShadows && pShadowPass)
-			//	{
-			//		float near_plane = 1.0f, far_plane = 100.f;
-			//		auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-			//		auto lightpos = SpotLight.GetInternalPosition();
-			//		auto up = glm::vec3(0.0, 1.0, 0.0);
-			//		//	auto target = lightpos + glm::vec3(0.0f);
-			//		auto lightView = glm::lookAt(lightpos, lightpos + SpotLight.GetDirection(), up);
+				if (SpotLight.mCastShadows && pShadowPass)
+				{
+					static float near_plane = 1.0f, far_plane = 50.f;
+					ImGui::Begin("LIGHT 2");
 
-			//		SpotLight.LightSpace = lightProjection * lightView;
-			//		lightspacematrices.push_back(SpotLight.LightSpace);
+					ImGui::DragFloat("Near plane", &near_plane, 0.5f, 0.0f, 0.0f, "%.6f");
+					ImGui::DragFloat("Far plane", &far_plane, 0.5f, 0.0f, 0.0f, "%.6f");
+					ImGui::End();
 
-			//		pShadowPass->SpotLightShadowDepthPass(SpotLight, mScene);
 
-			//		//Add to debug system
-			//		if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
-			//		{
-			//			mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(SpotLight.GetShadowMap());
-			//		}
-			//	}
-			//}
+					auto lightProjection = glm::perspective(Math::radians(45.0f), 1024.f/1024.f, near_plane, far_plane);
+					auto lightpos = SpotLight.GetInternalPosition();
+					auto up = glm::vec3(0.0, 1.0, 0.0);
+
+					auto lightView = glm::lookAt(lightpos, lightpos + SpotLight.GetDirection(), up);
+
+					SpotLight.LightSpace = lightProjection * lightView;
+					lightspacematrices.push_back(SpotLight.LightSpace);
+
+					pShadowPass->SpotLightShadowDepthPass(SpotLight, mScene);
+
+					//Add to debug system
+					if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+					{
+						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->AddRenderTarget(SpotLight.GetShadowMap());
+					}
+				}
+			}
 
 			//auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
 			//for (auto entity : PointLightView)

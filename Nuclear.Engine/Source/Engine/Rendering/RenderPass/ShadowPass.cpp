@@ -222,17 +222,18 @@ namespace Nuclear
 
 			PSOCreateInfo.PSODesc.Name = "mSpotShadowMapDepthPSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 0;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_R24G8_TYPELESS;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = false;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
-			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
-			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
-			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = false;
+			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.StencilEnable = false;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = true;
 
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;

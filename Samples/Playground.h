@@ -87,7 +87,7 @@ public:
 		//Assign Components
 		ELights.AddComponent<Components::DirLightComponent>().mCastShadows = true;
 	//	ELights.AddComponent<Components::PointLightComponent>();
-		//EController.AddComponent<Components::SpotLightComponent>();
+		EController.AddComponent<Components::SpotLightComponent>().mCastShadows = true;
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
@@ -228,7 +228,7 @@ public:
 		Camera.UpdateBuffer();
 		mCameraSystem->Update(deltatime);
 		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
-
+		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	bool iskinematic = false;
@@ -237,13 +237,10 @@ public:
 	{
 		mSceneManager->Update(dt);
 
-		//EController.GetComponent<Components::SpotLightComponent>()->SetPosition(Camera.GetPosition());
-	//	EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
-
 
 		{
 			using namespace Graphics;
-			ImGui::Begin("Sample3: PhysX & Scripting Test");
+			ImGui::Begin("PlayGround : Testing new features");
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
@@ -255,6 +252,8 @@ public:
 			ImGui::Text("Rendering Pipelines:");
 			ImGui::RadioButton("BlinnPhong", &e, 0);
 			ImGui::RadioButton("PBR", &e, 1);
+			ImGui::Separator();
+			ImGui::Checkbox("ShowRegisteredRenderTargets", &mDebugSystem->ShowRegisteredRenderTargets);
 
 			//Change Rendering Pipeline
 			if (e == 0)
@@ -286,8 +285,6 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
-			mDebugSystem->ShowRendertargets();
-
 		}
 	}
 
