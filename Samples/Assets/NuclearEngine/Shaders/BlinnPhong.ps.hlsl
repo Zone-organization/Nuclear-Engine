@@ -94,8 +94,8 @@ float3 CalcPointLight(PointLight light, float3 normal, float3 fragPos, float3 vi
     float attenuation = DoQuadraticAttenuation(light.Intensity_Attenuation, light.Position.xyz, fragPos);
 
     // combine results
-    float3 diffuse = light.Color.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
-    float3 specular = light.Color.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
+    float3 diffuse = light.Color_FarPlane.xyz * DoDiffuse(lightDir, normal) * albedo.xyz;
+    float3 specular = light.Color_FarPlane.xyz * DoBlinnSpecular(normal, lightDir, viewDir) * albedo.w;
     diffuse *= attenuation;
     specular *= attenuation;
 
@@ -143,17 +143,21 @@ PS_OUTPUT DoLighting(PixelInputType input)
     float3 viewDir = normalize(ViewPos.xyz - FragPos);
 
 
-    float dir_Shadow = 1.0f, spot_shadow = 1.0f;  //No shadow == 1.0f
+    float dir_Shadow = 1.0f, spot_shadow = 1.0f, point_shadow = 1.0f;  //No shadow == 1.0f
 
 #ifdef NE_SHADOWS
 
 
 #ifdef NE_MAX_DIR_CASTERS
-    dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, norm));
+    dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0]));
 #endif
 
 #ifdef NE_MAX_SPOT_CASTERS
-    spot_shadow = (1.0f - SpotlightShadowCalculation(input.SpotLight_FragPos[0], FragPos, norm));
+    spot_shadow = (1.0f - SpotlightShadowCalculation(input.SpotLight_FragPos[0]));
+#endif
+
+#ifdef NE_MAX_POINT_CASTERS
+ //   point_shadow = (1.0f - PointlightShadowCalculation(input.PointLight_FragPos[0], FragPos, norm));
 #endif
 
 #endif

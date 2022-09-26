@@ -69,28 +69,12 @@ namespace Nuclear
 					}
 				}
 			}
+
+			//CSM - WIP
 		}
 
 		void ShadowPass::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene)
 		{
-			//float near_plane = 1.0f, far_plane = 100.f;
-			//auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-
-			//auto lightpos = spotlight.GetInternalPosition();
-			// Also re-calculate the Right and Up vector
-		//	auto Right = normalize(Math::cross(spotlight.GetDirection(), glm::vec3(0.0, 1.0, 0.0)));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-			//auto Up = normalize(Math::cross(Right, spotlight.GetDirection()));
-
-			//auto lightView = glm::lookAt(lightpos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0, 1.0, 0.0));
-		/*	auto up = glm::vec3(0.0, 1.0, 0.0);
-
-
-			auto target = lightpos + glm::vec3(0.0f);
-
-
-			auto lightView = glm::lookAt(lightpos, spotlight.GetDirection(), up);
-			Math::Matrix4 lightSpaceMatrix = lightProjection * lightView;*/
-
 			Graphics::Context::GetContext()->SetPipelineState(mSpotShadowMapDepthPSO.RawPtr());
 
 			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, spotlight.GetShadowMap()->GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -122,6 +106,59 @@ namespace Nuclear
 
 		void ShadowPass::PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene)
 		{
+			Graphics::Context::GetContext()->SetPipelineState(mPointShadowPassPSO.RawPtr());
+
+			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, pointlight.GetShadowMap()->GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(pointlight.GetShadowMap()->GetRTV(), CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			Graphics::Context::GetContext()->CommitShaderResources(mPointShadowPassSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+			auto view = scene->GetRegistry().view<Components::MeshComponent>();
+			for (auto entity : view)
+			{
+				auto& MeshObject = view.get<Components::MeshComponent>(entity);
+				if (MeshObject.mRender && MeshObject.mCastShadows)               //TODO Animation component
+				{
+					auto& EntityInfo = scene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					EntityInfo.mTransform.Update();
+
+					float near_plane = 1.0f;
+					float far_plane = 25.0f;
+					auto lightPos = pointlight.GetInternalPosition();
+
+					//Update cbuffer NEStatic_PointShadowVS	{	matrix Model;	};
+					{
+						Diligent::MapHelper<Math::Matrix4> CBConstants(Graphics::Context::GetContext(), pPointShadowVS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
+						*CBConstants = EntityInfo.mTransform.GetWorldMatrix();
+					}
+					//Update cbuffer NEStatic_PointShadowGS	{matrix ShadowMatrices[6];	};
+					{
+
+						glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)1024 / (float)1024, near_plane, far_plane);
+
+						std::array<glm::mat4, 6> shadowTransforms = {
+						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)),
+						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))
+						};
+
+
+						PVoid data;
+						Graphics::Context::GetContext()->MapBuffer(pPointShadowGS_CB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+						data = memcpy(data, shadowTransforms.data(), sizeof(Math::Matrix4) * 6);
+						Graphics::Context::GetContext()->UnmapBuffer(pPointShadowGS_CB, MAP_WRITE);
+					}
+				//	Update cbuffer NEStatic_PointShadowPS	{    float3 gLightPos;	float gFarPlane;	};
+				    {
+						Diligent::MapHelper<Math::vec4> CBConstants(Graphics::Context::GetContext(), pPointShadowPS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
+						*CBConstants = glm::vec4(lightPos, far_plane);
+					}
+					RenderMeshForDepthPass(MeshObject.mMesh);
+				}
+			}
 		}
 
 		ShadowPassDesc ShadowPass::GetDesc() const
@@ -303,17 +340,18 @@ namespace Nuclear
 
 			PSOCreateInfo.PSODesc.Name = "PointShadowPassPSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 0;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_R24G8_TYPELESS;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = false;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_NONE;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FillMode = FILL_MODE_SOLID;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
-			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
-			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
-			//PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = false;
+			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.StencilEnable = false;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBias = 8500; //maybe as parameter
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthBiasClamp = 0.0f;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.SlopeScaledDepthBias = 1.0f;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.DepthClipEnable = true;
 
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;

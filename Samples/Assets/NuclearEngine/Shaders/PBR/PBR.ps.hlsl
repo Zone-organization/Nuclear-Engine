@@ -129,7 +129,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 #ifdef NE_SHADOWS
 
 #ifdef NE_MAX_DIR_CASTERS
-	dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0], FragPos, N));
+	dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0]));
 #endif
 
 
@@ -160,7 +160,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	{
 		float3 L = normalize(PointLights[i1].Position.xyz - FragPos);
 		float attenuation = DoQuadraticAttenuation(PointLights[i1].Intensity_Attenuation, PointLights[i1].Position.xyz, FragPos);
-		float3 radiance = PointLights[i1].Color.xyz * attenuation;
+		float3 radiance = PointLights[i1].Color_FarPlane.xyz * attenuation;
 
 		Lo += CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
 	}

@@ -39,17 +39,17 @@ void PointShadowMapDepthGS(triangle float4 input[3] : SV_POSITION,  inout Triang
 {
     for (uint face = 0; face < 6; ++face)
     {
+        GSOutput element;
+        element.slice = face; // built-in variable that specifies to which face we render.
 
         for (uint i = 0; i < 3; i++)  // for each triangle's vertices
         {
-            GSOutput element;
-            element.FragPos = input[i];
-            element.FragPos = mul(ShadowMatrices[face], element.FragPos);
-            element.slice = face; // built-in variable that specifies to which face we render.
+            element.FragPos = mul(ShadowMatrices[face], input[i]);
             output.Append(element);
         }
+        output.RestartStrip();
 
-
+        //---------------------------------GLSL Reference CODE-----------------------------------
         //for (uint i = 0; i < 3; ++i)
         //{
         //    FragPos = gl_in[i].gl_Position;

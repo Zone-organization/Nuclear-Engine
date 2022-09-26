@@ -149,13 +149,6 @@ namespace Nuclear
 			{
 				assert(false);
 			}
-
-			//TODO: Move!
-			Assets::TextureSet CubeSet;
-			CubeSet.mData.push_back({ 0, Managers::AssetManager::DefaultWhiteTex });
-			CubeSet.mData.push_back({ 1, Managers::AssetManager::DefaultSpecularTex });
-			LightSphereMaterial.mPixelShaderTextures.push_back(CubeSet);
-			CreateMaterialForAllPipelines(&LightSphereMaterial);
 		}
 		void RenderSystem::ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight)
 		{
@@ -164,6 +157,12 @@ namespace Nuclear
 		Rendering::RenderingPipeline* RenderSystem::GetActivePipeline()
 		{
 			return mActiveRenderingPipeline;
+		}
+
+		void RenderSystem::AddRenderPass(IRenderPass* pass)
+		{
+			//pass->Initialize();
+			mRenderPasses.push_back(pass);
 		}
 		
 		IBuffer* RenderSystem::GetAnimationCB()

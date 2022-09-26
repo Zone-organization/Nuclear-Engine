@@ -5,7 +5,7 @@
 Texture2D NE_ShadowMap_Dir;
 SamplerState NE_ShadowMap_Dir_sampler;
 
-float DirlightShadowCalculation(float4 fragPosLightSpace, float3 FragPos, float3 Normal)
+float DirlightShadowCalculation(float4 fragPosLightSpace)
 {
     // perform perspective divide (re-homogenize position after interpolation)
     float3 projCoords = (fragPosLightSpace.xyz / fragPosLightSpace.w);
@@ -52,26 +52,8 @@ float DirlightShadowCalculation(float4 fragPosLightSpace, float3 FragPos, float3
 Texture2D NE_ShadowMap_Spot;
 SamplerState NE_ShadowMap_Spot_sampler;
 
-float SpotlightShadowCalculation(float4 fragPosLightSpace, float3 FragPos, float3 Normal)
+float SpotlightShadowCalculation(float4 fragPosLightSpace)
 {
-    //projCoords = projCoords * 0.5 + 0.5;
-    //float shadow = 0.0f;
-    //// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    //float4 closestDepth = NE_ShadowMap_Spot.Sample(NE_ShadowMap_Spot_sampler, projCoords.xy).r;
-    //// get depth of current fragment from light's perspective
-    //float currentDepth = projCoords.z;
-    //// calculate bias (based on depth map resolution and slope)
-    //float3 normal = normalize(Normal);
-    //float3 lightDir = normalize(lightPos - FragPos);
-    //float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-
-    //// check whether current frag pos is in shadow
-    //float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
-
-    //// keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-    //if (projCoords.z > 1.0)
-    //    shadow = 0.0;
-
     // perform perspective divide (re-homogenize position after interpolation)
     float3 projCoords = (fragPosLightSpace.xyz / fragPosLightSpace.w);
 
@@ -100,8 +82,6 @@ float SpotlightShadowCalculation(float4 fragPosLightSpace, float3 FragPos, float
     float shadow = 0.0f;
 
     //  if clip space z value greater than shadow map value then pixel is in shadow ( check whether current frag pos is in shadow )
-     // float shadow = projCoords.z <= ShadowMapDepth;
-
     if (ShadowMapDepth < CurrentDepth)
     {
         shadow = 1.0f;
@@ -111,4 +91,30 @@ float SpotlightShadowCalculation(float4 fragPosLightSpace, float3 FragPos, float
 }
 #endif
  
+#ifdef NE_MAX_POINT_CASTERS
+
+Texture2D NE_ShadowMap_Point;
+SamplerState NE_ShadowMap_Point_sampler;
+
+float PointightShadowCalculation(float3 FragPos, float3 lightPos, float farplane)
+{
+    // get vector between fragment position and light position
+    float3 fragToLight = FragPos - lightPos;
+
+    // ise the fragment to light vector to sample from the depth map    
+    float ShadowMapDepth = NE_ShadowMap_Point.Sample(NE_ShadowMap_Point_sampler, fragToLight).r;
+
+    // it is currently in linear range between [0,1], let's re-transform it back to original depth value
+    ShadowMapDepth *= farplane;
+
+    // now get current linear depth as the length between the fragment and light position
+    float currentDepth = length(fragToLight);
+
+    float bias = 0.05; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+    float shadow = currentDepth - bias > ShadowMapDepth ? 1.0 : 0.0;
+
+    return shadow;
+}
+#endif
+
 #endif  //NE_SHADOWS

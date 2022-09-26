@@ -155,7 +155,6 @@
     <ClInclude Include="include\Engine\Rendering\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\RenderPass\GeometryPass.h" />
     <ClInclude Include="include\Engine\Rendering\RenderPass\IRenderPass.h" />
-    <ClInclude Include="include\Engine\Rendering\RenderPass\RenderPassManager.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\BlinnPhong.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\DiffuseOnly.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\PBR.h" />

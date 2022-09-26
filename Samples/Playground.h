@@ -86,7 +86,7 @@ public:
 
 		//Assign Components
 		ELights.AddComponent<Components::DirLightComponent>().mCastShadows = true;
-	//	ELights.AddComponent<Components::PointLightComponent>();
+		ELights.AddComponent<Components::PointLightComponent>().mCastShadows = true;
 		EController.AddComponent<Components::SpotLightComponent>().mCastShadows = true;
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
@@ -97,7 +97,7 @@ public:
 		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(1.f));
 
 		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(-2.0f, 4.0f, -1.0f));
-	//	ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		//ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
 
 	}
@@ -200,7 +200,6 @@ public:
 		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->ResizeRenderTargets(width, height);
 	}
-
 	void Update(float deltatime) override
 	{
 		//Movement
@@ -227,8 +226,7 @@ public:
 
 		Camera.UpdateBuffer();
 		mCameraSystem->Update(deltatime);
-		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
-		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+
 		Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	bool iskinematic = false;
@@ -236,8 +234,13 @@ public:
 	void Render(float dt) override
 	{
 		mSceneManager->Update(dt);
+		static bool LockSpotlight = true;
 
-
+		if (LockSpotlight)
+		{
+			EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
+			EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+		}
 		{
 			using namespace Graphics;
 			ImGui::Begin("PlayGround : Testing new features");
@@ -254,6 +257,8 @@ public:
 			ImGui::RadioButton("PBR", &e, 1);
 			ImGui::Separator();
 			ImGui::Checkbox("ShowRegisteredRenderTargets", &mDebugSystem->ShowRegisteredRenderTargets);
+			ImGui::Checkbox("LockSpotlight", &LockSpotlight);
+			ImGui::Checkbox("RenderLightSources", &mDebugSystem->RenderLightSources);
 
 			//Change Rendering Pipeline
 			if (e == 0)

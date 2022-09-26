@@ -133,8 +133,15 @@ namespace Nuclear
 			for (auto entity : PointLightView)
 			{
 				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
-				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+				if (pShadowPass)
+				{
+					if (!PointLight.GetShadowMap()->isInitialized())
+					{
+						Graphics::ShadowMapDesc desc;
+						desc.mResolution = pShadowPass->GetDesc().mPointLightShadowMapInfo.mResolution;
+						PointLight.GetShadowMap()->Initialize(desc);
+					}
+				}
 				PointLights.push_back(&PointLight);
 			}
 
@@ -215,15 +222,17 @@ namespace Nuclear
 
 				if (SpotLight.mCastShadows && pShadowPass)
 				{
-					static float near_plane = 1.0f, far_plane = 50.f;
+					static float near_plane = 1.0f, far_plane = 50.f, fov = 90.f;
 					ImGui::Begin("LIGHT 2");
 
 					ImGui::DragFloat("Near plane", &near_plane, 0.5f, 0.0f, 0.0f, "%.6f");
 					ImGui::DragFloat("Far plane", &far_plane, 0.5f, 0.0f, 0.0f, "%.6f");
+					ImGui::DragFloat("FOV", &fov, 0.5f, 0.0f, 0.0f, "%.6f");
+
 					ImGui::End();
 
 
-					auto lightProjection = glm::perspective(Math::radians(45.0f), 1024.f/1024.f, near_plane, far_plane);
+					auto lightProjection = glm::perspective(Math::radians(fov), 1024.f/1024.f, near_plane, far_plane);
 					auto lightpos = SpotLight.GetInternalPosition();
 					auto up = glm::vec3(0.0, 1.0, 0.0);
 
@@ -239,6 +248,26 @@ namespace Nuclear
 					{
 						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->AddRenderTarget(SpotLight.GetShadowMap());
 					}
+				}
+			}
+
+
+			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
+			for (auto entity : PointLightView)
+			{
+				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
+				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+
+				if (PointLight.mCastShadows && pShadowPass)
+				{
+					pShadowPass->PointLightShadowDepthPass(PointLight, mScene);
+
+					//Add to debug system
+					//if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+				//	{
+					//	mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->AddRenderTarget(PointLight.GetShadowMap());
+				//	}
 				}
 			}
 

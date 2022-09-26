@@ -51,8 +51,6 @@ namespace Nuclear
 				mRTDesc.mType = "PointLight ShadowMap";
 			}
 
-
-
 			ShadowMapDesc.Type = dimension;
 			Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &ShadowMapTex);
 
@@ -62,7 +60,7 @@ namespace Nuclear
 				ShadowMapTex->CreateView(SRVDesc, &mSRV);
 			}
 			{
-				TextureViewDesc DSVDesc{ "ShadowMap_DSV", TEXTURE_VIEW_DEPTH_STENCIL, dimension };
+				TextureViewDesc DSVDesc{ "ShadowMap_DSV", TEXTURE_VIEW_DEPTH_STENCIL, dimension == RESOURCE_DIM_TEX_CUBE ? RESOURCE_DIM_TEX_2D_ARRAY : RESOURCE_DIM_TEX_2D };
 				DSVDesc.Format = TEX_FORMAT_D32_FLOAT;
 				ShadowMapTex->CreateView(DSVDesc, &mRTV);
 			}

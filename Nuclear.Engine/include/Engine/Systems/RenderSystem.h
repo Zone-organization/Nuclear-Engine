@@ -8,6 +8,8 @@
 #include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
+#include <Engine/Rendering/RenderPass/IRenderPass.h>
+#include <Core/Logger.h>
 
 namespace Nuclear
 {
@@ -57,11 +59,33 @@ namespace Nuclear
 
 			Rendering::RenderingPipeline* GetActivePipeline();
 
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////WIP - RENDER PASS/////////////////////////////////////////
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			void AddRenderPass(IRenderPass* pass);
+
+			template <typename T>
+			T* GetRenderPass()
+			{
+				static_assert(std::is_base_of<IRenderPass, T>::value, "GetRenderPass<T> class must derive from IRenderPass!");
+
+				for (IRenderPass* pass : mRenderPasses)
+				{
+					T* result = dynamic_cast<T*>(pass);
+					if (result)
+					{
+						return result;
+					}
+				}
+				NUCLEAR_FATAL("[RenderSystem] GetRenderPass called with undefined RenderPass!");
+				return nullptr;
+			}
+			//////////////////////////////////////////////////////////////////////////////////////////////
+
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
 
 			IBuffer* GetAnimationCB();
-			Assets::Material LightSphereMaterial;                     //TODO: Move
 
 			CameraSystem* GetCameraSystem();
 			LightingSystem* GetLightingSystem();
@@ -70,6 +94,7 @@ namespace Nuclear
 
 		private:
 			Rendering::Background mBackground;
+			std::vector<IRenderPass*> mRenderPasses;
 
 			std::shared_ptr<CameraSystem> mCameraSystemPtr;
 			std::shared_ptr<LightingSystem> mLightingSystemPtr;

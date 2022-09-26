@@ -8,7 +8,7 @@ struct PointLight
 {
 	float4 Position;
 	float4 Intensity_Attenuation;
-	float4 Color;
+	float4 Color_FarPlane;
 };
 struct SpotLight
 {
