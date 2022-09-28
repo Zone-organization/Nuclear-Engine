@@ -75,9 +75,10 @@ float PointShadowMapDepthPS(GSOutput input) : SV_Depth
 {
     float lightDistance = length(input.FragPos.xyz - gLightPos);
 
-    // map to [0;1] range by dividing by far_plane
-    lightDistance = lightDistance / gFarPlane;
-
-    // write this as modified depth
+    //// map to [0;1] range by dividing by far_plane
+    lightDistance = input.FragPos.z / (gFarPlane / 25.f);
+   // lightDistance = input.FragPos.z;
+    //// write this as modified depth
     return lightDistance;
+
 }
