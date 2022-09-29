@@ -5,7 +5,6 @@ namespace Nuclear
 	namespace Components
 	{
 		DirLightComponent::DirLightComponent()
-			: mShadowMap(Graphics::LightType::DirLight)
 		{
 			data.Direction = Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f);
 			data.Color_Intensity = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -42,11 +41,6 @@ namespace Nuclear
 		Internal::Shader_DirLight_Struct& DirLightComponent::GetInternalData()
 		{
 			return data;
-		}
-
-		Graphics::ShadowMap* DirLightComponent::GetShadowMap()
-		{
-			return &mShadowMap;
 		}
 
 		LightShadowType DirLightComponent::GetShadowType() const

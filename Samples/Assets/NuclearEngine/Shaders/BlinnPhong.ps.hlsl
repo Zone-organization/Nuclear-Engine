@@ -142,52 +142,56 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
     float3 viewDir = normalize(ViewPos.xyz - FragPos);
 
-
-    float dir_Shadow = 1.0f, spot_shadow = 1.0f, point_shadow = 1.0f;  //No shadow == 1.0f
-
-#ifdef NE_SHADOWS
-
-
-#ifdef NE_MAX_DIR_CASTERS
-    dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0]));
-#endif
-
-#ifdef NE_MAX_SPOT_CASTERS
-    spot_shadow = (1.0f - SpotlightShadowCalculation(input.SpotLight_FragPos[0]));
-#endif
-
-#ifdef NE_MAX_POINT_CASTERS
- //   point_shadow = (1.0f - PointlightShadowCalculation(input.PointLight_FragPos[0], FragPos, norm));
-#endif
-
-#endif
-
     // phase 0: ambient "diffuse" lighting
     //should be done once and not incremented...?
     float3 ambient = 0.05f * albedo.xyz;
     result += ambient;
 
-#ifdef NE_DIR_LIGHTS_NUM
-  // phase 1: directional lighting
-    for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
+#ifdef NE_DIR_LIGHTS_NUM  // phase 1: directional lighting
+   
+    int i0 = 0;
+
+#ifdef NE_MAX_DIR_CASTERS
+    for (; i0 < DirSpotPointActiveCasters.x; i0++)   //Shadow enabled light casters first
     {
+        float dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[i0]));
+
         result += dir_Shadow * CalcDirLight(DirLights[i0], norm, viewDir, albedo);
     }
 #endif
-#ifdef NE_POINT_LIGHTS_NUM  
-    // phase 2: point lights
-    for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
+
+    for (int j0 = i0; j0 < NE_DIR_LIGHTS_NUM; j0++)
     {
-        result += CalcPointLight(PointLights[i1], norm, FragPos, viewDir, albedo);
+        result += CalcDirLight(DirLights[j0], norm, viewDir, albedo);
     }
 #endif
-#ifdef NE_SPOT_LIGHTS_NUM
-    // phase 3: spot light
-    for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
+
+#ifdef NE_SPOT_LIGHTS_NUM     // phase 2: spot light
+    int i1 = 0;
+
+#ifdef NE_MAX_SPOT_CASTERS
+    for (; i1 < DirSpotPointActiveCasters.y; i1++)   //Shadow enabled light casters first
     {
-        result += spot_shadow * CalcSpotLight(SpotLights[i2], norm, FragPos, viewDir, albedo);
+        float Spot_Shadow = (1.0f - SpotlightShadowCalculation(input.SpotLight_FragPos[0]));
+
+        result += Spot_Shadow * CalcSpotLight(SpotLights[i1], norm, FragPos, viewDir, albedo);
     }
 #endif
+
+    for (int j1 = i1; j1 < NE_SPOT_LIGHTS_NUM; j1++)
+    {
+        result += CalcSpotLight(SpotLights[j1], norm, FragPos, viewDir, albedo);
+    }
+#endif
+
+#ifdef NE_POINT_LIGHTS_NUM    // phase 3: point lights
+   
+    for (int i2 = 0; i2 < NE_POINT_LIGHTS_NUM; i2++)
+    {
+        result += CalcPointLight(PointLights[i2], norm, FragPos, viewDir, albedo);
+    }
+#endif
+
 
     PS_OUTPUT output;
     output.Color =  float4(result, 1.0f);

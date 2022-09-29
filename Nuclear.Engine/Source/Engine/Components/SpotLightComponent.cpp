@@ -5,7 +5,6 @@ namespace Nuclear
 	namespace Components
 	{
 		SpotLightComponent::SpotLightComponent()
-			: mShadowMap(Graphics::LightType::SpotLight)
 		{
 			data.Position = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 			data.Direction = Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f);
@@ -80,9 +79,6 @@ namespace Nuclear
 		{
 			data.Position = Math::Vector4(pos, 1.0f);
 		}
-		Graphics::ShadowMap* SpotLightComponent::GetShadowMap()
-		{
-			return &mShadowMap;
-		}
+
 	}
 }

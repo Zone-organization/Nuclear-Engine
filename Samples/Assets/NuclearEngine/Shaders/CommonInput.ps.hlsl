@@ -16,8 +16,9 @@ struct PixelInputType
 #endif
 
 #ifdef NE_MAX_SPOT_CASTERS  //Spotlights that casts shadows
-	float4 SpotLight_FragPos[NE_MAX_SPOT_CASTERS] : COLOR;
+	float4 SpotLight_FragPos[NE_MAX_SPOT_CASTERS] : TEXCOORD3;
 #endif
 
+    int4 DirSpotPointActiveCasters : COLOR;
 #endif
 };

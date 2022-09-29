@@ -26,6 +26,11 @@ cbuffer NEStatic_ShadowCasters
 #endif
 
 
+    //X: Num of active dir light shadow caster
+    //y: Num of active spot light shadow caster
+    //z: Num of active point light shadow caster
+    //w: padding
+    int4 DirSpotPointActiveCasters;
 };
 
 #endif

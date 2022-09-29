@@ -5,7 +5,6 @@ namespace Nuclear
 	namespace Components
 	{
 		PointLightComponent::PointLightComponent()
-			: mShadowMap(Graphics::LightType::PointLight)
 		{
 			data.Position = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 			data.Intensity_Attenuation = Math::Vector4(1.0f, 1.0f, 0.09f, 0.032f);
@@ -25,10 +24,6 @@ namespace Nuclear
 		void PointLightComponent::SetInternalPosition(Math::Vector3 pos)
 		{
 			data.Position = Math::Vector4(pos, 1.0f);
-		}
-		Graphics::ShadowMap* PointLightComponent::GetShadowMap()
-		{
-			return &mShadowMap;
 		}
 		void PointLightComponent::SetIntensity(float intensity)
 		{

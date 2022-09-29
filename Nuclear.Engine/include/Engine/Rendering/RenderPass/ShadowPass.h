@@ -22,15 +22,20 @@ namespace Nuclear
 
 		struct ShadowPassDesc
 		{
+			//max limits used for compiling shaders... (to avoid recompiling pipeline shaders everytime a new light is added to the scene or cast shadows activated)
+			//Note: has no effect on shadow pass pipelines. + used in pVSShadowCasterBuffer
+
+			Uint32 MAX_DIR_CSM_CASTERS = 1;   //WIP
+
 			Uint32 MAX_DIR_CASTERS = 1;
 			Uint32 MAX_SPOT_CASTERS = 1;
-			Uint32 MAX_POINT_CASTERS = 1;
 
+			Uint32 MAX_POS_CASTERS = 1;
+			Uint32 MAX_OMNIDIR_CASTERS = 1;
 
-
-			ShadowMapInfo mDirLightShadowMapInfo;
-			ShadowMapInfo mSpotLightShadowMapInfo;
-			ShadowMapInfo mPointLightShadowMapInfo;
+		//	ShadowMapInfo mDirLightShadowMapInfo;
+			ShadowMapInfo mPositionalShadowMapInfo;  //aka spot light shadows / simple (not csm) dir light shadow maps
+			ShadowMapInfo mOmniDirShadowMapInfo;     //Aka point light shadows
 
 		};
 		class NEAPI ShadowPass
@@ -51,26 +56,24 @@ namespace Nuclear
 			ShadowPassDesc mDesc;
 			RefCntAutoPtr<IBuffer> pVSShadowCasterBuffer;
 
-			//DirLight (simple)
-			RefCntAutoPtr<IPipelineState> mDirShadowMapDepthPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mDirShadowMapDepthSRB;
-			RefCntAutoPtr<IBuffer> pDirLightInfoCB;
+			//Spotlight/DirLight (simple)
+			RefCntAutoPtr<IPipelineState> mPositionalShadowMapDepthPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mPositionalShadowMapDepthSRB;
+			RefCntAutoPtr<IBuffer> pPositionalLightInfoCB;
+			RefCntAutoPtr<ITexture> pPosShadowMap;
+			RefCntAutoPtr<ITextureView> pPosShadowMapSRV;
 
-			//Spotlight
-			RefCntAutoPtr<IPipelineState> mSpotShadowMapDepthPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mSpotShadowMapDepthSRB;
-			RefCntAutoPtr<IBuffer> pSpotLightInfoCB;
+			void PositionalLightShadowDepthPass(Graphics::ShadowMap* shadowmap, const Math::Matrix4 lightspace, Assets::Scene* scene);
+			void InitPositionalShadowPassPSO();
+			void InitPositionalShadowMapTexture();
 
 			//Pointlight
-			RefCntAutoPtr<IPipelineState> mPointShadowPassPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mPointShadowPassSRB;
-			RefCntAutoPtr<IBuffer> pPointShadowVS_CB;
-			RefCntAutoPtr<IBuffer> pPointShadowGS_CB;
-			RefCntAutoPtr<IBuffer> pPointShadowPS_CB;
-
-			void InitDirLightSimpleShadowPassPSO();
-			void InitSpotLightShadowPSO();
-			void InitPointLightShadowPassPSO();
+			RefCntAutoPtr<IPipelineState> mOmniDirShadowPassPSO;
+			RefCntAutoPtr<IShaderResourceBinding> mOmniDirShadowPassSRB;
+			RefCntAutoPtr<IBuffer> pOmniDirShadowVS_CB;
+			RefCntAutoPtr<IBuffer> pOmniDirShadowGS_CB;
+			RefCntAutoPtr<IBuffer> pOmniDirShadowPS_CB;
+			void InitOmniDirShadowPassPSO();
 		
 			void RenderMeshForDepthPass(Assets::Mesh* mesh);
 		};

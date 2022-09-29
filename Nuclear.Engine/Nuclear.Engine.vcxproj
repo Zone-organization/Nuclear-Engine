@@ -138,7 +138,6 @@
     <ClInclude Include="include\Engine\Components\SpotLightComponent.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
     <ClInclude Include="include\Engine\ECS\Entity.h" />
-    <ClInclude Include="include\Engine\Graphics\ShadowMap.h" />
     <ClInclude Include="include\Engine\Managers\SceneManager.h" />
     <ClInclude Include="include\Engine\Rendering\Background.h" />
     <ClInclude Include="include\Engine\Graphics\BakeStatus.h" />

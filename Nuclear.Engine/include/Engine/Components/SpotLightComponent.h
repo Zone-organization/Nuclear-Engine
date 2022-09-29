@@ -46,7 +46,6 @@ namespace Nuclear
 			Math::Vector3 GetInternalPosition() const;
 			void SetInternalPosition(Math::Vector3 pos);
 
-			Graphics::ShadowMap* GetShadowMap();
 
 		protected:
 			friend class Rendering::ShadowPass;
@@ -57,7 +56,6 @@ namespace Nuclear
 		private:
 			Internal::Shader_SpotLight_Struct data;
 			LightShadowType mShadowType;
-			Graphics::ShadowMap mShadowMap;
 		};
 	}
 }

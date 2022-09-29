@@ -19,18 +19,15 @@ struct SpotLight
 	float4 Color;
 };
 
-//struct SpotLightWithShadow
-//{
-//	SpotLight LightData;
-//
-//};
 
+//It should be noted that light casters with shadow enabled are always added first in the array
 cbuffer NEStatic_Lights
 {
 	float4 ViewPos;            //Camera pos
 #ifdef NE_DIR_LIGHTS_NUM
 	DirLight DirLights[NE_DIR_LIGHTS_NUM];
 #endif
+
 #ifdef NE_POINT_LIGHTS_NUM
 	PointLight PointLights[NE_POINT_LIGHTS_NUM];
 #endif

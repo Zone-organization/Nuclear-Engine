@@ -27,8 +27,6 @@ namespace Nuclear
 			Math::Vector3 GetInternalPosition();
 			void SetInternalPosition(Math::Vector3 pos);
 
-
-			Graphics::ShadowMap* GetShadowMap();
 		protected:
 			Internal::Shader_PointLight_Struct data;
 			LightShadowType mShadowType;

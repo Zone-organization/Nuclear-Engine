@@ -11,12 +11,12 @@ struct VertexInputType
     float4 Weights : ATTRIB6;
 };
 
-cbuffer NEStatic_PointShadowVS
+cbuffer NEStatic_OmniDirShadowVS
 {
     matrix Model;
 };
 
-float4 PointShadowMapDepthVS(VertexInputType input) : SV_POSITION
+float4 OmniDirShadowMapDepthVS(VertexInputType input) : SV_POSITION
 {
    return mul(Model, float4(input.Position.xyz, 1.0f));
 }
@@ -26,16 +26,17 @@ float4 PointShadowMapDepthVS(VertexInputType input) : SV_POSITION
 struct GSOutput
 {
     float4 FragPos : SV_POSITION;
+    float4 VSPos : POSITION;
     uint slice : SV_RenderTargetArrayIndex;
 };
 
-cbuffer NEStatic_PointShadowGS
+cbuffer NEStatic_OmniDirShadowGS
 {
     matrix ShadowMatrices[6];
 };
 
 [maxvertexcount(18)]
-void PointShadowMapDepthGS(triangle float4 input[3] : SV_POSITION,  inout TriangleStream< GSOutput > output )
+void OmniDirShadowMapDepthGS(triangle float4 input[3] : SV_POSITION,  inout TriangleStream< GSOutput > output )
 {
     for (uint face = 0; face < 6; ++face)
     {
@@ -44,7 +45,8 @@ void PointShadowMapDepthGS(triangle float4 input[3] : SV_POSITION,  inout Triang
 
         for (uint i = 0; i < 3; i++)  // for each triangle's vertices
         {
-            element.FragPos = mul(ShadowMatrices[face], input[i]);
+            element.VSPos = input[i];
+            element.FragPos = mul(ShadowMatrices[face], element.VSPos);
             output.Append(element);
         }
         output.RestartStrip();
@@ -65,20 +67,20 @@ void PointShadowMapDepthGS(triangle float4 input[3] : SV_POSITION,  inout Triang
 
 ///////////////////////////////////////////////////////////////////PS
 
-cbuffer NEStatic_PointShadowPS
+cbuffer NEStatic_OmniDirShadowPS               //TODO Move
 {
     float3 gLightPos;
     float gFarPlane;
 };
 
-float PointShadowMapDepthPS(GSOutput input) : SV_Depth
+float OmniDirShadowMapDepthPS(GSOutput input) : SV_Depth
 {
-    float lightDistance = length(input.FragPos.xyz - gLightPos);
+    float lightDistance = length(input.VSPos.xyz - gLightPos);
 
-    //// map to [0;1] range by dividing by far_plane
-    lightDistance = input.FragPos.z / (gFarPlane / 25.f);
-   // lightDistance = input.FragPos.z;
-    //// write this as modified depth
+    // map to [0;1] range by dividing by far_plane
+    lightDistance = lightDistance / gFarPlane;
+
+    // write this as modified depth
     return lightDistance;
 
 }

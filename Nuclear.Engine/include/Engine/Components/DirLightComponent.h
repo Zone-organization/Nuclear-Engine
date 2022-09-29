@@ -35,7 +35,6 @@ namespace Nuclear
 
 			LightShadowType GetShadowType() const;
 			void SetShadowType(const LightShadowType& type);
-			Graphics::ShadowMap* GetShadowMap();
 			Math::Vector3 GetInternalPosition() const;
 			void SetInternalPosition(Math::Vector3 pos);
 
@@ -48,7 +47,6 @@ namespace Nuclear
 			Math::Vector4 _internalPos; //needed for simple shadow "not CSM"
 
 		private:
-			Graphics::ShadowMap mShadowMap;
 			Internal::Shader_DirLight_Struct data;
 			LightShadowType mShadowType;
 		};
