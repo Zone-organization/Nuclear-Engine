@@ -1,15 +1,16 @@
 #pragma once
+#include <Core\NE_Common.h>
 
 namespace Nuclear
 {
 	namespace Rendering
 	{
 
-        class IRenderPass
+        class NEAPI RenderPass
         {
         public:
-            IRenderPass() = default;
-            virtual ~IRenderPass() = default;
+            RenderPass() = default;
+            virtual ~RenderPass() = default;
 
             virtual void Initialize() = 0;
             virtual void Update() = 0;

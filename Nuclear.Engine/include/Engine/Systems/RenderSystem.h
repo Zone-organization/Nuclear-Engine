@@ -8,7 +8,7 @@
 #include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
-#include <Engine/Rendering/RenderPass/IRenderPass.h>
+#include <Engine/Rendering/RenderPass/RenderPass.h>
 #include <Core/Logger.h>
 
 namespace Nuclear
@@ -62,14 +62,14 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////WIP - RENDER PASS/////////////////////////////////////////
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			void AddRenderPass(IRenderPass* pass);
+			void AddRenderPass(Rendering::RenderPass* pass);
 
 			template <typename T>
 			T* GetRenderPass()
 			{
-				static_assert(std::is_base_of<IRenderPass, T>::value, "GetRenderPass<T> class must derive from IRenderPass!");
+				static_assert(std::is_base_of<Rendering::RenderPass, T>::value, "GetRenderPass<T> class must derive from IRenderPass!");
 
-				for (IRenderPass* pass : mRenderPasses)
+				for (Rendering::RenderPass* pass : mRenderPasses)
 				{
 					T* result = dynamic_cast<T*>(pass);
 					if (result)
@@ -94,7 +94,7 @@ namespace Nuclear
 
 		private:
 			Rendering::Background mBackground;
-			std::vector<IRenderPass*> mRenderPasses;
+			std::vector<Rendering::RenderPass*> mRenderPasses;
 
 			std::shared_ptr<CameraSystem> mCameraSystemPtr;
 			std::shared_ptr<LightingSystem> mLightingSystemPtr;

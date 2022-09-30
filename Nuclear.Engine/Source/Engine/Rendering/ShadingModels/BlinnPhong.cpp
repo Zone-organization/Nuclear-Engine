@@ -17,6 +17,7 @@ namespace Nuclear
 
 			mRenderingEffects[Utilities::Hash("BLOOM")] = ShaderEffect("BLOOM", ShaderEffect::Type::PostProcessingAndRenderingEffect, false);
 		}
+
 		bool BlinnPhong::Bake(const ShadingModelBakingDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
@@ -71,11 +72,13 @@ namespace Nuclear
 				{
 					defines.push_back("NE_DEFFERED");
 				}
-				if (mInitInfo.ShadowingEnabled == true)
+				if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
 				{
 					defines.push_back("NE_SHADOWS");
-					if (desc.Max_DirLight_Caster > 0) { defines.push_back("NE_MAX_DIR_CASTERS " + std::to_string(desc.Max_DirLight_Caster)); }
-					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
+					auto shadowpassdesc = desc.pShadowPass->GetDesc();
+					AddToDefinesIfNotZero(defines, "NE_MAX_DIR_CASTERS ", shadowpassdesc.MAX_DIR_CASTERS);
+					AddToDefinesIfNotZero(defines, "NE_MAX_SPOT_CASTERS ", shadowpassdesc.MAX_SPOT_CASTERS);
+					AddToDefinesIfNotZero(defines, "NE_MAX_OMNIDIR_CASTERS ", shadowpassdesc.MAX_OMNIDIR_CASTERS);
 				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
@@ -109,11 +112,13 @@ namespace Nuclear
 				{
 					defines.push_back("NE_DEFFERED");
 				}
-				if (mInitInfo.ShadowingEnabled == true)
+				if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
 				{
 					defines.push_back("NE_SHADOWS");
-					if (desc.Max_DirLight_Caster > 0) { defines.push_back("NE_MAX_DIR_CASTERS " + std::to_string(desc.Max_DirLight_Caster)); }
-					if (desc.Max_SpotLight_Caster > 0) { defines.push_back("NE_MAX_SPOT_CASTERS " + std::to_string(desc.Max_SpotLight_Caster)); }
+					auto shadowpassdesc = desc.pShadowPass->GetDesc();
+					AddToDefinesIfNotZero(defines, "NE_MAX_DIR_CASTERS ", shadowpassdesc.MAX_DIR_CASTERS);
+					AddToDefinesIfNotZero(defines, "NE_MAX_SPOT_CASTERS ", shadowpassdesc.MAX_SPOT_CASTERS);
+					AddToDefinesIfNotZero(defines, "NE_MAX_OMNIDIR_CASTERS ", shadowpassdesc.MAX_OMNIDIR_CASTERS);
 				}
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BlinnPhong.ps.hlsl", defines, std::vector<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
@@ -133,8 +138,12 @@ namespace Nuclear
 			if (desc.LightsBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
 
-			if (mInitInfo.ShadowingEnabled == true)
-				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_ShadowCasters")->Set(desc.ShadowCastersBufferPtr);
+			if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
+			{
+				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_LightSpaces")->Set(desc.pShadowPass->GetLightSpacesCB());
+		//		mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_ActiveShadowCasters")->Set(desc.pShadowPass->GetActiveShadowCastersCB());
+		//		mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_ActiveShadowCasters")->Set(desc.pShadowPass->GetActiveShadowCastersCB());
+			}
 
 			if (!mInitInfo.mDefferedPipeline)
 			{

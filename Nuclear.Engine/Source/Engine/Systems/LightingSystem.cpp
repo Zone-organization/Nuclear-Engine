@@ -98,52 +98,45 @@ namespace Nuclear
 		void LightingSystem::Bake()
 		{
 			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
+
+			std::vector<Components::DirLightComponent*> DirLights_noShadows;
+			std::vector<Components::PointLightComponent*> PointLights_noShadows;
+			std::vector<Components::SpotLightComponent*> SpotLights_noShadows;
+
+			//Shadows Enabled First
 			for (auto entity : DirLightView)
 			{
 				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
-				if (pShadowPass)
-				{
-					if (!DirLight.GetShadowMap()->isInitialized())
-					{
-						Graphics::ShadowMapDesc desc;
-						desc.mResolution = pShadowPass->GetDesc().mDirLightShadowMapInfo.mResolution;
-						DirLight.GetShadowMap()->Initialize(desc);
-					}
-				}
-				DirLights.push_back(&DirLight);
+				if(DirLight.mCastShadows)
+					DirLights.push_back(&DirLight);
+				else
+					DirLights_noShadows.push_back(&DirLight);
 			}
 
 			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
 			for (auto entity : SpotLightView)
 			{
 				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-				if (pShadowPass)
-				{
-					if (!SpotLight.GetShadowMap()->isInitialized())
-					{
-						Graphics::ShadowMapDesc desc;
-						desc.mResolution = pShadowPass->GetDesc().mSpotLightShadowMapInfo.mResolution;
-						SpotLight.GetShadowMap()->Initialize(desc);
-					}
-				}
-				SpotLights.push_back(&SpotLight);
+				if (SpotLight.mCastShadows)
+					SpotLights.push_back(&SpotLight);
+				else
+					SpotLights_noShadows.push_back(&SpotLight);
 			}
 
 			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
 			for (auto entity : PointLightView)
 			{
 				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
-				if (pShadowPass)
-				{
-					if (!PointLight.GetShadowMap()->isInitialized())
-					{
-						Graphics::ShadowMapDesc desc;
-						desc.mResolution = pShadowPass->GetDesc().mPointLightShadowMapInfo.mResolution;
-						PointLight.GetShadowMap()->Initialize(desc);
-					}
-				}
-				PointLights.push_back(&PointLight);
+				if (PointLight.mCastShadows)
+					PointLights.push_back(&PointLight);
+				else
+					PointLights_noShadows.push_back(&PointLight);
 			}
+					
+			//append the non shadowed vectors
+			DirLights.insert(DirLights.end(), DirLights_noShadows.begin(), DirLights_noShadows.end());
+			SpotLights.insert(SpotLights.end(), SpotLights_noShadows.begin(), SpotLights_noShadows.end());
+			PointLights.insert(PointLights.end(), PointLights_noShadows.begin(), PointLights_noShadows.end());
 
 			BakeBuffer();
 
@@ -158,6 +151,8 @@ namespace Nuclear
 			//TODO: Multiple Cameras
 
 			std::vector<Math::Matrix4> lightspacematrices;
+			Math::Vector4ui DirSpotPointActiveCasters = Math::Vector4ui(0);
+			Uint32 DirPosCasterRTIndex = 0 , SpotCasterRTIndex = 0;
 
 			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
 			for (auto entity : DirLightView)
@@ -203,13 +198,16 @@ namespace Nuclear
 
 					DirLight.LightSpace = lightProjection * lightView;
 					lightspacematrices.push_back(DirLight.LightSpace);
-					pShadowPass->DirLightShadowDepthPass(DirLight, mScene);
 
+
+					pShadowPass->DirLightShadowDepthPass(DirLight, DirPosCasterRTIndex, mScene);
+					DirSpotPointActiveCasters.x++;
+					DirPosCasterRTIndex++;
 					//Add to debug system
-					if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+					/*if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
 					{
 						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->AddRenderTarget(DirLight.GetShadowMap());
-					}
+					}*/
 				}
 			}
 
@@ -241,13 +239,16 @@ namespace Nuclear
 					SpotLight.LightSpace = lightProjection * lightView;
 					lightspacematrices.push_back(SpotLight.LightSpace);
 
-					pShadowPass->SpotLightShadowDepthPass(SpotLight, mScene);
+					pShadowPass->SpotLightShadowDepthPass(SpotLight, SpotCasterRTIndex, mScene);
+					DirSpotPointActiveCasters.y++;
+
+					SpotCasterRTIndex++;
 
 					//Add to debug system
-					if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+					/*if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
 					{
 						mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->AddRenderTarget(SpotLight.GetShadowMap());
-					}
+					}*/
 				}
 			}
 
@@ -262,6 +263,7 @@ namespace Nuclear
 				if (PointLight.mCastShadows && pShadowPass)
 				{
 					pShadowPass->PointLightShadowDepthPass(PointLight, mScene);
+					DirSpotPointActiveCasters.z++;
 
 					//Add to debug system
 					//if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
@@ -271,24 +273,24 @@ namespace Nuclear
 				}
 			}
 
-			//auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
-			//for (auto entity : PointLightView)
-			//{
-			//	auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
-			//	auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-			//	PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
-
-			//	//Shadows WIP
-			//}
-
+		
 
 			//Update Shadow Manager CB
 			if (pShadowPass)
 			{
-				PVoid data;
-				Graphics::Context::GetContext()->MapBuffer(pShadowPass->GetShadowCastersCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-				data = memcpy(data, lightspacematrices.data(), sizeof(Math::Matrix4) * lightspacematrices.size());
-				Graphics::Context::GetContext()->UnmapBuffer(pShadowPass->GetShadowCastersCB(), MAP_WRITE);
+				{
+					PVoid data;
+					Graphics::Context::GetContext()->MapBuffer(pShadowPass->GetLightSpacesCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+					data = memcpy(data, lightspacematrices.data(), sizeof(Math::Matrix4) * lightspacematrices.size());
+					Graphics::Context::GetContext()->UnmapBuffer(pShadowPass->GetLightSpacesCB(), MAP_WRITE);
+				}
+
+				{				
+					PVoid data;
+					Graphics::Context::GetContext()->MapBuffer(pShadowPass->GetActiveShadowCastersCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+					data = memcpy(&DirSpotPointActiveCasters, lightspacematrices.data(), sizeof(Math::Vector4ui));
+					Graphics::Context::GetContext()->UnmapBuffer(pShadowPass->GetActiveShadowCastersCB(), MAP_WRITE);
+				}
 			}
 		}
 		void LightingSystem::UpdateBuffer(const Math::Vector4& CameraPos)

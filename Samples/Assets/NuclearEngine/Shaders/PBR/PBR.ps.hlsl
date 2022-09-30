@@ -128,9 +128,9 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 
 #ifdef NE_SHADOWS
 
-#ifdef NE_MAX_DIR_CASTERS
-	dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0]));
-#endif
+//#ifdef NE_MAX_DIR_CASTERS
+//	dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0]));
+//#endif
 
 
 #endif

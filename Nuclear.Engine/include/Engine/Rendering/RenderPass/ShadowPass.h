@@ -5,6 +5,7 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Rendering\ShadingModel.h>
+#include <Engine\Rendering\RenderPass\RenderPass.h>
 #include <vector>
 #include <Engine\ECS\System.h>
 
@@ -20,6 +21,7 @@ namespace Nuclear
 			TEXTURE_FORMAT mFormat = TEX_FORMAT_D32_FLOAT;
 		};
 
+
 		struct ShadowPassDesc
 		{
 			//max limits used for compiling shaders... (to avoid recompiling pipeline shaders everytime a new light is added to the scene or cast shadows activated)
@@ -27,45 +29,61 @@ namespace Nuclear
 
 			Uint32 MAX_DIR_CSM_CASTERS = 1;   //WIP
 
-			Uint32 MAX_DIR_CASTERS = 1;
+			Uint32 MAX_DIR_CASTERS = 2;
 			Uint32 MAX_SPOT_CASTERS = 1;
-
-			Uint32 MAX_POS_CASTERS = 1;
 			Uint32 MAX_OMNIDIR_CASTERS = 1;
 
-		//	ShadowMapInfo mDirLightShadowMapInfo;
-			ShadowMapInfo mPositionalShadowMapInfo;  //aka spot light shadows / simple (not csm) dir light shadow maps
+			ShadowMapInfo mDirPosShadowMapInfo;
+			ShadowMapInfo mSpotShadowMapInfo;
 			ShadowMapInfo mOmniDirShadowMapInfo;     //Aka point light shadows
 
 		};
-		class NEAPI ShadowPass
+		class NEAPI ShadowPass : public RenderPass
 		{
 		public:
 			ShadowPass(const ShadowPassDesc& desc = ShadowPassDesc());
 
-			void Initialize();
+			void Initialize() override;
 
-			void DirLightShadowDepthPass(Components::DirLightComponent& dirlight, Assets::Scene* scene);
-			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene);
+			void Update() override;
+
+			void DirLightShadowDepthPass(Components::DirLightComponent& dirlight, Uint32 RTindex, Assets::Scene* scene);
+			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Uint32 RTindex, Assets::Scene* scene);
 			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene);
 
 			ShadowPassDesc GetDesc() const;
 
-			IBuffer* GetShadowCastersCB();
+			IBuffer* GetLightSpacesCB();
+			IBuffer* GetActiveShadowCastersCB();
+
+			ITextureView* GetDirPosShadowMapSRV();
+
+			ITextureView* GetSpotShadowMapSRV();
+
+			ITextureView* GetOmniDirShadowMapSRV();
+
 		protected:
 			ShadowPassDesc mDesc;
-			RefCntAutoPtr<IBuffer> pVSShadowCasterBuffer;
+			RefCntAutoPtr<IBuffer> pLightSpacesCB;
+			RefCntAutoPtr<IBuffer> pActiveShadowCastersCB;
 
 			//Spotlight/DirLight (simple)
+			struct PosShadowMap
+			{
+				RefCntAutoPtr<ITexture> pPosShadowMap;
+				RefCntAutoPtr<ITextureView> pPosShadowMapSRV;
+				std::vector<RefCntAutoPtr<ITextureView>> pPosShadowMapDSVs;
+			};
+
 			RefCntAutoPtr<IPipelineState> mPositionalShadowMapDepthPSO;
 			RefCntAutoPtr<IShaderResourceBinding> mPositionalShadowMapDepthSRB;
 			RefCntAutoPtr<IBuffer> pPositionalLightInfoCB;
-			RefCntAutoPtr<ITexture> pPosShadowMap;
-			RefCntAutoPtr<ITextureView> pPosShadowMapSRV;
+			PosShadowMap mDirShadowMap;
+			PosShadowMap mSpotShadowMap;
 
-			void PositionalLightShadowDepthPass(Graphics::ShadowMap* shadowmap, const Math::Matrix4 lightspace, Assets::Scene* scene);
+			void PositionalLightShadowDepthPass(Uint32 RTindex,const Math::Matrix4 lightspace, Assets::Scene* scene, PosShadowMap& type);
 			void InitPositionalShadowPassPSO();
-			void InitPositionalShadowMapTexture();
+			void InitPositionalShadowMapTextures();
 
 			//Pointlight
 			RefCntAutoPtr<IPipelineState> mOmniDirShadowPassPSO;
@@ -73,8 +91,13 @@ namespace Nuclear
 			RefCntAutoPtr<IBuffer> pOmniDirShadowVS_CB;
 			RefCntAutoPtr<IBuffer> pOmniDirShadowGS_CB;
 			RefCntAutoPtr<IBuffer> pOmniDirShadowPS_CB;
+			RefCntAutoPtr<ITexture> pOmniDirShadowMap;
+			RefCntAutoPtr<ITextureView> pOmniDirShadowMapSRV;
+			RefCntAutoPtr<ITextureView> pOmniDirShadowMapRTV;
+
 			void InitOmniDirShadowPassPSO();
-		
+			void InitOmniDirShadowMapTexture();
+
 			void RenderMeshForDepthPass(Assets::Mesh* mesh);
 		};
 

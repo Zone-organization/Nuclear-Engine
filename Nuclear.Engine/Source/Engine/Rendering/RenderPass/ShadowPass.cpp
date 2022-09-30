@@ -25,38 +25,50 @@ namespace Nuclear
 		void ShadowPass::Initialize()
 		{
 			InitPositionalShadowPassPSO();
+			InitPositionalShadowMapTextures();
 			InitOmniDirShadowPassPSO();
+			InitOmniDirShadowMapTexture();
 
 			BufferDesc CBDesc;
-			CBDesc.Name = "NEStatic_ShadowCasters";
+			CBDesc.Name = "NEStatic_LightSpaces";
 			CBDesc.Size = (sizeof(Math::Matrix4) * mDesc.MAX_DIR_CASTERS) + (sizeof(Math::Matrix4) * mDesc.MAX_SPOT_CASTERS);
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pVSShadowCasterBuffer);
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pLightSpacesCB);
+
+			CBDesc.Name = "NEStatic_ActiveShadowCasters";
+			CBDesc.Size = sizeof(Math::Vector4ui);
+
+			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pActiveShadowCastersCB);
 		}
 
-		void ShadowPass::DirLightShadowDepthPass(Components::DirLightComponent& light, Assets::Scene* scene)
+		void ShadowPass::Update()
 		{
-			if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
+
+		}
+
+		void ShadowPass::DirLightShadowDepthPass(Components::DirLightComponent& light, Uint32 RTindex, Assets::Scene* scene)
+		{
+		//	if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
 			{
-				PositionalLightShadowDepthPass(light.GetShadowMap(), light.LightSpace, scene);
+				PositionalLightShadowDepthPass(RTindex, light.LightSpace, scene, mDirShadowMap);
 			}
 
 			//CSM - WIP
 		}
 
-		void ShadowPass::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Assets::Scene* scene)
+		void ShadowPass::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Uint32 RTindex, Assets::Scene* scene)
 		{
-			return PositionalLightShadowDepthPass(spotlight.GetShadowMap(), spotlight.LightSpace, scene);
+			return PositionalLightShadowDepthPass(RTindex, spotlight.LightSpace, scene, mSpotShadowMap);
 		}
 
 		void ShadowPass::PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene)
 		{
 			Graphics::Context::GetContext()->SetPipelineState(mOmniDirShadowPassPSO.RawPtr());
 
-			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, pointlight.GetShadowMap()->GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(pointlight.GetShadowMap()->GetRTV(), CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, pOmniDirShadowMapRTV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(pOmniDirShadowMapRTV, CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			Graphics::Context::GetContext()->CommitShaderResources(mOmniDirShadowPassSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
@@ -113,16 +125,32 @@ namespace Nuclear
 			return mDesc;
 		}
 
-		IBuffer* ShadowPass::GetShadowCastersCB()
+		IBuffer* ShadowPass::GetLightSpacesCB()
 		{
-			return pVSShadowCasterBuffer;
+			return pLightSpacesCB.RawPtr();
 		}
-		void ShadowPass::PositionalLightShadowDepthPass(Graphics::ShadowMap* shadowmap, const Math::Matrix4 lightspace, Assets::Scene* scene)
+		IBuffer* ShadowPass::GetActiveShadowCastersCB()
+		{
+			return pActiveShadowCastersCB.RawPtr();
+		}
+		ITextureView* ShadowPass::GetDirPosShadowMapSRV()
+		{
+			return mDirShadowMap.pPosShadowMapSRV.RawPtr();
+		}
+		ITextureView* ShadowPass::GetSpotShadowMapSRV()
+		{
+			return mSpotShadowMap.pPosShadowMapSRV.RawPtr();
+		}
+		ITextureView* ShadowPass::GetOmniDirShadowMapSRV()
+		{
+			return pOmniDirShadowMapSRV.RawPtr();
+		}
+		void ShadowPass::PositionalLightShadowDepthPass(Uint32 RTindex, const Math::Matrix4 lightspace, Assets::Scene* scene, PosShadowMap& type)
 		{
 			Graphics::Context::GetContext()->SetPipelineState(mPositionalShadowMapDepthPSO.RawPtr());
 
-			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, shadowmap->GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(shadowmap->GetRTV(), CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(0, nullptr, type.pPosShadowMapDSVs[RTindex], RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(type.pPosShadowMapDSVs[RTindex], CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			Graphics::Context::GetContext()->CommitShaderResources(mPositionalShadowMapDepthSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
@@ -228,26 +256,73 @@ namespace Nuclear
 
 			mPositionalShadowMapDepthPSO->CreateShaderResourceBinding(mPositionalShadowMapDepthSRB.RawDblPtr(), true);
 		}
-		void ShadowPass::InitPositionalShadowMapTexture()
+		void ShadowPass::InitPositionalShadowMapTextures()
 		{
-			TextureDesc ShadowMapDesc;
-			ShadowMapDesc.Name = "PosShadowMap";
-			ShadowMapDesc.Width = mDesc.mPositionalShadowMapInfo.mResolution;
-			ShadowMapDesc.Height = mDesc.mPositionalShadowMapInfo.mResolution;
-			ShadowMapDesc.MipLevels = 1;
-			ShadowMapDesc.SampleCount = 1;
-			ShadowMapDesc.Format = TEX_FORMAT_R32_TYPELESS;
-			ShadowMapDesc.Usage = USAGE_DEFAULT;
-			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
-			ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D_ARRAY;
-			ShadowMapDesc.ArraySize = mDesc.MAX_POS_CASTERS;
-
-			Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &pPosShadowMap);
-
 			{
-				TextureViewDesc SRVDesc{ "PosShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_2D_ARRAY };
-				SRVDesc.Format = TEX_FORMAT_R32_FLOAT;
-				pPosShadowMap->CreateView(SRVDesc, &pPosShadowMapSRV);
+				TextureDesc ShadowMapDesc;
+				ShadowMapDesc.Name = "DirPosShadowMap";
+				ShadowMapDesc.Width = mDesc.mDirPosShadowMapInfo.mResolution;
+				ShadowMapDesc.Height = mDesc.mDirPosShadowMapInfo.mResolution;
+				ShadowMapDesc.MipLevels = 1;
+				ShadowMapDesc.SampleCount = 1;
+				ShadowMapDesc.Format = TEX_FORMAT_R32_TYPELESS;
+				ShadowMapDesc.Usage = USAGE_DEFAULT;
+				ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
+				ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D_ARRAY;
+				ShadowMapDesc.ArraySize = mDesc.MAX_DIR_CASTERS;
+
+				Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &mDirShadowMap.pPosShadowMap);
+
+				{
+					TextureViewDesc SRVDesc{ "DirPosShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_2D_ARRAY };
+					SRVDesc.Format = TEX_FORMAT_R32_FLOAT;
+					mDirShadowMap.pPosShadowMap->CreateView(SRVDesc, &mDirShadowMap.pPosShadowMapSRV);
+				}
+
+				mDirShadowMap.pPosShadowMapDSVs.clear();
+				mDirShadowMap.pPosShadowMapDSVs.resize(ShadowMapDesc.ArraySize);
+				for (Uint32 iArrSlice = 0; iArrSlice < ShadowMapDesc.ArraySize; iArrSlice++)   //To avoid recreating each frame
+				{
+					TextureViewDesc ShadowMapDSVDesc;
+					ShadowMapDSVDesc.Name = "DirPosShadowMap DSV";
+					ShadowMapDSVDesc.ViewType = TEXTURE_VIEW_DEPTH_STENCIL;
+					ShadowMapDSVDesc.FirstArraySlice = iArrSlice;
+					ShadowMapDSVDesc.NumArraySlices = 1;
+					mDirShadowMap.pPosShadowMap->CreateView(ShadowMapDSVDesc, &mDirShadowMap.pPosShadowMapDSVs[iArrSlice]);
+				}
+			}
+			{
+				TextureDesc ShadowMapDesc;
+				ShadowMapDesc.Name = "SpotShadowMap";
+				ShadowMapDesc.Width = mDesc.mDirPosShadowMapInfo.mResolution;
+				ShadowMapDesc.Height = mDesc.mDirPosShadowMapInfo.mResolution;
+				ShadowMapDesc.MipLevels = 1;
+				ShadowMapDesc.SampleCount = 1;
+				ShadowMapDesc.Format = TEX_FORMAT_R32_TYPELESS;
+				ShadowMapDesc.Usage = USAGE_DEFAULT;
+				ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
+				ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D_ARRAY;
+				ShadowMapDesc.ArraySize = mDesc.MAX_DIR_CASTERS;
+
+				Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &mSpotShadowMap.pPosShadowMap);
+
+				{
+					TextureViewDesc SRVDesc{ "SpotShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_2D_ARRAY };
+					SRVDesc.Format = TEX_FORMAT_R32_FLOAT;
+					mSpotShadowMap.pPosShadowMap->CreateView(SRVDesc, &mSpotShadowMap.pPosShadowMapSRV);
+				}
+
+				mSpotShadowMap.pPosShadowMapDSVs.clear();
+				mSpotShadowMap.pPosShadowMapDSVs.resize(ShadowMapDesc.ArraySize);
+				for (Uint32 iArrSlice = 0; iArrSlice < ShadowMapDesc.ArraySize; iArrSlice++)   //To avoid recreating each frame
+				{
+					TextureViewDesc ShadowMapDSVDesc;
+					ShadowMapDSVDesc.Name = "SpotShadowMap DSV";
+					ShadowMapDSVDesc.ViewType = TEXTURE_VIEW_DEPTH_STENCIL;
+					ShadowMapDSVDesc.FirstArraySlice = iArrSlice;
+					ShadowMapDSVDesc.NumArraySlices = 1;
+					mSpotShadowMap.pPosShadowMap->CreateView(ShadowMapDSVDesc, &mSpotShadowMap.pPosShadowMapDSVs[iArrSlice]);
+				}
 			}
 		}
 		void ShadowPass::InitOmniDirShadowPassPSO()
@@ -358,6 +433,35 @@ namespace Nuclear
 			mOmniDirShadowPassPSO->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_OmniDirShadowPS")->Set(pOmniDirShadowPS_CB);
 
 			mOmniDirShadowPassPSO->CreateShaderResourceBinding(mOmniDirShadowPassSRB.RawDblPtr(), true);
+		}
+		void ShadowPass::InitOmniDirShadowMapTexture()
+		{
+			TextureDesc ShadowMapDesc;
+			ShadowMapDesc.Name = "ShadowMap";
+			ShadowMapDesc.Width = mDesc.mOmniDirShadowMapInfo.mResolution;
+			ShadowMapDesc.Height = mDesc.mOmniDirShadowMapInfo.mResolution;
+			ShadowMapDesc.MipLevels = 1;
+			ShadowMapDesc.SampleCount = 1;
+			ShadowMapDesc.Format = TEX_FORMAT_R32_TYPELESS;
+			ShadowMapDesc.Usage = USAGE_DEFAULT;
+			ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
+
+			ShadowMapDesc.ArraySize = 6;
+
+
+			ShadowMapDesc.Type = RESOURCE_DIM_TEX_CUBE;
+			Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &pOmniDirShadowMap);
+
+			{
+				TextureViewDesc SRVDesc{ "ShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_CUBE };
+				SRVDesc.Format = TEX_FORMAT_R32_FLOAT;
+				pOmniDirShadowMap->CreateView(SRVDesc, &pOmniDirShadowMapSRV);
+			}
+			{
+				TextureViewDesc DSVDesc{ "ShadowMap_DSV", TEXTURE_VIEW_DEPTH_STENCIL,  RESOURCE_DIM_TEX_2D_ARRAY };
+				DSVDesc.Format = TEX_FORMAT_D32_FLOAT;
+				pOmniDirShadowMap->CreateView(DSVDesc, &pOmniDirShadowMapRTV);
+			}
 		}
 		void ShadowPass::RenderMeshForDepthPass(Assets::Mesh* mesh)
 		{

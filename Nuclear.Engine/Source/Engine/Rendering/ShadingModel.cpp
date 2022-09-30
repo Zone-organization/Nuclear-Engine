@@ -140,18 +140,17 @@ namespace Nuclear
 						VarName.erase(0, 13);
 
 						Assets::ShaderTexture* tex;
-						if (VarName.find("Spot") == 0)
+						if (VarName.find("DirPos") == 0)
 						{
-							tex = &mSpotLight_ShadowmapInfo;
+							tex = &mDirPos_ShadowmapInfo;
 						}
-						else if (VarName.find("Point") == 0)
+						else if (VarName.find("Spot") == 0)
 						{
-							tex = &mPointLight_ShadowmapInfo;
+							tex = &mSpot_ShadowmapInfo;
 						}
-						else if (VarName.find("Dir") == 0)
+						else if (VarName.find("OmniDir") == 0)
 						{
-							tex = &mDirLight_ShadowmapInfo;
-
+							tex = &mOmniDir_ShadowmapInfo;
 						}
 						else {
 							assert(false);
@@ -218,5 +217,12 @@ namespace Nuclear
 		{
 			return mName;
  		}
+
+
+		void ShadingModel::AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value)
+		{
+			if (value > 0) { defines.push_back(name + std::to_string(value)); }
+		}
+
 	}
 }

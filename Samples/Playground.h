@@ -89,6 +89,7 @@ public:
 		ELights.AddComponent<Components::PointLightComponent>().mCastShadows = true;
 		EController.AddComponent<Components::SpotLightComponent>().mCastShadows = true;
 		EController.AddComponent<Components::CameraComponent>(&Camera);
+		EController.AddComponent<Components::DirLightComponent>().mCastShadows = true;
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -129,6 +130,7 @@ public:
 		mSceneManager->CreateScene(&Scene, true);
 
 		mAssetManager->Initialize();
+
 		Systems::LightingSystemDesc desc;
 		desc.ShadowPass = &ShadowPass;
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
@@ -137,6 +139,7 @@ public:
 		mLightingSystem->Bake();
 
 		InitRenderer();
+		Renderer->AddRenderPass(&ShadowPass);
 
 		SetupAssets();
 

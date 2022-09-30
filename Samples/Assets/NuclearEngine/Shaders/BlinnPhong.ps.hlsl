@@ -147,48 +147,55 @@ PS_OUTPUT DoLighting(PixelInputType input)
     float3 ambient = 0.05f * albedo.xyz;
     result += ambient;
 
+    uint i = 0;  //used for iteriation
+
 #ifdef NE_DIR_LIGHTS_NUM  // phase 1: directional lighting
-   
-    int i0 = 0;
 
-#ifdef NE_MAX_DIR_CASTERS
-    for (; i0 < DirSpotPointActiveCasters.x; i0++)   //Shadow enabled light casters first
+    float dir_Shadow[NE_DIR_LIGHTS_NUM];
+    for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)   //initialize array
     {
-        float dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[i0]));
-
-        result += dir_Shadow * CalcDirLight(DirLights[i0], norm, viewDir, albedo);
+        dir_Shadow[i] = 0.0f;
     }
-#endif
-
-    for (int j0 = i0; j0 < NE_DIR_LIGHTS_NUM; j0++)
+#ifdef NE_MAX_DIR_CASTERS
+    for (i = 0; i < NE_MAX_DIR_CASTERS; i++)   //Shadow enabled light casters first
     {
-        result += CalcDirLight(DirLights[j0], norm, viewDir, albedo);
+        dir_Shadow[i] = (1.0f - DirPosShadowCalculation(i, input.DirLight_FragPos[i]));
+    }
+
+#endif
+    for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)  //do lighting + add shadow
+    {
+        result += dir_Shadow[i] * CalcDirLight(DirLights[i], norm, viewDir, albedo);
     }
 #endif
 
 #ifdef NE_SPOT_LIGHTS_NUM     // phase 2: spot light
-    int i1 = 0;
-
+    float Spot_Shadow[NE_SPOT_LIGHTS_NUM];
+ 
+    for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)   //initialize array
+    {
+        Spot_Shadow[i] = 0.0f;
+    }
 #ifdef NE_MAX_SPOT_CASTERS
-    for (; i1 < DirSpotPointActiveCasters.y; i1++)   //Shadow enabled light casters first
+    for (i = 0; i < NE_MAX_SPOT_CASTERS; i++)   //Shadow enabled light casters first
     {
-        float Spot_Shadow = (1.0f - SpotlightShadowCalculation(input.SpotLight_FragPos[0]));
-
-        result += Spot_Shadow * CalcSpotLight(SpotLights[i1], norm, FragPos, viewDir, albedo);
+        Spot_Shadow[i] = (1.0f - SpotShadowCalculation(i, input.SpotLight_FragPos[i]));
+    }
+#endif
+    for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)  //do lighting + add shadow
+    {
+        result += Spot_Shadow[i] * CalcSpotLight(SpotLights[i], norm, FragPos, viewDir, albedo);
     }
 #endif
 
-    for (int j1 = i1; j1 < NE_SPOT_LIGHTS_NUM; j1++)
-    {
-        result += CalcSpotLight(SpotLights[j1], norm, FragPos, viewDir, albedo);
-    }
-#endif
+
+
 
 #ifdef NE_POINT_LIGHTS_NUM    // phase 3: point lights
    
-    for (int i2 = 0; i2 < NE_POINT_LIGHTS_NUM; i2++)
+    for (uint i2 = 0; i2 < NE_POINT_LIGHTS_NUM; i2++)
     {
-        result += CalcPointLight(PointLights[i2], norm, FragPos, viewDir, albedo);
+        result += CalcPointLight(PointLights[i2], norm, FragPos, viewDir, albedo) * 0.0f;
     }
 #endif
 

@@ -1,6 +1,7 @@
 #include <Engine\Managers\ShaderManager.h>
 #include <Core\FileSystem.h>
 #include <Engine\Graphics\Context.h>
+#include <Core\Logger.h>
 
 namespace Nuclear
 {
@@ -116,34 +117,45 @@ namespace Nuclear
 		std::vector<ShaderResourceVariableDesc> ShaderManager::ReflectShaderVariables(IShader* VShader, IShader* PShader)
 		{
 			std::vector<ShaderResourceVariableDesc> resources;
-			for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
+			if (VShader)
 			{
-				ShaderResourceDesc RsrcDesc;
-				VShader->GetResourceDesc(i, RsrcDesc);
-				if (!CheckSampler(RsrcDesc.Name))
+				for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
 				{
-					ShaderResourceVariableDesc Desc;
-					Desc.Name = RsrcDesc.Name;
-					Desc.Type = ParseNameToGetType(RsrcDesc.Name);
-					Desc.ShaderStages = VShader->GetDesc().ShaderType;
-					resources.push_back(Desc);
+					ShaderResourceDesc RsrcDesc;
+					VShader->GetResourceDesc(i, RsrcDesc);
+					if (!CheckSampler(RsrcDesc.Name))
+					{
+						ShaderResourceVariableDesc Desc;
+						Desc.Name = RsrcDesc.Name;
+						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
+						Desc.ShaderStages = VShader->GetDesc().ShaderType;
+						resources.push_back(Desc);
+					}
 				}
 			}
-			for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
+			else {
+				NUCLEAR_WARN("[ShaderManager] ReflectShaderVariables() skipped null Vertex Shader...");
+			}
+			if (PShader)
 			{
-				ShaderResourceDesc RsrcDesc;
-				PShader->GetResourceDesc(i, RsrcDesc);
-				if (!CheckSampler(RsrcDesc.Name))
+				for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
 				{
-					std::string name(RsrcDesc.Name);
-					ShaderResourceVariableDesc Desc;
-					Desc.Name = RsrcDesc.Name;
-					Desc.Type = ParseNameToGetType(RsrcDesc.Name);
-					Desc.ShaderStages = PShader->GetDesc().ShaderType;
-					resources.push_back(Desc);
+					ShaderResourceDesc RsrcDesc;
+					PShader->GetResourceDesc(i, RsrcDesc);
+					if (!CheckSampler(RsrcDesc.Name))
+					{
+						std::string name(RsrcDesc.Name);
+						ShaderResourceVariableDesc Desc;
+						Desc.Name = RsrcDesc.Name;
+						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
+						Desc.ShaderStages = PShader->GetDesc().ShaderType;
+						resources.push_back(Desc);
+					}
 				}
 			}
-
+			else {
+				NUCLEAR_WARN("[ShaderManager] ReflectShaderVariables() skipped null Pixel Shader...");
+			}
 			return resources;
 		}
 		SHADER_RESOURCE_VARIABLE_TYPE ShaderManager::ParseNameToGetType(const std::string & name)

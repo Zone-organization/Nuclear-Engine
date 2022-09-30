@@ -153,7 +153,7 @@
     <ClInclude Include="include\Engine\Rendering\Rendering.h" />
     <ClInclude Include="include\Engine\Rendering\RenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\RenderPass\GeometryPass.h" />
-    <ClInclude Include="include\Engine\Rendering\RenderPass\IRenderPass.h" />
+    <ClInclude Include="include\Engine\Rendering\RenderPass\RenderPass.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\BlinnPhong.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\DiffuseOnly.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\PBR.h" />
@@ -296,7 +296,6 @@
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_freetype.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Managers\SceneManager.cpp" />
     <ClCompile Include="Source\Engine\Rendering\BlurEffect.cpp" />
     <ClCompile Include="Source\Engine\Rendering\DefferedRenderingPipeline.cpp" />

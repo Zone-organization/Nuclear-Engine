@@ -75,28 +75,16 @@ namespace Nuclear
 
 					//Shadows
 					////////////////////////     TODO    //////////////////////////////////////
-					if (GetShadingModel()->mDirLight_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+					auto shadowpass = renderer->GetRenderPass<ShadowPass>();
+					if (shadowpass)
 					{
-
-						auto DirLightView = renderer->mScene->GetRegistry().view<Components::DirLightComponent>();
-						for (auto entity : DirLightView)
+						if (GetShadingModel()->mDirPos_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
 						{
-							auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
-
-							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mDirLight_ShadowmapInfo.mSlot)->Set(DirLight.GetShadowMap()->GetSRV());
-
+							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mDirPos_ShadowmapInfo.mSlot)->Set(shadowpass->GetDirPosShadowMapSRV());
 						}
-					}
-					if (GetShadingModel()->mSpotLight_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
-					{
-
-						auto SpotLightView = renderer->mScene->GetRegistry().view<Components::SpotLightComponent>();
-						for (auto entity : SpotLightView)
+						if (GetShadingModel()->mSpot_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
 						{
-							auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-
-							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mSpotLight_ShadowmapInfo.mSlot)->Set(SpotLight.GetShadowMap()->GetSRV());
-
+							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mSpot_ShadowmapInfo.mSlot)->Set(shadowpass->GetSpotShadowMapSRV());
 						}
 					}
 

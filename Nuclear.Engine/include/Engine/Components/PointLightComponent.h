@@ -1,7 +1,6 @@
 #pragma once
 #include <Engine/Components/LightCommon.h>
 #include <Engine/Graphics/Color.h>
-#include <Engine/Graphics/ShadowMap.h>
 
 namespace Nuclear
 {
@@ -30,7 +29,6 @@ namespace Nuclear
 		protected:
 			Internal::Shader_PointLight_Struct data;
 			LightShadowType mShadowType;
-			Graphics::ShadowMap mShadowMap;
 		};
 
 	}

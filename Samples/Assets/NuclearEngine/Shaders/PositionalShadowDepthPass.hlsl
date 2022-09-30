@@ -16,7 +16,7 @@ cbuffer NEStatic_LightInfo : register(b0)
 
 };
 
-float4 DirShadowMapDepthVS(VertexInputType input) : SV_POSITION
+float4 PositionalShadowMapDepthVS(VertexInputType input) : SV_POSITION
 { 
      //TODO: Support animation
 
@@ -25,7 +25,7 @@ float4 DirShadowMapDepthVS(VertexInputType input) : SV_POSITION
       return pos;
 }
 
-void DirShadowMapDepthPS(float4 Position : SV_POSITION)
+void PositionalShadowMapDepthPS(float4 Position : SV_POSITION)
 {
     //Do nothing
 }

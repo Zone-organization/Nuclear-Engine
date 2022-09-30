@@ -1,7 +1,6 @@
 #pragma once
 #include <Engine/Components/LightCommon.h>
 #include <Engine/Graphics/Color.h>
-#include <Engine/Graphics/ShadowMap.h>
 
 namespace Nuclear
 {

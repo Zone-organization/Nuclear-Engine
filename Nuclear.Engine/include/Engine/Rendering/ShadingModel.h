@@ -9,6 +9,7 @@
 #include <vector>
 #include <unordered_map>
 #include "Engine/Rendering/GBuffer.h"
+#include <Engine/Rendering/RenderPass/ShadowPass.h>
 
 namespace Nuclear
 {
@@ -20,13 +21,11 @@ namespace Nuclear
 			Uint32 SpotLights = 0;
 			Uint32 PointLights = 0;
 
-			Uint32 Max_DirLight_Caster = 0;
-			Uint32 Max_SpotLight_Caster = 0;
+			ShadowPass* pShadowPass = nullptr;
 
 			IBuffer* CameraBufferPtr = nullptr;
 			IBuffer* AnimationBufferPtr = nullptr;
 			IBuffer* LightsBufferPtr = nullptr;
-			IBuffer* ShadowCastersBufferPtr = nullptr;
 
 			std::vector<ShaderEffect> mRequiredEffects;
 		};
@@ -74,9 +73,9 @@ namespace Nuclear
 			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo;
 			std::vector<Assets::ShaderTexture> mIBLTexturesInfo;
 
-			Assets::ShaderTexture mSpotLight_ShadowmapInfo;         //Texture2DArray
-			Assets::ShaderTexture mPointLight_ShadowmapInfo;        //TextureCubeArray
-			Assets::ShaderTexture mDirLight_ShadowmapInfo;
+			Assets::ShaderTexture mDirPos_ShadowmapInfo;         //Texture2DArray
+			Assets::ShaderTexture mSpot_ShadowmapInfo;         //Texture2DArray
+			Assets::ShaderTexture mOmniDir_ShadowmapInfo;        //TextureCubeArray
 
 			std::string GetName();
 		protected:
@@ -92,7 +91,8 @@ namespace Nuclear
 			Uint32 mID = 0;
 			std::string mName;
 
-
+			//helper function
+			void AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value);
 		};
 
 	}

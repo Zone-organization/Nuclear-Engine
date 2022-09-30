@@ -121,12 +121,8 @@ namespace Nuclear
 			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(mLightingSystemPtr->GetPointLightsNum());
 			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
 			bakedesc.mShadingModelDesc.LightsBufferPtr = mLightingSystemPtr->GetLightCB();
-			if (mLightingSystemPtr->GetShadowPass())
-			{
-				bakedesc.mShadingModelDesc.Max_DirLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowPass()->GetDesc().MAX_DIR_CASTERS);
-				bakedesc.mShadingModelDesc.Max_SpotLight_Caster = static_cast<Uint32>(mLightingSystemPtr->GetShadowPass()->GetDesc().MAX_SPOT_CASTERS);
-				bakedesc.mShadingModelDesc.ShadowCastersBufferPtr = mLightingSystemPtr->GetShadowPass()->GetShadowCastersCB();
-			}
+			bakedesc.mShadingModelDesc.pShadowPass = mLightingSystemPtr->GetShadowPass();
+
 			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
 
 			//if (lightsystemdesc.DisableShadows)
@@ -159,7 +155,7 @@ namespace Nuclear
 			return mActiveRenderingPipeline;
 		}
 
-		void RenderSystem::AddRenderPass(IRenderPass* pass)
+		void RenderSystem::AddRenderPass(Rendering::RenderPass* pass)
 		{
 			//pass->Initialize();
 			mRenderPasses.push_back(pass);
