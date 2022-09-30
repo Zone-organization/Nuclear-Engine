@@ -75,7 +75,7 @@ namespace Nuclear
 				if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
 				{
 					defines.push_back("NE_SHADOWS");
-					auto shadowpassdesc = desc.pShadowPass->GetDesc();
+					auto shadowpassdesc = desc.pShadowPass->GetBakingDesc();
 					AddToDefinesIfNotZero(defines, "NE_MAX_DIR_CASTERS ", shadowpassdesc.MAX_DIR_CASTERS);
 					AddToDefinesIfNotZero(defines, "NE_MAX_SPOT_CASTERS ", shadowpassdesc.MAX_SPOT_CASTERS);
 					AddToDefinesIfNotZero(defines, "NE_MAX_OMNIDIR_CASTERS ", shadowpassdesc.MAX_OMNIDIR_CASTERS);
@@ -115,7 +115,7 @@ namespace Nuclear
 				if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
 				{
 					defines.push_back("NE_SHADOWS");
-					auto shadowpassdesc = desc.pShadowPass->GetDesc();
+					auto shadowpassdesc = desc.pShadowPass->GetBakingDesc();
 					AddToDefinesIfNotZero(defines, "NE_MAX_DIR_CASTERS ", shadowpassdesc.MAX_DIR_CASTERS);
 					AddToDefinesIfNotZero(defines, "NE_MAX_SPOT_CASTERS ", shadowpassdesc.MAX_SPOT_CASTERS);
 					AddToDefinesIfNotZero(defines, "NE_MAX_OMNIDIR_CASTERS ", shadowpassdesc.MAX_OMNIDIR_CASTERS);
@@ -138,11 +138,9 @@ namespace Nuclear
 			if (desc.LightsBufferPtr)
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Lights")->Set(desc.LightsBufferPtr);
 
-			if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
+			if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass && (desc.pShadowPass->GetBakingDesc().MAX_DIR_CASTERS > 0 || desc.pShadowPass->GetBakingDesc().MAX_SPOT_CASTERS > 0))
 			{
 				mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_LightSpaces")->Set(desc.pShadowPass->GetLightSpacesCB());
-		//		mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_ActiveShadowCasters")->Set(desc.pShadowPass->GetActiveShadowCastersCB());
-		//		mPipeline->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_ActiveShadowCasters")->Set(desc.pShadowPass->GetActiveShadowCastersCB());
 			}
 
 			if (!mInitInfo.mDefferedPipeline)

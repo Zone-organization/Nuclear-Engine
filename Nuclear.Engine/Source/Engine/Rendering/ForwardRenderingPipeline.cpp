@@ -86,6 +86,10 @@ namespace Nuclear
 						{
 							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mSpot_ShadowmapInfo.mSlot)->Set(shadowpass->GetSpotShadowMapSRV());
 						}
+						if (GetShadingModel()->mOmniDir_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+						{
+							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mOmniDir_ShadowmapInfo.mSlot)->Set(shadowpass->GetOmniDirShadowMapSRV());
+						}
 					}
 
 					InstantRender(MeshObject.mMesh, MeshObject.mMaterial);

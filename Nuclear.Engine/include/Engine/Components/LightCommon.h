@@ -30,7 +30,7 @@ namespace Nuclear
 			{
 				Math::Vector4 Position;
 				Math::Vector4 Intensity_Attenuation;
-				Math::Vector4 Color;
+				Math::Vector4 Color_FarPlane;
 			};
 
 			struct NEAPI Shader_DirLight_Struct

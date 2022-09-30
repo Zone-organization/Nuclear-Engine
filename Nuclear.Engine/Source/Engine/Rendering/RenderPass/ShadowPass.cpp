@@ -17,32 +17,38 @@ namespace Nuclear
 			Math::Matrix4 LightSpace;
 		};
 
-		ShadowPass::ShadowPass(const ShadowPassDesc& desc)
+		ShadowPass::ShadowPass()
 		{
-			mDesc = desc;
 		}
 
 		void ShadowPass::Initialize()
 		{
-			InitPositionalShadowPassPSO();
-			InitPositionalShadowMapTextures();
-			InitOmniDirShadowPassPSO();
-			InitOmniDirShadowMapTexture();
 
-			BufferDesc CBDesc;
-			CBDesc.Name = "NEStatic_LightSpaces";
-			CBDesc.Size = (sizeof(Math::Matrix4) * mDesc.MAX_DIR_CASTERS) + (sizeof(Math::Matrix4) * mDesc.MAX_SPOT_CASTERS);
-			CBDesc.Usage = USAGE_DYNAMIC;
-			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
-			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pLightSpacesCB);
 
-			CBDesc.Name = "NEStatic_ActiveShadowCasters";
-			CBDesc.Size = sizeof(Math::Vector4ui);
-
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pActiveShadowCastersCB);
 		}
+		void ShadowPass::Bake(const ShadowPassBakingDesc& desc)
+		{
+			mDesc = desc;
+			if (mDesc.MAX_DIR_CASTERS > 0 || mDesc.MAX_SPOT_CASTERS > 0)
+			{
+				InitPositionalShadowPassPSO();
+				InitPositionalShadowMapTextures();
 
+				BufferDesc CBDesc;
+				CBDesc.Name = "NEStatic_LightSpaces";
+				CBDesc.Size = (sizeof(Math::Matrix4) * mDesc.MAX_DIR_CASTERS) + (sizeof(Math::Matrix4) * mDesc.MAX_SPOT_CASTERS);
+				CBDesc.Usage = USAGE_DYNAMIC;
+				CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
+				CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
+				Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &pLightSpacesCB);
+			}
+
+			if (mDesc.MAX_OMNIDIR_CASTERS > 0)
+			{
+				InitOmniDirShadowPassPSO();
+				InitOmniDirShadowMapTexture();
+			}
+		}
 		void ShadowPass::Update()
 		{
 
@@ -81,8 +87,6 @@ namespace Nuclear
 					auto& EntityInfo = scene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
 
-					float near_plane = 1.0f;
-					float far_plane = 100.0f;
 					auto lightPos = pointlight.GetInternalPosition();
 
 					//Update cbuffer NEStatic_PointShadowVS	{	matrix Model;	};
@@ -93,7 +97,7 @@ namespace Nuclear
 					//Update cbuffer NEStatic_PointShadowGS	{matrix ShadowMatrices[6];	};
 					{
 
-						glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)1024 / (float)1024, near_plane, far_plane);
+						glm::mat4 shadowProj = glm::perspective(glm::radians(pointlight.GetFOV()), (float)1024 / (float)1024, pointlight.GetNearPlane(), pointlight.GetFarPlane());
 
 						std::array<glm::mat4, 6> shadowTransforms = {
 						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),  //right
@@ -113,14 +117,14 @@ namespace Nuclear
 				//	Update cbuffer NEStatic_PointShadowPS	{    float3 gLightPos;	float gFarPlane;	};
 				    {
 						Diligent::MapHelper<Math::vec4> CBConstants(Graphics::Context::GetContext(), pOmniDirShadowPS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
-						*CBConstants = glm::vec4(lightPos, far_plane);
+						*CBConstants = glm::vec4(lightPos, pointlight.GetFarPlane());
 					}
 					RenderMeshForDepthPass(MeshObject.mMesh);
 				}
 			}
 		}
 
-		ShadowPassDesc ShadowPass::GetDesc() const
+		ShadowPassBakingDesc ShadowPass::GetBakingDesc() const
 		{
 			return mDesc;
 		}
@@ -129,10 +133,7 @@ namespace Nuclear
 		{
 			return pLightSpacesCB.RawPtr();
 		}
-		IBuffer* ShadowPass::GetActiveShadowCastersCB()
-		{
-			return pActiveShadowCastersCB.RawPtr();
-		}
+
 		ITextureView* ShadowPass::GetDirPosShadowMapSRV()
 		{
 			return mDirShadowMap.pPosShadowMapSRV.RawPtr();
@@ -258,6 +259,7 @@ namespace Nuclear
 		}
 		void ShadowPass::InitPositionalShadowMapTextures()
 		{
+			if(mDesc.MAX_DIR_CASTERS > 0)
 			{
 				TextureDesc ShadowMapDesc;
 				ShadowMapDesc.Name = "DirPosShadowMap";
@@ -291,18 +293,20 @@ namespace Nuclear
 					mDirShadowMap.pPosShadowMap->CreateView(ShadowMapDSVDesc, &mDirShadowMap.pPosShadowMapDSVs[iArrSlice]);
 				}
 			}
+
+			if (mDesc.MAX_SPOT_CASTERS > 0)
 			{
 				TextureDesc ShadowMapDesc;
 				ShadowMapDesc.Name = "SpotShadowMap";
-				ShadowMapDesc.Width = mDesc.mDirPosShadowMapInfo.mResolution;
-				ShadowMapDesc.Height = mDesc.mDirPosShadowMapInfo.mResolution;
+				ShadowMapDesc.Width = mDesc.mSpotShadowMapInfo.mResolution;
+				ShadowMapDesc.Height = mDesc.mSpotShadowMapInfo.mResolution;
 				ShadowMapDesc.MipLevels = 1;
 				ShadowMapDesc.SampleCount = 1;
 				ShadowMapDesc.Format = TEX_FORMAT_R32_TYPELESS;
 				ShadowMapDesc.Usage = USAGE_DEFAULT;
 				ShadowMapDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
 				ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D_ARRAY;
-				ShadowMapDesc.ArraySize = mDesc.MAX_DIR_CASTERS;
+				ShadowMapDesc.ArraySize = mDesc.MAX_SPOT_CASTERS;
 
 				Graphics::Context::GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &mSpotShadowMap.pPosShadowMap);
 

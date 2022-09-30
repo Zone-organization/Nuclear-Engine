@@ -192,10 +192,10 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
 
 #ifdef NE_POINT_LIGHTS_NUM    // phase 3: point lights
-   
-    for (uint i2 = 0; i2 < NE_POINT_LIGHTS_NUM; i2++)
+    float point_shadow = (1.0f - OmniDirShadowCalculation(FragPos, PointLights[0].Position.xyz, PointLights[0].Color_FarPlane.w));
+    for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)
     {
-        result += CalcPointLight(PointLights[i2], norm, FragPos, viewDir, albedo) * 0.0f;
+        result += point_shadow * CalcPointLight(PointLights[i], norm, FragPos, viewDir, albedo);
     }
 #endif
 

@@ -42,6 +42,8 @@ namespace Nuclear
 
 			//Camera stuff
 			Graphics::RenderTarget* GetSceneRT();
+			Graphics::RenderTarget* GetSceneDepthRT();
+
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
 

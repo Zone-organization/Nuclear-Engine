@@ -151,7 +151,6 @@ namespace Nuclear
 			//TODO: Multiple Cameras
 
 			std::vector<Math::Matrix4> lightspacematrices;
-			Math::Vector4ui DirSpotPointActiveCasters = Math::Vector4ui(0);
 			Uint32 DirPosCasterRTIndex = 0 , SpotCasterRTIndex = 0;
 
 			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
@@ -201,7 +200,6 @@ namespace Nuclear
 
 
 					pShadowPass->DirLightShadowDepthPass(DirLight, DirPosCasterRTIndex, mScene);
-					DirSpotPointActiveCasters.x++;
 					DirPosCasterRTIndex++;
 					//Add to debug system
 					/*if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
@@ -220,17 +218,7 @@ namespace Nuclear
 
 				if (SpotLight.mCastShadows && pShadowPass)
 				{
-					static float near_plane = 1.0f, far_plane = 50.f, fov = 90.f;
-					ImGui::Begin("LIGHT 2");
-
-					ImGui::DragFloat("Near plane", &near_plane, 0.5f, 0.0f, 0.0f, "%.6f");
-					ImGui::DragFloat("Far plane", &far_plane, 0.5f, 0.0f, 0.0f, "%.6f");
-					ImGui::DragFloat("FOV", &fov, 0.5f, 0.0f, 0.0f, "%.6f");
-
-					ImGui::End();
-
-
-					auto lightProjection = glm::perspective(Math::radians(fov), 1024.f/1024.f, near_plane, far_plane);
+					auto lightProjection = glm::perspective(Math::radians(SpotLight.GetFOV()), 1024.f/1024.f, SpotLight.GetNearPlane(), SpotLight.GetFarPlane());
 					auto lightpos = SpotLight.GetInternalPosition();
 					auto up = glm::vec3(0.0, 1.0, 0.0);
 
@@ -240,8 +228,6 @@ namespace Nuclear
 					lightspacematrices.push_back(SpotLight.LightSpace);
 
 					pShadowPass->SpotLightShadowDepthPass(SpotLight, SpotCasterRTIndex, mScene);
-					DirSpotPointActiveCasters.y++;
-
 					SpotCasterRTIndex++;
 
 					//Add to debug system
@@ -263,7 +249,6 @@ namespace Nuclear
 				if (PointLight.mCastShadows && pShadowPass)
 				{
 					pShadowPass->PointLightShadowDepthPass(PointLight, mScene);
-					DirSpotPointActiveCasters.z++;
 
 					//Add to debug system
 					//if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
@@ -276,21 +261,12 @@ namespace Nuclear
 		
 
 			//Update Shadow Manager CB
-			if (pShadowPass)
+			if (pShadowPass && pShadowPass->GetLightSpacesCB())
 			{
-				{
-					PVoid data;
-					Graphics::Context::GetContext()->MapBuffer(pShadowPass->GetLightSpacesCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-					data = memcpy(data, lightspacematrices.data(), sizeof(Math::Matrix4) * lightspacematrices.size());
-					Graphics::Context::GetContext()->UnmapBuffer(pShadowPass->GetLightSpacesCB(), MAP_WRITE);
-				}
-
-				{				
-					PVoid data;
-					Graphics::Context::GetContext()->MapBuffer(pShadowPass->GetActiveShadowCastersCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-					data = memcpy(&DirSpotPointActiveCasters, lightspacematrices.data(), sizeof(Math::Vector4ui));
-					Graphics::Context::GetContext()->UnmapBuffer(pShadowPass->GetActiveShadowCastersCB(), MAP_WRITE);
-				}
+				PVoid data;
+				Graphics::Context::GetContext()->MapBuffer(pShadowPass->GetLightSpacesCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+				data = memcpy(data, lightspacematrices.data(), sizeof(Math::Matrix4) * lightspacematrices.size());
+				Graphics::Context::GetContext()->UnmapBuffer(pShadowPass->GetLightSpacesCB(), MAP_WRITE);
 			}
 		}
 		void LightingSystem::UpdateBuffer(const Math::Vector4& CameraPos)
@@ -309,7 +285,7 @@ namespace Nuclear
 			{
 				LightsBuffer.push_back(PointLights[i]->GetInternalData().Position);
 				LightsBuffer.push_back(PointLights[i]->GetInternalData().Intensity_Attenuation);
-				LightsBuffer.push_back(PointLights[i]->GetInternalData().Color);
+				LightsBuffer.push_back(PointLights[i]->GetInternalData().Color_FarPlane);
 
 			}
 			for (size_t i = 0; i < SpotLights.size(); i++)

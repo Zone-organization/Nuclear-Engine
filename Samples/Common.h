@@ -193,6 +193,24 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						light->SetIntensity(f);
 					}
 
+					float np = light->GetNearPlane();
+					if (ImGui::SliderFloat("Near Plane", &np, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
+					{
+						light->SetNearPlane(np);
+					}
+
+					float fp = light->GetFarPlane();
+					if (ImGui::SliderFloat("Far Plane", &fp, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
+					{
+						light->SetFarPlane(fp);
+					}
+
+					float fov = light->GetFOV();
+					if (ImGui::SliderFloat("Fov", &fov, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
+					{
+						light->SetFOV(fov);
+					}
+
 				}
 			}
 		}
@@ -234,6 +252,23 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						light->SetIntensity(f);
 					}
 
+					float np = light->GetNearPlane();
+					if (ImGui::SliderFloat("Near Plane", &np, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
+					{
+						light->SetNearPlane(np);
+					}
+
+					float fp = light->GetFarPlane();
+					if (ImGui::SliderFloat("Far Plane", &fp, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
+					{
+						light->SetFarPlane(fp);
+					}
+
+					float fov = light->GetFOV();
+					if (ImGui::SliderFloat("Fov", &fov, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
+					{
+						light->SetFOV(fov);
+					}
 				}
 			}
 		}

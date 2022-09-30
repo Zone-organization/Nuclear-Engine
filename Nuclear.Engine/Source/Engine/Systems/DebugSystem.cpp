@@ -43,7 +43,9 @@ namespace Nuclear
 			if (RenderLightSources)
 			{
 				Graphics::Context::GetContext()->SetPipelineState(DebugRP.GetActivePipeline());
-
+				auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
+				Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, mScene->GetSystemManager().GetSystem<RenderSystem>()->GetActivePipeline()->GetSceneDepthRT()->GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				
 				{
 					auto view = mScene->GetRegistry().view<Components::DirLightComponent>();
 					for (auto entity : view)

@@ -85,11 +85,11 @@ public:
 		EController = Scene.CreateEntity("Controller");
 
 		//Assign Components
-		ELights.AddComponent<Components::DirLightComponent>().mCastShadows = true;
+		ELights.AddComponent<Components::DirLightComponent>();
 		ELights.AddComponent<Components::PointLightComponent>().mCastShadows = true;
-		EController.AddComponent<Components::SpotLightComponent>().mCastShadows = true;
+		EController.AddComponent<Components::SpotLightComponent>();
 		EController.AddComponent<Components::CameraComponent>(&Camera);
-		EController.AddComponent<Components::DirLightComponent>().mCastShadows = true;
+		//EController.AddComponent<Components::DirLightComponent>().mCastShadows = true;
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -130,6 +130,11 @@ public:
 		mSceneManager->CreateScene(&Scene, true);
 
 		mAssetManager->Initialize();
+		Rendering::ShadowPassBakingDesc spdesc;
+
+		spdesc.MAX_OMNIDIR_CASTERS = 1;
+		spdesc.MAX_SPOT_CASTERS = 0;
+		ShadowPass.Bake(spdesc);
 
 		Systems::LightingSystemDesc desc;
 		desc.ShadowPass = &ShadowPass;

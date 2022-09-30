@@ -12,6 +12,9 @@ namespace Nuclear
 			data.InnerCutOf_OuterCutoff = Math::Vector4(cos(Math::radians(12.5f)), cos(Math::radians(15.0f)), 1.0f, 1.0f);
 			data.Color = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 			mShadowType = LightShadowType::No_Shadows;
+			mFov = 90.f;
+			mNearPlane = 1.0F;
+			mFarPlane = 50.f;
 		}
 		SpotLightComponent::~SpotLightComponent()
 		{
@@ -50,7 +53,30 @@ namespace Nuclear
 		{
 			return Graphics::Color(data.Color.r, data.Color.g, data.Color.b, data.Color.a);
 		}
-	
+		void SpotLightComponent::SetFarPlane(float farplane)
+		{
+			mFarPlane = farplane;
+		}
+		float SpotLightComponent::GetFarPlane()
+		{
+			return mFarPlane;
+		}
+		void SpotLightComponent::SetNearPlane(float nearplane)
+		{
+			mNearPlane = nearplane;
+		}
+		float SpotLightComponent::GetNearPlane()
+		{
+			return mNearPlane;
+		}
+		void SpotLightComponent::SetFOV(float fov)
+		{
+			mFov = fov;
+		}
+		float SpotLightComponent::GetFOV()
+		{
+			return mFov;
+		}
 		Math::Vector3 SpotLightComponent::GetDirection() const
 		{
 			return Math::Vector3(data.Direction);

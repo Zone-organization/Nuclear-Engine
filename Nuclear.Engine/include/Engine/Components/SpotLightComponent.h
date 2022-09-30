@@ -40,6 +40,14 @@ namespace Nuclear
 			void SetShadowType(const LightShadowType& type);
 
 			bool mCastShadows = false;
+			float GetFarPlane();
+			void SetFarPlane(float farplane);
+
+			float GetNearPlane();
+			void SetNearPlane(float nearplane);
+
+			float GetFOV();
+			void SetFOV(float fov);
 
 			Internal::Shader_SpotLight_Struct& GetInternalData();
 			Math::Vector3 GetInternalPosition() const;
@@ -55,6 +63,7 @@ namespace Nuclear
 		private:
 			Internal::Shader_SpotLight_Struct data;
 			LightShadowType mShadowType;
+			float mFov, mNearPlane, mFarPlane;
 		};
 	}
 }

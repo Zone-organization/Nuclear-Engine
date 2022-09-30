@@ -74,6 +74,10 @@ namespace Nuclear
 		{
 			return &SceneRT;
 		}
+		Graphics::RenderTarget* RenderingPipeline::GetSceneDepthRT()
+		{
+			return &SceneDepthRT;
+		}
 
 		IPipelineState* RenderingPipeline::GetActivePipeline()
 		{

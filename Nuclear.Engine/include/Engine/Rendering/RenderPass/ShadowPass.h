@@ -22,16 +22,16 @@ namespace Nuclear
 		};
 
 
-		struct ShadowPassDesc
+		struct ShadowPassBakingDesc
 		{
 			//max limits used for compiling shaders... (to avoid recompiling pipeline shaders everytime a new light is added to the scene or cast shadows activated)
 			//Note: has no effect on shadow pass pipelines. + used in pVSShadowCasterBuffer
 
 			Uint32 MAX_DIR_CSM_CASTERS = 1;   //WIP
 
-			Uint32 MAX_DIR_CASTERS = 2;
-			Uint32 MAX_SPOT_CASTERS = 1;
-			Uint32 MAX_OMNIDIR_CASTERS = 1;
+			Uint32 MAX_DIR_CASTERS = 0;
+			Uint32 MAX_SPOT_CASTERS = 0;
+			Uint32 MAX_OMNIDIR_CASTERS = 0;
 
 			ShadowMapInfo mDirPosShadowMapInfo;
 			ShadowMapInfo mSpotShadowMapInfo;
@@ -41,7 +41,9 @@ namespace Nuclear
 		class NEAPI ShadowPass : public RenderPass
 		{
 		public:
-			ShadowPass(const ShadowPassDesc& desc = ShadowPassDesc());
+			ShadowPass();
+
+			void Bake(const ShadowPassBakingDesc& desc = ShadowPassBakingDesc());
 
 			void Initialize() override;
 
@@ -51,10 +53,9 @@ namespace Nuclear
 			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Uint32 RTindex, Assets::Scene* scene);
 			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Assets::Scene* scene);
 
-			ShadowPassDesc GetDesc() const;
+			ShadowPassBakingDesc GetBakingDesc() const;
 
 			IBuffer* GetLightSpacesCB();
-			IBuffer* GetActiveShadowCastersCB();
 
 			ITextureView* GetDirPosShadowMapSRV();
 
@@ -63,9 +64,8 @@ namespace Nuclear
 			ITextureView* GetOmniDirShadowMapSRV();
 
 		protected:
-			ShadowPassDesc mDesc;
+			ShadowPassBakingDesc mDesc;
 			RefCntAutoPtr<IBuffer> pLightSpacesCB;
-			RefCntAutoPtr<IBuffer> pActiveShadowCastersCB;
 
 			//Spotlight/DirLight (simple)
 			struct PosShadowMap
