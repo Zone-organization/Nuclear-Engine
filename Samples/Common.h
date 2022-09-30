@@ -193,6 +193,8 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						light->SetIntensity(f);
 					}
 
+					ImGui::Checkbox("Casts Shadows", &light->mCastShadows);
+
 					float np = light->GetNearPlane();
 					if (ImGui::SliderFloat("Near Plane", &np, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
 					{
@@ -210,7 +212,6 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 					{
 						light->SetFOV(fov);
 					}
-
 				}
 			}
 		}

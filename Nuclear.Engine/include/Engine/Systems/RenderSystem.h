@@ -77,7 +77,6 @@ namespace Nuclear
 						return result;
 					}
 				}
-				NUCLEAR_FATAL("[RenderSystem] GetRenderPass called with undefined RenderPass!");
 				return nullptr;
 			}
 			//////////////////////////////////////////////////////////////////////////////////////////////

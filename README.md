@@ -2,9 +2,7 @@
 
 ## Current To-dos 
   - W.I.P:
-    - Omni-Directional (pointlight) Shadow mapping
-    - Refactor RenderSystem to support multi-shader rendering/ divide render stages to RenderPass(es)
-	- Multi-Shadow Casters support
+    - Divide render stages to RenderPass(es)
     - CSM
 	- Basic Editor support (Nuclear Editor).
 

@@ -151,7 +151,7 @@ namespace Nuclear
 			//TODO: Multiple Cameras
 
 			std::vector<Math::Matrix4> lightspacematrices;
-			Uint32 DirPosCasterRTIndex = 0 , SpotCasterRTIndex = 0;
+			Uint32 DirPosCasterRTIndex = 0 , SpotCasterRTIndex = 0, PointCasterRTIndex =0;
 
 			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
 			for (auto entity : DirLightView)
@@ -248,8 +248,8 @@ namespace Nuclear
 
 				if (PointLight.mCastShadows && pShadowPass)
 				{
-					pShadowPass->PointLightShadowDepthPass(PointLight, mScene);
-
+					pShadowPass->PointLightShadowDepthPass(PointLight, PointCasterRTIndex, mScene);
+					PointCasterRTIndex++;
 					//Add to debug system
 					//if (mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
 				//	{

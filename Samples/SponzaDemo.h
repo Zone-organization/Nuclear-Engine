@@ -37,6 +37,8 @@ class SponzaDemo : public Client
 	Rendering::DefferedRenderingPipeline Deffered_BlinnPhongPipeline;
 	Rendering::DefferedRenderingPipeline Deffered_PBRPipeline;
 
+	Rendering::ShadowPass ShadowPass;
+
 	//IBL Settings
 	Rendering::ImageBasedLighting IBL;
 	Rendering::PBRCapture EnvCapture;
@@ -97,7 +99,7 @@ public:
 		ELights = Scene.CreateEntity("Lights");
 
 		ELights.AddComponent<Components::DirLightComponent>();
-		ELights.AddComponent<Components::PointLightComponent>();
+		ELights.AddComponent<Components::PointLightComponent>().mCastShadows = true;
 
 
 		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -106,14 +108,14 @@ public:
 		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.f);
 
-		for (int i = 1; i < 9; i++)
-		{
-			auto Light = Scene.CreateEntity("Light" + std::to_string(i));
-			Light.AddComponent<Components::PointLightComponent>();
-			Light.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(pointLightPositions[i]);
-			Light.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-			Light.GetComponent<Components::PointLightComponent>()->SetIntensity(2.f);
-		}
+		//for (int i = 1; i < 9; i++)
+		//{
+		//	auto Light = Scene.CreateEntity("Light" + std::to_string(i));
+		//	Light.AddComponent<Components::PointLightComponent>();
+		//	Light.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(pointLightPositions[i]);
+		//	Light.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		//	Light.GetComponent<Components::PointLightComponent>()->SetIntensity(2.f);
+		//}
 
 	}
 
@@ -138,6 +140,13 @@ public:
 
 	void InitForwardPipelines()
 	{
+		Rendering::ShadingModelInitInfo info;
+		info.ShadowingEnabled = true;
+
+		BlinnPhongRP.Initialize(info);
+		PBR.Initialize(info);
+		PBR_IBL.Initialize(info);
+
 		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
 		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
 		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
@@ -210,11 +219,22 @@ public:
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
-		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
 		SetupEntities();
+
+		Rendering::ShadowPassBakingDesc spdesc;
+
+		spdesc.MAX_OMNIDIR_CASTERS = 1;
+		spdesc.MAX_DIR_CASTERS = 0;
+		ShadowPass.Bake(spdesc);
+
+		Systems::LightingSystemDesc desc;
+		desc.ShadowPass = &ShadowPass;
+
+		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>(desc);
 		mLightingSystem->Bake();
 
 		InitRenderer();
+		Renderer->AddRenderPass(&ShadowPass);
 
 		SetupAssets();
 

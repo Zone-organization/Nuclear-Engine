@@ -45,6 +45,8 @@ namespace Nuclear
 
 			if (mInitInfo.mDefferedPipeline)
 			{
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = COORDSYSTEM_LH_ENABLED;
+
 				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
 				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
 			}
@@ -229,7 +231,7 @@ namespace Nuclear
             //PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
             PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_D32_FLOAT;
             PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-            PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+            PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = !COORDSYSTEM_LH_ENABLED;
             PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
             PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
             PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();

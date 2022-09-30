@@ -149,55 +149,89 @@ PS_OUTPUT DoLighting(PixelInputType input)
 
     uint i = 0;  //used for iteriation
 
-#ifdef NE_DIR_LIGHTS_NUM  // phase 1: directional lighting
+
+// phase 1: dir light
+#ifdef NE_DIR_LIGHTS_NUM
+
+#ifdef NE_MAX_DIR_CASTERS
 
     float dir_Shadow[NE_DIR_LIGHTS_NUM];
     for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)   //initialize array
     {
         dir_Shadow[i] = 0.0f;
     }
-#ifdef NE_MAX_DIR_CASTERS
     for (i = 0; i < NE_MAX_DIR_CASTERS; i++)   //Shadow enabled light casters first
     {
         dir_Shadow[i] = (1.0f - DirPosShadowCalculation(i, input.DirLight_FragPos[i]));
     }
 
-#endif
     for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)  //do lighting + add shadow
     {
         result += dir_Shadow[i] * CalcDirLight(DirLights[i], norm, viewDir, albedo);
     }
-#endif
 
-#ifdef NE_SPOT_LIGHTS_NUM     // phase 2: spot light
+#else  // NO SHADOWS
+    for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)  //do lighting 
+    {
+        result += CalcDirLight(DirLights[i], norm, viewDir, albedo);
+    }
+#endif  //NE_MAX_DIR_CASTERS
+
+#endif  //NE_DIR_LIGHTS_NUM
+
+// phase 2: spot light
+#ifdef NE_SPOT_LIGHTS_NUM
+
+#ifdef NE_MAX_SPOT_CASTERS 
     float Spot_Shadow[NE_SPOT_LIGHTS_NUM];
  
     for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)   //initialize array
     {
         Spot_Shadow[i] = 0.0f;
     }
-#ifdef NE_MAX_SPOT_CASTERS
     for (i = 0; i < NE_MAX_SPOT_CASTERS; i++)   //Shadow enabled light casters first
     {
         Spot_Shadow[i] = (1.0f - SpotShadowCalculation(i, input.SpotLight_FragPos[i]));
     }
-#endif
     for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)  //do lighting + add shadow
     {
         result += Spot_Shadow[i] * CalcSpotLight(SpotLights[i], norm, FragPos, viewDir, albedo);
     }
-#endif
+#else  //NO SHADOWS
+    for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)  //do lighting
+    {
+        result += CalcSpotLight(SpotLights[i], norm, FragPos, viewDir, albedo);
+    }
+#endif //NE_MAX_SPOT_CASTERS
+
+#endif //NE_SPOT_LIGHTS_NUM
 
 
+// phase 3: point lights
+#ifdef NE_POINT_LIGHTS_NUM   
+#ifdef NE_MAX_OMNIDIR_CASTERS
 
-
-#ifdef NE_POINT_LIGHTS_NUM    // phase 3: point lights
-    float point_shadow = (1.0f - OmniDirShadowCalculation(FragPos, PointLights[0].Position.xyz, PointLights[0].Color_FarPlane.w));
+    float point_shadow[NE_POINT_LIGHTS_NUM];
+    for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)   //initialize array
+    {
+        point_shadow[i] = 0.0f;
+    }
+    for (i = 0; i < NE_MAX_OMNIDIR_CASTERS; i++)   //Shadow enabled light casters first
+    {
+        point_shadow[i] = (1.0f - OmniDirShadowCalculation(i, FragPos, PointLights[i].Position.xyz, PointLights[i].Color_FarPlane.w));
+    }
     for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)
     {
-        result += point_shadow * CalcPointLight(PointLights[i], norm, FragPos, viewDir, albedo);
+        result += point_shadow[i] * CalcPointLight(PointLights[i], norm, FragPos, viewDir, albedo);
     }
-#endif
+#else  //NO SHADOWS
+    for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)
+    {
+        result += CalcPointLight(PointLights[i], norm, FragPos, viewDir, albedo);
+    }
+#endif //NE_MAX_OMNIDIR_CASTERS
+ 
+#endif  //NE_POINT_LIGHTS_NUM
 
 
     PS_OUTPUT output;

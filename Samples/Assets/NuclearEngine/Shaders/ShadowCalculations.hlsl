@@ -101,16 +101,16 @@ float SpotShadowCalculation(uint arrayslice, float4 fragPosLightSpace)
 
 #ifdef NE_MAX_OMNIDIR_CASTERS
 
-TextureCube NE_ShadowMap_OmniDir;
+TextureCubeArray NE_ShadowMap_OmniDir;
 SamplerState NE_ShadowMap_OmniDir_sampler;
 
-float OmniDirShadowCalculation(float3 FragPos, float3 lightPos, float farplane)
+float OmniDirShadowCalculation(uint arrayslice, float3 FragPos, float3 lightPos, float farplane)
 {
     // get vector between fragment position and light position
     float3 fragToLight = FragPos - lightPos;
 
     // ise the fragment to light vector to sample from the depth map    
-    float ShadowMapDepth = NE_ShadowMap_OmniDir.Sample(NE_ShadowMap_OmniDir_sampler, fragToLight).r;
+    float ShadowMapDepth = NE_ShadowMap_OmniDir.Sample(NE_ShadowMap_OmniDir_sampler, float4(fragToLight.xyz, arrayslice)).r;
 
     // it is currently in linear range between [0,1], let's re-transform it back to original depth value
     ShadowMapDepth *= farplane;

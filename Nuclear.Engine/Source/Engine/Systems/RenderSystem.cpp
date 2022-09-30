@@ -182,7 +182,14 @@ namespace Nuclear
 		}
 
 		void RenderSystem::Update(ECS::TimeDelta dt)
-		{
+		{		
+			//clean Render targets
+			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
+			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
+			Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
 			//Render Scene from each active camera perspective
 			//for (auto Camera : mCameraSystem.ActiveCameras)
 			{			
@@ -198,11 +205,7 @@ namespace Nuclear
 			GetActivePipeline()->SetFinalPipelineState();
 
 			//Render Main camera view to screen
-			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
-			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
 			Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Assets::DefaultMeshes::RenderScreenQuad();
 		}
 	}

@@ -124,17 +124,6 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	N = normalize(mul(N, input.TBN));
 #endif
 
-	float dir_Shadow = 1.0f;  //No shadow == 1.0f
-
-#ifdef NE_SHADOWS
-
-//#ifdef NE_MAX_DIR_CASTERS
-//	dir_Shadow = (1.0f - DirlightShadowCalculation(input.DirLight_FragPos[0]));
-//#endif
-
-
-#endif
-
 	float3 V = normalize(ViewPos.xyz - FragPos);
 
 	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
@@ -144,46 +133,124 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 
 	// reflectance equation
 	float3 Lo = float3(0.0f, 0.0f, 0.0f);
-#ifdef NE_DIR_LIGHTS_NUM
-	// phase 1: directional lighting
-	for (int i0 = 0; i0 < NE_DIR_LIGHTS_NUM; i0++)
-	{
-		float3 L = normalize(-DirLights[i0].Direction.xyz);
-		float3 radiance = DirLights[i0].Color_Intensity.xyz * DirLights[i0].Color_Intensity.w;
+	uint i = 0; //used for iteriation
 
-		Lo += dir_Shadow * CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
-	}
-#endif
-#ifdef NE_POINT_LIGHTS_NUM  
-	// phase 2: point lights
-	for (int i1 = 0; i1 < NE_POINT_LIGHTS_NUM; i1++)
+	// phase 1: dir light
+#ifdef NE_DIR_LIGHTS_NUM
+
+#ifdef NE_MAX_DIR_CASTERS
+
+	float dir_Shadow[NE_DIR_LIGHTS_NUM];
+	for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)   //initialize array
 	{
-		float3 L = normalize(PointLights[i1].Position.xyz - FragPos);
-		float attenuation = DoQuadraticAttenuation(PointLights[i1].Intensity_Attenuation, PointLights[i1].Position.xyz, FragPos);
-		float3 radiance = PointLights[i1].Color_FarPlane.xyz * attenuation;
+		dir_Shadow[i] = 0.0f;
+	}
+	for (i = 0; i < NE_MAX_DIR_CASTERS; i++)   //Shadow enabled light casters first
+	{
+		dir_Shadow[i] = (1.0f - DirPosShadowCalculation(i, input.DirLight_FragPos[i]));
+	}
+
+	for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)  //do lighting + add shadow
+	{
+		float3 L = normalize(-DirLights[i].Direction.xyz);
+		float3 radiance = DirLights[i].Color_Intensity.xyz * DirLights[i].Color_Intensity.w;
+
+		Lo += dir_Shadow[i] * CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
+	}
+
+#else  // NO SHADOWS
+	for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)
+	{
+		float3 L = normalize(-DirLights[i].Direction.xyz);
+		float3 radiance = DirLights[i].Color_Intensity.xyz * DirLights[i].Color_Intensity.w;
 
 		Lo += CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
 	}
-#endif
-#ifdef NE_SPOT_LIGHTS_NUM
-	// phase 3: spot light
-	for (int i2 = 0; i2 < NE_SPOT_LIGHTS_NUM; i2++)
-	{
-	//	Lo += CalcSpotLight(SpotLights[i2], N, FragPos, V, F0, albedo, metallic, roughness);
+#endif  //NE_MAX_DIR_CASTERS
 
-		float3 L = normalize(SpotLights[i2].Position.xyz - FragPos);
-		float attenuation = DoQuadraticAttenuation(SpotLights[i2].Intensity_Attenuation, SpotLights[i2].Position.xyz, FragPos);
+#endif  //NE_DIR_LIGHTS_NUM
+
+	// phase 2: spot light
+#ifdef NE_SPOT_LIGHTS_NUM
+
+#ifdef NE_MAX_SPOT_CASTERS 
+	float Spot_Shadow[NE_SPOT_LIGHTS_NUM];
+
+	for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)   //initialize array
+	{
+		Spot_Shadow[i] = 0.0f;
+	}
+	for (i = 0; i < NE_MAX_SPOT_CASTERS; i++)   //Shadow enabled light casters first
+	{
+		Spot_Shadow[i] = (1.0f - SpotShadowCalculation(i, input.SpotLight_FragPos[i]));
+	}
+	for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)  //do lighting + add shadow
+	{
+		float3 L = normalize(SpotLights[i].Position.xyz - FragPos);
+		float attenuation = DoQuadraticAttenuation(SpotLights[i].Intensity_Attenuation, SpotLights[i].Position.xyz, FragPos);
 
 		// spotlight intensity
-		float theta = dot(L, normalize(-SpotLights[i2].Direction.xyz));
-		float epsilon = SpotLights[i2].InnerCutOf_OuterCutoff.x - SpotLights[i2].InnerCutOf_OuterCutoff.y;
-		float intensity = saturate((theta - SpotLights[i2].InnerCutOf_OuterCutoff.y) / epsilon);
+		float theta = dot(L, normalize(-SpotLights[i].Direction.xyz));
+		float epsilon = SpotLights[i].InnerCutOf_OuterCutoff.x - SpotLights[i].InnerCutOf_OuterCutoff.y;
+		float intensity = saturate((theta - SpotLights[i].InnerCutOf_OuterCutoff.y) / epsilon);
 
-		float3 radiance = SpotLights[i2].Color.xyz * attenuation * intensity;
+		float3 radiance = SpotLights[i].Color.xyz * attenuation * intensity;
+
+		Lo += Spot_Shadow[i] * CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
+	}
+#else  //NO SHADOWS
+	for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)  //do lighting + add shadow
+	{
+		float3 L = normalize(SpotLights[i].Position.xyz - FragPos);
+		float attenuation = DoQuadraticAttenuation(SpotLights[i].Intensity_Attenuation, SpotLights[i].Position.xyz, FragPos);
+
+		// spotlight intensity
+		float theta = dot(L, normalize(-SpotLights[i].Direction.xyz));
+		float epsilon = SpotLights[i].InnerCutOf_OuterCutoff.x - SpotLights[i].InnerCutOf_OuterCutoff.y;
+		float intensity = saturate((theta - SpotLights[i].InnerCutOf_OuterCutoff.y) / epsilon);
+
+		float3 radiance = SpotLights[i].Color.xyz * attenuation * intensity;
 
 		Lo += CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
 	}
-#endif
+#endif //NE_MAX_SPOT_CASTERS
+
+#endif //NE_SPOT_LIGHTS_NUM
+
+
+// phase 3: point lights
+#ifdef NE_POINT_LIGHTS_NUM   
+#ifdef NE_MAX_OMNIDIR_CASTERS
+
+	float point_shadow[NE_POINT_LIGHTS_NUM];
+	for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)   //initialize array
+	{
+		point_shadow[i] = 0.0f;
+	}
+	for (i = 0; i < NE_MAX_OMNIDIR_CASTERS; i++)   //Shadow enabled light casters first
+	{
+		point_shadow[i] = (1.0f - OmniDirShadowCalculation(i, FragPos, PointLights[i].Position.xyz, PointLights[i].Color_FarPlane.w));
+	}
+	for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)
+	{
+		float3 L = normalize(PointLights[i].Position.xyz - FragPos);
+		float attenuation = DoQuadraticAttenuation(PointLights[i].Intensity_Attenuation, PointLights[i].Position.xyz, FragPos);
+		float3 radiance = PointLights[i].Color_FarPlane.xyz * attenuation;
+
+		Lo += point_shadow[i] * CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
+	}
+#else  //NO SHADOWS
+	for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)
+	{
+		float3 L = normalize(PointLights[i].Position.xyz - FragPos);
+		float attenuation = DoQuadraticAttenuation(PointLights[i].Intensity_Attenuation, PointLights[i].Position.xyz, FragPos);
+		float3 radiance = PointLights[i].Color_FarPlane.xyz * attenuation;
+
+		Lo += CalculatePBRLight(N, L, V, F0, radiance, albedo, metallic, roughness);
+	}
+#endif //NE_MAX_OMNIDIR_CASTERS
+
+#endif  //NE_POINT_LIGHTS_NUM
 
 	PS_OUTPUT output;
 
