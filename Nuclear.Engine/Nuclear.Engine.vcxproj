@@ -144,16 +144,16 @@
     <ClInclude Include="include\Engine\Graphics\Color.h" />
     <ClInclude Include="include\Engine\Graphics\Context.h" />
     <ClInclude Include="include\Engine\Rendering\BlurEffect.h" />
-    <ClInclude Include="include\Engine\Rendering\DefferedRenderingPipeline.h" />
-    <ClInclude Include="include\Engine\Rendering\ForwardRenderingPipeline.h" />
+    <ClInclude Include="include\Engine\Rendering\RenderingPipelines\DefferedRenderingPipeline.h" />
+    <ClInclude Include="include\Engine\Rendering\RenderingPipelines\ForwardRenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\FrameRenderData.h" />
     <ClInclude Include="include\Engine\Rendering\GBuffer.h" />
     <ClInclude Include="include\Engine\Rendering\ImageBasedLighting.h" />
     <ClInclude Include="include\Engine\Rendering\PBRCapture.h" />
     <ClInclude Include="include\Engine\Rendering\Rendering.h" />
     <ClInclude Include="include\Engine\Rendering\RenderingPipeline.h" />
-    <ClInclude Include="include\Engine\Rendering\RenderPass\GeometryPass.h" />
-    <ClInclude Include="include\Engine\Rendering\RenderPass\RenderPass.h" />
+    <ClInclude Include="include\Engine\Rendering\RenderPasses\GeometryPass.h" />
+    <ClInclude Include="include\Engine\Rendering\RenderPass.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\BlinnPhong.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\DiffuseOnly.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\PBR.h" />
@@ -173,7 +173,7 @@
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModel.h" />
     <ClInclude Include="include\Engine\Assets\AssetLibrary.h" />
-    <ClInclude Include="include\Engine\Rendering\RenderPass\ShadowPass.h" />
+    <ClInclude Include="include\Engine\Rendering\RenderPasses\ShadowPass.h" />
     <ClInclude Include="include\Engine\Serialization\ComponentsArchive.h" />
     <ClInclude Include="include\Engine\Serialization\MathArchive.h" />
     <ClInclude Include="include\Engine\Systems\CameraSystem.h" />
@@ -204,7 +204,6 @@
     <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
     <ClInclude Include="include\Engine\PhysX\RigidStatic.h" />
     <ClInclude Include="include\Engine\Systems\AudioSystem.h" />
-    <ClInclude Include="include\Engine\Systems\LightingSystem.h" />
     <ClInclude Include="include\Engine\Systems\PhysXSystem.h" />
     <ClInclude Include="include\Engine\Systems\Systems.h" />
     <ClInclude Include="include\Engine\Graphics\imconfig.h" />
@@ -297,11 +296,12 @@
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_freetype.cpp" />
     <ClCompile Include="Source\Engine\Managers\SceneManager.cpp" />
     <ClCompile Include="Source\Engine\Rendering\BlurEffect.cpp" />
-    <ClCompile Include="Source\Engine\Rendering\DefferedRenderingPipeline.cpp" />
-    <ClCompile Include="Source\Engine\Rendering\ForwardRenderingPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\RenderingPipelines\DefferedRenderingPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\RenderingPipelines\ForwardRenderingPipeline.cpp" />
     <ClCompile Include="Source\Engine\Rendering\GBuffer.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ImageBasedLighting.cpp" />
     <ClCompile Include="Source\Engine\Rendering\RenderingPipeline.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\RenderPasses\GeometryPass.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\BlinnPhong.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\DiffuseOnly.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\PBR.cpp" />
@@ -332,7 +332,7 @@
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Rendering\RenderPass\ShadowPass.cpp" />
+    <ClCompile Include="Source\Engine\Rendering\RenderPasses\ShadowPass.cpp" />
     <ClCompile Include="Source\Engine\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
@@ -349,7 +349,6 @@
     <ClCompile Include="Source\Engine\Scripting\ScriptData.cpp" />
     <ClCompile Include="Source\Engine\Systems\DebugSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\ScriptingSystem.cpp" />
-    <ClCompile Include="Source\Engine\Systems\LightingSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\PhysXSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\RenderSystem.cpp" />
     <ClCompile Include="Source\Engine\Components\MeshComponent.cpp" />

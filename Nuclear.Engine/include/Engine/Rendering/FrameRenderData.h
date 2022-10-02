@@ -3,6 +3,7 @@
 #include <Core\Math\Math.h>
 #include <Engine/Graphics/RenderTarget.h>
 #include <vector>
+#include <map>
 
 namespace Nuclear
 {
@@ -29,11 +30,27 @@ namespace Nuclear
             Math::Matrix4 mWorldTransform;
         };
 
+        struct DrawQueue
+        {
+            RenderingPipeline* mPipeline;
+            std::vector<DrawCommand> mDrawCommands;
+        };
+
 		struct NEAPI FrameRenderData
 		{
 		public:
-			
+            //Scene being rendered in this frame
+            Assets::Scene* pScene;
 
+
+            std::map<Uint32, DrawQueue> mSubmittedDraws;
+
+            //baked lights
+            std::vector<Components::DirLightComponent*> DirLights;
+            std::vector<Components::PointLightComponent*> PointLights;
+            std::vector<Components::SpotLightComponent*> SpotLights;
+
+            std::shared_ptr<CameraSystem> pCameraSystemPtr;
 
             //Rendered Scene here
             Graphics::RenderTarget mFinalRT;

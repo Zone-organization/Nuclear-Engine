@@ -153,7 +153,7 @@ namespace Nuclear
 				it->second.SetValue(value);
 				if (it->second.GetType() == ShaderEffect::Type::RenderingEffect)
 				{
-					mShadingModel->SetEffect(effectId, value);
+					//mShadingModel->SetEffect(effectId, value);
 				}
 				else if (it->second.GetType() == ShaderEffect::Type::PostProcessingEffect)
 				{
@@ -161,7 +161,7 @@ namespace Nuclear
 				}
 				else if (it->second.GetType() == ShaderEffect::Type::PostProcessingAndRenderingEffect)
 				{
-					mShadingModel->SetEffect(effectId, value);
+			//		mShadingModel->SetEffect(effectId, value);
 					SetPostProcessingEffect(effectId, value);
 				}
 			}
@@ -185,13 +185,24 @@ namespace Nuclear
 					NUCLEAR_ERROR("[RenderSystem DEBUG] Skipped Rendering Mesh with invalid Material...");
 					return;
 				}
+				if (!material->GetShadingModel())
+				{
+					NUCLEAR_ERROR("[RenderSystem DEBUG] material->GetShadingModel() Skipped Rendering Mesh with invalid Material...");
+					return;
+				}
+
+				if (material->GetShadingModel()->GetID() != GetShadingModel()->GetID())
+				{
+					NUCLEAR_WARN("[RenderSystem DEBUG] material->GetShadingModel()->GetID() != GetShadingModel()->GetID()...");
+				}
+
 			}
 
 			Uint64 offset = 0;
 
 			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
 			{
-				material->GetMaterialInstance(GetShadingModel()->GetID())->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
+				material->BindTexSet(mesh->mSubMeshes.at(i).data.TexSetIndex);
 
 				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
@@ -204,9 +215,8 @@ namespace Nuclear
 			}
 		}
 
-		void RenderingPipeline::SetShadingModelAndCamera(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera)
+		void RenderingPipeline::SetCamera(Graphics::Camera* camera)
 		{
-			mShadingModel = shadingModel;
 			mCamera = camera;
 
 			//Step 1: Find Compatible Effects (build mPairedEffects map)
@@ -396,10 +406,6 @@ namespace Nuclear
 			}
 		}
 
-		Rendering::ShadingModel* RenderingPipeline::GetShadingModel() const
-		{
-			return mShadingModel;
-		}
 		Graphics::Camera* RenderingPipeline::GetCamera() const
 		{
 			return mCamera;

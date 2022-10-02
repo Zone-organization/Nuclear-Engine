@@ -5,7 +5,7 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Engine\Rendering\ShadingModel.h>
-#include <Engine\Rendering\RenderPass\RenderPass.h>
+#include <Engine\Rendering\RenderPass.h>
 #include <vector>
 #include <Engine\ECS\System.h>
 
@@ -45,13 +45,11 @@ namespace Nuclear
 
 			void Bake(const ShadowPassBakingDesc& desc = ShadowPassBakingDesc());
 
-			void Initialize() override;
+			void Update(FrameRenderData* framedata) override;
 
-			void Update() override;
-
-			void DirLightShadowDepthPass(Components::DirLightComponent& dirlight, Uint32 RTindex, Assets::Scene* scene);
-			void SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Uint32 RTindex, Assets::Scene* scene);
-			void PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Uint32 RTindex, Assets::Scene* scene);
+			void DirLightShadowDepthPass(Components::DirLightComponent* dirlight, Uint32 RTindex, Assets::Scene* scene);
+			void SpotLightShadowDepthPass(Components::SpotLightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene);
+			void PointLightShadowDepthPass(Components::PointLightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene);
 
 			ShadowPassBakingDesc GetBakingDesc() const;
 
@@ -93,7 +91,6 @@ namespace Nuclear
 			RefCntAutoPtr<IBuffer> pOmniDirShadowPS_CB;
 			RefCntAutoPtr<ITexture> pOmniDirShadowMap;
 			RefCntAutoPtr<ITextureView> pOmniDirShadowMapSRV;
-		//	RefCntAutoPtr<ITextureView> pOmniDirShadowMapRTV;
 			std::vector<RefCntAutoPtr<ITextureView>> pOmniDirShadowMapDSVs;
 
 			void InitOmniDirShadowPassPSO();

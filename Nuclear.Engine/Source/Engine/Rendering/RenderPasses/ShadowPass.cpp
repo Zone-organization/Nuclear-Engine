@@ -7,6 +7,8 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine\Components\EntityInfoComponent.h>
 #include <Engine\Assets\Scene.h>
+#include <Engine/Rendering/FrameRenderData.h>
+#include <Core\Math\Math.h>
 
 namespace Nuclear
 {
@@ -21,11 +23,6 @@ namespace Nuclear
 		{
 		}
 
-		void ShadowPass::Initialize()
-		{
-
-
-		}
 		void ShadowPass::Bake(const ShadowPassBakingDesc& desc)
 		{
 			mDesc = desc;
@@ -49,27 +46,81 @@ namespace Nuclear
 				InitOmniDirShadowMapTexture();
 			}
 		}
-		void ShadowPass::Update()
+		void ShadowPass::Update(FrameRenderData* framedata)
 		{
+			std::vector<Math::Matrix4> lightspacematrices;
+			Uint32 DirPosCasterRTIndex = 0, SpotCasterRTIndex = 0, PointCasterRTIndex = 0;
 
+			for (auto DirLight : framedata->DirLights)
+			{
+				if (DirLight->mCastShadows)
+				{
+					float ab = 10.f;
+					auto lightProjection = glm::ortho(-ab, ab, -ab, ab, DirLight->GetNearPlane(), DirLight->GetFarPlane());
+					auto lightView = glm::lookAt(DirLight->GetDirection(), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+
+					DirLight->LightSpace = lightProjection * lightView;
+					lightspacematrices.push_back(DirLight->LightSpace);
+
+					DirLightShadowDepthPass(DirLight, DirPosCasterRTIndex, framedata->pScene);
+					DirPosCasterRTIndex++;
+				}
+				else {
+					break; //since they are ordered in rendersystem
+				}
+			}
+
+			for (auto SpotLight : framedata->SpotLights)
+			{
+				if (SpotLight->mCastShadows)
+				{
+					auto lightProjection = glm::perspective(Math::radians(SpotLight->GetFOV()), 1024.f / 1024.f, SpotLight->GetNearPlane(), SpotLight->GetFarPlane());
+					auto lightpos = SpotLight->GetInternalPosition();
+					auto up = glm::vec3(0.0, 1.0, 0.0);
+
+					auto lightView = glm::lookAt(lightpos, lightpos + SpotLight->GetDirection(), up);
+
+					SpotLight->LightSpace = lightProjection * lightView;
+					lightspacematrices.push_back(SpotLight->LightSpace);
+
+					SpotLightShadowDepthPass(SpotLight, SpotCasterRTIndex, framedata->pScene);
+					SpotCasterRTIndex++;
+				}
+				else {
+					break; //since they are ordered in rendersystem
+				}
+
+			}
+
+			for (auto PointLight : framedata->PointLights)
+			{
+				if (PointLight->mCastShadows)
+				{
+					PointLightShadowDepthPass(PointLight, PointCasterRTIndex, framedata->pScene);
+					PointCasterRTIndex++;
+				}
+				else {
+					break; //since they are ordered in rendersystem
+				}
+			}
 		}
 
-		void ShadowPass::DirLightShadowDepthPass(Components::DirLightComponent& light, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::DirLightShadowDepthPass(Components::DirLightComponent* light, Uint32 RTindex, Assets::Scene* scene)
 		{
 		//	if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
 			{
-				PositionalLightShadowDepthPass(RTindex, light.LightSpace, scene, mDirShadowMap);
+				PositionalLightShadowDepthPass(RTindex, light->LightSpace, scene, mDirShadowMap);
 			}
 
 			//CSM - WIP
 		}
 
-		void ShadowPass::SpotLightShadowDepthPass(Components::SpotLightComponent& spotlight, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::SpotLightShadowDepthPass(Components::SpotLightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene)
 		{
-			return PositionalLightShadowDepthPass(RTindex, spotlight.LightSpace, scene, mSpotShadowMap);
+			return PositionalLightShadowDepthPass(RTindex, spotlight->LightSpace, scene, mSpotShadowMap);
 		}
 
-		void ShadowPass::PointLightShadowDepthPass(Components::PointLightComponent& pointlight, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::PointLightShadowDepthPass(Components::PointLightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene)
 		{
 			Graphics::Context::GetContext()->SetPipelineState(mOmniDirShadowPassPSO.RawPtr());
 
@@ -87,7 +138,7 @@ namespace Nuclear
 					auto& EntityInfo = scene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
 
-					auto lightPos = pointlight.GetInternalPosition();
+					auto lightPos = pointlight->GetInternalPosition();
 
 					//Update cbuffer NEStatic_PointShadowVS	{	matrix Model;	};
 					{
@@ -97,7 +148,7 @@ namespace Nuclear
 					//Update cbuffer NEStatic_PointShadowGS	{matrix ShadowMatrices[6];	};
 					{
 
-						glm::mat4 shadowProj = glm::perspective(glm::radians(pointlight.GetFOV()), (float)1024 / (float)1024, pointlight.GetNearPlane(), pointlight.GetFarPlane());
+						glm::mat4 shadowProj = glm::perspective(glm::radians(pointlight->GetFOV()), (float)1024 / (float)1024, pointlight->GetNearPlane(), pointlight->GetFarPlane());
 
 						std::array<glm::mat4, 6> shadowTransforms = {
 						shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)),  //right
@@ -117,7 +168,7 @@ namespace Nuclear
 				//	Update cbuffer NEStatic_PointShadowPS	{    float3 gLightPos;	float gFarPlane;	};
 				    {
 						Diligent::MapHelper<Math::vec4> CBConstants(Graphics::Context::GetContext(), pOmniDirShadowPS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
-						*CBConstants = glm::vec4(lightPos, pointlight.GetFarPlane());
+						*CBConstants = glm::vec4(lightPos, pointlight->GetFarPlane());
 					}
 					RenderMeshForDepthPass(MeshObject.mMesh);
 				}

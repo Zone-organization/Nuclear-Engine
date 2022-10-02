@@ -29,6 +29,12 @@ namespace Nuclear
 			float GetIntensity();
 			void SetIntensity(float intensity);
 
+			float GetFarPlane();
+			void SetFarPlane(float farplane);
+
+			float GetNearPlane();
+			void SetNearPlane(float nearplane);
+
 			bool mCastShadows = false;
 			Internal::Shader_DirLight_Struct& GetInternalData();
 
@@ -45,6 +51,7 @@ namespace Nuclear
 
 			Math::Vector4 _internalPos; //needed for simple shadow "not CSM"
 
+			float mNearPlane, mFarPlane;
 		private:
 			Internal::Shader_DirLight_Struct data;
 			LightShadowType mShadowType;

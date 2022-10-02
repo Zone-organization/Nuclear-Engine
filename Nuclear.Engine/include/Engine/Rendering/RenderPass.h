@@ -5,15 +5,14 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-
+        struct FrameRenderData;
         class NEAPI RenderPass
         {
         public:
             RenderPass() = default;
             virtual ~RenderPass() = default;
 
-            virtual void Initialize() = 0;
-            virtual void Update() = 0;
+            virtual void Update(FrameRenderData* framedata) = 0;
 
         };
 	}

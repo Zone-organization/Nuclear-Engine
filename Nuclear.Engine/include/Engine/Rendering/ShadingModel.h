@@ -9,7 +9,7 @@
 #include <vector>
 #include <unordered_map>
 #include "Engine/Rendering/GBuffer.h"
-#include <Engine/Rendering/RenderPass/ShadowPass.h>
+#include <Engine/Rendering/RenderPasses/ShadowPass.h>
 
 namespace Nuclear
 {
@@ -64,7 +64,6 @@ namespace Nuclear
 
 			void SetEffect(const Uint32& effectId, bool value);
 
-			bool isDeffered();
 
 			virtual std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
 
@@ -78,6 +77,16 @@ namespace Nuclear
 			Assets::ShaderTexture mOmniDir_ShadowmapInfo;        //TextureCubeArray
 
 			std::string GetName();
+
+			virtual void ResizeRenderTargets(Uint32 Width, Uint32 Height);
+
+			//////////////////////////////////////////////////////////////////////////
+			//Deffered rendering
+			bool isDeffered();
+
+			GBuffer mGBuffer;
+			virtual void BakeRenderTargets();
+
 		protected:
 			std::unordered_map<Uint32, ShaderEffect> mRenderingEffects;
 

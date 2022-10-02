@@ -36,7 +36,6 @@ namespace Nuclear
 
 			Uint32 GetID() const;
 			std::string GetName() const;
-			Rendering::ShadingModel* GetShadingModel() const;
 			Graphics::Camera* GetCamera() const;
 			Graphics::BakeStatus GetStatus() const;
 
@@ -65,7 +64,7 @@ namespace Nuclear
 		protected:
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 
-			void SetShadingModelAndCamera(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera);
+			void SetCamera(Graphics::Camera* camera);
 
 			//Camera stuff
 			Graphics::RenderTarget SceneRT;
@@ -96,7 +95,6 @@ namespace Nuclear
 			virtual void BakeRenderTargets();
 			virtual void ApplyPostProcessingEffects();
 		private:
-			Rendering::ShadingModel* mShadingModel;
 			Graphics::Camera* mCamera;
 			Uint32 mID;
 			std::string mName;

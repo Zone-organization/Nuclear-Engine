@@ -32,6 +32,7 @@ namespace Nuclear
 
 			void BindTexSet(Uint32 index);
 
+			Rendering::ShadingModel* GetShadingModel();
 		private:
 
 			Rendering::ShadingModel* pShaderPipeline;

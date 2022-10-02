@@ -8,6 +8,8 @@ namespace Nuclear
 		{
 			data.Direction = Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f);
 			data.Color_Intensity = Math::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+			mNearPlane = 1.0F;
+			mFarPlane = 50.f;
 		}
 		DirLightComponent::~DirLightComponent()
 		{
@@ -58,6 +60,23 @@ namespace Nuclear
 		void DirLightComponent::SetInternalPosition(Math::Vector3 pos)
 		{
 			_internalPos = Math::Vector4(pos, 1.0f);
+		}
+
+		void DirLightComponent::SetFarPlane(float farplane)
+		{
+			mFarPlane = farplane;
+		}
+		float DirLightComponent::GetFarPlane()
+		{
+			return mFarPlane;
+		}
+		void DirLightComponent::SetNearPlane(float nearplane)
+		{
+			mNearPlane = nearplane;
+		}
+		float DirLightComponent::GetNearPlane()
+		{
+			return mNearPlane;
 		}
 	}
 }

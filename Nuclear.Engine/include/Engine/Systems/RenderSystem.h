@@ -17,7 +17,6 @@ namespace Nuclear
 	namespace Systems
 	{
 		class CameraSystem;
-		class LightingSystem;
 
 		struct RenderSystemBakeStatus
 		{
@@ -33,10 +32,6 @@ namespace Nuclear
 
 			void AddRenderingPipeline(Rendering::RenderingPipeline* Pipeline);
 			void SetActiveRenderingPipeline(Uint32 PipelineID);
-
-			void CreateMaterialForAllPipelines(Assets::Material* material);
-
-			void CreateMaterial(Assets::Material* material, Uint32 PipelineID);
 
 			bool NeedsBaking();
 
@@ -74,11 +69,17 @@ namespace Nuclear
 			IBuffer* GetAnimationCB();
 
 			CameraSystem* GetCameraSystem();
-			LightingSystem* GetLightingSystem();
 
 			Rendering::Background& GetBackground();
 
+
+			/////////////////////////////////////////////////////////////////////////////////////////
+			IBuffer* GetLightCB();
+
 			Rendering::FrameRenderData mRenderData;
+			size_t GetDirLightsNum();
+			size_t GetPointLightsNum();
+			size_t GetSpotLightsNum();
 		private:
 			Rendering::Background mBackground;
 			std::vector<Rendering::RenderPass*> mRenderPasses;
@@ -91,6 +92,24 @@ namespace Nuclear
 
 			Rendering::RenderingPipeline* mActiveRenderingPipeline;
 			std::unordered_map<Uint32, Rendering::RenderingPipeline*> mRenderingPipelines;
+
+
+			/////////////////////////////////////////////////////////////////////////////////////////
+			size_t Baked_DirLights_Size = 0;
+			size_t Baked_PointLights_Size = 0;
+			size_t Baked_SpotLights_Size = 0;
+			size_t NE_Light_CB_Size;
+			size_t NUM_OF_LIGHT_VECS;
+
+			bool HasbeenBakedBefore = false;
+
+			RefCntAutoPtr<IBuffer> mPSLightCB;
+
+			void BakeLights();
+			void BakeLightsBuffer();
+			void UpdateLights();
+			bool LightRequiresBaking();
+			void UpdateLightsBuffer(const Math::Vector4& CameraPos);
 		};
 
 	}

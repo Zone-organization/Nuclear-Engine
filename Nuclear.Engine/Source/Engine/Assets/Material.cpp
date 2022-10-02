@@ -39,6 +39,10 @@ namespace Nuclear
 
 			Graphics::Context::GetContext()->CommitShaderResources(pShaderPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
+		Rendering::ShadingModel* Material::GetShadingModel()
+		{
+			return pShaderPipeline;
+		}
 		void Material::InitializePipelineTextures()
 		{		
 			if (pData)

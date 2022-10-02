@@ -1,4 +1,4 @@
-#include "Engine/Rendering/ForwardRenderingPipeline.h"
+#include "Engine/Rendering/RenderingPipelines/ForwardRenderingPipeline.h"
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/MeshComponent.h>
 #include <Engine\Components/EntityInfoComponent.h>
@@ -7,7 +7,6 @@
 #include <Engine\Components\SpotLightComponent.h>
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Systems\CameraSystem.h>
-#include <Engine\Systems\LightingSystem.h>
 #include <Engine\Assets\Scene.h>
 
 namespace Nuclear

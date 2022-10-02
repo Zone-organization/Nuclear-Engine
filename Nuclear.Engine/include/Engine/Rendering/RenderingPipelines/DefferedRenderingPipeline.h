@@ -20,12 +20,12 @@ namespace Nuclear
 
 			//void Bake(const RenderingPipelineBakingDesc& desc) override;
 
-			void ResizeRenderTargets(Uint32 Width, Uint32 Height) override;
+			//void ResizeRenderTargets(Uint32 Width, Uint32 Height) override;
 
 			void StartRendering(Systems::RenderSystem* renderer) override;
 
 		private:
-			GBuffer mGBuffer;
+		//	GBuffer mGBuffer;
 			void BakeRenderTargets() override;
 			void RenderMeshes(Systems::RenderSystem* renderer);
 		};
