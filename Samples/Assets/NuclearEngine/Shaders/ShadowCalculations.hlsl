@@ -104,7 +104,7 @@ float SpotShadowCalculation(uint arrayslice, float4 fragPosLightSpace)
 TextureCubeArray NE_ShadowMap_OmniDir;
 SamplerState NE_ShadowMap_OmniDir_sampler;
 
-float OmniDirShadowCalculation(uint arrayslice, float3 FragPos, float3 lightPos, float farplane)
+float OmniDirShadowCalculation(uint arrayslice, float3 FragPos, float3 lightPos, float3 normal, float farplane)
 {
     // get vector between fragment position and light position
     float3 fragToLight = FragPos - lightPos;
@@ -118,7 +118,10 @@ float OmniDirShadowCalculation(uint arrayslice, float3 FragPos, float3 lightPos,
     // now get current linear depth as the length between the fragment and light position
     float currentDepth = length(fragToLight);
 
-    float bias = 0.05; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+    float3 lightDir = normalize(lightPos.xyz - FragPos);
+    float bias = max(0.5 * (1.0 - dot(normal, lightDir)), 0.05);
+
+   // float bias = 0.05; // we use a much larger bias since depth is now in [near_plane, far_plane] range
     float shadow = currentDepth - bias > ShadowMapDepth ? 1.0 : 0.0;
 
     return shadow;

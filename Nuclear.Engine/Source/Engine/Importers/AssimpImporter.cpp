@@ -16,13 +16,13 @@ namespace Nuclear {
 			vertex.BoneIDs = Math::Vector4i(boneID);
 		}
 
-		bool AssimpImporter::Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim)
+		bool AssimpImporter::Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
 		{
 			std::string path = desc.mPath;
 			mLoadingDesc = desc.mMeshDesc;
 			mManager = desc.mManager;
 			mMesh = mesh;
-			mMaterial = material;
+			pMaterialData = material;
 			mAnimation = anim;
 			Assimp::Importer importer;
 			scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -75,9 +75,9 @@ namespace Nuclear {
 				TexSet.mHashedName = Utilities::Hash(MeshName);
 
 
-				for (Uint32 i = 0; i < mMaterial->mPixelShaderTextures.size(); i++)
+				for (Uint32 i = 0; i < pMaterialData->mTextures.size(); i++)
 				{
-					if (TexSet.mHashedName == mMaterial->mPixelShaderTextures.at(i).mHashedName)
+					if (TexSet.mHashedName == pMaterialData->mTextures.at(i).mHashedName)
 					{
 						return i;
 					}
@@ -112,9 +112,9 @@ namespace Nuclear {
 						TexSet.mName = MeshName;
 					}
 
-					this->mMaterial->mPixelShaderTextures.push_back(TexSet);
+					this->pMaterialData->mTextures.push_back(TexSet);
 
-					return static_cast<Uint32>(this->mMaterial->mPixelShaderTextures.size() - 1);
+					return static_cast<Uint32>(this->pMaterialData->mTextures.size() - 1);
 				}
 			}
 			return 0;
@@ -398,7 +398,7 @@ namespace Nuclear {
 		}
 
 
-		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim)
+		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
 		{
 			AssimpImporter importer;
 			return importer.Load(desc,mesh,material,anim);

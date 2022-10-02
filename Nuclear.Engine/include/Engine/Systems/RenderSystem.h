@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <Engine/Rendering/RenderPass/RenderPass.h>
 #include <Core/Logger.h>
+#include <Engine/Rendering/FrameRenderData.h>
 
 namespace Nuclear
 {
@@ -23,20 +24,6 @@ namespace Nuclear
 			bool BakeLighting = true;
 			bool BakePipelines = true;
 		};
-
-		//RenderPass WIP
-		struct NEAPI DrawCommand
-		{
-			DrawCommand(Assets::Mesh* mesh, const Math::Matrix4& transform)
-				: mMeshPtr(mesh), mTransform(transform) {}
-
-			const Math::Matrix4& GetTransform() const { return mTransform; }
-			Assets::Mesh* GetMeshComponent() const { return mMeshPtr; }
-		private:
-			Assets::Mesh* mMeshPtr;
-			Math::Matrix4 mTransform;
-		};
-
 
 		class NEAPI RenderSystem : public ECS::System<RenderSystem>
 		{
@@ -91,6 +78,7 @@ namespace Nuclear
 
 			Rendering::Background& GetBackground();
 
+			Rendering::FrameRenderData mRenderData;
 		private:
 			Rendering::Background mBackground;
 			std::vector<Rendering::RenderPass*> mRenderPasses;

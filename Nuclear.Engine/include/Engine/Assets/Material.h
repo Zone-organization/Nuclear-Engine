@@ -1,28 +1,45 @@
 #pragma once
-#include <Engine/Assets/Common.h>
-#include <Engine\Assets\MaterialInstance.h>
-#include <unordered_map>
+#include <Engine\Assets\MaterialTypes.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
+#include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 
 namespace Nuclear
 {
+	namespace Rendering
+	{
+		class ShadingModel;
+	}
 	namespace Assets
 	{
+
+		//Describes the textures only
+		class NEAPI MaterialData : public Asset<MaterialData>
+		{
+		public:
+			std::vector<TextureSet> mTextures;
+
+		};
+
+
+		//Defines integration between Textures & Shaders
 		class NEAPI Material : public Asset<Material>
 		{
 		public:
 			Material();
 			~Material();
 
-			void CreateInstance(Rendering::ShadingModel* Pipeline);
+			void Create(MaterialData* data, Rendering::ShadingModel* Pipeline);
 
-			Assets::MaterialInstance* GetMaterialInstance(Uint32 PipelineID);
+			void BindTexSet(Uint32 index);
 
-			std::vector<TextureSet> mPixelShaderTextures;
-
-			std::string mName = std::string();
 		private:
 
-			std::unordered_map<Uint32, Assets::MaterialInstance> mMaterialInstances;
+			Rendering::ShadingModel* pShaderPipeline;
+			RefCntAutoPtr<IShaderResourceBinding> pShaderPipelineSRB;
+			std::vector<TextureSet> mPipelineUsableTextures;
+			bool mDefferedMaterial = false;
+			void InitializePipelineTextures();
+			MaterialData* pData;
 		};
 	}
 }

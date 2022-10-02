@@ -183,6 +183,36 @@ namespace Nuclear
 
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{		
+
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			//Step 1: Build FrameRenderData
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			if (false)  //WIP
+			{
+				auto view = mScene->GetRegistry().view<Components::MeshComponent>();
+				for (auto entity : view)
+				{
+					auto& MeshObject = view.get<Components::MeshComponent>(entity);
+					if (MeshObject.mRender)
+					{
+						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+						EntityInfo.mTransform.Update();
+
+
+						Rendering::DrawCommand drawcommand(MeshObject.mMesh, MeshObject.mMaterial, EntityInfo.mTransform.GetWorldMatrix());
+					}
+				}
+			}
+
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			//Step 2: Update RenderPasses
+			//////////////////////////////////////////////////////////////////////////////////////////////
+
+			for (auto pass : mRenderPasses)
+			{
+				pass->Update();
+			}
+
 			//clean Render targets
 			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
 			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();

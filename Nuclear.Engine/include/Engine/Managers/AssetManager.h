@@ -98,7 +98,7 @@ namespace Nuclear
 			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
 			//Mesh & Material & Animation
-			std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
+			std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
 
 			Assets::Font* Import(const Core::Path& Path, const Importers::FontLoadingDesc& desc);
 

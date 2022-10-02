@@ -229,7 +229,7 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	}
 	for (i = 0; i < NE_MAX_OMNIDIR_CASTERS; i++)   //Shadow enabled light casters first
 	{
-		point_shadow[i] = (1.0f - OmniDirShadowCalculation(i, FragPos, PointLights[i].Position.xyz, PointLights[i].Color_FarPlane.w));
+		point_shadow[i] = (1.0f - OmniDirShadowCalculation(i, FragPos, PointLights[i].Position.xyz, N, PointLights[i].Color_FarPlane.w));
 	}
 	for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)
 	{

@@ -17,7 +17,7 @@ namespace Nuclear
 	{
 		class AssimpImporter {
 		public:
-			bool Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim);
+			bool Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 		private:
 			Assets::TextureSet ProcessMaterialTexture(aiMaterial *mat, const aiTextureType& type);
 			void ProcessMesh(aiMesh *mesh, const aiScene *scene);
@@ -26,7 +26,7 @@ namespace Nuclear
 
 			std::vector<std::string> TexturePaths;
 
-			Assets::Material* mMaterial = nullptr;
+			Assets::MaterialData* pMaterialData = nullptr;
 			Assets::Animations* mAnimation = nullptr;
 			Assets::Mesh* mMesh = nullptr;
 			const aiScene* scene;
@@ -42,7 +42,7 @@ namespace Nuclear
 			Managers::AssetManager* mManager = nullptr;
 		};
 
-		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::Material* material, Assets::Animations* anim);
+		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 	}
 }
 

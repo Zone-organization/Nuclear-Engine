@@ -204,7 +204,7 @@ namespace Nuclear {
 		}
 
 
-		std::tuple<Assets::Mesh*, Assets::Material*, Assets::Animations*> AssetManager::Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc)
+		std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> AssetManager::Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc)
 		{
 			auto hashedname = Utilities::Hash(Path.mInputPath);
 
@@ -219,7 +219,7 @@ namespace Nuclear {
 					anim = &itanim->second;
 				}
 
-				return { &itmesh->second, &mLibrary.mImportedMaterials.mData[hashedname], anim };
+				return { &itmesh->second, &mLibrary.mImportedMaterialDatas.mData[hashedname], anim };
 			}
 
 			Assets::Animations Animation;
@@ -227,11 +227,11 @@ namespace Nuclear {
 		
 			mLibrary.mImportedMeshes.mData[hashedname] = Assets::Mesh();
 			Assets::Mesh* Mesh = &mLibrary.mImportedMeshes.mData[hashedname];
-			Assets::Material* Material = nullptr;
+			Assets::MaterialData* Material = nullptr;
 			if (desc.LoadMaterial)
 			{
-				mLibrary.mImportedMaterials.mData[hashedname] = Assets::Material();
-				Material = &mLibrary.mImportedMaterials.mData[hashedname];
+				mLibrary.mImportedMaterialDatas.mData[hashedname] = Assets::MaterialData();
+				Material = &mLibrary.mImportedMaterialDatas.mData[hashedname];
 			}
 			if (!mMeshImporter({ Path.mRealPath.c_str(), desc, this}, Mesh, Material, &Animation))
 			{

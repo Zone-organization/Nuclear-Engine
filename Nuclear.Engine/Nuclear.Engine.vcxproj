@@ -120,7 +120,6 @@
     <ClInclude Include="include\Engine\Assets\Common.h" />
     <ClInclude Include="include\Engine\Assets\ImageData.h" />
     <ClInclude Include="include\Engine\Assets\Material.h" />
-    <ClInclude Include="include\Engine\Assets\MaterialInstance.h" />
     <ClInclude Include="include\Engine\Assets\MaterialTypes.h" />
     <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Audio\Audio.h" />
@@ -147,6 +146,7 @@
     <ClInclude Include="include\Engine\Rendering\BlurEffect.h" />
     <ClInclude Include="include\Engine\Rendering\DefferedRenderingPipeline.h" />
     <ClInclude Include="include\Engine\Rendering\ForwardRenderingPipeline.h" />
+    <ClInclude Include="include\Engine\Rendering\FrameRenderData.h" />
     <ClInclude Include="include\Engine\Rendering\GBuffer.h" />
     <ClInclude Include="include\Engine\Rendering\ImageBasedLighting.h" />
     <ClInclude Include="include\Engine\Rendering\PBRCapture.h" />
@@ -292,7 +292,6 @@
     <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />
-    <ClCompile Include="Source\Engine\Assets\MaterialInstance.cpp" />
     <ClCompile Include="Source\Engine\Assets\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_freetype.cpp" />

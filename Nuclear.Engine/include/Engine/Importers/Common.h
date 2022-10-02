@@ -11,6 +11,7 @@ namespace Nuclear
 	namespace Assets {
 		class Mesh;
 		class Material;
+		class MaterialData;
 		class Animations;
 	}
 	namespace Managers { class AssetManager; }
@@ -130,7 +131,7 @@ namespace Nuclear
 			Managers::AssetManager* mManager = nullptr;
 		};
 
-		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::Material*, Assets::Animations*)> MeshImporterDelegate;
+		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::MaterialData*, Assets::Animations*)> MeshImporterDelegate;
 		typedef Utilities::Delegate<Assets::ImageData(const std::string& Path, const ImageLoadingDesc& Desc)> ImageImporterDelegate;
 	}
 }
