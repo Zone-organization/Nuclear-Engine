@@ -11,10 +11,12 @@ namespace Nuclear
         class Mesh;
         class Material;
     }
-
+    namespace Graphics {
+        class Camera;
+    }
 	namespace Rendering
 	{
-
+        class RenderingPipeline;
         struct DrawCommand
         {
             DrawCommand(Assets::Mesh* mesh, Assets::Material* material, const  Math::Matrix4& transform)
@@ -55,6 +57,7 @@ namespace Nuclear
             //Rendered Scene here
             Graphics::RenderTarget mFinalRT;
             Graphics::RenderTarget mFinalDepthRT;
+            Graphics::Camera* pCamera;
 		};
 	}
 }

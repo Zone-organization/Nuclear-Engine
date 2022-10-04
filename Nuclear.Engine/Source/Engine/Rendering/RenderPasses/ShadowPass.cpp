@@ -1,4 +1,4 @@
-#include "Engine\Rendering\RenderPass\ShadowPass.h"
+#include "Engine\Rendering\RenderPasses\ShadowPass.h"
 #include <Core\FileSystem.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>

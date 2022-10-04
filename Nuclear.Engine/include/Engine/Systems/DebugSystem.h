@@ -8,7 +8,7 @@
 #include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
-#include <Engine\Rendering\ForwardRenderingPipeline.h>
+#include <Engine\Rendering\RenderingPipelines\ForwardRenderingPipeline.h>
 #include <Engine\Rendering\ShadingModels\DiffuseOnly.h>
 
 namespace Nuclear

@@ -18,42 +18,9 @@ namespace Nuclear
 	{
 		RenderSystem::RenderSystem()
 		{
-			mActiveRenderingPipeline = nullptr;
 		}
 		RenderSystem::~RenderSystem()
 		{
-		}
-
-		void RenderSystem::AddRenderingPipeline(Rendering::RenderingPipeline* Pipeline)
-		{
-			if (!Pipeline)
-			{
-				NUCLEAR_ERROR("[RenderSystem] Pipeline is invalid!");
-				return;
-			}
-			mRenderingPipelines[Pipeline->GetID()] = Pipeline;
-
-			if (mActiveRenderingPipeline == nullptr)
-				mActiveRenderingPipeline =	mRenderingPipelines[Pipeline->GetID()];
-		}
-
-		void RenderSystem::SetActiveRenderingPipeline(Uint32 PipelineID)
-		{
-			if (mActiveRenderingPipeline)
-			{
-				if (mActiveRenderingPipeline->GetID() == PipelineID)
-				{
-					return;
-				}
-			}
-
-			auto it = mRenderingPipelines.find(PipelineID);
-			if (it != mRenderingPipelines.end())
-			{
-				mActiveRenderingPipeline = it->second;
-				return;
-			}
-			NUCLEAR_ERROR("[RenderSystem] Pipeline ID '{0}' is not found, while setting it active", Utilities::int_to_hex<Uint32>(PipelineID));
 		}
 
 		bool RenderSystem::NeedsBaking()
@@ -96,28 +63,10 @@ namespace Nuclear
 			bakedesc.mShadingModelDesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
 			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
 
-
-			if(AllPipelines)
-			{ 
-				for (auto it : mRenderingPipelines)
-				{
-
-
-					it.second->Bake(bakedesc);
-				}
-			}
-			else
-			{
-				assert(false);
-			}
 		}
 		void RenderSystem::ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight)
 		{
 			mActiveRenderingPipeline->ResizeRenderTargets(RTWidth, RTHeight);
-		}
-		Rendering::RenderingPipeline* RenderSystem::GetActivePipeline()
-		{
-			return mActiveRenderingPipeline;
 		}
 
 		void RenderSystem::AddRenderPass(Rendering::RenderPass* pass)
@@ -296,11 +245,6 @@ namespace Nuclear
 			mRenderData.PointLights.insert(mRenderData.PointLights.end(), PointLights_noShadows.begin(), PointLights_noShadows.end());
 
 			BakeLightsBuffer();
-
-			if (pShadowPass)
-			{
-				pShadowPass->Initialize();
-			}
 		}
 
 		void RenderSystem::UpdateLights()

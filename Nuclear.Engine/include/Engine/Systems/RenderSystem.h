@@ -8,7 +8,7 @@
 #include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
-#include <Engine/Rendering/RenderPass/RenderPass.h>
+#include <Engine/Rendering/RenderPass.h>
 #include <Core/Logger.h>
 #include <Engine/Rendering/FrameRenderData.h>
 
@@ -29,9 +29,6 @@ namespace Nuclear
 		public:
 			RenderSystem();
 			~RenderSystem();
-
-			void AddRenderingPipeline(Rendering::RenderingPipeline* Pipeline);
-			void SetActiveRenderingPipeline(Uint32 PipelineID);
 
 			bool NeedsBaking();
 
@@ -90,11 +87,6 @@ namespace Nuclear
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> mAnimationCB;
 
-			Rendering::RenderingPipeline* mActiveRenderingPipeline;
-			std::unordered_map<Uint32, Rendering::RenderingPipeline*> mRenderingPipelines;
-
-
-			/////////////////////////////////////////////////////////////////////////////////////////
 			size_t Baked_DirLights_Size = 0;
 			size_t Baked_PointLights_Size = 0;
 			size_t Baked_SpotLights_Size = 0;
