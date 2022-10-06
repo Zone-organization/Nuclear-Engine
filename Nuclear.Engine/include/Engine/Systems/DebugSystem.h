@@ -19,7 +19,6 @@ namespace Nuclear
 	namespace Systems
 	{
 		class CameraSystem;
-		class LightingSystem;
 
 		class NEAPI DebugSystem : public ECS::System<DebugSystem>
 		{

@@ -158,18 +158,17 @@ namespace Nuclear
 		{
 			mRTWidth = desc.mRTWidth;
 			mRTHeight = desc.mRTHeight;
-			BakeRenderTargets();
 			BakePostFXPipeline();
 		}
-		void PostProcessingPass::ResizeRenderTargets(Uint32 Width, Uint32 Height)
+
+		void PostProcessingPass::ResizeRTs(Uint32 Width, Uint32 Height)
 		{
 			mRTWidth = Width;
 			mRTHeight = Height;
-			BakeRenderTargets();
 
 			mActiveSRB.Release();
 			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
-			mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
+			//mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
 			auto it = mPostProcessingEffects.find(Utilities::Hash("BLOOM"));
 			if (it != mPostProcessingEffects.end())
 			{

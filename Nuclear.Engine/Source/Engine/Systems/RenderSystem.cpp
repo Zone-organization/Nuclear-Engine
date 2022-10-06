@@ -1,8 +1,10 @@
 #include <Engine\Systems\RenderSystem.h>
-#include <Core\Logger.h>
 #include <Engine\Graphics\Context.h>
+#include <Core/Logger.h>
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
+#include <Engine\Components\MeshComponent.h>
+#include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\Assets\Scene.h>
@@ -34,7 +36,6 @@ namespace Nuclear
 		void RenderSystem::Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines)
 		{		
 			mCameraSystemPtr = mScene->GetSystemManager().GetSystem<CameraSystem>();
-			mLightingSystemPtr = mScene->GetSystemManager().GetSystem<LightingSystem>();
 
 			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraSystem.GetMainCamera()->GetPosition(), 1.0f));
 

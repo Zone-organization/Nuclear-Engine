@@ -1,14 +1,8 @@
 #pragma once
 #include <Engine\ECS\System.h>
-#include <Engine\Rendering\ShadingModel.h>
-#include <Engine\Rendering\RenderingPipeline.h>
-#include <Engine\Components\MeshComponent.h>
-#include <Engine/Assets/Mesh.h>
-#include <Engine/Assets/Material.h>
 #include <vector>
 #include <unordered_map>
 #include <Engine/Rendering/RenderPass.h>
-#include <Core/Logger.h>
 #include <Engine/Rendering/FrameRenderData.h>
 
 namespace Nuclear
@@ -34,8 +28,6 @@ namespace Nuclear
 			void Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines = true);
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
-
-			Rendering::RenderingPipeline* GetActivePipeline();
 
 			void AddRenderPass(Rendering::RenderPass* pass);
 
@@ -74,7 +66,6 @@ namespace Nuclear
 			std::vector<Rendering::RenderPass*> mRenderPasses;
 
 			std::shared_ptr<CameraSystem> mCameraSystemPtr;
-			std::shared_ptr<LightingSystem> mLightingSystemPtr;
 
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> mAnimationCB;

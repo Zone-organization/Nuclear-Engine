@@ -8,10 +8,7 @@ namespace Nuclear
 	{
 		class ShadowPass;
 	}
-	namespace Systems
-	{
-		class LightingSystem;
-	}
+
 	namespace Components 
 	{
 		struct NEAPI DirLightComponent
@@ -45,7 +42,6 @@ namespace Nuclear
 
 		protected:
 			friend class Rendering::ShadowPass;
-			friend class Systems::LightingSystem;
 
 			Math::Matrix4 LightSpace;
 

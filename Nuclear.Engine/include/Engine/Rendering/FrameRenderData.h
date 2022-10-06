@@ -2,6 +2,9 @@
 #include <Core\NE_Common.h>
 #include <Core\Math\Math.h>
 #include <Engine/Graphics/RenderTarget.h>
+#include <Engine/Components/DirLightComponent.h>
+#include <Engine/Components/SpotLightComponent.h>
+#include <Engine/Components/PointLightComponent.h>
 #include <vector>
 #include <map>
 

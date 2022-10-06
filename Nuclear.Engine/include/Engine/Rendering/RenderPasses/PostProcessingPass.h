@@ -32,26 +32,13 @@ namespace Nuclear
 		public:
 			PostProcessingPass();
 
-
-			//Camera stuff
-			Graphics::RenderTarget* GetSceneRT();
-			Graphics::RenderTarget* GetSceneDepthRT();
-
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
 
 			virtual void Bake(const PostProcessingBakingDesc& desc);
 
-			virtual void SetFinalPipelineState();
-
-
-			//Camera stuff
-			//Graphics::RenderTarget SceneRT;
-			//Graphics::RenderTarget SceneDepthRT;
-
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
-
 
 			virtual void UpdatePSO(bool ForceDirty = false);
 
@@ -59,12 +46,11 @@ namespace Nuclear
 
 			void Update(FrameRenderData* framedata) override;
 
-			virtual void ResizeRenderTargets(Uint32 Width, Uint32 Height);
+			void ResizeRTs(Uint32 Width, Uint32 Height) override;
 
 			virtual void SetPostProcessingEffect(const Uint32& effectId, bool value);
 
 			virtual void BakePostFXPipeline();
-			virtual void BakeRenderTargets();
 		protected:
 			PostProcessingPassDesc mDesc;
 
