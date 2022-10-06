@@ -6,28 +6,13 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		struct DefferedRenderingPipelineInitInfo
-		{
-			Rendering::ShadingModel* shadingModel;
-			Graphics::Camera* camera;
-
-			TEXTURE_FORMAT mDepthBufferFormat = TEX_FORMAT_D16_UNORM;
-		};
 		class NEAPI DefferedRenderingPipeline : public RenderingPipeline
 		{
 		public:
-			void Initialize(const DefferedRenderingPipelineInitInfo& info);
-
-			//void Bake(const RenderingPipelineBakingDesc& desc) override;
-
-			//void ResizeRenderTargets(Uint32 Width, Uint32 Height) override;
-
-			void StartRendering(Systems::RenderSystem* renderer) override;
+			void RenderQueue(FrameRenderData* frame, DrawQueue* queue) override;
 
 		private:
-		//	GBuffer mGBuffer;
-			void BakeRenderTargets() override;
-			void RenderMeshes(Systems::RenderSystem* renderer);
+			void RenderMeshes(FrameRenderData* frame, DrawQueue* queue);
 		};
 	}
 }

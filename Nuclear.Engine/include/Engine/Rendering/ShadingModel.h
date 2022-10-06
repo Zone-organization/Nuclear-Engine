@@ -78,14 +78,13 @@ namespace Nuclear
 
 			std::string GetName();
 
-			virtual void ResizeRenderTargets(Uint32 Width, Uint32 Height);
 
 			//////////////////////////////////////////////////////////////////////////
 			//Deffered rendering
 			bool isDeffered();
 
 			GBuffer mGBuffer;
-			virtual void BakeRenderTargets();
+			virtual void BakeGBufferRTs(Uint32 Width, Uint32 Height);
 
 		protected:
 			std::unordered_map<Uint32, ShaderEffect> mRenderingEffects;

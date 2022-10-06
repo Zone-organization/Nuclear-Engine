@@ -239,17 +239,5 @@ namespace Nuclear
 
 			UpdatePSO(true);
 		}
-		void PostProcessingPass::BakeRenderTargets()
-		{
-			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = mRTWidth;
-			RTDesc.Height = mRTHeight;
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-
-			SceneRT.Create(RTDesc);
-
-			RTDesc.DepthTexFormat = TEX_FORMAT_D32_FLOAT;
-			SceneDepthRT.Create(RTDesc);
-		}
 	}
 }

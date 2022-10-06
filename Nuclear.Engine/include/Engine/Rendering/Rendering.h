@@ -9,5 +9,5 @@
 #include <Engine\Rendering\ShadingModels\DiffuseOnly.h>
 #include <Engine\Rendering\ShadingModels\WireFrame.h>
 #include <Engine\Rendering\ImageBasedLighting.h>
-#include <Engine\Rendering\RenderPass\ShadowPass.h>
+#include <Engine\Rendering\RenderPasses\ShadowPass.h>
 

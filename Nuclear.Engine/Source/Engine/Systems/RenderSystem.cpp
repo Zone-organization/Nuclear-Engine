@@ -1,14 +1,12 @@
 #include <Engine\Systems\RenderSystem.h>
+#include <Core\Logger.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\Assets\Scene.h>
-#include <Engine.h>
-#include <cstring>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
-#include <Core\Logger.h>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Systems\CameraSystem.h>
 
@@ -34,11 +32,9 @@ namespace Nuclear
 		}
 
 		void RenderSystem::Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines)
-		{
-		
+		{		
 			mCameraSystemPtr = mScene->GetSystemManager().GetSystem<CameraSystem>();
 			mLightingSystemPtr = mScene->GetSystemManager().GetSystem<LightingSystem>();
-
 
 			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraSystem.GetMainCamera()->GetPosition(), 1.0f));
 
@@ -50,7 +46,18 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
 
-			Rendering::RenderingPipelineBakingDesc bakedesc;
+
+			Graphics::RenderTargetDesc RTDesc;
+			RTDesc.Width = RTWidth;
+			RTDesc.Height = RTHeight;
+			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+
+			mRenderData.mFinalRT.Create(RTDesc);
+
+			RTDesc.DepthTexFormat = TEX_FORMAT_D32_FLOAT;
+			mRenderData.mFinalDepthRT.Create(RTDesc);
+
+		/*	Rendering::RenderingPipelineBakingDesc bakedesc;
 
 			bakedesc.mRTWidth = RTWidth;
 			bakedesc.mRTHeight = RTHeight;
@@ -61,12 +68,19 @@ namespace Nuclear
 			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
 			bakedesc.mShadingModelDesc.LightsBufferPtr = GetLightCB();
 			bakedesc.mShadingModelDesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
-			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;
+			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;*/
 
 		}
-		void RenderSystem::ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight)
+		void RenderSystem::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
-			mActiveRenderingPipeline->ResizeRenderTargets(RTWidth, RTHeight);
+			mRenderData.mFinalRT.Resize(RTWidth, RTHeight);
+			mRenderData.mFinalDepthRT.Resize(RTWidth, RTHeight);
+
+			for (auto pass : mRenderPasses)
+			{
+				pass->ResizeRTs(RTWidth, RTHeight);
+			}
+
 		}
 
 		void RenderSystem::AddRenderPass(Rendering::RenderPass* pass)
@@ -84,12 +98,7 @@ namespace Nuclear
 		{
 			return mCameraSystemPtr.get();
 		}
-
-		Rendering::Background& RenderSystem::GetBackground()
-		{
-			return mBackground;
-		}
-
+		
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{		
 			//////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +120,7 @@ namespace Nuclear
 						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 						EntityInfo.mTransform.Update();
 
-						auto drawqueue = mRenderData.mSubmittedDraws[MeshObject.mMaterial->GetShadingModel()->GetID()];
+						auto& drawqueue = mRenderData.mSubmittedDraws[MeshObject.mMaterial->GetShadingModel()->GetID()];
 						drawqueue.mDrawCommands.push_back(Rendering::DrawCommand(MeshObject.mMesh, MeshObject.mMaterial, EntityInfo.mTransform.GetWorldMatrix()));
 					//	drawqueue.mPipeline = 
 					}
@@ -119,38 +128,33 @@ namespace Nuclear
 			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 2: Update RenderPasses
+			//Step 2: Clear main RTVs
 			//////////////////////////////////////////////////////////////////////////////////////////////
+			Graphics::Context::GetContext()->SetRenderTargets(1, mRenderData.mFinalRT.GetRTVDblPtr(), mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(mRenderData.mFinalRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(mRenderData.mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			//Step 3: Update RenderPasses
+			//////////////////////////////////////////////////////////////////////////////////////////////
 			for (auto pass : mRenderPasses)
 			{
 				pass->Update(&mRenderData);
 			}
 
-			////clean Render targets
-			//auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
-			//auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
-			//Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			//Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			//Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			////Render Scene from each active camera perspective
-			////for (auto Camera : mCameraSystem.ActiveCameras)
-			//{			
-			//		
-			//	//Update light buffer
-			//	auto Camera = mCameraSystemPtr->GetMainCamera();
-			//	mLightingSystemPtr->UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			//Step 4: RenderScene to screen
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
+			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
+			Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			//	GetActivePipeline()->StartRendering(this);
-			//}
 
-			////Render pipeline render targets
-			//GetActivePipeline()->SetFinalPipelineState();
-
-			////Render Main camera view to screen
-			//Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			//Assets::DefaultMeshes::RenderScreenQuad();
+			//TODO :  ADD Scene to screne pipeline
+			Assets::DefaultMeshes::RenderScreenQuad();
 		}
 
 		void RenderSystem::BakeLightsBuffer()

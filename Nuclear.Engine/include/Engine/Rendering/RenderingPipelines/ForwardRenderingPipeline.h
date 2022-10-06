@@ -8,9 +8,7 @@ namespace Nuclear
 		class NEAPI ForwardRenderingPipeline : public RenderingPipeline
 		{
 		public:
-			void Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera);
-
-			void StartRendering(Systems::RenderSystem* renderer) override;
+			void RenderQueue(FrameRenderData* frame, DrawQueue* queue) override;
 		};
 	}
 }

@@ -9,6 +9,7 @@
 #include <vector>
 #include <Engine\ECS\System.h>
 #include <Engine/Rendering/RenderingPipeline.h>
+#include <Engine\Rendering\Background.h>
 
 namespace Nuclear
 {
@@ -25,9 +26,12 @@ namespace Nuclear
 
 			void Update(FrameRenderData* framedata) override;
 
+			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) override;
 
+			Rendering::Background& GetBackground();
 		protected:
-
+			RenderingPipeline* pPipeline;
+			Rendering::Background mBackground;
 		};
 
 	}

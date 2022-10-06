@@ -5,7 +5,6 @@
 #include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
-#include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
 #include <Engine/Rendering/RenderPass.h>
@@ -34,13 +33,10 @@ namespace Nuclear
 
 			void Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines = true);
 
-			void ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight);
+			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 
 			Rendering::RenderingPipeline* GetActivePipeline();
 
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////WIP - RENDER PASS/////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////
 			void AddRenderPass(Rendering::RenderPass* pass);
 
 			template <typename T>
@@ -58,7 +54,6 @@ namespace Nuclear
 				}
 				return nullptr;
 			}
-			//////////////////////////////////////////////////////////////////////////////////////////////
 
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
@@ -66,8 +61,6 @@ namespace Nuclear
 			IBuffer* GetAnimationCB();
 
 			CameraSystem* GetCameraSystem();
-
-			Rendering::Background& GetBackground();
 
 
 			/////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +71,6 @@ namespace Nuclear
 			size_t GetPointLightsNum();
 			size_t GetSpotLightsNum();
 		private:
-			Rendering::Background mBackground;
 			std::vector<Rendering::RenderPass*> mRenderPasses;
 
 			std::shared_ptr<CameraSystem> mCameraSystemPtr;

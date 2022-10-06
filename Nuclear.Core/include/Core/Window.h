@@ -16,7 +16,7 @@ namespace Nuclear
 			std::string Title = "NuclearEngine";
 		};
 
-		class Window : Input
+		class Window : public Input
 		{
 		public:
 			static bool InitializeGLFW();

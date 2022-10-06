@@ -13,107 +13,68 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-
-		void ForwardRenderingPipeline::Initialize(Rendering::ShadingModel* shadingModel, Graphics::Camera* camera)
+		void ForwardRenderingPipeline::RenderQueue(FrameRenderData* frame, DrawQueue* queue)
 		{
-			SetShadingModelAndCamera(shadingModel, camera);
-		}
-
-		void ForwardRenderingPipeline::StartRendering(Systems::RenderSystem* renderer)
-		{
-			SetPostFXPipelineForRendering();
-			Graphics::Context::GetContext()->ClearDepthStencil(SceneDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
+			auto shadingmodel = queue->pShadingModel;
 			//Render Meshes
-			Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetShadersPipeline());
+			Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
 
-
-
-			auto view = renderer->mScene->GetRegistry().view<Components::MeshComponent>();
-
-			for (auto entity : view)
+			for (auto& drawcmd : queue->mDrawCommands)
 			{
-				auto& MeshObject = view.get<Components::MeshComponent>(entity);
-				if (MeshObject.mRender)
+				frame->pCamera->SetModelMatrix(drawcmd.GetTransform());
+				frame->pCameraSystemPtr->UpdateBuffer();
+
+
+				/////////////////////// Animation ////////////////////////////////
+				PVoid anim_data;
+				Graphics::Context::GetContext()->MapBuffer(frame->pAnimationCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)anim_data);
+
+				if (drawcmd.GetAnimator() != nullptr)
 				{
-					auto& EntityInfo = renderer->mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-					EntityInfo.mTransform.Update();
-					GetCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-					renderer->GetCameraSystem()->UpdateBuffer();
+					std::vector<Math::Matrix4> ok;
+					ok.reserve(100);
 
-					auto AnimatorComponent = renderer->mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
-
-					if (AnimatorComponent != nullptr)
+					auto transforms = drawcmd.GetAnimator()->mAnimator->GetFinalBoneMatrices();
+					for (int i = 0; i < transforms.size(); ++i)
 					{
-						std::vector<Math::Matrix4> ok;
-						ok.reserve(100);
-
-						auto transforms = AnimatorComponent->mAnimator->GetFinalBoneMatrices();
-						for (int i = 0; i < transforms.size(); ++i)
-						{
-							ok.push_back(transforms[i]);
-						}
-
-						PVoid data;
-						Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-						data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
-						Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
-					}
-					else {
-						Math::Matrix4 empty(0.0f);
-						PVoid data;
-						Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-						data = memcpy(data, &empty, sizeof(Math::Matrix4));
-						Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
-					}
-					//IBL
-					for (int i = 0; i < GetShadingModel()->mIBLTexturesInfo.size(); i++)
-					{
-						GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mIBLTexturesInfo.at(i).mSlot)->Set(GetShadingModel()->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+						ok.push_back(transforms[i]);
 					}
 
-					//Shadows
-					////////////////////////     TODO    //////////////////////////////////////
-					auto shadowpass = renderer->GetRenderPass<ShadowPass>();
-					if (shadowpass)
-					{
-						if (GetShadingModel()->mDirPos_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
-						{
-							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mDirPos_ShadowmapInfo.mSlot)->Set(shadowpass->GetDirPosShadowMapSRV());
-						}
-						if (GetShadingModel()->mSpot_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
-						{
-							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mSpot_ShadowmapInfo.mSlot)->Set(shadowpass->GetSpotShadowMapSRV());
-						}
-						if (GetShadingModel()->mOmniDir_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
-						{
-							GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mOmniDir_ShadowmapInfo.mSlot)->Set(shadowpass->GetOmniDirShadowMapSRV());
-						}
-					}
-
-					InstantRender(MeshObject.mMesh, MeshObject.mMaterial);
+					anim_data = memcpy(anim_data, ok.data(), ok.size() * sizeof(Math::Matrix4));
 				}
+				else {
+					Math::Matrix4 empty(0.0f);
+					anim_data = memcpy(anim_data, &empty, sizeof(Math::Matrix4));
+				}
+
+				Graphics::Context::GetContext()->UnmapBuffer(frame->pAnimationCB, MAP_WRITE);
+
+				////////////////////////      IBL      ///////////////////////////
+				for (int i = 0; i < shadingmodel->mIBLTexturesInfo.size(); i++)
+				{
+					shadingmodel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, shadingmodel->mIBLTexturesInfo.at(i).mSlot)->Set(shadingmodel->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+				}
+
+				//Shadows
+				////////////////////////     TODO    //////////////////////////////////////
+				if (frame->mShadowsEnabled)
+				{
+					if (shadingmodel->mDirPos_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+					{
+						shadingmodel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, shadingmodel->mDirPos_ShadowmapInfo.mSlot)->Set(frame->pDirPosShadowMapSRV);
+					}
+					if (shadingmodel->mSpot_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+					{
+						shadingmodel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, shadingmodel->mSpot_ShadowmapInfo.mSlot)->Set(frame->pSpotPosShadowMapSRV);
+					}
+					if (shadingmodel->mOmniDir_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+					{
+						shadingmodel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, shadingmodel->mOmniDir_ShadowmapInfo.mSlot)->Set(frame->pOmniDirShadowMapSRV);
+					}
+				}
+
+				InstantRender(drawcmd.GetMesh(), drawcmd.GetMaterial());
 			}
-
-			//if (renderer->VisualizePointLightsPositions)
-			//{
-			//	for (unsigned int i = 0; i < renderer->GetLightingSubSystem().PointLights.size(); i++)
-			//	{
-			//		Math::Matrix4 model(1.0f);
-			//		model = Math::translate(model, Math::Vector3(renderer->GetLightingSubSystem().PointLights[i]->GetInternalData().Position));
-			//		model = Math::scale(model, Math::Vector3(0.75f));
-			//		GetCamera()->SetModelMatrix(model);
-			//		renderer->GetCameraSubSystem().UpdateBuffer();
-			//		InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &renderer->LightSphereMaterial);
-			//	}
-			//}
-
-			if (renderer->GetBackground().GetSkybox() != nullptr)
-			{
-				renderer->GetBackground().GetSkybox()->Render();
-			}
-
-			ApplyPostProcessingEffects();
 		}
 	}
 }

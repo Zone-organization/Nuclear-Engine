@@ -218,6 +218,10 @@ namespace Nuclear
 			return mName;
  		}
 
+		void ShadingModel::BakeGBufferRTs(Uint32 Width, Uint32 Height)
+		{
+			mGBuffer.Bake(Width, Height);
+		}
 
 		void ShadingModel::AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value)
 		{

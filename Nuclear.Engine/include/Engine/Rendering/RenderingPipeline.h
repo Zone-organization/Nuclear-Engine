@@ -14,16 +14,16 @@ namespace Nuclear
 
 	namespace Rendering
 	{
-
+		struct DrawQueue;
 		//Defines how to render stuff
 		class NEAPI RenderingPipeline
 		{
 		public:
 			RenderingPipeline();
 
-			virtual void StartRendering(Systems::RenderSystem* renderer) = 0;
+			virtual void RenderQueue(FrameRenderData* framedata, DrawQueue* queue) = 0;
 
-			// Render A Mesh instantly
+			// Render A Mesh (expects the pipeline to be bound)
 			virtual void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
 		};
 	}

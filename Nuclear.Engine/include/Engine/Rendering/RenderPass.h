@@ -14,6 +14,7 @@ namespace Nuclear
 
             virtual void Update(FrameRenderData* framedata) = 0;
 
+            virtual void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) {};
         };
 	}
 }

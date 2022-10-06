@@ -26,6 +26,7 @@ namespace Nuclear
 			std::vector<Graphics::RenderTarget> mRenderTargets;
 		private:
 			GBufferDesc mDesc;
+			bool mBaked = false;
 		};
 	}
 }

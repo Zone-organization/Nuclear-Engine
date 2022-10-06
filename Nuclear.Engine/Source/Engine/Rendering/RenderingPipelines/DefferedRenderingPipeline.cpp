@@ -15,136 +15,100 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		void DefferedRenderingPipeline::Initialize(const DefferedRenderingPipelineInitInfo& info)
+		/*void DefferedRenderingPipeline::Initialize(const DefferedRenderingPipelineInitInfo& info)
 		{
             SetShadingModelAndCamera(info.shadingModel, info.camera);
             GBufferDesc gbufferdesc;
             gbufferdesc.mRTDescs = info.shadingModel->GetGBufferDesc();
             mGBuffer.Initialize(gbufferdesc);
-		}
+		}*/
 
-        void DefferedRenderingPipeline::ResizeRenderTargets(Uint32 Width, Uint32 Height)
+        void DefferedRenderingPipeline::RenderQueue(FrameRenderData* frame, DrawQueue* queue)
         {
-            mGBuffer.Resize(Width, Height);
-            RenderingPipeline::ResizeRenderTargets(Width, Height);
-        }
+            auto shadingmodel = queue->pShadingModel;
 
-        void DefferedRenderingPipeline::StartRendering(Systems::RenderSystem* renderer)
-        {
+            //Render To Gbuffer
+            Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetGBufferPipeline());
+
             std::vector<ITextureView*> RTargets;
-            for (auto& i : mGBuffer.mRenderTargets)
+            for (auto& i : shadingmodel->mGBuffer.mRenderTargets)
             {
                 RTargets.push_back(i.GetRTV());
             }
-            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), SceneDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), frame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
             for (auto& i : RTargets)
             {
                 Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr,  RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
             }
 
-            Graphics::Context::GetContext()->ClearDepthStencil(SceneDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->ClearDepthStencil(frame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-            //Render To Gbuffer
-            Graphics::Context::GetContext()->SetPipelineState(GetShadingModel()->GetGBufferPipeline());
-            RenderMeshes(renderer);
-
-           /* if (renderer->VisualizePointLightsPositions)
-            {
-                for (unsigned int i = 0; i < renderer->GetLightingSystem().PointLights.size(); i++)
-                {
-                    Math::Matrix4 model(1.0f);
-                    model = Math::translate(model, Math::Vector3(renderer->GetLightingSubSystem().PointLights[i]->GetInternalData().Position));
-                    model = Math::scale(model, Math::Vector3(0.75f));
-                    GetCamera()->SetModelMatrix(model);
-                    renderer->GetCameraSubSystem().UpdateBuffer();
-                    InstantRender(Assets::DefaultMeshes::GetSphereAsset(), &renderer->LightSphereMaterial);
-                }
-            }*/
+            RenderMeshes(frame , queue);
 
             //Apply Lighting
-            SetPostFXPipelineForRendering();
-            for (int i = 0; i < mGBuffer.mRenderTargets.size(); i++)
+            Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
+            Graphics::Context::GetContext()->SetRenderTargets(1, frame->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+            for (int i = 0; i < shadingmodel->mGBuffer.mRenderTargets.size(); i++)
             {
-                GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(mGBuffer.mRenderTargets.at(i).GetSRV());
+                shadingmodel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(shadingmodel->mGBuffer.mRenderTargets.at(i).GetSRV());
             }
 
             //IBL
-            for (int i = 0; i < GetShadingModel()->mIBLTexturesInfo.size(); i++)
+            for (int i = 0; i < shadingmodel->mIBLTexturesInfo.size(); i++)
             {
-                GetShadingModel()->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, GetShadingModel()->mIBLTexturesInfo.at(i).mSlot)->Set(GetShadingModel()->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+                shadingmodel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, shadingmodel->mIBLTexturesInfo.at(i).mSlot)->Set(shadingmodel->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
             }
 
-            Graphics::Context::GetContext()->CommitShaderResources(GetShadingModel()->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            Graphics::Context::GetContext()->CommitShaderResources(shadingmodel->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 
             Assets::DefaultMeshes::RenderScreenQuad();
 
-            if (renderer->GetBackground().GetSkybox() != nullptr)
-            {
-                renderer->GetBackground().GetSkybox()->Render();
-            }
-
-            ApplyPostProcessingEffects();
 
             //Send GBUFFER to DebugSystem
-            if (renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
-            {
-                for (auto& i : mGBuffer.mRenderTargets)
-                {
-                    renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
-                }
-            }
+            //if (renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+            //{
+            //    for (auto& i : mGBuffer.mRenderTargets)
+            //    {
+            //        renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
+            //    }
+            //}
        //     mGBuffer.DebugIMGUI();
         }
 
-        void DefferedRenderingPipeline::BakeRenderTargets()
+        void DefferedRenderingPipeline::RenderMeshes(FrameRenderData* frame, DrawQueue* queue)
         {
-            mGBuffer.Bake(mRTWidth, mRTHeight);
-            RenderingPipeline::BakeRenderTargets();
-        }
-
-        void DefferedRenderingPipeline::RenderMeshes(Systems::RenderSystem* renderer)
-        {
-            auto view = renderer->mScene->GetRegistry().view<Components::MeshComponent>();
-            for (auto entity : view)
+            for (auto& drawcmd : queue->mDrawCommands)
             {
-                auto& MeshObject = view.get<Components::MeshComponent>(entity);
-                if (MeshObject.mRender)
+                frame->pCamera->SetModelMatrix(drawcmd.GetTransform());
+                frame->pCameraSystemPtr->UpdateBuffer();
+
+                /////////////////////// Animation ////////////////////////////////
+                PVoid anim_data;
+                Graphics::Context::GetContext()->MapBuffer(frame->pAnimationCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)anim_data);
+
+                if (drawcmd.GetAnimator() != nullptr)
                 {
-                    auto& EntityInfo = renderer->mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-                    EntityInfo.mTransform.Update();
-                    GetCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-                    renderer->GetCameraSystem()->UpdateBuffer();
+                    std::vector<Math::Matrix4> ok;
+                    ok.reserve(100);
 
-                    auto AnimatorComponent = renderer->mScene->GetRegistry().try_get<Components::AnimatorComponent>(entity);
-
-                    if (AnimatorComponent != nullptr)
+                    auto transforms = drawcmd.GetAnimator()->mAnimator->GetFinalBoneMatrices();
+                    for (int i = 0; i < transforms.size(); ++i)
                     {
-                        std::vector<Math::Matrix4> ok;
-                        ok.reserve(100);
-
-                        auto transforms = AnimatorComponent->mAnimator->GetFinalBoneMatrices();
-                        for (int i = 0; i < transforms.size(); ++i)
-                        {
-                            ok.push_back(transforms[i]);
-                        }
-
-                        PVoid data;
-                        Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-                        data = memcpy(data, ok.data(), ok.size() * sizeof(Math::Matrix4));
-                        Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
-
-                    }
-                    else {
-                        Math::Matrix4 empty(0.0f);
-                        PVoid data;
-                        Graphics::Context::GetContext()->MapBuffer(renderer->GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-                        data = memcpy(data, &empty, sizeof(Math::Matrix4));
-                        Graphics::Context::GetContext()->UnmapBuffer(renderer->GetAnimationCB(), MAP_WRITE);
+                        ok.push_back(transforms[i]);
                     }
 
-                    InstantRender(MeshObject.mMesh, MeshObject.mMaterial);
+                    anim_data = memcpy(anim_data, ok.data(), ok.size() * sizeof(Math::Matrix4));
                 }
+                else {
+                    Math::Matrix4 empty(0.0f);
+                    anim_data = memcpy(anim_data, &empty, sizeof(Math::Matrix4));
+                }
+
+                Graphics::Context::GetContext()->UnmapBuffer(frame->pAnimationCB, MAP_WRITE);
+
+                InstantRender(drawcmd.GetMesh(), drawcmd.GetMaterial());
             }
         }
 	}

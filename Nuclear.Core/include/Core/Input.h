@@ -5,8 +5,6 @@ namespace Nuclear
 {
 	namespace Core
 	{
-		class Window;
-
 		class Input
 		{
 		public:
