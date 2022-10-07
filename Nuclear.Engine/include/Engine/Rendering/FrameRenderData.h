@@ -7,6 +7,8 @@
 #include <Engine/Components/PointLightComponent.h>
 #include <vector>
 #include <map>
+#include <Engine\ECS/Entity.h>
+#include <Engine/Components/MeshComponent.h>
 
 namespace Nuclear
 {
@@ -26,28 +28,8 @@ namespace Nuclear
 	namespace Rendering
 	{
         class ShadingModel;
-        struct DrawCommand
-        {
-            DrawCommand(Assets::Mesh* mesh, Assets::Material* material, const  Math::Matrix4& transform)
-                : pMesh(mesh), pMaterial(material), mWorldTransform(transform) {}
 
-            Assets::Mesh* GetMesh() const { return pMesh; }
-            Assets::Material* GetMaterial() const { return pMaterial; }
-            Components::AnimatorComponent* GetAnimator() const { return pAnimator; }
-            const Math::Matrix4& GetTransform() const { return mWorldTransform; }
-
-        private:
-            Assets::Mesh* pMesh;
-            Assets::Material* pMaterial;
-            Math::Matrix4 mWorldTransform;
-            Components::AnimatorComponent* pAnimator = nullptr;  //TODO: MOVE! : we should have skinned and non skinned shading models for performance concerns
-        };
-
-        struct DrawQueue
-        {
-            ShadingModel* pShadingModel;
-            std::vector<DrawCommand> mDrawCommands;
-        };
+        typedef entt::basic_view<entt::entity, entt::get_t<Nuclear::Components::MeshComponent>, entt::exclude_t<>, void> MeshView;
 
 		struct NEAPI FrameRenderData
 		{
@@ -55,9 +37,7 @@ namespace Nuclear
             //Scene being rendered in this frame
             Assets::Scene* pScene;
 
-
-            std::map<Uint32, DrawQueue> mSubmittedDraws;
-
+            MeshView mMeshView;
             RefCntAutoPtr<IBuffer> pAnimationCB;
 
             //baked lights

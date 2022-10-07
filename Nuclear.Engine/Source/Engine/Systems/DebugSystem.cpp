@@ -43,7 +43,7 @@ namespace Nuclear
 			if (RenderLightSources)
 			{
 				Graphics::Context::GetContext()->SetPipelineState(DebugRP.GetActivePipeline());
-				auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
+				auto RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
 				Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, mScene->GetSystemManager().GetSystem<RenderSystem>()->mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
 				{

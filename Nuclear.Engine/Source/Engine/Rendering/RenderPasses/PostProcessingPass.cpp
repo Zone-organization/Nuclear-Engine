@@ -3,6 +3,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine/Rendering/FrameRenderData.h>
+#include <Core\FileSystem.h>
 
 namespace Nuclear
 {
@@ -187,44 +188,36 @@ namespace Nuclear
 
 		void PostProcessingPass::BakePostFXPipeline()
 		{
-			std::vector<LayoutElement> Layout;
-
-			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
-			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-			Graphics::CompoundPipelineDesc PSOCreateInfo;
-
-			for (auto it : mPostProcessingEffects)
 			{
-				PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
-			}
+				std::vector<LayoutElement> Layout;
 
-			PSOCreateInfo.mVShaderPath = mDesc.PostFX_VS_Path;
-			PSOCreateInfo.mPShaderPath = mDesc.PostFX_PS_Path;
+				Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
+				Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
+				Graphics::CompoundPipelineDesc PSOCreateInfo;
 
-			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
-
-			mPostFXPipeline.Create(PSOCreateInfo);
-
-			bool bloomincluded = false;
-			for (auto it : mPostProcessingEffects)
-			{
-				if (it.second.GetName() == "BLOOM")
+				for (auto it : mPostProcessingEffects)
 				{
-					bloomincluded = true;
+					PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
 				}
+
+				PSOCreateInfo.mVShaderPath = mDesc.PostFX_VS_Path;
+				PSOCreateInfo.mPShaderPath = mDesc.PostFX_PS_Path;
+
+				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
+
+				mPostFXPipeline.Create(PSOCreateInfo);
 			}
 
-			//Create Blur pipeline
-			if (bloomincluded)
+			//bloom
 			{
 				Graphics::RenderTargetDesc RTDesc;
 				RTDesc.Width = mRTWidth;
@@ -234,6 +227,69 @@ namespace Nuclear
 				BloomRT.Create(RTDesc);
 
 				mBloomBlur.Initialize(mRTWidth, mRTHeight);
+
+
+				//Create bloom extract PSO
+
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+
+				PSOCreateInfo.PSODesc.Name = "BloomExtract PSO";
+				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+
+				//Create Shaders
+				RefCntAutoPtr<IShader> VSShader;
+				RefCntAutoPtr<IShader> PSShader;
+
+				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(false);
+
+				//Create Vertex Shader
+				{
+
+					ShaderCreateInfo CreationAttribs;
+
+					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+					CreationAttribs.EntryPoint = "main";
+					CreationAttribs.Desc.Name = "BloomExtractVS";
+
+					auto source = Core::FileSystem::LoadShader(mDesc.PostFX_VS_Path, std::vector<std::string>(), std::vector<std::string>(), true);
+					CreationAttribs.Source = source.c_str();
+					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
+				}
+
+				//Create Pixel Shader
+				{
+					ShaderCreateInfo CreationAttribs;
+
+					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+					CreationAttribs.EntryPoint = "main";
+					CreationAttribs.Desc.Name = "BloomExtractPS";
+
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BloomExtract.ps.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+					CreationAttribs.Source = source.c_str();
+					Graphics::Context::GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
+				}
+
+				PSOCreateInfo.pVS = VSShader;
+				PSOCreateInfo.pPS = PSShader;
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pBloomExtractPSO, PSOCreateInfo, Vars, true);
+				pBloomExtractPSO->CreateShaderResourceBinding(pBloomExtractSRB.RawDblPtr());
 			}
 
 			UpdatePSO(true);

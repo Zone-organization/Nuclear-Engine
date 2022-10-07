@@ -16,16 +16,18 @@ namespace Nuclear
 			mName = std::string();
 		}
 
-		void Material::Create(MaterialData* pData, Rendering::ShadingModel* Pipeline)
+		void Material::Create(MaterialData* data, Rendering::ShadingModel* Pipeline)
 		{
 			if (!Pipeline)
 			{
 				NUCLEAR_ERROR("[Material] Creation requires a valid Pipeline object!");
 				return;
 			}
+			pData = data;
 			pShaderPipeline = Pipeline;
 			pShaderPipelineSRB = pShaderPipeline->GetActiveSRB();
 			mDefferedMaterial = Pipeline->isDeffered();
+			InitializePipelineTextures();
 		}
 		void Material::BindTexSet(Uint32 index)
 		{

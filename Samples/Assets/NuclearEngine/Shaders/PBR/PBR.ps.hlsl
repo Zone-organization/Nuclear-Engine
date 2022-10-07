@@ -98,9 +98,6 @@ float3 CalculatePBRLight(float3 N, float3 L, float3 V, float3 F0, float3 radianc
 struct PS_OUTPUT
 {
 	float4 Color: SV_Target0;
-#ifdef BLOOM
-	float4 Bloom: SV_Target1;
-#endif
 };
 
 // ----------------------------------------------------------------------------
@@ -285,13 +282,6 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 
 	output.Color = float4(color, 1.0f);
 
-#ifdef BLOOM
-	float brightness = dot(color, float3(0.2126, 0.7152, 0.0722));
-	if (brightness > 1.0)
-		output.Bloom = float4(color, 1.0);
-	else
-		output.Bloom = float4(0.0, 0.0, 0.0, 1.0);
-#endif
 	return output;
 }
 

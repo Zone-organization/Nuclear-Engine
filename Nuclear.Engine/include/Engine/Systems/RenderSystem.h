@@ -54,6 +54,7 @@ namespace Nuclear
 
 			CameraSystem* GetCameraSystem();
 
+			void RegisterShadingModel(Rendering::ShadingModel* shadingmodel);
 
 			/////////////////////////////////////////////////////////////////////////////////////////
 			IBuffer* GetLightCB();
@@ -64,11 +65,17 @@ namespace Nuclear
 			size_t GetSpotLightsNum();
 		private:
 			std::vector<Rendering::RenderPass*> mRenderPasses;
+			std::vector<Rendering::ShadingModel*> mRegisteredShadingModels;
 
 			std::shared_ptr<CameraSystem> mCameraSystemPtr;
 
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> mAnimationCB;
+
+			RefCntAutoPtr<IPipelineState> pSceneToScreenPSO;
+			RefCntAutoPtr<IShaderResourceBinding> pSceneToScreenSRB;
+
+			void BakeScenePipeline(Uint32 RTWidth, Uint32 RTHeight);
 
 			size_t Baked_DirLights_Size = 0;
 			size_t Baked_PointLights_Size = 0;

@@ -303,19 +303,19 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 							ImGui::Text("Unnamed Material");
 						}
 
-						for (auto &it : meshcomponent->mMaterial->mPixelShaderTextures)
-						{
-							ImGui::Text(it.mName.c_str());
+						//for (auto &it : meshcomponent->mMaterial->mPixelShaderTextures)
+						//{
+						//	ImGui::Text(it.mName.c_str());
 
-							for (auto& it1 : it.mData)
-							{
-								//ImGui::Text(it1.mSlot);
-								if (it1.mTex.GetImage() != nullptr)
-								{
-									ImGui::Image(it1.mTex.GetImage()->mTextureView, { 256.f,256.f });
-								}
-							}
-						}
+						//	for (auto& it1 : it.mData)
+						//	{
+						//		//ImGui::Text(it1.mSlot);
+						//		if (it1.mTex.GetImage() != nullptr)
+						//		{
+						//			ImGui::Image(it1.mTex.GetImage()->mTextureView, { 256.f,256.f });
+						//		}
+						//	}
+						//}
 					}
 
 				}

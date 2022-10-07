@@ -11,6 +11,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Systems\CameraSystem.h>
+#include <Core\FileSystem.h>
 
 namespace Nuclear
 {
@@ -47,29 +48,29 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
 
+			BakeScenePipeline(RTWidth, RTHeight);
+			BakeLights();
 
-			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = RTWidth;
-			RTDesc.Height = RTHeight;
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+			Rendering::ShadingModelBakingDesc bakedesc;
+			bakedesc.DirLights = static_cast<Uint32>(GetDirLightsNum());
+			bakedesc.SpotLights = static_cast<Uint32>(GetSpotLightsNum());
+			bakedesc.PointLights = static_cast<Uint32>(GetPointLightsNum());
+			bakedesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
+			bakedesc.LightsBufferPtr = GetLightCB();
+			bakedesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
+			bakedesc.AnimationBufferPtr = mAnimationCB;
 
-			mRenderData.mFinalRT.Create(RTDesc);
 
-			RTDesc.DepthTexFormat = TEX_FORMAT_D32_FLOAT;
-			mRenderData.mFinalDepthRT.Create(RTDesc);
-
-		/*	Rendering::RenderingPipelineBakingDesc bakedesc;
-
-			bakedesc.mRTWidth = RTWidth;
-			bakedesc.mRTHeight = RTHeight;
-
-			bakedesc.mShadingModelDesc.DirLights = static_cast<Uint32>(GetDirLightsNum());
-			bakedesc.mShadingModelDesc.SpotLights = static_cast<Uint32>(GetSpotLightsNum());
-			bakedesc.mShadingModelDesc.PointLights = static_cast<Uint32>(GetPointLightsNum());
-			bakedesc.mShadingModelDesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
-			bakedesc.mShadingModelDesc.LightsBufferPtr = GetLightCB();
-			bakedesc.mShadingModelDesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
-			bakedesc.mShadingModelDesc.AnimationBufferPtr = mAnimationCB;*/
+			for (auto i : mRegisteredShadingModels)
+			{
+				if (i)
+				{
+					if (i->mAutoBake)
+					{
+						i->Bake(bakedesc);
+					}
+				}
+			}
 
 		}
 		void RenderSystem::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
@@ -99,34 +100,50 @@ namespace Nuclear
 		{
 			return mCameraSystemPtr.get();
 		}
+
+		void RenderSystem::RegisterShadingModel(Rendering::ShadingModel* shadingmodel)
+		{
+			mRegisteredShadingModels.push_back(shadingmodel);
+		}
 		
 		void RenderSystem::Update(ECS::TimeDelta dt)
-		{		
+		{
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 0: Update Entites
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			UpdateLights();
+			UpdateLightsBuffer(Math::Vector4(mCameraSystemPtr->GetMainCamera()->GetPosition(), 1.0f));
+			mRenderData.pScene = mScene;
+			mRenderData.pAnimationCB = mAnimationCB;
+			mRenderData.pCameraSystemPtr = mCameraSystemPtr;
+			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 1: Build FrameRenderData
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			if (false)  //WIP
-			{
-				auto view = mScene->GetRegistry().view<Components::MeshComponent>();
-				for (auto entity : view)
-				{
-					auto& MeshObject = view.get<Components::MeshComponent>(entity);
-					if (MeshObject.mRender)
-					{
-						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-						EntityInfo.mTransform.Update();
+			//auto view = mScene->GetRegistry().view<Components::MeshComponent>();
 
-						auto& drawqueue = mRenderData.mSubmittedDraws[MeshObject.mMaterial->GetShadingModel()->GetID()];
-						drawqueue.mDrawCommands.push_back(Rendering::DrawCommand(MeshObject.mMesh, MeshObject.mMaterial, EntityInfo.mTransform.GetWorldMatrix()));
-					//	drawqueue.mPipeline = 
-					}
+			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
+				{
+				return lhs.z < rhs.z;
+				});
+
+			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();
+			for (auto entity : view)
+			{
+				auto& MeshObject = view.get<Components::MeshComponent>(entity);
+				if (MeshObject.mRender)
+				{
+					auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					EntityInfo.mTransform.Update();
+
+					auto& drawqueue = mRenderData.mSubmittedDraws[MeshObject.mMaterial->GetShadingModel()->GetID()];
+					drawqueue.mDrawCommands.push_back(Rendering::DrawCommand(MeshObject.mMesh, MeshObject.mMaterial, EntityInfo.mTransform.GetWorldMatrix(), MeshObject.z));
+					drawqueue.pShadingModel = MeshObject.mMaterial->GetShadingModel();
+
 				}
 			}
+
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 2: Clear main RTVs
@@ -153,8 +170,10 @@ namespace Nuclear
 			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+			Graphics::Context::GetContext()->SetPipelineState(pSceneToScreenPSO);
+			pSceneToScreenSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mRenderData.mFinalRT.GetSRV());
+			Graphics::Context::GetContext()->CommitShaderResources(pSceneToScreenSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			//TODO :  ADD Scene to screne pipeline
 			Assets::DefaultMeshes::RenderScreenQuad();
 		}
 
@@ -204,6 +223,79 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			BufferData DATA;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
+		}
+
+		void RenderSystem::BakeScenePipeline(Uint32 RTWidth, Uint32 RTHeight)
+		{
+			Graphics::RenderTargetDesc RTDesc;
+			RTDesc.Width = RTWidth;
+			RTDesc.Height = RTHeight;
+			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+
+			mRenderData.mFinalRT.Create(RTDesc);
+
+			RTDesc.DepthTexFormat = TEX_FORMAT_D32_FLOAT;
+			mRenderData.mFinalDepthRT.Create(RTDesc);
+
+			GraphicsPipelineStateCreateInfo PSOCreateInfo;
+
+			PSOCreateInfo.PSODesc.Name = "SceneToScreen PSO";
+			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+
+			//Create Shaders
+			RefCntAutoPtr<IShader> VSShader;
+			RefCntAutoPtr<IShader> PSShader;
+
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(true);
+
+			//Create Vertex Shader
+			{
+
+				ShaderCreateInfo CreationAttribs;
+
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "SceneToScreenVS";
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
+			}
+
+			//Create Pixel Shader
+			{
+				ShaderCreateInfo CreationAttribs;
+
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
+				CreationAttribs.EntryPoint = "main";
+				CreationAttribs.Desc.Name = "SceneToScreenPS";
+
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/SceneToScreen.ps.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				CreationAttribs.Source = source.c_str();
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
+			}
+
+			PSOCreateInfo.pVS = VSShader;
+			PSOCreateInfo.pPS = PSShader;
+			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pSceneToScreenPSO, PSOCreateInfo, Vars, true);
+			pSceneToScreenPSO->CreateShaderResourceBinding(pSceneToScreenSRB.RawDblPtr());
 		}
 
 		void RenderSystem::BakeLights()
@@ -278,6 +370,7 @@ namespace Nuclear
 				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
 			}
+		
 		}
 		void RenderSystem::UpdateLightsBuffer(const Math::Vector4& CameraPos)
 		{

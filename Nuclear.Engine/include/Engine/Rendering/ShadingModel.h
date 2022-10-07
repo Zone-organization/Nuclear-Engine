@@ -78,7 +78,7 @@ namespace Nuclear
 
 			std::string GetName();
 
-
+			bool mAutoBake = true;
 			//////////////////////////////////////////////////////////////////////////
 			//Deffered rendering
 			bool isDeffered();

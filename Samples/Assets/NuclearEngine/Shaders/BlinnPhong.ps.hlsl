@@ -34,17 +34,9 @@ SamplerState NEMat_Normal1_sampler : register(s2);
 
 #endif
 
-struct PS_OUTPUT
-{
-    float4 Color: SV_Target0;
-#ifdef BLOOM
-    float4 Bloom: SV_Target1;
-#endif
-};
+float4 DoLighting(PixelInputType input);
 
-PS_OUTPUT DoLighting(PixelInputType input);
-
-PS_OUTPUT main(PixelInputType input) : SV_TARGET
+float4 main(PixelInputType input) : SV_TARGET
 {
     return DoLighting(input);
 }
@@ -124,7 +116,7 @@ float3 CalcSpotLight(SpotLight light, float3 normal, float3 fragPos, float3 view
     return (diffuse + specular);
 }
 
-PS_OUTPUT DoLighting(PixelInputType input)
+float4 DoLighting(PixelInputType input)
 {
     float3 result = float3(0.0f, 0.0f, 0.0f);
 #ifdef NE_DEFFERED
@@ -233,16 +225,5 @@ PS_OUTPUT DoLighting(PixelInputType input)
  
 #endif  //NE_POINT_LIGHTS_NUM
 
-
-    PS_OUTPUT output;
-    output.Color =  float4(result, 1.0f);
-
-#ifdef BLOOM
-    float brightness = dot(result, float3(0.2126, 0.7152, 0.0722));
-    if (brightness > 1.0)
-        output.Bloom = float4(result, 1.0);
-    else
-        output.Bloom = float4(0.0, 0.0, 0.0, 1.0);
-#endif
-   return output;
+   return float4(result, 1.0f);
 }

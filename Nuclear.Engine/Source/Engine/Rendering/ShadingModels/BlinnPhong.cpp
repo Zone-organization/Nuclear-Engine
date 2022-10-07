@@ -21,21 +21,9 @@ namespace Nuclear
 		bool BlinnPhong::Bake(const ShadingModelBakingDesc& desc)
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
-			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA8_UNORM;
-			//Check for bloom
-			for (auto it : desc.mRequiredEffects)
-			{
-				if (it.GetName() == "BLOOM")
-				{
-					PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 2;
-					PSOCreateInfo.GraphicsPipeline.RTVFormats[1] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-				}
-			}
-
-
 			PSOCreateInfo.PSODesc.Name = "BlinnPhongPSO";
-
+			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = !COORDSYSTEM_LH_ENABLED;

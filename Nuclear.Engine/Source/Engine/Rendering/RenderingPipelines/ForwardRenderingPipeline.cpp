@@ -18,6 +18,7 @@ namespace Nuclear
 			auto shadingmodel = queue->pShadingModel;
 			//Render Meshes
 			Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
+			Graphics::Context::GetContext()->SetRenderTargets(1, frame->mFinalRT.GetRTVDblPtr(), frame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			for (auto& drawcmd : queue->mDrawCommands)
 			{
@@ -29,7 +30,7 @@ namespace Nuclear
 				PVoid anim_data;
 				Graphics::Context::GetContext()->MapBuffer(frame->pAnimationCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)anim_data);
 
-				if (drawcmd.GetAnimator() != nullptr)
+			/*	if (drawcmd.GetAnimator() != nullptr)
 				{
 					std::vector<Math::Matrix4> ok;
 					ok.reserve(100);
@@ -42,10 +43,10 @@ namespace Nuclear
 
 					anim_data = memcpy(anim_data, ok.data(), ok.size() * sizeof(Math::Matrix4));
 				}
-				else {
+				else {*/
 					Math::Matrix4 empty(0.0f);
 					anim_data = memcpy(anim_data, &empty, sizeof(Math::Matrix4));
-				}
+				//}
 
 				Graphics::Context::GetContext()->UnmapBuffer(frame->pAnimationCB, MAP_WRITE);
 

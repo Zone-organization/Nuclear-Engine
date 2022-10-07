@@ -21,7 +21,6 @@ namespace Nuclear
 		public:
 			GeometryPass();
 
-
 			void Initialize(RenderingPipeline* pipeline);
 
 			void Update(FrameRenderData* framedata) override;

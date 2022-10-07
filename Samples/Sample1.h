@@ -100,8 +100,7 @@ class Sample1 : public Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
-	std::shared_ptr<Systems::LightingSystem> mLightingSystem;
-	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
+//	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	Assets::Mesh* NanosuitAsset;
 	Assets::Mesh* CyborgAsset;
@@ -109,10 +108,16 @@ class Sample1 : public Client
 	Assets::Mesh* VampireAsset;
 
 	Assets::Material CubeMaterial;
-	Assets::Material* NanosuitMaterial;
-	Assets::Material* CyborgMaterial;
-	Assets::Material* BobMaterial;
-	Assets::Material* VampireMaterial;
+	Assets::Material NanosuitMaterial;
+	Assets::Material CyborgMaterial;
+	Assets::Material BobMaterial;
+	Assets::Material VampireMaterial;
+
+	Assets::MaterialData CubeTextures;
+	Assets::MaterialData* NanosuitMaterialD;
+	Assets::MaterialData* CyborgMaterialD;
+	Assets::MaterialData* BobMaterialD;
+	Assets::MaterialData* VampireMaterialD;
 
 	Animation::Animator BobAnimator;
 	Animation::Animator VampireAnimator;
@@ -127,12 +132,10 @@ class Sample1 : public Client
 	Rendering::DiffuseOnly DiffuseRP;
 	Rendering::WireFrame WireFrameRP;
 	Rendering::BlinnPhong BlinnPhongRP;
-	Rendering::BlinnPhong DefferedBlinnPhong;
 
-	Rendering::ForwardRenderingPipeline BlinnPhongPipeline;
-	Rendering::ForwardRenderingPipeline DiffuseRPPipeline;
-	Rendering::ForwardRenderingPipeline WireFrameRPPipeline;
-	Rendering::DefferedRenderingPipeline DefferedPipeline;
+	Rendering::ForwardRenderingPipeline ForwardRP;
+
+	Rendering::GeometryPass GeoPass;
 
 	ECS::Entity ECube;
 	ECS::Entity ECyborg;
@@ -160,16 +163,16 @@ public:
 		Assets::Animations* Placeholder;
 
 		//Load Nanosuit Model
-		std::tie(NanosuitAsset, NanosuitMaterial, Placeholder) = mAssetManager->Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		std::tie(NanosuitAsset, NanosuitMaterialD, Placeholder) = mAssetManager->Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		
 		//Load Cyborg Model
-		std::tie(CyborgAsset, CyborgMaterial, Placeholder) = mAssetManager->Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		std::tie(CyborgAsset, CyborgMaterialD, Placeholder) = mAssetManager->Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 		
 		//Load Bob Model
-		std::tie(BobAsset, BobMaterial, BobAnimation) = mAssetManager->Import("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
+		std::tie(BobAsset, BobMaterialD, BobAnimation) = mAssetManager->Import("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
 
 		//Load Bob Model
-		std::tie(VampireAsset, VampireMaterial, VampireAnimation) = mAssetManager->Import("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
+		std::tie(VampireAsset, VampireMaterialD, VampireAnimation) = mAssetManager->Import("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
 
 		BobAnimator.Initialize(&BobAnimation->mClips.at(0));
 		VampireAnimator.Initialize(&VampireAnimation->mClips.at(0));
@@ -184,25 +187,25 @@ public:
 		CubeSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/crate_specular.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Specular) });
 		CubeSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/crate_normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
 
-		CubeMaterial.mPixelShaderTextures.push_back(CubeSet);
+		CubeTextures.mTextures.push_back(CubeSet);
 
-		Renderer->CreateMaterialForAllPipelines(&CubeMaterial);
-		Renderer->CreateMaterialForAllPipelines(NanosuitMaterial);
-		Renderer->CreateMaterialForAllPipelines(CyborgMaterial);
-		Renderer->CreateMaterialForAllPipelines(BobMaterial);
-		Renderer->CreateMaterialForAllPipelines(VampireMaterial);
+		CubeMaterial.Create(&CubeTextures, &BlinnPhongRP);
+		NanosuitMaterial.Create(NanosuitMaterialD, &BlinnPhongRP);
+		CyborgMaterial.Create(CyborgMaterialD, &BlinnPhongRP);
+		BobMaterial.Create(BobMaterialD, &BlinnPhongRP);
+		VampireMaterial.Create(VampireMaterialD, &BlinnPhongRP);
 
 		CubeSet.mData.clear();
 
-		ECube.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(), &CubeMaterial);
-		ENanosuit.AddComponent<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
-		ECyborg.AddComponent<Components::MeshComponent>(CyborgAsset, CyborgMaterial);
+		ECube.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(),&CubeMaterial);
+		ENanosuit.AddComponent<Components::MeshComponent>(NanosuitAsset, &NanosuitMaterial);
+		ECyborg.AddComponent<Components::MeshComponent>(CyborgAsset, &CyborgMaterial);
 
-		EBob.AddComponent<Components::MeshComponent>(BobAsset, BobMaterial);
-		EBob.AddComponent<Components::AnimatorComponent>(&BobAnimator);
+	//	EBob.AddComponent<Components::MeshComponent>(BobAsset,&BobMaterial);
+	//	EBob.AddComponent<Components::AnimatorComponent>(&BobAnimator);
 
-		EVampire.AddComponent<Components::MeshComponent>(VampireAsset, VampireMaterial);
-		EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);
+	//	EVampire.AddComponent<Components::MeshComponent>(VampireAsset, &VampireMaterial);
+	//	EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);
 
 		//Create The skybox
 		std::array<Core::Path, 6> SkyBoxTexturePaths
@@ -241,8 +244,8 @@ public:
 		ECube = Scene.CreateEntity("Cube", TCube);
 		ENanosuit = Scene.CreateEntity("Nanosuit", TNansosuit);
 		ECyborg = Scene.CreateEntity("Cyborg", TCyborg);
-		EBob = Scene.CreateEntity("Bob", TBob);
-		EVampire = Scene.CreateEntity("Vampire" , TVampire);
+		//EBob = Scene.CreateEntity("Bob", TBob);
+	//	EVampire = Scene.CreateEntity("Vampire" , TVampire);
 		ELights = Scene.CreateEntity("Lights");
 
 		//ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
@@ -260,25 +263,12 @@ public:
 
 	void InitRenderer()
 	{
-		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
+	//	mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
-		BlinnPhongPipeline.Initialize(&BlinnPhongRP, &Camera);
-		DiffuseRPPipeline.Initialize(&DiffuseRP, &Camera);
-		WireFrameRPPipeline.Initialize(&WireFrameRP, &Camera);
-		DefferedBlinnPhong.Initialize({ true });
-		Rendering::DefferedRenderingPipelineInitInfo initInfo;
-		initInfo.shadingModel = &DefferedBlinnPhong;
-		initInfo.camera = &Camera;
-		DefferedPipeline.Initialize(initInfo);
-		//Scene.Systems.Configure();
-		//TestPBR.test = true;
-		//Renderer->AddRenderingPipeline(&TestPBR);
-		Renderer->AddRenderingPipeline(&BlinnPhongPipeline);
-		Renderer->AddRenderingPipeline(&DiffuseRPPipeline);
-		Renderer->AddRenderingPipeline(&WireFrameRPPipeline);
-		Renderer->AddRenderingPipeline(&DefferedPipeline);
-
+		Renderer->RegisterShadingModel(&BlinnPhongRP);
+		Renderer->RegisterShadingModel(&DiffuseRP);
+		Renderer->RegisterShadingModel(&WireFrameRP);
 
 		Renderer->Bake(_Width_, _Height_);
 	}
@@ -296,17 +286,15 @@ public:
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
-		mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>();
 
 		SetupEntities();
-
-		mLightingSystem->Bake();
 
 		InitRenderer();
 
 		SetupAssets();
-
-		Renderer->GetBackground().SetSkybox(&Skybox);
+		GeoPass.Initialize(&ForwardRP);
+		Renderer->AddRenderPass(&GeoPass);
+	//	Renderer->GetBackground().SetSkybox(&Skybox);
 
 		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -339,7 +327,7 @@ public:
 	{
 		Graphics::Context::GetSwapChain()->Resize(width, height);
 		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Renderer->ResizeRenderTargets(width, height);
+		Renderer->ResizeRTs(width, height);
 	}
 	void Update(float deltatime) override
 	{
@@ -374,7 +362,7 @@ public:
 		mCameraSystem->Update(deltatime);
 		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
 
-		Renderer->GetActivePipeline()->UpdatePSO();
+	//	Renderer->GetActivePipeline()->UpdatePSO();
 	}
 	void Render(float dt) override
 	{
@@ -392,44 +380,44 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			ImGui::Text("Active Rendering Pipeline:");
-			static int e = 0;
-			ImGui::RadioButton("DiffuseOnly", &e, 0);
-			ImGui::RadioButton("BlinnPhong", &e, 1);
-			//ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
-			ImGui::RadioButton("WireFrame", &e, 3);
-			ImGui::RadioButton("Deffered Blinn Phong", &e, 4);
+			//ImGui::Text("Active Rendering Pipeline:");
+			//static int e = 0;
+			//ImGui::RadioButton("DiffuseOnly", &e, 0);
+			//ImGui::RadioButton("BlinnPhong", &e, 1);
+			////ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
+			//ImGui::RadioButton("WireFrame", &e, 3);
+			//ImGui::RadioButton("Deffered Blinn Phong", &e, 4);
 
-			//Change Rendering Pipeline
+			////Change Rendering Pipeline
 
-			if (e == 0)
-				Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
-			else if (e == 1)
-				Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
-			//else if (e == 2)
+			//if (e == 0)
+			//	Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
+			//else if (e == 1)
+			//	Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
+			////else if (e == 2)
 
-			else if (e == 3)
-				Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-			else if (e == 4)
-				Renderer->SetActiveRenderingPipeline(DefferedPipeline.GetID());
+			//else if (e == 3)
+			//	Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
+			//else if (e == 4)
+			//	Renderer->SetActiveRenderingPipeline(DefferedPipeline.GetID());
 
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
 
-			if (ImGui::TreeNode("Pipeline Effects"))
-			{
-				for (auto& it : Renderer->GetActivePipeline()->mPairedEffects)
-				{
-					bool value = it.second.GetValue();
-					ImGui::Checkbox(it.second.GetName().c_str(), &value);
-					if (value != it.second.GetValue())
-					{
-						Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
-					}
-				}
-				ImGui::TreePop();
-			}
+			//if (ImGui::TreeNode("Pipeline Effects"))
+			//{
+			//	for (auto& it : Renderer->GetActivePipeline()->mPairedEffects)
+			//	{
+			//		bool value = it.second.GetValue();
+			//		ImGui::Checkbox(it.second.GetName().c_str(), &value);
+			//		if (value != it.second.GetValue())
+			//		{
+			//			Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
+			//		}
+			//	}
+			//	ImGui::TreePop();
+			//}
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
@@ -447,7 +435,7 @@ public:
 			EntityExplorer(&Scene);
 			AssetLibraryViewer(this->mAssetManager->mLibrary);
 
-			mDebugSystem->ShowRendertargets();
+			//mDebugSystem->ShowRendertargets();
 		}
 	}
 

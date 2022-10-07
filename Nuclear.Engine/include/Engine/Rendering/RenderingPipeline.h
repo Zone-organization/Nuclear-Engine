@@ -3,7 +3,7 @@
 #include <Engine/Graphics/Camera.h>
 #include <Engine/Rendering/ShaderEffect.h>
 #include <Engine/Rendering/ShadingModel.h>
-#include <Engine/Graphics/BakeStatus.h>
+#include <Engine/Graphics/BakeStatus.h> 
 #include <unordered_map>
 
 namespace Nuclear
@@ -14,12 +14,18 @@ namespace Nuclear
 
 	namespace Rendering
 	{
-		struct DrawQueue;
 		//Defines how to render stuff
 		class NEAPI RenderingPipeline
 		{
 		public:
 			RenderingPipeline();
+
+			virtual void StartRendering(FrameRenderData* framedata, DrawQueue* queue) = 0;
+
+			virtual void RenderFrame(FrameRenderData* framedata, DrawQueue* queue) = 0;
+
+			virtual void FinishRendering(FrameRenderData* framedata, DrawQueue* queue) = 0;
+
 
 			virtual void RenderQueue(FrameRenderData* framedata, DrawQueue* queue) = 0;
 

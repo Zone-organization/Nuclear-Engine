@@ -27,7 +27,7 @@ namespace Nuclear {
 
 			Assets::Mesh * mMesh;
 			Assets::Material * mMaterial;
-
+			Uint32 z;
 		};
 
 	}
