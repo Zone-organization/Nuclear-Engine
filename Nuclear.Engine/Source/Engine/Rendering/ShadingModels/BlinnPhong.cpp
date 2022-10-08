@@ -7,6 +7,7 @@ namespace Nuclear
 	namespace Rendering
 	{
 		BlinnPhong::BlinnPhong()
+			: ShadingModel()
 		{
 			static int i = 0;
 			mName = "NE_BlinnPhong" + std::to_string(i);

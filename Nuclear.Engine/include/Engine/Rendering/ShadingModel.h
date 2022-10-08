@@ -40,6 +40,8 @@ namespace Nuclear
 		class NEAPI ShadingModel
 		{
 		public:
+			ShadingModel();
+
 			virtual bool Bake(const ShadingModelBakingDesc& desc) = 0;
 
 			virtual void Initialize(const ShadingModelInitInfo& info);
@@ -55,6 +57,8 @@ namespace Nuclear
 			virtual void ReflectPixelShaderData();
 
 			Uint32 GetID();
+
+			Uint32 GetRenderQueue();
 
 			virtual Graphics::Texture GetDefaultTextureFromType(Uint8 Type);
 			
@@ -97,6 +101,8 @@ namespace Nuclear
 			ShadingModelInitInfo mInitInfo;
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 			Uint32 mID = 0;
+			Uint32 mRenderQueue = -1;
+
 			std::string mName;
 
 			//helper function

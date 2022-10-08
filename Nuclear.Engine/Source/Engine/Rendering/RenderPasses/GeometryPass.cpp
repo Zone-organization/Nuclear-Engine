@@ -2,6 +2,9 @@
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Rendering\FrameRenderData.h>
+#include <Engine\Components\EntityInfoComponent.h>
+#include <Engine\Assets\Scene.h>
+#include <Engine\Assets\Material.h>
 
 namespace Nuclear
 {
@@ -23,38 +26,52 @@ namespace Nuclear
 		{
 			return mBackground;
 		}
-		void GeometryPass::Update(FrameRenderData* framedata)
+		void GeometryPass::Update(FrameRenderData* frame)
 		{	
-			//Render Meshes
-			for (auto& drawqueue : framedata->mSubmittedDraws)
-			{
-				pPipeline->RenderQueue(framedata, &drawqueue.second);
-			}
+			pPipeline->BeginFrame(frame);
 
+			Uint32 SMCount = 0 , SMFinishedCount = 0;
+			ShadingModel* ActiveShadingModel = nullptr;
+
+			//Render Meshes
+			for (auto& meshentity : frame->mMeshView)
+			{
+				auto& mesh = frame->mMeshView.get<Components::MeshComponent>(meshentity);
+
+				if (mesh.mRender)
+				{
+					if (ActiveShadingModel != mesh.mMaterial->GetShadingModel())
+					{
+						//first sm rendering
+						if (ActiveShadingModel != nullptr)
+						{
+							pPipeline->FinishShaderModelRendering();
+							SMFinishedCount++;
+						}
+
+						ActiveShadingModel = mesh.mMaterial->GetShadingModel();
+
+						pPipeline->StartShaderModelRendering(mesh.mMaterial->GetShadingModel());
+						SMCount++;
+					}
+
+					auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
+					EntityInfo.mTransform.Update();
+
+					pPipeline->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
+				}
+			}
+			if (SMCount != SMFinishedCount)
+			{
+				pPipeline->FinishShaderModelRendering();
+				SMFinishedCount++;
+			}
 			//Render Skybox
 			if (GetBackground().GetSkybox() != nullptr)
 			{
-				Graphics::Context::GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), framedata->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->SetRenderTargets(1, frame->mFinalRT.GetRTVDblPtr(), frame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				GetBackground().GetSkybox()->Render();
 			}
-
-			////Render Scene from each active camera perspective
-			////for (auto Camera : mCameraSystem.ActiveCameras)
-			//{
-
-			//	//Update light buffer
-			//	auto Camera = mCameraSystemPtr->GetMainCamera();
-			//	mLightingSystemPtr->UpdateBuffer(Math::Vector4(Camera->GetPosition(), 1.0f));
-
-			//	GetActivePipeline()->StartRendering(this);
-			//}
-
-			////Render pipeline render targets
-			//GetActivePipeline()->SetFinalPipelineState();
-
-			////Render Main camera view to screen
-			//Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			//Assets::DefaultMeshes::RenderScreenQuad();
 		}
 	}
 }

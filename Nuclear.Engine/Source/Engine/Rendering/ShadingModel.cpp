@@ -6,6 +6,12 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		static Uint32 gRenderQueue = 0;
+		ShadingModel::ShadingModel()
+		{
+			mRenderQueue = gRenderQueue;
+			gRenderQueue++;
+		}
 		void ShadingModel::Initialize(const ShadingModelInitInfo& info)
 		{
 			mInitInfo = info;
@@ -167,6 +173,10 @@ namespace Nuclear
 		Uint32 ShadingModel::GetID()
 		{
 			return mID;
+		}
+		Uint32 ShadingModel::GetRenderQueue()
+		{
+			return mRenderQueue;
 		}
 		Graphics::Texture ShadingModel::GetDefaultTextureFromType(Uint8 Type)
 		{

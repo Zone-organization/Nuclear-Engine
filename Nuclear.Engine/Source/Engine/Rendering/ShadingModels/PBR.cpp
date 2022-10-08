@@ -7,7 +7,7 @@ namespace Nuclear
 	namespace Rendering
 	{
 		PBR::PBR(ImageBasedLighting* ibl)
-			: pIBLContext(ibl)
+			: pIBLContext(ibl) , ShadingModel()
 		{
 			if(pIBLContext)
 			{

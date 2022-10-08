@@ -9,10 +9,18 @@ namespace Nuclear
 		class NEAPI DefferedRenderingPipeline : public RenderingPipeline
 		{
 		public:
-			void RenderQueue(FrameRenderData* frame, DrawQueue* queue) override;
+
+			void BeginFrame(FrameRenderData* frame) override;
+
+			void StartShaderModelRendering(ShadingModel* sm) override;
+
+			void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
+
+			void FinishShaderModelRendering() override;
 
 		private:
-			void RenderMeshes(FrameRenderData* frame, DrawQueue* queue);
+			FrameRenderData* pCurrentFrame;
+			ShadingModel* pActiveShadingModel;
 		};
 	}
 }

@@ -10,6 +10,7 @@
 #include <Engine\Assets\Scene.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Engine\Assets\DefaultMeshes.h>
+#include <Engine\Assets\Material.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Core\FileSystem.h>
 
@@ -121,29 +122,12 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 1: Build FrameRenderData
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			//auto view = mScene->GetRegistry().view<Components::MeshComponent>();
-
 			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
 				{
-				return lhs.z < rhs.z;
+					return lhs.mMaterial->GetShadingModel()->GetRenderQueue() < rhs.mMaterial->GetShadingModel()->GetRenderQueue();
 				});
 
 			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();
-			for (auto entity : view)
-			{
-				auto& MeshObject = view.get<Components::MeshComponent>(entity);
-				if (MeshObject.mRender)
-				{
-					auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-					EntityInfo.mTransform.Update();
-
-					auto& drawqueue = mRenderData.mSubmittedDraws[MeshObject.mMaterial->GetShadingModel()->GetID()];
-					drawqueue.mDrawCommands.push_back(Rendering::DrawCommand(MeshObject.mMesh, MeshObject.mMaterial, EntityInfo.mTransform.GetWorldMatrix(), MeshObject.z));
-					drawqueue.pShadingModel = MeshObject.mMaterial->GetShadingModel();
-
-				}
-			}
-
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 2: Clear main RTVs

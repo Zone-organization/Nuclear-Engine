@@ -8,6 +8,7 @@ namespace Nuclear
 	namespace Rendering
 	{
 		DiffuseOnly::DiffuseOnly()
+			: ShadingModel()
 		{
 			mID  = Utilities::Hash("NE_Diffuse_Only");
 			mName = "NE_Diffuse_Only";

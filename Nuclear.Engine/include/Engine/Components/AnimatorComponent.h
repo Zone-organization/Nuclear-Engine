@@ -9,6 +9,7 @@ namespace Nuclear {
 	namespace Components
 	{
 
+		//TODO: Rename to SkinnedMeshComponent
 		class NEAPI AnimatorComponent
 		{
 		public:

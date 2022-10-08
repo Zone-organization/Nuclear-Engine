@@ -8,6 +8,7 @@ namespace Nuclear
 	namespace Rendering
 	{
 		WireFrame::WireFrame()
+			: ShadingModel()
 		{
 			mID = Utilities::Hash("NE_WireFrame");
 			mName = "NE_WireFrame";
