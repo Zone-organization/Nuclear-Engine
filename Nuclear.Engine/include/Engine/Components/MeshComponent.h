@@ -9,6 +9,10 @@ namespace Nuclear {
 		class Mesh;
 		class Material;
 	}
+
+	namespace Animation {
+		class Animator;
+	}
 	namespace Components 
 	{
 
@@ -27,7 +31,7 @@ namespace Nuclear {
 
 			Assets::Mesh * mMesh;
 			Assets::Material * mMaterial;
-			Uint32 z;
+			Animation::Animator* mAnimator = nullptr;
 		};
 
 	}

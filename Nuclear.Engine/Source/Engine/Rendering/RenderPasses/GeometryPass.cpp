@@ -66,6 +66,7 @@ namespace Nuclear
 				pPipeline->FinishShaderModelRendering();
 				SMFinishedCount++;
 			}
+
 			//Render Skybox
 			if (GetBackground().GetSkybox() != nullptr)
 			{

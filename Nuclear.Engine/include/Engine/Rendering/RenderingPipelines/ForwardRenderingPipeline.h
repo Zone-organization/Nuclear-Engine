@@ -14,6 +14,8 @@ namespace Nuclear
 
 			void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
 
+			void Render(Components::SkinnedMeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
+
 			void FinishShaderModelRendering() override;
 		private:
 			FrameRenderData* pCurrentFrame;

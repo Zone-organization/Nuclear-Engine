@@ -56,16 +56,16 @@ public:
 
 		ImGui::Text("Select Sample");
 
-	//	if (ImGui::Button("Sample1 : Basic model loading & animation & rendering"))
-	//	{
+		if (ImGui::Button("Sample1 : Basic model loading & animation & rendering"))
+		{
 			Sample1 demo;
 			return StartSample(&demo);
-		//}
-		//if (ImGui::Button("Sample2 : Introduction to rendering pipelines and shading models."))
-		//{
-		//	Sample2 demo;
-		//	return StartSample(&demo);
-		//}
+		}
+		if (ImGui::Button("Sample2 : Introduction to rendering pipelines and shading models."))
+		{
+			Sample2 demo;
+			return StartSample(&demo);
+		}
 		//if (ImGui::Button("Sample3 : PhysX & Scripting Test ------OLD"))             //Improve
 		//{
 		//	Sample3 demo;

@@ -4,6 +4,7 @@
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\MeshComponent.h>
+#include <Engine\Components\SkinnedMeshComponent.h>
 #include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Managers\AssetManager.h>
@@ -114,14 +115,15 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			UpdateLights();
 			UpdateLightsBuffer(Math::Vector4(mCameraSystemPtr->GetMainCamera()->GetPosition(), 1.0f));
+
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			//Step 1: Build FrameRenderData
+			//////////////////////////////////////////////////////////////////////////////////////////////
 			mRenderData.pScene = mScene;
 			mRenderData.pAnimationCB = mAnimationCB;
 			mRenderData.pCameraSystemPtr = mCameraSystemPtr;
 			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
 
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 1: Build FrameRenderData
-			//////////////////////////////////////////////////////////////////////////////////////////////
 			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
 				{
 					return lhs.mMaterial->GetShadingModel()->GetRenderQueue() < rhs.mMaterial->GetShadingModel()->GetRenderQueue();
@@ -129,11 +131,18 @@ namespace Nuclear
 
 			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();
 
+			mScene->GetRegistry().sort<Nuclear::Components::SkinnedMeshComponent>([](const auto& lhs, const auto& rhs)
+				{
+					return lhs.mMaterial->GetShadingModel()->GetRenderQueue() < rhs.mMaterial->GetShadingModel()->GetRenderQueue();
+				});
+
+			mRenderData.mSkinnedMeshView = mScene->GetRegistry().view<Components::SkinnedMeshComponent>();
+
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 2: Clear main RTVs
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			Graphics::Context::GetContext()->SetRenderTargets(1, mRenderData.mFinalRT.GetRTVDblPtr(), mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(mRenderData.mFinalRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(mRenderData.mFinalRT.GetRTV(), (float*)&mCameraSystemPtr->GetMainCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearDepthStencil(mRenderData.mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,11 +223,11 @@ namespace Nuclear
 			Graphics::RenderTargetDesc RTDesc;
 			RTDesc.Width = RTWidth;
 			RTDesc.Height = RTHeight;
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+			RTDesc.ColorTexFormat = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
 
 			mRenderData.mFinalRT.Create(RTDesc);
 
-			RTDesc.DepthTexFormat = TEX_FORMAT_D32_FLOAT;
+			RTDesc.DepthTexFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 			mRenderData.mFinalDepthRT.Create(RTDesc);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;

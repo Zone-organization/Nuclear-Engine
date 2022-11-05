@@ -186,11 +186,11 @@ public:
 		CubeSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
 		CubeSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/crate_specular.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Specular) });
 		CubeSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/crate_normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-
+		
 		CubeTextures.mTextures.push_back(CubeSet);
 
-		CubeMaterial.Create(&CubeTextures, &BlinnPhongRP);
-		NanosuitMaterial.Create(NanosuitMaterialD, &BlinnPhongRP);
+		CubeMaterial.Create(&CubeTextures, &DiffuseRP);
+		NanosuitMaterial.Create(NanosuitMaterialD, &WireFrameRP);
 		CyborgMaterial.Create(CyborgMaterialD, &BlinnPhongRP);
 		BobMaterial.Create(BobMaterialD, &BlinnPhongRP);
 		VampireMaterial.Create(VampireMaterialD, &BlinnPhongRP);
@@ -204,8 +204,8 @@ public:
 	//	EBob.AddComponent<Components::MeshComponent>(BobAsset,&BobMaterial);
 	//	EBob.AddComponent<Components::AnimatorComponent>(&BobAnimator);
 
-	//	EVampire.AddComponent<Components::MeshComponent>(VampireAsset, &VampireMaterial);
-	//	EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);
+		//EVampire.AddComponent<Components::MeshComponent>(VampireAsset, &VampireMaterial);
+		//EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);
 
 		//Create The skybox
 		std::array<Core::Path, 6> SkyBoxTexturePaths
@@ -258,7 +258,7 @@ public:
 
 		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.7f, 0.2f, 2.0f));
 		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.f);
+		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(1.f);
 	}
 
 	void InitRenderer()
@@ -380,44 +380,7 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			//ImGui::Text("Active Rendering Pipeline:");
-			//static int e = 0;
-			//ImGui::RadioButton("DiffuseOnly", &e, 0);
-			//ImGui::RadioButton("BlinnPhong", &e, 1);
-			////ImGui::RadioButton("BlinnPhongWithNormalMap", &e, 2);
-			//ImGui::RadioButton("WireFrame", &e, 3);
-			//ImGui::RadioButton("Deffered Blinn Phong", &e, 4);
-
-			////Change Rendering Pipeline
-
-			//if (e == 0)
-			//	Renderer->SetActiveRenderingPipeline(DiffuseRPPipeline.GetID());
-			//else if (e == 1)
-			//	Renderer->SetActiveRenderingPipeline(BlinnPhongPipeline.GetID());
-			////else if (e == 2)
-
-			//else if (e == 3)
-			//	Renderer->SetActiveRenderingPipeline(WireFrameRPPipeline.GetID());
-			//else if (e == 4)
-			//	Renderer->SetActiveRenderingPipeline(DefferedPipeline.GetID());
-
-
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
-
-
-			//if (ImGui::TreeNode("Pipeline Effects"))
-			//{
-			//	for (auto& it : Renderer->GetActivePipeline()->mPairedEffects)
-			//	{
-			//		bool value = it.second.GetValue();
-			//		ImGui::Checkbox(it.second.GetName().c_str(), &value);
-			//		if (value != it.second.GetValue())
-			//		{
-			//			Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
-			//		}
-			//	}
-			//	ImGui::TreePop();
-			//}
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 

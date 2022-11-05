@@ -4,7 +4,7 @@
 #include <Engine\Components/MeshComponent.h>
 #include <Engine\Components/EntityInfoComponent.h>
 #include "Engine/Animation/Animator.h"
-#include <Engine\Components\AnimatorComponent.h>
+#include <Core/Logger.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Core\FileSystem.h>
 #include <Engine\Systems\CameraSystem.h>
@@ -46,27 +46,38 @@ namespace Nuclear
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
             pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
 
+            InstantRender(mesh.mMesh, mesh.mMaterial);
+        }
+        void DefferedRenderingPipeline::Render(Components::SkinnedMeshComponent& mesh, const Math::Matrix4& modelmatrix)
+        {
+            pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
+            pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
+
             /////////////////////// Animation ////////////////////////////////
             PVoid anim_data;
             Graphics::Context::GetContext()->MapBuffer(pCurrentFrame->pAnimationCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)anim_data);
 
-            //if (drawcmd.GetAnimator() != nullptr)
-            //{
-            //    std::vector<Math::Matrix4> ok;
-            //    ok.reserve(100);
+            if (mesh.mAnimator != nullptr)
+            {
+                std::vector<Math::Matrix4> ok;
+                ok.reserve(100);
 
-            //    auto transforms = drawcmd.GetAnimator()->mAnimator->GetFinalBoneMatrices();
-            //    for (int i = 0; i < transforms.size(); ++i)
-            //    {
-            //        ok.push_back(transforms[i]);
-            //    }
+                auto transforms = mesh.mAnimator->GetFinalBoneMatrices();
+                for (int i = 0; i < transforms.size(); ++i)
+                {
+                    ok.push_back(transforms[i]);
+                }
 
-            //    anim_data = memcpy(anim_data, ok.data(), ok.size() * sizeof(Math::Matrix4));
-            //}
-            //else {
+                anim_data = memcpy(anim_data, ok.data(), ok.size() * sizeof(Math::Matrix4));
+            }
+            else
+            {
+
+                NUCLEAR_ERROR("[DefferedRenderingPipeline] Rendering SkinnedMeshComponent with no animator...");
                 Math::Matrix4 empty(0.0f);
                 anim_data = memcpy(anim_data, &empty, sizeof(Math::Matrix4));
-          //  }
+            }
+
 
             Graphics::Context::GetContext()->UnmapBuffer(pCurrentFrame->pAnimationCB, MAP_WRITE);
 
@@ -96,14 +107,13 @@ namespace Nuclear
             pActiveShadingModel = nullptr;
 
             //Send GBUFFER to DebugSystem
-            //if (renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
-            //{
-            //    for (auto& i : mGBuffer.mRenderTargets)
-            //    {
-            //        renderer->mScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
-            //    }
-            //}
-            //mGBuffer.DebugIMGUI();
+            if (pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+            {
+                for (auto& i : pActiveShadingModel->mGBuffer.mRenderTargets)
+                {
+                    pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
+                }
+            }
         }
     }
 }

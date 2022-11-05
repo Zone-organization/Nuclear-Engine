@@ -22,10 +22,10 @@ namespace Nuclear
 		{
 			Uint32 mRTWidth;
 			Uint32 mRTHeight;
+			Graphics::RenderTargetDesc mFinalRTDesc;
 		};
 
 
-		//TODO: Should separate bloom color values after geometrypass finishes
 		//TODO: Should Get rid of compound pipeline and switch to baked one since the effects toggle rarely change
 		class NEAPI PostProcessingPass : public RenderPass
 		{
@@ -58,6 +58,7 @@ namespace Nuclear
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
 			Graphics::CompoundPipeline mPostFXPipeline;
 
+			Graphics::RenderTarget PostFXRT;
 
 			Graphics::RenderTarget BloomRT;
 			Rendering::BlurEffect mBloomBlur;

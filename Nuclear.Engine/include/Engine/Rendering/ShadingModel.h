@@ -93,8 +93,12 @@ namespace Nuclear
 		protected:
 			std::unordered_map<Uint32, ShaderEffect> mRenderingEffects;
 
+			RefCntAutoPtr<IPipelineState> mSkinnedPipeline;
+			RefCntAutoPtr<IShaderResourceBinding> mSkinnedPipelineSRB;
+
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
+
 			RefCntAutoPtr<IPipelineState> mGBufferPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mGBufferSRB;
 

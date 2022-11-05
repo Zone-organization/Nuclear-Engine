@@ -124,7 +124,6 @@
     <ClInclude Include="include\Engine\Assets\Image.h" />
     <ClInclude Include="include\Engine\Audio\Audio.h" />
     <ClInclude Include="include\Engine\Audio\AudioEngine.h" />
-    <ClInclude Include="include\Engine\Components\AnimatorComponent.h" />
     <ClInclude Include="include\Engine\Components\AudioSourceComponent.h" />
     <ClInclude Include="include\Engine\Components\ColliderComponent.h" />
     <ClInclude Include="include\Engine\Components\CameraComponent.h" />
@@ -134,6 +133,7 @@
     <ClInclude Include="include\Engine\Components\PointLightComponent.h" />
     <ClInclude Include="include\Engine\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Engine\Components\ScriptComponent.h" />
+    <ClInclude Include="include\Engine\Components\SkinnedMeshComponent.h" />
     <ClInclude Include="include\Engine\Components\SpotLightComponent.h" />
     <ClInclude Include="include\Engine\ECS\ECS.h" />
     <ClInclude Include="include\Engine\ECS\Entity.h" />
@@ -289,7 +289,7 @@
     <ClCompile Include="Source\Engine\Assets\Animations.cpp" />
     <ClCompile Include="Source\Engine\Assets\AudioClip.cpp" />
     <ClCompile Include="Source\Engine\Assets\Image.cpp" />
-    <ClCompile Include="Source\Engine\Components\AnimatorComponent.cpp" />
+    <ClCompile Include="Source\Engine\Components\SkinnedMeshComponent.cpp" />
     <ClCompile Include="Source\Engine\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Engine\Assets\DefaultMeshes.cpp" />
     <ClCompile Include="Source\Engine\Assets\Material.cpp" />

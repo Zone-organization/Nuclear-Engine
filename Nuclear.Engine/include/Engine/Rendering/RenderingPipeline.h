@@ -5,6 +5,7 @@
 #include <Engine/Rendering/ShadingModel.h>
 #include <Engine/Graphics/BakeStatus.h> 
 #include <Engine\Components\MeshComponent.h>
+#include <Engine\Components\SkinnedMeshComponent.h>
 
 namespace Nuclear
 {
@@ -25,6 +26,8 @@ namespace Nuclear
 			virtual void StartShaderModelRendering(ShadingModel* sm) = 0;
 
 			virtual void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
+
+			virtual void Render(Components::SkinnedMeshComponent& skinnedmesh, const Math::Matrix4& modelmatrix) = 0;
 
 			virtual void FinishShaderModelRendering() = 0;
 

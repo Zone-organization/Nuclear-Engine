@@ -11,8 +11,8 @@ namespace Nuclear
 	{
 		PostProcessingPass::PostProcessingPass()
 		{
-			mPostProcessingEffects[Utilities::Hash("HDR")] = Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
-			mPostProcessingEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
+			mPostProcessingEffects[Utilities::Hash("HDR")] = Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::PostProcessingEffect, true);
+			mPostProcessingEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::PostProcessingEffect, true);
 			mPostProcessingEffects[Utilities::Hash("BLOOM")] = Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
 		}
 		void PostProcessingPass::Initialize(RenderingPipeline* pipeline)
@@ -20,7 +20,8 @@ namespace Nuclear
 		}
 		void PostProcessingPass::Update(FrameRenderData* framedata)
 		{
-
+			//mBloomEnabled = true;
+			UpdatePSO();
 			//1 - Extract bloom from scene rt
 			if (mBloomEnabled)
 			{
@@ -95,8 +96,16 @@ namespace Nuclear
 			}
 			Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			Graphics::Context::GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->SetRenderTargets(1, PostFXRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(PostFXRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Assets::DefaultMeshes::RenderScreenQuad();
+
+
+			//4- copy results to FinalRT
+			CopyTextureAttribs attrib;
+			attrib.pSrcTexture = PostFXRT.GetSRV()->GetTexture();
+			attrib.pDstTexture = framedata->mFinalRT.GetSRV()->GetTexture();
+			Graphics::Context::GetContext()->CopyTexture(attrib);
 		}
 
 		void PostProcessingPass::SetPostProcessingEffect(const Uint32& effectId, bool value)
@@ -145,6 +154,7 @@ namespace Nuclear
 				mActiveSRB = PSO_SRB.SRB;
 			}
 		}
+	
 
 		IPipelineState* PostProcessingPass::GetActivePipeline()
 		{
@@ -159,6 +169,7 @@ namespace Nuclear
 		{
 			mRTWidth = desc.mRTWidth;
 			mRTHeight = desc.mRTHeight;
+			PostFXRT.Create(desc.mFinalRTDesc);
 			BakePostFXPipeline();
 		}
 
@@ -166,6 +177,7 @@ namespace Nuclear
 		{
 			mRTWidth = Width;
 			mRTHeight = Height;
+			PostFXRT.Resize(Width, Height);
 
 			mActiveSRB.Release();
 			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
@@ -188,6 +200,7 @@ namespace Nuclear
 
 		void PostProcessingPass::BakePostFXPipeline()
 		{
+
 			{
 				std::vector<LayoutElement> Layout;
 
