@@ -23,16 +23,28 @@ namespace Nuclear
 
 			virtual void BeginFrame(FrameRenderData* framedata) = 0;
 
-			virtual void StartShaderModelRendering(ShadingModel* sm) = 0;
+
+			//Static meshes
+			virtual void StartStaticShaderModelRendering(ShadingModel* sm) = 0;
 
 			virtual void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
 
+			virtual void FinishStaticShaderModelRendering() = 0;
+
+
+			//Skinned meshes
+			virtual void StartSkinnedShaderModelRendering(ShadingModel* sm) = 0;
+
 			virtual void Render(Components::SkinnedMeshComponent& skinnedmesh, const Math::Matrix4& modelmatrix) = 0;
 
-			virtual void FinishShaderModelRendering() = 0;
+			virtual void FinishSkinnedShaderModelRendering() = 0;
 
 			// Render A Mesh (expects the pipeline to be bound)
-			virtual void InstantRender(Assets::Mesh* mesh, Assets::Material* material);
+			virtual void RenderStaticMesh(Assets::Mesh* mesh, Assets::Material* material);
+
+			virtual void RenderSkinnedMesh(Assets::Mesh* mesh, Assets::Material* material);
+
+			virtual void CheckValidMesh(Assets::Mesh* mesh, Assets::Material* material);
 		};
 	}
 }

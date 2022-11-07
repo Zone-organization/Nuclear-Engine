@@ -51,6 +51,10 @@ namespace Nuclear
 
 			IPipelineState* GetShadersPipeline();
 			IShaderResourceBinding* GetShadersPipelineSRB();
+
+			IPipelineState* GetSkinnedShadersPipeline();
+			IShaderResourceBinding* GetSkinnedShadersPipelineSRB();
+
 			IPipelineState* GetGBufferPipeline();
 			IShaderResourceBinding* GetGBufferPipelineSRB();
 

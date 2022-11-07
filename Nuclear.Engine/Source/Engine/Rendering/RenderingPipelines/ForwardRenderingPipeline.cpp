@@ -18,7 +18,7 @@ namespace Nuclear
 			pCurrentFrame = frame;
 			pActiveShadingModel = nullptr;
 		}
-		void ForwardRenderingPipeline::StartShaderModelRendering(ShadingModel* shadingmodel)
+		void ForwardRenderingPipeline::StartStaticShaderModelRendering(ShadingModel* shadingmodel)
 		{
 			pActiveShadingModel = shadingmodel;
 			Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
@@ -53,7 +53,7 @@ namespace Nuclear
 				}
 			}
 
-			InstantRender(mesh.mMesh, mesh.mMaterial);
+			RenderStaticMesh(mesh.mMesh, mesh.mMaterial);
 		}
 		void ForwardRenderingPipeline::Render(Components::SkinnedMeshComponent& mesh, const Math::Matrix4& modelmatrix)
 		{
@@ -91,7 +91,7 @@ namespace Nuclear
 			////////////////////////      IBL      ///////////////////////////
 			for (int i = 0; i < pActiveShadingModel->mIBLTexturesInfo.size(); i++)
 			{
-				pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mIBLTexturesInfo.at(i).mSlot)->Set(pActiveShadingModel->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+				pActiveShadingModel->GetSkinnedShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mIBLTexturesInfo.at(i).mSlot)->Set(pActiveShadingModel->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
 			}
 
 			//Shadows
@@ -100,24 +100,30 @@ namespace Nuclear
 			{
 				if (pActiveShadingModel->mDirPos_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
 				{
-					pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mDirPos_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pDirPosShadowMapSRV);
+					pActiveShadingModel->GetSkinnedShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mDirPos_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pDirPosShadowMapSRV);
 				}
 				if (pActiveShadingModel->mSpot_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
 				{
-					pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mSpot_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pSpotPosShadowMapSRV);
+					pActiveShadingModel->GetSkinnedShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mSpot_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pSpotPosShadowMapSRV);
 				}
 				if (pActiveShadingModel->mOmniDir_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
 				{
-					pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mOmniDir_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pOmniDirShadowMapSRV);
+					pActiveShadingModel->GetSkinnedShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mOmniDir_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pOmniDirShadowMapSRV);
 				}
 			}
 
-			InstantRender(mesh.mMesh, mesh.mMaterial);
+			RenderSkinnedMesh(mesh.mMesh, mesh.mMaterial);
 		}
-		void ForwardRenderingPipeline::FinishShaderModelRendering()
+		void ForwardRenderingPipeline::FinishStaticShaderModelRendering()
 		{
 			pActiveShadingModel = nullptr;
 			//Do nothing
+		}
+		void ForwardRenderingPipeline::StartSkinnedShaderModelRendering(ShadingModel* shadingmodel)
+		{
+			pActiveShadingModel = shadingmodel;
+			Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetSkinnedShadersPipeline());
+			Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 	}
 }

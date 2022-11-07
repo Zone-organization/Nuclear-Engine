@@ -46,7 +46,7 @@ namespace Nuclear
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
             pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
 
-            InstantRender(mesh.mMesh, mesh.mMaterial);
+           RenderStaticMesh(mesh.mMesh, mesh.mMaterial);
         }
         void DefferedRenderingPipeline::Render(Components::SkinnedMeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
@@ -81,7 +81,7 @@ namespace Nuclear
 
             Graphics::Context::GetContext()->UnmapBuffer(pCurrentFrame->pAnimationCB, MAP_WRITE);
 
-            InstantRender(mesh.mMesh, mesh.mMaterial);
+            RenderSkinnedMesh(mesh.mMesh, mesh.mMaterial);
         }
         void DefferedRenderingPipeline::FinishShaderModelRendering()
         {

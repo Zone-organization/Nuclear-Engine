@@ -42,6 +42,16 @@ namespace Nuclear
 			return mPipelineSRB.RawPtr();
 		}
 
+		IPipelineState* ShadingModel::GetSkinnedShadersPipeline()
+		{
+			return mSkinnedPipeline.RawPtr();
+		}
+
+		IShaderResourceBinding* ShadingModel::GetSkinnedShadersPipelineSRB()
+		{
+			return mSkinnedPipelineSRB.RawPtr();
+		}
+
 		IPipelineState* ShadingModel::GetGBufferPipeline()
 		{
 			return mGBufferPipeline.RawPtr();

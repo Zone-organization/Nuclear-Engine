@@ -30,13 +30,18 @@ namespace Nuclear
 
 			void Create(MaterialData* data, Rendering::ShadingModel* Pipeline);
 
-			void BindTexSet(Uint32 index);
+			void BindTexSetForStaticRendering(Uint32 index);
+
+			void BindTexSetForSkinnedRendering(Uint32 index);
 
 			Rendering::ShadingModel* GetShadingModel();
 		private:
 
 			Rendering::ShadingModel* pShaderPipeline;
-			RefCntAutoPtr<IShaderResourceBinding> pShaderPipelineSRB;
+
+			RefCntAutoPtr<IShaderResourceBinding> pStaticShaderPipelineSRB;
+			RefCntAutoPtr<IShaderResourceBinding> pSkinnedShaderPipelineSRB;
+
 			std::vector<TextureSet> mPipelineUsableTextures;
 			bool mDefferedMaterial = false;
 			void InitializePipelineTextures();

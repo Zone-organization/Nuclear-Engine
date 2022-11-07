@@ -25,22 +25,36 @@ namespace Nuclear
 			}
 			pData = data;
 			pShaderPipeline = Pipeline;
-			pShaderPipelineSRB = pShaderPipeline->GetActiveSRB();
+			pStaticShaderPipelineSRB = pShaderPipeline->GetActiveSRB();
+			pSkinnedShaderPipelineSRB = pShaderPipeline->GetSkinnedShadersPipelineSRB();
 			mDefferedMaterial = Pipeline->isDeffered();
 			InitializePipelineTextures();
 		}
-		void Material::BindTexSet(Uint32 index)
+		void Material::BindTexSetForStaticRendering(Uint32 index)
 		{
 			if (!mPipelineUsableTextures.empty())
 			{
 				for (auto tex : mPipelineUsableTextures.at(index).mData)
 				{
-					pShaderPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
+					pStaticShaderPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
 				}
 			}
 
-			Graphics::Context::GetContext()->CommitShaderResources(pShaderPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->CommitShaderResources(pStaticShaderPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
+		void Material::BindTexSetForSkinnedRendering(Uint32 index)
+		{
+			if (!mPipelineUsableTextures.empty())
+			{
+				for (auto tex : mPipelineUsableTextures.at(index).mData)
+				{
+					pSkinnedShaderPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
+				}
+			}
+
+			Graphics::Context::GetContext()->CommitShaderResources(pSkinnedShaderPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		}
+
 		Rendering::ShadingModel* Material::GetShadingModel()
 		{
 			return pShaderPipeline;
