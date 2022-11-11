@@ -105,6 +105,7 @@
     <ClInclude Include="SponzaDemo.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\NuclearEngine\Shaders\DiffuseOnly.neshader" />
     <None Include="Assets\script.as" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

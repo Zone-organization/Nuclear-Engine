@@ -2,7 +2,7 @@
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
 #include <Engine\Audio\AudioEngine.h>
-#include "Engine\Graphics\GraphicsEngine.h"
+#include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
 
 
@@ -97,6 +97,9 @@ namespace Nuclear {
 			{
 				NUCLEAR_ERROR("[{0}] Failed To Initialize FreeType library");
 			}
+
+			Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceISFactory);
+
 		}
 
 		Graphics::Texture AssetManager::Import(const Core::Path & Path, const Importers::ImageLoadingDesc& Desc, const Graphics::TextureUsageType& type)
@@ -369,6 +372,44 @@ namespace Nuclear {
 			//TODO
 
 			return nullptr;
+		}
+
+		Assets::Shader* AssetManager::Import(const Core::Path& Path, const Importers::ShaderLoadingDesc& desc)
+		{
+			auto hashedname = Utilities::Hash(Path.mInputPath);
+
+			Assets::Shader* result;
+
+			//Check if exists
+			auto it = mLibrary.mImportedShaders.mData.find(hashedname);
+			if (it != mLibrary.mImportedShaders.mData.end())
+			{
+				return result;
+			}
+
+			result = &mLibrary.mImportedShaders.mData[hashedname];
+
+			auto source = Core::FileSystem::LoadShader(Path.mRealPath, desc.mDefines, desc.mIncludes, true);
+
+			if (!desc.mVertexShaderEntryPoint.empty())
+			{
+				ShaderCreateInfo CreationAttribs;
+
+				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+				CreationAttribs.EntryPoint = desc.mVertexShaderEntryPoint.c_str();
+				CreationAttribs.Desc.Name = (desc.mShaderName + std::string("VS")).c_str();
+
+				CreationAttribs.Source = source.c_str();
+				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceISFactory;
+				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, result->VSShader.RawDblPtr());
+			}
+			
+
+
+
+			return result;
 		}
 
 					

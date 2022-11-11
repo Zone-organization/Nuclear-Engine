@@ -102,6 +102,9 @@ namespace Nuclear
 
 			Assets::Font* Import(const Core::Path& Path, const Importers::FontLoadingDesc& desc);
 
+			//Shader
+			Assets::Shader* Import(const Core::Path& Path, const Importers::ShaderLoadingDesc& desc);
+
 			//Assets::Script& ImportScript(const Core::Path& Path);
 
 			static Graphics::Texture DefaultBlackTex;
@@ -121,7 +124,7 @@ namespace Nuclear
 
 		//	Threading::TaskManager ImageLoadingTMgr;
 			Assets::AssetLibrary mSavedToImport;
-
+			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceISFactory;
 		};
 	}
 }

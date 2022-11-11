@@ -20,9 +20,23 @@ namespace Nuclear
 		}
 		void ForwardRenderingPipeline::StartStaticShaderModelRendering(ShadingModel* shadingmodel)
 		{
-			pActiveShadingModel = shadingmodel;
-			Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
-			Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			if (!mSkinnedRendering)
+			{
+				if (pActiveShadingModel != shadingmodel)
+				{
+					pActiveShadingModel = shadingmodel;
+					Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
+					Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				}
+				return;
+			}
+			else
+			{
+				mSkinnedRendering = false;
+				pActiveShadingModel = shadingmodel;
+				Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
+				Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			}
 		}
 		void ForwardRenderingPipeline::RenderStatic(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
 		{
@@ -114,24 +128,33 @@ namespace Nuclear
 
 			DrawSkinnedMesh(mesh.mMesh, mesh.mMaterial);
 		}
-		void ForwardRenderingPipeline::FinishSkinnedShaderModelRendering()
-		{	
-			//Do nothing
-		}
+
 		void ForwardRenderingPipeline::FinishAllRendering()
-		{	
-			//Do nothing
-		}
-		void ForwardRenderingPipeline::FinishStaticShaderModelRendering()
 		{
 			pActiveShadingModel = nullptr;
+
 			//Do nothing
 		}
+
 		void ForwardRenderingPipeline::StartSkinnedShaderModelRendering(ShadingModel* shadingmodel)
 		{
-			pActiveShadingModel = shadingmodel;
-			Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetSkinnedShadersPipeline());
-			Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			if (mSkinnedRendering)
+			{
+				if (pActiveShadingModel != shadingmodel)
+				{
+					pActiveShadingModel = shadingmodel;
+					Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetSkinnedShadersPipeline());
+					Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				}
+				return;
+			}
+			else 
+			{
+				mSkinnedRendering = true;
+				pActiveShadingModel = shadingmodel;
+				Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetSkinnedShadersPipeline());
+				Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			}
 		}
 	}
 }

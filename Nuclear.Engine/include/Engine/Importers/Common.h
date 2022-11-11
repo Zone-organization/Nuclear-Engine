@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
+#include <vector>
 
 namespace Nuclear
 {
@@ -124,6 +125,18 @@ namespace Nuclear
 			Uint32 Height = 48;
 
 		};
+		struct ShaderLoadingDesc
+		{
+			std::string mShaderName = "UnNamed";
+
+			std::string mVertexShaderEntryPoint = "VertexShader";
+
+			std::string mPixelShaderEntryPoint = "PixelShader";
+
+			std::vector<std::string> mDefines;
+			std::vector<std::string> mIncludes;
+		};
+
 		struct MeshImporterDesc
 		{
 			const char* mPath;

@@ -16,6 +16,13 @@ namespace Nuclear
 		{
 			mInitInfo = info;
 		}
+		void ShadingModel::Create(Assets::Shader* shader, const ShadingModelInitInfo& info)
+		{
+			mInitInfo = info;
+
+			//TODO: SHADER REVAMP
+
+		}
 		IPipelineState* ShadingModel::GetActivePipeline()
 		{
 			if (mInitInfo.mDefferedPipeline)
@@ -246,6 +253,14 @@ namespace Nuclear
 		void ShadingModel::AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value)
 		{
 			if (value > 0) { defines.push_back(name + std::to_string(value)); }
+		}
+
+		void ShadingModel::CreateStaticPipeline()
+		{
+		}
+
+		void ShadingModel::CreateSkinnedPipeline()
+		{
 		}
 
 	}

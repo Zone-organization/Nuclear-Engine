@@ -30,7 +30,7 @@ namespace Nuclear {
 
 			Assets::Mesh * mMesh;
 			Assets::Material * mMaterial;
-			Animation::Animator* mAnimator = nullptr;
+			Animation::Animator* mAnimator;
 		};
 
 	}

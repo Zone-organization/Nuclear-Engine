@@ -59,6 +59,8 @@ namespace Nuclear
 
 
 				std::vector<std::string> defines;
+				defines.push_back("NE_ENABLE_ANIMATION");
+
 				if (mInitInfo.mDefferedPipeline)
 				{
 					defines.push_back("NE_DEFFERED");

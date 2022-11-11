@@ -106,7 +106,7 @@ namespace Nuclear
 		{
 			mRegisteredShadingModels.push_back(shadingmodel);
 		}
-		
+
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{
 			//////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,10 +123,25 @@ namespace Nuclear
 			mRenderData.pCameraSystemPtr = mCameraSystemPtr;
 			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
 
+			
+			//sort accroding to shadingmodels (aka pipelines)
 			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
 				{
 					return lhs.mMaterial->GetShadingModel()->GetRenderQueue() < rhs.mMaterial->GetShadingModel()->GetRenderQueue();
 				});
+
+			//sort accroding to skinned or not
+			 
+			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
+			{
+					if (lhs.mMaterial->GetShadingModel()->GetRenderQueue() != rhs.mMaterial->GetShadingModel()->GetRenderQueue())
+					{
+						//do nothing
+						return false;
+					}
+
+			return (lhs.mAnimator) < (rhs.mAnimator);
+			});
 
 			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();
 

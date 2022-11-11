@@ -30,8 +30,9 @@ namespace Nuclear
 		{	
 			pPipeline->BeginFrame(frame);
 
-			Uint32 SMCount = 0 , SMFinishedCount = 0;
-			ShadingModel* ActiveShadingModel = nullptr;
+			bool SkinnedRendering = false;
+
+			mStatus = GeometryPassStatus::Idle;
 
 			//Render Meshes
 			for (auto& meshentity : frame->mMeshView)
@@ -40,45 +41,21 @@ namespace Nuclear
 
 				if (mesh.mRender)
 				{
-
 					if (!mesh.mAnimator)
 					{
-						if (ActiveShadingModel != mesh.mMaterial->GetShadingModel())
-						{
-							//first sm rendering
-							if (ActiveShadingModel != nullptr)
-							{
-								pPipeline->FinishStaticShaderModelRendering();
-								SMFinishedCount++;
-							}
+						mStatus = GeometryPassStatus::StaticMeshesRendering;
 
-							ActiveShadingModel = mesh.mMaterial->GetShadingModel();
-
-							pPipeline->StartStaticShaderModelRendering(mesh.mMaterial->GetShadingModel());
-							SMCount++;
-						}
+						pPipeline->StartStaticShaderModelRendering(mesh.mMaterial->GetShadingModel());
 
 						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
 						EntityInfo.mTransform.Update();
 
 						pPipeline->RenderStatic(mesh, EntityInfo.mTransform.GetWorldMatrix());
 					}
-					else 
-					{
-						//if (ActiveShadingModel != mesh.mMaterial->GetShadingModel())
-						//{
-						//	//first sm rendering
-						//	if (ActiveShadingModel != nullptr)
-						//	{
-						//		pPipeline->FinishSkinnedShaderModelRendering();
-						//		SMFinishedCount++;
-						//	}
+					else
+					{						
+						mStatus = GeometryPassStatus::SkinnedMeshesRendering;
 
-						//	ActiveShadingModel = mesh.mMaterial->GetShadingModel();
-
-						//	pPipeline->StartSkinnedShaderModelRendering(mesh.mMaterial->GetShadingModel());
-						//	SMCount++;
-						//}		
 						pPipeline->StartSkinnedShaderModelRendering(mesh.mMaterial->GetShadingModel());
 
 						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
@@ -88,16 +65,8 @@ namespace Nuclear
 
 					}
 				}
+
 			}
-
-
-
-			if (SMCount != SMFinishedCount)
-			{
-				pPipeline->FinishStaticShaderModelRendering();
-				SMFinishedCount++;
-			}
-
 
 			pPipeline->FinishAllRendering();
 
@@ -107,6 +76,9 @@ namespace Nuclear
 				Graphics::Context::GetContext()->SetRenderTargets(1, frame->mFinalRT.GetRTVDblPtr(), frame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				GetBackground().GetSkybox()->Render();
 			}
+
+			mStatus = GeometryPassStatus::Idle;
+
 		}
 	}
 }

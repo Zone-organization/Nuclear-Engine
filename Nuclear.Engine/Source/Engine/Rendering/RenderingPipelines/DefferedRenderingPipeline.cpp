@@ -22,24 +22,18 @@ namespace Nuclear
         }
         void DefferedRenderingPipeline::StartStaticShaderModelRendering(ShadingModel* shadingmodel)
         {
-            pActiveShadingModel = shadingmodel;
-
-            //Render To Gbuffer
-            Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetGBufferPipeline());
-
-            std::vector<ITextureView*> RTargets;
-            for (auto& i : shadingmodel->mGBuffer.mRenderTargets)
+            if (!mSkinnedRendering)
             {
-                RTargets.push_back(i.GetRTV());
+                if (pActiveShadingModel != shadingmodel)
+                {
+                    return StartStaticRendering(shadingmodel);
+                }
+                return;
             }
-            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-            for (auto& i : RTargets)
+            else
             {
-                Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                return StartStaticRendering(shadingmodel);
             }
-
-            Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
         }
         void DefferedRenderingPipeline::RenderStatic(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
@@ -48,11 +42,21 @@ namespace Nuclear
 
            DrawStaticMesh(mesh.mMesh, mesh.mMaterial);
         }
-        void DefferedRenderingPipeline::FinishStaticShaderModelRendering()
+
+        void DefferedRenderingPipeline::StartSkinnedShaderModelRendering(ShadingModel* shadingmodel)
         {
-        }
-        void DefferedRenderingPipeline::StartSkinnedShaderModelRendering(ShadingModel* sm)
-        {
+            if (mSkinnedRendering)
+            {
+                if (pActiveShadingModel != shadingmodel)
+                {
+                    return StartSkinnedRendering(shadingmodel);
+                }
+                return;
+            }
+            else
+            {
+                return StartSkinnedRendering(shadingmodel);
+            }
         }
         void DefferedRenderingPipeline::RenderSkinned(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
@@ -89,40 +93,94 @@ namespace Nuclear
 
            DrawSkinnedMesh(mesh.mMesh, mesh.mMaterial);
         }
-        void DefferedRenderingPipeline::FinishSkinnedShaderModelRendering()
+
+        void DefferedRenderingPipeline::FinishShaderModelRendering()
         {
-        }
-        void DefferedRenderingPipeline::FinishAllRendering()
-        {
-            //Apply Lighting
-            Graphics::Context::GetContext()->SetPipelineState(pActiveShadingModel->GetShadersPipeline());
-            Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-            for (int i = 0; i < pActiveShadingModel->mGBuffer.mRenderTargets.size(); i++)
+            if (pActiveShadingModel)
             {
-                pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(pActiveShadingModel->mGBuffer.mRenderTargets.at(i).GetSRV());
-            }
+                //Apply Lighting
+                Graphics::Context::GetContext()->SetPipelineState(pActiveShadingModel->GetShadersPipeline());
+                Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-            //IBL
-            for (int i = 0; i < pActiveShadingModel->mIBLTexturesInfo.size(); i++)
-            {
-                pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mIBLTexturesInfo.at(i).mSlot)->Set(pActiveShadingModel->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
-            }
-
-            Graphics::Context::GetContext()->CommitShaderResources(pActiveShadingModel->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-            Assets::DefaultMeshes::RenderScreenQuad();
-
-            pActiveShadingModel = nullptr;
-
-            //Send GBUFFER to DebugSystem
-            if (pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
-            {
-                for (auto& i : pActiveShadingModel->mGBuffer.mRenderTargets)
+                for (int i = 0; i < pActiveShadingModel->mGBuffer.mRenderTargets.size(); i++)
                 {
-                    pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
+                    pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(pActiveShadingModel->mGBuffer.mRenderTargets.at(i).GetSRV());
+                }
+
+                //IBL
+                for (int i = 0; i < pActiveShadingModel->mIBLTexturesInfo.size(); i++)
+                {
+                    pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mIBLTexturesInfo.at(i).mSlot)->Set(pActiveShadingModel->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+                }
+
+                Graphics::Context::GetContext()->CommitShaderResources(pActiveShadingModel->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+                Assets::DefaultMeshes::RenderScreenQuad();
+
+                pActiveShadingModel = nullptr;
+
+                //Send GBUFFER to DebugSystem
+                if (pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+                {
+                    for (auto& i : pActiveShadingModel->mGBuffer.mRenderTargets)
+                    {
+                        pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
+                    }
                 }
             }
+        }
+
+        void DefferedRenderingPipeline::FinishAllRendering()
+        {
+            FinishShaderModelRendering();           
+        }
+        void DefferedRenderingPipeline::StartStaticRendering(ShadingModel* shadingmodel)
+        {
+            FinishShaderModelRendering();
+
+            pActiveShadingModel = shadingmodel;
+            mSkinnedRendering = false;
+
+            //Render To Gbuffer
+            Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetGBufferPipeline());
+
+            std::vector<ITextureView*> RTargets;
+            for (auto& i : shadingmodel->mGBuffer.mRenderTargets)
+            {
+                RTargets.push_back(i.GetRTV());
+            }
+            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            for (auto& i : RTargets)
+            {
+                Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            }
+
+            Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+        }
+        void DefferedRenderingPipeline::StartSkinnedRendering(ShadingModel* shadingmodel)
+        {
+            FinishShaderModelRendering();
+
+            pActiveShadingModel = shadingmodel;
+            mSkinnedRendering = true;
+
+            //Render To Gbuffer
+            Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetGBufferPipeline());
+
+            std::vector<ITextureView*> RTargets;
+            for (auto& i : shadingmodel->mGBuffer.mRenderTargets)
+            {
+                RTargets.push_back(i.GetRTV());
+            }
+            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            for (auto& i : RTargets)
+            {
+                Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+            }
+
+            Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
         }
     }
 }

@@ -15,6 +15,14 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		enum class GeometryPassStatus
+		{
+			Idle,
+			StaticMeshesRendering,
+			FinishStaticMeshesRendering,
+
+			SkinnedMeshesRendering
+		};
 
 		class NEAPI GeometryPass : public RenderPass
 		{
@@ -31,6 +39,8 @@ namespace Nuclear
 		protected:
 			RenderingPipeline* pPipeline;
 			Rendering::Background mBackground;
+
+			GeometryPassStatus mStatus;
 		};
 
 	}

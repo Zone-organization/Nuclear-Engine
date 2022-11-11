@@ -28,15 +28,10 @@ namespace Nuclear
 
 			virtual void RenderStatic(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
 
-			virtual void FinishStaticShaderModelRendering() = 0;
-
-
 			//Skinned meshes
 			virtual void StartSkinnedShaderModelRendering(ShadingModel* sm) = 0;
 
 			virtual void RenderSkinned(Components::MeshComponent& skinnedmesh, const Math::Matrix4& modelmatrix) = 0;
-
-			virtual void FinishSkinnedShaderModelRendering() = 0;
 
 			virtual void FinishAllRendering() = 0;
 
@@ -47,6 +42,8 @@ namespace Nuclear
 			virtual void DrawSkinnedMesh(Assets::Mesh* mesh, Assets::Material* material);
 
 			virtual void CheckValidMesh(Assets::Mesh* mesh, Assets::Material* material);
+
+			bool mSkinnedRendering = false;
 		};
 	}
 }

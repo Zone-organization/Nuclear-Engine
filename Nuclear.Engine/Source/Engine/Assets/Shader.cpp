@@ -1,0 +1,7 @@
+namespace Nuclear
+{
+    namespace Assets
+    {
+
+    }
+}

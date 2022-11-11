@@ -131,7 +131,7 @@ class Sample1 : public Client
 
 	Rendering::DiffuseOnly DiffuseRP;
 	//Rendering::WireFrame WireFrameRP;
-//	Rendering::BlinnPhong BlinnPhongRP;
+	Rendering::BlinnPhong BlinnPhongRP;
 
 	Rendering::ForwardRenderingPipeline ForwardRP;
 
@@ -189,7 +189,7 @@ public:
 		
 		CubeTextures.mTextures.push_back(CubeSet);
 
-		CubeMaterial.Create(&CubeTextures, &DiffuseRP);
+		CubeMaterial.Create(&CubeTextures, &BlinnPhongRP);
 		NanosuitMaterial.Create(NanosuitMaterialD, &DiffuseRP);
 		CyborgMaterial.Create(CyborgMaterialD, &DiffuseRP);
 		BobMaterial.Create(BobMaterialD, &DiffuseRP);
@@ -265,7 +265,7 @@ public:
 	//	mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
-	//	Renderer->RegisterShadingModel(&BlinnPhongRP);
+		Renderer->RegisterShadingModel(&BlinnPhongRP);
 		Renderer->RegisterShadingModel(&DiffuseRP);
 	//	Renderer->RegisterShadingModel(&WireFrameRP);
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Engine/Assets/MaterialTypes.h>
+#include <Engine/Assets/Shader.h>
 #include <Engine/Graphics/BakeStatus.h>
 #include <Engine/Rendering/ShaderEffect.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
@@ -45,6 +45,8 @@ namespace Nuclear
 			virtual bool Bake(const ShadingModelBakingDesc& desc) = 0;
 
 			virtual void Initialize(const ShadingModelInitInfo& info);
+
+			void Create(Assets::Shader* shader,const ShadingModelInitInfo& info);
 
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
@@ -115,6 +117,11 @@ namespace Nuclear
 
 			//helper function
 			void AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value);
+
+
+			void CreateStaticPipeline();
+			void CreateSkinnedPipeline();
+
 		};
 
 	}

@@ -42,6 +42,7 @@ namespace Nuclear
 			ImportedAssetsMap<Assets::Animations> mImportedAnimations;
 			ImportedAssetsMap<Assets::AudioClip> mImportedAudioClips;
 			ImportedAssetsMap<Assets::Font> mImportedFonts;
+			ImportedAssetsMap<Assets::Shader> mImportedShaders;
 		};
 	}
 }
