@@ -12,13 +12,20 @@ namespace Nuclear
 
 			void BeginFrame(FrameRenderData* frame) override;
 
-			void StartShaderModelRendering(ShadingModel* sm) override;
+			void StartStaticShaderModelRendering(ShadingModel* sm) override;
 
-			void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
+			void RenderStatic(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
 
-			void Render(Components::SkinnedMeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
+			void FinishStaticShaderModelRendering() override;
 
-			void FinishShaderModelRendering() override;
+
+			void StartSkinnedShaderModelRendering(ShadingModel* sm) override;
+
+			void RenderSkinned(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
+
+			void FinishSkinnedShaderModelRendering() override;
+
+			void FinishAllRendering();
 
 		private:
 			FrameRenderData* pCurrentFrame;

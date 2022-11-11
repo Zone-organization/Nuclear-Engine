@@ -4,7 +4,6 @@
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\MeshComponent.h>
-#include <Engine\Components\SkinnedMeshComponent.h>
 #include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Managers\AssetManager.h>
@@ -130,13 +129,6 @@ namespace Nuclear
 				});
 
 			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();
-
-			mScene->GetRegistry().sort<Nuclear::Components::SkinnedMeshComponent>([](const auto& lhs, const auto& rhs)
-				{
-					return lhs.mMaterial->GetShadingModel()->GetRenderQueue() < rhs.mMaterial->GetShadingModel()->GetRenderQueue();
-				});
-
-			mRenderData.mSkinnedMeshView = mScene->GetRegistry().view<Components::SkinnedMeshComponent>();
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 2: Clear main RTVs

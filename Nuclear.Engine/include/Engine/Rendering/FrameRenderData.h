@@ -9,7 +9,6 @@
 #include <map>
 #include <Engine\ECS/Entity.h>
 #include <Engine/Components/MeshComponent.h>
-#include <Engine/Components/SkinnedMeshComponent.h>
 
 namespace Nuclear
 {
@@ -31,7 +30,6 @@ namespace Nuclear
         class ShadingModel;
 
         typedef entt::basic_view<entt::entity, entt::get_t<Nuclear::Components::MeshComponent>, entt::exclude_t<>, void> MeshView;
-        typedef entt::basic_view<entt::entity, entt::get_t<Nuclear::Components::SkinnedMeshComponent>, entt::exclude_t<>, void> SkinnedMeshView;
 
 		struct NEAPI FrameRenderData
 		{
@@ -40,7 +38,6 @@ namespace Nuclear
             Assets::Scene* pScene;
 
             MeshView mMeshView;
-            SkinnedMeshView mSkinnedMeshView;
 
             RefCntAutoPtr<IBuffer> pAnimationCB;
 

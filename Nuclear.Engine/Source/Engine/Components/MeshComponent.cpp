@@ -8,20 +8,19 @@ namespace Nuclear
 		{
 			mMesh = nullptr;
 			mMaterial = nullptr;
+			mAnimator = nullptr;
 		}
-		MeshComponent::MeshComponent(Assets::Mesh * mesh)
-		{
-			mMesh = mesh;
-		}
-		MeshComponent::MeshComponent(Assets::Mesh *mesh , Assets::Material * material)
+		MeshComponent::MeshComponent(Assets::Mesh* mesh, Assets::Material* material, Animation::Animator* Animator)
 		{
 			mMesh = mesh;
 			mMaterial = material;
+			mAnimator = Animator;
 		}
 		MeshComponent::~MeshComponent()
 		{
 			mMesh = nullptr;
 			mMaterial = nullptr;
+			mAnimator = nullptr;
 		}
 	}
 }

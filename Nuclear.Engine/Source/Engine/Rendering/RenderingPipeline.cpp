@@ -15,7 +15,7 @@ namespace Nuclear
 
 		}
 
-		void RenderingPipeline::RenderStaticMesh(Assets::Mesh* mesh, Assets::Material* material)
+		void RenderingPipeline::DrawStaticMesh(Assets::Mesh* mesh, Assets::Material* material)
 		{
 			CheckValidMesh(mesh, material);
 
@@ -36,7 +36,7 @@ namespace Nuclear
 			}
 		}
 
-		void RenderingPipeline::RenderSkinnedMesh(Assets::Mesh* mesh, Assets::Material* material)
+		void RenderingPipeline::DrawSkinnedMesh(Assets::Mesh* mesh, Assets::Material* material)
 		{
 			CheckValidMesh(mesh, material);
 

@@ -5,7 +5,6 @@
 #include <Engine/Rendering/ShadingModel.h>
 #include <Engine/Graphics/BakeStatus.h> 
 #include <Engine\Components\MeshComponent.h>
-#include <Engine\Components\SkinnedMeshComponent.h>
 
 namespace Nuclear
 {
@@ -27,7 +26,7 @@ namespace Nuclear
 			//Static meshes
 			virtual void StartStaticShaderModelRendering(ShadingModel* sm) = 0;
 
-			virtual void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
+			virtual void RenderStatic(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
 
 			virtual void FinishStaticShaderModelRendering() = 0;
 
@@ -35,14 +34,17 @@ namespace Nuclear
 			//Skinned meshes
 			virtual void StartSkinnedShaderModelRendering(ShadingModel* sm) = 0;
 
-			virtual void Render(Components::SkinnedMeshComponent& skinnedmesh, const Math::Matrix4& modelmatrix) = 0;
+			virtual void RenderSkinned(Components::MeshComponent& skinnedmesh, const Math::Matrix4& modelmatrix) = 0;
 
 			virtual void FinishSkinnedShaderModelRendering() = 0;
 
-			// Render A Mesh (expects the pipeline to be bound)
-			virtual void RenderStaticMesh(Assets::Mesh* mesh, Assets::Material* material);
+			virtual void FinishAllRendering() = 0;
 
-			virtual void RenderSkinnedMesh(Assets::Mesh* mesh, Assets::Material* material);
+		protected:
+			// Render A Mesh (expects the pipeline to be bound)
+			virtual void DrawStaticMesh(Assets::Mesh* mesh, Assets::Material* material);
+
+			virtual void DrawSkinnedMesh(Assets::Mesh* mesh, Assets::Material* material);
 
 			virtual void CheckValidMesh(Assets::Mesh* mesh, Assets::Material* material);
 		};

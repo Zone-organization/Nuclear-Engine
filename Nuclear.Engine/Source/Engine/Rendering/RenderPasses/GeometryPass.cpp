@@ -40,25 +40,53 @@ namespace Nuclear
 
 				if (mesh.mRender)
 				{
-					if (ActiveShadingModel != mesh.mMaterial->GetShadingModel())
+
+					if (!mesh.mAnimator)
 					{
-						//first sm rendering
-						if (ActiveShadingModel != nullptr)
+						if (ActiveShadingModel != mesh.mMaterial->GetShadingModel())
 						{
-							pPipeline->FinishStaticShaderModelRendering();
-							SMFinishedCount++;
+							//first sm rendering
+							if (ActiveShadingModel != nullptr)
+							{
+								pPipeline->FinishStaticShaderModelRendering();
+								SMFinishedCount++;
+							}
+
+							ActiveShadingModel = mesh.mMaterial->GetShadingModel();
+
+							pPipeline->StartStaticShaderModelRendering(mesh.mMaterial->GetShadingModel());
+							SMCount++;
 						}
 
-						ActiveShadingModel = mesh.mMaterial->GetShadingModel();
+						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
+						EntityInfo.mTransform.Update();
 
-						pPipeline->StartStaticShaderModelRendering(mesh.mMaterial->GetShadingModel());
-						SMCount++;
+						pPipeline->RenderStatic(mesh, EntityInfo.mTransform.GetWorldMatrix());
 					}
+					else 
+					{
+						//if (ActiveShadingModel != mesh.mMaterial->GetShadingModel())
+						//{
+						//	//first sm rendering
+						//	if (ActiveShadingModel != nullptr)
+						//	{
+						//		pPipeline->FinishSkinnedShaderModelRendering();
+						//		SMFinishedCount++;
+						//	}
 
-					auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
-					EntityInfo.mTransform.Update();
+						//	ActiveShadingModel = mesh.mMaterial->GetShadingModel();
 
-					pPipeline->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
+						//	pPipeline->StartSkinnedShaderModelRendering(mesh.mMaterial->GetShadingModel());
+						//	SMCount++;
+						//}		
+						pPipeline->StartSkinnedShaderModelRendering(mesh.mMaterial->GetShadingModel());
+
+						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
+						EntityInfo.mTransform.Update();
+
+						pPipeline->RenderSkinned(mesh, EntityInfo.mTransform.GetWorldMatrix());
+
+					}
 				}
 			}
 
@@ -70,34 +98,8 @@ namespace Nuclear
 				SMFinishedCount++;
 			}
 
-			//Render Skinned "Animated Meshes"
-			for (auto& meshentity : frame->mSkinnedMeshView)
-			{
-				auto& mesh = frame->mSkinnedMeshView.get<Components::SkinnedMeshComponent>(meshentity);
 
-				if (mesh.mRender)
-				{
-					if (ActiveShadingModel != mesh.mMaterial->GetShadingModel())
-					{
-						//first sm rendering
-						if (ActiveShadingModel != nullptr)
-						{
-							pPipeline->FinishSkinnedShaderModelRendering();
-							SMFinishedCount++;
-						}
-
-						ActiveShadingModel = mesh.mMaterial->GetShadingModel();
-
-						pPipeline->StartSkinnedShaderModelRendering(mesh.mMaterial->GetShadingModel());
-						SMCount++;
-					}
-
-					auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
-					EntityInfo.mTransform.Update();
-
-					pPipeline->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
-				}
-			}
+			pPipeline->FinishAllRendering();
 
 			//Render Skybox
 			if (GetBackground().GetSkybox() != nullptr)

@@ -80,9 +80,6 @@ namespace Nuclear
 
 				if (desc.CameraBufferPtr)
 					mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(desc.CameraBufferPtr);
-
-				if (desc.AnimationBufferPtr)
-					mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
 			}
 
 			//create skinned pipeline
@@ -100,9 +97,9 @@ namespace Nuclear
 					CreationAttribs.Desc.Name = "DiffuseOnlyVS";
 
 					std::vector<std::string> defines;
-					defines.push_back("NE_DISABLE_ANIMATION");
+					defines.push_back("NE_ENABLE_ANIMATION");
 
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", std::vector<std::string>(), defines, true);
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
 					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
@@ -118,6 +115,8 @@ namespace Nuclear
 
 				if (desc.AnimationBufferPtr)
 					mSkinnedPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(desc.AnimationBufferPtr);
+
+				mSkinnedPipeline->CreateShaderResourceBinding(&mSkinnedPipelineSRB, true);
 			}
 
 			ReflectPixelShaderData();

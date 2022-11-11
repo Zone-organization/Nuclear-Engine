@@ -64,6 +64,7 @@ PixelInputType main(VertexInputType input)
     float4 FinalPos = float4(input.Position.xyz, 1.0f);
     float4 FinalNorm = float4(input.Normals.xyz, 0.0f);
 
+#ifdef NE_ENABLE_ANIMATION
     for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
     {
         if (input.BoneIDs[i] == -1)
@@ -82,6 +83,7 @@ PixelInputType main(VertexInputType input)
         float3 localNormal = mul((float3x3)BoneTransforms[input.BoneIDs[i]], input.Normals);
         FinalNorm += mul(input.Weights[i], float4(localNormal, 0.0f));
     }
+#endif
 
     output.Position = mul(ModelViewProjection, FinalPos);
 

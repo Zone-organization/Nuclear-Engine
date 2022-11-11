@@ -24,7 +24,7 @@ namespace Nuclear
 			Graphics::Context::GetContext()->SetPipelineState(shadingmodel->GetShadersPipeline());
 			Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
-		void ForwardRenderingPipeline::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
+		void ForwardRenderingPipeline::RenderStatic(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
 		{
 			pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
 			pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
@@ -53,9 +53,9 @@ namespace Nuclear
 				}
 			}
 
-			RenderStaticMesh(mesh.mMesh, mesh.mMaterial);
+			DrawStaticMesh(mesh.mMesh, mesh.mMaterial);
 		}
-		void ForwardRenderingPipeline::Render(Components::SkinnedMeshComponent& mesh, const Math::Matrix4& modelmatrix)
+		void ForwardRenderingPipeline::RenderSkinned(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
 		{
 			pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
 			pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
@@ -112,7 +112,15 @@ namespace Nuclear
 				}
 			}
 
-			RenderSkinnedMesh(mesh.mMesh, mesh.mMaterial);
+			DrawSkinnedMesh(mesh.mMesh, mesh.mMaterial);
+		}
+		void ForwardRenderingPipeline::FinishSkinnedShaderModelRendering()
+		{	
+			//Do nothing
+		}
+		void ForwardRenderingPipeline::FinishAllRendering()
+		{	
+			//Do nothing
 		}
 		void ForwardRenderingPipeline::FinishStaticShaderModelRendering()
 		{

@@ -20,8 +20,7 @@ namespace Nuclear {
 		{
 		public:			
 			MeshComponent();
-			MeshComponent(Assets::Mesh *mesh);
-			MeshComponent(Assets::Mesh *mesh , Assets::Material * material);
+			MeshComponent(Assets::Mesh* mesh, Assets::Material* material = nullptr, Animation::Animator* Animator = nullptr);
 			~MeshComponent();
 
 			//if false the RenderSystem won't render the model

@@ -130,8 +130,8 @@ class Sample1 : public Client
 	Rendering::Skybox Skybox;
 
 	Rendering::DiffuseOnly DiffuseRP;
-	Rendering::WireFrame WireFrameRP;
-	Rendering::BlinnPhong BlinnPhongRP;
+	//Rendering::WireFrame WireFrameRP;
+//	Rendering::BlinnPhong BlinnPhongRP;
 
 	Rendering::ForwardRenderingPipeline ForwardRP;
 
@@ -190,10 +190,10 @@ public:
 		CubeTextures.mTextures.push_back(CubeSet);
 
 		CubeMaterial.Create(&CubeTextures, &DiffuseRP);
-		NanosuitMaterial.Create(NanosuitMaterialD, &WireFrameRP);
-		CyborgMaterial.Create(CyborgMaterialD, &BlinnPhongRP);
-		BobMaterial.Create(BobMaterialD, &BlinnPhongRP);
-		VampireMaterial.Create(VampireMaterialD, &BlinnPhongRP);
+		NanosuitMaterial.Create(NanosuitMaterialD, &DiffuseRP);
+		CyborgMaterial.Create(CyborgMaterialD, &DiffuseRP);
+		BobMaterial.Create(BobMaterialD, &DiffuseRP);
+		VampireMaterial.Create(VampireMaterialD, &DiffuseRP);
 
 		CubeSet.mData.clear();
 
@@ -201,8 +201,7 @@ public:
 		ENanosuit.AddComponent<Components::MeshComponent>(NanosuitAsset, &NanosuitMaterial);
 		ECyborg.AddComponent<Components::MeshComponent>(CyborgAsset, &CyborgMaterial);
 
-	//	EBob.AddComponent<Components::MeshComponent>(BobAsset,&BobMaterial);
-	//	EBob.AddComponent<Components::AnimatorComponent>(&BobAnimator);
+		EBob.AddComponent<Components::MeshComponent>(BobAsset,&BobMaterial, &BobAnimator);
 
 		//EVampire.AddComponent<Components::MeshComponent>(VampireAsset, &VampireMaterial);
 		//EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);
@@ -244,7 +243,7 @@ public:
 		ECube = Scene.CreateEntity("Cube", TCube);
 		ENanosuit = Scene.CreateEntity("Nanosuit", TNansosuit);
 		ECyborg = Scene.CreateEntity("Cyborg", TCyborg);
-		//EBob = Scene.CreateEntity("Bob", TBob);
+		EBob = Scene.CreateEntity("Bob", TBob);
 	//	EVampire = Scene.CreateEntity("Vampire" , TVampire);
 		ELights = Scene.CreateEntity("Lights");
 
@@ -266,9 +265,9 @@ public:
 	//	mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
-		Renderer->RegisterShadingModel(&BlinnPhongRP);
+	//	Renderer->RegisterShadingModel(&BlinnPhongRP);
 		Renderer->RegisterShadingModel(&DiffuseRP);
-		Renderer->RegisterShadingModel(&WireFrameRP);
+	//	Renderer->RegisterShadingModel(&WireFrameRP);
 
 		Renderer->Bake(_Width_, _Height_);
 	}

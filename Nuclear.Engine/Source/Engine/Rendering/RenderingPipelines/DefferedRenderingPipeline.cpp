@@ -20,7 +20,7 @@ namespace Nuclear
             pCurrentFrame = frame;
             pActiveShadingModel = nullptr;
         }
-        void DefferedRenderingPipeline::StartShaderModelRendering(ShadingModel* shadingmodel)
+        void DefferedRenderingPipeline::StartStaticShaderModelRendering(ShadingModel* shadingmodel)
         {
             pActiveShadingModel = shadingmodel;
 
@@ -41,14 +41,20 @@ namespace Nuclear
             Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
         }
-        void DefferedRenderingPipeline::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
+        void DefferedRenderingPipeline::RenderStatic(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
             pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
 
-           RenderStaticMesh(mesh.mMesh, mesh.mMaterial);
+           DrawStaticMesh(mesh.mMesh, mesh.mMaterial);
         }
-        void DefferedRenderingPipeline::Render(Components::SkinnedMeshComponent& mesh, const Math::Matrix4& modelmatrix)
+        void DefferedRenderingPipeline::FinishStaticShaderModelRendering()
+        {
+        }
+        void DefferedRenderingPipeline::StartSkinnedShaderModelRendering(ShadingModel* sm)
+        {
+        }
+        void DefferedRenderingPipeline::RenderSkinned(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
             pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
@@ -81,9 +87,12 @@ namespace Nuclear
 
             Graphics::Context::GetContext()->UnmapBuffer(pCurrentFrame->pAnimationCB, MAP_WRITE);
 
-            RenderSkinnedMesh(mesh.mMesh, mesh.mMaterial);
+           DrawSkinnedMesh(mesh.mMesh, mesh.mMaterial);
         }
-        void DefferedRenderingPipeline::FinishShaderModelRendering()
+        void DefferedRenderingPipeline::FinishSkinnedShaderModelRendering()
+        {
+        }
+        void DefferedRenderingPipeline::FinishAllRendering()
         {
             //Apply Lighting
             Graphics::Context::GetContext()->SetPipelineState(pActiveShadingModel->GetShadersPipeline());
