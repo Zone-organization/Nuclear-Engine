@@ -129,13 +129,6 @@ namespace Nuclear
 			DrawSkinnedMesh(mesh.mMesh, mesh.mMaterial);
 		}
 
-		void ForwardRenderingPipeline::FinishAllRendering()
-		{
-			pActiveShadingModel = nullptr;
-
-			//Do nothing
-		}
-
 		void ForwardRenderingPipeline::StartSkinnedShaderModelRendering(ShadingModel* shadingmodel)
 		{
 			if (mSkinnedRendering)

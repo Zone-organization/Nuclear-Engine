@@ -1,4 +1,4 @@
-#include <Engine\Rendering\ShadingModel.h>
+#include <Engine\Rendering\ShaderPipeline.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 #include <Engine/Managers/AssetManager.h>
@@ -7,23 +7,15 @@ namespace Nuclear
 	namespace Rendering
 	{
 		static Uint32 gRenderQueue = 0;
-		ShadingModel::ShadingModel()
+		ShaderPipeline::ShaderPipeline()
 		{
 			mRenderQueue = gRenderQueue;
 			gRenderQueue++;
 		}
-		void ShadingModel::Initialize(const ShadingModelInitInfo& info)
+		void ShaderPipeline::Create(Assets::Shader* shader, const ShaderPipelineDesc& desc)
 		{
-			mInitInfo = info;
 		}
-		void ShadingModel::Create(Assets::Shader* shader, const ShadingModelInitInfo& info)
-		{
-			mInitInfo = info;
-
-			//TODO: SHADER REVAMP
-
-		}
-		IPipelineState* ShadingModel::GetActivePipeline()
+		IPipelineState* ShaderPipeline::GetActivePipeline()
 		{
 			if (mInitInfo.mDefferedPipeline)
 			{
@@ -31,7 +23,7 @@ namespace Nuclear
 			}
 			return GetShadersPipeline();
 		}
-		IShaderResourceBinding* ShadingModel::GetActiveSRB()
+		IShaderResourceBinding* ShaderPipeline::GetActiveSRB()
 		{
 			if (mInitInfo.mDefferedPipeline)
 			{
@@ -39,32 +31,22 @@ namespace Nuclear
 			}
 			return GetShadersPipelineSRB();
 		}
-		IPipelineState* ShadingModel::GetShadersPipeline()
+		IPipelineState* ShaderPipeline::GetShadersPipeline()
 		{
 			return mPipeline.RawPtr();
 		}
 
-		IShaderResourceBinding* ShadingModel::GetShadersPipelineSRB()
+		IShaderResourceBinding* ShaderPipeline::GetShadersPipelineSRB()
 		{
 			return mPipelineSRB.RawPtr();
 		}
 
-		IPipelineState* ShadingModel::GetSkinnedShadersPipeline()
-		{
-			return mSkinnedPipeline.RawPtr();
-		}
-
-		IShaderResourceBinding* ShadingModel::GetSkinnedShadersPipelineSRB()
-		{
-			return mSkinnedPipelineSRB.RawPtr();
-		}
-
-		IPipelineState* ShadingModel::GetGBufferPipeline()
+		IPipelineState* ShaderPipeline::GetGBufferPipeline()
 		{
 			return mGBufferPipeline.RawPtr();
 		}
 
-		IShaderResourceBinding* ShadingModel::GetGBufferPipelineSRB()
+		IShaderResourceBinding* ShaderPipeline::GetGBufferPipelineSRB()
 		{
 			return mGBufferSRB.RawPtr();
 		}
@@ -102,7 +84,7 @@ namespace Nuclear
 		}
 
 
-		void ReflectData(IShaderResourceBinding* ActiveSRB,const std::string& varname, std::vector<Assets::ShaderTexture>& result,const Assets::ShaderTextureType& type)
+		void ReflectData(IShaderResourceBinding* ActiveSRB, const std::string& varname, std::vector<Assets::ShaderTexture>& result, const Assets::ShaderTextureType& type)
 		{
 			for (Uint32 i = 0; i < ActiveSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
 			{
@@ -125,11 +107,11 @@ namespace Nuclear
 				}
 			}
 		}
-		void ShadingModel::ReflectPixelShaderData()
+		void ShaderPipeline::ReflectPixelShaderData()
 		{
 			mPipeline->CreateShaderResourceBinding(&mPipelineSRB, true);
 
-			if(mGBufferPipeline)
+			if (mGBufferPipeline)
 			{
 				mGBufferPipeline->CreateShaderResourceBinding(&mGBufferSRB, true);
 			}
@@ -143,7 +125,7 @@ namespace Nuclear
 			}
 			else
 			{
-				ReflectData(mPipelineSRB.RawPtr(),"NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
+				ReflectData(mPipelineSRB.RawPtr(), "NEMat_", mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
 				ReflectData(mPipelineSRB.RawPtr(), "NEIBL_", mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
 
 			}
@@ -187,15 +169,15 @@ namespace Nuclear
 				}
 			}
 		}
-		Uint32 ShadingModel::GetID()
+		Uint32 ShaderPipeline::GetID()
 		{
 			return mID;
 		}
-		Uint32 ShadingModel::GetRenderQueue()
+		Uint32 ShaderPipeline::GetRenderQueue()
 		{
 			return mRenderQueue;
 		}
-		Graphics::Texture ShadingModel::GetDefaultTextureFromType(Uint8 Type)
+		Graphics::Texture ShaderPipeline::GetDefaultTextureFromType(Uint8 Type)
 		{
 			//TODO: Improve
 
@@ -212,15 +194,15 @@ namespace Nuclear
 			}
 			return Managers::AssetManager::DefaultBlackTex;
 		}
-		Graphics::BakeStatus ShadingModel::GetStatus()
+		Graphics::BakeStatus ShaderPipeline::GetStatus()
 		{
 			return mStatus;
 		}
-		std::unordered_map<Uint32, ShaderEffect>& ShadingModel::GetRenderingEffects()
+		std::unordered_map<Uint32, ShaderEffect>& ShaderPipeline::GetRenderingEffects()
 		{
 			return mRenderingEffects;
- 		}
-		void ShadingModel::SetEffect(const Uint32& effectId, bool value)
+		}
+		void ShaderPipeline::SetEffect(const Uint32& effectId, bool value)
 		{
 			auto it = mRenderingEffects.find(effectId);
 			if (it != mRenderingEffects.end())
@@ -232,28 +214,58 @@ namespace Nuclear
 				assert(false);
 			}
 		}
-		bool ShadingModel::isDeffered()
+		bool ShaderPipeline::isDeffered()
 		{
 			return mInitInfo.mDefferedPipeline;
 		}
-		std::vector<Graphics::RenderTargetDesc> ShadingModel::GetGBufferDesc()
+		void ShaderPipeline::RenderMesh(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
+		{
+			pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
+			pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
+
+			////////////////////////      IBL      ///////////////////////////
+			for (int i = 0; i < mIBLTexturesInfo.size(); i++)
+			{
+				GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, mIBLTexturesInfo.at(i).mSlot)->Set(mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+			}
+
+			//Shadows
+			////////////////////////     TODO    //////////////////////////////////////
+			if (pCurrentFrame->mShadowsEnabled)
+			{
+				if (mDirPos_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+				{
+					GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, mDirPos_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pDirPosShadowMapSRV);
+				}
+				if (mSpot_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+				{
+					GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, mSpot_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pSpotPosShadowMapSRV);
+				}
+				if (mOmniDir_ShadowmapInfo.mType != Assets::ShaderTextureType::Unknown)
+				{
+					GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, mOmniDir_ShadowmapInfo.mSlot)->Set(pCurrentFrame->pOmniDirShadowMapSRV);
+				}
+			}
+
+			DrawStaticMesh(mesh.mMesh, mesh.mMaterial);
+		}
+		std::vector<Graphics::RenderTargetDesc> ShaderPipeline::GetGBufferDesc()
 		{
 			return std::vector<Graphics::RenderTargetDesc>();
 		}
-		std::string ShadingModel::GetName()
+		std::string ShaderPipeline::GetName()
 		{
 			return mName;
- 		}
+		}
 
-		void ShadingModel::BakeGBufferRTs(Uint32 Width, Uint32 Height)
+		void ShaderPipeline::BakeGBufferRTs(Uint32 Width, Uint32 Height)
 		{
 			mGBuffer.Bake(Width, Height);
 		}
 
-		void ShadingModel::AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value)
+		void ShaderPipeline::AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value)
 		{
 			if (value > 0) { defines.push_back(name + std::to_string(value)); }
 		}
-
 	}
 }

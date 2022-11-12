@@ -15,25 +15,14 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		class NEAPI GeometryPass : public RenderPass
+		class NEAPI DefferedPass : public RenderPass
 		{
 		public:
-			GeometryPass();
-
-			void Initialize(RenderingPipeline* pipeline);
+			DefferedPass();
 
 			void Update(FrameRenderData* framedata) override;
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) override;
-
-			void StartShaderModelRendering(ShadingModel* shadingmodel);
-
-			void RenderMesh(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix);
-
-			Rendering::Background& GetBackground();
-		protected:
-			RenderingPipeline* pPipeline;
-			Rendering::Background mBackground;
 		};
 
 	}

@@ -28,6 +28,7 @@ namespace Nuclear
 	namespace Rendering
 	{
         class ShadingModel;
+        class ShaderPipeline;
 
         typedef entt::basic_view<entt::entity, entt::get_t<Nuclear::Components::MeshComponent>, entt::exclude_t<>, void> MeshView;
 
@@ -48,6 +49,7 @@ namespace Nuclear
 
             std::shared_ptr<Systems::CameraSystem> pCameraSystemPtr;
 
+            std::vector<Rendering::ShaderPipeline*> mUsedPipelines;
 
             //shadows
             bool mShadowsEnabled;

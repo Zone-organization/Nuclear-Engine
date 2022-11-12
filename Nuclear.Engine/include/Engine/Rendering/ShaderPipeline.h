@@ -10,12 +10,13 @@
 #include <unordered_map>
 #include "Engine/Rendering/GBuffer.h"
 #include <Engine/Rendering/RenderPasses/ShadowPass.h>
+#include <Engine\Components\MeshComponent.h>
 
 namespace Nuclear
 {
 	namespace Rendering
 	{
-		struct ShadingModelBakingDesc
+		struct ShaderPipelineBakingDesc
 		{
 			Uint32 DirLights = 0;
 			Uint32 SpotLights = 0;
@@ -30,23 +31,21 @@ namespace Nuclear
 			std::vector<ShaderEffect> mRequiredEffects;
 		};
 
-		struct ShadingModelInitInfo {
+		struct ShaderPipelineDesc {
 			bool mDefferedPipeline = false;
 			bool ShadowingEnabled = false;
 		};
 
 		//Used for both Deffered and Forward pipelines
 		//Should provide GBuffer Pipeline Implementation.
-		class NEAPI ShadingModel
+		class NEAPI ShaderPipeline
 		{
 		public:
-			ShadingModel();
+			ShaderPipeline();
 
-			virtual bool Bake(const ShadingModelBakingDesc& desc) = 0;
+			virtual bool Bake(const ShaderPipelineBakingDesc& desc) = 0;
 
-			virtual void Initialize(const ShadingModelInitInfo& info);
-
-			void Create(Assets::Shader* shader,const ShadingModelInitInfo& info);
+			void Create(Assets::Shader* shader, const ShaderPipelineDesc& desc);
 
 			IPipelineState* GetActivePipeline();
 			IShaderResourceBinding* GetActiveSRB();
@@ -54,53 +53,46 @@ namespace Nuclear
 			IPipelineState* GetShadersPipeline();
 			IShaderResourceBinding* GetShadersPipelineSRB();
 
-			IPipelineState* GetSkinnedShadersPipeline();
-			IShaderResourceBinding* GetSkinnedShadersPipelineSRB();
-
 			IPipelineState* GetGBufferPipeline();
 			IShaderResourceBinding* GetGBufferPipelineSRB();
 
-			virtual void ReflectPixelShaderData();
 
-			Uint32 GetID();
+			Uint32 GetShaderAssetID();
+
+			Uint32 GetUniqueID();
 
 			Uint32 GetRenderQueue();
 
 			virtual Graphics::Texture GetDefaultTextureFromType(Uint8 Type);
-			
+
 			virtual Graphics::BakeStatus GetStatus();
 
 			std::unordered_map<Uint32, ShaderEffect>& GetRenderingEffects();
 
 			void SetEffect(const Uint32& effectId, bool value);
 
+			virtual void StartForwardRendering();
+			virtual void StartDefferedRendering();
+
+			virtual void RenderMesh(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix);
 
 			virtual std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
-
-			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
-			//Note: It is very important to fill it in order for material creation work with the pipeline.
-			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo;
-			std::vector<Assets::ShaderTexture> mIBLTexturesInfo;
-
-			Assets::ShaderTexture mDirPos_ShadowmapInfo;         //Texture2DArray
-			Assets::ShaderTexture mSpot_ShadowmapInfo;         //Texture2DArray
-			Assets::ShaderTexture mOmniDir_ShadowmapInfo;        //TextureCubeArray
 
 			std::string GetName();
 
 			bool mAutoBake = true;
-			//////////////////////////////////////////////////////////////////////////
-			//Deffered rendering
+
+
+			bool isSkinned();
+
 			bool isDeffered();
+
 
 			GBuffer mGBuffer;
 			virtual void BakeGBufferRTs(Uint32 Width, Uint32 Height);
 
 		protected:
 			std::unordered_map<Uint32, ShaderEffect> mRenderingEffects;
-
-			RefCntAutoPtr<IPipelineState> mSkinnedPipeline;
-			RefCntAutoPtr<IShaderResourceBinding> mSkinnedPipelineSRB;
 
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
@@ -114,6 +106,8 @@ namespace Nuclear
 			Uint32 mRenderQueue = -1;
 
 			std::string mName;
+
+			Assets::Shader* pShader;
 
 			//helper function
 			void AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value);

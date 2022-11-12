@@ -1,5 +1,5 @@
 #include <Engine\Assets\Material.h>
-#include <Engine\Rendering\ShadingModel.h>
+#include <Engine\Rendering\ShaderPipeline.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
@@ -16,7 +16,7 @@ namespace Nuclear
 			mName = std::string();
 		}
 
-		void Material::Create(MaterialData* data, Rendering::ShadingModel* Pipeline)
+		void Material::Create(MaterialData* data, Assets::Shader* shader)
 		{
 			if (!Pipeline)
 			{
@@ -25,40 +25,29 @@ namespace Nuclear
 			}
 			pData = data;
 			pShaderPipeline = Pipeline;
-			pStaticShaderPipelineSRB = pShaderPipeline->GetActiveSRB();
-			pSkinnedShaderPipelineSRB = pShaderPipeline->GetSkinnedShadersPipelineSRB();
-			mDefferedMaterial = Pipeline->isDeffered();
+			mCreationShaderCommonID = pShaderPipeline->GetShaderAssetID();
 			InitializePipelineTextures();
 		}
-		void Material::BindTexSetForStaticRendering(Uint32 index)
+		void Material::BindTexSet(Rendering::ShaderPipeline* pipeline, Uint32 index)
 		{
-			if (!mPipelineUsableTextures.empty())
+			//check for compatability
+			if (pipeline->GetShaderAssetID() == mCreationShaderCommonID)
 			{
-				for (auto tex : mPipelineUsableTextures.at(index).mData)
+				if (!mPipelineUsableTextures.empty())
 				{
-					pStaticShaderPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
+					for (auto tex : mPipelineUsableTextures.at(index).mData)
+					{
+						pipeline->GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
+					}
 				}
+
+				Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				return;
 			}
 
-			Graphics::Context::GetContext()->CommitShaderResources(pStaticShaderPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		}
-		void Material::BindTexSetForSkinnedRendering(Uint32 index)
-		{
-			if (!mPipelineUsableTextures.empty())
-			{
-				for (auto tex : mPipelineUsableTextures.at(index).mData)
-				{
-					pSkinnedShaderPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
-				}
-			}
-
-			Graphics::Context::GetContext()->CommitShaderResources(pSkinnedShaderPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			NUCLEAR_ERROR("[Material] BindTexSet with incompatible ShaderPipeline!");
 		}
 
-		Rendering::ShadingModel* Material::GetShadingModel()
-		{
-			return pShaderPipeline;
-		}
 		void Material::InitializePipelineTextures()
 		{		
 			if (pData)

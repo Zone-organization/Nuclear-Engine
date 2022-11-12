@@ -22,6 +22,11 @@ namespace Nuclear
 		
 
 		}
+		void GeometryPass::RenderMesh(ShadingModel* shadingmodel, Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
+		{
+			
+		}
+
 		Rendering::Background& GeometryPass::GetBackground()
 		{
 			return mBackground;
@@ -32,8 +37,6 @@ namespace Nuclear
 
 			bool SkinnedRendering = false;
 
-			mStatus = GeometryPassStatus::Idle;
-
 			//Render Meshes
 			for (auto& meshentity : frame->mMeshView)
 			{
@@ -43,8 +46,6 @@ namespace Nuclear
 				{
 					if (!mesh.mAnimator)
 					{
-						mStatus = GeometryPassStatus::StaticMeshesRendering;
-
 						pPipeline->StartStaticShaderModelRendering(mesh.mMaterial->GetShadingModel());
 
 						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
@@ -54,7 +55,6 @@ namespace Nuclear
 					}
 					else
 					{						
-						mStatus = GeometryPassStatus::SkinnedMeshesRendering;
 
 						pPipeline->StartSkinnedShaderModelRendering(mesh.mMaterial->GetShadingModel());
 
@@ -68,17 +68,12 @@ namespace Nuclear
 
 			}
 
-			pPipeline->FinishAllRendering();
-
 			//Render Skybox
 			if (GetBackground().GetSkybox() != nullptr)
 			{
 				Graphics::Context::GetContext()->SetRenderTargets(1, frame->mFinalRT.GetRTVDblPtr(), frame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				GetBackground().GetSkybox()->Render();
 			}
-
-			mStatus = GeometryPassStatus::Idle;
-
 		}
 	}
 }

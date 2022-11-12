@@ -22,6 +22,13 @@ namespace Nuclear
 
 			virtual void BeginFrame(FrameRenderData* framedata) = 0;
 
+			virtual void StartRendering(ShaderPipeline* sm) = 0;
+
+			virtual void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
+
+			virtual void UpdateAnimationCB(Animation::Animator* mAnimator) = 0;
+
+		//	virtual void ForwardRendering
 
 			//Static meshes
 			virtual void StartStaticShaderModelRendering(ShadingModel* sm) = 0;
@@ -32,8 +39,6 @@ namespace Nuclear
 			virtual void StartSkinnedShaderModelRendering(ShadingModel* sm) = 0;
 
 			virtual void RenderSkinned(Components::MeshComponent& skinnedmesh, const Math::Matrix4& modelmatrix) = 0;
-
-			virtual void FinishAllRendering() = 0;
 
 		protected:
 			// Render A Mesh (expects the pipeline to be bound)

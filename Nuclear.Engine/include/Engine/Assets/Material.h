@@ -7,7 +7,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		class ShadingModel;
+		class ShaderPipeline;
 	}
 	namespace Assets
 	{
@@ -28,22 +28,14 @@ namespace Nuclear
 			Material();
 			~Material();
 
-			void Create(MaterialData* data, Rendering::ShadingModel* Pipeline);
+			void Create(MaterialData* data, Assets::Shader* shader);
 
-			void BindTexSetForStaticRendering(Uint32 index);
+			void BindTexSet(Rendering::ShaderPipeline* pipeline ,Uint32 index);
 
-			void BindTexSetForSkinnedRendering(Uint32 index);
-
-			Rendering::ShadingModel* GetShadingModel();
 		private:
-
-			Rendering::ShadingModel* pShaderPipeline;
-
-			RefCntAutoPtr<IShaderResourceBinding> pStaticShaderPipelineSRB;
-			RefCntAutoPtr<IShaderResourceBinding> pSkinnedShaderPipelineSRB;
-
+			Rendering::ShaderPipeline* pShaderPipeline;
+			Uint32 mCreationShaderCommonID;
 			std::vector<TextureSet> mPipelineUsableTextures;
-			bool mDefferedMaterial = false;
 			void InitializePipelineTextures();
 			MaterialData* pData;
 		};

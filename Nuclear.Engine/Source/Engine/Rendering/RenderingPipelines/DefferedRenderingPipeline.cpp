@@ -94,50 +94,8 @@ namespace Nuclear
            DrawSkinnedMesh(mesh.mMesh, mesh.mMaterial);
         }
 
-        void DefferedRenderingPipeline::FinishShaderModelRendering()
-        {
-            if (pActiveShadingModel)
-            {
-                //Apply Lighting
-                Graphics::Context::GetContext()->SetPipelineState(pActiveShadingModel->GetShadersPipeline());
-                Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-                for (int i = 0; i < pActiveShadingModel->mGBuffer.mRenderTargets.size(); i++)
-                {
-                    pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(pActiveShadingModel->mGBuffer.mRenderTargets.at(i).GetSRV());
-                }
-
-                //IBL
-                for (int i = 0; i < pActiveShadingModel->mIBLTexturesInfo.size(); i++)
-                {
-                    pActiveShadingModel->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActiveShadingModel->mIBLTexturesInfo.at(i).mSlot)->Set(pActiveShadingModel->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
-                }
-
-                Graphics::Context::GetContext()->CommitShaderResources(pActiveShadingModel->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-                Assets::DefaultMeshes::RenderScreenQuad();
-
-                pActiveShadingModel = nullptr;
-
-                //Send GBUFFER to DebugSystem
-                if (pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
-                {
-                    for (auto& i : pActiveShadingModel->mGBuffer.mRenderTargets)
-                    {
-                        pCurrentFrame->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
-                    }
-                }
-            }
-        }
-
-        void DefferedRenderingPipeline::FinishAllRendering()
-        {
-            FinishShaderModelRendering();           
-        }
         void DefferedRenderingPipeline::StartStaticRendering(ShadingModel* shadingmodel)
         {
-            FinishShaderModelRendering();
-
             pActiveShadingModel = shadingmodel;
             mSkinnedRendering = false;
 
@@ -160,8 +118,6 @@ namespace Nuclear
         }
         void DefferedRenderingPipeline::StartSkinnedRendering(ShadingModel* shadingmodel)
         {
-            FinishShaderModelRendering();
-
             pActiveShadingModel = shadingmodel;
             mSkinnedRendering = true;
 

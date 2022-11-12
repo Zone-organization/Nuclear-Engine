@@ -125,6 +125,8 @@ class Sample1 : public Client
 	Assets::Animations* BobAnimation;
 	Assets::Animations* VampireAnimation;
 
+	Assets::Shader* DiffuseOnlyShader;
+
 	Graphics::Camera Camera;
 
 	Rendering::Skybox Skybox;
@@ -264,6 +266,9 @@ public:
 	{
 	//	mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
+
+		Importers::ShaderLoadingDesc desc;
+		DiffuseOnlyShader = mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png", desc);
 
 		Renderer->RegisterShadingModel(&BlinnPhongRP);
 		Renderer->RegisterShadingModel(&DiffuseRP);
