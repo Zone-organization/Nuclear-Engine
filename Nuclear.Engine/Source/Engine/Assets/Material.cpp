@@ -18,34 +18,37 @@ namespace Nuclear
 
 		void Material::Create(MaterialData* data, Assets::Shader* shader)
 		{
-			if (!Pipeline)
+			if (!shader)
 			{
-				NUCLEAR_ERROR("[Material] Creation requires a valid Pipeline object!");
+				NUCLEAR_ERROR("[Material] Creation requires a valid Shader Asset!");
 				return;
 			}
 			pData = data;
-			pShaderPipeline = Pipeline;
-			mCreationShaderCommonID = pShaderPipeline->GetShaderAssetID();
+			pShader = shader;
+			mCreationShaderCommonID = pShader->GetRenderingID();
 			InitializePipelineTextures();
 		}
 		void Material::BindTexSet(Rendering::ShaderPipeline* pipeline, Uint32 index)
 		{
-			//check for compatability
-			if (pipeline->GetShaderAssetID() == mCreationShaderCommonID)
+			if (!mPipelineUsableTextures.empty())
 			{
-				if (!mPipelineUsableTextures.empty())
+				for (auto tex : mPipelineUsableTextures.at(index).mData)
 				{
-					for (auto tex : mPipelineUsableTextures.at(index).mData)
-					{
-						pipeline->GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
-					}
+					pipeline->GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
 				}
-
-				Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				return;
 			}
 
-			NUCLEAR_ERROR("[Material] BindTexSet with incompatible ShaderPipeline!");
+			Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetRenderingSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		}
+
+		Assets::Shader* Material::GetShader()
+		{
+			return pShader;
+		}
+
+		Uint32 Material::GetShaderID()
+		{
+			return mCreationShaderCommonID;
 		}
 
 		void Material::InitializePipelineTextures()
@@ -59,7 +62,7 @@ namespace Nuclear
 					TextureSet NewTexSet;
 					for (auto TexSetTexture : TexSet.mData)
 					{
-						for (auto ShaderTexinfo : pShaderPipeline->mMaterialTexturesInfo)
+						for (auto ShaderTexinfo : pShader->mMaterialTexturesInfo)
 						{
 							//Found a match
 							if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
@@ -78,13 +81,13 @@ namespace Nuclear
 				for (int i = 0; i < mPipelineUsableTextures.size(); i++)
 				{
 					//Check if a texture is missing
-					if (mPipelineUsableTextures.at(i).mData.size() != pShaderPipeline->mMaterialTexturesInfo.size())
+					if (mPipelineUsableTextures.at(i).mData.size() != pShader->mMaterialTexturesInfo.size())
 					{
 						//Stage 2A
 						//Generate a copy of the texture set that doesnt contain duplicated textures.
-						auto TexSetCopy = pShaderPipeline->mMaterialTexturesInfo;
+						auto TexSetCopy = pShader->mMaterialTexturesInfo;
 
-						for (auto ShaderTexinfo : pShaderPipeline->mMaterialTexturesInfo)
+						for (auto ShaderTexinfo : pShader->mMaterialTexturesInfo)
 						{
 							for (int j = 0; j < mPipelineUsableTextures.at(i).mData.size(); j++)
 							{

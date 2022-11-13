@@ -8,12 +8,6 @@ namespace Nuclear
 {
     namespace Assets
     {
-        enum class ShaderPipelineType
-        {
-            StaticMeshesPipeline,
-            SkinnedMeshesPipeline
-        };
-
         enum class ShaderType
         {
             _3DRendering
@@ -24,19 +18,33 @@ namespace Nuclear
 
         };
 
+        struct ShaderShadowMapsInfo 
+        {
+            Assets::ShaderTexture mDirPos_SMInfo;         //Texture2DArray
+            Assets::ShaderTexture mSpot_SMInfo;         //Texture2DArray
+            Assets::ShaderTexture mOmniDir_SMInfo;        //TextureCubeArray
+        };
 
+        struct ShaderPipelineVarients
+        {
+            Rendering::ShaderPipeline StaticSP;
+            Rendering::ShaderPipeline SkinnedSP;
+        };
 
-
-        //TODO
         class NEAPI Shader : public Asset<Shader>
         {
         public:
 
+
+            ShaderPipelineVarients mPipelines;
+
+            Uint32 GetRenderingID();
+
             RefCntAutoPtr<IShader> VSShader;
             RefCntAutoPtr<IShader> PSShader;
 
-
-            std::unordered_map<ShaderPipelineType, Rendering::ShaderPipeline> mPipelines;
+            //TODO: Multiple shader pipeline varients
+            //std::unordered_map<ShaderPipelineType, Rendering::ShaderPipeline> mPipelines;
             virtual void ReflectPixelShaderData();
 
 
@@ -45,9 +53,7 @@ namespace Nuclear
             std::vector<Assets::ShaderTexture> mMaterialTexturesInfo;
             std::vector<Assets::ShaderTexture> mIBLTexturesInfo;
 
-            Assets::ShaderTexture mDirPos_ShadowmapInfo;         //Texture2DArray
-            Assets::ShaderTexture mSpot_ShadowmapInfo;         //Texture2DArray
-            Assets::ShaderTexture mOmniDir_ShadowmapInfo;        //TextureCubeArray
+            ShaderShadowMapsInfo mShadowMapsInfo;
 
 
             ShaderType mType;

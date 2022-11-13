@@ -15,7 +15,7 @@ namespace Nuclear
 		void ShaderPipeline::Create(Assets::Shader* shader, const ShaderPipelineDesc& desc)
 		{
 		}
-		IPipelineState* ShaderPipeline::GetActivePipeline()
+		IPipelineState* ShaderPipeline::GetRenderingPipeline()
 		{
 			if (mInitInfo.mDefferedPipeline)
 			{
@@ -23,13 +23,17 @@ namespace Nuclear
 			}
 			return GetShadersPipeline();
 		}
-		IShaderResourceBinding* ShaderPipeline::GetActiveSRB()
+		IShaderResourceBinding* ShaderPipeline::GetRenderingSRB()
 		{
 			if (mInitInfo.mDefferedPipeline)
 			{
 				return GetGBufferPipelineSRB();
 			}
 			return GetShadersPipelineSRB();
+		}
+		Assets::Shader* ShaderPipeline::GetShaderAsset()
+		{
+			return pShader;
 		}
 		IPipelineState* ShaderPipeline::GetShadersPipeline()
 		{

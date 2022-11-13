@@ -5,6 +5,10 @@
 #include <Engine\Components\EntityInfoComponent.h>
 #include <Engine\Assets\Scene.h>
 #include <Engine\Assets\Material.h>
+#include <Engine\Rendering\ShaderPipeline.h>
+#include <Engine\Systems\CameraSystem.h>
+#include <Core\Logger.h>
+#include <Engine.h>
 
 namespace Nuclear
 {
@@ -13,30 +17,22 @@ namespace Nuclear
 		GeometryPass::GeometryPass()
 		{
 		}
-		void GeometryPass::Initialize(RenderingPipeline* pipeline)
-		{
-			pPipeline = pipeline;
-		}
+
 		void GeometryPass::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
 		
 
-		}
-		void GeometryPass::RenderMesh(ShadingModel* shadingmodel, Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
-		{
-			
 		}
 
 		Rendering::Background& GeometryPass::GetBackground()
 		{
 			return mBackground;
 		}
+
 		void GeometryPass::Update(FrameRenderData* frame)
 		{	
-			pPipeline->BeginFrame(frame);
-
 			bool SkinnedRendering = false;
-
+			frame->mUsedPipelines.clear();
 			//Render Meshes
 			for (auto& meshentity : frame->mMeshView)
 			{
@@ -44,25 +40,35 @@ namespace Nuclear
 
 				if (mesh.mRender)
 				{
-					if (!mesh.mAnimator)
+					if (mesh.mMaterial)
 					{
-						pPipeline->StartStaticShaderModelRendering(mesh.mMaterial->GetShadingModel());
+						ShaderPipeline* meshPipeline;
+						if (mesh.mAnimator != nullptr)
+						{
+							if (mesh.mMaterial->GetShader()->mPipelines.SkinnedSP.isValid())
+							{
+								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.SkinnedSP;
+							}
+							else
+							{
+								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.StaticSP;
+							}
+						}
+						else
+						{
+							meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.StaticSP;
+						}
+
+						pRenderingPath->StartRendering(meshPipeline);
 
 						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
 						EntityInfo.mTransform.Update();
 
-						pPipeline->RenderStatic(mesh, EntityInfo.mTransform.GetWorldMatrix());
+						pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
+						frame->mUsedPipelines.push_back(meshPipeline);
 					}
-					else
-					{						
-
-						pPipeline->StartSkinnedShaderModelRendering(mesh.mMaterial->GetShadingModel());
-
-						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
-						EntityInfo.mTransform.Update();
-
-						pPipeline->RenderSkinned(mesh, EntityInfo.mTransform.GetWorldMatrix());
-
+					else {
+						NUCLEAR_ERROR("[GeometryPass] Skipped Rendering Mesh with invalid Material (nullptr)...");
 					}
 				}
 

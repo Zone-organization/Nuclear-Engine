@@ -43,12 +43,17 @@ namespace Nuclear
 		public:
 			ShaderPipeline();
 
-			virtual bool Bake(const ShaderPipelineBakingDesc& desc) = 0;
+			virtual bool Bake(const ShaderPipelineBakingDesc& desc);
 
 			void Create(Assets::Shader* shader, const ShaderPipelineDesc& desc);
 
-			IPipelineState* GetActivePipeline();
-			IShaderResourceBinding* GetActiveSRB();
+
+			//Returns the main pipeline used for rendering
+			IPipelineState* GetRenderingPipeline();
+			IShaderResourceBinding* GetRenderingSRB();
+
+			Assets::Shader* GetShaderAsset();
+			Uint32 GetShaderAssetID();
 
 			IPipelineState* GetShadersPipeline();
 			IShaderResourceBinding* GetShadersPipelineSRB();
@@ -56,8 +61,6 @@ namespace Nuclear
 			IPipelineState* GetGBufferPipeline();
 			IShaderResourceBinding* GetGBufferPipelineSRB();
 
-
-			Uint32 GetShaderAssetID();
 
 			Uint32 GetUniqueID();
 
@@ -82,6 +85,7 @@ namespace Nuclear
 
 			bool mAutoBake = true;
 
+			bool isValid();
 
 			bool isSkinned();
 

@@ -1,14 +1,13 @@
 #pragma once
 #include <Engine\ECS\System.h>
 #include <Engine\Rendering\ShadingModel.h>
-#include <Engine\Rendering\RenderingPipeline.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>
 #include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
-#include <Engine\Rendering\RenderingPipelines\ForwardRenderingPipeline.h>
+#include <Engine\Rendering\RenderingPaths\ForwardRenderingPath.h>
 #include <Engine\Rendering\ShadingModels\DiffuseOnly.h>
 
 namespace Nuclear
