@@ -20,7 +20,7 @@ namespace Nuclear
 
 		void GeometryPass::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
-		
+
 
 		}
 
@@ -30,7 +30,7 @@ namespace Nuclear
 		}
 
 		void GeometryPass::Update(FrameRenderData* frame)
-		{	
+		{
 			bool SkinnedRendering = false;
 			frame->mUsedPipelines.clear();
 			//Render Meshes
@@ -42,8 +42,20 @@ namespace Nuclear
 				{
 					if (mesh.mMaterial)
 					{
-						ShaderPipeline* meshPipeline;
-						if (mesh.mAnimator != nullptr)
+						ShaderPipeline* meshPipeline = nullptr;
+
+						if (mesh.mAnimator == nullptr)
+						{
+							if (mesh.mMaterial->GetShader()->mPipelines.StaticSP.isValid())
+							{
+								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.StaticSP;
+							}
+							else
+							{
+								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.SkinnedSP;
+							}
+						}
+						else
 						{
 							if (mesh.mMaterial->GetShader()->mPipelines.SkinnedSP.isValid())
 							{
@@ -52,11 +64,13 @@ namespace Nuclear
 							else
 							{
 								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.StaticSP;
-							}
+							}							
 						}
-						else
+
+						if (!meshPipeline->isValid())
 						{
-							meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.StaticSP;
+							NUCLEAR_ERROR("[GeometryPass] Skipped Rendering Mesh with invalid ShaderPipeline (nullptr)...");
+							continue;
 						}
 
 						pRenderingPath->StartRendering(meshPipeline);
@@ -67,19 +81,19 @@ namespace Nuclear
 						pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
 						frame->mUsedPipelines.push_back(meshPipeline);
 					}
-					else {
+					else 
+					{
 						NUCLEAR_ERROR("[GeometryPass] Skipped Rendering Mesh with invalid Material (nullptr)...");
 					}
 				}
 
 			}
-
 			//Render Skybox
 			if (GetBackground().GetSkybox() != nullptr)
 			{
 				Graphics::Context::GetContext()->SetRenderTargets(1, frame->mFinalRT.GetRTVDblPtr(), frame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				GetBackground().GetSkybox()->Render();
 			}
-		}
+		}		
 	}
 }

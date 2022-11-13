@@ -74,11 +74,6 @@ namespace Nuclear
 
 			void SetEffect(const Uint32& effectId, bool value);
 
-			virtual void StartForwardRendering();
-			virtual void StartDefferedRendering();
-
-			virtual void RenderMesh(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix);
-
 			virtual std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
 
 			std::string GetName();
