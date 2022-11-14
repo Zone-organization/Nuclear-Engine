@@ -1,9 +1,9 @@
 #pragma once
-#include <Engine\Rendering\RenderingPipeline.h>
-#include <Engine\Rendering\RenderingPipelines\ForwardRenderingPipeline.h>
-#include <Engine\Rendering\RenderingPipelines\DefferedRenderingPipeline.h>
+#include <Engine\Rendering\RenderingPath.h>
+#include <Engine\Rendering\RenderingPaths\ForwardRenderingPath.h>
+#include <Engine\Rendering\RenderingPaths\DefferedRenderingPath.h>
 #include <Engine\Rendering\BlurEffect.h>
-#include <Engine\Rendering\ShadingModel.h>
+#include <Engine\Rendering\ShaderPipeline.h>
 #include <Engine\Rendering\ShadingModels\BlinnPhong.h>
 #include <Engine\Rendering\ShadingModels\PBR.h>
 #include <Engine\Rendering\ShadingModels\DiffuseOnly.h>

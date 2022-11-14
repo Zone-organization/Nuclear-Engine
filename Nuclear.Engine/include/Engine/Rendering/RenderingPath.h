@@ -2,7 +2,6 @@
 #include <Core\NE_Common.h>
 #include <Engine/Graphics/Camera.h>
 #include <Engine/Rendering/ShaderEffect.h>
-#include <Engine/Rendering/ShadingModel.h>
 #include <Engine/Graphics/BakeStatus.h> 
 #include <Engine\Components\MeshComponent.h>
 

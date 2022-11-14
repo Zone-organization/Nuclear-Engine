@@ -175,7 +175,6 @@
     <ClInclude Include="include\Engine\Importers\Importers.h" />
     <ClInclude Include="include\Engine\Assets\Mesh.h" />
     <ClInclude Include="include\Engine\Components\MeshComponent.h" />
-    <ClInclude Include="include\Engine\Rendering\ShadingModel.h" />
     <ClInclude Include="include\Engine\Assets\AssetLibrary.h" />
     <ClInclude Include="include\Engine\Rendering\RenderPasses\ShadowPass.h" />
     <ClInclude Include="include\Engine\Serialization\ComponentsArchive.h" />
@@ -329,7 +328,6 @@
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_tables.cpp" />
     <ClCompile Include="Source\Engine\Graphics\CompoundPipeline.cpp" />
     <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp" />
-    <ClCompile Include="Source\Engine\Rendering\ShadingModel.cpp" />
     <ClCompile Include="Source\Engine\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_draw.cpp" />

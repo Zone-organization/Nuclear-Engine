@@ -1,6 +1,6 @@
 #include "Engine\Rendering\RenderPasses\DefferedPass.h"
 #include <Engine\Rendering\FrameRenderData.h>
-#include <Engine\Rendering\ShaderPipeline.h>
+#include <Engine\Assets\Shader.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Systems\DebugSystem.h>
 #include <Engine\Assets\Scene.h>

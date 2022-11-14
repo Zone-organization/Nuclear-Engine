@@ -4,16 +4,20 @@
 #include <Engine\Components\SpotLightComponent.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Engine\Rendering\ShadingModel.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <Engine\Rendering\RenderPass.h>
 #include <vector>
 #include <Engine\ECS\System.h>
 
 namespace Nuclear
 {
+	namespace Assets {
+		class Mesh;
+	}
 	namespace Rendering
 	{
-
 		class CameraSystem;
 		struct ShadowMapInfo
 		{

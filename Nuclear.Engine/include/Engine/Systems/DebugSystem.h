@@ -1,6 +1,5 @@
 #pragma once
 #include <Engine\ECS\System.h>
-#include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Components\MeshComponent.h>
 #include <Engine/Assets/Mesh.h>
 #include <Engine/Assets/Material.h>

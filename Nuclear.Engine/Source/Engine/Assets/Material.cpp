@@ -1,5 +1,5 @@
 #include <Engine\Assets\Material.h>
-#include <Engine\Rendering\ShaderPipeline.h>
+#include <Engine\Assets\Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
@@ -25,7 +25,7 @@ namespace Nuclear
 			}
 			pData = data;
 			pShader = shader;
-			mCreationShaderCommonID = pShader->GetRenderingID();
+			mCreationShaderCommonID = pShader->GetID();
 			InitializePipelineTextures();
 		}
 		void Material::BindTexSet(Rendering::ShaderPipeline* pipeline, Uint32 index)

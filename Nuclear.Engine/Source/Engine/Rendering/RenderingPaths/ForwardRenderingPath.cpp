@@ -5,6 +5,7 @@
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Engine\Assets\Scene.h>
+#include <Engine\Assets\Shader.h>
 #include <Core/Logger.h>
 #include <Engine\Rendering\ShaderPipeline.h>
 

@@ -15,9 +15,7 @@ namespace Nuclear
 			mPostProcessingEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::PostProcessingEffect, true);
 			mPostProcessingEffects[Utilities::Hash("BLOOM")] = Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
 		}
-		void PostProcessingPass::Initialize(RenderingPipeline* pipeline)
-		{
-		}
+
 		void PostProcessingPass::Update(FrameRenderData* framedata)
 		{
 			//mBloomEnabled = true;

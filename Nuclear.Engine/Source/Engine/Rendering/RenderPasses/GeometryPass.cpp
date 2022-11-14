@@ -4,6 +4,7 @@
 #include <Engine\Rendering\FrameRenderData.h>
 #include <Engine\Components\EntityInfoComponent.h>
 #include <Engine\Assets\Scene.h>
+#include <Engine\Assets\Shader.h>
 #include <Engine\Assets\Material.h>
 #include <Engine\Rendering\ShaderPipeline.h>
 #include <Engine\Systems\CameraSystem.h>

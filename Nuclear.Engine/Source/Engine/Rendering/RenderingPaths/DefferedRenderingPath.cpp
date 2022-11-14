@@ -2,7 +2,7 @@
 #include <Engine\Graphics\Context.h>
 #include <Engine\Systems\RenderSystem.h>
 #include <Engine\Components/MeshComponent.h>
-#include <Engine\Rendering\ShaderPipeline.h>
+#include <Engine\Assets\Shader.h>
 #include "Engine/Animation/Animator.h"
 #include <Core/Logger.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>

@@ -1,8 +1,7 @@
 #pragma once
-#include <Core\NE_Common.h>
 #include <Engine/Assets/Common.h>
 #include <Engine/Assets/MaterialTypes.h>
-#include <Engine\Graphics\RenderTarget.h>
+#include <Engine\Rendering\ShaderPipeline.h>
 
 namespace Nuclear
 {
@@ -35,10 +34,9 @@ namespace Nuclear
         {
         public:
 
+            void Build(const ShaderDesc& desc);
 
             ShaderPipelineVarients mPipelines;
-
-            Uint32 GetRenderingID();
 
             RefCntAutoPtr<IShader> VSShader;
             RefCntAutoPtr<IShader> PSShader;
@@ -55,8 +53,10 @@ namespace Nuclear
 
             ShaderShadowMapsInfo mShadowMapsInfo;
 
-
             ShaderType mType;
+
+        protected:
+            Rendering::ShaderPipeline* pMainPipeline;
         };
     }
 }

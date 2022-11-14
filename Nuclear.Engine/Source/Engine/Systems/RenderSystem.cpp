@@ -130,19 +130,6 @@ namespace Nuclear
 					return lhs.mMaterial->GetShadingModel()->GetRenderQueue() < rhs.mMaterial->GetShadingModel()->GetRenderQueue();
 				});
 
-			//sort accroding to skinned or not
-			 
-			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
-			{
-					if (lhs.mMaterial->GetShadingModel()->GetRenderQueue() != rhs.mMaterial->GetShadingModel()->GetRenderQueue())
-					{
-						//do nothing
-						return false;
-					}
-
-			return (lhs.mAnimator) < (rhs.mAnimator);
-			});
-
 			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();
 
 			//////////////////////////////////////////////////////////////////////////////////////////////

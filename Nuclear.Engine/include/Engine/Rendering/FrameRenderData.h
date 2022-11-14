@@ -18,6 +18,7 @@ namespace Nuclear
     namespace Assets {
         class Mesh;
         class Material;
+        class Scene;
     }
     namespace Graphics {
         class Camera;

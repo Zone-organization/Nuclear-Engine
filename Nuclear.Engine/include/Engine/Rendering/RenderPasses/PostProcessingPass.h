@@ -1,12 +1,11 @@
 #pragma once
-
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
-#include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Rendering\RenderPass.h>
 #include <vector>
 #include <Engine\ECS\System.h>
-#include <Engine/Rendering/RenderingPipeline.h>
+#include <Engine/Rendering/BlurEffect.h>
+#include <Engine/Graphics/CompoundPipeline.h>
 
 namespace Nuclear
 {
@@ -41,8 +40,6 @@ namespace Nuclear
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
 			virtual void UpdatePSO(bool ForceDirty = false);
-
-			void Initialize(RenderingPipeline* pipeline);
 
 			void Update(FrameRenderData* framedata) override;
 
