@@ -12,9 +12,14 @@ namespace Nuclear
             _3DRendering
         };
 
-        struct ShaderDesc 
+        struct ShaderBuildDesc 
         {
+            GraphicsPipelineStateCreateInfo mMainPSOCreateInfo;
+            GraphicsPipelineStateCreateInfo mGBufferPSOCreateInfo;
 
+            bool mSupportDefferedRendering = false;
+            bool mSupportSkinnedMeshes = false;
+            bool mSupportShadows = false;
         };
 
         struct ShaderShadowMapsInfo 
@@ -34,7 +39,7 @@ namespace Nuclear
         {
         public:
 
-            void Build(const ShaderDesc& desc);
+            void Build(const ShaderBuildDesc& desc);
 
             ShaderPipelineVarients mPipelines;
 

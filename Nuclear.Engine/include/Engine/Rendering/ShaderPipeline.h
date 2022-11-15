@@ -33,6 +33,10 @@ namespace Nuclear
 
 		struct ShaderPipelineDesc
 		{
+			GraphicsPipelineStateCreateInfo mMainPSOCreateInfo;
+			GraphicsPipelineStateCreateInfo mGBufferPSOCreateInfo;
+
+
 			bool _isDeffered = false;
 			bool _isSkinned = false;
 
