@@ -32,7 +32,8 @@ namespace Nuclear
 		};
 
 		struct ShaderPipelineDesc
-		{
+		{    /// Graphics pipeline state description.
+
 			GraphicsPipelineStateCreateInfo mMainPSOCreateInfo;
 			GraphicsPipelineStateCreateInfo mGBufferPSOCreateInfo;
 

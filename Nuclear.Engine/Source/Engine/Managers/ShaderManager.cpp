@@ -131,19 +131,59 @@ namespace Nuclear
 				return defaultvalue;
 		}
 
-		Rendering::ShaderPipelineDesc ParsePipeline(toml::table& tbl)
+		Rendering::ShaderPipelineDesc ParsePipeline(toml::table* tbl)
 		{
 			Rendering::ShaderPipelineDesc desc;
-			desc.mMainPSOCreateInfo.GraphicsPipeline.NumRenderTargets = tbl["NumRenderTargets"].as_integer()->value_or(1);
-			for (Uint8 i = 0; i < desc.mMainPSOCreateInfo.GraphicsPipeline.NumRenderTargets; i++)
+			desc.mMainPSOCreateInfo.GraphicsPipeline.NumRenderTargets = tbl->get("NumRenderTargets")->as_integer()->value_or(1);
+
+			if (toml::array* arr = tbl->get("RTVFormats")->as_array())
 			{
-				//desc.mMainPSOCreateInfo.GraphicsPipeline.RTVFormats[i] = ParseTexFormat(tbl[]);
+				desc.mMainPSOCreateInfo.GraphicsPipeline.NumRenderTargets = arr->size();
+
+				for (Uint32 i = 0; i< arr->size(); i++)
+				{
+					desc.mMainPSOCreateInfo.GraphicsPipeline.RTVFormats[i] = ParseTexFormat(arr[i].as_string()->value_or("TEX_FORMAT_RGBA8_UNORM_SRGB"sv));
+				}
 			}
 
-			desc.mMainPSOCreateInfo.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl["DSVFormat"].value_or("TEX_FORMAT_D32_FLOAT"sv));
+			desc.mMainPSOCreateInfo.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT"sv));
 
 
 			return desc;	
+		}
+
+		IShader* ParseShader(toml::table* tbl, SHADER_TYPE type)
+		{
+			ShaderCreateInfo CreationAttribs;
+
+			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
+			CreationAttribs.EntryPoint = "main";
+			CreationAttribs.Desc.Name = "BlinnPhongVS";
+
+
+			std::vector<std::string> defines;
+			defines.push_back("NE_ENABLE_ANIMATION");
+
+			if (mInitInfo.mDefferedPipeline)
+			{
+				defines.push_back("NE_DEFFERED");
+			}
+			if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
+			{
+				defines.push_back("NE_SHADOWS");
+				auto shadowpassdesc = desc.pShadowPass->GetBakingDesc();
+				AddToDefinesIfNotZero(defines, "NE_MAX_DIR_CASTERS ", shadowpassdesc.MAX_DIR_CASTERS);
+				AddToDefinesIfNotZero(defines, "NE_MAX_SPOT_CASTERS ", shadowpassdesc.MAX_SPOT_CASTERS);
+				AddToDefinesIfNotZero(defines, "NE_MAX_OMNIDIR_CASTERS ", shadowpassdesc.MAX_OMNIDIR_CASTERS);
+			}
+			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
+			CreationAttribs.Source = source.c_str();
+			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+			Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+			CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 		}
 
 		Assets::ShaderBuildDesc ShaderManager::ParseShaderAsset(const std::string& source)
@@ -161,7 +201,11 @@ namespace Nuclear
 				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].as_boolean()->value_or(false);
 				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].as_boolean()->value_or(false);
 
-
+				std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
+				if (str1.has_value())
+				{
+					ParsePipeline(tbl.get(str1.value())->as_table());
+				}
 			}
 			catch (const toml::parse_error& err)
 			{
