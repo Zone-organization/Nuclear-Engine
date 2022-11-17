@@ -17,6 +17,12 @@ namespace Nuclear
 		{
 		}
 
+		void ShaderManager::Initialize()
+		{
+			Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+		}
+
+
 #define TEXFMTMAP(name)	else if (!str.compare(#name)) { return name; }
 
 
@@ -131,60 +137,74 @@ namespace Nuclear
 				return defaultvalue;
 		}
 
-		Rendering::ShaderPipelineDesc ParsePipeline(toml::table* tbl)
+
+		ShaderCreationDesc ParsePSOShader(toml::table* tbl,std::string_view& name, SHADER_TYPE type)
 		{
-			Rendering::ShaderPipelineDesc desc;
-			desc.mMainPSOCreateInfo.GraphicsPipeline.NumRenderTargets = tbl->get("NumRenderTargets")->as_integer()->value_or(1);
+			ShaderCreationDesc result;
+			result.mType = type;
+			result.mName = name.data();
+			result.mEntrypoint = tbl->get("EntryPoint")->value_or("main"sv);
 
-			if (toml::array* arr = tbl->get("RTVFormats")->as_array())
+			if (toml::array* arr = tbl->get("Defines")->as_array())
 			{
-				desc.mMainPSOCreateInfo.GraphicsPipeline.NumRenderTargets = arr->size();
-
-				for (Uint32 i = 0; i< arr->size(); i++)
+				for (Uint32 i = 0; i < arr->size(); i++)
 				{
-					desc.mMainPSOCreateInfo.GraphicsPipeline.RTVFormats[i] = ParseTexFormat(arr[i].as_string()->value_or("TEX_FORMAT_RGBA8_UNORM_SRGB"sv));
+					if (arr[i].as_string())
+					{
+						result.mDefines.push_back(arr[i].as_string()->value_or(""));
+					}
 				}
 			}
 
-			desc.mMainPSOCreateInfo.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT"sv));
+			std::optional<std::string_view> source = tbl->get("Source")->value<std::string_view>();
+			if (source.has_value())
+			{
+				result.mSource = source.value();
+			}
+			else {
+				std::optional<std::string_view> path = tbl->get("Path")->value<std::string_view>();
+				if (path.has_value())
+				{
+					result.mPath = std::string(path.value());			
+				}
+				else {
+					NUCLEAR_ERROR("[ShaderManager] Shader: ", name , " has no Source or Path!");
+				}
+			}
+			
+			return result;
+		}
+
+		Rendering::ShaderPSODesc ParsePSO(toml::table* tbl, toml::table& parent, ShaderManager* mgr)
+		{
+			Rendering::ShaderPSODesc desc;
+
+			if (toml::array* arr = tbl->get("RTVFormats")->as_array())
+			{
+				desc.GraphicsPipeline.NumRenderTargets = arr->size();
+
+				for (Uint32 i = 0; i< arr->size(); i++)
+				{
+					desc.GraphicsPipeline.RTVFormats[i] = ParseTexFormat(arr[i].as_string()->value_or("TEX_FORMAT_RGBA8_UNORM_SRGB"sv));
+				}
+			}
+
+			desc.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT"sv));
 
 
+			std::optional<std::string_view> str1 = tbl->get("VertexShader")->value<std::string_view>();
+			std::optional<std::string_view> str2 = tbl->get("PixelShader")->value<std::string_view>();
+
+			if (str1.has_value())
+				mgr->CreateShader(desc.pVS.RawDblPtr(), ParsePSOShader(parent.get(str1.value())->as_table(), str1.value(), SHADER_TYPE_VERTEX));
+			
+
+			if (str2.has_value())
+				mgr->CreateShader(desc.pPS.RawDblPtr(), ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL));
+			
 			return desc;	
 		}
 
-		IShader* ParseShader(toml::table* tbl, SHADER_TYPE type)
-		{
-			ShaderCreateInfo CreationAttribs;
-
-			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.UseCombinedTextureSamplers = true;
-			CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-			CreationAttribs.EntryPoint = "main";
-			CreationAttribs.Desc.Name = "BlinnPhongVS";
-
-
-			std::vector<std::string> defines;
-			defines.push_back("NE_ENABLE_ANIMATION");
-
-			if (mInitInfo.mDefferedPipeline)
-			{
-				defines.push_back("NE_DEFFERED");
-			}
-			if (mInitInfo.ShadowingEnabled == true && desc.pShadowPass)
-			{
-				defines.push_back("NE_SHADOWS");
-				auto shadowpassdesc = desc.pShadowPass->GetBakingDesc();
-				AddToDefinesIfNotZero(defines, "NE_MAX_DIR_CASTERS ", shadowpassdesc.MAX_DIR_CASTERS);
-				AddToDefinesIfNotZero(defines, "NE_MAX_SPOT_CASTERS ", shadowpassdesc.MAX_SPOT_CASTERS);
-				AddToDefinesIfNotZero(defines, "NE_MAX_OMNIDIR_CASTERS ", shadowpassdesc.MAX_OMNIDIR_CASTERS);
-			}
-			auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Basic.vs.hlsl", defines, std::vector<std::string>(), true);
-			CreationAttribs.Source = source.c_str();
-			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-			Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
-			CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
-		}
 
 		Assets::ShaderBuildDesc ShaderManager::ParseShaderAsset(const std::string& source)
 		{
@@ -197,15 +217,38 @@ namespace Nuclear
 
 				std::string_view ShaderName = tbl["Shader"]["Name"].value_or("UnNamed"sv);
 
-				desc.mSupportDefferedRendering = tbl["Shader"]["SupportDefferedRendering"].as_boolean()->value_or(false);
 				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].as_boolean()->value_or(false);
 				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].as_boolean()->value_or(false);
 
-				std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
-				if (str1.has_value())
+
+				desc.isDeffered = tbl["Shader"]["isDeffered"].as_boolean()->value_or(false);
+
+				if (desc.isDeffered)
 				{
-					ParsePipeline(tbl.get(str1.value())->as_table());
+					desc.isDeffered = true;
+
+					std::optional<std::string_view> str1 = tbl["Shader"]["DefferedPipeline"].value<std::string_view>();
+					std::optional<std::string_view> str2 = tbl["Shader"]["GBufferPipeline"].value<std::string_view>();
+
+					if (str2.has_value())
+					{
+						desc.mPipelineDesc.mMainPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl, this);
+					}
+
+					if (str2.has_value())
+					{
+						desc.mPipelineDesc.mGBufferPSOCreateInfo =  ParsePSO(tbl.get(str2.value())->as_table(), tbl, this);
+					}
 				}
+				else 
+				{
+					desc.isDeffered = false;
+					std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
+					if (str1.has_value())
+					{
+						desc.mPipelineDesc.mMainPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl, this);
+					}
+				}				
 			}
 			catch (const toml::parse_error& err)
 			{
@@ -215,6 +258,139 @@ namespace Nuclear
 
 			return desc;
 		}
+
+		ShadersReflection ShaderManager::ReflectShaderAsset(Assets::ShaderBuildDesc& desc)
+		{
+			ShadersReflection result;
+			std::vector<ShaderResourceVariableDesc> resources;
+			if (VShader)
+			{
+				for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
+				{
+					ShaderResourceDesc RsrcDesc;
+					VShader->GetResourceDesc(i, RsrcDesc);
+					if (!CheckSampler(RsrcDesc.Name))
+					{
+						ShaderResourceVariableDesc Desc;
+						Desc.Name = RsrcDesc.Name;
+						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
+						Desc.ShaderStages = VShader->GetDesc().ShaderType;
+						resources.push_back(Desc);
+					}
+				}
+			}
+			else {
+				NUCLEAR_WARN("[ShaderManager] ReflectShaderVariables() skipped null Vertex Shader...");
+			}
+			if (PShader)
+			{
+				for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
+				{
+					ShaderResourceDesc RsrcDesc;
+					PShader->GetResourceDesc(i, RsrcDesc);
+					if (!CheckSampler(RsrcDesc.Name))
+					{
+						std::string name(RsrcDesc.Name);
+						ShaderResourceVariableDesc Desc;
+						Desc.Name = RsrcDesc.Name;
+						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
+						Desc.ShaderStages = PShader->GetDesc().ShaderType;
+						resources.push_back(Desc);
+					}
+				}
+			}
+			else {
+				NUCLEAR_WARN("[ShaderManager] ReflectShaderVariables() skipped null Pixel Shader...");
+			}
+			return resources;
+			return ShadersReflection();
+		}
+
+
+		bool ShaderManager::BuildShaderAsset(Assets::Shader* shader, Assets::ShaderBuildDesc& desc)
+		{
+			if (!desc.isDeffered)
+			{
+
+			}
+			else
+			{
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+				//PSOCreateInfo.PSODesc.Name = shader;
+				PSOCreateInfo.GraphicsPipeline = desc.mPipelineDesc.mMainPSOCreateInfo.GraphicsPipeline;
+
+				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = !COORDSYSTEM_LH_ENABLED;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+
+				PSOCreateInfo.pVS = desc.mPipelineDesc.mMainPSOCreateInfo.pVS;
+				PSOCreateInfo.pPS = desc.mPipelineDesc.mMainPSOCreateInfo.pPS;
+
+				//PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+				//PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+
+				auto reflection = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderAsset(desc);
+
+
+				//Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(shader->mPipelines.StaticSP, PSOCreateInfo, Vars, true);
+
+			}
+
+
+
+			return true;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		void ShaderManager::CreateShader(IShader** result, const ShaderCreationDesc& desc)
+		{
+			ShaderCreateInfo CreationAttribs;
+
+			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.ShaderType = desc.mType;
+			CreationAttribs.EntryPoint = desc.mEntrypoint.c_str();
+			CreationAttribs.Desc.Name = desc.mName.c_str();
+			CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+
+			std::string Source = desc.mSource;
+			if (Source.empty())
+			{
+				Source = Core::FileSystem::LoadShader(desc.mPath.mRealPath, desc.mDefines, std::vector<std::string>(), true);
+			}
+			else
+			{
+				//add defines
+				if (desc.mDefines.size() > 0)
+				{
+					std::vector<std::string> MergedCode;
+
+					std::string firstLine = Source.substr(0, Source.find("\n"));
+					
+					for (unsigned int i = 0; i < desc.mDefines.size(); ++i)
+					{
+						std::string define = "#define " + desc.mDefines[i] + "\n";
+						MergedCode.push_back(define);
+					}
+
+					MergedCode.push_back(Source);
+					std::string str;
+					for (unsigned int i = 0; i < MergedCode.size(); ++i)
+						str = str + MergedCode[i].c_str();
+
+					Source = str;
+				}
+				
+			}
+
+			CreationAttribs.Source = Source.c_str();
+
+			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, result);
+		}
+
+
 		void ShaderManager::CreateShader(const std::string& source, IShader** result, SHADER_TYPE type)
 		{
 			ShaderCreateInfo CreationAttribs;

@@ -1,21 +1,21 @@
-#pragma once
-#include <Engine\Rendering\ShadingModel.h>
-#include <vector>
-
-namespace Nuclear
-{
-	namespace Rendering
-	{
-		class NEAPI BlinnPhong : public ShadingModel
-		{
-		public:
-			BlinnPhong();
-			bool Bake(const ShadingModelBakingDesc& desc) override;
-			std::vector<Graphics::RenderTargetDesc> GetGBufferDesc() override;
-
-		private:
-			void BakeGBufferPipeline(const ShadingModelBakingDesc& desc);
-		};
-
-	}
-}
+//#pragma once
+//#include <Engine\Rendering\ShadingModel.h>
+//#include <vector>
+//
+//namespace Nuclear
+//{
+//	namespace Rendering
+//	{
+//		class NEAPI BlinnPhong : public ShadingModel
+//		{
+//		public:
+//			BlinnPhong();
+//			bool Bake(const ShadingModelBakingDesc& desc) override;
+//			std::vector<Graphics::RenderTargetDesc> GetGBufferDesc() override;
+//
+//		private:
+//			void BakeGBufferPipeline(const ShadingModelBakingDesc& desc);
+//		};
+//
+//	}
+//}

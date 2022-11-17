@@ -31,14 +31,31 @@ namespace Nuclear
 			std::vector<ShaderEffect> mRequiredEffects;
 		};
 
+		enum class ShaderPipelineType {
+			ForwardPipeline,
+			DefferedPipeline,
+			GBufferPipeline,
+			Unknown
+		};
+		struct ShaderPSODesc 
+		{
+			ShaderPipelineType mType;
+
+			GraphicsPipelineDesc GraphicsPipeline;
+
+			RefCntAutoPtr<IShader> pVS;
+
+			RefCntAutoPtr<IShader> pPS;
+
+		};		
+
 		struct ShaderPipelineDesc
-		{    /// Graphics pipeline state description.
-
-			GraphicsPipelineStateCreateInfo mMainPSOCreateInfo;
-			GraphicsPipelineStateCreateInfo mGBufferPSOCreateInfo;
-
+		{    
+			ShaderPSODesc mMainPSOCreateInfo; 
+			ShaderPSODesc mGBufferPSOCreateInfo;
 
 			bool _isDeffered = false;
+
 			bool _isSkinned = false;
 
 			bool _SupportShadows = false;

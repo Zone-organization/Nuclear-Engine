@@ -129,12 +129,10 @@ namespace Nuclear
 		{
 			std::string mShaderName = "UnNamed";
 
-			std::string mVertexShaderEntryPoint = "VertexShader";
-
-			std::string mPixelShaderEntryPoint = "PixelShader";
+			//bool LoadForwardPipeline;
+			//bool LoadDefferedPipeline;
 
 			std::vector<std::string> mDefines;
-			std::vector<std::string> mIncludes;
 		};
 
 		struct MeshImporterDesc

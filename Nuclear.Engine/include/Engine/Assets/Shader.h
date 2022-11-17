@@ -14,10 +14,9 @@ namespace Nuclear
 
         struct ShaderBuildDesc 
         {
-            GraphicsPipelineStateCreateInfo mMainPSOCreateInfo;
-            GraphicsPipelineStateCreateInfo mGBufferPSOCreateInfo;
+            Rendering::ShaderPipelineDesc mPipelineDesc;
 
-            bool mSupportDefferedRendering = false;
+            bool isDeffered = false;
             bool mSupportSkinnedMeshes = false;
             bool mSupportShadows = false;
         };
@@ -35,20 +34,16 @@ namespace Nuclear
             Rendering::ShaderPipeline SkinnedSP;
         };
 
+
+        //TODO: Multiple shader pipeline varients
         class NEAPI Shader : public Asset<Shader>
         {
         public:
-
-            void Build(const ShaderBuildDesc& desc);
-
             ShaderPipelineVarients mPipelines;
 
-            RefCntAutoPtr<IShader> VSShader;
-            RefCntAutoPtr<IShader> PSShader;
 
-            //TODO: Multiple shader pipeline varients
             //std::unordered_map<ShaderPipelineType, Rendering::ShaderPipeline> mPipelines;
-            virtual void ReflectPixelShaderData();
+          //  virtual void ReflectPixelShaderData();
 
 
             //This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
@@ -59,9 +54,6 @@ namespace Nuclear
             ShaderShadowMapsInfo mShadowMapsInfo;
 
             ShaderType mType;
-
-        protected:
-            Rendering::ShaderPipeline* pMainPipeline;
         };
     }
 }

@@ -4,7 +4,6 @@
 #include <Engine\Components/EntityInfoComponent.h>
 #include <Engine\Components\CameraComponent.h>
 #include <Engine\Components\MeshComponent.h>
-#include <Engine\Rendering\ShadingModel.h>
 #include <Engine\Graphics\GraphicsEngine.h>
 #include <Engine\Managers\AssetManager.h>
 #include <Engine\Assets\Scene.h>

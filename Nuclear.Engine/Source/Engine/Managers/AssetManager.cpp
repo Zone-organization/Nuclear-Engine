@@ -389,24 +389,11 @@ namespace Nuclear {
 
 			result = &mLibrary.mImportedShaders.mData[hashedname];
 
-			auto source = Core::FileSystem::LoadShader(Path.mRealPath, desc.mDefines, desc.mIncludes, true);
+			auto source = Core::FileSystem::LoadFileToString(Path.mRealPath);
 
-			if (!desc.mVertexShaderEntryPoint.empty())
-			{
-				ShaderCreateInfo CreationAttribs;
 
-				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-				CreationAttribs.EntryPoint = desc.mVertexShaderEntryPoint.c_str();
-				CreationAttribs.Desc.Name = (desc.mShaderName + std::string("VS")).c_str();
 
-				CreationAttribs.Source = source.c_str();
-				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceISFactory;
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, result->VSShader.RawDblPtr());
-			}
-			
-
+			auto shaderbuilddesc = Graphics::GraphicsEngine::GetShaderManager()->ParseShaderAsset(source);
 
 
 			return result;

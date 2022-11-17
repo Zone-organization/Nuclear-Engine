@@ -60,10 +60,6 @@ namespace Nuclear
 			}
 		}
 
-		void Shader::Build(const ShaderDesc& desc)
-		{
-		}
-
 		void Shader::ReflectPixelShaderData()
         {
 			//pMainPipeline->

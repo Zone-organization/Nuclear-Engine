@@ -127,15 +127,20 @@ class Sample1 : public Client
 
 	Assets::Shader* DiffuseOnlyShader;
 
+	Assets::Shader* BlinnPhong;
+
+
 	Graphics::Camera Camera;
 
 	Rendering::Skybox Skybox;
 
-	Rendering::DiffuseOnly DiffuseRP;
-	//Rendering::WireFrame WireFrameRP;
-	Rendering::BlinnPhong BlinnPhongRP;
 
-	Rendering::ForwardRenderingPipeline ForwardRP;
+
+	//Rendering::DiffuseOnly DiffuseRP;
+	////Rendering::WireFrame WireFrameRP;
+	//Rendering::BlinnPhong BlinnPhongRP;
+
+	//Rendering::ForwardRenderingPipeline ForwardRP;
 
 	Rendering::GeometryPass GeoPass;
 

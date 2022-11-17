@@ -1,34 +1,30 @@
 #Blinn Phong Nuclear Shader
 [Shader]
 Name = BlinnPhong
-SupportDefferedRendering = true
 SupportSkinnedMeshes = true
 SupportShadows = true
+isDeffered = false
 ForwardPipeline = "MainPSO"
 DefferedPipeline = "DefferedPSO"
 GBufferPipeline = "GBufferPSO"
-GBufferDesc = "GBuffer"
 
 [MainPSO]
 RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]
-DSVFormat = [ "TEX_FORMAT_D32_FLOAT" ]
-VertexShader = VShader
-PixelShader = PShader
+DSVFormat = "TEX_FORMAT_D32_FLOAT"
+VertexShader = "VShader"
+PixelShader = "PShader"
 
 [GBufferPSO]
-PixelShader = PShader
+PixelShader = "PShader"
 RTVFormats = [ "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA8_UNORM" ]
-DSVFormat = [ "TEX_FORMAT_D32_FLOAT" ]
+DSVFormat = "TEX_FORMAT_D32_FLOAT"
 
-
-[GBuffer]
-
-
-
-
+			
 [VShader]
+EntryPoint = 
 Path = "Basic.vs.hlsl"
- 
+Defines = 
+
 [PShader]
 Source = """ 
 //Definitions:

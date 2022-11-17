@@ -11,6 +11,23 @@ namespace Nuclear
 {
 	namespace Managers
 	{
+		struct ShaderCreationDesc
+		{
+			std::string mName;
+			SHADER_TYPE mType;
+			std::string mEntrypoint;
+
+			std::string mSource;
+			Core::Path mPath;
+
+			std::vector<std::string> mDefines;
+		};
+
+		struct ShadersReflection
+		{
+			std::vector<ShaderResourceVariableDesc> mTextures;
+		};
+
 		//This is very useful class/factory, it automates the shader creation easily, control all their Input & output, may even store them in the future.
 		class NEAPI ShaderManager
 		{
@@ -18,10 +35,21 @@ namespace Nuclear
 			ShaderManager();
 			~ShaderManager();
 
+			void Initialize();
+
+			bool BuildShaderAsset(Assets::Shader* shader, Assets::ShaderBuildDesc& desc);
+
 			Assets::ShaderBuildDesc ParseShaderAsset(const std::string& source);
 
-			void CreateShader(const std::string& source, IShader** shader, SHADER_TYPE type);
+			ShadersReflection ReflectShaderAsset(Assets::ShaderBuildDesc& desc);
 
+
+			bool CreateShaderAssetPipeline();
+
+			void CreateShader(IShader** result, const ShaderCreationDesc& desc);
+
+
+			//////////////////////////////////////////////////////////////////////////////////////////////
 			std::vector<LayoutElement> GetBasicVSLayout(bool isDeffered);
 
 			bool ProcessAndCreatePipeline(
@@ -33,10 +61,13 @@ namespace Nuclear
 
 			std::vector<ShaderResourceVariableDesc> ReflectShaderVariables(IShader* VShader, IShader* PShader);
 
+
+			void CreateShader(const std::string& source, IShader** shader, SHADER_TYPE type);
+
 			SHADER_RESOURCE_VARIABLE_TYPE ParseNameToGetType(const std::string& name);
 
 		protected:
-
+			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 		};
 	}
 }
