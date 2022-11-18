@@ -1,4 +1,6 @@
 #include "Engine\Components\MeshComponent.h"
+#include "Engine\Assets\Material.h"
+#include "Engine\Assets\Shader.h"
 
 namespace Nuclear 
 {
@@ -21,6 +23,27 @@ namespace Nuclear
 			mMesh = nullptr;
 			mMaterial = nullptr;
 			mAnimator = nullptr;
+		}
+		void MeshComponent::UpdateRenderQueue(bool forcedirty)
+		{
+		}
+		Uint32 MeshComponent::GetRenderQueue()
+		{
+			if (mMaterial)
+			{
+				if(mAnimator)
+					mMaterial->GetShader()->mPipeline.GetVariant()
+				else
+
+
+				//if()
+				//mMaterial->
+			}
+			return Uint32();
+		}
+		Graphics::ShaderPipelineVariant* MeshComponent::GetRenderingVariant()
+		{
+			return mVariant;
 		}
 	}
 }

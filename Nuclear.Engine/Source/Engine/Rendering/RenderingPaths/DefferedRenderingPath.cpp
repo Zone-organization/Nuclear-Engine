@@ -16,7 +16,7 @@ namespace Nuclear
 	namespace Rendering
 	{ 
 
-        void DefferedRenderingPath::StartRendering(ShaderPipeline* pipeline)
+        void DefferedRenderingPath::StartRendering(Graphics::ShaderPipelineVariant* pipeline)
         {
             pActivePipeline = pipeline;
 

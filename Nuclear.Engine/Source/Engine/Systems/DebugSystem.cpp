@@ -23,12 +23,13 @@ namespace Nuclear
 		}
 		void DebugSystem::Initialize(Graphics::Camera* camera, IBuffer* _AnimationBufferPtr)
 		{
-			Rendering::ShadingModelBakingDesc info;
+	////////////////////////////////////////////	
+	/*		Rendering::ShadingModelBakingDesc info;
 			info.CameraBufferPtr = mScene->GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB();
 			info.AnimationBufferPtr = _AnimationBufferPtr;
 
 			DebugRP.Bake(info);
-			mPipelineSRB = DebugRP.GetActiveSRB();
+			mPipelineSRB = DebugRP.GetActiveSRB();*/
 		}
 		void DebugSystem::Update(ECS::TimeDelta dt)
 		{
@@ -42,7 +43,7 @@ namespace Nuclear
 			//Render Light Sources
 			if (RenderLightSources)
 			{
-				Graphics::Context::GetContext()->SetPipelineState(DebugRP.GetActivePipeline());
+			///////////////////////////////////////////////////////////	Graphics::Context::GetContext()->SetPipelineState(DebugRP.GetActivePipeline());
 				auto RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
 				Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, mScene->GetSystemManager().GetSystem<RenderSystem>()->mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
@@ -158,10 +159,10 @@ namespace Nuclear
 
 			Uint64 offset = 0;
 
-			auto i = mPipelineSRB->GetVariableCount(SHADER_TYPE_PIXEL);
+		/////////////////////////////	auto i = mPipelineSRB->GetVariableCount(SHADER_TYPE_PIXEL);
 
-			mPipelineSRB->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(diffusetex->mTextureView.RawPtr());
-			Graphics::Context::GetContext()->CommitShaderResources(mPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		//////////////////////	mPipelineSRB->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(diffusetex->mTextureView.RawPtr());
+		///////////////////	Graphics::Context::GetContext()->CommitShaderResources(mPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
 			{

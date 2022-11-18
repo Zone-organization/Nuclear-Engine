@@ -7,7 +7,7 @@
 #include <Engine/Graphics/ImGui.h>
 #include <Engine\Assets\Material.h>
 #include "Engine/Animation/Animator.h"
-#include <Engine\Rendering\ShaderPipeline.h>
+#include <Engine\Graphics\ShaderPipelineVariant.h>
 
 namespace Nuclear
 {

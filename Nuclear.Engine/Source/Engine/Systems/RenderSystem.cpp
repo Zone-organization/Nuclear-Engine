@@ -51,7 +51,7 @@ namespace Nuclear
 			BakeScenePipeline(RTWidth, RTHeight);
 			BakeLights();
 
-			Rendering::ShadingModelBakingDesc bakedesc;
+			Graphics::ShaderRenderingBakingDesc bakedesc;
 			bakedesc.DirLights = static_cast<Uint32>(GetDirLightsNum());
 			bakedesc.SpotLights = static_cast<Uint32>(GetSpotLightsNum());
 			bakedesc.PointLights = static_cast<Uint32>(GetPointLightsNum());
@@ -61,14 +61,11 @@ namespace Nuclear
 			bakedesc.AnimationBufferPtr = mAnimationCB;
 
 
-			for (auto i : mRegisteredShadingModels)
+			for (auto i : mRegisteredShaders)
 			{
 				if (i)
 				{
-					if (i->mAutoBake)
-					{
-						i->Bake(bakedesc);
-					}
+					i->mPipeline.Bake(&bakedesc);
 				}
 			}
 
@@ -101,9 +98,9 @@ namespace Nuclear
 			return mCameraSystemPtr.get();
 		}
 
-		void RenderSystem::RegisterShadingModel(Rendering::ShadingModel* shadingmodel)
+		void RenderSystem::RegisterShader(Assets::Shader* shader)
 		{
-			mRegisteredShadingModels.push_back(shadingmodel);
+			mRegisteredShaders.push_back(shader);
 		}
 
 		void RenderSystem::Update(ECS::TimeDelta dt)

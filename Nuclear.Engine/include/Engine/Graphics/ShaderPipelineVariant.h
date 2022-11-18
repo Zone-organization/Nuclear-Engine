@@ -8,70 +8,47 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include "Engine/Rendering/GBuffer.h"
 #include <Engine/Rendering/RenderPasses/ShadowPass.h>
+#include <set>
 
 namespace Nuclear
 {
 	namespace Assets {
 		class Shader;
 	}
-	namespace Rendering
+	namespace Graphics
 	{
-		struct ShaderPipelineBakingDesc
-		{
-			Uint32 DirLights = 0;
-			Uint32 SpotLights = 0;
-			Uint32 PointLights = 0;
-
-			ShadowPass* pShadowPass = nullptr;
-
-			IBuffer* CameraBufferPtr = nullptr;
-			IBuffer* AnimationBufferPtr = nullptr;
-			IBuffer* LightsBufferPtr = nullptr;
-
-			std::vector<ShaderEffect> mRequiredEffects;
-		};
-
-		enum class ShaderPipelineType {
+		enum class ShaderPSOType {
 			ForwardPipeline,
 			DefferedPipeline,
 			GBufferPipeline,
 			Unknown
 		};
+
 		struct ShaderPSODesc 
 		{
-			ShaderPipelineType mType;
-
+			ShaderPSOType mType;
 			GraphicsPipelineDesc GraphicsPipeline;
-
-			RefCntAutoPtr<IShader> pVS;
-
-			RefCntAutoPtr<IShader> pPS;
-
 		};		
 
-		struct ShaderPipelineDesc
+		struct ShaderPipelineVariantDesc
 		{    
 			ShaderPSODesc mMainPSOCreateInfo; 
 			ShaderPSODesc mGBufferPSOCreateInfo;
 
 			bool _isDeffered = false;
-
 			bool _isSkinned = false;
+			bool _isShadowed = false;
 
-			bool _SupportShadows = false;
+			std::set<std::string> mDefines;
+			Uint32 mHashKey;
 		};
 
 		//Used for both Deffered and Forward pipelines
 		//Should provide GBuffer Pipeline Implementation.
-		class NEAPI ShaderPipeline
+		class NEAPI ShaderPipelineVariant
 		{
 		public:
-			ShaderPipeline();
-
-			virtual bool Bake(const ShaderPipelineBakingDesc& desc);
-
-			void Create(Assets::Shader* shader, const ShaderPipelineDesc& desc);
-
+			ShaderPipelineVariant();
 
 			//Returns the main pipeline used for rendering
 			IPipelineState* GetRenderingPipeline();
@@ -92,10 +69,6 @@ namespace Nuclear
 
 			virtual Graphics::BakeStatus GetStatus();
 
-			std::unordered_map<Uint32, ShaderEffect>& GetRenderingEffects();
-
-			void SetEffect(const Uint32& effectId, bool value);
-
 			virtual std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
 
 			std::string GetName();
@@ -108,20 +81,19 @@ namespace Nuclear
 
 			bool isDeffered();
 
-
-			GBuffer mGBuffer;
+			//Move to main shader? its only RTs.
+			Rendering::GBuffer mGBuffer;
 			virtual void BakeGBufferRTs(Uint32 Width, Uint32 Height);
 
 		protected:
-			std::unordered_map<Uint32, ShaderEffect> mRenderingEffects;
-
+			friend class ShaderPipeline;
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
 
 			RefCntAutoPtr<IPipelineState> mGBufferPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mGBufferSRB;
 
-			ShaderPipelineDesc mDesc;
+			ShaderPipelineVariantDesc mDesc;
 
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 

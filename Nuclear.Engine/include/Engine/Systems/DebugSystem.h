@@ -7,7 +7,6 @@
 #include <vector>
 #include <unordered_map>
 #include <Engine\Rendering\RenderingPaths\ForwardRenderingPath.h>
-#include <Engine\Rendering\ShadingModels\DiffuseOnly.h>
 
 namespace Nuclear
 {
@@ -42,8 +41,8 @@ namespace Nuclear
 			void InstantRender(Assets::Mesh* mesh, Assets::Image* diffusetex);
 
 		protected:
-			Rendering::DiffuseOnly DebugRP;
-			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
+			//Rendering::DiffuseOnly DebugRP;
+			//RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
 		};
 
 	}

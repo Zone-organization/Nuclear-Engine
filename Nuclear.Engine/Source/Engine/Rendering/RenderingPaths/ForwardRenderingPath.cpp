@@ -7,13 +7,13 @@
 #include <Engine\Assets\Scene.h>
 #include <Engine\Assets\Shader.h>
 #include <Core/Logger.h>
-#include <Engine\Rendering\ShaderPipeline.h>
+#include <Engine\Graphics\ShaderPipelineVariant.h>
 
 namespace Nuclear
 {
 	namespace Rendering
 	{
-		void ForwardRenderingPath::StartRendering(ShaderPipeline* pipeline)
+		void ForwardRenderingPath::StartRendering(Graphics::ShaderPipelineVariant* pipeline)
 		{
 			pActivePipeline = pipeline;
 			Graphics::Context::GetContext()->SetPipelineState(pipeline->GetShadersPipeline());
@@ -27,16 +27,16 @@ namespace Nuclear
 			UpdateAnimationCB(mesh.mAnimator);
 
 			////////////////////////      IBL      ///////////////////////////
-			for (int i = 0; i < pActivePipeline->GetShaderAsset()->mIBLTexturesInfo.size(); i++)
+			for (int i = 0; i < pActivePipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.size(); i++)
 			{
-				pActivePipeline->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActivePipeline->GetShaderAsset()->mIBLTexturesInfo.at(i).mSlot)->Set(pActivePipeline->GetShaderAsset()->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+				pActivePipeline->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pActivePipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.at(i).mSlot)->Set(pActivePipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
 			}
 
 			//Shadows
 			////////////////////////     TODO    //////////////////////////////////////
 			if (pCurrentFrame->mShadowsEnabled)
 			{
-				auto& shadowmapsInfo = pActivePipeline->GetShaderAsset()->mShadowMapsInfo;
+				auto& shadowmapsInfo = pActivePipeline->GetShaderAsset()->mReflection.mShadowMapsInfo;
 				if (shadowmapsInfo.mDirPos_SMInfo.mType != Assets::ShaderTextureType::Unknown)
 				{
 					pActivePipeline->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, shadowmapsInfo.mDirPos_SMInfo.mSlot)->Set(pCurrentFrame->pDirPosShadowMapSRV);

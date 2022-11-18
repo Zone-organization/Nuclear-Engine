@@ -138,9 +138,9 @@ namespace Nuclear
 		}
 
 
-		ShaderCreationDesc ParsePSOShader(toml::table* tbl,std::string_view& name, SHADER_TYPE type)
+		Graphics::ShaderObjectCreationDesc ParsePSOShader(toml::table* tbl,std::string_view& name, SHADER_TYPE type)
 		{
-			ShaderCreationDesc result;
+			Graphics::ShaderObjectCreationDesc result;
 			result.mType = type;
 			result.mName = name.data();
 			result.mEntrypoint = tbl->get("EntryPoint")->value_or("main"sv);
@@ -175,9 +175,9 @@ namespace Nuclear
 			return result;
 		}
 
-		Rendering::ShaderPSODesc ParsePSO(toml::table* tbl, toml::table& parent, ShaderManager* mgr)
+		Graphics::ShaderPSODesc ParsePSO(toml::table* tbl, toml::table& parent)
 		{
-			Rendering::ShaderPSODesc desc;
+			Graphics::ShaderPSODesc desc;
 
 			if (toml::array* arr = tbl->get("RTVFormats")->as_array())
 			{
@@ -196,12 +196,11 @@ namespace Nuclear
 			std::optional<std::string_view> str2 = tbl->get("PixelShader")->value<std::string_view>();
 
 			if (str1.has_value())
-				mgr->CreateShader(desc.pVS.RawDblPtr(), ParsePSOShader(parent.get(str1.value())->as_table(), str1.value(), SHADER_TYPE_VERTEX));
-			
-
+				ParsePSOShader(parent.get(str1.value())->as_table(), str1.value(), SHADER_TYPE_VERTEX);
+						
 			if (str2.has_value())
-				mgr->CreateShader(desc.pPS.RawDblPtr(), ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL));
-			
+				ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL);
+
 			return desc;	
 		}
 
@@ -220,35 +219,46 @@ namespace Nuclear
 				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].as_boolean()->value_or(false);
 				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].as_boolean()->value_or(false);
 
-
-				desc.isDeffered = tbl["Shader"]["isDeffered"].as_boolean()->value_or(false);
-
-				if (desc.isDeffered)
+				if (toml::array* arr = tbl["Shader"]["Variants"].as_array())
 				{
-					desc.isDeffered = true;
+					for (Uint32 i = 0; i < arr->size(); i++)
+					{
+						desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr[i].as_string()->value_or("")));
+					}
+				}
+				else {
 
+				}
+
+
+				desc.mSupportForwardRendering = tbl["Shader"]["SupportForwardRendering"].as_boolean()->value_or(true);
+				desc.mSupportDefferedRendering = tbl["Shader"]["SupportDefferedRendering"].as_boolean()->value_or(false);
+
+				if (desc.mSupportForwardRendering)
+				{
+					std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
+					if (str1.has_value())
+					{
+						desc.mPipelineDesc.mForwardPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl);
+					}
+				}
+
+				if (desc.mSupportDefferedRendering)
+				{
 					std::optional<std::string_view> str1 = tbl["Shader"]["DefferedPipeline"].value<std::string_view>();
 					std::optional<std::string_view> str2 = tbl["Shader"]["GBufferPipeline"].value<std::string_view>();
 
 					if (str2.has_value())
 					{
-						desc.mPipelineDesc.mMainPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl, this);
+						desc.mPipelineDesc.mDefferedPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl);
 					}
 
 					if (str2.has_value())
 					{
-						desc.mPipelineDesc.mGBufferPSOCreateInfo =  ParsePSO(tbl.get(str2.value())->as_table(), tbl, this);
+						desc.mPipelineDesc.mGBufferPSOCreateInfo = ParsePSO(tbl.get(str2.value())->as_table(), tbl);
 					}
 				}
-				else 
-				{
-					desc.isDeffered = false;
-					std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
-					if (str1.has_value())
-					{
-						desc.mPipelineDesc.mMainPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl, this);
-					}
-				}				
+			
 			}
 			catch (const toml::parse_error& err)
 			{
@@ -259,11 +269,11 @@ namespace Nuclear
 			return desc;
 		}
 
-		ShadersReflection ShaderManager::ReflectShaderAsset(Assets::ShaderBuildDesc& desc)
+		/*ShadersReflection ShaderManager::ReflectShaderAsset(Assets::ShaderBuildDesc& desc)
 		{
 			ShadersReflection result;
 			std::vector<ShaderResourceVariableDesc> resources;
-			if (VShader)
+			if (desc.mPipelineDesc.mVertexShader)
 			{
 				for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
 				{
@@ -304,47 +314,11 @@ namespace Nuclear
 			}
 			return resources;
 			return ShadersReflection();
-		}
+		}*/
 
-
-		bool ShaderManager::BuildShaderAsset(Assets::Shader* shader, Assets::ShaderBuildDesc& desc)
-		{
-			if (!desc.isDeffered)
-			{
-
-			}
-			else
-			{
-				GraphicsPipelineStateCreateInfo PSOCreateInfo;
-				//PSOCreateInfo.PSODesc.Name = shader;
-				PSOCreateInfo.GraphicsPipeline = desc.mPipelineDesc.mMainPSOCreateInfo.GraphicsPipeline;
-
-				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = !COORDSYSTEM_LH_ENABLED;
-				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
-				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-
-				PSOCreateInfo.pVS = desc.mPipelineDesc.mMainPSOCreateInfo.pVS;
-				PSOCreateInfo.pPS = desc.mPipelineDesc.mMainPSOCreateInfo.pPS;
-
-				//PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-				//PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-
-				auto reflection = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderAsset(desc);
-
-
-				//Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(shader->mPipelines.StaticSP, PSOCreateInfo, Vars, true);
-
-			}
-
-
-
-			return true;
-		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		void ShaderManager::CreateShader(IShader** result, const ShaderCreationDesc& desc)
+		void ShaderManager::CreateShader(IShader** result, const Graphics::ShaderObjectCreationDesc& desc)
 		{
 			ShaderCreateInfo CreationAttribs;
 

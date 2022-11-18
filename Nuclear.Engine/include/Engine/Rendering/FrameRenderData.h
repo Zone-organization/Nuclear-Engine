@@ -19,18 +19,17 @@ namespace Nuclear
         class Mesh;
         class Material;
         class Scene;
+        class Shader;
     }
     namespace Graphics {
         class Camera;
+        class ShaderPipelineVariant;
     }
     namespace Components {
         class AnimatorComponent;
     }
 	namespace Rendering
 	{
-        class ShadingModel;
-        class ShaderPipeline;
-
         typedef entt::basic_view<entt::entity, entt::get_t<Nuclear::Components::MeshComponent>, entt::exclude_t<>, void> MeshView;
 
 		struct NEAPI FrameRenderData
@@ -50,7 +49,7 @@ namespace Nuclear
 
             std::shared_ptr<Systems::CameraSystem> pCameraSystemPtr;
 
-            std::vector<Rendering::ShaderPipeline*> mUsedPipelines;
+            std::vector<Graphics::ShaderPipelineVariant*> mUsedPipelines;
 
             //shadows
             bool mShadowsEnabled;

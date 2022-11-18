@@ -1,11 +1,7 @@
 #pragma once
 #include <Core\NE_Common.h>
 #include <Core\Math\Math.h>
-#include <Engine\Graphics\RenderTarget.h>
 #include <Engine\Graphics\Color.h>
-#include <Engine\Graphics\CompoundPipeline.h>
-#include <Engine\Rendering\ShaderEffect.h>
-#include "Engine/Rendering/BlurEffect.h"
 
 namespace Nuclear
 {

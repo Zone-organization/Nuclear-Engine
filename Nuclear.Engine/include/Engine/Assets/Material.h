@@ -5,9 +5,9 @@
 
 namespace Nuclear
 {
-	namespace Rendering
+	namespace Graphics
 	{
-		class ShaderPipeline;
+		class ShaderPipelineVariant;
 	}
 	namespace Assets
 	{
@@ -30,9 +30,8 @@ namespace Nuclear
 
 			void Create(MaterialData* data, Assets::Shader* shader);
 
-
 			//Note: doesnt validate the shaders!
-			void BindTexSet(Rendering::ShaderPipeline* pipeline ,Uint32 index);
+			void BindTexSet(Graphics::ShaderPipelineVariant* pipeline ,Uint32 index);
 
 			Assets::Shader* GetShader();
 			Uint32 GetShaderID();

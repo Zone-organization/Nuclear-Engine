@@ -3,7 +3,6 @@
 #include <string>
 #include <Engine\Graphics\RenderTarget.h>
 #include <Engine\Graphics\Color.h>
-#include <Engine\Graphics\CompoundPipeline.h>
 #include <Engine\Rendering\ShaderEffect.h>
 #include <Engine\Rendering\Skybox.h>
 namespace Nuclear

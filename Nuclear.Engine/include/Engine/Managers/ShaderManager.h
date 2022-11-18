@@ -11,18 +11,6 @@ namespace Nuclear
 {
 	namespace Managers
 	{
-		struct ShaderCreationDesc
-		{
-			std::string mName;
-			SHADER_TYPE mType;
-			std::string mEntrypoint;
-
-			std::string mSource;
-			Core::Path mPath;
-
-			std::vector<std::string> mDefines;
-		};
-
 		struct ShadersReflection
 		{
 			std::vector<ShaderResourceVariableDesc> mTextures;
@@ -37,16 +25,13 @@ namespace Nuclear
 
 			void Initialize();
 
-			bool BuildShaderAsset(Assets::Shader* shader, Assets::ShaderBuildDesc& desc);
-
 			Assets::ShaderBuildDesc ParseShaderAsset(const std::string& source);
 
-			ShadersReflection ReflectShaderAsset(Assets::ShaderBuildDesc& desc);
+			//ShadersReflection ReflectShaderVariant(Assets::ShaderBuildDesc& desc);
 
+			//ShadersReflection ReflectShaderAsset(Assets::ShaderBuildDesc& desc);
 
-			bool CreateShaderAssetPipeline();
-
-			void CreateShader(IShader** result, const ShaderCreationDesc& desc);
+			void CreateShader(IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
 
 
 			//////////////////////////////////////////////////////////////////////////////////////////////

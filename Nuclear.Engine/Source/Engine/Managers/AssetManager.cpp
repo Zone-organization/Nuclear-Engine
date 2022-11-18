@@ -391,10 +391,8 @@ namespace Nuclear {
 
 			auto source = Core::FileSystem::LoadFileToString(Path.mRealPath);
 
-
-
 			auto shaderbuilddesc = Graphics::GraphicsEngine::GetShaderManager()->ParseShaderAsset(source);
-
+			result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
 
 			return result;
 		}

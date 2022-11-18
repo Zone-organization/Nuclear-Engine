@@ -13,6 +13,10 @@ namespace Nuclear {
 	namespace Animation {
 		class Animator;
 	}
+
+	namespace Graphics {
+		class ShaderPipelineVariant;
+	}
 	namespace Components 
 	{
 
@@ -23,6 +27,10 @@ namespace Nuclear {
 			MeshComponent(Assets::Mesh* mesh, Assets::Material* material = nullptr, Animation::Animator* Animator = nullptr);
 			~MeshComponent();
 
+			void UpdateRenderQueue(bool forcedirty);
+			Uint32 GetRenderQueue();
+			Graphics::ShaderPipelineVariant* GetRenderingVariant();
+
 			//if false the RenderSystem won't render the model
 			bool mRender = true;
 			bool mCastShadows = true;
@@ -31,6 +39,9 @@ namespace Nuclear {
 			Assets::Mesh * mMesh;
 			Assets::Material * mMaterial;
 			Animation::Animator* mAnimator;
+		protected:
+			Graphics::ShaderPipelineVariant* mVariant;
+			Uint32 RenderQueue = -1;
 		};
 
 	}

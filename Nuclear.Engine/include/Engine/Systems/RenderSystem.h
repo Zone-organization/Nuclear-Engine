@@ -54,7 +54,7 @@ namespace Nuclear
 
 			CameraSystem* GetCameraSystem();
 
-			void RegisterShadingModel(Rendering::ShadingModel* shadingmodel);
+			void RegisterShader(Assets::Shader* shader);
 
 			/////////////////////////////////////////////////////////////////////////////////////////
 			IBuffer* GetLightCB();
@@ -65,7 +65,7 @@ namespace Nuclear
 			size_t GetSpotLightsNum();
 		private:
 			std::vector<Rendering::RenderPass*> mRenderPasses;
-			std::vector<Rendering::ShadingModel*> mRegisteredShadingModels;
+			std::vector<Assets::Shader*> mRegisteredShaders;
 
 			std::shared_ptr<CameraSystem> mCameraSystemPtr;
 

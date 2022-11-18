@@ -2,6 +2,7 @@
 #include <Engine\Rendering\FrameRenderData.h>
 #include <Engine\Assets\Shader.h>
 #include <Engine\Graphics\Context.h>
+#include <Engine\Graphics\ShaderPipelineVariant.h>
 #include <Engine\Systems\DebugSystem.h>
 #include <Engine\Assets\Scene.h>
 #include <Engine\Assets\DefaultMeshes.h>
@@ -31,9 +32,9 @@ namespace Nuclear
                         }
 
                         //IBL
-                        for (int i = 0; i < pipeline->GetShaderAsset()->mIBLTexturesInfo.size(); i++)
+                        for (int i = 0; i < pipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.size(); i++)
                         {
-                            pipeline->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetShaderAsset()->mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetShaderAsset()->mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+                            pipeline->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
                         }
 
                         Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

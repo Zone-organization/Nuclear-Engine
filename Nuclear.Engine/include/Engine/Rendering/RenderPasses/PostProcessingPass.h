@@ -5,7 +5,7 @@
 #include <vector>
 #include <Engine\ECS\System.h>
 #include <Engine/Rendering/BlurEffect.h>
-#include <Engine/Graphics/CompoundPipeline.h>
+#include <Engine/Graphics/ShaderPipeline.h>
 
 namespace Nuclear
 {
@@ -53,7 +53,7 @@ namespace Nuclear
 
 			//PostProcessing Effects
 			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
-			Graphics::CompoundPipeline mPostFXPipeline;
+			Graphics::ShaderPipeline mPostFXPipeline;
 
 			Graphics::RenderTarget PostFXRT;
 

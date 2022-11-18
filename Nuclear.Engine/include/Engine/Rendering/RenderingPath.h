@@ -10,7 +10,9 @@ namespace Nuclear
 	namespace Systems {
 		class RenderSystem;
 	}
-
+	namespace Graphics {
+		class ShaderPipelineVariant;
+	}
 	namespace Rendering
 	{
 		struct FrameRenderData;
@@ -27,13 +29,13 @@ namespace Nuclear
 			virtual void UpdateAnimationCB(Animation::Animator* mAnimator);
 
 			//Static meshes
-			virtual void StartRendering(ShaderPipeline* pipeline) = 0;
+			virtual void StartRendering(Graphics::ShaderPipelineVariant* pipeline) = 0;
 
 			virtual void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
 
 		protected:
 			void DrawMesh(Assets::Mesh* mesh, Assets::Material* material);
-			ShaderPipeline* pActivePipeline = nullptr;
+			Graphics::ShaderPipelineVariant* pActivePipeline = nullptr;
 			FrameRenderData* pCurrentFrame = nullptr;
 		};
 	}

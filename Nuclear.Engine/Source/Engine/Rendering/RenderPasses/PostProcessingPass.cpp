@@ -148,8 +148,8 @@ namespace Nuclear
 
 				auto PSO_SRB = mPostFXPipeline.GetVariant(mRequiredHash);
 
-				mActivePSO = PSO_SRB.PSO;
-				mActiveSRB = PSO_SRB.SRB;
+				mActivePSO = PSO_SRB.GetRenderingPipeline();
+				mActiveSRB = PSO_SRB.GetRenderingSRB();
 			}
 		}
 	
@@ -204,26 +204,26 @@ namespace Nuclear
 
 				Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 				Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-				Graphics::CompoundPipelineDesc PSOCreateInfo;
+				Graphics::ShaderPipelineDesc PSOCreateInfo;
 
 				for (auto it : mPostProcessingEffects)
 				{
-					PSOCreateInfo.Switches.push_back(Graphics::PipelineSwitch(it.second.GetName()));
+					PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch(it.second.GetName()));
 				}
 
-				PSOCreateInfo.mVShaderPath = mDesc.PostFX_VS_Path;
-				PSOCreateInfo.mPShaderPath = mDesc.PostFX_PS_Path;
+				PSOCreateInfo.mVertexShader.mPath = mDesc.PostFX_VS_Path;
+				PSOCreateInfo.mPixelShader.mPath = mDesc.PostFX_PS_Path;
 
-				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
-				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
-				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
-				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
+				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
 				mPostFXPipeline.Create(PSOCreateInfo);
 			}
