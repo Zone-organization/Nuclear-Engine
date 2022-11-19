@@ -283,21 +283,21 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 				{
 					ImGui::Checkbox("Render", &meshcomponent->mRender);
 
-					if (meshcomponent->mMesh != nullptr)
+					if (meshcomponent->GetMesh())
 					{
-						if (meshcomponent->mMesh->GetName() != std::string(""))
+						if (meshcomponent->GetMesh()->GetName() != std::string(""))
 						{
-							ImGui::Text(meshcomponent->mMesh->GetName().c_str());
+							ImGui::Text(meshcomponent->GetMesh()->GetName().c_str());
 						}
 						else {
 							ImGui::Text("Unnamed Mesh");
 						}
 					}
-					if (meshcomponent->mMaterial != nullptr)
+					if (meshcomponent->GetMaterial())
 					{
-						if (meshcomponent->mMaterial->GetName() != std::string(""))
+						if (meshcomponent->GetMaterial()->GetName() != std::string(""))
 						{
-							ImGui::Text(meshcomponent->mMaterial->GetName().c_str());
+							ImGui::Text(meshcomponent->GetMaterial()->GetName().c_str());
 						}
 						else {
 							ImGui::Text("Unnamed Material");

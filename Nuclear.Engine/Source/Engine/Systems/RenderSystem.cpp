@@ -119,11 +119,18 @@ namespace Nuclear
 			mRenderData.pCameraSystemPtr = mCameraSystemPtr;
 			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
 
-			
-			//sort accroding to shadingmodels (aka pipelines)
+
+			auto meshview = mScene->GetRegistry().view<Components::MeshComponent>();
+			for (auto entity : meshview)
+			{
+				auto& mesh = meshview.get<Components::MeshComponent>(entity);
+				mesh.Update();
+			}
+
+			//sort accroding to shadingmodels (aka pipelines) & update their renderqueues
 			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
 				{
-					return lhs.mMaterial->GetShadingModel()->GetRenderQueue() < rhs.mMaterial->GetShadingModel()->GetRenderQueue();
+					return lhs.GetRenderQueue() < rhs.GetRenderQueue();
 				});
 
 			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();

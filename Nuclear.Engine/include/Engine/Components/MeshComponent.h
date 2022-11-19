@@ -1,6 +1,7 @@
 #pragma once
 #include <Core\NE_Common.h>
 #include <Core\Math\Math.h>
+#include <Engine\Graphics\ShaderPipelineSwitch.h>
 #include <vector>
 
 namespace Nuclear {
@@ -27,8 +28,8 @@ namespace Nuclear {
 			MeshComponent(Assets::Mesh* mesh, Assets::Material* material = nullptr, Animation::Animator* Animator = nullptr);
 			~MeshComponent();
 
-			void UpdateRenderQueue(bool forcedirty);
-			Uint32 GetRenderQueue();
+			void Update(bool forcedirty = false);
+			Uint32 GetRenderQueue() const;
 			Graphics::ShaderPipelineVariant* GetRenderingVariant();
 
 			//if false the RenderSystem won't render the model
@@ -36,12 +37,18 @@ namespace Nuclear {
 			bool mCastShadows = true;
 			bool mRecieveShadows = true;
 
-			Assets::Mesh * mMesh;
-			Assets::Material * mMaterial;
-			Animation::Animator* mAnimator;
+			Assets::Mesh* GetMesh();
+			Assets::Material* GetMaterial();
+			Animation::Animator* GetAnimator();
 		protected:
-			Graphics::ShaderPipelineVariant* mVariant;
+			Assets::Mesh* pMesh;
+			Assets::Material* pMaterial;
+			Animation::Animator* pAnimator;
+			Graphics::ShaderPipelineSwitchController mPipelineCntrl;
 			Uint32 RenderQueue = -1;
+
+			bool mDirty = true;
+
 		};
 
 	}

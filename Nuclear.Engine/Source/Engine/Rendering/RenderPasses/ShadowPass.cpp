@@ -170,7 +170,7 @@ namespace Nuclear
 						Diligent::MapHelper<Math::vec4> CBConstants(Graphics::Context::GetContext(), pOmniDirShadowPS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = glm::vec4(lightPos, pointlight->GetFarPlane());
 					}
-					RenderMeshForDepthPass(MeshObject.mMesh);
+					RenderMeshForDepthPass(MeshObject.GetMesh());
 				}
 			}
 		}
@@ -223,7 +223,7 @@ namespace Nuclear
 						*CBConstants = cbdata;
 					}
 
-					RenderMeshForDepthPass(MeshObject.mMesh);
+					RenderMeshForDepthPass(MeshObject.GetMesh());
 				}
 			}
 		}

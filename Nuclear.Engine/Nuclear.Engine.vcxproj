@@ -159,8 +159,8 @@
     <ClInclude Include="include\Engine\Rendering\RenderPasses\PostProcessingPass.h" />
     <ClInclude Include="include\Engine\Assets\Shader.h" />
     <ClInclude Include="include\Engine\Graphics\ShaderPipelineVariant.h" />
+    <ClInclude Include="include\Engine\Graphics\ShaderPipelineSwitch.h" />
     <ClInclude Include="include\Engine\Rendering\ShadingModels\PBR.h" />
-    <ClInclude Include="include\Engine\Rendering\ShaderEffect.h" />
     <ClInclude Include="include\Engine\Graphics\ShaderPipeline.h" />
     <ClInclude Include="include\Engine\Graphics\Graphics.h" />
     <ClInclude Include="include\Engine\Graphics\GraphicsEngine.h" />
@@ -306,11 +306,11 @@
     <ClCompile Include="Source\Engine\Rendering\RenderPasses\GeometryPass.cpp" />
     <ClCompile Include="Source\Engine\Rendering\RenderPasses\PostProcessingPass.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ShaderPipelineVariant.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShaderPipelineSwitch.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\BlinnPhong.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\DiffuseOnly.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\PBR.cpp" />
     <ClCompile Include="Source\Engine\Rendering\ShadingModels\WireFrame.cpp" />
-    <ClCompile Include="Source\Engine\Rendering\ShaderEffect.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Engine\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Engine\Components\ColliderComponent.cpp" />

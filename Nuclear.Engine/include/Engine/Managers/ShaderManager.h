@@ -25,7 +25,7 @@ namespace Nuclear
 
 			void Initialize();
 
-			Assets::ShaderBuildDesc ParseShaderAsset(const std::string& source);
+			bool ParseShaderAsset(const std::string& source, Assets::ShaderBuildDesc& desc);
 
 			//ShadersReflection ReflectShaderVariant(Assets::ShaderBuildDesc& desc);
 

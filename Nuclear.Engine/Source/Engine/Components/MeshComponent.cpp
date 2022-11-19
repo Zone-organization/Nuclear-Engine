@@ -8,42 +8,65 @@ namespace Nuclear
 	{
 		MeshComponent::MeshComponent()
 		{
-			mMesh = nullptr;
-			mMaterial = nullptr;
-			mAnimator = nullptr;
+			pMesh = nullptr;
+			pMaterial = nullptr;
+			pAnimator = nullptr;
 		}
 		MeshComponent::MeshComponent(Assets::Mesh* mesh, Assets::Material* material, Animation::Animator* Animator)
 		{
-			mMesh = mesh;
-			mMaterial = material;
-			mAnimator = Animator;
+			pMesh = mesh;
+			pMaterial = material;
+			pAnimator = Animator;
 		}
 		MeshComponent::~MeshComponent()
 		{
-			mMesh = nullptr;
-			mMaterial = nullptr;
-			mAnimator = nullptr;
+			pMesh = nullptr;
+			pMaterial = nullptr;
+			pAnimator = nullptr;
 		}
-		void MeshComponent::UpdateRenderQueue(bool forcedirty)
+		void MeshComponent::Update(bool forcedirty)
 		{
-		}
-		Uint32 MeshComponent::GetRenderQueue()
-		{
-			if (mMaterial)
+			if (mDirty)
 			{
-				if(mAnimator)
-					mMaterial->GetShader()->mPipeline.GetVariant()
-				else
+				if (pMaterial)
+				{
+					mPipelineCntrl.SetPipeline(&pMaterial->GetShader()->mPipeline);
 
+					Uint32 mAnimationHash = Utilities::Hash("ANIMATION");
+					Uint32 mRecieveShadowHash = Utilities::Hash("SHADOWS");
+					
+					mPipelineCntrl.SetSwitch(mAnimationHash, bool(pAnimator));
+					mPipelineCntrl.SetSwitch(mRecieveShadowHash, mRecieveShadows);
 
-				//if()
-				//mMaterial->
+					mPipelineCntrl.Update();
+				}
+				else {
+					mRender = false;  //Dont render meshes with invalid material
+					RenderQueue = -1;
+				}
+
+				mDirty = false;
 			}
-			return Uint32();
+		}
+		Uint32 MeshComponent::GetRenderQueue() const
+		{
+			return RenderQueue;
 		}
 		Graphics::ShaderPipelineVariant* MeshComponent::GetRenderingVariant()
 		{
-			return mVariant;
+			return mPipelineCntrl.GetActiveVariant();
+		}
+		Assets::Mesh* MeshComponent::GetMesh()
+		{
+			return pMesh;
+		}
+		Assets::Material* MeshComponent::GetMaterial()
+		{
+			return pMaterial;
+		}
+		Animation::Animator* MeshComponent::GetAnimator()
+		{
+			return pAnimator;
 		}
 	}
 }

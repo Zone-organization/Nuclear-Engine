@@ -39,22 +39,19 @@ namespace Nuclear
 			RefCntAutoPtr<IPipelineState> mActivePSO;
 			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
-			virtual void UpdatePSO(bool ForceDirty = false);
-
 			void Update(FrameRenderData* framedata) override;
 
 			void ResizeRTs(Uint32 Width, Uint32 Height) override;
 
-			virtual void SetPostProcessingEffect(const Uint32& effectId, bool value);
+			void SetPostProcessingEffect(Uint32 effectId, bool value);
 
 			virtual void BakePostFXPipeline();
 		protected:
 			PostProcessingPassDesc mDesc;
 
 			//PostProcessing Effects
-			std::unordered_map<Uint32, Rendering::ShaderEffect> mPostProcessingEffects;
 			Graphics::ShaderPipeline mPostFXPipeline;
-
+			Graphics::ShaderPipelineSwitchController mPipelineCntrllr;
 			Graphics::RenderTarget PostFXRT;
 
 			Graphics::RenderTarget BloomRT;
@@ -65,9 +62,11 @@ namespace Nuclear
 			bool mBloomEnabled = false;
 
 			bool mPipelineDirty = true;
-			Uint32 mRequiredHash = 0;
+
 			Uint32 mRTWidth = 0;
 			Uint32 mRTHeight = 0;
+
+			Uint32 _HashedBloomID;
 		};
 
 	}

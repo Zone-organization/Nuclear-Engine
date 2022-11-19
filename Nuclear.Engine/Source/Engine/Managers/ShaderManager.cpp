@@ -143,29 +143,45 @@ namespace Nuclear
 			Graphics::ShaderObjectCreationDesc result;
 			result.mType = type;
 			result.mName = name.data();
-			result.mEntrypoint = tbl->get("EntryPoint")->value_or("main"sv);
-
-			if (toml::array* arr = tbl->get("Defines")->as_array())
+			auto entrypointnode = tbl->get("EntryPoint");
+			if (entrypointnode)
 			{
+				result.mEntrypoint = entrypointnode->value_or("main"sv);
+
+			}
+
+			auto defines = tbl->get("Defines");
+			if (defines)
+			{
+				toml::array* arr = defines->as_array();
+
 				for (Uint32 i = 0; i < arr->size(); i++)
 				{
 					if (arr[i].as_string())
 					{
-						result.mDefines.push_back(arr[i].as_string()->value_or(""));
+						result.mDefines.push_back(arr[i].value_or(""));
 					}
 				}
 			}
-
-			std::optional<std::string_view> source = tbl->get("Source")->value<std::string_view>();
-			if (source.has_value())
+			auto sourcenode = tbl->get("Source");
+			if (sourcenode)
 			{
-				result.mSource = source.value();
-			}
-			else {
-				std::optional<std::string_view> path = tbl->get("Path")->value<std::string_view>();
-				if (path.has_value())
+				std::optional<std::string> source = sourcenode->value<std::string>();
+				if (source.has_value())
 				{
-					result.mPath = std::string(path.value());			
+					result.mSource = source.value();
+				}
+			}
+			else 
+			{
+				auto pathnode = tbl->get("Path");
+				if (pathnode)
+				{
+					std::optional<std::string> path = pathnode->value<std::string>();
+					if (path.has_value())
+					{
+						result.mPath = path.value();
+					}
 				}
 				else {
 					NUCLEAR_ERROR("[ShaderManager] Shader: ", name , " has no Source or Path!");
@@ -174,6 +190,8 @@ namespace Nuclear
 			
 			return result;
 		}
+
+
 
 		Graphics::ShaderPSODesc ParsePSO(toml::table* tbl, toml::table& parent)
 		{
@@ -185,30 +203,32 @@ namespace Nuclear
 
 				for (Uint32 i = 0; i< arr->size(); i++)
 				{
-					desc.GraphicsPipeline.RTVFormats[i] = ParseTexFormat(arr[i].as_string()->value_or("TEX_FORMAT_RGBA8_UNORM_SRGB"sv));
+					desc.GraphicsPipeline.RTVFormats[i] = ParseTexFormat(arr->at(i).value_or("TEX_FORMAT_RGBA8_UNORM_SRGB"sv));
 				}
 			}
 
 			desc.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT"sv));
 
+			auto vsnode = tbl->get("VertexShader");
 
-			std::optional<std::string_view> str1 = tbl->get("VertexShader")->value<std::string_view>();
-			std::optional<std::string_view> str2 = tbl->get("PixelShader")->value<std::string_view>();
-
-			if (str1.has_value())
+			if (vsnode)
+			{
+				auto str1 = vsnode->value<std::string_view>();
 				ParsePSOShader(parent.get(str1.value())->as_table(), str1.value(), SHADER_TYPE_VERTEX);
-						
-			if (str2.has_value())
+			}
+			auto psnode = tbl->get("PixelShader");
+			if (psnode)
+			{
+				auto str2 = psnode->value<std::string_view>();
 				ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL);
-
+			}
 			return desc;	
 		}
 
 
-		Assets::ShaderBuildDesc ShaderManager::ParseShaderAsset(const std::string& source)
+		bool ShaderManager::ParseShaderAsset(const std::string& source, Assets::ShaderBuildDesc& desc)
 		{
 			toml::table tbl;
-			Assets::ShaderBuildDesc desc;
 
 			try
 			{
@@ -216,14 +236,14 @@ namespace Nuclear
 
 				std::string_view ShaderName = tbl["Shader"]["Name"].value_or("UnNamed"sv);
 
-				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].as_boolean()->value_or(false);
-				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].as_boolean()->value_or(false);
+				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].value_or(false);
+				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].value_or(false);
 
 				if (toml::array* arr = tbl["Shader"]["Variants"].as_array())
 				{
 					for (Uint32 i = 0; i < arr->size(); i++)
 					{
-						desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr[i].as_string()->value_or("")));
+						desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr->at(i).as_string()->value_or("")));
 					}
 				}
 				else {
@@ -231,8 +251,8 @@ namespace Nuclear
 				}
 
 
-				desc.mSupportForwardRendering = tbl["Shader"]["SupportForwardRendering"].as_boolean()->value_or(true);
-				desc.mSupportDefferedRendering = tbl["Shader"]["SupportDefferedRendering"].as_boolean()->value_or(false);
+				desc.mSupportForwardRendering = tbl["Shader"]["SupportForwardRendering"].value_or(true);
+				desc.mSupportDefferedRendering = tbl["Shader"]["SupportDefferedRendering"].value_or(false);
 
 				if (desc.mSupportForwardRendering)
 				{
@@ -245,28 +265,36 @@ namespace Nuclear
 
 				if (desc.mSupportDefferedRendering)
 				{
-					std::optional<std::string_view> str1 = tbl["Shader"]["DefferedPipeline"].value<std::string_view>();
-					std::optional<std::string_view> str2 = tbl["Shader"]["GBufferPipeline"].value<std::string_view>();
+					std::optional<std::string> str1 = tbl["Shader"]["DefferedPipeline"].value<std::string>();
 
-					if (str2.has_value())
-					{
-						desc.mPipelineDesc.mDefferedPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl);
+					if (str1.has_value())
+					{ 
+						auto tbl1 = tbl.get(str1.value());
+						if (tbl1)
+							desc.mPipelineDesc.mDefferedPSOCreateInfo = ParsePSO(tbl1->as_table(), tbl);
+						else
+							NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> DefferedPipeline '{0}' not found", str1.value());
 					}
 
+					std::optional<std::string> str2 = tbl["Shader"]["GBufferPipeline"].value<std::string>();
 					if (str2.has_value())
 					{
-						desc.mPipelineDesc.mGBufferPSOCreateInfo = ParsePSO(tbl.get(str2.value())->as_table(), tbl);
+						auto tbl2 = tbl.get(str2.value());
+						if (tbl2)
+							desc.mPipelineDesc.mGBufferPSOCreateInfo = ParsePSO(tbl2->as_table(), tbl);
+						else
+							NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> GBufferPipeline '{0}' not found", str2.value());
 					}
 				}
 			
 			}
 			catch (const toml::parse_error& err)
 			{
-				std::cerr << "Parsing failed:\n" << err << "\n";
-				return desc;
+				NUCLEAR_ERROR("[ShaderManager] Parsing Shader failed: '{0}'", err.description());
+				return false;
 			}
 
-			return desc;
+			return true;
 		}
 
 		/*ShadersReflection ShaderManager::ReflectShaderAsset(Assets::ShaderBuildDesc& desc)

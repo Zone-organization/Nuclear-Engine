@@ -89,7 +89,7 @@ namespace Nuclear
 
 		ShaderPipeline::~ShaderPipeline()
 		{
-			mKeyChain.clear();
+			mSwitches.clear();
 			mVariants.clear();
 		}
 
@@ -102,7 +102,7 @@ namespace Nuclear
 			ZeroInstance.mHashKey = 0;
 
 			InstancesInfo.push_back(ZeroInstance);
-			
+
 			//Phase 1: Process Switches
 			for (Uint32 ISwitch = 0; ISwitch < Desc.Switches.size(); ISwitch++)
 			{
@@ -111,9 +111,9 @@ namespace Nuclear
 					for (Uint32 NextSwitch2 = 0; NextSwitch2 < Desc.Switches.size(); NextSwitch2++)
 					{
 						ShaderPipelineVariantDesc Info_;
-						Info_.mDefines.insert(Desc.Switches.at(ISwitch).KeyName);
-						Info_.mDefines.insert(Desc.Switches.at(NextSwitch).KeyName);
-						Info_.mDefines.insert(Desc.Switches.at(NextSwitch2).KeyName);
+						Info_.mDefines.insert(Desc.Switches.at(ISwitch).GetName());
+						Info_.mDefines.insert(Desc.Switches.at(NextSwitch).GetName());
+						Info_.mDefines.insert(Desc.Switches.at(NextSwitch2).GetName());
 
 						for (auto& i : Info_.mDefines)
 						{
@@ -129,7 +129,7 @@ namespace Nuclear
 							{
 								Info_._isSkinned = true;
 							}
-							else if (i =="SHADOWS")
+							else if (i == "SHADOWS")
 							{
 								Info_._isShadowed = true;
 							}
@@ -223,21 +223,24 @@ namespace Nuclear
 			//Error
 			return 0;
 		}
-		ShaderPipelineVariant ShaderPipeline::GetVariant(Uint32 Key)
+		ShaderPipelineVariant* ShaderPipeline::GetVariant(Uint32 Key)
 		{
 			for (auto i : mVariants)
 			{
 				if (i.first == Key)
 				{
-					return i.second;
+					return &i.second;
 				}
 			}
 
-			NUCLEAR_ERROR("[ShaderPipeline] Variant: '{0}' Not Found!" , Key);
-			return mVariants.begin()->second;
+			NUCLEAR_ERROR("[ShaderPipeline] Variant: '{0}' Not Found!", Key);
+			return &mVariants.begin()->second;
 		}
 
-	
+		const std::vector<ShaderPipelineSwitch>& ShaderPipeline::GetSwitches() const
+		{
+			return mSwitches;
+		}
 
 		void ShaderPipeline::ReflectPixelShaderData(ShaderPipelineVariant& pipeline)
 		{

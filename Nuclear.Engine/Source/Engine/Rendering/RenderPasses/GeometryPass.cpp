@@ -6,7 +6,6 @@
 #include <Engine\Assets\Scene.h>
 #include <Engine\Assets\Shader.h>
 #include <Engine\Assets\Material.h>
-#include <Engine\Rendering\ShaderPipeline.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Core\Logger.h>
 #include <Engine.h>
@@ -39,53 +38,15 @@ namespace Nuclear
 			{
 				auto& mesh = frame->mMeshView.get<Components::MeshComponent>(meshentity);
 
-				if (mesh.mRender)
-				{
-					if (mesh.mMaterial)
-					{
-						ShaderPipeline* meshPipeline = nullptr;
+				if (mesh.GetRenderQueue() != -1)
+				{			
+					pRenderingPath->StartRendering(mesh.GetRenderingVariant());
 
-						if (mesh.mAnimator == nullptr)
-						{
-							if (mesh.mMaterial->GetShader()->mPipelines.StaticSP.isValid())
-							{
-								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.StaticSP;
-							}
-							else
-							{
-								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.SkinnedSP;
-							}
-						}
-						else
-						{
-							if (mesh.mMaterial->GetShader()->mPipelines.SkinnedSP.isValid())
-							{
-								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.SkinnedSP;
-							}
-							else
-							{
-								meshPipeline = &mesh.mMaterial->GetShader()->mPipelines.StaticSP;
-							}							
-						}
+					auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
+					EntityInfo.mTransform.Update();
 
-						if (!meshPipeline->isValid())
-						{
-							NUCLEAR_ERROR("[GeometryPass] Skipped Rendering Mesh with invalid ShaderPipeline (nullptr)...");
-							continue;
-						}
-
-						pRenderingPath->StartRendering(meshPipeline);
-
-						auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
-						EntityInfo.mTransform.Update();
-
-						pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
-						frame->mUsedPipelines.push_back(meshPipeline);
-					}
-					else 
-					{
-						NUCLEAR_ERROR("[GeometryPass] Skipped Rendering Mesh with invalid Material (nullptr)...");
-					}
+					pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
+					frame->mUsedPipelines.push_back(mesh.GetRenderingVariant());
 				}
 
 			}

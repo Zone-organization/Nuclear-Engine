@@ -15,16 +15,20 @@ namespace Nuclear
 	{
 		void ForwardRenderingPath::StartRendering(Graphics::ShaderPipelineVariant* pipeline)
 		{
-			pActivePipeline = pipeline;
-			Graphics::Context::GetContext()->SetPipelineState(pipeline->GetShadersPipeline());
-			Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			if (pActivePipeline != pipeline)
+			{
+				pActivePipeline = pipeline;
+				Graphics::Context::GetContext()->SetPipelineState(pipeline->GetShadersPipeline());
+				Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			}
 		}
+			
 		void ForwardRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
 		{
 			pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
 			pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
 
-			UpdateAnimationCB(mesh.mAnimator);
+			UpdateAnimationCB(mesh.GetAnimator());
 
 			////////////////////////      IBL      ///////////////////////////
 			for (int i = 0; i < pActivePipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.size(); i++)
@@ -51,7 +55,7 @@ namespace Nuclear
 				}
 			}
 
-			DrawMesh(mesh.mMesh, mesh.mMaterial);
+			DrawMesh(mesh.GetMesh(), mesh.GetMaterial());
 		}
 	}
 }

@@ -11,15 +11,12 @@ namespace Nuclear
 	{
 		PostProcessingPass::PostProcessingPass()
 		{
-			mPostProcessingEffects[Utilities::Hash("HDR")] = Rendering::ShaderEffect("HDR", Rendering::ShaderEffect::Type::PostProcessingEffect, true);
-			mPostProcessingEffects[Utilities::Hash("GAMMACORRECTION")] = Rendering::ShaderEffect("GAMMACORRECTION", Rendering::ShaderEffect::Type::PostProcessingEffect, true);
-			mPostProcessingEffects[Utilities::Hash("BLOOM")] = Rendering::ShaderEffect("BLOOM", Rendering::ShaderEffect::Type::PostProcessingEffect, false);
+			_HashedBloomID = Utilities::Hash("BLOOM");
 		}
 
 		void PostProcessingPass::Update(FrameRenderData* framedata)
 		{
-			//mBloomEnabled = true;
-			UpdatePSO();
+			mPipelineCntrllr.Update();
 			//1 - Extract bloom from scene rt
 			if (mBloomEnabled)
 			{
@@ -37,7 +34,7 @@ namespace Nuclear
 			if (mBloomEnabled)
 			{
 				bool horizontal = true, first_iteration = true, horicleared = false, verticleared = false;
-				int amount = 10;
+				unsigned int amount = 10;
 
 				for (unsigned int i = 0; i < amount; i++)
 				{
@@ -106,53 +103,17 @@ namespace Nuclear
 			Graphics::Context::GetContext()->CopyTexture(attrib);
 		}
 
-		void PostProcessingPass::SetPostProcessingEffect(const Uint32& effectId, bool value)
+		void PostProcessingPass::SetPostProcessingEffect(Uint32 effectId, bool value)
 		{
-			auto it = mPostProcessingEffects.find(effectId);
-			if (it != mPostProcessingEffects.end())
+			if (mPipelineCntrllr.SetSwitch(effectId, value))
 			{
-				it->second.SetValue(value);
-				if (it->second.GetName() == "BLOOM")
+				//check for bloom
+				if (effectId == _HashedBloomID)
 				{
 					mBloomEnabled = value;
 				}
 			}
-			else
-			{
-				assert(false);
-			}
 		}
-
-		void PostProcessingPass::UpdatePSO(bool ForceDirty)
-		{
-			mRequiredHash = 0;
-
-			if (mPipelineDirty || ForceDirty)
-			{
-				bool _hashzeroed = false;
-
-				for (auto it : mPostProcessingEffects)
-				{
-					if (it.second.GetValue())
-					{
-						if (_hashzeroed)
-						{
-							mRequiredHash = 0;
-							_hashzeroed = true;
-						}
-						auto val = mRequiredHash + it.second.GetID();
-
-						mRequiredHash = val;
-					}
-				}
-
-				auto PSO_SRB = mPostFXPipeline.GetVariant(mRequiredHash);
-
-				mActivePSO = PSO_SRB.GetRenderingPipeline();
-				mActiveSRB = PSO_SRB.GetRenderingSRB();
-			}
-		}
-	
 
 		IPipelineState* PostProcessingPass::GetActivePipeline()
 		{
@@ -180,36 +141,30 @@ namespace Nuclear
 			mActiveSRB.Release();
 			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
 			//mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
-			auto it = mPostProcessingEffects.find(Utilities::Hash("BLOOM"));
-			if (it != mPostProcessingEffects.end())
-			{
-				if (it->second.GetValue())
-				{
-					mBloomBlur.ResizeRenderTargets(mRTWidth, mRTHeight);
-					Graphics::RenderTargetDesc RTDesc;
-					RTDesc.Width = mRTWidth;
-					RTDesc.Height = mRTHeight;
-					RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
-					BloomRT.Create(RTDesc);
-				}
+			if (mPipelineCntrllr.GetSwitch(_HashedBloomID).GetValue())
+			{
+				mBloomBlur.ResizeRenderTargets(mRTWidth, mRTHeight);
+				Graphics::RenderTargetDesc RTDesc;
+				RTDesc.Width = mRTWidth;
+				RTDesc.Height = mRTHeight;
+				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+
+				BloomRT.Create(RTDesc);
 			}
 		}
 
 		void PostProcessingPass::BakePostFXPipeline()
 		{
-
 			{
 				std::vector<LayoutElement> Layout;
 
 				Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 				Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
 				Graphics::ShaderPipelineDesc PSOCreateInfo;
-
-				for (auto it : mPostProcessingEffects)
-				{
-					PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch(it.second.GetName()));
-				}
+				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("HDR", true));
+				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("GAMMACORRECTION", true));
+				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("BLOOM", true));
 
 				PSOCreateInfo.mVertexShader.mPath = mDesc.PostFX_VS_Path;
 				PSOCreateInfo.mPixelShader.mPath = mDesc.PostFX_PS_Path;
@@ -303,7 +258,8 @@ namespace Nuclear
 				pBloomExtractPSO->CreateShaderResourceBinding(pBloomExtractSRB.RawDblPtr());
 			}
 
-			UpdatePSO(true);
+			mPipelineCntrllr.SetPipeline(&mPostFXPipeline);
+			mPipelineCntrllr.Update();
 		}
 	}
 }

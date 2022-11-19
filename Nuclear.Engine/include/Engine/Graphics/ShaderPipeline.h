@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <Core\Path.h>
 #include <Engine/Graphics/ShaderPipelineVariant.h>
+#include <Engine/Graphics/ShaderPipelineSwitch.h>
 
 namespace Nuclear
 {
@@ -15,25 +16,14 @@ namespace Nuclear
 		{
 			std::string mName;
 			SHADER_TYPE mType;
-			std::string mEntrypoint;
+			std::string mEntrypoint = "main";
 
 			std::string mSource;
 			Core::Path mPath;
 
 			std::vector<std::string> mDefines;
 		};
-
-		struct ShaderPipelineSwitch
-		{
-			ShaderPipelineSwitch(std::string KeyName_)
-			{
-
-			}
-			std::string KeyName;
-
-			//AUTO FILLED ON CREATING ShaderPipeline
-			Uint32 mHashedName = 0;
-		};
+				
 		struct ShaderRenderingBakingDesc
 		{
 			Uint32 DirLights = 0;
@@ -49,29 +39,24 @@ namespace Nuclear
 
 		struct ShaderPipelineDesc
 		{
-			std::string mName;
+			std::string mName= "";
 
-			ShaderObjectCreationDesc mVertexShader;
-			ShaderObjectCreationDesc mPixelShader;
+			ShaderObjectCreationDesc mVertexShader = ShaderObjectCreationDesc();
+			ShaderObjectCreationDesc mPixelShader = ShaderObjectCreationDesc();
 
-			ShaderPSODesc mForwardPSOCreateInfo;
-			ShaderPSODesc mDefferedPSOCreateInfo;
-			ShaderPSODesc mGBufferPSOCreateInfo;
+			ShaderPSODesc mForwardPSOCreateInfo = ShaderPSODesc();
+			ShaderPSODesc mDefferedPSOCreateInfo = ShaderPSODesc();
+			ShaderPSODesc mGBufferPSOCreateInfo = ShaderPSODesc();
 
-			ShaderPipelineVariantDesc mInstanceDesc;
+			ShaderPipelineVariantDesc mInstanceDesc= ShaderPipelineVariantDesc();
 
-			std::vector<ShaderPipelineSwitch> Switches;
+			std::vector<ShaderPipelineSwitch> Switches = std::vector<ShaderPipelineSwitch>();
 
-			std::vector<std::string> mDefines;
+			std::vector<std::string> mDefines = std::vector<std::string>();
 
 			bool isRenderingPipeline = true;
 			ShaderRenderingBakingDesc mBakingDesc;
-
-			//Increases memory cosumptions as it stores KeyChain information
-			bool SaveKeyChainsInfo = DEBUG_TRUE_BOOL;
 		};
-
-
 
 		class NEAPI ShaderPipeline
 		{
@@ -84,12 +69,17 @@ namespace Nuclear
 			bool Bake(ShaderRenderingBakingDesc* bakingdesc);
 
 			Uint32 GetHashedKey(const std::string& Key);
-			ShaderPipelineVariant GetVariant(Uint32 Key);
+			ShaderPipelineVariant* GetVariant(Uint32 Key);
+
+			const std::vector<ShaderPipelineSwitch>& GetSwitches() const;
+
 		protected:
 			Assets::Shader* mParentAsset;
-			std::vector<ShaderPipelineSwitch> mKeyChain;
 			std::unordered_map<Uint32, ShaderPipelineVariant> mVariants;
 			std::vector<ShaderPipelineVariantDesc> mVariantsInfo;
+
+			std::vector<ShaderPipelineSwitch> mSwitches;
+
 			ShaderPipelineDesc mDesc;
 
 			ShaderPipelineVariant CreateForwardVariant(const ShaderPipelineVariantDesc& variantdesc, const ShaderPipelineDesc& pipelinedesc);

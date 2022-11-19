@@ -125,7 +125,7 @@ class Sample1 : public Client
 	Assets::Animations* BobAnimation;
 	Assets::Animations* VampireAnimation;
 
-	Assets::Shader* DiffuseOnlyShader;
+	//Assets::Shader* DiffuseOnlyShader;
 
 	Assets::Shader* BlinnPhong;
 
@@ -140,7 +140,7 @@ class Sample1 : public Client
 	////Rendering::WireFrame WireFrameRP;
 	//Rendering::BlinnPhong BlinnPhongRP;
 
-	//Rendering::ForwardRenderingPipeline ForwardRP;
+	Rendering::ForwardRenderingPath ForwardRP;
 
 	Rendering::GeometryPass GeoPass;
 
@@ -196,11 +196,11 @@ public:
 		
 		CubeTextures.mTextures.push_back(CubeSet);
 
-		CubeMaterial.Create(&CubeTextures, &BlinnPhongRP);
-		NanosuitMaterial.Create(NanosuitMaterialD, &DiffuseRP);
-		CyborgMaterial.Create(CyborgMaterialD, &DiffuseRP);
-		BobMaterial.Create(BobMaterialD, &DiffuseRP);
-		VampireMaterial.Create(VampireMaterialD, &DiffuseRP);
+		CubeMaterial.Create(&CubeTextures, BlinnPhong);
+		NanosuitMaterial.Create(NanosuitMaterialD, BlinnPhong);
+		CyborgMaterial.Create(CyborgMaterialD, BlinnPhong);
+		BobMaterial.Create(BobMaterialD, BlinnPhong);
+		VampireMaterial.Create(VampireMaterialD, BlinnPhong);
 
 		CubeSet.mData.clear();
 
@@ -273,10 +273,10 @@ public:
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		Importers::ShaderLoadingDesc desc;
-		DiffuseOnlyShader = mAssetManager->Import("@CommonAssets@/Textures/crate_diffuse.png", desc);
+		BlinnPhong = mAssetManager->Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
 
-		Renderer->RegisterShadingModel(&BlinnPhongRP);
-		Renderer->RegisterShadingModel(&DiffuseRP);
+		Renderer->RegisterShader(BlinnPhong);
+		//Renderer->RegisterShadingModel(&DiffuseRP);
 	//	Renderer->RegisterShadingModel(&WireFrameRP);
 
 		Renderer->Bake(_Width_, _Height_);
@@ -301,7 +301,7 @@ public:
 		InitRenderer();
 
 		SetupAssets();
-		GeoPass.Initialize(&ForwardRP);
+		GeoPass.pRenderingPath = &ForwardRP;
 		Renderer->AddRenderPass(&GeoPass);
 	//	Renderer->GetBackground().SetSkybox(&Skybox);
 

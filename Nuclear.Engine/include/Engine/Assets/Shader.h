@@ -14,7 +14,7 @@ namespace Nuclear
 
         struct ShaderBuildDesc 
         {
-            Graphics::ShaderPipelineDesc mPipelineDesc;
+            Graphics::ShaderPipelineDesc mPipelineDesc = Graphics::ShaderPipelineDesc();
 
             bool mSupportForwardRendering = true;
             bool mSupportDefferedRendering = false;

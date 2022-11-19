@@ -1,7 +1,8 @@
 #Blinn Phong Nuclear Shader
 [Shader]
-Name = BlinnPhong
+Name = "BlinnPhong"
 #SupportForwardRendering = true
+SupportSkinnedMeshes = true
 SupportDefferedRendering = true
 SupportShadows = true
 
@@ -19,6 +20,14 @@ DSVFormat = "TEX_FORMAT_D32_FLOAT"
 VertexShader = "VShader"
 PixelShader = "PShader"
 
+
+[DefferedPSO]
+RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]
+DSVFormat = "TEX_FORMAT_D32_FLOAT"
+VertexShader = "VShader"
+PixelShader = "PShader"
+
+
 [GBufferPSO]
 PixelShader = "PShader"
 RTVFormats = [ "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA8_UNORM" ]
@@ -26,12 +35,12 @@ DSVFormat = "TEX_FORMAT_D32_FLOAT"
 
 			
 [VShader]
-EntryPoint = 
+EntryPoint = "main"
 Path = "Basic.vs.hlsl"
-Defines = 
+#Defines = 
 
 [PShader]
-Source = """ 
+Source = '''
 //Definitions:
 //#define NE_USE_NORMAL_MAPS
 //#define NE_DIR_LIGHTS_NUM 1
@@ -262,4 +271,4 @@ float4 DoLighting(PixelInputType input)
    return float4(result, 1.0f);
 }
 
-"""
+'''

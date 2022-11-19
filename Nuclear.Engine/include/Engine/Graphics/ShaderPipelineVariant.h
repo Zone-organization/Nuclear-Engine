@@ -2,7 +2,7 @@
 #include <Core\NE_Common.h>
 #include <Engine/Graphics/Texture.h>
 #include <Engine/Graphics/BakeStatus.h>
-#include <Engine/Rendering/ShaderEffect.h>
+#include <Engine/Graphics/ShaderPipelineSwitch.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
@@ -26,21 +26,21 @@ namespace Nuclear
 
 		struct ShaderPSODesc 
 		{
-			ShaderPSOType mType;
-			GraphicsPipelineDesc GraphicsPipeline;
+			ShaderPSOType mType = ShaderPSOType::Unknown;
+			GraphicsPipelineDesc GraphicsPipeline = GraphicsPipelineDesc();
 		};		
 
 		struct ShaderPipelineVariantDesc
 		{    
-			ShaderPSODesc mMainPSOCreateInfo; 
-			ShaderPSODesc mGBufferPSOCreateInfo;
+			ShaderPSODesc mMainPSOCreateInfo = ShaderPSODesc();
+			ShaderPSODesc mGBufferPSOCreateInfo = ShaderPSODesc();
 
 			bool _isDeffered = false;
 			bool _isSkinned = false;
 			bool _isShadowed = false;
 
-			std::set<std::string> mDefines;
-			Uint32 mHashKey;
+			std::set<std::string> mDefines = std::set<std::string>();
+			Uint32 mHashKey = -1;
 		};
 
 		//Used for both Deffered and Forward pipelines

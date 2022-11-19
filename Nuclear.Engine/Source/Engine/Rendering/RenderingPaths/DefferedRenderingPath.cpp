@@ -18,30 +18,34 @@ namespace Nuclear
 
         void DefferedRenderingPath::StartRendering(Graphics::ShaderPipelineVariant* pipeline)
         {
-            pActivePipeline = pipeline;
-
-            //Render To Gbuffer
-            Graphics::Context::GetContext()->SetPipelineState(pipeline->GetGBufferPipeline());
-
-            std::vector<ITextureView*> RTargets;
-            for (auto& i : pipeline->mGBuffer.mRenderTargets)
+            if (pActivePipeline != pipeline)
             {
-                RTargets.push_back(i.GetRTV());
-            }
-            Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-            for (auto& i : RTargets)
-            {
-                Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-            }
+                pActivePipeline = pipeline;
 
-            Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                //Render To Gbuffer
+                Graphics::Context::GetContext()->SetPipelineState(pipeline->GetGBufferPipeline());
+
+                std::vector<ITextureView*> RTargets;
+                for (auto& i : pipeline->mGBuffer.mRenderTargets)
+                {
+                    RTargets.push_back(i.GetRTV());
+                }
+                Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                for (auto& i : RTargets)
+                {
+                    Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                }
+
+                Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+            }
         }
         void DefferedRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
             pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
 
-            UpdateAnimationCB(mesh.mAnimator);
+            UpdateAnimationCB(mesh.GetAnimator());
 
             ////Shadows
             //////////////////////////     TODO    //////////////////////////////////////
@@ -62,7 +66,7 @@ namespace Nuclear
             //    }
             //}
 
-            DrawMesh(mesh.mMesh, mesh.mMaterial);
+            DrawMesh(mesh.GetMesh(), mesh.GetMaterial());
         }
     }
 }
