@@ -96,12 +96,10 @@ namespace Nuclear
 		void ShaderPipeline::Create(const ShaderPipelineDesc& Desc)
 		{
 			mDesc = Desc;
-			std::vector<ShaderPipelineVariantDesc> InstancesInfo;
-
 			ShaderPipelineVariantDesc ZeroInstance;
 			ZeroInstance.mHashKey = 0;
 
-			InstancesInfo.push_back(ZeroInstance);
+			mVariantsInfo.push_back(ZeroInstance);
 
 			//Phase 1: Process Switches
 			for (Uint32 ISwitch = 0; ISwitch < Desc.Switches.size(); ISwitch++)
@@ -137,7 +135,7 @@ namespace Nuclear
 
 						int Found = 0;
 
-						for (auto& i : InstancesInfo)
+						for (auto& i : mVariantsInfo)
 						{
 							if (i.mHashKey == Info_.mHashKey)
 							{
@@ -147,7 +145,7 @@ namespace Nuclear
 
 						if (Found == 0)
 						{
-							InstancesInfo.push_back(Info_);
+							mVariantsInfo.push_back(Info_);
 						}
 					}
 				}
@@ -184,9 +182,9 @@ namespace Nuclear
 
 			RefCntAutoPtr<IShader> VShader;
 			RefCntAutoPtr<IShader> PShader;
-
-			GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(Desc.mVertexShader.mSource, Info.mDefines), VShader.RawDblPtr(), SHADER_TYPE_VERTEX);
-			GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(Desc.mVertexShader.mSource, Info.mDefines), PShader.RawDblPtr(), SHADER_TYPE_PIXEL);
+			GraphicsEngine::GetShaderManager()->CreateShader(VShader.RawDblPtr(), Desc.mForwardPSOCreateInfo.mVertexShader);
+			GraphicsEngine::GetShaderManager()->CreateShader(PShader.RawDblPtr(), Desc.mForwardPSOCreateInfo.mPixelShader);
+		//	GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(Desc.mForwardPSOCreateInfo.mVertexShader.mSource, Info.mDefines), , SHADER_TYPE_PIXEL);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			std::string psoname(Desc.mName + "_ID_" + std::to_string(Info.mHashKey));
@@ -225,7 +223,7 @@ namespace Nuclear
 		}
 		ShaderPipelineVariant* ShaderPipeline::GetVariant(Uint32 Key)
 		{
-			for (auto i : mVariants)
+			for (auto& i : mVariants)
 			{
 				if (i.first == Key)
 				{
@@ -234,7 +232,11 @@ namespace Nuclear
 			}
 
 			NUCLEAR_ERROR("[ShaderPipeline] Variant: '{0}' Not Found!", Key);
-			return &mVariants.begin()->second;
+
+			if(mVariants.size() > 0)
+				return &mVariants.begin()->second;
+
+			return nullptr;
 		}
 
 		const std::vector<ShaderPipelineSwitch>& ShaderPipeline::GetSwitches() const

@@ -3,9 +3,6 @@
 #include <iostream>
 #include "Engine\Scripting\ScriptingEngine.h"
 
-#pragma comment(lib,"Nuclear.Core.lib")
-#pragma comment(lib,"glfw3.lib")
-
 RENDER_DEVICE_TYPE SelectRenderer()
 {
 	std::cout << "Select Renderer: \n"

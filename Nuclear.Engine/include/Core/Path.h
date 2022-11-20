@@ -7,20 +7,24 @@ namespace Nuclear
 {
 	namespace Core
 	{
-		class Path
+		class NEAPI Path
 		{
 		public:
 			Path();
 			Path(const char* path, bool ParseForReservedPaths = true);
 			Path(const std::string& path, bool ParseForReservedPaths = true);
 			
-			std::string mRealPath;
-			std::string mInputPath;
+			void SetPath(const std::string& path, bool ParseForReservedPaths = true);
+
+			const std::string& GetInputPath() const;
+			const std::string& GetRealPath() const;
 
 			static std::unordered_map<std::string, std::string> mReservedPaths;
 
 		private:
 			void Parse();
+			std::string mRealPath;
+			std::string mInputPath;
 		};
 
 	}

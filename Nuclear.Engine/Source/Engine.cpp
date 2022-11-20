@@ -12,8 +12,6 @@
 #include <GLFW/include/GLFW/glfw3.h>
 
 //Dependencies Linking
-#pragma comment(lib,"Nuclear.Core.lib")
-
 #pragma comment(lib,"assimp-vc143-mt.lib")
 
 #pragma comment(lib,"freetype.lib")

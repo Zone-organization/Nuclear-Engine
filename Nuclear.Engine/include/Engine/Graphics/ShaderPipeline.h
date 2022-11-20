@@ -11,19 +11,7 @@
 namespace Nuclear
 {
 	namespace Graphics
-	{
-		struct ShaderObjectCreationDesc
-		{
-			std::string mName;
-			SHADER_TYPE mType;
-			std::string mEntrypoint = "main";
-
-			std::string mSource;
-			Core::Path mPath;
-
-			std::vector<std::string> mDefines;
-		};
-				
+	{				
 		struct ShaderRenderingBakingDesc
 		{
 			Uint32 DirLights = 0;
@@ -40,9 +28,6 @@ namespace Nuclear
 		struct ShaderPipelineDesc
 		{
 			std::string mName= "";
-
-			ShaderObjectCreationDesc mVertexShader = ShaderObjectCreationDesc();
-			ShaderObjectCreationDesc mPixelShader = ShaderObjectCreationDesc();
 
 			ShaderPSODesc mForwardPSOCreateInfo = ShaderPSODesc();
 			ShaderPSODesc mDefferedPSOCreateInfo = ShaderPSODesc();

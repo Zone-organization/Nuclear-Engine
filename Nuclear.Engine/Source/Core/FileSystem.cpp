@@ -8,7 +8,7 @@ namespace Nuclear
 	{
 			std::string FileSystem::LoadFileToString(const Path& Filepath)
 			{
-				std::ifstream file(Filepath.mRealPath, std::ios::in);
+				std::ifstream file(Filepath.GetRealPath(), std::ios::in);
 				std::string data = "", line = "";
 
 				if (file.is_open())
@@ -18,7 +18,7 @@ namespace Nuclear
 				}
 				else
 				{
-					NUCLEAR_ERROR("[FileSystem] Couldn't Read File: '{0}'", Filepath.mRealPath);
+					NUCLEAR_ERROR("[FileSystem] Couldn't Read File: '{0}'", Filepath.GetRealPath());
 					return std::string("");
 				}
 				return data;
@@ -26,7 +26,7 @@ namespace Nuclear
 
 			std::string FileSystem::LoadShader(const Path& Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder)
 			{
-				std::ifstream file(Filepath.mRealPath, std::ios::in);
+				std::ifstream file(Filepath.GetRealPath(), std::ios::in);
 				std::string data = "", line = "";
 
 				if (file.is_open())
@@ -38,7 +38,7 @@ namespace Nuclear
 				}
 				else
 				{
-					NUCLEAR_ERROR("[FileSystem] Couldn't Read Shader File: '{0}'", Filepath.mRealPath);
+					NUCLEAR_ERROR("[FileSystem] Couldn't Read Shader File: '{0}'", Filepath.GetRealPath());
 					return std::string();
 				}
 				if (reverseorder == false)

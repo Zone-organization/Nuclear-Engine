@@ -36,6 +36,8 @@ namespace Nuclear
 			if(Result)
 				NUCLEAR_INFO("[Context] Diligent Graphics API Initialized.");
 
+			GraphicsEngine::GetShaderManager()->Initialize();
+
 			return true;
 		}
 

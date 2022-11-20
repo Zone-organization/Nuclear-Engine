@@ -5,7 +5,7 @@ namespace Nuclear
 {
 	namespace Core
 	{
-		class Input
+		class NEAPI Input
 		{
 		public:
 			enum class MouseInputMode { Virtual, Normal, Hidden };

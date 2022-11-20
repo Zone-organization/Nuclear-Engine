@@ -24,8 +24,22 @@ namespace Nuclear
 			Unknown
 		};
 
+		struct ShaderObjectCreationDesc
+		{
+			std::string mName ="";
+			SHADER_TYPE mType = SHADER_TYPE_UNKNOWN;
+			std::string mEntrypoint = "main";
+
+			std::string mSource = "";
+			Core::Path mPath = "";
+
+			std::vector<std::string> mDefines = std::vector<std::string>();
+		};
+
 		struct ShaderPSODesc 
 		{
+			ShaderObjectCreationDesc mVertexShader = ShaderObjectCreationDesc();
+			ShaderObjectCreationDesc mPixelShader = ShaderObjectCreationDesc();
 			ShaderPSOType mType = ShaderPSOType::Unknown;
 			GraphicsPipelineDesc GraphicsPipeline = GraphicsPipelineDesc();
 		};		

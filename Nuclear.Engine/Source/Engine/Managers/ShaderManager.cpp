@@ -138,9 +138,8 @@ namespace Nuclear
 		}
 
 
-		Graphics::ShaderObjectCreationDesc ParsePSOShader(toml::table* tbl,std::string_view& name, SHADER_TYPE type)
+		void ParsePSOShader(toml::table* tbl,std::string_view& name, SHADER_TYPE type , Graphics::ShaderObjectCreationDesc& result)
 		{
-			Graphics::ShaderObjectCreationDesc result;
 			result.mType = type;
 			result.mName = name.data();
 			auto entrypointnode = tbl->get("EntryPoint");
@@ -180,23 +179,19 @@ namespace Nuclear
 					std::optional<std::string> path = pathnode->value<std::string>();
 					if (path.has_value())
 					{
-						result.mPath = path.value();
+						result.mPath = Core::Path(path.value());
 					}
 				}
 				else {
 					NUCLEAR_ERROR("[ShaderManager] Shader: ", name , " has no Source or Path!");
 				}
 			}
-			
-			return result;
 		}
 
 
 
-		Graphics::ShaderPSODesc ParsePSO(toml::table* tbl, toml::table& parent)
+		void ParsePSO(toml::table* tbl, toml::table& parent, Graphics::ShaderPSODesc& desc)
 		{
-			Graphics::ShaderPSODesc desc;
-
 			if (toml::array* arr = tbl->get("RTVFormats")->as_array())
 			{
 				desc.GraphicsPipeline.NumRenderTargets = arr->size();
@@ -214,17 +209,15 @@ namespace Nuclear
 			if (vsnode)
 			{
 				auto str1 = vsnode->value<std::string_view>();
-				ParsePSOShader(parent.get(str1.value())->as_table(), str1.value(), SHADER_TYPE_VERTEX);
+				 ParsePSOShader(parent.get(str1.value())->as_table(), str1.value(), SHADER_TYPE_VERTEX, desc.mVertexShader);
 			}
 			auto psnode = tbl->get("PixelShader");
 			if (psnode)
 			{
 				auto str2 = psnode->value<std::string_view>();
-				ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL);
+				 ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL, desc.mPixelShader);
 			}
-			return desc;	
 		}
-
 
 		bool ShaderManager::ParseShaderAsset(const std::string& source, Assets::ShaderBuildDesc& desc)
 		{
@@ -259,7 +252,7 @@ namespace Nuclear
 					std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
 					if (str1.has_value())
 					{
-						desc.mPipelineDesc.mForwardPSOCreateInfo = ParsePSO(tbl.get(str1.value())->as_table(), tbl);
+						ParsePSO(tbl.get(str1.value())->as_table(), tbl, desc.mPipelineDesc.mForwardPSOCreateInfo);
 					}
 				}
 
@@ -271,7 +264,7 @@ namespace Nuclear
 					{ 
 						auto tbl1 = tbl.get(str1.value());
 						if (tbl1)
-							desc.mPipelineDesc.mDefferedPSOCreateInfo = ParsePSO(tbl1->as_table(), tbl);
+							ParsePSO(tbl1->as_table(), tbl, desc.mPipelineDesc.mDefferedPSOCreateInfo);
 						else
 							NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> DefferedPipeline '{0}' not found", str1.value());
 					}
@@ -281,7 +274,7 @@ namespace Nuclear
 					{
 						auto tbl2 = tbl.get(str2.value());
 						if (tbl2)
-							desc.mPipelineDesc.mGBufferPSOCreateInfo = ParsePSO(tbl2->as_table(), tbl);
+							ParsePSO(tbl2->as_table(), tbl, desc.mPipelineDesc.mGBufferPSOCreateInfo);
 						else
 							NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> GBufferPipeline '{0}' not found", str2.value());
 					}
@@ -360,7 +353,7 @@ namespace Nuclear
 			std::string Source = desc.mSource;
 			if (Source.empty())
 			{
-				Source = Core::FileSystem::LoadShader(desc.mPath.mRealPath, desc.mDefines, std::vector<std::string>(), true);
+				Source = Core::FileSystem::LoadShader(desc.mPath.GetRealPath(), desc.mDefines, std::vector<std::string>(), true);
 			}
 			else
 			{

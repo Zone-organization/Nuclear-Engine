@@ -32,9 +32,30 @@ namespace Nuclear
 			}
 		}
 
+		void Path::SetPath(const std::string& path, bool ParseForReservedPaths)
+		{
+			mInputPath = path;
+			mRealPath = mInputPath;
+
+			if (ParseForReservedPaths)
+			{
+				Parse();
+			}
+		}
+
+		const std::string& Path::GetInputPath() const
+		{
+			return mInputPath;
+		}
+
+		const std::string& Path::GetRealPath() const
+		{
+			return mRealPath;
+		}
+
 		void Path::Parse()
 		{
-			for (auto str : mReservedPaths)
+			for (auto& str : mReservedPaths)
 			{
 				auto Offset = mInputPath.find(str.first);
 				if (Offset != std::string::npos)

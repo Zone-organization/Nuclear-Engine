@@ -9,7 +9,7 @@ namespace Nuclear
 		struct GraphicsEngineDesc
 		{
 			//The shader manager used internally by the engine if this is a nullptr the engine auto create a one.
-			Managers::ShaderManager* DefaultShaderManager;
+			Managers::ShaderManager* DefaultShaderManager = nullptr;
 
 			SwapChainDesc SCDesc;
 

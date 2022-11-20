@@ -166,8 +166,8 @@ namespace Nuclear
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("GAMMACORRECTION", true));
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("BLOOM", true));
 
-				PSOCreateInfo.mVertexShader.mPath = mDesc.PostFX_VS_Path;
-				PSOCreateInfo.mPixelShader.mPath = mDesc.PostFX_PS_Path;
+				PSOCreateInfo.mForwardPSOCreateInfo.mVertexShader.mPath = mDesc.PostFX_VS_Path;
+				PSOCreateInfo.mForwardPSOCreateInfo.mPixelShader.mPath = mDesc.PostFX_PS_Path;
 
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;

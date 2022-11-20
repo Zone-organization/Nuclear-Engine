@@ -36,7 +36,7 @@ DSVFormat = "TEX_FORMAT_D32_FLOAT"
 			
 [VShader]
 EntryPoint = "main"
-Path = "Basic.vs.hlsl"
+Path = '@NuclearAssets@/Shaders/Basic.vs.hlsl'
 #Defines = 
 
 [PShader]
