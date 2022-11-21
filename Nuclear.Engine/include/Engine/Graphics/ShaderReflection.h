@@ -8,25 +8,23 @@ namespace Nuclear
 
 		struct ShaderShadowMapsInfo
 		{
-			Assets::ShaderTexture mDirPos_SMInfo;         //Texture2DArray
-			Assets::ShaderTexture mSpot_SMInfo;         //Texture2DArray
-			Assets::ShaderTexture mOmniDir_SMInfo;        //TextureCubeArray
+			Assets::ShaderTexture mDirPos_SMInfo = Assets::ShaderTexture();         //Texture2DArray
+			Assets::ShaderTexture mSpot_SMInfo = Assets::ShaderTexture();        //Texture2DArray
+			Assets::ShaderTexture mOmniDir_SMInfo = Assets::ShaderTexture();        //TextureCubeArray
 		};
-		class NEAPI ShaderReflection
-		{
-		public:
 
-			//This can be filled automatically by ReflectPixelShaderData(), Or fill it manually
-			//Note: It is very important to fill it in order for material creation work with the pipeline.
-			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo;
-			std::vector<Assets::ShaderTexture> mIBLTexturesInfo;
-			ShaderShadowMapsInfo mShadowMapsInfo;
+		//Should be constant for all variants
+		struct ShaderReflection
+		{
+			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo = std::vector<Assets::ShaderTexture>();
 
 		};
 
-		class NEAPI ShaderVariantReflection
+		//can change from a variant to the other
+		struct ShaderVariantReflection
 		{
-		public:
+			ShaderShadowMapsInfo mShadowMapsInfo = ShaderShadowMapsInfo();
+			std::vector<Assets::ShaderTexture> mIBLTexturesInfo = std::vector<Assets::ShaderTexture>();
 		};
 	}
 }

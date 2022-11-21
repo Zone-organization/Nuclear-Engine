@@ -24,7 +24,12 @@ namespace Nuclear
 				return data;
 			}
 
-			std::string FileSystem::LoadShader(const Path& Filepath, std::vector<std::string> defines, std::vector<std::string> includes, bool reverseorder)
+			std::string FileSystem::LoadShader(const Path& Filepath)
+			{
+				return LoadFileToString(Filepath);
+			}
+
+			std::string FileSystem::LoadShader(const Path& Filepath, std::set<std::string> defines, std::set<std::string> includes, bool reverseorder)
 			{
 				std::ifstream file(Filepath.GetRealPath(), std::ios::in);
 				std::string data = "", line = "";
@@ -54,9 +59,9 @@ namespace Nuclear
 							data = data.substr(data.find("\n") + 1, data.length() - 1);
 							MergedCode.push_back(firstLine + "\n");
 						}
-						for (unsigned int i = 0; i < defines.size(); ++i)
+						for (auto& i : defines)
 						{
-							std::string define = "#define " + defines[i] + "\n";
+							std::string define = "#define " + i + "\n";
 							MergedCode.push_back(define);
 						}
 
@@ -78,9 +83,9 @@ namespace Nuclear
 							data = data.substr(data.find("\n") + 1, data.length() - 1);
 							MergedCode.push_back(firstLine + "\n");
 						}
-						for (unsigned int i = 0; i < includes.size(); ++i)
+						for (auto& i : includes)
 						{
-							std::string define = "#include \"" + includes[i] + "\"\n";
+							std::string define = "#include \"" + i + "\"\n";
 							MergedCode.push_back(define);
 						}
 
@@ -104,9 +109,9 @@ namespace Nuclear
 							data = data.substr(data.find("\n") + 1, data.length() - 1);
 							MergedCode.push_back(firstLine + "\n");
 						}
-						for (unsigned int i = 0; i < includes.size(); ++i)
+						for (auto& i : includes)
 						{
-							std::string define = "#include \"" + includes[i] + "\"\n";
+							std::string define = "#include \"" + i + "\"\n";
 							MergedCode.push_back(define);
 						}
 
@@ -128,9 +133,9 @@ namespace Nuclear
 							data = data.substr(data.find("\n") + 1, data.length() - 1);
 							MergedCode.push_back(firstLine + "\n");
 						}
-						for (unsigned int i = 0; i < defines.size(); ++i)
+						for (auto& i : defines)
 						{
-							std::string define = "#define " + defines[i] + "\n";
+							std::string define = "#define " + i + "\n";
 							MergedCode.push_back(define);
 						}
 

@@ -8,9 +8,10 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		static Uint32 gRenderQueue = 0;
+		static Uint32 gRenderQueue = 1;
 		ShaderPipelineVariant::ShaderPipelineVariant()
 		{
+			pParent = nullptr;
 			mRenderQueue = gRenderQueue;
 			gRenderQueue++;
 		}
@@ -21,7 +22,7 @@ namespace Nuclear
 			{
 				return GetGBufferPipeline();
 			}
-			return GetShadersPipeline();
+			return GetMainPipeline();
 		}
 		IShaderResourceBinding* ShaderPipelineVariant::GetRenderingSRB()
 		{
@@ -29,22 +30,19 @@ namespace Nuclear
 			{
 				return GetGBufferPipelineSRB();
 			}
-			return GetShadersPipelineSRB();
+			return GetMainPipelineSRB();
 		}
-		Assets::Shader* ShaderPipelineVariant::GetShaderAsset()
+		Graphics::ShaderPipeline* ShaderPipelineVariant::GetParentPipeline()
 		{
-			return pShader;
+			return pParent;
 		}
-		Uint32 ShaderPipelineVariant::GetShaderAssetID()
-		{
-			return mShaderID;
-		}
-		IPipelineState* ShaderPipelineVariant::GetShadersPipeline()
+
+		IPipelineState* ShaderPipelineVariant::GetMainPipeline()
 		{
 			return mPipeline.RawPtr();
 		}
 
-		IShaderResourceBinding* ShaderPipelineVariant::GetShadersPipelineSRB()
+		IShaderResourceBinding* ShaderPipelineVariant::GetMainPipelineSRB()
 		{
 			return mPipelineSRB.RawPtr();
 		}
@@ -63,6 +61,10 @@ namespace Nuclear
 		{
 			return mRenderQueue;
 		}
+		Uint32 ShaderPipelineVariant::GetShaderID()
+		{
+			return mShaderAssetID;
+		}
 		Graphics::Texture ShaderPipelineVariant::GetDefaultTextureFromType(Uint8 Type)
 		{
 			//TODO: Improve
@@ -80,9 +82,19 @@ namespace Nuclear
 			}
 			return Managers::AssetManager::DefaultBlackTex;
 		}
-		Graphics::BakeStatus ShaderPipelineVariant::GetStatus()
+		//Graphics::BakeStatus ShaderPipelineVariant::GetStatus()
+		//{
+		//	return mStatus;
+		//}
+
+		const std::string& ShaderPipelineVariant::GetName() const
 		{
-			return mStatus;
+			return mName;
+		}
+
+		Graphics::ShaderVariantReflection& ShaderPipelineVariant::GetReflection()
+		{
+			return mReflection;
 		}
 
 		bool ShaderPipelineVariant::isValid()
@@ -98,7 +110,7 @@ namespace Nuclear
 			return mDesc._isDeffered;
 		}
 
-		std::vector<Graphics::RenderTargetDesc> ShaderPipelineVariant::GetGBufferDesc()
+		/*std::vector<Graphics::RenderTargetDesc> ShaderPipelineVariant::GetGBufferDesc()
 		{
 			return std::vector<Graphics::RenderTargetDesc>();
 		}
@@ -110,11 +122,6 @@ namespace Nuclear
 		void ShaderPipelineVariant::BakeGBufferRTs(Uint32 Width, Uint32 Height)
 		{
 			mGBuffer.Bake(Width, Height);
-		}
-
-		void ShaderPipelineVariant::AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value)
-		{
-			if (value > 0) { defines.push_back(name + std::to_string(value)); }
-		}
+		}*/
 	}
 }

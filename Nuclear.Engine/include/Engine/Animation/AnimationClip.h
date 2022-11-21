@@ -13,11 +13,12 @@ namespace Nuclear
 			~ClipNodeData()
 			{
 				childrenCount = 0;
-				name = std::string();
+				mName = std::string();
 				children.clear();
 			}
 			Math::Matrix4 transformation;
-			std::string name;
+			std::string mName;
+			Uint32 mHashedName;
 			int childrenCount;
 			std::vector<ClipNodeData> children;
 		};
@@ -28,13 +29,14 @@ namespace Nuclear
 			~AnimationClip();
 
 			Animation::Bone* FindBone(const std::string& name);
+			Animation::Bone* FindBone(Uint32 hashedname);
 
 
 			inline Float64 GetTicksPerSecond() { return m_TicksPerSecond; }
 			inline Float64 GetDuration() { return m_Duration; }
 
 			inline const ClipNodeData& GetRootNode() { return mRootNode; }
-			inline const std::unordered_map<std::string, Animation::BoneInfo>& GetBoneIDMap()
+			inline const std::unordered_map<Uint32, Animation::BoneInfo>& GetBoneIDMap()
 			{
 				return mBoneInfoMap;
 			}
@@ -45,7 +47,7 @@ namespace Nuclear
 			Float64 m_TicksPerSecond;
 			std::vector<Animation::Bone> mBones;
 			ClipNodeData mRootNode;
-			std::unordered_map<std::string, Animation::BoneInfo> mBoneInfoMap;
+			std::unordered_map<Uint32, Animation::BoneInfo> mBoneInfoMap;
 
 		};
 	}

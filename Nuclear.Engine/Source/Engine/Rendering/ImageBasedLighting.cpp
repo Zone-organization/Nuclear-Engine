@@ -24,7 +24,7 @@ namespace Nuclear
 				CreationAttribs.EntryPoint = "main";
 				CreationAttribs.Desc.Name = "CubemapSample_VS";
 
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/CubemapSample.vs.hlsl", std::vector<std::string>());
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/CubemapSample.vs.hlsl", std::set<std::string>());
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
@@ -75,7 +75,7 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "ERectToCubemap_PS";
 
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/EquirectangularToCubemap.ps.hlsl", std::vector<std::string>());
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/EquirectangularToCubemap.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
 					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
@@ -122,7 +122,7 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeIrradiance_PS";
 
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/IrradianceConvolution.ps.hlsl", std::vector<std::string>());
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/IrradianceConvolution.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
 					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
@@ -166,7 +166,7 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputePrefilter_PS";
 
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/PrefilterConvolution.ps.hlsl", std::vector<std::string>());
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/PrefilterConvolution.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
 					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);
@@ -211,7 +211,7 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeBRDF_VS";
 
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/FullScreenTriangle.vs.hlsl", std::vector<std::string>());
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/FullScreenTriangle.vs.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
 					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
@@ -229,7 +229,7 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeBRDF_PS";
 
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/BRDF.ps.hlsl", std::vector<std::string>());
+					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/PBR/BRDF.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
 					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 					Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/PBR/", &pShaderSourceFactory);

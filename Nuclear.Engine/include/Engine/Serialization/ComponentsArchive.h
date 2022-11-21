@@ -18,7 +18,7 @@ namespace Nuclear
 
 		template<class Archive> void serialize(Archive& archive, MeshComponent& c)
 		{
-			archive(cereal::make_nvp("Render", c.mRender));
+		//	archive(cereal::make_nvp("Render", c.mRender));
 		//	archive(cereal::make_nvp("Mesh ID", c.mMesh->mHashedName));
 	//		archive(cereal::make_nvp("Mesh Name", c.mMesh->mName));
 

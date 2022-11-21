@@ -133,7 +133,7 @@ namespace Nuclear
 			for (auto entity : view)
 			{
 				auto& MeshObject = view.get<Components::MeshComponent>(entity);
-				if (MeshObject.mRender && MeshObject.mCastShadows)               //TODO Animation component
+				if (MeshObject.GetCastShadows())               //TODO Animation component
 				{
 					auto& EntityInfo = scene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
@@ -210,7 +210,7 @@ namespace Nuclear
 			for (auto entity : view)
 			{
 				auto& MeshObject = view.get<Components::MeshComponent>(entity);
-				if (MeshObject.mRender && MeshObject.mCastShadows)               //TODO Animation component
+				if (MeshObject.GetCastShadows())               //TODO Animation component
 				{
 					auto& EntityInfo = scene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();

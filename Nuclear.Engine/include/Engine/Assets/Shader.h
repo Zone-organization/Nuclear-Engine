@@ -30,7 +30,6 @@ namespace Nuclear
 
             ShaderBuildDesc mBuildDesc;
             Graphics::ShaderPipeline mPipeline;
-            Graphics::ShaderReflection mReflection;
 
             ShaderType mType;
         };

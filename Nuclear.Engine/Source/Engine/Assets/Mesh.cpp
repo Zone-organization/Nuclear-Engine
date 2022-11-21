@@ -6,7 +6,7 @@ namespace Nuclear {
 	namespace Assets {
 #define MathPI 3.14159265358979323846f
 
-		Mesh::SubMesh::SubMesh(SubMeshData _data) : data(_data)
+		Mesh::SubMesh::SubMesh(const SubMeshData& _data) : data(_data)
 		{
 		}
 
@@ -57,7 +57,7 @@ namespace Nuclear {
 			data.indices.clear();
 		}
 
-		Mesh::Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animation::BoneInfo> BoneInfoMap, int BoneCounter)
+		Mesh::Mesh(const std::vector<SubMesh>& SubMeshes, const std::unordered_map<Uint32, Animation::BoneInfo>& BoneInfoMap, int BoneCounter)
 			:mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
 		{
 		}

@@ -85,6 +85,7 @@ namespace Nuclear
 		ShaderPipeline::ShaderPipeline(Assets::Shader* parent)
 			: mParentAsset(parent)
 		{
+			mReflection = Graphics::ShaderReflection();
 		}
 
 		ShaderPipeline::~ShaderPipeline()
@@ -154,6 +155,7 @@ namespace Nuclear
 
 		bool ShaderPipeline::Bake(ShaderRenderingBakingDesc* bakingdesc)
 		{
+			mDesc.pBakingDesc = bakingdesc;
 			//Phase 2: Create Pipelines
 			for (auto& Info : mVariantsInfo)
 			{
@@ -176,15 +178,49 @@ namespace Nuclear
 			return false;
 		}
 
-		ShaderPipelineVariant ShaderPipeline::CreateForwardVariant(const ShaderPipelineVariantDesc& Info, const ShaderPipelineDesc& Desc)
+		void SetIfFound(IPipelineState* pipeline,SHADER_TYPE ShaderType, const Char* Name, IDeviceObject* obj)
+		{
+			auto res = pipeline->GetStaticVariableByName(ShaderType, Name);
+
+			if (res) 
+			{
+				if (obj)
+				{
+					res->Set(obj);
+				}
+			}
+		}
+		void AddToDefinesIfNotZero(std::set<std::string>& defines, const std::string& name, Uint32 value)
+		{
+			if (value > 0) { defines.insert(name + std::to_string(value)); }
+		}
+		ShaderPipelineVariant ShaderPipeline::CreateForwardVariant(ShaderPipelineVariantDesc& Info, ShaderPipelineDesc& Desc)
 		{
 			ShaderPipelineVariant result;
+			result.pParent = this;
+			result.mShaderAssetID = mParentAsset->GetID();
 
 			RefCntAutoPtr<IShader> VShader;
 			RefCntAutoPtr<IShader> PShader;
+
+			AddToDefinesIfNotZero(Info.mDefines, "NE_DIR_LIGHTS_NUM ", Desc.pBakingDesc->DirLights);
+			AddToDefinesIfNotZero(Info.mDefines, "NE_SPOT_LIGHTS_NUM ", Desc.pBakingDesc->SpotLights);
+			AddToDefinesIfNotZero(Info.mDefines, "NE_POINT_LIGHTS_NUM ", Desc.pBakingDesc->PointLights);
+
+			if (Desc.pBakingDesc->pShadowPass)
+			{
+				AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_DIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_DIR_CASTERS);
+				AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_SPOT_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_SPOT_CASTERS);
+				AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_OMNIDIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_OMNIDIR_CASTERS);
+			}
+
+			for (auto& i : Info.mDefines)
+			{
+				Desc.mForwardPSOCreateInfo.mVertexShader.mDefines.insert(i);
+				Desc.mForwardPSOCreateInfo.mPixelShader.mDefines.insert(i);
+			}
 			GraphicsEngine::GetShaderManager()->CreateShader(VShader.RawDblPtr(), Desc.mForwardPSOCreateInfo.mVertexShader);
 			GraphicsEngine::GetShaderManager()->CreateShader(PShader.RawDblPtr(), Desc.mForwardPSOCreateInfo.mPixelShader);
-		//	GraphicsEngine::GetShaderManager()->CreateShader(MergeCode(Desc.mForwardPSOCreateInfo.mVertexShader.mSource, Info.mDefines), , SHADER_TYPE_PIXEL);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			std::string psoname(Desc.mName + "_ID_" + std::to_string(Info.mHashKey));
@@ -193,15 +229,24 @@ namespace Nuclear
 			PSOCreateInfo.pVS = VShader;
 			PSOCreateInfo.pPS = PShader;
 
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(false);
+			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VShader, PShader);
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&result.mPipeline, PSOCreateInfo, Vars, true);
 
+			SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
+			SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Desc.pBakingDesc->AnimationBufferPtr);
+			SetIfFound(result.mPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
+
 			result.mPipeline->CreateShaderResourceBinding(&result.mPipelineSRB, true);
 
+			ReflectShaderPipelineVariant(result);
 			return result;
 		}
 
-		ShaderPipelineVariant ShaderPipeline::CreateDefferedVariant(const ShaderPipelineVariantDesc& variantdesc, const ShaderPipelineDesc& pipelinedesc)
+		ShaderPipelineVariant ShaderPipeline::CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc)
 		{
 			//TODO
 			return ShaderPipelineVariant();
@@ -244,11 +289,21 @@ namespace Nuclear
 			return mSwitches;
 		}
 
-		void ShaderPipeline::ReflectPixelShaderData(ShaderPipelineVariant& pipeline)
+		const Graphics::ShaderReflection& ShaderPipeline::GetReflection() const
 		{
-			if (pipeline.isDeffered())
+			return mReflection;
+		}
+
+		Assets::Shader* ShaderPipeline::GetShaderAsset()
+		{
+			return mParentAsset;
+		}
+
+		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline)
+		{
+			if (mFirstReflection && pipeline.isDeffered())
 			{
-				ReflectData(pipeline.GetGBufferPipelineSRB(), "NEMat_", mParentAsset->mReflection.mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
+				ReflectData(pipeline.GetGBufferPipelineSRB(), "NEMat_", mReflection.mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
 			}
 
 			for (Uint32 i = 0; i < pipeline.GetRenderingSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
@@ -261,22 +316,22 @@ namespace Nuclear
 				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV)
 				{
 					//Shadow Maps
-					if (VarName.find("NE_ShadowMap") == 0)
+					if (VarName.find("NE_ShadowMap_") == 0)
 					{
 						VarName.erase(0, 13);
 
 						Assets::ShaderTexture* tex;
 						if (VarName.find("DirPos") == 0)
 						{
-							tex = &mParentAsset->mReflection.mShadowMapsInfo.mDirPos_SMInfo;
+							tex = &pipeline.mReflection.mShadowMapsInfo.mDirPos_SMInfo;
 						}
 						else if (VarName.find("Spot") == 0)
 						{
-							tex = &mParentAsset->mReflection.mShadowMapsInfo.mSpot_SMInfo;
+							tex = &pipeline.mReflection.mShadowMapsInfo.mSpot_SMInfo;
 						}
 						else if (VarName.find("OmniDir") == 0)
 						{
-							tex = &mParentAsset->mReflection.mShadowMapsInfo.mOmniDir_SMInfo;
+							tex = &pipeline.mReflection.mShadowMapsInfo.mOmniDir_SMInfo;
 						}
 						else {
 							assert(false);
@@ -289,7 +344,7 @@ namespace Nuclear
 					}
 					else if (VarName.find("NEIBL_") == 0)
 					{
-						VarName.erase(0, 7);
+						VarName.erase(0, 6);
 
 						Assets::ShaderTexture ReflectedTex;
 						ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
@@ -297,13 +352,13 @@ namespace Nuclear
 						ReflectedTex.mSlot = i;
 						ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
 						ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
-						mParentAsset->mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
+						pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
 					}
-					else if (!pipeline.isDeffered())
+					else if (!pipeline.isDeffered() && mFirstReflection)
 					{
 						if (VarName.find("NEMat_") == 0)
 						{
-							VarName.erase(0, 7);
+							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
 							ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
@@ -311,11 +366,13 @@ namespace Nuclear
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
 							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
-							mParentAsset->mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
+							mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
 						}
 					}
 				}
 			}
+
+			mFirstReflection = false;
 		}
 	}
 }

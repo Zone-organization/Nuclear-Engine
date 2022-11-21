@@ -1,6 +1,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "Engine\Animation\Bone.h"
 #include "Core/Math/gtx/quaternion.hpp"
+#include "Core/Utilities/Hash.h"
+
 namespace Nuclear
 {
 	namespace Animation
@@ -10,7 +12,8 @@ namespace Nuclear
 			m_Name(name),
 			m_ID(ID),
 			m_LocalTransform(1.0f),
-			mData(BoneData())
+			mData(BoneData()),
+			mHashedName(Utilities::Hash(name))
 		{
 		}
 		inline Bone::Bone(const std::string& name, int ID, BoneData data)
@@ -18,7 +21,8 @@ namespace Nuclear
 			m_Name(name),
 			m_ID(ID),
 			m_LocalTransform(1.0f),
-			mData(data)
+			mData(data),
+			mHashedName(Utilities::Hash(name))
 		{
 		}
 		Bone::~Bone()
@@ -35,6 +39,10 @@ namespace Nuclear
 		}
 		inline Math::Matrix4 Bone::GetLocalTransform() { return m_LocalTransform; }
 		inline std::string Bone::GetBoneName() const { return m_Name; }
+		Uint32 Bone::GetBoneHashedName() const
+		{
+			return mHashedName;
+		}
 		inline int Bone::GetBoneID() { return m_ID; }
 		inline int Bone::GetPositionIndex(float animationTime)
 		{

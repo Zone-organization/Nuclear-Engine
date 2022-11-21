@@ -33,7 +33,7 @@ namespace Nuclear
 		{
 			if (!mPipelineUsableTextures.empty())
 			{
-				for (auto tex : mPipelineUsableTextures.at(index).mData)
+				for (auto& tex : mPipelineUsableTextures.at(index).mData)
 				{
 					pipeline->GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
 				}
@@ -63,7 +63,7 @@ namespace Nuclear
 					TextureSet NewTexSet;
 					for (auto& TexSetTexture : TexSet.mData)
 					{
-						for (auto &ShaderTexinfo : pShader->mReflection.mMaterialTexturesInfo)
+						for (auto &ShaderTexinfo : pShader->mPipeline.GetReflection().mMaterialTexturesInfo)
 						{
 							//Found a match
 							if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
@@ -82,13 +82,13 @@ namespace Nuclear
 				for (int i = 0; i < mPipelineUsableTextures.size(); i++)
 				{
 					//Check if a texture is missing
-					if (mPipelineUsableTextures.at(i).mData.size() != pShader->mReflection.mMaterialTexturesInfo.size())
+					if (mPipelineUsableTextures.at(i).mData.size() != pShader->mPipeline.GetReflection().mMaterialTexturesInfo.size())
 					{
 						//Stage 2A
 						//Generate a copy of the texture set that doesnt contain duplicated textures.
-						auto TexSetCopy = pShader->mReflection.mMaterialTexturesInfo;
+						auto TexSetCopy = pShader->mPipeline.GetReflection().mMaterialTexturesInfo;
 
-						for (auto& ShaderTexinfo : pShader->mReflection.mMaterialTexturesInfo)
+						for (auto& ShaderTexinfo : pShader->mPipeline.GetReflection().mMaterialTexturesInfo)
 						{
 							for (int j = 0; j < mPipelineUsableTextures.at(i).mData.size(); j++)
 							{

@@ -16,28 +16,28 @@ namespace Nuclear
         }
         void DefferedPass::Update(FrameRenderData* framedata)
         {
-            for (auto pipeline : framedata->mUsedPipelines)
+            for (auto pipeline : framedata->mUsedDefferedPipelines)
             {
                 if (pipeline != nullptr)
                 {
                     if (pipeline->isDeffered())
                     {
                         //Apply Lighting
-                        Graphics::Context::GetContext()->SetPipelineState(pipeline->GetShadersPipeline());
+                        Graphics::Context::GetContext()->SetPipelineState(pipeline->GetMainPipeline());
                         Graphics::Context::GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         for (int i = 0; i < pipeline->mGBuffer.mRenderTargets.size(); i++)
                         {
-                            pipeline->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(pipeline->mGBuffer.mRenderTargets.at(i).GetSRV());
+                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(pipeline->mGBuffer.mRenderTargets.at(i).GetSRV());
                         }
 
                         //IBL
-                        for (int i = 0; i < pipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.size(); i++)
+                        for (int i = 0; i < pipeline->GetReflection().mIBLTexturesInfo.size(); i++)
                         {
-                            pipeline->GetShadersPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetShaderAsset()->mReflection.mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetReflection().mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetReflection().mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
                         }
 
-                        Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetShadersPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetMainPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         Assets::DefaultMeshes::RenderScreenQuad();
 

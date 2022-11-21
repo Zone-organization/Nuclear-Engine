@@ -158,7 +158,7 @@ namespace Nuclear
 				{
 					if (arr[i].as_string())
 					{
-						result.mDefines.push_back(arr[i].value_or(""));
+						result.mDefines.insert(arr[i].value_or(""));
 					}
 				}
 			}
@@ -228,7 +228,7 @@ namespace Nuclear
 				tbl = toml::parse(source);
 
 				std::string_view ShaderName = tbl["Shader"]["Name"].value_or("UnNamed"sv);
-
+				desc.mPipelineDesc.mName = ShaderName;
 				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].value_or(false);
 				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].value_or(false);
 
@@ -353,7 +353,7 @@ namespace Nuclear
 			std::string Source = desc.mSource;
 			if (Source.empty())
 			{
-				Source = Core::FileSystem::LoadShader(desc.mPath.GetRealPath(), desc.mDefines, std::vector<std::string>(), true);
+				Source = Core::FileSystem::LoadShader(desc.mPath.GetRealPath(), desc.mDefines, std::set<std::string>(), true);
 			}
 			else
 			{
@@ -364,9 +364,9 @@ namespace Nuclear
 
 					std::string firstLine = Source.substr(0, Source.find("\n"));
 					
-					for (unsigned int i = 0; i < desc.mDefines.size(); ++i)
+					for (auto& i : desc.mDefines)
 					{
-						std::string define = "#define " + desc.mDefines[i] + "\n";
+						std::string define = "#define " + i + "\n";
 						MergedCode.push_back(define);
 					}
 

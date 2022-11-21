@@ -9,7 +9,7 @@ SupportShadows = true
 ForwardPipeline = "MainPSO"
 DefferedPipeline = "DefferedPSO"
 GBufferPipeline = "GBufferPSO"
-Variants = [ "ANIMATION" , "SHADOWS", "DEFFERED"]
+Variants = [ "ANIMATION" ]
 
 
 

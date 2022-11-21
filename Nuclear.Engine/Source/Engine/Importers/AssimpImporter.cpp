@@ -288,18 +288,20 @@ namespace Nuclear {
 			{
 				int boneID = -1;
 				std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
-				if (boneInfoMap.find(boneName) == boneInfoMap.end())
+				Uint32 bonehash = Utilities::Hash(boneName);
+
+				if (boneInfoMap.find(bonehash) == boneInfoMap.end())
 				{
 					Animation::BoneInfo newBoneInfo;
 					newBoneInfo.id = boneCount;
 					newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
-					boneInfoMap[boneName] = newBoneInfo;
+					boneInfoMap[bonehash] = newBoneInfo;
 					boneID = boneCount;
 					boneCount++;
 				}
 				else
 				{
-					boneID = boneInfoMap[boneName].id;
+					boneID = boneInfoMap[bonehash].id;
 				}
 				assert(boneID != -1);
 				auto weights = mesh->mBones[boneIndex]->mWeights;
@@ -328,13 +330,14 @@ namespace Nuclear {
 			{
 				auto channel = animation->mChannels[i];
 				std::string boneName = channel->mNodeName.data;
+				Uint32 bonehash = Utilities::Hash(boneName);
 
-				if (boneInfoMap.find(boneName) == boneInfoMap.end())
+				if (boneInfoMap.find(bonehash) == boneInfoMap.end())
 				{
-					boneInfoMap[boneName].id = boneCount;
+					boneInfoMap[bonehash].id = boneCount;
 					boneCount++;
 				}
-				Animation::Bone bone(channel->mNodeName.data, boneInfoMap[channel->mNodeName.data].id);
+				Animation::Bone bone(channel->mNodeName.data, boneInfoMap[bonehash].id);
 				InitBoneData(channel, bone.mData);
 				clip->mBones.push_back(bone);
 			}
@@ -346,7 +349,8 @@ namespace Nuclear {
 		{
 			assert(src);
 
-			dest->name = src->mName.data;
+			dest->mName = src->mName.data;
+			dest->mHashedName = Utilities::Hash(dest->mName);
 			dest->transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
 			dest->childrenCount = src->mNumChildren;
 

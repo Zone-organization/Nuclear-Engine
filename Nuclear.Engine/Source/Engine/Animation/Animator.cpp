@@ -6,6 +6,9 @@ namespace Nuclear
 	{
 		Animator::Animator()
 		{
+			m_CurrentAnimation = nullptr;
+			m_CurrentTime = 0;
+			m_DeltaTime = 0;
 		}
 		inline Animator::Animator(Animation::AnimationClip* animation)
 		{
@@ -38,10 +41,10 @@ namespace Nuclear
 		}
 		inline void Animator::CalculateBoneTransform(const Animation::ClipNodeData* node, Math::Matrix4 parentTransform)
 		{
-			std::string nodeName = node->name;
+			Uint32 nodehash = node->mHashedName;
 			Math::Matrix4 nodeTransform = node->transformation;
 
-			Bone* Bone = m_CurrentAnimation->FindBone(nodeName);
+			Bone* Bone = m_CurrentAnimation->FindBone(nodehash);
 
 			if (Bone)
 			{
@@ -52,10 +55,10 @@ namespace Nuclear
 			Math::Matrix4 globalTransformation = parentTransform * nodeTransform;
 
 			auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
-			if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+			if (boneInfoMap.find(nodehash) != boneInfoMap.end())
 			{
-				int index = boneInfoMap[nodeName].id;
-				Math::Matrix4 offset = boneInfoMap[nodeName].offset;
+				int index = boneInfoMap[nodehash].id;
+				Math::Matrix4 offset = boneInfoMap[nodehash].offset;
 				m_FinalBoneMatrices[index] = globalTransformation * offset;
 			}
 

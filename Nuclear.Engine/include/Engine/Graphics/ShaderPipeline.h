@@ -40,7 +40,7 @@ namespace Nuclear
 			std::vector<std::string> mDefines = std::vector<std::string>();
 
 			bool isRenderingPipeline = true;
-			ShaderRenderingBakingDesc mBakingDesc;
+			ShaderRenderingBakingDesc* pBakingDesc;
 		};
 
 		class NEAPI ShaderPipeline
@@ -57,7 +57,9 @@ namespace Nuclear
 			ShaderPipelineVariant* GetVariant(Uint32 Key);
 
 			const std::vector<ShaderPipelineSwitch>& GetSwitches() const;
+			const Graphics::ShaderReflection& GetReflection() const;
 
+			Assets::Shader* GetShaderAsset();
 		protected:
 			Assets::Shader* mParentAsset;
 			std::unordered_map<Uint32, ShaderPipelineVariant> mVariants;
@@ -66,12 +68,14 @@ namespace Nuclear
 			std::vector<ShaderPipelineSwitch> mSwitches;
 
 			ShaderPipelineDesc mDesc;
+			Graphics::ShaderReflection mReflection;
 
-			ShaderPipelineVariant CreateForwardVariant(const ShaderPipelineVariantDesc& variantdesc, const ShaderPipelineDesc& pipelinedesc);
-			ShaderPipelineVariant CreateDefferedVariant(const ShaderPipelineVariantDesc& variantdesc, const ShaderPipelineDesc& pipelinedesc);
+			ShaderPipelineVariant CreateForwardVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
+			ShaderPipelineVariant CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
 
 		private:
-			void ReflectPixelShaderData(ShaderPipelineVariant& pipeline);
+			void ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline);
+			bool mFirstReflection = true;
 		};
 	}
 }

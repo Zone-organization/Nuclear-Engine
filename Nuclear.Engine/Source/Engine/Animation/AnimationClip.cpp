@@ -26,5 +26,16 @@ namespace Nuclear
 			if (iter == mBones.end()) return nullptr;
 			else return &(*iter);
 		}
+		Animation::Bone* AnimationClip::FindBone(Uint32 hashedname)
+		{
+			auto iter = std::find_if(mBones.begin(), mBones.end(),
+				[&](const Animation::Bone& Bone)
+				{
+					return Bone.GetBoneHashedName() == hashedname;
+				}
+			);
+			if (iter == mBones.end()) return nullptr;
+			else return &(*iter);
+		}
 	}
 }

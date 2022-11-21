@@ -281,10 +281,17 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 
 				if (ImGui::CollapsingHeader("Mesh"))
 				{
-					ImGui::Checkbox("Render", &meshcomponent->mRender);
+					
+					bool b = meshcomponent->GetEnableRender();
+					if (ImGui::Checkbox("Render", &b))
+					{
+						meshcomponent->SetEnableRender(b);
+					}
 
 					if (meshcomponent->GetMesh())
 					{
+						
+
 						if (meshcomponent->GetMesh()->GetName() != std::string(""))
 						{
 							ImGui::Text(meshcomponent->GetMesh()->GetName().c_str());

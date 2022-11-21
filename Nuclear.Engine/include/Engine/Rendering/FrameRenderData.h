@@ -49,7 +49,7 @@ namespace Nuclear
 
             std::shared_ptr<Systems::CameraSystem> pCameraSystemPtr;
 
-            std::vector<Graphics::ShaderPipelineVariant*> mUsedPipelines;
+            std::vector<Graphics::ShaderPipelineVariant*> mUsedDefferedPipelines;
 
             //shadows
             bool mShadowsEnabled;

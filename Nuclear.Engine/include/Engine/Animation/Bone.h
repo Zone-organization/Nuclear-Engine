@@ -56,6 +56,8 @@ namespace Nuclear
 			void Update(float animationTime);
 			Math::Matrix4 GetLocalTransform();
 			std::string GetBoneName() const;
+			Uint32 GetBoneHashedName() const;
+
 			int GetBoneID();
 
 			int GetPositionIndex(float animationTime);
@@ -78,6 +80,7 @@ namespace Nuclear
 
 			Math::Matrix4 m_LocalTransform;
 			std::string m_Name;
+			Uint32 mHashedName;
 			int m_ID;
 		};
 	}

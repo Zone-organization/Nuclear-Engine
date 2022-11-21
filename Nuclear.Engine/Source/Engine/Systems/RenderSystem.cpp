@@ -256,7 +256,7 @@ namespace Nuclear
 				CreationAttribs.EntryPoint = "main";
 				CreationAttribs.Desc.Name = "SceneToScreenVS";
 
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
@@ -274,7 +274,7 @@ namespace Nuclear
 				CreationAttribs.EntryPoint = "main";
 				CreationAttribs.Desc.Name = "SceneToScreenPS";
 
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/SceneToScreen.ps.hlsl", std::vector<std::string>(), std::vector<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/SceneToScreen.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
 			}

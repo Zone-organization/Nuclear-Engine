@@ -3,6 +3,7 @@
 #include <Engine/Graphics/Texture.h>
 #include <Engine/Graphics/BakeStatus.h>
 #include <Engine/Graphics/ShaderPipelineSwitch.h>
+#include <Engine/Graphics/ShaderReflection.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
@@ -33,7 +34,7 @@ namespace Nuclear
 			std::string mSource = "";
 			Core::Path mPath = "";
 
-			std::vector<std::string> mDefines = std::vector<std::string>();
+			std::set<std::string> mDefines = std::set<std::string>();
 		};
 
 		struct ShaderPSODesc 
@@ -68,24 +69,26 @@ namespace Nuclear
 			IPipelineState* GetRenderingPipeline();
 			IShaderResourceBinding* GetRenderingSRB();
 
-			Assets::Shader* GetShaderAsset();
-			Uint32 GetShaderAssetID();
+			Graphics::ShaderPipeline* GetParentPipeline();
 
-			IPipelineState* GetShadersPipeline();
-			IShaderResourceBinding* GetShadersPipelineSRB();
+			IPipelineState* GetMainPipeline();
+			IShaderResourceBinding* GetMainPipelineSRB();
 
 			IPipelineState* GetGBufferPipeline();
 			IShaderResourceBinding* GetGBufferPipelineSRB();
 
 			Uint32 GetRenderQueue();
 
-			virtual Graphics::Texture GetDefaultTextureFromType(Uint8 Type);
+			Uint32 GetShaderID();
+			//TODO ??
+			Graphics::Texture GetDefaultTextureFromType(Uint8 Type);
 
-			virtual Graphics::BakeStatus GetStatus();
+			//Graphics::BakeStatus GetStatus();
 
-			virtual std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
+			//std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
 
-			std::string GetName();
+			const std::string& GetName() const;
+			Graphics::ShaderVariantReflection& GetReflection();
 
 			bool mAutoBake = true;
 
@@ -97,10 +100,12 @@ namespace Nuclear
 
 			//Move to main shader? its only RTs.
 			Rendering::GBuffer mGBuffer;
-			virtual void BakeGBufferRTs(Uint32 Width, Uint32 Height);
+			//void BakeGBufferRTs(Uint32 Width, Uint32 Height);
 
 		protected:
 			friend class ShaderPipeline;
+			friend class ShaderManager;
+
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
 
@@ -108,20 +113,17 @@ namespace Nuclear
 			RefCntAutoPtr<IShaderResourceBinding> mGBufferSRB;
 
 			ShaderPipelineVariantDesc mDesc;
+			ShaderVariantReflection mReflection;
 
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 
-			Uint32 mRenderQueue = -1;
-
+			Uint32 mRenderQueue = 1;
+			Uint32 mShaderAssetID = 0;
 			std::string mName;
 
-			Assets::Shader* pShader;
-			Uint32 mShaderID;
+			Graphics::ShaderPipeline* pParent;
 
 			bool _isValid = false;
-
-			//helper function
-			void AddToDefinesIfNotZero(std::vector<std::string>& defines, const std::string& name, Uint32 value);
 		};
 
 	}

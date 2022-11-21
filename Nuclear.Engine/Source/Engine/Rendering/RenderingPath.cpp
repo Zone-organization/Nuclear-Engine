@@ -63,7 +63,7 @@ namespace Nuclear
 					NUCLEAR_ERROR("[RenderingPath] Skipped Rendering invalid Mesh...");
 					return;
 				}
-				if (material->GetShaderID() != pActivePipeline->GetShaderAssetID())
+				if (material->GetShaderID() != pActivePipeline->GetShaderID())
 				{
 					NUCLEAR_ERROR("[RenderingPath] Skipped Rendering Mesh with invalid Material (shader asset & shader pipeline mismatch)...");
 					return;
@@ -71,16 +71,16 @@ namespace Nuclear
 			}
 			Uint64 offset = 0;
 
-			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
+			for (auto& i : mesh->mSubMeshes)
 			{
-				material->BindTexSet(pActivePipeline, mesh->mSubMeshes.at(i).data.TexSetIndex);
+				material->BindTexSet(pActivePipeline, i.data.TexSetIndex);
 
-				Graphics::Context::GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+				Graphics::Context::GetContext()->SetIndexBuffer(i.mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &i.mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 				DrawIndexedAttribs  DrawAttrs;
 				DrawAttrs.IndexType = VT_UINT32;
-				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
+				DrawAttrs.NumIndices = i.mIndicesCount;
 				Graphics::Context::GetContext()->DrawIndexed(DrawAttrs);
 
 			}

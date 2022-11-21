@@ -32,13 +32,16 @@ namespace Nuclear
 		void GeometryPass::Update(FrameRenderData* frame)
 		{
 			bool SkinnedRendering = false;
-			frame->mUsedPipelines.clear();
+			frame->mUsedDefferedPipelines.clear();
+
+			pRenderingPath->BeginFrame(frame);
 			//Render Meshes
 			for (auto& meshentity : frame->mMeshView)
 			{
 				auto& mesh = frame->mMeshView.get<Components::MeshComponent>(meshentity);
+					mesh.Update();
 
-				if (mesh.GetRenderQueue() != -1)
+				if (mesh.GetRenderQueue() > 0)
 				{			
 					pRenderingPath->StartRendering(mesh.GetRenderingVariant());
 
@@ -46,7 +49,6 @@ namespace Nuclear
 					EntityInfo.mTransform.Update();
 
 					pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
-					frame->mUsedPipelines.push_back(mesh.GetRenderingVariant());
 				}
 
 			}

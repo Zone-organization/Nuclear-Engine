@@ -56,7 +56,7 @@ namespace Nuclear {
 				};
 
 				/*  Mesh Data  */
-				SubMesh(SubMeshData data);
+				SubMesh(const SubMeshData& data);
 				SubMesh(const SubMesh& obj);
 				~SubMesh();
 
@@ -72,7 +72,7 @@ namespace Nuclear {
 				RefCntAutoPtr<IBuffer> mVB;
 			};
 
-			Mesh(std::vector<SubMesh> SubMeshes, std::unordered_map<std::string, Animation::BoneInfo> BoneInfoMap, int BoneCounter);
+			Mesh(const std::vector<SubMesh>& SubMeshes, const std::unordered_map<Uint32, Animation::BoneInfo>& BoneInfoMap, int BoneCounter);
 
 			Mesh();
 			~Mesh();
@@ -85,7 +85,7 @@ namespace Nuclear {
 			static void CreateGrid(Mesh* model, float width = 10.0f, float depth = 10.0f, unsigned int m = 10, unsigned int n = 10);
 			static void CreateScreenQuad(Mesh* model);
 
-			std::unordered_map<std::string, Animation::BoneInfo> mBoneInfoMap;
+			std::unordered_map<Uint32, Animation::BoneInfo> mBoneInfoMap;
 			int mBoneCounter = 0;
 			std::vector<SubMesh> mSubMeshes;
 		};
