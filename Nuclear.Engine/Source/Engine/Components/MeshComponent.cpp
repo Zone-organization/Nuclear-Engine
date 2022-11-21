@@ -35,7 +35,8 @@ namespace Nuclear
 				{
 					if (pMaterial)
 					{
-						mPipelineCntrl.SetPipeline(&pMaterial->GetShader()->mPipeline);
+						auto assetptr = pMaterial->GetShader();
+						mPipelineCntrl.SetPipeline(&assetptr->mPipeline);
 
 						Uint32 mAnimationHash = Utilities::Hash("ANIMATION");
 						Uint32 mRecieveShadowHash = Utilities::Hash("SHADOWS");
@@ -101,6 +102,11 @@ namespace Nuclear
 		bool MeshComponent::GetRecieveShadows() const
 		{
 			return mRecieveShadows;
+		}
+		void MeshComponent::SetMaterial(Assets::Material* material)
+		{
+			pMaterial = material;
+			mDirty = true;
 		}
 		Assets::Mesh* MeshComponent::GetMesh()
 		{

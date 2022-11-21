@@ -55,7 +55,7 @@ namespace Nuclear
 			bool _isShadowed = false;
 
 			std::set<std::string> mDefines = std::set<std::string>();
-			Uint32 mHashKey = -1;
+			Uint32 mHashKey = 0;
 		};
 
 		//Used for both Deffered and Forward pipelines

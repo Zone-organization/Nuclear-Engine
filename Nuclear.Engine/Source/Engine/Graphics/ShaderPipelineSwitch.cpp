@@ -40,10 +40,12 @@ namespace Nuclear
 
 		ShaderPipelineSwitchController::ShaderPipelineSwitchController()
 		{
+			mRequiredHash = 0;
 		}
 
 		ShaderPipelineSwitchController::~ShaderPipelineSwitchController()
 		{
+			mRequiredHash = 0;
 		}
 
 		void ShaderPipelineSwitchController::SetPipeline(ShaderPipeline* pipeline)
@@ -57,18 +59,23 @@ namespace Nuclear
 			}
 		}
 
-		bool ShaderPipelineSwitchController::SetSwitch(Uint32 switchId, bool value)
+		bool ShaderPipelineSwitchController::SetSwitch(Uint32 switchId, bool value, bool controllersupport)
 		{
-			auto it = mSwitches.find(switchId);
-			if (it != mSwitches.end())
+			if (controllersupport)
 			{
-				it->second.SetValue(value);
-				return true;
+				auto it = mSwitches.find(switchId);
+				if (it != mSwitches.end())
+				{
+					it->second.SetValue(value);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
-			else
-			{
-				return false;
-			}
+
+			return false;
 		}
 
 		void ShaderPipelineSwitchController::Update(bool ForceDirty)

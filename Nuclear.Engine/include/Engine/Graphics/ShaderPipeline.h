@@ -65,8 +65,6 @@ namespace Nuclear
 			std::unordered_map<Uint32, ShaderPipelineVariant> mVariants;
 			std::vector<ShaderPipelineVariantDesc> mVariantsInfo;
 
-			std::vector<ShaderPipelineSwitch> mSwitches;
-
 			ShaderPipelineDesc mDesc;
 			Graphics::ShaderReflection mReflection;
 

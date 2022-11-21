@@ -65,22 +65,22 @@ namespace Nuclear
 			}
 		}
 
-		std::string MergeCode(const std::string& shadersource, const std::set<std::string>& defines)
-		{
-			std::vector<std::string> MergedCode;
+		//std::string MergeCode(const std::string& shadersource, const std::set<std::string>& defines)
+		//{
+		//	std::vector<std::string> MergedCode;
 
-			for (auto i : defines)
-			{
-				MergedCode.push_back("#define " + i + "\n");
-			}
-			std::string str;
-			MergedCode.push_back(shadersource);
-			for (auto i : MergedCode)
-			{
-				str = str + i;
-			}
-			return str;
-		}
+		//	for (auto& i : defines)
+		//	{
+		//		MergedCode.push_back("#define " + i + "\n");
+		//	}
+		//	std::string str;
+		//	MergedCode.push_back(shadersource);
+		//	for (auto& i : MergedCode)
+		//	{
+		//		str = str + i;
+		//	}
+		//	return str;
+		//}
 
 		ShaderPipeline::ShaderPipeline(Assets::Shader* parent)
 			: mParentAsset(parent)
@@ -90,7 +90,6 @@ namespace Nuclear
 
 		ShaderPipeline::~ShaderPipeline()
 		{
-			mSwitches.clear();
 			mVariants.clear();
 		}
 
@@ -199,7 +198,7 @@ namespace Nuclear
 			ShaderPipelineVariant result;
 			result.pParent = this;
 			result.mShaderAssetID = mParentAsset->GetID();
-
+			result.mDesc = Info;
 			RefCntAutoPtr<IShader> VShader;
 			RefCntAutoPtr<IShader> PShader;
 
@@ -286,7 +285,7 @@ namespace Nuclear
 
 		const std::vector<ShaderPipelineSwitch>& ShaderPipeline::GetSwitches() const
 		{
-			return mSwitches;
+			return mDesc.Switches;
 		}
 
 		const Graphics::ShaderReflection& ShaderPipeline::GetReflection() const

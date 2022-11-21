@@ -125,20 +125,13 @@ class Sample1 : public Client
 	Assets::Animations* BobAnimation;
 	Assets::Animations* VampireAnimation;
 
-	//Assets::Shader* DiffuseOnlyShader;
-
+	Assets::Shader* DiffuseOnly;
 	Assets::Shader* BlinnPhong;
 
 
 	Graphics::Camera Camera;
 
 	Rendering::Skybox Skybox;
-
-
-
-	//Rendering::DiffuseOnly DiffuseRP;
-	////Rendering::WireFrame WireFrameRP;
-	//Rendering::BlinnPhong BlinnPhongRP;
 
 	Rendering::ForwardRenderingPath ForwardRP;
 
@@ -199,7 +192,7 @@ public:
 		CubeMaterial.Create(&CubeTextures, BlinnPhong);
 		NanosuitMaterial.Create(NanosuitMaterialD, BlinnPhong);
 		CyborgMaterial.Create(CyborgMaterialD, BlinnPhong);
-		BobMaterial.Create(BobMaterialD, BlinnPhong);
+		BobMaterial.Create(BobMaterialD, DiffuseOnly);
 		VampireMaterial.Create(VampireMaterialD, BlinnPhong);
 
 		CubeSet.mData.clear();
@@ -274,10 +267,10 @@ public:
 
 		Importers::ShaderLoadingDesc desc;
 		BlinnPhong = mAssetManager->Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		DiffuseOnly = mAssetManager->Import("@NuclearAssets@/Shaders/DiffuseOnly.NEShader", desc);
 
 		Renderer->RegisterShader(BlinnPhong);
-		//Renderer->RegisterShadingModel(&DiffuseRP);
-	//	Renderer->RegisterShadingModel(&WireFrameRP);
+		Renderer->RegisterShader(DiffuseOnly);
 
 		Renderer->Bake(_Width_, _Height_);
 	}
@@ -378,7 +371,7 @@ public:
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 		BobAnimator.UpdateAnimation(dt);
-		VampireAnimator.UpdateAnimation(dt);
+	//	VampireAnimator.UpdateAnimation(dt);
 
 		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
 

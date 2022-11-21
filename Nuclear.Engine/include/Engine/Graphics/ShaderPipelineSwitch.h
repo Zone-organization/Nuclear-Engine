@@ -43,7 +43,7 @@ namespace Nuclear
 			~ShaderPipelineSwitchController();
 
 			void SetPipeline(ShaderPipeline* pipeline);
-			bool SetSwitch(Uint32 switchId, bool value);
+			bool SetSwitch(Uint32 switchId, bool value, bool controllersupport = true);
 			void Update(bool ForceDirty = false);
 
 			Uint32 GetRequiredHash();

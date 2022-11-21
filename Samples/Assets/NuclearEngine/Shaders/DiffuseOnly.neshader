@@ -1,5 +1,25 @@
-#include <Basic.vs.hlsl>
+#DiffuseOnly Nuclear Shader
+[Shader]
+Name = "DiffuseOnly"
+#SupportForwardRendering = true
+SupportSkinnedMeshes = true
+SupportDefferedRendering = false
+SupportShadows = true
+ForwardPipeline = "MainPSO"
+Variants = [ "ANIMATION" ]
 
+[MainPSO]
+RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]
+DSVFormat = "TEX_FORMAT_D32_FLOAT"
+VertexShader = "VShader"
+PixelShader = "PShader"
+
+[VShader]
+EntryPoint = "main"
+Path = '@NuclearAssets@/Shaders/Basic.vs.hlsl'
+
+[PShader]
+Source = '''
 struct PixelInputType
 {
     float4 Position : SV_POSITION;
@@ -16,3 +36,4 @@ float4 main(PixelInputType input) : SV_TARGET
 
     return result;
 }
+'''
