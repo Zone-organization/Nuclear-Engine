@@ -31,13 +31,7 @@ namespace Nuclear
 		public:
 			PostProcessingPass();
 
-			IPipelineState* GetActivePipeline();
-			IShaderResourceBinding* GetActiveSRB();
-
 			virtual void Bake(const PostProcessingBakingDesc& desc);
-
-			RefCntAutoPtr<IPipelineState> mActivePSO;
-			RefCntAutoPtr<IShaderResourceBinding> mActiveSRB;
 
 			void Update(FrameRenderData* framedata) override;
 

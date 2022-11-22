@@ -44,6 +44,10 @@ namespace Nuclear
 						mPipelineCntrl.SetSwitch(mAnimationHash, bool(pAnimator));
 						mPipelineCntrl.SetSwitch(mRecieveShadowHash, mRecieveShadows);
 
+						for (auto& i : mCustomSwitches)
+						{
+							mPipelineCntrl.SetSwitch(i.first, i.second);
+						}
 						mPipelineCntrl.Update();
 					}
 					else {
@@ -66,6 +70,11 @@ namespace Nuclear
 		Graphics::ShaderPipelineVariant* MeshComponent::GetRenderingVariant()
 		{
 			return mPipelineCntrl.GetActiveVariant();
+		}
+		void MeshComponent::SetVariantSwitch(Uint32 VariantID, bool val)
+		{
+			mCustomSwitches[VariantID] = val;
+			mDirty = true;
 		}
 		void MeshComponent::SetEnableRender(bool val)
 		{

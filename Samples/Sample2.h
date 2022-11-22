@@ -27,7 +27,6 @@ class Sample2 : public Client
 
 	//Shading models
 	//Rendering::DiffuseOnly DiffuseRP;
-	//Rendering::WireFrame WireFrameRP;
 
 	Assets::Shader* PBR;
 
@@ -193,7 +192,7 @@ public:
 		PBR = mAssetManager->Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 
 		Renderer->RegisterShader(PBR);
-
+		Renderer->SetIBLContext(&IBL);
 		Renderer->Bake(_Width_, _Height_);
 
 		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc()});
@@ -225,17 +224,10 @@ public:
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
 		//Renderer->VisualizePointLightsPositions = true;
-		//PBRPipeline.SetEffect(Utilities::Hash("HDR"), true);
-		//PBRPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
-		//IBLPipeline.SetEffect(Utilities::Hash("HDR"), true);
-		//IBLPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
-		//Deffered_PBRPipeline.SetEffect(Utilities::Hash("HDR"), true);
-		//Deffered_PBRPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
-		//Deffered_IBLPipeline.SetEffect(Utilities::Hash("HDR"), true);
-		//Deffered_IBLPipeline.SetEffect(Utilities::Hash("GAMMACORRECTION"), true);
 
 		//Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
 		//Renderer->GetBackground().SetSkybox(&Skybox);
+		PostFXPass.SetPostProcessingEffect(Utilities::Hash("BLOOM"), false);
 
 		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -328,6 +320,12 @@ public:
 
 			ImGui::Text("Material");
 
+			static bool IBL_ = false;
+
+			if (ImGui::Checkbox("IBL", &IBL_))
+				activeentity.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
+
+
 			if (ImGui::Button("Rusted Iron"))
 			{
 				activeentity.GetComponent<Components::MeshComponent>()->SetMaterial(&RustedIron);
@@ -354,10 +352,25 @@ public:
 
 			ImGui::SliderFloat3("Rotation Axis", (float*)&RotationAxis, 0.0f, 1.0f);
 
-
 			float rotationAngle = LastFrame / 5.0f * rotationspeed;
 			activeentity.GetComponent<Components::EntityInfoComponent>()->mTransform.SetRotation(RotationAxis, rotationAngle);
 
+			ImGui::Separator();
+			ImGui::Text("PostFX Pipeline");
+
+
+			static bool HDR = true;
+			static bool GAMMACORRECTION = true;
+			static bool BLOOM = false;
+
+			if (ImGui::Checkbox("HDR", &HDR))
+				PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), HDR);
+			
+			if (ImGui::Checkbox("GAMMACORRECTION", &GAMMACORRECTION))
+				PostFXPass.SetPostProcessingEffect(Utilities::Hash("GAMMACORRECTION"), GAMMACORRECTION);
+
+			if (ImGui::Checkbox("BLOOM", &BLOOM))
+				PostFXPass.SetPostProcessingEffect(Utilities::Hash("BLOOM"), BLOOM);
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 

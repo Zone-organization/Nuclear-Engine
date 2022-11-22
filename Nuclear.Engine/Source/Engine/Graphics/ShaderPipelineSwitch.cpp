@@ -66,7 +66,11 @@ namespace Nuclear
 				auto it = mSwitches.find(switchId);
 				if (it != mSwitches.end())
 				{
-					it->second.SetValue(value);
+					if (it->second.GetValue() != value)
+					{
+						it->second.SetValue(value);
+						mDirty = true;
+					}
 					return true;
 				}
 				else

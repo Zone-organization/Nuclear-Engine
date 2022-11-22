@@ -10,6 +10,10 @@
 
 namespace Nuclear
 {
+	namespace Rendering
+	{
+		class ImageBasedLighting;
+	}
 	namespace Graphics
 	{				
 		struct ShaderRenderingBakingDesc
@@ -19,7 +23,7 @@ namespace Nuclear
 			Uint32 PointLights = 0;
 
 			Rendering::ShadowPass* pShadowPass = nullptr;
-
+			Rendering::ImageBasedLighting* pIBLContext = nullptr;
 			IBuffer* CameraBufferPtr = nullptr;
 			IBuffer* AnimationBufferPtr = nullptr;
 			IBuffer* LightsBufferPtr = nullptr;
@@ -72,7 +76,7 @@ namespace Nuclear
 			ShaderPipelineVariant CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
 
 		private:
-			void ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline);
+			void ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc);
 			bool mFirstReflection = true;
 		};
 	}

@@ -17,6 +17,9 @@ namespace Nuclear
 		void PostProcessingPass::Update(FrameRenderData* framedata)
 		{
 			mPipelineCntrllr.Update();
+			auto pipeline = mPipelineCntrllr.GetActiveVariant()->GetMainPipeline();
+			auto pipelineSRB = mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB();
+
 			//1 - Extract bloom from scene rt
 			if (mBloomEnabled)
 			{
@@ -82,14 +85,14 @@ namespace Nuclear
 			}
 
 			//3 - apply the remaning effects
-			Graphics::Context::GetContext()->SetPipelineState(GetActivePipeline());
+			Graphics::Context::GetContext()->SetPipelineState(pipeline);
 
-			GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->mFinalRT.GetSRV());
+			pipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->mFinalRT.GetSRV());
 			if (mBloomEnabled)
 			{
-				GetActiveSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mBloomBlur.BlurVerticalRT.GetSRV());
+				pipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mBloomBlur.BlurVerticalRT.GetSRV());
 			}
-			Graphics::Context::GetContext()->CommitShaderResources(GetActiveSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->CommitShaderResources(pipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			Graphics::Context::GetContext()->SetRenderTargets(1, PostFXRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Graphics::Context::GetContext()->ClearRenderTarget(PostFXRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -115,15 +118,6 @@ namespace Nuclear
 			}
 		}
 
-		IPipelineState* PostProcessingPass::GetActivePipeline()
-		{
-			return mActivePSO.RawPtr();
-		}
-
-		IShaderResourceBinding* PostProcessingPass::GetActiveSRB()
-		{
-			return mActiveSRB.RawPtr();
-		}
 		void PostProcessingPass::Bake(const PostProcessingBakingDesc& desc)
 		{
 			mRTWidth = desc.mRTWidth;
@@ -138,9 +132,12 @@ namespace Nuclear
 			mRTHeight = Height;
 			PostFXRT.Resize(Width, Height);
 
-			mActiveSRB.Release();
-			mActivePSO->CreateShaderResourceBinding(&mActiveSRB, true);
-			//mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
+
+		//	mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB().Release();
+		//	mPipelineCntrllr.GetActiveVariant()->GetMainPipeline()->CreateShaderResourceBinding(mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB(), true);
+		
+		
+		//mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
 
 			if (mPipelineCntrllr.GetSwitch(_HashedBloomID).GetValue())
 			{
@@ -164,10 +161,11 @@ namespace Nuclear
 				Graphics::ShaderPipelineDesc PSOCreateInfo;
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("HDR", true));
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("GAMMACORRECTION", true));
-				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("BLOOM", true));
-
+				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("BLOOM", false));
+				PSOCreateInfo.mForwardPSOCreateInfo.mVertexShader.mType = SHADER_TYPE_VERTEX;
 				PSOCreateInfo.mForwardPSOCreateInfo.mVertexShader.mPath = mDesc.PostFX_VS_Path;
 				PSOCreateInfo.mForwardPSOCreateInfo.mPixelShader.mPath = mDesc.PostFX_PS_Path;
+				PSOCreateInfo.mForwardPSOCreateInfo.mPixelShader.mType = SHADER_TYPE_PIXEL;
 
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
@@ -181,6 +179,7 @@ namespace Nuclear
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
 				mPostFXPipeline.Create(PSOCreateInfo);
+				mPostFXPipeline.Bake(nullptr);
 			}
 
 			//bloom

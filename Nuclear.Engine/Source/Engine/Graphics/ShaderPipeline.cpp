@@ -4,6 +4,7 @@
 #include <Core/Utilities/Hash.h>
 #include <Core\Logger.h>
 #include <Engine/Managers/AssetManager.h>
+#include "Engine/Rendering/ImageBasedLighting.h"
 
 namespace Nuclear
 {
@@ -197,22 +198,27 @@ namespace Nuclear
 		{
 			ShaderPipelineVariant result;
 			result.pParent = this;
-			result.mShaderAssetID = mParentAsset->GetID();
+			if (mParentAsset)
+			{
+				result.mShaderAssetID = mParentAsset->GetID();
+			}
 			result.mDesc = Info;
 			RefCntAutoPtr<IShader> VShader;
 			RefCntAutoPtr<IShader> PShader;
 
-			AddToDefinesIfNotZero(Info.mDefines, "NE_DIR_LIGHTS_NUM ", Desc.pBakingDesc->DirLights);
-			AddToDefinesIfNotZero(Info.mDefines, "NE_SPOT_LIGHTS_NUM ", Desc.pBakingDesc->SpotLights);
-			AddToDefinesIfNotZero(Info.mDefines, "NE_POINT_LIGHTS_NUM ", Desc.pBakingDesc->PointLights);
-
-			if (Desc.pBakingDesc->pShadowPass)
+			if (Desc.pBakingDesc)
 			{
-				AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_DIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_DIR_CASTERS);
-				AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_SPOT_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_SPOT_CASTERS);
-				AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_OMNIDIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_OMNIDIR_CASTERS);
-			}
+				AddToDefinesIfNotZero(Info.mDefines, "NE_DIR_LIGHTS_NUM ", Desc.pBakingDesc->DirLights);
+				AddToDefinesIfNotZero(Info.mDefines, "NE_SPOT_LIGHTS_NUM ", Desc.pBakingDesc->SpotLights);
+				AddToDefinesIfNotZero(Info.mDefines, "NE_POINT_LIGHTS_NUM ", Desc.pBakingDesc->PointLights);
 
+				if (Desc.pBakingDesc->pShadowPass)
+				{
+					AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_DIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_DIR_CASTERS);
+					AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_SPOT_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_SPOT_CASTERS);
+					AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_OMNIDIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_OMNIDIR_CASTERS);
+				}
+			}
 			for (auto& i : Info.mDefines)
 			{
 				Desc.mForwardPSOCreateInfo.mVertexShader.mDefines.insert(i);
@@ -229,19 +235,24 @@ namespace Nuclear
 			PSOCreateInfo.pPS = PShader;
 
 			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(false);
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-
+			if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
+			{
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+			}
 			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VShader, PShader);
 			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&result.mPipeline, PSOCreateInfo, Vars, true);
 
-			SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
-			SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Desc.pBakingDesc->AnimationBufferPtr);
-			SetIfFound(result.mPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
+			if (Desc.pBakingDesc)
+			{
+				SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
+				SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Desc.pBakingDesc->AnimationBufferPtr);
+				SetIfFound(result.mPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
+			}
 
 			result.mPipeline->CreateShaderResourceBinding(&result.mPipelineSRB, true);
 
-			ReflectShaderPipelineVariant(result);
+			ReflectShaderPipelineVariant(result, Desc.pBakingDesc);
 			return result;
 		}
 
@@ -298,7 +309,7 @@ namespace Nuclear
 			return mParentAsset;
 		}
 
-		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline)
+		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
 		{
 			if (mFirstReflection && pipeline.isDeffered())
 			{
@@ -366,6 +377,28 @@ namespace Nuclear
 							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
 							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
 							mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
+						}
+					}
+				}
+			}
+
+			if (pBakingDesc)
+			{
+				if (pBakingDesc->pIBLContext)
+				{
+					for (auto& i : pipeline.mReflection.mIBLTexturesInfo)
+					{
+						if (i.mTex.GetUsageType() == Graphics::TextureUsageType::IrradianceMap)
+						{
+							i.mTex.SetImage(&pBakingDesc->pIBLContext->GetEnvironmentCapture()->mIrradiance);
+						}
+						else if (i.mTex.GetUsageType() == Graphics::TextureUsageType::PreFilterMap)
+						{
+							i.mTex.SetImage(&pBakingDesc->pIBLContext->GetEnvironmentCapture()->mPrefiltered);
+						}
+						else if (i.mTex.GetUsageType() == Graphics::TextureUsageType::BRDF_LUT)
+						{
+							i.mTex.SetImage(pBakingDesc->pIBLContext->GetBRDF_LUT());
 						}
 					}
 				}

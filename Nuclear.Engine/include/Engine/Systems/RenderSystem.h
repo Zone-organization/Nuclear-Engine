@@ -7,6 +7,10 @@
 
 namespace Nuclear
 {
+	namespace Rendering
+	{
+		class ImageBasedLighting;
+	}
 	namespace Systems
 	{
 		class CameraSystem;
@@ -54,6 +58,8 @@ namespace Nuclear
 
 			CameraSystem* GetCameraSystem();
 
+			void SetIBLContext(Rendering::ImageBasedLighting* IBLContext);
+
 			void RegisterShader(Assets::Shader* shader);
 
 			/////////////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +74,8 @@ namespace Nuclear
 			std::vector<Assets::Shader*> mRegisteredShaders;
 
 			std::shared_ptr<CameraSystem> mCameraSystemPtr;
+
+			Rendering::ImageBasedLighting* pIBLContext = nullptr;
 
 			RenderSystemBakeStatus mStatus;
 			RefCntAutoPtr<IBuffer> mAnimationCB;

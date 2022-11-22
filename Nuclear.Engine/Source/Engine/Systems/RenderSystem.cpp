@@ -59,7 +59,7 @@ namespace Nuclear
 			bakedesc.LightsBufferPtr = GetLightCB();
 			bakedesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
 			bakedesc.AnimationBufferPtr = mAnimationCB;
-
+			bakedesc.pIBLContext = pIBLContext;
 
 			for (auto i : mRegisteredShaders)
 			{
@@ -96,6 +96,11 @@ namespace Nuclear
 		CameraSystem* RenderSystem::GetCameraSystem()
 		{
 			return mCameraSystemPtr.get();
+		}
+
+		void RenderSystem::SetIBLContext(Rendering::ImageBasedLighting* IBLContext)
+		{
+			pIBLContext = IBLContext;
 		}
 
 		void RenderSystem::RegisterShader(Assets::Shader* shader)

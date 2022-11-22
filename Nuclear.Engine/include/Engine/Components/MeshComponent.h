@@ -32,6 +32,7 @@ namespace Nuclear {
 			Uint32 GetRenderQueue() const;
 			Graphics::ShaderPipelineVariant* GetRenderingVariant();
 
+			void SetVariantSwitch(Uint32 VariantID, bool val);
 
 			void SetEnableRender(bool val);
 			void SetCastShadows(bool val);
@@ -51,6 +52,9 @@ namespace Nuclear {
 			Assets::Material* pMaterial;
 			Animation::Animator* pAnimator;
 			Graphics::ShaderPipelineSwitchController mPipelineCntrl;
+
+			std::unordered_map<Uint32, bool> mCustomSwitches;
+
 			Uint32 RenderQueue = 1;
 
 			bool mDirty = true;
