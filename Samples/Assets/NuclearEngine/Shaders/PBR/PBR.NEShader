@@ -1,14 +1,13 @@
-#Blinn Phong Nuclear Shader
+#PBR Nuclear Shader
 [Shader]
 Name = "PBR"
-#SupportForwardRendering = true
 SupportSkinnedMeshes = true
-SupportDefferedRendering = false
 SupportShadows = true
 ForwardPipeline = "MainPSO"
-#DefferedPipeline = "DefferedPSO"
-#GBufferPipeline = "GBufferPSO"
-Variants = [ "ANIMATION" , "IBL_ENABLED" ]
+DefferedPipeline = "DefferedPSO"
+GBufferPipeline = "GBufferPSO"
+Variants = [ "NE_DEFFERED", "ANIMATION" , "IBL_ENABLED" ]
+#Defines = [ "PBR" ]
 
 [MainPSO]
 RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]
@@ -25,9 +24,11 @@ PixelShader = "PShader"
 
 
 [GBufferPSO]
-PixelShader = "PShader"
-RTVFormats = [ "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA8_UNORM" ]
+VertexShader = "GBufferVShader"
+PixelShader = "GBufferPShader"
+RTVFormats = [ "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA8_UNORM", "TEX_FORMAT_RGBA8_UNORM" ]
 DSVFormat = "TEX_FORMAT_D32_FLOAT"
+Defines = [ "PBR" ]
 
 			
 [VShader]
@@ -37,10 +38,6 @@ Path = '@NuclearAssets@/Shaders/Basic.vs.hlsl'
 
 [PShader]
 Source = '''
-//Definitions:
-//#define NE_DIR_LIGHTS_NUM 1
-//#define NE_POINT_LIGHTS_NUM 1
-//#define NE_SPOT_LIGHTS_NUM 1
 #include "LightTypes.hlsli"
 #include "PBR\Common.hlsl"
 
@@ -63,17 +60,6 @@ SamplerState NE_RT_GBuffer_Position_sampler : register(s0);
 SamplerState NE_RT_GBuffer_Normal_sampler : register(s1);
 SamplerState NE_RT_GBuffer_AlbedoMetallic_sampler : register(s2);
 SamplerState NE_RT_GBuffer_RoughnessAO_sampler : register(s3);  //1 Component
-
-//#ifdef IBL_ENABLED
-//
-//TextureCube NEIBL_IrradianceMap : register(t4);
-//TextureCube NEIBL_PrefilterMap : register(t5);
-//Texture2D NEIBL_BRDF_LUT : register(t6);
-//SamplerState NEIBL_IrradianceMap_sampler : register(s4);
-//SamplerState NEIBL_PrefilterMap_sampler : register(s5);
-//SamplerState NEIBL_BRDF_LUT_sampler : register(s6);
-//
-//#endif
 
 #else
 Texture2D NEMat_Albedo : register(t0);
@@ -325,3 +311,9 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 }
 
 '''
+
+[GBufferVShader]
+Path = '@NuclearAssets@/Shaders/GBuffer.vs.hlsl'
+
+[GBufferPShader]
+Path = '@NuclearAssets@/Shaders/GBuffer.ps.hlsl'

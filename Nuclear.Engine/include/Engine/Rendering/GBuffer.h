@@ -16,6 +16,8 @@ namespace Nuclear
 		class NEAPI GBuffer
 		{
 		public:
+			GBuffer();
+			~GBuffer();
 
 			void Initialize(const GBufferDesc& desc);
 
@@ -23,10 +25,13 @@ namespace Nuclear
 
 			void Resize(Uint32 width, Uint32 height);
 
+			bool isInitialized() const;
+
 			std::vector<Graphics::RenderTarget> mRenderTargets;
 		private:
 			GBufferDesc mDesc;
 			bool mBaked = false;
+			bool mInitialized = false;
 		};
 	}
 }

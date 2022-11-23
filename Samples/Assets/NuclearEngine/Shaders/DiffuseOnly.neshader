@@ -1,9 +1,7 @@
 #DiffuseOnly Nuclear Shader
 [Shader]
 Name = "DiffuseOnly"
-#SupportForwardRendering = true
 SupportSkinnedMeshes = true
-SupportDefferedRendering = false
 SupportShadows = true
 ForwardPipeline = "MainPSO"
 Variants = [ "ANIMATION" ]

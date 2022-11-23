@@ -125,12 +125,18 @@ namespace Nuclear
 			Uint32 Height = 48;
 
 		};
+
+		enum class ShaderType
+		{
+			_3DRendering,
+			PostFX,
+			Unknown
+		};
+
 		struct ShaderLoadingDesc
 		{
 			std::string mShaderName = "UnNamed";
-
-			//bool LoadForwardPipeline;
-			//bool LoadDefferedPipeline;
+			ShaderType mType = ShaderType::Unknown;
 
 			std::vector<std::string> mDefines;
 		};

@@ -7,7 +7,6 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
-#include "Engine/Rendering/GBuffer.h"
 #include <Engine/Rendering/RenderPasses/ShadowPass.h>
 #include <set>
 
@@ -97,10 +96,6 @@ namespace Nuclear
 			bool isSkinned();
 
 			bool isDeffered();
-
-			//Move to main shader? its only RTs.
-			Rendering::GBuffer mGBuffer;
-			//void BakeGBufferRTs(Uint32 Width, Uint32 Height);
 
 		protected:
 			friend class ShaderPipeline;

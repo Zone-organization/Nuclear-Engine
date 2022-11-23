@@ -26,7 +26,7 @@ namespace Nuclear
                 Graphics::Context::GetContext()->SetPipelineState(pipeline->GetGBufferPipeline());
 
                 std::vector<ITextureView*> RTargets;
-                for (auto& i : pipeline->mGBuffer.mRenderTargets)
+                for (auto& i : pipeline->GetParentPipeline()->GetGBuffer()->mRenderTargets)
                 {
                     RTargets.push_back(i.GetRTV());
                 }
@@ -38,6 +38,7 @@ namespace Nuclear
 
                 Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
+                pCurrentFrame->mUsedDefferedPipelines.push_back(pActivePipeline);
             }
         }
         void DefferedRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)

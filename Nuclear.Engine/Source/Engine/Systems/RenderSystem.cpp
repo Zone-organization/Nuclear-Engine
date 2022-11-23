@@ -60,6 +60,8 @@ namespace Nuclear
 			bakedesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
 			bakedesc.AnimationBufferPtr = mAnimationCB;
 			bakedesc.pIBLContext = pIBLContext;
+			bakedesc.mRTWidth = RTWidth;
+			bakedesc.mRTHeight = RTHeight;
 
 			for (auto i : mRegisteredShaders)
 			{
@@ -123,7 +125,7 @@ namespace Nuclear
 			mRenderData.pAnimationCB = mAnimationCB;
 			mRenderData.pCameraSystemPtr = mCameraSystemPtr;
 			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
-
+			mRenderData.mUsedDefferedPipelines.clear();
 
 			auto meshview = mScene->GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : meshview)

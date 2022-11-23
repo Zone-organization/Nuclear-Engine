@@ -204,6 +204,23 @@ namespace Nuclear
 
 			desc.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT"sv));
 
+			auto defines = tbl->get("Defines");
+			if (defines)
+			{
+				toml::array* arr = defines->as_array();
+
+				for (Uint32 i = 0; i < arr->size(); i++)
+				{
+					std::optional<std::string> val = arr->at(i).value<std::string>();
+
+					if (val.has_value())
+					{
+						desc.mVertexShader.mDefines.insert(val.value());
+						desc.mPixelShader.mDefines.insert(val.value());
+					}
+				}
+			}
+
 			auto vsnode = tbl->get("VertexShader");
 
 			if (vsnode)
@@ -243,40 +260,36 @@ namespace Nuclear
 
 				}
 
-
-				desc.mSupportForwardRendering = tbl["Shader"]["SupportForwardRendering"].value_or(true);
-				desc.mSupportDefferedRendering = tbl["Shader"]["SupportDefferedRendering"].value_or(false);
-
-				if (desc.mSupportForwardRendering)
+				if (desc.mType == Importers::ShaderType::_3DRendering)
 				{
-					std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
-					if (str1.has_value())
 					{
-						ParsePSO(tbl.get(str1.value())->as_table(), tbl, desc.mPipelineDesc.mForwardPSOCreateInfo);
+						std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
+						if (str1.has_value())
+						{
+							ParsePSO(tbl.get(str1.value())->as_table(), tbl, desc.mPipelineDesc.mForwardPSOCreateInfo);
+						}
 					}
-				}
-
-				if (desc.mSupportDefferedRendering)
-				{
-					std::optional<std::string> str1 = tbl["Shader"]["DefferedPipeline"].value<std::string>();
-
-					if (str1.has_value())
-					{ 
-						auto tbl1 = tbl.get(str1.value());
-						if (tbl1)
-							ParsePSO(tbl1->as_table(), tbl, desc.mPipelineDesc.mDefferedPSOCreateInfo);
-						else
-							NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> DefferedPipeline '{0}' not found", str1.value());
-					}
-
-					std::optional<std::string> str2 = tbl["Shader"]["GBufferPipeline"].value<std::string>();
-					if (str2.has_value())
 					{
-						auto tbl2 = tbl.get(str2.value());
-						if (tbl2)
-							ParsePSO(tbl2->as_table(), tbl, desc.mPipelineDesc.mGBufferPSOCreateInfo);
-						else
-							NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> GBufferPipeline '{0}' not found", str2.value());
+						std::optional<std::string> str1 = tbl["Shader"]["DefferedPipeline"].value<std::string>();
+
+						if (str1.has_value())
+						{
+							auto tbl1 = tbl.get(str1.value());
+							if (tbl1)
+								ParsePSO(tbl1->as_table(), tbl, desc.mPipelineDesc.mDefferedPSOCreateInfo);
+							else
+								NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> DefferedPipeline '{0}' not found", str1.value());
+						}
+
+						std::optional<std::string> str2 = tbl["Shader"]["GBufferPipeline"].value<std::string>();
+						if (str2.has_value())
+						{
+							auto tbl2 = tbl.get(str2.value());
+							if (tbl2)
+								ParsePSO(tbl2->as_table(), tbl, desc.mPipelineDesc.mGBufferPSOCreateInfo);
+							else
+								NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> GBufferPipeline '{0}' not found", str2.value());
+						}
 					}
 				}
 			

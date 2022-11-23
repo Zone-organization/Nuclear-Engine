@@ -22,13 +22,15 @@ namespace Nuclear
                 {
                     if (pipeline->isDeffered())
                     {
+                        auto gbuffer = pipeline->GetParentPipeline()->GetGBuffer();
+
                         //Apply Lighting
                         Graphics::Context::GetContext()->SetPipelineState(pipeline->GetMainPipeline());
                         Graphics::Context::GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-                        for (int i = 0; i < pipeline->mGBuffer.mRenderTargets.size(); i++)
+                        for (int i = 0; i < gbuffer->mRenderTargets.size(); i++)
                         {
-                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(pipeline->mGBuffer.mRenderTargets.at(i).GetSRV());
+                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(gbuffer->mRenderTargets.at(i).GetSRV());
                         }
 
                         //IBL
@@ -41,12 +43,10 @@ namespace Nuclear
 
                         Assets::DefaultMeshes::RenderScreenQuad();
 
-                        pipeline = nullptr;
-
                         //Send GBUFFER to DebugSystem
                         if (framedata->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
                         {
-                            for (auto& i : pipeline->mGBuffer.mRenderTargets)
+                            for (auto& i : gbuffer->mRenderTargets)
                             {
                                 framedata->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
                             }

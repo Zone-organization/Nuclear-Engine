@@ -378,19 +378,20 @@ namespace Nuclear {
 		{
 			auto hashedname = Utilities::Hash(Path.GetInputPath());
 
-			Assets::Shader* result;
-
 			//Check if exists
 			auto it = mLibrary.mImportedShaders.mData.find(hashedname);
 			if (it != mLibrary.mImportedShaders.mData.end())
 			{
-				return result;
+				return &it->second;
 			}
 
-			result = &mLibrary.mImportedShaders.mData[hashedname];
 
+			Assets::Shader* result;
+			result = &mLibrary.mImportedShaders.mData[hashedname];
 			auto source = Core::FileSystem::LoadFileToString(Path.GetRealPath());
 			Assets::ShaderBuildDesc shaderbuilddesc;
+			shaderbuilddesc.mType = desc.mType;
+			shaderbuilddesc.mDefines = desc.mDefines;
 			if (Graphics::GraphicsEngine::GetShaderManager()->ParseShaderAsset(source, shaderbuilddesc))
 			{
 				result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);

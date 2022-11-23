@@ -82,10 +82,6 @@ namespace Nuclear
 			}
 			return Managers::AssetManager::DefaultBlackTex;
 		}
-		//Graphics::BakeStatus ShaderPipelineVariant::GetStatus()
-		//{
-		//	return mStatus;
-		//}
 
 		const std::string& ShaderPipelineVariant::GetName() const
 		{
@@ -109,19 +105,5 @@ namespace Nuclear
 		{
 			return mDesc._isDeffered;
 		}
-
-		/*std::vector<Graphics::RenderTargetDesc> ShaderPipelineVariant::GetGBufferDesc()
-		{
-			return std::vector<Graphics::RenderTargetDesc>();
-		}
-		std::string ShaderPipelineVariant::GetName()
-		{
-			return mName;
-		}
-
-		void ShaderPipelineVariant::BakeGBufferRTs(Uint32 Width, Uint32 Height)
-		{
-			mGBuffer.Bake(Width, Height);
-		}*/
 	}
 }

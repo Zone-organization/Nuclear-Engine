@@ -99,7 +99,10 @@ namespace Nuclear
 			mDesc = Desc;
 			ShaderPipelineVariantDesc ZeroInstance;
 			ZeroInstance.mHashKey = 0;
-
+			if (Desc.isDeffered)
+			{
+				ZeroInstance._isDeffered = true;
+			}
 			mVariantsInfo.push_back(ZeroInstance);
 
 			//Phase 1: Process Switches
@@ -118,9 +121,7 @@ namespace Nuclear
 						{
 							auto iHash = Utilities::Hash(i);
 							Info_.mHashKey = Info_.mHashKey + iHash;
-
-							//TODO: Is Correct????
-							if (i == "DEFFERED")
+							if (i == "NE_DEFFERED")
 							{
 								Info_._isDeffered = true;
 							}
@@ -156,7 +157,7 @@ namespace Nuclear
 		bool ShaderPipeline::Bake(ShaderRenderingBakingDesc* bakingdesc)
 		{
 			mDesc.pBakingDesc = bakingdesc;
-			//Phase 2: Create Pipelines
+
 			for (auto& Info : mVariantsInfo)
 			{
 				if (Info._isDeffered)
@@ -168,14 +169,12 @@ namespace Nuclear
 				}
 			}
 
-			//Phase 3: Reflection
-			if (mParentAsset)
+			if (bakingdesc)
 			{
-				auto& firstinstance = mVariants.at(0);
-
-
+				mGBuffer.Bake(bakingdesc->mRTWidth, bakingdesc->mRTHeight);
 			}
-			return false;
+
+			return true;
 		}
 
 		void SetIfFound(IPipelineState* pipeline,SHADER_TYPE ShaderType, const Char* Name, IDeviceObject* obj)
@@ -228,7 +227,7 @@ namespace Nuclear
 			GraphicsEngine::GetShaderManager()->CreateShader(PShader.RawDblPtr(), Desc.mForwardPSOCreateInfo.mPixelShader);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
-			std::string psoname(Desc.mName + "_ID_" + std::to_string(Info.mHashKey));
+			std::string psoname(Desc.mName + "_FID_" + std::to_string(Info.mHashKey));
 			PSOCreateInfo.PSODesc.Name = psoname.c_str();
 			PSOCreateInfo.GraphicsPipeline = Desc.mForwardPSOCreateInfo.GraphicsPipeline;
 			PSOCreateInfo.pVS = VShader;
@@ -256,10 +255,142 @@ namespace Nuclear
 			return result;
 		}
 
-		ShaderPipelineVariant ShaderPipeline::CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc)
+		ShaderPipelineVariant ShaderPipeline::CreateDefferedVariant(ShaderPipelineVariantDesc& Info, ShaderPipelineDesc& Desc)
 		{
-			//TODO
-			return ShaderPipelineVariant();
+			ShaderPipelineVariant result;
+			result.pParent = this;
+			if (mParentAsset)
+			{
+				result.mShaderAssetID = mParentAsset->GetID();
+			}
+			result.mDesc = Info;
+			//Geometry -GBuffer- Pass
+			{
+
+				//Pipeline
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+				std::string psoname(Desc.mName + "_GBID_" + std::to_string(Info.mHashKey));
+
+				RefCntAutoPtr<IShader> VSShader;
+				RefCntAutoPtr<IShader> PSShader;
+				if (Desc.pBakingDesc)
+				{
+					AddToDefinesIfNotZero(Info.mDefines, "NE_DIR_LIGHTS_NUM ", Desc.pBakingDesc->DirLights);
+					AddToDefinesIfNotZero(Info.mDefines, "NE_SPOT_LIGHTS_NUM ", Desc.pBakingDesc->SpotLights);
+					AddToDefinesIfNotZero(Info.mDefines, "NE_POINT_LIGHTS_NUM ", Desc.pBakingDesc->PointLights);
+
+					if (Desc.pBakingDesc->pShadowPass)
+					{
+						AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_DIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_DIR_CASTERS);
+						AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_SPOT_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_SPOT_CASTERS);
+						AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_OMNIDIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_OMNIDIR_CASTERS);
+					}
+				}
+				for (auto& i : Info.mDefines)
+				{
+					Desc.mGBufferPSOCreateInfo.mVertexShader.mDefines.insert(i);
+					Desc.mGBufferPSOCreateInfo.mPixelShader.mDefines.insert(i);
+				}
+				GraphicsEngine::GetShaderManager()->CreateShader(VSShader.RawDblPtr(), Desc.mGBufferPSOCreateInfo.mVertexShader);
+				GraphicsEngine::GetShaderManager()->CreateShader(PSShader.RawDblPtr(), Desc.mGBufferPSOCreateInfo.mPixelShader);
+				
+				PSOCreateInfo.pVS = VSShader;
+				PSOCreateInfo.pPS = PSShader;
+				PSOCreateInfo.GraphicsPipeline = Desc.mGBufferPSOCreateInfo.GraphicsPipeline;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = !COORDSYSTEM_LH_ENABLED;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
+
+				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(false);
+				if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
+				{
+					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				}
+
+				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&result.mGBufferPipeline, PSOCreateInfo, Vars, true);
+
+
+				if (Desc.pBakingDesc)
+				{
+					SetIfFound(result.mGBufferPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
+
+					SetIfFound(result.mGBufferPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
+				}
+				result.mGBufferPipeline->CreateShaderResourceBinding(&result.mGBufferSRB, true);
+
+				//Create GBuffer Desc
+				if (!mGBuffer.isInitialized())
+				{
+					Rendering::GBufferDesc gbufferdesc;
+
+					for (Uint32 i = 0; i < PSOCreateInfo.GraphicsPipeline.NumRenderTargets; i++)
+					{
+						Graphics::RenderTargetDesc RTDesc;
+						RTDesc.ColorTexFormat = PSOCreateInfo.GraphicsPipeline.RTVFormats[i];
+
+						gbufferdesc.mRTDescs.push_back(RTDesc);
+					}
+
+					//if (PSOCreateInfo.GraphicsPipeline.DSVFormat != TEX_FORMAT_UNKNOWN)
+					//{
+					//	Graphics::RenderTargetDesc RTDesc;
+					//	RTDesc.DepthTexFormat = PSOCreateInfo.GraphicsPipeline.DSVFormat;
+					//	gbufferdesc.mRTDescs.push_back(RTDesc);
+					//}
+
+					mGBuffer.Initialize(gbufferdesc);
+				}
+			}
+			//Deffered -Lighting- Pass
+			{
+				GraphicsPipelineStateCreateInfo PSOCreateInfo;
+				std::string psoname(Desc.mName + "_DID_" + std::to_string(Info.mHashKey));
+
+				RefCntAutoPtr<IShader> VSShader;
+				RefCntAutoPtr<IShader> PSShader;
+
+				for (auto& i : Info.mDefines)
+				{
+					Desc.mDefferedPSOCreateInfo.mVertexShader.mDefines.insert(i);
+					Desc.mDefferedPSOCreateInfo.mPixelShader.mDefines.insert(i);
+				}
+				GraphicsEngine::GetShaderManager()->CreateShader(VSShader.RawDblPtr(), Desc.mDefferedPSOCreateInfo.mVertexShader);
+				GraphicsEngine::GetShaderManager()->CreateShader(PSShader.RawDblPtr(), Desc.mDefferedPSOCreateInfo.mPixelShader);
+
+				PSOCreateInfo.pVS = VSShader;
+				PSOCreateInfo.pPS = PSShader;
+				PSOCreateInfo.GraphicsPipeline = Desc.mDefferedPSOCreateInfo.GraphicsPipeline;
+				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = COORDSYSTEM_LH_ENABLED;
+				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
+				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = FALSE;
+
+				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(true);
+				if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
+				{
+					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
+					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				}
+
+				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
+				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&result.mPipeline, PSOCreateInfo, Vars, true);
+
+				if (Desc.pBakingDesc)
+				{
+					SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
+					SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Desc.pBakingDesc->AnimationBufferPtr);
+					SetIfFound(result.mPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
+
+				}
+
+				result.mPipeline->CreateShaderResourceBinding(&result.mPipelineSRB, true);
+			}
+			ReflectShaderPipelineVariant(result, Desc.pBakingDesc);
+
+			return result;
 		}
 
 		Uint32 ShaderPipeline::GetHashedKey(const std::string& Key)
@@ -309,11 +440,18 @@ namespace Nuclear
 			return mParentAsset;
 		}
 
+		Rendering::GBuffer* ShaderPipeline::GetGBuffer()
+		{
+			return &mGBuffer;
+		}
+
+		//TODO: Optimize
 		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
 		{
 			if (mFirstReflection && pipeline.isDeffered())
 			{
 				ReflectData(pipeline.GetGBufferPipelineSRB(), "NEMat_", mReflection.mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
+				ReflectData(pipeline.GetMainPipelineSRB(), "NEIBL_", pipeline.mReflection.mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
 			}
 
 			for (Uint32 i = 0; i < pipeline.GetRenderingSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)

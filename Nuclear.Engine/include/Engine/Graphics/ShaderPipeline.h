@@ -7,6 +7,7 @@
 #include <Core\Path.h>
 #include <Engine/Graphics/ShaderPipelineVariant.h>
 #include <Engine/Graphics/ShaderPipelineSwitch.h>
+#include "Engine/Rendering/GBuffer.h"
 
 namespace Nuclear
 {
@@ -18,6 +19,9 @@ namespace Nuclear
 	{				
 		struct ShaderRenderingBakingDesc
 		{
+			Uint32 mRTWidth = 800;
+			Uint32 mRTHeight = 600;
+
 			Uint32 DirLights = 0;
 			Uint32 SpotLights = 0;
 			Uint32 PointLights = 0;
@@ -43,6 +47,7 @@ namespace Nuclear
 
 			std::vector<std::string> mDefines = std::vector<std::string>();
 
+			bool isDeffered = false;
 			bool isRenderingPipeline = true;
 			ShaderRenderingBakingDesc* pBakingDesc;
 		};
@@ -64,6 +69,8 @@ namespace Nuclear
 			const Graphics::ShaderReflection& GetReflection() const;
 
 			Assets::Shader* GetShaderAsset();
+			Rendering::GBuffer* GetGBuffer();
+
 		protected:
 			Assets::Shader* mParentAsset;
 			std::unordered_map<Uint32, ShaderPipelineVariant> mVariants;
@@ -71,6 +78,7 @@ namespace Nuclear
 
 			ShaderPipelineDesc mDesc;
 			Graphics::ShaderReflection mReflection;
+			Rendering::GBuffer mGBuffer;
 
 			ShaderPipelineVariant CreateForwardVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
 			ShaderPipelineVariant CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);

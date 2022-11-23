@@ -266,6 +266,7 @@ public:
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 
 		Importers::ShaderLoadingDesc desc;
+		desc.mType = Importers::ShaderType::_3DRendering;
 		BlinnPhong = mAssetManager->Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
 		DiffuseOnly = mAssetManager->Import("@NuclearAssets@/Shaders/DiffuseOnly.NEShader", desc);
 

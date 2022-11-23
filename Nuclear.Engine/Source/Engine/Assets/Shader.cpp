@@ -8,7 +8,6 @@ namespace Nuclear
         {
             mBuildDesc = ShaderBuildDesc();
             mPipeline = Graphics::ShaderPipeline(this);
-            mType = ShaderType::_3DRendering;
         }
         Shader::~Shader()
         {

@@ -2,22 +2,20 @@
 #include <Engine/Assets/Common.h>
 #include <Engine/Graphics/ShaderReflection.h>
 #include <Engine\Graphics\ShaderPipeline.h>
+#include <Engine/Importers/Common.h>
 
 namespace Nuclear
 {
     namespace Assets
     {
-        enum class ShaderType
-        {
-            _3DRendering
-        };
+
 
         struct ShaderBuildDesc 
         {
             Graphics::ShaderPipelineDesc mPipelineDesc = Graphics::ShaderPipelineDesc();
+            Importers::ShaderType mType = Importers::ShaderType::Unknown;;
+            std::vector<std::string> mDefines;
 
-            bool mSupportForwardRendering = true;
-            bool mSupportDefferedRendering = false;
             bool mSupportSkinnedMeshes = false;
             bool mSupportShadows = false;
         };
@@ -31,7 +29,6 @@ namespace Nuclear
             ShaderBuildDesc mBuildDesc;
             Graphics::ShaderPipeline mPipeline;
 
-            ShaderType mType;
         };
     }
 }

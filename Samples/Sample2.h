@@ -25,18 +25,15 @@ class Sample2 : public Client
 
 	Graphics::Camera Camera;
 
-	//Shading models
-	//Rendering::DiffuseOnly DiffuseRP;
-
 	Assets::Shader* PBR;
 
 	//Pipelines
-	Rendering::ForwardRenderingPath ForwardRP;
-
+	//Rendering::ForwardRenderingPath ForwardRP;
+	Rendering::DefferedRenderingPath DefferedRP;
 
 	Rendering::GeometryPass GeoPass;
 	Rendering::PostProcessingPass PostFXPass;
-
+	Rendering::DefferedPass DefferedPass;
 
 	//IBL Settings
 	Rendering::ImageBasedLighting IBL;
@@ -183,12 +180,14 @@ public:
 
 		InitIBL();
 
-		GeoPass.pRenderingPath = &ForwardRP;
+		GeoPass.pRenderingPath = &DefferedRP;
 
 		Renderer->AddRenderPass(&GeoPass);
+		Renderer->AddRenderPass(&DefferedPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
 		Importers::ShaderLoadingDesc desc;
+		desc.mType = Importers::ShaderType::_3DRendering;
 		PBR = mAssetManager->Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 
 		Renderer->RegisterShader(PBR);
@@ -224,6 +223,8 @@ public:
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
 		//Renderer->VisualizePointLightsPositions = true;
+		ESphere.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), true);
+		EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), true);
 
 		//Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
 		//Renderer->GetBackground().SetSkybox(&Skybox);
