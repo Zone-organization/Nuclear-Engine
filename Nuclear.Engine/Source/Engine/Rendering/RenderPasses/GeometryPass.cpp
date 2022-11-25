@@ -24,11 +24,6 @@ namespace Nuclear
 
 		}
 
-		Rendering::Background& GeometryPass::GetBackground()
-		{
-			return mBackground;
-		}
-
 		void GeometryPass::Update(FrameRenderData* frame)
 		{
 			bool SkinnedRendering = false;
@@ -51,12 +46,6 @@ namespace Nuclear
 					pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());
 				}
 
-			}
-			//Render Skybox
-			if (GetBackground().GetSkybox() != nullptr)
-			{
-				Graphics::Context::GetContext()->SetRenderTargets(1, frame->mFinalRT.GetRTVDblPtr(), frame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				GetBackground().GetSkybox()->Render();
 			}
 		}		
 	}

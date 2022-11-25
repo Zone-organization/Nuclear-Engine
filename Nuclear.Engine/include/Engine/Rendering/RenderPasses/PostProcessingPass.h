@@ -6,6 +6,7 @@
 #include <Engine\ECS\System.h>
 #include <Engine/Rendering/BlurEffect.h>
 #include <Engine/Graphics/ShaderPipeline.h>
+#include <Engine\Rendering\Background.h>
 
 namespace Nuclear
 {
@@ -39,7 +40,11 @@ namespace Nuclear
 
 			void SetPostProcessingEffect(Uint32 effectId, bool value);
 
+			Graphics::ShaderPipelineSwitchController& GetPipelineController();
+
 			virtual void BakePostFXPipeline();
+
+			Rendering::Background& GetBackground();
 		protected:
 			PostProcessingPassDesc mDesc;
 
@@ -61,6 +66,8 @@ namespace Nuclear
 			Uint32 mRTHeight = 0;
 
 			Uint32 _HashedBloomID;
+
+			Rendering::Background mBackground;
 		};
 
 	}

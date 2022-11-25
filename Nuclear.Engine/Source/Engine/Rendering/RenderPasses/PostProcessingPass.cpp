@@ -20,9 +20,17 @@ namespace Nuclear
 			auto pipeline = mPipelineCntrllr.GetActiveVariant()->GetMainPipeline();
 			auto pipelineSRB = mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB();
 
-			//1 - Extract bloom from scene rt
-			if (mBloomEnabled)
+			//Render Skybox
+
+			if (GetBackground().GetSkybox() != nullptr)
 			{
+				Graphics::Context::GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), framedata->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				GetBackground().GetSkybox()->Render();
+			}
+
+			if (mBloomEnabled)
+			{		
+				//1 - Extract bloom from scene rt
 				Graphics::Context::GetContext()->SetPipelineState(pBloomExtractPSO);
 				pBloomExtractSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->mFinalRT.GetSRV());
 				Graphics::Context::GetContext()->CommitShaderResources(pBloomExtractSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -31,11 +39,9 @@ namespace Nuclear
 				Graphics::Context::GetContext()->ClearRenderTarget(BloomRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				Assets::DefaultMeshes::RenderScreenQuad();
-			}
 
-			//2 - apply bloom blur
-			if (mBloomEnabled)
-			{
+
+				//2 - apply bloom blur
 				bool horizontal = true, first_iteration = true, horicleared = false, verticleared = false;
 				unsigned int amount = 10;
 
@@ -85,6 +91,9 @@ namespace Nuclear
 			}
 
 			//3 - apply the remaning effects
+			Graphics::Context::GetContext()->SetRenderTargets(1, PostFXRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetContext()->ClearRenderTarget(PostFXRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
 			Graphics::Context::GetContext()->SetPipelineState(pipeline);
 
 			pipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->mFinalRT.GetSRV());
@@ -94,8 +103,6 @@ namespace Nuclear
 			}
 			Graphics::Context::GetContext()->CommitShaderResources(pipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			Graphics::Context::GetContext()->SetRenderTargets(1, PostFXRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(PostFXRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			Assets::DefaultMeshes::RenderScreenQuad();
 
 
@@ -104,18 +111,24 @@ namespace Nuclear
 			attrib.pSrcTexture = PostFXRT.GetSRV()->GetTexture();
 			attrib.pDstTexture = framedata->mFinalRT.GetSRV()->GetTexture();
 			Graphics::Context::GetContext()->CopyTexture(attrib);
+		
 		}
 
 		void PostProcessingPass::SetPostProcessingEffect(Uint32 effectId, bool value)
 		{
-			if (mPipelineCntrllr.SetSwitch(effectId, value))
+			mPipelineCntrllr.SetSwitch(effectId, value);
+
+			//check for bloom
+			if (effectId == _HashedBloomID)
 			{
-				//check for bloom
-				if (effectId == _HashedBloomID)
-				{
-					mBloomEnabled = value;
-				}
+				mBloomEnabled = value;
 			}
+
+		}
+
+		Graphics::ShaderPipelineSwitchController& PostProcessingPass::GetPipelineController()
+		{
+			return mPipelineCntrllr;
 		}
 
 		void PostProcessingPass::Bake(const PostProcessingBakingDesc& desc)
@@ -200,7 +213,7 @@ namespace Nuclear
 
 				PSOCreateInfo.PSODesc.Name = "BloomExtract PSO";
 				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA16_FLOAT;
 				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
 				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
@@ -260,5 +273,12 @@ namespace Nuclear
 			mPipelineCntrllr.SetPipeline(&mPostFXPipeline);
 			mPipelineCntrllr.Update();
 		}
+
+
+		Rendering::Background& PostProcessingPass::GetBackground()
+		{
+			return mBackground;
+		}
+
 	}
 }

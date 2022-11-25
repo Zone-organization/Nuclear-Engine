@@ -1,6 +1,5 @@
 #pragma once
 #include <Engine\Rendering\RenderPass.h>
-#include <Engine\Rendering\Background.h>
 #include <Engine\Rendering\RenderingPath.h>
 
 namespace Nuclear
@@ -18,15 +17,11 @@ namespace Nuclear
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) override;
 
-			Rendering::Background& GetBackground();
-
 			RenderingPath* pRenderingPath;
 		protected:
 
 			ShaderPipeline* pActivePipeline = nullptr;
 			FrameRenderData* pCurrentFrame = nullptr;
-
-			Rendering::Background mBackground;
 		};
 
 	}

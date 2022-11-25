@@ -227,7 +227,7 @@ namespace Nuclear
 			Graphics::RenderTargetDesc RTDesc;
 			RTDesc.Width = RTWidth;
 			RTDesc.Height = RTHeight;
-			RTDesc.ColorTexFormat = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 			mRenderData.mFinalRT.Create(RTDesc);
 

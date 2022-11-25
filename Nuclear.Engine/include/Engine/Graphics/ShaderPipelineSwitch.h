@@ -9,7 +9,7 @@ namespace Nuclear
 		class ShaderPipeline;
 		class ShaderPipelineVariant;
 
-		class ShaderPipelineSwitch
+		class NEAPI ShaderPipelineSwitch
 		{
 		public:
 			enum class Type {
@@ -24,7 +24,7 @@ namespace Nuclear
 			void SetValue(bool value);
 			bool GetValue() const;
 
-			Type GetType();
+			Type GetType() const;
 
 			std::string GetName() const;
 			Uint32 GetID() const;
@@ -50,6 +50,7 @@ namespace Nuclear
 			ShaderPipelineVariant* GetActiveVariant();
 			ShaderPipeline* GetShaderPipeline();
 			ShaderPipelineSwitch& GetSwitch(Uint32 SwitchID);
+			std::unordered_map<Uint32, ShaderPipelineSwitch>& GetSwitches();
 
 		protected:
 			std::unordered_map<Uint32, ShaderPipelineSwitch> mSwitches;

@@ -42,30 +42,6 @@ namespace Nuclear
 			return Graphics::TextureUsageType::Unknown;
 		}
 
-		void ReflectData(IShaderResourceBinding* ActiveSRB, const std::string& varname, std::vector<Assets::ShaderTexture>& result, const Assets::ShaderTextureType& type)
-		{
-			for (Uint32 i = 0; i < ActiveSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
-			{
-				auto variable = ActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
-				ShaderResourceDesc VarDesc;
-				variable->GetResourceDesc(VarDesc);
-				std::string VarName(VarDesc.Name);
-				auto VarType = VarDesc.Type;
-				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find(varname) == 0)
-				{
-					VarName.erase(0, varname.size());
-
-					Assets::ShaderTexture ReflectedTex;
-					ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
-					ReflectedTex.mTex.SetName(VarName);
-					ReflectedTex.mSlot = i;
-					ReflectedTex.mType = type;
-					ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
-					result.push_back(ReflectedTex);
-				}
-			}
-		}
-
 		//std::string MergeCode(const std::string& shadersource, const std::set<std::string>& defines)
 		//{
 		//	std::vector<std::string> MergedCode;
@@ -177,11 +153,11 @@ namespace Nuclear
 			return true;
 		}
 
-		void SetIfFound(IPipelineState* pipeline,SHADER_TYPE ShaderType, const Char* Name, IDeviceObject* obj)
+		void SetIfFound(IPipelineState* pipeline, SHADER_TYPE ShaderType, const Char* Name, IDeviceObject* obj)
 		{
 			auto res = pipeline->GetStaticVariableByName(ShaderType, Name);
 
-			if (res) 
+			if (res)
 			{
 				if (obj)
 				{
@@ -218,13 +194,15 @@ namespace Nuclear
 					AddToDefinesIfNotZero(Info.mDefines, "NE_MAX_OMNIDIR_CASTERS ", Desc.pBakingDesc->pShadowPass->GetBakingDesc().MAX_OMNIDIR_CASTERS);
 				}
 			}
+			Info.mMainPSOCreateInfo = Desc.mForwardPSOCreateInfo;
+
 			for (auto& i : Info.mDefines)
 			{
-				Desc.mForwardPSOCreateInfo.mVertexShader.mDefines.insert(i);
-				Desc.mForwardPSOCreateInfo.mPixelShader.mDefines.insert(i);
+				Info.mMainPSOCreateInfo.mVertexShader.mDefines.insert(i);
+				Info.mMainPSOCreateInfo.mPixelShader.mDefines.insert(i);
 			}
-			GraphicsEngine::GetShaderManager()->CreateShader(VShader.RawDblPtr(), Desc.mForwardPSOCreateInfo.mVertexShader);
-			GraphicsEngine::GetShaderManager()->CreateShader(PShader.RawDblPtr(), Desc.mForwardPSOCreateInfo.mPixelShader);
+			GraphicsEngine::GetShaderManager()->CreateShader(VShader.RawDblPtr(), Info.mMainPSOCreateInfo.mVertexShader);
+			GraphicsEngine::GetShaderManager()->CreateShader(PShader.RawDblPtr(), Info.mMainPSOCreateInfo.mPixelShader);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			std::string psoname(Desc.mName + "_FID_" + std::to_string(Info.mHashKey));
@@ -264,6 +242,9 @@ namespace Nuclear
 				result.mShaderAssetID = mParentAsset->GetID();
 			}
 			result.mDesc = Info;
+			Info.mGBufferPSOCreateInfo = Desc.mGBufferPSOCreateInfo;
+			Info.mMainPSOCreateInfo = Desc.mDefferedPSOCreateInfo;
+
 			//Geometry -GBuffer- Pass
 			{
 
@@ -288,12 +269,13 @@ namespace Nuclear
 				}
 				for (auto& i : Info.mDefines)
 				{
-					Desc.mGBufferPSOCreateInfo.mVertexShader.mDefines.insert(i);
-					Desc.mGBufferPSOCreateInfo.mPixelShader.mDefines.insert(i);
+					
+					Info.mGBufferPSOCreateInfo.mVertexShader.mDefines.insert(i);
+					Info.mGBufferPSOCreateInfo.mPixelShader.mDefines.insert(i);
 				}
-				GraphicsEngine::GetShaderManager()->CreateShader(VSShader.RawDblPtr(), Desc.mGBufferPSOCreateInfo.mVertexShader);
-				GraphicsEngine::GetShaderManager()->CreateShader(PSShader.RawDblPtr(), Desc.mGBufferPSOCreateInfo.mPixelShader);
-				
+				GraphicsEngine::GetShaderManager()->CreateShader(VSShader.RawDblPtr(), Info.mGBufferPSOCreateInfo.mVertexShader);
+				GraphicsEngine::GetShaderManager()->CreateShader(PSShader.RawDblPtr(), Info.mGBufferPSOCreateInfo.mPixelShader);
+
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
 				PSOCreateInfo.GraphicsPipeline = Desc.mGBufferPSOCreateInfo.GraphicsPipeline;
@@ -354,11 +336,11 @@ namespace Nuclear
 
 				for (auto& i : Info.mDefines)
 				{
-					Desc.mDefferedPSOCreateInfo.mVertexShader.mDefines.insert(i);
-					Desc.mDefferedPSOCreateInfo.mPixelShader.mDefines.insert(i);
+					Info.mMainPSOCreateInfo.mVertexShader.mDefines.insert(i);
+					Info.mMainPSOCreateInfo.mPixelShader.mDefines.insert(i);
 				}
-				GraphicsEngine::GetShaderManager()->CreateShader(VSShader.RawDblPtr(), Desc.mDefferedPSOCreateInfo.mVertexShader);
-				GraphicsEngine::GetShaderManager()->CreateShader(PSShader.RawDblPtr(), Desc.mDefferedPSOCreateInfo.mPixelShader);
+				GraphicsEngine::GetShaderManager()->CreateShader(VSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mVertexShader);
+				GraphicsEngine::GetShaderManager()->CreateShader(PSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mPixelShader);
 
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
@@ -419,7 +401,7 @@ namespace Nuclear
 
 			NUCLEAR_ERROR("[ShaderPipeline] Variant: '{0}' Not Found!", Key);
 
-			if(mVariants.size() > 0)
+			if (mVariants.size() > 0)
 				return &mVariants.begin()->second;
 
 			return nullptr;
@@ -445,66 +427,46 @@ namespace Nuclear
 			return &mGBuffer;
 		}
 
-		//TODO: Optimize
-		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
-		{
-			if (mFirstReflection && pipeline.isDeffered())
-			{
-				ReflectData(pipeline.GetGBufferPipelineSRB(), "NEMat_", mReflection.mMaterialTexturesInfo, Assets::ShaderTextureType::MaterialTex);
-				ReflectData(pipeline.GetMainPipelineSRB(), "NEIBL_", pipeline.mReflection.mIBLTexturesInfo, Assets::ShaderTextureType::IBL_Tex);
-			}
 
-			for (Uint32 i = 0; i < pipeline.GetRenderingSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
+		void ReflectData(IShaderResourceBinding* ActiveSRB, const std::string& varname, std::vector<Assets::ShaderTexture>& result, const Assets::ShaderTextureType& type)
+		{
+			for (Uint32 i = 0; i < ActiveSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
 			{
-				auto variable = pipeline.GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
+				auto variable = ActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
 				ShaderResourceDesc VarDesc;
 				variable->GetResourceDesc(VarDesc);
 				std::string VarName(VarDesc.Name);
 				auto VarType = VarDesc.Type;
-				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV)
+				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find(varname) == 0)
 				{
-					//Shadow Maps
-					if (VarName.find("NE_ShadowMap_") == 0)
-					{
-						VarName.erase(0, 13);
+					VarName.erase(0, varname.size());
 
-						Assets::ShaderTexture* tex;
-						if (VarName.find("DirPos") == 0)
-						{
-							tex = &pipeline.mReflection.mShadowMapsInfo.mDirPos_SMInfo;
-						}
-						else if (VarName.find("Spot") == 0)
-						{
-							tex = &pipeline.mReflection.mShadowMapsInfo.mSpot_SMInfo;
-						}
-						else if (VarName.find("OmniDir") == 0)
-						{
-							tex = &pipeline.mReflection.mShadowMapsInfo.mOmniDir_SMInfo;
-						}
-						else {
-							assert(false);
-						}
-						tex->mTex = Managers::AssetManager::DefaultWhiteTex;
-						tex->mTex.SetName(VarName);
-						tex->mSlot = i;
-						tex->mType = Assets::ShaderTextureType::ShadowTex;
-						tex->mTex.SetUsageType(ParseTexUsageFromName(VarName));
-					}
-					else if (VarName.find("NEIBL_") == 0)
-					{
-						VarName.erase(0, 6);
+					Assets::ShaderTexture ReflectedTex;
+					ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+					ReflectedTex.mTex.SetName(VarName);
+					ReflectedTex.mSlot = i;
+					ReflectedTex.mType = type;
+					ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
+					result.push_back(ReflectedTex);
+				}
+			}
+		}
 
-						Assets::ShaderTexture ReflectedTex;
-						ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
-						ReflectedTex.mTex.SetName(VarName);
-						ReflectedTex.mSlot = i;
-						ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
-						ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
-						pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
-					}
-					else if (!pipeline.isDeffered() && mFirstReflection)
+		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
+		{
+			if (pipeline.isDeffered())
+			{
+				if (mFirstReflection)
+				{
+					//Gbuffer Reflection
+					for (Uint32 i = 0; i < pipeline.GetGBufferPipelineSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
 					{
-						if (VarName.find("NEMat_") == 0)
+						auto variable = pipeline.GetGBufferPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
+						ShaderResourceDesc VarDesc;
+						variable->GetResourceDesc(VarDesc);
+						std::string VarName(VarDesc.Name);
+						auto VarType = VarDesc.Type;
+						if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
 						{
 							VarName.erase(0, 6);
 
@@ -515,6 +477,126 @@ namespace Nuclear
 							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
 							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
 							mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
+						}
+					}
+				}
+
+				//Main pipeline Reflection
+				for (Uint32 i = 0; i < pipeline.GetMainPipelineSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
+				{
+					auto variable = pipeline.GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
+					ShaderResourceDesc VarDesc;
+					variable->GetResourceDesc(VarDesc);
+					std::string VarName(VarDesc.Name);
+					auto VarType = VarDesc.Type;
+					if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV)
+					{
+						//Shadow Maps
+						if (VarName.find("NE_ShadowMap_") == 0)
+						{
+							VarName.erase(0, 13);
+
+							Assets::ShaderTexture* tex;
+							if (VarName.find("DirPos") == 0)
+							{
+								tex = &pipeline.mReflection.mShadowMapsInfo.mDirPos_SMInfo;
+							}
+							else if (VarName.find("Spot") == 0)
+							{
+								tex = &pipeline.mReflection.mShadowMapsInfo.mSpot_SMInfo;
+							}
+							else if (VarName.find("OmniDir") == 0)
+							{
+								tex = &pipeline.mReflection.mShadowMapsInfo.mOmniDir_SMInfo;
+							}
+							else {
+								assert(false);
+							}
+							tex->mTex = Managers::AssetManager::DefaultWhiteTex;
+							tex->mTex.SetName(VarName);
+							tex->mSlot = i;
+							tex->mType = Assets::ShaderTextureType::ShadowTex;
+							tex->mTex.SetUsageType(ParseTexUsageFromName(VarName));
+						}
+						else if (VarName.find("NEIBL_") == 0)
+						{
+							VarName.erase(0, 6);
+
+							Assets::ShaderTexture ReflectedTex;
+							ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+							ReflectedTex.mTex.SetName(VarName);
+							ReflectedTex.mSlot = i;
+							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
+							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
+							pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
+						}
+					}
+				}
+			}
+			else
+			{
+				for (Uint32 i = 0; i < pipeline.GetRenderingSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
+				{
+					auto variable = pipeline.GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
+					ShaderResourceDesc VarDesc;
+					variable->GetResourceDesc(VarDesc);
+					std::string VarName(VarDesc.Name);
+					auto VarType = VarDesc.Type;
+					if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV)
+					{
+						//Shadow Maps
+						if (VarName.find("NE_ShadowMap_") == 0)
+						{
+							VarName.erase(0, 13);
+
+							Assets::ShaderTexture* tex;
+							if (VarName.find("DirPos") == 0)
+							{
+								tex = &pipeline.mReflection.mShadowMapsInfo.mDirPos_SMInfo;
+							}
+							else if (VarName.find("Spot") == 0)
+							{
+								tex = &pipeline.mReflection.mShadowMapsInfo.mSpot_SMInfo;
+							}
+							else if (VarName.find("OmniDir") == 0)
+							{
+								tex = &pipeline.mReflection.mShadowMapsInfo.mOmniDir_SMInfo;
+							}
+							else {
+								assert(false);
+							}
+							tex->mTex = Managers::AssetManager::DefaultWhiteTex;
+							tex->mTex.SetName(VarName);
+							tex->mSlot = i;
+							tex->mType = Assets::ShaderTextureType::ShadowTex;
+							tex->mTex.SetUsageType(ParseTexUsageFromName(VarName));
+						}
+						else if (VarName.find("NEIBL_") == 0)
+						{
+							VarName.erase(0, 6);
+
+							Assets::ShaderTexture ReflectedTex;
+							ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+							ReflectedTex.mTex.SetName(VarName);
+							ReflectedTex.mSlot = i;
+							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
+							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
+							pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
+						}
+						else if (mFirstReflection)
+						{
+							if (VarName.find("NEMat_") == 0)
+							{
+								VarName.erase(0, 6);
+
+								Assets::ShaderTexture ReflectedTex;
+								ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+								ReflectedTex.mTex.SetName(VarName);
+								ReflectedTex.mSlot = i;
+								ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
+								ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
+								mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
+							}
 						}
 					}
 				}

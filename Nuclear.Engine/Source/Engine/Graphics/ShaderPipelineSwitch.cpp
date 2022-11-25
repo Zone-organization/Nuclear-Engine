@@ -24,7 +24,7 @@ namespace Nuclear
 		{
 			return mValue;
 		}
-		ShaderPipelineSwitch::Type ShaderPipelineSwitch::GetType()
+		ShaderPipelineSwitch::Type ShaderPipelineSwitch::GetType() const
 		{
 			return mType;
 		}
@@ -40,6 +40,9 @@ namespace Nuclear
 
 		ShaderPipelineSwitchController::ShaderPipelineSwitchController()
 		{
+			mSwitches = std::unordered_map<Uint32, ShaderPipelineSwitch>();
+			pActiveVariant = nullptr;
+			pPipeline = nullptr;
 			mRequiredHash = 0;
 		}
 
@@ -55,7 +58,7 @@ namespace Nuclear
 
 			for (auto& i : pipeline->GetSwitches())
 			{
-				mSwitches[i.GetID()] = ShaderPipelineSwitch(i.GetName());
+				mSwitches[i.GetID()] = ShaderPipelineSwitch(i.GetName(), i.GetValue(), i.GetType());
 			}
 		}
 
@@ -106,6 +109,7 @@ namespace Nuclear
 				}
 
 				pActiveVariant = pPipeline->GetVariant(mRequiredHash);
+				mDirty = false;
 			}
 		}
 
@@ -134,6 +138,10 @@ namespace Nuclear
 			{
 				assert(false);
 			}
+		}
+		std::unordered_map<Uint32, ShaderPipelineSwitch>& ShaderPipelineSwitchController::GetSwitches()
+		{
+			return mSwitches;
 		}
 	}
 }

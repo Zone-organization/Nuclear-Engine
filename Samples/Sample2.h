@@ -226,9 +226,8 @@ public:
 		ESphere.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), true);
 		EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), true);
 
-		//Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
-		//Renderer->GetBackground().SetSkybox(&Skybox);
-		PostFXPass.SetPostProcessingEffect(Utilities::Hash("BLOOM"), false);
+		Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
+		PostFXPass.GetBackground().SetSkybox(&Skybox);
 
 		Engine::GetInstance()->GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -359,19 +358,32 @@ public:
 			ImGui::Separator();
 			ImGui::Text("PostFX Pipeline");
 
+			if (ImGui::TreeNode("PostFX Effects"))
+			{
+				for (auto& it : PostFXPass.GetPipelineController().GetSwitches())
+				{
+					bool value = it.second.GetValue();
+					ImGui::Checkbox(it.second.GetName().c_str(), &value);
+					if (value != it.second.GetValue())
+					{
+						PostFXPass.SetPostProcessingEffect(it.second.GetID(), value);
+					}
+				}
+				ImGui::TreePop();
+			}
 
-			static bool HDR = true;
-			static bool GAMMACORRECTION = true;
-			static bool BLOOM = false;
+			//static bool HDR = true;
+			//static bool GAMMACORRECTION = true;
+			//static bool BLOOM = true;
 
-			if (ImGui::Checkbox("HDR", &HDR))
-				PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), HDR);
-			
-			if (ImGui::Checkbox("GAMMACORRECTION", &GAMMACORRECTION))
-				PostFXPass.SetPostProcessingEffect(Utilities::Hash("GAMMACORRECTION"), GAMMACORRECTION);
+			//if (ImGui::Checkbox("HDR", &HDR))
+			//	PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), HDR);
+			//
+			//if (ImGui::Checkbox("GAMMACORRECTION", &GAMMACORRECTION))
+			//	PostFXPass.SetPostProcessingEffect(Utilities::Hash("GAMMACORRECTION"), GAMMACORRECTION);
 
-			if (ImGui::Checkbox("BLOOM", &BLOOM))
-				PostFXPass.SetPostProcessingEffect(Utilities::Hash("BLOOM"), BLOOM);
+			//if (ImGui::Checkbox("BLOOM", &BLOOM))
+			//	PostFXPass.SetPostProcessingEffect(Utilities::Hash("BLOOM"), BLOOM);
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 

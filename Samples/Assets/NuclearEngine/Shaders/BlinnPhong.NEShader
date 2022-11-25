@@ -22,11 +22,17 @@ VertexShader = "VShader"
 PixelShader = "PShader"
 
 [GBufferPSO]
-PixelShader = "PShader"
+VertexShader = "GBufferVShader"
+PixelShader = "GBufferPShader"
 RTVFormats = [ "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA8_UNORM" ]
 DSVFormat = "TEX_FORMAT_D32_FLOAT"
 
-			
+[GBufferVShader]
+Path = '@NuclearAssets@/Shaders/GBuffer.vs.hlsl'
+
+[GBufferPShader]
+Path = '@NuclearAssets@/Shaders/GBuffer.ps.hlsl'
+
 [VShader]
 EntryPoint = "main"
 Path = '@NuclearAssets@/Shaders/Basic.vs.hlsl'

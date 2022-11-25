@@ -2,7 +2,6 @@
 
 ## Current To-dos 
   - W.I.P:
-    - Divide render stages to RenderPass(es)
     - CSM
 	- Basic Editor support (Nuclear Editor).
 

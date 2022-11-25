@@ -74,11 +74,11 @@ public:
 
 		//ImGui::Text("Select Demo");
 
-		//if (ImGui::Button("Sponza Demo"))
-		//{
-		//	SponzaDemo demo;
-		//	return StartSample(&demo);
-		//}
+		if (ImGui::Button("Sponza Demo"))
+		{
+			SponzaDemo demo;
+			return StartSample(&demo);
+		}
 
 		//if (ImGui::Button("Playground"))
 		//{
