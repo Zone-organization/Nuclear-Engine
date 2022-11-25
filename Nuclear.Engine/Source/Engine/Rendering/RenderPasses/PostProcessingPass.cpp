@@ -166,11 +166,12 @@ namespace Nuclear
 
 		void PostProcessingPass::BakePostFXPipeline()
 		{
-			{
-				std::vector<LayoutElement> Layout;
+			std::vector<LayoutElement> Layout;
 
-				Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
-				Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
+			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
+			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
+			{
+
 				Graphics::ShaderPipelineDesc PSOCreateInfo;
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("HDR", true));
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("GAMMACORRECTION", true));
@@ -225,8 +226,6 @@ namespace Nuclear
 				RefCntAutoPtr<IShader> VSShader;
 				RefCntAutoPtr<IShader> PSShader;
 
-				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(false);
-
 				//Create Vertex Shader
 				{
 
@@ -263,8 +262,9 @@ namespace Nuclear
 
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
-				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
+
 				auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
 				Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pBloomExtractPSO, PSOCreateInfo, Vars, true);
 				pBloomExtractPSO->CreateShaderResourceBinding(pBloomExtractSRB.RawDblPtr());
