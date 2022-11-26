@@ -372,35 +372,12 @@ public:
 				ImGui::TreePop();
 			}
 
-			//static bool HDR = true;
-			//static bool GAMMACORRECTION = true;
-			//static bool BLOOM = true;
-
-			//if (ImGui::Checkbox("HDR", &HDR))
-			//	PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), HDR);
-			//
-			//if (ImGui::Checkbox("GAMMACORRECTION", &GAMMACORRECTION))
-			//	PostFXPass.SetPostProcessingEffect(Utilities::Hash("GAMMACORRECTION"), GAMMACORRECTION);
-
-			//if (ImGui::Checkbox("BLOOM", &BLOOM))
-			//	PostFXPass.SetPostProcessingEffect(Utilities::Hash("BLOOM"), BLOOM);
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
-
-			//for (auto& it : Renderer->GetActivePipeline()->mPairedEffects)
-			//{
-			//	bool value = it.second.GetValue();
-			//	ImGui::Checkbox(it.second.GetName().c_str(), &value);
-			//	if (value != it.second.GetValue())
-			//	{
-			//		Renderer->GetActivePipeline()->SetEffect(it.second.GetID(), value);
-			//	}
-			//}
-
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

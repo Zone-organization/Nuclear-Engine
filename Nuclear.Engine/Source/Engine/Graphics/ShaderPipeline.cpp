@@ -427,31 +427,6 @@ namespace Nuclear
 			return &mGBuffer;
 		}
 
-
-		void ReflectData(IShaderResourceBinding* ActiveSRB, const std::string& varname, std::vector<Assets::ShaderTexture>& result, const Assets::ShaderTextureType& type)
-		{
-			for (Uint32 i = 0; i < ActiveSRB->GetVariableCount(SHADER_TYPE_PIXEL); i++)
-			{
-				auto variable = ActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
-				ShaderResourceDesc VarDesc;
-				variable->GetResourceDesc(VarDesc);
-				std::string VarName(VarDesc.Name);
-				auto VarType = VarDesc.Type;
-				if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find(varname) == 0)
-				{
-					VarName.erase(0, varname.size());
-
-					Assets::ShaderTexture ReflectedTex;
-					ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
-					ReflectedTex.mTex.SetName(VarName);
-					ReflectedTex.mSlot = i;
-					ReflectedTex.mType = type;
-					ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
-					result.push_back(ReflectedTex);
-				}
-			}
-		}
-
 		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
 		{
 			if (pipeline.isDeffered())

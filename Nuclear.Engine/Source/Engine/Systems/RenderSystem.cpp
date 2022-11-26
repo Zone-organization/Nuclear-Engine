@@ -127,6 +127,15 @@ namespace Nuclear
 			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
 			mRenderData.mUsedDefferedPipelines.clear();
 
+			auto shadowpass = GetRenderPass<Rendering::ShadowPass>();
+			if (shadowpass)
+			{
+				mRenderData.pDirPosShadowMapSRV = shadowpass->GetDirPosShadowMapSRV();
+				mRenderData.pSpotPosShadowMapSRV = shadowpass->GetSpotShadowMapSRV();
+				mRenderData.pOmniDirShadowMapSRV = shadowpass->GetOmniDirShadowMapSRV();
+
+			}
+
 			auto meshview = mScene->GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : meshview)
 			{
