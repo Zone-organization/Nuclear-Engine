@@ -7,7 +7,7 @@ ForwardPipeline = "MainPSO"
 DefferedPipeline = "DefferedPSO"
 GBufferPipeline = "GBufferPSO"
 Variants = [  "NE_SHADOWS" ]
-#Variants = [ "NE_DEFFERED", "NE_SHADOWS", "ANIMATION" , "IBL_ENABLED" ]
+#Variants = [ "NE_DEFFERED", "NE_SHADOWS", "NE_ANIMATION" , "IBL_ENABLED" ]
 #Defines = [ "PBR" ]
 
 [MainPSO]

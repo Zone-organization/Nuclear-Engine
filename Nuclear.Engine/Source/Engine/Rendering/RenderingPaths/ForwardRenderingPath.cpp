@@ -38,7 +38,7 @@ namespace Nuclear
 
 			//Shadows
 			////////////////////////     TODO    //////////////////////////////////////
-			if (pCurrentFrame->mShadowsEnabled)
+			if (pCurrentFrame->mShadowsEnabled && pActivePipeline->isShadowed())
 			{
 				auto& shadowmapsInfo = pActivePipeline->GetReflection().mShadowMapsInfo;
 				if (shadowmapsInfo.mDirPos_SMInfo.mType != Assets::ShaderTextureType::Unknown)

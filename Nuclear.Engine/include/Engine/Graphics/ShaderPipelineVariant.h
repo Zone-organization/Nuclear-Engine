@@ -97,6 +97,8 @@ namespace Nuclear
 
 			bool isDeffered();
 
+			bool isShadowed();
+
 		protected:
 			friend class ShaderPipeline;
 			friend class ShaderManager;

@@ -282,16 +282,24 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 				if (ImGui::CollapsingHeader("Mesh"))
 				{
 					
-					bool b = meshcomponent->GetEnableRender();
-					if (ImGui::Checkbox("Render", &b))
+					bool b = meshcomponent->GetEnableRendering();
+					if (ImGui::Checkbox("Enable Rendering", &b))
 					{
-						meshcomponent->SetEnableRender(b);
+						meshcomponent->SetEnableRendering(b);
+					}
+					bool castshadows = meshcomponent->GetCastShadow();
+					if (ImGui::Checkbox("Casts Shadow", &castshadows))
+					{
+						meshcomponent->SetCastShadow(castshadows);
+					}
+					bool recieveshadows = meshcomponent->GetReceiveShadows();
+					if (ImGui::Checkbox("Recieves Shadows", &recieveshadows))
+					{
+						meshcomponent->SetReceiveShadows(recieveshadows);
 					}
 
 					if (meshcomponent->GetMesh())
 					{
-						
-
 						if (meshcomponent->GetMesh()->GetName() != std::string(""))
 						{
 							ImGui::Text(meshcomponent->GetMesh()->GetName().c_str());

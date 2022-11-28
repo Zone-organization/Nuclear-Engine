@@ -101,11 +101,11 @@ namespace Nuclear
 							{
 								Info_._isDeffered = true;
 							}
-							else if (i == "ANIMATION")
+							else if (i == "NE_ANIMATION")
 							{
 								Info_._isSkinned = true;
 							}
-							else if (i == "SHADOWS")
+							else if (i == "NE_SHADOWS")
 							{
 								Info_._isShadowed = true;
 							}

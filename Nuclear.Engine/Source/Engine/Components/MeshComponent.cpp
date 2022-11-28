@@ -31,18 +31,22 @@ namespace Nuclear
 		{
 			if (mDirty)
 			{
-				if (mEnableRender)
+				if (mEnableRendering)
 				{
 					if (pMaterial)
 					{
-						auto assetptr = pMaterial->GetShader();
-						mPipelineCntrl.SetPipeline(&assetptr->mPipeline);
+						if (mMaterialDirty)
+						{
+							auto assetptr = pMaterial->GetShader();
+							mPipelineCntrl.SetPipeline(&assetptr->mPipeline);
+							mMaterialDirty = false;
+						}
 
-						Uint32 mAnimationHash = Utilities::Hash("ANIMATION");
-						Uint32 mRecieveShadowHash = Utilities::Hash("SHADOWS");
+						Uint32 mAnimationHash = Utilities::Hash("NE_ANIMATION");
+						Uint32 mRecieveShadowHash = Utilities::Hash("NE_SHADOWS");
 
 						mPipelineCntrl.SetSwitch(mAnimationHash, bool(pAnimator));
-						mPipelineCntrl.SetSwitch(mRecieveShadowHash, mRecieveShadows);
+						mPipelineCntrl.SetSwitch(mRecieveShadowHash, mReceiveShadows);
 
 						for (auto& i : mCustomSwitches)
 						{
@@ -51,7 +55,7 @@ namespace Nuclear
 						mPipelineCntrl.Update();
 					}
 					else {
-						mEnableRender = false;  //Dont render meshes with invalid material
+						mEnableRendering = false;  //Dont render meshes with invalid material
 						RenderQueue = 0;
 					}
 				}
@@ -76,46 +80,47 @@ namespace Nuclear
 			mCustomSwitches[VariantID] = val;
 			mDirty = true;
 		}
-		void MeshComponent::SetEnableRender(bool val)
+		void MeshComponent::SetEnableRendering(bool val)
 		{
-			if (mEnableRender != val)
+			if (mEnableRendering != val)
 			{
-				mEnableRender = val;
+				mEnableRendering = val;
 				mDirty = true;
 			}
 		}
-		void MeshComponent::SetCastShadows(bool val)
+		void MeshComponent::SetCastShadow(bool val)
 		{
-			if (mCastShadows != val)
+			if (mCastShadow != val)
 			{
-				mCastShadows = val;
+				mCastShadow = val;
 				mDirty = true;
 			}
 		}
-		void MeshComponent::SetRecieveShadows(bool val)
+		void MeshComponent::SetReceiveShadows(bool val)
 		{
-			if (mRecieveShadows != val)
+			if (mReceiveShadows != val)
 			{
-				mRecieveShadows = val;
+				mReceiveShadows = val;
 				mDirty = true;
 			}
 		}
-		bool MeshComponent::GetEnableRender() const
+		bool MeshComponent::GetEnableRendering() const
 		{
-			return mEnableRender;
+			return mEnableRendering;
 		}
-		bool MeshComponent::GetCastShadows() const
+		bool MeshComponent::GetCastShadow() const
 		{
-			return mCastShadows;
+			return mCastShadow;
 		}
-		bool MeshComponent::GetRecieveShadows() const
+		bool MeshComponent::GetReceiveShadows() const
 		{
-			return mRecieveShadows;
+			return mReceiveShadows;
 		}
 		void MeshComponent::SetMaterial(Assets::Material* material)
 		{
 			pMaterial = material;
 			mDirty = true;
+			mMaterialDirty = true;
 		}
 		Assets::Mesh* MeshComponent::GetMesh()
 		{

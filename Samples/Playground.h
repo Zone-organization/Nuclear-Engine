@@ -158,14 +158,14 @@ public:
 			ECS::Transform TSphere;
 			TSphere.SetPosition(Math::Vector3(0.0f, 1.5f, 0.0));
 		//	TSphere.SetScale(Math::Vector3(0.5f));
-			Scene.CreateBox(&RustedIron, TSphere).GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_SHADOWS"), true);
+			Scene.CreateBox(&RustedIron, TSphere);
 		}
 		{		
 			ECS::Transform TSphere;
 
 			TSphere.SetPosition(Math::Vector3(2.0f, 0.0f, 1.0));
 		//	TSphere.SetScale(Math::Vector3(0.5f));
-			Scene.CreateBox(&RustedIron, TSphere).GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_SHADOWS"), true);
+			Scene.CreateBox(&RustedIron, TSphere);
 		}
 		{		
 			ECS::Transform TSphere;
@@ -173,9 +173,9 @@ public:
 			TSphere.SetPosition(Math::Vector3(-1.0f, 0.0f, 2.0));
 			TSphere.SetRotation(glm::normalize(glm::vec3(1.0, 0.0, 1.0)), glm::radians(60.0f));
 	//		TSphere.SetScale(Math::Vector3(0.25));
-			Scene.CreateBox(&RustedIron, TSphere).GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_SHADOWS"), true);
+			Scene.CreateBox(&RustedIron, TSphere);
 		}
-		Scene.CreatePlane(&Plastic).GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_SHADOWS"), true);
+		Scene.CreatePlane(&Plastic);
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 		//Camera.MovementSpeed = 15;
@@ -289,7 +289,7 @@ public:
 			}
 
 			ImGui::End();
-			//EntityExplorer(&Scene);
+			EntityExplorer(&Scene);
 		}
 	}
 

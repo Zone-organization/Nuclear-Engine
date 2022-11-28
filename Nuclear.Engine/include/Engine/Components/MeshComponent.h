@@ -34,13 +34,13 @@ namespace Nuclear {
 
 			void SetVariantSwitch(Uint32 VariantID, bool val);
 
-			void SetEnableRender(bool val);
-			void SetCastShadows(bool val);
-			void SetRecieveShadows(bool val);
+			void SetEnableRendering(bool val);
+			void SetCastShadow(bool val);
+			void SetReceiveShadows(bool val);
 
-			bool GetEnableRender() const;
-			bool GetCastShadows() const;
-			bool GetRecieveShadows() const;
+			bool GetEnableRendering() const;
+			bool GetCastShadow() const;
+			bool GetReceiveShadows() const;
 
 			void SetMaterial(Assets::Material* material);
 
@@ -57,10 +57,11 @@ namespace Nuclear {
 
 			Uint32 RenderQueue = 1;
 
+			bool mMaterialDirty = true;
 			bool mDirty = true;
-			bool mEnableRender = true;
-			bool mCastShadows = true;
-			bool mRecieveShadows = true;
+			bool mEnableRendering = true;
+			bool mCastShadow = true;
+			bool mReceiveShadows = true;
 		};
 
 	}

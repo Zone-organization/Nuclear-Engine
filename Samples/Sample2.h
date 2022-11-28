@@ -217,8 +217,8 @@ public:
 		SetupAssets();
 
 		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, &RustedIron);
-		EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRender(true);
-		ESphere.GetComponent<Components::MeshComponent>()->SetEnableRender(false);
+		EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRendering(true);
+		ESphere.GetComponent<Components::MeshComponent>()->SetEnableRendering(false);
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
@@ -296,7 +296,7 @@ public:
 		{	
 
 			using namespace Graphics;
-			ImGui::Begin("Sample5: Advanced Rendering");
+			ImGui::Begin("Sample2: Advanced Rendering");
 
 			static float rotationspeed = 0.0f;
 			static Math::Vector3 RotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -307,14 +307,14 @@ public:
 			if (ImGui::RadioButton("ShaderBall", &f, 0))
 			{
 				activeentity = EShaderBall;
-				EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRender(true);
-				ESphere.GetComponent<Components::MeshComponent>()->SetEnableRender(false);
+				EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRendering(true);
+				ESphere.GetComponent<Components::MeshComponent>()->SetEnableRendering(false);
 			}
 			if (ImGui::RadioButton("Sphere", &f, 1))
 			{
 				activeentity = ESphere;
-				EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRender(false);
-				ESphere.GetComponent<Components::MeshComponent>()->SetEnableRender(true);
+				EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRendering(false);
+				ESphere.GetComponent<Components::MeshComponent>()->SetEnableRendering(true);
 			}
 
 

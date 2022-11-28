@@ -105,5 +105,9 @@ namespace Nuclear
 		{
 			return mDesc._isDeffered;
 		}
+		bool ShaderPipelineVariant::isShadowed()
+		{
+			return mDesc._isShadowed;
+		}
 	}
 }
