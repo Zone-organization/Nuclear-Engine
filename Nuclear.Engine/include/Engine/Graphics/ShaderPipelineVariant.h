@@ -46,6 +46,7 @@ namespace Nuclear
 			ShaderObjectCreationDesc mPixelShader = ShaderObjectCreationDesc();
 			ShaderPSOType mType = ShaderPSOType::Unknown;
 			GraphicsPipelineDesc GraphicsPipeline = GraphicsPipelineDesc();
+			std::vector<std::string> mRTsNames = std::vector<std::string>();
 		};		
 
 		struct ShaderPipelineVariantDesc

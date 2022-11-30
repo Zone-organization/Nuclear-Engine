@@ -224,8 +224,6 @@ public:
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		//Renderer->VisualizePointLightsPositions = true;
-
 		Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
 		PostFXPass.GetBackground().SetSkybox(&Skybox);
 
@@ -326,7 +324,7 @@ public:
 				EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
 			}
 
-			static bool IBL_ = false;
+			static bool IBL_ = true;
 
 			if (ImGui::Checkbox("IBL", &IBL_))
 				activeentity.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
@@ -381,7 +379,9 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
+			ImGui::Checkbox("Visualize RenderTargets", &mDebugSystem->ShowRegisteredRenderTargets);
+
+			ImGui::Checkbox("Visualize LightSources", &mDebugSystem->RenderLightSources);
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
@@ -395,9 +395,6 @@ public:
 
 			ImGui::End();
 			EntityExplorer(&Scene);
-
-			mDebugSystem->ShowRendertargets();
-
 		}
 	}
 

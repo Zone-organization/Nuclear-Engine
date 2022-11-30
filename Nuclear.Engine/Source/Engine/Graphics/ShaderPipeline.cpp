@@ -315,17 +315,9 @@ namespace Nuclear
 					{
 						Graphics::RenderTargetDesc RTDesc;
 						RTDesc.ColorTexFormat = PSOCreateInfo.GraphicsPipeline.RTVFormats[i];
-
+						RTDesc.mName = Info.mGBufferPSOCreateInfo.mRTsNames.at(i);
 						gbufferdesc.mRTDescs.push_back(RTDesc);
 					}
-
-					//if (PSOCreateInfo.GraphicsPipeline.DSVFormat != TEX_FORMAT_UNKNOWN)
-					//{
-					//	Graphics::RenderTargetDesc RTDesc;
-					//	RTDesc.DepthTexFormat = PSOCreateInfo.GraphicsPipeline.DSVFormat;
-					//	gbufferdesc.mRTDescs.push_back(RTDesc);
-					//}
-
 					mGBuffer.Initialize(gbufferdesc);
 				}
 			}

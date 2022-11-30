@@ -1,11 +1,12 @@
 # Nuclear Engine
 
+![Sample2](Sample2.gif "Sample2 Demo Logo") 
+
 ## Current To-dos 
   - W.I.P:
     - CSM
 	- SSAO
 	- Motion blur
-	- Replace GLFW with SDL or SFML
 
   - On-Hold:
     - Text rendering (text tile-set creation finished)
@@ -15,6 +16,7 @@
     - Finish Audio implementation
 	- FIX BRDF generation in IBL Pipeline
 	- Clean and document Samples.
+	- Replace GLFW with SDL or SFML
 	- GUI (basic widgets)
 	
 ## Getting started

@@ -202,6 +202,29 @@ namespace Nuclear
 				}
 			}
 
+			auto rtnames = tbl->get("RTVNames");
+			if (rtnames)
+			{	
+				toml::array* arr = rtnames->as_array();
+				for (Uint32 i = 0; i < desc.GraphicsPipeline.NumRenderTargets; i++)
+				{
+					if (i < arr->size())
+					{
+						desc.mRTsNames.push_back(arr->at(i).value_or("UnNamed RT"));
+					}
+					else
+					{
+						desc.mRTsNames.push_back("UnNamed RT");
+					}
+				}
+			}
+			else {
+				for (Uint32 i = 0; i < desc.GraphicsPipeline.NumRenderTargets; i++)
+				{
+					desc.mRTsNames.push_back("UnNamed RT" + std::to_string(i));
+				}
+			}
+
 			desc.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT"sv));
 
 			auto defines = tbl->get("Defines");

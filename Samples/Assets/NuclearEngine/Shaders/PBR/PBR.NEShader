@@ -26,6 +26,7 @@ PixelShader = "PShader"
 VertexShader = "GBufferVShader"
 PixelShader = "GBufferPShader"
 RTVFormats = [ "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA16_FLOAT" , "TEX_FORMAT_RGBA8_UNORM", "TEX_FORMAT_RGBA8_UNORM" ]
+RTVNames = [ "Position" , "Normal" , "AlbedoMetallic", "RoughnessAO" ]
 DSVFormat = "TEX_FORMAT_D32_FLOAT"
 Defines = [ "PBR" ]
 
