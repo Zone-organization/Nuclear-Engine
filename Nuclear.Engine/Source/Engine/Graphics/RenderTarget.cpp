@@ -14,25 +14,19 @@ namespace Nuclear
 		}
 		void RenderTarget::Create(const RenderTargetDesc& Desc)
 		{
-			mRTDesc = Desc;
+			mDesc = Desc;
 			CreateViews();
 		}
 
-		void RenderTarget::Resize(Uint32 width, Uint32 height)
+		void RenderTarget::Resize(const Math::Vector2ui& dimensions)
 		{
-			mRTDesc.Width = width;
-			mRTDesc.Height = height;
-			Create(mRTDesc);
+			mDesc.mDimensions = dimensions;
+			Create(mDesc);
 		}
 
-		Uint32 RenderTarget::GetWidth() const
+		Math::Vector2ui RenderTarget::GetDimensions() const
 		{
-			return mRTDesc.Width;
-		}
-
-		Uint32 RenderTarget::GetHeight() const
-		{
-			return mRTDesc.Height;
+			return mDesc.mDimensions;
 		}
 
 		ITextureView* RenderTarget::GetSRV()
@@ -50,7 +44,7 @@ namespace Nuclear
 		}
 		RenderTargetDesc RenderTarget::GetDesc() const
 		{
-			return mRTDesc;
+			return mDesc;
 		}
 		void RenderTarget::CreateViews()
 		{
@@ -65,14 +59,14 @@ namespace Nuclear
 
 			TextureDesc TexDesc;
 			TexDesc.Type = RESOURCE_DIM_TEX_2D;
-			TexDesc.Width = mRTDesc.Width;
-			TexDesc.Height = mRTDesc.Height;
+			TexDesc.Width = mDesc.mDimensions.x;
+			TexDesc.Height = mDesc.mDimensions.y;
 
-			if (mRTDesc.DepthTexFormat != TEX_FORMAT_UNKNOWN)
+			if (mDesc.DepthTexFormat != TEX_FORMAT_UNKNOWN)
 			{
 				//Create Depth Texture
 				RefCntAutoPtr<ITexture> pRTDepth;
-				TexDesc.Format = mRTDesc.DepthTexFormat;
+				TexDesc.Format = mDesc.DepthTexFormat;
 				TexDesc.ClearValue.Format = TexDesc.Format;
 				TexDesc.ClearValue.DepthStencil.Depth = 1;
 				TexDesc.ClearValue.DepthStencil.Stencil = 0;
@@ -86,9 +80,9 @@ namespace Nuclear
 				RefCntAutoPtr<ITexture> pRTColor;
 
 				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
-				TexDesc.Format = mRTDesc.ColorTexFormat;
+				TexDesc.Format = mDesc.ColorTexFormat;
 				TexDesc.MipLevels = 1;
-				TexDesc.ClearValue = mRTDesc.ClearValue;
+				TexDesc.ClearValue = mDesc.ClearValue;
 
 				Graphics::Context::GetDevice()->CreateTexture(TexDesc, nullptr, &pRTColor);
 				mRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);

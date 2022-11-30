@@ -63,8 +63,8 @@ namespace Nuclear
 					//Z: Padding
 					//W: Padding
 					{
-						data.x = BloomRT.GetWidth();
-						data.y = BloomRT.GetHeight();
+						data.x = BloomRT.GetDimensions().x;
+						data.y = BloomRT.GetDimensions().y;
 
 						Diligent::MapHelper<Math::Vector4i> CBConstants(Graphics::Context::GetContext(), mBloomBlur.mBlurCB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = data;
@@ -143,7 +143,8 @@ namespace Nuclear
 		{
 			mRTWidth = Width;
 			mRTHeight = Height;
-			PostFXRT.Resize(Width, Height);
+
+			PostFXRT.Resize(Math::Vector2ui(Width, Height));
 
 
 		//	mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB().Release();
@@ -156,8 +157,7 @@ namespace Nuclear
 			{
 				mBloomBlur.ResizeRenderTargets(mRTWidth, mRTHeight);
 				Graphics::RenderTargetDesc RTDesc;
-				RTDesc.Width = mRTWidth;
-				RTDesc.Height = mRTHeight;
+				RTDesc.mDimensions = Math::Vector2ui(mRTWidth, mRTHeight);
 				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 				BloomRT.Create(RTDesc);
@@ -199,8 +199,8 @@ namespace Nuclear
 			//bloom
 			{
 				Graphics::RenderTargetDesc RTDesc;
-				RTDesc.Width = mRTWidth;
-				RTDesc.Height = mRTHeight;
+				RTDesc.mDimensions = Math::Vector2ui(mRTWidth, mRTHeight);
+
 				RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 				BloomRT.Create(RTDesc);

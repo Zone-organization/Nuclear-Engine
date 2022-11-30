@@ -1,14 +1,14 @@
 #pragma once
 #include <Engine/Graphics/RenderTarget.h>
 #include <vector>
+
 namespace Nuclear
 {
 	namespace Rendering
 	{
 		struct GBufferDesc {
 			std::string mGbufferName = "GBuffer";
-			Uint32 RTWidth = 800;
-			Uint32 RTHeight = 600;
+			Math::Vector2ui mDimensions = Math::Vector2ui(800,600);
 			std::vector<Graphics::RenderTargetDesc> mRTDescs;
 		};
 
@@ -21,11 +21,13 @@ namespace Nuclear
 
 			void Initialize(const GBufferDesc& desc);
 
-			void Bake(Uint32 width, Uint32 height);
+			void Bake(const Math::Vector2ui& dimensions);
 
-			void Resize(Uint32 width, Uint32 height);
+			void Resize(const Math::Vector2ui& dimensions);
 
 			bool isInitialized() const;
+
+			Math::Vector2ui GetDimensions() const;
 
 			std::vector<Graphics::RenderTarget> mRenderTargets;
 		private:

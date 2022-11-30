@@ -148,7 +148,7 @@ namespace Nuclear
 
 			if (bakingdesc)
 			{
-				mGBuffer.Bake(bakingdesc->mRTWidth, bakingdesc->mRTHeight);
+				mGBuffer.Bake(Math::Vector2ui(bakingdesc->mRTWidth, bakingdesc->mRTHeight));
 			}
 
 			return true;

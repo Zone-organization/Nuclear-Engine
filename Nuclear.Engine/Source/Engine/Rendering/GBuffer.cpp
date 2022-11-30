@@ -18,7 +18,7 @@ namespace Nuclear
 			mDesc = desc;
 			mInitialized = true;
 		}
-		void GBuffer::Bake(Uint32 width, Uint32 height)
+		void GBuffer::Bake(const Math::Vector2ui& dimensions)
 		{
 			if (mInitialized)
 			{
@@ -28,8 +28,7 @@ namespace Nuclear
 					for (auto& i : mDesc.mRTDescs)
 					{
 						Graphics::RenderTarget newrt;
-						i.Width = width;
-						i.Height = height;
+						i.mDimensions = dimensions;
 						i.mType = mDesc.mGbufferName;
 						newrt.Create(i);
 						mRenderTargets.push_back(newrt);
@@ -37,17 +36,18 @@ namespace Nuclear
 					mBaked = true;
 				}
 				else {
-					Resize(width, height);
+					Resize(dimensions);
 				}
 			}
 		}
-		void GBuffer::Resize(Uint32 width, Uint32 height)
+		void GBuffer::Resize(const Math::Vector2ui& dimensions)
 		{
 			if (mInitialized)
 			{
+				mDesc.mDimensions = dimensions;
 				for (auto& i : mRenderTargets)
 				{
-					i.Resize(width, height);
+					i.Resize(dimensions);
 				}
 			}
 		}
@@ -55,6 +55,11 @@ namespace Nuclear
 		bool GBuffer::isInitialized() const
 		{
 			return mInitialized;
+		}
+
+		Math::Vector2ui GBuffer::GetDimensions() const
+		{
+			return mDesc.mDimensions;
 		}
 
 	}

@@ -27,3 +27,8 @@ namespace glm
 
 		typedef quat Quaternion;
 }
+
+namespace Nuclear
+{
+	namespace Math = glm;
+}

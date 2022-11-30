@@ -102,8 +102,7 @@ namespace Nuclear
 			mVertBlurPSO->CreateShaderResourceBinding(&mVertBlurSRB, true);
 
 			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = RTWidth;
-			RTDesc.Height = RTHeight;
+			RTDesc.mDimensions = Math::Vector2ui(RTWidth, RTHeight);
 			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 			BlurHorizentalRT.Create(RTDesc);
@@ -133,8 +132,7 @@ namespace Nuclear
 			//mVertBlurPSO->CreateShaderResourceBinding(&mVertBlurSRB, true);
 
 			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = RTWidth;
-			RTDesc.Height = RTHeight;
+			RTDesc.mDimensions = Math::Vector2ui(RTWidth, RTHeight);
 			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 			BlurHorizentalRT.Create(RTDesc);

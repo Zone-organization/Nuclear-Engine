@@ -41,8 +41,3 @@
 #include "gtc/type_ptr.hpp"
 
 #include "NETypes.h"
-
-namespace Nuclear
-{
-	namespace Math = glm;
-}

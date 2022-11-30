@@ -39,8 +39,6 @@ namespace Nuclear
 		{		
 			mCameraSystemPtr = mScene->GetSystemManager().GetSystem<CameraSystem>();
 
-			//mLightingSystem.UpdateBuffer(Math::Vector4(mCameraSystem.GetMainCamera()->GetPosition(), 1.0f));
-
 			BufferDesc CBDesc;
 			CBDesc.Name = "NEStatic_Animation";
 			CBDesc.Size = sizeof(Math::Matrix4) * 100;
@@ -82,14 +80,25 @@ namespace Nuclear
 		}
 		void RenderSystem::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
-			mRenderData.mFinalRT.Resize(RTWidth, RTHeight);
-			mRenderData.mFinalDepthRT.Resize(RTWidth, RTHeight);
+			Math::Vector2ui newsize(RTWidth, RTHeight);
+			mRenderData.mFinalRT.Resize(newsize);
+			mRenderData.mFinalDepthRT.Resize(newsize);
 
 			for (auto pass : mRenderPasses)
 			{
 				pass->ResizeRTs(RTWidth, RTHeight);
 			}
 
+			for (auto i : mRegisteredShaders)
+			{
+				if (i)
+				{
+					if (i->mPipeline.GetGBuffer()->GetDimensions() != newsize)
+					{
+						i->mPipeline.GetGBuffer()->Resize(newsize);
+					}
+				}
+			}
 		}
 
 		void RenderSystem::AddRenderPass(Rendering::RenderPass* pass)
@@ -242,8 +251,7 @@ namespace Nuclear
 		void RenderSystem::BakeScenePipeline(Uint32 RTWidth, Uint32 RTHeight)
 		{
 			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.Width = RTWidth;
-			RTDesc.Height = RTHeight;
+			RTDesc.mDimensions = Math::Vector2ui(RTWidth, RTHeight);
 			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 			mRenderData.mFinalRT.Create(RTDesc);

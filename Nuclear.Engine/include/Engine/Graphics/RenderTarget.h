@@ -4,6 +4,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
+#include <Core/Math/NETypes.h>
 
 namespace Nuclear
 {
@@ -18,8 +19,7 @@ namespace Nuclear
 			std::string mName;
 			std::string mType;  
 
-			Uint32 Width = 800;
-			Uint32 Height = 600;
+			Math::Vector2ui mDimensions = Math::Vector2ui(800, 600);
 			TEXTURE_FORMAT ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
 
 			//If it isnt equal unknown a depth RT will be created
@@ -36,11 +36,9 @@ namespace Nuclear
 
 			void Create(const RenderTargetDesc& Desc);
 
-			void Resize(Uint32 width, Uint32 height);
+			void Resize(const Math::Vector2ui& dimensions);
 
-			//void SetActive(const float* RGBA);
-			Uint32 GetWidth() const;
-			Uint32 GetHeight() const;
+			Math::Vector2ui GetDimensions() const;
 
 			//Shader Resource View
 			ITextureView* GetSRV();
@@ -56,7 +54,7 @@ namespace Nuclear
 			RefCntAutoPtr<ITextureView> mRTV;
 			RefCntAutoPtr<ITextureView> mSRV;
 
-			RenderTargetDesc mRTDesc;
+			RenderTargetDesc mDesc;
 		};
 	}
 }
