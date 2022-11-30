@@ -23,12 +23,12 @@ namespace Nuclear
 		public:
 			RenderingPath();
 
-			virtual void BeginFrame(FrameRenderData* framedata);
-
 			virtual void UpdateAnimationCB(Animation::Animator* mAnimator);
 
+			virtual void Reset();
+
 			//Static meshes
-			virtual void StartRendering(Graphics::ShaderPipelineVariant* pipeline) = 0;
+			virtual void StartRendering(FrameRenderData* framedata, Graphics::ShaderPipelineVariant* pipeline) = 0;
 
 			virtual void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) = 0;
 

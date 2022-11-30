@@ -281,7 +281,10 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 
 				if (ImGui::CollapsingHeader("Mesh"))
 				{
-					
+					ImGui::Text("Active Rendering Variant name: %s", meshcomponent->GetRenderingVariant()->GetName().c_str());
+					ImGui::Text("Shader AssetID: %i", meshcomponent->GetRenderingVariant()->GetShaderID());
+					ImGui::Text("RenderQueue: %i", meshcomponent->GetRenderQueue());
+
 					bool b = meshcomponent->GetEnableRendering();
 					if (ImGui::Checkbox("Enable Rendering", &b))
 					{

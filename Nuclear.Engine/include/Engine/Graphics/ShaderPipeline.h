@@ -31,6 +31,9 @@ namespace Nuclear
 			IBuffer* CameraBufferPtr = nullptr;
 			IBuffer* AnimationBufferPtr = nullptr;
 			IBuffer* LightsBufferPtr = nullptr;
+
+			bool mRenderSystemHasDefferedPass = false;
+			bool mAlwaysRequestDefferedPipelines = true;
 		};
 
 		struct ShaderPipelineDesc
@@ -71,6 +74,7 @@ namespace Nuclear
 			Assets::Shader* GetShaderAsset();
 			Rendering::GBuffer* GetGBuffer();
 
+			bool GetAlwaysRequestDeffered();
 		protected:
 			Assets::Shader* mParentAsset;
 			std::unordered_map<Uint32, ShaderPipelineVariant> mVariants;
@@ -83,6 +87,7 @@ namespace Nuclear
 			ShaderPipelineVariant CreateForwardVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
 			ShaderPipelineVariant CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
 
+			bool mAlwaysRequestDeffered = true;
 		private:
 			void ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc);
 			bool mFirstReflection = true;

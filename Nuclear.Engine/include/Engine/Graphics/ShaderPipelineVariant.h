@@ -15,6 +15,10 @@ namespace Nuclear
 	namespace Assets {
 		class Shader;
 	}
+	namespace Systems
+	{
+		class DebugSystem;
+	}
 	namespace Graphics
 	{
 		enum class ShaderPSOType {
@@ -102,7 +106,7 @@ namespace Nuclear
 		protected:
 			friend class ShaderPipeline;
 			friend class ShaderManager;
-
+			friend class Systems::DebugSystem;
 			RefCntAutoPtr<IPipelineState> mPipeline;
 			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
 

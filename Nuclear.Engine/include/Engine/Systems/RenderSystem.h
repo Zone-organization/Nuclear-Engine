@@ -21,6 +21,15 @@ namespace Nuclear
 			bool BakePipelines = true;
 		};
 
+		struct RenderSystemBakingDesc
+		{
+			Uint32 RTWidth;
+			Uint32 RTHeight;
+
+			//requests deffered pipeline for all meshes (if exists)
+			bool mIsDefferedByDefault = true;
+		};
+
 		class NEAPI RenderSystem : public ECS::System<RenderSystem>
 		{
 		public:
@@ -29,7 +38,7 @@ namespace Nuclear
 
 			bool NeedsBaking();
 
-			void Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines = true);
+			void Bake(const RenderSystemBakingDesc& desc);
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 

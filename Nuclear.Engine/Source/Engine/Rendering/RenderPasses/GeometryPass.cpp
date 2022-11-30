@@ -29,16 +29,29 @@ namespace Nuclear
 			bool SkinnedRendering = false;
 			frame->mUsedDefferedPipelines.clear();
 
-			pRenderingPath->BeginFrame(frame);
+			//if()
+			mForwardPath.Reset();
+			mDefferedPath.Reset();
+
 			//Render Meshes
 			for (auto& meshentity : frame->mMeshView)
 			{
 				auto& mesh = frame->mMeshView.get<Components::MeshComponent>(meshentity);
-					mesh.Update();
+
+				mesh.Update();
 
 				if (mesh.GetRenderQueue() > 0)
 				{			
-					pRenderingPath->StartRendering(mesh.GetRenderingVariant());
+					auto pipelinevariant = mesh.GetRenderingVariant();
+
+					if (pipelinevariant->isDeffered())
+					{
+						pRenderingPath = &mDefferedPath;
+					}
+					else {
+						pRenderingPath = &mForwardPath;
+					}
+					pRenderingPath->StartRendering(frame, pipelinevariant);
 
 					auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
 					EntityInfo.mTransform.Update();

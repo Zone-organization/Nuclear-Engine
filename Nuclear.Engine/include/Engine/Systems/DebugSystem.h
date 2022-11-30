@@ -6,7 +6,7 @@
 #include <Engine\Rendering\Background.h>
 #include <vector>
 #include <unordered_map>
-#include <Engine\Rendering\RenderingPaths\ForwardRenderingPath.h>
+#include <Engine\Graphics\ShaderPipelineVariant.h>
 
 namespace Nuclear
 {
@@ -41,8 +41,7 @@ namespace Nuclear
 			void InstantRender(Assets::Mesh* mesh, Assets::Image* diffusetex);
 
 		protected:
-			//Rendering::DiffuseOnly DebugRP;
-			//RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
+			Graphics::ShaderPipelineVariant pShader;
 		};
 
 	}

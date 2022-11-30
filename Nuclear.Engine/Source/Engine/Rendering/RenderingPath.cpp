@@ -18,12 +18,6 @@ namespace Nuclear
 
 		}
 
-		void RenderingPath::BeginFrame(FrameRenderData* frame)
-		{
-			pCurrentFrame = frame;
-			pActivePipeline = nullptr;
-		}
-
 		void RenderingPath::UpdateAnimationCB(Animation::Animator* animator)
 		{
 			if (pActivePipeline->isSkinned())
@@ -51,6 +45,12 @@ namespace Nuclear
 				}
 				Graphics::Context::GetContext()->UnmapBuffer(pCurrentFrame->pAnimationCB, MAP_WRITE);
 			}
+		}
+
+		void RenderingPath::Reset()
+		{
+			pActivePipeline = nullptr;
+			pCurrentFrame = nullptr;
 		}
 
 		void RenderingPath::DrawMesh(Assets::Mesh* mesh, Assets::Material* material)

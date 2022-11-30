@@ -13,10 +13,11 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		void ForwardRenderingPath::StartRendering(Graphics::ShaderPipelineVariant* pipeline)
+		void ForwardRenderingPath::StartRendering(FrameRenderData* frame,Graphics::ShaderPipelineVariant* pipeline)
 		{
 			if (pActivePipeline != pipeline)
 			{
+				pCurrentFrame = frame;
 				pActivePipeline = pipeline;
 				Graphics::Context::GetContext()->SetPipelineState(pipeline->GetMainPipeline());
 				Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

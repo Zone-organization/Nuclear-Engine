@@ -16,10 +16,11 @@ namespace Nuclear
 	namespace Rendering
 	{ 
 
-        void DefferedRenderingPath::StartRendering(Graphics::ShaderPipelineVariant* pipeline)
+        void DefferedRenderingPath::StartRendering(FrameRenderData* framedata, Graphics::ShaderPipelineVariant* pipeline)
         {
             if (pActivePipeline != pipeline)
             {
+                pCurrentFrame = framedata;
                 pActivePipeline = pipeline;
 
                 //Render To Gbuffer

@@ -10,7 +10,7 @@ class Playground : public Client
 
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
-//	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
+	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	Assets::Material RustedIron;
 	Assets::Material Plastic;
@@ -33,9 +33,6 @@ class Playground : public Client
 
 	ECS::Entity EController;
 	ECS::Entity ELights;
-	Rendering::ForwardRenderingPath ForwardRP;
-
-	//Rendering::DefferedRenderingPath DefferedRP;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -114,7 +111,6 @@ public:
 	void InitRenderer()
 	{
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
-		GeoPass.pRenderingPath = &ForwardRP;
 
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
@@ -126,11 +122,14 @@ public:
 		//Renderer->AddRenderPass(&DefferedPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
-		Renderer->Bake(_Width_, _Height_);
+		Systems::RenderSystemBakingDesc bakedesc;
+		bakedesc.RTWidth = _Width_;
+		bakedesc.RTHeight = _Height_;
+		Renderer->Bake(bakedesc);
 		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc() });
 
-	//	mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
-	//	mDebugSystem->Initialize(&Camera, Renderer->GetAnimationCB());
+		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
+		mDebugSystem->Initialize(&Camera, Renderer->GetAnimationCB());
 
 	}
 
@@ -262,9 +261,9 @@ public:
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
 
-		//	ImGui::Checkbox("ShowRegisteredRenderTargets", &mDebugSystem->ShowRegisteredRenderTargets);
+			ImGui::Checkbox("ShowRegisteredRenderTargets", &mDebugSystem->ShowRegisteredRenderTargets);
 			ImGui::Checkbox("LockSpotlight", &LockSpotlight);
-	//		ImGui::Checkbox("RenderLightSources", &mDebugSystem->RenderLightSources);
+			ImGui::Checkbox("RenderLightSources", &mDebugSystem->RenderLightSources);
 
 			if (ImGui::TreeNode("PostFX Effects"))
 			{

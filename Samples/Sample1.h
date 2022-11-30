@@ -273,7 +273,10 @@ public:
 		Renderer->RegisterShader(BlinnPhong);
 		Renderer->RegisterShader(DiffuseOnly);
 
-		Renderer->Bake(_Width_, _Height_);
+		Systems::RenderSystemBakingDesc bakedesc;
+		bakedesc.RTWidth = _Width_;
+		bakedesc.RTHeight = _Height_;
+		Renderer->Bake(bakedesc);
 	}
 
 	void Load()
@@ -295,7 +298,7 @@ public:
 		InitRenderer();
 
 		SetupAssets();
-		GeoPass.pRenderingPath = &ForwardRP;
+
 		Renderer->AddRenderPass(&GeoPass);
 	//	Renderer->GetBackground().SetSkybox(&Skybox);
 

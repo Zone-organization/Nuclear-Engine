@@ -145,16 +145,16 @@ public:
 
 		InitIBL();
 
-		GeoPass.pRenderingPath = &DefferedRP;
-
 		Renderer->AddRenderPass(&GeoPass);
 		Renderer->AddRenderPass(&DefferedPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
-
 		InitShaders();
 
-		Renderer->Bake(_Width_, _Height_);
+		Systems::RenderSystemBakingDesc bakedesc;
+		bakedesc.RTWidth = _Width_;
+		bakedesc.RTHeight = _Height_;
+		Renderer->Bake(bakedesc);	
 		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc() });
 
 		PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), false);

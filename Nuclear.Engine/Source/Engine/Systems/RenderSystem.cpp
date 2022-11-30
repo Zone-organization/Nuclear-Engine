@@ -12,6 +12,7 @@
 #include <Engine\Assets\Material.h>
 #include <Engine\Systems\CameraSystem.h>
 #include <Core\FileSystem.h>
+#include <Engine\Rendering\RenderPasses\DefferedPass.h>
 
 namespace Nuclear
 {
@@ -34,7 +35,7 @@ namespace Nuclear
 			return false;
 		}
 
-		void RenderSystem::Bake(Uint32 RTWidth, Uint32 RTHeight, bool AllPipelines)
+		void RenderSystem::Bake(const RenderSystemBakingDesc& desc)
 		{		
 			mCameraSystemPtr = mScene->GetSystemManager().GetSystem<CameraSystem>();
 
@@ -48,7 +49,7 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
 
-			BakeScenePipeline(RTWidth, RTHeight);
+			BakeScenePipeline(desc.RTWidth, desc.RTHeight);
 			BakeLights();
 
 			Graphics::ShaderRenderingBakingDesc bakedesc;
@@ -60,8 +61,15 @@ namespace Nuclear
 			bakedesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
 			bakedesc.AnimationBufferPtr = mAnimationCB;
 			bakedesc.pIBLContext = pIBLContext;
-			bakedesc.mRTWidth = RTWidth;
-			bakedesc.mRTHeight = RTHeight;
+			bakedesc.mRTWidth = desc.RTWidth;
+			bakedesc.mRTHeight = desc.RTHeight;
+			bakedesc.mAlwaysRequestDefferedPipelines = desc.mIsDefferedByDefault;
+
+			auto defferedpass = GetRenderPass<Rendering::DefferedPass>();
+			if (defferedpass)
+			{
+				bakedesc.mRenderSystemHasDefferedPass = true;
+			}
 
 			for (auto i : mRegisteredShaders)
 			{

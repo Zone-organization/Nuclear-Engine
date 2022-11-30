@@ -180,8 +180,6 @@ public:
 
 		InitIBL();
 
-		GeoPass.pRenderingPath = &DefferedRP;
-
 		Renderer->AddRenderPass(&GeoPass);
 		Renderer->AddRenderPass(&DefferedPass);
 		Renderer->AddRenderPass(&PostFXPass);
@@ -192,12 +190,16 @@ public:
 
 		Renderer->RegisterShader(PBR);
 		Renderer->SetIBLContext(&IBL);
-		Renderer->Bake(_Width_, _Height_);
+
+		Systems::RenderSystemBakingDesc bakedesc;
+		bakedesc.RTWidth = _Width_;
+		bakedesc.RTHeight = _Height_;
+		Renderer->Bake(bakedesc);
 
 		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc()});
 
-	//	mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
-	//	mDebugSystem->Initialize(&Camera, Renderer->GetAnimationCB());
+		mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
+		mDebugSystem->Initialize(&Camera, Renderer->GetAnimationCB());
 	}
 
 	void Load()
@@ -223,8 +225,6 @@ public:
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
 		//Renderer->VisualizePointLightsPositions = true;
-		ESphere.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), true);
-		EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), true);
 
 		Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
 		PostFXPass.GetBackground().SetSkybox(&Skybox);
@@ -289,7 +289,7 @@ public:
 		mCameraSystem->Update(deltatime);
 	}
 	bool iskinematic = false;
-
+	bool isDeffered = true;
 	void Render(float dt) override
 	{
 		mSceneManager->Update(dt);
@@ -319,6 +319,12 @@ public:
 
 
 			ImGui::Text("Material");
+
+			if (ImGui::Checkbox("Use Deffered Pipeline", &isDeffered))
+			{
+				ESphere.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
+				EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
+			}
 
 			static bool IBL_ = false;
 
@@ -390,7 +396,7 @@ public:
 			ImGui::End();
 			EntityExplorer(&Scene);
 
-		//	mDebugSystem->ShowRendertargets();
+			mDebugSystem->ShowRendertargets();
 
 		}
 	}

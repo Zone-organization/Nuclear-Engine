@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine\Rendering\RenderPass.h>
-#include <Engine\Rendering\RenderingPath.h>
+#include <Engine\Rendering\RenderingPaths\ForwardRenderingPath.h>
+#include <Engine\Rendering\RenderingPaths\DefferedRenderingPath.h>
 
 namespace Nuclear
 {
@@ -17,8 +18,10 @@ namespace Nuclear
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) override;
 
-			RenderingPath* pRenderingPath;
 		protected:
+			ForwardRenderingPath mForwardPath;
+			DefferedRenderingPath mDefferedPath;
+			RenderingPath* pRenderingPath = nullptr;
 
 			ShaderPipeline* pActivePipeline = nullptr;
 			FrameRenderData* pCurrentFrame = nullptr;

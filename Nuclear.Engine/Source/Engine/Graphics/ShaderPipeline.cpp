@@ -99,6 +99,7 @@ namespace Nuclear
 							Info_.mHashKey = Info_.mHashKey + iHash;
 							if (i == "NE_DEFFERED")
 							{
+								mReflection.mHasDefferedPipelines = true;
 								Info_._isDeffered = true;
 							}
 							else if (i == "NE_ANIMATION")
@@ -206,6 +207,7 @@ namespace Nuclear
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			std::string psoname(Desc.mName + "_FID_" + std::to_string(Info.mHashKey));
+			result.mName = psoname;
 			PSOCreateInfo.PSODesc.Name = psoname.c_str();
 			PSOCreateInfo.GraphicsPipeline = Desc.mForwardPSOCreateInfo.GraphicsPipeline;
 			PSOCreateInfo.pVS = VShader;
@@ -251,6 +253,7 @@ namespace Nuclear
 				//Pipeline
 				GraphicsPipelineStateCreateInfo PSOCreateInfo;
 				std::string psoname(Desc.mName + "_GBID_" + std::to_string(Info.mHashKey));
+				PSOCreateInfo.PSODesc.Name = psoname.c_str();
 
 				RefCntAutoPtr<IShader> VSShader;
 				RefCntAutoPtr<IShader> PSShader;
@@ -330,6 +333,7 @@ namespace Nuclear
 			{
 				GraphicsPipelineStateCreateInfo PSOCreateInfo;
 				std::string psoname(Desc.mName + "_DID_" + std::to_string(Info.mHashKey));
+				result.mName = psoname;
 
 				RefCntAutoPtr<IShader> VSShader;
 				RefCntAutoPtr<IShader> PSShader;
@@ -341,7 +345,7 @@ namespace Nuclear
 				}
 				GraphicsEngine::GetShaderManager()->CreateShader(VSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mVertexShader);
 				GraphicsEngine::GetShaderManager()->CreateShader(PSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mPixelShader);
-
+				PSOCreateInfo.PSODesc.Name = psoname.c_str();
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
 				PSOCreateInfo.GraphicsPipeline = Desc.mDefferedPSOCreateInfo.GraphicsPipeline;
@@ -425,6 +429,11 @@ namespace Nuclear
 		Rendering::GBuffer* ShaderPipeline::GetGBuffer()
 		{
 			return &mGBuffer;
+		}
+
+		bool ShaderPipeline::GetAlwaysRequestDeffered()
+		{
+			return mAlwaysRequestDeffered;
 		}
 
 		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)

@@ -62,6 +62,7 @@ namespace Nuclear {
 			bool mEnableRendering = true;
 			bool mCastShadow = true;
 			bool mReceiveShadows = true;
+			bool mRequestDeffered = false;
 		};
 
 	}

@@ -11,6 +11,7 @@ namespace Nuclear
 		static Uint32 gRenderQueue = 1;
 		ShaderPipelineVariant::ShaderPipelineVariant()
 		{
+			mName = "UnNamed";
 			pParent = nullptr;
 			mRenderQueue = gRenderQueue;
 			gRenderQueue++;

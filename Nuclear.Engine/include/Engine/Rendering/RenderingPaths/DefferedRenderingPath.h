@@ -8,7 +8,7 @@ namespace Nuclear
 		class NEAPI DefferedRenderingPath : public RenderingPath
 		{
 		public:
-			void StartRendering(Graphics::ShaderPipelineVariant* pipeline) override;
+			void StartRendering(FrameRenderData* framedata, Graphics::ShaderPipelineVariant* pipeline) override;
 
 			void Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix) override;
 		};
