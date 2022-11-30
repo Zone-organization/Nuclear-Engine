@@ -48,6 +48,10 @@ namespace Nuclear {
 	void PrintIntroLog();
 	void ResizeCallback(GLFWwindow* window, int Width, int Height)
 	{
+		if (Width == 0 && Height == 0)
+		{
+			return;
+		}
 		Engine::GetInstance()->GetMainWindow()->UpdateSize();
 		Engine::GetInstance()->GetClient()->OnWindowResize(Width, Height);
 	}
