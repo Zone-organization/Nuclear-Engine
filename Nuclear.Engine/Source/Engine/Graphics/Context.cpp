@@ -8,16 +8,12 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		static IRenderDevice* gDevice;
-		static IDeviceContext* gContext;
-		static ISwapChain* gSwapChain;
-		static IEngineFactory* gEngineFactory;
+		Context& Context::GetInstance()
+		{
+			static Context context;
 
-		bool OpenGL = false;
-		bool Vulkan = false;
-		bool Direct3D = false;
-		bool Metal = false;
-
+			return context;
+		}
 
 		bool Context::Initialize(RENDER_DEVICE_TYPE renderapi, const Graphics::GraphicsEngineDesc& GraphicsDesc)
 		{
@@ -36,7 +32,7 @@ namespace Nuclear
 			if(Result)
 				NUCLEAR_INFO("[Context] Diligent Graphics API Initialized.");
 
-			GraphicsEngine::GetShaderManager()->Initialize();
+			GraphicsEngine::GetInstance().GetShaderManager().Initialize();
 
 			return true;
 		}
@@ -91,6 +87,13 @@ namespace Nuclear
 		IEngineFactory* Context::GetEngineFactory()
 		{
 			return gEngineFactory;
+		}
+		Context::Context()
+		{
+			gDevice = nullptr;
+			gContext = nullptr;
+			gSwapChain = nullptr;
+			gEngineFactory = nullptr;
 		}
 	}
 }

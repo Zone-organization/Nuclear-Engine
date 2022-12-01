@@ -96,8 +96,7 @@ namespace Nuclear {
 			{
 				NUCLEAR_ERROR("[{0}] Failed To Initialize FreeType library");
 			}
-
-			Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceISFactory);
+			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceISFactory);
 
 		}
 
@@ -391,7 +390,7 @@ namespace Nuclear {
 			Assets::ShaderBuildDesc shaderbuilddesc;
 			shaderbuilddesc.mType = desc.mType;
 			shaderbuilddesc.mDefines = desc.mDefines;
-			if (Graphics::GraphicsEngine::GetShaderManager()->ParseShaderAsset(source, shaderbuilddesc))
+			if (Graphics::GraphicsEngine::GetInstance().GetShaderManager().ParseShaderAsset(source, shaderbuilddesc))
 			{
 				result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
 			}

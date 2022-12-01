@@ -26,7 +26,7 @@ namespace Nuclear
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.vs.hlsl", { "HORIZENTAL" }, std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &HorzVShader);
+				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &HorzVShader);
 			}
 			{
 				ShaderCreateInfo CreationAttribs;
@@ -39,7 +39,7 @@ namespace Nuclear
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &VertVShader);
+				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &VertVShader);
 			}
 			{
 				ShaderCreateInfo CreationAttribs;
@@ -51,12 +51,12 @@ namespace Nuclear
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, &PShader);
+				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PShader);
 			}
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
 			PSOCreateInfo.GraphicsPipeline.DSVFormat = TEX_FORMAT_UNKNOWN;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
@@ -81,11 +81,11 @@ namespace Nuclear
 			PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers.data();
 
 			PSOCreateInfo.PSODesc.Name = "HorzBlurPSO";
-			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mHorzBlurPSO);
+			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mHorzBlurPSO);
 
 			PSOCreateInfo.pVS = VertVShader;
 			PSOCreateInfo.PSODesc.Name = "VertBlurPSO";
-			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mVertBlurPSO);
+			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mVertBlurPSO);
 
 			BufferDesc CBDesc;
 			CBDesc.Name = "BlurCB";
@@ -93,7 +93,7 @@ namespace Nuclear
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mBlurCB);
+			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &mBlurCB);
 
 			mHorzBlurPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "ScreenSizeBuffer")->Set(mBlurCB);
 			mVertBlurPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "ScreenSizeBuffer")->Set(mBlurCB);
@@ -110,17 +110,17 @@ namespace Nuclear
 		}
 		void BlurEffect::SetHorizentalPSO(ITextureView* texture)
 		{
-			Graphics::Context::GetContext()->SetPipelineState(mHorzBlurPSO);
+			Graphics::Context::GetInstance().GetContext()->SetPipelineState(mHorzBlurPSO);
 
-			Graphics::Context::GetContext()->SetRenderTargets(1, BlurHorizentalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, BlurHorizentalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			mHorzBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(texture);
 		}
 		void BlurEffect::SetVerticalPSO(ITextureView* texture)
 		{
-			Graphics::Context::GetContext()->SetPipelineState(mVertBlurPSO);
+			Graphics::Context::GetInstance().GetContext()->SetPipelineState(mVertBlurPSO);
 
-			Graphics::Context::GetContext()->SetRenderTargets(1, BlurVerticalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, BlurVerticalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			mVertBlurSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(texture);
 		}

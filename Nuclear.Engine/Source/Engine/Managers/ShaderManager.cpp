@@ -19,7 +19,7 @@ namespace Nuclear
 
 		void ShaderManager::Initialize()
 		{
-			Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
 		}
 
 
@@ -418,7 +418,7 @@ namespace Nuclear
 
 			CreationAttribs.Source = Source.c_str();
 
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, result);
+			Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, result);
 		}
 
 
@@ -431,7 +431,7 @@ namespace Nuclear
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Source = source.c_str();
 
-			Graphics::Context::GetDevice()->CreateShader(CreationAttribs, result);
+			Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, result);
 		}
 		std::vector<LayoutElement> ShaderManager::GetBasicVSLayout(bool isDeffered)
 		{
@@ -510,7 +510,7 @@ namespace Nuclear
 				PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = GeneratedSamplerDesc.data();
 			}
 
-			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, PipelineState);
+			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, PipelineState);
 
 			return true;
 		}

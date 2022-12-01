@@ -42,27 +42,27 @@ int main(int argc, char* argv[])
 //	if (i == 2)
 	//{
 	//	desc.Renderer = SelectRenderer();
-	//	Engine::GetInstance()->Start(desc);
+	//	Engine::GetInstance().Start(desc);
 
 	//}
 	//else
 	//{
 	//	EngineStartupDesc desc;
-	//	Engine::GetInstance()->Start(desc);
+	//	Engine::GetInstance().Start(desc);
 	//}
 
 	//EngineStartupDesc desc;
 	desc.mEngineWindowDesc.WindowWidth = 1280;
 	desc.mEngineWindowDesc.WindowHeight = 720;
 
-	Engine::GetInstance()->Start(desc);
+	Engine::GetInstance().Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
 	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
 
-	while (!Engine::GetInstance()->ShouldClose())
+	while (!Engine::GetInstance().ShouldClose())
 	{
 		SampleSelector selector;
-		Engine::GetInstance()->LoadClient(&selector);
+		Engine::GetInstance().LoadClient(&selector);
 	}
 	return 0;
 }

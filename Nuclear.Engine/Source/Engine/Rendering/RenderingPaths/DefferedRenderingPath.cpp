@@ -24,20 +24,20 @@ namespace Nuclear
                 pActivePipeline = pipeline;
 
                 //Render To Gbuffer
-                Graphics::Context::GetContext()->SetPipelineState(pipeline->GetGBufferPipeline());
+                Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetGBufferPipeline());
 
                 std::vector<ITextureView*> RTargets;
                 for (auto& i : pipeline->GetParentPipeline()->GetGBuffer()->mRenderTargets)
                 {
                     RTargets.push_back(i.GetRTV());
                 }
-                Graphics::Context::GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 for (auto& i : RTargets)
                 {
-                    Graphics::Context::GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                    Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 }
 
-                Graphics::Context::GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                 pCurrentFrame->mUsedDefferedPipelines.push_back(pActivePipeline);
             }

@@ -193,7 +193,7 @@ namespace Nuclear
 			TexData.pSubResources = pSubResources.data();
 			TexData.NumSubresources = TexDesc.MipLevels;
 			RefCntAutoPtr<ITexture> mTexture;
-			Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
+			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
 			mData.mData = NULL;
 			if (mTexture.RawPtr() != nullptr)

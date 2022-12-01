@@ -25,8 +25,8 @@ namespace Nuclear
                         auto gbuffer = pipeline->GetParentPipeline()->GetGBuffer();
 
                         //Apply Lighting
-                        Graphics::Context::GetContext()->SetPipelineState(pipeline->GetMainPipeline());
-                        Graphics::Context::GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetMainPipeline());
+                        Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         for (int i = 0; i < gbuffer->mRenderTargets.size(); i++)
                         {
@@ -39,7 +39,7 @@ namespace Nuclear
                             pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetReflection().mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetReflection().mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
                         }
 
-                        Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetMainPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetMainPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         Assets::DefaultMeshes::RenderScreenQuad();
 

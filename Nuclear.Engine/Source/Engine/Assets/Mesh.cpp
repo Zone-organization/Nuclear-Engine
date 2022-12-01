@@ -35,7 +35,7 @@ namespace Nuclear {
 				BufferData VBData;
 				VBData.pData = data.Vertices.data();
 				VBData.DataSize = (unsigned int)data.Vertices.size() * sizeof(Vertex);
-				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
+				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
 
 			}
 
@@ -49,7 +49,7 @@ namespace Nuclear {
 				BufferData IBData;
 				IBData.pData = data.indices.data();
 				IBData.DataSize = (unsigned int)data.indices.size() * sizeof(Uint32);
-				Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
+				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
 			}
 			mIndicesCount = static_cast<Uint32>(data.indices.size());			
 
@@ -363,7 +363,7 @@ namespace Nuclear {
 
 			float VTexCoord = +1.0f;
 
-			if (Graphics::Context::IsOpenGL())
+			if (Graphics::Context::GetInstance().IsOpenGL())
 			{
 				VTexCoord = -1.0f;
 			}
@@ -405,7 +405,7 @@ namespace Nuclear {
 				BufferData VBData;
 				VBData.pData = Vertices.data();
 				VBData.DataSize = (unsigned int)Vertices.size() * sizeof(ScreenVertex);
-				Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &submesh->mVB);
+				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &submesh->mVB);
 
 			}
 
@@ -419,7 +419,7 @@ namespace Nuclear {
 				BufferData IBData;
 				IBData.pData = Indices.data();
 				IBData.DataSize = (unsigned int)Indices.size() * sizeof(Uint32);
-				Graphics::Context::GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &submesh->mIB);
+				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &submesh->mIB);
 			}
 			submesh->mIndicesCount = static_cast<Uint32>(Indices.size());
 

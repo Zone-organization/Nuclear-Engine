@@ -16,7 +16,7 @@ public:
 
 	void OnWindowResize(int width, int height) override
 	{
-		Graphics::Context::GetSwapChain()->Resize(width, height);
+		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
 	}
 	SampleSelector()
 	{
@@ -25,14 +25,14 @@ public:
 	void StartSample(Client* sample)
 	{
 		ImGui::End();
-		Engine::GetInstance()->EndFrame();
-		Engine::GetInstance()->EndClient();
+		Engine::GetInstance().EndFrame();
+		Engine::GetInstance().EndClient();
 
 		sample->SetDefaultAssetManager(&AssetLoader);
 		sample->SetDefaultSceneManager(&SceneMgr);
 
-		Engine::GetInstance()->LoadClient(sample);
-		Engine::GetInstance()->EndClient();
+		Engine::GetInstance().LoadClient(sample);
+		Engine::GetInstance().EndClient();
 	}
 
 	void Load()
@@ -44,12 +44,12 @@ public:
 	{
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 
-		auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
-		auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
+		auto* RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
+		auto* DSV = Graphics::Context::GetInstance().GetSwapChain()->GetDepthBufferDSV();
 
-		Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearRenderTarget(RTV, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(RTV, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		using namespace Graphics;
 		ImGui::Begin("SampleSelector");

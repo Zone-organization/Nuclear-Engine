@@ -19,8 +19,8 @@ namespace Nuclear
 			{
 				pCurrentFrame = frame;
 				pActivePipeline = pipeline;
-				Graphics::Context::GetContext()->SetPipelineState(pipeline->GetMainPipeline());
-				Graphics::Context::GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetMainPipeline());
+				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			}
 		}
 			

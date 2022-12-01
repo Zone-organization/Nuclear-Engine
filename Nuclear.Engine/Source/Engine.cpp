@@ -72,13 +72,13 @@ namespace Nuclear {
 
 		MainWindow.SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 
-		if (!Graphics::GraphicsEngine::Initialize(desc.mGraphicsEngineDesc))
+		if (!Graphics::GraphicsEngine::GetInstance().Initialize(desc.mGraphicsEngineDesc))
 		{
 			NUCLEAR_FATAL("[Engine] GraphicsEngine Failed to initalize...");
 			return false;
 		}
 		//Initialize Context
-		Graphics::Context::Initialize(desc.Renderer, desc.mGraphicsEngineDesc);
+		Graphics::Context::GetInstance().Initialize(desc.Renderer, desc.mGraphicsEngineDesc);
 		Assets::DefaultMeshes::Initialize();
 
 
@@ -129,9 +129,9 @@ namespace Nuclear {
 		Importers::FreeImage::Shutdown();
 
 		pClient = nullptr;
-		Graphics::Context::ShutDown();
+		Graphics::Context::GetInstance().ShutDown();
 		Audio::AudioEngine::Shutdown();
-		Graphics::GraphicsEngine::Shutdown();
+		Graphics::GraphicsEngine::GetInstance().Shutdown();
 		MainWindow.Destroy();
 		//Graphics::ImGui_Renderer::Shutdown();
 
@@ -149,7 +149,7 @@ namespace Nuclear {
 	{
 		ImGui::Render();
 		ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
-		Graphics::Context::GetSwapChain()->Present();
+		Graphics::Context::GetInstance().GetSwapChain()->Present();
 	}
 	Core::Window* Engine::GetMainWindow()
 	{

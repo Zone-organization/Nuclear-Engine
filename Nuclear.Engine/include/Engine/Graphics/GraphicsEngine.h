@@ -9,7 +9,7 @@ namespace Nuclear
 		struct GraphicsEngineDesc
 		{
 			//The shader manager used internally by the engine if this is a nullptr the engine auto create a one.
-			Managers::ShaderManager* DefaultShaderManager = nullptr;
+		//	Managers::ShaderManager* DefaultShaderManager = nullptr;
 
 			SwapChainDesc SCDesc;
 
@@ -20,14 +20,22 @@ namespace Nuclear
 		class NEAPI GraphicsEngine
 		{
 		public:
-			static bool Initialize(const GraphicsEngineDesc& desc);
-			static void Shutdown();
-			static Managers::ShaderManager* GetShaderManager();
+			GraphicsEngine(GraphicsEngine const&) = delete;
+			void operator=(GraphicsEngine const&) = delete;
 
-			static bool isGammaCorrect();
+			static GraphicsEngine& GetInstance();
+
+			bool Initialize(const GraphicsEngineDesc& desc);
+			void Shutdown();
+			Managers::ShaderManager& GetShaderManager();
+
+			bool isGammaCorrect();
 
 		protected:
-			static Managers::ShaderManager* pDefaultShaderManager;
+			Managers::ShaderManager mDefaultShaderManager;
+
+		private:
+			GraphicsEngine();
 		};
 	}
 }

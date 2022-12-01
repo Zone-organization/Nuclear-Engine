@@ -89,7 +89,7 @@ namespace Nuclear
 
 			Data.NumSubresources = 6;
 			Data.pSubResources = &subData[0];
-			Graphics::Context::GetDevice()->CreateTexture(TexDesc, &Data, &TexCube);
+			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &Data, &TexCube);
 			if (TexCube != nullptr)
 			{
 				mTextureSRV = TexCube->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
@@ -112,8 +112,8 @@ namespace Nuclear
 		{
 			if (Valid)
 			{
-				Graphics::Context::GetContext()->SetPipelineState(mPipeline);
-				Graphics::Context::GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetPipelineState(mPipeline);
+				Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				RenderCube();
 			}
@@ -124,9 +124,9 @@ namespace Nuclear
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			PSOCreateInfo.PSODesc.Name = "SkyBox_PSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
@@ -138,8 +138,8 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
-			Graphics::GraphicsEngine::GetShaderManager()->CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
+			Graphics::GraphicsEngine::GetInstance().GetShaderManager().CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
+			Graphics::GraphicsEngine::GetInstance().GetShaderManager().CreateShader(Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 
 			LayoutElement LayoutElems[] =
@@ -172,7 +172,7 @@ namespace Nuclear
 			};
 			PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers;
 			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = _countof(StaticSamplers);
-			Graphics::Context::GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPipeline);
+			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPipeline);
 
 			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(CameraConstantBuffer);
 
@@ -192,16 +192,16 @@ namespace Nuclear
 			BufferData VBData;
 			VBData.pData = skyboxVertices;
 			VBData.DataSize = sizeof(skyboxVertices);
-			Graphics::Context::GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVBuffer);
+			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVBuffer);
 		}
 
 		void Skybox::RenderCube()
 		{
-			Graphics::Context::GetContext()->SetVertexBuffers(0, 1, &mVBuffer, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+			Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &mVBuffer, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 			DrawAttribs DrawAttrs;
 			DrawAttrs.NumVertices = 36;
-			Graphics::Context::GetContext()->Draw(DrawAttrs);
+			Graphics::Context::GetInstance().GetContext()->Draw(DrawAttrs);
 		}
 
 	}

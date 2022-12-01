@@ -34,7 +34,7 @@ namespace Nuclear
 			TexData.pSubResources = &pSubResource;
 			TexData.NumSubresources = 1;
 			RefCntAutoPtr<ITexture> mTexture;
-			Graphics::Context::GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
+			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
 			mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 		

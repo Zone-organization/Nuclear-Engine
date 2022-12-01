@@ -45,7 +45,7 @@ namespace Nuclear
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
+			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
 
 			BakeScenePipeline(desc.RTWidth, desc.RTHeight);
 			BakeLights();
@@ -171,9 +171,9 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 2: Clear main RTVs
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			Graphics::Context::GetContext()->SetRenderTargets(1, mRenderData.mFinalRT.GetRTVDblPtr(), mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(mRenderData.mFinalRT.GetRTV(), (float*)&mCameraSystemPtr->GetMainCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(mRenderData.mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, mRenderData.mFinalRT.GetRTVDblPtr(), mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(mRenderData.mFinalRT.GetRTV(), (float*)&mCameraSystemPtr->GetMainCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(mRenderData.mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 3: Update RenderPasses
@@ -187,15 +187,15 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 4: RenderScene to screen
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
-			auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
-			Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			auto* RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
+			auto* DSV = Graphics::Context::GetInstance().GetSwapChain()->GetDepthBufferDSV();
+			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			Graphics::Context::GetContext()->SetPipelineState(pSceneToScreenPSO);
+			Graphics::Context::GetInstance().GetContext()->SetPipelineState(pSceneToScreenPSO);
 			pSceneToScreenSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mRenderData.mFinalRT.GetSRV());
-			Graphics::Context::GetContext()->CommitShaderResources(pSceneToScreenSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pSceneToScreenSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			Assets::DefaultMeshes::RenderScreenQuad();
 		}
@@ -245,7 +245,7 @@ namespace Nuclear
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			BufferData DATA;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
+			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
 		}
 
 		void RenderSystem::BakeScenePipeline(Uint32 RTWidth, Uint32 RTHeight)
@@ -256,16 +256,16 @@ namespace Nuclear
 
 			mRenderData.mFinalRT.Create(RTDesc);
 
-			RTDesc.DepthTexFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+			RTDesc.DepthTexFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
 			mRenderData.mFinalDepthRT.Create(RTDesc);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
 			PSOCreateInfo.PSODesc.Name = "SceneToScreen PSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetSwapChain()->GetDesc().DepthBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
@@ -275,7 +275,7 @@ namespace Nuclear
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
 
-			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetShaderManager()->GetBasicVSLayout(true);
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetBasicVSLayout(true);
 
 			//Create Vertex Shader
 			{
@@ -291,9 +291,9 @@ namespace Nuclear
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BasicVertex.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-				Graphics::Context::GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+				Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
 				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
+				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 			}
 
 			//Create Pixel Shader
@@ -308,15 +308,15 @@ namespace Nuclear
 
 				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/SceneToScreen.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-				Graphics::Context::GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
+				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
 			}
 
 			PSOCreateInfo.pVS = VSShader;
 			PSOCreateInfo.pPS = PSShader;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-			auto Vars = Graphics::GraphicsEngine::GetShaderManager()->ReflectShaderVariables(VSShader, PSShader);
-			Graphics::GraphicsEngine::GetShaderManager()->ProcessAndCreatePipeline(&pSceneToScreenPSO, PSOCreateInfo, Vars, true);
+			auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VSShader, PSShader);
+			Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&pSceneToScreenPSO, PSOCreateInfo, Vars, true);
 			pSceneToScreenPSO->CreateShaderResourceBinding(pSceneToScreenSRB.RawDblPtr());
 		}
 
@@ -423,9 +423,9 @@ namespace Nuclear
 			}
 
 			PVoid data;
-			Graphics::Context::GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+			Graphics::Context::GetInstance().GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
 			data = memcpy(data, LightsBuffer.data(), NE_Light_CB_Size);
-			Graphics::Context::GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
+			Graphics::Context::GetInstance().GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
 		}
 		bool RenderSystem::LightRequiresBaking()
 		{

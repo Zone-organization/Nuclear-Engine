@@ -15,7 +15,7 @@ namespace Nuclear
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetDevice()->CreateBuffer(CBDesc, nullptr, &mCameraCB);
+			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &mCameraCB);
 
 			SetMainCamera(Camera);
 			//ActiveCameras.push_back(Camera);
@@ -29,7 +29,7 @@ namespace Nuclear
 		}
 		void CameraSystem::UpdateBuffer()
 		{
-			Diligent::MapHelper<Graphics::CameraBuffer> CBConstants(Graphics::Context::GetContext(), mCameraCB, MAP_WRITE, MAP_FLAG_DISCARD);
+			Diligent::MapHelper<Graphics::CameraBuffer> CBConstants(Graphics::Context::GetInstance().GetContext(), mCameraCB, MAP_WRITE, MAP_FLAG_DISCARD);
 			*CBConstants = MainCamera->mCameraData;
 		}
 		void CameraSystem::SetMainCamera(Graphics::Camera* Camera)

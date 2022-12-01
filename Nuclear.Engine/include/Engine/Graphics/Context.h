@@ -15,26 +15,41 @@ namespace Nuclear
 		class NEAPI Context
 		{
 		public:
-			static bool Initialize(RENDER_DEVICE_TYPE renderapi, const Graphics::GraphicsEngineDesc& GraphicsDesc);
+			Context(Context const&) = delete;
+			void operator=(Context const&) = delete;
 
-			static void ShutDown();
+			static Context& GetInstance();
 
-			static void PresentFrame();
+			bool Initialize(RENDER_DEVICE_TYPE renderapi, const Graphics::GraphicsEngineDesc& GraphicsDesc);
 
-			static bool IsOpenGL();			// Returns ture if OpenGL is used as rendering API.
+			void ShutDown();
 
-			static bool IsVulkan();			// Returns ture if Vulkan is used as rendering API.
+			void PresentFrame();
+
+			bool IsOpenGL();			// Returns ture if OpenGL is used as rendering API.
+
+			bool IsVulkan();			// Returns ture if Vulkan is used as rendering API.
 			
-			static bool IsDirect3D();		// Returns ture if Direct3D is used as rendering API.
+			bool IsDirect3D();		// Returns ture if Direct3D is used as rendering API.
 			
-			static void ResizeSwapChain(Uint32 Width, Uint32 Height);
+			void ResizeSwapChain(Uint32 Width, Uint32 Height);
 
+			IRenderDevice* GetDevice();
+			IDeviceContext* GetContext();
+			ISwapChain* GetSwapChain();
+			IEngineFactory* GetEngineFactory();
 
-			static IRenderDevice* GetDevice();
-			static IDeviceContext* GetContext();
-			static ISwapChain* GetSwapChain();
-			static IEngineFactory* GetEngineFactory();
+		private:
+			Context();
+			IRenderDevice* gDevice;
+			IDeviceContext* gContext;
+			ISwapChain* gSwapChain;
+			IEngineFactory* gEngineFactory;
 
+			bool OpenGL = false;
+			bool Vulkan = false;
+			bool Direct3D = false;
+			bool Metal = false;
 		};
 	}
 }

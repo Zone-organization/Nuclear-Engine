@@ -41,7 +41,7 @@ namespace Nuclear
 				}
 			}
 
-			Graphics::Context::GetContext()->CommitShaderResources(pipeline->GetRenderingSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetRenderingSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 
 		void Material::SetAlwaysRequestDefferedPipeline(bool val)
