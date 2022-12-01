@@ -29,14 +29,14 @@ namespace Nuclear
 	class NEAPI Engine
 	{
 	public:
-		//Engine(Engine const&) = delete;
-		//void operator=(Engine const&) = delete;
+		Engine(Engine const&) = delete;
+		void operator=(Engine const&) = delete;
 
 		enum class State { Initializing, Loading, Rendering, ExitingRendering, Shuttingdown };
 
 		bool Start(const EngineStartupDesc& desc);
 
-		static Engine* GetInstance();
+		static Engine& GetInstance();
 
 		void Shutdown();
 
@@ -58,7 +58,7 @@ namespace Nuclear
 		Client* GetClient();
 
 	private:
-		//Engine() {}
+		Engine();
 		Client* pClient;
 		Core::Window MainWindow;
 

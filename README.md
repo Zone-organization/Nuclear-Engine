@@ -41,12 +41,12 @@ Follow the instructions below to compile and run the engine from source.
 | Assimp | Submodule & built with cmake |
 | DiligentCore | Submodule & built with cmake |
 | GLFW | Submodule & built with cmake |
-| AngelScript | included |
 | spdlog | included |
 | IMGUI | included |
 | stb_truetype | included |
 | entt | included |
 | cereal | included |
+| Mono | External 'Download it through their site' |
 | FMOD SDK | External 'Download it through their site' |
 | PhysX 4.1 | submodule |
 | Freeimage | submodule |

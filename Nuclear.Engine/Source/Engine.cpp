@@ -44,8 +44,6 @@ namespace Nuclear {
 	static std::string MajorVersion = "0";
 	static std::string MinorVersion = "001";
 
-	static Engine* engine = nullptr;
-
 	void PrintIntroLog();
 	void ResizeCallback(GLFWwindow* window, int Width, int Height)
 	{
@@ -53,8 +51,8 @@ namespace Nuclear {
 		{
 			return;
 		}
-		Engine::GetInstance()->GetMainWindow()->UpdateSize();
-		Engine::GetInstance()->GetClient()->OnWindowResize(Width, Height);
+		Engine::GetInstance().GetMainWindow()->UpdateSize();
+		Engine::GetInstance().GetClient()->OnWindowResize(Width, Height);
 	}
 	bool Engine::Start(const EngineStartupDesc& desc)
 	{
@@ -118,14 +116,11 @@ namespace Nuclear {
 		return true;
 	}
 
-	Engine* Engine::GetInstance()
+	Engine& Engine::GetInstance()
 	{
-		if (engine == nullptr)
-		{
-			engine = new Engine();
-		}
-		return engine;
+		static Engine engine;
 
+		return engine;
 	}
 
 	void Engine::Shutdown()
@@ -206,6 +201,11 @@ namespace Nuclear {
 	Client* Engine::GetClient()
 	{
 		return pClient;
+	}
+
+	Engine::Engine()
+	{
+
 	}
 
 	void Engine::MainLoop()

@@ -1,11 +1,13 @@
 #pragma once
 #include <Engine/Scripting/ScriptingContext.h>
 
+struct _MonoDomain;
+
 namespace Nuclear
 {
 	namespace Systems
 	{
-		class ScriptingSystem;
+		class ScriptingEngine;
 	}
 	namespace Scripting
 	{
@@ -27,17 +29,41 @@ namespace Nuclear
 		class NEAPI ScriptingEngine
 		{
 		public:
-			virtual bool Initialize() = 0;
+			ScriptingEngine(ScriptingEngine const&) = delete;
+			void operator=(ScriptingEngine const&) = delete;
 
-			virtual void Shutdown() = 0;
+			static ScriptingEngine& GetInstance();
 
-			virtual bool CreateScript(Assets::Script* script, const std::string& scriptcode, Scripting::ScriptingModule* scriptmodule) = 0;
+			bool Initialize();
 
-			virtual void CreateScriptingModule(Scripting::ScriptingModule* scriptmodule, ScriptModuleCreationDesc desc) = 0;
+			void Shutdown();
 
-			virtual bool BuildScriptingModule(Scripting::ScriptingModule* scriptmodule) = 0;
 
-			virtual ScriptingContext* GetContext() = 0;
+
+		private:
+			ScriptingEngine();
+
+			_MonoDomain* pRuntimeDomain;
 		};
+
+
+		//class NEAPI ScriptingEngine
+		//{
+		//public:
+		//	bool Initialize();
+
+		//	void Shutdown();
+
+		//	bool CreateScript(Assets::Script* script, const std::string& scriptcode, Scripting::ScriptingModule* scriptmodule);
+
+		//	void CreateScriptingModule(Scripting::ScriptingModule* scriptmodule, ScriptModuleCreationDesc desc);
+
+		//	bool BuildScriptingModule(Scripting::ScriptingModule* scriptmodule);
+
+		//	ScriptingContext* GetContext();
+		//private:
+		//	_MonoDomain* pRuntimeDomain;
+
+		//};
 	}
 }

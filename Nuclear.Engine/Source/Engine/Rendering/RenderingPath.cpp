@@ -56,7 +56,7 @@ namespace Nuclear
 		void RenderingPath::DrawMesh(Assets::Mesh* mesh, Assets::Material* material)
 		{
 			//Validation
-			if (Engine::GetInstance()->isDebug())
+			if (Engine::GetInstance().isDebug())
 			{
 				if (mesh == nullptr)
 				{

@@ -430,47 +430,6 @@
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imstb_truetype.h" />
-    <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.h" />
-    <ClInclude Include="include\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.h" />
-    <ClInclude Include="Source\Engine\Scripting\AngelScriptEngine\scriptstdstring.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\include\angelscript.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_array.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_atomic.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_builder.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_bytecode.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_callfunc.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_compiler.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_config.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_configgroup.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_context.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_criticalsection.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_datatype.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_debug.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_gc.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_generic.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_map.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_memory.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_module.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_namespace.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_objecttype.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_outputbuffer.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_parser.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_property.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_restore.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptcode.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptengine.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptfunction.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptnode.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_scriptobject.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_string.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_string_util.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_symboltable.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_texts.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_thread.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_tokendef.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_tokenizer.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_typeinfo.h" />
-    <ClInclude Include="Source\ThirdParty\angelscript\source\as_variablescope.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_config.h" />
@@ -541,6 +500,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Source\Engine\Rendering\RenderPasses\ShadowPass.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\ScriptingEngine.cpp" />
     <ClCompile Include="Source\Engine\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />
@@ -550,10 +510,7 @@
     <ClCompile Include="Source\Engine\PhysX\PhysXMaterial.cpp" />
     <ClCompile Include="Source\Engine\PhysX\PhysXEngine.cpp" />
     <ClCompile Include="Source\Engine\PhysX\RigidDynamic.cpp" />
-    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptEngine.cpp" />
     <ClCompile Include="Source\Engine\Assets\Script.cpp" />
-    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\AngelScriptingContext.cpp" />
-    <ClCompile Include="Source\Engine\Scripting\AngelScriptEngine\scriptstdstring.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptData.cpp" />
     <ClCompile Include="Source\Engine\Systems\DebugSystem.cpp" />
     <ClCompile Include="Source\Engine\Systems\ScriptingSystem.cpp" />
@@ -563,45 +520,6 @@
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
     <ClCompile Include="Source\Client.cpp" />
     <ClCompile Include="Source\Engine\Assets\Font.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_atomic.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_builder.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_bytecode.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_arm.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_arm64.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_mips.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_ppc.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_ppc_64.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_sh4.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_gcc.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_mingw.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_msvc.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_x86.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_callfunc_xenon.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_compiler.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_configgroup.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_context.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_datatype.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_gc.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_generic.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_globalproperty.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_memory.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_module.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_objecttype.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_outputbuffer.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_parser.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_restore.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptcode.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptengine.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptfunction.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptnode.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_scriptobject.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_string.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_string_util.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_thread.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_tokenizer.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_typeinfo.cpp" />
-    <ClCompile Include="Source\ThirdParty\angelscript\source\as_variablescope.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
@@ -746,15 +664,6 @@
     <None Include="include\Core\Parsers\impl\toml_formatter.inl" />
     <None Include="include\Core\Parsers\impl\unicode.inl" />
     <None Include="include\Core\Parsers\impl\yaml_formatter.inl" />
-    <None Include="Source\ThirdParty\angelscript\source\as_callfunc_arm64_msvc.asm" />
-    <None Include="Source\ThirdParty\angelscript\source\as_callfunc_arm_msvc.asm" />
-    <CustomBuild Include="Source\ThirdParty\angelscript\source\as_callfunc_x64_msvc_asm.asm">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ml64.exe /c  /nologo /Fo"Build\DebugX64\as_callfunc_x64_msvc_asm.obj" /W3 /Zi /Ta "%(RootDir)%(Directory)\%(Filename)%(Extension)"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64.exe /c  /nologo /Fo"Build\ReleaseX64\as_callfunc_x64_msvc_asm.obj" /W3 /Zi /Ta "%(RootDir)%(Directory)\%(Filename)%(Extension)"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Build\DebugX64\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Build\ReleaseX64\as_callfunc_x64_msvc_asm.obj;%(Outputs)</Outputs>
-    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
