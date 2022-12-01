@@ -9,6 +9,8 @@ namespace Nuclear::Editor
 	struct ProjectInfo
 	{
 		std::string mProjectName;
+
+
 	};
 
 	class Project
@@ -24,6 +26,8 @@ namespace Nuclear::Editor
 
 		Assets::Material* GetDefaultMaterial();
 		void SetDefaultMaterial(Assets::Material* mat);
+
+		Managers::AssetManager* GetAssetManager();
 
 		void ShowProjectFolderView();
 

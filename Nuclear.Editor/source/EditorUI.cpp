@@ -22,12 +22,14 @@ namespace Nuclear::Editor
 		}
 	}
 	EditorUI::EditorUI(NuclearEditor* editor)
+		:mAssetLibViewer(editor)
 	{
 		mEditorInstance = editor;
 		pActiveProject = nullptr;
 	}
 	void EditorUI::SetProject(Project* project)
 	{
+		mAssetLibViewer.SetProject(project);
 		pActiveProject = project;
 	}
 	void EditorUI::NewProjectWindow()
@@ -38,7 +40,7 @@ namespace Nuclear::Editor
 			ProjectTemplates.push_back("Empty 2D project");
 			ProjectTemplates.push_back("Empty 3D/2D project");
 
-			static bool firstpage = true;
+			static bool firstpage = true, secondpage = false;
 			static int selected = 0;
 
 			//Project Info
@@ -87,8 +89,26 @@ namespace Nuclear::Editor
 					ImGui::EndChild();
 					if (ImGui::Button("Cancel")) { mNewPrjWindowOpen = false; ImGui::CloseCurrentPopup(); }
 					ImGui::SameLine();
-					if (ImGui::Button("Next")) { firstpage = false; }
+					if (ImGui::Button("Next")) { firstpage = false; secondpage = true; }
 					ImGui::EndGroup();
+				}
+			}
+			else if (secondpage)
+			{
+				ImGui::Text("Project Configuration");
+
+
+
+				ImGui::Separator();
+
+
+
+
+				if (ImGui::Button("Back")) { firstpage = true; secondpage = false; }
+				ImGui::SameLine();
+				if (ImGui::Button("Next"))
+				{
+					firstpage = false; secondpage = false;
 				}
 			}
 			else
@@ -97,7 +117,7 @@ namespace Nuclear::Editor
 				ImGui::InputText("##newprjlbl", ProjectName, IM_ARRAYSIZE(ProjectName));
 				ImGui::Separator();
 
-				if (ImGui::Button("Back")) { firstpage = true; }
+				if (ImGui::Button("Back")) { firstpage = false; secondpage = true;  }
 				ImGui::SameLine();
 				if (ImGui::Button("Create"))
 				{
@@ -106,6 +126,7 @@ namespace Nuclear::Editor
 					info.mProjectName = ProjectName;
 					pActiveProject->Initalize(info);
 
+					mAssetLibViewer.SetProject(pActiveProject);
 
 					//Finish close window
 					mNewPrjWindowOpen = false;
@@ -158,6 +179,7 @@ namespace Nuclear::Editor
 		{
 			pActiveProject->ShowProjectFolderView();
 			RenderEntityExplorer();
+			mAssetLibViewer.Render();
 		}
 	}
 

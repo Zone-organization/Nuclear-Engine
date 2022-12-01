@@ -2,6 +2,7 @@
 #include <Common.h>
 #include <Project.h>
 #include "EntityEditor.h"
+#include "AssetLibraryViewer.h"
 
 class NuclearEditor;
 	
@@ -21,7 +22,7 @@ namespace Nuclear::Editor {
 
 		Project* pActiveProject;
 		NuclearEditor* mEditorInstance;
-
+		AssetLibraryViewer mAssetLibViewer;
 		ECS::Entity mSelectedEntity;
 
 		void RenderEntityExplorer();

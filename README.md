@@ -7,7 +7,8 @@
     - CSM
 	- SSAO
 	- Motion blur
-
+	- C# scripting through mono
+	
   - On-Hold:
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).

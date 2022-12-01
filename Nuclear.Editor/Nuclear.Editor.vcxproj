@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\AssetLibraryViewer.cpp" />
     <ClCompile Include="source\EntityEditor.cpp" />
     <ClCompile Include="source\Project.cpp" />
     <ClCompile Include="source\EditorUI.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="include\EntityEditor.h" />
     <ClInclude Include="include\GameViewPort.h" />
     <ClInclude Include="include\Project.h" />
+    <ClInclude Include="include\ProjectTemplate.h" />
     <ClInclude Include="include\SystemsEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

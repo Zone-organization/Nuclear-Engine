@@ -35,6 +35,11 @@ namespace Nuclear::Editor
 		mDefaultMaterial = mat;
 	}
 
+	Managers::AssetManager* Project::GetAssetManager()
+	{
+		return &AssetLoader;
+	}
+
 	std::string AssetTypeToString(Assets::AssetType type)
 	{
 		switch (type)

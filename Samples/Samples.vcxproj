@@ -100,7 +100,6 @@
     <ClInclude Include="Sample2.h" />
     <ClInclude Include="Sample1.h" />
     <ClInclude Include="Sample3.h" />
-    <ClInclude Include="OLD.h" />
     <ClInclude Include="SampleSelector.h" />
     <ClInclude Include="SponzaDemo.h" />
   </ItemGroup>
