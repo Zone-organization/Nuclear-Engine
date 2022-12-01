@@ -1,4 +1,5 @@
 #include "Core\Path.h"
+#include <algorithm>
 
 namespace Nuclear
 {
@@ -63,6 +64,8 @@ namespace Nuclear
 					mRealPath.replace(Offset, str.first.length(), str.second);
 				}
 			}
+			std::replace(mInputPath.begin(), mInputPath.end(), '\\', '/');
+			std::replace(mRealPath.begin(), mRealPath.end(), '\\', '/');
 		}
 	}
 }

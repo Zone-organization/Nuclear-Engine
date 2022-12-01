@@ -34,6 +34,57 @@ namespace Nuclear::Editor
 	{
 		mDefaultMaterial = mat;
 	}
+
+	std::string AssetTypeToString(Assets::AssetType type)
+	{
+		switch (type)
+		{
+		case Nuclear::Assets::AssetType::Unknown:
+			return "Unknown";
+		case Nuclear::Assets::AssetType::Scene:
+			return "Scene";
+		case Nuclear::Assets::AssetType::Image:
+			return "Image";
+		case Nuclear::Assets::AssetType::Mesh:
+			return "Mesh";
+		case Nuclear::Assets::AssetType::Material:
+			return "Material";
+		case Nuclear::Assets::AssetType::MaterialData:
+			return "MaterialData";
+		case Nuclear::Assets::AssetType::Animations:
+			return "Animations";
+		case Nuclear::Assets::AssetType::AudioClip:
+			return "AudioClip";
+		case Nuclear::Assets::AssetType::Font:
+			return "Font";
+		case Nuclear::Assets::AssetType::Shader:
+			return "Shader";
+		default:
+			return "Unknown";
+		}
+
+		return "Unknown";
+	}
+
+	void Project::ImportAssetWindow(const std::string& path, const Assets::AssetType& type)
+	{
+		if (ImGui::Begin("Import Asset"))
+		{
+			if (type == Assets::AssetType::Image)
+			{
+				Importers::ImageLoadingDesc desc;
+
+				AssetLoader.Import(path, desc);
+			}
+
+			ImGui::End();
+		}
+		/*if (ImGui::Button(("Load: %s", AssetTypeToString(type).c_str())))
+		{
+			assert(false);
+		}*/
+	}
+
     void Project::ShowProjectFolderView()
     {
 		if (ImGui::Begin("FilePicker"))
@@ -106,12 +157,38 @@ namespace Nuclear::Editor
 				else if (entry.is_regular_file())
 				{
 
-							if (ButtonFile(entryName.c_str()))
+					if (ButtonFile(entryName.c_str()))
+					{
+						auto type = AssetLoader.GetAssetType(entryName.c_str());
+
+
+						if (type != Nuclear::Assets::AssetType::Unknown)
+						{
+							if (type == Assets::AssetType::Image)
 							{
-								//if (mOnPicked)
-								//	mOnPicked(path);
-								//Hide();
+								Importers::ImageLoadingDesc desc;
+
+								AssetLoader.Import(path.string(), desc);
 							}
+							else if (type == Assets::AssetType::Shader)
+							{
+								Importers::ShaderLoadingDesc desc;
+
+								AssetLoader.Import(path.string(), desc);
+							}
+							else if (type == Assets::AssetType::Mesh)
+							{
+								Importers::MeshLoadingDesc desc;
+								AssetLoader.Import(path.string(), desc);
+							}
+						}
+
+
+
+						/*if (mOnPicked)
+							mOnPicked(path);
+						Hide();*/
+					}
 						
 					
 				}

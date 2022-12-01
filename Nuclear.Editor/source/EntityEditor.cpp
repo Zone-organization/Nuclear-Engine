@@ -79,8 +79,6 @@ namespace Nuclear::Editor
 			return "Point Light Component";
 		else if (id == entt::type_id<Components::SpotLightComponent>().hash())
 			return "Spot Light Component";
-		else if (id == entt::type_id<Components::AnimatorComponent>().hash())
-			return "Animator Component";
 		else if (id == entt::type_id<Components::ScriptComponent>().hash())
 			return "Script Component";
 
@@ -287,41 +285,65 @@ namespace Nuclear::Editor
 
 						if (ImGui::CollapsingHeader("Mesh"))
 						{
-							ImGui::Checkbox("Render", &meshcomponent->mRender);
-
-							if (meshcomponent->mMesh != nullptr)
+							if (meshcomponent->GetRenderingVariant())
 							{
-								if (meshcomponent->mMesh->GetName() != std::string(""))
+								ImGui::Text("Active Rendering Variant name: %s", meshcomponent->GetRenderingVariant()->GetName().c_str());
+								ImGui::Text("Shader AssetID: %i", meshcomponent->GetRenderingVariant()->GetShaderID());
+							}
+							else {
+								ImGui::Text("No Active Rendering Variant...");
+							}
+							ImGui::Text("RenderQueue: %i", meshcomponent->GetRenderQueue());
+
+							bool b = meshcomponent->GetEnableRendering();
+							if (ImGui::Checkbox("Enable Rendering", &b))
+							{
+								meshcomponent->SetEnableRendering(b);
+							}
+							bool castshadows = meshcomponent->GetCastShadow();
+							if (ImGui::Checkbox("Casts Shadow", &castshadows))
+							{
+								meshcomponent->SetCastShadow(castshadows);
+							}
+							bool recieveshadows = meshcomponent->GetReceiveShadows();
+							if (ImGui::Checkbox("Recieves Shadows", &recieveshadows))
+							{
+								meshcomponent->SetReceiveShadows(recieveshadows);
+							}
+
+							if (meshcomponent->GetMesh())
+							{
+								if (meshcomponent->GetMesh()->GetName() != std::string(""))
 								{
-									ImGui::Text(meshcomponent->mMesh->GetName().c_str());
+									ImGui::Text(meshcomponent->GetMesh()->GetName().c_str());
 								}
 								else {
 									ImGui::Text("Unnamed Mesh");
 								}
 							}
-							if (meshcomponent->mMaterial != nullptr)
+							if (meshcomponent->GetMaterial())
 							{
-								if (meshcomponent->mMaterial->GetName() != std::string(""))
+								if (meshcomponent->GetMaterial()->GetName() != std::string(""))
 								{
-									ImGui::Text(meshcomponent->mMaterial->GetName().c_str());
+									ImGui::Text(meshcomponent->GetMaterial()->GetName().c_str());
 								}
 								else {
 									ImGui::Text("Unnamed Material");
 								}
 
-								for (auto& it : meshcomponent->mMaterial->mPixelShaderTextures)
-								{
-									ImGui::Text(it.mName.c_str());
+								//for (auto &it : meshcomponent->mMaterial->mPixelShaderTextures)
+								//{
+								//	ImGui::Text(it.mName.c_str());
 
-									for (auto& it1 : it.mData)
-									{
-										//ImGui::Text(it1.mSlot);
-										if (it1.mTex.GetImage() != nullptr)
-										{
-											ImGui::Image(it1.mTex.GetImage()->mTextureView, { 256.f,256.f });
-										}
-									}
-								}
+								//	for (auto& it1 : it.mData)
+								//	{
+								//		//ImGui::Text(it1.mSlot);
+								//		if (it1.mTex.GetImage() != nullptr)
+								//		{
+								//			ImGui::Image(it1.mTex.GetImage()->mTextureView, { 256.f,256.f });
+								//		}
+								//	}
+								//}
 							}
 
 						}

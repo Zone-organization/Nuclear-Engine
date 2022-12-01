@@ -8,7 +8,6 @@
 
 #define EXPOSE_FREEIMAGE_IMPORTER
 #define EXPOSE_ASSIMP_IMPORTER
-#include <Engine\Importers\AssimpImporter.h>
 #include <Engine\Importers\FreeImageImporter.h>
 #include <utility>
 #include <Core\FileSystem.h>
@@ -35,8 +34,8 @@ namespace Nuclear {
 		AssetManager::AssetManager(AssetManagerDesc desc)
 			: mDesc(desc)
 		{
-			mImageImporter = Importers::ImageImporterDelegate::create<&Importers::FreeImageLoad>();
-			mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
+			//mImageImporter = Importers::ImageImporterDelegate::create<&Importers::FreeImageLoad>();
+			//mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
 			FT_Handle = nullptr;
 		}
 
@@ -117,7 +116,7 @@ namespace Nuclear {
 
 
 			//Load
-			Assets::ImageData imagedata = mImageImporter(Path.GetRealPath(), Desc);
+			Assets::ImageData imagedata = Importers::FreeImage::Load(Path.GetRealPath(), Desc);
 			if (imagedata.mData == nullptr)
 			{
 				NUCLEAR_ERROR("[{0}] Failed To Load Texture: '{1}' Hash: '{2}'" , mDesc.mName, Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedname));
@@ -236,7 +235,7 @@ namespace Nuclear {
 				mLibrary.mImportedMaterialDatas.mData[hashedname] = Assets::MaterialData();
 				Material = &mLibrary.mImportedMaterialDatas.mData[hashedname];
 			}
-			if (!mMeshImporter({ Path.GetRealPath().c_str(), desc, this}, Mesh, Material, &Animation))
+			if (!mDefaultAssimpImporter.Load({ Path.GetRealPath().c_str(), desc, this}, Mesh, Material, &Animation))
 			{
 				NUCLEAR_ERROR("[{0}] Failed to import Model : '{1}' : '{2}'", mDesc.mName, Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedname));
 
@@ -396,6 +395,9 @@ namespace Nuclear {
 			{
 				result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
 			}
+
+			NUCLEAR_INFO("[{0}] Imported Shader : '{1}' : '{2}'", mDesc.mName, Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedname));
+
 			return result;
 		}
 
@@ -457,6 +459,30 @@ namespace Nuclear {
 			//return result;
 		//}
 
+
+
+	
+		Assets::AssetType AssetManager::GetAssetType(const std::string& filename)
+		{
+			std::string extension = filename.substr(filename.find_last_of("."));
+
+
+			if (Importers::FreeImage::IsExtensionSupported(extension))
+			{
+				return Assets::AssetType::Image;
+			}
+			else if (mDefaultAssimpImporter.IsExtensionSupported(extension))
+			{
+				return Assets::AssetType::Mesh;
+			}
+			else if (extension == ".NEShader")
+			{
+				return Assets::AssetType::Shader;
+			}
+
+			return Assets::AssetType::Unknown;
+		}
+
 		Assets::Image* AssetManager::TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc)
 		{
 			auto hashedname = Utilities::Hash(Path.GetInputPath());
@@ -467,7 +493,7 @@ namespace Nuclear {
 			}
 
 			Assets::Image result;
-			Assets::ImageData imagedata = mImageImporter(Path.GetRealPath(), Desc);
+			Assets::ImageData imagedata = Importers::FreeImage::Load(Path.GetRealPath(), Desc);
 			if (imagedata.mData == nullptr)
 			{
 				NUCLEAR_ERROR("[{0}] Failed To Load Texture2D (For CubeMap): '{1}' : '{2}'", mDesc.mName, Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedname));

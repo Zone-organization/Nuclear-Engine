@@ -25,9 +25,6 @@ namespace Nuclear
         class Camera;
         class ShaderPipelineVariant;
     }
-    namespace Components {
-        class AnimatorComponent;
-    }
 	namespace Rendering
 	{
         typedef entt::basic_view<entt::entity, entt::get_t<Nuclear::Components::MeshComponent>, entt::exclude_t<>, void> MeshView;

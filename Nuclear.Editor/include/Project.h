@@ -29,6 +29,8 @@ namespace Nuclear::Editor
 
 		void SetPath(const std::filesystem::path& path);
 
+		void ImportAssetWindow(const std::string& path, const Assets::AssetType& type);
+
 		Assets::Scene* AddNewScene();
 	protected:
 		Managers::AssetManager AssetLoader;

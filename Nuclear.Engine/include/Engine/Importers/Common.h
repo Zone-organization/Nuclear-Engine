@@ -148,7 +148,8 @@ namespace Nuclear
 			Managers::AssetManager* mManager = nullptr;
 		};
 
-		typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::MaterialData*, Assets::Animations*)> MeshImporterDelegate;
-		typedef Utilities::Delegate<Assets::ImageData(const std::string& Path, const ImageLoadingDesc& Desc)> ImageImporterDelegate;
+		//typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::MaterialData*, Assets::Animations*)> MeshImporterDelegate;
+
+		//typedef Utilities::Delegate<Assets::ImageData(const std::string& Path, const ImageLoadingDesc& Desc)> ImageImporterDelegate;
 	}
 }

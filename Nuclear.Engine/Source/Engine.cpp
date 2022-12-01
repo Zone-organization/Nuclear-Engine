@@ -6,6 +6,7 @@
 #include <Engine\Audio\AudioEngine.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\DefaultMeshes.h>
+#include <Engine\Importers\FreeImageImporter.h>
 
 #include "Engine\Graphics\ImGUI\imgui_impl_glfw.h"
 #include "Engine\Graphics\ImGUI\imgui_impl.h"
@@ -111,6 +112,8 @@ namespace Nuclear {
 		}
 		gisDebug = desc.Debug;
 
+		Importers::FreeImage::Initialize();
+
 		NUCLEAR_INFO("[Engine] Nuclear Engine has been initalized successfully!");
 		return true;
 	}
@@ -128,6 +131,7 @@ namespace Nuclear {
 	void Engine::Shutdown()
 	{
 		NUCLEAR_INFO("[Engine] Shutting Down Engine.");
+		Importers::FreeImage::Shutdown();
 
 		pClient = nullptr;
 		Graphics::Context::ShutDown();

@@ -8,7 +8,20 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		enum class AssetType
+		{
+			Unknown,
+			Scene,
 
+			Image,
+			Mesh,
+			Material,
+			MaterialData,
+			Animations,
+			AudioClip,
+			Font,
+			Shader
+		};
 		template <class T>
 		class Asset
 		{

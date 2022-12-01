@@ -2,6 +2,7 @@
 #include <Engine/Importers/Common.h>
 #include <Engine\Assets\AssetLibrary.h>
 //#include <Engine\Threading\TaskManager.h>
+#include <Engine\Importers\AssimpImporter.h>
 
 #include <FMOD/inc/fmod.hpp>
 #include <array>
@@ -79,8 +80,8 @@ namespace Nuclear
 
 			bool mMultithreadMeshTextureLoading = true;
 
-			Importers::ImageImporterDelegate mImageImporter;
-			Importers::MeshImporterDelegate mMeshImporter;
+			//Importers::ImageImporterDelegate mImageImporter;
+			//Importers::MeshImporterDelegate mMeshImporter;
 
 			//Note: Automatically called on Destruction
 			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
@@ -115,6 +116,7 @@ namespace Nuclear
 			static Graphics::Texture DefaultSpecularTex;
 			static Graphics::Texture DefaultNormalTex;
 
+			Assets::AssetType GetAssetType(const std::string& filename);
 		//	Graphics::Texture SaveToImport(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 
 		private:
@@ -124,6 +126,7 @@ namespace Nuclear
 
 		//	Threading::TaskManager ImageLoadingTMgr;
 			Assets::AssetLibrary mSavedToImport;
+			Importers::AssimpImporter mDefaultAssimpImporter;
 			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceISFactory;
 		};
 	}

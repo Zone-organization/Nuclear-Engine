@@ -1,29 +1,48 @@
 #pragma once
 
-#ifdef EXPOSE_ASSIMP_IMPORTER
 #include <Core\NE_Common.h>
 #include <Engine\Assets\Mesh.h>
 #include <Engine\Assets\Material.h>
 #include <Engine/Importers/Common.h>
-#include <Assimp\include\assimp\Importer.hpp>
-#include <Assimp\include\assimp\scene.h>
-#include <Assimp\include\assimp\postprocess.h>
 #include "Engine\Animation\Bone.h"
 #include <Engine/Assets/Animations.h>
 
+struct aiMaterial;
+struct aiMesh;
+struct aiScene;
+struct aiNode;
+struct aiAnimation;
+struct aiNodeAnim;
+namespace Assimp {
+	class Importer;
+}
 namespace Nuclear 
 {
 	namespace Importers
 	{
-		class AssimpImporter {
+		class NEAPI AssimpImporter
+		{
 		public:
-			bool Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
-		private:
-			Assets::TextureSet ProcessMaterialTexture(aiMaterial *mat, const aiTextureType& type);
-			void ProcessMesh(aiMesh *mesh, const aiScene *scene);
-			Uint32 ProcessMaterial(aiMesh * mesh, const aiScene * scene);
-			void ProcessNode(aiNode *node, const aiScene *scene);
+			AssimpImporter();
+			~AssimpImporter();
 
+			bool Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
+			bool IsExtensionSupported(const std::string& extension);
+			Assimp::Importer* GetImporter();
+		private:
+			Assimp::Importer* pImporter;
+		};
+
+
+		class NEAPI AssimpLoader
+		{
+			Assets::TextureSet ProcessMaterialTexture(aiMaterial* mat, int type);
+			void ProcessMesh(aiMesh* mesh, const aiScene* scene);
+			Uint32 ProcessMaterial(aiMesh* mesh, const aiScene* scene);
+			void ProcessNode(aiNode* node, const aiScene* scene);
+
+		protected:
+			friend class AssimpImporter;
 			std::vector<std::string> TexturePaths;
 
 			Assets::MaterialData* pMaterialData = nullptr;
@@ -42,8 +61,7 @@ namespace Nuclear
 			Managers::AssetManager* mManager = nullptr;
 		};
 
-		bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
+
+		//bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 	}
 }
-
-#endif

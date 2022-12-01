@@ -1,11 +1,10 @@
-#define EXPOSE_FREEIMAGE_IMPORTER
 #include <Engine\Importers\FreeImageImporter.h>
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
 
 #pragma comment(lib,"Freeimage.lib")
 
-namespace Nuclear 
+namespace Nuclear
 {
 	namespace Importers
 	{
@@ -35,24 +34,26 @@ namespace Nuclear
 			return TRUE;
 		}
 
-		static bool FreeImageInitalized = false;
-		Assets::ImageData FreeImageLoad(const std::string& Path, const Importers::ImageLoadingDesc& Desc)
+		void FreeImage::Initialize()
 		{
-			if (!FreeImageInitalized)
-			{
-				FreeImage_Initialise();
-				FreeImageInitalized = true;
-			}
+			FreeImage_Initialise();
+		}
 
+		void FreeImage::Shutdown()
+		{
+			FreeImage_DeInitialise();
+		}
+
+		Assets::ImageData FreeImage::Load(const std::string & Path, const Importers::ImageLoadingDesc & Desc)
+		{
 			FIBITMAP* dib = nullptr;
-
 
 			if (Desc.mLoadFromMemory == true)
 			{
 				FIMEMORY* memBuff;
 				memBuff = FreeImage_OpenMemory((Byte*)Desc.mMemData, Desc.mMemSize);
 
-				auto type = FreeImage_GetFileTypeFromMemory(memBuff,0);
+				auto type = FreeImage_GetFileTypeFromMemory(memBuff, 0);
 				dib = FreeImage_LoadFromMemory(type, memBuff);
 				FreeImage_CloseMemory(memBuff);
 			}
@@ -66,7 +67,7 @@ namespace Nuclear
 				//Log.Error("[FreeImageImporter] Failed To Load: " + Path +  ".\n");
 				return Assets::ImageData();
 			}
-			if(Desc.mFlipY_Axis)
+			if (Desc.mFlipY_Axis)
 				FreeImage_FlipVertical(dib);
 
 			FIBITMAP* bitmap = nullptr;
@@ -123,5 +124,22 @@ namespace Nuclear
 
 			return result;
 		}
+
+		bool FreeImage::IsExtensionSupported(const std::string& extension)
+		{
+
+			FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+
+			fif = FreeImage_GetFIFFromFilename(extension.c_str());
+
+			if ((fif != FIF_UNKNOWN) && FreeImage_FIFSupportsReading(fif))
+			{
+
+				return true;
+			}
+
+			return false;
+		}
 	}
 }
+

@@ -1,5 +1,4 @@
 #pragma once
-#ifdef EXPOSE_FREEIMAGE_IMPORTER
 #include <Engine/Importers/Common.h>
 #include <Engine/Assets/ImageData.h>
 
@@ -7,7 +6,16 @@ namespace Nuclear
 {
 	namespace Importers
 	{
-		Assets::ImageData FreeImageLoad(const std::string& Path, const Importers::ImageLoadingDesc & Desc);
+		class FreeImage
+		{
+		public:
+			static void Initialize();
+
+			static void Shutdown();
+
+			static Assets::ImageData Load(const std::string& Path, const Importers::ImageLoadingDesc& Desc);
+
+			static bool IsExtensionSupported(const std::string& extension);
+		};
 	}
 }
-#endif

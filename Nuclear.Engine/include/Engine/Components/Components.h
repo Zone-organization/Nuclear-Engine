@@ -17,5 +17,4 @@
 						Components::DirLightComponent,  \
 						Components::PointLightComponent,\
 						Components::SpotLightComponent, \
-						Components::AnimatorComponent,  \
 						Components::ScriptComponent    
