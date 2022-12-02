@@ -28,11 +28,6 @@ RENDER_DEVICE_TYPE SelectRenderer()
 
 	return RENDER_DEVICE_TYPE_D3D11;
 }
-int func(int a) {
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-	printf("a = %d\n", a);
-	return 0;
-}
 
 int main(int argc, char* argv[])
 {
@@ -63,8 +58,7 @@ int main(int argc, char* argv[])
 	desc.mEngineWindowDesc.WindowHeight = 720;
 
 	Engine::GetInstance().Start(desc);
-	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
-	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
+	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
 
 	while (!Engine::GetInstance().ShouldClose())
 	{

@@ -13,12 +13,12 @@ namespace Nuclear
 		PhysXSystem::PhysXSystem(const PhysXSystemDesc &sceneDesc)
 		{
 			
-			PhysX::PxSceneDesc SceneDesc(PhysX::PhysXEngine::GetPhysics()->getTolerancesScale());
+			PhysX::PxSceneDesc SceneDesc(PhysX::PhysXEngine::GetInstance().GetPhysics()->getTolerancesScale());
 			SceneDesc.gravity = PhysX::To(sceneDesc.mGravity);
-			SceneDesc.cpuDispatcher = PhysX::PhysXEngine::GetCPUDispatcher();
+			SceneDesc.cpuDispatcher = PhysX::PhysXEngine::GetInstance().GetCPUDispatcher();
 			SceneDesc.filterShader = PhysX::PxDefaultSimulationFilterShader;
 	
-			mPhysXScene = PhysX::PhysXEngine::GetPhysics()->createScene(SceneDesc);
+			mPhysXScene = PhysX::PhysXEngine::GetInstance().GetPhysics()->createScene(SceneDesc);
 		}
 		PhysXSystem::~PhysXSystem()
 		{

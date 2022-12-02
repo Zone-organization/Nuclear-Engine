@@ -259,7 +259,7 @@ namespace Nuclear
 			LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
 			LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 
-			auto source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/PositionalShadowDepthPass.hlsl");
+			auto source = Core::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/PositionalShadowDepthPass.hlsl");
 
 			//Create Vertex Shader
 			{
@@ -413,7 +413,7 @@ namespace Nuclear
 			LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
 			LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 
-			auto source = Core::FileSystem::LoadFileToString("Assets/NuclearEngine/Shaders/OmniDirShadowDepthPass.hlsl");
+			auto source = Core::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/OmniDirShadowDepthPass.hlsl");
 
 			//Create Vertex Shader
 			{

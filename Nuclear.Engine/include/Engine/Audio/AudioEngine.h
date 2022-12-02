@@ -11,16 +11,31 @@ namespace Nuclear
 {
 	namespace Audio
 	{
+		struct AudioEngineDesc
+		{
+			unsigned int MaxChannels = 32;
+		};
+
 		class NEAPI AudioEngine
 		{
 		public:
-			static bool Initialize(unsigned int MaxChannels = 32);
+			AudioEngine(AudioEngine const&) = delete;
+			void operator=(AudioEngine const&) = delete;
 
-			static void Shutdown();
+			static AudioEngine& GetInstance();
 
-			static FMOD::System *GetSystem();
+			bool Initialize(const AudioEngineDesc& desc);
 
-			static void Update(FMOD::Channel * ch);
+			void Shutdown();
+
+			FMOD::System *GetSystem();
+
+			void Update(FMOD::Channel * ch);
+		protected:
+			FMOD::System* pSystem;
+
+		private:
+			AudioEngine();
 		};
 	}
 }

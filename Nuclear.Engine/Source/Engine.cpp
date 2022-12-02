@@ -3,14 +3,22 @@
 #include <Core\Window.h>
 #include <Core\Logger.h>
 
-#include <Engine\Audio\AudioEngine.h>
 #include <Engine\Graphics\Context.h>
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Importers\FreeImageImporter.h>
 
 #include "Engine\Graphics\ImGUI\imgui_impl_glfw.h"
 #include "Engine\Graphics\ImGUI\imgui_impl.h"
+
 #include <GLFW/include/GLFW/glfw3.h>
+
+#include <filesystem>
+
+//Sub-engines
+#include <Engine\Audio\AudioEngine.h>
+#include <Engine\Graphics\GraphicsEngine.h>
+#include <Engine\PhysX\PhysXEngine.h>
+#include <Engine/Scripting/ScriptingEngine.h>
 
 //Dependencies Linking
 #pragma comment(lib,"assimp-vc143-mt.lib")
@@ -58,6 +66,8 @@ namespace Nuclear {
 	{
 		PrintIntroLog();
 
+		Core::Path::mReservedPaths["@NuclearAssets@"] = "../Assets/NuclearEngine";
+
 		//Create platform specific app (window)
 		Core::Window::InitializeGLFW();
 
@@ -65,45 +75,63 @@ namespace Nuclear {
 		{
 			NUCLEAR_FATAL("[Engine] Failed To Create Window...");
 		}
-		//Application::Start(desc.mAppdesc);
 
 		glfwSetFramebufferSizeCallback(MainWindow.GetRawWindowPtr(), ResizeCallback);
 
 		MainWindow.SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 
-		if (!Graphics::GraphicsEngine::GetInstance().Initialize(desc.mGraphicsEngineDesc))
+		if (desc.AutoInitGraphicsEngine)
 		{
-			NUCLEAR_FATAL("[Engine] GraphicsEngine Failed to initalize...");
-			return false;
+			Graphics::GraphicsEngineDesc GraphicsEngineDesc;
+			GraphicsEngineDesc.pWindowHandle = GetMainWindow()->GetRawWindowPtr();
+			if (!Graphics::GraphicsEngine::GetInstance().Initialize(GraphicsEngineDesc))
+			{
+				NUCLEAR_FATAL("[Engine] Failed to initalize GraphicsEngine...");
+				return false;
+			}
 		}
-		//Initialize Context
-		Graphics::Context::GetInstance().Initialize(desc.Renderer, desc.mGraphicsEngineDesc);
-		Assets::DefaultMeshes::Initialize();
-
-
-		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontFromFileTTF("Assets/Common/Fonts/Roboto-Medium.ttf", 15);
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		io.ConfigDockingWithShift = true;
-		ImGui_ImplGlfw_InitForOther(MainWindow.GetRawWindowPtr(), true);
-		ImGui_Impl_Init();
-		ImGui_Impl_CreateDeviceObjects();
-		//io.Fonts->GetTexDataAsAlpha8()
-
-		NUCLEAR_INFO("[Engine] ImGUI Initalized.");
-
 
 		if (desc.AutoInitAudioEngine)
-			Audio::AudioEngine::Initialize();
+		{
+			Audio::AudioEngineDesc desc;
 
+			if (!Audio::AudioEngine::GetInstance().Initialize(desc))
+			{
+				NUCLEAR_FATAL("[Engine] Failed to initalize AudioEngine...");
+				return false;
+			}
+		}
+		if (desc.AutoInitScriptingEngine)
+		{
+			namespace fs = std::filesystem;
 
+			Scripting::ScriptingEngineDesc desc;
+			fs::path monopath = std::filesystem::current_path().string() + "/mono";
+
+			if (!fs::exists(monopath))
+			{
+				monopath = std::filesystem::current_path().string() + "/../mono";
+				if (!fs::exists(monopath))
+				{
+					NUCLEAR_FATAL("[Engine] Failed to find mono runtime assemblies directory!");
+				}
+			}
+			desc.mMonoRuntimeDir = monopath.string();
+
+			if (!Scripting::ScriptingEngine::GetInstance().Initialize(desc))
+			{
+				NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingEngine...");
+				return false;
+			}
+		}
 
 		if (desc.AutoInitPhysXEngine)
 		{
-			if (!PhysX::PhysXEngine::Initialize(desc.mPhysXEngineDesc))
+			PhysX::PhysXEngineDesc desc;
+
+			if (!PhysX::PhysXEngine::GetInstance().Initialize(desc))
 			{
-				NUCLEAR_FATAL("[Engine] PhysXEngine Failed to auto Initialize!");
+				NUCLEAR_FATAL("[Engine] Failed to initalize PhysXEngine...");
 				return false;
 			}
 		}
@@ -128,8 +156,8 @@ namespace Nuclear {
 		Importers::FreeImage::Shutdown();
 
 		pClient = nullptr;
-		Graphics::Context::GetInstance().ShutDown();
-		Audio::AudioEngine::Shutdown();
+		Audio::AudioEngine::GetInstance().Shutdown();
+		PhysX::PhysXEngine::GetInstance().Shutdown();
 		Graphics::GraphicsEngine::GetInstance().Shutdown();
 		MainWindow.Destroy();
 		//Graphics::ImGui_Renderer::Shutdown();
@@ -280,6 +308,7 @@ namespace Nuclear {
 	{
 		NUCLEAR_INFO("-------------------------- -Nuclear Engine- --------------------------");
 		NUCLEAR_INFO("------------------------- Zone Organization --------------------------");
+		NUCLEAR_INFO("--------------------------------v7medz--------------------------------");
 		NUCLEAR_INFO("[Engine] Starting Engine...");
 		NUCLEAR_INFO("[Engine] Engine Build: '{0}'.'{1}'  On: '{2}' At: '{3}'", MajorVersion, MinorVersion, __DATE__, __TIME__);
 

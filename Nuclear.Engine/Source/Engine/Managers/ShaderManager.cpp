@@ -19,7 +19,7 @@ namespace Nuclear
 
 		void ShaderManager::Initialize()
 		{
-			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("@NuclearAssets@/Shaders/", &pShaderSourceFactory);
 		}
 
 

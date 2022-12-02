@@ -3,14 +3,6 @@
 #include <PhysX/include/PxPhysicsAPI.h>
 #include <Core\Logger.h>
 
-using namespace physx;
-PxDefaultAllocator		gAllocator;
-
-PxFoundation* gFoundation = NULL;
-PxPhysics* gPhysics = NULL;
-PxPvd* gPvd = NULL;
-
-PxDefaultCpuDispatcher* gDispatcher = NULL;
 
 #pragma comment(lib,"PhysX_64.lib")
 #pragma comment(lib,"PhysXCommon_64.lib")
@@ -19,6 +11,7 @@ PxDefaultCpuDispatcher* gDispatcher = NULL;
 #pragma comment(lib,"PhysXPvdSDK_static_64.lib")
 
 #define PX_RELEASE(x) if(x) { x->release(); }
+using namespace physx;
 
 namespace Nuclear
 {
@@ -33,29 +26,55 @@ namespace Nuclear
 			}
 		}gErrorCallback;
 
-		PxMaterial* gDefaultMaterial;
+		PhysXEngine::PhysXEngine()
+		{
+
+		}
+		PhysXEngine& PhysXEngine::GetInstance()
+		{
+			static PhysXEngine pxengine;
+
+			return pxengine;
+		}
+		PxDefaultAllocator gAllocator;
 
 		bool PhysXEngine::Initialize(const PhysXEngineDesc& desc)
 		{
 			gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 			
 			gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true);
+
+			if (gPhysics == NULL)
+			{
+				NUCLEAR_ERROR("[PhysXEngine] PxCreatePhysics Failed!");
+				return false;
+			}
+
 			PxInitExtensions(*gPhysics, nullptr);
 
 			PxU32 numCores = 4;
 			gDispatcher = PxDefaultCpuDispatcherCreate(numCores == 0 ? 0 : numCores - 1);
-			
+
+			if (!gDispatcher)
+			{
+				NUCLEAR_ERROR("[PhysXEngine] PxDefaultCpuDispatcherCreate Failed!");
+				return false;
+			}
+
 			// setup default material...
 			gDefaultMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.1f);
 			if (!gDefaultMaterial)
 			{
-				NUCLEAR_FATAL("[PhysXEngine] createMaterial failed");
+				NUCLEAR_ERROR("[PhysXEngine] createMaterial(gDefaultMaterial) Failed!");
+				return false;
 			}
+
 			NUCLEAR_INFO("[PhysXEngine] PhysX has been initalized succesfully!");
 			return true;
 		}
 		void PhysXEngine::Shutdown()
 		{
+			NUCLEAR_INFO("[PhysXEngine] Shutting down...");
 			PX_RELEASE(gDispatcher)
 			PX_RELEASE(gPhysics)
 			PX_RELEASE(gFoundation)	

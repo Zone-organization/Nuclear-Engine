@@ -2,14 +2,18 @@
 #include <Core\NE_Common.h>
 #include <Engine\Managers\ShaderManager.h>
 
+struct GLFWwindow;
+
 namespace Nuclear
 {
 	namespace Graphics
 	{
 		struct GraphicsEngineDesc
 		{
-			//The shader manager used internally by the engine if this is a nullptr the engine auto create a one.
-		//	Managers::ShaderManager* DefaultShaderManager = nullptr;
+			RENDER_DEVICE_TYPE mRenderAPI = RENDER_DEVICE_TYPE::RENDER_DEVICE_TYPE_D3D11;
+
+			bool InitImGui = true;
+			GLFWwindow* pWindowHandle;
 
 			SwapChainDesc SCDesc;
 

@@ -8,13 +8,16 @@
 namespace Nuclear
 {
 	namespace Audio
-	{
-		FMOD::System *system;
-	      
-		bool AudioEngine::Initialize(unsigned int MaxChannels)
+	{	      
+		AudioEngine::AudioEngine()
+		{
+
+		}
+
+		bool AudioEngine::Initialize(const AudioEngineDesc& desc)
 		{
 			FMOD_RESULT result;
-			result = FMOD::System_Create(&system);
+			result = FMOD::System_Create(&pSystem);
 
 			if (result != FMOD_OK)
 			{
@@ -23,7 +26,7 @@ namespace Nuclear
 			}
 
 
-			result = system->init(MaxChannels, FMOD_INIT_NORMAL, 0);
+			result = pSystem->init(desc.MaxChannels, FMOD_INIT_NORMAL, 0);
 			if (result != FMOD_OK)
 			{
 				NUCLEAR_ERROR("[AudioEngine] Failed to initialize FMOD SoundSystem! Info: '{0}'", FMOD_ErrorString(result));
@@ -32,18 +35,25 @@ namespace Nuclear
 			NUCLEAR_INFO("[AudioEngine] Initialized FMOD SoundSystem.");
 			return true;
 		}
+		AudioEngine& AudioEngine::GetInstance()
+		{
+			static AudioEngine audioengine;
+
+			return audioengine;
+		}
+	
 		void AudioEngine::Shutdown()
 		{
-			system->close();
-			system->release();
+			pSystem->close();
+			pSystem->release();
 		}
 		FMOD::System * AudioEngine::GetSystem()
 		{
-			return system;
+			return pSystem;
 		}
 		void AudioEngine::Update(FMOD::Channel * channel)
 		{
-			system->update();
+			pSystem->update();
 
 			if (channel)
 			{

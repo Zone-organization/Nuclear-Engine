@@ -240,7 +240,7 @@ namespace Nuclear
 					auto source = Core::FileSystem::LoadShader(mDesc.PostFX_VS_Path, std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
 					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-					Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceFactory);
+					Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("@NuclearAssets@/Shaders/", &pShaderSourceFactory);
 					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 				}
@@ -255,7 +255,7 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "BloomExtractPS";
 
-					auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/BloomExtract.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
+					auto source = Core::FileSystem::LoadShader("@NuclearAssets@/Shaders/BloomExtract.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
 				}

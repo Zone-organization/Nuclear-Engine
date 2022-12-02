@@ -14,8 +14,8 @@ namespace Nuclear
 	{
 
 		struct PostProcessingPassDesc {
-			std::string PostFX_VS_Path = "Assets/NuclearEngine/Shaders/PostProcessing.vs.hlsl";
-			std::string PostFX_PS_Path = "Assets/NuclearEngine/Shaders/PostProcessing.ps.hlsl";
+			std::string PostFX_VS_Path = "@NuclearAssets@/Shaders/PostProcessing.vs.hlsl";
+			std::string PostFX_PS_Path = "@NuclearAssets@/Shaders/PostProcessing.ps.hlsl";
 		};
 
 		struct PostProcessingBakingDesc

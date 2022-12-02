@@ -52,21 +52,21 @@
 //
 //		//Initialize Materials
 //		Assets::TextureSet PBRSphereSet;
-//		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
-//		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/metallic.png", desc,Graphics::TextureUsageType::Specular) });
-//		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/normal.png",desc, Graphics::TextureUsageType::Normal) });
-//		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
-//		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/RustedIron/ao.png", desc, Graphics::TextureUsageType::AO) });
+//		PBRSphereSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
+//		PBRSphereSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", desc,Graphics::TextureUsageType::Specular) });
+//		PBRSphereSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/PBR/RustedIron/normal.png",desc, Graphics::TextureUsageType::Normal) });
+//		PBRSphereSet.mData.push_back({ 3, mAssetManager->Import("@CommonAssets@/Textures/PBR/RustedIron/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
+//		PBRSphereSet.mData.push_back({ 4, mAssetManager->Import("@CommonAssets@/Textures/PBR/RustedIron/ao.png", desc, Graphics::TextureUsageType::AO) });
 //
 //		SphereMaterial.mPixelShaderTextures.push_back(PBRSphereSet);
 //		Renderer->CreateMaterialForAllPipelines(&SphereMaterial);
 //
 //		Assets::TextureSet PBRPlaneSet;
-//		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
-//		PBRPlaneSet.mData.push_back({ 1, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/metallic.png", desc,Graphics::TextureUsageType::Specular) });
-//		PBRPlaneSet.mData.push_back({ 2, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/normal.png",desc, Graphics::TextureUsageType::Normal) });
-//		PBRPlaneSet.mData.push_back({ 3, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
-//		PBRPlaneSet.mData.push_back({ 4, mAssetManager->Import("Assets/Common/Textures/PBR/plastic/ao.png", desc, Graphics::TextureUsageType::AO) });
+//		PBRPlaneSet.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/PBR/plastic/albedo.png",desc, Graphics::TextureUsageType::Diffuse) });
+//		PBRPlaneSet.mData.push_back({ 1, mAssetManager->Import("@CommonAssets@/Textures/PBR/plastic/metallic.png", desc,Graphics::TextureUsageType::Specular) });
+//		PBRPlaneSet.mData.push_back({ 2, mAssetManager->Import("@CommonAssets@/Textures/PBR/plastic/normal.png",desc, Graphics::TextureUsageType::Normal) });
+//		PBRPlaneSet.mData.push_back({ 3, mAssetManager->Import("@CommonAssets@/Textures/PBR/plastic/roughness.png", desc, Graphics::TextureUsageType::Roughness) });
+//		PBRPlaneSet.mData.push_back({ 4, mAssetManager->Import("@CommonAssets@/Textures/PBR/plastic/ao.png", desc, Graphics::TextureUsageType::AO) });
 //
 //		PlaneMaterial.mPixelShaderTextures.push_back(PBRPlaneSet);
 //		PlaneMaterial.SetName("Plane Material");

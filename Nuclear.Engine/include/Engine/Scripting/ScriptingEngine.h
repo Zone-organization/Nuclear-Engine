@@ -1,5 +1,5 @@
 #pragma once
-#include <Engine/Scripting/ScriptingContext.h>
+#include <Engine/Scripting/ScriptData.h>
 
 struct _MonoDomain;
 
@@ -23,9 +23,13 @@ namespace Nuclear
 		struct ScriptModuleCreationDesc
 		{
 			std::string mName;
+			Core::Path mPath;
 			ScriptModuleCreationFlags mFlags;
 		};
-
+		struct ScriptingEngineDesc
+		{
+			Core::Path mMonoRuntimeDir;
+		};
 		class NEAPI ScriptingEngine
 		{
 		public:
@@ -34,10 +38,11 @@ namespace Nuclear
 
 			static ScriptingEngine& GetInstance();
 
-			bool Initialize();
+			bool Initialize(const ScriptingEngineDesc& desc);
 
 			void Shutdown();
 
+			bool CreateScriptingModule(Scripting::ScriptingModule* scriptmodule, const ScriptModuleCreationDesc& desc);
 
 
 		private:

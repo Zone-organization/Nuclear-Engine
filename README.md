@@ -6,19 +6,19 @@
   - W.I.P:
 	- C# scripting through mono
 	- AssetLoading Multithreading
-	- CSM
-	- SSAO
-	- Motion blur
+	- Replace GLFW with SDL or SFML
 	
   - On-Hold:
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).
 
   - TODO:
+  	- CSM
+	- SSAO
+	- Motion blur
     - Finish Audio implementation
 	- FIX BRDF generation in IBL Pipeline
 	- Clean and document Samples.
-	- Replace GLFW with SDL or SFML
 	- GUI (basic widgets)
 	
 ## Getting started

@@ -20,9 +20,9 @@ namespace Nuclear
 
 			static Context& GetInstance();
 
-			bool Initialize(RENDER_DEVICE_TYPE renderapi, const Graphics::GraphicsEngineDesc& GraphicsDesc);
+			bool Initialize(const Graphics::GraphicsEngineDesc& GraphicsDesc);
 
-			void ShutDown();
+			void Shutdown();
 
 			void PresentFrame();
 

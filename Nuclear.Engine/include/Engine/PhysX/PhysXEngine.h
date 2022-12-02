@@ -7,6 +7,7 @@ namespace physx {
 	class PxPvd;
 	class PxCpuDispatcher;
 	class PxMaterial;
+	class PxDefaultCpuDispatcher;
 }
 namespace Nuclear
 {
@@ -24,16 +25,31 @@ namespace Nuclear
 
 		class NEAPI PhysXEngine
 		{
-		public:
-			static bool Initialize(const PhysXEngineDesc& desc);
-			static void Shutdown();
+		public:	
+			PhysXEngine(PhysXEngine const&) = delete;
+			void operator=(PhysXEngine const&) = delete;
 
-			static PxFoundation* GetFoundation();
-			static PxPhysics* GetPhysics();
-			static PxPvd* GetPvd();
-			static PxCpuDispatcher* GetCPUDispatcher();
+			static PhysXEngine& GetInstance();
 
-			static PxMaterial& GetDefaultMaterial();
+			bool Initialize(const PhysXEngineDesc& desc);
+			void Shutdown();
+
+			PxFoundation* GetFoundation();
+			PxPhysics* GetPhysics();
+			PxPvd* GetPvd();
+			PxCpuDispatcher* GetCPUDispatcher();
+
+			PxMaterial& GetDefaultMaterial();
+
+		protected:
+			PxFoundation* gFoundation = NULL;
+			PxPhysics* gPhysics = NULL;
+			PxPvd* gPvd = NULL;
+			PxDefaultCpuDispatcher* gDispatcher = NULL;
+			PxMaterial* gDefaultMaterial;
+
+		private:
+			PhysXEngine();
 		};
 	}
 }

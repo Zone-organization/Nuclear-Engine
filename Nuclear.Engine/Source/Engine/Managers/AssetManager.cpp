@@ -74,10 +74,10 @@ namespace Nuclear {
 		void AssetManager::Initialize(AssetManagerDesc desc)
 		{
 			mDesc = desc;
-			DefaultBlackTex = Import("Assets/NuclearEngine/DefaultTextures/Black32x32.png", Importers::ImageLoadingDesc());
-			DefaultGreyTex = Import("Assets/NuclearEngine/DefaultTextures/Grey32x32.png", Importers::ImageLoadingDesc());
-			DefaultWhiteTex = Import("Assets/NuclearEngine/DefaultTextures/White32x32.png", Importers::ImageLoadingDesc());
-			DefaultNormalTex = Import("Assets/NuclearEngine/DefaultTextures/Normal32x32.png", Importers::ImageLoadingDesc());
+			DefaultBlackTex = Import("@NuclearAssets@/DefaultTextures/Black32x32.png", Importers::ImageLoadingDesc());
+			DefaultGreyTex = Import("@NuclearAssets@/DefaultTextures/Grey32x32.png", Importers::ImageLoadingDesc());
+			DefaultWhiteTex = Import("@NuclearAssets@/DefaultTextures/White32x32.png", Importers::ImageLoadingDesc());
+			DefaultNormalTex = Import("@NuclearAssets@/DefaultTextures/Normal32x32.png", Importers::ImageLoadingDesc());
 
 			DefaultDiffuseTex = DefaultGreyTex;
 			DefaultSpecularTex = DefaultWhiteTex;
@@ -96,7 +96,7 @@ namespace Nuclear {
 			{
 				NUCLEAR_ERROR("[{0}] Failed To Initialize FreeType library");
 			}
-			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("Assets/NuclearEngine/Shaders/", &pShaderSourceISFactory);
+			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("@NuclearAssets@/Shaders/", &pShaderSourceISFactory);
 
 		}
 
@@ -202,7 +202,7 @@ namespace Nuclear {
 
 			mLibrary.mImportedAudioClips.mData[hashedname] = Assets::AudioClip();
 			auto result = &mLibrary.mImportedAudioClips.mData[hashedname];
-			Audio::AudioEngine::GetSystem()->createSound(Path.GetRealPath().c_str(), mode, 0, &result->mSound);
+			Audio::AudioEngine::GetInstance().GetSystem()->createSound(Path.GetRealPath().c_str(), mode, 0, &result->mSound);
 
 			NUCLEAR_INFO("[{0}] Imported AudioClip: '{1}' : '{2}'", mDesc.mName, Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedname));
 

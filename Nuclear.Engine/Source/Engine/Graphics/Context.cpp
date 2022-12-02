@@ -1,6 +1,6 @@
 #include <Engine\Graphics\Context.h>
-#include <Engine.h>
-#include <Core/Window.h>
+//#include <Engine.h>
+//#include <Core/Window.h>
 #include "InitializeDiligentEngineWin32.h"
 #include <Core\Logger.h>
 
@@ -15,7 +15,7 @@ namespace Nuclear
 			return context;
 		}
 
-		bool Context::Initialize(RENDER_DEVICE_TYPE renderapi, const Graphics::GraphicsEngineDesc& GraphicsDesc)
+		bool Context::Initialize(const Graphics::GraphicsEngineDesc& GraphicsDesc)
 		{
 			SwapChainDesc SCDesc(GraphicsDesc.SCDesc);
 
@@ -27,18 +27,21 @@ namespace Nuclear
 			{
 				SCDesc.ColorBufferFormat = TEX_FORMAT_RGBA8_UNORM;
 			}
-			bool Result = InitializeDiligentEngineWin32(Engine::GetInstance().GetMainWindow()->GetRawWindowPtr(),renderapi, &gDevice, &gContext, &gSwapChain,&gEngineFactory, SCDesc);
+			bool Result = InitializeDiligentEngineWin32(GraphicsDesc.pWindowHandle, GraphicsDesc.mRenderAPI, &gDevice, &gContext, &gSwapChain,&gEngineFactory, SCDesc);
 
-			if(Result)
-				NUCLEAR_INFO("[Context] Diligent Graphics API Initialized.");
+			if (!Result)
+			{
+				NUCLEAR_ERROR("[Context] Failed to initialize DiligentCore!");
+				return false;
+			}
 
-			GraphicsEngine::GetInstance().GetShaderManager().Initialize();
-
+			NUCLEAR_INFO("[Context] Diligent Graphics API Initialized.");
 			return true;
 		}
 
-		void Context::ShutDown()
+		void Context::Shutdown()
 		{
+			NUCLEAR_INFO("[Context] Shutting down...");
 			gDevice->Release();
 			gContext->Release();
 			gSwapChain->Release();

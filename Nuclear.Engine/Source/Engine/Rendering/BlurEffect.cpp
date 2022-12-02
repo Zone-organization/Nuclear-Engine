@@ -23,7 +23,7 @@ namespace Nuclear
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 				CreationAttribs.Desc.Name = "HorzBlurVS";
 				CreationAttribs.EntryPoint = "main";
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.vs.hlsl", { "HORIZENTAL" }, std::set<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("@NuclearAssets@/Shaders/Blur.vs.hlsl", { "HORIZENTAL" }, std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
 				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &HorzVShader);
@@ -36,7 +36,7 @@ namespace Nuclear
 				CreationAttribs.Desc.Name = "VertBlurVS";
 				CreationAttribs.EntryPoint = "main";
 
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("@NuclearAssets@/Shaders/Blur.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
 				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &VertVShader);
@@ -48,7 +48,7 @@ namespace Nuclear
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 				CreationAttribs.Desc.Name = "BlurPS";
 
-				auto source = Core::FileSystem::LoadShader("Assets/NuclearEngine/Shaders/Blur.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
+				auto source = Core::FileSystem::LoadShader("@NuclearAssets@/Shaders/Blur.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
 
 				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PShader);
