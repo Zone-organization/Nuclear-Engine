@@ -3,7 +3,7 @@
 //#define NE_POINT_LIGHTS_NUM 1
 //#define NE_SPOT_LIGHTS_NUM 1
 #include "..\LightTypes.hlsli"
-#include "Common.hlsl"
+#include "PBR/Common.hlsl"
 
 #ifdef NE_SHADOWS
 #include <..\ShadowCalculations.hlsl>

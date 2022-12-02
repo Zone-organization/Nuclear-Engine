@@ -1,4 +1,4 @@
-#include "Common.hlsl"
+#include "PBR/Common.hlsl"
 
 struct PixelInputType
 {

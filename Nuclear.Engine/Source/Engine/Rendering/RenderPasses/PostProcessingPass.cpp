@@ -239,9 +239,8 @@ namespace Nuclear
 
 					auto source = Core::FileSystem::LoadShader(mDesc.PostFX_VS_Path, std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
-					RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-					Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("@NuclearAssets@/Shaders/", &pShaderSourceFactory);
-					CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetDefaultShaderSourceFactory();
+
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 				}
 

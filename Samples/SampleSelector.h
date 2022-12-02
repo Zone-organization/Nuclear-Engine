@@ -66,13 +66,13 @@ public:
 			Sample2 demo;
 			return StartSample(&demo);
 		}
-		//if (ImGui::Button("Sample3 : PhysX & Scripting Test ------OLD"))             //Improve
-		//{
-		//	Sample3 demo;
-		//	return StartSample(&demo);
-		//}
+		if (ImGui::Button("Sample3 : PhysX & Scripting Test ------OLD"))             //Improve
+		{
+			Sample3 demo;
+			return StartSample(&demo);
+		}
 
-		//ImGui::Text("Select Demo");
+		ImGui::Text("Select Demo");
 
 		if (ImGui::Button("Sponza Demo"))
 		{

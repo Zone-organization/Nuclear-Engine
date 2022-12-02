@@ -423,10 +423,10 @@ namespace Nuclear
 			return &mGBuffer;
 		}
 
-		bool ShaderPipeline::GetAlwaysRequestDeffered()
-		{
-			return mAlwaysRequestDeffered;
-		}
+		//bool ShaderPipeline::GetAlwaysRequestDeffered()
+		//{
+		//	return mAlwaysRequestDeffered;
+		//}
 
 		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
 		{

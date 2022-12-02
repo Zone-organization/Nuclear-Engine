@@ -47,6 +47,8 @@ namespace Nuclear {
 			Assets::Mesh* GetMesh();
 			Assets::Material* GetMaterial();
 			Animation::Animator* GetAnimator();
+
+			void SetRenderSystemFlags(bool hasdefferedpass, bool hasshadowpass);
 		protected:
 			Assets::Mesh* pMesh;
 			Assets::Material* pMaterial;
@@ -63,6 +65,9 @@ namespace Nuclear {
 			bool mCastShadow = true;
 			bool mReceiveShadows = true;
 			bool mRequestDeffered = false;
+
+			bool mRenderSystemHasDefferedPass = false;
+			bool mRenderSystemHasShadowPass = false;
 		};
 
 	}

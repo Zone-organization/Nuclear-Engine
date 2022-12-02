@@ -27,10 +27,6 @@ class Sample2 : public Client
 
 	Assets::Shader* PBR;
 
-	//Pipelines
-	//Rendering::ForwardRenderingPath ForwardRP;
-	Rendering::DefferedRenderingPath DefferedRP;
-
 	Rendering::GeometryPass GeoPass;
 	Rendering::PostProcessingPass PostFXPass;
 	Rendering::DefferedPass DefferedPass;
@@ -324,12 +320,13 @@ public:
 				EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
 			}
 
-			static bool IBL_ = true;
+			static bool IBL_ = false;
 
 			if (ImGui::Checkbox("IBL", &IBL_))
-				activeentity.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
-
-
+			{
+				ESphere.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
+				EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
+			}
 			if (ImGui::Button("Rusted Iron"))
 			{
 				activeentity.GetComponent<Components::MeshComponent>()->SetMaterial(&RustedIron);

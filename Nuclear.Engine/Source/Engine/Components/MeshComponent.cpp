@@ -40,24 +40,13 @@ namespace Nuclear
 							auto assetptr = pMaterial->GetShader();
 							mPipelineCntrl.SetPipeline(&assetptr->mPipeline);
 							mMaterialDirty = false;
-							if (pMaterial->GetAlwaysRequestDefferedPipeline())
-							{
-								mRequestDeffered = true;
-							}
-
-							if (!mPipelineCntrl.GetShaderPipeline()->GetReflection().mHasDefferedPipelines)
-							{
-								mRequestDeffered = false;
-								pMaterial->SetAlwaysRequestDefferedPipeline(false);
-							}
-							else {
-								if (mPipelineCntrl.GetShaderPipeline()->GetReflection().mAllPipelinesAreDeffered)
-								{
-									mRequestDeffered = true;
-									pMaterial->SetAlwaysRequestDefferedPipeline(true);
-								}
-							}
 						}
+
+						if (mRenderSystemHasDefferedPass)
+							mRequestDeffered = false;
+
+						if (mRenderSystemHasShadowPass)
+							mReceiveShadows = false;
 
 						Uint32 mDefferedPipeline = Utilities::Hash("NE_DEFFERED");
 						Uint32 mAnimationHash = Utilities::Hash("NE_ANIMATION");
@@ -160,6 +149,20 @@ namespace Nuclear
 		Animation::Animator* MeshComponent::GetAnimator()
 		{
 			return pAnimator;
+		}
+		void MeshComponent::SetRenderSystemFlags(bool hasdefferedpass, bool hasshadowpass)
+		{
+			if (mRenderSystemHasDefferedPass != hasdefferedpass)
+			{
+				mRenderSystemHasDefferedPass = hasdefferedpass;
+				mDirty = true;
+			}
+
+			if (mRenderSystemHasShadowPass != hasshadowpass)
+			{
+				mRenderSystemHasShadowPass = hasshadowpass;
+				mDirty = true;
+			}
 		}
 	}
 }

@@ -33,7 +33,7 @@ namespace Nuclear
 
 			void CreateShader(IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
 
-
+			IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			std::vector<LayoutElement> GetBasicVSLayout(bool isDeffered);
 

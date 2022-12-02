@@ -7,6 +7,7 @@ ForwardPipeline = "MainPSO"
 DefferedPipeline = "DefferedPSO"
 GBufferPipeline = "GBufferPSO"
 Variants = [ "NE_DEFFERED", "NE_SHADOWS", "NE_ANIMATION" , "IBL_ENABLED" ]
+VariantsValues = [ false, false, true, false ]
 
 [MainPSO]
 RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]

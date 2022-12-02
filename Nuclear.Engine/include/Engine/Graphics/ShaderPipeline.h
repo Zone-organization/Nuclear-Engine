@@ -33,7 +33,7 @@ namespace Nuclear
 			IBuffer* LightsBufferPtr = nullptr;
 
 			bool mRenderSystemHasDefferedPass = false;
-			bool mAlwaysRequestDefferedPipelines = true;
+			bool mRenderSystemHasShadowPass = false;
 		};
 
 		struct ShaderPipelineDesc
@@ -74,7 +74,7 @@ namespace Nuclear
 			Assets::Shader* GetShaderAsset();
 			Rendering::GBuffer* GetGBuffer();
 
-			bool GetAlwaysRequestDeffered();
+			//bool GetAlwaysRequestDeffered();
 		protected:
 			Assets::Shader* mParentAsset;
 			std::unordered_map<Uint32, ShaderPipelineVariant> mVariants;
@@ -87,7 +87,7 @@ namespace Nuclear
 			ShaderPipelineVariant CreateForwardVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
 			ShaderPipelineVariant CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
 
-			bool mAlwaysRequestDeffered = true;
+			//bool mAlwaysRequestDeffered = true;
 		private:
 			void ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc);
 			bool mFirstReflection = true;

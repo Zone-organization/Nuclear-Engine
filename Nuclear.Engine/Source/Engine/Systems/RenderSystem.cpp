@@ -61,13 +61,17 @@ namespace Nuclear
 			bakedesc.pIBLContext = pIBLContext;
 			bakedesc.mRTWidth = desc.RTWidth;
 			bakedesc.mRTHeight = desc.RTHeight;
-			bakedesc.mAlwaysRequestDefferedPipelines = desc.mIsDefferedByDefault;
 
-			auto defferedpass = GetRenderPass<Rendering::DefferedPass>();
-			if (defferedpass)
+			if (GetRenderPass<Rendering::DefferedPass>())
 			{
 				bakedesc.mRenderSystemHasDefferedPass = true;
 			}
+
+			if (GetRenderPass<Rendering::ShadowPass>())
+			{
+				bakedesc.mRenderSystemHasShadowPass = true;
+			}
+
 
 			for (auto i : mRegisteredShaders)
 			{
@@ -103,7 +107,6 @@ namespace Nuclear
 
 		void RenderSystem::AddRenderPass(Rendering::RenderPass* pass)
 		{
-			//pass->Initialize();
 			mRenderPasses.push_back(pass);
 		}
 		
@@ -144,19 +147,26 @@ namespace Nuclear
 			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
 			mRenderData.mUsedDefferedPipelines.clear();
 
+			bool hasdefpasss = false, hasshadowpass =false;
+			if (GetRenderPass<Rendering::DefferedPass>())
+			{
+				hasdefpasss = true;
+			}
+
 			auto shadowpass = GetRenderPass<Rendering::ShadowPass>();
 			if (shadowpass)
 			{
 				mRenderData.pDirPosShadowMapSRV = shadowpass->GetDirPosShadowMapSRV();
 				mRenderData.pSpotPosShadowMapSRV = shadowpass->GetSpotShadowMapSRV();
 				mRenderData.pOmniDirShadowMapSRV = shadowpass->GetOmniDirShadowMapSRV();
-
+				hasshadowpass = true;
 			}
-
+		
 			auto meshview = mScene->GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : meshview)
 			{
 				auto& mesh = meshview.get<Components::MeshComponent>(entity);
+				mesh.SetRenderSystemFlags(hasdefpasss, hasshadowpass);
 				mesh.Update();
 			}
 
@@ -290,9 +300,8 @@ namespace Nuclear
 
 				auto source = Core::FileSystem::LoadShader("@NuclearAssets@/Shaders/BasicVertex.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-				RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
-				Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("@NuclearAssets@/Shaders/", &pShaderSourceFactory);
-				CreationAttribs.pShaderSourceStreamFactory = pShaderSourceFactory;
+				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetDefaultShaderSourceFactory();
+
 				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 			}
 

@@ -30,9 +30,6 @@ namespace Nuclear
 
 			void Create(MaterialData* data, Assets::Shader* shader);
 
-			void SetAlwaysRequestDefferedPipeline(bool val);
-			bool GetAlwaysRequestDefferedPipeline() const;
-
 			//Note: doesnt validate the shaders!
 			void BindTexSet(Graphics::ShaderPipelineVariant* pipeline ,Uint32 index);
 
@@ -45,7 +42,6 @@ namespace Nuclear
 			std::vector<TextureSet> mPipelineUsableTextures;
 			void InitializePipelineTextures();
 			MaterialData* pData;
-			bool mAlwaysRequestDefferedVariant = true;
 		};
 	}
 }

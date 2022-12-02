@@ -27,7 +27,7 @@ namespace Nuclear
 			Uint32 RTHeight;
 
 			//requests deffered pipeline for all meshes (if exists)
-			bool mIsDefferedByDefault = true;
+			bool mIsDefferedByDefault = false;
 		};
 
 		class NEAPI RenderSystem : public ECS::System<RenderSystem>

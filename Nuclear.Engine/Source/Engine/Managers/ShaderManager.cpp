@@ -19,7 +19,7 @@ namespace Nuclear
 
 		void ShaderManager::Initialize()
 		{
-			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory("@NuclearAssets@/Shaders/", &pShaderSourceFactory);
+			Graphics::Context::GetInstance().GetEngineFactory()->CreateDefaultShaderSourceStreamFactory(Core::Path("@NuclearAssets@/Shaders/").GetRealPath().c_str(), &pShaderSourceFactory);
 		}
 
 
@@ -271,12 +271,22 @@ namespace Nuclear
 				desc.mPipelineDesc.mName = ShaderName;
 				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].value_or(false);
 				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].value_or(false);
-
-				if (toml::array* arr = tbl["Shader"]["Variants"].as_array())
+				toml::array* arr = tbl["Shader"]["Variants"].as_array();
+				if (arr)
 				{
-					for (Uint32 i = 0; i < arr->size(); i++)
+					toml::array* valarr = tbl["Shader"]["VariantsValues"].as_array();
+					if (valarr)
 					{
-						desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr->at(i).as_string()->value_or("")));
+						for (Uint32 i = 0; i < arr->size(); i++)
+						{
+							desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr->at(i).as_string()->value_or(""), valarr->at(i).as_boolean()->value_or(true)));
+						}
+					}
+					else {
+						for (Uint32 i = 0; i < arr->size(); i++)
+						{
+							desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr->at(i).as_string()->value_or("")));
+						}
 					}
 				}
 				else {
@@ -419,6 +429,11 @@ namespace Nuclear
 			CreationAttribs.Source = Source.c_str();
 
 			Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, result);
+		}
+
+		IShaderSourceInputStreamFactory* ShaderManager::GetDefaultShaderSourceFactory()
+		{
+			return pShaderSourceFactory.RawPtr();
 		}
 
 
