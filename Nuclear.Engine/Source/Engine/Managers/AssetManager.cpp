@@ -32,7 +32,7 @@ namespace Nuclear {
 		Graphics::Texture AssetManager::DefaultNormalTex;
 	
 		AssetManager::AssetManager(AssetManagerDesc desc)
-			: mDesc(desc)
+			: mDesc(desc), mThreadPool(4)
 		{
 			//mImageImporter = Importers::ImageImporterDelegate::create<&Importers::FreeImageLoad>();
 			//mMeshImporter = Importers::MeshImporterDelegate::create<&Importers::AssimpLoadMesh>();
@@ -169,6 +169,11 @@ namespace Nuclear {
 
 			return result;
 		}
+
+		/*std::future<Assets::ImageData> AssetManager::EnqueueImage(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc, const Graphics::TextureUsageType& type)
+		{
+			return mThreadPool.AddJob(Importers::FreeImage::Load, Path.GetRealPath(), Desc);
+		}*/
 
 		//Assets::Image* AssetManager::Import(const Assets::ImageData& Image , const Importers::ImageLoadingDesc & Desc)
 		//{

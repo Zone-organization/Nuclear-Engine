@@ -8,7 +8,7 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		Context& Context::GetInstance()
+		inline Context& Context::GetInstance()
 		{
 			static Context context;
 

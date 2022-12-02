@@ -56,7 +56,6 @@ namespace Nuclear {
 	}
 	bool Engine::Start(const EngineStartupDesc& desc)
 	{
-		Core::Logger::Initialize();
 		PrintIntroLog();
 
 		//Create platform specific app (window)
@@ -116,7 +115,7 @@ namespace Nuclear {
 		return true;
 	}
 
-	Engine& Engine::GetInstance()
+	inline Engine& Engine::GetInstance()
 	{
 		static Engine engine;
 

@@ -28,6 +28,11 @@ RENDER_DEVICE_TYPE SelectRenderer()
 
 	return RENDER_DEVICE_TYPE_D3D11;
 }
+int func(int a) {
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	printf("a = %d\n", a);
+	return 0;
+}
 
 int main(int argc, char* argv[])
 {
@@ -52,6 +57,8 @@ int main(int argc, char* argv[])
 	//}
 
 	//EngineStartupDesc desc;
+
+
 	desc.mEngineWindowDesc.WindowWidth = 1280;
 	desc.mEngineWindowDesc.WindowHeight = 720;
 
@@ -64,5 +71,6 @@ int main(int argc, char* argv[])
 		SampleSelector selector;
 		Engine::GetInstance().LoadClient(&selector);
 	}
+
 	return 0;
 }

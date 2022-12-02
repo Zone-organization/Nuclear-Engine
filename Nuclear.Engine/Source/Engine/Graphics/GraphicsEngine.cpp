@@ -7,7 +7,7 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		GraphicsEngine& GraphicsEngine::GetInstance()
+		inline GraphicsEngine& GraphicsEngine::GetInstance()
 		{
 			static GraphicsEngine engine;
 

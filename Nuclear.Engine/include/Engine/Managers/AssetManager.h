@@ -1,7 +1,7 @@
 #pragma once
 #include <Engine/Importers/Common.h>
 #include <Engine\Assets\AssetLibrary.h>
-//#include <Engine\Threading\TaskManager.h>
+#include <Engine\Threading\ThreadPool.h>
 #include <Engine\Importers\AssimpImporter.h>
 
 #include <FMOD/inc/fmod.hpp>
@@ -90,7 +90,9 @@ namespace Nuclear
 			//Textures
 			Graphics::Texture Import(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 			Graphics::Texture Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
-		    //Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
+
+
+			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
 			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::ImageLoadingDesc& Desc);
 			Assets::Image* DoesImageExist(Uint32 hashedname);
 
@@ -119,12 +121,20 @@ namespace Nuclear
 			Assets::AssetType GetAssetType(const std::string& filename);
 		//	Graphics::Texture SaveToImport(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 
+			//////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////THREADING WIP////////////////////////////////////
+		//	void LoadImagesMT(const std::vector<Core::Path>);
+			//std::future<Assets::ImageData> EnqueueImage(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
+
+			void FinishLoadingPendingAssets();
+			Threading::ThreadPool mThreadPool;
+
+			//////////////////////////////////////////////////////////////////////////////////
 		private:
 			AssetManagerDesc mDesc;
 			Assets::Image* TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc);
 			msdfgen::FreetypeHandle* FT_Handle;
 
-		//	Threading::TaskManager ImageLoadingTMgr;
 			Assets::AssetLibrary mSavedToImport;
 			Importers::AssimpImporter mDefaultAssimpImporter;
 			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceISFactory;

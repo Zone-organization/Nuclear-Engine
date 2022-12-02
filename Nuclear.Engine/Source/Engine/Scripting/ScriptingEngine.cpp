@@ -12,7 +12,7 @@ namespace Nuclear
 		bool ScriptingEngine::Initialize()
 		{
 			pRuntimeDomain = mono_jit_init("Scripting");
-
+			
 			if (!pRuntimeDomain)
 			{
 				NUCLEAR_ERROR("[ScriptingEngine] Failed to initialize pRuntimeDomain...");

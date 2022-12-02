@@ -397,8 +397,6 @@
     <ClInclude Include="include\Engine\Systems\ScriptingSystem.h" />
     <ClInclude Include="include\Client.h" />
     <ClInclude Include="include\Engine\Assets\Font.h" />
-    <ClInclude Include="include\Engine\Threading\Task.h" />
-    <ClInclude Include="include\Engine\Threading\TaskManager.h" />
     <ClInclude Include="include\Engine\Threading\ThreadPool.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Engine\Importers\AssimpGLMHelpers.h" />
@@ -520,6 +518,7 @@
     <ClCompile Include="Source\Engine\ECS\System.cpp" />
     <ClCompile Include="Source\Client.cpp" />
     <ClCompile Include="Source\Engine\Assets\Font.cpp" />
+    <ClCompile Include="Source\Engine\Threading\ThreadPool.cpp" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_arm64.cc" />
     <ClCompile Include="Source\ThirdParty\crc32c\crc32c_portable.cc" />
