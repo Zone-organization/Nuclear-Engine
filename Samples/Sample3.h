@@ -161,6 +161,26 @@ public:
 		//Scene.Save();
 		//Camera.MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
+
+
+		///////////Scripting Test/////////////
+
+
+		Assets::Script script;
+		Scripting::ScriptCreationDesc scriptdesc;
+		scriptdesc.mNamespaceName = "Nuclear";
+		scriptdesc.mClassName = "Test";
+		Scripting::ScriptingEngine::GetInstance().CreateScript(&script, Scripting::ScriptingEngine::GetInstance().GetCoreAssembly(), scriptdesc);
+
+
+
+
+
+
+
+
+
+
 		Engine::GetInstance().GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override

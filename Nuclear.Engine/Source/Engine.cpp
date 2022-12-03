@@ -53,6 +53,7 @@ namespace Nuclear {
 	static std::string MinorVersion = "001";
 
 	void PrintIntroLog();
+
 	void ResizeCallback(GLFWwindow* window, int Width, int Height)
 	{
 		if (Width == 0 && Height == 0)
@@ -117,6 +118,8 @@ namespace Nuclear {
 				}
 			}
 			desc.mMonoRuntimeDir = monopath.string();
+			desc.mScriptingCoreAssemblyDir = std::filesystem::current_path().string();
+			desc.mClientAssemblyPath = std::filesystem::current_path().string() + "/ClientScripts.dll";
 
 			if (!Scripting::ScriptingEngine::GetInstance().Initialize(desc))
 			{

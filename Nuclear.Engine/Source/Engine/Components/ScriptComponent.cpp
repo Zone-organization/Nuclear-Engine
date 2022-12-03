@@ -6,7 +6,7 @@ namespace Nuclear
 	{
 		ScriptComponent::ScriptComponent()
 		{
-
+		//	pScript = nullptr;
 		}
 	}
 }

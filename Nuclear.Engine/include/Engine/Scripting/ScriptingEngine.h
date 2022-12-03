@@ -1,7 +1,10 @@
 #pragma once
-#include <Engine/Scripting/ScriptData.h>
+#include <Engine/Scripting/ScriptingAssembly.h>
+#include <Engine/Scripting/ScriptingObject.h>
+#include <Engine/Assets/Script.h>
 
 struct _MonoDomain;
+struct _MonoObject;
 
 namespace Nuclear
 {
@@ -11,24 +14,28 @@ namespace Nuclear
 	}
 	namespace Scripting
 	{
-		class ScriptingModule;
-
-		enum class ScriptModuleCreationFlags
-		{
-			ONLY_IF_EXISTS = 0,
-			CREATE_IF_NOT_EXISTS = 1,
-			ALWAYS_CREATE = 2
-		};
-
 		struct ScriptModuleCreationDesc
 		{
 			std::string mName;
 			Core::Path mPath;
-			ScriptModuleCreationFlags mFlags;
+		};
+
+		struct ScriptCreationDesc
+		{
+			std::string mName;
+			std::string mClassName;
+			std::string mNamespaceName;
 		};
 		struct ScriptingEngineDesc
 		{
+			//Directory only
 			Core::Path mMonoRuntimeDir;
+			Core::Path mScriptingCoreAssemblyDir;
+
+			//Path + filename
+			Core::Path mClientAssemblyPath;
+			bool mAutoInitClientAssembly = true;
+
 		};
 		class NEAPI ScriptingEngine
 		{
@@ -42,11 +49,19 @@ namespace Nuclear
 
 			void Shutdown();
 
-			bool CreateScriptingModule(Scripting::ScriptingModule* scriptmodule, const ScriptModuleCreationDesc& desc);
+			bool CreateScript(Assets::Script* script, Scripting::ScriptingAssembly* assembly,const ScriptCreationDesc& desc);
 
+			bool CreateScriptingAssembly(Scripting::ScriptingAssembly* assembly, const ScriptModuleCreationDesc& desc);
 
+			ScriptingObject CreateScriptObject(Assets::Script* script);
+
+			ScriptingAssembly* GetCoreAssembly();
+			ScriptingAssembly* GetClientAssembly();
 		private:
 			ScriptingEngine();
+
+			ScriptingAssembly mCoreAssembly;
+			ScriptingAssembly mClientAssembly;
 
 			_MonoDomain* pRuntimeDomain;
 		};

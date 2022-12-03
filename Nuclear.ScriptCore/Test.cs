@@ -4,13 +4,13 @@ namespace Nuclear
 {
     public class Test
     {
-        public static void HelloWorld(object message)
+        public void HelloWorld()
         {
-            HelloWorld_Native(message);
+            HelloWorld_Native();
         }
 
        
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void HelloWorld_Native(object message);
+        private static extern void HelloWorld_Native();
     }
 }

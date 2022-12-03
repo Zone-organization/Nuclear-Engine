@@ -1,5 +1,6 @@
 #pragma once
 #include <Engine/Assets/Script.h>
+#include <Engine/Scripting/ScriptingObject.h>
 
 namespace Nuclear
 {
@@ -11,7 +12,7 @@ namespace Nuclear
 		public:
 			ScriptComponent();
 			
-			Assets::Script* script;
+			Scripting::ScriptingObject mScriptObject;
 		};
 	}
 }
