@@ -1,7 +1,7 @@
 #pragma once
 #include <Core\NE_Common.h>
 #include <Engine/Assets/Common.h>
-#include <Core\Math\Math.h>
+#include <Math\Math.h>
 #include <vector>
 #include <unordered_map>
 #include <Engine/Animation/AnimationClip.h>

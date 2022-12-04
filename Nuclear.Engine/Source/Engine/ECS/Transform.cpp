@@ -1,6 +1,6 @@
 #include "Engine\ECS/Transform.h"
 #define GLM_ENABLE_EXPERIMENTAL
-#include <Core/Math/gtx/quaternion.hpp>
+#include <Math/gtx/quaternion.hpp>
 namespace Nuclear
 {
 	namespace ECS

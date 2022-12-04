@@ -1,6 +1,6 @@
 #pragma once
 #include <cereal\cereal.hpp>
-#include <Core/Math/Math.h>
+#include <Math/Math.h>
 
 namespace glm
 {

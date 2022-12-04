@@ -4,7 +4,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
-#include <Core/Math/NETypes.h>
+#include <Math/NETypes.h>
 
 namespace Nuclear
 {

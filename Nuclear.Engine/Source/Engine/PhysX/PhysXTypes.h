@@ -5,7 +5,7 @@
 #include <foundation/PxVec4.h>
 #include <foundation/PxTransform.h>
 #include <Engine\ECS\Transform.h>
-#include <Core/Math/Math.h>
+#include <Math/Math.h>
 
 namespace Nuclear
 {

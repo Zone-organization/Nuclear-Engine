@@ -1,5 +1,5 @@
 #include "Engine/Graphics\Camera.h"
-#include "Core/Math/gtc/matrix_inverse.hpp"
+#include "Math/gtc/matrix_inverse.hpp"
 #include <Engine.h>
 #include <Diligent/Graphics/GraphicsTools/interface/CommonlyUsedStates.h>
 #include <Engine\Managers\ShaderManager.h>

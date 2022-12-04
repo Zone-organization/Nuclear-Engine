@@ -2,7 +2,7 @@
 #include <Engine/Assets/Common.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
-#include <Core/Math/Math.h>
+#include <Math/Math.h>
 #include <unordered_map>
 
 namespace Nuclear

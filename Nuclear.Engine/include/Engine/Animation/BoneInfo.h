@@ -1,5 +1,5 @@
 #pragma once
-#include <Core\Math\Math.h>
+#include <Math\Math.h>
 
 namespace Nuclear
 {

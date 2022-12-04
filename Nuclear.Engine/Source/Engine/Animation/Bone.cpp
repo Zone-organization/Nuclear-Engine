@@ -1,6 +1,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "Engine\Animation\Bone.h"
-#include "Core/Math/gtx/quaternion.hpp"
+#include "Math/gtx/quaternion.hpp"
 #include "Core/Utilities/Hash.h"
 
 namespace Nuclear

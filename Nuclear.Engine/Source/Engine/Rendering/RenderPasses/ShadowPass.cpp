@@ -8,7 +8,7 @@
 #include <Engine\Components\EntityInfoComponent.h>
 #include <Engine\Assets\Scene.h>
 #include <Engine/Rendering/FrameRenderData.h>
-#include <Core\Math\Math.h>
+#include <Math\Math.h>
 
 namespace Nuclear
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Core\Math\Math.h>
+#include <Math\Math.h>
 #include <Engine/PhysX/PhysXEngine.h>
 #include <Engine/PhysX/PhysXMaterial.h>
 #include <Engine/PhysX/PhysXShape.h>
