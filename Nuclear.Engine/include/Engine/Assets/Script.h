@@ -1,15 +1,9 @@
 #pragma once
 #include <Engine/Assets/Common.h>
+#include <Engine/Scripting/ScriptingClass.h>
 
-struct _MonoMethod;
-struct _MonoClass;
 namespace Nuclear
 {
-	namespace Scripting
-	{
-		typedef _MonoMethod* ScriptFunction;
-	}
-
 	namespace Assets
 	{
 
@@ -19,20 +13,13 @@ namespace Nuclear
 			Script();
 			~Script();
 
-			const std::string GetClassName();
-			const std::string GetFullNameClassName();
-			const std::string GetNamespaceName();
 
 			Scripting::ScriptFunction mConstructor = nullptr;
-			Scripting::ScriptFunction mLoadMethod = nullptr;
-			Scripting::ScriptFunction mUpdateMethod = nullptr;
-		//private:
-			_MonoClass* Class = nullptr;
+			Scripting::ScriptFunction mOnStartMethod = nullptr;
+			Scripting::ScriptFunction mOnUpdateMethod = nullptr;
 
+			Scripting::ScriptingClass mClass;
 
-			std::string mFullName;
-			std::string mClassName;
-			std::string mNamespaceName;
 		};
 	}
 }

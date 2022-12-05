@@ -28,6 +28,7 @@ class Sample3 : public Client
 	ECS::Entity ELights;
 
 	std::vector<ECS::Entity> boxes;
+	Assets::Script script;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -93,6 +94,7 @@ public:
 		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
 		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
+		mScriptSystem = Scene.GetSystemManager().Add<Systems::ScriptingSystem>();
 
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 		Renderer->AddRenderPass(&GeoPass);
@@ -115,6 +117,17 @@ public:
 	void Load()
 	{
 		mSceneManager->CreateScene(&Scene, true);
+
+		///////////Scripting Test/////////////
+
+
+		Scripting::ScriptingEngine::GetInstance().CreateScriptAsset(&script, "Samples.Sample3");
+
+		auto entity = Scene.CreateEntity("ScriptEntity");
+		auto& comp = entity.AddComponent<Components::ScriptComponent>();
+		comp.pParentScript = &script;
+		comp.mScriptObject = script.mClass.CreateObject();
+
 
 		mAssetManager->Initialize();
 
@@ -161,22 +174,6 @@ public:
 		//Scene.Save();
 		//Camera.MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
-
-
-		///////////Scripting Test/////////////
-
-
-		Assets::Script script;
-		Scripting::ScriptCreationDesc scriptdesc;
-		scriptdesc.mNamespaceName = "Nuclear";
-		scriptdesc.mClassName = "Test";
-		Scripting::ScriptingEngine::GetInstance().CreateScript(&script, Scripting::ScriptingEngine::GetInstance().GetCoreAssembly(), scriptdesc);
-
-
-
-
-
-
 
 
 

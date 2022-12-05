@@ -18,6 +18,7 @@ namespace Nuclear
 		bool AutoInitAudioEngine = true;
 		bool AutoInitPhysXEngine = true;
 		bool AutoInitScriptingEngine = true;
+		std::string mScriptingClientDllName = "ClientScripts.dll";
 
 		//Enables some debugging options that slows down performance in runtime
 		bool Debug = DEBUG_TRUE_BOOL;

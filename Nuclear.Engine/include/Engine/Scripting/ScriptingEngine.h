@@ -1,11 +1,9 @@
 #pragma once
 #include <Engine/Scripting/ScriptingAssembly.h>
+#include <Engine/Scripting/ScriptingClass.h>
 #include <Engine/Scripting/ScriptingObject.h>
 #include <Engine/Assets/Script.h>
-
-struct _MonoDomain;
-struct _MonoObject;
-
+struct _MonoString;
 namespace Nuclear
 {
 	namespace Systems
@@ -20,12 +18,7 @@ namespace Nuclear
 			Core::Path mPath;
 		};
 
-		struct ScriptCreationDesc
-		{
-			std::string mName;
-			std::string mClassName;
-			std::string mNamespaceName;
-		};
+
 		struct ScriptingEngineDesc
 		{
 			//Directory only
@@ -49,16 +42,23 @@ namespace Nuclear
 
 			void Shutdown();
 
-			bool CreateScript(Assets::Script* script, Scripting::ScriptingAssembly* assembly,const ScriptCreationDesc& desc);
+			bool CreateScriptAsset(Assets::Script* script,const std::string& scriptclassname);
+
+			ScriptingClass CreateScriptClass(Scripting::ScriptingAssembly* assembly, const ScriptingClassCreationDesc& desc);
 
 			bool CreateScriptingAssembly(Scripting::ScriptingAssembly* assembly, const ScriptModuleCreationDesc& desc);
 
-			ScriptingObject CreateScriptObject(Assets::Script* script);
+			std::string ToStdString(_MonoString* monostring);
 
+			_MonoDomain* GetDomain();
 			ScriptingAssembly* GetCoreAssembly();
 			ScriptingAssembly* GetClientAssembly();
 		private:
 			ScriptingEngine();
+
+			void InitBindings();
+			void InitCoreAssembly();
+			ScriptingClass ScriptCoreClass;
 
 			ScriptingAssembly mCoreAssembly;
 			ScriptingAssembly mClientAssembly;

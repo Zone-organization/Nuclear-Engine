@@ -1,26 +1,25 @@
 #pragma once
 #include <Core/NE_Common.h>
-#include <Engine/Assets/Script.h>
-
-struct _MonoObject;
-
+#include <Engine/Scripting/MonoDeclarations.h>
+#include <string>
 namespace Nuclear
 {
 	namespace Scripting
 	{
-
+		class ScriptingClass;
 		class NEAPI ScriptingObject
 		{
 		public:
-			_MonoObject* GetMonoObject() const;
+			_MonoObject* GetMonoObjectPtr() const;
 
-			_MonoObject* CallMethod(Scripting::ScriptFunction method, void** params = nullptr);
+			ScriptFunction GetVirtualMethod(const std::string& methodname);
+			_MonoObject* CallMethod(ScriptFunction method, void** params = nullptr);
 
-			Assets::Script* GetScript();
+			ScriptingClass* GetScriptingClass();
 		private:
-			friend class ScriptingEngine;
+			friend class ScriptingClass;
 			Uint32 mHandle = 0;
-			Assets::Script* pParent;
+			ScriptingClass* pParent;
 		};
 	}
 }

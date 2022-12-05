@@ -2,14 +2,10 @@
 
 namespace Nuclear
 {
-    public class Test
+    public class ScriptCore
     {
-        public void HelloWorld()
-        {
-            HelloWorld_Native();
-        }
-
        
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void HelloWorld_Native();
     }

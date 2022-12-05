@@ -106,7 +106,7 @@ namespace Nuclear {
 		{
 			namespace fs = std::filesystem;
 
-			Scripting::ScriptingEngineDesc desc;
+			Scripting::ScriptingEngineDesc scdesc;
 			fs::path monopath = std::filesystem::current_path().string() + "/mono";
 
 			if (!fs::exists(monopath))
@@ -117,11 +117,11 @@ namespace Nuclear {
 					NUCLEAR_FATAL("[Engine] Failed to find mono runtime assemblies directory!");
 				}
 			}
-			desc.mMonoRuntimeDir = monopath.string();
-			desc.mScriptingCoreAssemblyDir = std::filesystem::current_path().string();
-			desc.mClientAssemblyPath = std::filesystem::current_path().string() + "/ClientScripts.dll";
+			scdesc.mMonoRuntimeDir = monopath.string();
+			scdesc.mScriptingCoreAssemblyDir = std::filesystem::current_path().string();
+			scdesc.mClientAssemblyPath = std::filesystem::current_path().string() + "/" + desc.mScriptingClientDllName;
 
-			if (!Scripting::ScriptingEngine::GetInstance().Initialize(desc))
+			if (!Scripting::ScriptingEngine::GetInstance().Initialize(scdesc))
 			{
 				NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingEngine...");
 				return false;

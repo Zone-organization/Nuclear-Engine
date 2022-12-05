@@ -1,9 +1,8 @@
 #pragma once
 #include <Core/NE_Common.h>
+#include <Engine/Scripting/MonoDeclarations.h>
 #include <string>
-struct _MonoAssembly;
-struct _MonoImage;
-struct _MonoMethod;
+
 
 namespace Nuclear
 {
@@ -14,7 +13,10 @@ namespace Nuclear
 		class NEAPI ScriptingAssembly
 		{
 		public:
-			_MonoMethod* GetMethod(const std::string& methodname);
+			ScriptingAssembly();
+
+			//Namespace should be included "Nuclear.ScriptCore:Load()"
+			ScriptFunction GetMethod(const std::string& methodname);
 
 		//	std::unordered_map<Assets::Script*, ScriptData> mImportedScripts;
 			_MonoAssembly* pAssembly;

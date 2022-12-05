@@ -1,10 +1,9 @@
 #include <Engine/Scripting/ScriptingEngine.h>
-
+#include <Engine/Scripting/ScriptingBindings.h>
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <Core\Logger.h>
 #pragma comment(lib,"mono-2.0-sgen.lib")
-
 
 namespace Nuclear
 {
@@ -45,6 +44,9 @@ namespace Nuclear
 				}
 			}
 
+			InitBindings();
+			InitCoreAssembly();
+
 			NUCLEAR_INFO("[ScriptingEngine] ScriptingEngine has been initalized succesfully!");
 			return true;
 		}
@@ -52,58 +54,52 @@ namespace Nuclear
 		{
 			mono_jit_cleanup(pRuntimeDomain);
 		}
-		void HelloWorld()
+
+		bool ScriptingEngine::CreateScriptAsset(Assets::Script* script, const std::string& scriptclassname)
 		{
-			NUCLEAR_INFO("\n HELLO WORLD \n");
+			script->mClass = CreateScriptClass(&mClientAssembly, ScriptingClassCreationDesc(scriptclassname));
+
+			script->mOnStartMethod = script->mClass.GetMethod("OnStart()");
+			script->mOnUpdateMethod = script->mClass.GetMethod("OnUpdate(single)");
+
+			return false;
 		}
-		bool ScriptingEngine::CreateScript(Assets::Script* script, Scripting::ScriptingAssembly* assembly, const ScriptCreationDesc& desc)
+	
+	//	bool ScriptingEngine::CreateScript(Assets::Script* script, Scripting::ScriptingAssembly* assembly, const ScriptCreationDesc& desc)
+		//{
+
+			//MonoMethodDesc* ptrTickMethodDesc = mono_method_desc_new(".Test:HelloWorld()", false);
+			//// = mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
+
+			//MonoMethod* helloworld;
+			//if (ptrTickMethodDesc) {
+			//	// Get real function
+			//	MonoMethod* virtualMethod = mono_method_desc_search_in_class(ptrTickMethodDesc, script->Class);
+			//	if (virtualMethod)
+			//	{
+			//		helloworld = mono_object_get_virtual_method(object.GetMonoObject(), virtualMethod);
+			//	}
+
+			//	// Free
+			//	mono_method_desc_free(ptrTickMethodDesc);
+			//}
+
+			//MonoMethod* helloworld = mono_class_get_method_from_name(script->Class, "HelloWorld", 0);
+			//MonoMethod* helloworld = assembly->GetMethod("Nuclear.Test:HelloWorld()");
+			//object.CallMethod(helloworld);
+		//	return true;
+	//	}
+		Scripting::ScriptingClass ScriptingEngine::CreateScriptClass(Scripting::ScriptingAssembly* assembly, const ScriptingClassCreationDesc& desc)
 		{
-			script->Class = mono_class_from_name(assembly->pImage, desc.mNamespaceName.c_str(), desc.mClassName.c_str());
-
-			if (!script->Class)
+			Scripting::ScriptingClass result;
+			result.mDesc = desc;
+			result.pClass = mono_class_from_name(assembly->pImage, desc.mNamespaceName.c_str(), desc.mClassName.c_str());
+			
+			if (!result.pClass)
 			{
-				NUCLEAR_ERROR("[ScriptingEngine] Failed to get class in C# {0}!", script->mClassName);
-				return false;
+				NUCLEAR_ERROR("[ScriptingEngine] Failed to get class in C# {0}.{1} !", desc.mNamespaceName, desc.mClassName);
 			}
-			auto object = CreateScriptObject(script);
-			mono_add_internal_call("Nuclear.Test:HelloWorld_Native()", HelloWorld);
-
-
-			MonoMethod* method = NULL, * m = NULL, * ctor = NULL, * fail = NULL, * mvalues;
-			MonoProperty* prop;
-			MonoObject* result, * exception;
-			MonoString* str;
-			char* p;
-			void* iter;
-			void* args[2];
-			int val;
-
-			/* retrieve all the methods we need */
-			iter = NULL;
-			while ((m = mono_class_get_methods(script->Class, &iter))) {
-				if (strcmp(mono_method_get_name(m), "method") == 0) {
-					method = m;
-				}
-				else if (strcmp(mono_method_get_name(m), "Fail") == 0) {
-					fail = m;
-				}
-				else if (strcmp(mono_method_get_name(m), "Values") == 0) {
-					mvalues = m;
-				}
-				else if (strcmp(mono_method_get_name(m), ".ctor") == 0) {
-					/* Check it's the ctor that takes two args:
-					 * as you see a contrsuctor is a method like any other.
-					 */
-					MonoMethodSignature* sig = mono_method_signature(m);
-					if (mono_signature_get_param_count(sig) == 2) {
-						ctor = m;
-					}
-				}
-			}
-
-			MonoMethod* helloworld = assembly->GetMethod("Nuclear.Test:HelloWorld()");
-			object.CallMethod(helloworld);
-			return true;
+			return result;
 		}
 		bool ScriptingEngine::CreateScriptingAssembly(Scripting::ScriptingAssembly* scriptmodule, const ScriptModuleCreationDesc& desc)
 		{
@@ -126,21 +122,18 @@ namespace Nuclear
 
 			return true;
 		}
-		ScriptingObject ScriptingEngine::CreateScriptObject(Assets::Script* script)
+
+		std::string ScriptingEngine::ToStdString(_MonoString* monostring)
 		{
-			ScriptingObject result;
-
-			MonoObject* instance = mono_object_new(pRuntimeDomain, script->Class);
-
-			if (!instance)
-			{
-				NUCLEAR_ERROR("[ScriptingEngine] Failed instantiate C# class!...");
-				return result;
-			}
-
-			mono_runtime_object_init(instance);
-			result.mHandle = mono_gchandle_new(instance, false);
-			return result;
+			char* ptr = mono_string_to_utf8(monostring);
+			std::string str{ ptr };
+			mono_free(ptr);
+			return str;
+		}
+		
+		_MonoDomain* ScriptingEngine::GetDomain()
+		{
+			return pRuntimeDomain;
 		}
 
 		ScriptingAssembly* ScriptingEngine::GetCoreAssembly()
@@ -157,6 +150,30 @@ namespace Nuclear
 		{
 			pRuntimeDomain = nullptr;
 		}
+
+		void HelloWorld()
+		{
+			NUCLEAR_INFO("\n HELLO WORLD \n");
+		}
+		void ScriptingEngine::InitBindings()
+		{
+			mono_add_internal_call("Nuclear.Core.Logger::LoggerInfo_Native", &Bindings::Core_Logger_Info);
+			mono_add_internal_call("Nuclear.Core.Logger::LoggerWarn_Native", &Bindings::Core_Logger_Warn);
+			mono_add_internal_call("Nuclear.Core.Logger::LoggerTrace_Native", &Bindings::Core_Logger_Trace);
+			mono_add_internal_call("Nuclear.Core.Logger::LoggerError_Native", &Bindings::Core_Logger_Error);
+			mono_add_internal_call("Nuclear.Core.Logger::LoggerFatal_Native", &Bindings::Core_Logger_FatalError);
+
+		//	mono_add_internal_call("Nuclear.ScriptCore::HelloWorld_Native()", &HelloWorld);
+		}
+
+		void ScriptingEngine::InitCoreAssembly()
+		{
+			ScriptingClassCreationDesc desc;
+			desc.mNamespaceName = "Nuclear";
+			desc.mClassName = "ScriptCore";
+			ScriptCoreClass = CreateScriptClass(&mCoreAssembly, desc);
+		}
+
 		ScriptingEngine& ScriptingEngine::GetInstance()
 		{
 			static ScriptingEngine instance;

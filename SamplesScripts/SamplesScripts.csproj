@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F2A7FA26-B783-445A-A44C-8E9634B5AB0F}</ProjectGuid>
+    <ProjectGuid>{94839814-8B49-44D9-9811-097E9B13D0C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nuclear.ScriptCore</RootNamespace>
-    <AssemblyName>Nuclear.ScriptCore</AssemblyName>
+    <RootNamespace>SamplesScripts</RootNamespace>
+    <AssemblyName>SamplesScripts</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,14 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Logger.cs" />
-    <Compile Include="ScriptCore.cs" />
-    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Sample3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclear.ScriptCore\Nuclear.ScriptCore.csproj">
+      <Project>{f2a7fa26-b783-445a-a44c-8e9634b5ab0f}</Project>
+      <Name>Nuclear.ScriptCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)$(TargetFileName) $(SolutionDir)Samples\
-</PostBuildEvent>
+    <PostBuildEvent>xcopy /y $(ProjectDir)$(OutDir)$(TargetFileName) $(SolutionDir)Samples\</PostBuildEvent>
   </PropertyGroup>
 </Project>
