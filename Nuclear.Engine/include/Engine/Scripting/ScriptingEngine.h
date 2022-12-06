@@ -12,9 +12,9 @@ namespace Nuclear
 	}
 	namespace Scripting
 	{
-		struct ScriptModuleCreationDesc
+		struct ScriptingAssemblyCreationDesc
 		{
-			std::string mName;
+			std::string mNamespaceName;
 			Core::Path mPath;
 		};
 
@@ -26,6 +26,7 @@ namespace Nuclear
 			Core::Path mScriptingCoreAssemblyDir;
 
 			//Path + filename
+			std::string mClientNamespace = "ClientScripts";
 			Core::Path mClientAssemblyPath;
 			bool mAutoInitClientAssembly = true;
 
@@ -46,7 +47,7 @@ namespace Nuclear
 
 			ScriptingClass CreateScriptClass(Scripting::ScriptingAssembly* assembly, const ScriptingClassCreationDesc& desc);
 
-			bool CreateScriptingAssembly(Scripting::ScriptingAssembly* assembly, const ScriptModuleCreationDesc& desc);
+			bool CreateScriptingAssembly(Scripting::ScriptingAssembly* assembly, const ScriptingAssemblyCreationDesc& desc);
 
 			std::string ToStdString(_MonoString* monostring);
 

@@ -13,27 +13,27 @@ namespace Nuclear
 			void Core_Logger_Trace(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				NUCLEAR_TRACE(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_TRACE(ScriptingEngine::GetInstance().ToStdString(str));
 			}
 			void Core_Logger_Info(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				NUCLEAR_INFO(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_INFO(ScriptingEngine::GetInstance().ToStdString(str));
 			}
 			void Core_Logger_Warn(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				NUCLEAR_WARN(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_WARN(ScriptingEngine::GetInstance().ToStdString(str));
 			}
 			void Core_Logger_Error(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				NUCLEAR_ERROR(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_ERROR(ScriptingEngine::GetInstance().ToStdString(str));
 			}
 			void Core_Logger_FatalError(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				NUCLEAR_FATAL(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_FATAL(ScriptingEngine::GetInstance().ToStdString(str));
 			}
 		}
 	}

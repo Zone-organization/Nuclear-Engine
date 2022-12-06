@@ -19,5 +19,9 @@ namespace Nuclear
 			MonoMethodDesc* description = mono_method_desc_new(methodname.c_str(), NULL);;
 			return mono_method_desc_search_in_image(description, pImage);
 		}
+		const std::string& ScriptingAssembly::GetNamespaceName() const
+		{
+			return mNamespaceName;
+		}
 	}
 }

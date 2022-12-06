@@ -148,6 +148,13 @@ namespace Nuclear
 			Managers::AssetManager* mManager = nullptr;
 		};
 
+		struct ScriptImportingDesc
+		{
+
+			std::string mScriptFullName;
+			bool mClassNameFromPath = true;
+		};
+
 		//typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::MaterialData*, Assets::Animations*)> MeshImporterDelegate;
 
 		//typedef Utilities::Delegate<Assets::ImageData(const std::string& Path, const ImageLoadingDesc& Desc)> ImageImporterDelegate;

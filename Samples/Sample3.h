@@ -16,6 +16,7 @@ class Sample3 : public Client
 
 	Graphics::Camera Camera;
 
+	Assets::Script* script;
 	Assets::Shader* PBR;
 	Rendering::ForwardRenderingPath ForwardRP;
 
@@ -28,7 +29,6 @@ class Sample3 : public Client
 	ECS::Entity ELights;
 
 	std::vector<ECS::Entity> boxes;
-	Assets::Script script;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -42,6 +42,8 @@ public:
 	}
 	void SetupAssets()
 	{
+		script = mAssetManager->Import("@CurrentPath@/../Textures/SamplesScripts/Sample3.cs", Importers::ScriptImportingDesc());
+
 		//Initialize Materials
 		Assets::TextureSet PBRRustedIron;
 		PBRRustedIron.mData.push_back({ 0, mAssetManager->Import("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
@@ -95,7 +97,7 @@ public:
 		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
 		mScriptSystem = Scene.GetSystemManager().Add<Systems::ScriptingSystem>();
-
+		mScriptSystem->Initialize();
 		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
 		Renderer->AddRenderPass(&GeoPass);
 		Renderer->AddRenderPass(&PostFXPass);
@@ -118,17 +120,6 @@ public:
 	{
 		mSceneManager->CreateScene(&Scene, true);
 
-		///////////Scripting Test/////////////
-
-
-		Scripting::ScriptingEngine::GetInstance().CreateScriptAsset(&script, "Samples.Sample3");
-
-		auto entity = Scene.CreateEntity("ScriptEntity");
-		auto& comp = entity.AddComponent<Components::ScriptComponent>();
-		comp.pParentScript = &script;
-		comp.mScriptObject = script.mClass.CreateObject();
-
-
 		mAssetManager->Initialize();
 
 		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
@@ -138,6 +129,9 @@ public:
 		InitRenderer();
 
 		SetupAssets();
+
+		auto entity = Scene.CreateEntity("ScriptEntity");
+		auto& comp = entity.AddComponent<Components::ScriptComponent>(script);
 
 		int nrRows = 7;
 		int nrColumns = 7;

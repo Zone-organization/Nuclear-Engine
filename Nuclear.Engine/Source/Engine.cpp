@@ -68,7 +68,8 @@ namespace Nuclear {
 		PrintIntroLog();
 
 		Core::Path::mReservedPaths["@NuclearAssets@"] = "../Assets/NuclearEngine";
-
+		Core::Path::mReservedPaths["@CurrentPath@"] = std::filesystem::current_path().string();
+		
 		//Create platform specific app (window)
 		Core::Window::InitializeGLFW();
 
@@ -120,7 +121,7 @@ namespace Nuclear {
 			scdesc.mMonoRuntimeDir = monopath.string();
 			scdesc.mScriptingCoreAssemblyDir = std::filesystem::current_path().string();
 			scdesc.mClientAssemblyPath = std::filesystem::current_path().string() + "/" + desc.mScriptingClientDllName;
-
+			scdesc.mClientNamespace = desc.mScriptingAssemblyNamespace;
 			if (!Scripting::ScriptingEngine::GetInstance().Initialize(scdesc))
 			{
 				NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingEngine...");

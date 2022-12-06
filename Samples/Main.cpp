@@ -57,6 +57,7 @@ int main(int argc, char* argv[])
 	desc.mEngineWindowDesc.WindowWidth = 1280;
 	desc.mEngineWindowDesc.WindowHeight = 720;
 	desc.mScriptingClientDllName = "SamplesScripts.dll";
+	desc.mScriptingAssemblyNamespace = "Samples";
 	Engine::GetInstance().Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
 

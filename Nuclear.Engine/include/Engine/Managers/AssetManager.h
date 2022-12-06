@@ -108,7 +108,7 @@ namespace Nuclear
 			//Shader
 			Assets::Shader* Import(const Core::Path& Path, const Importers::ShaderLoadingDesc& desc);
 
-			//Assets::Script& ImportScript(const Core::Path& Path);
+			Assets::Script* Import(const Core::Path& Path, const Importers::ScriptImportingDesc& desc);
 
 			static Graphics::Texture DefaultBlackTex;
 			static Graphics::Texture DefaultGreyTex;

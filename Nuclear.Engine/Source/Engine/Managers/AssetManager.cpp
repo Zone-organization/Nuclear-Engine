@@ -5,6 +5,7 @@
 #include <Engine\Graphics\Context.h>
 #include <Core\Logger.h>
 
+#include <Engine\Scripting\ScriptingEngine.h>
 
 #define EXPOSE_FREEIMAGE_IMPORTER
 #define EXPOSE_ASSIMP_IMPORTER
@@ -401,6 +402,34 @@ namespace Nuclear {
 			}
 
 			NUCLEAR_INFO("[{0}] Imported Shader : '{1}' : '{2}'", mDesc.mName, Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedname));
+
+			return result;
+		}
+
+		Assets::Script* AssetManager::Import(const Core::Path& Path, const Importers::ScriptImportingDesc& desc)
+		{
+			auto hashedname = Utilities::Hash(Path.GetInputPath());
+
+			//Check if exists
+			auto it = mLibrary.mImportedScripts.mData.find(hashedname);
+			if (it != mLibrary.mImportedScripts.mData.end())
+			{
+				return &it->second;
+			}
+			Assets::Script* result;
+			result = &mLibrary.mImportedScripts.mData[hashedname];
+
+			std::string fullname = "";
+			if (desc.mClassNameFromPath)
+			{				
+				fullname = Scripting::ScriptingEngine::GetInstance().GetClientAssembly()->GetNamespaceName() + '.' + Path.GetFilename(true);
+			}
+			else {
+				fullname = desc.mScriptFullName;
+			}
+			Scripting::ScriptingEngine::GetInstance().CreateScriptAsset(result, fullname);
+
+			NUCLEAR_INFO("[{0}] Imported Script : '{1}' : '{2}'", mDesc.mName, Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedname));
 
 			return result;
 		}

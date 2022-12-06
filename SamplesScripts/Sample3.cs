@@ -4,11 +4,11 @@ using Nuclear.Core;
 
 namespace Samples
 {
-    public class Sample3 : ScriptCore
+    public class Sample3 : Entity
     {
         public void OnStart()
         {
-            Logger.Info("Script Start");
+            Logger.Info("Script Start id " + mID);
         }
 
         public void OnUpdate(float td)

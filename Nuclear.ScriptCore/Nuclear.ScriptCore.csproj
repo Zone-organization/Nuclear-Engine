@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Logger.cs" />
-    <Compile Include="ScriptCore.cs" />
+    <Compile Include="Engine\Components\EntityInfoComponent.cs" />
+    <Compile Include="Engine\ECS\Transform.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

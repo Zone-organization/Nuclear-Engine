@@ -17,10 +17,16 @@ namespace Nuclear
 
 			//Namespace should be included "Nuclear.ScriptCore:Load()"
 			ScriptFunction GetMethod(const std::string& methodname);
+			const std::string& GetNamespaceName() const;
 
-		//	std::unordered_map<Assets::Script*, ScriptData> mImportedScripts;
+
+		private:
+			friend class ScriptingEngine;
 			_MonoAssembly* pAssembly;
 			_MonoImage* pImage;
+			std::string mNamespaceName;
+			//	std::unordered_map<Assets::Script*, ScriptData> mImportedScripts;
+
 		};
 	}
 }

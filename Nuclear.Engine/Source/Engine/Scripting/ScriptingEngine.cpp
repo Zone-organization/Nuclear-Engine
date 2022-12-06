@@ -25,7 +25,8 @@ namespace Nuclear
 			}
 
 			{
-				ScriptModuleCreationDesc CoreAssemblyDesc;
+				ScriptingAssemblyCreationDesc CoreAssemblyDesc;
+				CoreAssemblyDesc.mNamespaceName = "Nuclear";
 				CoreAssemblyDesc.mPath = desc.mScriptingCoreAssemblyDir.GetRealPath() + "/Nuclear.ScriptCore.DLL";				
 				if (!CreateScriptingAssembly(&mCoreAssembly, CoreAssemblyDesc))
 				{
@@ -36,7 +37,8 @@ namespace Nuclear
 
 			if(desc.mAutoInitClientAssembly)
 			{
-				ScriptModuleCreationDesc ClientAssemblyDesc;
+				ScriptingAssemblyCreationDesc ClientAssemblyDesc;
+				ClientAssemblyDesc.mNamespaceName = desc.mClientNamespace;
 				ClientAssemblyDesc.mPath = desc.mClientAssemblyPath.GetRealPath();
 				if (!CreateScriptingAssembly(&mClientAssembly, ClientAssemblyDesc))
 				{
@@ -58,7 +60,7 @@ namespace Nuclear
 		bool ScriptingEngine::CreateScriptAsset(Assets::Script* script, const std::string& scriptclassname)
 		{
 			script->mClass = CreateScriptClass(&mClientAssembly, ScriptingClassCreationDesc(scriptclassname));
-
+			script->mConstructor = ScriptCoreClass.GetMethod(".ctor(uint)");
 			script->mOnStartMethod = script->mClass.GetMethod("OnStart()");
 			script->mOnUpdateMethod = script->mClass.GetMethod("OnUpdate(single)");
 
@@ -101,10 +103,10 @@ namespace Nuclear
 			}
 			return result;
 		}
-		bool ScriptingEngine::CreateScriptingAssembly(Scripting::ScriptingAssembly* scriptmodule, const ScriptModuleCreationDesc& desc)
+		bool ScriptingEngine::CreateScriptingAssembly(Scripting::ScriptingAssembly* scriptmodule, const ScriptingAssemblyCreationDesc& desc)
 		{
 			scriptmodule->pAssembly = mono_domain_assembly_open(pRuntimeDomain, desc.mPath.GetRealPath().c_str());
-
+			scriptmodule->mNamespaceName = desc.mNamespaceName;
 
 			if (!scriptmodule->pAssembly)
 			{
@@ -170,8 +172,9 @@ namespace Nuclear
 		{
 			ScriptingClassCreationDesc desc;
 			desc.mNamespaceName = "Nuclear";
-			desc.mClassName = "ScriptCore";
+			desc.mClassName = "Entity";
 			ScriptCoreClass = CreateScriptClass(&mCoreAssembly, desc);
+
 		}
 
 		ScriptingEngine& ScriptingEngine::GetInstance()

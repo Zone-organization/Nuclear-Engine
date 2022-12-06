@@ -11,6 +11,12 @@ namespace Nuclear
 		{
 		public:
 			ScriptComponent();
+			ScriptComponent(Assets::Script* _asset);
+			~ScriptComponent();
+
+			Assets::Script* GetScriptAsset(); 
+			Scripting::ScriptingObject& GetScriptingObject();
+		protected:
 			Assets::Script* pParentScript;
 			Scripting::ScriptingObject mScriptObject;
 		};
