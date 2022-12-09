@@ -1,7 +1,6 @@
 ﻿#include "Common.h"
 #include "SampleSelector.h"
 #include <iostream>
-#include "Engine\Scripting\ScriptingEngine.h"
 
 RENDER_DEVICE_TYPE SelectRenderer()
 {
@@ -31,7 +30,7 @@ RENDER_DEVICE_TYPE SelectRenderer()
 
 int main(int argc, char* argv[])
 {
-	EngineStartupDesc desc;
+	Core::EngineStartupDesc desc;
 
 	/*std::cout << "Auto Initialize? \n"
 		<< "1) Yes \n"
@@ -42,13 +41,13 @@ int main(int argc, char* argv[])
 //	if (i == 2)
 	//{
 	//	desc.Renderer = SelectRenderer();
-	//	Engine::GetInstance().Start(desc);
+	//	Core::Engine::GetInstance().Start(desc);
 
 	//}
 	//else
 	//{
 	//	EngineStartupDesc desc;
-	//	Engine::GetInstance().Start(desc);
+	//	Core::Engine::GetInstance().Start(desc);
 	//}
 
 	//EngineStartupDesc desc;
@@ -58,13 +57,13 @@ int main(int argc, char* argv[])
 	desc.mEngineWindowDesc.WindowHeight = 720;
 	desc.mScriptingClientDllName = "SamplesScripts.dll";
 	desc.mScriptingAssemblyNamespace = "Samples";
-	Engine::GetInstance().Start(desc);
+	Core::Engine::GetInstance().Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
 
-	while (!Engine::GetInstance().ShouldClose())
+	while (!Core::Engine::GetInstance().ShouldClose())
 	{
 		SampleSelector selector;
-		Engine::GetInstance().LoadClient(&selector);
+		Core::Engine::GetInstance().LoadClient(&selector);
 	}
 
 	return 0;

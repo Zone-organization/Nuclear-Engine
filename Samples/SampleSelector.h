@@ -6,7 +6,7 @@
 #include "SponzaDemo.h"
 #include "Playground.h"
 
-class SampleSelector : public Client
+class SampleSelector : public Core::Client
 {
 public:
 
@@ -25,14 +25,14 @@ public:
 	void StartSample(Client* sample)
 	{
 		ImGui::End();
-		Engine::GetInstance().EndFrame();
-		Engine::GetInstance().EndClient();
+		Core::Engine::GetInstance().EndFrame();
+		Core::Engine::GetInstance().EndClient();
 
 		sample->SetDefaultAssetManager(&AssetLoader);
 		sample->SetDefaultSceneManager(&SceneMgr);
 
-		Engine::GetInstance().LoadClient(sample);
-		Engine::GetInstance().EndClient();
+		Core::Engine::GetInstance().LoadClient(sample);
+		Core::Engine::GetInstance().EndClient();
 	}
 
 	void Load()

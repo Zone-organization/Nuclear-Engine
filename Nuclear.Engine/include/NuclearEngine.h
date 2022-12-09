@@ -11,18 +11,16 @@ _____________/BOOOM\_____________
 */
 
 #include <Core/Core.h>
-#include <Engine.h>
-#include <Client.h>
-#include <Engine/ECS/ECS.h>
-#include <Engine/Animation/Animation.h>
-#include <Engine/Components/Components.h>
-#include <Engine/Assets/Assets.h>
-#include <Engine/Graphics/Graphics.h>
-#include <Engine/Managers/Managers.h>
-#include <Engine/Importers/Importers.h>
-#include <Engine/Audio/Audio.h>
-#include <Engine/Systems/Systems.h>
-#include <Engine/PhysX/PhysX.h>
-#include <Engine/Scripting/Scripting.h>
-#include <Engine/Rendering/Rendering.h>
+#include <ECS/ECS.h>
+#include <Animation/Animation.h>
+#include <Components/Components.h>
+#include <Assets/Assets.h>
+#include <Graphics/Graphics.h>
+#include <Managers/Managers.h>
+#include <Importers/Importers.h>
+#include <Audio/Audio.h>
+#include <Systems/Systems.h>
+#include <PhysX/PhysX.h>
+#include <Scripting/Scripting.h>
+#include <Rendering/Rendering.h>
 

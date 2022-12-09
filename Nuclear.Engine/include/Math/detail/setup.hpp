@@ -18,7 +18,7 @@
 #include <cassert>
 #include <cstddef>
 
-#include <Core\NE_Common.h>
+#include <NE_Common.h>
 
 #ifdef COORDINATE_SYSTEM_LEFT_HANDED
 #define GLM_FORCE_LEFT_HANDED
