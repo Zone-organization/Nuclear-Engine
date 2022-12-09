@@ -16,7 +16,7 @@ namespace Nuclear
 				return false;
 			}
 			pSurface = SDL_GetWindowSurface(pWindow);
-			SDLK_UP;
+
 			return true;
 		}
 		void Window::Destroy()
@@ -67,10 +67,6 @@ namespace Nuclear
 			pKeyboardStateArray = SDL_GetKeyboardState(NULL);
 		}
 
-	/*	bool Window::ShouldClose()
-		{
-			return glfwWindowShouldClose(mWindow);
-		}*/
 		bool Window::InitializeGLFW()
 		{
 			//Initialize SDL
@@ -87,11 +83,6 @@ namespace Nuclear
 			return SDL_Quit();
 		}
 	
-	/*	void Window::PollEvents()
-		{
-			return glfwPollEvents();
-		}*/
-
 		Window::KeyboardKeyStatus Window::GetKeyStatus(KeyboardKey key)
 		{
 			if (pKeyboardStateArray[key])
@@ -128,10 +119,7 @@ namespace Nuclear
 		{
 			return pKeyboardStateArray;
 		}
-		/*const Uint8* Window::GetKeyboardState(int* numkeys)
-		{
-			return SDL_GetKeyboardState(numkeys);
-		}*/
+
 		SDL_Window* Window::GetSDLWindowPtr()
 		{
 			return pWindow;
