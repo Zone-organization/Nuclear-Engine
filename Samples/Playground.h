@@ -96,14 +96,14 @@ public:
 		ELights2.AddComponent<Components::PointLightComponent>().mCastShadows = true;
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>().SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 
-		//ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(1.f));
+		//ELights.GetComponent<Components::DirLightComponent>().SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>().SetColor(Graphics::Color(1.f));
 
-		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(-2.0f, 4.0f, -1.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		//ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
+		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(-2.0f, 4.0f, -1.0f));
+		ELights.GetComponent<Components::PointLightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		//ELights.GetComponent<Components::PointLightComponent>().SetIntensity(10.0f);
 
 	}
 
@@ -179,7 +179,7 @@ public:
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 		//Camera.MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
-		//EController.GetComponent<Components::SpotLightComponent>()->mCastShadows = true;
+		//EController.GetComponent<Components::SpotLightComponent>().mCastShadows = true;
 
 		Engine::GetInstance().GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
 	}
@@ -248,8 +248,8 @@ public:
 
 		if (LockSpotlight)
 		{
-			EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
-			EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+			EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Camera.GetPosition());
+			EController.GetComponent<Components::SpotLightComponent>().SetDirection(Camera.GetFrontView());
 		}
 		{
 			using namespace Graphics;

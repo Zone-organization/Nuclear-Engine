@@ -1,9 +1,14 @@
 #pragma once
 #include <Core\NE_Common.h>
-#include <Engine\Assets\Scene.h>
-
-namespace Nuclear {
-	namespace Managers {
+#include <string>
+namespace Nuclear
+{
+	namespace Assets
+	{
+		class Scene;
+	}
+	namespace Managers
+	{
 		class AssetManager; 
 		class SceneManager;
 	}

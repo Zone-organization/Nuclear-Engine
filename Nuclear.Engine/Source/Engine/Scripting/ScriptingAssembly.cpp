@@ -23,5 +23,13 @@ namespace Nuclear
 		{
 			return mNamespaceName;
 		}
+		_MonoAssembly* ScriptingAssembly::GetAssembly()
+		{
+			return pAssembly;
+		}
+		_MonoImage* ScriptingAssembly::GetImage()
+		{
+			return pImage;
+		}
 	}
 }

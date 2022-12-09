@@ -5,7 +5,8 @@ struct _MonoImage;
 struct _MonoMethod;
 struct _MonoObject;
 struct _MonoClass;
-
+struct _MonoType;
+struct _MonoString;
 namespace Nuclear
 {
 	namespace Scripting

@@ -28,8 +28,8 @@ namespace Nuclear
 		void PhysXSystem::SetColliderForRigidBody(ECS::Entity entity)
 		{
 			//Check if entity is valid
-			auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
-			auto ColliderComponent = entity.GetComponent<Components::ColliderComponent>();
+			auto RigidComponent = entity.TryToGetComponent<Components::RigidBodyComponent>();
+			auto ColliderComponent = entity.TryToGetComponent<Components::ColliderComponent>();
 
 			if (RigidComponent && ColliderComponent)
 			{
@@ -95,21 +95,21 @@ namespace Nuclear
 
 		bool PhysXSystem::AddActor(ECS::Entity entity)
 		{
-			auto RigidComponent = entity.GetComponent<Components::RigidBodyComponent>();
-			auto ColliderComponent = entity.GetComponent<Components::ColliderComponent>();
+			auto RigidComponent = entity.TryToGetComponent<Components::RigidBodyComponent>();
+			auto ColliderComponent = entity.TryToGetComponent<Components::ColliderComponent>();
 
 			if (RigidComponent && ColliderComponent)
 			{
 				mPhysXScene->addActor(*RigidComponent->GetActor().mPtr);
-				RigidComponent->GetActor().mPtr->userData = (void*)entity.entity;
-				ColliderComponent->GetActor().mPtr->userData = (void*)entity.entity;
+				RigidComponent->GetActor().mPtr->userData = (void*)entity.GetEntityID();
+				ColliderComponent->GetActor().mPtr->userData = (void*)entity.GetEntityID();
 				return true;
 			}
 
 			if (ColliderComponent)
 			{
 				mPhysXScene->addActor(*ColliderComponent->GetActor().mPtr);
-				ColliderComponent->GetActor().mPtr->userData = (void*)entity.entity;
+				ColliderComponent->GetActor().mPtr->userData = (void*)entity.GetEntityID();
 				return true;
 			}
 
@@ -140,8 +140,7 @@ namespace Nuclear
 				outhit.position = PhysX::From(hit.block.position);
 				outhit.normal = PhysX::From(hit.block.normal);
 				outhit.distance = hit.block.distance;
-				outhit.HitEntity.parent = &mScene->GetRegistry();
-				outhit.HitEntity.entity = (entt::entity&)hit.block.actor->userData;
+				outhit.HitEntity = ECS::Entity(mScene->GetRegistry(), (entt::entity&)hit.block.actor->userData);
 					
 				outhit.valid = true;
 				return true;

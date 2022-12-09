@@ -252,12 +252,12 @@ public:
 		ELights.AddComponent<Components::PointLightComponent>();
 
 
-		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+		ELights.GetComponent<Components::DirLightComponent>().SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>().SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.7f, 0.2f, 2.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(1.f);
+		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.7f, 0.2f, 2.0f));
+		ELights.GetComponent<Components::PointLightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		ELights.GetComponent<Components::PointLightComponent>().SetIntensity(1.f);
 	}
 
 	void InitRenderer()
@@ -366,7 +366,7 @@ public:
 
 		Camera.UpdateBuffer();
 		mCameraSystem->Update(deltatime);
-		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
+		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Camera.GetPosition());
 
 	//	Renderer->GetActivePipeline()->UpdatePSO();
 	}
@@ -377,7 +377,7 @@ public:
 		BobAnimator.UpdateAnimation(dt);
 	//	VampireAnimator.UpdateAnimation(dt);
 
-		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::SpotLightComponent>().SetDirection(Camera.GetFrontView());
 
 		mSceneManager->Update(dt);
 		{

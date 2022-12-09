@@ -91,19 +91,19 @@ public:
 		ELights.AddComponent<Components::PointLightComponent>().mCastShadows = true;
 
 
-		ELights.GetComponent<Components::DirLightComponent>()->SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		ELights.GetComponent<Components::DirLightComponent>()->SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
-		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(pointLightPositions[0]);
-		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.f);
+		ELights.GetComponent<Components::DirLightComponent>().SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		ELights.GetComponent<Components::DirLightComponent>().SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(pointLightPositions[0]);
+		ELights.GetComponent<Components::PointLightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		ELights.GetComponent<Components::PointLightComponent>().SetIntensity(10.f);
 
 		//for (int i = 1; i < 9; i++)
 		//{
 		//	auto Light = Scene.CreateEntity("Light" + std::to_string(i));
 		//	Light.AddComponent<Components::PointLightComponent>();
-		//	Light.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(pointLightPositions[i]);
-		//	Light.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		//	Light.GetComponent<Components::PointLightComponent>()->SetIntensity(2.f);
+		//	Light.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(pointLightPositions[i]);
+		//	Light.GetComponent<Components::PointLightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		//	Light.GetComponent<Components::PointLightComponent>().SetIntensity(2.f);
 		//}
 
 	}
@@ -262,14 +262,14 @@ public:
 
 		Camera.UpdateBuffer();
 		mCameraSystem->Update(deltatime);
-		EController.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Camera.GetPosition());
+		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Camera.GetPosition());
 	}
 	void Render(float dt) override
 	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 
-		EController.GetComponent<Components::SpotLightComponent>()->SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::SpotLightComponent>().SetDirection(Camera.GetFrontView());
 
 		mSceneManager->Update(dt);
 		{
@@ -303,11 +303,11 @@ public:
 
 			if (ImGui::Button("PBR"))
 			{
-				ESponza.GetComponent<Components::MeshComponent>()->SetMaterial(&SponzaPBRMaterial);
+				ESponza.GetComponent<Components::MeshComponent>().SetMaterial(&SponzaPBRMaterial);
 			}
 			if (ImGui::Button("BlinnPhong"))
 			{
-				ESponza.GetComponent<Components::MeshComponent>()->SetMaterial(&SponzaBlinnPhongMaterial);
+				ESponza.GetComponent<Components::MeshComponent>().SetMaterial(&SponzaBlinnPhongMaterial);
 			}
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);

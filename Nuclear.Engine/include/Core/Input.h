@@ -139,12 +139,12 @@ namespace Nuclear
 			   KEY_MENU = 348,
 
 			   KEY_LAST = KEY_MENU,
-			   MOD_SHIFT = 0x0001,
-			   MOD_CONTROL = 0x0002,
-			   MOD_ALT = 0x0004,
-			   MOD_SUPER = 0x0008,
-			   MOD_CAPS_LOCK = 0x0010,
-			   MOD_NUM_LOCK = 0x0020,
+			   KEY_MOD_SHIFT = 0x0001,
+			   KEY_MOD_CONTROL = 0x0002,
+			   KEY_MOD_ALT = 0x0004,
+			   KEY_MOD_SUPER = 0x0008,
+			   KEY_MOD_CAPS_LOCK = 0x0010,
+			   KEY_MOD_NUM_LOCK = 0x0020,
 			};
 
 			enum class KeyboardKeyStatus

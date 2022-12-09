@@ -1,4 +1,5 @@
 #include <Client.h>
+#include <Engine\Assets\Scene.h>
 
 namespace Nuclear {
 

@@ -19,6 +19,8 @@ namespace Nuclear
 			ScriptFunction GetMethod(const std::string& methodname);
 			const std::string& GetNamespaceName() const;
 
+			_MonoAssembly* GetAssembly();
+			_MonoImage* GetImage();
 
 		private:
 			friend class ScriptingEngine;

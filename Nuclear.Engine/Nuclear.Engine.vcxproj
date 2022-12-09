@@ -115,6 +115,7 @@
     <ClInclude Include="include\Engine\Scripting\MonoDeclarations.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingBindings.h" />
     <ClInclude Include="include\Engine\Scripting\ScriptingClass.h" />
+    <ClInclude Include="include\Engine\Scripting\ScriptingRegistry.h" />
     <ClInclude Include="include\Math\common.hpp" />
     <ClInclude Include="include\Math\detail\compute_vector_relational.hpp" />
     <ClInclude Include="include\Math\detail\qualifier.hpp" />
@@ -443,6 +444,7 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingBindings.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -505,6 +507,7 @@
     <ClCompile Include="Source\Engine\Scripting\ScriptingAssembly.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingEngine.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingObject.cpp" />
+    <ClCompile Include="Source\Engine\Scripting\ScriptingRegistry.cpp" />
     <ClCompile Include="Source\Engine\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Engine\Managers\ShaderManager.cpp" />
     <ClCompile Include="Source\Engine\Importers\FreeImageImporter.cpp" />

@@ -2,10 +2,14 @@
 #include <Engine/Scripting/ScriptingAssembly.h>
 #include <Engine/Scripting/ScriptingClass.h>
 #include <Engine/Scripting/ScriptingObject.h>
+#include <Engine/Scripting/ScriptingRegistry.h>
 #include <Engine/Assets/Script.h>
-struct _MonoString;
+
 namespace Nuclear
 {
+	namespace Assets {
+		class Scene;
+	}
 	namespace Systems
 	{
 		class ScriptingEngine;
@@ -17,8 +21,6 @@ namespace Nuclear
 			std::string mNamespaceName;
 			Core::Path mPath;
 		};
-
-
 		struct ScriptingEngineDesc
 		{
 			//Directory only
@@ -29,7 +31,6 @@ namespace Nuclear
 			std::string mClientNamespace = "ClientScripts";
 			Core::Path mClientAssemblyPath;
 			bool mAutoInitClientAssembly = true;
-
 		};
 		class NEAPI ScriptingEngine
 		{
@@ -54,6 +55,7 @@ namespace Nuclear
 			_MonoDomain* GetDomain();
 			ScriptingAssembly* GetCoreAssembly();
 			ScriptingAssembly* GetClientAssembly();
+			ScriptingRegistry& GetRegistry();
 		private:
 			ScriptingEngine();
 
@@ -63,6 +65,8 @@ namespace Nuclear
 
 			ScriptingAssembly mCoreAssembly;
 			ScriptingAssembly mClientAssembly;
+
+			ScriptingRegistry mRegistry;
 
 			_MonoDomain* pRuntimeDomain;
 		};

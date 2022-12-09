@@ -48,7 +48,6 @@ namespace Nuclear
 
 			InitBindings();
 			InitCoreAssembly();
-
 			NUCLEAR_INFO("[ScriptingEngine] ScriptingEngine has been initalized succesfully!");
 			return true;
 		}
@@ -148,6 +147,10 @@ namespace Nuclear
 			return &mClientAssembly;
 		}
 
+		ScriptingRegistry& ScriptingEngine::GetRegistry()
+		{
+			return mRegistry;
+		}
 		ScriptingEngine::ScriptingEngine()
 		{
 			pRuntimeDomain = nullptr;
@@ -159,11 +162,16 @@ namespace Nuclear
 		}
 		void ScriptingEngine::InitBindings()
 		{
+			//Logger
 			mono_add_internal_call("Nuclear.Core.Logger::LoggerInfo_Native", &Bindings::Core_Logger_Info);
 			mono_add_internal_call("Nuclear.Core.Logger::LoggerWarn_Native", &Bindings::Core_Logger_Warn);
 			mono_add_internal_call("Nuclear.Core.Logger::LoggerTrace_Native", &Bindings::Core_Logger_Trace);
 			mono_add_internal_call("Nuclear.Core.Logger::LoggerError_Native", &Bindings::Core_Logger_Error);
 			mono_add_internal_call("Nuclear.Core.Logger::LoggerFatal_Native", &Bindings::Core_Logger_FatalError);
+
+
+			mono_add_internal_call("Nuclear.Entity::AddComponent_Native", &Bindings::ECS_Entity_AddComponent);
+			mono_add_internal_call("Nuclear.Entity::HasComponent_Native", &Bindings::ECS_Entity_HasComponent);
 
 		//	mono_add_internal_call("Nuclear.ScriptCore::HelloWorld_Native()", &HelloWorld);
 		}
@@ -174,7 +182,7 @@ namespace Nuclear
 			desc.mNamespaceName = "Nuclear";
 			desc.mClassName = "Entity";
 			ScriptCoreClass = CreateScriptClass(&mCoreAssembly, desc);
-
+			mRegistry.RegisterEngineComponents(&mCoreAssembly);
 		}
 
 		ScriptingEngine& ScriptingEngine::GetInstance()

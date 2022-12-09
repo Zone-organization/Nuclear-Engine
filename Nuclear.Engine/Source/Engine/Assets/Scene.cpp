@@ -27,9 +27,7 @@ namespace Nuclear
 
 		ECS::Entity Scene::CreateEntity()
 		{
-			ECS::Entity result;
-			result.entity = GetRegistry().create();
-			result.parent = &GetRegistry();
+			ECS::Entity result(GetRegistry(), GetRegistry().create());
 			auto& einfo = result.AddComponent<Components::EntityInfoComponent>();
 			einfo.mOwnerEntity = result;
 
@@ -37,9 +35,7 @@ namespace Nuclear
 		}
 		ECS::Entity Scene::CreateEntity(const std::string& name, const ECS::Transform& transform)
 		{
-			ECS::Entity result;
-			result.entity = GetRegistry().create();
-			result.parent = &GetRegistry();
+			ECS::Entity result(GetRegistry(), GetRegistry().create());
 			auto& einfo = result.AddComponent<Components::EntityInfoComponent>(transform, name);
 			einfo.mOwnerEntity = result;
 
@@ -65,7 +61,7 @@ namespace Nuclear
 					Result.AddComponent<Components::RigidBodyComponent>(transform);
 					System->AddActor(Result);
 					System->SetColliderForRigidBody(Result);
-					Result.GetComponent<Components::ColliderComponent>()->SetValid(true);
+					Result.GetComponent<Components::ColliderComponent>().SetValid(true);
 				}
 			}
 
@@ -90,7 +86,7 @@ namespace Nuclear
 					Result.AddComponent<Components::RigidBodyComponent>(transform);
 					System->AddActor(Result);
 					System->SetColliderForRigidBody(Result);
-					Result.GetComponent<Components::ColliderComponent>()->SetValid(true);
+					Result.GetComponent<Components::ColliderComponent>().SetValid(true);
 				}
 			}
 

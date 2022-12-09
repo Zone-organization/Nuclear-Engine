@@ -8,12 +8,16 @@ namespace Samples
     {
         public void OnStart()
         {
-            Logger.Info("Script Start id " + mID);
+            Logger.Info("Script Start id " + ID);
         }
 
         public void OnUpdate(float td)
         {
             Logger.Info("Update Time Delta "+ td);
+
+            bool result = HasComponent<Nuclear.Components.EntityInfoComponent>();
+            Logger.Info("Result " + result);
+
         }
     }
 }

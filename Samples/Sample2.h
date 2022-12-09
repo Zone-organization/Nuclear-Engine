@@ -146,9 +146,9 @@ public:
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		ELights.GetComponent<Components::EntityInfoComponent>()->mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		ELights.GetComponent<Components::PointLightComponent>()->SetIntensity(10.0f);
+		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
+		ELights.GetComponent<Components::PointLightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
+		ELights.GetComponent<Components::PointLightComponent>().SetIntensity(10.0f);
 
 	}
 	void InitIBL()
@@ -215,8 +215,8 @@ public:
 		SetupAssets();
 
 		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, &RustedIron);
-		EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRendering(true);
-		ESphere.GetComponent<Components::MeshComponent>()->SetEnableRendering(false);
+		EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
+		ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
@@ -301,14 +301,14 @@ public:
 			if (ImGui::RadioButton("ShaderBall", &f, 0))
 			{
 				activeentity = EShaderBall;
-				EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRendering(true);
-				ESphere.GetComponent<Components::MeshComponent>()->SetEnableRendering(false);
+				EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
+				ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 			}
 			if (ImGui::RadioButton("Sphere", &f, 1))
 			{
 				activeentity = ESphere;
-				EShaderBall.GetComponent<Components::MeshComponent>()->SetEnableRendering(false);
-				ESphere.GetComponent<Components::MeshComponent>()->SetEnableRendering(true);
+				EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+				ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 			}
 
 
@@ -316,36 +316,36 @@ public:
 
 			if (ImGui::Checkbox("Use Deffered Pipeline", &isDeffered))
 			{
-				ESphere.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
-				EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
+				ESphere.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
+				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
 			}
 
 			static bool IBL_ = false;
 
 			if (ImGui::Checkbox("IBL", &IBL_))
 			{
-				ESphere.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
-				EShaderBall.GetComponent<Components::MeshComponent>()->SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
+				ESphere.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
+				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
 			}
 			if (ImGui::Button("Rusted Iron"))
 			{
-				activeentity.GetComponent<Components::MeshComponent>()->SetMaterial(&RustedIron);
+				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(&RustedIron);
 			}
 			if (ImGui::Button("Wall"))
 			{
-				activeentity.GetComponent<Components::MeshComponent>()->SetMaterial(&Wall);
+				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(&Wall);
 			}
 			if (ImGui::Button("Grass"))
 			{
-				activeentity.GetComponent<Components::MeshComponent>()->SetMaterial(&Grass);
+				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(&Grass);
 			}
 			if (ImGui::Button("Gold"))
 			{
-				activeentity.GetComponent<Components::MeshComponent>()->SetMaterial(&Gold);
+				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(&Gold);
 			}
 			if (ImGui::Button("Plastic"))
 			{
-				activeentity.GetComponent<Components::MeshComponent>()->SetMaterial(&Plastic);
+				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(&Plastic);
 			}
 
 
@@ -354,7 +354,7 @@ public:
 			ImGui::SliderFloat3("Rotation Axis", (float*)&RotationAxis, 0.0f, 1.0f);
 
 			float rotationAngle = LastFrame / 5.0f * rotationspeed;
-			activeentity.GetComponent<Components::EntityInfoComponent>()->mTransform.SetRotation(RotationAxis, rotationAngle);
+			activeentity.GetComponent<Components::EntityInfoComponent>().mTransform.SetRotation(RotationAxis, rotationAngle);
 
 			ImGui::Separator();
 			ImGui::Text("PostFX Pipeline");
