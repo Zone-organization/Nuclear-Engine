@@ -6,7 +6,6 @@
   - W.I.P:
 	- C# scripting through mono
 	- AssetLoading Multithreading
-	- Replace GLFW with SDL or SFML
 	
   - On-Hold:
     - Text rendering (text tile-set creation finished)
@@ -41,7 +40,10 @@ Follow the instructions below to compile and run the engine from source.
 | ------ | ------ |
 | Assimp | Submodule & built with cmake |
 | DiligentCore | Submodule & built with cmake |
-| GLFW | Submodule & built with cmake |
+| PhysX 4.1 | submodule |
+| Freeimage | submodule |
+| Freetype | submodule |
+| msdf-atlas-gen | submodule |
 | spdlog | included |
 | IMGUI | included |
 | stb_truetype | included |
@@ -49,10 +51,7 @@ Follow the instructions below to compile and run the engine from source.
 | cereal | included |
 | Mono | External 'Download it through their site' |
 | FMOD SDK | External 'Download it through their site' |
-| PhysX 4.1 | submodule |
-| Freeimage | submodule |
-| Freetype | submodule |
-| msdf-atlas-gen | submodule |
+| SDL2 | External 'Download it through their site' |
 
 
 ## RoadMap

@@ -5,7 +5,7 @@
   - Cross platform ready.
   - Modern Fast code using C++17.
   - Fast Robust Entity Component System "ECS" using entt.
-  - Cross-platform Application creation through GLFW.
+  - Cross-platform Application creation through SDL2.
   - Support for XML & INI Parsers.
   
 - __Managers__  

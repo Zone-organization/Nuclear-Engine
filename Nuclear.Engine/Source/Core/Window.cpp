@@ -1,39 +1,35 @@
 #include "Core\Window.h"
-#include <GLFW/include/GLFW/glfw3.h>
+#include <SDL\include\SDL.h>
 #include <Core\Logger.h>
-
-#pragma comment(lib,"glfw3.lib")
 
 namespace Nuclear
 {
 	namespace Core 
 	{
-		
-
 		bool Window::Create(const WindowDesc & Desc)
 		{
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-			mWindow = glfwCreateWindow(Desc.WindowWidth, Desc.WindowHeight, Desc.Title.c_str(), NULL, NULL);
-			if (mWindow == NULL)
+			
+			pWindow = SDL_CreateWindow(Desc.Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Desc.WindowWidth, Desc.WindowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+			if (pWindow == NULL)
 			{
-				NUCLEAR_ERROR("[Window] Creating Window '{0}' Failed!", Desc.Title);
+				NUCLEAR_ERROR("[Window] Creating Window {0} Failed! SDL_ERROR: {1}", Desc.Title, SDL_GetError());
 				return false;
 			}
-
+			pSurface = SDL_GetWindowSurface(pWindow);
+			SDLK_UP;
 			return true;
 		}
 		void Window::Destroy()
 		{
-			glfwDestroyWindow(mWindow);
+			SDL_DestroyWindow(pWindow);
 		}
 
 		void Window::Display(bool show)
 		{
 			if (show)
-				glfwShowWindow(mWindow);
+				SDL_ShowWindow(pWindow);
 			else
-				glfwHideWindow(mWindow);
+				SDL_HideWindow(pWindow);
 		}
 
 
@@ -47,8 +43,7 @@ namespace Nuclear
 		}
 		void Window::GetSize(int& width, int& height)
 		{
-			width = mWidth;
-			height = mHeight;
+			SDL_GetWindowSize(pWindow, &width, &height);
 		}
 
 		Float32 Window::GetAspectRatioF32()
@@ -58,61 +53,88 @@ namespace Nuclear
 			return  static_cast<float>(width) / static_cast<float>(height);
 		}
 
-		void Window::UpdateSize()
-		{
-			glfwGetWindowSize(mWindow, &mWidth, &mHeight);
-		}
-
 		void Window::SetSize(Uint32 width, Uint32 height)
 		{
-			glfwSetWindowSize(mWindow, width, height);
-			UpdateSize();
+			SDL_SetWindowSize(pWindow, width, height);
 		}
 		void Window::SetTitle(const std::string& title)
 		{
-			glfwSetWindowTitle(mWindow, title.c_str());
+			SDL_SetWindowTitle(pWindow, title.c_str());
 		}
 
-		bool Window::ShouldClose()
+		void Window::Update()
+		{
+			pKeyboardStateArray = SDL_GetKeyboardState(NULL);
+		}
+
+	/*	bool Window::ShouldClose()
 		{
 			return glfwWindowShouldClose(mWindow);
-		}
+		}*/
 		bool Window::InitializeGLFW()
 		{
-			return glfwInit();
+			//Initialize SDL
+			if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
+			{
+				printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+				return false;
+			}
+			return true;
 		}
 		void Window::ShutdownGLFW()
-		{
-			return glfwTerminate();
+		{ 
+			//Quit SDL subsystems
+			return SDL_Quit();
 		}
-		void Window::PollEvents()
+	
+	/*	void Window::PollEvents()
 		{
 			return glfwPollEvents();
-		}
+		}*/
 
 		Window::KeyboardKeyStatus Window::GetKeyStatus(KeyboardKey key)
 		{
-			return static_cast<KeyboardKeyStatus>(glfwGetKey(mWindow, static_cast<int>(key)));
+			if (pKeyboardStateArray[key])
+				return Window::KeyboardKeyStatus::Pressed;
+			else
+				return Window::KeyboardKeyStatus::Released;
 		}
+
 		void Window::SetMouseInputMode(const MouseInputMode& mode)
-		{
+		{			
 			switch (mode)
 			{
 			case MouseInputMode::Normal:
-				return glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				SDL_ShowCursor(SDL_ENABLE);
+				SDL_SetRelativeMouseMode(SDL_FALSE);
+
+				return;
 			case MouseInputMode::Virtual:
-				return glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				SDL_SetRelativeMouseMode(SDL_TRUE);
+
+				return;
 			case MouseInputMode::Hidden:
-				return glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+				SDL_SetRelativeMouseMode(SDL_FALSE);
+				SDL_ShowCursor(SDL_DISABLE);
+
+				return;
 			}
 		}
-		void Window::GetMousePosition(double* xpos, double* ypos)
+		Uint32 Window::GetMouseState(int* xpos, int* ypos)
 		{
-			glfwGetCursorPos(mWindow, xpos, ypos);
+			return SDL_GetMouseState(xpos, ypos);
 		}
-		GLFWwindow * Window::GetRawWindowPtr()
+		const Uint8* Window::GetKeyboardState()
 		{
-			return mWindow;
+			return pKeyboardStateArray;
+		}
+		/*const Uint8* Window::GetKeyboardState(int* numkeys)
+		{
+			return SDL_GetKeyboardState(numkeys);
+		}*/
+		SDL_Window* Window::GetSDLWindowPtr()
+		{
+			return pWindow;
 		}
 	}
 }

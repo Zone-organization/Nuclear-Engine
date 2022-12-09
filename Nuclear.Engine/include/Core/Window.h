@@ -2,7 +2,8 @@
 #include <Core\Input.h>
 #include <string>
 
-struct GLFWwindow;
+struct SDL_Window;
+struct SDL_Surface;
 namespace Nuclear
 {
 	namespace Core 
@@ -21,7 +22,6 @@ namespace Nuclear
 		public:
 			static bool InitializeGLFW();
 			static void ShutdownGLFW();
-			void PollEvents();
 
 			bool Create(const WindowDesc& desc);
 			void Destroy();
@@ -32,22 +32,22 @@ namespace Nuclear
 			void GetSize(int& width, int& height);
 			Float32 GetAspectRatioF32();
 
-			void UpdateSize();
 			void SetSize(Uint32 width, Uint32 height);
 			void SetTitle(const std::string& title);
 
-			bool ShouldClose();
+			void Update();
 
 			KeyboardKeyStatus GetKeyStatus(KeyboardKey key) override;
 
 			void SetMouseInputMode(const MouseInputMode& mode) override;
 
-			void GetMousePosition(double* xpos, double* ypos) override;
-
-			GLFWwindow* GetRawWindowPtr();
+			Uint32 GetMouseState(int* xpos, int* ypos) override;
+			const Uint8* GetKeyboardState() override;
+			SDL_Window* GetSDLWindowPtr();
 		private:
-			GLFWwindow* mWindow;
-			int mWidth, mHeight;
+			const Uint8* pKeyboardStateArray;
+			SDL_Window* pWindow;
+			SDL_Surface* pSurface;
 		};
 	}
 }

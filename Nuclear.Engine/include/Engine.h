@@ -63,6 +63,7 @@ namespace Nuclear
 
 		Engine::State Engine_State;
 		bool gisDebug = DEBUG_TRUE_BOOL;
+		bool mShouldClose = false;
 		void MainLoop();
 	};
 }

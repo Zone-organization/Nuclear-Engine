@@ -402,6 +402,7 @@
     <ClInclude Include="include\Engine\Assets\Font.h" />
     <ClInclude Include="include\Engine\Threading\ThreadPool.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_freetype.h" />
+    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Engine\Importers\AssimpGLMHelpers.h" />
     <ClInclude Include="Source\Engine\PhysX\PhysXTypes.h" />
     <ClInclude Include="include\Engine\PhysX\RigidDynamic.h" />
@@ -412,7 +413,6 @@
     <ClInclude Include="include\Engine\Graphics\imconfig.h" />
     <ClInclude Include="include\Engine\Graphics\ImGui.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_impl.h" />
-    <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.h" />
     <ClInclude Include="Source\Engine\Graphics\ImGUI\imgui_internal.h" />
     <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="include\Engine\Components\EntityInfoComponent.h" />
@@ -445,6 +445,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\ECS\Entity.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl_sdl.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingBindings.cpp" />
     <ClCompile Include="Source\Engine\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Core\FileSystem.cpp" />
@@ -498,7 +499,6 @@
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_impl_glfw.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="Source\Engine\Importers\AssimpImporter.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

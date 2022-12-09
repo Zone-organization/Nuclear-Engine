@@ -7,10 +7,10 @@
 #include <Engine\Assets\DefaultMeshes.h>
 #include <Engine\Importers\FreeImageImporter.h>
 
-#include "Engine\Graphics\ImGUI\imgui_impl_glfw.h"
+#include "Engine\Graphics\ImGUI\imgui_impl_sdl.h"
 #include "Engine\Graphics\ImGUI\imgui_impl.h"
 
-#include <GLFW/include/GLFW/glfw3.h>
+#include <SDL\include\SDL.h>
 
 #include <filesystem>
 
@@ -48,19 +48,22 @@
 #pragma comment(lib,"Diligent-Win32Platform.lib")
 
 
+#pragma comment(lib,"SDL2.lib")
+#pragma comment(lib,"SDL2Main.lib")
+
+
 namespace Nuclear {
 	static std::string MajorVersion = "0";
 	static std::string MinorVersion = "001";
 
 	void PrintIntroLog();
 
-	void ResizeCallback(GLFWwindow* window, int Width, int Height)
+	void ResizeCallback(int Width, int Height)
 	{
 		if (Width == 0 && Height == 0)
 		{
 			return;
 		}
-		Engine::GetInstance().GetMainWindow()->UpdateSize();
 		Engine::GetInstance().GetClient()->OnWindowResize(Width, Height);
 	}
 	bool Engine::Start(const EngineStartupDesc& desc)
@@ -78,14 +81,12 @@ namespace Nuclear {
 			NUCLEAR_FATAL("[Engine] Failed To Create Window...");
 		}
 
-		glfwSetFramebufferSizeCallback(MainWindow.GetRawWindowPtr(), ResizeCallback);
-
 		MainWindow.SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 
 		if (desc.AutoInitGraphicsEngine)
 		{
 			Graphics::GraphicsEngineDesc GraphicsEngineDesc;
-			GraphicsEngineDesc.pWindowHandle = GetMainWindow()->GetRawWindowPtr();
+			GraphicsEngineDesc.pWindowHandle = GetMainWindow()->GetSDLWindowPtr();
 			if (!Graphics::GraphicsEngine::GetInstance().Initialize(GraphicsEngineDesc))
 			{
 				NUCLEAR_FATAL("[Engine] Failed to initalize GraphicsEngine...");
@@ -172,7 +173,7 @@ namespace Nuclear {
 	void Engine::BeginFrame()
 	{
 		ImGui_Impl_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 	}
 
@@ -221,7 +222,7 @@ namespace Nuclear {
 
 	bool Engine::ShouldClose()
 	{
-		return MainWindow.ShouldClose();
+		return mShouldClose;
 	}
 
 	bool Engine::isDebug()
@@ -245,14 +246,34 @@ namespace Nuclear {
 
 		Core::Utilities::Timer timer;
 
-		double SavedX = 0, SavedY = 0;
+		int SavedX = 0, SavedY = 0;
+		mShouldClose = false;
+
+		//Event handler
+		SDL_Event e;
 
 		//Main Client Loop
-		while (!MainWindow.ShouldClose() && pClient != nullptr)
+		while (!mShouldClose && pClient != nullptr)
 		{
-			MainWindow.PollEvents();
+			while (SDL_PollEvent(&e) != 0)
+			{
+				switch (e.type)
+				{
+				case SDL_QUIT:
+					mShouldClose = true;
+					break;
+				case SDL_WINDOWEVENT:
+					if (e.window.event == SDL_WINDOWEVENT_RESIZED)
+					{
+						ResizeCallback(e.window.data1, e.window.data2);
+					}
+					break;
 
-			MainWindow.UpdateSize();
+
+				};
+				ImGui_ImplSDL2_ProcessEvent(&e);
+			}
+			MainWindow.Update();
 
 			// per-frame time logic (ensure speed is constant through all platforms)
 			float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
@@ -263,19 +284,20 @@ namespace Nuclear {
 			BeginFrame();
 
 			//Mouse Movement Callback
-			double MousePosX, MousePosY;
-			MainWindow.GetMousePosition(&MousePosX, &MousePosY);
+			int MousePosX, MousePosY;
+			MainWindow.GetMouseState(&MousePosX, &MousePosY);
 			if (SavedX != MousePosX || SavedY != MousePosY)
 			{
 				SavedX = MousePosX;
 				SavedY = MousePosY;
-				pClient->OnMouseMovement(static_cast<int>(SavedX), static_cast<int>(SavedY));
+				pClient->OnMouseMovement(SavedX, SavedY);
 			}
 
 			pClient->Update(pClient->DeltaTime);
 			pClient->Render(pClient->DeltaTime);
 
 			EndFrame();
+
 		}
 	}
 

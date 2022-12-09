@@ -207,22 +207,22 @@ public:
 	void Update(float deltatime) override
 	{
 		//Movement
-		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KEYBOARD_KEY_W) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KEYBOARD_KEY_A) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KEYBOARD_KEY_S) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KEYBOARD_KEY_D) == Core::Input::KeyboardKeyStatus::Pressed)
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//Change Mouse Mode
-		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KEYBOARD_KEY_ESCAPE) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
 			isMouseDisabled = true;
 			Engine::GetInstance().GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Normal);
 		}
-		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_M) == Core::Input::KeyboardKeyStatus::Pressed)
+		if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KEYBOARD_KEY_M) == Core::Input::KeyboardKeyStatus::Pressed)
 		{
 			isMouseDisabled = false;
 			Engine::GetInstance().GetMainWindow()->SetMouseInputMode(Core::Input::MouseInputMode::Virtual);
@@ -254,7 +254,7 @@ public:
 			PhysX::RaycastHit hit;
 			if (ImGui::TreeNode("Raycast Info"))
 			{
-				if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KeyboardKey::KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
+				if (Engine::GetInstance().GetMainWindow()->GetKeyStatus(Core::Input::KEYBOARD_KEY_F) == Core::Input::KeyboardKeyStatus::Pressed)
 				{
 
 					if (mPhysXSystem->Raycast(Camera.GetPosition(), Camera.GetFrontView(), 100.f, hit))

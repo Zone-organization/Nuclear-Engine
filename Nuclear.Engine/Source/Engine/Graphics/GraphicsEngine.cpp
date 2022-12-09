@@ -1,7 +1,7 @@
 #include "Engine\Graphics\GraphicsEngine.h"
 #include <Engine\Graphics\Context.h>
 #include <Engine\Managers\AssetManager.h>
-#include "..\..\Engine\Graphics\ImGUI\imgui_impl_glfw.h"
+#include "..\..\Engine\Graphics\ImGUI\imgui_impl_sdl.h"
 #include "..\..\Engine\Graphics\ImGUI\imgui_impl.h"
 #include <Core\Logger.h>
 
@@ -34,7 +34,7 @@ namespace Nuclear
 				io.Fonts->AddFontFromFileTTF(Core::Path("@NuclearAssets@/Fonts/Roboto-Medium.ttf").GetRealPath().c_str(), 15);
 				io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 				io.ConfigDockingWithShift = true;
-				ImGui_ImplGlfw_InitForOther(desc.pWindowHandle, true);
+				ImGui_ImplSDL2_InitForDiligent(desc.pWindowHandle);
 				ImGui_Impl_Init();
 				ImGui_Impl_CreateDeviceObjects();
 				//io.Fonts->GetTexDataAsAlpha8()

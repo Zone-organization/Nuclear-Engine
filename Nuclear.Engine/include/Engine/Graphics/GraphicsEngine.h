@@ -2,7 +2,7 @@
 #include <Core\NE_Common.h>
 #include <Engine\Managers\ShaderManager.h>
 
-struct GLFWwindow;
+struct SDL_Window;
 
 namespace Nuclear
 {
@@ -13,7 +13,7 @@ namespace Nuclear
 			RENDER_DEVICE_TYPE mRenderAPI = RENDER_DEVICE_TYPE::RENDER_DEVICE_TYPE_D3D11;
 
 			bool InitImGui = true;
-			GLFWwindow* pWindowHandle;
+			SDL_Window* pWindowHandle;
 
 			SwapChainDesc SCDesc;
 

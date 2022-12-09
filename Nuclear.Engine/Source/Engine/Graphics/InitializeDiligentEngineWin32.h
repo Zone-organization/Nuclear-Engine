@@ -7,9 +7,9 @@
 #include "Diligent/Graphics/GraphicsEngineD3D12/interface/EngineFactoryD3D12.h"
 #include "Diligent/Graphics/GraphicsEngineOpenGL/interface/EngineFactoryOpenGL.h"
 #include "Diligent/Graphics/GraphicsEngineVulkan/interface/EngineFactoryVk.h"
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/include/GLFW/glfw3.h>
-#include <GLFW/include/GLFW/glfw3native.h>
+#include <SDL\include\SDL.h>
+#include <SDL\include\SDL_syswm.h>
+
 namespace Nuclear 
 {
 	void DiligentMassageCallback(DEBUG_MESSAGE_SEVERITY Severity, const Char* Message, const char* Function, const char* File, int Line)
@@ -36,7 +36,7 @@ namespace Nuclear
 
 	}
 
-	bool InitializeDiligentEngineWin32(GLFWwindow* window,
+	bool InitializeDiligentEngineWin32(SDL_Window* window,
 		const RENDER_DEVICE_TYPE& type,
 		IRenderDevice** device,
 		IDeviceContext** context,
@@ -47,9 +47,13 @@ namespace Nuclear
 	{
 		Uint32 NumDeferredCtx = 0;
 
+		SDL_SysWMinfo wmInfo;
+		SDL_VERSION(&wmInfo.version);
+		SDL_GetWindowWMInfo(window, &wmInfo);
+
 		FullScreenModeDesc FSDesc;
 		NativeWindow DLWindow;
-		DLWindow.hWnd = glfwGetWin32Window(window);
+		DLWindow.hWnd = wmInfo.info.win.window;
 
 		switch (type)
 		{
