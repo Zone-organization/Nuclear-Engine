@@ -57,3 +57,4 @@
 /Samples/Nuclear.ScriptCore.dll
 /SamplesScripts/obj/Debug
 *.dll
+/External/SDL
