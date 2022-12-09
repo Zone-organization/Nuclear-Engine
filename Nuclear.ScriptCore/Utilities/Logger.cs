@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Nuclear.Core
+namespace Nuclear.Utilities
 {
     public class Logger
     {

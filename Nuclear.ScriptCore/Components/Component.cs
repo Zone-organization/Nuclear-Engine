@@ -4,6 +4,6 @@ namespace Nuclear.Components
 {
     public abstract class Component
     {
-        public Entity Entity { get; set; }
+        public ECS.Entity Entity { get; set; }
     }
 }

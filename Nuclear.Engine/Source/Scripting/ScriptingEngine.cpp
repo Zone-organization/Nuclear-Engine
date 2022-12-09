@@ -163,15 +163,15 @@ namespace Nuclear
 		void ScriptingEngine::InitBindings()
 		{
 			//Logger
-			mono_add_internal_call("Nuclear.Core.Logger::LoggerInfo_Native", &Bindings::Core_Logger_Info);
-			mono_add_internal_call("Nuclear.Core.Logger::LoggerWarn_Native", &Bindings::Core_Logger_Warn);
-			mono_add_internal_call("Nuclear.Core.Logger::LoggerTrace_Native", &Bindings::Core_Logger_Trace);
-			mono_add_internal_call("Nuclear.Core.Logger::LoggerError_Native", &Bindings::Core_Logger_Error);
-			mono_add_internal_call("Nuclear.Core.Logger::LoggerFatal_Native", &Bindings::Core_Logger_FatalError);
+			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerInfo_Native", &Bindings::Utilities_Logger_Info);
+			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerWarn_Native", &Bindings::Utilities_Logger_Warn);
+			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerTrace_Native", &Bindings::Utilities_Logger_Trace);
+			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerError_Native", &Bindings::Utilities_Logger_Error);
+			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerFatal_Native", &Bindings::Utilities_Logger_FatalError);
 
 
-			mono_add_internal_call("Nuclear.Entity::AddComponent_Native", &Bindings::ECS_Entity_AddComponent);
-			mono_add_internal_call("Nuclear.Entity::HasComponent_Native", &Bindings::ECS_Entity_HasComponent);
+			mono_add_internal_call("Nuclear.ECS.Entity::AddComponent_Native", &Bindings::ECS_Entity_AddComponent);
+			mono_add_internal_call("Nuclear.ECS.Entity::HasComponent_Native", &Bindings::ECS_Entity_HasComponent);
 
 		//	mono_add_internal_call("Nuclear.ScriptCore::HelloWorld_Native()", &HelloWorld);
 		}
@@ -179,7 +179,7 @@ namespace Nuclear
 		void ScriptingEngine::InitCoreAssembly()
 		{
 			ScriptingClassCreationDesc desc;
-			desc.mNamespaceName = "Nuclear";
+			desc.mNamespaceName = "Nuclear.ECS";
 			desc.mClassName = "Entity";
 			ScriptCoreClass = CreateScriptClass(&mCoreAssembly, desc);
 			mRegistry.RegisterEngineComponents(&mCoreAssembly);

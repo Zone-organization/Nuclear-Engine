@@ -7,7 +7,7 @@
     <ProjectGuid>{F2A7FA26-B783-445A-A44C-8E9634B5AB0F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nuclear.ScriptCore</RootNamespace>
+    <RootNamespace>Nuclear</RootNamespace>
     <AssemblyName>Nuclear.ScriptCore</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,11 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Logger.cs" />
-    <Compile Include="Engine\Components\Component.cs" />
-    <Compile Include="Engine\Components\EntityInfoComponent.cs" />
-    <Compile Include="Engine\ECS\Transform.cs" />
-    <Compile Include="Entity.cs" />
+    <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\EntityInfoComponent.cs" />
+    <Compile Include="ECS\Transform.cs" />
+    <Compile Include="ECS\Entity.cs" />
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />

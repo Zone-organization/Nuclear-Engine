@@ -1,6 +1,7 @@
 ﻿using System;
 using Nuclear;
-using Nuclear.Core;
+using Nuclear.ECS;
+using Nuclear.Utilities;
 
 namespace Samples
 {

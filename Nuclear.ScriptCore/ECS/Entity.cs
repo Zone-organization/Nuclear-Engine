@@ -1,10 +1,10 @@
-﻿using Nuclear.Core;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace Nuclear
+namespace Nuclear.ECS
 {
+
     public class Entity
     {
         public uint ID { get; private set; }
