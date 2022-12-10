@@ -1,6 +1,6 @@
-# Nuclear Engine
-
-![Sample2](Sample2.gif "Sample2 Demo Logo") 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/11663821/206862862-6e1c396d-f782-43e8-bbc1-1bb7f8a38184.png">
+</p>
 
 ## Current To-dos 
   - W.I.P:
@@ -60,3 +60,7 @@ Follow the instructions below to compile and run the engine from source.
 	- Complete AudioSystem Implementation. (?%)
 	- Basic Implementaion of PhysX.
 	- Complete Samples & their documentation.
+
+## Preview
+
+![Sample2](Sample2.gif "Sample2 Demo Logo") 
