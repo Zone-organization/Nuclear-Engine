@@ -138,108 +138,30 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 			}
 		}
 
-		//DirLight
+		//Light
 		{
-			Components::DirLightComponent* light = reg.try_get< Components::DirLightComponent>(entity);
+			Components::LightComponent* light = reg.try_get< Components::LightComponent>(entity);
 			if (light)
 			{
-				if (ImGui::CollapsingHeader("Directional Light"))
-				{
-					Graphics::Color color = light->GetColor();
-					if (ImGui::ColorEdit4("Dir Color", (float*)&color))
-					{
-						light->SetColor(color);
-					}
-
-					float f = light->GetIntensity();
-					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.4f", ImGuiSliderFlags_None))
-					{
-						light->SetIntensity(f);
-					}
-
-					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
-					if (ImGui::DragFloat3("Direction", (float*)&lighdir))
-					{
-						light->SetDirection(Math::Vector3(lighdir.x, lighdir.y, lighdir.z));
-					}
-
-
-				}
-			}
-		}
-
-		//PointLight
-		{
-			Components::PointLightComponent* light = reg.try_get< Components::PointLightComponent>(entity);
-			if (light)
-			{
-				if (ImGui::CollapsingHeader("Point Light"))
-				{
-					Graphics::Color color = light->GetColor();
-					if (ImGui::ColorEdit4("Point Color", (float*)&color))
-					{
-						light->SetColor(color);
-					}
-
-					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
-					if (ImGui::DragFloat3("Attenuation", (float*)&att))
-					{
-						light->SetAttenuation(Math::Vector3(att.x, att.y, att.z));
-					}
-
-					float f = light->GetIntensity();
-					if (ImGui::SliderFloat("Intensity", &f, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
-					{
-						light->SetIntensity(f);
-					}
-
-					ImGui::Checkbox("Casts Shadows", &light->mCastShadows);
-
-					float np = light->GetNearPlane();
-					if (ImGui::SliderFloat("Near Plane", &np, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
-					{
-						light->SetNearPlane(np);
-					}
-
-					float fp = light->GetFarPlane();
-					if (ImGui::SliderFloat("Far Plane", &fp, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
-					{
-						light->SetFarPlane(fp);
-					}
-
-					float fov = light->GetFOV();
-					if (ImGui::SliderFloat("Fov", &fov, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))
-					{
-						light->SetFOV(fov);
-					}
-				}
-			}
-		}
-
-		//SpotLight
-		{
-			Components::SpotLightComponent* light = reg.try_get< Components::SpotLightComponent>(entity);
-			if (light)
-			{
-				if (ImGui::CollapsingHeader("Spot Light"))
+				if (ImGui::CollapsingHeader("Light"))
 				{
 					ImVec4 lighdir = ImVec4(light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 1.00f);
 					if (ImGui::DragFloat3("Direction", (float*)&lighdir))
 					{
 						light->SetDirection(Math::Vector3(lighdir.x, lighdir.y, lighdir.z));
+					}
+
+					Graphics::Color color = light->GetColor();
+					if (ImGui::ColorEdit4("Color", (float*)&color))
+					{
+						light->SetColor(color);
 					}
 
 					ImVec2 cone = ImVec2(light->GetSpotlightCone().x, light->GetSpotlightCone().y);
 					if (ImGui::DragFloat2("Spotlight Cone", (float*)&cone))
 					{
 						light->SetSpotlightCone(Math::Vector2(cone.x, cone.y));
-					}
-
-					Graphics::Color color = light->GetColor();
-					if (ImGui::ColorEdit4("Spot Color", (float*)&color))
-					{
-						light->SetColor(color);
-					}
+					}					
 
 					ImVec4 att = ImVec4(light->GetAttenuation().x, light->GetAttenuation().y, light->GetAttenuation().z, 1.00f);
 					if (ImGui::DragFloat3("Attenuation", (float*)&att))
@@ -252,6 +174,8 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 					{
 						light->SetIntensity(f);
 					}
+
+					ImGui::Checkbox("Casts Shadows", &light->mCastShadows);
 
 					float np = light->GetNearPlane();
 					if (ImGui::SliderFloat("Near Plane", &np, 0.0f, 100.0f, "%.1f", ImGuiSliderFlags_None))

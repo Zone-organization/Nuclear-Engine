@@ -1,6 +1,7 @@
 ﻿using System;
 using Nuclear;
 using Nuclear.ECS;
+using Nuclear.Platform;
 using Nuclear.Utilities;
 
 namespace Samples
@@ -14,11 +15,19 @@ namespace Samples
 
         public void OnUpdate(float td)
         {
-            Logger.Info("Update Time Delta "+ td);
+            //Logger.Info("Update Time Delta "+ td);
 
-            bool result = HasComponent<Nuclear.Components.EntityInfoComponent>();
-            Logger.Info("Result " + result);
+            //bool result = HasComponent<Nuclear.Components.EntityInfoComponent>();
+            //Logger.Info("Result " + result);
 
+            if(Input.IsKeyPressed(Input.KeyCode.W))
+            {
+                Logger.Info("W KeyPressed ");
+            }
+            if (Input.IsKeyPressed(Input.KeyCode.S))
+            {
+                Logger.Info("S KeyPressed ");
+            }
         }
     }
 }

@@ -105,7 +105,7 @@ namespace Nuclear
 			}
 		}
 
-		void ShadowPass::DirLightShadowDepthPass(Components::DirLightComponent* light, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::DirLightShadowDepthPass(Components::LightComponent* light, Uint32 RTindex, Assets::Scene* scene)
 		{
 		//	if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
 			{
@@ -115,12 +115,12 @@ namespace Nuclear
 			//CSM - WIP
 		}
 
-		void ShadowPass::SpotLightShadowDepthPass(Components::SpotLightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::SpotLightShadowDepthPass(Components::LightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene)
 		{
 			return PositionalLightShadowDepthPass(RTindex, spotlight->LightSpace, scene, mSpotShadowMap);
 		}
 
-		void ShadowPass::PointLightShadowDepthPass(Components::PointLightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::PointLightShadowDepthPass(Components::LightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene)
 		{
 			Graphics::Context::GetInstance().GetContext()->SetPipelineState(mOmniDirShadowPassPSO.RawPtr());
 

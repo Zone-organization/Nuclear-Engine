@@ -1,7 +1,5 @@
 #pragma once
-#include <Components\DirLightComponent.h>
-#include <Components\PointLightComponent.h>
-#include <Components\SpotLightComponent.h>
+#include <Components\LightComponent.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/TextureView.h>
@@ -51,9 +49,9 @@ namespace Nuclear
 
 			void Update(FrameRenderData* framedata) override;
 
-			void DirLightShadowDepthPass(Components::DirLightComponent* dirlight, Uint32 RTindex, Assets::Scene* scene);
-			void SpotLightShadowDepthPass(Components::SpotLightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene);
-			void PointLightShadowDepthPass(Components::PointLightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene);
+			void DirLightShadowDepthPass(Components::LightComponent* dirlight, Uint32 RTindex, Assets::Scene* scene);
+			void SpotLightShadowDepthPass(Components::LightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene);
+			void PointLightShadowDepthPass(Components::LightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene);
 
 			ShadowPassBakingDesc GetBakingDesc() const;
 

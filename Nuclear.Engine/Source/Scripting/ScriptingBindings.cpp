@@ -55,6 +55,11 @@ namespace Nuclear
 				bool result = ScriptingEngine::GetInstance().GetRegistry().mHasComponentFuncs[monoType](entity);
 				return result;
 			}
+
+			bool Platform_Input_IsKeyPressed(Platform::Input::KeyCode key)
+			{
+				return Platform::Input::GetInstance().IsKeyPressed(key);
+			}
 		
 		}
 	}

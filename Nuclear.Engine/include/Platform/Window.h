@@ -1,5 +1,5 @@
 #pragma once
-#include <Platform\Input.h>
+#include <NE_Common.h>
 #include <string>
 
 struct SDL_Window;
@@ -16,11 +16,11 @@ namespace Nuclear
 			std::string Title = "NuclearEngine";
 		};
 
-		class NEAPI Window : public Input
+		class NEAPI Window
 		{
 		public:
-			static bool InitializeGLFW();
-			static void ShutdownGLFW();
+			Window();
+			~Window();
 
 			bool Create(const WindowDesc& desc);
 			void Destroy();
@@ -34,19 +34,9 @@ namespace Nuclear
 			void SetSize(Uint32 width, Uint32 height);
 			void SetTitle(const std::string& title);
 
-			void Update();
-
-			KeyboardKeyStatus GetKeyStatus(KeyboardKey key) override;
-
-			void SetMouseInputMode(const MouseInputMode& mode) override;
-
-			Uint32 GetMouseState(int* xpos, int* ypos) override;
-			const Uint8* GetKeyboardState() override;
 			SDL_Window* GetSDLWindowPtr();
 		private:
-			const Uint8* pKeyboardStateArray;
 			SDL_Window* pWindow;
-			SDL_Surface* pSurface;
 		};
 	}
 }

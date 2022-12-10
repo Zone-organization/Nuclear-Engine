@@ -107,7 +107,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Core\Core.h" />
+    <ClInclude Include="include\Platform\Platform.h" />
     <ClInclude Include="include\Utilities\NonCopyable.h" />
     <ClInclude Include="include\Platform\FileSystem.h" />
     <ClInclude Include="include\Platform\Input.h" />
@@ -329,12 +331,8 @@
     <ClInclude Include="include\Components\ColliderComponent.h" />
     <ClInclude Include="include\Components\CameraComponent.h" />
     <ClInclude Include="include\Components\Components.h" />
-    <ClInclude Include="include\Components\DirLightComponent.h" />
-    <ClInclude Include="include\Components\LightCommon.h" />
-    <ClInclude Include="include\Components\PointLightComponent.h" />
     <ClInclude Include="include\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Components\ScriptComponent.h" />
-    <ClInclude Include="include\Components\SpotLightComponent.h" />
     <ClInclude Include="include\ECS\ECS.h" />
     <ClInclude Include="include\ECS\Entity.h" />
     <ClInclude Include="include\Graphics\ShaderReflection.h" />
@@ -439,6 +437,8 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Components\LightComponent.cpp" />
+    <ClCompile Include="Source\Platform\Input.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui_impl_sdl.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingBindings.cpp" />
@@ -477,11 +477,8 @@
     <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Components\ColliderComponent.cpp" />
-    <ClCompile Include="Source\Components\DirLightComponent.cpp" />
-    <ClCompile Include="Source\Components\PointLightComponent.cpp" />
     <ClCompile Include="Source\Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Source\Components\ScriptComponent.cpp" />
-    <ClCompile Include="Source\Components\SpotLightComponent.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />
     <ClCompile Include="Source\Rendering\Background.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />

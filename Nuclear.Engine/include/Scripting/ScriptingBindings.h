@@ -1,5 +1,6 @@
 #pragma once
 #include <NE_Common.h>
+#include <Platform/Input.h>
 struct _MonoObject;
 
 namespace Nuclear
@@ -18,6 +19,9 @@ namespace Nuclear
 			//Entity
 			void ECS_Entity_AddComponent(Uint32 id, void* type);
 			bool ECS_Entity_HasComponent(Uint32 id, void* type);
+
+			//Input
+			bool Platform_Input_IsKeyPressed(Platform::Input::KeyCode key);
 		}
 	}
 }

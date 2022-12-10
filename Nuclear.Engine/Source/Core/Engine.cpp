@@ -1,6 +1,8 @@
 #include <Core/Engine.h>
 #include <Utilities\Timer.h>
 #include <Platform\Window.h>
+#include <Platform\Input.h>
+
 #include <Utilities\Logger.h>
 
 #include <Graphics\Context.h>
@@ -87,7 +89,7 @@ namespace Nuclear {
 				NUCLEAR_FATAL("[Engine] Failed To Create Window...");
 			}
 
-			MainWindow.SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
+			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
 
 			if (desc.AutoInitGraphicsEngine)
 			{
@@ -252,12 +254,10 @@ namespace Nuclear {
 
 			Utilities::Timer timer;
 
-			int SavedX = 0, SavedY = 0;
 			mShouldClose = false;
 
 			//Event handler
 			SDL_Event e;
-
 			//Main Client Loop
 			while (!mShouldClose && pClient != nullptr)
 			{
@@ -274,12 +274,21 @@ namespace Nuclear {
 							ResizeCallback(e.window.data1, e.window.data2);
 						}
 						break;
+					case SDL_MOUSEMOTION:
+						int w, h;
+						MainWindow.GetSize(w,h);
+						static int xpos = w / 2; 
+						static int ypos = h / 2;
+						xpos += e.motion.xrel;
+						ypos += e.motion.yrel;
+						pClient->OnMouseMovement(xpos, ypos);
 
+						break;
 
 					};
 					ImGui_ImplSDL2_ProcessEvent(&e);
 				}
-				MainWindow.Update();
+				Platform::Input::GetInstance().Update();
 
 				// per-frame time logic (ensure speed is constant through all platforms)
 				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());
@@ -288,16 +297,6 @@ namespace Nuclear {
 				pClient->ClockTime = static_cast<float>(timer.GetElapsedTimeInSeconds());
 
 				BeginFrame();
-
-				//Mouse Movement Callback
-				int MousePosX, MousePosY;
-				MainWindow.GetMouseState(&MousePosX, &MousePosY);
-				if (SavedX != MousePosX || SavedY != MousePosY)
-				{
-					SavedX = MousePosX;
-					SavedY = MousePosY;
-					pClient->OnMouseMovement(SavedX, SavedY);
-				}
 
 				pClient->Update(pClient->DeltaTime);
 				pClient->Render(pClient->DeltaTime);

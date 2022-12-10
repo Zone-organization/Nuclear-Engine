@@ -162,18 +162,20 @@ namespace Nuclear
 		}
 		void ScriptingEngine::InitBindings()
 		{
-			//Logger
+			//Utilities::Logger
 			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerInfo_Native", &Bindings::Utilities_Logger_Info);
 			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerWarn_Native", &Bindings::Utilities_Logger_Warn);
 			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerTrace_Native", &Bindings::Utilities_Logger_Trace);
 			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerError_Native", &Bindings::Utilities_Logger_Error);
 			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerFatal_Native", &Bindings::Utilities_Logger_FatalError);
 
-
+			//ECS::Entity
 			mono_add_internal_call("Nuclear.ECS.Entity::AddComponent_Native", &Bindings::ECS_Entity_AddComponent);
 			mono_add_internal_call("Nuclear.ECS.Entity::HasComponent_Native", &Bindings::ECS_Entity_HasComponent);
 
-		//	mono_add_internal_call("Nuclear.ScriptCore::HelloWorld_Native()", &HelloWorld);
+			//Platform::Input
+			mono_add_internal_call("Nuclear.Platform.Input::IsKeyPressed_Native", &Bindings::Platform_Input_IsKeyPressed);
+
 		}
 
 		void ScriptingEngine::InitCoreAssembly()

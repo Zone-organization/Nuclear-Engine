@@ -145,7 +145,6 @@ class Sample1 : public Core::Client
 
 	Assets::Scene Scene;
 	ECS::Entity EController;
-	ECS::Entity ELights;
 
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
@@ -245,19 +244,18 @@ public:
 		ECyborg = Scene.CreateEntity("Cyborg", TCyborg);
 		EBob = Scene.CreateEntity("Bob", TBob);
 	//	EVampire = Scene.CreateEntity("Vampire" , TVampire);
-		ELights = Scene.CreateEntity("Lights");
-
-		//ENanosuit.Assign<Components::MeshComponent>(NanosuitAsset, NanosuitMaterial);
-		ELights.AddComponent<Components::DirLightComponent>();
-		ELights.AddComponent<Components::PointLightComponent>();
 
 
-		ELights.GetComponent<Components::DirLightComponent>().SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
-		ELights.GetComponent<Components::DirLightComponent>().SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+		//Create Entities
+		auto EDirLight = Scene.CreateEntity("DirLight");
+		auto& dircomp = EDirLight.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Directional);
+		dircomp.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
+		dircomp.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
+
+		auto ELights = Scene.CreateEntity("PointLight1");
+		auto& lightcomp = ELights.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
 
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.7f, 0.2f, 2.0f));
-		ELights.GetComponent<Components::PointLightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
-		ELights.GetComponent<Components::PointLightComponent>().SetIntensity(1.f);
 	}
 
 	void InitRenderer()
@@ -286,7 +284,7 @@ public:
 		mAssetManager->Initialize();
 
 		EController = Scene.CreateEntity();
-		EController.AddComponent<Components::SpotLightComponent>();
+		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
@@ -302,7 +300,7 @@ public:
 		Renderer->AddRenderPass(&GeoPass);
 	//	Renderer->GetBackground().SetSkybox(&Skybox);
 
-		Core::Engine::GetInstance().GetMainWindow()->SetMouseInputMode(Platform::Input::MouseInputMode::Virtual);
+		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
@@ -338,30 +336,30 @@ public:
 	void Update(float deltatime) override
 	{
 		//Movement
-		if (Core::Engine::GetInstance().GetMainWindow()->GetKeyStatus(Platform::Input::KEYBOARD_KEY_W) == Platform::Input::KeyboardKeyStatus::Pressed)
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Core::Engine::GetInstance().GetMainWindow()->GetKeyStatus(Platform::Input::KEYBOARD_KEY_A) == Platform::Input::KeyboardKeyStatus::Pressed)
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Core::Engine::GetInstance().GetMainWindow()->GetKeyStatus(Platform::Input::KEYBOARD_KEY_S) == Platform::Input::KeyboardKeyStatus::Pressed)
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Core::Engine::GetInstance().GetMainWindow()->GetKeyStatus(Platform::Input::KEYBOARD_KEY_D) == Platform::Input::KeyboardKeyStatus::Pressed)
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
 			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
 
-		//if (Core::Engine::GetInstance().GetMainWindow()->GetKeyStatus(Platform::Input::KEYBOARD_KEY_LEFT_SHIFT) == Platform::Input::KeyboardKeyStatus::Pressed)
+		//if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LEFT_SHIFT))
 		//	Camera.MovementSpeed = 10;
 		//else
 		//	Camera.MovementSpeed = 4.5;
 
 		//Change Mouse Mode
-		if (Core::Engine::GetInstance().GetMainWindow()->GetKeyStatus(Platform::Input::KEYBOARD_KEY_ESCAPE) == Platform::Input::KeyboardKeyStatus::Pressed)
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
 		{
 			isMouseDisabled = true;
-			Core::Engine::GetInstance().GetMainWindow()->SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
+			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
 		}
-		if (Core::Engine::GetInstance().GetMainWindow()->GetKeyStatus(Platform::Input::KEYBOARD_KEY_M) == Platform::Input::KeyboardKeyStatus::Pressed)
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_M))
 		{
 			isMouseDisabled = false;
-			Core::Engine::GetInstance().GetMainWindow()->SetMouseInputMode(Platform::Input::MouseInputMode::Virtual);
+			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
 		Camera.UpdateBuffer();
@@ -377,7 +375,7 @@ public:
 		BobAnimator.UpdateAnimation(dt);
 	//	VampireAnimator.UpdateAnimation(dt);
 
-		EController.GetComponent<Components::SpotLightComponent>().SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
 
 		mSceneManager->Update(dt);
 		{

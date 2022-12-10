@@ -42,9 +42,7 @@ namespace Nuclear
 			RegisterEngineComponent(MeshComponent, coreassembly->GetImage());
 			RegisterEngineComponent(ColliderComponent, coreassembly->GetImage());
 			RegisterEngineComponent(RigidBodyComponent, coreassembly->GetImage());
-			RegisterEngineComponent(DirLightComponent, coreassembly->GetImage());
-			RegisterEngineComponent(PointLightComponent, coreassembly->GetImage());
-			RegisterEngineComponent(SpotLightComponent, coreassembly->GetImage());
+			RegisterEngineComponent(LightComponent, coreassembly->GetImage());
 			RegisterEngineComponent(ScriptComponent, coreassembly->GetImage());
 		}
 	}

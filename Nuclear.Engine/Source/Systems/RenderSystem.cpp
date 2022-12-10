@@ -210,6 +210,33 @@ namespace Nuclear
 			Assets::DefaultMeshes::RenderScreenQuad();
 		}
 
+		//Shader Structs
+		namespace ShaderReference
+		{
+			struct NEAPI Shader_SpotLight_Struct
+			{
+				Math::Vector4 Position;
+				Math::Vector4 Direction;
+				Math::Vector4 Intensity_Attenuation;
+				Math::Vector4 InnerCutOf_OuterCutoff;
+				Math::Vector4 Color;
+			};
+
+			struct NEAPI Shader_PointLight_Struct
+			{
+				Math::Vector4 Position;
+				Math::Vector4 Intensity_Attenuation;
+				Math::Vector4 Color_FarPlane;
+			};
+
+			struct NEAPI Shader_DirLight_Struct
+			{
+				Math::Vector4 Direction;
+				Math::Vector4 Color_Intensity;
+
+			};
+		}
+
 		void RenderSystem::BakeLightsBuffer()
 		{
 			if (HasbeenBakedBefore)
@@ -230,17 +257,17 @@ namespace Nuclear
 
 			if (mRenderData.DirLights.size() > 0)
 			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (mRenderData.DirLights.size() * sizeof(Components::Internal::Shader_DirLight_Struct));
+				NE_Light_CB_Size = NE_Light_CB_Size + (mRenderData.DirLights.size() * sizeof(ShaderReference::Shader_DirLight_Struct));
 				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (mRenderData.DirLights.size() * 2);
 			}
 			if (mRenderData.PointLights.size() > 0)
 			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (mRenderData.PointLights.size() * sizeof(Components::Internal::Shader_PointLight_Struct));
+				NE_Light_CB_Size = NE_Light_CB_Size + (mRenderData.PointLights.size() * sizeof(ShaderReference::Shader_PointLight_Struct));
 				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (mRenderData.PointLights.size() * 3);
 			}
 			if (mRenderData.SpotLights.size() > 0)
 			{
-				NE_Light_CB_Size = NE_Light_CB_Size + (mRenderData.SpotLights.size() * sizeof(Components::Internal::Shader_SpotLight_Struct));
+				NE_Light_CB_Size = NE_Light_CB_Size + (mRenderData.SpotLights.size() * sizeof(ShaderReference::Shader_SpotLight_Struct));
 				NUM_OF_LIGHT_VECS = NUM_OF_LIGHT_VECS + (mRenderData.SpotLights.size() * 5);
 			}
 
@@ -331,42 +358,44 @@ namespace Nuclear
 
 		void RenderSystem::BakeLights()
 		{
-			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
+			auto LightSourcesView = mScene->GetRegistry().view<Components::LightComponent>();
 
-			std::vector<Components::DirLightComponent*> DirLights_noShadows;
-			std::vector<Components::PointLightComponent*> PointLights_noShadows;
-			std::vector<Components::SpotLightComponent*> SpotLights_noShadows;
+			std::vector<Components::LightComponent*> DirLights_noShadows;
+			std::vector<Components::LightComponent*> PointLights_noShadows;
+			std::vector<Components::LightComponent*> SpotLights_noShadows;
 
 			//Shadows Enabled First
-			for (auto entity : DirLightView)
+			for (auto entity : LightSourcesView)
 			{
-				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
-				if (DirLight.mCastShadows)
-					mRenderData.DirLights.push_back(&DirLight);
-				else
-					DirLights_noShadows.push_back(&DirLight);
-			}
+				auto& Light = LightSourcesView.get<Components::LightComponent>(entity);
+				auto type = Light.GetType();
 
-			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
-			for (auto entity : SpotLightView)
-			{
-				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-				if (SpotLight.mCastShadows)
-					mRenderData.SpotLights.push_back(&SpotLight);
-				else
-					SpotLights_noShadows.push_back(&SpotLight);
+				if (type == Components::LightComponent::Type::Directional)
+				{
+					if (Light.mCastShadows)
+						mRenderData.DirLights.push_back(&Light);
+					else
+						DirLights_noShadows.push_back(&Light);
+				}
+				else if (type == Components::LightComponent::Type::Point)
+				{
+					if (Light.mCastShadows)
+						mRenderData.PointLights.push_back(&Light);
+					else
+						PointLights_noShadows.push_back(&Light);
+				}			
+				else if (type == Components::LightComponent::Type::Spot)
+				{
+					if (Light.mCastShadows)
+						mRenderData.SpotLights.push_back(&Light);
+					else
+						SpotLights_noShadows.push_back(&Light);
+				}
+				else {
+					assert(0);
+				}
 			}
-
-			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
-			for (auto entity : PointLightView)
-			{
-				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
-				if (PointLight.mCastShadows)
-					mRenderData.PointLights.push_back(&PointLight);
-				else
-					PointLights_noShadows.push_back(&PointLight);
-			}
-
+			
 			//append the non shadowed vectors
 			mRenderData.DirLights.insert(mRenderData.DirLights.end(), DirLights_noShadows.begin(), DirLights_noShadows.end());
 			mRenderData.SpotLights.insert(mRenderData.SpotLights.end(), SpotLights_noShadows.begin(), SpotLights_noShadows.end());
@@ -377,31 +406,13 @@ namespace Nuclear
 
 		void RenderSystem::UpdateLights()
 		{
-			auto DirLightView = mScene->GetRegistry().view<Components::DirLightComponent>();
-			for (auto entity : DirLightView)
+			auto LightView = mScene->GetRegistry().view<Components::LightComponent>();
+			for (auto entity : LightView)
 			{
-				auto& DirLight = DirLightView.get<Components::DirLightComponent>(entity);
+				auto& Light = LightView.get<Components::LightComponent>(entity);
 				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-				DirLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
-			}
-
-			auto SpotLightView = mScene->GetRegistry().view<Components::SpotLightComponent>();
-			for (auto entity : SpotLightView)
-			{
-				auto& SpotLight = SpotLightView.get<Components::SpotLightComponent>(entity);
-				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-				SpotLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
-			}
-
-
-			auto PointLightView = mScene->GetRegistry().view<Components::PointLightComponent>();
-			for (auto entity : PointLightView)
-			{
-				auto& PointLight = PointLightView.get<Components::PointLightComponent>(entity);
-				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-				PointLight.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
-			}
-		
+				Light.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
+			}		
 		}
 		void RenderSystem::UpdateLightsBuffer(const Math::Vector4& CameraPos)
 		{
@@ -412,23 +423,32 @@ namespace Nuclear
 
 			for (size_t i = 0; i < mRenderData.DirLights.size(); i++)
 			{
-				LightsBuffer.push_back(mRenderData.DirLights[i]->GetInternalData().Direction);
-				LightsBuffer.push_back(mRenderData.DirLights[i]->GetInternalData().Color_Intensity);
+				auto& data = mRenderData.DirLights[i]->GetInternalData();
+				LightsBuffer.push_back(data.Direction);
+				LightsBuffer.push_back(data.Color_Intensity);
 			}
 			for (size_t i = 0; i < mRenderData.PointLights.size(); i++)
 			{
-				LightsBuffer.push_back(mRenderData.PointLights[i]->GetInternalData().Position);
-				LightsBuffer.push_back(mRenderData.PointLights[i]->GetInternalData().Intensity_Attenuation);
-				LightsBuffer.push_back(mRenderData.PointLights[i]->GetInternalData().Color_FarPlane);
+				auto& data = mRenderData.PointLights[i]->GetInternalData();
+
+				LightsBuffer.push_back(data.Position);
+				Math::Vector4 Intensity_Attenuation(data.Color_Intensity.w, data.Attenuation_FarPlane.x, data.Attenuation_FarPlane.y, data.Attenuation_FarPlane.z);
+				LightsBuffer.push_back(Intensity_Attenuation);
+				Math::Vector4 Color_FarPlane(Math::Vector3(data.Color_Intensity) , data.Attenuation_FarPlane.w);
+				LightsBuffer.push_back(Color_FarPlane);
 
 			}
 			for (size_t i = 0; i < mRenderData.SpotLights.size(); i++)
 			{
-				LightsBuffer.push_back(mRenderData.SpotLights[i]->GetInternalData().Position);
-				LightsBuffer.push_back(mRenderData.SpotLights[i]->GetInternalData().Direction);
-				LightsBuffer.push_back(mRenderData.SpotLights[i]->GetInternalData().Intensity_Attenuation);
-				LightsBuffer.push_back(mRenderData.SpotLights[i]->GetInternalData().InnerCutOf_OuterCutoff);
-				LightsBuffer.push_back(mRenderData.SpotLights[i]->GetInternalData().Color);
+				auto& data = mRenderData.SpotLights[i]->GetInternalData();
+
+				LightsBuffer.push_back(data.Position);
+				LightsBuffer.push_back(data.Direction);
+				Math::Vector4 Intensity_Attenuation(data.Color_Intensity.w, data.Attenuation_FarPlane.x, data.Attenuation_FarPlane.y, data.Attenuation_FarPlane.z);
+				LightsBuffer.push_back(Intensity_Attenuation);
+				LightsBuffer.push_back(data.InnerCutOf_OuterCutoff);
+				Math::Vector4 Color(Math::Vector3(data.Color_Intensity), 0.0f);
+				LightsBuffer.push_back(Color);
 			}
 
 			PVoid data;

@@ -4,9 +4,7 @@
 #include <Components/MeshComponent.h>
 #include <Components/ColliderComponent.h>
 #include <Components/RigidBodyComponent.h>
-#include <Components\DirLightComponent.h>
-#include <Components\PointLightComponent.h>
-#include <Components\SpotLightComponent.h>
+#include <Components\LightComponent.h>
 #include <Components\ScriptComponent.h>
 
 #define ALL_COMPONENTS 	Components::EntityInfoComponent,\
@@ -14,7 +12,5 @@
 						Components::MeshComponent,      \
 						Components::ColliderComponent,  \
 						Components::RigidBodyComponent, \
-						Components::DirLightComponent,  \
-						Components::PointLightComponent,\
-						Components::SpotLightComponent, \
+						Components::LightComponent,  \
 						Components::ScriptComponent    

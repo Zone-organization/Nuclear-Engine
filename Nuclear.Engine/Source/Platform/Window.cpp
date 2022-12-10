@@ -6,6 +6,14 @@ namespace Nuclear
 {
 	namespace Platform 
 	{
+		Window::Window()
+		{
+			pWindow = nullptr;
+		}
+		Window::~Window()
+		{
+			pWindow = nullptr;
+		}
 		bool Window::Create(const WindowDesc & Desc)
 		{
 			
@@ -15,7 +23,6 @@ namespace Nuclear
 				NUCLEAR_ERROR("[Window] Creating Window {0} Failed! SDL_ERROR: {1}", Desc.Title, SDL_GetError());
 				return false;
 			}
-			pSurface = SDL_GetWindowSurface(pWindow);
 
 			return true;
 		}
@@ -60,48 +67,6 @@ namespace Nuclear
 		void Window::SetTitle(const std::string& title)
 		{
 			SDL_SetWindowTitle(pWindow, title.c_str());
-		}
-
-		void Window::Update()
-		{
-			pKeyboardStateArray = SDL_GetKeyboardState(NULL);
-		}
-	
-		Window::KeyboardKeyStatus Window::GetKeyStatus(KeyboardKey key)
-		{
-			if (pKeyboardStateArray[key])
-				return Window::KeyboardKeyStatus::Pressed;
-			else
-				return Window::KeyboardKeyStatus::Released;
-		}
-
-		void Window::SetMouseInputMode(const MouseInputMode& mode)
-		{			
-			switch (mode)
-			{
-			case MouseInputMode::Normal:
-				SDL_ShowCursor(SDL_ENABLE);
-				SDL_SetRelativeMouseMode(SDL_FALSE);
-
-				return;
-			case MouseInputMode::Virtual:
-				SDL_SetRelativeMouseMode(SDL_TRUE);
-
-				return;
-			case MouseInputMode::Hidden:
-				SDL_SetRelativeMouseMode(SDL_FALSE);
-				SDL_ShowCursor(SDL_DISABLE);
-
-				return;
-			}
-		}
-		Uint32 Window::GetMouseState(int* xpos, int* ypos)
-		{
-			return SDL_GetMouseState(xpos, ypos);
-		}
-		const Uint8* Window::GetKeyboardState()
-		{
-			return pKeyboardStateArray;
 		}
 
 		SDL_Window* Window::GetSDLWindowPtr()

@@ -2,9 +2,7 @@
 #include <NE_Common.h>
 #include <Math\Math.h>
 #include <Graphics/RenderTarget.h>
-#include <Components/DirLightComponent.h>
-#include <Components/SpotLightComponent.h>
-#include <Components/PointLightComponent.h>
+#include <Components/LightComponent.h>
 #include <vector>
 #include <map>
 #include <ECS/Entity.h>
@@ -40,9 +38,9 @@ namespace Nuclear
             RefCntAutoPtr<IBuffer> pAnimationCB;
 
             //baked lights
-            std::vector<Components::DirLightComponent*> DirLights;
-            std::vector<Components::PointLightComponent*> PointLights;
-            std::vector<Components::SpotLightComponent*> SpotLights;
+            std::vector<Components::LightComponent*> DirLights;
+            std::vector<Components::LightComponent*> PointLights;
+            std::vector<Components::LightComponent*> SpotLights;
 
             std::shared_ptr<Systems::CameraSystem> pCameraSystemPtr;
 

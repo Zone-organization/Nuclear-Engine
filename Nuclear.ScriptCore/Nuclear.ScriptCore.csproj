@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Platform\Input.cs" />
     <Compile Include="Utilities\Logger.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\EntityInfoComponent.cs" />

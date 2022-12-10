@@ -18,6 +18,7 @@ _____________/BOOOM\_____________
 #include <Graphics/Graphics.h>
 #include <Managers/Managers.h>
 #include <Importers/Importers.h>
+#include <Platform/Platform.h>
 #include <Audio/Audio.h>
 #include <Systems/Systems.h>
 #include <PhysX/PhysX.h>

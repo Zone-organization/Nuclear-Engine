@@ -1,8 +1,6 @@
 #include <Systems\DebugSystem.h>
 #include <Graphics/ImGui.h>
-#include <Components/DirLightComponent.h>
-#include <Components/SpotLightComponent.h>
-#include <Components/PointLightComponent.h>
+#include <Components/LightComponent.h>
 #include <Components/EntityInfoComponent.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/RenderSystem.h>
@@ -179,10 +177,10 @@ namespace Nuclear
 				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, mScene->GetSystemManager().GetSystem<RenderSystem>()->mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
 				{
-					auto view = mScene->GetRegistry().view<Components::DirLightComponent>();
+					auto view = mScene->GetRegistry().view<Components::LightComponent>();
 					for (auto entity : view)
 					{
-						auto& dirLightComp = view.get<Components::DirLightComponent>(entity);
+						auto& LightComp = view.get<Components::LightComponent>(entity);
 						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
 
 						EntityInfo.mTransform.Update();
@@ -206,27 +204,6 @@ namespace Nuclear
 						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
 
 						InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());*/
-					}
-				}
-				{
-					auto view = mScene->GetRegistry().view<Components::PointLightComponent>();
-					for (auto entity : view)
-					{
-						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
-
-						EntityInfo.mTransform.Update();
-						mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
-						auto AnimationBufferPtr = mScene->GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
-
-						Math::Matrix4 empty(0.0f);
-						PVoid data;
-						Graphics::Context::GetInstance().GetContext()->MapBuffer(AnimationBufferPtr, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
-						data = memcpy(data, &empty, sizeof(Math::Matrix4));
-						Graphics::Context::GetInstance().GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
-
-
-						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());
 					}
 				}
 			}
