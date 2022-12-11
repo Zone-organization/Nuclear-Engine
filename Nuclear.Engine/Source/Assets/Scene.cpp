@@ -29,7 +29,6 @@ namespace Nuclear
 		{
 			ECS::Entity result(GetRegistry(), GetRegistry().create());
 			auto& einfo = result.AddComponent<Components::EntityInfoComponent>();
-			einfo.mOwnerEntity = result;
 
 			return result;
 		}
@@ -37,7 +36,6 @@ namespace Nuclear
 		{
 			ECS::Entity result(GetRegistry(), GetRegistry().create());
 			auto& einfo = result.AddComponent<Components::EntityInfoComponent>(transform, name);
-			einfo.mOwnerEntity = result;
 
 			return result;
 		}
