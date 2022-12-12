@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\LightComponent.cs" />
+    <Compile Include="Graphics\Color.cs" />
     <Compile Include="Platform\Input.cs" />
     <Compile Include="Utilities\Logger.cs" />
     <Compile Include="Components\Component.cs" />

@@ -8,6 +8,7 @@
 #include <Core/Engine.h>
 #include <Core/Client.h>
 #include <Managers/SceneManager.h>
+#include <Components/LightComponent.h>
 
 namespace Nuclear
 {
@@ -59,6 +60,30 @@ namespace Nuclear
 			bool Platform_Input_IsKeyPressed(Platform::Input::KeyCode key)
 			{
 				return Platform::Input::GetInstance().IsKeyPressed(key);
+			}
+
+			void Components_LightComponent_GetColor(Uint32 id, Graphics::Color* outcolor)
+			{
+				ECS::Entity entity(Core::Engine::GetInstance().GetClient()->GetDefaultSceneManager()->GetActiveScene()->GetRegistry(), id);
+				*outcolor = entity.GetComponent<Components::LightComponent>().GetColor();
+			}
+
+			void Components_LightComponent_SetColor(Uint32 id, Graphics::Color* incolor)
+			{
+				ECS::Entity entity(Core::Engine::GetInstance().GetClient()->GetDefaultSceneManager()->GetActiveScene()->GetRegistry(), id);
+				entity.GetComponent<Components::LightComponent>().SetColor(*incolor);
+			}
+
+			float Components_LightComponent_GetIntensity(Uint32 id)
+			{
+				ECS::Entity entity(Core::Engine::GetInstance().GetClient()->GetDefaultSceneManager()->GetActiveScene()->GetRegistry(), id);
+				return entity.GetComponent<Components::LightComponent>().GetIntensity();
+			}
+
+			void Components_LightComponent_SetIntensity(Uint32 id, float inIntensity)
+			{
+				ECS::Entity entity(Core::Engine::GetInstance().GetClient()->GetDefaultSceneManager()->GetActiveScene()->GetRegistry(), id);
+				entity.GetComponent<Components::LightComponent>().SetIntensity(inIntensity);
 			}
 		
 		}

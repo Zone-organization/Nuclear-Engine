@@ -20,15 +20,17 @@ namespace Nuclear
 				ALL = 7
 			};
 
-			Transform(Math::Vector3 position = Math::Vector3(0.0f), Math::Vector3 scale = Math::Vector3(1.0f), Math::Quaternion rotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+			Transform(const Math::Vector3& position = Math::Vector3(0.0f),
+				const Math::Vector3& scale = Math::Vector3(1.0f),
+				const Math::Quaternion& rotation = Math::Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
 			~Transform();
 
-			void SetPosition(Math::Vector3 position);
-			void SetRotation(Math::Quaternion rotation);
+			void SetPosition(const Math::Vector3& position);
+			void SetRotation(const Math::Quaternion& rotation);
 			void SetRotation(const Math::Vector3& axis, float angle);
 			void SetRotation(const Math::Vector3& eular);
 
-			void SetScale(Math::Vector3 scale);
+			void SetScale(const Math::Vector3& scale);
 			void SetScale(float scale);
 
 			Math::Vector3 GetLocalPosition();

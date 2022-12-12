@@ -11,7 +11,7 @@ namespace Nuclear
 		//	mWorldMatrix = Transform;
 		//}
 
-		Transform::Transform(Math::Vector3 position, Math::Vector3 scale, Math::Quaternion rotation)
+		Transform::Transform(const Math::Vector3& position, const Math::Vector3& scale, const Math::Quaternion& rotation)
 		{
 			mWorldMatrix = Math::Matrix4(1.0f);
 			mLocalPosition = position;
@@ -26,14 +26,14 @@ namespace Nuclear
 		{
 		}
 
-		void Transform::SetPosition(Math::Vector3 position)
+		void Transform::SetPosition(const Math::Vector3& position)
 		{
 			mLocalPosition = position;
 			mDirty = TRANSLATION;
 			Update();
 		}
 
-		void Transform::SetRotation(Math::Quaternion rotation)
+		void Transform::SetRotation(const Math::Quaternion& rotation)
 		{
 			mLocalRotation = rotation;
 			mDirty = ROTATION;
@@ -51,7 +51,7 @@ namespace Nuclear
 			mDirty = ROTATION;
 		}
 
-		void Transform::SetScale(Math::Vector3 scale)
+		void Transform::SetScale(const Math::Vector3& scale)
 		{
 			mLocalScale = scale;
 			mDirty = SCALE;
