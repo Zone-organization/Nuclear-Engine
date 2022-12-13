@@ -3,7 +3,7 @@
 #include <Platform\FileSystem.h>
 #include <Utilities/Hash.h>
 #include <Utilities/Logger.h>
-#include <Managers/AssetManager.h>
+#include <Importers/AssetsImporter.h>
 #include "Rendering/ImageBasedLighting.h"
 
 namespace Nuclear
@@ -202,8 +202,8 @@ namespace Nuclear
 				Info.mMainPSOCreateInfo.mVertexShader.mDefines.insert(i);
 				Info.mMainPSOCreateInfo.mPixelShader.mDefines.insert(i);
 			}
-			GraphicsEngine::GetInstance().GetShaderManager().CreateShader(VShader.RawDblPtr(), Info.mMainPSOCreateInfo.mVertexShader);
-			GraphicsEngine::GetInstance().GetShaderManager().CreateShader(PShader.RawDblPtr(), Info.mMainPSOCreateInfo.mPixelShader);
+			GraphicsEngine::GetInstance().CreateShader(VShader.RawDblPtr(), Info.mMainPSOCreateInfo.mVertexShader);
+			GraphicsEngine::GetInstance().CreateShader(PShader.RawDblPtr(), Info.mMainPSOCreateInfo.mPixelShader);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			std::string psoname(Desc.mName + "_FID_" + std::to_string(Info.mHashKey));
@@ -213,14 +213,14 @@ namespace Nuclear
 			PSOCreateInfo.pVS = VShader;
 			PSOCreateInfo.pPS = PShader;
 
-			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetBasicVSLayout(false);
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(false);
 			if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
 			{
 				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 			}
-			auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VShader, PShader);
-			Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&result.mPipeline, PSOCreateInfo, Vars, true);
+			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
+			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&result.mPipeline, PSOCreateInfo, Vars, true);
 
 			if (Desc.pBakingDesc)
 			{
@@ -276,8 +276,8 @@ namespace Nuclear
 					Info.mGBufferPSOCreateInfo.mVertexShader.mDefines.insert(i);
 					Info.mGBufferPSOCreateInfo.mPixelShader.mDefines.insert(i);
 				}
-				GraphicsEngine::GetInstance().GetShaderManager().CreateShader(VSShader.RawDblPtr(), Info.mGBufferPSOCreateInfo.mVertexShader);
-				GraphicsEngine::GetInstance().GetShaderManager().CreateShader(PSShader.RawDblPtr(), Info.mGBufferPSOCreateInfo.mPixelShader);
+				GraphicsEngine::GetInstance().CreateShader(VSShader.RawDblPtr(), Info.mGBufferPSOCreateInfo.mVertexShader);
+				GraphicsEngine::GetInstance().CreateShader(PSShader.RawDblPtr(), Info.mGBufferPSOCreateInfo.mPixelShader);
 
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
@@ -287,15 +287,15 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
 
-				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetBasicVSLayout(false);
+				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(false);
 				if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
 				{
 					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 				}
 
-				auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&result.mGBufferPipeline, PSOCreateInfo, Vars, true);
+				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
+				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&result.mGBufferPipeline, PSOCreateInfo, Vars, true);
 
 
 				if (Desc.pBakingDesc)
@@ -335,8 +335,8 @@ namespace Nuclear
 					Info.mMainPSOCreateInfo.mVertexShader.mDefines.insert(i);
 					Info.mMainPSOCreateInfo.mPixelShader.mDefines.insert(i);
 				}
-				GraphicsEngine::GetInstance().GetShaderManager().CreateShader(VSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mVertexShader);
-				GraphicsEngine::GetInstance().GetShaderManager().CreateShader(PSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mPixelShader);
+				GraphicsEngine::GetInstance().CreateShader(VSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mVertexShader);
+				GraphicsEngine::GetInstance().CreateShader(PSShader.RawDblPtr(), Info.mMainPSOCreateInfo.mPixelShader);
 				PSOCreateInfo.PSODesc.Name = psoname.c_str();
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
@@ -346,15 +346,15 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = FALSE;
 
-				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetBasicVSLayout(true);
+				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(true);
 				if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
 				{
 					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 				}
 
-				auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&result.mPipeline, PSOCreateInfo, Vars, true);
+				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
+				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&result.mPipeline, PSOCreateInfo, Vars, true);
 
 				if (Desc.pBakingDesc)
 				{
@@ -447,7 +447,7 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+							ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
@@ -488,7 +488,7 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex = Managers::AssetManager::DefaultWhiteTex;
+							tex->mTex = Importers::AssetsImporter::GetInstance().DefaultWhiteTex;
 							tex->mTex.SetName(VarName);
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
@@ -499,7 +499,7 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+							ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
@@ -541,7 +541,7 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex = Managers::AssetManager::DefaultWhiteTex;
+							tex->mTex = Importers::AssetsImporter::GetInstance().DefaultWhiteTex;
 							tex->mTex.SetName(VarName);
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
@@ -552,7 +552,7 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+							ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
@@ -566,7 +566,7 @@ namespace Nuclear
 								VarName.erase(0, 6);
 
 								Assets::ShaderTexture ReflectedTex;
-								ReflectedTex.mTex = Managers::AssetManager::DefaultBlackTex;
+								ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
 								ReflectedTex.mTex.SetName(VarName);
 								ReflectedTex.mSlot = i;
 								ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;

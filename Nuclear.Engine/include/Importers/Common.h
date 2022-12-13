@@ -9,13 +9,13 @@
 
 namespace Nuclear
 {
-	namespace Assets {
+	namespace Assets
+	{
 		class Mesh;
 		class Material;
 		class MaterialData;
 		class Animations;
 	}
-	namespace Managers { class AssetManager; }
 
 	namespace Importers
 	{
@@ -145,7 +145,6 @@ namespace Nuclear
 		{
 			const char* mPath;
 			MeshLoadingDesc mMeshDesc = MeshLoadingDesc();
-			Managers::AssetManager* mManager = nullptr;
 		};
 
 		struct ScriptImportingDesc

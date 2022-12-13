@@ -1,6 +1,6 @@
 #include "Rendering/Skybox.h"
 #include <Graphics/Context.h>
-#include <Managers/AssetManager.h>
+#include <Importers\AssetsImporter.h>
 #include <Components/CameraComponent.h>
 #include "Graphics/GraphicsEngine.h"
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
@@ -138,8 +138,8 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			Graphics::GraphicsEngine::GetInstance().GetShaderManager().CreateShader(Platform::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
-			Graphics::GraphicsEngine::GetInstance().GetShaderManager().CreateShader(Platform::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
+			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
+			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 
 			LayoutElement LayoutElems[] =

@@ -10,7 +10,7 @@ namespace Nuclear
 	}
 	namespace Managers
 	{
-		class AssetManager;
+		class AssetsImporter;
 		class SceneManager;
 	}
 	namespace Core
@@ -54,12 +54,6 @@ namespace Nuclear
 			// Helper Functions
 			virtual void LoadFinishUp();
 
-			void SetDefaultSceneManager(Managers::SceneManager* scenemanager);
-			Managers::SceneManager* GetDefaultSceneManager();
-
-			void SetDefaultAssetManager(Managers::AssetManager* assetmanager);
-			Managers::AssetManager* GetDefaultAssetManager();
-
 			float FPS, FrameTime, ClockTime;
 
 			float DeltaTime = 0.0f;	// time between current frame and last frame
@@ -67,8 +61,6 @@ namespace Nuclear
 		protected:
 			ClientInfo minfo;
 			Assets::Scene* pScene;
-			Managers::SceneManager* mSceneManager;
-			Managers::AssetManager* mAssetManager;
 		};
 	}
 }

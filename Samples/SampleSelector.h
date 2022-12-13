@@ -10,10 +10,6 @@ class SampleSelector : public Core::Client
 {
 public:
 
-	//Asset Manager (Loader) for all samples
-	Managers::AssetManager AssetLoader;
-	Managers::SceneManager SceneMgr;
-
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
@@ -28,16 +24,8 @@ public:
 		Core::Engine::GetInstance().EndFrame();
 		Core::Engine::GetInstance().EndClient();
 
-		sample->SetDefaultAssetManager(&AssetLoader);
-		sample->SetDefaultSceneManager(&SceneMgr);
-
 		Core::Engine::GetInstance().LoadClient(sample);
 		Core::Engine::GetInstance().EndClient();
-	}
-
-	void Load()
-	{
-		AssetLoader.Initialize();
 	}
 
 	void Render(float dt) override

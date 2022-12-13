@@ -8,9 +8,6 @@
 
 namespace Nuclear
 {
-	namespace Managers {
-		class SceneManager;
-	}
 	namespace Components { class CameraComponent; }
 	namespace Assets
 	{
@@ -18,7 +15,6 @@ namespace Nuclear
 
 		class NEAPI Scene : public Asset<Scene>
 		{
-			friend class Managers::SceneManager;
 		public:
 			Scene();
 			~Scene();
@@ -35,8 +31,7 @@ namespace Nuclear
 			ECS::SystemManager& GetSystemManager();
 			entt::registry& GetRegistry();
 
-		private: 
-			Managers::SceneManager* ParentSceneMgr;
+			void Update(ECS::TimeDelta dt);
 		};
 	}
 }

@@ -3,9 +3,10 @@
 
 namespace Nuclear
 {
-	namespace Utilities
+	namespace Interfaces
 	{
-		class NEAPI NonCopyable {
+		class NEAPI NonCopyable
+		{
 		protected:
 			NonCopyable() = default;
 			~NonCopyable() = default;

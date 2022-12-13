@@ -5,7 +5,7 @@
 #include <Components\CameraComponent.h>
 #include <Components\MeshComponent.h>
 #include <Graphics\GraphicsEngine.h>
-#include <Managers\AssetManager.h>
+#include <Importers\AssetsImporter.h>
 #include <Assets\Scene.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Assets\DefaultMeshes.h>
@@ -312,7 +312,7 @@ namespace Nuclear
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
 
-			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetBasicVSLayout(true);
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(true);
 
 			//Create Vertex Shader
 			{
@@ -327,7 +327,7 @@ namespace Nuclear
 
 				auto source = Platform::FileSystem::LoadShader("@NuclearAssets@/Shaders/BasicVertex.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetDefaultShaderSourceFactory();
+				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
 
 				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 			}
@@ -351,8 +351,8 @@ namespace Nuclear
 			PSOCreateInfo.pPS = PSShader;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-			auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VSShader, PSShader);
-			Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&pSceneToScreenPSO, PSOCreateInfo, Vars, true);
+			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
+			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pSceneToScreenPSO, PSOCreateInfo, Vars, true);
 			pSceneToScreenPSO->CreateShaderResourceBinding(pSceneToScreenSRB.RawDblPtr());
 		}
 

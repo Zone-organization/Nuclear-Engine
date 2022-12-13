@@ -12,6 +12,7 @@ namespace Nuclear
 {
 	namespace Graphics {
 		class Camera;
+		class RenderTarget;
 	}
 	namespace Systems
 	{

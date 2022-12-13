@@ -6,7 +6,7 @@
 #include <utility>
 #include <cassert>
 #include <memory>
-#include "Utilities/NonCopyable.h"
+#include "Interfaces/NonCopyable.h"
 
 
 namespace Nuclear
@@ -19,7 +19,7 @@ namespace Nuclear
 	namespace ECS
 	{
 
-		class NEAPI BaseSystem : Utilities::NonCopyable {
+		class NEAPI BaseSystem : Interfaces::NonCopyable {
 		public:
 			typedef size_t Family;
 
@@ -52,7 +52,7 @@ namespace Nuclear
 			}
 		};
 
-		class NEAPI SystemManager : Utilities::NonCopyable {
+		class NEAPI SystemManager : Interfaces::NonCopyable {
 		public:
 			SystemManager() {}
 

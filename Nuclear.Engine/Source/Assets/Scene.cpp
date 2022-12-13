@@ -7,9 +7,7 @@
 #include <Assets/DefaultMeshes.h>
 #include "..\PhysX\PhysXTypes.h"
 #include <Assets/Material.h>
-#include <Managers\SceneManager.h>
 #include <Core/Engine.h>
-#include <Core/Client.h>
 #include <Utilities/Logger.h>
 
 namespace Nuclear
@@ -115,21 +113,29 @@ namespace Nuclear
 
 		ECS::SystemManager& Scene::GetSystemManager()
 		{
-
-			if (ParentSceneMgr->GetActiveScene() != this)
+			if (Core::Engine::GetInstance().GetActiveScene() != this)
 			{
 				NUCLEAR_ERROR("[Scene] [GetSystemManager] Active Scene mismatch!");
 			}
-			return ParentSceneMgr->GetSystemManager();
+			return Core::Engine::GetInstance().GetSystemManager();
 		}
 
 		entt::registry& Scene::GetRegistry()
 		{
-			if (ParentSceneMgr->GetActiveScene() != this)
+			if (Core::Engine::GetInstance().GetActiveScene() != this)
 			{
 				NUCLEAR_ERROR("[Scene] [GetRegistry] Active Scene mismatch!");
 			}
-			return ParentSceneMgr->GetRegistry();
+			return Core::Engine::GetInstance().GetRegistry();
+		}
+
+		void Scene::Update(ECS::TimeDelta dt)
+		{
+			if (Core::Engine::GetInstance().GetActiveScene() != this)
+			{
+				NUCLEAR_ERROR("[Scene] [GetRegistry] Active Scene mismatch!");
+			}
+			return GetSystemManager().Update_All(dt);
 		}
 
 	/*	void Scene::Save()

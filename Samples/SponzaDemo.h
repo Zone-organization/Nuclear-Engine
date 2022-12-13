@@ -71,7 +71,7 @@ public:
 		Assets::Animations* Placeholder;
 
 		//Load Sponza Model
-		std::tie(SponzaAsset, SponzaMaterial, Placeholder) = mAssetManager->Import("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
+		std::tie(SponzaAsset, SponzaMaterial, Placeholder) = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
 
 		SponzaPBRMaterial.Create(SponzaMaterial, PBR);
 		SponzaBlinnPhongMaterial.Create(SponzaMaterial, BlinnPhong);
@@ -115,8 +115,8 @@ public:
 	{
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
-		PBR = mAssetManager->Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
-		BlinnPhong = mAssetManager->Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		PBR = Importers::AssetsImporter::GetInstance().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		BlinnPhong = Importers::AssetsImporter::GetInstance().Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
 
 		Renderer->SetIBLContext(&IBL);
 		Renderer->RegisterShader(PBR);
@@ -132,7 +132,7 @@ public:
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 
-		HDREnv = mAssetManager->Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+		HDREnv = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
 
 		Rendering::ImageBasedLightingDesc desc;
 		IBL.Initialize(desc);
@@ -170,9 +170,9 @@ public:
 
 	void Load()
 	{
-		mSceneManager->CreateScene(&Scene, true);
+		Core::Engine::GetInstance().CreateScene(&Scene, true);
 
-		mAssetManager->Initialize();
+		Importers::AssetsImporter::GetInstance().Initialize();
 
 		EController = Scene.CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
@@ -274,7 +274,7 @@ public:
 
 		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
 
-		mSceneManager->Update(dt);
+		Scene.Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample3: Sponza Rendering");
@@ -349,6 +349,6 @@ public:
 
 	void Shutdown() override
 	{
-		mAssetManager->FlushContainers();
+		Importers::AssetsImporter::GetInstance().FlushContainers();
 	}
 };

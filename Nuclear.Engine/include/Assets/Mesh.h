@@ -19,7 +19,7 @@ namespace Nuclear {
 				Vertex()
 					: Position(Math::Vector3(0.0f)), Normal(Math::Vector3(0.0f)), Tangents(Math::Vector3(0.0f)), Bitangents(Math::Vector3(0.0f)), UV(Math::Vector2(0.0f)) {}
 				Vertex(const Math::Vector3& p, const Math::Vector3& n, const Math::Vector3& t, const Math::Vector3& b, const Math::Vector2& uv)
-					: Position(p), Normal(n), Tangents(t), UV(uv) {}
+					: Position(p), Normal(n), Tangents(t), Bitangents(b), UV(uv) {}
 				Vertex(
 					float px, float py, float pz,
 					float nx, float ny, float nz,

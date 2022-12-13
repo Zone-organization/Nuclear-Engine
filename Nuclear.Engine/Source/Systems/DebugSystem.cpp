@@ -4,7 +4,7 @@
 #include <Components/EntityInfoComponent.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/RenderSystem.h>
-#include <Managers\AssetManager.h>
+#include <Importers\AssetsImporter.h>
 #include <Assets/Scene.h>
 #include <Utilities/Logger.h>
 #include <Assets\DefaultMeshes.h>
@@ -135,14 +135,14 @@ namespace Nuclear
 			PSOCreateInfo.pVS = VShader;
 			PSOCreateInfo.pPS = PShader;
 
-			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetBasicVSLayout(false);
+			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(false);
 			if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
 			{
 				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 			}
-			auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VShader, PShader);
-			Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&pShader.mPipeline, PSOCreateInfo, Vars, true);
+			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
+			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pShader.mPipeline, PSOCreateInfo, Vars, true);
 
 			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(mScene->GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB());
 			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(_AnimationBufferPtr);
@@ -195,7 +195,7 @@ namespace Nuclear
 						Graphics::Context::GetInstance().GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
 
 
-						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Importers::AssetsImporter::GetInstance().DefaultGreyTex.GetImage());
 
 
 						//TODO: Render Cube at direction
@@ -203,7 +203,7 @@ namespace Nuclear
 						mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
 						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
 
-						InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Managers::AssetManager::DefaultGreyTex.GetImage());*/
+						InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Importers::AssetsImporter::DefaultGreyTex.GetImage());*/
 					}
 				}
 			}

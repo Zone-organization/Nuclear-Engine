@@ -1,6 +1,9 @@
 #pragma once
 #include <NE_Common.h>
-#include <Managers\ShaderManager.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/InputLayout.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
+#include <Graphics/ShaderTypes.h>
 
 struct SDL_Window;
 
@@ -31,12 +34,30 @@ namespace Nuclear
 
 			bool Initialize(const GraphicsEngineDesc& desc);
 			void Shutdown();
-			Managers::ShaderManager& GetShaderManager();
 
 			bool isGammaCorrect();
 
+			std::vector<LayoutElement> GetBasicVSLayout(bool isDeffered);
+			void CreateShader(IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
+			IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();
+
+
+
+			bool ProcessAndCreatePipeline(
+				IPipelineState** PipelineState,
+				GraphicsPipelineStateCreateInfo& Desc,
+				const std::vector<ShaderResourceVariableDesc>& Resources,
+				bool AutoCreateSamplersDesc = true,
+				const std::vector<ImmutableSamplerDesc>& StaticSamplers = std::vector<ImmutableSamplerDesc>());
+
+			std::vector<ShaderResourceVariableDesc> ReflectShaderVariables(IShader* VShader, IShader* PShader);
+
+			void CreateShader(const std::string& source, IShader** shader, SHADER_TYPE type);
+
+			SHADER_RESOURCE_VARIABLE_TYPE ParseNameToGetType(const std::string& name);
+
 		protected:
-			Managers::ShaderManager mDefaultShaderManager;
+			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
 
 		private:
 			GraphicsEngine();

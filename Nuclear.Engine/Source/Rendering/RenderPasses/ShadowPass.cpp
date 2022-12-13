@@ -293,8 +293,8 @@ namespace Nuclear
 			PSOCreateInfo.pPS = PSShader;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-			auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VSShader, PSShader);
-			Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&mPositionalShadowMapDepthPSO, PSOCreateInfo, Vars, true);
+			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
+			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&mPositionalShadowMapDepthPSO, PSOCreateInfo, Vars, true);
 
 			BufferDesc CBDesc;
 			CBDesc.Name = "PositionalLightInfo_CB";
@@ -462,8 +462,8 @@ namespace Nuclear
 			PSOCreateInfo.pPS = PSShader;
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-			auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VSShader, PSShader);
-			Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&mOmniDirShadowPassPSO, PSOCreateInfo, Vars, true);
+			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
+			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&mOmniDirShadowPassPSO, PSOCreateInfo, Vars, true);
 
 			{
 				BufferDesc CBDesc;

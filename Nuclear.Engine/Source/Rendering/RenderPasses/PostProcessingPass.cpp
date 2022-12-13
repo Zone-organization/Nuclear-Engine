@@ -239,7 +239,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::LoadShader(mDesc.PostFX_VS_Path, std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetShaderManager().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 				}
@@ -264,8 +264,8 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
-				auto Vars = Graphics::GraphicsEngine::GetInstance().GetShaderManager().ReflectShaderVariables(VSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().GetShaderManager().ProcessAndCreatePipeline(&pBloomExtractPSO, PSOCreateInfo, Vars, true);
+				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
+				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pBloomExtractPSO, PSOCreateInfo, Vars, true);
 				pBloomExtractPSO->CreateShaderResourceBinding(pBloomExtractSRB.RawDblPtr());
 			}
 

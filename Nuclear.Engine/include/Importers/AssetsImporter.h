@@ -2,7 +2,7 @@
 #include <Importers/Common.h>
 #include <Assets\AssetLibrary.h>
 #include <Threading\ThreadPool.h>
-#include <Importers\AssimpImporter.h>
+#include <Importers\Internal\AssimpImporter.h>
 
 #include <FMOD/inc/fmod.hpp>
 #include <array>
@@ -13,22 +13,8 @@ typedef struct FT_LibraryRec_* FT_Library;
 namespace msdfgen { class FreetypeHandle; }
 namespace Nuclear 
 {
-	namespace Managers
+	namespace Importers
 	{
-		enum ASSET_MANAGER_FLUSH_FLAGS
-		{
-			ASSET_MANAGER_FLUSH_NONE = 0x00,
-			ASSET_MANAGER_FLUSH_MESHES = 0x01,
-			ASSET_MANAGER_FLUSH_MESHES_NAMES = 0x02,
-			ASSET_MANAGER_FLUSH_TEXTURES = 0x03,
-			ASSET_MANAGER_FLUSH_TEXTURES_NAMES = 0x04,
-			ASSET_MANAGER_FLUSH_MATERIALS = 0x05,
-			ASSET_MANAGER_FLUSH_MATERIALS_NAMES = 0x06,
-			ASSET_MANAGER_FLUSH_ALL = 0x07,
-		};
-		DEFINE_FLAG_ENUM_OPERATORS(ASSET_MANAGER_FLUSH_FLAGS)
-
-
 		enum AUDIO_IMPORT_MODE
 		{
 			AUDIO_IMPORT_MODE_DEFAULT = 0x00000000,
@@ -64,17 +50,20 @@ namespace Nuclear
 
 		struct AssetManagerDesc
 		{
-			std::string mName = "UnNamed AssetManager";
-			ASSET_MANAGER_FLUSH_FLAGS mFlushFlagOnShutdown = ASSET_MANAGER_FLUSH_ALL;
 			bool mSaveTexturePaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
 			bool mSaveMeshPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real mesh name or not
 			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real material name or not
 		};
 
-		class NEAPI AssetManager {
+		class NEAPI AssetsImporter {
 		public:
-			AssetManager(AssetManagerDesc desc = AssetManagerDesc());
-			~AssetManager();
+			AssetsImporter(AssetsImporter const&) = delete;
+			void operator=(AssetsImporter const&) = delete;
+
+			static AssetsImporter& GetInstance();
+
+			//AssetsImporter(AssetManagerDesc desc = AssetManagerDesc());
+		//	~AssetsImporter();
 
 			Assets::AssetLibrary mLibrary;
 
@@ -84,7 +73,7 @@ namespace Nuclear
 			//Importers::MeshImporterDelegate mMeshImporter;
 
 			//Note: Automatically called on Destruction
-			void FlushContainers(ASSET_MANAGER_FLUSH_FLAGS = ASSET_MANAGER_FLUSH_ALL);
+			void FlushContainers();
 			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
 			//Textures
@@ -110,13 +99,13 @@ namespace Nuclear
 
 			Assets::Script* Import(const Core::Path& Path, const Importers::ScriptImportingDesc& desc);
 
-			static Graphics::Texture DefaultBlackTex;
-			static Graphics::Texture DefaultGreyTex;
-			static Graphics::Texture DefaultWhiteTex;
+			Graphics::Texture DefaultBlackTex;
+			Graphics::Texture DefaultGreyTex;
+			Graphics::Texture DefaultWhiteTex;
 
-			static Graphics::Texture DefaultDiffuseTex;
-			static Graphics::Texture DefaultSpecularTex;
-			static Graphics::Texture DefaultNormalTex;
+			Graphics::Texture DefaultDiffuseTex;
+			Graphics::Texture DefaultSpecularTex;
+			Graphics::Texture DefaultNormalTex;
 
 			Assets::AssetType GetAssetType(const std::string& filename);
 		//	Graphics::Texture SaveToImport(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
@@ -130,14 +119,16 @@ namespace Nuclear
 			Threading::ThreadPool mThreadPool;
 
 			//////////////////////////////////////////////////////////////////////////////////
-		private:
+		protected:
 			AssetManagerDesc mDesc;
 			Assets::Image* TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc);
 			msdfgen::FreetypeHandle* FT_Handle;
 
 			Assets::AssetLibrary mSavedToImport;
-			Importers::AssimpImporter mDefaultAssimpImporter;
-			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceISFactory;
+			Importers::Internal::AssimpImporter mAssimpImporter;
+
+		private:
+			AssetsImporter();
 		};
 	}
 }

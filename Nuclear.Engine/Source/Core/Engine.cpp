@@ -7,7 +7,7 @@
 
 #include <Graphics\Context.h>
 #include <Assets\DefaultMeshes.h>
-#include <Importers\FreeImageImporter.h>
+#include <Importers\Internal\FreeImageImporter.h>
 
 #include "..\Graphics\ImGUI\imgui_impl_sdl.h"
 #include "..\Graphics\ImGUI\imgui_impl.h"
@@ -21,6 +21,8 @@
 #include <Graphics\GraphicsEngine.h>
 #include <PhysX\PhysXEngine.h>
 #include <Scripting/ScriptingEngine.h>
+
+#include <Importers/AssetsImporter.h>
 
 //Dependencies Linking
 #pragma comment(lib,"assimp-vc143-mt.lib")
@@ -150,7 +152,7 @@ namespace Nuclear {
 			}
 			gisDebug = desc.Debug;
 
-			Importers::FreeImage::Initialize();
+			Importers::AssetsImporter::GetInstance().Initialize();
 
 			NUCLEAR_INFO("[Engine] Nuclear Engine has been initalized successfully!");
 			return true;
@@ -166,7 +168,6 @@ namespace Nuclear {
 		void Engine::Shutdown()
 		{
 			NUCLEAR_INFO("[Engine] Shutting Down Engine.");
-			Importers::FreeImage::Shutdown();
 
 			pClient = nullptr;
 			Audio::AudioEngine::GetInstance().Shutdown();
@@ -333,6 +334,43 @@ namespace Nuclear {
 			}
 
 			NUCLEAR_INFO("[Engine] Client state changed to '{0}'", name);
+		}
+
+		void Engine::CreateScene(Assets::Scene* scene, bool SetAsActive)
+		{
+			if (scene->GetName() == std::string())
+			{
+				NUCLEAR_WARN("[Engine] Creating a scene with no name, hence the scene has been given a name automatically.");
+				static int scenes = 0;
+				scene->SetName("UnNamed_Scene" + std::to_string(scenes));
+				scenes++;
+			}
+			if (SetAsActive)
+			{
+				SetActiveScene(scene);
+			}
+		}
+		ECS::SystemManager& Engine::GetSystemManager()
+		{
+			return mSystems;
+		}
+		entt::registry& Engine::GetRegistry()
+		{
+			return mRegistry;
+		}
+	/*	void Engine::Update(ECS::TimeDelta dt)
+		{
+			mSystems.Update_All(dt);
+		}*/
+		void Engine::SetActiveScene(Assets::Scene* scene)
+		{
+			//TODO
+			mSystems.SetScene(scene);
+			pActiveScene = scene;
+		}
+		Assets::Scene* Engine::GetActiveScene()
+		{
+			return pActiveScene;
 		}
 
 		void PrintIntroLog()

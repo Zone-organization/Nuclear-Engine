@@ -2,7 +2,6 @@
 #include "Math/glm/gtc/matrix_inverse.hpp"
 #include <Core/Engine.h>
 #include <Diligent/Graphics/GraphicsTools/interface/CommonlyUsedStates.h>
-#include <Managers\ShaderManager.h>
 #include <Platform\FileSystem.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Utilities/Logger.h>
