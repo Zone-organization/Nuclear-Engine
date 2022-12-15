@@ -13,7 +13,7 @@ namespace Nuclear
 	{
 		class Material;
 
-		class NEAPI Scene : public Asset<Scene>
+		class NEAPI Scene : public Asset
 		{
 		public:
 			Scene();
@@ -27,7 +27,6 @@ namespace Nuclear
 			ECS::Entity CreateSphere(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 			ECS::Entity CreatePlane(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 
-			//void Save();
 			ECS::SystemManager& GetSystemManager();
 			entt::registry& GetRegistry();
 

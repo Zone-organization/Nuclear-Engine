@@ -60,6 +60,8 @@ int main(int argc, char* argv[])
 	Core::Engine::GetInstance().Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
 
+	Serialization::SerializationEngine::GetInstance().SaveScene(nullptr);
+
 	while (!Core::Engine::GetInstance().ShouldClose())
 	{
 		SampleSelector selector;

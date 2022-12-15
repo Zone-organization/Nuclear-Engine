@@ -7,7 +7,7 @@ namespace Nuclear
 	namespace Assets
 	{
 
-		class NEAPI Script : public Asset<Script>
+		class NEAPI Script : public Asset
 		{
 		public:
 			Script();

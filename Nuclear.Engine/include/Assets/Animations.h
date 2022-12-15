@@ -11,7 +11,7 @@ namespace Nuclear
 	namespace Assets
 	{
 
-		class NEAPI Animations : public Asset<Animations>
+		class NEAPI Animations : public Asset
 		{
 		public:
 			Animations();

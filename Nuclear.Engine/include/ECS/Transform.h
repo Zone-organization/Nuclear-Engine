@@ -1,8 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Math\Math.h>
-#include <cereal/access.hpp>
-
+#include <bitsery/details/serialization_common.h>
 namespace Nuclear
 {
 	namespace ECS
@@ -44,16 +43,25 @@ namespace Nuclear
 
 			void Update();
 		protected:
+			friend bitsery::Access;
+
 			Math::Vector3 mLocalPosition;
 			Math::Quaternion mLocalRotation;
 			Math::Vector3 mLocalScale;
 
 			Math::Vector3 mWorldPosition = Math::Vector3(0.0f);
 
+			template<class S> void serialize(S& s)
+			{
+				s.object(mLocalPosition);
+				s.object(mLocalRotation);
+				s.object(mLocalScale);
+				s.object(mWorldPosition);
+			}
+
+		private:
 			Math::Matrix4 mWorldMatrix = Math::Matrix4(1.0f);
 			Byte mDirty = NONE;
-
-			friend class cereal::access;
 		};
 	}
 }

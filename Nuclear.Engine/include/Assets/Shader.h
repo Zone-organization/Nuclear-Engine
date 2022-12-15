@@ -20,7 +20,7 @@ namespace Nuclear
             bool mSupportShadows = false;
         };
 
-        class NEAPI Shader : public Asset<Shader>
+        class NEAPI Shader : public Asset
         {
         public: 
             Shader();

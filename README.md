@@ -18,14 +18,14 @@
 ## Current To-dos 
   - W.I.P:
 	- Finish reflecting the C++ api to the C# scripting assembly
-	- Multithreading Engine
-		- Async task system
-		- Async asset loading
+	- Serializing the scene.
 	
   - On-Hold:
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).
-
+	- Multithreading Engine
+		- Async asset loading
+		
   - TODO:
   	- CSM
 	- SSAO
@@ -67,7 +67,7 @@ Follow the instructions below to compile and run the engine from source.
 | IMGUI | included | Built with the engine |
 | stb_truetype | included | Built with the engine |
 | entt | included | Built with the engine |
-| cereal | included | Built with the engine |
+| bitsery | included | Built with the engine |
 
 Download external dependencies through their sites.
 Put all their .lib in the bin folder.

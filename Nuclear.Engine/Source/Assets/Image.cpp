@@ -8,10 +8,12 @@ namespace Nuclear
 	namespace Assets 
 	{
 		Image::Image()
+			: Asset(AssetType::Image)
 		{
 		}
 
 		Image::Image(const Assets::ImageData& src_data, const Importers::ImageLoadingDesc& Desc)
+			: Asset(AssetType::Image)
 		{
 			mData = src_data;
 			CreateTextureFromRawImage(src_data, Desc);

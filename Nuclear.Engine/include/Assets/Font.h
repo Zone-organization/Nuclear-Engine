@@ -22,7 +22,7 @@ namespace Nuclear
 			unsigned int Advance;    // Offset to advance to next glyph
 		};
 
-		class NEAPI Font : public Asset<Font>
+		class NEAPI Font : public Asset
 		{
 		public:
 			Font();

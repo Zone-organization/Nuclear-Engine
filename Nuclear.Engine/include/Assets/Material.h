@@ -14,15 +14,21 @@ namespace Nuclear
 		class Shader;
 
 		//Describes the textures only
-		class NEAPI MaterialData : public Asset<MaterialData>
+		class NEAPI MaterialData : public Asset
 		{
 		public:
+			MaterialData()
+				: Asset(AssetType::MaterialData)
+			{
+
+			}
+
 			std::vector<TextureSet> mTextures;
 
 		};
 
 		//Defines integration between Textures & Shaders
-		class NEAPI Material : public Asset<Material>
+		class NEAPI Material : public Asset
 		{
 		public:
 			Material();

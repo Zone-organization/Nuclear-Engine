@@ -10,6 +10,7 @@ namespace Nuclear
 	namespace Assets
 	{	
 		Material::Material()
+			: Asset(AssetType::Material)
 		{
 		}
 		Material::~Material()

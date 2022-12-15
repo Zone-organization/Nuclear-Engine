@@ -13,7 +13,7 @@ namespace Nuclear
 
 	namespace Assets
 	{
-		class NEAPI AudioClip : public Asset<AudioClip>
+		class NEAPI AudioClip : public Asset
 		{
 		public:
 			AudioClip();

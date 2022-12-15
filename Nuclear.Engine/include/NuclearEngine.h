@@ -20,6 +20,7 @@ _____________/BOOOM\_____________
 #include <Platform/Platform.h>
 #include <Audio/Audio.h>
 #include <Systems/Systems.h>
+#include <Serialization/Serialization.h>
 #include <PhysX/PhysX.h>
 #include <Scripting/Scripting.h>
 #include <Rendering/Rendering.h>

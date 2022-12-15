@@ -8,7 +8,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class NEAPI Image : public Asset<Image>
+		class NEAPI Image : public Asset
 		{
 		public:
 			Image();

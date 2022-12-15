@@ -4,6 +4,7 @@ namespace Nuclear
 	namespace Assets
 	{
 		Script::Script()
+			: Asset(AssetType::Script)
 		{
 
 		}

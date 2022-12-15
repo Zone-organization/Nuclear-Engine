@@ -1,8 +1,6 @@
 #include <Assets\Scene.h>
-#include <cereal/archives/json.hpp>
 #include <sstream>
 #include <Components\Components.h>
-#include <Serialization/ComponentsArchive.h>
 #include <Systems\PhysXSystem.h>
 #include <Assets/DefaultMeshes.h>
 #include "..\PhysX\PhysXTypes.h"
@@ -15,6 +13,7 @@ namespace Nuclear
 	namespace Assets
 	{
 		Scene::Scene()
+			: Asset(AssetType::Scene)
 		{
 		}
 
@@ -138,28 +137,5 @@ namespace Nuclear
 			return GetSystemManager().Update_All(dt);
 		}
 
-	/*	void Scene::Save()
-		{
-			std::stringstream storage;
-
-			entt::registry destination;
-
-			{
-				// output finishes flushing its contents when it goes out of scope
-				cereal::JSONOutputArchive output{ storage };
-				entt::snapshot{ GetRegistry()}.entities(output).component<
-					Components::EntityInfoComponent,
-					Components::MeshComponent
-
-				//	Components::DirLightComponent,
-				//	Components::PointLightComponent,
-				//	Components::SpotLightComponent
-				>(output);
-			}
-
-			cereal::JSONInputArchive input{ storage };
-			entt::snapshot_loader{ destination }.entities(input).component<Components::EntityInfoComponent, Components::MeshComponent
-			>(input);
-		}*/
 	}
 }

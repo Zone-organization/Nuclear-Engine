@@ -114,6 +114,8 @@
     <ClInclude Include="include\Interfaces\Singleton.h" />
     <ClInclude Include="include\Parsers\ShaderParser.h" />
     <ClInclude Include="include\Platform\Platform.h" />
+    <ClInclude Include="include\Serialization\Serialization.h" />
+    <ClInclude Include="include\Serialization\SerializationEngine.h" />
     <ClInclude Include="include\Threading\ThreadingEngine.h" />
     <ClInclude Include="include\Interfaces\NonCopyable.h" />
     <ClInclude Include="include\Platform\FileSystem.h" />
@@ -376,8 +378,8 @@
     <ClInclude Include="include\Assets\AssetLibrary.h" />
     <ClInclude Include="include\Rendering\RenderPasses\ShadowPass.h" />
     <ClInclude Include="include\Scripting\ScriptingObject.h" />
-    <ClInclude Include="include\Serialization\ComponentsArchive.h" />
-    <ClInclude Include="include\Serialization\MathArchive.h" />
+    <ClInclude Include="include\Serialization\ComponentsSerialization.h" />
+    <ClInclude Include="include\Serialization\MathSerialization.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
     <ClInclude Include="include\PhysX\RaycastHit.h" />
     <ClInclude Include="include\Scripting\Scripting.h" />
@@ -446,6 +448,7 @@
     <ClCompile Include="Source\Scripting\ScriptingBindings.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Platform\FileSystem.cpp" />
+    <ClCompile Include="Source\Serialization\SerializationEngine.cpp" />
     <ClCompile Include="Source\Threading\ThreadingEngine.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Parsers\INIReader.cpp" />

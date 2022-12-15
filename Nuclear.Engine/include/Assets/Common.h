@@ -2,7 +2,6 @@
 #include <NE_Common.h>
 #include <Utilities/Hash.h>
 #include <Core/Path.h>
-#include <cereal/access.hpp>
 
 namespace Nuclear
 {
@@ -20,15 +19,21 @@ namespace Nuclear
 			Animations,
 			AudioClip,
 			Font,
-			Shader
+			Shader,
+			Script
 		};
-		template <class T>
-		class Asset
+
+		class NEAPI Asset
 		{
 		public:
-			const char* GetType()
+			Asset(AssetType type)
 			{
-				return typeid(T).name();
+				mType = type;
+			}
+
+			const AssetType GetType() const
+			{
+				return mType;
 			}
 
 			Uint32 GetID() { return mHashedName; }
@@ -46,8 +51,8 @@ namespace Nuclear
 
 			bool isValid = false;
 		protected:
-			friend class cereal::access;
 
+			AssetType mType;
 			Uint32 mHashedName = 0;
 			std::string mName;
 			Core::Path mPath;

@@ -11,7 +11,7 @@
 namespace Nuclear {
 	namespace Assets {
 		
-		class NEAPI Mesh : public Asset<Mesh>
+		class NEAPI Mesh : public Asset
 		{
 		public:	
 			struct Vertex

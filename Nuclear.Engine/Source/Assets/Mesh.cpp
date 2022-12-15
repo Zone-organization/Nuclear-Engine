@@ -58,11 +58,12 @@ namespace Nuclear {
 		}
 
 		Mesh::Mesh(const std::vector<SubMesh>& SubMeshes, const std::unordered_map<Uint32, Animation::BoneInfo>& BoneInfoMap, int BoneCounter)
-			:mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
+			: Asset(AssetType::Mesh), mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
 		{
 		}
 
 		Mesh::Mesh()
+			: Asset(AssetType::Mesh)
 		{
 
 		}
