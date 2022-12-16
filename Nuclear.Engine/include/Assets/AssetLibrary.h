@@ -1,5 +1,16 @@
 #pragma once
-#include <Assets/Assets.h>
+#include <Assets/Mesh.h>
+#include <Assets/DefaultMeshes.h>
+#include <Assets/Material.h>
+#include <Assets/MaterialTypes.h>
+#include <Assets/Image.h>
+#include <Assets/ImageData.h>
+#include <Assets/Animations.h>
+#include <Assets/AudioClip.h>
+#include <Assets/Script.h>
+#include <Assets/SavedScene.h>
+#include <Assets/Shader.h>
+#include <Assets/Font.h>
 #include <Core/Path.h>
 #include <unordered_map>
 
@@ -33,7 +44,7 @@ namespace Nuclear
 		struct NEAPI AssetLibrary
 		{
 			//Special type of asset??
-			ImportedAssetsMap<Assets::Scene> mImportedScenes;
+			ImportedAssetsMap<Assets::SavedScene> mImportedScenes;
 
 			ImportedAssetsMap<Assets::Image> mImportedImages;
 			ImportedAssetsMap<Assets::Mesh> mImportedMeshes;

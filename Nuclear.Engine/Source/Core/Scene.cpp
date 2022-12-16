@@ -1,4 +1,4 @@
-#include <Assets\Scene.h>
+#include <Core\Scene.h>
 #include <sstream>
 #include <Components\Components.h>
 #include <Systems\PhysXSystem.h>
@@ -8,20 +8,19 @@
 #include <Core/Engine.h>
 #include <Utilities/Logger.h>
 
-namespace Nuclear
+#include "Serialization/MathSerialization.h"
+#include "Serialization/SceneArchive.h"
+
+#include <bitsery/bitsery.h>
+#include <bitsery/adapter/buffer.h>
+#include <bitsery/traits/vector.h>
+#include <bitsery/traits/string.h>
+
+
+namespace Nuclear 
 {
-	namespace Assets
+	namespace Core
 	{
-		Scene::Scene()
-			: Asset(AssetType::Scene)
-		{
-		}
-
-		Scene::~Scene()
-		{
-		//	Entities.reset();
-		}
-
 		ECS::Entity Scene::CreateEntity()
 		{
 			ECS::Entity result(GetRegistry(), GetRegistry().create());
@@ -112,30 +111,47 @@ namespace Nuclear
 
 		ECS::SystemManager& Scene::GetSystemManager()
 		{
-			if (Core::Engine::GetInstance().GetActiveScene() != this)
-			{
-				NUCLEAR_ERROR("[Scene] [GetSystemManager] Active Scene mismatch!");
-			}
-			return Core::Engine::GetInstance().GetSystemManager();
+			return mSystems;
 		}
 
 		entt::registry& Scene::GetRegistry()
 		{
-			if (Core::Engine::GetInstance().GetActiveScene() != this)
-			{
-				NUCLEAR_ERROR("[Scene] [GetRegistry] Active Scene mismatch!");
-			}
-			return Core::Engine::GetInstance().GetRegistry();
+			return mRegistry;
 		}
 
 		void Scene::Update(ECS::TimeDelta dt)
 		{
-			if (Core::Engine::GetInstance().GetActiveScene() != this)
-			{
-				NUCLEAR_ERROR("[Scene] [GetRegistry] Active Scene mismatch!");
-			}
-			return GetSystemManager().Update_All(dt);
+			return mSystems.Update_All(dt);
 		}
 
+		// some helper types
+		using Buffer = std::vector<Uint8>;
+		using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
+		using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
+
+		bool Scene::SaveScene(Assets::SavedScene* scene)
+		{
+			scene->mBinaryBuffer.clear();
+
+			bitsery::Serializer<OutputAdapter> ser{ scene->mBinaryBuffer };
+
+			Serialization::SceneOutputArchive<bitsery::Serializer<OutputAdapter>> output(&ser);
+			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent>(output);
+
+			return true;
+		}
+		bool Scene::LoadScene(Assets::SavedScene* scene)
+		{
+			mRegistry.clear();
+
+
+			bitsery::Deserializer<InputAdapter> deser{ scene->mBinaryBuffer.begin(), scene->mBinaryBuffer.size()};
+			Serialization::SceneInputArchive<bitsery::Deserializer<InputAdapter>> input(&deser);
+
+
+			entt::snapshot_loader{ mRegistry }.entities(input).component<Components::EntityInfoComponent, Components::LightComponent>(input);
+
+			return true;
+		}
 	}
 }

@@ -2,7 +2,7 @@
 #include <Assets\Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
-#include <Importers/AssetsImporter.h>
+#include <Assets/AssetManager.h>
 
 namespace Nuclear
 {
@@ -73,15 +73,15 @@ namespace Nuclear
 			switch (Type)
 			{
 			case Graphics::TextureUsageType::Diffuse:
-				Importers::AssetsImporter::GetInstance().DefaultDiffuseTex;
+				Assets::AssetManager::GetInstance().DefaultDiffuseTex;
 			case Graphics::TextureUsageType::Specular:
-				Importers::AssetsImporter::GetInstance().DefaultSpecularTex;
+				Assets::AssetManager::GetInstance().DefaultSpecularTex;
 			case Graphics::TextureUsageType::Normal:
-				Importers::AssetsImporter::GetInstance().DefaultNormalTex;
+				Assets::AssetManager::GetInstance().DefaultNormalTex;
 			default:
 				break;
 			}
-			return Importers::AssetsImporter::GetInstance().DefaultBlackTex;
+			return Assets::AssetManager::GetInstance().DefaultBlackTex;
 		}
 
 		const std::string& ShaderPipelineVariant::GetName() const

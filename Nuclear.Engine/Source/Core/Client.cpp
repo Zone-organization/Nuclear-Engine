@@ -1,6 +1,6 @@
 #include <Core/Client.h>
-#include <Assets\Scene.h>
-
+#include <Core/Scene.h>
+#include <Assets/AssetManager.h>
 namespace Nuclear {
 	namespace Core {
 		Client::Client(const ClientInfo& yourinfo)
@@ -37,6 +37,14 @@ namespace Nuclear {
 		void Client::LoadFinishUp()
 		{
 		}
+		Core::Scene& Client::GetScene()
+		{
+			return Core::Scene::GetInstance();
+		}
+		Assets::AssetManager& Client::GetAssetManager()
+		{
+			return Assets::AssetManager::GetInstance();
+		}
 		void Client::OnMouseScroll(double val1, double val2)
 		{
 		}
@@ -47,15 +55,5 @@ namespace Nuclear {
 		void Client::OnWindowResize(int width, int height)
 		{
 		}
-
-		//void Client::SetActiveScene(ECS::Scene* scene)
-		//{
-		//	pScene = scene;
-		//}
-
-		//ECS::Scene* Client::GetActiveScene()
-		//{
-		//	return pScene;
-		//}
 	}
 }

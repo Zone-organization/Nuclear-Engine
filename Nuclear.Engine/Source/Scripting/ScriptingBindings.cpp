@@ -1,6 +1,6 @@
 #include "Scripting/ScriptingBindings.h"
 #include "Scripting/ScriptingEngine.h"
-#include "Assets/Scene.h"
+#include "Core/Scene.h"
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/appdomain.h>
 #include <Utilities/Logger.h>
@@ -41,14 +41,14 @@ namespace Nuclear
 			}
 			void ECS_Entity_AddComponent(Uint32 id, void* type)
 			{
-				ECS::Entity entity(Core::Engine::GetInstance().GetActiveScene()->GetRegistry(), id);
+				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 
 				MonoType* monoType = mono_reflection_type_get_type((MonoReflectionType*)type);
 				ScriptingEngine::GetInstance().GetRegistry().mAddComponentFuncs[monoType](entity);				
 			}
 			bool ECS_Entity_HasComponent(Uint32 id, void* type)
 			{
-				ECS::Entity entity(Core::Engine::GetInstance().GetActiveScene()->GetRegistry(), id);
+				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 
 				MonoType* monoType = mono_reflection_type_get_type((MonoReflectionType*)type);
 				bool result = ScriptingEngine::GetInstance().GetRegistry().mHasComponentFuncs[monoType](entity);
@@ -62,25 +62,25 @@ namespace Nuclear
 
 			void Components_LightComponent_GetColor(Uint32 id, Graphics::Color* outcolor)
 			{
-				ECS::Entity entity(Core::Engine::GetInstance().GetActiveScene()->GetRegistry(), id);
+				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 				*outcolor = entity.GetComponent<Components::LightComponent>().GetColor();
 			}
 
 			void Components_LightComponent_SetColor(Uint32 id, Graphics::Color* incolor)
 			{
-				ECS::Entity entity(Core::Engine::GetInstance().GetActiveScene()->GetRegistry(), id);
+				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 				entity.GetComponent<Components::LightComponent>().SetColor(*incolor);
 			}
 
 			float Components_LightComponent_GetIntensity(Uint32 id)
 			{
-				ECS::Entity entity(Core::Engine::GetInstance().GetActiveScene()->GetRegistry(), id);
+				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 				return entity.GetComponent<Components::LightComponent>().GetIntensity();
 			}
 
 			void Components_LightComponent_SetIntensity(Uint32 id, float inIntensity)
 			{
-				ECS::Entity entity(Core::Engine::GetInstance().GetActiveScene()->GetRegistry(), id);
+				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 				entity.GetComponent<Components::LightComponent>().SetIntensity(inIntensity);
 			}
 		

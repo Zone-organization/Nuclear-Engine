@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Math\Math.h>
-#include <bitsery/details/serialization_common.h>
+#include <Serialization/Access.h>
 namespace Nuclear
 {
 	namespace ECS
@@ -43,7 +43,7 @@ namespace Nuclear
 
 			void Update();
 		protected:
-			friend bitsery::Access;
+			friend Serialization::Access;
 
 			Math::Vector3 mLocalPosition;
 			Math::Quaternion mLocalRotation;

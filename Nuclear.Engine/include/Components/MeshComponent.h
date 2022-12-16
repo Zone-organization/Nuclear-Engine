@@ -2,6 +2,7 @@
 #include <NE_Common.h>
 #include <Math\Math.h>
 #include <Graphics\ShaderPipelineSwitch.h>
+#include <Serialization/Access.h>
 #include <vector>
 
 namespace Nuclear {
@@ -50,6 +51,8 @@ namespace Nuclear {
 
 			void SetRenderSystemFlags(bool hasdefferedpass, bool hasshadowpass);
 		protected:
+			friend Serialization::Access;
+
 			Assets::Mesh* pMesh;
 			Assets::Material* pMaterial;
 			Animation::Animator* pAnimator;
@@ -59,15 +62,25 @@ namespace Nuclear {
 
 			Uint32 RenderQueue = 1;
 
-			bool mMaterialDirty = true;
-			bool mDirty = true;
+			//Switches
 			bool mEnableRendering = true;
 			bool mCastShadow = true;
 			bool mReceiveShadows = true;
-			bool mRequestDeffered = false;
 
+			//Internal
+			bool mRequestDeffered = false;
+			bool mMaterialDirty = true;
+			bool mDirty = true;
 			bool mRenderSystemHasDefferedPass = false;
 			bool mRenderSystemHasShadowPass = false;
+
+			template<class S> void serialize(S& s)
+			{
+				s.value1b(mEnableRendering);
+				s.value1b(mCastShadow);
+				s.value1b(mReceiveShadows);
+
+			}
 		};
 
 	}

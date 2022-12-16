@@ -16,7 +16,6 @@ namespace Nuclear
     namespace Assets {
         class Mesh;
         class Material;
-        class Scene;
         class Shader;
     }
     namespace Graphics {
@@ -30,9 +29,6 @@ namespace Nuclear
 		struct NEAPI FrameRenderData
 		{
 		public:
-            //Scene being rendered in this frame
-            Assets::Scene* pScene;
-
             MeshView mMeshView;
 
             RefCntAutoPtr<IBuffer> pAnimationCB;

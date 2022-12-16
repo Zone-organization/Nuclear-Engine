@@ -4,17 +4,13 @@
 
 namespace Nuclear
 {
-	namespace Assets
-	{
-		class Scene;
-	}
-	namespace Managers
-	{
-		class AssetsImporter;
-		class SceneManager;
+	namespace Assets {
+		class AssetManager;
 	}
 	namespace Core
 	{
+		class Scene;
+		
 		enum class ClientType {
 			Game,
 			Editor,
@@ -54,13 +50,15 @@ namespace Nuclear
 			// Helper Functions
 			virtual void LoadFinishUp();
 
+			static Core::Scene& GetScene();
+			static Assets::AssetManager& GetAssetManager();
+
 			float FPS, FrameTime, ClockTime;
 
 			float DeltaTime = 0.0f;	// time between current frame and last frame
 			float LastFrame = 0.0f;
 		protected:
 			ClientInfo minfo;
-			Assets::Scene* pScene;
 		};
 	}
 }

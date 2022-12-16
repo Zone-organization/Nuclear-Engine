@@ -1,6 +1,6 @@
 #include "Graphics\GraphicsEngine.h"
 #include <Graphics\Context.h>
-#include <Importers\AssetsImporter.h>
+#include <Assets\AssetManager.h>
 #include "..\Graphics\ImGUI\imgui_impl_sdl.h"
 #include "..\Graphics\ImGUI\imgui_impl.h"
 #include <Utilities/Logger.h>

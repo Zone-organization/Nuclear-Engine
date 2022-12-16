@@ -1,4 +1,5 @@
 #pragma once
+#include <Assets/AssetManager.h>
 #include <Assets/Mesh.h>
 #include <Assets/DefaultMeshes.h>
 #include <Assets/Material.h>
@@ -8,6 +9,6 @@
 #include <Assets/Animations.h>
 #include <Assets/AudioClip.h>
 #include <Assets/Script.h>
-#include <Assets/Scene.h>
+#include <Assets/SavedScene.h>
 #include <Assets/Shader.h>
 #include <Assets/Font.h>

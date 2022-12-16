@@ -107,6 +107,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Core\Scene.h" />
+    <ClInclude Include="include\TL\String.h" />
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Core\Core.h" />
     <ClInclude Include="include\ECS\Transform.h" />
@@ -114,8 +116,9 @@
     <ClInclude Include="include\Interfaces\Singleton.h" />
     <ClInclude Include="include\Parsers\ShaderParser.h" />
     <ClInclude Include="include\Platform\Platform.h" />
+    <ClInclude Include="include\Serialization\Access.h" />
+    <ClInclude Include="include\Serialization\SceneArchive.h" />
     <ClInclude Include="include\Serialization\Serialization.h" />
-    <ClInclude Include="include\Serialization\SerializationEngine.h" />
     <ClInclude Include="include\Threading\ThreadingEngine.h" />
     <ClInclude Include="include\Interfaces\NonCopyable.h" />
     <ClInclude Include="include\Platform\FileSystem.h" />
@@ -313,6 +316,7 @@
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="include\Utilities\Delegate.h" />
     <ClInclude Include="include\Utilities\Hash.h" />
+    <ClInclude Include="include\TL\StringTable.h" />
     <ClInclude Include="include\Utilities\Timer.h" />
     <ClInclude Include="include\Utilities\Utilties.h" />
     <ClInclude Include="include\Platform\Window.h" />
@@ -378,7 +382,6 @@
     <ClInclude Include="include\Assets\AssetLibrary.h" />
     <ClInclude Include="include\Rendering\RenderPasses\ShadowPass.h" />
     <ClInclude Include="include\Scripting\ScriptingObject.h" />
-    <ClInclude Include="include\Serialization\ComponentsSerialization.h" />
     <ClInclude Include="include\Serialization\MathSerialization.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
     <ClInclude Include="include\PhysX\RaycastHit.h" />
@@ -414,10 +417,10 @@
     <ClInclude Include="include\Components\EntityInfoComponent.h" />
     <ClInclude Include="include\Rendering\Skybox.h" />
     <ClInclude Include="include\ECS\Common.h" />
-    <ClInclude Include="include\Assets\Scene.h" />
+    <ClInclude Include="include\Assets\SavedScene.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\Core\Engine.h" />
-    <ClInclude Include="include\Importers\AssetsImporter.h" />
+    <ClInclude Include="include\Assets\AssetManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="Source\Audio\FMODError.h" />
     <ClInclude Include="Source\Graphics\InitializeDiligentEngineWin32.h" />
@@ -440,6 +443,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Components\LightComponent.cpp" />
+    <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />
     <ClCompile Include="Source\Parsers\ShaderParser.cpp" />
     <ClCompile Include="Source\Platform\Input.cpp" />
@@ -448,7 +452,6 @@
     <ClCompile Include="Source\Scripting\ScriptingBindings.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Platform\FileSystem.cpp" />
-    <ClCompile Include="Source\Serialization\SerializationEngine.cpp" />
     <ClCompile Include="Source\Threading\ThreadingEngine.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Parsers\INIReader.cpp" />
@@ -528,9 +531,9 @@
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Rendering\Skybox.cpp" />
-    <ClCompile Include="Source\Assets\Scene.cpp" />
+    <ClCompile Include="Source\Assets\SavedScene.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
-    <ClCompile Include="Source\Importers\AssetsImporter.cpp" />
+    <ClCompile Include="Source\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\ThirdParty\inih\ini.c" />
     <ClCompile Include="Source\Utilities\Timer.cpp" />
   </ItemGroup>

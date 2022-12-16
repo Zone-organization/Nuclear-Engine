@@ -4,8 +4,8 @@
 #include <Components/EntityInfoComponent.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/RenderSystem.h>
-#include <Importers\AssetsImporter.h>
-#include <Assets/Scene.h>
+#include <Assets\AssetManager.h>
+#include <Core/Scene.h>
 #include <Utilities/Logger.h>
 #include <Assets\DefaultMeshes.h>
 #include <Graphics\GraphicsEngine.h>
@@ -144,7 +144,7 @@ namespace Nuclear
 			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
 			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pShader.mPipeline, PSOCreateInfo, Vars, true);
 
-			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(mScene->GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB());
+			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB());
 			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(_AnimationBufferPtr);
 
 			pShader.GetMainPipeline()->CreateShaderResourceBinding(&pShader.mPipelineSRB, true);
@@ -154,7 +154,7 @@ namespace Nuclear
 
 			////////////////////////////////////////////	
 			/*		Rendering::ShadingModelBakingDesc info;
-					info.CameraBufferPtr = mScene->GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB();
+					info.CameraBufferPtr = Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB();
 					info.AnimationBufferPtr = _AnimationBufferPtr;
 
 					DebugRP.Bake(info);
@@ -174,19 +174,19 @@ namespace Nuclear
 			{
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pShader.GetMainPipeline());
 				auto RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, mScene->GetSystemManager().GetSystem<RenderSystem>()->mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, Core::Scene::GetInstance().GetSystemManager().GetSystem<RenderSystem>()->mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
 				{
-					auto view = mScene->GetRegistry().view<Components::LightComponent>();
+					auto view = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
 					for (auto entity : view)
 					{
 						auto& LightComp = view.get<Components::LightComponent>(entity);
-						auto& EntityInfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+						auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
 
 						EntityInfo.mTransform.Update();
-						mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
-						auto AnimationBufferPtr = mScene->GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
+						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
+						auto AnimationBufferPtr = Core::Scene::GetInstance().GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
 
 						Math::Matrix4 empty(0.0f);
 						PVoid data;
@@ -195,15 +195,15 @@ namespace Nuclear
 						Graphics::Context::GetInstance().GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
 
 
-						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Importers::AssetsImporter::GetInstance().DefaultGreyTex.GetImage());
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Assets::AssetManager::GetInstance().DefaultGreyTex.GetImage());
 
 
 						//TODO: Render Cube at direction
 						/*EntityInfo.mTransform.Update();
-						mScene->GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						mScene->GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
+						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
 
-						InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Importers::AssetsImporter::DefaultGreyTex.GetImage());*/
+						InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Assets::AssetManager::DefaultGreyTex.GetImage());*/
 					}
 				}
 			}

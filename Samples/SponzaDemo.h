@@ -35,8 +35,6 @@ class SponzaDemo : public Core::Client
 	Graphics::Texture HDREnv;
 	Assets::Image HDR_Cube;
 
-	Assets::Scene Scene;
-
 	ECS::Entity ESponza;
 
 	ECS::Entity EController;
@@ -71,7 +69,7 @@ public:
 		Assets::Animations* Placeholder;
 
 		//Load Sponza Model
-		std::tie(SponzaAsset, SponzaMaterial, Placeholder) = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
+		std::tie(SponzaAsset, SponzaMaterial, Placeholder) = GetAssetManager().Import("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
 
 		SponzaPBRMaterial.Create(SponzaMaterial, PBR);
 		SponzaBlinnPhongMaterial.Create(SponzaMaterial, BlinnPhong);
@@ -84,16 +82,16 @@ public:
 		//Create Entities
 		ECS::Transform TSponza;
 		TSponza.SetScale(Math::Vector3(0.05f, 0.05f, 0.05f));
-		ESponza = Scene.CreateEntity("Sponza", TSponza);
-		ELights = Scene.CreateEntity("Lights");
+		ESponza = GetScene().CreateEntity("Sponza", TSponza);
+		ELights = GetScene().CreateEntity("Lights");
 
 
-		auto EDirLight = Scene.CreateEntity("DirLight");
+		auto EDirLight = GetScene().CreateEntity("DirLight");
 		auto& dircomp = EDirLight.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Directional);
 		dircomp.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		dircomp.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		auto ELights = Scene.CreateEntity("PointLight1");
+		auto ELights = Core::Scene::GetInstance().CreateEntity("PointLight1");
 		auto& lightcomp = ELights.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
 		lightcomp.SetIntensity(10.0f);
 		lightcomp.mCastShadows = true;
@@ -102,7 +100,7 @@ public:
 
 		//for (int i = 1; i < 9; i++)
 		//{
-		//	auto Light = Scene.CreateEntity("Light" + std::to_string(i));
+		//	auto Light = GetScene().CreateEntity("Light" + std::to_string(i));
 		//	Light.AddComponent<Components::PointLightComponent>();
 		//	Light.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(pointLightPositions[i]);
 		//	Light.GetComponent<Components::PointLightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
@@ -115,8 +113,8 @@ public:
 	{
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
-		PBR = Importers::AssetsImporter::GetInstance().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
-		BlinnPhong = Importers::AssetsImporter::GetInstance().Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		BlinnPhong = GetAssetManager().Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
 
 		Renderer->SetIBLContext(&IBL);
 		Renderer->RegisterShader(PBR);
@@ -132,7 +130,7 @@ public:
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 
-		HDREnv = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+		HDREnv = GetAssetManager().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
 
 		Rendering::ImageBasedLightingDesc desc;
 		IBL.Initialize(desc);
@@ -144,7 +142,7 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
+		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
 
 		InitIBL();
 
@@ -170,17 +168,15 @@ public:
 
 	void Load()
 	{
-		Core::Engine::GetInstance().CreateScene(&Scene, true);
+		GetAssetManager().Initialize();
 
-		Importers::AssetsImporter::GetInstance().Initialize();
-
-		EController = Scene.CreateEntity();
+		EController = GetScene().CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
-		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 		SetupEntities();
 
 		//Rendering::ShadowPassBakingDesc spdesc;
@@ -192,7 +188,7 @@ public:
 		//Systems::LightingSystemDesc desc;
 		//desc.ShadowPass = &ShadowPass;
 
-		//mLightingSystem = Scene.GetSystemManager().Add<Systems::LightingSystem>(desc);
+		//mLightingSystem = GetScene().GetSystemManager().Add<Systems::LightingSystem>(desc);
 		//mLightingSystem->Bake();
 
 		InitRenderer();
@@ -274,7 +270,7 @@ public:
 
 		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
 
-		Scene.Update(dt);
+		GetScene().Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample3: Sponza Rendering");
@@ -343,12 +339,12 @@ public:
 			}
 
 			ImGui::End();
-			EntityExplorer(&Scene);
+			EntityExplorer();
 		}
 	}
 
 	void Shutdown() override
 	{
-		Importers::AssetsImporter::GetInstance().FlushContainers();
+		GetAssetManager().FlushContainers();
 	}
 };

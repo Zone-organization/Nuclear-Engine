@@ -27,7 +27,7 @@ namespace Nuclear
 				AssimpImporter();
 				~AssimpImporter();
 
-				bool Load(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
+				bool Load(const MeshLoadingDesc& desc, const std::string& Path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 				bool IsExtensionSupported(const std::string& extension);
 				Assimp::Importer* GetImporter();
 			private:

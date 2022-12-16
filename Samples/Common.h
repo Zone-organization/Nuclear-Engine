@@ -6,13 +6,13 @@ const int _Width_ = 1280;
 const int _Height_ = 720;
 void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInfoComponent& Einfo);
 
-void EntityExplorer(Assets::Scene* scene)
+void EntityExplorer()
 {
 	//ImGui::ShowStackToolWindow();
 	ImGui::Begin("Entity Explorer");
-	if (ImGui::TreeNode(scene->GetName().c_str()))
+	if (ImGui::TreeNode("Scene"))
 	{
-		auto view = scene->GetRegistry().view<Components::EntityInfoComponent>();
+		auto view = Core::Scene::GetInstance().GetRegistry().view<Components::EntityInfoComponent>();
 
 		for (auto entity : view)
 		{
@@ -27,7 +27,7 @@ void EntityExplorer(Assets::Scene* scene)
 			if (selectedindex == index)
 			{
 				node_flags |= ImGuiTreeNodeFlags_Selected;
-				EntityView(entity, scene->GetRegistry(), Einfo);
+				EntityView(entity, Core::Scene::GetInstance().GetRegistry(), Einfo);
 			}
 
 			ImGui::PushID(index);

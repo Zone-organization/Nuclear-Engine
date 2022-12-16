@@ -143,7 +143,6 @@ class Sample1 : public Core::Client
 	ECS::Entity EBob;
 	ECS::Entity EVampire;
 
-	Assets::Scene Scene;
 	ECS::Entity EController;
 
 	float lastX = _Width_ / 2.0f;
@@ -162,16 +161,16 @@ public:
 		Assets::Animations* Placeholder;
 
 		//Load Nanosuit Model
-		std::tie(NanosuitAsset, NanosuitMaterialD, Placeholder) = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		std::tie(NanosuitAsset, NanosuitMaterialD, Placeholder) = GetAssetManager().Import("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		
 		//Load Cyborg Model
-		std::tie(CyborgAsset, CyborgMaterialD, Placeholder) = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		std::tie(CyborgAsset, CyborgMaterialD, Placeholder) = GetAssetManager().Import("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 		
 		//Load Bob Model
-		std::tie(BobAsset, BobMaterialD, BobAnimation) = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
+		std::tie(BobAsset, BobMaterialD, BobAnimation) = GetAssetManager().Import("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
 
 		//Load Bob Model
-		std::tie(VampireAsset, VampireMaterialD, VampireAnimation) = Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
+		std::tie(VampireAsset, VampireMaterialD, VampireAnimation) = GetAssetManager().Import("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
 
 		BobAnimator.Initialize(&BobAnimation->mClips.at(0));
 		VampireAnimator.Initialize(&VampireAnimation->mClips.at(0));
@@ -182,9 +181,9 @@ public:
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/crate_diffuse.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		CubeSet.mData.push_back({ 1, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/crate_specular.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Specular) });
-		CubeSet.mData.push_back({ 2, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/crate_normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		CubeSet.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/crate_diffuse.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/crate_specular.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Specular) });
+		CubeSet.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/crate_normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
 		
 		CubeTextures.mTextures.push_back(CubeSet);
 
@@ -218,7 +217,7 @@ public:
 
 		Importers::ImageLoadingDesc SkyboxDesc;
 		//SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		auto test = Importers::AssetsImporter::GetInstance().LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
+		auto test = GetAssetManager().LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
 		Skybox.Initialize(mCameraSystem->GetCameraCB(), test);
 	}
 	void SetupEntities()
@@ -239,20 +238,20 @@ public:
 		TCube.SetPosition(Math::Vector3(2.0f, -1.75f, 2.0f));
 		TCube.SetScale(Math::Vector3(2.f, 2.f, 2.f));
 
-		ECube = Scene.CreateEntity("Cube", TCube);
-		ENanosuit = Scene.CreateEntity("Nanosuit", TNansosuit);
-		ECyborg = Scene.CreateEntity("Cyborg", TCyborg);
-		EBob = Scene.CreateEntity("Bob", TBob);
-	//	EVampire = Scene.CreateEntity("Vampire" , TVampire);
+		ECube = GetScene().CreateEntity("Cube", TCube);
+		ENanosuit = GetScene().CreateEntity("Nanosuit", TNansosuit);
+		ECyborg = GetScene().CreateEntity("Cyborg", TCyborg);
+		EBob = GetScene().CreateEntity("Bob", TBob);
+	//	EVampire = GetScene().CreateEntity("Vampire" , TVampire);
 
 
 		//Create Entities
-		auto EDirLight = Scene.CreateEntity("DirLight");
+		auto EDirLight = GetScene().CreateEntity("DirLight");
 		auto& dircomp = EDirLight.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Directional);
 		dircomp.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		dircomp.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		auto ELights = Scene.CreateEntity("PointLight1");
+		auto ELights = GetScene().CreateEntity("PointLight1");
 		auto& lightcomp = ELights.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
 
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.7f, 0.2f, 2.0f));
@@ -260,13 +259,13 @@ public:
 
 	void InitRenderer()
 	{
-	//	mDebugSystem = Scene.GetSystemManager().Add<Systems::DebugSystem>();
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
+	//	mDebugSystem = GetScene().GetSystemManager().Add<Systems::DebugSystem>();
+		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
 
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
-		BlinnPhong = Importers::AssetsImporter::GetInstance().Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
-		DiffuseOnly = Importers::AssetsImporter::GetInstance().Import("@NuclearAssets@/Shaders/DiffuseOnly.NEShader", desc);
+		BlinnPhong = GetAssetManager().Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		DiffuseOnly = GetAssetManager().Import("@NuclearAssets@/Shaders/DiffuseOnly.NEShader", desc);
 
 		Renderer->RegisterShader(BlinnPhong);
 		Renderer->RegisterShader(DiffuseOnly);
@@ -279,17 +278,15 @@ public:
 
 	void Load()
 	{
-		Core::Engine::GetInstance().CreateScene(&Scene, true);
+		GetAssetManager().Initialize();
 
-		Importers::AssetsImporter::GetInstance().Initialize();
-
-		EController = Scene.CreateEntity();
+		EController = GetScene().CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
 		EController.AddComponent<Components::CameraComponent>(&Camera);
 
 		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
-		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 
 		SetupEntities();
 
@@ -377,7 +374,7 @@ public:
 
 		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
 
-		Scene.Update(dt);
+		GetScene().Update(dt);
 		{
 			using namespace Graphics;
 			ImGui::Begin("Sample1: Basic Rendering");
@@ -399,8 +396,8 @@ public:
 			}
 
 			ImGui::End();
-			EntityExplorer(&Scene);
-			AssetLibraryViewer(Importers::AssetsImporter::GetInstance().mLibrary);
+			EntityExplorer();
+			AssetLibraryViewer(GetAssetManager().mLibrary);
 
 			//mDebugSystem->ShowRendertargets();
 		}
@@ -408,6 +405,6 @@ public:
 
 	void Shutdown() override
 	{
-		Importers::AssetsImporter::GetInstance().FlushContainers();
+		GetAssetManager().FlushContainers();
 	}
 };

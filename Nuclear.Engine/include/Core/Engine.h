@@ -2,7 +2,6 @@
 #include <Core\Client.h>
 #include <Platform\Window.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
-#include <Assets\Scene.h>
 
 namespace Nuclear
 {
@@ -59,18 +58,6 @@ namespace Nuclear
 
 			Client* GetClient();
 
-			void CreateScene(Assets::Scene* scene, bool SetAsActive = false);
-
-			ECS::SystemManager& GetSystemManager();
-			entt::registry& GetRegistry();
-
-			void SetActiveScene(Assets::Scene* scene);
-			Assets::Scene* GetActiveScene();
-		protected:
-			entt::registry mRegistry;
-			ECS::SystemManager mSystems;
-
-			Assets::Scene* pActiveScene;
 		private:
 			Engine();
 			Client* pClient;

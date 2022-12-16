@@ -3,7 +3,7 @@
 #include <Assets\DefaultMeshes.h>
 #include <Rendering\FrameRenderData.h>
 #include <Components\EntityInfoComponent.h>
-#include <Assets\Scene.h>
+#include <Core\Scene.h>
 #include <Assets\Shader.h>
 #include <Assets\Material.h>
 #include <Systems\CameraSystem.h>
@@ -53,7 +53,7 @@ namespace Nuclear
 					}
 					pRenderingPath->StartRendering(frame, pipelinevariant);
 
-					auto& EntityInfo = frame->pScene->GetRegistry().get<Components::EntityInfoComponent>(meshentity);
+					auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(meshentity);
 					EntityInfo.mTransform.Update();
 
 					pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());

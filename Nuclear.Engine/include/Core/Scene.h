@@ -5,20 +5,19 @@
 #include <Assets/Common.h>
 #include <ECS\Entity.h>
 #include <ECS\Transform.h>
+#include <Interfaces\Singleton.h>
+#include <Assets/SavedScene.h>
 
 namespace Nuclear
 {
 	namespace Components { class CameraComponent; }
-	namespace Assets
-	{
-		class Material;
+	namespace Assets { class Material; }
 
-		class NEAPI Scene : public Asset
+	namespace Core
+	{
+		class NEAPI Scene : public Interfaces::Singleton<Scene>
 		{
 		public:
-			Scene();
-			~Scene();
-
 			//Creates a new entity and assign a transform component to it automatically
 			ECS::Entity CreateEntity();
 			ECS::Entity CreateEntity(const std::string& name, const ECS::Transform& transform = ECS::Transform());
@@ -31,6 +30,16 @@ namespace Nuclear
 			entt::registry& GetRegistry();
 
 			void Update(ECS::TimeDelta dt);
+
+			//Serialization
+			bool SaveScene(Assets::SavedScene* scene);
+
+			bool LoadScene(Assets::SavedScene* scene);
+
+
+		private:
+			entt::registry mRegistry;
+			ECS::SystemManager mSystems;
 		};
 	}
 }

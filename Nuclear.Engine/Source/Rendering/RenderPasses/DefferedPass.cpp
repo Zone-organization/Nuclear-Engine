@@ -4,7 +4,7 @@
 #include <Graphics\Context.h>
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Systems\DebugSystem.h>
-#include <Assets\Scene.h>
+#include <Core\Scene.h>
 #include <Assets\DefaultMeshes.h>
 
 namespace Nuclear
@@ -44,11 +44,11 @@ namespace Nuclear
                         Assets::DefaultMeshes::RenderScreenQuad();
 
                         //Send GBUFFER to DebugSystem
-                        if (framedata->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>())
+                        if (Core::Scene::GetInstance().GetSystemManager().GetSystem<Systems::DebugSystem>())
                         {
                             for (auto& i : gbuffer->mRenderTargets)
                             {
-                                framedata->pScene->GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
+                                Core::Scene::GetInstance().GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
                             }
                         }
                     }

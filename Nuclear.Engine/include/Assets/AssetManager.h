@@ -13,7 +13,7 @@ typedef struct FT_LibraryRec_* FT_Library;
 namespace msdfgen { class FreetypeHandle; }
 namespace Nuclear 
 {
-	namespace Importers
+	namespace Assets
 	{
 		enum AUDIO_IMPORT_MODE
 		{
@@ -55,15 +55,15 @@ namespace Nuclear
 			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real material name or not
 		};
 
-		class NEAPI AssetsImporter {
+		class NEAPI AssetManager {
 		public:
-			AssetsImporter(AssetsImporter const&) = delete;
-			void operator=(AssetsImporter const&) = delete;
+			AssetManager(AssetManager const&) = delete;
+			void operator=(AssetManager const&) = delete;
 
-			static AssetsImporter& GetInstance();
+			static AssetManager& GetInstance();
 
-			//AssetsImporter(AssetManagerDesc desc = AssetManagerDesc());
-		//	~AssetsImporter();
+			//AssetManager(AssetManagerDesc desc = AssetManagerDesc());
+		//	~AssetManager();
 
 			Assets::AssetLibrary mLibrary;
 
@@ -97,7 +97,7 @@ namespace Nuclear
 			//Shader
 			Assets::Shader* Import(const Core::Path& Path, const Importers::ShaderLoadingDesc& desc);
 
-			Assets::Script* Import(const Core::Path& Path, const Importers::ScriptImportingDesc& desc);
+			Assets::Script* Import(const Core::Path& Path, const Importers::ScriptLoadingDesc& desc);
 
 			Graphics::Texture DefaultBlackTex;
 			Graphics::Texture DefaultGreyTex;
@@ -108,6 +108,13 @@ namespace Nuclear
 			Graphics::Texture DefaultNormalTex;
 
 			Assets::AssetType GetAssetType(const std::string& filename);
+
+
+			Assets::SavedScene* Import(const Core::Path& Path, const Importers::SceneLoadingDesc& desc);
+
+			bool Export(Assets::SavedScene* scene, const Core::Path& Path);
+
+
 		//	Graphics::Texture SaveToImport(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 
 			//////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +135,7 @@ namespace Nuclear
 			Importers::Internal::AssimpImporter mAssimpImporter;
 
 		private:
-			AssetsImporter();
+			AssetManager();
 		};
 	}
 }

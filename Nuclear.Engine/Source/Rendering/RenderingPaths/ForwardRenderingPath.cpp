@@ -4,7 +4,6 @@
 #include "Animation/Animator.h"
 #include <Systems\RenderSystem.h>
 #include <Systems\CameraSystem.h>
-#include <Assets\Scene.h>
 #include <Assets\Shader.h>
 #include <Utilities/Logger.h>
 #include <Graphics\ShaderPipelineVariant.h>

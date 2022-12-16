@@ -7,9 +7,6 @@
 
 namespace Nuclear
 {
-	namespace Assets {
-		class Scene;
-	}
 	namespace Systems
 	{
 		class ScriptingEngine;

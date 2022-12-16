@@ -1,7 +1,7 @@
 #include "Systems\ScriptingSystem.h"
 #include "Scripting\ScriptingEngine.h"
 #include "Components\ScriptComponent.h"
-#include "Assets\Scene.h"
+#include "Core\Scene.h"
 #include <Utilities/Logger.h>
 
 namespace Nuclear
@@ -33,7 +33,7 @@ namespace Nuclear
 		bool ScriptingSystem::Initialize()
 		{
 			// connects a free function
-			mScene->GetRegistry().on_construct<Components::ScriptComponent>().connect<&ScriptInitialization>();
+			Core::Scene::GetInstance().GetRegistry().on_construct<Components::ScriptComponent>().connect<&ScriptInitialization>();
 
 			
 
@@ -43,7 +43,7 @@ namespace Nuclear
 
 		void ScriptingSystem::Load()
 		{
-			//auto view = mScene->GetRegistry().view<Components::ScriptComponent>();
+			//auto view = Core::Scene::GetInstance().GetRegistry().view<Components::ScriptComponent>();
 
 			//for (auto entity : view)
 			//{
@@ -55,7 +55,7 @@ namespace Nuclear
 
 		void ScriptingSystem::Update(ECS::TimeDelta dt)
 		{
-			auto view = mScene->GetRegistry().view<Components::ScriptComponent>();
+			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::ScriptComponent>();
 
 			for (auto entity : view)
 			{

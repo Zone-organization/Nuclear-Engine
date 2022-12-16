@@ -6,16 +6,10 @@
 #include <utility>
 #include <cassert>
 #include <memory>
-#include "Interfaces/NonCopyable.h"
-
+#include <Interfaces/NonCopyable.h>
 
 namespace Nuclear
 {
-	namespace Assets
-	{
-		class Scene;
-	}
-
 	namespace ECS
 	{
 
@@ -40,8 +34,6 @@ namespace Nuclear
 		public:
 			virtual ~System() {}
 
-			Assets::Scene* mScene;
-
 		private:
 
 			friend class SystemManager;
@@ -56,14 +48,8 @@ namespace Nuclear
 		public:
 			SystemManager() {}
 
-			void SetScene(Assets::Scene* scene)
-			{
-				mScene = scene;
-			}
-
 			template <typename S>
 			void Add(std::shared_ptr<S> system) {
-				system->mScene = this->mScene;
 				systems_.insert(std::make_pair(S::family(), system));
 			}
 
@@ -99,7 +85,6 @@ namespace Nuclear
 
 		private:
 			//bool initialized_ = false;
-			Assets::Scene* mScene;
 			std::unordered_map<BaseSystem::Family, std::shared_ptr<BaseSystem>> systems_;
 		};
 	}

@@ -3,7 +3,7 @@
 #include <Platform\FileSystem.h>
 #include <Utilities/Hash.h>
 #include <Utilities/Logger.h>
-#include <Importers/AssetsImporter.h>
+#include <Assets/AssetManager.h>
 #include "Rendering/ImageBasedLighting.h"
 
 namespace Nuclear
@@ -447,7 +447,7 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
+							ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
@@ -488,7 +488,7 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex = Importers::AssetsImporter::GetInstance().DefaultWhiteTex;
+							tex->mTex = Assets::AssetManager::GetInstance().DefaultWhiteTex;
 							tex->mTex.SetName(VarName);
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
@@ -499,7 +499,7 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
+							ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
@@ -541,7 +541,7 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex = Importers::AssetsImporter::GetInstance().DefaultWhiteTex;
+							tex->mTex = Assets::AssetManager::GetInstance().DefaultWhiteTex;
 							tex->mTex.SetName(VarName);
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
@@ -552,7 +552,7 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
+							ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
@@ -566,7 +566,7 @@ namespace Nuclear
 								VarName.erase(0, 6);
 
 								Assets::ShaderTexture ReflectedTex;
-								ReflectedTex.mTex = Importers::AssetsImporter::GetInstance().DefaultBlackTex;
+								ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
 								ReflectedTex.mTex.SetName(VarName);
 								ReflectedTex.mSlot = i;
 								ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;

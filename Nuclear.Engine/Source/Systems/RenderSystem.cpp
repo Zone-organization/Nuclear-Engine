@@ -5,8 +5,8 @@
 #include <Components\CameraComponent.h>
 #include <Components\MeshComponent.h>
 #include <Graphics\GraphicsEngine.h>
-#include <Importers\AssetsImporter.h>
-#include <Assets\Scene.h>
+#include <Assets\AssetManager.h>
+#include <Core\Scene.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Assets\DefaultMeshes.h>
 #include <Assets\Material.h>
@@ -37,7 +37,7 @@ namespace Nuclear
 
 		void RenderSystem::Bake(const RenderSystemBakingDesc& desc)
 		{		
-			mCameraSystemPtr = mScene->GetSystemManager().GetSystem<CameraSystem>();
+			mCameraSystemPtr = Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>();
 
 			BufferDesc CBDesc;
 			CBDesc.Name = "NEStatic_Animation";
@@ -141,7 +141,6 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 1: Build FrameRenderData
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			mRenderData.pScene = mScene;
 			mRenderData.pAnimationCB = mAnimationCB;
 			mRenderData.pCameraSystemPtr = mCameraSystemPtr;
 			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
@@ -162,7 +161,7 @@ namespace Nuclear
 				hasshadowpass = true;
 			}
 		
-			auto meshview = mScene->GetRegistry().view<Components::MeshComponent>();
+			auto meshview = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : meshview)
 			{
 				auto& mesh = meshview.get<Components::MeshComponent>(entity);
@@ -171,12 +170,12 @@ namespace Nuclear
 			}
 
 			//sort accroding to shadingmodels (aka pipelines) & update their renderqueues
-			mScene->GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
+			Core::Scene::GetInstance().GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
 				{
 					return lhs.GetRenderQueue() < rhs.GetRenderQueue();
 				});
 
-			mRenderData.mMeshView = mScene->GetRegistry().view<Components::MeshComponent>();
+			mRenderData.mMeshView = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 2: Clear main RTVs
@@ -358,7 +357,7 @@ namespace Nuclear
 
 		void RenderSystem::BakeLights()
 		{
-			auto LightSourcesView = mScene->GetRegistry().view<Components::LightComponent>();
+			auto LightSourcesView = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
 
 			std::vector<Components::LightComponent*> DirLights_noShadows;
 			std::vector<Components::LightComponent*> PointLights_noShadows;
@@ -406,11 +405,11 @@ namespace Nuclear
 
 		void RenderSystem::UpdateLights()
 		{
-			auto LightView = mScene->GetRegistry().view<Components::LightComponent>();
+			auto LightView = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
 			for (auto entity : LightView)
 			{
 				auto& Light = LightView.get<Components::LightComponent>(entity);
-				auto& Einfo = mScene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+				auto& Einfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
 				Light.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
 			}		
 		}

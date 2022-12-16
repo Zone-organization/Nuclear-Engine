@@ -141,19 +141,16 @@ namespace Nuclear
 			std::vector<std::string> mDefines;
 		};
 
-		struct MeshImporterDesc
-		{
-			const char* mPath;
-			MeshLoadingDesc mMeshDesc = MeshLoadingDesc();
-		};
-
-		struct ScriptImportingDesc
+		struct ScriptLoadingDesc
 		{
 
 			std::string mScriptFullName;
 			bool mClassNameFromPath = true;
 		};
-
+		struct SceneLoadingDesc
+		{
+			std::string mName;
+		};
 		//typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::MaterialData*, Assets::Animations*)> MeshImporterDelegate;
 
 		//typedef Utilities::Delegate<Assets::ImageData(const std::string& Path, const ImageLoadingDesc& Desc)> ImageImporterDelegate;

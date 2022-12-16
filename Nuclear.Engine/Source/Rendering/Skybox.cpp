@@ -1,6 +1,6 @@
 #include "Rendering/Skybox.h"
 #include <Graphics/Context.h>
-#include <Importers\AssetsImporter.h>
+#include <Assets\AssetManager.h>
 #include <Components/CameraComponent.h>
 #include "Graphics/GraphicsEngine.h"
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>

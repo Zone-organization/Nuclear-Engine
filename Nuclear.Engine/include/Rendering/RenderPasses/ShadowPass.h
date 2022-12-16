@@ -49,9 +49,9 @@ namespace Nuclear
 
 			void Update(FrameRenderData* framedata) override;
 
-			void DirLightShadowDepthPass(Components::LightComponent* dirlight, Uint32 RTindex, Assets::Scene* scene);
-			void SpotLightShadowDepthPass(Components::LightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene);
-			void PointLightShadowDepthPass(Components::LightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene);
+			void DirLightShadowDepthPass(Components::LightComponent* dirlight, Uint32 RTindex);
+			void SpotLightShadowDepthPass(Components::LightComponent* spotlight, Uint32 RTindex);
+			void PointLightShadowDepthPass(Components::LightComponent* pointlight, Uint32 RTindex);
 
 			ShadowPassBakingDesc GetBakingDesc() const;
 
@@ -81,7 +81,7 @@ namespace Nuclear
 			PosShadowMap mDirShadowMap;
 			PosShadowMap mSpotShadowMap;
 
-			void PositionalLightShadowDepthPass(Uint32 RTindex,const Math::Matrix4 lightspace, Assets::Scene* scene, PosShadowMap& type);
+			void PositionalLightShadowDepthPass(Uint32 RTindex,const Math::Matrix4 lightspace, PosShadowMap& type);
 			void InitPositionalShadowPassPSO();
 			void InitPositionalShadowMapTextures();
 

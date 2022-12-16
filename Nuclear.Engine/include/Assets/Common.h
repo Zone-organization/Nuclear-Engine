@@ -10,7 +10,7 @@ namespace Nuclear
 		enum class AssetType
 		{
 			Unknown,
-			Scene,
+			SerializedScene,
 
 			Image,
 			Mesh,

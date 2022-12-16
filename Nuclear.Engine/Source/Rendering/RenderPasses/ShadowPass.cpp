@@ -6,7 +6,7 @@
 #include <Assets/Mesh.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Components\EntityInfoComponent.h>
-#include <Assets\Scene.h>
+#include <Core\Scene.h>
 #include <Rendering/FrameRenderData.h>
 #include <Math\Math.h>
 
@@ -62,7 +62,7 @@ namespace Nuclear
 					DirLight->LightSpace = lightProjection * lightView;
 					lightspacematrices.push_back(DirLight->LightSpace);
 
-					DirLightShadowDepthPass(DirLight, DirPosCasterRTIndex, framedata->pScene);
+					DirLightShadowDepthPass(DirLight, DirPosCasterRTIndex);
 					DirPosCasterRTIndex++;
 				}
 				else {
@@ -83,7 +83,7 @@ namespace Nuclear
 					SpotLight->LightSpace = lightProjection * lightView;
 					lightspacematrices.push_back(SpotLight->LightSpace);
 
-					SpotLightShadowDepthPass(SpotLight, SpotCasterRTIndex, framedata->pScene);
+					SpotLightShadowDepthPass(SpotLight, SpotCasterRTIndex);
 					SpotCasterRTIndex++;
 				}
 				else {
@@ -96,7 +96,7 @@ namespace Nuclear
 			{
 				if (PointLight->mCastShadows)
 				{
-					PointLightShadowDepthPass(PointLight, PointCasterRTIndex, framedata->pScene);
+					PointLightShadowDepthPass(PointLight, PointCasterRTIndex);
 					PointCasterRTIndex++;
 				}
 				else {
@@ -105,22 +105,22 @@ namespace Nuclear
 			}
 		}
 
-		void ShadowPass::DirLightShadowDepthPass(Components::LightComponent* light, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::DirLightShadowDepthPass(Components::LightComponent* light, Uint32 RTindex)
 		{
 		//	if (light.GetShadowType() == Components::LightShadowType::Simple_Shadows)
 			{
-				PositionalLightShadowDepthPass(RTindex, light->LightSpace, scene, mDirShadowMap);
+				PositionalLightShadowDepthPass(RTindex, light->LightSpace, mDirShadowMap);
 			}
 
 			//CSM - WIP
 		}
 
-		void ShadowPass::SpotLightShadowDepthPass(Components::LightComponent* spotlight, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::SpotLightShadowDepthPass(Components::LightComponent* spotlight, Uint32 RTindex)
 		{
-			return PositionalLightShadowDepthPass(RTindex, spotlight->LightSpace, scene, mSpotShadowMap);
+			return PositionalLightShadowDepthPass(RTindex, spotlight->LightSpace, mSpotShadowMap);
 		}
 
-		void ShadowPass::PointLightShadowDepthPass(Components::LightComponent* pointlight, Uint32 RTindex, Assets::Scene* scene)
+		void ShadowPass::PointLightShadowDepthPass(Components::LightComponent* pointlight, Uint32 RTindex)
 		{
 			Graphics::Context::GetInstance().GetContext()->SetPipelineState(mOmniDirShadowPassPSO.RawPtr());
 
@@ -129,13 +129,13 @@ namespace Nuclear
 
 			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mOmniDirShadowPassSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			auto view = scene->GetRegistry().view<Components::MeshComponent>();
+			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : view)
 			{
 				auto& MeshObject = view.get<Components::MeshComponent>(entity);
 				if (MeshObject.GetCastShadow())               //TODO Animation component
 				{
-					auto& EntityInfo = scene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
 
 					auto lightPos = pointlight->GetInternalPosition();
@@ -197,7 +197,7 @@ namespace Nuclear
 		{
 			return pOmniDirShadowMapSRV.RawPtr();
 		}
-		void ShadowPass::PositionalLightShadowDepthPass(Uint32 RTindex, const Math::Matrix4 lightspace, Assets::Scene* scene, PosShadowMap& type)
+		void ShadowPass::PositionalLightShadowDepthPass(Uint32 RTindex, const Math::Matrix4 lightspace, PosShadowMap& type)
 		{
 			Graphics::Context::GetInstance().GetContext()->SetPipelineState(mPositionalShadowMapDepthPSO.RawPtr());
 
@@ -206,13 +206,13 @@ namespace Nuclear
 
 			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mPositionalShadowMapDepthSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			auto view = scene->GetRegistry().view<Components::MeshComponent>();
+			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : view)
 			{
 				auto& MeshObject = view.get<Components::MeshComponent>(entity);
 				if (MeshObject.GetCastShadow())               //TODO Animation component
 				{
-					auto& EntityInfo = scene->GetRegistry().get<Components::EntityInfoComponent>(entity);
+					auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
 
 					NEStatic_LightInfo cbdata;

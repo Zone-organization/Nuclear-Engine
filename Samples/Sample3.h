@@ -20,8 +20,6 @@ class Sample3 : public Core::Client
 	Assets::Shader* PBR;
 	Rendering::ForwardRenderingPath ForwardRP;
 
-	Assets::Scene Scene;
-
 	Rendering::GeometryPass GeoPass;
 	Rendering::PostProcessingPass PostFXPass;
 
@@ -41,25 +39,25 @@ public:
 	}
 	void SetupAssets()
 	{
-		script = Importers::AssetsImporter::GetInstance().Import("@CurrentPath@/../Textures/SamplesScripts/Sample3.cs", Importers::ScriptImportingDesc());
+		script = GetAssetManager().Import("@CurrentPath@/../Textures/SamplesScripts/Sample3.cs", Importers::ScriptLoadingDesc());
 
 		//Initialize Materials
 		Assets::TextureSet PBRRustedIron;
-		PBRRustedIron.mData.push_back({ 0, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRRustedIron.mData.push_back({ 1, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRRustedIron.mData.push_back({ 2, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRRustedIron.mData.push_back({ 3, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRRustedIron.mData.push_back({ 4, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRRustedIron.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRRustedIron.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRRustedIron.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRRustedIron.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRRustedIron.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
 
 		RustedIron_D.mTextures.push_back(PBRRustedIron);
 		RustedIron.SetName("RustedIron Material");
 
 		Assets::TextureSet PBRPlastic;
-		PBRPlastic.mData.push_back({ 0, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRPlastic.mData.push_back({ 1, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRPlastic.mData.push_back({ 2, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRPlastic.mData.push_back({ 3, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRPlastic.mData.push_back({ 4, Importers::AssetsImporter::GetInstance().Import("@CommonAssets@/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRPlastic.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
+		PBRPlastic.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
+		PBRPlastic.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
+		PBRPlastic.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
+		PBRPlastic.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
 
 		Plastic_D.mTextures.push_back(PBRPlastic);
 		Plastic.SetName("Plastic Material");
@@ -70,14 +68,14 @@ public:
 	void SetupEntities()
 	{
 		//Create Entities
-		EController = Scene.CreateEntity("Controller");
+		EController = GetScene().CreateEntity("Controller");
 
-		auto EDirLight = Scene.CreateEntity("DirLight");
+		auto EDirLight = GetScene().CreateEntity("DirLight");
 		auto& dircomp = EDirLight.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Directional);
 		dircomp.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 		dircomp.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 
-		auto ELights = Scene.CreateEntity("PointLight1");
+		auto ELights = GetScene().CreateEntity("PointLight1");
 		auto& lightcomp = ELights.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
 		lightcomp.SetIntensity(10.0f);
 
@@ -93,17 +91,17 @@ public:
 	{
 		Systems::PhysXSystemDesc sceneDesc;
 		sceneDesc.mGravity = Math::Vector3(0.0f, -7.0f, 0.0f);
-		mPhysXSystem = Scene.GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
+		mPhysXSystem = GetScene().GetSystemManager().Add<Systems::PhysXSystem>(sceneDesc);
 
-		mScriptSystem = Scene.GetSystemManager().Add<Systems::ScriptingSystem>();
+		mScriptSystem = GetScene().GetSystemManager().Add<Systems::ScriptingSystem>();
 		mScriptSystem->Initialize();
-		Renderer = Scene.GetSystemManager().Add<Systems::RenderSystem>();
+		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
 		Renderer->AddRenderPass(&GeoPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
-		PBR = Importers::AssetsImporter::GetInstance().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 
 		Renderer->RegisterShader(PBR);
 
@@ -117,11 +115,9 @@ public:
 
 	void Load()
 	{
-		Core::Engine::GetInstance().CreateScene(&Scene, true);
+		GetAssetManager().Initialize();
 
-		Importers::AssetsImporter::GetInstance().Initialize();
-
-		mCameraSystem = Scene.GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 
 		SetupEntities();
 
@@ -129,7 +125,7 @@ public:
 
 		SetupAssets();
 
-		auto entity = Scene.CreateEntity("ScriptEntity");
+		auto entity = GetScene().CreateEntity("ScriptEntity");
 		auto& comp = entity.AddComponent<Components::ScriptComponent>(script);
 
 		int nrRows = 7;
@@ -148,27 +144,36 @@ public:
 
 				ECS::Transform ESphere(position, Math::Vector3(2.0f));
 
-				auto sphere = Scene.CreateSphere(&RustedIron, ESphere);
+				auto sphere = GetScene().CreateSphere(&RustedIron, ESphere);
 				position.z += 5.0f;
 
 				//ECS::Transform EBox(position, Math::Vector3(1.0f));
 
-				//boxes.push_back(Scene.GetFactory().CreateBox(&SphereMaterial, EBox));
+				//boxes.push_back(GetScene().GetFactory().CreateBox(&SphereMaterial, EBox));
 			}
 		}
 
-		Scene.CreatePlane(&Plastic);
+		GetScene().CreatePlane(&Plastic);
 		for (auto it : boxes)
 		{
 			it.GetComponent<Components::RigidBodyComponent>().isKinematic = true;
 		}
 
 		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
-		//Scene.Save();
+		//GetScene().Save();
 		//Camera.MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
 
 
+		Assets::SavedScene scene;
+
+		GetScene().SaveScene(&scene);
+
+		GetAssetManager().Export(&scene, "@CommonAssets@/Scenes/Sample3.bin");
+
+		auto resultscene  = GetAssetManager().Import("@CommonAssets@/Scenes/Sample3.bin", Importers::SceneLoadingDesc());
+
+		//GetScene().LoadScene(&scene);
 
 
 		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
@@ -237,7 +242,7 @@ public:
 
 	void Render(float dt) override
 	{
-		Scene.Update(dt);
+		GetScene().Update(dt);
 
 		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
 
@@ -260,7 +265,7 @@ public:
 					{
 						auto entity = hit.HitEntity;
 
-						ImGui::Text((char*)Scene.GetRegistry().try_get<Components::EntityInfoComponent>(entity.GetEntityID())->mName.c_str());
+						ImGui::Text((char*)GetScene().GetRegistry().try_get<Components::EntityInfoComponent>(entity.GetEntityID())->mName.c_str());
 					}
 					else
 					{
@@ -299,12 +304,12 @@ public:
 			}
 
 			ImGui::End();
-			EntityExplorer(&Scene);
+			EntityExplorer();
 		}
 	}
 
 	void Shutdown() override
 	{
-		Importers::AssetsImporter::GetInstance().FlushContainers();
+		GetAssetManager().FlushContainers();
 	}
 };
