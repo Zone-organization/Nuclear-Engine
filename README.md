@@ -19,13 +19,20 @@
   - W.I.P:
 	- Finish reflecting the C++ api to the C# scripting assembly
 	- Serializing the scene.
-	
+	- PostProcessing effects should be processed per camera not only in the main camera.
+	- Improving AssetManager
+	    - All imported assets should be exported in unified filetype to ease loading assets in a final game
+	    - 3D models should be exported to binary gltf (.glb)
+		- Textures common filetype is yet to be decided.
+		- AssetLibrary should become a directory (and serialized into a zip file)
+		- Imported Assets should be converted to the consumable extension with a meta-data file containing its description
+
   - On-Hold:
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).
 	- Multithreading Engine
 		- Async asset loading
-		
+
   - TODO:
   	- CSM
 	- SSAO
@@ -34,8 +41,7 @@
 	- FIX BRDF generation in IBL Pipeline
 	- Clean and document Samples.
 	- GUI (basic widgets)
-		
-	
+
 ## Getting started
 
 Follow the instructions below to compile and run the engine from source.
