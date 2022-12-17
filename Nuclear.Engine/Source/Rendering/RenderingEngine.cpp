@@ -5,6 +5,7 @@
 #include <Assets\DefaultMeshes.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Components\ShaderStructs.h>
+#include <Utilities/Logger.h>
 
 namespace Nuclear
 {
@@ -16,11 +17,15 @@ namespace Nuclear
 
 			return instance;
 		}
-		void RenderingEngine::Initialize(const RenderingEngineDesc& desc)
+		bool RenderingEngine::Initialize(const RenderingEngineDesc& desc)
 		{
 			mDesc = desc;
 
-			InitSceneToScreenPSO();
+			if (!InitSceneToScreenPSO())
+			{
+				NUCLEAR_ERROR("[RenderingEngine] Initialization Failed : InitSceneToScreenPSO() failed!");
+				return false;
+			}
 
 			Graphics::RenderTargetDesc RTDesc;
 			RTDesc.mDimensions = Math::Vector2ui(desc.RTWidth, desc.RTHeight);
@@ -30,6 +35,9 @@ namespace Nuclear
 
 			RTDesc.DepthTexFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
 			mFinalDepthRT.Create(RTDesc);
+
+			NUCLEAR_INFO("[RenderingEngine] RenderingEngine has been initalized succesfully!");
+			return true;
 		}
 
 		void RenderingEngine::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
@@ -82,8 +90,8 @@ namespace Nuclear
 		{
 			return mFinalDepthRT;
 		}
-		void RenderingEngine::InitSceneToScreenPSO()
-		{		
+		bool RenderingEngine::InitSceneToScreenPSO()
+		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
 			PSOCreateInfo.PSODesc.Name = "SceneToScreen PSO";
@@ -141,7 +149,15 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
 			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pSceneToScreenPSO, PSOCreateInfo, Vars, true);
+
+			if (!pSceneToScreenPSO)
+			{
+				return false;
+			}
+
+
 			pSceneToScreenPSO->CreateShaderResourceBinding(pSceneToScreenSRB.RawDblPtr());
+			return true;
 		}
 		RenderingEngine::RenderingEngine()
 		{

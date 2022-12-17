@@ -21,6 +21,7 @@
 #include <Graphics\GraphicsEngine.h>
 #include <PhysX\PhysXEngine.h>
 #include <Scripting/ScriptingEngine.h>
+#include <Rendering\RenderingEngine.h>
 
 #include <Assets/AssetManager.h>
 
@@ -142,14 +143,29 @@ namespace Nuclear {
 
 			if (desc.AutoInitPhysXEngine)
 			{
-				PhysX::PhysXEngineDesc desc;
+				PhysX::PhysXEngineDesc pxdesc;
 
-				if (!PhysX::PhysXEngine::GetInstance().Initialize(desc))
+				if (!PhysX::PhysXEngine::GetInstance().Initialize(pxdesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize PhysXEngine...");
 					return false;
 				}
 			}
+
+			if (desc.AutoInitRenderingEngine)
+			{
+				Rendering::RenderingEngineDesc redesc;
+				redesc.RTWidth = desc.mEngineWindowDesc.WindowWidth;
+				redesc.RTHeight = desc.mEngineWindowDesc.WindowHeight;;
+									
+				if (!Rendering::RenderingEngine::GetInstance().Initialize(redesc))
+				{
+					NUCLEAR_FATAL("[Engine] Failed to initalize RenderingEngine...");
+					return false;
+				}			
+			}
+
+
 			gisDebug = desc.Debug;
 
 			Assets::AssetManager::GetInstance().Initialize();

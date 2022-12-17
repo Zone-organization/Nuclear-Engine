@@ -25,7 +25,7 @@ namespace Nuclear
 			RenderingEngine(const RenderingEngine&) = delete;
 			RenderingEngine& operator= (const RenderingEngine) = delete;
 
-			void Initialize(const RenderingEngineDesc& desc);
+			bool Initialize(const RenderingEngineDesc& desc);
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 
@@ -53,7 +53,7 @@ namespace Nuclear
 			Graphics::RenderTarget mFinalRT;
 			Graphics::RenderTarget mFinalDepthRT;
 
-			void InitSceneToScreenPSO();
+			bool InitSceneToScreenPSO();
 
 		private:
 			RenderingEngine();

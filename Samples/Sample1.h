@@ -274,7 +274,6 @@ public:
 	void Load()
 	{
 		GetAssetManager().Initialize();
-		Rendering::RenderingEngine::GetInstance().Initialize({ _Width_  , _Height_ });
 
 		EController = GetScene().CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
@@ -343,10 +342,10 @@ public:
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
-		//if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LEFT_SHIFT))
-		//	GetScene().GetMainCamera()->MovementSpeed = 10;
-		//else
-		//	GetScene().GetMainCamera()->MovementSpeed = 4.5;
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LSHIFT))
+			GetScene().GetMainCamera()->MovementSpeed = 10;
+		else
+			GetScene().GetMainCamera()->MovementSpeed = 4.5;
 
 		//Change Mouse Mode
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))

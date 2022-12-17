@@ -22,7 +22,6 @@ public:
 	void Load() override
 	{
 		GetAssetManager().Initialize();
-		Rendering::RenderingEngine::GetInstance().Initialize({ _Width_  , _Height_ });
 
 		//Create Controller
 		EController = GetScene().CreateEntity("Controller");
@@ -97,6 +96,11 @@ public:
 			isMouseDisabled = false;
 			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
+
+		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LSHIFT))
+			GetScene().GetMainCamera()->MovementSpeed = 10;
+		else
+			GetScene().GetMainCamera()->MovementSpeed = 4.5;
 
 		GetScene().GetMainCamera()->UpdateBuffer();
 		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
