@@ -23,6 +23,8 @@ namespace Nuclear
 
 			virtual void Update(TimeDelta dt) = 0;
 
+			virtual void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) { }
+
 			static Family family_counter_;
 
 		protected:
@@ -77,6 +79,7 @@ namespace Nuclear
 				s->Update(dt);
 			}
 
+			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 
 			void Update_All(ECS::TimeDelta dt);
 

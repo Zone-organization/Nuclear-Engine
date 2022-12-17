@@ -41,7 +41,7 @@ namespace Nuclear
 
 			void Bake(const RenderSystemBakingDesc& desc);
 
-			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
+			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) override;
 
 			void AddRenderPass(Rendering::RenderPass* pass);
 
