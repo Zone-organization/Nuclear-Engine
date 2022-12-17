@@ -1,14 +1,10 @@
 #pragma once
-#include "Common.h"
-
+#include "SampleBase.h"
 
 //Current TODO:
 //Shadow test
-class Playground : public Core::Client
+class Playground : public SampleBase
 {
-	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
-
 	Assets::Material RustedIron;
 	Assets::Material Plastic;
 
@@ -23,13 +19,6 @@ class Playground : public Core::Client
 	Rendering::PostProcessingPass PostFXPass;
 	//Rendering::DefferedPass DefferedPass;
 	Rendering::ShadowPass ShadowPass;
-
-	ECS::Entity EController;
-
-	float lastX = _Width_ / 2.0f;
-	float lastY = _Height_ / 2.0f;
-	bool firstMouse = true;
-	bool isMouseDisabled = false;
 public:
 	Playground()
 	{
@@ -82,12 +71,8 @@ public:
 		auto& light2comp = ELights2.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
 		light2comp.mCastShadows = true;
 
-		EController = GetScene().CreateEntity("Controller");
-
 		//Assign Components
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
-
 
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(-2.0f, 4.0f, -1.0f));
 	}
@@ -95,8 +80,6 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
-
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
 		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
@@ -112,13 +95,11 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
-
-		mDebugSystem = GetScene().GetSystemManager().Add<Systems::DebugSystem>();
 	}
 
 	void Load()
 	{
-		GetAssetManager().Initialize();
+		SampleBase::Load();
 		Rendering::ShadowPassBakingDesc spdesc;
 
 		spdesc.MAX_OMNIDIR_CASTERS =2;
@@ -163,64 +144,6 @@ public:
 
 		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
-	void OnMouseMovement(int xpos_a, int ypos_a) override
-	{
-		if (!isMouseDisabled)
-		{
-			float xpos = static_cast<float>(xpos_a);
-			float ypos = static_cast<float>(ypos_a);
-
-			if (firstMouse)
-			{
-				lastX = xpos;
-				lastY = ypos;
-				firstMouse = false;
-			}
-
-			float xoffset = xpos - lastX;
-			float yoffset = lastY - ypos;
-
-			lastX = xpos;
-			lastY = ypos;
-
-			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
-		}
-	}
-	void OnWindowResize(int width, int height) override
-	{
-		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-	//	Renderer->ResizeRenderTargets(width, height);
-	}
-	void Update(float deltatime) override
-	{
-		//Movement
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
-
-		//Change Mouse Mode
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
-		{
-			isMouseDisabled = true;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
-		}
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_M))
-		{
-			isMouseDisabled = false;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
-		}
-
-
-		GetScene().GetMainCamera()->UpdateBuffer();
-		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
-
-	}
 	bool iskinematic = false;
 
 	void Render(float dt) override
@@ -243,9 +166,9 @@ public:
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
 
-			ImGui::Checkbox("ShowRegisteredRenderTargets", &mDebugSystem->ShowRegisteredRenderTargets);
+			ImGui::Checkbox("ShowRegisteredRenderTargets", &DebugSystem->ShowRegisteredRenderTargets);
 			ImGui::Checkbox("LockSpotlight", &LockSpotlight);
-			ImGui::Checkbox("RenderLightSources", &mDebugSystem->RenderLightSources);
+			ImGui::Checkbox("RenderLightSources", &DebugSystem->RenderLightSources);
 
 			if (ImGui::TreeNode("PostFX Effects"))
 			{

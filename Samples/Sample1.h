@@ -274,10 +274,20 @@ public:
 	void Load()
 	{
 		GetAssetManager().Initialize();
+		Rendering::RenderingEngine::GetInstance().Initialize({ _Width_  , _Height_ });
 
 		EController = GetScene().CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
+
+		//Initialize camera
+		{
+			Components::CameraComponentDesc cameradesc;
+			cameradesc.mProjection = Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f);
+			cameradesc.mRTDesc = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc();
+			cameradesc.mDepthRTDesc = Rendering::RenderingEngine::GetInstance().GetFinalDepthRT().GetDesc();
+			GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(cameradesc));
+
+		}
 
 		SetupEntities();
 

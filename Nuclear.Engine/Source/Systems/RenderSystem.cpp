@@ -148,29 +148,31 @@ namespace Nuclear
 			for (auto entity : CameraView)
 			{
 				auto& camera = CameraView.get<Components::CameraComponent>(entity);
-				UpdateLightsBuffer(Math::Vector4(camera.GetPosition(), 1.0f));
-
-				////////////////////////////////////
-				//Step 2.1: Build FrameRenderData
-				////////////////////////////////////
-				mRenderData.pCamera = &camera;
-				mRenderData.mUsedDefferedPipelines.clear();
-
-				////////////////////////////////////
-				//Step 2.2: Clear main RTVs
-				////////////////////////////////////
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetRenderTarget().GetRTVDblPtr(), camera.GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetRenderTarget().GetRTV(), (float*)&camera.mRTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRenderTarget().GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-				////////////////////////////////////
-				//Step 2.3: Update RenderPasses
-				////////////////////////////////////
-				for (auto pass : mRenderPasses)
+				if (camera.GetIsActive())
 				{
-					pass->Update(&mRenderData);
-				}
+					UpdateLightsBuffer(Math::Vector4(camera.GetPosition(), 1.0f));
 
+					////////////////////////////////////
+					//Step 2.1: Build FrameRenderData
+					////////////////////////////////////
+					mRenderData.pCamera = &camera;
+					mRenderData.mUsedDefferedPipelines.clear();
+
+					////////////////////////////////////
+					//Step 2.2: Clear main RTVs
+					////////////////////////////////////
+					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetRenderTarget().GetRTVDblPtr(), camera.GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetRenderTarget().GetRTV(), (float*)&camera.mRTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRenderTarget().GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+					////////////////////////////////////
+					//Step 2.3: Update RenderPasses
+					////////////////////////////////////
+					for (auto pass : mRenderPasses)
+					{
+						pass->Update(&mRenderData);
+					}
+				}
 			}		
 
 			//////////////////////////////////////////////////////////////////////////////////////////////

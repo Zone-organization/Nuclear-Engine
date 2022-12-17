@@ -10,7 +10,7 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		struct RenderTargetDesc
+		struct NEAPI RenderTargetDesc
 		{
 			RenderTargetDesc();
 			RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT depthTexFormat, std::string name = "Unnamed RT");

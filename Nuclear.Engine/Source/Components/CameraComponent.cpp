@@ -8,17 +8,31 @@ namespace Nuclear
 	namespace Components
 	{
 		CameraComponent::CameraComponent()
-			: CameraComponent(Math::perspective(Math::radians(45.0f), 800.f/600.f, 0.1f, 100.0f))
+			: CameraComponent({ Math::perspective(Math::radians(45.0f), 800.f / 600.f, 0.1f, 100.0f) })
 		{
 		}
 		CameraComponent::~CameraComponent()
 		{
 		}
 
-		CameraComponent::CameraComponent(Math::Matrix4 projectionMatrix, float yaw, float pitch, float speed, float sensitivity, float _Zoom)
-			: Front(Math::Vector3(0.0f, 0.0f, -1.0f)), MovementSpeed(speed), MouseSensitivity(sensitivity), Yaw(yaw), Pitch(pitch), WorldUp(Math::Vector3(0.0f, 1.0f, 0.0f)), Zoom(_Zoom)
+		CameraComponent::CameraComponent(const CameraComponentDesc& desc)
 		{
-			mCameraData.Projection = projectionMatrix;
+			WorldUp = Math::Vector3(0.0f, 1.0f, 0.0f);
+			Front = Math::Vector3(0.0f, 0.0f, -1.0f);
+			Position = Math::Vector3(0.0f, 0.0f, 0.0f);
+			MovementSpeed = desc.mSpeed;
+			MouseSensitivity = desc.mSensitivity;
+			Yaw = desc.mYaw;
+			Pitch = desc.mPitch;
+			Zoom = desc.mZoom;
+			mCameraData.Projection = desc.mProjection;
+			mIsActive = desc.mIsActiveCamera;
+
+			if (desc.mInitRTs)
+			{
+				CreateRenderTargets(desc.mRTDesc, desc.mDepthRTDesc);
+			}
+
 			UpdateBuffer();
 		}
 
@@ -80,6 +94,12 @@ namespace Nuclear
 		{
 			return Position;
 		}
+
+		void CameraComponent::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
+		{
+			mRT.Resize({ RTWidth, RTHeight });
+			mDepthRT.Resize({ RTWidth, RTHeight });
+		}
 	
 		Graphics::RenderTarget& CameraComponent::GetRenderTarget()
 		{
@@ -89,6 +109,22 @@ namespace Nuclear
 		Graphics::RenderTarget& CameraComponent::GetDepthRenderTarget()
 		{
 			return mDepthRT;
+		}
+
+		void CameraComponent::SetIsActive(bool value)
+		{
+			mIsActive = value;
+		}
+
+		bool CameraComponent::GetIsActive()
+		{
+			return mIsActive;
+		}
+
+		void CameraComponent::CreateRenderTargets(const Graphics::RenderTargetDesc& ColorRTDesc, const Graphics::RenderTargetDesc& DepthRTDesc)
+		{
+			mRT.Create(ColorRTDesc);
+			mDepthRT.Create(DepthRTDesc);
 		}
 
 

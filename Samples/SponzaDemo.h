@@ -1,11 +1,8 @@
 #pragma once
-#include "Common.h"
+#include "SampleBase.h"
 
-class SponzaDemo : public Core::Client
+class SponzaDemo : public SampleBase
 {
-	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
-
 	Assets::Mesh* SponzaAsset;
 	Assets::MaterialData* SponzaMaterial;
 
@@ -34,7 +31,6 @@ class SponzaDemo : public Core::Client
 
 	ECS::Entity ESponza;
 
-	ECS::Entity EController;
 	ECS::Entity ELights;
 
 	// positions of the point lights
@@ -50,11 +46,6 @@ class SponzaDemo : public Core::Client
 		Math::Vector3(-6.2f, 2.0f, 0.0f),
 		Math::Vector3(-6.2f, -2.0f, 0.0f)
 	};
-	float lastX = _Width_ / 2.0f;
-	float lastY = _Height_ / 2.0f;
-	bool firstMouse = true;
-	bool isMouseDisabled = false;
-
 public:
 	SponzaDemo()
 	{
@@ -138,8 +129,6 @@ public:
 
 	void InitRenderer()
 	{
-		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
-
 		InitIBL();
 
 		Renderer->AddRenderPass(&GeoPass);
@@ -164,12 +153,9 @@ public:
 
 	void Load()
 	{
-		GetAssetManager().Initialize();
+		SampleBase::Load();
 
-		EController = GetScene().CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
-
 
 		SetupEntities();
 
@@ -193,70 +179,7 @@ public:
 		//Renderer->GetBackground().SetSkybox(&Skybox);
 		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
-	void OnMouseMovement(int xpos_a, int ypos_a) override
-	{
-		if (!isMouseDisabled)
-		{
-			float xpos = static_cast<float>(xpos_a);
-			float ypos = static_cast<float>(ypos_a);
 
-			if (firstMouse)
-			{
-				lastX = xpos;
-				lastY = ypos;
-				firstMouse = false;
-			}
-
-			float xoffset = xpos - lastX;
-			float yoffset = lastY - ypos;
-
-			lastX = xpos;
-			lastY = ypos;
-
-			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
-		}
-	}
-
-
-	void OnWindowResize(int width, int height) override
-	{
-		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 400.0f));
-	//	Renderer->ResizeRenderTargets(width, height);
-	}
-	void Update(float deltatime) override
-	{
-		//Movement
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
-
-		//if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LEFT_SHIFT))
-		//	GetScene().GetMainCamera()->MovementSpeed = 10;
-		//else
-		//	GetScene().GetMainCamera()->MovementSpeed = 4.5;
-
-		//Change Mouse Mode
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
-		{
-			isMouseDisabled = true;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
-		}
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_M))
-		{
-			isMouseDisabled = false;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
-		}
-
-		GetScene().GetMainCamera()->UpdateBuffer();
-
-		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
-	}
 	void Render(float dt) override
 	{
 		// Clear the back buffer 

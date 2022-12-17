@@ -23,11 +23,26 @@ namespace Nuclear
 		const float ZOOM = 45.0f;
 
 
+		struct CameraComponentDesc
+		{
+			Math::Matrix4 mProjection;
+			float mYaw = YAW;
+			float mPitch = PITCH;
+			float mSpeed = SPEED;
+			float mSensitivity = SENSITIVTY;
+			float mZoom = ZOOM;
+
+			bool mIsActiveCamera = true;
+			bool mInitRTs = true;
+			Graphics::RenderTargetDesc mRTDesc;
+			Graphics::RenderTargetDesc mDepthRTDesc;
+		};
+
 		class NEAPI CameraComponent
 		{
 		public:
 			CameraComponent();
-			CameraComponent(Math::Matrix4 projectionMatrix, float yaw = YAW, float pitch = PITCH, float speed = SPEED, float sensitivity = SENSITIVTY, float Zoom = ZOOM);
+			CameraComponent(const CameraComponentDesc& desc);
 			~CameraComponent();
 
 			void ProcessEye(float xoffset, float yoffset, bool constrainPitch = true);
@@ -49,9 +64,15 @@ namespace Nuclear
 			void SetPosition(Math::Vector3 cameraposition);
 			Math::Vector3 GetPosition();
 
+			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
+
 			Graphics::RenderTarget& GetRenderTarget();
 			Graphics::RenderTarget& GetDepthRenderTarget();
 
+			void SetIsActive(bool value);
+			bool GetIsActive();
+
+			void CreateRenderTargets(const Graphics::RenderTargetDesc& ColorRTDesc, const Graphics::RenderTargetDesc& DepthRTDesc);
 
 			// Camera options
 			float MovementSpeed;
@@ -61,10 +82,8 @@ namespace Nuclear
 			CameraBuffer mCameraData;
 
 			Graphics::Color mRTClearColor;
-
-			//Rendering::Skybox* mSkybox = nullptr;
-			//bool RenderSkybox = false;
 		protected:
+			bool mIsActive;
 
 			// Eular Angles
 			float Yaw;

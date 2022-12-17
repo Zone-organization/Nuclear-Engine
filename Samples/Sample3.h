@@ -1,9 +1,8 @@
 #pragma once
-#include "Common.h"
+#include "SampleBase.h"
 
-class Sample3 : public Core::Client
+class Sample3 : public SampleBase
 {
-	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 	std::shared_ptr<Systems::ScriptingSystem> mScriptSystem;
 
@@ -20,14 +19,8 @@ class Sample3 : public Core::Client
 	Rendering::GeometryPass GeoPass;
 	Rendering::PostProcessingPass PostFXPass;
 
-	ECS::Entity EController;
-
 	std::vector<ECS::Entity> boxes;
 
-	float lastX = _Width_ / 2.0f;
-	float lastY = _Height_ / 2.0f;
-	bool firstMouse = true;
-	bool isMouseDisabled = false;
 public:
 	Sample3()
 	{
@@ -63,9 +56,6 @@ public:
 	}
 	void SetupEntities()
 	{
-		//Create Entities
-		EController = GetScene().CreateEntity("Controller");
-
 		auto EDirLight = GetScene().CreateEntity("DirLight");
 		auto& dircomp = EDirLight.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Directional);
 		dircomp.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
@@ -74,10 +64,8 @@ public:
 		auto ELights = GetScene().CreateEntity("PointLight1");
 		auto& lightcomp = ELights.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
 		lightcomp.SetIntensity(10.0f);
-
-		
+				
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
 
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
 	}
@@ -89,15 +77,13 @@ public:
 
 		mScriptSystem = GetScene().GetSystemManager().Add<Systems::ScriptingSystem>();
 		mScriptSystem->Initialize();
-		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
+
 		Renderer->AddRenderPass(&GeoPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
 		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
-		Rendering::RenderingEngine::GetInstance().Initialize({});
-		Rendering::RenderingEngine::GetInstance().Bake({ _Width_ ,_Height_ });
 
 		Renderer->RegisterShader(PBR);
 
@@ -111,7 +97,7 @@ public:
 
 	void Load()
 	{
-		GetAssetManager().Initialize();
+		SampleBase::Load();
 
 		SetupEntities();
 
@@ -165,72 +151,14 @@ public:
 
 		GetAssetManager().Export(&scene, "@CommonAssets@/Scenes/Sample3.bin");
 
-		auto resultscene  = GetAssetManager().Import("@CommonAssets@/Scenes/Sample3.bin", Importers::SceneLoadingDesc());
+		auto resultscene = GetAssetManager().Import("@CommonAssets@/Scenes/Sample3.bin", Importers::SceneLoadingDesc());
 
 		//GetScene().LoadScene(&scene);
 
 
 		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
-	void OnMouseMovement(int xpos_a, int ypos_a) override
-	{
-		if (!isMouseDisabled)
-		{
-			float xpos = static_cast<float>(xpos_a);
-			float ypos = static_cast<float>(ypos_a);
 
-			if (firstMouse)
-			{
-				lastX = xpos;
-				lastY = ypos;
-				firstMouse = false;
-			}
-
-			float xoffset = xpos - lastX;
-			float yoffset = lastY - ypos;
-
-			lastX = xpos;
-			lastY = ypos;
-
-			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
-		}
-	}
-	void OnWindowResize(int width, int height) override
-	{
-		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Renderer->ResizeRTs(width, height);
-	}
-
-	void Update(float deltatime) override
-	{
-		//Movement
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
-
-		//Change Mouse Mode
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
-		{
-			isMouseDisabled = true;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
-		}
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_M))
-		{
-			isMouseDisabled = false;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
-		}
-
-		GetScene().GetMainCamera()->UpdateBuffer();
-
-		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
-
-	}
 	bool iskinematic = false;
 
 	void Render(float dt) override
@@ -253,8 +181,7 @@ public:
 			{
 				if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_F))
 				{
-
-					/*if (mPhysXSystem->Raycast(GetScene().GetMainCamera()->GetPosition(), GetScene().GetMainCamera()->GetFrontView(), 100.f, hit))
+					if (mPhysXSystem->Raycast(GetScene().GetMainCamera()->GetPosition(), GetScene().GetMainCamera()->GetFrontView(), 100.f, hit))
 					{
 						auto entity = hit.HitEntity;
 
@@ -263,7 +190,7 @@ public:
 					else
 					{
 						ImGui::Text("No hit");
-					}*/
+					}
 				}
 				else
 					ImGui::Text("Press F");

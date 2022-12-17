@@ -9,13 +9,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-
 		struct RenderingEngineDesc
-		{
-
-		};
-
-		struct RenderingEngineBakingDesc
 		{
 			Uint32 RTWidth;
 			Uint32 RTHeight;
@@ -33,8 +27,6 @@ namespace Nuclear
 
 			void Initialize(const RenderingEngineDesc& desc);
 
-			void Bake(const RenderingEngineBakingDesc& bakedesc);
-
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 
 			void RenderFinalRT();
@@ -50,7 +42,6 @@ namespace Nuclear
 
 		protected:
 			RenderingEngineDesc mDesc;
-			RenderingEngineBakingDesc mBakingDesc;
 
 			//rendering constant buffers
 			RefCntAutoPtr<IBuffer> mCameraCB;

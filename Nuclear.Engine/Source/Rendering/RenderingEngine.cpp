@@ -21,14 +21,9 @@ namespace Nuclear
 			mDesc = desc;
 
 			InitSceneToScreenPSO();
-		}
-
-		void RenderingEngine::Bake(const RenderingEngineBakingDesc& bakedesc)
-		{
-			mBakingDesc = bakedesc;
 
 			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.mDimensions = Math::Vector2ui(mBakingDesc.RTWidth, mBakingDesc.RTHeight);
+			RTDesc.mDimensions = Math::Vector2ui(desc.RTWidth, desc.RTHeight);
 			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
 
 			mFinalRT.Create(RTDesc);
