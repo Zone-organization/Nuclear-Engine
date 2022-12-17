@@ -4,7 +4,6 @@
 class SponzaDemo : public Core::Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	Assets::Mesh* SponzaAsset;
@@ -12,8 +11,6 @@ class SponzaDemo : public Core::Client
 
 	Assets::Material SponzaPBRMaterial;
 	Assets::Material SponzaBlinnPhongMaterial;
-
-	Graphics::Camera Camera;
 
 	Rendering::Skybox Skybox;
 
@@ -60,7 +57,6 @@ class SponzaDemo : public Core::Client
 
 public:
 	SponzaDemo()
-		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 	}
 	void SetupAssets()
@@ -156,13 +152,13 @@ public:
 		bakedesc.RTWidth = _Width_;
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);	
-		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc() });
+		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
 
 		PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), false);
 		PostFXPass.SetPostProcessingEffect(Utilities::Hash("GAMMACORRECTION"), false);
 		PostFXPass.SetPostProcessingEffect(Utilities::Hash("BLOOM"), false);
 
-		Skybox.Initialize(mCameraSystem->GetCameraCB(), &HDR_Cube);
+		Skybox.Initialize(&HDR_Cube);
 		//Renderer->GetBackground().SetSkybox(&Skybox);
 	}
 
@@ -172,11 +168,9 @@ public:
 
 		EController = GetScene().CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		EController.AddComponent<Components::CameraComponent>(&Camera);
+		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
 
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
-		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 		SetupEntities();
 
 		//Rendering::ShadowPassBakingDesc spdesc;
@@ -219,7 +213,7 @@ public:
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera.ProcessEye(xoffset, yoffset);
+			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
 		}
 	}
 
@@ -227,25 +221,25 @@ public:
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 400.0f));
+		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 400.0f));
 	//	Renderer->ResizeRenderTargets(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LEFT_SHIFT))
-		//	Camera.MovementSpeed = 10;
+		//	GetScene().GetMainCamera()->MovementSpeed = 10;
 		//else
-		//	Camera.MovementSpeed = 4.5;
+		//	GetScene().GetMainCamera()->MovementSpeed = 4.5;
 
 		//Change Mouse Mode
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
@@ -259,16 +253,16 @@ public:
 			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
-		Camera.UpdateBuffer();
-		mCameraSystem->Update(deltatime);
-		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Camera.GetPosition());
+		GetScene().GetMainCamera()->UpdateBuffer();
+
+		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
 	}
 	void Render(float dt) override
 	{
 		// Clear the back buffer 
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 
-		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::LightComponent>().SetDirection(GetScene().GetMainCamera()->GetFrontView());
 
 		GetScene().Update(dt);
 		{
@@ -309,7 +303,7 @@ public:
 				ESponza.GetComponent<Components::MeshComponent>().SetMaterial(&SponzaBlinnPhongMaterial);
 			}
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
 
 
 			if (ImGui::TreeNode("PostFX Effects"))
@@ -328,7 +322,7 @@ public:
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			//ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
+			//ImGui::Checkbox("Render Skybox", &GetScene().GetMainCamera()->RenderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

@@ -70,7 +70,7 @@ void AssetLibraryViewer(Assets::AssetLibrary& obj)
 
 			if (img)
 			{
-				if (img->isValid)
+				//if (img->GetState() == Assets::Asset::State::Created)
 				{
 					ImageViewer(img);
 				}
@@ -99,7 +99,6 @@ void AssetsFolderViewer(Assets::AssetLibrary& obj)
 class Sample1 : public Core::Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 //	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	Assets::Mesh* NanosuitAsset;
@@ -128,9 +127,6 @@ class Sample1 : public Core::Client
 	Assets::Shader* DiffuseOnly;
 	Assets::Shader* BlinnPhong;
 
-
-	Graphics::Camera Camera;
-
 	Rendering::Skybox Skybox;
 
 	Rendering::ForwardRenderingPath ForwardRP;
@@ -152,7 +148,6 @@ class Sample1 : public Core::Client
 
 public:
 	Sample1()
-		: Camera(Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(0.0f, 1.0f, 0.0f),  Graphics::YAW, Graphics::PITCH, Graphics::SPEED, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 	}
 	void SetupAssets()
@@ -218,7 +213,7 @@ public:
 		Importers::ImageLoadingDesc SkyboxDesc;
 		//SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		auto test = GetAssetManager().LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
-		Skybox.Initialize(mCameraSystem->GetCameraCB(), test);
+		Skybox.Initialize(test);
 	}
 	void SetupEntities()
 	{
@@ -282,11 +277,7 @@ public:
 
 		EController = GetScene().CreateEntity();
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		EController.AddComponent<Components::CameraComponent>(&Camera);
-
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-
-		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
+		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
 
 		SetupEntities();
 
@@ -319,7 +310,7 @@ public:
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera.ProcessEye(xoffset, yoffset);
+			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
 		}
 	}
 
@@ -327,25 +318,25 @@ public:
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->ResizeRTs(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LEFT_SHIFT))
-		//	Camera.MovementSpeed = 10;
+		//	GetScene().GetMainCamera()->MovementSpeed = 10;
 		//else
-		//	Camera.MovementSpeed = 4.5;
+		//	GetScene().GetMainCamera()->MovementSpeed = 4.5;
 
 		//Change Mouse Mode
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
@@ -359,9 +350,8 @@ public:
 			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
-		Camera.UpdateBuffer();
-		mCameraSystem->Update(deltatime);
-		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Camera.GetPosition());
+		GetScene().GetMainCamera()->UpdateBuffer();
+		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
 
 	//	Renderer->GetActivePipeline()->UpdatePSO();
 	}
@@ -372,7 +362,7 @@ public:
 		BobAnimator.UpdateAnimation(dt);
 	//	VampireAnimator.UpdateAnimation(dt);
 
-		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::LightComponent>().SetDirection(GetScene().GetMainCamera()->GetFrontView());
 
 		GetScene().Update(dt);
 		{
@@ -381,11 +371,11 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
 
 			//ImGui::Checkbox("Visualize Pointlights", &Renderer->VisualizePointLightsPositions);
 
-			//ImGui::Checkbox("Render Skybox", &Camera.RenderSkybox);
+			//ImGui::Checkbox("Render Skybox", &GetScene().GetMainCamera()->RenderSkybox);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

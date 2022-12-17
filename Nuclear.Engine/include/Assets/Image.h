@@ -17,8 +17,23 @@ namespace Nuclear
 
 			bool CreateTextureFromRawImage(const Assets::ImageData& src_data, const Importers::ImageLoadingDesc& Desc);
 
+
+	//	protected:
+			//friend class Rendering::ShadowPass;
+
 			ImageData mData;
 			RefCntAutoPtr<ITextureView> mTextureView;
+		protected:
+
+			friend Serialization::Access;
+
+			template<typename S>
+			void serialize(S& s)
+			{
+				s.value1b(mType);
+				s.value4b(mHashedName);
+				s.text1b(mName, 256);
+			}
 		};
 	}
 }

@@ -25,16 +25,16 @@ namespace Nuclear
 			Skybox();
 			~Skybox();
 			//TODO: Move
-			void Initialize(IBuffer* CameraConstantBuffer, const std::array<Assets::Image*, 6>& data);     
+			void Initialize(const std::array<Assets::Image*, 6>& data);     
 
-			void Initialize(IBuffer* CameraConstantBuffer, Assets::Image* Texture);
+			void Initialize(Assets::Image* Texture);
 
 			void Render();
 
 		protected:
 			friend class ImageBasedLighting;
 
-			void InitializePipeline(IBuffer* CameraConstantBuffer);
+			void InitializePipeline();
 			void InitializeCube();
 			void RenderCube();
 

@@ -11,20 +11,15 @@
 namespace Nuclear
 {
 	namespace Graphics {
-		class Camera;
 		class RenderTarget;
 	}
 	namespace Systems
 	{
-		class CameraSystem;
-
 		class NEAPI DebugSystem : public ECS::System<DebugSystem>
 		{
 		public:
 			DebugSystem();
 			~DebugSystem();
-
-			void Initialize(Graphics::Camera* camera, IBuffer* AnimationBufferPtr );
 
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;

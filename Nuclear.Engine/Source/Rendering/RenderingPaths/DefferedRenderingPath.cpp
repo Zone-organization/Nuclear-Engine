@@ -1,14 +1,12 @@
 #include "Rendering\RenderingPaths\DefferedRenderingPath.h"
 #include <Graphics\Context.h>
-#include <Systems\RenderSystem.h>
 #include <Components/MeshComponent.h>
 #include <Assets\Shader.h>
 #include "Animation/Animator.h"
-#include <Utilities/Logger.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
-#include <Platform\FileSystem.h>
-#include <Systems\CameraSystem.h>
 #include <Systems\DebugSystem.h>
+#include <Rendering\FrameRenderData.h>
+#include <Rendering/RenderingEngine.h>
 
 namespace Nuclear
 {
@@ -30,13 +28,13 @@ namespace Nuclear
                 {
                     RTargets.push_back(i.GetRTV());
                 }
-                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 for (auto& i : RTargets)
                 {
                     Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 }
 
-                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                 pCurrentFrame->mUsedDefferedPipelines.push_back(pActivePipeline);
             }
@@ -44,7 +42,7 @@ namespace Nuclear
         void DefferedRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
-            pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
+            Rendering::RenderingEngine::GetInstance().UpdateCameraCB(pCurrentFrame->pCamera);
 
             UpdateAnimationCB(mesh.GetAnimator());
 

@@ -2,11 +2,10 @@
 #include <Graphics\Context.h>
 #include <Components/MeshComponent.h>
 #include "Animation/Animator.h"
-#include <Systems\RenderSystem.h>
-#include <Systems\CameraSystem.h>
 #include <Assets\Shader.h>
-#include <Utilities/Logger.h>
 #include <Graphics\ShaderPipelineVariant.h>
+#include <Rendering/RenderingEngine.h>
+#include <Rendering\FrameRenderData.h>
 
 namespace Nuclear
 {
@@ -19,14 +18,14 @@ namespace Nuclear
 				pCurrentFrame = frame;
 				pActivePipeline = pipeline;
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetMainPipeline());
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pCurrentFrame->mFinalRT.GetRTVDblPtr(), pCurrentFrame->mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pCurrentFrame->pCamera->GetRenderTarget().GetRTVDblPtr(), pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			}
 		}
 			
 		void ForwardRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
 		{
 			pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
-			pCurrentFrame->pCameraSystemPtr->UpdateBuffer();
+			Rendering::RenderingEngine::GetInstance().UpdateCameraCB(pCurrentFrame->pCamera);
 
 			UpdateAnimationCB(mesh.GetAnimator());
 

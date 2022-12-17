@@ -7,7 +7,6 @@
 class Playground : public Core::Client
 {
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	Assets::Material RustedIron;
@@ -17,8 +16,6 @@ class Playground : public Core::Client
 	Assets::MaterialData Plastic_D;
 
 	Assets::Font* ArialFont;
-
-	Graphics::Camera Camera;
 
 	Assets::Shader* PBR;
 
@@ -35,7 +32,6 @@ class Playground : public Core::Client
 	bool isMouseDisabled = false;
 public:
 	Playground()
-		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, 10.f, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 	}
 	void SetupAssets()
@@ -90,9 +86,8 @@ public:
 
 		//Assign Components
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		EController.AddComponent<Components::CameraComponent>(&Camera);
+		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
 
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(-2.0f, 4.0f, -1.0f));
 	}
@@ -116,11 +111,9 @@ public:
 		bakedesc.RTWidth = _Width_;
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
-		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc() });
+		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
 
 		mDebugSystem = GetScene().GetSystemManager().Add<Systems::DebugSystem>();
-		mDebugSystem->Initialize(&Camera, Renderer->GetAnimationCB());
-
 	}
 
 	void Load()
@@ -132,7 +125,6 @@ public:
 		spdesc.MAX_SPOT_CASTERS = 0;
 		ShadowPass.Bake(spdesc);
 
-		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 		SetupEntities();
 
 		InitRenderer();
@@ -164,8 +156,8 @@ public:
 		}
 		GetScene().CreatePlane(&Plastic);
 
-		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
-		//Camera.MovementSpeed = 15;
+		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
+		//GetScene().GetMainCamera()->MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
 		//EController.GetComponent<Components::SpotLightComponent>().mCastShadows = true;
 
@@ -191,26 +183,26 @@ public:
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera.ProcessEye(xoffset, yoffset);
+			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
 		}
 	}
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 	//	Renderer->ResizeRenderTargets(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//Change Mouse Mode
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
@@ -224,8 +216,10 @@ public:
 			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
-		Camera.UpdateBuffer();
-		mCameraSystem->Update(deltatime);
+
+		GetScene().GetMainCamera()->UpdateBuffer();
+		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
+
 	}
 	bool iskinematic = false;
 
@@ -236,8 +230,8 @@ public:
 
 		if (LockSpotlight)
 		{
-			EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Camera.GetPosition());
-			EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
+			EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
+			EController.GetComponent<Components::LightComponent>().SetDirection(GetScene().GetMainCamera()->GetFrontView());
 		}
 		{
 			using namespace Graphics;
@@ -247,7 +241,7 @@ public:
 
 			ImGui::Image(ArialFont->mTextureView, {256.f,256.f });
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
 
 			ImGui::Checkbox("ShowRegisteredRenderTargets", &mDebugSystem->ShowRegisteredRenderTargets);
 			ImGui::Checkbox("LockSpotlight", &LockSpotlight);

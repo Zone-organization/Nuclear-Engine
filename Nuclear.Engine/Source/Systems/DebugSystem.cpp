@@ -2,25 +2,19 @@
 #include <Graphics/ImGui.h>
 #include <Components/LightComponent.h>
 #include <Components/EntityInfoComponent.h>
-#include <Systems/CameraSystem.h>
 #include <Systems/RenderSystem.h>
 #include <Assets\AssetManager.h>
 #include <Core/Scene.h>
 #include <Utilities/Logger.h>
 #include <Assets\DefaultMeshes.h>
 #include <Graphics\GraphicsEngine.h>
+#include <Rendering/RenderingEngine.h>
 
 namespace Nuclear
 {
 	namespace Systems
 	{
 		DebugSystem::DebugSystem()
-		{
-		}
-		DebugSystem::~DebugSystem()
-		{
-		}
-		void DebugSystem::Initialize(Graphics::Camera* camera, IBuffer* _AnimationBufferPtr)
 		{
 			RefCntAutoPtr<IShader> VShader;
 			RefCntAutoPtr<IShader> PShader;
@@ -36,8 +30,6 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = !COORDSYSTEM_LH_ENABLED;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = True;
-
-			
 
 			//Create Vertex Shader
 			{
@@ -144,8 +136,8 @@ namespace Nuclear
 			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
 			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pShader.mPipeline, PSOCreateInfo, Vars, true);
 
-			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB());
-			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(_AnimationBufferPtr);
+			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingEngine::GetInstance().GetCameraCB());
+			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingEngine::GetInstance().GetAnimationCB());
 
 			pShader.GetMainPipeline()->CreateShaderResourceBinding(&pShader.mPipelineSRB, true);
 
@@ -160,6 +152,10 @@ namespace Nuclear
 					DebugRP.Bake(info);
 					mPipelineSRB = DebugRP.GetActiveSRB();*/
 		}
+		DebugSystem::~DebugSystem()
+		{
+		}
+
 		void DebugSystem::Update(ECS::TimeDelta dt)
 		{
 			if (ShowRegisteredRenderTargets)
@@ -174,7 +170,7 @@ namespace Nuclear
 			{
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pShader.GetMainPipeline());
 				auto RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, Core::Scene::GetInstance().GetSystemManager().GetSystem<RenderSystem>()->mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, Rendering::RenderingEngine::GetInstance().GetFinalDepthRT().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
 				{
 					auto view = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
@@ -184,9 +180,10 @@ namespace Nuclear
 						auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
 
 						EntityInfo.mTransform.Update();
-						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
-						auto AnimationBufferPtr = Core::Scene::GetInstance().GetSystemManager().GetSystem<RenderSystem>()->GetAnimationCB();
+						Core::Scene::GetInstance().GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						Rendering::RenderingEngine::GetInstance().UpdateCameraCB(Core::Scene::GetInstance().GetMainCamera());
+
+						auto AnimationBufferPtr = Rendering::RenderingEngine::GetInstance().GetAnimationCB();
 
 						Math::Matrix4 empty(0.0f);
 						PVoid data;

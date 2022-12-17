@@ -8,6 +8,7 @@
 #include <Assets\Material.h>
 #include "Animation/Animator.h"
 #include <Graphics\ShaderPipelineVariant.h>
+#include <Rendering\RenderingEngine.h>
 
 namespace Nuclear
 {
@@ -23,7 +24,7 @@ namespace Nuclear
 			if (pActivePipeline->isSkinned())
 			{
 				PVoid anim_data;
-				Graphics::Context::GetInstance().GetContext()->MapBuffer(pCurrentFrame->pAnimationCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)anim_data);
+				Graphics::Context::GetInstance().GetContext()->MapBuffer(Rendering::RenderingEngine::GetInstance().GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)anim_data);
 
 				if (animator != nullptr)
 				{
@@ -43,7 +44,7 @@ namespace Nuclear
 					Math::Matrix4 empty(0.0f);
 					anim_data = memcpy(anim_data, &empty, sizeof(Math::Matrix4));
 				}
-				Graphics::Context::GetInstance().GetContext()->UnmapBuffer(pCurrentFrame->pAnimationCB, MAP_WRITE);
+				Graphics::Context::GetInstance().GetContext()->UnmapBuffer(Rendering::RenderingEngine::GetInstance().GetAnimationCB(), MAP_WRITE);
 			}
 		}
 

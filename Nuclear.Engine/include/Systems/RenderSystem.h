@@ -5,6 +5,9 @@
 #include <Rendering/RenderPass.h>
 #include <Rendering/FrameRenderData.h>
 
+namespace Diligent {
+	struct IBuffer;
+}
 namespace Nuclear
 {
 	namespace Rendering
@@ -13,8 +16,6 @@ namespace Nuclear
 	}
 	namespace Systems
 	{
-		class CameraSystem;
-
 		struct RenderSystemBakeStatus
 		{
 			bool BakeLighting = true;
@@ -63,10 +64,6 @@ namespace Nuclear
 			//Update Functions
 			void Update(ECS::TimeDelta dt) override;
 
-			IBuffer* GetAnimationCB();
-
-			CameraSystem* GetCameraSystem();
-
 			void SetIBLContext(Rendering::ImageBasedLighting* IBLContext);
 
 			void RegisterShader(Assets::Shader* shader);
@@ -82,17 +79,9 @@ namespace Nuclear
 			std::vector<Rendering::RenderPass*> mRenderPasses;
 			std::vector<Assets::Shader*> mRegisteredShaders;
 
-			std::shared_ptr<CameraSystem> mCameraSystemPtr;
-
 			Rendering::ImageBasedLighting* pIBLContext = nullptr;
 
 			RenderSystemBakeStatus mStatus;
-			RefCntAutoPtr<IBuffer> mAnimationCB;
-
-			RefCntAutoPtr<IPipelineState> pSceneToScreenPSO;
-			RefCntAutoPtr<IShaderResourceBinding> pSceneToScreenSRB;
-
-			void BakeScenePipeline(Uint32 RTWidth, Uint32 RTHeight);
 
 			size_t Baked_DirLights_Size = 0;
 			size_t Baked_PointLights_Size = 0;

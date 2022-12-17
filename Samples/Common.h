@@ -129,9 +129,9 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 				//	{
 				//		ImGui::Checkbox(it.GetName().c_str(), &it.mValue);
 				//	}
-				//	//ImGui::DragFloat("Movement Speed", &Camera.MovementSpeed);
-				//	//ImGui::DragFloat("Mouse Sensitivity", &Camera.MouseSensitivity);
-				//	//ImGui::DragFloat("Zoom", &Camera.Zoom);
+				//	//ImGui::DragFloat("Movement Speed", &GetMainCamera().MovementSpeed);
+				//	//ImGui::DragFloat("Mouse Sensitivity", &GetMainCamera().MouseSensitivity);
+				//	//ImGui::DragFloat("Zoom", &GetMainCamera().Zoom);
 
 
 				//}

@@ -249,7 +249,7 @@ namespace Nuclear
 
 			if (desc.LoadAnimation)
 			{
-				if (Animation.isValid == true)
+				if (Animation.GetState() == Assets::Asset::State::Loaded)
 				{
 					mLibrary.mImportedAnimations.mData[hashedname] = Animation;
 					anim = &mLibrary.mImportedAnimations.mData[hashedname];

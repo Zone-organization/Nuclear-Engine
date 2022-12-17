@@ -5,6 +5,7 @@
 #include "Graphics/GraphicsEngine.h"
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Platform/FileSystem.h>
+#include <Rendering/RenderingEngine.h>
 
 namespace Nuclear
 {
@@ -63,7 +64,7 @@ namespace Nuclear
 		
 		}
 
-		void Skybox::Initialize(IBuffer* CameraConstantBuffer, const std::array<Assets::Image*, 6> & data)
+		void Skybox::Initialize( const std::array<Assets::Image*, 6> & data)
 		{
 			TextureDesc TexDesc;
 			TexDesc.Name = "SkyBox_TextureCube";
@@ -94,16 +95,16 @@ namespace Nuclear
 			{
 				mTextureSRV = TexCube->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
-				InitializePipeline(CameraConstantBuffer);
+				InitializePipeline();
 				InitializeCube();
 			}
 		}
 
-		void Skybox::Initialize(IBuffer* CameraConstantBuffer, Assets::Image* tex)
+		void Skybox::Initialize(Assets::Image* tex)
 		{
 			mTextureSRV = tex->mTextureView;
 
-			InitializePipeline(CameraConstantBuffer);
+			InitializePipeline();
 			InitializeCube();
 		}
 	
@@ -119,7 +120,7 @@ namespace Nuclear
 			}
 		}
 
-		void Skybox::InitializePipeline(IBuffer* CameraConstantBuffer)
+		void Skybox::InitializePipeline()
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			PSOCreateInfo.PSODesc.Name = "SkyBox_PSO";
@@ -174,7 +175,7 @@ namespace Nuclear
 			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = _countof(StaticSamplers);
 			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPipeline);
 
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(CameraConstantBuffer);
+			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(RenderingEngine::GetInstance().GetCameraCB());
 
 
 			mPipeline->CreateShaderResourceBinding(&mSRB, true);

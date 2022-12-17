@@ -1,14 +1,9 @@
 #include "Rendering\RenderPasses\GeometryPass.h"
-#include <Graphics\Context.h>
-#include <Assets\DefaultMeshes.h>
 #include <Rendering\FrameRenderData.h>
 #include <Components\EntityInfoComponent.h>
 #include <Core\Scene.h>
 #include <Assets\Shader.h>
 #include <Assets\Material.h>
-#include <Systems\CameraSystem.h>
-#include <Utilities/Logger.h>
-#include <Core/Engine.h>
 
 namespace Nuclear
 {

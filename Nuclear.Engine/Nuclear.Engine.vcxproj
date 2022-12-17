@@ -107,13 +107,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Assets\AssetPtr.h" />
+    <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
+    <ClInclude Include="include\Rendering\RenderingEngine.h" />
+    <ClInclude Include="include\Serialization\AssetsSerialization.h" />
+    <ClInclude Include="include\Serialization\SerializationEngine.h" />
     <ClInclude Include="include\TL\String.h" />
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Core\Core.h" />
     <ClInclude Include="include\ECS\Transform.h" />
     <ClInclude Include="include\Graphics\ShaderTypes.h" />
-    <ClInclude Include="include\Interfaces\Singleton.h" />
     <ClInclude Include="include\Parsers\ShaderParser.h" />
     <ClInclude Include="include\Platform\Platform.h" />
     <ClInclude Include="include\Serialization\Access.h" />
@@ -348,7 +352,6 @@
     <ClInclude Include="include\Graphics\ShaderReflection.h" />
     <ClInclude Include="include\Rendering\Background.h" />
     <ClInclude Include="include\Graphics\BakeStatus.h" />
-    <ClInclude Include="include\Graphics\Camera.h" />
     <ClInclude Include="include\Graphics\Color.h" />
     <ClInclude Include="include\Graphics\Context.h" />
     <ClInclude Include="include\Rendering\BlurEffect.h" />
@@ -383,7 +386,6 @@
     <ClInclude Include="include\Rendering\RenderPasses\ShadowPass.h" />
     <ClInclude Include="include\Scripting\ScriptingObject.h" />
     <ClInclude Include="include\Serialization\MathSerialization.h" />
-    <ClInclude Include="include\Systems\CameraSystem.h" />
     <ClInclude Include="include\PhysX\RaycastHit.h" />
     <ClInclude Include="include\Scripting\Scripting.h" />
     <ClInclude Include="include\Scripting\ScriptingEngine.h" />
@@ -449,9 +451,11 @@
     <ClCompile Include="Source\Platform\Input.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui_impl_sdl.cpp" />
+    <ClCompile Include="Source\Rendering\RenderingEngine.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingBindings.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Platform\FileSystem.cpp" />
+    <ClCompile Include="Source\Serialization\SerializationEngine.cpp" />
     <ClCompile Include="Source\Threading\ThreadingEngine.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Parsers\INIReader.cpp" />
@@ -468,7 +472,6 @@
     <ClCompile Include="Source\Assets\DefaultMeshes.cpp" />
     <ClCompile Include="Source\Assets\Material.cpp" />
     <ClCompile Include="Source\Assets\Mesh.cpp" />
-    <ClCompile Include="Source\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui_freetype.cpp" />
     <ClCompile Include="Source\Rendering\BlurEffect.cpp" />
     <ClCompile Include="Source\Rendering\RenderingPaths\DefferedRenderingPath.cpp" />
@@ -505,7 +508,6 @@
     <ClCompile Include="Source\Scripting\ScriptingEngine.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingObject.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingRegistry.cpp" />
-    <ClCompile Include="Source\Systems\CameraSystem.cpp" />
     <ClCompile Include="Source\Importers\FreeImageImporter.cpp" />
     <ClCompile Include="Source\PhysX\PhysXShape.cpp" />
     <ClCompile Include="Source\PhysX\RaycastHit.cpp" />

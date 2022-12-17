@@ -15,12 +15,19 @@
 #include <bitsery/adapter/buffer.h>
 #include <bitsery/traits/vector.h>
 #include <bitsery/traits/string.h>
+#include <Assets/AssetManager.h>
 
 
 namespace Nuclear 
 {
 	namespace Core
 	{
+		Scene& Scene::GetInstance()
+		{
+			static Scene instance;
+
+			return instance;
+		}
 		ECS::Entity Scene::CreateEntity()
 		{
 			ECS::Entity result(GetRegistry(), GetRegistry().create());
@@ -109,6 +116,21 @@ namespace Nuclear
 			return Result;
 		}
 
+		void Scene::SetMainCamera(const ECS::Entity& entity)
+		{
+			pMainCamera = entity.TryToGetComponent<Components::CameraComponent>();
+		}
+
+		void Scene::SetMainCamera(Components::CameraComponent* camera)
+		{
+			pMainCamera = camera;
+		}
+
+		Components::CameraComponent* Scene::GetMainCamera()
+		{
+			return pMainCamera;
+		}
+
 		ECS::SystemManager& Scene::GetSystemManager()
 		{
 			return mSystems;
@@ -138,6 +160,9 @@ namespace Nuclear
 			Serialization::SceneOutputArchive<bitsery::Serializer<OutputAdapter>> output(&ser);
 			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent>(output);
 
+			ser.object(Assets::AssetManager::GetInstance().mLibrary);
+
+
 			return true;
 		}
 		bool Scene::LoadScene(Assets::SavedScene* scene)
@@ -152,6 +177,11 @@ namespace Nuclear
 			entt::snapshot_loader{ mRegistry }.entities(input).component<Components::EntityInfoComponent, Components::LightComponent>(input);
 
 			return true;
+		}
+
+		Scene::Scene()
+		{	
+			pMainCamera = nullptr;
 		}
 	}
 }

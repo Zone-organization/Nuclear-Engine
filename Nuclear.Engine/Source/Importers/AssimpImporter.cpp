@@ -52,9 +52,13 @@ namespace Nuclear {
 				if (loader.mLoadingDesc.LoadAnimation && loader.scene->mAnimations != nullptr)
 				{
 					loader.LoadAnimations();
-					loader.mAnimation->isValid = true;
+					loader.mAnimation->SetState(Assets::Asset::State::Loaded);
 				}
-
+				loader.mMesh->SetState(Assets::Asset::State::Loaded);
+				if (loader.pMaterialData)
+				{
+					loader.pMaterialData->SetState(Assets::Asset::State::Loaded);
+				}
 				auto hashedname = Utilities::Hash(path);
 
 				return true;

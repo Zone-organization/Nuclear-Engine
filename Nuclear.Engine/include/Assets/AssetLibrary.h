@@ -3,7 +3,6 @@
 #include <Assets/DefaultMeshes.h>
 #include <Assets/Material.h>
 #include <Assets/MaterialTypes.h>
-#include <Assets/Image.h>
 #include <Assets/ImageData.h>
 #include <Assets/Animations.h>
 #include <Assets/AudioClip.h>
@@ -12,7 +11,7 @@
 #include <Assets/Shader.h>
 #include <Assets/Font.h>
 #include <Core/Path.h>
-#include <unordered_map>
+#include <Serialization/AssetsSerialization.h>
 
 namespace Nuclear
 {
@@ -38,7 +37,7 @@ namespace Nuclear
 			{
 				mData.clear();
 				mHashedPaths.clear();
-			}
+			}			
 		};
 
 		struct NEAPI AssetLibrary
@@ -55,6 +54,12 @@ namespace Nuclear
 			ImportedAssetsMap<Assets::Font> mImportedFonts;
 			ImportedAssetsMap<Assets::Shader> mImportedShaders;
 			ImportedAssetsMap<Assets::Script> mImportedScripts;
+
+			template<typename S>
+			void serialize(S& s)
+			{
+				s.object(mImportedImages.mData);
+			}
 		};
 	}
 }

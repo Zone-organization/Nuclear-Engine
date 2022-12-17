@@ -5,6 +5,7 @@
 #include <Utilities/Logger.h>
 #include <Assets/AssetManager.h>
 #include "Rendering/ImageBasedLighting.h"
+#include <Rendering\RenderingEngine.h>
 
 namespace Nuclear
 {
@@ -224,8 +225,8 @@ namespace Nuclear
 
 			if (Desc.pBakingDesc)
 			{
-				SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
-				SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Desc.pBakingDesc->AnimationBufferPtr);
+				SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingEngine::GetInstance().GetCameraCB());
+				SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingEngine::GetInstance().GetAnimationCB());
 				SetIfFound(result.mPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
 			}
 
@@ -300,7 +301,7 @@ namespace Nuclear
 
 				if (Desc.pBakingDesc)
 				{
-					SetIfFound(result.mGBufferPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
+					SetIfFound(result.mGBufferPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingEngine::GetInstance().GetCameraCB());
 
 					SetIfFound(result.mGBufferPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
 				}
@@ -358,8 +359,8 @@ namespace Nuclear
 
 				if (Desc.pBakingDesc)
 				{
-					SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Desc.pBakingDesc->CameraBufferPtr);
-					SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Desc.pBakingDesc->AnimationBufferPtr);
+					SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingEngine::GetInstance().GetCameraCB());
+					SetIfFound(result.mPipeline, SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingEngine::GetInstance().GetAnimationCB());
 					SetIfFound(result.mPipeline, SHADER_TYPE_PIXEL, "NEStatic_Lights", Desc.pBakingDesc->LightsBufferPtr);
 
 				}

@@ -28,8 +28,7 @@ namespace Nuclear
 
 			Rendering::ShadowPass* pShadowPass = nullptr;
 			Rendering::ImageBasedLighting* pIBLContext = nullptr;
-			IBuffer* CameraBufferPtr = nullptr;
-			IBuffer* AnimationBufferPtr = nullptr;
+
 			IBuffer* LightsBufferPtr = nullptr;
 
 			bool mRenderSystemHasDefferedPass = false;

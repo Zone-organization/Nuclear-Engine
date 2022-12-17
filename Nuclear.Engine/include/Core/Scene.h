@@ -5,7 +5,6 @@
 #include <Assets/Common.h>
 #include <ECS\Entity.h>
 #include <ECS\Transform.h>
-#include <Interfaces\Singleton.h>
 #include <Assets/SavedScene.h>
 
 namespace Nuclear
@@ -15,9 +14,14 @@ namespace Nuclear
 
 	namespace Core
 	{
-		class NEAPI Scene : public Interfaces::Singleton<Scene>
+		class NEAPI Scene
 		{
 		public:
+			static Scene& GetInstance();
+
+			Scene(const Scene&) = delete;
+			Scene& operator= (const Scene) = delete;
+
 			//Creates a new entity and assign a transform component to it automatically
 			ECS::Entity CreateEntity();
 			ECS::Entity CreateEntity(const std::string& name, const ECS::Transform& transform = ECS::Transform());
@@ -25,6 +29,10 @@ namespace Nuclear
 			ECS::Entity CreateBox(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 			ECS::Entity CreateSphere(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 			ECS::Entity CreatePlane(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
+
+			void SetMainCamera(const ECS::Entity& entity);
+			void SetMainCamera(Components::CameraComponent* camera);
+			Components::CameraComponent* GetMainCamera();
 
 			ECS::SystemManager& GetSystemManager();
 			entt::registry& GetRegistry();
@@ -37,9 +45,13 @@ namespace Nuclear
 			bool LoadScene(Assets::SavedScene* scene);
 
 
-		private:
+		protected:
 			entt::registry mRegistry;
 			ECS::SystemManager mSystems;
+			Components::CameraComponent* pMainCamera;
+
+		private:
+			Scene();
 		};
 	}
 }

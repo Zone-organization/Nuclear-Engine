@@ -1,6 +1,5 @@
 #pragma once
 #include <NE_Common.h>
-#include <Graphics/Camera.h>
 #include <Graphics/BakeStatus.h> 
 #include <Components\MeshComponent.h>
 

@@ -6,15 +6,12 @@ class Sample3 : public Core::Client
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 	std::shared_ptr<Systems::ScriptingSystem> mScriptSystem;
-	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 
 	Assets::MaterialData RustedIron_D;
 	Assets::MaterialData Plastic_D;
 
 	Assets::Material RustedIron;
 	Assets::Material Plastic;
-
-	Graphics::Camera Camera;
 
 	Assets::Script* script;
 	Assets::Shader* PBR;
@@ -33,7 +30,6 @@ class Sample3 : public Core::Client
 	bool isMouseDisabled = false;
 public:
 	Sample3()
-		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, 10.f, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 
 	}
@@ -81,9 +77,7 @@ public:
 
 		
 		EController.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Spot);
-		EController.AddComponent<Components::CameraComponent>(&Camera);
-
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
 
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
 	}
@@ -102,6 +96,8 @@ public:
 		Importers::ShaderLoadingDesc desc;
 		desc.mType = Importers::ShaderType::_3DRendering;
 		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		Rendering::RenderingEngine::GetInstance().Initialize({});
+		Rendering::RenderingEngine::GetInstance().Bake({ _Width_ ,_Height_ });
 
 		Renderer->RegisterShader(PBR);
 
@@ -110,14 +106,12 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc() });
+		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc()});
 	}
 
 	void Load()
 	{
 		GetAssetManager().Initialize();
-
-		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 
 		SetupEntities();
 
@@ -159,9 +153,9 @@ public:
 			it.GetComponent<Components::RigidBodyComponent>().isKinematic = true;
 		}
 
-		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
+		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 		//GetScene().Save();
-		//Camera.MovementSpeed = 15;
+		//GetScene().GetMainCamera()->MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
 
 
@@ -198,13 +192,13 @@ public:
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera.ProcessEye(xoffset, yoffset);
+			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
 		}
 	}
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->ResizeRTs(width, height);
 	}
 
@@ -212,13 +206,13 @@ public:
 	{
 		//Movement
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//Change Mouse Mode
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
@@ -232,10 +226,9 @@ public:
 			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
-		Camera.UpdateBuffer();
-		mCameraSystem->Update(deltatime);
+		GetScene().GetMainCamera()->UpdateBuffer();
 
-		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Camera.GetPosition());
+		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
 
 	}
 	bool iskinematic = false;
@@ -244,7 +237,7 @@ public:
 	{
 		GetScene().Update(dt);
 
-		EController.GetComponent<Components::LightComponent>().SetDirection(Camera.GetFrontView());
+		EController.GetComponent<Components::LightComponent>().SetDirection(GetScene().GetMainCamera()->GetFrontView());
 
 
 		{
@@ -253,7 +246,7 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 		
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
 									
 			PhysX::RaycastHit hit;
 			if (ImGui::TreeNode("Raycast Info"))
@@ -261,7 +254,7 @@ public:
 				if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_F))
 				{
 
-					if (mPhysXSystem->Raycast(Camera.GetPosition(), Camera.GetFrontView(), 100.f, hit))
+					/*if (mPhysXSystem->Raycast(GetScene().GetMainCamera()->GetPosition(), GetScene().GetMainCamera()->GetFrontView(), 100.f, hit))
 					{
 						auto entity = hit.HitEntity;
 
@@ -270,7 +263,7 @@ public:
 					else
 					{
 						ImGui::Text("No hit");
-					}
+					}*/
 				}
 				else
 					ImGui::Text("Press F");

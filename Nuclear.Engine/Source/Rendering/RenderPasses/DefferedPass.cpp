@@ -26,7 +26,7 @@ namespace Nuclear
 
                         //Apply Lighting
                         Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetMainPipeline());
-                        Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->mFinalRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->pCamera->GetRenderTarget().GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         for (int i = 0; i < gbuffer->mRenderTargets.size(); i++)
                         {

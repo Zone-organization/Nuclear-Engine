@@ -8,11 +8,10 @@
 #include <Assets\AssetManager.h>
 #include <Core\Scene.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
-#include <Assets\DefaultMeshes.h>
 #include <Assets\Material.h>
-#include <Systems\CameraSystem.h>
 #include <Platform\FileSystem.h>
 #include <Rendering\RenderPasses\DefferedPass.h>
+#include <Rendering\RenderingEngine.h>
 
 namespace Nuclear
 {
@@ -36,28 +35,15 @@ namespace Nuclear
 		}
 
 		void RenderSystem::Bake(const RenderSystemBakingDesc& desc)
-		{		
-			mCameraSystemPtr = Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>();
-
-			BufferDesc CBDesc;
-			CBDesc.Name = "NEStatic_Animation";
-			CBDesc.Size = sizeof(Math::Matrix4) * 100;
-			CBDesc.Usage = USAGE_DYNAMIC;
-			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
-			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &mAnimationCB);
-
-			BakeScenePipeline(desc.RTWidth, desc.RTHeight);
+		{								
 			BakeLights();
 
 			Graphics::ShaderRenderingBakingDesc bakedesc;
 			bakedesc.DirLights = static_cast<Uint32>(GetDirLightsNum());
 			bakedesc.SpotLights = static_cast<Uint32>(GetSpotLightsNum());
 			bakedesc.PointLights = static_cast<Uint32>(GetPointLightsNum());
-			bakedesc.CameraBufferPtr = mCameraSystemPtr->GetCameraCB();
 			bakedesc.LightsBufferPtr = GetLightCB();
 			bakedesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
-			bakedesc.AnimationBufferPtr = mAnimationCB;
 			bakedesc.pIBLContext = pIBLContext;
 			bakedesc.mRTWidth = desc.RTWidth;
 			bakedesc.mRTHeight = desc.RTHeight;
@@ -85,8 +71,6 @@ namespace Nuclear
 		void RenderSystem::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
 			Math::Vector2ui newsize(RTWidth, RTHeight);
-			mRenderData.mFinalRT.Resize(newsize);
-			mRenderData.mFinalDepthRT.Resize(newsize);
 
 			for (auto pass : mRenderPasses)
 			{
@@ -108,17 +92,7 @@ namespace Nuclear
 		void RenderSystem::AddRenderPass(Rendering::RenderPass* pass)
 		{
 			mRenderPasses.push_back(pass);
-		}
-		
-		IBuffer* RenderSystem::GetAnimationCB()
-		{
-			return mAnimationCB;
-		}
-
-		CameraSystem* RenderSystem::GetCameraSystem()
-		{
-			return mCameraSystemPtr.get();
-		}
+		}		
 
 		void RenderSystem::SetIBLContext(Rendering::ImageBasedLighting* IBLContext)
 		{
@@ -133,20 +107,10 @@ namespace Nuclear
 		void RenderSystem::Update(ECS::TimeDelta dt)
 		{
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 0: Update Entites
+			//Step 1: Update Entites
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			UpdateLights();
-			UpdateLightsBuffer(Math::Vector4(mCameraSystemPtr->GetMainCamera()->GetPosition(), 1.0f));
-
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 1: Build FrameRenderData
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			mRenderData.pAnimationCB = mAnimationCB;
-			mRenderData.pCameraSystemPtr = mCameraSystemPtr;
-			mRenderData.pCamera = mCameraSystemPtr->GetMainCamera();
-			mRenderData.mUsedDefferedPipelines.clear();
-
-			bool hasdefpasss = false, hasshadowpass =false;
+			bool hasdefpasss = false, hasshadowpass = false;
 			if (GetRenderPass<Rendering::DefferedPass>())
 			{
 				hasdefpasss = true;
@@ -160,7 +124,7 @@ namespace Nuclear
 				mRenderData.pOmniDirShadowMapSRV = shadowpass->GetOmniDirShadowMapSRV();
 				hasshadowpass = true;
 			}
-		
+
 			auto meshview = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : meshview)
 			{
@@ -178,35 +142,51 @@ namespace Nuclear
 			mRenderData.mMeshView = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 2: Clear main RTVs
+			//Step 2: Render scene from each camera pov
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, mRenderData.mFinalRT.GetRTVDblPtr(), mRenderData.mFinalDepthRT.GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(mRenderData.mFinalRT.GetRTV(), (float*)&mCameraSystemPtr->GetMainCamera()->RTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(mRenderData.mFinalDepthRT.GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 3: Update RenderPasses
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			for (auto pass : mRenderPasses)
+			auto CameraView = Core::Scene::GetInstance().GetRegistry().view<Components::CameraComponent>();
+			for (auto entity : CameraView)
 			{
-				pass->Update(&mRenderData);
-			}
+				auto& camera = CameraView.get<Components::CameraComponent>(entity);
+				UpdateLightsBuffer(Math::Vector4(camera.GetPosition(), 1.0f));
 
+				////////////////////////////////////
+				//Step 2.1: Build FrameRenderData
+				////////////////////////////////////
+				mRenderData.pCamera = &camera;
+				mRenderData.mUsedDefferedPipelines.clear();
+
+				////////////////////////////////////
+				//Step 2.2: Clear main RTVs
+				////////////////////////////////////
+				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetRenderTarget().GetRTVDblPtr(), camera.GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetRenderTarget().GetRTV(), (float*)&camera.mRTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRenderTarget().GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+
+				////////////////////////////////////
+				//Step 2.3: Update RenderPasses
+				////////////////////////////////////
+				for (auto pass : mRenderPasses)
+				{
+					pass->Update(&mRenderData);
+				}
+
+			}		
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 4: RenderScene to screen
+			//Step 3: Copy Main camera RT to RenderingEngine RTs.
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			auto* RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
-			auto* DSV = Graphics::Context::GetInstance().GetSwapChain()->GetDepthBufferDSV();
-			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(RTV, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			CopyTextureAttribs attrib;
+			attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetRenderTarget().GetSRV()->GetTexture();
+			attrib.pDstTexture = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetSRV()->GetTexture();
+			Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
+			
+			//---------TODO: Maybe copy main camera depth rt?--------------
 
-			Graphics::Context::GetInstance().GetContext()->SetPipelineState(pSceneToScreenPSO);
-			pSceneToScreenSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mRenderData.mFinalRT.GetSRV());
-			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pSceneToScreenSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-			Assets::DefaultMeshes::RenderScreenQuad();
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			//Step 4: Render to screen
+			//////////////////////////////////////////////////////////////////////////////////////////////
+			Rendering::RenderingEngine::GetInstance().RenderFinalRT();
 		}
 
 		//Shader Structs
@@ -282,77 +262,6 @@ namespace Nuclear
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 			BufferData DATA;
 			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
-		}
-
-		void RenderSystem::BakeScenePipeline(Uint32 RTWidth, Uint32 RTHeight)
-		{
-			Graphics::RenderTargetDesc RTDesc;
-			RTDesc.mDimensions = Math::Vector2ui(RTWidth, RTHeight);
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
-
-			mRenderData.mFinalRT.Create(RTDesc);
-
-			RTDesc.DepthTexFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
-			mRenderData.mFinalDepthRT.Create(RTDesc);
-
-			GraphicsPipelineStateCreateInfo PSOCreateInfo;
-
-			PSOCreateInfo.PSODesc.Name = "SceneToScreen PSO";
-			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
-			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
-			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
-			PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
-
-			//Create Shaders
-			RefCntAutoPtr<IShader> VSShader;
-			RefCntAutoPtr<IShader> PSShader;
-
-			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(true);
-
-			//Create Vertex Shader
-			{
-
-				ShaderCreateInfo CreationAttribs;
-
-				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
-				CreationAttribs.EntryPoint = "main";
-				CreationAttribs.Desc.Name = "SceneToScreenVS";
-
-				auto source = Platform::FileSystem::LoadShader("@NuclearAssets@/Shaders/BasicVertex.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
-				CreationAttribs.Source = source.c_str();
-				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
-
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
-			}
-
-			//Create Pixel Shader
-			{
-				ShaderCreateInfo CreationAttribs;
-
-				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
-				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
-				CreationAttribs.EntryPoint = "main";
-				CreationAttribs.Desc.Name = "SceneToScreenPS";
-
-				auto source = Platform::FileSystem::LoadShader("@NuclearAssets@/Shaders/SceneToScreen.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
-				CreationAttribs.Source = source.c_str();
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
-			}
-
-			PSOCreateInfo.pVS = VSShader;
-			PSOCreateInfo.pPS = PSShader;
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
-			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
-			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pSceneToScreenPSO, PSOCreateInfo, Vars, true);
-			pSceneToScreenPSO->CreateShaderResourceBinding(pSceneToScreenSRB.RawDblPtr());
 		}
 
 		void RenderSystem::BakeLights()

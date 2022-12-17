@@ -45,6 +45,7 @@ namespace Nuclear {
 		{
 			return Assets::AssetManager::GetInstance();
 		}
+
 		void Client::OnMouseScroll(double val1, double val2)
 		{
 		}

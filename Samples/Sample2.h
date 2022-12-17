@@ -7,7 +7,6 @@ class Sample2 : public Core::Client
 	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
 	std::shared_ptr<Systems::RenderSystem> Renderer;
-	std::shared_ptr<Systems::CameraSystem> mCameraSystem;
 
 	Assets::Mesh* ShaderBall;
 
@@ -22,8 +21,6 @@ class Sample2 : public Core::Client
 	Assets::Material Grass;
 	Assets::Material Gold;
 	Assets::Material Wall;
-
-	Graphics::Camera Camera;
 
 	Assets::Shader* PBR;
 
@@ -53,7 +50,6 @@ class Sample2 : public Core::Client
 	bool isMouseDisabled = false;
 public:
 	Sample2()
-		: Camera(Math::Vector3(0.0f, 5.0f, 30.0f), Math::Vector3(0.0f, 1.0f, 0.0f), Graphics::YAW, Graphics::PITCH, 10.f, Graphics::SENSITIVTY, Graphics::ZOOM)
 	{
 
 	}
@@ -142,9 +138,8 @@ public:
 
 		//Assign Components
 		ELights.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
-		EController.AddComponent<Components::CameraComponent>(&Camera);
-
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f)));
+		
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.0f, 5.0f, 10.0f));
 		ELights.GetComponent<Components::LightComponent>().SetColor(Graphics::Color(1.0f, 1.0f, 1.0f, 0.0f));
 		ELights.GetComponent<Components::LightComponent>().SetIntensity(10.0f);
@@ -191,17 +186,15 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		PostFXPass.Bake({ _Width_, _Height_,Renderer->mRenderData.mFinalRT.GetDesc()});
+		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
 
 		mDebugSystem = GetScene().GetSystemManager().Add<Systems::DebugSystem>();
-		mDebugSystem->Initialize(&Camera, Renderer->GetAnimationCB());
 	}
 
 	void Load()
 	{
 		GetAssetManager().Initialize();
 
-		mCameraSystem = GetScene().GetSystemManager().Add<Systems::CameraSystem>(&Camera);
 		SetupEntities();
 
 		InitRenderer();
@@ -215,9 +208,9 @@ public:
 		EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 		ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 
-		Camera.RTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
+		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		Skybox.Initialize(mCameraSystem->GetCameraCB(),&HDR_Cube);
+		Skybox.Initialize(&HDR_Cube);
 		PostFXPass.GetBackground().SetSkybox(&Skybox);
 
 		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
@@ -242,13 +235,13 @@ public:
 			lastX = xpos;
 			lastY = ypos;
 
-			Camera.ProcessEye(xoffset, yoffset);
+			GetScene().GetMainCamera()->ProcessEye(xoffset, yoffset);
 		}
 	}
 	void OnWindowResize(int width, int height) override
 	{
 		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
-		Camera.SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		Renderer->ResizeRTs(width, height);
 	}
 
@@ -256,13 +249,13 @@ public:
 	{
 		//Movement
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_FORWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_LEFT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_BACKWARD, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
-			Camera.ProcessMovement(Graphics::CAMERA_MOVEMENT_RIGHT, deltatime);
+			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//Change Mouse Mode
 		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
@@ -276,8 +269,9 @@ public:
 			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
-		Camera.UpdateBuffer();
-		mCameraSystem->Update(deltatime);
+		GetScene().GetMainCamera()->UpdateBuffer();
+		EController.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(GetScene().GetMainCamera()->GetPosition());
+
 	}
 	bool iskinematic = false;
 	bool isDeffered = true;
@@ -377,7 +371,7 @@ public:
 
 			ImGui::Checkbox("Visualize LightSources", &mDebugSystem->RenderLightSources);
 
-			ImGui::ColorEdit3("Camera ClearColor", (float*)&Camera.RTClearColor);
+			ImGui::ColorEdit3("Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

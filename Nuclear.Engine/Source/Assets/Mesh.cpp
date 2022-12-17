@@ -73,7 +73,6 @@ namespace Nuclear {
 			mSubMeshes.clear();
 			mBoneInfoMap.clear();
 			mBoneCounter = 0;
-			isValid = false;
 		}
 
 		void Mesh::Create()
@@ -83,7 +82,7 @@ namespace Nuclear {
 				mSubMeshes.at(i).Create();
 			}
 
-			isValid = true;
+			mState = Asset::State::Created;
 		}
 		//Todo rework this since we do alot of unnecessery looping
 		void Mesh::CreateCube(Mesh* model, float width, float height, float depth)
