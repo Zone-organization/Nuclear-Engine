@@ -71,7 +71,8 @@ public:
 		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
 		GetScene().GetMainCamera()->ResizeRTs(width, height);
 		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
-		Renderer->ResizeRTs(width, height);
+		GetScene().GetSystemManager().ResizeRTs(width, height);
+		Rendering::RenderingEngine::GetInstance().ResizeRTs(width, height);
 	}
 	void Update(float deltatime) override
 	{

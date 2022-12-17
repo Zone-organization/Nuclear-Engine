@@ -3,6 +3,7 @@
 #include "Sample1.h"
 #include "Sample2.h"
 #include "Sample3.h"
+#include "Sample4.h"
 #include "SponzaDemo.h"
 #include "Playground.h"
 
@@ -54,9 +55,14 @@ public:
 			Sample2 demo;
 			return StartSample(&demo);
 		}
-		if (ImGui::Button("Sample3 : PhysX & Scripting Test ------OLD"))             //Improve
+		if (ImGui::Button("Sample3 : PhysX & Scripting Test WIP"))             //Improve
 		{
 			Sample3 demo;
+			return StartSample(&demo);
+		}
+		if (ImGui::Button("Sample4 : Multiple Cameras"))
+		{
+			Sample4 demo;
 			return StartSample(&demo);
 		}
 
