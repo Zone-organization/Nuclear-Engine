@@ -2,7 +2,7 @@
 #include <Assets/Common.h>
 #include <Graphics/ShaderReflection.h>
 #include <Graphics\ShaderPipeline.h>
-#include <Importers/Common.h>
+#include <Assets/AssetLoadingDesc.h>
 
 namespace Nuclear
 {
@@ -13,7 +13,7 @@ namespace Nuclear
         struct ShaderBuildDesc 
         {
             Graphics::ShaderPipelineDesc mPipelineDesc = Graphics::ShaderPipelineDesc();
-            Importers::ShaderType mType = Importers::ShaderType::Unknown;;
+            ShaderType mType = ShaderType::Unknown;;
             std::vector<std::string> mDefines;
 
             bool mSupportSkinnedMeshes = false;

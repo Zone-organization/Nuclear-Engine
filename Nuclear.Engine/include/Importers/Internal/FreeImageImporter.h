@@ -1,5 +1,5 @@
 #pragma once
-#include <Importers/Common.h>
+#include <Assets/AssetLoadingDesc.h>
 #include <Assets/ImageData.h>
 
 namespace Nuclear
@@ -17,7 +17,7 @@ namespace Nuclear
 
 				static FreeImageImporter& GetInstance();
 
-				Assets::ImageData Load(const std::string& Path, const Importers::ImageLoadingDesc& Desc);
+				Assets::ImageData Load(const std::string& Path, const Assets::ImageLoadingDesc& Desc);
 
 				bool IsExtensionSupported(const std::string& extension);
 

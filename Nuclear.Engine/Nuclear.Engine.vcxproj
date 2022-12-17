@@ -107,7 +107,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Assets\AssetMetadata.h" />
     <ClInclude Include="include\Assets\AssetPtr.h" />
+    <ClInclude Include="include\Assets\AssetLoadingDesc.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Rendering\RenderingEngine.h" />
@@ -378,7 +380,6 @@
     <ClInclude Include="include\Graphics\RenderTarget.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Graphics\Texture.h" />
-    <ClInclude Include="include\Importers\Common.h" />
     <ClInclude Include="include\Importers\Importers.h" />
     <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
@@ -402,6 +403,7 @@
     <ClInclude Include="include\Core\Client.h" />
     <ClInclude Include="include\Assets\Font.h" />
     <ClInclude Include="include\Threading\ThreadPool.h" />
+    <ClInclude Include="include\Utilities\UUID.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Importers\AssimpGLMHelpers.h" />
@@ -538,6 +540,7 @@
     <ClCompile Include="Source\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\ThirdParty\inih\ini.c" />
     <ClCompile Include="Source\Utilities\Timer.cpp" />
+    <ClCompile Include="Source\Utilities\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\glm\detail\func_common.inl" />

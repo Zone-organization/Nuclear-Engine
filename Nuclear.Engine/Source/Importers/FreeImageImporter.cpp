@@ -46,7 +46,7 @@ namespace Nuclear
 				FreeImage_DeInitialise();
 			}
 
-			Assets::ImageData FreeImageImporter::Load(const std::string& Path, const Importers::ImageLoadingDesc& Desc)
+			Assets::ImageData FreeImageImporter::Load(const std::string& Path, const Assets::ImageLoadingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 

@@ -2,7 +2,7 @@
 #include <NE_Common.h>
 #include <Assets\Mesh.h>
 #include <Assets\Material.h>
-#include <Importers/Common.h>
+#include <Assets/AssetLoadingDesc.h>
 #include "Animation\Bone.h"
 #include <Assets/Animations.h>
 
@@ -27,7 +27,7 @@ namespace Nuclear
 				AssimpImporter();
 				~AssimpImporter();
 
-				bool Load(const MeshLoadingDesc& desc, const std::string& Path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
+				bool Load(const Assets::MeshLoadingDesc& desc, const std::string& Path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 				bool IsExtensionSupported(const std::string& extension);
 				Assimp::Importer* GetImporter();
 			private:
@@ -58,7 +58,7 @@ namespace Nuclear
 				void ReadHeirarchyData(Animation::ClipNodeData* dest, const aiNode* src);
 
 				void InitBoneData(const aiNodeAnim* channel, Animation::BoneData& data);
-				Importers::MeshLoadingDesc mLoadingDesc;
+				Assets::MeshLoadingDesc mLoadingDesc;
 			};
 
 

@@ -280,7 +280,7 @@ namespace Nuclear
 
 				}
 
-				if (desc.mType == Importers::ShaderType::_3DRendering)
+				if (desc.mType == Assets::ShaderType::_3DRendering)
 				{
 					{
 						std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();

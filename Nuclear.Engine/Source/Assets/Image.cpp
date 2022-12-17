@@ -12,7 +12,7 @@ namespace Nuclear
 		{
 		}
 
-		Image::Image(const Assets::ImageData& src_data, const Importers::ImageLoadingDesc& Desc)
+		Image::Image(const Assets::ImageData& src_data, const ImageLoadingDesc& Desc)
 			: Asset(AssetType::Image)
 		{
 			mData = src_data;
@@ -56,7 +56,7 @@ namespace Nuclear
 			}
 		}
 
-		bool Image::CreateTextureFromRawImage(const Assets::ImageData& src_data, const Importers::ImageLoadingDesc& Desc)
+		bool Image::CreateTextureFromRawImage(const Assets::ImageData& src_data, const ImageLoadingDesc& Desc)
 		{
 			TextureDesc TexDesc;
 			TexDesc.Type = Desc.mType;
@@ -182,9 +182,9 @@ namespace Nuclear
 						Attribs.pCoarseMipData = Mips[m].data();
 						Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
 						Attribs.AlphaCutoff = Desc.AlphaCutoff;
-						static_assert(MIP_FILTER_TYPE_DEFAULT == static_cast<MIP_FILTER_TYPE>(Importers::TEXTURE_LOAD_MIP_FILTER_DEFAULT), "Inconsistent enum values");
-						static_assert(MIP_FILTER_TYPE_BOX_AVERAGE == static_cast<MIP_FILTER_TYPE>(Importers::TEXTURE_LOAD_MIP_FILTER_BOX_AVERAGE), "Inconsistent enum values");
-						static_assert(MIP_FILTER_TYPE_MOST_FREQUENT == static_cast<MIP_FILTER_TYPE>(Importers::TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT), "Inconsistent enum values");
+						static_assert(MIP_FILTER_TYPE_DEFAULT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_DEFAULT), "Inconsistent enum values");
+						static_assert(MIP_FILTER_TYPE_BOX_AVERAGE == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_BOX_AVERAGE), "Inconsistent enum values");
+						static_assert(MIP_FILTER_TYPE_MOST_FREQUENT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT), "Inconsistent enum values");
 						Attribs.FilterType = static_cast<MIP_FILTER_TYPE>(Desc.MipFilter);
 						ComputeMipLevel(Attribs);
 					}

@@ -1,5 +1,5 @@
 #pragma once
-#include <Importers/Common.h>
+#include <Assets/AssetLoadingDesc.h>
 #include <Assets\AssetLibrary.h>
 #include <Threading\ThreadPool.h>
 #include <Importers\Internal\AssimpImporter.h>
@@ -69,20 +69,20 @@ namespace Nuclear
 
 			bool mMultithreadMeshTextureLoading = true;
 
-			//Importers::ImageImporterDelegate mImageImporter;
-			//Importers::MeshImporterDelegate mMeshImporter;
+			//ImageImporterDelegate mImageImporter;
+			//MeshImporterDelegate mMeshImporter;
 
 			//Note: Automatically called on Destruction
 			void FlushContainers();
 			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
 			//Textures
-			Graphics::Texture Import(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
-			Graphics::Texture Import(const Assets::ImageData& Imagedata, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc());
+			Graphics::Texture Import(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
+			Graphics::Texture Import(const Assets::ImageData& Imagedata, const ImageLoadingDesc& Desc = ImageLoadingDesc());
 
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const Importers::ImageLoadingDesc& Desc);
+			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const ImageLoadingDesc& Desc);
 			Assets::Image* DoesImageExist(Uint32 hashedname);
 
 
@@ -90,14 +90,14 @@ namespace Nuclear
 			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
 			//Mesh & Material & Animation
-			std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> Import(const Core::Path& Path, const Importers::MeshLoadingDesc& desc);
+			std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> Import(const Core::Path& Path, const MeshLoadingDesc& desc);
 
-			Assets::Font* Import(const Core::Path& Path, const Importers::FontLoadingDesc& desc);
+			Assets::Font* Import(const Core::Path& Path, const FontLoadingDesc& desc);
 
 			//Shader
-			Assets::Shader* Import(const Core::Path& Path, const Importers::ShaderLoadingDesc& desc);
+			Assets::Shader* Import(const Core::Path& Path, const ShaderLoadingDesc& desc);
 
-			Assets::Script* Import(const Core::Path& Path, const Importers::ScriptLoadingDesc& desc);
+			Assets::Script* Import(const Core::Path& Path, const ScriptLoadingDesc& desc);
 
 			Graphics::Texture DefaultBlackTex;
 			Graphics::Texture DefaultGreyTex;
@@ -110,17 +110,17 @@ namespace Nuclear
 			Assets::AssetType GetAssetType(const std::string& filename);
 
 
-			Assets::SavedScene* Import(const Core::Path& Path, const Importers::SceneLoadingDesc& desc);
+			Assets::SavedScene* Import(const Core::Path& Path, const SceneLoadingDesc& desc);
 
 			bool Export(Assets::SavedScene* scene, const Core::Path& Path);
 
 
-		//	Graphics::Texture SaveToImport(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
+		//	Graphics::Texture SaveToImport(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 
 			//////////////////////////////////////////////////////////////////////////////////
 			/////////////////////////////////THREADING WIP////////////////////////////////////
 		//	void LoadImagesMT(const std::vector<Core::Path>);
-			//std::future<Assets::ImageData> EnqueueImage(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc = Importers::ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
+			//std::future<Assets::ImageData> EnqueueImage(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
 
 			void FinishLoadingPendingAssets();
 			Threading::ThreadPool mThreadPool;
@@ -128,7 +128,7 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////
 		protected:
 			AssetManagerDesc mDesc;
-			Assets::Image* TextureCube_Load(const Core::Path& Path, const Importers::ImageLoadingDesc& Desc);
+			Assets::Image* TextureCube_Load(const Core::Path& Path, const ImageLoadingDesc& Desc);
 			msdfgen::FreetypeHandle* FT_Handle;
 
 			Assets::AssetLibrary mSavedToImport;

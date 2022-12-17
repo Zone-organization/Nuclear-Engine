@@ -1,6 +1,5 @@
 #pragma once
 #include <Assets/ImageData.h>
-#include <Utilities\Delegate.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
 #include <string>
 #include <tuple>
@@ -11,42 +10,17 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class Mesh;
-		class Material;
-		class MaterialData;
-		class Animations;
-	}
-
-	namespace Importers
-	{
-		enum MeshTextureType
+		struct AssetLoadingDesc 
 		{
-			NONE = 0x0,
+			//Empty?
+		};
 
-			ALBEDO = 0x1,
 
-			SPECULAR = 0x2,
-
-			AMBIENT = 0x3,
-
-			EMISSIVE = 0x4,
-
-			HEIGHT = 0x5,
-
-			NORMALS = 0x6,
-
-			SHININESS = 0x7,
-
-			OPACITY = 0x8,
-
-			DISPLACEMENT = 0x9,
-
-			LIGHTMAP = 0xA,
-
-			REFLECTION = 0xB,
-
-			UNKNOWN = 0xC,
-
+		struct MeshLoadingDesc : public AssetLoadingDesc
+		{
+			bool SaveMaterialNames = true;
+			bool LoadAnimation = true;
+			bool LoadMaterial = true;
 		};
 
 		DILIGENT_TYPED_ENUM(TEXTURE_LOAD_MIP_FILTER, Uint8)
@@ -64,15 +38,9 @@ namespace Nuclear
 				TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT
 		};
 
-		struct MeshLoadingDesc
+		struct ImageLoadingDesc : public AssetLoadingDesc
 		{
-			bool SaveMaterialNames = true;
-			bool LoadAnimation = true;
-			bool LoadMaterial = true;
-		};
-		struct ImageLoadingDesc
-		{
-			std::string mPath;
+			Uint32 mHashedPath;
 
 			USAGE mUsage;
 
@@ -96,7 +64,7 @@ namespace Nuclear
 
 			Uint32 mMemSize;
 
-			float AlphaCutoff  = 0;
+			float AlphaCutoff = 0;
 
 			// Coarse mip filter type, see Diligent::TEXTURE_LOAD_MIP_FILTER.
 			TEXTURE_LOAD_MIP_FILTER MipFilter = TEXTURE_LOAD_MIP_FILTER_DEFAULT;
@@ -104,7 +72,6 @@ namespace Nuclear
 			//TEXTURE_FORMAT mFormat;
 
 			ImageLoadingDesc() :
-				mPath(""),
 				mUsage(USAGE_IMMUTABLE),
 				mBindFlags(BIND_SHADER_RESOURCE),
 				mMipLevels(0),
@@ -119,7 +86,8 @@ namespace Nuclear
 				mType(RESOURCE_DIM_TEX_2D)
 			{}
 		};
-		struct FontLoadingDesc
+
+		struct FontLoadingDesc : public AssetLoadingDesc
 		{
 			Uint32 Width = 0;
 			Uint32 Height = 48;
@@ -127,13 +95,12 @@ namespace Nuclear
 		};
 
 		enum class ShaderType
-		{
-			_3DRendering,
+		{	_3DRendering,
 			PostFX,
 			Unknown
 		};
 
-		struct ShaderLoadingDesc
+		struct ShaderLoadingDesc : public AssetLoadingDesc
 		{
 			std::string mShaderName = "UnNamed";
 			ShaderType mType = ShaderType::Unknown;
@@ -141,18 +108,15 @@ namespace Nuclear
 			std::vector<std::string> mDefines;
 		};
 
-		struct ScriptLoadingDesc
+		struct ScriptLoadingDesc : public AssetLoadingDesc
 		{
 
 			std::string mScriptFullName;
 			bool mClassNameFromPath = true;
 		};
-		struct SceneLoadingDesc
+		struct SceneLoadingDesc : public AssetLoadingDesc
 		{
 			std::string mName;
 		};
-		//typedef Utilities::Delegate<bool(const MeshImporterDesc& desc, Assets::Mesh*, Assets::MaterialData*, Assets::Animations*)> MeshImporterDelegate;
-
-		//typedef Utilities::Delegate<Assets::ImageData(const std::string& Path, const ImageLoadingDesc& Desc)> ImageImporterDelegate;
 	}
 }

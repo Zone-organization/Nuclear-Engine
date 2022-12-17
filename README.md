@@ -26,7 +26,8 @@
 		- Textures common filetype is yet to be decided.
 		- AssetLibrary should become a directory (and serialized into a zip file)
 		- Imported Assets should be converted to the consumable extension with a meta-data file containing its description
-
+		- Getting rid of the CRC32 HashedPath/Name used to identify assets and replace it with UUIDs.
+		
   - On-Hold:
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).

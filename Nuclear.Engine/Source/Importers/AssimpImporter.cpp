@@ -30,7 +30,7 @@ namespace Nuclear {
 				delete pImporter;
 			}
 
-			bool AssimpImporter::Load(const MeshLoadingDesc& desc, const std::string& path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
+			bool AssimpImporter::Load(const Assets::MeshLoadingDesc& desc, const std::string& path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
 			{
 				AssimpLoader loader;
 
@@ -232,13 +232,13 @@ namespace Nuclear {
 					aiString str;
 					mat->GetTexture(type, i, &str);
 
-					Importers::ImageLoadingDesc desc;
+					Assets::ImageLoadingDesc desc;
 					Graphics::Texture texture;
 
 					//Embedded Texture
 					if (auto embeddedtex = scene->GetEmbeddedTexture(str.C_Str()))
 					{
-						desc.mPath = embeddedtex->mFilename.C_Str();
+						desc.mHashedPath = Utilities::Hash(embeddedtex->mFilename.C_Str());
 
 						if (embeddedtex->mHeight != 0)
 						{
@@ -252,6 +252,7 @@ namespace Nuclear {
 							else
 								desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 							*/
+
 							texture = Assets::AssetManager::GetInstance().Import(data, desc);
 							texture.SetUsageType(GetTextureType(type));
 						}
@@ -260,7 +261,7 @@ namespace Nuclear {
 							desc.mLoadFromMemory = true;
 							desc.mMemData = (Byte*)embeddedtex->pcData;
 							desc.mMemSize = embeddedtex->mWidth;
-							texture = Assets::AssetManager::GetInstance().Import(desc.mPath, desc, GetTextureType(type));
+							texture = Assets::AssetManager::GetInstance().Import(embeddedtex->mFilename.C_Str(), desc, GetTextureType(type));
 						}
 
 					}
