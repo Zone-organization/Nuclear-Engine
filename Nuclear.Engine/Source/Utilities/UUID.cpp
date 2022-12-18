@@ -394,6 +394,12 @@ namespace Nuclear
 		}
 #endif
 
+
+		UUID UUID::CreateNewUUID()
+		{
+			return newUUID();
+		}
+
 	}
 }
 

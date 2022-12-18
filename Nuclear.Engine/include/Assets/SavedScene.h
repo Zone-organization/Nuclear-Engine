@@ -1,5 +1,5 @@
 #pragma once
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <vector>
 
 
@@ -7,7 +7,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class NEAPI SavedScene : public Asset
+		class NEAPI SavedScene : public IAsset
 		{
 		public:
 			SavedScene();

@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <Math/Math.h>
 #include <vector>
 #include <unordered_map>
@@ -11,7 +11,7 @@ namespace Nuclear
 	namespace Assets
 	{
 
-		class NEAPI Animations : public Asset
+		class NEAPI Animations : public IAsset
 		{
 		public:
 			Animations();

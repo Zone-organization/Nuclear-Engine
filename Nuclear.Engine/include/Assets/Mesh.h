@@ -1,5 +1,5 @@
 #pragma once
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <Animation/BoneInfo.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
@@ -11,7 +11,7 @@
 namespace Nuclear {
 	namespace Assets {
 		
-		class NEAPI Mesh : public Asset
+		class NEAPI Mesh : public IAsset
 		{
 		public:	
 			struct Vertex

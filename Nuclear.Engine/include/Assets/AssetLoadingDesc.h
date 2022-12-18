@@ -5,6 +5,7 @@
 #include <tuple>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <vector>
+#include <Graphics/TextureUsageType.h>
 
 namespace Nuclear
 {
@@ -16,9 +17,10 @@ namespace Nuclear
 		};
 
 
-		struct MeshLoadingDesc : public AssetLoadingDesc
+		struct ModelLoadingDesc : public AssetLoadingDesc
 		{
 			bool SaveMaterialNames = true;
+			bool LoadMesh = true;
 			bool LoadAnimation = true;
 			bool LoadMaterial = true;
 		};
@@ -40,8 +42,6 @@ namespace Nuclear
 
 		struct ImageLoadingDesc : public AssetLoadingDesc
 		{
-			Uint32 mHashedPath;
-
 			USAGE mUsage;
 
 			BIND_FLAGS mBindFlags;
@@ -85,6 +85,12 @@ namespace Nuclear
 				mMemSize(0),
 				mType(RESOURCE_DIM_TEX_2D)
 			{}
+		};
+
+		struct TextureLoadingDesc : public AssetLoadingDesc
+		{
+			ImageLoadingDesc mImageDesc;
+			Graphics::TextureUsageType mType = Graphics::TextureUsageType::Unknown;
 		};
 
 		struct FontLoadingDesc : public AssetLoadingDesc

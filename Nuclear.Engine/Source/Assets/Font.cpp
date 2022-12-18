@@ -7,7 +7,7 @@ namespace Nuclear
 	namespace Assets
 	{
 		Font::Font()
-			: Asset(AssetType::Font)
+			: IAsset(AssetType::Font)
 		{
 		}
 

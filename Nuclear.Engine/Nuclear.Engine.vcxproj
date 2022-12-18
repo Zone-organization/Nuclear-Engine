@@ -108,10 +108,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Assets\AssetMetadata.h" />
-    <ClInclude Include="include\Assets\AssetPtr.h" />
     <ClInclude Include="include\Assets\AssetLoadingDesc.h" />
+    <ClInclude Include="include\Assets\AssetType.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
+    <ClInclude Include="include\Graphics\TextureUsageType.h" />
     <ClInclude Include="include\Rendering\RenderingEngine.h" />
     <ClInclude Include="include\Serialization\AssetsSerialization.h" />
     <ClInclude Include="include\Serialization\SerializationEngine.h" />
@@ -336,7 +337,7 @@
     <ClInclude Include="include\Assets\AudioClip.h" />
     <ClInclude Include="include\Engine\Assets\AudioFile.h" />
     <ClInclude Include="include\Assets\DefaultMeshes.h" />
-    <ClInclude Include="include\Assets\Common.h" />
+    <ClInclude Include="include\Assets\IAsset.h" />
     <ClInclude Include="include\Assets\ImageData.h" />
     <ClInclude Include="include\Assets\Material.h" />
     <ClInclude Include="include\Assets\MaterialTypes.h" />
@@ -446,6 +447,7 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Assets\IAsset.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />

@@ -13,7 +13,7 @@ namespace Nuclear
 	namespace Assets
 	{
 		SavedScene::SavedScene()
-			: Asset(AssetType::SerializedScene)
+			: IAsset(AssetType::SerializedScene)
 		{
 		}
 		SavedScene::~SavedScene()

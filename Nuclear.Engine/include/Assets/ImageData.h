@@ -30,6 +30,8 @@ namespace Nuclear
 				mComponentType = VT_UNDEFINED;
 			}
 
+			Uint32 mHashedPath;
+
 			Uint32 mWidth;
 
 			Uint32 mHeight;

@@ -1,5 +1,5 @@
 #pragma once
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 
 namespace FMOD
 {
@@ -13,7 +13,7 @@ namespace Nuclear
 
 	namespace Assets
 	{
-		class NEAPI AudioClip : public Asset
+		class NEAPI AudioClip : public IAsset
 		{
 		public:
 			AudioClip();

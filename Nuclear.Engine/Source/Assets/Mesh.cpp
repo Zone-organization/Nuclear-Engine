@@ -58,12 +58,12 @@ namespace Nuclear {
 		}
 
 		Mesh::Mesh(const std::vector<SubMesh>& SubMeshes, const std::unordered_map<Uint32, Animation::BoneInfo>& BoneInfoMap, int BoneCounter)
-			: Asset(AssetType::Mesh), mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
+			: IAsset(AssetType::Mesh), mSubMeshes(SubMeshes), mBoneInfoMap(BoneInfoMap), mBoneCounter(BoneCounter)
 		{
 		}
 
 		Mesh::Mesh()
-			: Asset(AssetType::Mesh)
+			: IAsset(AssetType::Mesh)
 		{
 
 		}
@@ -82,7 +82,7 @@ namespace Nuclear {
 				mSubMeshes.at(i).Create();
 			}
 
-			mState = Asset::State::Created;
+			mState = IAsset::State::Created;
 		}
 		//Todo rework this since we do alot of unnecessery looping
 		void Mesh::CreateCube(Mesh* model, float width, float height, float depth)

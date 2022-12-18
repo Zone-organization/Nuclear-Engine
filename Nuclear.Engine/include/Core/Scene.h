@@ -2,7 +2,7 @@
 #include <NE_Common.h>
 #include <ECS/System.h>
 #include <Core\Path.h>
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <ECS\Entity.h>
 #include <ECS\Transform.h>
 #include <Assets/SavedScene.h>

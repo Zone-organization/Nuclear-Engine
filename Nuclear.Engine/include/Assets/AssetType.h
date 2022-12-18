@@ -1,13 +1,11 @@
 #pragma once
 #include <NE_Common.h>
-#include <Utilities/Hash.h>
-#include <Core/Path.h>
 
 namespace Nuclear
 {
 	namespace Assets
 	{
-		enum class AssetType
+		enum class AssetType : Uint8
 		{
 			Unknown,
 			SerializedScene,
@@ -23,17 +21,5 @@ namespace Nuclear
 			Script
 		};
 
-		template<class T>
-		class NEAPI AssetPtr
-		{
-		public:
-			AssetPtr()
-			{
-
-			}
-
-			AssetType mType;
-			T* pAsset;
-		};
 	}
 }

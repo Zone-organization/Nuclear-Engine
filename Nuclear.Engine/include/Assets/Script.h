@@ -1,5 +1,5 @@
 #pragma once
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <Scripting/ScriptingClass.h>
 
 namespace Nuclear
@@ -7,7 +7,7 @@ namespace Nuclear
 	namespace Assets
 	{
 
-		class NEAPI Script : public Asset
+		class NEAPI Script : public IAsset
 		{
 		public:
 			Script();

@@ -62,23 +62,20 @@ namespace Nuclear
 
 			static AssetManager& GetInstance();
 
-			//AssetManager(AssetManagerDesc desc = AssetManagerDesc());
-		//	~AssetManager();
-
 			Assets::AssetLibrary mLibrary;
 
 			bool mMultithreadMeshTextureLoading = true;
-
-			//ImageImporterDelegate mImageImporter;
-			//MeshImporterDelegate mMeshImporter;
 
 			//Note: Automatically called on Destruction
 			void FlushContainers();
 			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
 			//Textures
-			Graphics::Texture Import(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
-			Graphics::Texture Import(const Assets::ImageData& Imagedata, const ImageLoadingDesc& Desc = ImageLoadingDesc());
+			Assets::Image* Import(const Core::Path& Path, const ImageLoadingDesc& Desc);
+			Assets::Image* Import(const Assets::ImageData& Imagedata, const ImageLoadingDesc& Desc);
+
+			Graphics::Texture Import(const Core::Path& Path, const TextureLoadingDesc& Desc);
+			Graphics::Texture Import(const Assets::ImageData& Imagedata, const TextureLoadingDesc& Desc);
 
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
@@ -90,7 +87,7 @@ namespace Nuclear
 			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
 			//Mesh & Material & Animation
-			std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> Import(const Core::Path& Path, const MeshLoadingDesc& desc);
+			std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> Import(const Core::Path& Path, const ModelLoadingDesc& desc);
 
 			Assets::Font* Import(const Core::Path& Path, const FontLoadingDesc& desc);
 
@@ -114,18 +111,6 @@ namespace Nuclear
 
 			bool Export(Assets::SavedScene* scene, const Core::Path& Path);
 
-
-		//	Graphics::Texture SaveToImport(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
-
-			//////////////////////////////////////////////////////////////////////////////////
-			/////////////////////////////////THREADING WIP////////////////////////////////////
-		//	void LoadImagesMT(const std::vector<Core::Path>);
-			//std::future<Assets::ImageData> EnqueueImage(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc(), const Graphics::TextureUsageType& type = Graphics::TextureUsageType::Unknown);
-
-			void FinishLoadingPendingAssets();
-			Threading::ThreadPool mThreadPool;
-
-			//////////////////////////////////////////////////////////////////////////////////
 		protected:
 			AssetManagerDesc mDesc;
 			Assets::Image* TextureCube_Load(const Core::Path& Path, const ImageLoadingDesc& Desc);
@@ -133,6 +118,8 @@ namespace Nuclear
 
 			Assets::AssetLibrary mSavedToImport;
 			Importers::Internal::AssimpImporter mAssimpImporter;
+
+			void FinishImportingAsset(Assets::IAsset* asset,const Core::Path& path, Uint32 Hashedpath, bool log = true);
 
 		private:
 			AssetManager();

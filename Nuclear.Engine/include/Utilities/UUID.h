@@ -36,6 +36,8 @@ namespace Nuclear
 			void swap(UUID& other);
 			bool isValid() const;
 
+			static UUID CreateNewUUID();
+
 		private:
 			void zeroify();
 
@@ -46,8 +48,6 @@ namespace Nuclear
 			friend std::ostream& operator<<(std::ostream& s, const UUID& guid);
 			friend bool operator<(const UUID& lhs, const UUID& rhs);
 		};
-
-		UUID newUUID();
 
 		namespace Internal
 		{

@@ -52,12 +52,12 @@ namespace Nuclear {
 				if (loader.mLoadingDesc.LoadAnimation && loader.scene->mAnimations != nullptr)
 				{
 					loader.LoadAnimations();
-					loader.mAnimation->SetState(Assets::Asset::State::Loaded);
+					loader.mAnimation->SetState(Assets::IAsset::State::Loaded);
 				}
-				loader.mMesh->SetState(Assets::Asset::State::Loaded);
+				loader.mMesh->SetState(Assets::IAsset::State::Loaded);
 				if (loader.pMaterialData)
 				{
-					loader.pMaterialData->SetState(Assets::Asset::State::Loaded);
+					loader.pMaterialData->SetState(Assets::IAsset::State::Loaded);
 				}
 				auto hashedname = Utilities::Hash(path);
 

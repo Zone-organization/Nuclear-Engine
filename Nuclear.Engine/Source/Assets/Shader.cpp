@@ -5,7 +5,7 @@ namespace Nuclear
     namespace Assets
     {
         Shader::Shader()
-            : Asset(AssetType::Shader)
+            : IAsset(AssetType::Shader)
         {
             mBuildDesc = ShaderBuildDesc();
             mPipeline = Graphics::ShaderPipeline(this);

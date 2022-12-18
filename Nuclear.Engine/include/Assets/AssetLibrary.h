@@ -19,7 +19,7 @@ namespace Nuclear
 	{
 		template <class T>
 		struct ImportedAssetsMap
-		{		
+		{
 			std::unordered_map<Uint32, T> mData; //All loaded asset T with their hashed names with crc32c (always saved)
 
 			std::unordered_map<Uint32, Core::Path> mHashedPaths; //Real pre-hashed paths (conditionally saved see mSavePaths)
@@ -31,6 +31,30 @@ namespace Nuclear
 				{
 					mHashedPaths[hashed] = path;
 				}
+			}
+
+			T* GetAsset(Uint32 hashedpath)
+			{
+				auto it = mData.find(hashedpath);
+				if (it != mData.end())
+				{
+					return &it->second;
+				}
+				return nullptr;
+			}
+
+
+			T& AddAsset(Uint32 hashed)
+			{
+				return mData[hashed];
+			}
+
+			T& AddAsset(const Core::Path& path, Uint32 hashed)
+			{
+				if (mSavePaths)
+					mHashedPaths[hashed] = path;
+
+				return AddAsset(hashed);
 			}
 
 			void Release()

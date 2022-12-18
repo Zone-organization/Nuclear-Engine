@@ -5,7 +5,7 @@ namespace Nuclear
 	namespace Assets
 	{
 		Animations::Animations()
-			: Asset(AssetType::Animations)
+			: IAsset(AssetType::Animations)
 		{
 		}
 		Animations::~Animations()

@@ -4,6 +4,7 @@
 #include <Scripting/ScriptingObject.h>
 #include <Scripting/ScriptingRegistry.h>
 #include <Assets/Script.h>
+#include <Core/Path.h>
 
 namespace Nuclear
 {

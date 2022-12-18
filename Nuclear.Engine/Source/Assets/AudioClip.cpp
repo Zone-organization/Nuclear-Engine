@@ -9,7 +9,7 @@ namespace Nuclear
 	namespace Assets
 	{
 		AudioClip::AudioClip()
-			: Asset(AssetType::AudioClip)
+			: IAsset(AssetType::AudioClip)
 		{
 
 		}

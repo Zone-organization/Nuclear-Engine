@@ -1,5 +1,5 @@
 #pragma once
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Math/Math.h>
@@ -22,7 +22,7 @@ namespace Nuclear
 			unsigned int Advance;    // Offset to advance to next glyph
 		};
 
-		class NEAPI Font : public Asset
+		class NEAPI Font : public IAsset
 		{
 		public:
 			Font();

@@ -1,5 +1,5 @@
 #pragma once
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <Graphics/ShaderReflection.h>
 #include <Graphics\ShaderPipeline.h>
 #include <Assets/AssetLoadingDesc.h>
@@ -20,7 +20,7 @@ namespace Nuclear
             bool mSupportShadows = false;
         };
 
-        class NEAPI Shader : public Asset
+        class NEAPI Shader : public IAsset
         {
         public: 
             Shader();

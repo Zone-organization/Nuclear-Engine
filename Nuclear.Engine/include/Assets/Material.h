@@ -14,11 +14,11 @@ namespace Nuclear
 		class Shader;
 
 		//Describes the textures only
-		class NEAPI MaterialData : public Asset
+		class NEAPI MaterialData : public IAsset
 		{
 		public:
 			MaterialData()
-				: Asset(AssetType::MaterialData)
+				: IAsset(AssetType::MaterialData)
 			{
 
 			}
@@ -28,7 +28,7 @@ namespace Nuclear
 		};
 
 		//Defines integration between Textures & Shaders
-		class NEAPI Material : public Asset
+		class NEAPI Material : public IAsset
 		{
 		public:
 			Material();

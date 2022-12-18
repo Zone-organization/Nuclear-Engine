@@ -1,5 +1,5 @@
 #pragma once
-#include <Assets/Common.h>
+#include <Assets/IAsset.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Assets/AssetLoadingDesc.h>
@@ -8,7 +8,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class NEAPI Image : public Asset
+		class NEAPI Image : public IAsset
 		{
 		public:
 			Image();
