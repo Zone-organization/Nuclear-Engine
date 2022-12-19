@@ -58,3 +58,4 @@
 /SamplesScripts/obj/Debug
 *.dll
 /External/SDL
+/Assets/Common/Scenes/Sample3.bin
