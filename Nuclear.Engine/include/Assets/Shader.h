@@ -26,6 +26,8 @@ namespace Nuclear
             Shader();
             ~Shader();
 
+            Uint32 GetID();
+
             ShaderBuildDesc mBuildDesc;
             Graphics::ShaderPipeline mPipeline;
 

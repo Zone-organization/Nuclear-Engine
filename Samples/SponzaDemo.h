@@ -3,9 +3,6 @@
 
 class SponzaDemo : public SampleBase
 {
-	Assets::Mesh* SponzaAsset;
-	Assets::MaterialData* SponzaMaterial;
-
 	Assets::Material SponzaPBRMaterial;
 	Assets::Material SponzaBlinnPhongMaterial;
 
@@ -52,16 +49,17 @@ public:
 	}
 	void SetupAssets()
 	{
-		Importers::MeshLoadingDesc ModelDesc;
-		Assets::Animations* Placeholder;
+		Assets::ModelLoadingDesc ModelDesc;
+		ModelDesc.LoadAnimation = false;
 
+	
 		//Load Sponza Model
-		std::tie(SponzaAsset, SponzaMaterial, Placeholder) = GetAssetManager().Import("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
+		auto Model = GetAssetManager().Import("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
 
-		SponzaPBRMaterial.Create(SponzaMaterial, PBR);
-		SponzaBlinnPhongMaterial.Create(SponzaMaterial, BlinnPhong);
+		SponzaPBRMaterial.Create(Model.pMaterialData, PBR);
+		SponzaBlinnPhongMaterial.Create(Model.pMaterialData, BlinnPhong);
 
-		ESponza.AddComponent<Components::MeshComponent>(SponzaAsset, &SponzaPBRMaterial);
+		ESponza.AddComponent<Components::MeshComponent>(Model.pMesh, &SponzaPBRMaterial);
 
 	}
 	void SetupEntities()
@@ -98,8 +96,8 @@ public:
 
 	void InitShaders()
 	{
-		Importers::ShaderLoadingDesc desc;
-		desc.mType = Importers::ShaderType::_3DRendering;
+		Assets::ShaderLoadingDesc desc;
+		desc.mType = Assets::ShaderType::_3DRendering;
 		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 		BlinnPhong = GetAssetManager().Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
 
@@ -111,13 +109,13 @@ public:
 	void InitIBL()
 	{
 		//IBL
-		Importers::ImageLoadingDesc DESC;
+		Assets::ImageLoadingDesc DESC;
 		DESC.mType = RESOURCE_DIM_TEX_2D;
 		DESC.mUsage = USAGE_IMMUTABLE;
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 
-		HDREnv = GetAssetManager().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+		HDREnv = GetAssetManager().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", (DESC, Graphics::TextureUsageType::Unknown));
 
 		Rendering::ImageBasedLightingDesc desc;
 		IBL.Initialize(desc);

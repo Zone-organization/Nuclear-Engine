@@ -13,5 +13,11 @@ namespace Nuclear
         Shader::~Shader()
         {
         }
+
+        Uint32 Shader::GetID()
+        {
+            //TODO: Shaders should have unique id based on their name/source not path
+            return GetPathHash();
+        }
     }
 }

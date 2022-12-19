@@ -30,14 +30,14 @@ namespace Nuclear {
 				delete pImporter;
 			}
 
-			bool AssimpImporter::Load(const Assets::MeshLoadingDesc& desc, const std::string& path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
+			bool AssimpImporter::Load(const Assets::ModelLoadingDesc& desc, const std::string& path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
 			{
 				AssimpLoader loader;
 
 				loader.mLoadingDesc = desc;
-				loader.mMesh = mesh;
+				loader.pMesh = mesh;
 				loader.pMaterialData = material;
-				loader.mAnimation = anim;
+				loader.pAnimation = anim;
 				loader.scene = pImporter->ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 				//Failed?
@@ -49,12 +49,15 @@ namespace Nuclear {
 				loader.mDirectory = path.substr(0, path.find_last_of('/'));
 				loader.ProcessNode(loader.scene->mRootNode, loader.scene);
 
-				if (loader.mLoadingDesc.LoadAnimation && loader.scene->mAnimations != nullptr)
+				if (loader.pAnimation && loader.scene->mAnimations != nullptr)
 				{
 					loader.LoadAnimations();
-					loader.mAnimation->SetState(Assets::IAsset::State::Loaded);
+					loader.pAnimation->SetState(Assets::IAsset::State::Loaded);
 				}
-				loader.mMesh->SetState(Assets::IAsset::State::Loaded);
+				if (loader.pMesh)
+				{
+					loader.pMesh->SetState(Assets::IAsset::State::Loaded);
+				}
 				if (loader.pMaterialData)
 				{
 					loader.pMaterialData->SetState(Assets::IAsset::State::Loaded);
@@ -92,7 +95,7 @@ namespace Nuclear {
 			}
 			Uint32 AssimpLoader::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
 			{
-				if (mLoadingDesc.LoadMaterial)
+				if (pMaterialData)
 				{
 					Assets::TextureSet TexSet;
 
@@ -149,10 +152,11 @@ namespace Nuclear {
 
 			void AssimpLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 			{
-				assert(mMesh);
-				mMesh->mSubMeshes.push_back(Assets::Mesh::SubMesh::SubMeshData());
+				assert(pMesh);
 
-				Assets::Mesh::SubMesh::SubMeshData* result = &mMesh->mSubMeshes.back().data;
+				pMesh->mSubMeshes.push_back(Assets::Mesh::SubMesh::SubMeshData());
+
+				Assets::Mesh::SubMesh::SubMeshData* result = &pMesh->mSubMeshes.back().data;
 				result->Vertices.reserve(mesh->mNumVertices);
 
 
@@ -198,14 +202,14 @@ namespace Nuclear {
 					}
 				}
 
+
 				// process material		
 				result->TexSetIndex = ProcessMaterial(mesh, scene);
 
-				if (mLoadingDesc.LoadAnimation && scene->mAnimations != nullptr)
+				if (pAnimation && scene->mAnimations != nullptr)
 				{
 					ExtractBoneWeightForVertices(result, mesh, scene);
 				}
-
 			}
 
 			Graphics::TextureUsageType GetTextureType(aiTextureType type)
@@ -232,13 +236,15 @@ namespace Nuclear {
 					aiString str;
 					mat->GetTexture(type, i, &str);
 
-					Assets::ImageLoadingDesc desc;
+					Assets::TextureLoadingDesc desc;
+
 					Graphics::Texture texture;
 
 					//Embedded Texture
 					if (auto embeddedtex = scene->GetEmbeddedTexture(str.C_Str()))
 					{
 						desc.mHashedPath = Utilities::Hash(embeddedtex->mFilename.C_Str());
+						desc.mType = GetTextureType(type);
 
 						if (embeddedtex->mHeight != 0)
 						{
@@ -246,7 +252,7 @@ namespace Nuclear {
 							data.mWidth = embeddedtex->mWidth;
 							data.mHeight = embeddedtex->mHeight;
 							data.mData = (Byte*)embeddedtex->pcData;
-
+						//	data.
 							/*if (Graphics::GraphicsEngine::isGammaCorrect())
 								desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
 							else
@@ -254,14 +260,13 @@ namespace Nuclear {
 							*/
 
 							texture = Assets::AssetManager::GetInstance().Import(data, desc);
-							texture.SetUsageType(GetTextureType(type));
 						}
 						else
 						{
-							desc.mLoadFromMemory = true;
-							desc.mMemData = (Byte*)embeddedtex->pcData;
-							desc.mMemSize = embeddedtex->mWidth;
-							texture = Assets::AssetManager::GetInstance().Import(embeddedtex->mFilename.C_Str(), desc, GetTextureType(type));
+							desc.mImageDesc.mLoadFromMemory = true;
+							desc.mImageDesc.mMemData = (Byte*)embeddedtex->pcData;
+							desc.mImageDesc.mMemSize = embeddedtex->mWidth;
+							texture = Assets::AssetManager::GetInstance().Import(embeddedtex->mFilename.C_Str(), desc);
 						}
 
 					}
@@ -280,7 +285,7 @@ namespace Nuclear {
 						}*/
 
 
-						texture = Assets::AssetManager::GetInstance().Import(filename, desc, GetTextureType(type));
+						texture = Assets::AssetManager::GetInstance().Import(filename, (desc, GetTextureType(type)));
 					}
 
 					textures.mData.push_back({ 0, texture });
@@ -291,11 +296,11 @@ namespace Nuclear {
 
 			void AssimpLoader::LoadAnimations()
 			{
-				mAnimation->mClips.reserve(scene->mNumAnimations);
+				pAnimation->mClips.reserve(scene->mNumAnimations);
 				for (Uint32 i = 0; i < scene->mNumAnimations; i++)
 				{
-					mAnimation->mClips.push_back(Animation::AnimationClip());
-					auto clipptr = &mAnimation->mClips.at(0);
+					pAnimation->mClips.push_back(Animation::AnimationClip());
+					auto clipptr = &pAnimation->mClips.at(0);
 					auto animation = scene->mAnimations[i];
 
 					clipptr->m_Duration = animation->mDuration;
@@ -311,8 +316,8 @@ namespace Nuclear {
 
 			void AssimpLoader::ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene)
 			{
-				auto& boneInfoMap = mMesh->mBoneInfoMap;
-				int& boneCount = mMesh->mBoneCounter;
+				auto& boneInfoMap = pMesh->mBoneInfoMap;
+				int& boneCount = pMesh->mBoneCounter;
 
 				for (Uint32 boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
 				{
@@ -351,8 +356,8 @@ namespace Nuclear {
 			{
 				int size = animation->mNumChannels;
 
-				auto& boneInfoMap = mMesh->mBoneInfoMap;//getting m_BoneInfoMap from Model class
-				int& boneCount = mMesh->mBoneCounter; //getting the m_BoneCounter from Model class
+				auto& boneInfoMap = pMesh->mBoneInfoMap;//getting m_BoneInfoMap from Model class
+				int& boneCount = pMesh->mBoneCounter; //getting the m_BoneCounter from Model class
 
 				//reading channels(bones engaged in an animation and their keyframes)
 				clip->mBones.reserve(size);

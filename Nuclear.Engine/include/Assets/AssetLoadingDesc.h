@@ -2,7 +2,6 @@
 #include <Assets/ImageData.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
 #include <string>
-#include <tuple>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <vector>
 #include <Graphics/TextureUsageType.h>
@@ -11,6 +10,10 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		class Mesh;
+		class MaterialData;
+		class Animations;
+
 		struct AssetLoadingDesc 
 		{
 			//Empty?
@@ -22,8 +25,15 @@ namespace Nuclear
 			bool SaveMaterialNames = true;
 			bool LoadMesh = true;
 			bool LoadAnimation = true;
-			bool LoadMaterial = true;
+			bool LoadMaterialData = true;
 		};
+		struct ImportedModel
+		{
+			Assets::Mesh* pMesh = nullptr;
+			Assets::MaterialData* pMaterialData = nullptr;
+			Assets::Animations* pAnimations = nullptr;
+		};
+
 
 		DILIGENT_TYPED_ENUM(TEXTURE_LOAD_MIP_FILTER, Uint8)
 		{
@@ -89,8 +99,37 @@ namespace Nuclear
 
 		struct TextureLoadingDesc : public AssetLoadingDesc
 		{
+			TextureLoadingDesc()
+			{
+				mImageDesc = ImageLoadingDesc();
+				mType = Graphics::TextureUsageType::Unknown;
+				mHashedPath = 0;
+			}
+
+			TextureLoadingDesc(Graphics::TextureUsageType type)
+			{
+				mImageDesc = ImageLoadingDesc();
+				mType = type;
+				mHashedPath = 0;
+			}
+
+			TextureLoadingDesc(const ImageLoadingDesc& desc, Graphics::TextureUsageType type)
+			{
+				mImageDesc = desc;
+				mType = type;
+				mHashedPath = 0;
+			}
+
+			
+			TextureLoadingDesc(const ImageLoadingDesc& desc, Graphics::TextureUsageType type, Uint32 hashedpath)
+			{
+				mImageDesc = desc;
+				mType = type;
+				mHashedPath = hashedpath;
+			}
 			ImageLoadingDesc mImageDesc;
-			Graphics::TextureUsageType mType = Graphics::TextureUsageType::Unknown;
+			Graphics::TextureUsageType mType;
+			Uint32 mHashedPath = 0;
 		};
 
 		struct FontLoadingDesc : public AssetLoadingDesc

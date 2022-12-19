@@ -31,7 +31,7 @@ namespace Nuclear
 			void serialize(S& s)
 			{
 				s.value1b(mType);
-				s.value4b(mHashedName);
+				//s.value4b(mHashedName);
 				s.text1b(mName, 256);
 			}
 		};

@@ -27,6 +27,7 @@ namespace Nuclear
 			}
 			pData = data;
 			pShader = shader;
+
 			mCreationShaderCommonID = pShader->GetID();
 			InitializePipelineTextures();
 		}

@@ -47,51 +47,51 @@ public:
 	{
 		//Initialize Materials
 		Assets::TextureSet PBRRustedIron;
-		PBRRustedIron.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRRustedIron.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRRustedIron.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRRustedIron.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRRustedIron.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRRustedIron.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
+		PBRRustedIron.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", {Graphics::TextureUsageType::Specular}) });
+		PBRRustedIron.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/normal.png",{ Graphics::TextureUsageType::Normal}) });
+		PBRRustedIron.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/roughness.png", { Graphics::TextureUsageType::Roughness}) });
+		PBRRustedIron.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/RustedIron/ao.png", { Graphics::TextureUsageType::AO}) });
 
 		RustedIron_D.mTextures.push_back(PBRRustedIron);
 		RustedIron.SetName("RustedIron Material");
 
 		Assets::TextureSet PBRPlastic;
-		PBRPlastic.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRPlastic.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRPlastic.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRPlastic.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRPlastic.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRPlastic.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
+		PBRPlastic.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/metallic.png", {Graphics::TextureUsageType::Specular}) });
+		PBRPlastic.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/normal.png",{ Graphics::TextureUsageType::Normal}) });
+		PBRPlastic.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/roughness.png", { Graphics::TextureUsageType::Roughness}) });
+		PBRPlastic.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/ao.png", { Graphics::TextureUsageType::AO}) });
 
 		Plastic_D.mTextures.push_back(PBRPlastic);
 		Plastic.SetName("Plastic Material");
 
 		Assets::TextureSet PBRGrass;
-		PBRGrass.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRGrass.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRGrass.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRGrass.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRGrass.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRGrass.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
+		PBRGrass.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/metallic.png", {Graphics::TextureUsageType::Specular}) });
+		PBRGrass.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/normal.png",{ Graphics::TextureUsageType::Normal}) });
+		PBRGrass.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/roughness.png", { Graphics::TextureUsageType::Roughness}) });
+		PBRGrass.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/grass/ao.png", { Graphics::TextureUsageType::AO}) });
 
 		Grass_D.mTextures.push_back(PBRGrass);
 		Grass.SetName("Grass Material");
 
 		Assets::TextureSet PBRWall;
-		PBRWall.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRWall.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRWall.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRWall.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRWall.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRWall.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
+		PBRWall.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/metallic.png", {Graphics::TextureUsageType::Specular}) });
+		PBRWall.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/normal.png",{ Graphics::TextureUsageType::Normal}) });
+		PBRWall.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/roughness.png", { Graphics::TextureUsageType::Roughness}) });
+		PBRWall.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/wall/ao.png", { Graphics::TextureUsageType::AO}) });
 
 		Wall_D.mTextures.push_back(PBRWall);
 		Wall.SetName("Wall Material");
 
 		Assets::TextureSet PBRGold;
-		PBRGold.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/albedo.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Diffuse) });
-		PBRGold.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/metallic.png", Importers::ImageLoadingDesc(),Graphics::TextureUsageType::Specular) });
-		PBRGold.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/normal.png",Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Normal) });
-		PBRGold.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/roughness.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::Roughness) });
-		PBRGold.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/ao.png", Importers::ImageLoadingDesc(), Graphics::TextureUsageType::AO) });
+		PBRGold.mData.push_back({ 0, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
+		PBRGold.mData.push_back({ 1, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/metallic.png", {Graphics::TextureUsageType::Specular}) });
+		PBRGold.mData.push_back({ 2, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/normal.png",{ Graphics::TextureUsageType::Normal}) });
+		PBRGold.mData.push_back({ 3, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/roughness.png", { Graphics::TextureUsageType::Roughness}) });
+		PBRGold.mData.push_back({ 4, GetAssetManager().Import("@CommonAssets@/Textures/PBR/gold/ao.png", { Graphics::TextureUsageType::AO}) });
 
 		Gold_D.mTextures.push_back(PBRGold);
 		Gold.SetName("Gold Material");
@@ -105,14 +105,13 @@ public:
 
 	void SetupAssets()
 	{
-		Importers::MeshLoadingDesc ModelDesc;
-		ModelDesc.LoadMaterial = false;
-		Assets::MaterialData* temp;
-		Assets::Animations* temp2;
+		Assets::ModelLoadingDesc ModelDesc;
+		ModelDesc.LoadMaterialData = false;
+		ModelDesc.LoadAnimation = false;
 
 		//Load Models
-		std::tie(ShaderBall, temp, temp2) = GetAssetManager().Import("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
-
+		auto shaderballasset = GetAssetManager().Import("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
+		ShaderBall = shaderballasset.pMesh;
 		LoadPBRMaterials();
 	}
 	void SetupEntities()
@@ -146,13 +145,13 @@ public:
 	void InitIBL()
 	{
 		//IBL
-		Importers::ImageLoadingDesc DESC;
+		Assets::ImageLoadingDesc DESC;
 		DESC.mType = RESOURCE_DIM_TEX_2D;
 		DESC.mUsage = USAGE_IMMUTABLE;
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 
-		HDREnv = GetAssetManager().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC, Graphics::TextureUsageType::Unknown);
+		HDREnv = GetAssetManager().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", (DESC, Graphics::TextureUsageType::Unknown) );
 
 		Rendering::ImageBasedLightingDesc desc;
 		IBL.Initialize(desc);
@@ -170,8 +169,8 @@ public:
 		Renderer->AddRenderPass(&DefferedPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
-		Importers::ShaderLoadingDesc desc;
-		desc.mType = Importers::ShaderType::_3DRendering;
+		Assets::ShaderLoadingDesc desc;
+		desc.mType = Assets::ShaderType::_3DRendering;
 		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 
 		Renderer->RegisterShader(PBR);

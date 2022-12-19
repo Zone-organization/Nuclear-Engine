@@ -27,7 +27,7 @@ namespace Nuclear
 				AssimpImporter();
 				~AssimpImporter();
 
-				bool Load(const Assets::MeshLoadingDesc& desc, const std::string& Path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
+				bool Load(const Assets::ModelLoadingDesc& desc, const std::string& Path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 				bool IsExtensionSupported(const std::string& extension);
 				Assimp::Importer* GetImporter();
 			private:
@@ -47,8 +47,8 @@ namespace Nuclear
 				std::vector<std::string> TexturePaths;
 
 				Assets::MaterialData* pMaterialData = nullptr;
-				Assets::Animations* mAnimation = nullptr;
-				Assets::Mesh* mMesh = nullptr;
+				Assets::Animations* pAnimation = nullptr;
+				Assets::Mesh* pMesh = nullptr;
 				const aiScene* scene;
 				std::string mDirectory;
 
@@ -58,7 +58,7 @@ namespace Nuclear
 				void ReadHeirarchyData(Animation::ClipNodeData* dest, const aiNode* src);
 
 				void InitBoneData(const aiNodeAnim* channel, Animation::BoneData& data);
-				Assets::MeshLoadingDesc mLoadingDesc;
+				Assets::ModelLoadingDesc mLoadingDesc;
 			};
 
 

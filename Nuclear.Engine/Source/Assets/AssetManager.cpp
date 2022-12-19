@@ -142,7 +142,7 @@ namespace Nuclear
 			//Create
 			result = &(mLibrary.mImportedImages.AddAsset(Path, hashedpath) = Assets::Image(imagedata, Desc));
 
-			FinishImportingAsset(result, Path, imagedata.mHashedPath);
+			FinishImportingAsset(result, Path, hashedpath);
 			return result;
 		}
 
@@ -209,60 +209,58 @@ namespace Nuclear
 		}
 
 
-		std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> AssetManager::Import(const Core::Path& Path, const ModelLoadingDesc& desc)
+		ImportedModel AssetManager::Import(const Core::Path& Path, const ModelLoadingDesc& desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
+			ImportedModel result;
 
 			//Check if exists
+			if (desc.LoadMesh)
+			{
+				result.pMesh = mLibrary.mImportedMeshes.GetAsset(hashedpath);
 
-			auto mesh = mLibrary.mImportedMeshes.GetAsset(hashedpath);
-			if (mesh)
-			{				
-				return { mesh, mLibrary.mImportedMaterialDatas.GetAsset(hashedpath),   mLibrary.mImportedAnimations.GetAsset(hashedpath) };
+				if(!result.pMesh)
+					result.pMesh = &(mLibrary.mImportedMeshes.AddAsset(hashedpath) = Assets::Mesh());
 			}
 
-			Assets::Animations* pAnim = nullptr;
-			Assets::Mesh* pMesh = nullptr;
-
-			mLibrary.mImportedMeshes.mData[hashedpath] = Assets::Mesh();
-			Assets::Mesh* Mesh = &mLibrary.mImportedMeshes.mData[hashedpath];
-			Assets::MaterialData* Material = nullptr;
-			if (desc.LoadMaterial)
+			if (desc.LoadMaterialData)
 			{
-				mLibrary.mImportedMaterialDatas.mData[hashedpath] = Assets::MaterialData();
-				Material = &mLibrary.mImportedMaterialDatas.mData[hashedpath];
-			}
-			if (!mAssimpImporter.Load(desc, Path.GetRealPath(), Mesh, Material, &Animation))
-			{
-				NUCLEAR_ERROR("[AssetManager] Failed to import Model : '{0}' : '{1}'",  Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+				result.pMaterialData = mLibrary.mImportedMaterialDatas.GetAsset(hashedpath);
 
-				return { Mesh , Material, anim };
+				if (!result.pMaterialData)
+					result.pMaterialData = &(mLibrary.mImportedMaterialDatas.AddAsset(hashedpath) = Assets::MaterialData());
 			}
 
 			if (desc.LoadAnimation)
 			{
-				if (Animation.GetState() == Assets::IAsset::State::Loaded)
-				{
-					mLibrary.mImportedAnimations.mData[hashedpath] = Animation;
-					anim = &mLibrary.mImportedAnimations.mData[hashedpath];
+				result.pAnimations = mLibrary.mImportedAnimations.GetAsset(hashedpath);
 
-					mLibrary.mImportedAnimations.SavePath(hashedpath, Path);
+				if (!result.pAnimations)
+					result.pAnimations = &(mLibrary.mImportedAnimations.AddAsset(hashedpath) = Assets::Animations());
+			}
+		
+			if (!mAssimpImporter.Load(desc, Path.GetRealPath(), result.pMesh, result.pMaterialData, result.pAnimations))
+			{
+				NUCLEAR_ERROR("[AssetManager] Failed to import Model : '{0}' : '{1}'",  Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+
+				return result;
+			}
+
+			if (desc.LoadAnimation)
+			{
+				if (result.pAnimations->GetState() != Assets::IAsset::State::Loaded)
+				{
+					mLibrary.mImportedAnimations.mData.erase(hashedpath);
 				}
 			}
-			FinishImportingAsset(Mesh, Path, hashedpath);
-			FinishImportingAsset(Material, Path, hashedpath ,false);
-			FinishImportingAsset(anim, Path, hashedpath, false);
+			FinishImportingAsset(result.pMesh, Path, hashedpath);
+			FinishImportingAsset(result.pMaterialData, Path, hashedpath ,false);
+			FinishImportingAsset(result.pAnimations, Path, hashedpath, false);
 
-			Mesh->Create();
-			
-			mLibrary.mImportedMeshes.SavePath(hashedpath, Path);
+			if(result.pMesh)
+				result.pMesh->Create();
 
-			if (desc.LoadMaterial)
-			{
-				mLibrary.mImportedMaterials.SavePath(hashedpath, Path);
-			}
-
-			return { Mesh , Material, anim };
+			return result;
 		}
 
 		template <int N>

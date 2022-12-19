@@ -62,7 +62,7 @@ namespace Nuclear
 
 			static AssetManager& GetInstance();
 
-			Assets::AssetLibrary mLibrary;
+			AssetLibrary mLibrary;
 
 			bool mMultithreadMeshTextureLoading = true;
 
@@ -71,30 +71,30 @@ namespace Nuclear
 			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
 			//Textures
-			Assets::Image* Import(const Core::Path& Path, const ImageLoadingDesc& Desc);
-			Assets::Image* Import(const Assets::ImageData& Imagedata, const ImageLoadingDesc& Desc);
+			Image* Import(const Core::Path& Path, const ImageLoadingDesc& Desc);
+			Image* Import(const ImageData& Imagedata, const ImageLoadingDesc& Desc);
 
 			Graphics::Texture Import(const Core::Path& Path, const TextureLoadingDesc& Desc);
-			Graphics::Texture Import(const Assets::ImageData& Imagedata, const TextureLoadingDesc& Desc);
+			Graphics::Texture Import(const ImageData& Imagedata, const TextureLoadingDesc& Desc);
 
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<Assets::Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const ImageLoadingDesc& Desc);
-			Assets::Image* DoesImageExist(Uint32 hashedname);
+			std::array<Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const ImageLoadingDesc& Desc);
+			Image* DoesImageExist(Uint32 hashedname);
 
 
 			//Audio
-			Assets::AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
+			AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
 
-			//Mesh & Material & Animation
-			std::tuple<Assets::Mesh*, Assets::MaterialData*, Assets::Animations*> Import(const Core::Path& Path, const ModelLoadingDesc& desc);
+			//Model = (Mesh & Material & Animation)
+			ImportedModel Import(const Core::Path& Path, const ModelLoadingDesc& desc);
 
-			Assets::Font* Import(const Core::Path& Path, const FontLoadingDesc& desc);
+			Font* Import(const Core::Path& Path, const FontLoadingDesc& desc);
 
 			//Shader
-			Assets::Shader* Import(const Core::Path& Path, const ShaderLoadingDesc& desc);
+			Shader* Import(const Core::Path& Path, const ShaderLoadingDesc& desc);
 
-			Assets::Script* Import(const Core::Path& Path, const ScriptLoadingDesc& desc);
+			Script* Import(const Core::Path& Path, const ScriptLoadingDesc& desc);
 
 			Graphics::Texture DefaultBlackTex;
 			Graphics::Texture DefaultGreyTex;
@@ -104,22 +104,22 @@ namespace Nuclear
 			Graphics::Texture DefaultSpecularTex;
 			Graphics::Texture DefaultNormalTex;
 
-			Assets::AssetType GetAssetType(const std::string& filename);
+			AssetType GetAssetType(const std::string& filename);
 
 
-			Assets::SavedScene* Import(const Core::Path& Path, const SceneLoadingDesc& desc);
+			SavedScene* Import(const Core::Path& Path, const SceneLoadingDesc& desc);
 
-			bool Export(Assets::SavedScene* scene, const Core::Path& Path);
+			bool Export(SavedScene* scene, const Core::Path& Path);
 
 		protected:
 			AssetManagerDesc mDesc;
-			Assets::Image* TextureCube_Load(const Core::Path& Path, const ImageLoadingDesc& Desc);
+			Image* TextureCube_Load(const Core::Path& Path, const ImageLoadingDesc& Desc);
 			msdfgen::FreetypeHandle* FT_Handle;
 
-			Assets::AssetLibrary mSavedToImport;
+			AssetLibrary mSavedToImport;
 			Importers::Internal::AssimpImporter mAssimpImporter;
 
-			void FinishImportingAsset(Assets::IAsset* asset,const Core::Path& path, Uint32 Hashedpath, bool log = true);
+			void FinishImportingAsset(IAsset* asset,const Core::Path& path, Uint32 Hashedpath, bool log = true);
 
 		private:
 			AssetManager();
