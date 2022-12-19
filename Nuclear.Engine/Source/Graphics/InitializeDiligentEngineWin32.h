@@ -17,18 +17,18 @@ namespace Nuclear
 		switch (Severity)
 		{
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_INFO:
-			NUCLEAR_INFO("[GraphicsEngine] '{0}'" , Message);
+			NUCLEAR_INFO("[Diligent] {0}" , Message);
 			return;
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_WARNING:
-			NUCLEAR_WARN("[GraphicsEngine] '{0}'", Message);
+			NUCLEAR_WARN("[Diligent] {0}", Message);
 
 			return;
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_ERROR:
-			NUCLEAR_ERROR("[GraphicsEngine] '{0}'", Message);
+			NUCLEAR_ERROR("[Diligent] {0}", Message);
 
 			return;
 		case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_FATAL_ERROR:
-			NUCLEAR_FATAL("[GraphicsEngine] '{0}'", Message);
+			NUCLEAR_FATAL("[Diligent] {0}", Message);
 			return;
 		default:
 			return;

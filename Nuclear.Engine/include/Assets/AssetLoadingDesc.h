@@ -103,33 +103,22 @@ namespace Nuclear
 			{
 				mImageDesc = ImageLoadingDesc();
 				mType = Graphics::TextureUsageType::Unknown;
-				mHashedPath = 0;
 			}
 
 			TextureLoadingDesc(Graphics::TextureUsageType type)
 			{
 				mImageDesc = ImageLoadingDesc();
 				mType = type;
-				mHashedPath = 0;
 			}
 
 			TextureLoadingDesc(const ImageLoadingDesc& desc, Graphics::TextureUsageType type)
 			{
 				mImageDesc = desc;
 				mType = type;
-				mHashedPath = 0;
 			}
 
-			
-			TextureLoadingDesc(const ImageLoadingDesc& desc, Graphics::TextureUsageType type, Uint32 hashedpath)
-			{
-				mImageDesc = desc;
-				mType = type;
-				mHashedPath = hashedpath;
-			}
 			ImageLoadingDesc mImageDesc;
 			Graphics::TextureUsageType mType;
-			Uint32 mHashedPath = 0;
 		};
 
 		struct FontLoadingDesc : public AssetLoadingDesc

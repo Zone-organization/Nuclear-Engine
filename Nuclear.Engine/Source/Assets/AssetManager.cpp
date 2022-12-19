@@ -42,10 +42,7 @@ namespace Nuclear
 
 				if (log)
 				{
-					if (path.GetInputPath() != "")
-						NUCLEAR_INFO("[AssetManager] Imported: '{0}' : '{1}'", path.GetInputPath(), Utilities::int_to_hex<Uint32>(Hashedpath));
-					else
-						NUCLEAR_INFO("[AssetManager] Imported : {0}", Utilities::int_to_hex<Uint32>(Hashedpath));
+					NUCLEAR_INFO("[AssetManager] Imported: {0} ", path.GetInputPath());
 				}
 			}
 			return;
@@ -148,9 +145,9 @@ namespace Nuclear
 
 		Assets::Image* AssetManager::Import(const Assets::ImageData& imagedata, const ImageLoadingDesc& Desc)
 		{
-			assert(imagedata.mHashedPath != 0);
+			auto hashedpath = Utilities::Hash(imagedata.mPath);
 
-			auto result = mLibrary.mImportedImages.GetAsset(imagedata.mHashedPath);
+			auto result = mLibrary.mImportedImages.GetAsset(hashedpath);
 			if (result)
 			{
 				return result;
@@ -161,14 +158,14 @@ namespace Nuclear
 
 			if (image.mTextureView == nullptr)
 			{
-				NUCLEAR_ERROR("[AssetManager] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(imagedata.mHashedPath));
+				NUCLEAR_ERROR("[AssetManager] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
 				return DefaultBlackTex.GetImage();
 			}
 			image.mData.mData = NULL;
 
-			result = &(mLibrary.mImportedImages.AddAsset(imagedata.mHashedPath) = Assets::Image(imagedata, Desc));
+			result = &(mLibrary.mImportedImages.AddAsset(hashedpath) = Assets::Image(imagedata, Desc));
 
-			FinishImportingAsset(result, Core::Path(), imagedata.mHashedPath);
+			FinishImportingAsset(result, imagedata.mPath, hashedpath);
 
 			return result;
 		}

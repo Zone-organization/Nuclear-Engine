@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
-
+#include <string>
 namespace Nuclear
 {
 	namespace Assets
@@ -30,7 +30,7 @@ namespace Nuclear
 				mComponentType = VT_UNDEFINED;
 			}
 
-			Uint32 mHashedPath;
+			std::string mPath;
 
 			Uint32 mWidth;
 

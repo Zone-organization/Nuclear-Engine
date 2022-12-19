@@ -2,7 +2,6 @@
 #include <Assets\AssetManager.h>
 #include "Graphics\GraphicsEngine.h"
 #include <Assets\Material.h>
-#include <Utilities\Hash.h>
 #include "AssimpGLMHelpers.h"
 #include <Utilities/Logger.h>
 #include <Assimp\include\assimp\Importer.hpp>
@@ -243,7 +242,6 @@ namespace Nuclear {
 					//Embedded Texture
 					if (auto embeddedtex = scene->GetEmbeddedTexture(str.C_Str()))
 					{
-						desc.mHashedPath = Utilities::Hash(embeddedtex->mFilename.C_Str());
 						desc.mType = GetTextureType(type);
 
 						if (embeddedtex->mHeight != 0)
@@ -252,6 +250,7 @@ namespace Nuclear {
 							data.mWidth = embeddedtex->mWidth;
 							data.mHeight = embeddedtex->mHeight;
 							data.mData = (Byte*)embeddedtex->pcData;
+							data.mPath = embeddedtex->mFilename.C_Str();
 						//	data.
 							/*if (Graphics::GraphicsEngine::isGammaCorrect())
 								desc.mFormat = TEX_FORMAT_RGBA8_UNORM_SRGB;
