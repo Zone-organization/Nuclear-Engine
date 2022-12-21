@@ -6,7 +6,17 @@ namespace Nuclear
 {
 	namespace Platform
 	{
-			std::string FileSystem::LoadFileToString(const Core::Path& Filepath)
+		FileSystem::FileSystem()
+		{
+
+		}
+
+		FileSystem& FileSystem::GetInstance()
+		{
+			static FileSystem instance;
+			return instance;
+		}
+		std::string FileSystem::LoadFileToString(const Core::Path& Filepath)
 			{
 				std::ifstream file(Filepath.GetRealPath(), std::ios::in);
 				std::string data = "", line = "";
@@ -148,6 +158,23 @@ namespace Nuclear
 					}
 				}
 				return data;
-			}		
+			}
+
+			//Todo: Errors and exceptions
+			bool FileSystem::LoadBinaryBuffer(std::vector<Uint8>& buffer, const Core::Path& Filepath)
+			{
+				std::ifstream input(Filepath.GetRealPath(), std::ios::binary);
+				buffer = std::vector<Uint8>(std::istreambuf_iterator<char>(input), {});
+
+				return true;
+			}
+			bool FileSystem::SaveBinaryBuffer(const std::vector<Uint8>& buffer, const Core::Path& Path)
+			{
+				std::ofstream fout(Path.GetRealPath(), std::ios::out | std::ios::binary);
+				fout.write((char*)buffer.data(), buffer.size());
+				fout.close();
+
+				return true;
+			}
 	}
 }

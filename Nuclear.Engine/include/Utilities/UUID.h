@@ -3,6 +3,7 @@
 #include <array>
 #include <sstream>
 #include <string_view>
+#include <Serialization/Access.h>
 
 namespace Nuclear
 {
@@ -39,6 +40,15 @@ namespace Nuclear
 			static UUID CreateNewUUID();
 
 		private:
+			///////////////////////////////
+			//Serialization
+			friend Serialization::Access;
+			template<typename S>
+			void serialize(S& s)
+			{
+				s.container1b(_bytes);
+			}
+			///////////////////////////////
 			void zeroify();
 
 			// actual data

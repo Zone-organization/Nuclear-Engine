@@ -1,8 +1,10 @@
 #pragma once
 #include <Assets/AssetLoadingDesc.h>
 #include <Assets\AssetLibrary.h>
+#include <Assets\AssetMetadata.h>
 #include <Threading\ThreadPool.h>
 #include <Importers\Internal\AssimpImporter.h>
+#include <Serialization/BinaryBuffer.h>
 
 #include <FMOD/inc/fmod.hpp>
 #include <array>
@@ -106,11 +108,12 @@ namespace Nuclear
 
 			AssetType GetAssetType(const std::string& filename);
 
-
 			SavedScene* Import(const Core::Path& Path, const SceneLoadingDesc& desc);
 
-			bool Export(SavedScene* scene, const Core::Path& Path);
+			AssetMetadata CreateMetadata(IAsset* asset);
+			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);
 
+			bool Export(IAsset* asset , const Core::Path& Path);
 		protected:
 			AssetManagerDesc mDesc;
 			Image* TextureCube_Load(const Core::Path& Path, const ImageLoadingDesc& Desc);

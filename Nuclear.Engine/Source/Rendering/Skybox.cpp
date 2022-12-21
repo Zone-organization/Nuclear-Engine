@@ -139,8 +139,8 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
-			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
+			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
+			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 
 			LayoutElement LayoutElems[] =

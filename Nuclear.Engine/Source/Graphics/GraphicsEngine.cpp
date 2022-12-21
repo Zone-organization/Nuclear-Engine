@@ -93,7 +93,7 @@ namespace Nuclear
 			std::string Source = desc.mSource;
 			if (Source.empty())
 			{
-				Source = Platform::FileSystem::LoadShader(desc.mPath.GetRealPath(), desc.mDefines, std::set<std::string>(), true);
+				Source = Platform::FileSystem::GetInstance().LoadShader(desc.mPath.GetRealPath(), desc.mDefines, std::set<std::string>(), true);
 			}
 			else
 			{

@@ -18,8 +18,6 @@
 
 #include <Parsers/ShaderParser.h>
 
-#include <fstream>
-
 namespace Nuclear
 {
 	namespace Assets
@@ -381,7 +379,7 @@ namespace Nuclear
 
 			Assets::Shader* result;
 			result = &mLibrary.mImportedShaders.mData[hashedpath];
-			auto source = Platform::FileSystem::LoadFileToString(Path.GetRealPath());
+			auto source = Platform::FileSystem::GetInstance().LoadFileToString(Path.GetRealPath());
 			Assets::ShaderBuildDesc shaderbuilddesc;
 			shaderbuilddesc.mType = desc.mType;
 			shaderbuilddesc.mDefines = desc.mDefines;
@@ -455,28 +453,59 @@ namespace Nuclear
 			}
 			Assets::SavedScene* result = &mLibrary.mImportedScenes.mData[hashedpath];
 
-			std::ifstream input(Path.GetRealPath(), std::ios::binary);
-			result->mBinaryBuffer = std::vector<Uint8>(std::istreambuf_iterator<char>(input), {});
+			Platform::FileSystem::GetInstance().LoadBinaryBuffer(result->mBinaryBuffer, Path);
 
 			NUCLEAR_INFO("[AssetManager] Imported Scene : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 			return result;
 		}
 
-		bool AssetManager::Export(Assets::SavedScene* scene, const Core::Path& Path)
+		AssetMetadata AssetManager::CreateMetadata(IAsset* asset)
 		{
-			if (scene)
+			AssetMetadata result;
+
+			result.mName = asset->GetName();
+			result.mHashedName = Utilities::Hash(asset->GetName());
+			result.mHashedPath = asset->GetPathHash();
+			result.mUUID = asset->GetUUID();
+			result.mType = asset->GetType();
+
+			return result;
+		}
+
+		bool AssetManager::Export(const Serialization::BinaryBuffer& asset, const Core::Path& Path)
+		{
+			Platform::FileSystem::GetInstance().SaveBinaryBuffer(asset, Path);
+
+			return false;
+		}
+
+		bool AssetManager::Export(IAsset* asset, const Core::Path& Path)
+		{
+			if (!asset)
 			{
+				NUCLEAR_ERROR("[AssetManager] Exporting a null asset! To : '{0}'", Path.GetInputPath());
+				return false;
+			}
+
+
+			if (asset->GetType() == AssetType::SerializedScene)
+			{
+				auto scene = static_cast<SavedScene*>(asset);
 				if (!scene->mBinaryBuffer.empty())
 				{
-					std::ofstream fout(Path.GetRealPath(), std::ios::out | std::ios::binary);
-					fout.write((char*)scene->mBinaryBuffer.data(), scene->mBinaryBuffer.size());
-					fout.close();
+					Platform::FileSystem::GetInstance().SaveBinaryBuffer(scene->mBinaryBuffer, Path);
 					NUCLEAR_INFO("[AssetManager] Exported Scene '{0}' : '{1}' To: '{2}'", scene->GetName(), Utilities::int_to_hex<Uint32>(scene->GetPathHash()), Path.GetInputPath());
 					return true;
 				}
+			}
+			/*else  if (asset->GetType() == AssetType::Image)
+			{
+				 auto image = static_cast<Image*>(asset);
 
 			}
-			NUCLEAR_ERROR("[AssetManager] Failed To Export Scene! To : '{0}'", Path.GetInputPath());
+			*/
+			//WIP:
+			//Convert all assets to unified types.
 			return false;
 		}
 
