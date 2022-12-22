@@ -19,6 +19,7 @@ namespace Nuclear
 			const std::string& GetInputPath() const;
 			const std::string& GetRealPath() const;
 			std::string GetFilename(bool removeextension = false) const;
+			std::string GetPathNoExt() const;
 
 			static std::unordered_map<std::string, std::string> mReservedPaths;
 

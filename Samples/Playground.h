@@ -55,6 +55,14 @@ public:
 
 		Assets::FontLoadingDesc fdesc;
 		ArialFont = GetAssetManager().Import("@CommonAssets@/Fonts/arial.ttf", fdesc);
+
+		//Test asset metadata
+		auto test = GetAssetManager().Import("@CommonAssets@/Textures/PBR/plastic/albedo.png", { Graphics::TextureUsageType::Diffuse });
+		auto meta = GetAssetManager().CreateMetadata(test.GetImage());
+		Serialization::SerializationEngine::GetInstance().Serialize(meta, "Asset.meta");
+		Assets::AssetMetadata META2;
+		Serialization::SerializationEngine::GetInstance().Deserialize(META2, "Asset.meta");
+
 	}
 	void SetupEntities()
 	{
@@ -162,7 +170,7 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-			ImGui::Image(ArialFont->mTextureView, {256.f,256.f });
+			//ImGui::Image(ArialFont->mTextureView, {256.f,256.f });
 
 			ImGui::ColorEdit3("Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
 

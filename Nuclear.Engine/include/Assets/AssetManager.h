@@ -72,6 +72,24 @@ namespace Nuclear
 			void FlushContainers();
 			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
+			//Generic
+
+			template<class T> 
+			T* Import(const Core::Path& Path)
+			{
+				static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
+
+				return dynamic_cast<T*>(Import(path));
+			}
+
+			IAsset* Import(const Core::Path& Path);
+
+			IAsset* Import(const Core::Path& Path, const AssetMetadata& meta);
+
+			bool Export(IAsset* asset, const Core::Path& Path);
+
+
+			//TODO: Import methods should be renamed and removed to another class.
 			//Textures
 			Image* Import(const Core::Path& Path, const ImageLoadingDesc& Desc);
 			Image* Import(const ImageData& Imagedata, const ImageLoadingDesc& Desc);
@@ -79,11 +97,9 @@ namespace Nuclear
 			Graphics::Texture Import(const Core::Path& Path, const TextureLoadingDesc& Desc);
 			Graphics::Texture Import(const ImageData& Imagedata, const TextureLoadingDesc& Desc);
 
-
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
 			std::array<Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const ImageLoadingDesc& Desc);
 			Image* DoesImageExist(Uint32 hashedname);
-
 
 			//Audio
 			AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
@@ -112,8 +128,6 @@ namespace Nuclear
 
 			AssetMetadata CreateMetadata(IAsset* asset);
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);
-
-			bool Export(IAsset* asset , const Core::Path& Path);
 		protected:
 			AssetManagerDesc mDesc;
 			Image* TextureCube_Load(const Core::Path& Path, const ImageLoadingDesc& Desc);

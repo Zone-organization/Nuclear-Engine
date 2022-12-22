@@ -17,6 +17,7 @@
 #include <msdf-atlas-gen/msdf-atlas-gen/msdf-atlas-gen.h>
 
 #include <Parsers/ShaderParser.h>
+#include <Serialization/SerializationEngine.h>
 
 namespace Nuclear
 {
@@ -113,6 +114,24 @@ namespace Nuclear
 			{
 				NUCLEAR_ERROR("[AssetManager] Failed To Initialize FreeType library");
 			}
+		}
+
+		IAsset* AssetManager::Import(const Core::Path& Path)
+		{
+			std::string path(Path.GetPathNoExt() + ".NEMeta");
+			AssetMetadata meta;
+			Serialization::SerializationEngine::GetInstance().Deserialize(meta, path);
+
+			return Import(Path, meta);
+		}
+
+		IAsset* AssetManager::Import(const Core::Path& Path, const AssetMetadata& meta)
+		{
+			if (meta.mType == AssetType::Image)
+			{
+
+			}
+			return nullptr;
 		}
 
 		Assets::Image* AssetManager::Import(const Core::Path& Path, const ImageLoadingDesc& Desc)

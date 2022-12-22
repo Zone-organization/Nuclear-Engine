@@ -28,5 +28,10 @@ namespace Nuclear
 				<< std::hex << i;
 			return stream.str();
 		}
+
+		inline Uint32 NEAPI hex_to_uint32(const std::string& hex)
+		{
+			return std::stoul(hex, nullptr, 16);
+		}
 	}
 }

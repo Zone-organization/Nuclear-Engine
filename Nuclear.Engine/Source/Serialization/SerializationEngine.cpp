@@ -5,6 +5,8 @@
 #include <bitsery/traits/string.h>
 #include <bitsery/traits/array.h>
 #include <Parsers/INIParser.h>
+#include <ThirdParty/magic_enum.hpp>
+#include <Utilities/Hash.h>
 
 namespace Nuclear
 {
@@ -15,9 +17,6 @@ namespace Nuclear
 
 			return instance;
 		}
-
-		using OutputAdapter = bitsery::OutputBufferAdapter<BinaryBuffer>;
-		using InputAdapter = bitsery::InputBufferAdapter<BinaryBuffer>;
 
 		/*
 		
@@ -31,29 +30,39 @@ namespace Nuclear
 			AssetImportingDesc mImportingDesc;			
 		*/
 
-		bool SerializationEngine::Serialize(const Assets::AssetMetadata& metadata, BinaryBuffer& outbuffer)
+		bool SerializationEngine::Serialize(const Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
+			Parsers::INIFile file(path.GetRealPath());
+
 			Parsers::INIStructure meta;
 			meta["General"]["Type"] = "AssetMetadata";
 
 			meta["AssetMetadata"]["Name"] = metadata.mName;
 			meta["AssetMetadata"]["UUID"] = metadata.mUUID.str();
-			meta["AssetMetadata"]["AssetType"] = "Metadata";
-			meta["AssetMetadata"]["HashedName"] = "Metadata";
-			meta["AssetMetadata"]["HashedPath"] = "Metadata";
+			meta["AssetMetadata"]["AssetType"] = magic_enum::enum_name(metadata.mType);
+			meta["AssetMetadata"]["HashedName"] = Utilities::int_to_hex<Uint32>(metadata.mHashedName);
+			meta["AssetMetadata"]["HashedPath"] = Utilities::int_to_hex<Uint32>(metadata.mHashedPath);
 
-
-			bitsery::Serializer<OutputAdapter> ser{ outbuffer };
-			
-			ser.object(metadata);
-
-			return true;
+			return file.generate(meta);
 		}
-		bool SerializationEngine::Deserialize(Assets::AssetMetadata& metadata, const BinaryBuffer& outbuffer)
+		bool SerializationEngine::Deserialize(Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
-			bitsery::Deserializer<InputAdapter> deser{ outbuffer.begin(), outbuffer.size() };
-			deser.object(metadata);
-			return true;
+			Parsers::INIFile file(path.GetRealPath());
+
+			Parsers::INIStructure meta;
+
+			bool result = file.read(meta);
+
+			if (meta["General"]["Type"] == "AssetMetadata")
+			{
+				metadata.mName = meta["AssetMetadata"]["Name"];
+				metadata.mUUID = Utilities::UUID(meta["AssetMetadata"]["UUID"]);
+				metadata.mType = magic_enum::enum_cast<Assets::AssetType>(meta["AssetMetadata"]["AssetType"]).value_or(Assets::AssetType::Unknown);
+				metadata.mHashedName = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedName"]);
+				metadata.mHashedPath = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedPath"]);
+			}	
+
+			return result;
 		}
 		bool SerializationEngine::SaveScene()
 		{

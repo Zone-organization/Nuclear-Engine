@@ -54,6 +54,13 @@ namespace Nuclear
 			return mRealPath;
 		}
 
+		std::string Path::GetPathNoExt() const
+		{
+			std::string result = mRealPath.substr(0, mRealPath.find_last_of('.'));
+
+			return result;
+		}
+
 		std::string Path::GetFilename(bool removeextension ) const
 		{
 			std::string result;
