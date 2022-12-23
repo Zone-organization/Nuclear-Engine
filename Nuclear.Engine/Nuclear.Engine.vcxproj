@@ -112,6 +112,7 @@
     <ClInclude Include="include\Assets\AssetType.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
+    <ClInclude Include="include\Fallbacks\FallbacksEngine.h" />
     <ClInclude Include="include\Graphics\TextureUsageType.h" />
     <ClInclude Include="include\Parsers\INIParser.h" />
     <ClInclude Include="include\Rendering\RenderingEngine.h" />
@@ -453,6 +454,7 @@
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />
+    <ClCompile Include="Source\Fallbacks\FallbacksEngine.cpp" />
     <ClCompile Include="Source\Parsers\ShaderParser.cpp" />
     <ClCompile Include="Source\Platform\Input.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />

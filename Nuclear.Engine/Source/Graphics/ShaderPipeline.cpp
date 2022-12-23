@@ -1,11 +1,12 @@
-#include <Graphics\ShaderPipeline.h>
-#include <Graphics\GraphicsEngine.h>
-#include <Platform\FileSystem.h>
+#include <Graphics/ShaderPipeline.h>
+#include <Graphics/GraphicsEngine.h>
+#include <Platform/FileSystem.h>
 #include <Utilities/Hash.h>
 #include <Utilities/Logger.h>
-#include <Assets/AssetManager.h>
-#include "Rendering/ImageBasedLighting.h"
-#include <Rendering\RenderingEngine.h>
+#include <Fallbacks/FallbacksEngine.h>
+#include <Rendering/ImageBasedLighting.h>
+#include <Rendering/RenderingEngine.h>
+#include <Assets/Shader.h>
 
 namespace Nuclear
 {
@@ -448,11 +449,10 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
+							ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
-							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
 							mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
 						}
 					}
@@ -489,18 +489,17 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex = Assets::AssetManager::GetInstance().DefaultWhiteTex;
+							tex->mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage(), ParseTexUsageFromName(VarName));
 							tex->mTex.SetName(VarName);
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
-							tex->mTex.SetUsageType(ParseTexUsageFromName(VarName));
 						}
 						else if (VarName.find("NEIBL_") == 0)
 						{
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
+							ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
@@ -542,22 +541,20 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex = Assets::AssetManager::GetInstance().DefaultWhiteTex;
+							tex->mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage(), ParseTexUsageFromName(VarName));
 							tex->mTex.SetName(VarName);
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
-							tex->mTex.SetUsageType(ParseTexUsageFromName(VarName));
 						}
 						else if (VarName.find("NEIBL_") == 0)
 						{
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
+							ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
 							ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
-							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
 							pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
 						}
 						else if (mFirstReflection)
@@ -567,11 +564,10 @@ namespace Nuclear
 								VarName.erase(0, 6);
 
 								Assets::ShaderTexture ReflectedTex;
-								ReflectedTex.mTex = Assets::AssetManager::GetInstance().DefaultBlackTex;
+								ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
 								ReflectedTex.mTex.SetName(VarName);
 								ReflectedTex.mSlot = i;
 								ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
-								ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
 								mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
 							}
 						}

@@ -54,7 +54,7 @@ public:
 
 	
 		//Load Sponza Model
-		auto Model = GetAssetManager().Import("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
+		auto Model = GetAssetManager().ImportModel("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
 
 		SponzaPBRMaterial.Create(Model.pMaterialData, PBR);
 		SponzaBlinnPhongMaterial.Create(Model.pMaterialData, BlinnPhong);
@@ -98,8 +98,8 @@ public:
 	{
 		Assets::ShaderLoadingDesc desc;
 		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().Import("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
-		BlinnPhong = GetAssetManager().Import("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		PBR = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		BlinnPhong = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
 
 		Renderer->SetIBLContext(&IBL);
 		Renderer->RegisterShader(PBR);
@@ -115,7 +115,7 @@ public:
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 
-		HDREnv = GetAssetManager().Import("@CommonAssets@/Textures/HDR/newport_loft.hdr", (DESC, Graphics::TextureUsageType::Unknown));
+		HDREnv = GetAssetManager().ImportTexture("@CommonAssets@/Textures/HDR/newport_loft.hdr", (DESC, Graphics::TextureUsageType::Unknown));
 
 		Rendering::ImageBasedLightingDesc desc;
 		IBL.Initialize(desc);

@@ -3,7 +3,7 @@
 #include <Components/LightComponent.h>
 #include <Components/EntityInfoComponent.h>
 #include <Systems/RenderSystem.h>
-#include <Assets\AssetManager.h>
+#include <Fallbacks/FallbacksEngine.h>
 #include <Core/Scene.h>
 #include <Utilities/Logger.h>
 #include <Assets\DefaultMeshes.h>
@@ -192,7 +192,7 @@ namespace Nuclear
 						Graphics::Context::GetInstance().GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
 
 
-						InstantRender(Assets::DefaultMeshes::GetSphereAsset(), Assets::AssetManager::GetInstance().DefaultGreyTex.GetImage());
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(),Fallbacks::FallbacksEngine::GetInstance().GetDefaultGreyImage());
 
 
 						//TODO: Render Cube at direction
@@ -257,7 +257,7 @@ namespace Nuclear
 			}
 			if (diffusetex == nullptr)
 			{
-				NUCLEAR_ERROR("[DebugSystem] Skipped Rendering Mesh with invalid texture...");
+				NUCLEAR_ERROR("[DebugSystem] Skipped Rendering Mesh with invalid image...");
 				return;
 			}
 

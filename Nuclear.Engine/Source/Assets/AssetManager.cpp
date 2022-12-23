@@ -19,6 +19,8 @@
 #include <Parsers/ShaderParser.h>
 #include <Serialization/SerializationEngine.h>
 
+#include <Fallbacks/FallbacksEngine.h>
+
 namespace Nuclear
 {
 	namespace Assets
@@ -92,22 +94,7 @@ namespace Nuclear
 		void AssetManager::Initialize(AssetManagerDesc desc)
 		{
 			mDesc = desc;
-			DefaultBlackTex = Import("@NuclearAssets@/DefaultTextures/Black32x32.png",  TextureLoadingDesc());
-			DefaultGreyTex = Import("@NuclearAssets@/DefaultTextures/Grey32x32.png", TextureLoadingDesc());
-			DefaultWhiteTex = Import("@NuclearAssets@/DefaultTextures/White32x32.png",  TextureLoadingDesc());
-			DefaultNormalTex = Import("@NuclearAssets@/DefaultTextures/Normal32x32.png", TextureLoadingDesc());
-
-			DefaultDiffuseTex = DefaultGreyTex;
-			DefaultSpecularTex = DefaultWhiteTex;
-
-			DefaultGreyTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
-			DefaultDiffuseTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
-
-			DefaultWhiteTex.SetUsageType(Graphics::TextureUsageType::Diffuse);
-			DefaultSpecularTex.SetUsageType(Graphics::TextureUsageType::Specular);
-
-			DefaultNormalTex.SetUsageType(Graphics::TextureUsageType::Normal);
-
+			
 			FT_Handle = msdfgen::initializeFreetype();
 
 			if (FT_Handle == nullptr)
@@ -129,12 +116,12 @@ namespace Nuclear
 		{
 			if (meta.mType == AssetType::Image)
 			{
-
+				return ImportImage(Path);
 			}
 			return nullptr;
 		}
 
-		Assets::Image* AssetManager::Import(const Core::Path& Path, const ImageLoadingDesc& Desc)
+		Assets::Image* AssetManager::ImportImage(const Core::Path& Path, const ImageLoadingDesc& Desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -150,7 +137,7 @@ namespace Nuclear
 			if (imagedata.mData == nullptr)
 			{
 				NUCLEAR_ERROR("[AssetManager] Failed To Load Image: '{0}' Hash: '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
-				return DefaultBlackTex.GetImage();
+				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 
 			//Create
@@ -160,7 +147,7 @@ namespace Nuclear
 			return result;
 		}
 
-		Assets::Image* AssetManager::Import(const Assets::ImageData& imagedata, const ImageLoadingDesc& Desc)
+		Assets::Image* AssetManager::ImportImage(const Assets::ImageData& imagedata, const ImageLoadingDesc& Desc)
 		{
 			auto hashedpath = Utilities::Hash(imagedata.mPath);
 
@@ -176,7 +163,7 @@ namespace Nuclear
 			if (image.mTextureView == nullptr)
 			{
 				NUCLEAR_ERROR("[AssetManager] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
-				return DefaultBlackTex.GetImage();
+				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 			image.mData.mData = NULL;
 
@@ -187,9 +174,9 @@ namespace Nuclear
 			return result;
 		}
 
-		Graphics::Texture AssetManager::Import(const Core::Path & Path, const TextureLoadingDesc& Desc)
+		Graphics::Texture AssetManager::ImportTexture(const Core::Path & Path, const TextureLoadingDesc& Desc)
 		{
-			auto image = Import(Path, Desc.mImageDesc);
+			auto image = ImportImage(Path, Desc.mImageDesc);
 
 			Graphics::Texture result;
 			result.SetImage(image);
@@ -198,9 +185,9 @@ namespace Nuclear
 			return result;
 		}
 
-		Graphics::Texture AssetManager::Import(const Assets::ImageData& imagedata, const TextureLoadingDesc& Desc)
+		Graphics::Texture AssetManager::ImportTexture(const Assets::ImageData& imagedata, const TextureLoadingDesc& Desc)
 		{
-			auto image = Import(imagedata, Desc.mImageDesc);
+			auto image = ImportImage(imagedata, Desc.mImageDesc);
 
 			Graphics::Texture result;
 			result.SetImage(image);
@@ -209,7 +196,7 @@ namespace Nuclear
 			return result;
 		}
 
-		Assets::AudioClip* AssetManager::Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode)
+		Assets::AudioClip* AssetManager::ImportAudioClip(const Core::Path& Path, AUDIO_IMPORT_MODE mode)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -223,7 +210,7 @@ namespace Nuclear
 		}
 
 
-		ImportedModel AssetManager::Import(const Core::Path& Path, const ModelLoadingDesc& desc)
+		ImportedModel AssetManager::ImportModel(const Core::Path& Path, const ModelLoadingDesc& desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 			ImportedModel result;
@@ -284,7 +271,7 @@ namespace Nuclear
 			desc.AtlasHeight = bitmap.height;
 			desc.Data = bitmap.pixels;
 		}
-		Assets::Font* AssetManager::Import(const Core::Path& Path, const FontLoadingDesc& desc)
+		Assets::Font* AssetManager::ImportFont(const Core::Path& Path, const FontLoadingDesc& desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -384,7 +371,7 @@ namespace Nuclear
 			return nullptr;
 		}
 
-		Assets::Shader* AssetManager::Import(const Core::Path& Path, const ShaderLoadingDesc& desc)
+		Assets::Shader* AssetManager::ImportShader(const Core::Path& Path, const ShaderLoadingDesc& desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -412,7 +399,7 @@ namespace Nuclear
 			return result;
 		}
 
-		Assets::Script* AssetManager::Import(const Core::Path& Path, const ScriptLoadingDesc& desc)
+		Assets::Script* AssetManager::ImportScript(const Core::Path& Path, const ScriptLoadingDesc& desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -460,7 +447,7 @@ namespace Nuclear
 			return Assets::AssetType::Unknown;
 		}
 
-		Assets::SavedScene* AssetManager::Import(const Core::Path& Path, const SceneLoadingDesc& desc)
+		Assets::SavedScene* AssetManager::ImportScene(const Core::Path& Path, const SceneLoadingDesc& desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 

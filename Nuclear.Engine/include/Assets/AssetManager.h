@@ -79,7 +79,7 @@ namespace Nuclear
 			{
 				static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
 
-				return dynamic_cast<T*>(Import(path));
+				return static_cast<T*>(Import(Path));
 			}
 
 			IAsset* Import(const Core::Path& Path);
@@ -88,43 +88,36 @@ namespace Nuclear
 
 			bool Export(IAsset* asset, const Core::Path& Path);
 
+			////////////////////////////////////////////////////////////////////////////////////////////////
+			//TODO: Import methods should be renamed or removed to another class.
+			////////////////////////////////////////////////////////////////////////////////////////////////
+			Image* ImportImage(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc());
+			Image* ImportImage(const ImageData& Imagedata, const ImageLoadingDesc& Desc = ImageLoadingDesc());
 
-			//TODO: Import methods should be renamed and removed to another class.
-			//Textures
-			Image* Import(const Core::Path& Path, const ImageLoadingDesc& Desc);
-			Image* Import(const ImageData& Imagedata, const ImageLoadingDesc& Desc);
+			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureLoadingDesc& Desc = TextureLoadingDesc());
+			Graphics::Texture ImportTexture(const ImageData& Imagedata, const TextureLoadingDesc& Desc = TextureLoadingDesc());
 
-			Graphics::Texture Import(const Core::Path& Path, const TextureLoadingDesc& Desc);
-			Graphics::Texture Import(const ImageData& Imagedata, const TextureLoadingDesc& Desc);
+
+
+			AudioClip* ImportAudioClip(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
+
+			ImportedModel ImportModel(const Core::Path& Path, const ModelLoadingDesc& desc);
+
+			Font* ImportFont(const Core::Path& Path, const FontLoadingDesc& desc);
+
+			Shader* ImportShader(const Core::Path& Path, const ShaderLoadingDesc& desc);
+
+			Script* ImportScript(const Core::Path& Path, const ScriptLoadingDesc& desc);
+
+			SavedScene* ImportScene(const Core::Path& Path, const SceneLoadingDesc& desc);				
+			////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
 			std::array<Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const ImageLoadingDesc& Desc);
 			Image* DoesImageExist(Uint32 hashedname);
 
-			//Audio
-			AudioClip* Import(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
-
-			//Model = (Mesh & Material & Animation)
-			ImportedModel Import(const Core::Path& Path, const ModelLoadingDesc& desc);
-
-			Font* Import(const Core::Path& Path, const FontLoadingDesc& desc);
-
-			//Shader
-			Shader* Import(const Core::Path& Path, const ShaderLoadingDesc& desc);
-
-			Script* Import(const Core::Path& Path, const ScriptLoadingDesc& desc);
-
-			Graphics::Texture DefaultBlackTex;
-			Graphics::Texture DefaultGreyTex;
-			Graphics::Texture DefaultWhiteTex;
-
-			Graphics::Texture DefaultDiffuseTex;
-			Graphics::Texture DefaultSpecularTex;
-			Graphics::Texture DefaultNormalTex;
-
 			AssetType GetAssetType(const std::string& filename);
-
-			SavedScene* Import(const Core::Path& Path, const SceneLoadingDesc& desc);
 
 			AssetMetadata CreateMetadata(IAsset* asset);
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);

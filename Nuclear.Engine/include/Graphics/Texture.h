@@ -11,23 +11,22 @@ namespace Nuclear
 		{
 		public:
 			Texture();
+			Texture(Assets::Image* image, TextureUsageType type);
 			~Texture();
 
 			Uint8 GetUsageType() const;
 			void SetUsageType(Uint8 type);
 			void SetUsageType(TextureUsageType type);
 
-			inline Assets::Image* GetImage() { return mTextureImage; }
-			inline void SetImage(Assets::Image* image) { mTextureImage = image; }
+			void Set(Assets::Image* image, TextureUsageType type);
 
-			inline Uint32 GetName() { return 	mHashedName; }
-			inline void SetName(Uint32 name) { mHashedName = name; }
-			inline std::string GetStringName() { return mName; }
+			Assets::Image* GetImage();
+			void SetImage(Assets::Image* image);
 
-			inline void SetName(const std::string& str) {
-				mHashedName = Utilities::Hash(str);
-				mName = str;
-			}
+			Uint32 GetName();
+			std::string GetStringName();
+
+			void SetName(const std::string& str);
 
 		protected:
 			Uint32 mHashedName = 0;

@@ -258,14 +258,14 @@ namespace Nuclear {
 								desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 							*/
 
-							texture = Assets::AssetManager::GetInstance().Import(data, desc);
+							texture = Assets::AssetManager::GetInstance().ImportTexture(data, desc);
 						}
 						else
 						{
 							desc.mImageDesc.mLoadFromMemory = true;
 							desc.mImageDesc.mMemData = (Byte*)embeddedtex->pcData;
 							desc.mImageDesc.mMemSize = embeddedtex->mWidth;
-							texture = Assets::AssetManager::GetInstance().Import(embeddedtex->mFilename.C_Str(), desc);
+							texture = Assets::AssetManager::GetInstance().ImportTexture(embeddedtex->mFilename.C_Str(), desc);
 						}
 
 					}
@@ -284,7 +284,7 @@ namespace Nuclear {
 						}*/
 
 
-						texture = Assets::AssetManager::GetInstance().Import(filename, (desc, GetTextureType(type)));
+						texture = Assets::AssetManager::GetInstance().ImportTexture(filename, (desc, GetTextureType(type)));
 					}
 
 					textures.mData.push_back({ 0, texture });
