@@ -20,12 +20,12 @@ namespace Nuclear
 		class Script;
 		struct AssetLibrary;
 
-		class NEAPI AssetImporter
+		class NEAPI Importer
 		{
 		public:
-			static AssetImporter& GetInstance();
-			AssetImporter(const AssetImporter&) = delete;
-			AssetImporter& operator= (const AssetImporter) = delete;
+			static Importer& GetInstance();
+			Importer(const Importer&) = delete;
+			Importer& operator= (const Importer) = delete;
 
 			Image* ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
 			Image* ImportImage(const ImageData& Imagedata, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
@@ -56,7 +56,7 @@ namespace Nuclear
 			Importers::AssimpImporter mAssimpImporter;
 			msdfgen::FreetypeHandle* FT_Handle;
 
-			AssetImporter();
+			Importer();
 		};
 	}
 }

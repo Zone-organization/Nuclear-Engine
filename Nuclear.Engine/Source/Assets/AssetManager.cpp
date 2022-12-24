@@ -5,8 +5,6 @@
 
 #include <Serialization/SerializationEngine.h>
 
-#include <Assets/AssetImporter.h>
-
 namespace Nuclear
 {
 	namespace Assets
@@ -84,32 +82,32 @@ namespace Nuclear
 			AssetType Type = type;
 			if (Type == AssetType::Unknown)
 			{
-				Type = AssetImporter::GetInstance().GetAssetType(Path.GetRealPath());
+				Type = Importer::GetInstance().GetAssetType(Path.GetRealPath());
 			}
 
 			
 			if (Type == AssetType::Image)
 			{
-				return AssetImporter::GetInstance().ImportImage(Path, &mLibrary);
+				return Importer::GetInstance().ImportImage(Path, &mLibrary);
 			}
 			return nullptr;
 		}
 
 		Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc)
 		{
-			return AssetImporter::GetInstance().ImportTexture(Path, &mLibrary, Desc);
+			return Importer::GetInstance().ImportTexture(Path, &mLibrary, Desc);
 		}
 
 		Graphics::Texture AssetManager::ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc)
 		{
-			return AssetImporter::GetInstance().ImportTexture(Imagedata, &mLibrary, Desc);
+			return Importer::GetInstance().ImportTexture(Imagedata, &mLibrary, Desc);
 		}
 
 		//IAsset* AssetManager::Load(const Core::Path& Path, const AssetMetadata& meta)
 		//{
 		//	if (meta.mType == AssetType::Image)
 		//	{
-		//		return AssetImporter::GetInstance().ImportImage(Path, &mLibrary);
+		//		return Importer::GetInstance().ImportImage(Path, &mLibrary);
 		//	}
 		//	return nullptr;
 		//}

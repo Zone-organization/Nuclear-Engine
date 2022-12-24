@@ -42,7 +42,7 @@ namespace Nuclear
 
 		protected:
 			friend class AssetManager;
-			friend class AssetImporter;
+			friend class Importer;
 
 			//TODO: Maybe change since asset types should be compile time constant
 			AssetType mType;

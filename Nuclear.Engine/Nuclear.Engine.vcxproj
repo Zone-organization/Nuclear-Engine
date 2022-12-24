@@ -387,7 +387,7 @@
     <ClInclude Include="include\Graphics\RenderTarget.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Graphics\Texture.h" />
-    <ClInclude Include="include\Assets\AssetImporter.h" />
+    <ClInclude Include="include\Assets\Importer.h" />
     <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
     <ClInclude Include="include\Assets\AssetLibrary.h" />
@@ -453,7 +453,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Assets\IAsset.cpp" />
-    <ClCompile Include="Source\Assets\AssetImporter.cpp" />
+    <ClCompile Include="Source\Assets\Importer.cpp" />
     <ClCompile Include="Source\Assets\Model.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />

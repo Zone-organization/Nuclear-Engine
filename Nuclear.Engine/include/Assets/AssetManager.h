@@ -2,7 +2,7 @@
 #include <Assets/ImportingDescs.h>
 #include <Assets\AssetLibrary.h>
 #include <Assets\AssetMetadata.h>
-#include <Assets\AssetImporter.h>
+#include <Assets\Importer.h>
 #include <Threading\ThreadPool.h>
 #include <Serialization/BinaryBuffer.h>
 #include <FMOD/inc/fmod.hpp>
@@ -11,9 +11,9 @@
 #define MAX_BONE_INFLUENCE 4
 #define IMPORTING_METHOD_SPECIALIZATION(ASSETTYPE)   \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path) { \
-	return AssetImporter::GetInstance().Import##ASSETTYPE(Path, &mLibrary); } \
+	return Importer::GetInstance().Import##ASSETTYPE(Path, &mLibrary); } \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path, const ASSETTYPE##ImportingDesc & desc) { \
-return AssetImporter::GetInstance().Import##ASSETTYPE(Path, &mLibrary, desc); } \
+return Importer::GetInstance().Import##ASSETTYPE(Path, &mLibrary, desc); } \
 
 namespace Nuclear 
 {
@@ -101,12 +101,12 @@ namespace Nuclear
 
 				//template <> Assets::Script* Import<Assets::Script>(const Core::Path& Path)
 				//{
-				//	return AssetImporter::GetInstance().ImportScript(Path, &mLibrary);
+				//	return Importer::GetInstance().ImportScript(Path, &mLibrary);
 				//}
 
 				//template <> Assets::Model* Import<Assets::Model>(const Core::Path& Path)
 				//{
-				//	return AssetImporter::GetInstance().ImportModel(Path, &mLibrary);
+				//	return Importer::GetInstance().ImportModel(Path, &mLibrary);
 				//}
 		};
 	}

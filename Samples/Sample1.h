@@ -200,7 +200,7 @@ public:
 
 		Assets::ImageImportingDesc SkyboxDesc;
 		//SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		auto test =Assets::AssetImporter::GetInstance().ImportTextureCube(SkyBoxTexturePaths,&GetAssetManager().GetDefaultLibrary(), SkyboxDesc);
+		auto test =Assets::Importer::GetInstance().ImportTextureCube(SkyBoxTexturePaths,&GetAssetManager().GetDefaultLibrary(), SkyboxDesc);
 		Skybox.Initialize(test);
 	}
 	void SetupEntities()
