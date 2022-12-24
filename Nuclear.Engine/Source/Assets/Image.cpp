@@ -12,7 +12,7 @@ namespace Nuclear
 		{
 		}
 
-		Image::Image(const Assets::ImageData& src_data, const ImageLoadingDesc& Desc)
+		Image::Image(const Assets::ImageData& src_data, const ImageImportingDesc& Desc)
 			: IAsset(AssetType::Image)
 		{
 			mData = src_data;
@@ -56,7 +56,7 @@ namespace Nuclear
 			}
 		}
 
-		bool Image::CreateTextureFromRawImage(const Assets::ImageData& src_data, const ImageLoadingDesc& Desc)
+		bool Image::CreateTextureFromRawImage(const Assets::ImageData& src_data, const ImageImportingDesc& Desc)
 		{
 			TextureDesc TexDesc;
 			TexDesc.Type = Desc.mType;

@@ -141,25 +141,25 @@ public:
 	}
 	void SetupAssets()
 	{
-		Assets::ModelLoadingDesc ModelDesc;
+		Assets::ModelImportingDesc ModelDesc;
 
 		//Load Nanosuit Model
-		auto nanosuitmodel = GetAssetManager().ImportModel("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		auto nanosuitmodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
 		
 		//Load Cyborg Model
-		auto cyborgmodel = GetAssetManager().ImportModel("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		auto cyborgmodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
 		
 		//Load Bob Model
-		auto bobmodel = GetAssetManager().ImportModel("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
+		auto bobmodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
 
 		//Load vampire Model
-		auto vampiremodel = GetAssetManager().ImportModel("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
+		auto vampiremodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
 
-		BobAnimator.Initialize(&bobmodel.pAnimations->mClips.at(0));
-		VampireAnimator.Initialize(&vampiremodel.pAnimations->mClips.at(0));
+		BobAnimator.Initialize(&bobmodel->pAnimations->mClips.at(0));
+		VampireAnimator.Initialize(&vampiremodel->pAnimations->mClips.at(0));
 
 		//Load some textures manually
-		Assets::ImageLoadingDesc desc;
+		Assets::ImageImportingDesc desc;
 	//	desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
@@ -171,18 +171,18 @@ public:
 		CubeTextures.mTextures.push_back(CubeSet);
 
 		CubeMaterial.Create(&CubeTextures, BlinnPhong);
-		NanosuitMaterial.Create(nanosuitmodel.pMaterialData, BlinnPhong);
-		CyborgMaterial.Create(cyborgmodel.pMaterialData, BlinnPhong);
-		BobMaterial.Create(bobmodel.pMaterialData, DiffuseOnly);
-		VampireMaterial.Create(vampiremodel.pMaterialData, BlinnPhong);
+		NanosuitMaterial.Create(nanosuitmodel->pMaterialData, BlinnPhong);
+		CyborgMaterial.Create(cyborgmodel->pMaterialData, BlinnPhong);
+		BobMaterial.Create(bobmodel->pMaterialData, DiffuseOnly);
+		VampireMaterial.Create(vampiremodel->pMaterialData, BlinnPhong);
 
 		CubeSet.mData.clear();
 
 		ECube.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(),&CubeMaterial);
-		ENanosuit.AddComponent<Components::MeshComponent>(nanosuitmodel.pMesh, &NanosuitMaterial);
-		ECyborg.AddComponent<Components::MeshComponent>(cyborgmodel.pMesh, &CyborgMaterial);
+		ENanosuit.AddComponent<Components::MeshComponent>(nanosuitmodel->pMesh, &NanosuitMaterial);
+		ECyborg.AddComponent<Components::MeshComponent>(cyborgmodel->pMesh, &CyborgMaterial);
 
-		EBob.AddComponent<Components::MeshComponent>(bobmodel.pMesh,&BobMaterial, &BobAnimator);
+		EBob.AddComponent<Components::MeshComponent>(bobmodel->pMesh,&BobMaterial, &BobAnimator);
 
 		//EVampire.AddComponent<Components::MeshComponent>(VampireAsset, &VampireMaterial);
 		//EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);
@@ -198,9 +198,9 @@ public:
 			Core::Path("@CommonAssets@/Skybox/back.jpg")
 		};
 
-		Assets::ImageLoadingDesc SkyboxDesc;
+		Assets::ImageImportingDesc SkyboxDesc;
 		//SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		auto test = GetAssetManager().LoadTextureCubeFromFile(SkyBoxTexturePaths, SkyboxDesc);
+		auto test =Assets::AssetImporter::GetInstance().ImportTextureCube(SkyBoxTexturePaths,&GetAssetManager().GetDefaultLibrary(), SkyboxDesc);
 		Skybox.Initialize(test);
 	}
 	void SetupEntities()
@@ -245,10 +245,10 @@ public:
 	//	mDebugSystem = GetScene().GetSystemManager().Add<Systems::DebugSystem>();
 		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
 
-		Assets::ShaderLoadingDesc desc;
+		Assets::ShaderImportingDesc desc;
 		desc.mType = Assets::ShaderType::_3DRendering;
-		BlinnPhong = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
-		DiffuseOnly = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/DiffuseOnly.NEShader", desc);
+		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		DiffuseOnly = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NEShader", desc);
 
 		Renderer->RegisterShader(BlinnPhong);
 		Renderer->RegisterShader(DiffuseOnly);
@@ -385,7 +385,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer();
-			AssetLibraryViewer(GetAssetManager().mLibrary);
+			AssetLibraryViewer(GetAssetManager().GetDefaultLibrary());
 
 			//mDebugSystem->ShowRendertargets();
 		}

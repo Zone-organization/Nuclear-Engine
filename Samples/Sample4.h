@@ -76,9 +76,9 @@ public:
 		Renderer->AddRenderPass(&GeoPass);
 		//Renderer->AddRenderPass(&PostFXPass);
 
-		Assets::ShaderLoadingDesc desc;
+		Assets::ShaderImportingDesc desc;
 		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 
 		Renderer->RegisterShader(PBR);
 

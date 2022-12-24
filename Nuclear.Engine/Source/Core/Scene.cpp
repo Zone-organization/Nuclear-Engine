@@ -151,7 +151,7 @@ namespace Nuclear
 		using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 		using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 
-		bool Scene::SaveScene(Assets::SavedScene* scene)
+		bool Scene::SaveScene(Assets::Scene* scene)
 		{
 			scene->mBinaryBuffer.clear();
 
@@ -160,12 +160,12 @@ namespace Nuclear
 			Serialization::SceneOutputArchive<bitsery::Serializer<OutputAdapter>> output(&ser);
 			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent>(output);
 
-			ser.object(Assets::AssetManager::GetInstance().mLibrary);
+			//ser.object(Assets::AssetManager::GetInstance().mLibrary);
 
 
 			return true;
 		}
-		bool Scene::LoadScene(Assets::SavedScene* scene)
+		bool Scene::LoadScene(Assets::Scene* scene)
 		{
 			mRegistry.clear();
 

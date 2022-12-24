@@ -2,7 +2,7 @@
 #include <Assets/IAsset.h>
 #include <Graphics/ShaderReflection.h>
 #include <Graphics\ShaderPipeline.h>
-#include <Assets/AssetLoadingDesc.h>
+#include <Assets/ImportingDescs.h>
 
 namespace Nuclear
 {

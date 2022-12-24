@@ -108,10 +108,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Assets\AssetMetadata.h" />
-    <ClInclude Include="include\Assets\AssetLoadingDesc.h" />
+    <ClInclude Include="include\Assets\ImportingDescs.h" />
     <ClInclude Include="include\Assets\AssetType.h" />
+    <ClInclude Include="include\Assets\Model.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
+    <ClInclude Include="include\Fallbacks\Fallbacks.h" />
     <ClInclude Include="include\Fallbacks\FallbacksEngine.h" />
     <ClInclude Include="include\Graphics\TextureUsageType.h" />
     <ClInclude Include="include\Parsers\INIParser.h" />
@@ -385,7 +387,7 @@
     <ClInclude Include="include\Graphics\RenderTarget.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Graphics\Texture.h" />
-    <ClInclude Include="include\Importers\Importers.h" />
+    <ClInclude Include="include\Assets\AssetImporter.h" />
     <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
     <ClInclude Include="include\Assets\AssetLibrary.h" />
@@ -411,7 +413,7 @@
     <ClInclude Include="include\Utilities\UUID.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
-    <ClInclude Include="Source\Importers\AssimpGLMHelpers.h" />
+    <ClInclude Include="Source\Assets\Importers\AssimpGLMHelpers.h" />
     <ClInclude Include="Source\PhysX\PhysXTypes.h" />
     <ClInclude Include="include\PhysX\RigidDynamic.h" />
     <ClInclude Include="include\PhysX\RigidStatic.h" />
@@ -426,15 +428,15 @@
     <ClInclude Include="include\Components\EntityInfoComponent.h" />
     <ClInclude Include="include\Rendering\Skybox.h" />
     <ClInclude Include="include\ECS\Common.h" />
-    <ClInclude Include="include\Assets\SavedScene.h" />
+    <ClInclude Include="include\Assets\Scene.h" />
     <ClInclude Include="include\NuclearEngine.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\Assets\AssetManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="Source\Audio\FMODError.h" />
     <ClInclude Include="Source\Graphics\InitializeDiligentEngineWin32.h" />
-    <ClInclude Include="include\Importers\Internal\AssimpImporter.h" />
-    <ClInclude Include="include\Importers\Internal\FreeImageImporter.h" />
+    <ClInclude Include="include\Assets\Importers\AssimpImporter.h" />
+    <ClInclude Include="include\Assets\Importers\FreeImageImporter.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_truetype.h" />
@@ -451,6 +453,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Assets\IAsset.cpp" />
+    <ClCompile Include="Source\Assets\AssetImporter.cpp" />
+    <ClCompile Include="Source\Assets\Model.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />
@@ -508,7 +512,7 @@
     <ClCompile Include="Source\Graphics\ImGUI\imgui_draw.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui_impl.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Importers\AssimpImporter.cpp">
+    <ClCompile Include="Source\Assets\Importers\AssimpImporter.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Source\Rendering\RenderPasses\ShadowPass.cpp" />
@@ -516,7 +520,7 @@
     <ClCompile Include="Source\Scripting\ScriptingEngine.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingObject.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingRegistry.cpp" />
-    <ClCompile Include="Source\Importers\FreeImageImporter.cpp" />
+    <ClCompile Include="Source\Assets\Importers\FreeImageImporter.cpp" />
     <ClCompile Include="Source\PhysX\PhysXShape.cpp" />
     <ClCompile Include="Source\PhysX\RaycastHit.cpp" />
     <ClCompile Include="Source\PhysX\RigidStatic.cpp" />
@@ -541,7 +545,6 @@
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Components\CameraComponent.cpp" />
     <ClCompile Include="Source\Rendering\Skybox.cpp" />
-    <ClCompile Include="Source\Assets\SavedScene.cpp" />
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\Utilities\Timer.cpp" />

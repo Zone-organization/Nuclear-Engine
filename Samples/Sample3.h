@@ -28,7 +28,7 @@ public:
 	}
 	void SetupAssets()
 	{
-		script = GetAssetManager().ImportScript("@CurrentPath@/../Textures/SamplesScripts/Sample3.cs", Assets::ScriptLoadingDesc());
+		script = GetAssetManager().Import<Assets::Script>("@CurrentPath@/../Textures/SamplesScripts/Sample3.cs");
 
 		//Initialize Materials
 		Assets::TextureSet PBRRustedIron;
@@ -81,9 +81,9 @@ public:
 		Renderer->AddRenderPass(&GeoPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
-		Assets::ShaderLoadingDesc desc;
+		Assets::ShaderImportingDesc desc;
 		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 
 		Renderer->RegisterShader(PBR);
 
@@ -145,13 +145,13 @@ public:
 		//Renderer->VisualizePointLightsPositions = true;
 
 
-		Assets::SavedScene scene;
+		Assets::Scene scene;
 
 		GetScene().SaveScene(&scene);
 
 		GetAssetManager().Export(&scene, "@CommonAssets@/Scenes/Sample3.bin");
 
-		auto resultscene = GetAssetManager().ImportScene("@CommonAssets@/Scenes/Sample3.bin", Assets::SceneLoadingDesc());
+		auto resultscene = GetAssetManager().Import<Assets::Scene>("@CommonAssets@/Scenes/Sample3.bin", Assets::SceneImportingDesc());
 
 		//GetScene().LoadScene(&scene);
 

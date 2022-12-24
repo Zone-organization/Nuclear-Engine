@@ -1,6 +1,5 @@
 #pragma once
 #include <NE_Common.h>
-#include <Assets/SavedScene.h>
 #include <Assets/AssetLibrary.h>
 #include <Assets/AssetMetadata.h>
 

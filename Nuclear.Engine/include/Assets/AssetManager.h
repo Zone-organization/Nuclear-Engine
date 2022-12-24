@@ -1,55 +1,24 @@
 #pragma once
-#include <Assets/AssetLoadingDesc.h>
+#include <Assets/ImportingDescs.h>
 #include <Assets\AssetLibrary.h>
 #include <Assets\AssetMetadata.h>
+#include <Assets\AssetImporter.h>
 #include <Threading\ThreadPool.h>
-#include <Importers\Internal\AssimpImporter.h>
 #include <Serialization/BinaryBuffer.h>
-
 #include <FMOD/inc/fmod.hpp>
 #include <array>
 
 #define MAX_BONE_INFLUENCE 4
+#define IMPORTING_METHOD_SPECIALIZATION(ASSETTYPE)   \
+template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path) { \
+	return AssetImporter::GetInstance().Import##ASSETTYPE(Path, &mLibrary); } \
+template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path, const ASSETTYPE##ImportingDesc & desc) { \
+return AssetImporter::GetInstance().Import##ASSETTYPE(Path, &mLibrary, desc); } \
 
-typedef struct FT_LibraryRec_* FT_Library;
-namespace msdfgen { class FreetypeHandle; }
 namespace Nuclear 
 {
 	namespace Assets
 	{
-		enum AUDIO_IMPORT_MODE
-		{
-			AUDIO_IMPORT_MODE_DEFAULT = 0x00000000,
-			AUDIO_IMPORT_MODE_LOOP_OFF = 0x00000001,
-			AUDIO_IMPORT_MODE_LOOP_NORMAL = 0x00000002,
-			AUDIO_IMPORT_MODE_LOOP_BIDI = 0x00000004,
-			AUDIO_IMPORT_MODE_2D = 0x00000008,
-			AUDIO_IMPORT_MODE_3D = 0x00000010,
-			AUDIO_IMPORT_MODE_CREATESTREAM = 0x00000080,
-			AUDIO_IMPORT_MODE_CREATESAMPLE = 0x00000100,
-			AUDIO_IMPORT_MODE_CREATECOMPRESSEDSAMPLE = 0x00000200,
-			AUDIO_IMPORT_MODE_OPENUSER = 0x00000400,
-			AUDIO_IMPORT_MODE_OPENMEMORY = 0x00000800,
-			AUDIO_IMPORT_MODE_OPENMEMORY_POINT = 0x10000000,
-			AUDIO_IMPORT_MODE_OPENRAW = 0x00001000,
-			AUDIO_IMPORT_MODE_OPENONLY = 0x00002000,
-			AUDIO_IMPORT_MODE_ACCURATETIME = 0x00004000,
-			AUDIO_IMPORT_MODE_MPEGSEARCH = 0x00008000,
-			AUDIO_IMPORT_MODE_NONBLOCKING = 0x00010000,
-			AUDIO_IMPORT_MODE_UNIQUE = 0x00020000,
-			AUDIO_IMPORT_MODE_3D_HEADRELATIVE = 0x00040000,
-			AUDIO_IMPORT_MODE_3D_WORLDRELATIVE = 0x00080000,
-			AUDIO_IMPORT_MODE_3D_INVERSEROLLOFF = 0x00100000,
-			AUDIO_IMPORT_MODE_3D_LINEARROLLOFF = 0x00200000,
-			AUDIO_IMPORT_MODE_3D_LINEARSQUAREROLLOFF = 0x00400000,
-			AUDIO_IMPORT_MODE_3D_INVERSETAPEREDROLLOFF = 0x00800000,
-			AUDIO_IMPORT_MODE_3D_CUSTOMROLLOFF = 0x04000000,
-			AUDIO_IMPORT_MODE_3D_IGNOREGEOMETRY = 0x40000000,
-			AUDIO_IMPORT_MODE_IGNORETAGS = 0x02000000,
-			AUDIO_IMPORT_MODE_LOWMEM = 0x08000000,
-			AUDIO_IMPORT_MODE_VIRTUAL_PLAYFROMSTART = 0x80000000
-		};
-
 		struct AssetManagerDesc
 		{
 			bool mSaveTexturePaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real texture name or not
@@ -57,6 +26,9 @@ namespace Nuclear
 			bool mSaveMaterialsPaths = DEBUG_TRUE_BOOL; //tells the asset manager whether to store the real material name or not
 		};
 
+		//Importing vs Loading
+		//Importing: using asset for the first time ( no metadata)
+		//Loading: loading a previously imported "exported" asset with metadata
 		class NEAPI AssetManager {
 		public:
 			AssetManager(AssetManager const&) = delete;
@@ -64,17 +36,26 @@ namespace Nuclear
 
 			static AssetManager& GetInstance();
 
-			AssetLibrary mLibrary;
-
-			bool mMultithreadMeshTextureLoading = true;
-
 			//Note: Automatically called on Destruction
 			void FlushContainers();
 			void Initialize(AssetManagerDesc desc = AssetManagerDesc());
 
 			//Generic
 
-			template<class T> 
+			//template<class T> 
+			//T* Load(const Core::Path& Path)
+			//{
+			//	static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
+
+			//	return static_cast<T*>(Load(Path));
+			//}
+
+			//IAsset* Load(const Core::Path& Path);
+
+			//IAsset* Load(const Core::Path& Path, const AssetMetadata& meta);
+
+
+			template<class T>
 			T* Import(const Core::Path& Path)
 			{
 				static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
@@ -82,57 +63,51 @@ namespace Nuclear
 				return static_cast<T*>(Import(Path));
 			}
 
-			IAsset* Import(const Core::Path& Path);
+			template<class T, class D>
+			T* Import(const Core::Path& Path, const D& desc)
+			{
+				static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
 
-			IAsset* Import(const Core::Path& Path, const AssetMetadata& meta);
+				return static_cast<T*>(Import(Path));
+			}
 
-			bool Export(IAsset* asset, const Core::Path& Path);
+			IAsset* Import(const Core::Path& Path, AssetType type = AssetType::Unknown);
 
-			////////////////////////////////////////////////////////////////////////////////////////////////
-			//TODO: Import methods should be renamed or removed to another class.
-			////////////////////////////////////////////////////////////////////////////////////////////////
-			Image* ImportImage(const Core::Path& Path, const ImageLoadingDesc& Desc = ImageLoadingDesc());
-			Image* ImportImage(const ImageData& Imagedata, const ImageLoadingDesc& Desc = ImageLoadingDesc());
-
-			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureLoadingDesc& Desc = TextureLoadingDesc());
-			Graphics::Texture ImportTexture(const ImageData& Imagedata, const TextureLoadingDesc& Desc = TextureLoadingDesc());
-
-
-
-			AudioClip* ImportAudioClip(const Core::Path& Path, AUDIO_IMPORT_MODE mode = AUDIO_IMPORT_MODE_LOOP_OFF);
-
-			ImportedModel ImportModel(const Core::Path& Path, const ModelLoadingDesc& desc);
-
-			Font* ImportFont(const Core::Path& Path, const FontLoadingDesc& desc);
-
-			Shader* ImportShader(const Core::Path& Path, const ShaderLoadingDesc& desc);
-
-			Script* ImportScript(const Core::Path& Path, const ScriptLoadingDesc& desc);
-
-			SavedScene* ImportScene(const Core::Path& Path, const SceneLoadingDesc& desc);				
-			////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<Image*, 6> LoadTextureCubeFromFile(const std::array<Core::Path, 6 >& Paths, const ImageLoadingDesc& Desc);
-			Image* DoesImageExist(Uint32 hashedname);
-
-			AssetType GetAssetType(const std::string& filename);
+			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
+			Graphics::Texture ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 
 			AssetMetadata CreateMetadata(IAsset* asset);
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);
+			bool Export(IAsset* asset, const Core::Path& Path);
+
+			AssetLibrary& GetDefaultLibrary();
 		protected:
 			AssetManagerDesc mDesc;
-			Image* TextureCube_Load(const Core::Path& Path, const ImageLoadingDesc& Desc);
-			msdfgen::FreetypeHandle* FT_Handle;
 
-			AssetLibrary mSavedToImport;
-			Importers::Internal::AssimpImporter mAssimpImporter;
-
-			void FinishImportingAsset(IAsset* asset,const Core::Path& path, Uint32 Hashedpath, bool log = true);
-
+			AssetLibrary mLibrary;
 		private:
 			AssetManager();
+
+		public:
+			//Importing methods specializations
+
+			IMPORTING_METHOD_SPECIALIZATION(Image)
+			IMPORTING_METHOD_SPECIALIZATION(Script)
+			IMPORTING_METHOD_SPECIALIZATION(Model)
+			IMPORTING_METHOD_SPECIALIZATION(Shader)
+			IMPORTING_METHOD_SPECIALIZATION(Font)
+			IMPORTING_METHOD_SPECIALIZATION(AudioClip)
+			IMPORTING_METHOD_SPECIALIZATION(Scene)
+
+				//template <> Assets::Script* Import<Assets::Script>(const Core::Path& Path)
+				//{
+				//	return AssetImporter::GetInstance().ImportScript(Path, &mLibrary);
+				//}
+
+				//template <> Assets::Model* Import<Assets::Model>(const Core::Path& Path)
+				//{
+				//	return AssetImporter::GetInstance().ImportModel(Path, &mLibrary);
+				//}
 		};
 	}
 }

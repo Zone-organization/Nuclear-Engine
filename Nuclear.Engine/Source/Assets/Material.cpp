@@ -4,6 +4,7 @@
 #include <Graphics\Context.h>
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Utilities/Logger.h>
+#include <Assets\Image.h>
 
 namespace Nuclear
 {

@@ -9,6 +9,6 @@
 #include <Assets/Animations.h>
 #include <Assets/AudioClip.h>
 #include <Assets/Script.h>
-#include <Assets/SavedScene.h>
+#include <Assets/Scene.h>
 #include <Assets/Shader.h>
 #include <Assets/Font.h>

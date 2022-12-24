@@ -3,6 +3,7 @@
 #include <Components/MeshComponent.h>
 #include "Animation/Animator.h"
 #include <Assets\Shader.h>
+#include <Assets\Image.h>
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Rendering/RenderingEngine.h>
 #include <Rendering\FrameRenderData.h>

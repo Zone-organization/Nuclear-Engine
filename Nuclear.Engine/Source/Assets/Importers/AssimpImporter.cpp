@@ -1,4 +1,4 @@
-#include <Importers\Internal\AssimpImporter.h>
+#include <Assets\Importers\AssimpImporter.h>
 #include <Assets\AssetManager.h>
 #include "Graphics\GraphicsEngine.h"
 #include <Assets\Material.h>
@@ -9,8 +9,8 @@
 #include <Assimp\include\assimp\postprocess.h>
 
 namespace Nuclear {
-	namespace Importers {
-		namespace Internal {
+	namespace Assets {
+		namespace Importers {
 
 			inline void SetVertexBoneData(Assets::Mesh::Vertex& vertex, int boneID, float weight)
 			{
@@ -29,7 +29,7 @@ namespace Nuclear {
 				delete pImporter;
 			}
 
-			bool AssimpImporter::Load(const Assets::ModelLoadingDesc& desc, const std::string& path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
+			bool AssimpImporter::Load(const Assets::ModelImportingDesc& desc, const std::string& path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
 			{
 				AssimpLoader loader;
 
@@ -235,7 +235,7 @@ namespace Nuclear {
 					aiString str;
 					mat->GetTexture(type, i, &str);
 
-					Assets::TextureLoadingDesc desc;
+					Assets::TextureImportingDesc desc;
 
 					Graphics::Texture texture;
 

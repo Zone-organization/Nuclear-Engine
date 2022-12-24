@@ -49,17 +49,17 @@ public:
 	}
 	void SetupAssets()
 	{
-		Assets::ModelLoadingDesc ModelDesc;
+		Assets::ModelImportingDesc ModelDesc;
 		ModelDesc.LoadAnimation = false;
 
 	
 		//Load Sponza Model
-		auto Model = GetAssetManager().ImportModel("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
+		auto Model = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
 
-		SponzaPBRMaterial.Create(Model.pMaterialData, PBR);
-		SponzaBlinnPhongMaterial.Create(Model.pMaterialData, BlinnPhong);
+		SponzaPBRMaterial.Create(Model->pMaterialData, PBR);
+		SponzaBlinnPhongMaterial.Create(Model->pMaterialData, BlinnPhong);
 
-		ESponza.AddComponent<Components::MeshComponent>(Model.pMesh, &SponzaPBRMaterial);
+		ESponza.AddComponent<Components::MeshComponent>(Model->pMesh, &SponzaPBRMaterial);
 
 	}
 	void SetupEntities()
@@ -96,10 +96,10 @@ public:
 
 	void InitShaders()
 	{
-		Assets::ShaderLoadingDesc desc;
+		Assets::ShaderImportingDesc desc;
 		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
-		BlinnPhong = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
 
 		Renderer->SetIBLContext(&IBL);
 		Renderer->RegisterShader(PBR);
@@ -109,7 +109,7 @@ public:
 	void InitIBL()
 	{
 		//IBL
-		Assets::ImageLoadingDesc DESC;
+		Assets::ImageImportingDesc DESC;
 		DESC.mType = RESOURCE_DIM_TEX_2D;
 		DESC.mUsage = USAGE_IMMUTABLE;
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;

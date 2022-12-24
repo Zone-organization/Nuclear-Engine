@@ -105,13 +105,13 @@ public:
 
 	void SetupAssets()
 	{
-		Assets::ModelLoadingDesc ModelDesc;
+		Assets::ModelImportingDesc ModelDesc;
 		ModelDesc.LoadMaterialData = false;
 		ModelDesc.LoadAnimation = false;
 
 		//Load Models
-		auto shaderballasset = GetAssetManager().ImportModel("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
-		ShaderBall = shaderballasset.pMesh;
+		auto shaderballasset = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
+		ShaderBall = shaderballasset->pMesh;
 		LoadPBRMaterials();
 	}
 	void SetupEntities()
@@ -135,7 +135,7 @@ public:
 	void InitIBL()
 	{
 		//IBL
-		Assets::ImageLoadingDesc DESC;
+		Assets::ImageImportingDesc DESC;
 		DESC.mType = RESOURCE_DIM_TEX_2D;
 		DESC.mUsage = USAGE_IMMUTABLE;
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
@@ -159,9 +159,9 @@ public:
 		Renderer->AddRenderPass(&DefferedPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
-		Assets::ShaderLoadingDesc desc;
+		Assets::ShaderImportingDesc desc;
 		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 
 		Renderer->RegisterShader(PBR);
 		Renderer->SetIBLContext(&IBL);

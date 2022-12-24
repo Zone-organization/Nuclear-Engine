@@ -2,7 +2,7 @@
 #include <Assets/IAsset.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
-#include <Assets/AssetLoadingDesc.h>
+#include <Assets/ImportingDescs.h>
 
 namespace Nuclear
 {
@@ -12,10 +12,11 @@ namespace Nuclear
 		{
 		public:
 			Image();
-			Image(const Assets::ImageData& src_data, const ImageLoadingDesc& Desc);
+			Image(const Assets::ImageData& src_data, const ImageImportingDesc& Desc);
 			~Image();
 
-			bool CreateTextureFromRawImage(const Assets::ImageData& src_data, const ImageLoadingDesc& Desc);
+			//TODO: replace ImageImportingDesc with ImageCreationDesc.
+			bool CreateTextureFromRawImage(const Assets::ImageData& src_data, const ImageImportingDesc& Desc);
 
 
 	//	protected:

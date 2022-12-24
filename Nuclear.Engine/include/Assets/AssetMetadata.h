@@ -1,16 +1,11 @@
 #pragma once
 #include <Assets/IAsset.h>
-#include <Assets/AssetLoadingDesc.h>
+#include <Assets/ImportingDescs.h>
 
 namespace Nuclear
 {
 	namespace Assets
 	{	
-
-		struct AssetImportingDesc
-		{
-
-		};
 
 		//Global serializable asset desc (sort-of)
 		//Not stored in the memory during engine running

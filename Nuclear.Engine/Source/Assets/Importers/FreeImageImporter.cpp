@@ -1,4 +1,4 @@
-#include <Importers\Internal\FreeImageImporter.h>
+#include <Assets\Importers\FreeImageImporter.h>
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
 
@@ -6,9 +6,9 @@
 
 namespace Nuclear
 {
-	namespace Importers
+	namespace Assets
 	{
-		namespace Internal 
+		namespace Importers 
 		{
 			/// INPLACESWAP adopted from codeguru.com 
 			template <class T> void INPLACESWAP(T& a, T& b) {
@@ -46,7 +46,7 @@ namespace Nuclear
 				FreeImage_DeInitialise();
 			}
 
-			Assets::ImageData FreeImageImporter::Load(const std::string& Path, const Assets::ImageLoadingDesc& Desc)
+			Assets::ImageData FreeImageImporter::Load(const std::string& Path, const Assets::ImageImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 

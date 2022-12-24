@@ -7,7 +7,6 @@
 
 #include <Graphics\Context.h>
 #include <Assets\DefaultMeshes.h>
-#include <Importers\Internal\FreeImageImporter.h>
 
 #include "..\Graphics\ImGUI\imgui_impl_sdl.h"
 #include "..\Graphics\ImGUI\imgui_impl.h"

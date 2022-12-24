@@ -7,11 +7,18 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class NEAPI SavedScene : public IAsset
+		class NEAPI Scene : public IAsset
 		{
 		public:
-			SavedScene();
-			~SavedScene();
+			Scene()			
+				: IAsset(AssetType::Scene)
+			{
+
+			}
+			~Scene()
+			{
+
+			}
 
 			std::vector<Uint8> mBinaryBuffer;
 		};

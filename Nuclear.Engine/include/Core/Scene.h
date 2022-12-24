@@ -5,7 +5,7 @@
 #include <Assets/IAsset.h>
 #include <ECS\Entity.h>
 #include <ECS\Transform.h>
-#include <Assets/SavedScene.h>
+#include <Assets/Scene.h>
 
 namespace Nuclear
 {
@@ -40,9 +40,9 @@ namespace Nuclear
 			void Update(ECS::TimeDelta dt);
 
 			//Serialization
-			bool SaveScene(Assets::SavedScene* scene);
+			bool SaveScene(Assets::Scene* scene);
 
-			bool LoadScene(Assets::SavedScene* scene);
+			bool LoadScene(Assets::Scene* scene);
 
 
 		protected:

@@ -1,12 +1,12 @@
 #pragma once
-#include <Assets/AssetLoadingDesc.h>
+#include <Assets/ImportingDescs.h>
 #include <Assets/ImageData.h>
 
 namespace Nuclear
 {
-	namespace Importers
+	namespace Assets
 	{
-		namespace Internal
+		namespace Importers
 		{
 			class NEAPI FreeImageImporter
 			{
@@ -17,7 +17,7 @@ namespace Nuclear
 
 				static FreeImageImporter& GetInstance();
 
-				Assets::ImageData Load(const std::string& Path, const Assets::ImageLoadingDesc& Desc);
+				Assets::ImageData Load(const std::string& Path, const Assets::ImageImportingDesc& Desc);
 
 				bool IsExtensionSupported(const std::string& extension);
 

@@ -8,9 +8,10 @@ namespace Nuclear
 		enum class AssetType : Uint8
 		{
 			Unknown,
-			SerializedScene,
+			Scene,
 
 			Image,
+			Model,
 			Mesh,
 			Material,
 			MaterialData,

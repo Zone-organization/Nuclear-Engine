@@ -1,10 +1,12 @@
 #pragma once
-#include <Math\Math.h>
-#include <Assets/Image.h>
 #include <Graphics/TextureUsageType.h>
-
+#include <string>
 namespace Nuclear
 {
+	namespace Assets
+	{
+		class Image;
+	}
 	namespace Graphics
 	{
 		class NEAPI Texture 

@@ -26,7 +26,7 @@ public:
 	void SetupAssets()
 	{
 		//Load some textures manually
-		Assets::ImageLoadingDesc desc;
+		Assets::ImageImportingDesc desc;
 		//desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
@@ -53,8 +53,8 @@ public:
 		RustedIron.Create(&RustedIron_D, PBR);
 		Plastic.Create(&Plastic_D, PBR);
 
-		Assets::FontLoadingDesc fdesc;
-		ArialFont = GetAssetManager().ImportFont("@CommonAssets@/Fonts/arial.ttf", fdesc);
+		Assets::FontImportingDesc fdesc;
+		ArialFont = GetAssetManager().Import<Assets::Font> ("@CommonAssets@/Fonts/arial.ttf", fdesc);
 
 		//Test asset metadata
 		auto test = GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/albedo.png", { Graphics::TextureUsageType::Diffuse });
@@ -88,9 +88,9 @@ public:
 
 	void InitRenderer()
 	{
-		Assets::ShaderLoadingDesc desc;
+		Assets::ShaderImportingDesc desc;
 		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().ImportShader("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
 		Renderer->RegisterShader(PBR);
 
 		Renderer->AddRenderPass(&ShadowPass);
