@@ -122,6 +122,7 @@
     <ClInclude Include="include\Serialization\AssetsSerialization.h" />
     <ClInclude Include="include\Serialization\BinaryBuffer.h" />
     <ClInclude Include="include\Serialization\SerializationEngine.h" />
+    <ClInclude Include="include\ThirdParty\concurrentqueue.h" />
     <ClInclude Include="include\ThirdParty\magic_enum.hpp" />
     <ClInclude Include="include\ThirdParty\nameof.hpp" />
     <ClInclude Include="include\TL\String.h" />
