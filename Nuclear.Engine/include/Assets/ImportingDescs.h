@@ -166,6 +166,7 @@ namespace Nuclear
 			ShaderType mType = ShaderType::Unknown;
 
 			std::vector<std::string> mDefines;
+			std::vector<std::string> mExcludedVariants;
 		};
 
 		struct ScriptImportingDesc : public AssetImportingDesc

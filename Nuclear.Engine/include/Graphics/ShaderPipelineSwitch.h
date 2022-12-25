@@ -24,9 +24,12 @@ namespace Nuclear
 			void SetValue(bool value);
 			bool GetValue() const;
 
+			void SetName(const std::string& name);
+			std::string GetName() const;
+
+			void SetType(Type type);
 			Type GetType() const;
 
-			std::string GetName() const;
 			Uint32 GetID() const;
 
 		private:

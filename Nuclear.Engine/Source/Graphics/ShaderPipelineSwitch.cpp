@@ -8,8 +8,7 @@ namespace Nuclear
 	{	
 		ShaderPipelineSwitch::ShaderPipelineSwitch(const std::string& name, bool InitialValue, Type type)
 		{
-			mName = name;
-			mID = Utilities::Hash(mName);
+			SetName(name);
 			mValue = InitialValue;
 			mType = type;
 		}
@@ -23,6 +22,15 @@ namespace Nuclear
 		bool ShaderPipelineSwitch::GetValue() const
 		{
 			return mValue;
+		}
+		void ShaderPipelineSwitch::SetName(const std::string& name)
+		{
+			mName = name;
+			mID = Utilities::Hash(mName);
+		}
+		void ShaderPipelineSwitch::SetType(Type type)
+		{
+			mType = type;
 		}
 		ShaderPipelineSwitch::Type ShaderPipelineSwitch::GetType() const
 		{

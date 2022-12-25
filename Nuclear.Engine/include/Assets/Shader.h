@@ -15,6 +15,7 @@ namespace Nuclear
             Graphics::ShaderPipelineDesc mPipelineDesc = Graphics::ShaderPipelineDesc();
             ShaderType mType = ShaderType::Unknown;;
             std::vector<std::string> mDefines;
+            std::vector<std::string> mExcludedVariants = std::vector<std::string>();
 
             bool mSupportSkinnedMeshes = false;
             bool mSupportShadows = false;

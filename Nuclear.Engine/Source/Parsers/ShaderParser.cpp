@@ -258,26 +258,53 @@ namespace Nuclear
 				desc.mPipelineDesc.mName = ShaderName;
 				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].value_or(false);
 				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].value_or(false);
+
 				toml::array* arr = tbl["Shader"]["Variants"].as_array();
 				if (arr)
 				{
+					auto arrsize = arr->size();
+					std::vector<int> excludedvariantsIndex;
+					for (Uint32 i = 0; i < arrsize; i++)
+					{
+						bool match = false;
+						auto name = arr->at(i).as_string()->value_or("ERROR");
+						for (auto& j : desc.mExcludedVariants)
+						{
+							if (name == j)
+							{
+								match = true;
+								excludedvariantsIndex.push_back(i);
+							}
+						}
+
+						if(!match)
+							desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(name));
+					}
+
 					toml::array* valarr = tbl["Shader"]["VariantsValues"].as_array();
+					std::vector<bool> VariantsValues;
 					if (valarr)
 					{
-						for (Uint32 i = 0; i < arr->size(); i++)
+						for (Uint32 i = 0; i < valarr->size(); i++)
 						{
-							desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr->at(i).as_string()->value_or(""), valarr->at(i).as_boolean()->value_or(true)));
-						}
-					}
-					else {
-						for (Uint32 i = 0; i < arr->size(); i++)
-						{
-							desc.mPipelineDesc.Switches.push_back(Graphics::ShaderPipelineSwitch(arr->at(i).as_string()->value_or("")));
-						}
-					}
-				}
-				else {
+							bool match = false;
+							for (Uint32 j = 0; j < excludedvariantsIndex.size(); j++)
+							{
+								if (i == excludedvariantsIndex[j])
+								{
+									match = true;
+								}
+							}
 
+							if(!match)
+								VariantsValues.push_back(valarr->at(i).as_boolean()->value_or(true));
+						}
+
+						for (Uint32 i = 0; i < VariantsValues.size(); i++)
+						{
+							desc.mPipelineDesc.Switches.at(i).SetValue(VariantsValues[i]);
+						}
+					}
 				}
 
 				if (desc.mType == Assets::ShaderType::_3DRendering)
