@@ -125,7 +125,10 @@
     <ClInclude Include="include\ThirdParty\concurrentqueue.h" />
     <ClInclude Include="include\ThirdParty\magic_enum.hpp" />
     <ClInclude Include="include\ThirdParty\nameof.hpp" />
-    <ClInclude Include="include\TL\String.h" />
+    <ClInclude Include="include\Threading\ConcurrentQueue.h" />
+    <ClInclude Include="include\Threading\ConcurrentTaskQueue.h" />
+    <ClInclude Include="include\Threading\Task.h" />
+    <ClInclude Include="include\Types\String.h" />
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Core\Core.h" />
     <ClInclude Include="include\ECS\Transform.h" />
@@ -331,7 +334,7 @@
     <ClInclude Include="include\Core\Path.h" />
     <ClInclude Include="include\Utilities\Delegate.h" />
     <ClInclude Include="include\Utilities\Hash.h" />
-    <ClInclude Include="include\TL\StringTable.h" />
+    <ClInclude Include="include\Types\StringTable.h" />
     <ClInclude Include="include\Utilities\Timer.h" />
     <ClInclude Include="include\Utilities\Utilities.h" />
     <ClInclude Include="include\Platform\Window.h" />

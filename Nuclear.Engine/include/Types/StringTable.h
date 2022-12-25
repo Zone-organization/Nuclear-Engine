@@ -1,10 +1,10 @@
 #pragma once
 #include <unordered_set>
-#include <TL/String.h>
+#include <Types/String.h>
 
 namespace Nuclear
 {
-	namespace TL
+	namespace Types
 	{
 		class StringTable
 		{

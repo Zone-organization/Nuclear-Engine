@@ -5,7 +5,7 @@
 
 namespace Nuclear
 {
-	namespace TL
+	namespace Types
 	{
 		class TString
 		{
@@ -22,7 +22,7 @@ namespace Nuclear
 				str = _str;
 			}
 
-			const std::string& string() const 
+			const std::string& string() const
 			{
 				return str;
 			}
@@ -39,7 +39,7 @@ namespace Nuclear
 				s.value8b(size);
 
 				//TODO: Probably find a better way to add all chars without iteriation
-				for (size_t i = 0; i< str.size();i++)
+				for (size_t i = 0; i < str.size(); i++)
 				{
 					s.value1b(str[i]);
 				}
