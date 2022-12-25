@@ -108,6 +108,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Assets\AssetMetadata.h" />
+    <ClInclude Include="include\Assets\Exporter.h" />
     <ClInclude Include="include\Assets\ImportingDescs.h" />
     <ClInclude Include="include\Assets\AssetType.h" />
     <ClInclude Include="include\Assets\Model.h" />
@@ -331,7 +332,7 @@
     <ClInclude Include="include\Utilities\Hash.h" />
     <ClInclude Include="include\TL\StringTable.h" />
     <ClInclude Include="include\Utilities\Timer.h" />
-    <ClInclude Include="include\Utilities\Utilties.h" />
+    <ClInclude Include="include\Utilities\Utilities.h" />
     <ClInclude Include="include\Platform\Window.h" />
     <ClInclude Include="include\Animation\AnimationClip.h" />
     <ClInclude Include="include\Animation\Animation.h" />
@@ -452,6 +453,7 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Assets\Exporter.cpp" />
     <ClCompile Include="Source\Assets\IAsset.cpp" />
     <ClCompile Include="Source\Assets\Importer.cpp" />
     <ClCompile Include="Source\Assets\Model.cpp" />
