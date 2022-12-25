@@ -305,6 +305,7 @@ namespace Nuclear
 			ShaderBuildDesc shaderbuilddesc;
 			shaderbuilddesc.mType = desc.mType;
 			shaderbuilddesc.mDefines = desc.mDefines;
+			shaderbuilddesc.mExcludedVariants = desc.mExcludedVariants;
 			if (Parsers::ShaderParser::ParseSource(source, shaderbuilddesc))
 			{
 				result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
