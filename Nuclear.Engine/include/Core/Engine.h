@@ -21,6 +21,7 @@ namespace Nuclear
 			bool AutoInitPhysXEngine = true;
 			bool AutoInitScriptingEngine = true;
 			bool AutoInitRenderingEngine = true;
+			bool AutoInitThreadingEngine = true;
 
 			std::string mScriptingClientDllName = "ClientScripts.dll";
 			std::string mScriptingAssemblyNamespace = "ClientScripts";

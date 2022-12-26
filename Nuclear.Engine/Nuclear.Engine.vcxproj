@@ -108,7 +108,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Assets\AssetMetadata.h" />
-    <ClInclude Include="include\Assets\Exporter.h" />
     <ClInclude Include="include\Assets\ImportingDescs.h" />
     <ClInclude Include="include\Assets\AssetType.h" />
     <ClInclude Include="include\Assets\Model.h" />
@@ -127,6 +126,7 @@
     <ClInclude Include="include\ThirdParty\nameof.hpp" />
     <ClInclude Include="include\Threading\ConcurrentQueue.h" />
     <ClInclude Include="include\Threading\ConcurrentTaskQueue.h" />
+    <ClInclude Include="include\Threading\DelegateTask.h" />
     <ClInclude Include="include\Threading\Task.h" />
     <ClInclude Include="include\Types\String.h" />
     <ClInclude Include="include\Components\LightComponent.h" />
@@ -457,7 +457,6 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Assets\Exporter.cpp" />
     <ClCompile Include="Source\Assets\IAsset.cpp" />
     <ClCompile Include="Source\Assets\Importer.cpp" />
     <ClCompile Include="Source\Assets\Model.cpp" />
@@ -474,6 +473,7 @@
     <ClCompile Include="Source\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Platform\FileSystem.cpp" />
     <ClCompile Include="Source\Serialization\SerializationEngine.cpp" />
+    <ClCompile Include="Source\Threading\Task.cpp" />
     <ClCompile Include="Source\Threading\ThreadingEngine.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Parsers\INIParser.cpp" />

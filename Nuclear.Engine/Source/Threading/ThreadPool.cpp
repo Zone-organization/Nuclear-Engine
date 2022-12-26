@@ -4,51 +4,43 @@ namespace Nuclear
 {
 	namespace Threading
 	{
-        inline ThreadPool::ThreadPool()
-        {
-        }
-        // the constructor just launches some amount of workers
-        inline ThreadPool::ThreadPool(size_t threads)
-        {
-            Initalize(threads);
-        }
+		ThreadPool::ThreadPool()
+		{
 
-        // the destructor joins all threads
-        inline ThreadPool::~ThreadPool()
-        {
-            {
-                std::unique_lock<std::mutex> lock(queue_mutex);
-                stop = true;
-            }
-            condition.notify_all();
-            for (std::thread& worker : workers)
-                worker.join();
-        }
+		}
+		void ThreadPool::ThreadFunc()
+		{
+			Task* task;
 
-        void ThreadPool::Initalize(size_t threads)
-        {
-            stop = false;
-            for (size_t i = 0; i < threads; ++i)
-                workers.emplace_back(
-                    [this]
-                    {
-                        for (;;)
-                        {
-                            std::function<void()> task;
-                            {
-                                std::unique_lock<std::mutex> lock(this->queue_mutex);
-                                this->condition.wait(lock,
-                                    [this] { return this->stop || !this->tasks.empty(); });
-                                if (this->stop && this->tasks.empty())
-                                    return;
-                                task = std::move(this->tasks.front());
-                                this->tasks.pop();
-                            }
+			while (!mShouldClose.load())
+			{
+				if (mTasks.try_dequeue(task))
+				{
+					task->Execute();
+				}
+				else
+				{
+					std::unique_lock lk(mTasksMutex);
+					mTaskConditionVar.wait(lk);
+				}
+			}
+		}
 
-                            task();
-                        }
-                    }
-                    );
-        }
+		void ThreadPool::Initialize(Uint32 threadscount)
+		{
+
+			for (Uint32 i = 0; i < threadscount; i++)
+			{
+
+				std::thread thread([this] { this->ThreadFunc(); });
+
+				mThreads.push_back(std::move(thread));
+			}
+		}
+		void ThreadPool::AddTask(Task* task)
+		{
+			mTasks.Add(task);
+			mTaskConditionVar.notify_one();
+		}
 	}
 }

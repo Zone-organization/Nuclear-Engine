@@ -21,6 +21,8 @@
 #include <PhysX\PhysXEngine.h>
 #include <Scripting/ScriptingEngine.h>
 #include <Rendering\RenderingEngine.h>
+#include <Threading/ThreadingEngine.h>
+#include <Threading/DelegateTask.h>
 
 #include <Assets/AssetManager.h>
 
@@ -56,8 +58,10 @@
 #pragma comment(lib,"SDL2Main.lib")
 
 
-namespace Nuclear {
-	namespace Core {
+namespace Nuclear 
+{
+	namespace Core
+	{
 
 		static std::string MajorVersion = "0";
 		static std::string MinorVersion = "001";
@@ -164,6 +168,14 @@ namespace Nuclear {
 				}			
 			}
 
+			if (desc.AutoInitThreadingEngine)
+			{
+				if (!Threading::ThreadingEngine::GetInstance().Initialize())
+				{
+					NUCLEAR_FATAL("[Engine] Failed to initalize ThreadingEngine...");
+					return false;
+				}
+			}
 
 			gisDebug = desc.Debug;
 

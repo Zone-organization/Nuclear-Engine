@@ -1,5 +1,5 @@
 #include "Threading/ThreadingEngine.h"
-
+#include <Utilities/Logger.h>
 namespace Nuclear
 {
     namespace Threading
@@ -14,9 +14,20 @@ namespace Nuclear
 
             return instance;
         }
-        void ThreadingEngine::Initialize()
+        bool ThreadingEngine::Initialize()
         {
             mMainThreadID = std::this_thread::get_id();
+
+            //TODO: Clamp
+            auto allowedthreads = std::thread::hardware_concurrency() - 1;
+            mMainPool.Initialize(allowedthreads);
+
+            NUCLEAR_INFO("[ThreadingEngine] ThreadingEngine has been initalized succesfully!");
+            return true;
+        }
+        ThreadPool& ThreadingEngine::GetThreadPool()
+        {
+            return mMainPool;
         }
     }
 }

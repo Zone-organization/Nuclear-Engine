@@ -1,63 +1,32 @@
 #pragma once
 #include <NE_Common.h>
-#include <vector>
-#include <queue>
-#include <memory>
-#include <thread>
+#include <Threading\Task.h>
+#include <Threading\ConcurrentTaskQueue.h>
 #include <mutex>
 #include <condition_variable>
-#include <future>
-#include <functional>
-#include <stdexcept>
-#include <type_traits>
 
 namespace Nuclear
 {
-	namespace Threading
-	{
-        class NEAPI ThreadPool {
+    namespace Threading
+    {
+        class NEAPI ThreadPool
+        {
         public:
             ThreadPool();
-            ThreadPool(size_t);
-            ~ThreadPool();
 
-            void Initalize(size_t num_of_threads);
+            void Initialize(Uint32 threadscount);
+            void AddTask(Task* task);
 
-            template<class F, class... Args>
-            auto AddJob(F&& f, Args&&... args)
-                -> std::future<typename std::invoke_result<F, Args...>::type>
-            {
-                using return_type = typename std::invoke_result<F, Args...>::type;
+        protected:
+            std::vector<std::thread> mThreads;
+            ConcurrentTaskQueue<Task> mTasks;
+            std::mutex mTasksMutex;
+            std::condition_variable mTaskConditionVar;
+            std::atomic<bool> mShouldClose;
 
-                auto task = std::make_shared< std::packaged_task<return_type()> >(
-                    std::bind(std::forward<F>(f), std::forward<Args>(args)...)
-                    );
-
-                std::future<return_type> res = task->get_future();
-                {
-                    std::unique_lock<std::mutex> lock(queue_mutex);
-
-                    // don't allow enqueueing after stopping the pool
-                    if (stop)
-                        throw std::runtime_error("enqueue on stopped ThreadPool");
-
-                    tasks.emplace([task]() { (*task)(); });
-                }
-                condition.notify_one();
-                return res;
-            }
-
+           void ThreadFunc();
         private:
-            // need to keep track of threads so we can join them
-            std::vector< std::thread > workers;
-            // the task queue
-            std::queue< std::function<void()> > tasks;
-
-            // synchronization
-            std::mutex queue_mutex;
-            std::condition_variable condition;
-            bool stop = true;
         };
 
-	}
+    }
 }

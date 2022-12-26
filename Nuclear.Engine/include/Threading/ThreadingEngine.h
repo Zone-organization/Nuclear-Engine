@@ -1,15 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <vector>
-#include <queue>
-#include <memory>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <future>
-#include <functional>
-#include <stdexcept>
-#include <type_traits>
+#include <Threading/ThreadPool.h>
 
 namespace Nuclear
 {
@@ -22,11 +13,12 @@ namespace Nuclear
 
             static ThreadingEngine& GetInstance();
 
-            void Initialize();
+            bool Initialize();
 
+            ThreadPool& GetThreadPool();
         protected:
             std::thread::id mMainThreadID;
-
+            ThreadPool mMainPool;
 
         private:
             ThreadingEngine();
