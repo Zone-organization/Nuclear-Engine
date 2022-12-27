@@ -1,6 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Threading/ThreadPool.h>
+#include <Threading/MainThreadTask.h>
 
 namespace Nuclear
 {
@@ -14,12 +15,15 @@ namespace Nuclear
             static ThreadingEngine& GetInstance();
 
             bool Initialize();
+            void AddTask(Task* task);
+            void AddMainThreadTask(MainThreadTask* task);
 
             ThreadPool& GetThreadPool();
+            std::vector<MainThreadTask*>& GetMainTasks();
         protected:
             std::thread::id mMainThreadID;
             ThreadPool mMainPool;
-
+            std::vector<MainThreadTask*> mMainTTasks;
         private:
             ThreadingEngine();
         };

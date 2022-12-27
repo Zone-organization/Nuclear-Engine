@@ -316,6 +316,17 @@ namespace Nuclear
 					};
 					ImGui_ImplSDL2_ProcessEvent(&e);
 				}
+
+				//Process MainThread tasks
+				auto mainThreadTasks = Threading::ThreadingEngine::GetInstance().GetMainTasks();
+				for (Uint32 i = 0;i < mainThreadTasks.size(); i++)
+				{
+					mainThreadTasks.at(i)->Execute();
+					mainThreadTasks.erase(mainThreadTasks.begin());
+					break;
+				}
+
+				//Render
 				Platform::Input::GetInstance().Update();
 
 				// per-frame time logic (ensure speed is constant through all platforms)

@@ -18,6 +18,7 @@ namespace Nuclear
 				static FreeImageImporter& GetInstance();
 
 				Assets::ImageData Load(const std::string& Path, const Assets::ImageImportingDesc& Desc);
+				bool Load(const std::string& Path, Assets::ImageData* result ,const Assets::ImageImportingDesc& Desc);
 
 				bool IsExtensionSupported(const std::string& extension);
 

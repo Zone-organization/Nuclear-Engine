@@ -11,6 +11,7 @@ namespace Nuclear
 		public:
 			ImageData()
 			{
+				mPath = "";
 				mWidth = 0;
 				mHeight = 0;
 				mBitsPerPixel = 0;
@@ -21,6 +22,7 @@ namespace Nuclear
 			}
 			~ImageData()
 			{
+				mPath = "";
 				mWidth = 0;
 				mHeight = 0;
 				mBitsPerPixel = 0;

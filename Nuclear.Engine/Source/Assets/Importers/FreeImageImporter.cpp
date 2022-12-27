@@ -127,6 +127,86 @@ namespace Nuclear
 				return result;
 			}
 
+			bool FreeImageImporter::Load(const std::string& Path, Assets::ImageData* result, const Assets::ImageImportingDesc& Desc)
+			{
+				FIBITMAP* dib = nullptr;
+
+				if (Desc.mLoadFromMemory == true)
+				{
+					FIMEMORY* memBuff;
+					memBuff = FreeImage_OpenMemory((Byte*)Desc.mMemData, Desc.mMemSize);
+
+					auto type = FreeImage_GetFileTypeFromMemory(memBuff, 0);
+					dib = FreeImage_LoadFromMemory(type, memBuff);
+					FreeImage_CloseMemory(memBuff);
+				}
+				else
+				{
+					dib = FreeImage_Load(FreeImage_GetFileType(Path.c_str(), 0), Path.c_str());
+				}
+
+				if (!dib)
+				{
+					//Log.Error("[FreeImageImporter] Failed To Load: " + Path +  ".\n");
+					return false;
+				}
+				if (Desc.mFlipY_Axis)
+					FreeImage_FlipVertical(dib);
+
+				FIBITMAP* bitmap = nullptr;
+				auto type = FreeImage_GetImageType(dib);
+
+				//Only bitmaps are loaded in BGR format in sume platforms
+				//TODO: Disable if its already RGB
+				if (type == FIT_BITMAP)
+				{
+					bitmap = FreeImage_ConvertTo32Bits(dib);
+					SwapRedBlue32(bitmap);
+				}
+
+				if (type == FIT_RGBF)
+				{
+					bitmap = FreeImage_ConvertToRGBAF(dib);
+					type = FreeImage_GetImageType(bitmap);
+				}
+
+				result->mData = FreeImage_GetBits(bitmap);
+				result->mWidth = FreeImage_GetWidth(bitmap);
+				result->mHeight = FreeImage_GetHeight(bitmap);
+				result->mBitsPerPixel = FreeImage_GetBPP(bitmap);
+
+				unsigned bytespp = FreeImage_GetLine(bitmap) / FreeImage_GetWidth(bitmap);
+				unsigned samples = 4;
+
+				switch (type)
+				{
+				case FIT_BITMAP:
+					samples = bytespp / sizeof(BYTE);
+					result->mComponentType = VT_UINT8;
+					break;
+				case FIT_UINT16:
+				case FIT_RGB16:
+				case FIT_RGBA16:
+					samples = bytespp / sizeof(WORD);
+					result->mComponentType = VT_UINT16;
+					break;
+				case FIT_FLOAT:
+				case FIT_RGBF:
+				case FIT_RGBAF:
+					samples = bytespp / sizeof(float);
+					result->mComponentType = VT_FLOAT32;
+					break;
+				}
+
+				result->mNumComponents = samples;
+
+				FreeImage_Unload(dib);
+
+				//result->mRowStride = AlignUp(static_cast<Uint32>(result->mWidth * result->mNumComponents), 4u);
+
+				return true;
+			}
+
 			bool FreeImageImporter::IsExtensionSupported(const std::string& extension)
 			{
 

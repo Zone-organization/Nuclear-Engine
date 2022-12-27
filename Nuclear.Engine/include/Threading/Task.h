@@ -2,7 +2,7 @@
 #include <NE_Common.h>
 #include <Interfaces/NonCopyable.h>
 #include <functional>
-
+#include <atomic>
 namespace Nuclear
 {
     namespace Threading
@@ -26,6 +26,17 @@ namespace Nuclear
            void Cancel();
 
            void Execute();
+
+           bool IsFailed() const;
+           bool IsCanceled() const;
+           bool IsQueued() const;
+           bool IsRunning() const;
+           bool IsFinished() const;
+           bool IsEnded() const;
+           bool IsCancelRequested() const;
+
+           State GetState();
+
         protected:   
 
             //Actual task
@@ -37,6 +48,7 @@ namespace Nuclear
             virtual void OnFinish();
 
             State mState = State::Created;
+            std::atomic<bool> mCancelRequested;
         };
 
     }

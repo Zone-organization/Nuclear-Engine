@@ -15,11 +15,55 @@
 #include <Parsers/ShaderParser.h>
 
 #include <FMOD/inc/fmod.hpp>
+#include <Threading/Task.h>
+#include <Threading/MainThreadTask.h>
+#include <Threading/ThreadingEngine.h>
+
 
 namespace Nuclear
 {
 	namespace Assets 
 	{
+		class CreateImageTask : public Threading::MainThreadTask
+		{
+		public:
+			bool OnRunning() override
+			{
+				Image image;
+				Assets::ImageData data;
+				ImageImportingDesc desc;
+
+				image.CreateTextureFromRawImage(data, desc);
+				return true;
+			}
+
+		};
+
+		class NEAPI FreeImageTask : public Threading::Task
+		{
+		public:
+			FreeImageTask(Assets::ImageData* result, const std::string& Path, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
+				: pResult(result)
+			{
+				pResult = result;
+				mPath = Path;
+				mDesc = desc;
+			}
+
+			bool OnRunning() override
+			{
+				Importers::FreeImageImporter::GetInstance().Load(mPath, pResult, mDesc);
+				
+				NUCLEAR_INFO("[TEST] {0}", mPath);
+				return true;
+			}
+
+		protected:
+			Assets::ImageData* pResult;
+			Assets::ImageImportingDesc mDesc;
+			std::string mPath;
+		};
+
 		Importer::Importer()
 		{
 			FT_Handle = msdfgen::initializeFreetype();
@@ -34,6 +78,17 @@ namespace Nuclear
 			static Importer instance;
 
 			return instance;
+		}
+		void Importer::Test()
+		{
+			Assets::ImageData r1, r2, r3, r4, r5, r6;
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r1, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png").GetRealPath()));
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r2, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/metallic.png").GetRealPath()));
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r3, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/normal.png").GetRealPath()));
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r4, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png").GetRealPath()));
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r5, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/ao.png").GetRealPath()));
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r6, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png").GetRealPath()));
+
 		}
 		Image* Importer::ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
 		{

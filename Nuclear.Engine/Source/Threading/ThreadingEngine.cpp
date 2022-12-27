@@ -25,9 +25,21 @@ namespace Nuclear
             NUCLEAR_INFO("[ThreadingEngine] ThreadingEngine has been initalized succesfully!");
             return true;
         }
+        void ThreadingEngine::AddTask(Task* task)
+        {
+            mMainPool.AddTask(task);
+        }
+        void ThreadingEngine::AddMainThreadTask(MainThreadTask* task)
+        {
+            
+        }
         ThreadPool& ThreadingEngine::GetThreadPool()
         {
             return mMainPool;
+        }
+        std::vector<MainThreadTask*>& ThreadingEngine::GetMainTasks()
+        {
+            return mMainTTasks;
         }
     }
 }

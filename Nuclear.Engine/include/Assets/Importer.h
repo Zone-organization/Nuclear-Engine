@@ -3,6 +3,7 @@
 #include <Assets/ImportingDescs.h>
 #include <Assets/Model.h>
 #include <Assets\Importers\AssimpImporter.h>
+#include <Assets\Importers\FreeImageImporter.h>
 #include <Graphics/Texture.h>
 #include <Core/Path.h>
 
@@ -20,12 +21,16 @@ namespace Nuclear
 		class Script;
 		struct AssetLibrary;
 
+
+
 		class NEAPI Importer
 		{
 		public:
 			static Importer& GetInstance();
 			Importer(const Importer&) = delete;
 			Importer& operator= (const Importer) = delete;
+
+			void Test();
 
 			Image* ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
 			Image* ImportImage(const ImageData& Imagedata, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
@@ -55,6 +60,8 @@ namespace Nuclear
 			void FinishImportingAsset(IAsset* asset, const Core::Path& path, Uint32 Hashedpath, const std::string& libraryname, bool log = true);
 			Importers::AssimpImporter mAssimpImporter;
 			msdfgen::FreetypeHandle* FT_Handle;
+
+			std::vector<Importers::FreeImageImporter> mImageTasks;
 
 			Importer();
 		};
