@@ -318,14 +318,8 @@ namespace Nuclear
 				}
 
 				//Process MainThread tasks
-				auto mainThreadTasks = Threading::ThreadingEngine::GetInstance().GetMainTasks();
-				for (Uint32 i = 0;i < mainThreadTasks.size(); i++)
-				{
-					mainThreadTasks.at(i)->Execute();
-					mainThreadTasks.erase(mainThreadTasks.begin());
-					break;
-				}
-
+				Threading::ThreadingEngine::GetInstance().ExecuteMainThreadTasks(1);
+					
 				//Render
 				Platform::Input::GetInstance().Update();
 

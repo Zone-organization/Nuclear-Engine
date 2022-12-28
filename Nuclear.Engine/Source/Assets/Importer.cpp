@@ -19,46 +19,68 @@
 #include <Threading/MainThreadTask.h>
 #include <Threading/ThreadingEngine.h>
 
-
+#include <Assets/AssetManager.h>
 namespace Nuclear
 {
 	namespace Assets 
 	{
+		struct AssetInfo
+		{
+			Core::Path mPath;
+			Uint32 mHashedPath;
+			std::string mLibraryName;
+			bool mLog = true;
+		};
+
 		class CreateImageTask : public Threading::MainThreadTask
 		{
 		public:
-			CreateImageTask(Image* img, const Assets::ImageData& data,const ImageImportingDesc& desc)
-				: pImage(img), mDesc(data, desc)
+			CreateImageTask(Image* img, const AssetInfo& info, const Assets::ImageData& data,const ImageImportingDesc& desc)
+				: pImage(img), mDesc(data, desc), mInfo(info)
 			{
 
 			}
 
 			bool OnRunning() override
-			{		
-				return pImage->Create(mDesc);	
+			{
+				bool result = pImage->Create(mDesc);
+
+				if (!result)
+				{
+					NUCLEAR_ERROR("[Importer] Failed To Create Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
+					return false;
+				}
+				Importer::FinishImportingAsset(pImage, mInfo.mPath, mInfo.mHashedPath, mInfo.mLibraryName, mInfo.mLog);
+				return result;
 			}
 			Image* pImage;
 			ImageCreationDesc mDesc;
+			AssetInfo mInfo;
 		};
 
 		class NEAPI FreeImageTask : public Threading::Task
 		{
 		public:
-			FreeImageTask(Assets::Image* result, const std::string& Path, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
-				: pResult(result)
+			FreeImageTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
+				: pResult(result), mInfo(info)
 			{
 				pResult = result;
-				mPath = Path;
 				mDesc = desc;
 			}
 
 			bool OnRunning() override
 			{
+				std::this_thread::sleep_for(std::chrono::seconds(2));
 				Assets::ImageData data;
-				bool result = Importers::FreeImageImporter::GetInstance().Load(mPath, &data, mDesc);
+				bool result = Importers::FreeImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &data, mDesc);
 
-				if(result)
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult,data, mDesc));
+				if (result)
+				{
+					pResult->SetState(IAsset::State::Loaded);
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data, mDesc));
+				}
+				else
+					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
 
 				return result;
 			}
@@ -66,7 +88,7 @@ namespace Nuclear
 		protected:
 			Assets::Image* pResult;
 			Assets::ImageImportingDesc mDesc;
-			std::string mPath;
+			AssetInfo mInfo;
 		};
 
 		Importer::Importer()
@@ -86,15 +108,41 @@ namespace Nuclear
 		}
 		void Importer::Test()
 		{
-			Assets::Image r1, r2, r3, r4, r5, r6;
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r1, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png").GetRealPath()));
+			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png"), &AssetManager::GetInstance().GetDefaultLibrary());
+			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/metallic.png"), &AssetManager::GetInstance().GetDefaultLibrary());
+			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/normal.png"), &AssetManager::GetInstance().GetDefaultLibrary());
+			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png"), &AssetManager::GetInstance().GetDefaultLibrary());
+			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/ao.png"), &AssetManager::GetInstance().GetDefaultLibrary());
+
+			/*Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r1, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png").GetRealPath()));
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r2, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/metallic.png").GetRealPath()));
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r3, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/normal.png").GetRealPath()));
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r4, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png").GetRealPath()));
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r5, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/ao.png").GetRealPath()));
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r6, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png").GetRealPath()));
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r6, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png").GetRealPath()));*/
 
 		}
+		Image* Importer::AsyncImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
+		{
+			auto hashedpath = Utilities::Hash(Path.GetInputPath());
+
+			//Check if exists
+			auto result = library->mImportedImages.GetAsset(hashedpath);
+			if (result)
+			{
+				return result;
+			}
+
+			//Add to queue			
+			mQueuedAssets.push_back(result);
+			result = &(library->mImportedImages.AddAsset(hashedpath));
+			result->SetState(IAsset::State::Queued);
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(result,{Path, hashedpath, library->mName, true}, Desc));
+
+			result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
+			return result;
+		}
+
 		Image* Importer::ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
@@ -109,7 +157,7 @@ namespace Nuclear
 			//Load
 			ImageData imagedata = Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(), Desc);
 			Image image;
-			if (image.Create(ImageCreationDesc(imagedata, Desc)))
+			if (!image.Create(ImageCreationDesc(imagedata, Desc)))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}' Hash: '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
@@ -135,7 +183,7 @@ namespace Nuclear
 			//Create
 			Image image;
 
-			if (image.Create(ImageCreationDesc(imagedata, Desc)))
+			if (!image.Create(ImageCreationDesc(imagedata, Desc)))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();

@@ -15,10 +15,10 @@ void ImageViewer(Assets::Image* img)
 	ImGui::Text(SplitFilename(img->GetName()).c_str());
 
 	ImGui::Separator();
-	ImGui::Image(img->mTextureView, tex_sz);
+	ImGui::Image(img->GetTextureView(), tex_sz);
 
 	ImGui::Text("Path: %s", img->GetName().c_str());
-	ImGui::Text("Width: %i", img->mData.mWidth, " - Height: %i", img->mData.mHeight);
+	ImGui::Text("Width: %i", img->GetWidth(), " - Height: %i", img->GetHeight());
 
 
 	ImGui::End();
@@ -41,11 +41,11 @@ void AssetLibraryViewer(Assets::AssetLibrary& obj)
 			for (auto& i : obj.mImportedImages.mData)
 			{
 				ImGui::PushID(count);
-				if (i.second.mTextureView)
+				if (i.second.GetTextureView())
 				{
 					ImGui::BeginGroup();
 					{
-						ImGui::Image(i.second.mTextureView, tex_sz);
+						ImGui::Image(i.second.GetTextureView(), tex_sz);
 						ImGui::Text(SplitFilename(i.second.GetName()).c_str());
 						ImGui::EndGroup();
 						if (ImGui::IsItemClicked())

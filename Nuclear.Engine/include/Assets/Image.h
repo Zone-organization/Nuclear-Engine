@@ -35,9 +35,11 @@ namespace Nuclear
 			void SetTextureView(ITextureView* view);
 			ITextureView* GetTextureView();
 
+			const Uint32 GetWidth() const;
+			const Uint32 GetHeight() const;
 		protected:
 			RefCntAutoPtr<ITextureView> mTextureView;
-
+			Uint32 mWidth, mHeight;
 			friend Serialization::Access;
 
 			template<typename S>

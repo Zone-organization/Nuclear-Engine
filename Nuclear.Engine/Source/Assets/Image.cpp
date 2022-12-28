@@ -51,6 +51,10 @@ namespace Nuclear
 
 		bool Image::Create(const ImageCreationDesc& Desc)
 		{
+			mTextureView = nullptr;
+
+			mWidth = Desc.mData.mWidth;
+			mHeight = Desc.mData.mHeight;
 			TextureDesc TexDesc;
 			TexDesc.Type = Desc.mImportingDesc.mType;
 			TexDesc.Width = Desc.mData.mWidth;
@@ -193,6 +197,7 @@ namespace Nuclear
 			if (mTexture.RawPtr() != nullptr)
 			{
 				mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+				SetState(IAsset::State::Created);
 				return true;
 			}
 
@@ -205,6 +210,14 @@ namespace Nuclear
 		ITextureView* Image::GetTextureView()
 		{
 			return mTextureView.RawPtr();
+		}
+		const Uint32 Image::GetWidth() const
+		{
+			return mWidth;
+		}
+		const Uint32 Image::GetHeight() const
+		{
+			return mHeight;
 		}
 	}
 }

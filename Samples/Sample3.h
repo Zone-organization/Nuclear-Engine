@@ -155,7 +155,6 @@ public:
 
 		//GetScene().LoadScene(&scene);
 
-		Assets::Importer::GetInstance().Test();
 		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 

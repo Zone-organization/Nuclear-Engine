@@ -1,14 +1,98 @@
 #pragma once
 #include "SampleBase.h"
+void ImageVi2ewer(Assets::Image* img)
+{
+	ImGui::Begin("Asset Info");
+
+	ImVec2 tex_sz(128.f, 128.f);
+	ImGui::Text(SplitFilename(img->GetName()).c_str());
+
+	ImGui::Separator();
+	ImGui::Image(img->GetTextureView(), tex_sz);
+
+	ImGui::Text("Path: %s", img->GetName().c_str());
+	ImGui::Text("Width: %i", img->GetWidth(), " - Height: %i", img->GetHeight());
+
+
+	ImGui::End();
+}
+
+void AssetLibraryVi2ewer(Assets::AssetLibrary& obj)
+{
+	ImGui::Begin("Assets Library Viewer");
+	ImVec2 tex_sz(128.f, 128.f);
+
+	if (ImGui::BeginTabBar("Asset Library"))
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		if (ImGui::BeginTabItem("Images"))
+		{
+			static int count = 0;
+			static Assets::Image* img = nullptr;
+			for (auto& i : obj.mImportedImages.mData)
+			{
+				ImGui::PushID(count);
+				if (i.second.GetTextureView())
+				{
+					ImGui::BeginGroup();
+					{
+						ImGui::Image(i.second.GetTextureView(), tex_sz);
+						ImGui::Text(SplitFilename(i.second.GetName()).c_str());
+						ImGui::EndGroup();
+						if (ImGui::IsItemClicked())
+							img = &i.second;
+					}
+				}
+				else
+				{
+					//ERROR
+				}
+
+				float last_button_x2 = ImGui::GetItemRectMax().x;
+				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + tex_sz.x; // Expected position if next button was on same line
+				if (count + 1 < obj.mImportedImages.mData.size() && next_button_x2 < window_visible_x2)
+					ImGui::SameLine();
+				ImGui::PopID();
+
+				count++;
+			}
+			count = 0;
+			ImGui::EndTabItem();
+
+			if (img)
+			{
+				//if (img->GetState() == Assets::Asset::State::Created)
+				{
+					ImageVi2ewer(img);
+				}
+			}
+		}
+		if (ImGui::BeginTabItem("Meshes"))
+		{
+			//Should show mesh icon only
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Materials"))
+		{
+			//Should show material rendered on a sphere
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+}
+
 
 class Sample5 : public SampleBase
 {
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 
-	Assets::MaterialData RustedIron_D;
+	//Assets::MaterialData RustedIron_D;
 	Assets::MaterialData Plastic_D;
 
-	Assets::Material RustedIron;
+	//Assets::Material RustedIron;
 	Assets::Material Plastic;
 
 	Assets::Shader* PBR;
@@ -20,22 +104,22 @@ class Sample5 : public SampleBase
 	std::vector<ECS::Entity> boxes;
 
 public:
-	Sample4()
+	Sample5()
 	{
 
 	}
 	void SetupAssets()
 	{
 		//Initialize Materials
-		Assets::TextureSet PBRRustedIron;
-		PBRRustedIron.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
-		PBRRustedIron.mData.push_back({ 1, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", {Graphics::TextureUsageType::Specular}) });
-		PBRRustedIron.mData.push_back({ 2, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/normal.png",{ Graphics::TextureUsageType::Normal}) });
-		PBRRustedIron.mData.push_back({ 3, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/roughness.png", { Graphics::TextureUsageType::Roughness}) });
-		PBRRustedIron.mData.push_back({ 4, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/ao.png", { Graphics::TextureUsageType::AO}) });
+		//Assets::TextureSet PBRRustedIron;
+		//PBRRustedIron.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
+		//PBRRustedIron.mData.push_back({ 1, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", {Graphics::TextureUsageType::Specular}) });
+		//PBRRustedIron.mData.push_back({ 2, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/normal.png",{ Graphics::TextureUsageType::Normal}) });
+		//PBRRustedIron.mData.push_back({ 3, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/roughness.png", { Graphics::TextureUsageType::Roughness}) });
+		//PBRRustedIron.mData.push_back({ 4, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/ao.png", { Graphics::TextureUsageType::AO}) });
 
-		RustedIron_D.mTextures.push_back(PBRRustedIron);
-		RustedIron.SetName("RustedIron Material");
+	/*	RustedIron_D.mTextures.push_back(PBRRustedIron);
+		RustedIron.SetName("RustedIron Material");*/
 
 		Assets::TextureSet PBRPlastic;
 		PBRPlastic.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });
@@ -47,7 +131,7 @@ public:
 		Plastic_D.mTextures.push_back(PBRPlastic);
 		Plastic.SetName("Plastic Material");
 
-		RustedIron.Create(&RustedIron_D, PBR);
+		//RustedIron.Create(&RustedIron_D, PBR);
 		Plastic.Create(&Plastic_D, PBR);
 	}
 	void SetupEntities()
@@ -105,7 +189,7 @@ public:
 
 				ECS::Transform ESphere(position, Math::Vector3(2.0f));
 
-				auto sphere = GetScene().CreateSphere(&RustedIron, ESphere);
+				auto sphere = GetScene().CreateSphere(&Plastic, ESphere);
 				position.z += 5.0f;
 
 				//ECS::Transform EBox(position, Math::Vector3(1.0f));
@@ -136,7 +220,8 @@ public:
 		//Main Camera RT
 		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		
+		Assets::Importer::GetInstance().Test();
+
 		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 
@@ -155,34 +240,6 @@ public:
 
 			ImGui::Text("Press M to enable mouse capturing, or Esc to disable mouse capturing");
 
-
-			ImGui::ColorEdit3("Main Camera ClearColor", (float*)&GetScene().GetMainCamera()->mRTClearColor);
-
-			ImGui::ColorEdit3("Camera 2 ClearColor", (float*)&camera2.mRTClearColor);
-
-			ImGui::Text("Camera2 RT");
-
-			ImGui::Separator();
-
-			ImGui::Image(camera2.GetRenderTarget().GetSRV(), { 800, 600 });
-			ImGui::Separator();
-
-			/*	ImGui::Text("PostFX Pipeline");
-
-				if (ImGui::TreeNode("PostFX Effects"))
-				{
-					for (auto& it : PostFXPass.GetPipelineController().GetSwitches())
-					{
-						bool value = it.second.GetValue();
-						ImGui::Checkbox(it.second.GetName().c_str(), &value);
-						if (value != it.second.GetValue())
-						{
-							PostFXPass.SetPostProcessingEffect(it.second.GetID(), value);
-						}
-					}
-					ImGui::TreePop();
-				}*/
-
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 			if (ImGui::Button("End Game"))
@@ -193,6 +250,8 @@ public:
 
 			ImGui::End();
 			EntityExplorer();
+			AssetLibraryVi2ewer(GetAssetManager().GetDefaultLibrary());
+
 		}
 	}
 

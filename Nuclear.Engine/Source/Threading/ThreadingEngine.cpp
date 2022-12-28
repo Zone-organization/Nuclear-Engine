@@ -31,11 +31,22 @@ namespace Nuclear
         }
         void ThreadingEngine::AddMainThreadTask(MainThreadTask* task)
         {
-            
+            mMainTTasksMutex.lock();
+            mMainTTasks.push_back(task);
+            mMainTTasksMutex.unlock();
         }
         ThreadPool& ThreadingEngine::GetThreadPool()
         {
             return mMainPool;
+        }
+        void ThreadingEngine::ExecuteMainThreadTasks(Uint32 count)
+        {
+            for (Uint32 i = 0; i < mMainTTasks.size() && i < count; i++)
+            {
+                mMainTTasks.at(i)->Execute();
+                mMainTTasks.erase(mMainTTasks.begin() + i);
+            }
+         
         }
         std::vector<MainThreadTask*>& ThreadingEngine::GetMainTasks()
         {

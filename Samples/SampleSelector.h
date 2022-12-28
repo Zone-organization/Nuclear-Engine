@@ -4,6 +4,7 @@
 #include "Sample2.h"
 #include "Sample3.h"
 #include "Sample4.h"
+#include "Sample5.h"
 #include "SponzaDemo.h"
 #include "Playground.h"
 
@@ -67,7 +68,7 @@ public:
 		}
 		if (ImGui::Button("Sample5 : Async Asset Importing"))
 		{
-			Sample4 demo;
+			Sample5 demo;
 			return StartSample(&demo);
 		}
 

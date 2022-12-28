@@ -18,7 +18,6 @@ namespace Nuclear
 		{
 			//Images
 			DefaultBlackImage = Assets::AssetManager::GetInstance().Import<Assets::Image>("@NuclearAssets@/DefaultTextures/Black32x32.png");
-			//	DefaultBlackImage = Assets::AssetManager::GetInstance().Import<Assets::Image>("@NuclearAssets@/DefaultTextures/Black32x32.png");
 			DefaultGreyImage = Assets::AssetManager::GetInstance().Import<Assets::Image>("@NuclearAssets@/DefaultTextures/Grey32x32.png");
 			DefaultWhiteImage = Assets::AssetManager::GetInstance().Import<Assets::Image>("@NuclearAssets@/DefaultTextures/White32x32.png");
 

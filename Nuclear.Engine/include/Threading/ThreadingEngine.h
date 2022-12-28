@@ -19,11 +19,13 @@ namespace Nuclear
             void AddMainThreadTask(MainThreadTask* task);
 
             ThreadPool& GetThreadPool();
+            void ExecuteMainThreadTasks(Uint32 count);
             std::vector<MainThreadTask*>& GetMainTasks();
         protected:
             std::thread::id mMainThreadID;
             ThreadPool mMainPool;
             std::vector<MainThreadTask*> mMainTTasks;
+            std::mutex mMainTTasksMutex;
         private:
             ThreadingEngine();
         };
