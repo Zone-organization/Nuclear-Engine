@@ -27,22 +27,24 @@ namespace Nuclear
 		class CreateImageTask : public Threading::MainThreadTask
 		{
 		public:
-			bool OnRunning() override
+			CreateImageTask(Image* img, const Assets::ImageData& data,const ImageImportingDesc& desc)
+				: pImage(img), mDesc(data, desc)
 			{
-				Image image;
-				Assets::ImageData data;
-				ImageImportingDesc desc;
 
-				image.CreateTextureFromRawImage(data, desc);
-				return true;
 			}
 
+			bool OnRunning() override
+			{		
+				return pImage->Create(mDesc);	
+			}
+			Image* pImage;
+			ImageCreationDesc mDesc;
 		};
 
 		class NEAPI FreeImageTask : public Threading::Task
 		{
 		public:
-			FreeImageTask(Assets::ImageData* result, const std::string& Path, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
+			FreeImageTask(Assets::Image* result, const std::string& Path, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
 				: pResult(result)
 			{
 				pResult = result;
@@ -52,14 +54,17 @@ namespace Nuclear
 
 			bool OnRunning() override
 			{
-				Importers::FreeImageImporter::GetInstance().Load(mPath, pResult, mDesc);
-				
-				NUCLEAR_INFO("[TEST] {0}", mPath);
-				return true;
+				Assets::ImageData data;
+				bool result = Importers::FreeImageImporter::GetInstance().Load(mPath, &data, mDesc);
+
+				if(result)
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult,data, mDesc));
+
+				return result;
 			}
 
 		protected:
-			Assets::ImageData* pResult;
+			Assets::Image* pResult;
 			Assets::ImageImportingDesc mDesc;
 			std::string mPath;
 		};
@@ -81,7 +86,7 @@ namespace Nuclear
 		}
 		void Importer::Test()
 		{
-			Assets::ImageData r1, r2, r3, r4, r5, r6;
+			Assets::Image r1, r2, r3, r4, r5, r6;
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r1, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png").GetRealPath()));
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r2, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/metallic.png").GetRealPath()));
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r3, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/normal.png").GetRealPath()));
@@ -103,14 +108,15 @@ namespace Nuclear
 
 			//Load
 			ImageData imagedata = Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(), Desc);
-			if (imagedata.mData == nullptr)
+			Image image;
+			if (image.Create(ImageCreationDesc(imagedata, Desc)))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}' Hash: '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 
 			//Create
-			result = &(library->mImportedImages.AddAsset(Path, hashedpath) = Image(imagedata, Desc));
+			result = &(library->mImportedImages.AddAsset(hashedpath) = image);
 
 			FinishImportingAsset(result,  Path, hashedpath, library->mName);
 			return result;
@@ -127,16 +133,15 @@ namespace Nuclear
 			}
 
 			//Create
-			Image image(imagedata, Desc);
+			Image image;
 
-			if (image.mTextureView == nullptr)
+			if (image.Create(ImageCreationDesc(imagedata, Desc)))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
-			image.mData.mData = NULL;
 
-			result = &(library->mImportedImages.AddAsset(hashedpath) = Image(imagedata, Desc));
+			result = &(library->mImportedImages.AddAsset(hashedpath) = image);
 
 			FinishImportingAsset(result, imagedata.mPath, hashedpath, library->mName);
 
@@ -455,6 +460,7 @@ namespace Nuclear
 
 		Image* Importer::TextureCube_Import(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
 		{
+			
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
 			//Check if Texture has been Imported before
@@ -471,7 +477,8 @@ namespace Nuclear
 				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return nullptr;
 			}
-			result.mData = imagedata;
+			//TODO::
+			//result.mData = imagedata;
 
 			library->mImportedImages.mData[hashedpath] = result;
 

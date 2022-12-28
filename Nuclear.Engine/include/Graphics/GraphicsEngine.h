@@ -9,6 +9,10 @@ struct SDL_Window;
 
 namespace Nuclear
 {
+	namespace Assets
+	{
+		class Image;
+	}
 	namespace Graphics
 	{
 		struct GraphicsEngineDesc
@@ -40,8 +44,6 @@ namespace Nuclear
 			std::vector<LayoutElement> GetBasicVSLayout(bool isDeffered);
 			void CreateShader(IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
 			IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();
-
-
 
 			bool ProcessAndCreatePipeline(
 				IPipelineState** PipelineState,

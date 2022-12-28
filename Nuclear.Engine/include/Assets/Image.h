@@ -8,23 +8,35 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		struct ImageCreationDesc
+		{
+			ImageCreationDesc()
+			{
+				mData = Assets::ImageData();
+				mImportingDesc = ImageImportingDesc();
+			}
+			ImageCreationDesc(const Assets::ImageData& data, const ImageImportingDesc& desc)
+				: mData(data), mImportingDesc(desc)
+			{
+
+			}
+			Assets::ImageData mData;
+			ImageImportingDesc mImportingDesc;
+		};
+
 		class NEAPI Image : public IAsset
 		{
 		public:
 			Image();
-			Image(const Assets::ImageData& src_data, const ImageImportingDesc& Desc);
 			~Image();
 
-			//TODO: replace ImageImportingDesc with ImageCreationDesc.
-			bool CreateTextureFromRawImage(const Assets::ImageData& src_data, const ImageImportingDesc& Desc);
+			bool Create(const ImageCreationDesc& Desc);
 
+			void SetTextureView(ITextureView* view);
+			ITextureView* GetTextureView();
 
-	//	protected:
-			//friend class Rendering::ShadowPass;
-
-			ImageData mData;
-			RefCntAutoPtr<ITextureView> mTextureView;
 		protected:
+			RefCntAutoPtr<ITextureView> mTextureView;
 
 			friend Serialization::Access;
 

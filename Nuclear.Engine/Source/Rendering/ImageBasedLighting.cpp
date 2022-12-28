@@ -250,7 +250,7 @@ namespace Nuclear
 
 				Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &pBRDF_LUT);
 			}
-			mBRDF_LUT_Image.mTextureView = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			mBRDF_LUT_Image.SetTextureView(pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
 			pBRDF_LUT_RTV = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
 
 			{
@@ -299,7 +299,7 @@ namespace Nuclear
 			// IBL: convert HDR equirectangular environment map to cubemap equivalent
 			{
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pERectToCubemap_PSO.RawPtr());
-				pERectToCubemap_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(HDR_Env->GetImage()->mTextureView.RawPtr());
+				pERectToCubemap_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(HDR_Env->GetImage()->GetTextureView());
 
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
@@ -328,7 +328,7 @@ namespace Nuclear
 			}
 
 			Assets::Image result;
-			result.mTextureView = TexCubeRTs->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			result.SetTextureView(TexCubeRTs->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
 			return result;
 		}
 
@@ -356,7 +356,7 @@ namespace Nuclear
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pPrecomputeIrradiancePSO.RawPtr());
 
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
-				pPrecomputeIrradiance_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(cubemap->mTextureView.RawPtr());
+				pPrecomputeIrradiance_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(cubemap->GetTextureView());
 
 				for (unsigned int i = 0; i < 6; ++i)
 				{
@@ -404,7 +404,7 @@ namespace Nuclear
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pPrecomputePrefilterPSO.RawPtr());
 
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
-				pPrecomputePrefilter_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(cubemap->mTextureView.RawPtr());
+				pPrecomputePrefilter_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(cubemap->GetTextureView());
 
 				const auto& PrefilteredEnvMapDesc = pPrefilterTex->GetDesc();
 				for (Uint32 mip = 0; mip < PrefilteredEnvMapDesc.MipLevels; ++mip)
@@ -442,8 +442,8 @@ namespace Nuclear
 			}
 			Rendering::PBRCapture result;
 
-			result.mIrradiance.mTextureView = pIrradianceTex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-			result.mPrefiltered.mTextureView = pPrefilterTex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			result.mIrradiance.SetTextureView(pIrradianceTex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+			result.mPrefiltered.SetTextureView(pPrefilterTex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
 			return result;
 		}
 

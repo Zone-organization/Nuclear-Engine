@@ -12,13 +12,6 @@ namespace Nuclear
 		{
 		}
 
-		Image::Image(const Assets::ImageData& src_data, const ImageImportingDesc& Desc)
-			: IAsset(AssetType::Image)
-		{
-			mData = src_data;
-			CreateTextureFromRawImage(src_data, Desc);
-		}
-
 		Image::~Image()
 		{
 		}
@@ -56,30 +49,30 @@ namespace Nuclear
 			}
 		}
 
-		bool Image::CreateTextureFromRawImage(const Assets::ImageData& src_data, const ImageImportingDesc& Desc)
+		bool Image::Create(const ImageCreationDesc& Desc)
 		{
 			TextureDesc TexDesc;
-			TexDesc.Type = Desc.mType;
-			TexDesc.Width = src_data.mWidth;
-			TexDesc.Height = src_data.mHeight;
+			TexDesc.Type = Desc.mImportingDesc.mType;
+			TexDesc.Width = Desc.mData.mWidth;
+			TexDesc.Height = Desc.mData.mHeight;
 
-			const auto  ChannelDepth = GetValueSize(src_data.mComponentType) * 8;
+			const auto  ChannelDepth = GetValueSize(Desc.mData.mComponentType) * 8;
 
 			TexDesc.MipLevels = ComputeMipLevelsCount(TexDesc.Width, TexDesc.Height);
-			if (Desc.mMipLevels > 0)
-				TexDesc.MipLevels = std::min(TexDesc.MipLevels, Desc.mMipLevels);
+			if (Desc.mImportingDesc.mMipLevels > 0)
+				TexDesc.MipLevels = std::min(TexDesc.MipLevels, Desc.mImportingDesc.mMipLevels);
 
-			TexDesc.Usage = Desc.mUsage;
-			TexDesc.BindFlags = Desc.mBindFlags;
+			TexDesc.Usage = Desc.mImportingDesc.mUsage;
+			TexDesc.BindFlags = Desc.mImportingDesc.mBindFlags;
 			TexDesc.Format = TEX_FORMAT_UNKNOWN;
-			TexDesc.CPUAccessFlags = Desc.mCPUAccessFlags;
+			TexDesc.CPUAccessFlags = Desc.mImportingDesc.mCPUAccessFlags;
 
 			Uint32 NumComponents = 0;
 
-			bool IsSRGB = (src_data.mNumComponents >= 3 && ChannelDepth == 8) ? Desc.mIsSRGB : false;
+			bool IsSRGB = (Desc.mData.mNumComponents >= 3 && ChannelDepth == 8) ? Desc.mImportingDesc.mIsSRGB : false;
 			if (TexDesc.Format == TEX_FORMAT_UNKNOWN)
 			{
-				NumComponents = src_data.mNumComponents == 3 ? 4 : src_data.mNumComponents;
+				NumComponents = Desc.mData.mNumComponents == 3 ? 4 : Desc.mData.mNumComponents;
 
 				if (ChannelDepth == 8)
 				{
@@ -88,7 +81,7 @@ namespace Nuclear
 					case 1: TexDesc.Format = TEX_FORMAT_R8_UNORM; break;
 					case 2: TexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
 					case 4: TexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", src_data.mNumComponents, ")");
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
 					}
 				}
 				else if (ChannelDepth == 16)
@@ -98,7 +91,7 @@ namespace Nuclear
 					case 1: TexDesc.Format = TEX_FORMAT_R16_UNORM; break;
 					case 2: TexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
 					case 4: TexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", src_data.mNumComponents, ")");
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
 					}
 				}
 				else if (ChannelDepth == 32)
@@ -108,7 +101,7 @@ namespace Nuclear
 					case 1: TexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
 					case 2: TexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
 					case 4: TexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", src_data.mNumComponents, ")");
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
 					}
 				}
 				else
@@ -127,37 +120,37 @@ namespace Nuclear
 			std::vector<TextureSubResData> pSubResources(TexDesc.MipLevels);
 			std::vector< std::vector<Uint8> > Mips(TexDesc.MipLevels);
 
-			if (src_data.mNumComponents != NumComponents)
+			if (Desc.mData.mNumComponents != NumComponents)
 			{
-				auto DstStride = src_data.mWidth * NumComponents * ChannelDepth / 8;
+				auto DstStride = Desc.mData.mWidth * NumComponents * ChannelDepth / 8;
 				DstStride = AlignUp(DstStride, Uint32{ 4 });
-				Mips[0].resize(size_t{ DstStride } *size_t{ src_data.mHeight });
+				Mips[0].resize(size_t{ DstStride } *size_t{ Desc.mData.mHeight });
 				pSubResources[0].pData = Mips[0].data();
 				pSubResources[0].Stride = DstStride;
 				if (ChannelDepth == 8)
 				{
-					ModifyComponentCount<Uint8>(src_data.mData, src_data.mRowStride, src_data.mNumComponents,
+					ModifyComponentCount<Uint8>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
 						Mips[0].data(), DstStride,
-						src_data.mWidth, src_data.mHeight, NumComponents);
+						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
 				}
 				else if (ChannelDepth == 16)
 				{
-					ModifyComponentCount<Uint16>(src_data.mData, src_data.mRowStride, src_data.mNumComponents,
+					ModifyComponentCount<Uint16>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
 						Mips[0].data(), DstStride,
-						src_data.mWidth, src_data.mHeight, NumComponents);
+						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
 				}
 				else if (ChannelDepth == 32)
 				{
-					ModifyComponentCount<float>(src_data.mData, src_data.mRowStride, src_data.mNumComponents,
+					ModifyComponentCount<float>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
 						Mips[0].data(), DstStride,
-						src_data.mWidth, src_data.mHeight, NumComponents);
+						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
 				}
 			}
 			else
 			{
 				auto MipLevelProps = GetMipLevelProperties(TexDesc, 0);
 
-				pSubResources[0].pData = src_data.mData;
+				pSubResources[0].pData = Desc.mData.mData;
 				pSubResources[0].Stride = MipLevelProps.RowSize;
 			}
 
@@ -168,10 +161,10 @@ namespace Nuclear
 				pSubResources[m].pData = Mips[m].data();
 				pSubResources[m].Stride = MipLevelProps.RowSize;
 
-				if (Desc.mGenerateMips)
+				if (Desc.mImportingDesc.mGenerateMips)
 				{
 					auto FinerMipProps = GetMipLevelProperties(TexDesc, m - 1);
-					if (Desc.mGenerateMips)
+					if (Desc.mImportingDesc.mGenerateMips)
 					{
 						ComputeMipLevelAttribs Attribs;
 						Attribs.Format = TexDesc.Format;
@@ -181,11 +174,11 @@ namespace Nuclear
 						Attribs.FineMipStride = StaticCast<size_t>(pSubResources[m - 1].Stride);
 						Attribs.pCoarseMipData = Mips[m].data();
 						Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
-						Attribs.AlphaCutoff = Desc.AlphaCutoff;
+						Attribs.AlphaCutoff = Desc.mImportingDesc.AlphaCutoff;
 						static_assert(MIP_FILTER_TYPE_DEFAULT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_DEFAULT), "Inconsistent enum values");
 						static_assert(MIP_FILTER_TYPE_BOX_AVERAGE == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_BOX_AVERAGE), "Inconsistent enum values");
 						static_assert(MIP_FILTER_TYPE_MOST_FREQUENT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT), "Inconsistent enum values");
-						Attribs.FilterType = static_cast<MIP_FILTER_TYPE>(Desc.MipFilter);
+						Attribs.FilterType = static_cast<MIP_FILTER_TYPE>(Desc.mImportingDesc.MipFilter);
 						ComputeMipLevel(Attribs);
 					}
 				}
@@ -197,7 +190,6 @@ namespace Nuclear
 			RefCntAutoPtr<ITexture> mTexture;
 			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
-			mData.mData = NULL;
 			if (mTexture.RawPtr() != nullptr)
 			{
 				mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
@@ -205,6 +197,14 @@ namespace Nuclear
 			}
 
 			return false;
+		}
+		void Image::SetTextureView(ITextureView* view)
+		{
+			mTextureView = view;
+		}
+		ITextureView* Image::GetTextureView()
+		{
+			return mTextureView.RawPtr();
 		}
 	}
 }

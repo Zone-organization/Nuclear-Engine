@@ -65,6 +65,11 @@ public:
 			Sample4 demo;
 			return StartSample(&demo);
 		}
+		if (ImGui::Button("Sample5 : Async Asset Importing"))
+		{
+			Sample4 demo;
+			return StartSample(&demo);
+		}
 
 		ImGui::Text("Select Demo");
 

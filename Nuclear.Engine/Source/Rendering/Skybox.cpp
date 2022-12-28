@@ -66,13 +66,14 @@ namespace Nuclear
 
 		void Skybox::Initialize( const std::array<Assets::Image*, 6> & data)
 		{
+			//TODO
 			TextureDesc TexDesc;
 			TexDesc.Name = "SkyBox_TextureCube";
 			TexDesc.Type = RESOURCE_DIM_TEX_CUBE;
 			TexDesc.Usage = USAGE_DEFAULT;
 			TexDesc.BindFlags = BIND_SHADER_RESOURCE;
-			TexDesc.Width = data.at(0)->mData.mWidth;
-			TexDesc.Height = data.at(0)->mData.mHeight;
+	//		TexDesc.Width = data.at(0)->mData.mWidth;
+	//		TexDesc.Height = data.at(0)->mData.mHeight;
 			TexDesc.Format = TEX_FORMAT_RGBA8_UNORM;
 			TexDesc.ArraySize = 6;
 			TexDesc.MipLevels = 1;
@@ -84,8 +85,8 @@ namespace Nuclear
 			TextureSubResData subData[6];
 			for (unsigned int i = 0; i < data.size(); i++)
 			{
-				subData[i].pData = data[i]->mData.mData;
-				subData[i].Stride = data[i]->mData.mWidth * 4;
+		//		subData[i].pData = data[i]->mData.mData;
+	//			subData[i].Stride = data[i]->mData.mWidth * 4;
 			}
 
 			Data.NumSubresources = 6;
@@ -102,7 +103,7 @@ namespace Nuclear
 
 		void Skybox::Initialize(Assets::Image* tex)
 		{
-			mTextureSRV = tex->mTextureView;
+			mTextureSRV = tex->GetTextureView();
 
 			InitializePipeline();
 			InitializeCube();

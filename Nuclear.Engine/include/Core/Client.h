@@ -36,6 +36,7 @@ namespace Nuclear
 			ClientInfo GetClientInfo();
 
 			// Arranged function.
+			//TODO: Old to be replaces...
 			virtual void Initialize();	 // At Startup
 			virtual void Load();          // Loading Assets
 			virtual void Update(float Deltatime);        // Render The Game

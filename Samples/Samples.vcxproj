@@ -101,6 +101,7 @@
     <ClInclude Include="Sample1.h" />
     <ClInclude Include="Sample3.h" />
     <ClInclude Include="Sample4.h" />
+    <ClInclude Include="Sample5.h" />
     <ClInclude Include="SampleBase.h" />
     <ClInclude Include="SampleSelector.h" />
     <ClInclude Include="SponzaDemo.h" />

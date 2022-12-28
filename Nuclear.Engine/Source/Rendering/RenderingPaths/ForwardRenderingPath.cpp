@@ -33,7 +33,7 @@ namespace Nuclear
 			////////////////////////      IBL      ///////////////////////////
 			for (auto& i : pActivePipeline->GetReflection().mIBLTexturesInfo)
 			{
-				pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i.mSlot)->Set(i.mTex.GetImage()->mTextureView);
+				pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i.mSlot)->Set(i.mTex.GetImage()->GetTextureView());
 			}
 
 			//Shadows

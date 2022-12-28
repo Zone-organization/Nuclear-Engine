@@ -264,7 +264,7 @@ namespace Nuclear
 
 		Uint64 offset = 0;
 
-		pShader.GetMainPipelineSRB()->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(diffusetex->mTextureView.RawPtr());
+		pShader.GetMainPipelineSRB()->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(diffusetex->GetTextureView());
 		Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pShader.GetMainPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)

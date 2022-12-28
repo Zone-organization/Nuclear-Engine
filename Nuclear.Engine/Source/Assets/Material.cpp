@@ -38,7 +38,7 @@ namespace Nuclear
 			{
 				for (auto& tex : mPipelineUsableTextures.at(index).mData)
 				{
-					pipeline->GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->mTextureView.RawPtr());
+					pipeline->GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->GetTextureView());
 				}
 			}
 
