@@ -44,6 +44,16 @@ namespace Nuclear
 			bool OnRunning() override
 			{
 				bool result = pImage->Create(mDesc);
+				auto& vec = Importer::GetInstance().GetQueuedAssets();
+
+				for (Uint32 i = 0; i < vec.size(); i++)
+				{
+					if (vec[i]->GetUUID() == pImage->GetUUID())
+					{
+						vec.erase(vec.begin() + i);
+						break;
+					}
+				}		
 
 				if (!result)
 				{
@@ -52,6 +62,11 @@ namespace Nuclear
 				}
 				Importer::FinishImportingAsset(pImage, mInfo.mPath, mInfo.mHashedPath, mInfo.mLibraryName, mInfo.mLog);
 				return result;
+			}
+
+			void OnEnd() override
+			{
+				delete this;
 			}
 			Image* pImage;
 			ImageCreationDesc mDesc;
@@ -67,10 +82,12 @@ namespace Nuclear
 				pResult = result;
 				mDesc = desc;
 			}
+			~FreeImageTask()
+			{
 
+			}
 			bool OnRunning() override
 			{
-				std::this_thread::sleep_for(std::chrono::seconds(2));
 				Assets::ImageData data;
 				bool result = Importers::FreeImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &data, mDesc);
 
@@ -85,6 +102,10 @@ namespace Nuclear
 				return result;
 			}
 
+			void OnEnd() override
+			{
+				delete this;
+			}
 		protected:
 			Assets::Image* pResult;
 			Assets::ImageImportingDesc mDesc;
@@ -108,11 +129,11 @@ namespace Nuclear
 		}
 		void Importer::Test()
 		{
-			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png"), &AssetManager::GetInstance().GetDefaultLibrary());
+			/*AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png"), &AssetManager::GetInstance().GetDefaultLibrary());
 			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/metallic.png"), &AssetManager::GetInstance().GetDefaultLibrary());
 			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/normal.png"), &AssetManager::GetInstance().GetDefaultLibrary());
 			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png"), &AssetManager::GetInstance().GetDefaultLibrary());
-			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/ao.png"), &AssetManager::GetInstance().GetDefaultLibrary());
+			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/ao.png"), &AssetManager::GetInstance().GetDefaultLibrary());*/
 
 			/*Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r1, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png").GetRealPath()));
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r2, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/metallic.png").GetRealPath()));
@@ -122,7 +143,8 @@ namespace Nuclear
 			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(&r6, Core::Path("@CommonAssets@/Textures/PBR/RustedIron/roughness.png").GetRealPath()));*/
 
 		}
-		Image* Importer::AsyncImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
+	
+		Image* Importer::ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -134,16 +156,72 @@ namespace Nuclear
 			}
 
 			//Add to queue			
-			mQueuedAssets.push_back(result);
 			result = &(library->mImportedImages.AddAsset(hashedpath));
+			mQueuedAssets.push_back(result);
 			result->SetState(IAsset::State::Queued);
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(result,{Path, hashedpath, library->mName, true}, Desc));
+			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(result, { Path, hashedpath, library->mName, true }, Desc));
 
 			result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
 			return result;
 		}
 
-		Image* Importer::ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
+		Model* Importer::AsyncImportModel(const Core::Path& Path, AssetLibrary* library, const ModelImportingDesc& desc)
+		{
+			auto hashedpath = Utilities::Hash(Path.GetInputPath());
+			Model result;
+
+			//Check if exists
+			if (desc.LoadMesh)
+			{
+				result.pMesh = library->mImportedMeshes.GetAsset(hashedpath);
+
+				if (!result.pMesh)
+					result.pMesh = &(library->mImportedMeshes.AddAsset(hashedpath) = Mesh());
+			}
+
+			if (desc.LoadMaterialData)
+			{
+				result.pMaterialData = library->mImportedMaterialDatas.GetAsset(hashedpath);
+
+				if (!result.pMaterialData)
+					result.pMaterialData = &(library->mImportedMaterialDatas.AddAsset(hashedpath) = MaterialData());
+			}
+
+			if (desc.LoadAnimation)
+			{
+				result.pAnimations = library->mImportedAnimations.GetAsset(hashedpath);
+
+				if (!result.pAnimations)
+					result.pAnimations = &(library->mImportedAnimations.AddAsset(hashedpath) = Animations());
+			}
+
+			if (!mAssimpImporter.Load(desc, Path.GetRealPath(), result.pMesh, result.pMaterialData, result.pAnimations))
+			{
+				NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+
+				return nullptr;
+			}
+
+			if (desc.LoadAnimation)
+			{
+				if (result.pAnimations->GetState() != IAsset::State::Loaded)
+				{
+					library->mImportedAnimations.mData.erase(hashedpath);
+				}
+			}
+			FinishImportingAsset(result.pMesh, Path, hashedpath, library->mName);
+			FinishImportingAsset(result.pMaterialData, Path, hashedpath, "", false);
+			FinishImportingAsset(result.pAnimations, Path, hashedpath, "", false);
+
+			if (result.pMesh)
+				result.pMesh->Create();
+
+			library->mImportedModels.mData[hashedpath] = result;
+
+			return &library->mImportedModels.mData[hashedpath];
+		}
+
+		Image* Importer::ImportImageST(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -488,6 +566,11 @@ namespace Nuclear
 			return AssetType::Unknown;
 		}
 
+		std::vector<IAsset*>& Importer::GetQueuedAssets()
+		{
+			return mQueuedAssets;
+		}
+
 		Scene* Importer::ImportScene(const Core::Path& Path, AssetLibrary* library, const SceneImportingDesc& desc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
@@ -539,7 +622,6 @@ namespace Nuclear
 		{
 			if (asset)
 			{
-				asset->mUUID = Utilities::UUID::CreateNewUUID();
 				asset->mPathHash = Hashedpath;
 				asset->mState = IAsset::State::Loaded;
 

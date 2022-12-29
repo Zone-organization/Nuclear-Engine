@@ -27,10 +27,13 @@ namespace Nuclear
 				AssimpImporter();
 				~AssimpImporter();
 
+				bool isBusy();
+
 				bool Load(const Assets::ModelImportingDesc& desc, const std::string& Path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 				bool IsExtensionSupported(const std::string& extension);
 				Assimp::Importer* GetImporter();
 			private:
+				bool busy = false;
 				Assimp::Importer* pImporter;
 			};
 
@@ -61,6 +64,14 @@ namespace Nuclear
 				Assets::ModelImportingDesc mLoadingDesc;
 			};
 
+
+			class AssimpManager
+			{
+			public:
+
+				std::vector<AssimpImporter> mImporters;
+
+			};
 
 			//bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
 		}

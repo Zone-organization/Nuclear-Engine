@@ -46,6 +46,7 @@ namespace Nuclear
             virtual void OnFail();
             virtual void OnCancel();
             virtual void OnFinish();
+            virtual void OnEnd();
 
             State mState = State::Created;
             std::atomic<bool> mCancelRequested;

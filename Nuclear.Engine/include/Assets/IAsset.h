@@ -40,7 +40,7 @@ namespace Nuclear
 			//TODO: Maybe remove since the client shouldnt be able to change an asset state
 			void SetState(const State& state);
 
-
+			void SetUUID(const Utilities::UUID& uuid);
 		protected:
 			friend class AssetManager;
 			friend class Importer;

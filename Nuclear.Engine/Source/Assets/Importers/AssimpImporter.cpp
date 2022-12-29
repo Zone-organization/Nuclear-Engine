@@ -29,8 +29,14 @@ namespace Nuclear {
 				delete pImporter;
 			}
 
+			bool AssimpImporter::isBusy()
+			{
+				return busy;
+			}
+
 			bool AssimpImporter::Load(const Assets::ModelImportingDesc& desc, const std::string& path, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim)
 			{
+				busy = true;
 				AssimpLoader loader;
 
 				loader.mLoadingDesc = desc;
@@ -62,7 +68,7 @@ namespace Nuclear {
 					loader.pMaterialData->SetState(Assets::IAsset::State::Loaded);
 				}
 				auto hashedname = Utilities::Hash(path);
-
+				busy = false;
 				return true;
 			}
 

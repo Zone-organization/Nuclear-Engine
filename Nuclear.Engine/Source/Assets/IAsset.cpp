@@ -43,5 +43,10 @@ namespace Nuclear
 			mState = state;
 		}
 
+		void IAsset::SetUUID(const Utilities::UUID& uuid)
+		{
+			mUUID = uuid;
+		}
+
 	}
 }

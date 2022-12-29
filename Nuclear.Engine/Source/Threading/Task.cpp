@@ -91,15 +91,21 @@ namespace Nuclear
         {
             mState = State::Failed;
 
+
+            OnEnd();
         }
         void Task::OnCancel()
         {
             mState = State::Canceled;
-
+            OnEnd();
         }
         void Task::OnFinish()
         {
             mState = State::Finished;
+            OnEnd();
+        }
+        void Task::OnEnd()
+        {
         }
     }
 }

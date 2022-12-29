@@ -32,10 +32,13 @@ namespace Nuclear
 
 			void Test();
 
-			Image* AsyncImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
-
 			Image* ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
 			Image* ImportImage(const ImageData& Imagedata, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
+
+			Model* AsyncImportModel(const Core::Path& Path, AssetLibrary* library, const ModelImportingDesc& desc = ModelImportingDesc());
+
+			Image* ImportImageST(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
+		//	Image* ImportImage(const ImageData& Imagedata, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
 
 			Graphics::Texture ImportTexture(const Core::Path& Path, AssetLibrary* library, const TextureImportingDesc& Desc = TextureImportingDesc());
 			Graphics::Texture ImportTexture(const ImageData& Imagedata, AssetLibrary* library, const TextureImportingDesc& Desc = TextureImportingDesc());
@@ -58,6 +61,8 @@ namespace Nuclear
 
 			AssetType GetAssetType(const std::string& filename);
 
+			std::vector<IAsset*>& GetQueuedAssets();
+
 			static void FinishImportingAsset(IAsset* asset, const Core::Path& path, Uint32 Hashedpath, const std::string& libraryname, bool log = true);
 		private:
 			Image* TextureCube_Import(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc);
@@ -65,6 +70,8 @@ namespace Nuclear
 			msdfgen::FreetypeHandle* FT_Handle;
 
 			std::vector<IAsset*> mQueuedAssets;
+
+			//std::vector<Threading::Task*> mQueuedTasks;
 			Importer();
 		};
 	}

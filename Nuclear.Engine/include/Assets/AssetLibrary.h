@@ -47,7 +47,9 @@ namespace Nuclear
 
 			T& AddAsset(Uint32 hashed)
 			{
-				return mData[hashed];
+				T& result = mData[hashed];
+				result.SetUUID(Utilities::UUID::CreateNewUUID());
+				return result;
 			}
 
 			T& AddAsset(const Core::Path& path, Uint32 hashed)
