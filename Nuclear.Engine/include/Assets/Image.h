@@ -18,7 +18,7 @@ namespace Nuclear
 			ImageCreationDesc(const Assets::ImageData& data, const ImageImportingDesc& desc)
 				: mData(data), mImportingDesc(desc)
 			{
-
+				
 			}
 			Assets::ImageData mData;
 			ImageImportingDesc mImportingDesc;
