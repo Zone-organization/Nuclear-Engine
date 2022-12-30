@@ -234,7 +234,7 @@ bool ImGui_Impl_CreateDeviceObjects()
 
 	ShaderCreateInfo ShaderCI;
 	ShaderCI.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-	ShaderCI.UseCombinedTextureSamplers = true;
+	ShaderCI.Desc.UseCombinedTextureSamplers = true;
 
 
 	// Create vertex shader

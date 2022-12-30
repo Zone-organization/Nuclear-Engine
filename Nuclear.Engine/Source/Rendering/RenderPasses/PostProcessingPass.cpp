@@ -232,7 +232,7 @@ namespace Nuclear
 					ShaderCreateInfo CreationAttribs;
 
 					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 					CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "BloomExtractVS";
@@ -249,7 +249,7 @@ namespace Nuclear
 					ShaderCreateInfo CreationAttribs;
 
 					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "BloomExtractPS";

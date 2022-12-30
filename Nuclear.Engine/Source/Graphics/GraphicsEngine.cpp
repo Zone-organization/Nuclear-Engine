@@ -85,7 +85,7 @@ namespace Nuclear
 			ShaderCreateInfo CreationAttribs;
 
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.ShaderType = desc.mType;
 			CreationAttribs.EntryPoint = desc.mEntrypoint.c_str();
 			CreationAttribs.Desc.Name = desc.mName.c_str();
@@ -136,7 +136,7 @@ namespace Nuclear
 		{
 			ShaderCreateInfo CreationAttribs;
 			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.ShaderType = type;
 			CreationAttribs.EntryPoint = "main";
 			CreationAttribs.Source = source.c_str();

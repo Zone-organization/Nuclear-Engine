@@ -24,7 +24,7 @@ void ImageViewer(Assets::Image* img)
 	ImGui::End();
 }
 
-void AssetLibraryViewer(Assets::AssetLibrary& obj)
+void AssetLibraryViewer()
 {
 	ImGui::Begin("Assets Library Viewer");
 	ImVec2 tex_sz(128.f, 128.f);
@@ -38,7 +38,7 @@ void AssetLibraryViewer(Assets::AssetLibrary& obj)
 		{
 			static int count = 0;
 			static Assets::Image* img = nullptr;
-			for (auto& i : obj.mImportedImages.mData)
+			for (auto& i : Assets::AssetLibrary::GetInstance().mImportedImages.mData)
 			{
 				ImGui::PushID(count);
 				if (i.second.GetTextureView())
@@ -59,7 +59,7 @@ void AssetLibraryViewer(Assets::AssetLibrary& obj)
 
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + tex_sz.x; // Expected position if next button was on same line
-				if (count + 1 < obj.mImportedImages.mData.size() && next_button_x2 < window_visible_x2)
+				if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedImages.mData.size() && next_button_x2 < window_visible_x2)
 					ImGui::SameLine();
 				ImGui::PopID();
 
@@ -200,7 +200,7 @@ public:
 
 		Assets::ImageImportingDesc SkyboxDesc;
 		//SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		auto test =Assets::Importer::GetInstance().ImportTextureCube(SkyBoxTexturePaths,&GetAssetManager().GetDefaultLibrary(), SkyboxDesc);
+		auto test =Assets::Importer::GetInstance().ImportTextureCube(SkyBoxTexturePaths, SkyboxDesc);
 		Skybox.Initialize(test);
 	}
 	void SetupEntities()
@@ -385,7 +385,7 @@ public:
 
 			ImGui::End();
 			EntityExplorer();
-			AssetLibraryViewer(GetAssetManager().GetDefaultLibrary());
+			AssetLibraryViewer();
 
 			//mDebugSystem->ShowRendertargets();
 		}

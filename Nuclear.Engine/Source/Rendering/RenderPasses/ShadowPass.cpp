@@ -265,7 +265,7 @@ namespace Nuclear
 			{
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 				CreationAttribs.EntryPoint = "PositionalShadowMapDepthVS";
 				CreationAttribs.Desc.Name = "Positional_ShadowMapDepthVS";
@@ -279,7 +279,7 @@ namespace Nuclear
 			{
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 				CreationAttribs.EntryPoint = "PositionalShadowMapDepthPS";
 				CreationAttribs.Desc.Name = "Positional_ShadowMapDepthPS";
@@ -419,7 +419,7 @@ namespace Nuclear
 			{
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 				CreationAttribs.EntryPoint = "OmniDirShadowMapDepthVS";
 				CreationAttribs.Desc.Name = "OmniDir_ShadowMapDepthVS";
@@ -433,7 +433,7 @@ namespace Nuclear
 			{
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_GEOMETRY;
 				CreationAttribs.EntryPoint = "OmniDirShadowMapDepthGS";
 				CreationAttribs.Desc.Name = "OmniDir_ShadowMapDepthGS";
@@ -447,7 +447,7 @@ namespace Nuclear
 			{
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 				CreationAttribs.EntryPoint = "OmniDirShadowMapDepthPS";
 				CreationAttribs.Desc.Name = "OmniDir_ShadowMapDepthPS";

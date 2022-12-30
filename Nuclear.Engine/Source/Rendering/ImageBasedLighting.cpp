@@ -19,7 +19,7 @@ namespace Nuclear
 			{
 				ShaderCreateInfo CreationAttribs;
 				CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-				CreationAttribs.UseCombinedTextureSamplers = true;
+				CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 				CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 				CreationAttribs.EntryPoint = "main";
 				CreationAttribs.Desc.Name = "CubemapSample_VS";
@@ -69,7 +69,7 @@ namespace Nuclear
 				{
 					ShaderCreateInfo CreationAttribs;
 					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "ERectToCubemap_PS";
@@ -114,7 +114,7 @@ namespace Nuclear
 				{
 					ShaderCreateInfo CreationAttribs;
 					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeIrradiance_PS";
@@ -156,7 +156,7 @@ namespace Nuclear
 				{
 					ShaderCreateInfo CreationAttribs;
 					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputePrefilter_PS";
@@ -199,7 +199,7 @@ namespace Nuclear
 				{
 					ShaderCreateInfo CreationAttribs;
 					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 					CreationAttribs.Desc.ShaderType = SHADER_TYPE_VERTEX;
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeBRDF_VS";
@@ -215,7 +215,7 @@ namespace Nuclear
 				{
 					ShaderCreateInfo CreationAttribs;
 					CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
-					CreationAttribs.UseCombinedTextureSamplers = true;
+					CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 					CreationAttribs.Desc.ShaderType = SHADER_TYPE_PIXEL;
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeBRDF_PS";
