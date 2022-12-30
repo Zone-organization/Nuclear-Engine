@@ -5,6 +5,7 @@
 #include "..\Graphics\ImGUI\imgui_impl.h"
 #include <Utilities/Logger.h>
 #include <Platform\FileSystem.h>
+#include <Assets/DefaultMeshes.h>
 
 namespace Nuclear
 {

@@ -458,6 +458,7 @@
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Assets\AssetLibrary.cpp" />
     <ClCompile Include="Source\Assets\IAsset.cpp" />
     <ClCompile Include="Source\Assets\Importer.cpp" />
     <ClCompile Include="Source\Assets\Model.cpp" />

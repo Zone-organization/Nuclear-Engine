@@ -15,8 +15,8 @@ namespace Nuclear
 			enum class State : Uint8
 			{
 				Unknown,              ///< Not usable asset
+				Deserialized,         ///< Refers to the asset has just been deserialized (has type & name & hashedname) (not queued or loaded)
 				Queued,			      ///< Queued for loading
-				Deserialized,         ///< Refers to the asset has just been deserialized (has type & name & hashedname)
 				Loaded,               ///< Loaded data from disk/memory by importer
 				Created               ///< Asset creation successfull also marks the data loading success
 			};

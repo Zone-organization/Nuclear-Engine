@@ -1,6 +1,5 @@
 #pragma once
 #include <Assets/ImportingDescs.h>
-#include <Assets\AssetLibrary.h>
 #include <Assets\AssetMetadata.h>
 #include <Assets\Importer.h>
 #include <Threading\ThreadPool.h>
@@ -11,9 +10,9 @@
 #define MAX_BONE_INFLUENCE 4
 #define IMPORTING_METHOD_SPECIALIZATION(ASSETTYPE)   \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path) { \
-	return Importer::GetInstance().Import##ASSETTYPE(Path, &mLibrary); } \
+	return Importer::GetInstance().Import##ASSETTYPE(Path); } \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path, const ASSETTYPE##ImportingDesc & desc) { \
-return Importer::GetInstance().Import##ASSETTYPE(Path, &mLibrary, desc); } \
+return Importer::GetInstance().Import##ASSETTYPE(Path, desc); } \
 
 namespace Nuclear 
 {
@@ -80,11 +79,9 @@ namespace Nuclear
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);
 			bool Export(IAsset* asset, const Core::Path& Path);
 
-			AssetLibrary& GetDefaultLibrary();
 		protected:
 			AssetManagerDesc mDesc;
 
-			AssetLibrary mLibrary;
 		private:
 			AssetManager();
 

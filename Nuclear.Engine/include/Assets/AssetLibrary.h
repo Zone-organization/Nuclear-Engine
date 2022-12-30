@@ -45,6 +45,16 @@ namespace Nuclear
 			}
 
 
+			T* GetOrAddAsset(Uint32 hashedpath)
+			{
+				auto it = mData.find(hashedpath);
+				if (it != mData.end())
+				{
+					return &it->second;
+				}
+				return &AddAsset(hashedpath);
+			}
+
 			T& AddAsset(Uint32 hashed)
 			{
 				T& result = mData[hashed];
@@ -67,9 +77,14 @@ namespace Nuclear
 			}			
 		};
 
-		struct NEAPI AssetLibrary
+		class NEAPI AssetLibrary
 		{
+		public:
+			AssetLibrary(AssetLibrary const&) = delete;
+			void operator=(AssetLibrary const&) = delete;
+
 			std::string mName = "DefaultLibrary";
+			std::string mPath = "";
 
 			//Special type of asset??
 			ImportedAssetsMap<Assets::Scene> mImportedScenes;
@@ -85,11 +100,17 @@ namespace Nuclear
 			ImportedAssetsMap<Assets::Shader> mImportedShaders;
 			ImportedAssetsMap<Assets::Script> mImportedScripts;
 
+			static AssetLibrary& GetInstance();
+
+
 			template<typename S>
 			void serialize(S& s)
 			{
 				s.object(mImportedImages.mData);
 			}
+
+		private:		
+			AssetLibrary();
 		};
 	}
 }

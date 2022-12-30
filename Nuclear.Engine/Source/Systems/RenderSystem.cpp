@@ -12,6 +12,7 @@
 #include <Platform\FileSystem.h>
 #include <Rendering\RenderPasses\DefferedPass.h>
 #include <Rendering\RenderingEngine.h>
+#include <Assets\Shader.h>
 
 namespace Nuclear
 {

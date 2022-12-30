@@ -36,7 +36,7 @@ namespace Nuclear
                         //IBL
                         for (int i = 0; i < pipeline->GetReflection().mIBLTexturesInfo.size(); i++)
                         {
-                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetReflection().mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetReflection().mIBLTexturesInfo.at(i).mTex.GetImage()->mTextureView);
+                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetReflection().mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetReflection().mIBLTexturesInfo.at(i).mTex.GetImage()->GetTextureView());
                         }
 
                         Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetMainPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

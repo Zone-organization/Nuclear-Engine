@@ -19,7 +19,7 @@ namespace Nuclear
 		class Shader;
 		class Scene;
 		class Script;
-		struct AssetLibrary;
+		class AssetLibrary;
 
 
 
@@ -32,32 +32,32 @@ namespace Nuclear
 
 			void Test();
 
-			Image* ImportImage(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
-			Image* ImportImage(const ImageData& Imagedata, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
+			Image* ImportImage(const Core::Path& Path, const ImageImportingDesc& Desc = ImageImportingDesc());
+			Image* ImportImage(const ImageData& Imagedata, const ImageImportingDesc& Desc = ImageImportingDesc());
 
-			Model* AsyncImportModel(const Core::Path& Path, AssetLibrary* library, const ModelImportingDesc& desc = ModelImportingDesc());
+			//	Model* AsyncImportModel(const Core::Path& Path,  const ModelImportingDesc& desc = ModelImportingDesc());
 
-			Image* ImportImageST(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
-		//	Image* ImportImage(const ImageData& Imagedata, AssetLibrary* library, const ImageImportingDesc& Desc = ImageImportingDesc());
+			Image* ImportImageST(const Core::Path& Path, const ImageImportingDesc& Desc = ImageImportingDesc());
+			//	Image* ImportImage(const ImageData& Imagedata,  const ImageImportingDesc& Desc = ImageImportingDesc());
 
-			Graphics::Texture ImportTexture(const Core::Path& Path, AssetLibrary* library, const TextureImportingDesc& Desc = TextureImportingDesc());
-			Graphics::Texture ImportTexture(const ImageData& Imagedata, AssetLibrary* library, const TextureImportingDesc& Desc = TextureImportingDesc());
+			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
+			Graphics::Texture ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 
-			AudioClip* ImportAudioClip(const Core::Path& Path, AssetLibrary* library, const AudioClipImportingDesc& Desc = AudioClipImportingDesc());
+			AudioClip* ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc = AudioClipImportingDesc());
 
 			//TODO: Separate to ImportMesh & MaterialData & Animations
-			Model* ImportModel(const Core::Path& Path, AssetLibrary* library, const ModelImportingDesc& desc = ModelImportingDesc());
+			Model* ImportModel(const Core::Path& Path, const ModelImportingDesc& desc = ModelImportingDesc());
 
-			Font* ImportFont(const Core::Path& Path, AssetLibrary* library, const FontImportingDesc& desc = FontImportingDesc());
+			Font* ImportFont(const Core::Path& Path, const FontImportingDesc& desc = FontImportingDesc());
 
-			Shader* ImportShader(const Core::Path& Path, AssetLibrary* library, const ShaderImportingDesc& desc = ShaderImportingDesc());
+			Shader* ImportShader(const Core::Path& Path, const ShaderImportingDesc& desc = ShaderImportingDesc());
 
-			Script* ImportScript(const Core::Path& Path, AssetLibrary* library, const ScriptImportingDesc& desc = ScriptImportingDesc());
+			Script* ImportScript(const Core::Path& Path, const ScriptImportingDesc& desc = ScriptImportingDesc());
 
-			Scene* ImportScene(const Core::Path& Path, AssetLibrary* library, const SceneImportingDesc& desc = SceneImportingDesc());
+			Scene* ImportScene(const Core::Path& Path, const SceneImportingDesc& desc = SceneImportingDesc());
 
 			//Order:  [+X (right)] [-X (left)] [+Y (top)] [-Y (bottom)] [+Z (front)] [-Z (back)]			
-			std::array<Image*, 6> ImportTextureCube(const std::array<Core::Path, 6 >& Paths, AssetLibrary* library, const ImageImportingDesc& Desc);
+			std::array<Image*, 6> ImportTextureCube(const std::array<Core::Path, 6 >& Paths, const ImageImportingDesc& Desc);
 
 			AssetType GetAssetType(const std::string& filename);
 
@@ -65,7 +65,7 @@ namespace Nuclear
 
 			static void FinishImportingAsset(IAsset* asset, const Core::Path& path, Uint32 Hashedpath, const std::string& libraryname, bool log = true);
 		private:
-			Image* TextureCube_Import(const Core::Path& Path, AssetLibrary* library, const ImageImportingDesc& Desc);
+			Image* TextureCube_Import(const Core::Path& Path, const ImageImportingDesc& Desc);
 			Importers::AssimpImporter mAssimpImporter;
 			msdfgen::FreetypeHandle* FT_Handle;
 

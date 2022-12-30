@@ -17,22 +17,23 @@
 
 ## Current To-dos 
   - W.I.P:
-	- Finish reflecting the C++ api to the C# scripting assembly
-	- Serializing the scene.
-	- PostProcessing effects should be processed per camera not only in the main camera.
 	- Improving AssetManager
+		- Async asset loading
 	    - All imported assets should be exported in unified filetype to ease loading assets in a final game
 	    - 3D models should be exported to binary gltf (.glb)
-		- Textures common filetype is yet to be decided.
+		- Textures should be exported to (DDS, TGA, PNG)
 		- AssetLibrary should become a directory (and serialized into a zip file)
 		- Imported Assets should be converted to the consumable extension with a meta-data file containing its description
 		- Getting rid of the CRC32 HashedPath/Name used to identify assets and replace it with UUIDs.
-		
+	- Finish reflecting the C++ api to the C# scripting assembly
+	- Serializing the scene.
+	- Multithreading Engine
+
+	
   - On-Hold:
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).
-	- Multithreading Engine
-		- Async asset loading
+	- PostProcessing effects should be processed per camera not only in the main camera.
 
   - TODO:
   	- CSM

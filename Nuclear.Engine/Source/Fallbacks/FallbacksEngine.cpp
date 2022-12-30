@@ -17,13 +17,13 @@ namespace Nuclear
 		void FallbacksEngine::Initialize()
 		{
 			//Images
-			DefaultBlackImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Black32x32.png", &Assets::AssetManager::GetInstance().GetDefaultLibrary());
-			DefaultGreyImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Grey32x32.png", &Assets::AssetManager::GetInstance().GetDefaultLibrary());
-			DefaultWhiteImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/White32x32.png", &Assets::AssetManager::GetInstance().GetDefaultLibrary());
+			DefaultBlackImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Black32x32.png");
+			DefaultGreyImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Grey32x32.png");
+			DefaultWhiteImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/White32x32.png");
 
 
 			//Textures
-			DefaultNormalTex.Set(Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Normal32x32.png", &Assets::AssetManager::GetInstance().GetDefaultLibrary()), Graphics::TextureUsageType::Normal);
+			DefaultNormalTex.Set(Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Normal32x32.png"), Graphics::TextureUsageType::Normal);
 			DefaultDiffuseTex.Set(DefaultGreyImage, Graphics::TextureUsageType::Diffuse);
 			DefaultSpecularTex.Set(DefaultWhiteImage, Graphics::TextureUsageType::Specular);
 		}

@@ -49,7 +49,7 @@ namespace Nuclear
 				it.second.mTextureView.Release();
 			}*/
 		//
-			mLibrary.mImportedMeshes.Release();
+			/*mLibrary.mImportedMeshes.Release();
 
 			mLibrary.mImportedImages.Release();
 
@@ -57,7 +57,7 @@ namespace Nuclear
 
 			mLibrary.mImportedAnimations.Release();
 
-			mLibrary.mImportedAudioClips.Release();
+			mLibrary.mImportedAudioClips.Release();*/
 		}
 
 		void AssetManager::Initialize(AssetManagerDesc desc)
@@ -88,26 +88,26 @@ namespace Nuclear
 			
 			if (Type == AssetType::Image)
 			{
-				return Importer::GetInstance().ImportImage(Path, &mLibrary);
+				return Importer::GetInstance().ImportImage(Path);
 			}
 			return nullptr;
 		}
 
 		Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc)
 		{
-			return Importer::GetInstance().ImportTexture(Path, &mLibrary, Desc);
+			return Importer::GetInstance().ImportTexture(Path, Desc);
 		}
 
 		Graphics::Texture AssetManager::ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc)
 		{
-			return Importer::GetInstance().ImportTexture(Imagedata, &mLibrary, Desc);
+			return Importer::GetInstance().ImportTexture(Imagedata, Desc);
 		}
 
 		//IAsset* AssetManager::Load(const Core::Path& Path, const AssetMetadata& meta)
 		//{
 		//	if (meta.mType == AssetType::Image)
 		//	{
-		//		return Importer::GetInstance().ImportImage(Path, &mLibrary);
+		//		return Importer::GetInstance().ImportImage(Path, );
 		//	}
 		//	return nullptr;
 		//}
@@ -161,10 +161,6 @@ namespace Nuclear
 			//WIP:
 			//Convert all assets to unified types.
 			return false;
-		}
-		AssetLibrary& AssetManager::GetDefaultLibrary()
-		{
-			return mLibrary;
 		}
 	}
 }
