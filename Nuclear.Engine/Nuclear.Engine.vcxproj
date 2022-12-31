@@ -110,7 +110,9 @@
     <ClInclude Include="include\Assets\AssetMetadata.h" />
     <ClInclude Include="include\Assets\ImportingDescs.h" />
     <ClInclude Include="include\Assets\AssetType.h" />
+    <ClInclude Include="include\Assets\LoadingDescs.h" />
     <ClInclude Include="include\Assets\Model.h" />
+    <ClInclude Include="include\Assets\Tasks\ImageImporting.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Fallbacks\Fallbacks.h" />
@@ -143,6 +145,7 @@
     <ClInclude Include="include\Interfaces\NonCopyable.h" />
     <ClInclude Include="include\Platform\FileSystem.h" />
     <ClInclude Include="include\Platform\Input.h" />
+    <ClInclude Include="include\Utilities\DataBlob.h" />
     <ClInclude Include="include\Utilities\Logger.h" />
     <ClInclude Include="include\Scripting\MonoDeclarations.h" />
     <ClInclude Include="include\Scripting\ScriptingBindings.h" />
@@ -455,6 +458,13 @@
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_round_up.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_sse42_check.h" />
+    <ClInclude Include="Source\ThirdParty\DiligentTextureLoader\src\BCTools.h" />
+    <ClInclude Include="Source\ThirdParty\DiligentTextureLoader\src\dxgiformat.h" />
+    <ClInclude Include="Source\ThirdParty\DiligentTextureLoader\src\Image.h" />
+    <ClInclude Include="Source\ThirdParty\DiligentTextureLoader\src\stb_dxt.h" />
+    <ClInclude Include="Source\ThirdParty\DiligentTextureLoader\src\TextureLoader.h" />
+    <ClInclude Include="Source\ThirdParty\DiligentTextureLoader\src\TextureLoaderImpl.hpp" />
+    <ClInclude Include="Source\ThirdParty\DiligentTextureLoader\src\TextureUtilities.h" />
     <ClInclude Include="Source\ThirdParty\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
@@ -475,8 +485,16 @@
     <ClCompile Include="Source\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Platform\FileSystem.cpp" />
     <ClCompile Include="Source\Serialization\SerializationEngine.cpp" />
+    <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\BCTools.cpp" />
+    <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\DDSLoader.cpp" />
+    <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\DImage.cpp" />
+    <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\KTXLoader.cpp" />
+    <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\STBImpl.cpp" />
+    <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\TextureLoaderImpl.cpp" />
+    <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\TextureUtilities.cpp" />
     <ClCompile Include="Source\Threading\Task.cpp" />
     <ClCompile Include="Source\Threading\ThreadingEngine.cpp" />
+    <ClCompile Include="Source\Utilities\DataBlob.cpp" />
     <ClCompile Include="Source\Utilities\Logger.cpp" />
     <ClCompile Include="Source\Parsers\INIParser.cpp" />
     <ClCompile Include="Source\Core\Path.cpp" />

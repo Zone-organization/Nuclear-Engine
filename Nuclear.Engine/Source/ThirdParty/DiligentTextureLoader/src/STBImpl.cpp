@@ -26,4 +26,4 @@
 
 #include <cstring>
 #define STB_DXT_IMPLEMENTATION
-#include "../../ThirdParty/stb/stb_dxt.h"
+#include "stb_dxt.h"

@@ -177,6 +177,7 @@ namespace Nuclear
 			model.pAnimations = new Assets::Animations();
 
 			mAssimpImporter.Import("../Assets/Common/Models/CrytekNanosuit/nanosuit.obj", "../Assets/Common/Models/CrytekNanosuit/exportednanosuit.glb", &model, Assets::ModelImportingDesc());
+		
 			/*AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo.png"), &AssetManager::GetInstance().GetDefaultLibrary());
 			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/metallic.png"), &AssetManager::GetInstance().GetDefaultLibrary());
 			AsyncImportImage(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/normal.png"), &AssetManager::GetInstance().GetDefaultLibrary());

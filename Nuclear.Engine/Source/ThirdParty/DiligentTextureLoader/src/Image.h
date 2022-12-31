@@ -107,27 +107,10 @@ struct Image : public ObjectBase<IObject>
     /// \param [in] LoadInfo - Image loading information
     /// \param [out] ppImage - Memory location where pointer to the created image is written.
     ///                        The image should be released via Release().
-    static void CreateFromDataBlob(IDataBlob*           pFileData,
-                                   const ImageLoadInfo& LoadInfo,
-                                   Image**              ppImage);
+    //static void CreateFromDataBlob(IDataBlob*           pFileData,
+    //                               const ImageLoadInfo& LoadInfo,
+    //                               Image**              ppImage);
 
-    /// Creates a new image from memory
-    static void CreateFromMemory(const ImageDesc& Desc,
-                                 IDataBlob*       pPixels,
-                                 Image**          ppImage);
-
-    struct EncodeInfo
-    {
-        Uint32            Width       = 0;
-        Uint32            Height      = 0;
-        TEXTURE_FORMAT    TexFormat   = TEX_FORMAT_UNKNOWN;
-        bool              KeepAlpha   = false;
-        const void*       pData       = nullptr;
-        Uint32            Stride      = 0;
-        IMAGE_FILE_FORMAT FileFormat  = IMAGE_FILE_FORMAT_JPEG;
-        int               JpegQuality = 95;
-    };
-    static void Encode(const EncodeInfo& Info, IDataBlob** ppEncodedData);
 
     /// Returns image description
     const ImageDesc& GetDesc() const { return m_Desc; }
@@ -151,30 +134,13 @@ private:
     template <typename AllocatorType, typename ObjectType>
     friend class MakeNewRCObj;
 
-    Image(IReferenceCounters*  pRefCounters,
-          IDataBlob*           pFileData,
-          const ImageLoadInfo& LoadInfo);
-
     Image(IReferenceCounters* pRefCounters,
           const ImageDesc&    Desc,
           IDataBlob*          pPixels);
 
-    void LoadTiffFile(IDataBlob* pFileData, const ImageLoadInfo& LoadInfo);
-
     ImageDesc                m_Desc;
     RefCntAutoPtr<IDataBlob> m_pData;
 };
-
-/// Creates an image from file
-
-/// \param [in] FilePath   - Source file path
-/// \param [out] ppImage   - Memory location where pointer to the created image will be stored
-/// \param [out] ppRawData - If the file format is not recognized by the function, it will load raw bytes
-///                          and return them in the data blob. This parameter can be null.
-/// \return                  Image file format.
-IMAGE_FILE_FORMAT CreateImageFromFile(const Char* FilePath,
-                                      Image**     ppImage,
-                                      IDataBlob** ppRawData = nullptr);
 
 #endif
 

@@ -24,7 +24,7 @@
  *  of the possibility of such damages.
  */
 
-#include "..\include\BCTools.h"
+#include "BCTools.h"
 #include <Diligent/Platforms/Basic/interface/DebugUtilities.hpp>
 
 namespace Diligent

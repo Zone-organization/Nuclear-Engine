@@ -29,8 +29,8 @@
 #include <vector>
 
 #include "TextureLoaderImpl.hpp"
-#include "GraphicsAccessories.hpp"
-#include "Align.hpp"
+#include <Diligent/Graphics/GraphicsAccessories/interface/GraphicsAccessories.hpp>
+#include <Diligent/Common/interface/Align.hpp>
 
 #define GL_RGBA32F            0x8814
 #define GL_RGBA32UI           0x8D70

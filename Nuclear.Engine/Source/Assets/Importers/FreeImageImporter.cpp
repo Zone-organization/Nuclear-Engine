@@ -1,6 +1,10 @@
 #include <Assets\Importers\FreeImageImporter.h>
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
+#include <Assets\Image.h>
+#include <Graphics\Context.h>
+
+#include "..\..\ThirdParty\DiligentTextureLoader\src\TextureLoader.h"
 
 #pragma comment(lib,"Freeimage.lib")
 
@@ -35,18 +39,17 @@ namespace Nuclear
 
 				return TRUE;
 			}
-
+			void MyMessageFunc(FREE_IMAGE_FORMAT fif, const char* message)
+			{
+				std::cout << "\n*** " << message << " ***\n";
+			}
 			FreeImageImporter::FreeImageImporter()
 			{
 				FreeImage_Initialise();
+				FreeImage_SetOutputMessage(MyMessageFunc);
 			}
 
-			FreeImageImporter::~FreeImageImporter()
-			{
-				FreeImage_DeInitialise();
-			}
-
-			Assets::ImageData FreeImageImporter::Load(const std::string& Path, const Assets::ImageImportingDesc& Desc)
+			bool FreeImageImporter::FreeimageLoad(const std::string& Path, Assets::ImageData* result, const Assets::ImageImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 
@@ -67,7 +70,7 @@ namespace Nuclear
 				if (!dib)
 				{
 					//Log.Error("[FreeImageImporter] Failed To Load: " + Path +  ".\n");
-					return Assets::ImageData();
+					return false;
 				}
 				if (Desc.mFlipY_Axis)
 					FreeImage_FlipVertical(dib);
@@ -89,11 +92,10 @@ namespace Nuclear
 					type = FreeImage_GetImageType(bitmap);
 				}
 
-				Assets::ImageData result;
-				result.mData = FreeImage_GetBits(bitmap);
-				result.mWidth = FreeImage_GetWidth(bitmap);
-				result.mHeight = FreeImage_GetHeight(bitmap);
-				result.mBitsPerPixel = FreeImage_GetBPP(bitmap);
+				result->mData = FreeImage_GetBits(bitmap);
+				result->mWidth = FreeImage_GetWidth(bitmap);
+				result->mHeight = FreeImage_GetHeight(bitmap);
+				result->mBitsPerPixel = FreeImage_GetBPP(bitmap);
 
 				unsigned bytespp = FreeImage_GetLine(bitmap) / FreeImage_GetWidth(bitmap);
 				unsigned samples = 4;
@@ -102,29 +104,34 @@ namespace Nuclear
 				{
 				case FIT_BITMAP:
 					samples = bytespp / sizeof(BYTE);
-					result.mComponentType = VT_UINT8;
+					result->mComponentType = VT_UINT8;
 					break;
 				case FIT_UINT16:
 				case FIT_RGB16:
 				case FIT_RGBA16:
 					samples = bytespp / sizeof(WORD);
-					result.mComponentType = VT_UINT16;
+					result->mComponentType = VT_UINT16;
 					break;
 				case FIT_FLOAT:
 				case FIT_RGBF:
 				case FIT_RGBAF:
 					samples = bytespp / sizeof(float);
-					result.mComponentType = VT_FLOAT32;
+					result->mComponentType = VT_FLOAT32;
 					break;
 				}
 
-				result.mNumComponents = samples;
+				result->mNumComponents = samples;
 
 				FreeImage_Unload(dib);
 
-				//result.mRowStride = AlignUp(static_cast<Uint32>(result.mWidth * result.mNumComponents), 4u);
+				//result->mRowStride = AlignUp(static_cast<Uint32>(result->mWidth * result->mNumComponents), 4u);
 
-				return result;
+				return true;
+			}
+
+			FreeImageImporter::~FreeImageImporter()
+			{
+				FreeImage_DeInitialise();
 			}
 
 			bool FreeImageImporter::Load(const std::string& Path, Assets::ImageData* result, const Assets::ImageImportingDesc& Desc)
@@ -226,6 +233,50 @@ namespace Nuclear
 			{
 				static FreeImageImporter instance;
 				return instance;
+			}
+			bool FreeImageImporter::Import(const std::string& importPath, const std::string& exportPath, Assets::Image* image, const Assets::ImageImportingDesc& desc)
+			{
+				Assets::ImageData data;
+				Assets::ImageCreationDesc creationdesc(data, desc);
+				creationdesc.mDeleteDataAfterCreation = false;
+
+				if (!FreeimageLoad(importPath, &data, desc))
+				{
+					return false;
+				}
+
+				Diligent::TextureDesc TexDesc;
+				Diligent::TextureData TexData;
+
+				image->Create(creationdesc, TexDesc, TexData);
+								
+				return SaveTextureAsDDS(exportPath.c_str(), TexDesc, TexData);				
+			}
+			bool FreeImageImporter::Load(Assets::Image* result, const Assets::ImageLoadingDesc& Desc)
+			{
+				FREE_IMAGE_FORMAT type = FIF_UNKNOWN;
+				if(Desc.mPath != "")
+				{
+					type = FreeImage_GetFileType(Desc.mPath.c_str(), 0);
+				}
+				else
+				{
+					
+				}
+
+				if (type == FIF_DDS)
+				{
+					TextureLoadInfo info;
+					RefCntAutoPtr<ITextureLoader> loader;
+					RefCntAutoPtr<ITexture> texture;
+
+					CreateTextureLoaderFromMemory(Desc.mData.GetBuffer().data(), Desc.mData.GetBuffer().size(), IMAGE_FILE_FORMAT_DDS,false, info, &loader);
+
+					loader->CreateTexture(Graphics::Context::GetInstance().GetDevice(), &texture);
+					result->SetTextureView(texture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+					return true;
+				}
+				return false;
 			}
 		}
 	}

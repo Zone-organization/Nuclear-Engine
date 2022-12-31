@@ -1,4 +1,5 @@
 #pragma once
+#include <Utilities\DataBlob.h>
 #include <Core\Path.h>
 #include <set>
 
@@ -21,6 +22,10 @@ namespace Nuclear
 			//std::string LoadScript(const Path& Filepath, std::vector<std::string> defines, std::vector<std::string> includes = std::vector<std::string>(), bool reverseorder = false);
 			std::string LoadShader(const Core::Path& Filepath, std::set<std::string> defines, std::set<std::string> includes = std::set<std::string>(), bool reverseorder = false);
 	
+			Utilities::DataBlob LoadFile(const Core::Path& Filepath);
+
+			bool SaveFile(const Utilities::DataBlob& data, const Core::Path& Filepath);
+
 			bool SaveBinaryBuffer(const std::vector<Uint8>& buffer, const Core::Path& Filepath);
 
 			bool LoadBinaryBuffer(std::vector<Uint8>& buffer, const Core::Path& Filepath);

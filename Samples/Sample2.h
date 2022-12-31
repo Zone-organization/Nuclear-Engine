@@ -45,6 +45,10 @@ public:
 
 	void LoadPBRMaterials()
 	{
+		Assets::ImageImportingDesc desc;
+		desc.test = true;
+		auto testimg = Assets::Importer::GetInstance().ImportImageST("@CommonAssets@/Textures/PBR/RustedIron/albedo.png", desc);
+
 		//Initialize Materials
 		Assets::TextureSet PBRRustedIron;
 		PBRRustedIron.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/albedo.png",{ Graphics::TextureUsageType::Diffuse}) });

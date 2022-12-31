@@ -48,8 +48,8 @@
 // clang-format off
 
 #include "TextureLoaderImpl.hpp"
-#include "FileWrapper.hpp"
-#include "GraphicsAccessories.hpp"
+#include "Diligent\Common\interface\FileWrapper.hpp"
+#include "Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp"
 
 #include "dxgiformat.h"
 

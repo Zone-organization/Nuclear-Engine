@@ -160,6 +160,21 @@ namespace Nuclear
 				return data;
 			}
 
+			Utilities::DataBlob FileSystem::LoadFile(const Core::Path& Filepath)
+			{
+				std::ifstream input(Filepath.GetRealPath(), std::ios::binary);
+
+				return Utilities::DataBlob(std::vector<Uint8>(std::istreambuf_iterator<char>(input), {}));
+			}
+
+			bool FileSystem::SaveFile(const Utilities::DataBlob& data, const Core::Path& Path)
+			{
+				std::ofstream fout(Path.GetRealPath(), std::ios::out | std::ios::binary);
+				fout.write((char*)data.GetBuffer().data(), data.GetBuffer().size());
+				fout.close();
+				return true;
+			}
+
 			//Todo: Errors and exceptions
 			bool FileSystem::LoadBinaryBuffer(std::vector<Uint8>& buffer, const Core::Path& Filepath)
 			{

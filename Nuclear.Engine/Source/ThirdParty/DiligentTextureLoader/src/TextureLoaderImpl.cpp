@@ -24,51 +24,30 @@
  *  all other commercial damages or losses), even if such Contributor has been advised 
  *  of the possibility of such damages.
  */
+#include <Diligent/Primitives/interface/BasicTypes.h>
 
-#include "pch.h"
+#include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
+#include <Diligent/Primitives/interface/Errors.hpp>
+#include <Diligent/Platforms/Basic/interface/DebugUtilities.hpp>
+
 #include <algorithm>
 #include <limits>
 #include <math.h>
 #include <vector>
 
 #include "TextureLoaderImpl.hpp"
-#include "GraphicsAccessories.hpp"
-#include "GraphicsUtilities.h"
-#include "PNGCodec.h"
-#include "JPEGCodec.h"
-#include "ColorConversion.h"
+#include <Diligent/Graphics/GraphicsAccessories/interface/GraphicsAccessories.hpp>
+
+#include <Diligent/Graphics/GraphicsAccessories/interface/GraphicsAccessories.hpp>
+
+#include <Diligent/Graphics/GraphicsAccessories/interface/ColorConversion.h>
+#include <Diligent/Graphics/GraphicsTools/interface/GraphicsUtilities.h>
+
 #include "Image.h"
-#include "FileWrapper.hpp"
-#include "DataBlobImpl.hpp"
-#include "Align.hpp"
-
-extern "C"
-{
-    Diligent::DECODE_PNG_RESULT Diligent_DecodePng(Diligent::IDataBlob* pSrcPngBits,
-                                                   Diligent::IDataBlob* pDstPixels,
-                                                   Diligent::ImageDesc* pDstImgDesc);
-
-    Diligent::ENCODE_PNG_RESULT Diligent_EncodePng(const Diligent::Uint8* pSrcPixels,
-                                                   Diligent::Uint32       Width,
-                                                   Diligent::Uint32       Height,
-                                                   Diligent::Uint32       StrideInBytes,
-                                                   int                    PngColorType,
-                                                   Diligent::IDataBlob*   pDstPngBits);
-
-    Diligent::DECODE_JPEG_RESULT Diligent_DecodeJpeg(Diligent::IDataBlob* pSrcJpegBits,
-                                                     Diligent::IDataBlob* pDstPixels,
-                                                     Diligent::ImageDesc* pDstImgDesc);
-
-    Diligent::ENCODE_JPEG_RESULT Diligent_EncodeJpeg(Diligent::Uint8*     pSrcRGBData,
-                                                     Diligent::Uint32     Width,
-                                                     Diligent::Uint32     Height,
-                                                     int                  quality,
-                                                     Diligent::IDataBlob* pDstJpegBits);
-
-    Diligent::DECODE_JPEG_RESULT Diligent_LoadSGI(Diligent::IDataBlob* pSrcJpegBits,
-                                                  Diligent::IDataBlob* pDstPixels,
-                                                  Diligent::ImageDesc* pDstImgDesc);
-}
+#include <Diligent/Common/interface/FileWrapper.hpp>
+#include <Diligent/Common/interface/DataBlobImpl.hpp>
+#include <Diligent/Common/interface/Align.hpp>
 
 namespace Diligent
 {
@@ -106,40 +85,6 @@ void ModifyComponentCount(const void* pSrcData,
     }
 }
 
-DECODE_PNG_RESULT DecodePng(IDataBlob* pSrcPngBits,
-                            IDataBlob* pDstPixels,
-                            ImageDesc* pDstImgDesc)
-{
-    return Diligent_DecodePng(pSrcPngBits, pDstPixels, pDstImgDesc);
-}
-
-ENCODE_PNG_RESULT EncodePng(const Uint8* pSrcPixels,
-                            Uint32       Width,
-                            Uint32       Height,
-                            Uint32       StrideInBytes,
-                            int          PngColorType,
-                            IDataBlob*   pDstPngBits)
-{
-    return Diligent_EncodePng(pSrcPixels, Width, Height, StrideInBytes, PngColorType, pDstPngBits);
-}
-
-
-DECODE_JPEG_RESULT DecodeJpeg(IDataBlob* pSrcJpegBits,
-                              IDataBlob* pDstPixels,
-                              ImageDesc* pDstImgDesc)
-{
-    return Diligent_DecodeJpeg(pSrcJpegBits, pDstPixels, pDstImgDesc);
-}
-
-ENCODE_JPEG_RESULT EncodeJpeg(Uint8*     pSrcRGBPixels,
-                              Uint32     Width,
-                              Uint32     Height,
-                              int        quality,
-                              IDataBlob* pDstJpegBits)
-{
-    return Diligent_EncodeJpeg(pSrcRGBPixels, Width, Height, quality, pDstJpegBits);
-}
-
 static TextureDesc TexDescFromTexLoadInfo(const TextureLoadInfo& TexLoadInfo, const std::string& Name)
 {
     TextureDesc TexDesc;
@@ -172,7 +117,9 @@ TextureLoaderImpl::TextureLoaderImpl(IReferenceCounters*        pRefCounters,
         ImgFileFormat == IMAGE_FILE_FORMAT_TIFF ||
         ImgFileFormat == IMAGE_FILE_FORMAT_SGI)
     {
-        ImageLoadInfo ImgLoadInfo;
+        LOG_ERROR_AND_THROW("image format support removed.");
+
+      /*  ImageLoadInfo ImgLoadInfo;
         ImgLoadInfo.Format = ImgFileFormat;
         if (!m_pDataBlob)
         {
@@ -180,7 +127,7 @@ TextureLoaderImpl::TextureLoaderImpl(IReferenceCounters*        pRefCounters,
         }
         Image::CreateFromDataBlob(m_pDataBlob, ImgLoadInfo, &m_pImage);
         LoadFromImage(TexLoadInfo);
-        m_pDataBlob.Release();
+        m_pDataBlob.Release();*/
     }
     else
     {

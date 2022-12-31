@@ -7,7 +7,8 @@
 namespace Nuclear
 {
 	namespace Assets
-	{
+	{			
+		//TODO: REMOVE!
 		struct ImageCreationDesc
 		{
 			ImageCreationDesc()
@@ -22,6 +23,7 @@ namespace Nuclear
 			}
 			Assets::ImageData mData;
 			ImageImportingDesc mImportingDesc;
+			bool mDeleteDataAfterCreation = true;
 		};
 
 		class NEAPI Image : public IAsset
@@ -30,7 +32,12 @@ namespace Nuclear
 			Image();
 			~Image();
 
+			//TODO: REMOVE!
 			bool Create(const ImageCreationDesc& Desc);
+			bool Create(const ImageCreationDesc& desc, Diligent::TextureDesc& texdesc, Diligent::TextureData& texdata);
+
+
+			bool Create(const Diligent::TextureDesc& texdesc, const Diligent::TextureData& texdata);
 
 			void SetTextureView(ITextureView* view);
 			ITextureView* GetTextureView();

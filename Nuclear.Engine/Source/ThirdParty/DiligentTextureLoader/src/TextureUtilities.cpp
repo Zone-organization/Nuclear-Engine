@@ -27,7 +27,7 @@
 
 #include "TextureUtilities.h"
 #include "TextureLoader.h"
-#include "RefCntAutoPtr.hpp"
+#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 
 namespace Diligent
 {
