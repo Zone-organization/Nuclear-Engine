@@ -52,338 +52,27 @@ namespace Nuclear
 			}
 		}
 
-		bool Image::Create(const ImageCreationDesc& Desc)
-		{
-			mTextureView = nullptr;
-
-			mWidth = Desc.mData.mWidth;
-			mHeight = Desc.mData.mHeight;
-			TextureDesc TexDesc;
-			TexDesc.Type = Desc.mImportingDesc.mType;
-			TexDesc.Width = Desc.mData.mWidth;
-			TexDesc.Height = Desc.mData.mHeight;
-
-			const auto  ChannelDepth = GetValueSize(Desc.mData.mComponentType) * 8;
-
-			TexDesc.MipLevels = ComputeMipLevelsCount(TexDesc.Width, TexDesc.Height);
-			if (Desc.mImportingDesc.mMipLevels > 0)
-				TexDesc.MipLevels = std::min(TexDesc.MipLevels, Desc.mImportingDesc.mMipLevels);
-
-			TexDesc.Usage = Desc.mImportingDesc.mUsage;
-			TexDesc.BindFlags = Desc.mImportingDesc.mBindFlags;
-			TexDesc.Format = TEX_FORMAT_UNKNOWN;
-			TexDesc.CPUAccessFlags = Desc.mImportingDesc.mCPUAccessFlags;
-
-			Uint32 NumComponents = 0;
-
-			bool IsSRGB = (Desc.mData.mNumComponents >= 3 && ChannelDepth == 8) ? Desc.mImportingDesc.mIsSRGB : false;
-			if (TexDesc.Format == TEX_FORMAT_UNKNOWN)
-			{
-				NumComponents = Desc.mData.mNumComponents == 3 ? 4 : Desc.mData.mNumComponents;
-
-				if (ChannelDepth == 8)
-				{
-					switch (NumComponents)
-					{
-					case 1: TexDesc.Format = TEX_FORMAT_R8_UNORM; break;
-					case 2: TexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
-					case 4: TexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
-					}
-				}
-				else if (ChannelDepth == 16)
-				{
-					switch (NumComponents)
-					{
-					case 1: TexDesc.Format = TEX_FORMAT_R16_UNORM; break;
-					case 2: TexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
-					case 4: TexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
-					}
-				}
-				else if (ChannelDepth == 32)
-				{
-					switch (NumComponents)
-					{
-					case 1: TexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
-					case 2: TexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
-					case 4: TexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
-					}
-				}
-				else
-					LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
-			}
-			else
-			{
-				const auto& TexFmtDesc = GetTextureFormatAttribs(TexDesc.Format);
-
-				NumComponents = TexFmtDesc.NumComponents;
-				if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
-					LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
-			}
-
-
-			std::vector<TextureSubResData> pSubResources(TexDesc.MipLevels);
-			std::vector< std::vector<Uint8> > Mips(TexDesc.MipLevels);
-
-			if (Desc.mData.mNumComponents != NumComponents)
-			{
-				auto DstStride = Desc.mData.mWidth * NumComponents * ChannelDepth / 8;
-				DstStride = AlignUp(DstStride, Uint32{ 4 });
-				Mips[0].resize(size_t{ DstStride } *size_t{ Desc.mData.mHeight });
-				pSubResources[0].pData = Mips[0].data();
-				pSubResources[0].Stride = DstStride;
-				if (ChannelDepth == 8)
-				{
-					ModifyComponentCount<Uint8>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
-						Mips[0].data(), DstStride,
-						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
-				}
-				else if (ChannelDepth == 16)
-				{
-					ModifyComponentCount<Uint16>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
-						Mips[0].data(), DstStride,
-						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
-				}
-				else if (ChannelDepth == 32)
-				{
-					ModifyComponentCount<float>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
-						Mips[0].data(), DstStride,
-						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
-				}
-			}
-			else
-			{
-				auto MipLevelProps = GetMipLevelProperties(TexDesc, 0);
-
-				pSubResources[0].pData = Desc.mData.mData;
-				pSubResources[0].Stride = MipLevelProps.RowSize;
-			}
-
-			for (Uint32 m = 1; m < TexDesc.MipLevels; ++m)
-			{
-				auto MipLevelProps = GetMipLevelProperties(TexDesc, m);
-				Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
-				pSubResources[m].pData = Mips[m].data();
-				pSubResources[m].Stride = MipLevelProps.RowSize;
-
-				if (Desc.mImportingDesc.mGenerateMips)
-				{
-					auto FinerMipProps = GetMipLevelProperties(TexDesc, m - 1);
-					if (Desc.mImportingDesc.mGenerateMips)
-					{
-						ComputeMipLevelAttribs Attribs;
-						Attribs.Format = TexDesc.Format;
-						Attribs.FineMipWidth = FinerMipProps.LogicalWidth;
-						Attribs.FineMipHeight = FinerMipProps.LogicalHeight;
-						Attribs.pFineMipData = pSubResources[m - 1].pData;
-						Attribs.FineMipStride = StaticCast<size_t>(pSubResources[m - 1].Stride);
-						Attribs.pCoarseMipData = Mips[m].data();
-						Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
-						Attribs.AlphaCutoff = Desc.mImportingDesc.AlphaCutoff;
-						static_assert(MIP_FILTER_TYPE_DEFAULT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_DEFAULT), "Inconsistent enum values");
-						static_assert(MIP_FILTER_TYPE_BOX_AVERAGE == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_BOX_AVERAGE), "Inconsistent enum values");
-						static_assert(MIP_FILTER_TYPE_MOST_FREQUENT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT), "Inconsistent enum values");
-						Attribs.FilterType = static_cast<MIP_FILTER_TYPE>(Desc.mImportingDesc.MipFilter);
-						ComputeMipLevel(Attribs);
-					}
-				}
-			}
-
-			TextureData TexData;
-			TexData.pSubResources = pSubResources.data();
-			TexData.NumSubresources = TexDesc.MipLevels;
-			RefCntAutoPtr<ITexture> mTexture;
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
-
-			if (Desc.mImportingDesc.test ==true)
-			{
-				using std::chrono::high_resolution_clock;
-				using std::chrono::duration_cast;
-				using std::chrono::duration;
-				using std::chrono::milliseconds;
-				TextureLoadInfo info;
-				RefCntAutoPtr<ITextureLoader> loader;
-				duration<double, std::milli> ms_double;
-
-				auto t1 = high_resolution_clock::now();
-				SaveTextureAsDDS("../Assets/Common/Test5.dds", TexDesc, TexData);
-				auto t2 = high_resolution_clock::now();
-
-				ms_double = t2 - t1;
-				std::cout << "Export: " << ms_double << "ms\n";
-
-				auto t3 = high_resolution_clock::now();
-				auto testimg = Importer::GetInstance().ImportImageST(Core::Path("@CommonAssets@/Textures/PBR/RustedIron/albedo2.png"));
-				auto t4 = high_resolution_clock::now();
-
-				ms_double = t4 - t3;
-				std::cout << "Native Import: " << ms_double << "ms\n";
-
-				auto t5 = high_resolution_clock::now();
-				CreateTextureLoaderFromFile("../Assets/Common/Test5.dds", IMAGE_FILE_FORMAT_DDS, info, &loader);
-
-				RefCntAutoPtr<ITexture> mTexture3;
-				loader->CreateTexture(Graphics::Context::GetInstance().GetDevice(), &mTexture3);
-				auto t6 = high_resolution_clock::now();
-				ms_double = t6 - t5;
-				std::cout << "Diligent Import: " << ms_double << "ms\n";
-
-			}
-			
-			if (mTexture.RawPtr() != nullptr)
-			{
-				mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
-				SetState(IAsset::State::Created);
-				return true;
-			}
-
-			return false;
-		}
-		bool Image::Create(const ImageCreationDesc& Desc, Diligent::TextureDesc& TexDesc, Diligent::TextureData& TexData)
+		bool Image::Create()
 		{			
 			mTextureView = nullptr;
 
-			mWidth = Desc.mData.mWidth;
-			mHeight = Desc.mData.mHeight;
+			mWidth = mDesc.mTexDesc.Width;
+			mHeight = mDesc.mTexDesc.Height;
 
-			TexDesc.Type = Desc.mImportingDesc.mType;
-			TexDesc.Width = Desc.mData.mWidth;
-			TexDesc.Height = Desc.mData.mHeight;
-
-			const auto  ChannelDepth = GetValueSize(Desc.mData.mComponentType) * 8;
-
-			TexDesc.MipLevels = ComputeMipLevelsCount(TexDesc.Width, TexDesc.Height);
-			if (Desc.mImportingDesc.mMipLevels > 0)
-				TexDesc.MipLevels = std::min(TexDesc.MipLevels, Desc.mImportingDesc.mMipLevels);
-
-			TexDesc.Usage = Desc.mImportingDesc.mUsage;
-			TexDesc.BindFlags = Desc.mImportingDesc.mBindFlags;
-			TexDesc.Format = TEX_FORMAT_UNKNOWN;
-			TexDesc.CPUAccessFlags = Desc.mImportingDesc.mCPUAccessFlags;
-
-			Uint32 NumComponents = 0;
-
-			bool IsSRGB = (Desc.mData.mNumComponents >= 3 && ChannelDepth == 8) ? Desc.mImportingDesc.mIsSRGB : false;
-			if (TexDesc.Format == TEX_FORMAT_UNKNOWN)
-			{
-				NumComponents = Desc.mData.mNumComponents == 3 ? 4 : Desc.mData.mNumComponents;
-
-				if (ChannelDepth == 8)
-				{
-					switch (NumComponents)
-					{
-					case 1: TexDesc.Format = TEX_FORMAT_R8_UNORM; break;
-					case 2: TexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
-					case 4: TexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
-					}
-				}
-				else if (ChannelDepth == 16)
-				{
-					switch (NumComponents)
-					{
-					case 1: TexDesc.Format = TEX_FORMAT_R16_UNORM; break;
-					case 2: TexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
-					case 4: TexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
-					}
-				}
-				else if (ChannelDepth == 32)
-				{
-					switch (NumComponents)
-					{
-					case 1: TexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
-					case 2: TexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
-					case 4: TexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
-					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", Desc.mData.mNumComponents, ")");
-					}
-				}
-				else
-					LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
-			}
-			else
-			{
-				const auto& TexFmtDesc = GetTextureFormatAttribs(TexDesc.Format);
-
-				NumComponents = TexFmtDesc.NumComponents;
-				if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
-					LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
-			}
-
-
-			std::vector<TextureSubResData> pSubResources(TexDesc.MipLevels);
-			std::vector< std::vector<Uint8> > Mips(TexDesc.MipLevels);
-
-			if (Desc.mData.mNumComponents != NumComponents)
-			{
-				auto DstStride = Desc.mData.mWidth * NumComponents * ChannelDepth / 8;
-				DstStride = AlignUp(DstStride, Uint32{ 4 });
-				Mips[0].resize(size_t{ DstStride } *size_t{ Desc.mData.mHeight });
-				pSubResources[0].pData = Mips[0].data();
-				pSubResources[0].Stride = DstStride;
-				if (ChannelDepth == 8)
-				{
-					ModifyComponentCount<Uint8>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
-						Mips[0].data(), DstStride,
-						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
-				}
-				else if (ChannelDepth == 16)
-				{
-					ModifyComponentCount<Uint16>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
-						Mips[0].data(), DstStride,
-						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
-				}
-				else if (ChannelDepth == 32)
-				{
-					ModifyComponentCount<float>(Desc.mData.mData, Desc.mData.mRowStride, Desc.mData.mNumComponents,
-						Mips[0].data(), DstStride,
-						Desc.mData.mWidth, Desc.mData.mHeight, NumComponents);
-				}
-			}
-			else
-			{
-				auto MipLevelProps = GetMipLevelProperties(TexDesc, 0);
-
-				pSubResources[0].pData = Desc.mData.mData;
-				pSubResources[0].Stride = MipLevelProps.RowSize;
-			}
-
-			for (Uint32 m = 1; m < TexDesc.MipLevels; ++m)
-			{
-				auto MipLevelProps = GetMipLevelProperties(TexDesc, m);
-				Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
-				pSubResources[m].pData = Mips[m].data();
-				pSubResources[m].Stride = MipLevelProps.RowSize;
-
-				if (Desc.mImportingDesc.mGenerateMips)
-				{
-					auto FinerMipProps = GetMipLevelProperties(TexDesc, m - 1);
-					if (Desc.mImportingDesc.mGenerateMips)
-					{
-						ComputeMipLevelAttribs Attribs;
-						Attribs.Format = TexDesc.Format;
-						Attribs.FineMipWidth = FinerMipProps.LogicalWidth;
-						Attribs.FineMipHeight = FinerMipProps.LogicalHeight;
-						Attribs.pFineMipData = pSubResources[m - 1].pData;
-						Attribs.FineMipStride = StaticCast<size_t>(pSubResources[m - 1].Stride);
-						Attribs.pCoarseMipData = Mips[m].data();
-						Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
-						Attribs.AlphaCutoff = Desc.mImportingDesc.AlphaCutoff;
-						static_assert(MIP_FILTER_TYPE_DEFAULT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_DEFAULT), "Inconsistent enum values");
-						static_assert(MIP_FILTER_TYPE_BOX_AVERAGE == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_BOX_AVERAGE), "Inconsistent enum values");
-						static_assert(MIP_FILTER_TYPE_MOST_FREQUENT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT), "Inconsistent enum values");
-						Attribs.FilterType = static_cast<MIP_FILTER_TYPE>(Desc.mImportingDesc.MipFilter);
-						ComputeMipLevel(Attribs);
-					}
-				}
-			}
-
-			TexData.pSubResources = pSubResources.data();
-			TexData.NumSubresources = TexDesc.MipLevels;
+			//CREATE IMAGE
+			Diligent::TextureData TexData;
+			TexData.pSubResources = mDesc.mSubresources.data();
+			TexData.NumSubresources = mDesc.mSubresources.size();
 			RefCntAutoPtr<ITexture> mTexture;
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
+			Graphics::Context::GetInstance().GetDevice()->CreateTexture(mDesc.mTexDesc, &TexData, &mTexture);
+
+			mDesc.mSubresources.clear();
+			//mDesc.mSubresources.shrink_to_fit();
+			std::vector<TextureSubResData>().swap(mDesc.mSubresources);
+
+			mDesc.mMips.clear();
+		//	mDesc.mMips.shrink_to_fit();
+			std::vector<std::vector<Uint8>>().swap(mDesc.mMips);
 
 			if (mTexture.RawPtr() != nullptr)
 			{
@@ -394,6 +83,144 @@ namespace Nuclear
 
 			return false;
 		}
+		ImageDesc& Image::GetDesc()
+		{
+			return mDesc;
+		}
+		void Image::ProcessImageData(const Assets::ImageData& data)
+		{
+			mDesc.mTexDesc.Type = data.mType;
+			mDesc.mTexDesc.Usage = data.mUsage;
+			mDesc.mTexDesc.BindFlags = data.mBindFlags;
+			mDesc.mTexDesc.Format = data.mFormat;
+			mDesc.mTexDesc.CPUAccessFlags = data.mCPUAccessFlags;
+			mDesc.mTexDesc.Width = data.mWidth;
+			mDesc.mTexDesc.Height = data.mHeight;
+
+			if (mDesc.mSubresources.size() == 0)
+			{
+				mDesc.mTexDesc.MipLevels = ComputeMipLevelsCount(mDesc.mTexDesc.Width, mDesc.mTexDesc.Height);
+				if (data.mMipLevels > 0)
+					mDesc.mTexDesc.MipLevels = std::min(mDesc.mTexDesc.MipLevels, data.mMipLevels);
+
+				Uint32 NumComponents = 0;
+				const auto ChannelDepth = GetValueSize(data.mComponentType) * 8;
+
+				bool IsSRGB = (data.mNumComponents >= 3 && ChannelDepth == 8) ? data.mIsSRGB : false;
+				if (mDesc.mTexDesc.Format == TEX_FORMAT_UNKNOWN)
+				{
+					NumComponents = data.mNumComponents == 3 ? 4 : data.mNumComponents;
+
+					if (ChannelDepth == 8)
+					{
+						switch (NumComponents)
+						{
+						case 1: mDesc.mTexDesc.Format = TEX_FORMAT_R8_UNORM; break;
+						case 2: mDesc.mTexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
+						case 4: mDesc.mTexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", data.mNumComponents, ")");
+						}
+					}
+					else if (ChannelDepth == 16)
+					{
+						switch (NumComponents)
+						{
+						case 1: mDesc.mTexDesc.Format = TEX_FORMAT_R16_UNORM; break;
+						case 2: mDesc.mTexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
+						case 4: mDesc.mTexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", data.mNumComponents, ")");
+						}
+					}
+					else if (ChannelDepth == 32)
+					{
+						switch (NumComponents)
+						{
+						case 1: mDesc.mTexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
+						case 2: mDesc.mTexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
+						case 4: mDesc.mTexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", data.mNumComponents, ")");
+						}
+					}
+					else
+						LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
+				}
+				else
+				{
+					const auto& TexFmtDesc = GetTextureFormatAttribs(mDesc.mTexDesc.Format);
+
+					NumComponents = TexFmtDesc.NumComponents;
+					if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
+						LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
+				}
+				mDesc.mSubresources = std::vector<TextureSubResData>(mDesc.mTexDesc.MipLevels);
+				mDesc.mMips = std::vector< std::vector<Uint8> >(mDesc.mTexDesc.MipLevels);
+
+				auto& pSubResources = mDesc.mSubresources;
+				auto& Mips = mDesc.mMips;
+
+				//std::vector< std::vector<Uint8> > Mips(mDesc.mTexDesc.MipLevels);
+
+				if (data.mNumComponents != NumComponents)
+				{
+					auto DstStride = data.mWidth * NumComponents * ChannelDepth / 8;
+					DstStride = AlignUp(DstStride, Uint32{ 4 });
+					Mips[0].resize(size_t{ DstStride } *size_t{ data.mHeight });
+					pSubResources[0].pData = Mips[0].data();
+					pSubResources[0].Stride = DstStride;
+					if (ChannelDepth == 8)
+					{
+						ModifyComponentCount<Uint8>(data.mData, data.mRowStride, data.mNumComponents,
+							Mips[0].data(), DstStride,
+							data.mWidth, data.mHeight, NumComponents);
+					}
+					else if (ChannelDepth == 16)
+					{
+						ModifyComponentCount<Uint16>(data.mData, data.mRowStride, data.mNumComponents,
+							Mips[0].data(), DstStride,
+							data.mWidth, data.mHeight, NumComponents);
+					}
+					else if (ChannelDepth == 32)
+					{
+						ModifyComponentCount<float>(data.mData, data.mRowStride, data.mNumComponents,
+							Mips[0].data(), DstStride,
+							data.mWidth, data.mHeight, NumComponents);
+					}
+				}
+				else
+				{
+					auto MipLevelProps = GetMipLevelProperties(mDesc.mTexDesc, 0);
+
+					pSubResources[0].pData = data.mData;
+					pSubResources[0].Stride = MipLevelProps.RowSize;
+				}
+
+				for (Uint32 m = 1; m < mDesc.mTexDesc.MipLevels; ++m)
+				{
+					auto MipLevelProps = GetMipLevelProperties(mDesc.mTexDesc, m);
+					Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
+					pSubResources[m].pData = Mips[m].data();
+					pSubResources[m].Stride = MipLevelProps.RowSize;
+
+					if (data.mGenerateMipMaps)
+					{
+						auto FinerMipProps = GetMipLevelProperties(mDesc.mTexDesc, m - 1);
+
+						ComputeMipLevelAttribs Attribs;
+						Attribs.Format = mDesc.mTexDesc.Format;
+						Attribs.FineMipWidth = FinerMipProps.LogicalWidth;
+						Attribs.FineMipHeight = FinerMipProps.LogicalHeight;
+						Attribs.pFineMipData = pSubResources[m - 1].pData;
+						Attribs.FineMipStride = StaticCast<size_t>(pSubResources[m - 1].Stride);
+						Attribs.pCoarseMipData = Mips[m].data();
+						Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
+						Attribs.AlphaCutoff = data.mMipMapsAlphaCutoff;
+						Attribs.FilterType = data.mMipMapsFilter;
+						ComputeMipLevel(Attribs);
+					}
+				}
+			}
+		}
+		/*
 		bool Image::Create(const Diligent::TextureDesc& TexDesc, const Diligent::TextureData& texdata)
 		{
 			RefCntAutoPtr<ITexture> texture;
@@ -406,7 +233,7 @@ namespace Nuclear
 				return true;
 			}
 			return false;
-		}
+		}*/
 		void Image::SetTextureView(ITextureView* view)
 		{
 			mTextureView = view;

@@ -59,6 +59,16 @@ public:
         return m_TexDesc;
     }
 
+    virtual  std::vector<TextureSubResData>& DILIGENT_CALL_TYPE GetSubresources()  override final
+    {
+        return m_SubResources;
+    }
+
+    virtual  std::vector<std::vector<Uint8>>& DILIGENT_CALL_TYPE GetMips()  override final
+    {
+        return m_Mips;
+    }
+
     virtual const TextureSubResData& DILIGENT_CALL_TYPE GetSubresourceData(Uint32 MipLevel,
                                                                            Uint32 ArraySlice) const override final
     {

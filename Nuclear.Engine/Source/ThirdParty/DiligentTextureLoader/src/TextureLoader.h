@@ -141,6 +141,11 @@ DILIGENT_BEGIN_INTERFACE(ITextureLoader, IObject)
                                        IRenderDevice* pDevice,
                                        ITexture**     ppTexture) PURE;
 
+    /// Returns the texture subresources.
+    VIRTUAL std::vector<TextureSubResData> REF METHOD(GetSubresources)(THIS) PURE;
+
+    VIRTUAL std::vector<std::vector<Uint8>> REF METHOD(GetMips)(THIS) PURE;
+
     /// Returns the texture description.
     VIRTUAL const TextureDesc REF METHOD(GetTextureDesc)(THIS) CONST PURE;
 

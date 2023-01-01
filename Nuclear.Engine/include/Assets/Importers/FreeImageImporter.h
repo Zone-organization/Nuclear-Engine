@@ -1,6 +1,7 @@
 #pragma once
 #include <Assets/ImportingDescs.h>
 #include <Assets/LoadingDescs.h>
+#include <Assets/Image.h>
 
 namespace Nuclear
 {
@@ -19,7 +20,7 @@ namespace Nuclear
 				static FreeImageImporter& GetInstance();
 
 				bool Import(const std::string& importPath, const std::string& exportPath, Assets::Image* image, const Assets::ImageImportingDesc& desc);
-				bool Load(const Assets::ImageLoadingDesc& Desc);
+				bool Load(const Assets::ImageLoadingDesc& Desc, ImageDesc& result);
 
 				bool Load(const std::string& Path, Assets::ImageData* result ,const Assets::ImageImportingDesc& Desc);
 

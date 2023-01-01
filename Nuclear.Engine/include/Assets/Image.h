@@ -8,22 +8,11 @@ namespace Nuclear
 {
 	namespace Assets
 	{			
-		//TODO: REMOVE!
-		struct ImageCreationDesc
-		{
-			ImageCreationDesc()
-			{
-				mData = Assets::ImageData();
-				mImportingDesc = ImageImportingDesc();
-			}
-			ImageCreationDesc(const Assets::ImageData& data, const ImageImportingDesc& desc)
-				: mData(data), mImportingDesc(desc)
-			{
-				
-			}
-			Assets::ImageData mData;
-			ImageImportingDesc mImportingDesc;
-			bool mDeleteDataAfterCreation = true;
+		struct ImageDesc
+		{	
+			Diligent::TextureDesc mTexDesc;
+			std::vector<TextureSubResData> mSubresources;
+			std::vector< std::vector<Uint8> > mMips;
 		};
 
 		class NEAPI Image : public IAsset
@@ -32,12 +21,11 @@ namespace Nuclear
 			Image();
 			~Image();
 
-			//TODO: REMOVE!
-			bool Create(const ImageCreationDesc& Desc);
-			bool Create(const ImageCreationDesc& desc, Diligent::TextureDesc& texdesc, Diligent::TextureData& texdata);
+			bool Create();
 
+			ImageDesc& GetDesc();
 
-			bool Create(const Diligent::TextureDesc& texdesc, const Diligent::TextureData& texdata);
+			void ProcessImageData(const Assets::ImageData& data);
 
 			void SetTextureView(ITextureView* view);
 			ITextureView* GetTextureView();
@@ -46,6 +34,7 @@ namespace Nuclear
 			const Uint32 GetHeight() const;
 		protected:
 			RefCntAutoPtr<ITextureView> mTextureView;
+			ImageDesc mDesc;
 			Uint32 mWidth, mHeight;
 			friend Serialization::Access;
 

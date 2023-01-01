@@ -37,15 +37,14 @@ namespace Nuclear
 		class CreateImageTask : public Threading::MainThreadTask
 		{
 		public:
-			CreateImageTask(Image* img, const AssetInfo& info, const Assets::ImageData& data, const ImageImportingDesc& desc)
-				: pImage(img), mDesc(data, desc), mInfo(info)
+			CreateImageTask(Image* img, const AssetInfo& info, const Assets::ImageData& data)
+				: pImage(img), mData(data), mInfo(info)
 			{
-
 			}
 
 			bool OnRunning() override
 			{
-				bool result = pImage->Create(mDesc);
+				bool result = pImage->Create();
 				auto& vec = Importer::GetInstance().GetQueuedAssets();
 
 				for (Uint32 i = 0; i < vec.size(); i++)
@@ -70,8 +69,8 @@ namespace Nuclear
 			{
 				delete this;
 			}
+			Assets::ImageData mData;
 			Image* pImage;
-			ImageCreationDesc mDesc;
 			AssetInfo mInfo;
 		};
 
@@ -96,7 +95,9 @@ namespace Nuclear
 				if (result)
 				{
 					pResult->SetState(IAsset::State::Loaded);
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data, mDesc));
+					pResult->ProcessImageData(data);
+
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data));
 				}
 				else
 					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
@@ -114,7 +115,7 @@ namespace Nuclear
 			AssetInfo mInfo;
 		};
 
-		class NEAPI AssimpImportTask : public Threading::Task
+		/*class NEAPI AssimpImportTask : public Threading::Task
 		{
 		public:
 			AssimpImportTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
@@ -135,7 +136,7 @@ namespace Nuclear
 				if (result)
 				{
 					pResult->SetState(IAsset::State::Loaded);
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data, mDesc));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data));
 				}
 				else
 					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
@@ -151,7 +152,7 @@ namespace Nuclear
 			Assets::Image* pResult;
 			Assets::ImageImportingDesc mDesc;
 			AssetInfo mInfo;
-		};
+		};*/
 
 
 		Importer::Importer()
@@ -289,16 +290,18 @@ namespace Nuclear
 			}
 
 			//Load
-			ImageData imagedata = Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(), Desc);
-			Image image;
-			if (!image.Create(ImageCreationDesc(imagedata, Desc)))
+			ImageData imagedata;
+			Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(),&imagedata, Desc);
+			auto& image = AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath);
+			image.ProcessImageData(imagedata);
+			if (!image.Create())
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}' Hash: '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 
 			//Create
-			result = &(AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath) = image);
+			result = &image;
 
 			FinishImportingAsset(result, Path, hashedpath, AssetLibrary::GetInstance().mName);
 			return result;
@@ -316,8 +319,8 @@ namespace Nuclear
 
 			//Create
 			Image image;
-
-			if (!image.Create(ImageCreationDesc(imagedata, Desc)))
+			image.ProcessImageData(imagedata);
+			if (!image.Create())
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
@@ -656,12 +659,14 @@ namespace Nuclear
 			}
 
 			Image result;
-			ImageData imagedata = Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(), Desc);
-			if (imagedata.mData == nullptr)
+			ImageData imagedata;
+			
+			if (!Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(), &imagedata, Desc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return nullptr;
 			}
+
 			//TODO::
 			//result.mData = imagedata;
 

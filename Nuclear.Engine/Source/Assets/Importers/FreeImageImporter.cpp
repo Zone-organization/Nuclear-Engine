@@ -52,7 +52,6 @@ namespace Nuclear
 			bool FreeImageImporter::FreeimageLoad(const std::string& Path, Assets::ImageData* result, const Assets::ImageImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
-
 				if (Desc.mLoadFromMemory == true)
 				{
 					FIMEMORY* memBuff;
@@ -92,6 +91,7 @@ namespace Nuclear
 					type = FreeImage_GetImageType(bitmap);
 				}
 
+				result->mType = RESOURCE_DIM_TEX_2D;
 				result->mData = FreeImage_GetBits(bitmap);
 				result->mWidth = FreeImage_GetWidth(bitmap);
 				result->mHeight = FreeImage_GetHeight(bitmap);
@@ -176,7 +176,7 @@ namespace Nuclear
 					bitmap = FreeImage_ConvertToRGBAF(dib);
 					type = FreeImage_GetImageType(bitmap);
 				}
-
+				result->mType = RESOURCE_DIM_TEX_2D;
 				result->mData = FreeImage_GetBits(bitmap);
 				result->mWidth = FreeImage_GetWidth(bitmap);
 				result->mHeight = FreeImage_GetHeight(bitmap);
@@ -237,8 +237,6 @@ namespace Nuclear
 			bool FreeImageImporter::Import(const std::string& importPath, const std::string& exportPath, Assets::Image* image, const Assets::ImageImportingDesc& desc)
 			{
 				Assets::ImageData data;
-				Assets::ImageCreationDesc creationdesc(data, desc);
-				creationdesc.mDeleteDataAfterCreation = false;
 
 				if (!FreeimageLoad(importPath, &data, desc))
 				{
@@ -247,12 +245,13 @@ namespace Nuclear
 
 				Diligent::TextureDesc TexDesc;
 				Diligent::TextureData TexData;
+				image->ProcessImageData(data);
 
-				image->Create(creationdesc, TexDesc, TexData);
+				image->Create();
 								
 				return SaveTextureAsDDS(exportPath.c_str(), TexDesc, TexData);				
 			}
-			bool FreeImageImporter::Load(Assets::Image* result, const Assets::ImageLoadingDesc& Desc)
+			bool FreeImageImporter::Load(const Assets::ImageLoadingDesc& Desc, ImageDesc& result)
 			{
 				FREE_IMAGE_FORMAT type = FIF_UNKNOWN;
 				if(Desc.mPath != "")
@@ -268,12 +267,13 @@ namespace Nuclear
 				{
 					TextureLoadInfo info;
 					RefCntAutoPtr<ITextureLoader> loader;
-					RefCntAutoPtr<ITexture> texture;
 
 					CreateTextureLoaderFromMemory(Desc.mData.GetBuffer().data(), Desc.mData.GetBuffer().size(), IMAGE_FILE_FORMAT_DDS,false, info, &loader);
 
-					loader->CreateTexture(Graphics::Context::GetInstance().GetDevice(), &texture);
-					result->SetTextureView(texture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
+					result.mTexDesc = loader->GetTextureDesc();
+					result.mSubresources = std::move(loader->GetSubresources());
+					result.mMips = std::move(loader->GetMips());
+
 					return true;
 				}
 				return false;

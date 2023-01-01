@@ -16,6 +16,7 @@ namespace Nuclear
 			std::string mPath = "";
 
 			Utilities::DataBlob mData;
+
 		};
 
 	

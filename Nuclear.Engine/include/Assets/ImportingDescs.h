@@ -61,21 +61,6 @@ namespace Nuclear
 			bool LoadMaterialData = true;
 		};
 
-		DILIGENT_TYPED_ENUM(TEXTURE_LOAD_MIP_FILTER, Uint8)
-		{
-			/// Default filter type: BOX_AVERAGE for UNORM/SNORM and FP formats, and
-			/// MOST_FREQUENT for UINT/SINT formats.
-			TEXTURE_LOAD_MIP_FILTER_DEFAULT = 0,
-
-				/// 2x2 box average.
-				TEXTURE_LOAD_MIP_FILTER_BOX_AVERAGE,
-
-				/// Use the most frequent element from the 2x2 box.
-				/// This filter does not introduce new values and should be used
-				/// for integer textures that contain non-filterable data (e.g. indices).
-				TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT
-		};
-
 		struct ImageImportingDesc : public AssetImportingDesc
 		{
 			USAGE mUsage;
@@ -100,13 +85,6 @@ namespace Nuclear
 
 			Uint32 mMemSize;
 
-			float AlphaCutoff = 0;
-
-			// Coarse mip filter type, see Diligent::TEXTURE_LOAD_MIP_FILTER.
-			TEXTURE_LOAD_MIP_FILTER MipFilter = TEXTURE_LOAD_MIP_FILTER_DEFAULT;
-
-			//TEXTURE_FORMAT mFormat;
-
 			ImageImportingDesc() :
 				mUsage(USAGE_IMMUTABLE),
 				mBindFlags(BIND_SHADER_RESOURCE),
@@ -115,7 +93,6 @@ namespace Nuclear
 				mIsSRGB(false),
 				mGenerateMips(true),
 				mFlipY_Axis(true),
-				/*	mFormat(TEX_FORMAT_UNKNOWN),*/
 				mLoadFromMemory(false),
 				mMemData(nullptr),
 				mMemSize(0),
