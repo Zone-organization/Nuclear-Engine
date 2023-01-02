@@ -143,7 +143,7 @@ public:
 		DESC.mUsage = USAGE_IMMUTABLE;
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
-
+		DESC.mAsyncImporting = false;
 		HDREnv = GetAssetManager().ImportTexture("@CommonAssets@/Textures/HDR/newport_loft.hdr", (DESC, Graphics::TextureUsageType::Unknown) );
 
 		Rendering::ImageBasedLightingDesc desc;

@@ -72,26 +72,26 @@ namespace Nuclear
 			TexDesc.Type = RESOURCE_DIM_TEX_CUBE;
 			TexDesc.Usage = USAGE_DEFAULT;
 			TexDesc.BindFlags = BIND_SHADER_RESOURCE;
-	//		TexDesc.Width = data.at(0)->mData.mWidth;
-	//		TexDesc.Height = data.at(0)->mData.mHeight;
+			TexDesc.Width = data.at(0)->GetWidth();
+			TexDesc.Height = data.at(0)->GetHeight();
 			TexDesc.Format = TEX_FORMAT_RGBA8_UNORM;
 			TexDesc.ArraySize = 6;
 			TexDesc.MipLevels = 1;
 
 			RefCntAutoPtr<ITexture> TexCube;
-			TextureData Data;
 
+			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &TexCube);
 
-			TextureSubResData subData[6];
 			for (unsigned int i = 0; i < data.size(); i++)
 			{
-		//		subData[i].pData = data[i]->mData.mData;
-	//			subData[i].Stride = data[i]->mData.mWidth * 4;
+				CopyTextureAttribs attrib;
+				attrib.pSrcTexture = data[i]->GetTextureView()->GetTexture();
+				attrib.DstSlice = i;
+				attrib.pDstTexture = TexCube;
+				Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
+
 			}
 
-			Data.NumSubresources = 6;
-			Data.pSubResources = &subData[0];
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &Data, &TexCube);
 			if (TexCube != nullptr)
 			{
 				mTextureSRV = TexCube->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);

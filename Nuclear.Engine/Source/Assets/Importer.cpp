@@ -37,14 +37,14 @@ namespace Nuclear
 		class CreateImageTask : public Threading::MainThreadTask
 		{
 		public:
-			CreateImageTask(Image* img, const AssetInfo& info, const Assets::ImageData& data)
-				: pImage(img), mData(data), mInfo(info)
+			CreateImageTask(Image* img, ImageDesc* dsc, const AssetInfo& info, const Assets::ImageData& data)
+				: pImage(img), mData(data), mInfo(info), pImageDesc(dsc)
 			{
 			}
 
 			bool OnRunning() override
 			{
-				bool result = pImage->Create();
+				bool result = pImage->Create(pImageDesc);
 				auto& vec = Importer::GetInstance().GetQueuedAssets();
 
 				for (Uint32 i = 0; i < vec.size(); i++)
@@ -67,10 +67,12 @@ namespace Nuclear
 
 			void OnEnd() override
 			{
+				delete pImageDesc;
 				delete this;
 			}
 			Assets::ImageData mData;
 			Image* pImage;
+			ImageDesc* pImageDesc;
 			AssetInfo mInfo;
 		};
 
@@ -94,14 +96,16 @@ namespace Nuclear
 
 				if (result)
 				{
+					pResultDesc = new ImageDesc;
 					pResult->SetState(IAsset::State::Loaded);
-					pResult->ProcessImageData(data);
+					pResult->CreateImageDesc(pResultDesc, data);
 
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultDesc, mInfo, data));
 				}
 				else
+				{
 					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
-
+				}
 				return result;
 			}
 
@@ -111,6 +115,7 @@ namespace Nuclear
 			}
 		protected:
 			Assets::Image* pResult;
+			ImageDesc* pResultDesc;
 			Assets::ImageImportingDesc mDesc;
 			AssetInfo mInfo;
 		};
@@ -196,23 +201,27 @@ namespace Nuclear
 
 		Image* Importer::ImportImage(const Core::Path& Path, const ImageImportingDesc& Desc)
 		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-			//Check if exists
-			auto result = AssetLibrary::GetInstance().mImportedImages.GetAsset(hashedpath);
-			if (result)
+			if (Desc.mAsyncImporting)
 			{
+				auto hashedpath = Utilities::Hash(Path.GetInputPath());
+
+				//Check if exists
+				auto result = AssetLibrary::GetInstance().mImportedImages.GetAsset(hashedpath);
+				if (result)
+				{
+					return result;
+				}
+
+				//Add to queue			
+				result = &(AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath));
+				mQueuedAssets.push_back(result);
+				result->SetState(IAsset::State::Queued);
+				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(result, { Path, hashedpath, AssetLibrary::GetInstance().mName, true }, Desc));
+
+				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
-
-			//Add to queue			
-			result = &(AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath));
-			mQueuedAssets.push_back(result);
-			result->SetState(IAsset::State::Queued);
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(result, { Path, hashedpath, AssetLibrary::GetInstance().mName, true }, Desc));
-
-			result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
-			return result;
+			return ImportImageST(Path, Desc);
 		}
 
 
@@ -293,8 +302,9 @@ namespace Nuclear
 			ImageData imagedata;
 			Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(),&imagedata, Desc);
 			auto& image = AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath);
-			image.ProcessImageData(imagedata);
-			if (!image.Create())
+			ImageDesc desc;
+			image.CreateImageDesc(&desc, imagedata);
+			if (!image.Create(&desc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}' Hash: '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
@@ -319,8 +329,9 @@ namespace Nuclear
 
 			//Create
 			Image image;
-			image.ProcessImageData(imagedata);
-			if (!image.Create())
+			ImageDesc desc;
+			image.CreateImageDesc(&desc,imagedata);
+			if (!image.Create(&desc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();

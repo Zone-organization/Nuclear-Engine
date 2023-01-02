@@ -11,9 +11,9 @@ namespace Nuclear
 	namespace Assets
 	{
 
-		struct AssetImportingDesc 
+		struct NEAPI AssetImportingDesc
 		{
-			//Empty?
+			bool mAsyncImporting = true;
 		};
 
 		struct AudioClipImportingDesc : public AssetImportingDesc
@@ -61,7 +61,7 @@ namespace Nuclear
 			bool LoadMaterialData = true;
 		};
 
-		struct ImageImportingDesc : public AssetImportingDesc
+		struct NEAPI ImageImportingDesc : public AssetImportingDesc
 		{
 			USAGE mUsage;
 
@@ -96,7 +96,8 @@ namespace Nuclear
 				mLoadFromMemory(false),
 				mMemData(nullptr),
 				mMemSize(0),
-				mType(RESOURCE_DIM_TEX_2D)
+				mType(RESOURCE_DIM_TEX_2D),
+				AssetImportingDesc({ true })
 			{}
 		};
 

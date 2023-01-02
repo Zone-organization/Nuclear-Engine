@@ -9,7 +9,13 @@ namespace Nuclear
 	namespace Assets
 	{			
 		struct ImageDesc
-		{	
+		{
+			ImageDesc()
+			{
+				mTexDesc = Diligent::TextureDesc();
+				mSubresources = std::vector<TextureSubResData>();
+				mMips = std::vector< std::vector<Uint8> >();
+			}
 			Diligent::TextureDesc mTexDesc;
 			std::vector<TextureSubResData> mSubresources;
 			std::vector< std::vector<Uint8> > mMips;
@@ -21,11 +27,9 @@ namespace Nuclear
 			Image();
 			~Image();
 
-			bool Create();
+			bool Create(ImageDesc* desc);
 
-			ImageDesc& GetDesc();
-
-			void ProcessImageData(const Assets::ImageData& data);
+			void CreateImageDesc(ImageDesc* desc, const Assets::ImageData& data);
 
 			void SetTextureView(ITextureView* view);
 			ITextureView* GetTextureView();
@@ -34,7 +38,6 @@ namespace Nuclear
 			const Uint32 GetHeight() const;
 		protected:
 			RefCntAutoPtr<ITextureView> mTextureView;
-			ImageDesc mDesc;
 			Uint32 mWidth, mHeight;
 			friend Serialization::Access;
 
