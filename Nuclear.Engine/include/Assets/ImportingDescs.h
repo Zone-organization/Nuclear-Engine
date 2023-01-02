@@ -11,9 +11,9 @@ namespace Nuclear
 	namespace Assets
 	{
 
-		struct AssetImportingDesc 
+		struct AssetImportingDesc
 		{
-			//Empty?
+			bool mAsyncImporting = true;
 		};
 
 		struct AudioClipImportingDesc : public AssetImportingDesc
@@ -97,27 +97,17 @@ namespace Nuclear
 				mMemData(nullptr),
 				mMemSize(0),
 				mType(RESOURCE_DIM_TEX_2D)
-			{}
+			{
+				mAsyncImporting = true;
+			}
 		};
 
 		struct TextureImportingDesc : public AssetImportingDesc
 		{
 			TextureImportingDesc()
+				: mImageDesc(ImageImportingDesc()), mType(Graphics::TextureUsageType::Unknown)
 			{
-				mImageDesc = ImageImportingDesc();
-				mType = Graphics::TextureUsageType::Unknown;
-			}
 
-			TextureImportingDesc(Graphics::TextureUsageType type)
-			{
-				mImageDesc = ImageImportingDesc();
-				mType = type;
-			}
-
-			TextureImportingDesc(const ImageImportingDesc& desc, Graphics::TextureUsageType type)
-			{
-				mImageDesc = desc;
-				mType = type;
 			}
 
 			ImageImportingDesc mImageDesc;

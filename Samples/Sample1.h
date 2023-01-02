@@ -164,9 +164,9 @@ public:
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_diffuse.png",{ Graphics::TextureUsageType::Diffuse}) });
-		CubeSet.mData.push_back({ 1, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_specular.png",{ Graphics::TextureUsageType::Specular}) });
-		CubeSet.mData.push_back({ 2, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_normal.png",{ Graphics::TextureUsageType::Normal}) });
+		CubeSet.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_diffuse.png", Graphics::TextureUsageType::Diffuse) });
+		CubeSet.mData.push_back({ 1, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_specular.png", Graphics::TextureUsageType::Specular) });
+		CubeSet.mData.push_back({ 2, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_normal.png", Graphics::TextureUsageType::Normal) });
 		
 		CubeTextures.mTextures.push_back(CubeSet);
 

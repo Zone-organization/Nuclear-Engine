@@ -93,6 +93,13 @@ namespace Nuclear
 			return nullptr;
 		}
 
+		Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype)
+		{
+			TextureImportingDesc desc;
+			desc.mType = texturetype;
+			return ImportTexture(Path, desc);
+		}
+
 		Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc)
 		{
 			return Importer::GetInstance().ImportTexture(Path, Desc);

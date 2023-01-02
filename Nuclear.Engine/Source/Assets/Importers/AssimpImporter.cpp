@@ -367,7 +367,8 @@ namespace Nuclear {
 						}*/
 
 
-						texture = Assets::AssetManager::GetInstance().ImportTexture(filename, (desc, GetTextureType(type)));
+						desc.mType = GetTextureType(type);
+						texture = Assets::AssetManager::GetInstance().ImportTexture(filename, desc);
 					}
 
 					textures.mData.push_back({ 0, texture });

@@ -245,9 +245,11 @@ namespace Nuclear
 
 				Diligent::TextureDesc TexDesc;
 				Diligent::TextureData TexData;
-				image->ProcessImageData(data);
 
-				image->Create();
+
+				//image->ProcessImageData(data);
+
+				//image->Create();
 								
 				return SaveTextureAsDDS(exportPath.c_str(), TexDesc, TexData);				
 			}

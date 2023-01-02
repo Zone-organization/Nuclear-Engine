@@ -72,6 +72,7 @@ namespace Nuclear
 
 			IAsset* Import(const Core::Path& Path, AssetType type = AssetType::Unknown);
 
+			Graphics::Texture ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype);
 			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
 			Graphics::Texture ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 

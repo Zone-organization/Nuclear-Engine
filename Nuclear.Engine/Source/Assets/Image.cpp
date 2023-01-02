@@ -13,6 +13,9 @@ namespace Nuclear
 		Image::Image()
 			: IAsset(AssetType::Image)
 		{
+			mWidth = 0;
+			mHeight = 0;
+			mTextureView = nullptr;
 		}
 
 		Image::~Image()
@@ -52,27 +55,19 @@ namespace Nuclear
 			}
 		}
 
-		bool Image::Create()
+		bool Image::Create(ImageDesc* desc)
 		{			
 			mTextureView = nullptr;
 
-			mWidth = mDesc.mTexDesc.Width;
-			mHeight = mDesc.mTexDesc.Height;
+			mWidth = desc->mTexDesc.Width;
+			mHeight = desc->mTexDesc.Height;
 
 			//CREATE IMAGE
 			Diligent::TextureData TexData;
-			TexData.pSubResources = mDesc.mSubresources.data();
-			TexData.NumSubresources = mDesc.mSubresources.size();
+			TexData.pSubResources = desc->mSubresources.data();
+			TexData.NumSubresources = desc->mSubresources.size();
 			RefCntAutoPtr<ITexture> mTexture;
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(mDesc.mTexDesc, &TexData, &mTexture);
-
-			mDesc.mSubresources.clear();
-			//mDesc.mSubresources.shrink_to_fit();
-			std::vector<TextureSubResData>().swap(mDesc.mSubresources);
-
-			mDesc.mMips.clear();
-		//	mDesc.mMips.shrink_to_fit();
-			std::vector<std::vector<Uint8>>().swap(mDesc.mMips);
+			Graphics::Context::GetInstance().GetDevice()->CreateTexture(desc->mTexDesc, &TexData, &mTexture);
 
 			if (mTexture.RawPtr() != nullptr)
 			{
@@ -83,31 +78,28 @@ namespace Nuclear
 
 			return false;
 		}
-		ImageDesc& Image::GetDesc()
-		{
-			return mDesc;
-		}
-		void Image::ProcessImageData(const Assets::ImageData& data)
-		{
-			mDesc.mTexDesc.Type = data.mType;
-			mDesc.mTexDesc.Usage = data.mUsage;
-			mDesc.mTexDesc.BindFlags = data.mBindFlags;
-			mDesc.mTexDesc.Format = data.mFormat;
-			mDesc.mTexDesc.CPUAccessFlags = data.mCPUAccessFlags;
-			mDesc.mTexDesc.Width = data.mWidth;
-			mDesc.mTexDesc.Height = data.mHeight;
 
-			if (mDesc.mSubresources.size() == 0)
+		void Image::CreateImageDesc(ImageDesc* desc, const Assets::ImageData& data)
+		{
+			desc->mTexDesc.Type = data.mType;
+			desc->mTexDesc.Usage = data.mUsage;
+			desc->mTexDesc.BindFlags = data.mBindFlags;
+			desc->mTexDesc.Format = data.mFormat;
+			desc->mTexDesc.CPUAccessFlags = data.mCPUAccessFlags;
+			desc->mTexDesc.Width = data.mWidth;
+			desc->mTexDesc.Height = data.mHeight;
+
+			if (desc->mSubresources.size() == 0)
 			{
-				mDesc.mTexDesc.MipLevels = ComputeMipLevelsCount(mDesc.mTexDesc.Width, mDesc.mTexDesc.Height);
+				desc->mTexDesc.MipLevels = ComputeMipLevelsCount(desc->mTexDesc.Width, desc->mTexDesc.Height);
 				if (data.mMipLevels > 0)
-					mDesc.mTexDesc.MipLevels = std::min(mDesc.mTexDesc.MipLevels, data.mMipLevels);
+					desc->mTexDesc.MipLevels = std::min(desc->mTexDesc.MipLevels, data.mMipLevels);
 
 				Uint32 NumComponents = 0;
 				const auto ChannelDepth = GetValueSize(data.mComponentType) * 8;
 
 				bool IsSRGB = (data.mNumComponents >= 3 && ChannelDepth == 8) ? data.mIsSRGB : false;
-				if (mDesc.mTexDesc.Format == TEX_FORMAT_UNKNOWN)
+				if (desc->mTexDesc.Format == TEX_FORMAT_UNKNOWN)
 				{
 					NumComponents = data.mNumComponents == 3 ? 4 : data.mNumComponents;
 
@@ -115,9 +107,9 @@ namespace Nuclear
 					{
 						switch (NumComponents)
 						{
-						case 1: mDesc.mTexDesc.Format = TEX_FORMAT_R8_UNORM; break;
-						case 2: mDesc.mTexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
-						case 4: mDesc.mTexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
+						case 1: desc->mTexDesc.Format = TEX_FORMAT_R8_UNORM; break;
+						case 2: desc->mTexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
+						case 4: desc->mTexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
 						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", data.mNumComponents, ")");
 						}
 					}
@@ -125,9 +117,9 @@ namespace Nuclear
 					{
 						switch (NumComponents)
 						{
-						case 1: mDesc.mTexDesc.Format = TEX_FORMAT_R16_UNORM; break;
-						case 2: mDesc.mTexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
-						case 4: mDesc.mTexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
+						case 1: desc->mTexDesc.Format = TEX_FORMAT_R16_UNORM; break;
+						case 2: desc->mTexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
+						case 4: desc->mTexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
 						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", data.mNumComponents, ")");
 						}
 					}
@@ -135,9 +127,9 @@ namespace Nuclear
 					{
 						switch (NumComponents)
 						{
-						case 1: mDesc.mTexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
-						case 2: mDesc.mTexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
-						case 4: mDesc.mTexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
+						case 1: desc->mTexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
+						case 2: desc->mTexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
+						case 4: desc->mTexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
 						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", data.mNumComponents, ")");
 						}
 					}
@@ -146,19 +138,19 @@ namespace Nuclear
 				}
 				else
 				{
-					const auto& TexFmtDesc = GetTextureFormatAttribs(mDesc.mTexDesc.Format);
+					const auto& TexFmtDesc = GetTextureFormatAttribs(desc->mTexDesc.Format);
 
 					NumComponents = TexFmtDesc.NumComponents;
 					if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
 						LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
 				}
-				mDesc.mSubresources = std::vector<TextureSubResData>(mDesc.mTexDesc.MipLevels);
-				mDesc.mMips = std::vector< std::vector<Uint8> >(mDesc.mTexDesc.MipLevels);
+				desc->mSubresources = std::vector<TextureSubResData>(desc->mTexDesc.MipLevels);
+				desc->mMips = std::vector< std::vector<Uint8> >(desc->mTexDesc.MipLevels);
 
-				auto& pSubResources = mDesc.mSubresources;
-				auto& Mips = mDesc.mMips;
+				auto& pSubResources = desc->mSubresources;
+				auto& Mips = desc->mMips;
 
-				//std::vector< std::vector<Uint8> > Mips(mDesc.mTexDesc.MipLevels);
+				//std::vector< std::vector<Uint8> > Mips(desc->mTexDesc.MipLevels);
 
 				if (data.mNumComponents != NumComponents)
 				{
@@ -188,25 +180,25 @@ namespace Nuclear
 				}
 				else
 				{
-					auto MipLevelProps = GetMipLevelProperties(mDesc.mTexDesc, 0);
+					auto MipLevelProps = GetMipLevelProperties(desc->mTexDesc, 0);
 
 					pSubResources[0].pData = data.mData;
 					pSubResources[0].Stride = MipLevelProps.RowSize;
 				}
 
-				for (Uint32 m = 1; m < mDesc.mTexDesc.MipLevels; ++m)
+				for (Uint32 m = 1; m < desc->mTexDesc.MipLevels; ++m)
 				{
-					auto MipLevelProps = GetMipLevelProperties(mDesc.mTexDesc, m);
+					auto MipLevelProps = GetMipLevelProperties(desc->mTexDesc, m);
 					Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
 					pSubResources[m].pData = Mips[m].data();
 					pSubResources[m].Stride = MipLevelProps.RowSize;
 
 					if (data.mGenerateMipMaps)
 					{
-						auto FinerMipProps = GetMipLevelProperties(mDesc.mTexDesc, m - 1);
+						auto FinerMipProps = GetMipLevelProperties(desc->mTexDesc, m - 1);
 
 						ComputeMipLevelAttribs Attribs;
-						Attribs.Format = mDesc.mTexDesc.Format;
+						Attribs.Format = desc->mTexDesc.Format;
 						Attribs.FineMipWidth = FinerMipProps.LogicalWidth;
 						Attribs.FineMipHeight = FinerMipProps.LogicalHeight;
 						Attribs.pFineMipData = pSubResources[m - 1].pData;
