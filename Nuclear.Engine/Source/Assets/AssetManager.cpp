@@ -105,7 +105,7 @@ namespace Nuclear
 			return Importer::GetInstance().ImportTexture(Path, Desc);
 		}
 
-		Graphics::Texture AssetManager::ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc)
+		Graphics::Texture AssetManager::ImportTexture(const ImageDesc& Imagedata, const TextureImportingDesc& Desc)
 		{
 			return Importer::GetInstance().ImportTexture(Imagedata, Desc);
 		}

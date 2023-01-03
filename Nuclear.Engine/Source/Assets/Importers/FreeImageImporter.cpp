@@ -49,7 +49,7 @@ namespace Nuclear
 				FreeImage_SetOutputMessage(MyMessageFunc);
 			}
 
-			bool FreeImageImporter::FreeimageLoad(const std::string& Path, Assets::ImageData* result, const Assets::ImageImportingDesc& Desc)
+			bool FreeImageImporter::FreeimageLoad(const std::string& Path, Assets::ImageDesc* result, const Assets::ImageImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 				if (Desc.mLoadFromMemory == true)
@@ -134,7 +134,7 @@ namespace Nuclear
 				FreeImage_DeInitialise();
 			}
 
-			bool FreeImageImporter::Load(const std::string& Path, Assets::ImageData* result, const Assets::ImageImportingDesc& Desc)
+			bool FreeImageImporter::Load(const std::string& Path, Assets::ImageDesc* result, const Assets::ImageImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 
@@ -236,7 +236,7 @@ namespace Nuclear
 			}
 			bool FreeImageImporter::Import(const std::string& importPath, const std::string& exportPath, Assets::Image* image, const Assets::ImageImportingDesc& desc)
 			{
-				Assets::ImageData data;
+				Assets::ImageDesc data;
 
 				if (!FreeimageLoad(importPath, &data, desc))
 				{
@@ -253,7 +253,7 @@ namespace Nuclear
 								
 				return SaveTextureAsDDS(exportPath.c_str(), TexDesc, TexData);				
 			}
-			bool FreeImageImporter::Load(const Assets::ImageLoadingDesc& Desc, ImageDesc& result)
+			bool FreeImageImporter::Load(const Assets::ImageLoadingDesc& Desc, ImageData& result)
 			{
 				FREE_IMAGE_FORMAT type = FIF_UNKNOWN;
 				if(Desc.mPath != "")

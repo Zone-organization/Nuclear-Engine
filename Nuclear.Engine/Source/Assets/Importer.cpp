@@ -22,6 +22,8 @@
 #include <Assets/AssetManager.h>
 #include <Assets\AssetLibrary.h>
 
+#include <Graphics\GraphicsEngine.h>
+
 namespace Nuclear
 {
 	namespace Assets
@@ -37,14 +39,14 @@ namespace Nuclear
 		class CreateImageTask : public Threading::MainThreadTask
 		{
 		public:
-			CreateImageTask(Image* img, ImageDesc* dsc, const AssetInfo& info, const Assets::ImageData& data)
-				: pImage(img), mData(data), mInfo(info), pImageDesc(dsc)
+			CreateImageTask(Image* img, ImageData* data, const AssetInfo& info, const Assets::ImageDesc& desc)
+				: pImage(img), pImageData(data), mInfo(info), mDesc(desc)
 			{
 			}
 
 			bool OnRunning() override
 			{
-				bool result = pImage->Create(pImageDesc);
+				bool result = Graphics::GraphicsEngine::GetInstance().CreateImage(pImage, pImageData);
 				auto& vec = Importer::GetInstance().GetQueuedAssets();
 
 				for (Uint32 i = 0; i < vec.size(); i++)
@@ -67,12 +69,12 @@ namespace Nuclear
 
 			void OnEnd() override
 			{
-				delete pImageDesc;
+				delete pImageData;
 				delete this;
 			}
-			Assets::ImageData mData;
+			Assets::ImageDesc mDesc;
 			Image* pImage;
-			ImageDesc* pImageDesc;
+			ImageData* pImageData;
 			AssetInfo mInfo;
 		};
 
@@ -91,16 +93,16 @@ namespace Nuclear
 			}
 			bool OnRunning() override
 			{
-				Assets::ImageData data;
-				bool result = Importers::FreeImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &data, mDesc);
+				Assets::ImageDesc desc;
+				bool result = Importers::FreeImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &desc, mDesc);
 
 				if (result)
 				{
-					pResultDesc = new ImageDesc;
+					pResultData = new ImageData;
 					pResult->SetState(IAsset::State::Loaded);
-					pResult->CreateImageDesc(pResultDesc, data);
+					Graphics::GraphicsEngine::GetInstance().CreateImageData(pResultData, desc);
 
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultDesc, mInfo, data));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));
 				}
 				else
 				{
@@ -115,7 +117,7 @@ namespace Nuclear
 			}
 		protected:
 			Assets::Image* pResult;
-			ImageDesc* pResultDesc;
+			ImageData* pResultData;
 			Assets::ImageImportingDesc mDesc;
 			AssetInfo mInfo;
 		};
@@ -135,7 +137,7 @@ namespace Nuclear
 			}
 			bool OnRunning() override
 			{
-				Assets::ImageData data;
+				Assets::ImageDesc data;
 				bool result = Importers::FreeImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &data, mDesc);
 
 				if (result)
@@ -287,7 +289,7 @@ namespace Nuclear
 			return &AssetLibrary::GetInstance().mImportedModels.mData[hashedpath];
 		}
 		*/
-		Image* Importer::ImportImageST(const Core::Path& Path, const ImageImportingDesc& Desc)
+		Image* Importer::ImportImageST(const Core::Path& Path, const ImageImportingDesc& importingdesc)
 		{
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
 
@@ -299,12 +301,16 @@ namespace Nuclear
 			}
 
 			//Load
-			ImageData imagedata;
-			Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(),&imagedata, Desc);
-			auto& image = AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath);
 			ImageDesc desc;
-			image.CreateImageDesc(&desc, imagedata);
-			if (!image.Create(&desc))
+			ImageData data;
+
+			Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(),&desc, importingdesc);
+
+			auto& image = AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath);
+
+			Graphics::GraphicsEngine::GetInstance().CreateImageData(&data, desc);
+
+			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(&image, &data))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}' Hash: '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
@@ -317,9 +323,9 @@ namespace Nuclear
 			return result;
 		}
 
-		Image* Importer::ImportImage(const ImageData& imagedata, const ImageImportingDesc& Desc)
+		Image* Importer::ImportImage(const ImageDesc& imagedesc, const ImageImportingDesc& importingdesc)
 		{
-			auto hashedpath = Utilities::Hash(imagedata.mPath);
+			auto hashedpath = Utilities::Hash(imagedesc.mPath);
 
 			auto result = AssetLibrary::GetInstance().mImportedImages.GetAsset(hashedpath);
 			if (result)
@@ -329,9 +335,10 @@ namespace Nuclear
 
 			//Create
 			Image image;
-			ImageDesc desc;
-			image.CreateImageDesc(&desc,imagedata);
-			if (!image.Create(&desc))
+			ImageData imagedata;
+			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
+			
+			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(&image, &imagedata))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
@@ -339,7 +346,7 @@ namespace Nuclear
 
 			result = &(AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath) = image);
 
-			FinishImportingAsset(result, imagedata.mPath, hashedpath, AssetLibrary::GetInstance().mName);
+			FinishImportingAsset(result, imagedesc.mPath, hashedpath, AssetLibrary::GetInstance().mName);
 
 			return result;
 		}
@@ -355,7 +362,7 @@ namespace Nuclear
 			return result;
 		}
 
-		Graphics::Texture Importer::ImportTexture(const ImageData& imagedata, const TextureImportingDesc& Desc)
+		Graphics::Texture Importer::ImportTexture(const ImageDesc& imagedata, const TextureImportingDesc& Desc)
 		{
 			auto image = ImportImage(imagedata, Desc.mImageDesc);
 
@@ -657,7 +664,7 @@ namespace Nuclear
 			return result;
 		}
 
-		Image* Importer::TextureCube_Import(const Core::Path& Path, const ImageImportingDesc& Desc)
+		Image* Importer::TextureCube_Import(const Core::Path& Path, const ImageImportingDesc& importingdesc)
 		{
 
 			auto hashedpath = Utilities::Hash(Path.GetInputPath());
@@ -670,18 +677,17 @@ namespace Nuclear
 			}
 
 			Image result;
+			ImageDesc imagedesc;
 			ImageData imagedata;
-			ImageDesc desc;
 
-			if (!Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(), &imagedata, Desc))
+			if (!Importers::FreeImageImporter::GetInstance().Load(Path.GetRealPath(), &imagedesc, importingdesc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 				return nullptr;
 			}
-			imagedata.mGenerateMipMaps = false;
-
-			result.CreateImageDesc(&desc, imagedata);
-			result.Create(&desc);
+			imagedesc.mGenerateMipMaps = false;
+			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
+			Graphics::GraphicsEngine::GetInstance().CreateImage(&result, &imagedata);
 
 			//TODO::
 			//result.mData = imagedata;

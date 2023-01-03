@@ -6,6 +6,8 @@
 #include <Utilities/Logger.h>
 #include <Platform\FileSystem.h>
 #include <Assets/DefaultMeshes.h>
+#include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp>
+#include <Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h>
 
 namespace Nuclear
 {
@@ -51,6 +53,195 @@ namespace Nuclear
 		{
 			NUCLEAR_INFO("[GraphicsEngine] Shutting down...");
 			Graphics::Context::GetInstance().Shutdown();
+		}
+
+		bool GraphicsEngine::CreateImage(Assets::Image* result, Assets::ImageData* data)
+		{
+			result->mTextureView = nullptr;
+
+			result->mWidth = data->mTexDesc.Width;
+			result->mHeight = data->mTexDesc.Height;
+
+			//CREATE IMAGE
+			Diligent::TextureData TexData;
+			TexData.pSubResources = data->mSubresources.data();
+			TexData.NumSubresources = data->mSubresources.size();
+			RefCntAutoPtr<ITexture> mTexture;
+			Graphics::Context::GetInstance().GetDevice()->CreateTexture(data->mTexDesc, &TexData, &mTexture);
+
+			if (mTexture.RawPtr() != nullptr)
+			{
+				result->mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+				result->SetState(Assets::IAsset::State::Created);
+				return true;
+			}
+
+			return false;
+		}
+
+		template <typename ChannelType>
+		void ModifyComponentCount(const void* pSrcData,
+			Uint32      SrcStride,
+			Uint32      SrcCompCount,
+			void* pDstData,
+			Uint32      DstStride,
+			Uint32      Width,
+			Uint32      Height,
+			Uint32      DstCompCount)
+		{
+			auto CompToCopy = std::min(SrcCompCount, DstCompCount);
+			for (size_t row = 0; row < size_t{ Height }; ++row)
+			{
+				for (size_t col = 0; col < size_t{ Width }; ++col)
+				{
+					// clang-format off
+					auto* pDst = reinterpret_cast<ChannelType*>((reinterpret_cast<Uint8*>(pDstData) + size_t{ DstStride } *row)) + col * DstCompCount;
+					const auto* pSrc = reinterpret_cast<const ChannelType*>((reinterpret_cast<const Uint8*>(pSrcData) + size_t{ SrcStride } *row)) + col * SrcCompCount;
+					// clang-format on
+
+					for (size_t c = 0; c < CompToCopy; ++c)
+						pDst[c] = pSrc[c];
+
+					for (size_t c = CompToCopy; c < DstCompCount; ++c)
+					{
+						pDst[c] = c < 3 ?
+							(SrcCompCount == 1 ? pSrc[0] : 0) :      // For single-channel source textures, propagate r to other channels
+							std::numeric_limits<ChannelType>::max(); // Use 1.0 as default value for alpha
+					}
+				}
+			}
+		}
+
+		void GraphicsEngine::CreateImageData(Assets::ImageData* result, const Assets::ImageDesc& desc)
+		{
+			result->mTexDesc.Type = desc.mType;
+			result->mTexDesc.Usage = desc.mUsage;
+			result->mTexDesc.BindFlags = desc.mBindFlags;
+			result->mTexDesc.Format = desc.mFormat;
+			result->mTexDesc.CPUAccessFlags = desc.mCPUAccessFlags;
+			result->mTexDesc.Width = desc.mWidth;
+			result->mTexDesc.Height = desc.mHeight;
+
+			if (result->mSubresources.size() == 0)
+			{
+				result->mTexDesc.MipLevels = ComputeMipLevelsCount(result->mTexDesc.Width, result->mTexDesc.Height);
+				if (desc.mMipLevels > 0)
+					result->mTexDesc.MipLevels = std::min(result->mTexDesc.MipLevels, desc.mMipLevels);
+
+				Uint32 NumComponents = 0;
+				const auto ChannelDepth = GetValueSize(desc.mComponentType) * 8;
+
+				bool IsSRGB = (desc.mNumComponents >= 3 && ChannelDepth == 8) ? desc.mIsSRGB : false;
+				if (result->mTexDesc.Format == TEX_FORMAT_UNKNOWN)
+				{
+					NumComponents = desc.mNumComponents == 3 ? 4 : desc.mNumComponents;
+
+					if (ChannelDepth == 8)
+					{
+						switch (NumComponents)
+						{
+						case 1: result->mTexDesc.Format = TEX_FORMAT_R8_UNORM; break;
+						case 2: result->mTexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
+						case 4: result->mTexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
+						}
+					}
+					else if (ChannelDepth == 16)
+					{
+						switch (NumComponents)
+						{
+						case 1: result->mTexDesc.Format = TEX_FORMAT_R16_UNORM; break;
+						case 2: result->mTexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
+						case 4: result->mTexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
+						}
+					}
+					else if (ChannelDepth == 32)
+					{
+						switch (NumComponents)
+						{
+						case 1: result->mTexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
+						case 2: result->mTexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
+						case 4: result->mTexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
+						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
+						}
+					}
+					else
+						LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
+				}
+				else
+				{
+					const auto& TexFmtDesc = GetTextureFormatAttribs(result->mTexDesc.Format);
+
+					NumComponents = TexFmtDesc.NumComponents;
+					if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
+						LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
+				}
+				result->mSubresources = std::vector<TextureSubResData>(result->mTexDesc.MipLevels);
+				result->mMips = std::vector< std::vector<Uint8> >(result->mTexDesc.MipLevels);
+
+				auto& pSubResources = result->mSubresources;
+				auto& Mips = result->mMips;
+
+				if (desc.mNumComponents != NumComponents)
+				{
+					auto DstStride = desc.mWidth * NumComponents * ChannelDepth / 8;
+					DstStride = AlignUp(DstStride, Uint32{ 4 });
+					Mips[0].resize(size_t{ DstStride } *size_t{ desc.mHeight });
+					pSubResources[0].pData = Mips[0].data();
+					pSubResources[0].Stride = DstStride;
+					if (ChannelDepth == 8)
+					{
+						ModifyComponentCount<Uint8>(desc.mData, desc.mRowStride, desc.mNumComponents,
+							Mips[0].data(), DstStride,
+							desc.mWidth, desc.mHeight, NumComponents);
+					}
+					else if (ChannelDepth == 16)
+					{
+						ModifyComponentCount<Uint16>(desc.mData, desc.mRowStride, desc.mNumComponents,
+							Mips[0].data(), DstStride,
+							desc.mWidth, desc.mHeight, NumComponents);
+					}
+					else if (ChannelDepth == 32)
+					{
+						ModifyComponentCount<float>(desc.mData, desc.mRowStride, desc.mNumComponents,
+							Mips[0].data(), DstStride,
+							desc.mWidth, desc.mHeight, NumComponents);
+					}
+				}
+				else
+				{
+					auto MipLevelProps = GetMipLevelProperties(result->mTexDesc, 0);
+
+					pSubResources[0].pData = desc.mData;
+					pSubResources[0].Stride = MipLevelProps.RowSize;
+				}
+
+				for (Uint32 m = 1; m < result->mTexDesc.MipLevels; ++m)
+				{
+					auto MipLevelProps = GetMipLevelProperties(result->mTexDesc, m);
+					Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
+					pSubResources[m].pData = Mips[m].data();
+					pSubResources[m].Stride = MipLevelProps.RowSize;
+
+					if (desc.mGenerateMipMaps)
+					{
+						auto FinerMipProps = GetMipLevelProperties(result->mTexDesc, m - 1);
+
+						ComputeMipLevelAttribs Attribs;
+						Attribs.Format = result->mTexDesc.Format;
+						Attribs.FineMipWidth = FinerMipProps.LogicalWidth;
+						Attribs.FineMipHeight = FinerMipProps.LogicalHeight;
+						Attribs.pFineMipData = pSubResources[m - 1].pData;
+						Attribs.FineMipStride = StaticCast<size_t>(pSubResources[m - 1].Stride);
+						Attribs.pCoarseMipData = Mips[m].data();
+						Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
+						Attribs.AlphaCutoff = desc.mMipMapsAlphaCutoff;
+						Attribs.FilterType = desc.mMipMapsFilter;
+						ComputeMipLevel(Attribs);
+					}
+				}
+			}
 		}
 
 		bool GraphicsEngine::isGammaCorrect()

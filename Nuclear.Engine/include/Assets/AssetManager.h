@@ -74,7 +74,7 @@ namespace Nuclear
 
 			Graphics::Texture ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype);
 			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
-			Graphics::Texture ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
+			Graphics::Texture ImportTexture(const ImageDesc& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 
 			AssetMetadata CreateMetadata(IAsset* asset);
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);

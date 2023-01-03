@@ -33,15 +33,15 @@ namespace Nuclear
 			void Test();
 
 			Image* ImportImage(const Core::Path& Path, const ImageImportingDesc& Desc = ImageImportingDesc());
-			Image* ImportImage(const ImageData& Imagedata, const ImageImportingDesc& Desc = ImageImportingDesc());
+			Image* ImportImage(const ImageDesc& Imagedata, const ImageImportingDesc& Desc = ImageImportingDesc());
 
 			//	Model* AsyncImportModel(const Core::Path& Path,  const ModelImportingDesc& desc = ModelImportingDesc());
 
 			Image* ImportImageST(const Core::Path& Path, const ImageImportingDesc& Desc = ImageImportingDesc());
-			//	Image* ImportImage(const ImageData& Imagedata,  const ImageImportingDesc& Desc = ImageImportingDesc());
+			//	Image* ImportImage(const ImageDesc& Imagedata,  const ImageImportingDesc& Desc = ImageImportingDesc());
 
 			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
-			Graphics::Texture ImportTexture(const ImageData& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
+			Graphics::Texture ImportTexture(const ImageDesc& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 
 			AudioClip* ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc = AudioClipImportingDesc());
 

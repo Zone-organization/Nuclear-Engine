@@ -53,7 +53,7 @@ namespace Diligent
 //}
 
 Image::Image(IReferenceCounters* pRefCounters,
-             const ImageDesc&    Desc,
+             const ImageData&    Desc,
              IDataBlob*          pPixels) :
     TBase{pRefCounters},
     m_Desc{Desc},

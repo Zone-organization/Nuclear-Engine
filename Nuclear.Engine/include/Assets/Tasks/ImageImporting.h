@@ -83,7 +83,7 @@ namespace Nuclear
 				}
 				bool OnRunning() override
 				{
-					Assets::ImageData data;
+					Assets::ImageDesc data;
 					bool result = Importers::FreeImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &data, mDesc);
 
 					if (result)
@@ -122,7 +122,7 @@ namespace Nuclear
 				}
 				bool OnRunning() override
 				{
-					Assets::ImageData data;
+					Assets::ImageDesc data;
 					bool result = Importers::FreeImageImporter::GetInstance().Load(&data, mDesc);
 
 					if (result)

@@ -20,16 +20,16 @@ namespace Nuclear
 				static FreeImageImporter& GetInstance();
 
 				bool Import(const std::string& importPath, const std::string& exportPath, Assets::Image* image, const Assets::ImageImportingDesc& desc);
-				bool Load(const Assets::ImageLoadingDesc& Desc, ImageDesc& result);
+				bool Load(const Assets::ImageLoadingDesc& Desc, ImageData& result);
 
-				bool Load(const std::string& Path, Assets::ImageData* result ,const Assets::ImageImportingDesc& Desc);
+				bool Load(const std::string& Path, Assets::ImageDesc* result ,const Assets::ImageImportingDesc& Desc);
 
 				bool IsExtensionSupported(const std::string& extension);
 
 			private:
 				FreeImageImporter();
 
-				bool FreeimageLoad(const std::string& Path, Assets::ImageData* result, const Assets::ImageImportingDesc& Desc);
+				bool FreeimageLoad(const std::string& Path, Assets::ImageDesc* result, const Assets::ImageImportingDesc& Desc);
 			};
 		}
 	}

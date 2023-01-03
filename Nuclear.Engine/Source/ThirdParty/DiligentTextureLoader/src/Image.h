@@ -73,7 +73,7 @@ struct ImageLoadInfo
 typedef struct ImageLoadInfo ImageLoadInfo;
 
 /// Image description
-struct ImageDesc
+struct ImageData
 {
     /// Image width in pixels
     Uint32 Width DEFAULT_INITIALIZER(0);
@@ -90,7 +90,7 @@ struct ImageDesc
     /// Image row stride in bytes
     Uint32 RowStride DEFAULT_INITIALIZER(0);
 };
-typedef struct ImageDesc ImageDesc;
+typedef struct ImageData ImageData;
 
 
 
@@ -113,7 +113,7 @@ struct Image : public ObjectBase<IObject>
 
 
     /// Returns image description
-    const ImageDesc& GetDesc() const { return m_Desc; }
+    const ImageData& GetDesc() const { return m_Desc; }
 
     /// Returns a pointer to the image data
     IDataBlob* GetData() { return m_pData; }
@@ -135,10 +135,10 @@ private:
     friend class MakeNewRCObj;
 
     Image(IReferenceCounters* pRefCounters,
-          const ImageDesc&    Desc,
+          const ImageData&    Desc,
           IDataBlob*          pPixels);
 
-    ImageDesc                m_Desc;
+    ImageData                m_Desc;
     RefCntAutoPtr<IDataBlob> m_pData;
 };
 

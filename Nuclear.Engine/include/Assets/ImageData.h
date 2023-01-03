@@ -4,15 +4,15 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h>
 #include <string>
-
+#include <vector>
 namespace Nuclear
 {
 	namespace Assets
 	{
-		class NEAPI ImageData
+		struct ImageDesc
 		{
 		public:
-			ImageData()
+			ImageDesc()
 			{
 				mPath = "";
 				mWidth = 0;
@@ -29,7 +29,7 @@ namespace Nuclear
 				mIsSRGB = false;
 				mFormat = TEX_FORMAT_UNKNOWN;
 			}
-			~ImageData()
+			~ImageDesc()
 			{
 				mPath = "";
 				mWidth = 0;
@@ -78,5 +78,19 @@ namespace Nuclear
 
 			MIP_FILTER_TYPE mMipMapsFilter = MIP_FILTER_TYPE_DEFAULT;
 		};
+
+		struct ImageData
+		{
+			ImageData()
+			{
+				mTexDesc = Diligent::TextureDesc();
+				mSubresources = std::vector<TextureSubResData>();
+				mMips = std::vector< std::vector<Uint8> >();
+			}
+			Diligent::TextureDesc mTexDesc;
+			std::vector<TextureSubResData> mSubresources;
+			std::vector< std::vector<Uint8> > mMips;
+		};
+
 	}
 }

@@ -329,7 +329,7 @@ namespace Nuclear {
 
 						if (embeddedtex->mHeight != 0)
 						{
-							Assets::ImageData data;
+							Assets::ImageDesc data;
 							data.mWidth = embeddedtex->mWidth;
 							data.mHeight = embeddedtex->mHeight;
 							data.mData = (Byte*)embeddedtex->pcData;
