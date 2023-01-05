@@ -1,5 +1,6 @@
 #pragma once
 #include <Assets/ImageData.h>
+#include <Assets/LoadingDescs.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
 #include <string>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
@@ -11,12 +12,7 @@ namespace Nuclear
 	namespace Assets
 	{
 
-		struct AssetImportingDesc
-		{
-			bool mAsyncImporting = true;
-		};
-
-		struct AudioClipImportingDesc : public AssetImportingDesc
+		struct AudioClipImportingDesc
 		{
 			enum AUDIO_IMPORT_MODE
 			{
@@ -53,7 +49,7 @@ namespace Nuclear
 
 			AUDIO_IMPORT_MODE mMode = AUDIO_IMPORT_MODE_LOOP_OFF;
 		};
-		struct ModelImportingDesc : public AssetImportingDesc
+		struct ModelImportingDesc
 		{
 			bool SaveMaterialNames = true;
 			bool LoadMesh = true;
@@ -61,7 +57,7 @@ namespace Nuclear
 			bool LoadMaterialData = true;
 		};
 
-		struct ImageImportingDesc : public AssetImportingDesc
+		struct ImageImportingDesc
 		{
 			USAGE mUsage;
 
@@ -85,6 +81,10 @@ namespace Nuclear
 
 			Uint32 mMemSize;
 
+			IMAGE_EXTENSION mExportExtension;
+
+			bool mAsyncImporting;
+
 			ImageImportingDesc() :
 				mUsage(USAGE_IMMUTABLE),
 				mBindFlags(BIND_SHADER_RESOURCE),
@@ -96,13 +96,14 @@ namespace Nuclear
 				mLoadFromMemory(false),
 				mMemData(nullptr),
 				mMemSize(0),
-				mType(RESOURCE_DIM_TEX_2D)
+				mType(RESOURCE_DIM_TEX_2D),
+				mExportExtension(IMAGE_EXTENSION_DDS),
+				mAsyncImporting(true)
 			{
-				mAsyncImporting = true;
 			}
 		};
 
-		struct TextureImportingDesc : public AssetImportingDesc
+		struct TextureImportingDesc
 		{
 			TextureImportingDesc()
 				: mImageDesc(ImageImportingDesc()), mType(Graphics::TextureUsageType::Unknown)
@@ -114,7 +115,7 @@ namespace Nuclear
 			Graphics::TextureUsageType mType;
 		};
 
-		struct FontImportingDesc : public AssetImportingDesc
+		struct FontImportingDesc
 		{
 			Uint32 Width = 0;
 			Uint32 Height = 48;
@@ -127,7 +128,7 @@ namespace Nuclear
 			Unknown
 		};
 
-		struct ShaderImportingDesc : public AssetImportingDesc
+		struct ShaderImportingDesc
 		{
 			std::string mShaderName = "UnNamed";
 			ShaderType mType = ShaderType::Unknown;
@@ -136,13 +137,13 @@ namespace Nuclear
 			std::vector<std::string> mExcludedVariants;
 		};
 
-		struct ScriptImportingDesc : public AssetImportingDesc
+		struct ScriptImportingDesc
 		{
 
 			std::string mScriptFullName;
 			bool mClassNameFromPath = true;
 		};
-		struct SceneImportingDesc : public AssetImportingDesc
+		struct SceneImportingDesc
 		{
 			std::string mName;
 		};

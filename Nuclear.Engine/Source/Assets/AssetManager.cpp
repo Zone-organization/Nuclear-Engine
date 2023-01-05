@@ -130,6 +130,14 @@ namespace Nuclear
 			result.mUUID = asset->GetUUID();
 			result.mType = asset->GetType();
 
+			switch (result.mType)
+			{
+			case Assets::AssetType::Image:
+				result.pLoadingDesc
+			default:
+				break;
+			}
+
 			return result;
 		}
 

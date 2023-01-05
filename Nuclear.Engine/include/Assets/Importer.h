@@ -3,7 +3,6 @@
 #include <Assets/ImportingDescs.h>
 #include <Assets/Model.h>
 #include <Assets\Importers\AssimpImporter.h>
-#include <Assets\Importers\FreeImageImporter.h>
 #include <Graphics/Texture.h>
 #include <Core/Path.h>
 
@@ -63,7 +62,7 @@ namespace Nuclear
 
 			std::vector<IAsset*>& GetQueuedAssets();
 
-			static void FinishImportingAsset(IAsset* asset, const Core::Path& path, Uint32 Hashedpath, const std::string& libraryname, bool log = true);
+			static void FinishImportingAsset(IAsset* asset, const Core::Path& path, Uint32 Hashedpath, bool log = true);
 		private:
 			Image* TextureCube_Import(const Core::Path& Path, const ImageImportingDesc& Desc);
 			Importers::AssimpImporter mAssimpImporter;

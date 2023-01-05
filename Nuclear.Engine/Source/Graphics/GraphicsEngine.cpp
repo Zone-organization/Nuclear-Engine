@@ -8,6 +8,7 @@
 #include <Assets/DefaultMeshes.h>
 #include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp>
 #include <Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h>
+#include <Assets\Image.h>
 
 namespace Nuclear
 {

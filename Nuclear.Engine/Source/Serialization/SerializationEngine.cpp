@@ -30,6 +30,11 @@ namespace Nuclear
 			AssetImportingDesc mImportingDesc;			
 		*/
 
+		//bool ReadValue(Parsers::INIStructure& meta, std::string section, std::string key, std::string value)
+		//{
+
+		//}
+
 		bool SerializationEngine::Serialize(const Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
 			Parsers::INIFile file(path.GetRealPath());
@@ -42,6 +47,8 @@ namespace Nuclear
 			meta["AssetMetadata"]["AssetType"] = magic_enum::enum_name(metadata.mType);
 			meta["AssetMetadata"]["HashedName"] = Utilities::int_to_hex<Uint32>(metadata.mHashedName);
 			meta["AssetMetadata"]["HashedPath"] = Utilities::int_to_hex<Uint32>(metadata.mHashedPath);
+
+
 
 			return file.generate(meta);
 		}
@@ -60,6 +67,17 @@ namespace Nuclear
 				metadata.mType = magic_enum::enum_cast<Assets::AssetType>(meta["AssetMetadata"]["AssetType"]).value_or(Assets::AssetType::Unknown);
 				metadata.mHashedName = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedName"]);
 				metadata.mHashedPath = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedPath"]);
+
+				switch (metadata.mType)
+				{
+				case Assets::AssetType::Image:
+					auto imagedesc = static_cast<Assets::ImageLoadingDesc*>(metadata.pLoadingDesc = new Assets::ImageLoadingDesc);
+					imagedesc->mPath = meta["AssetMetadata"]["Path"];
+					imagedesc->mExtension = magic_enum::enum_cast<Assets::IMAGE_EXTENSION>(meta["ImageLoadingDesc"]["Extension"]).value_or(Assets::IMAGE_EXTENSION::IMAGE_EXTENSION_UNKNOWN);
+					imagedesc->mAsyncLoading = meta["ImageLoadingDesc"].GetBoolean("AsyncLoading", true);
+				default:
+					break;
+				}
 			}	
 
 			return result;

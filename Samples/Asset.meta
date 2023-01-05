@@ -1,8 +1,14 @@
 [General]
 Type=AssetMetadata
+
 [AssetMetadata]
-Name=
+Name=TestAsset
 UUID=a069094e-d105-4f99-ae69-a9fc500201d4
 AssetType=Image
 HashedName=0x00000000
 HashedPath=0xdbc2150c
+Path=@LibraryPath@/Sample6/Textures/TestAsset.dds
+
+[ImageLoadingDesc]
+Extension=IMAGE_EXTENSION_DDS
+AsyncLoading=true

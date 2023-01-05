@@ -445,7 +445,7 @@
     <ClInclude Include="Source\Audio\FMODError.h" />
     <ClInclude Include="Source\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="include\Assets\Importers\AssimpImporter.h" />
-    <ClInclude Include="include\Assets\Importers\FreeImageImporter.h" />
+    <ClInclude Include="include\Assets\Importers\ImageImporter.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_truetype.h" />
@@ -546,7 +546,7 @@
     <ClCompile Include="Source\Scripting\ScriptingEngine.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingObject.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingRegistry.cpp" />
-    <ClCompile Include="Source\Assets\Importers\FreeImageImporter.cpp" />
+    <ClCompile Include="Source\Assets\Importers\ImageImporter.cpp" />
     <ClCompile Include="Source\PhysX\PhysXShape.cpp" />
     <ClCompile Include="Source\PhysX\RaycastHit.cpp" />
     <ClCompile Include="Source\PhysX\RigidStatic.cpp" />

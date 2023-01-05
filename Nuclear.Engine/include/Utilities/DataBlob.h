@@ -9,6 +9,7 @@ namespace Nuclear
 		class NEAPI DataBlob
 		{
 		public:
+			DataBlob();
 			DataBlob(const std::vector<Uint8>& buffer);
 			~DataBlob();
 

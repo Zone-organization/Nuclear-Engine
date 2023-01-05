@@ -1,6 +1,6 @@
 #pragma once
 #include <Assets/IAsset.h>
-#include <Assets/ImportingDescs.h>
+#include <Assets/LoadingDescs.h>
 
 namespace Nuclear
 {
@@ -20,7 +20,7 @@ namespace Nuclear
 			Uint32 mHashedName = 0;
 
 			Uint32 mHashedPath = 0;
-			AssetImportingDesc mImportingDesc;			
+			AssetLoadingDesc* pLoadingDesc = nullptr;
 		};
 	}
 }

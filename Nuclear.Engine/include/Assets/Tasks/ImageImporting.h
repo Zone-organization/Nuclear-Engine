@@ -1,7 +1,7 @@
 #pragma once
 #include <Assets/ImportingDescs.h>
 #include <Assets/Image.h>
-#include <Assets/Importers/FreeImageImporter.h>
+#include <Assets/Importers/ImageImporter.h>
 #include <Core/Path.h>
 #include <Assets/Importer.h>
 
@@ -9,6 +9,13 @@
 #include <Threading/MainThreadTask.h>
 #include <Threading/ThreadingEngine.h>
 #include <Utilities/Logger.h>
+
+#include <Graphics\GraphicsEngine.h>
+#include <Assets/LoadingDescs.h>
+
+#include <Parsers/INIParser.h>
+
+#include <Serialization/SerializationEngine.h>
 
 namespace Nuclear
 {
@@ -19,133 +26,154 @@ namespace Nuclear
 		{
 			Core::Path mPath;
 			Uint32 mHashedPath;
-			std::string mLibraryName;
 			bool mLog = true;
 		};
-		namespace Importers
+
+		class CreateImageTask : public Threading::MainThreadTask
 		{
-
-			class CreateImageTask : public Threading::MainThreadTask
+		public:
+			CreateImageTask(Image* img, ImageData* data, const AssetInfo& info, const Assets::ImageDesc& desc)
+				: pImage(img), pImageData(data), mInfo(info), mDesc(desc)
 			{
-			public:
-				CreateImageTask(Image* img, const AssetInfo& info, const Diligent::TextureDesc& texdesc, const Diligent::TextureData& texdata)
-					: pImage(img), mDesc(texdesc), mData(texdata), mInfo(info)
-				{
+			}
 
-				}
-
-				bool OnRunning() override
-				{
-					bool result = pImage->Create(mDesc, mData);
-					auto& vec = Importer::GetInstance().GetQueuedAssets();
-
-					for (Uint32 i = 0; i < vec.size(); i++)
-					{
-						if (vec[i]->GetUUID() == pImage->GetUUID())
-						{
-							vec.erase(vec.begin() + i);
-							break;
-						}
-					}
-
-					if (!result)
-					{
-						NUCLEAR_ERROR("[Importer] Failed To Create Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
-						return false;
-					}
-					Importer::FinishImportingAsset(pImage, mInfo.mPath, mInfo.mHashedPath, mInfo.mLibraryName, mInfo.mLog);
-					return result;
-				}
-
-				void OnEnd() override
-				{
-					delete this;
-				}
-				Image* pImage;
-				TextureDesc mDesc;
-				TextureData mData;
-
-				AssetInfo mInfo;
-			};
-
-			class NEAPI ImportImageTask : public Threading::Task
+			bool OnRunning() override
 			{
-			public:
-				ImportImageTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
-					: pResult(result), mInfo(info)
-				{
-					pResult = result;
-					mDesc = desc;
-				}
-				~ImportImageTask()
-				{
+				bool result = Graphics::GraphicsEngine::GetInstance().CreateImage(pImage, pImageData);
+				auto& vec = Importer::GetInstance().GetQueuedAssets();
 
-				}
-				bool OnRunning() override
+				for (Uint32 i = 0; i < vec.size(); i++)
 				{
-					Assets::ImageDesc data;
-					bool result = Importers::FreeImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &data, mDesc);
-
-					if (result)
+					if (vec[i]->GetUUID() == pImage->GetUUID())
 					{
-						pResult->SetState(IAsset::State::Loaded);
-						Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data, mDesc));
+						vec.erase(vec.begin() + i);
+						break;
 					}
-					else
-						NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
-
-					return result;
 				}
 
-				void OnEnd() override
+				if (!result)
 				{
-					delete this;
+					NUCLEAR_ERROR("[Importer] Failed To Create Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
+					return false;
 				}
-			protected:
-				Assets::Image* pResult;
-				Assets::ImageImportingDesc mDesc;
-				AssetInfo mInfo;
-			};
+				Importer::FinishImportingAsset(pImage, mInfo.mPath, mInfo.mHashedPath, mInfo.mLog);
+				return result;
+			}
 
-			class NEAPI LoadImageTask : public Threading::Task
+			void OnEnd() override
 			{
-			public:
-				LoadImageTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageLoadingDesc& desc = ImageLoadingDesc())
-					: pResult(result), mInfo(info)
+				delete pImageData;
+				delete this;
+			}
+			Assets::ImageDesc mDesc;
+			Image* pImage;
+			ImageData* pImageData;
+			AssetInfo mInfo;
+		};
+		
+		class ImageImportTask : public Threading::Task
+		{
+		public:
+			ImageImportTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
+				: pResult(result), mInfo(info), pResultData(nullptr), mImportingDesc(desc)
+			{
+			}
+			~ImageImportTask()
+			{
+
+			}
+			bool OnRunning() override
+			{
+				//Import
+				pResultData = new ImageData;
+				Assets::ImageDesc desc;
+				bool result = Importers::ImageImporter::GetInstance().Import(mInfo.mPath.GetRealPath(), pResultData, mImportingDesc);
+
+				if (result)
 				{
-					pResult = result;
-					mDesc = desc;
+					pResult->SetState(IAsset::State::Loaded);
+
+					ImageLoadingDesc loadingdesc;
+					loadingdesc.mExtension = mImportingDesc.mExportExtension;
+
+					Importers::ImageImporter::GetInstance().Export(AssetLibrary::GetInstance().mPath + mInfo.mPath.GetFilename(true) + ".dds", pResultData, loadingdesc);
+
+					//Export Meta
+					Serialization::SerializationEngine::GetInstance().Serialize(assetmeta, mInfo.mPath);
+
+					//Create image task
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));
 				}
-				~LoadImageTask()
+				else
 				{
-
+					delete pResultData;
+					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
 				}
-				bool OnRunning() override
+				return result;
+			}
+
+			void OnEnd() override
+			{
+				delete this;
+			}
+		protected:
+			Assets::Image* pResult;
+			ImageData* pResultData;
+			Assets::ImageImportingDesc mImportingDesc;
+			AssetInfo mInfo;
+		};
+
+		class ImageLoadTask : public Threading::Task
+		{
+		public:
+			ImageLoadTask(Assets::Image* result, const AssetInfo& info)
+				: pResult(result), mInfo(info), pResultData(nullptr)
+			{
+			}
+			~ImageLoadTask()
+			{
+
+			}
+			bool OnRunning() override
+			{		
+				Assets::AssetMetadata assetmeta;
+
+				Serialization::SerializationEngine::GetInstance().Deserialize(assetmeta, mInfo.mPath);
+				Assets::ImageLoadingDesc mLoadingDesc = *static_cast<Assets::ImageLoadingDesc*>(assetmeta.pLoadingDesc);
+				delete assetmeta.pLoadingDesc;
+				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mLoadingDesc.mPath);
+
+				//Load image
+				pResultData = new ImageData;
+				Assets::ImageDesc desc;
+
+				bool result = Importers::ImageImporter::GetInstance().Load(mLoadingDesc, pResultData);
+
+				if (result)
 				{
-					Assets::ImageDesc data;
-					bool result = Importers::FreeImageImporter::GetInstance().Load(&data, mDesc);
+					pResult->SetState(IAsset::State::Loaded);
 
-					if (result)
-					{
-						pResult->SetState(IAsset::State::Loaded);
-						Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, mInfo, data, mDesc));
-					}
-					else
-						NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
+					Importers::ImageImporter::GetInstance().Export(AssetLibrary::GetInstance().mPath + mInfo.mPath.GetFilename(true), pResultData, mLoadingDesc);
 
-					return result;
+					//Create image task
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));
 				}
-
-				void OnEnd() override
+				else
 				{
-					delete this;
+					delete pResultData;
+					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
 				}
-			protected:
-				Assets::Image* pResult;
-				Assets::ImageLoadingDesc mDesc;
-				AssetInfo mInfo;
-			};
+				return result;
+			}
 
-		}
+			void OnEnd() override
+			{
+				delete this;
+			}
+		protected:
+			Assets::Image* pResult;
+			ImageData* pResultData;
+			AssetInfo mInfo;
+		};
 	}
 }
