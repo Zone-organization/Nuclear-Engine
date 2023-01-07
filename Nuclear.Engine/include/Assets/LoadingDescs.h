@@ -56,12 +56,10 @@ namespace Nuclear
 		struct AssetLoadingDesc
 		{
 			AssetLoadingDesc()
-				: mPath(""), mAsyncLoading(true)
+				: mAsyncLoading(true)
 			{
 
 			}
-			Core::Path mPath;
-
 			bool mAsyncLoading = true;
 		};
 

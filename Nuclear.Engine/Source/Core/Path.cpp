@@ -44,6 +44,18 @@ namespace Nuclear
 			}
 		}
 
+		const bool Path::isValid() const
+		{
+			if (mInputPath != "")
+				return true;
+
+			//Sometimes a path can include only a real path
+			if (mRealPath != "")
+				return true;
+
+			return false;
+		}
+
 		const std::string& Path::GetInputPath() const
 		{
 			return mInputPath;

@@ -83,8 +83,7 @@ namespace Nuclear
 			AssetLibrary(AssetLibrary const&) = delete;
 			void operator=(AssetLibrary const&) = delete;
 
-			std::string mName = "DefaultLibrary";
-			std::string mPath = "";
+			Core::Path mPath;
 
 			//Special type of asset??
 			ImportedAssetsMap<Assets::Scene> mImportedScenes;

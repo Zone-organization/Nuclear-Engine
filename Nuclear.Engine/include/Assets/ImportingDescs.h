@@ -85,6 +85,8 @@ namespace Nuclear
 
 			bool mAsyncImporting;
 
+			bool mLoadOnly;
+
 			ImageImportingDesc() :
 				mUsage(USAGE_IMMUTABLE),
 				mBindFlags(BIND_SHADER_RESOURCE),
@@ -98,7 +100,8 @@ namespace Nuclear
 				mMemSize(0),
 				mType(RESOURCE_DIM_TEX_2D),
 				mExportExtension(IMAGE_EXTENSION_DDS),
-				mAsyncImporting(true)
+				mAsyncImporting(true),
+				mLoadOnly(true)
 			{
 			}
 		};

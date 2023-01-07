@@ -10,6 +10,10 @@ namespace Nuclear
 			mState = State::Unknown;
 		}
 
+		IAsset::~IAsset()
+		{
+		}
+
 		const AssetType IAsset::GetType() const
 		{
 			return mType;

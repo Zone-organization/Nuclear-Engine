@@ -14,7 +14,7 @@ namespace Nuclear
 			~DataBlob();
 
 			const std::vector<Uint8>& GetBuffer() const;
-		private:
+	//	private:
 			std::vector<Uint8> mDataBuf;
 		};
 

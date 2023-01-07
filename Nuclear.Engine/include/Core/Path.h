@@ -16,6 +16,8 @@ namespace Nuclear
 			
 			void SetPath(const std::string& path, bool ParseForReservedPaths = true);
 
+			const bool isValid() const;
+
 			const std::string& GetInputPath() const;
 			const std::string& GetRealPath() const;
 			std::string GetFilename(bool removeextension = false) const;

@@ -227,13 +227,9 @@ namespace Nuclear
 				static ImageImporter instance;
 				return instance;
 			}
-			bool ImageImporter::Import(const std::string& importPath, ImageData* data, const Assets::ImageImportingDesc& importingdesc)
+			bool ImageImporter::Import(ImageData* data, IMAGE_EXTENSION extension, const Assets::ImageImportingDesc& importingdesc)
 			{
-				FREE_IMAGE_FORMAT type = FIF_UNKNOWN;
-				if (importPath != "")
-				{
-					type = FreeImage_GetFileType(importPath.c_str(), 0);
-				}
+				FREE_IMAGE_FORMAT type = (FREE_IMAGE_FORMAT)extension;
 				
 				if (type == FIF_UNKNOWN)
 				{
@@ -264,14 +260,14 @@ namespace Nuclear
 								
 				return false;
 			}
-			bool ImageImporter::Export(const std::string& exportPath, ImageData* data, const Assets::ImageLoadingDesc& desc)
+			bool ImageImporter::Export(const std::string& exportPath, ImageData* data, IMAGE_EXTENSION type)
 			{
 				if (!data)
 				{
 					return false;
 				}
 
-				if (desc.mExtension == IMAGE_EXTENSION_DDS)
+				if (type == IMAGE_EXTENSION_DDS)
 				{
 					TextureData texdata{ data->mSubresources.data(), static_cast<Uint32>(data->mSubresources.size()) };
 					return SaveTextureAsDDS(exportPath.c_str(), data->mTexDesc, texdata);
@@ -283,28 +279,18 @@ namespace Nuclear
 				//FreeImage_FIFSupportsExportType((FREE_IMAGE_FORMAT)desc.mExtension)
 				return false;
 			}
-			bool ImageImporter::Load(const Assets::ImageLoadingDesc& Desc, ImageData& result)
+			bool ImageImporter::Load(const Assets::ImageLoadingDesc& Desc, ImageData* result)
 			{
-				FREE_IMAGE_FORMAT type = FIF_UNKNOWN;
-				if(Desc.mPath != "")
-				{
-					type = FreeImage_GetFileType(Desc.mPath.c_str(), 0);
-				}
-				else
-				{
-					
-				}
-
-				if (type == FIF_DDS)
+				if (Desc.mExtension == IMAGE_EXTENSION_DDS)
 				{
 					TextureLoadInfo info;
 					RefCntAutoPtr<ITextureLoader> loader;
 
 					CreateTextureLoaderFromMemory(Desc.mData.GetBuffer().data(), Desc.mData.GetBuffer().size(), IMAGE_FILE_FORMAT_DDS,false, info, &loader);
 
-					result.mTexDesc = loader->GetTextureDesc();
-					result.mSubresources = std::move(loader->GetSubresources());
-					result.mMips = std::move(loader->GetMips());
+					result->mTexDesc = loader->GetTextureDesc();
+					result->mSubresources = std::move(loader->GetSubresources());
+					result->mMips = std::move(loader->GetMips());
 					return true;
 				}
 				else
@@ -312,6 +298,14 @@ namespace Nuclear
 					//FreeimageLoadMemory()
 				}
 				return false;
+			}
+			IMAGE_EXTENSION ImageImporter::GetImageExtension(const std::string& filename)
+			{
+				FREE_IMAGE_FORMAT type = FIF_UNKNOWN;
+
+				type = FreeImage_GetFileType(filename.c_str(), 0);
+
+				return (IMAGE_EXTENSION)type;
 			}
 		}
 	}

@@ -74,7 +74,7 @@ namespace Nuclear
 		class ImageImportTask : public Threading::Task
 		{
 		public:
-			ImageImportTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
+			ImageImportTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc)
 				: pResult(result), mInfo(info), pResultData(nullptr), mImportingDesc(desc)
 			{
 			}
@@ -87,20 +87,41 @@ namespace Nuclear
 				//Import
 				pResultData = new ImageData;
 				Assets::ImageDesc desc;
-				bool result = Importers::ImageImporter::GetInstance().Import(mInfo.mPath.GetRealPath(), pResultData, mImportingDesc);
+				bool result = false;
 
+				if (!mImportingDesc.mLoadFromMemory)
+				{
+					auto extension = Importers::ImageImporter::GetInstance().GetImageExtension(mInfo.mPath.GetRealPath());
+					auto importedfile = Platform::FileSystem::GetInstance().LoadFile(mInfo.mPath.GetRealPath());
+					mImportingDesc.mMemData = importedfile.mDataBuf.data();
+					mImportingDesc.mMemSize = importedfile.mDataBuf.size();
+					result = Importers::ImageImporter::GetInstance().Import(pResultData, extension, mImportingDesc);
+				}
+				else
+				{
+					assert(false);
+				}
 				if (result)
 				{
 					pResult->SetState(IAsset::State::Loaded);
 
-					ImageLoadingDesc loadingdesc;
-					loadingdesc.mExtension = mImportingDesc.mExportExtension;
+					if (!mImportingDesc.mLoadOnly)
+					{
+						std::string exportpath = AssetLibrary::GetInstance().mPath.GetRealPath() + "/Textures/";
+						std::string exportedimagename = mInfo.mPath.GetFilename(true) + ".dds"; ///<TODO extension...
 
-					Importers::ImageImporter::GetInstance().Export(AssetLibrary::GetInstance().mPath + mInfo.mPath.GetFilename(true) + ".dds", pResultData, loadingdesc);
+						Importers::ImageImporter::GetInstance().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension);
 
-					//Export Meta
-					Serialization::SerializationEngine::GetInstance().Serialize(assetmeta, mInfo.mPath);
+						AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(pResult);
 
+						auto imageloadingdesc = static_cast<Assets::ImageLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::ImageLoadingDesc);
+
+						imageloadingdesc->mExtension = mImportingDesc.mExportExtension;
+						imageloadingdesc->mAsyncLoading = mImportingDesc.mAsyncImporting;
+
+						//Export Meta
+						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mInfo.mPath.GetFilename(true) + ".NEAsset");
+					}
 					//Create image task
 					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));
 				}
@@ -141,7 +162,7 @@ namespace Nuclear
 				Serialization::SerializationEngine::GetInstance().Deserialize(assetmeta, mInfo.mPath);
 				Assets::ImageLoadingDesc mLoadingDesc = *static_cast<Assets::ImageLoadingDesc*>(assetmeta.pLoadingDesc);
 				delete assetmeta.pLoadingDesc;
-				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mLoadingDesc.mPath);
+				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mInfo.mPath.GetPathNoExt() + ".dds");
 
 				//Load image
 				pResultData = new ImageData;
@@ -151,9 +172,11 @@ namespace Nuclear
 
 				if (result)
 				{
+					std::string exportpath = AssetLibrary::GetInstance().mPath.GetRealPath() + "/Textures/";
+
 					pResult->SetState(IAsset::State::Loaded);
 
-					Importers::ImageImporter::GetInstance().Export(AssetLibrary::GetInstance().mPath + mInfo.mPath.GetFilename(true), pResultData, mLoadingDesc);
+					Importers::ImageImporter::GetInstance().Export(exportpath + mInfo.mPath.GetFilename(true), pResultData, mLoadingDesc.mExtension);
 
 					//Create image task
 					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));

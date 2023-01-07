@@ -58,10 +58,15 @@ public:
 
 		//Test asset metadata
 		auto test = GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/albedo.png",  Graphics::TextureUsageType::Diffuse );
-		auto meta = GetAssetManager().CreateMetadata(test.GetImage());
-		Serialization::SerializationEngine::GetInstance().Serialize(meta, "Asset.meta");
-		Assets::AssetMetadata META2;
-		Serialization::SerializationEngine::GetInstance().Deserialize(META2, "Asset.meta");
+
+		Assets::ImageImportingDesc imagedesc;
+		imagedesc.mLoadOnly = false;
+		GetAssetManager().Import<Assets::Image>("@CommonAssets@/Textures/PBR/wall/albedo.png", imagedesc);
+		GetAssetManager().Import<Assets::Image>("@CommonAssets@/Textures/PBR/wall/metallic.png", imagedesc);
+		GetAssetManager().Import<Assets::Image>("@CommonAssets@/Textures/PBR/wall/normal.png", imagedesc);
+		GetAssetManager().Import<Assets::Image>("@CommonAssets@/Textures/PBR/wall/roughness.png", imagedesc);
+		GetAssetManager().Import<Assets::Image>("@CommonAssets@/Textures/PBR/wall/ao.png", imagedesc);
+
 
 	}
 	void SetupEntities()

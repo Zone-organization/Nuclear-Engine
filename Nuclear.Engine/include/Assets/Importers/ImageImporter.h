@@ -19,10 +19,11 @@ namespace Nuclear
 
 				static ImageImporter& GetInstance();
 
-				bool Import(const std::string& importPath, ImageData* data, const Assets::ImageImportingDesc& desc);
-				bool Export(const std::string& exportPath, ImageData* data, const Assets::ImageLoadingDesc& desc);
+				bool Import(ImageData* data, IMAGE_EXTENSION extension, const Assets::ImageImportingDesc& desc);
+				bool Export(const std::string& exportPath, ImageData* data, IMAGE_EXTENSION type);
 				bool Load(const Assets::ImageLoadingDesc& Desc, ImageData* result);
 
+				IMAGE_EXTENSION GetImageExtension(const std::string& filename);
 
 				//Old:
 				bool Load(const std::string& Path, Assets::ImageDesc* result ,const Assets::ImageImportingDesc& Desc);

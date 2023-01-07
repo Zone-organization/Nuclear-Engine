@@ -31,7 +31,7 @@ namespace Nuclear
 		{
 		public:
 			Client(const ClientInfo& yourinfo = ClientInfo());
-			~Client();
+			virtual ~Client() = default;
 
 			ClientInfo GetClientInfo();
 

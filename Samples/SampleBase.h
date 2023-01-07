@@ -18,6 +18,7 @@ public:
 	{
 
 	}
+	virtual ~SampleBase() = default;
 
 	void Load() override
 	{

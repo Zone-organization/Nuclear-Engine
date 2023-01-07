@@ -28,49 +28,6 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class NEAPI FreeImageTask : public Threading::Task
-		{
-		public:
-			FreeImageTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc = ImageImportingDesc())
-				: pResult(result), mInfo(info)
-			{
-				pResult = result;
-				mDesc = desc;
-			}
-			~FreeImageTask()
-			{
-
-			}
-			bool OnRunning() override
-			{
-				Assets::ImageDesc desc;
-				bool result = Importers::ImageImporter::GetInstance().Load(mInfo.mPath.GetRealPath(), &desc, mDesc);
-
-				if (result)
-				{
-					pResultData = new ImageData;
-					pResult->SetState(IAsset::State::Loaded);
-					Graphics::GraphicsEngine::GetInstance().CreateImageData(pResultData, desc);
-
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));
-				}
-				else
-				{
-					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
-				}
-				return result;
-			}
-
-			void OnEnd() override
-			{
-				delete this;
-			}
-		protected:
-			Assets::Image* pResult;
-			ImageData* pResultData;
-			Assets::ImageImportingDesc mDesc;
-			AssetInfo mInfo;
-		};
 		Importer::Importer()
 		{
 			FT_Handle = msdfgen::initializeFreetype();
@@ -114,7 +71,7 @@ namespace Nuclear
 				result = &(AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath));
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
-				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new FreeImageTask(result, { Path, hashedpath, true }, Desc));
+				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new ImageImportTask(result, { Path, hashedpath, true }, Desc));
 
 				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
@@ -604,7 +561,7 @@ namespace Nuclear
 
 				if (log)
 				{
-					NUCLEAR_INFO("[{0}] Imported: {1} ", AssetLibrary::GetInstance().mName, path.GetInputPath());
+					NUCLEAR_INFO("[Assets] Imported: {0} ", path.GetInputPath());
 				}
 			}
 			return;

@@ -59,6 +59,7 @@ int main(int argc, char* argv[])
 	desc.mScriptingAssemblyNamespace = "Samples";
 	Core::Engine::GetInstance().Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
+	Assets::AssetLibrary::GetInstance().mPath = "../Assets/Imported";
 
 	while (!Core::Engine::GetInstance().ShouldClose())
 	{

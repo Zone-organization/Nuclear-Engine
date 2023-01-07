@@ -126,17 +126,8 @@ namespace Nuclear
 
 			result.mName = asset->GetName();
 			result.mHashedName = Utilities::Hash(asset->GetName());
-			result.mHashedPath = asset->GetPathHash();
 			result.mUUID = asset->GetUUID();
 			result.mType = asset->GetType();
-
-			switch (result.mType)
-			{
-			case Assets::AssetType::Image:
-				result.pLoadingDesc
-			default:
-				break;
-			}
 
 			return result;
 		}

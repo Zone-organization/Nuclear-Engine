@@ -22,6 +22,7 @@ namespace Nuclear
 			};
 
 			IAsset(AssetType type);
+			virtual ~IAsset();
 
 			const AssetType GetType() const;
 

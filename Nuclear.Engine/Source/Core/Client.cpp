@@ -7,9 +7,6 @@ namespace Nuclear {
 		{
 			minfo = yourinfo;
 		}
-		Client::~Client()
-		{
-		}
 		ClientInfo Client::GetClientInfo()
 		{
 			return minfo;

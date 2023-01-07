@@ -35,6 +35,13 @@ namespace Nuclear
 
 		//}
 
+		const char* SetBool(bool val)
+		{
+			if (val)
+				return "true";
+
+			return "false";
+		}
 		bool SerializationEngine::Serialize(const Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
 			Parsers::INIFile file(path.GetRealPath());
@@ -46,12 +53,23 @@ namespace Nuclear
 			meta["AssetMetadata"]["UUID"] = metadata.mUUID.str();
 			meta["AssetMetadata"]["AssetType"] = magic_enum::enum_name(metadata.mType);
 			meta["AssetMetadata"]["HashedName"] = Utilities::int_to_hex<Uint32>(metadata.mHashedName);
-			meta["AssetMetadata"]["HashedPath"] = Utilities::int_to_hex<Uint32>(metadata.mHashedPath);
 
-
+			switch (metadata.mType)
+			{
+			case Assets::AssetType::Image:
+			{
+				const auto imagedesc = static_cast<Assets::ImageLoadingDesc*>(metadata.pLoadingDesc);
+				meta["ImageLoadingDesc"]["Extension"] = magic_enum::enum_name(imagedesc->mExtension);
+				meta["ImageLoadingDesc"]["AsyncLoading"] = SetBool(imagedesc->mAsyncLoading);
+			}
+			default:
+				break;
+			}
 
 			return file.generate(meta);
 		}
+
+
 		bool SerializationEngine::Deserialize(Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
 			Parsers::INIFile file(path.GetRealPath());
@@ -66,15 +84,15 @@ namespace Nuclear
 				metadata.mUUID = Utilities::UUID(meta["AssetMetadata"]["UUID"]);
 				metadata.mType = magic_enum::enum_cast<Assets::AssetType>(meta["AssetMetadata"]["AssetType"]).value_or(Assets::AssetType::Unknown);
 				metadata.mHashedName = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedName"]);
-				metadata.mHashedPath = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedPath"]);
 
 				switch (metadata.mType)
 				{
 				case Assets::AssetType::Image:
+				{
 					auto imagedesc = static_cast<Assets::ImageLoadingDesc*>(metadata.pLoadingDesc = new Assets::ImageLoadingDesc);
-					imagedesc->mPath = meta["AssetMetadata"]["Path"];
 					imagedesc->mExtension = magic_enum::enum_cast<Assets::IMAGE_EXTENSION>(meta["ImageLoadingDesc"]["Extension"]).value_or(Assets::IMAGE_EXTENSION::IMAGE_EXTENSION_UNKNOWN);
 					imagedesc->mAsyncLoading = meta["ImageLoadingDesc"].GetBoolean("AsyncLoading", true);
+				}
 				default:
 					break;
 				}
