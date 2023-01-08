@@ -7,7 +7,7 @@
 
 namespace Nuclear
 {
-	namespace Utilities
+	namespace Core
 	{
 
 		// Class to represent a GUID/UUID. Each instance acts as a wrapper around a
@@ -88,18 +88,18 @@ namespace std
 	// Template specialization for std::swap<Guid>() --
 	// See guid.cpp for the function definition
 	template <>
-	void swap(Nuclear::Utilities::UUID& guid0, Nuclear::Utilities::UUID& guid1) noexcept;
+	void swap(Nuclear::Core::UUID& guid0, Nuclear::Core::UUID& guid1) noexcept;
 
 	// Specialization for std::hash<Guid> -- this implementation
 	// uses std::hash<std::string> on the stringification of the guid
 	// to calculate the hash
 	template <>
-	struct hash<Nuclear::Utilities::UUID>
+	struct hash<Nuclear::Core::UUID>
 	{
-		std::size_t operator()(Nuclear::Utilities::UUID const& guid) const
+		std::size_t operator()(Nuclear::Core::UUID const& guid) const
 		{
 			const uint64_t* p = reinterpret_cast<const uint64_t*>(guid.bytes().data());
-			return Nuclear::Utilities::Internal::hash<uint64_t, uint64_t>{}(p[0], p[1]);
+			return Nuclear::Core::Internal::hash<uint64_t, uint64_t>{}(p[0], p[1]);
 		}
 	};
 }

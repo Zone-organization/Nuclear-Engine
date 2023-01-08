@@ -24,10 +24,6 @@ namespace Nuclear
 			return mState;
 		}
 
-		Uint32 IAsset::GetPathHash() const
-		{
-			return mPathHash;
-		}
 		const std::string IAsset::GetName()
 		{ 
 			return mName; 
@@ -37,7 +33,7 @@ namespace Nuclear
 			mName = str;
 		}
 
-		const Utilities::UUID& IAsset::GetUUID() const
+		const Core::UUID& IAsset::GetUUID() const
 		{
 			return mUUID;
 		}
@@ -47,7 +43,7 @@ namespace Nuclear
 			mState = state;
 		}
 
-		void IAsset::SetUUID(const Utilities::UUID& uuid)
+		void IAsset::SetUUID(const Core::UUID& uuid)
 		{
 			mUUID = uuid;
 		}

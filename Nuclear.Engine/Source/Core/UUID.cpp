@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include <Utilities/UUID.h>
+#include <Core/UUID.h>
 #include <cstring>
 #include <iostream>
 #include <utility>
@@ -47,7 +47,7 @@ THE SOFTWARE.
 
 namespace Nuclear
 {
-	namespace Utilities
+	namespace Core
 	{
 
 #ifdef PLATFORM_ANDROID
@@ -409,7 +409,7 @@ namespace Nuclear
 namespace std
 {
 	template <>
-	void swap(Nuclear::Utilities::UUID& lhs, Nuclear::Utilities::UUID& rhs) noexcept
+	void swap(Nuclear::Core::UUID& lhs, Nuclear::Core::UUID& rhs) noexcept
 	{
 		lhs.swap(rhs);
 	}

@@ -419,7 +419,7 @@
     <ClInclude Include="include\Core\Client.h" />
     <ClInclude Include="include\Assets\Font.h" />
     <ClInclude Include="include\Threading\ThreadPool.h" />
-    <ClInclude Include="include\Utilities\UUID.h" />
+    <ClInclude Include="include\Core\UUID.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpGLMHelpers.h" />
@@ -574,7 +574,7 @@
     <ClCompile Include="Source\Platform\Win32\dllmain.cpp" />
     <ClCompile Include="Source\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\Utilities\Timer.cpp" />
-    <ClCompile Include="Source\Utilities\UUID.cpp" />
+    <ClCompile Include="Source\Core\UUID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Math\glm\detail\func_common.inl" />

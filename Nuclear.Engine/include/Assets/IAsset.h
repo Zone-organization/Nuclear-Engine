@@ -2,7 +2,7 @@
 #include <Assets/AssetType.h>
 #include <Utilities/Hash.h>
 #include <Serialization/Access.h>
-#include <Utilities/UUID.h>
+#include <Core/UUID.h>
 
 namespace Nuclear
 {
@@ -33,15 +33,12 @@ namespace Nuclear
 			void SetName(const std::string& str);
 
 			//Used for serialization
-			const Utilities::UUID& GetUUID() const;
-
-			//Used for run-time duplicate asset checking in asset library
-			Uint32 GetPathHash() const;
+			const Core::UUID& GetUUID() const;
 
 			//TODO: Maybe remove since the client shouldnt be able to change an asset state
 			void SetState(const State& state);
 
-			void SetUUID(const Utilities::UUID& uuid);
+			void SetUUID(const Core::UUID& uuid);
 		protected:
 			friend class AssetManager;
 			friend class Importer;
@@ -51,8 +48,7 @@ namespace Nuclear
 			State mState;
 
 			std::string mName;
-			Uint32 mPathHash = 0;
-			Utilities::UUID mUUID;
+			Core::UUID mUUID;
 		};
 	}
 }
