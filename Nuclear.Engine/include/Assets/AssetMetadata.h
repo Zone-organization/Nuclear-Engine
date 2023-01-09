@@ -30,7 +30,7 @@ namespace Nuclear
 			}
 			//Important for loading assets
 			AssetType mType;
-			Utilities::UUID mUUID;
+			Core::UUID mUUID;
 			std::string mName;
 			Uint32 mHashedName;
 			AssetLoadingDesc* pLoadingDesc = nullptr;

@@ -62,7 +62,7 @@ namespace Nuclear
 
 			std::vector<IAsset*>& GetQueuedAssets();
 
-			static void FinishImportingAsset(IAsset* asset, const Core::Path& path, Uint32 Hashedpath, bool log = true);
+			static void FinishImportingAsset(IAsset* asset, const Core::Path& path, bool log = true);
 		private:
 			Image* TextureCube_Import(const Core::Path& Path, const ImageImportingDesc& Desc);
 			Importers::AssimpImporter mAssimpImporter;

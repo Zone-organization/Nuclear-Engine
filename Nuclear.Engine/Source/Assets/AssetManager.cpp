@@ -154,7 +154,7 @@ namespace Nuclear
 				if (!scene->mBinaryBuffer.empty())
 				{
 					Platform::FileSystem::GetInstance().SaveBinaryBuffer(scene->mBinaryBuffer, Path);
-					NUCLEAR_INFO("[AssetManager] Exported Scene '{0}' : '{1}' To: '{2}'", scene->GetName(), Utilities::int_to_hex<Uint32>(scene->GetPathHash()), Path.GetInputPath());
+					NUCLEAR_INFO("[AssetManager] Exported Scene '{0}' To: '{1}'", scene->GetName(), Path.GetInputPath());
 					return true;
 				}
 			}

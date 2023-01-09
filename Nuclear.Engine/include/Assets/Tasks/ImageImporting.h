@@ -25,7 +25,6 @@ namespace Nuclear
 		struct AssetInfo
 		{
 			Core::Path mPath;
-			Uint32 mHashedPath;
 			bool mLog = true;
 		};
 
@@ -53,10 +52,10 @@ namespace Nuclear
 
 				if (!result)
 				{
-					NUCLEAR_ERROR("[Importer] Failed To Create Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
+					NUCLEAR_ERROR("[Importer] Failed To Create Image: '{0}'", mInfo.mPath.GetInputPath());
 					return false;
 				}
-				Importer::FinishImportingAsset(pImage, mInfo.mPath, mInfo.mHashedPath, mInfo.mLog);
+				Importer::FinishImportingAsset(pImage, mInfo.mPath, mInfo.mLog);
 				return result;
 			}
 
@@ -128,7 +127,7 @@ namespace Nuclear
 				else
 				{
 					delete pResultData;
-					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
+					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}'", mInfo.mPath.GetInputPath());
 				}
 				return result;
 			}
@@ -184,7 +183,7 @@ namespace Nuclear
 				else
 				{
 					delete pResultData;
-					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}' Hash: '{1}'", mInfo.mPath.GetInputPath(), Utilities::int_to_hex<Uint32>(mInfo.mHashedPath));
+					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}'", mInfo.mPath.GetInputPath());
 				}
 				return result;
 			}

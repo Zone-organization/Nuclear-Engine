@@ -2,7 +2,6 @@
 #include <Assets/AssetLibrary.h>
 #include <Assets/Importers\ImageImporter.h>
 #include <Utilities/Logger.h>
-#include <Utilities/Hash.h>
 #include <Scripting\ScriptingEngine.h>
 
 #include <ft2build.h>
@@ -58,28 +57,17 @@ namespace Nuclear
 		{
 			if (Desc.mAsyncImporting)
 			{
-				auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-				//Check if exists
-				auto result = AssetLibrary::GetInstance().mImportedImages.GetAsset(hashedpath);
-				if (result)
-				{
-					return result;
-				}
-
 				//Add to queue			
-				result = &(AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath));
+				auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
-				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new ImageImportTask(result, { Path, hashedpath, true }, Desc));
+				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new ImageImportTask(result, { Path, true }, Desc));
 
 				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
 			return ImportImageST(Path, Desc);
 		}
-
-
 
 		/**Model* Importer::AsyncImportModel(const Core::Path& Path, const ModelImportingDesc& desc)
 		{
@@ -144,62 +132,43 @@ namespace Nuclear
 		*/
 		Image* Importer::ImportImageST(const Core::Path& Path, const ImageImportingDesc& importingdesc)
 		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-			//Check if exists
-			auto result = AssetLibrary::GetInstance().mImportedImages.GetAsset(hashedpath);
-			if (result)
-			{
-				return result;
-			}
-
 			//Load
 			ImageDesc desc;
 			ImageData data;
 
 			Importers::ImageImporter::GetInstance().Load(Path.GetRealPath(),&desc, importingdesc);
 
-			auto& image = AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath);
+			auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
 
 			Graphics::GraphicsEngine::GetInstance().CreateImageData(&data, desc);
 
-			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(&image, &data))
+			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &data))
 			{
-				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}' Hash: '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}'", Path.GetInputPath());
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 
-			//Create
-			result = &image;
 
-			FinishImportingAsset(result, Path, hashedpath);
+			FinishImportingAsset(result, Path);
 			return result;
 		}
 
 		Image* Importer::ImportImage(const ImageDesc& imagedesc, const ImageImportingDesc& importingdesc)
 		{
-			auto hashedpath = Utilities::Hash(imagedesc.mPath);
-
-			auto result = AssetLibrary::GetInstance().mImportedImages.GetAsset(hashedpath);
-			if (result)
-			{
-				return result;
-			}
-
 			//Create
-			Image image;
+			auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
+
 			ImageData imagedata;
 			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
 			
-			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(&image, &imagedata))
+			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &imagedata))
 			{
-				NUCLEAR_ERROR("[Importer] Failed To Create Image Hash: '{0}'", Utilities::int_to_hex<Uint32>(hashedpath));
+				NUCLEAR_ERROR("[Importer] Failed To Create Image : '");
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 
-			result = &(AssetLibrary::GetInstance().mImportedImages.AddAsset(hashedpath) = image);
 
-			FinishImportingAsset(result, imagedesc.mPath, hashedpath);
+			FinishImportingAsset(result, imagedesc.mPath);
 
 			return result;
 		}
@@ -228,13 +197,10 @@ namespace Nuclear
 
 		AudioClip* Importer::ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc)
 		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-			AssetLibrary::GetInstance().mImportedAudioClips.mData[hashedpath] = AudioClip();
-			auto result = &AssetLibrary::GetInstance().mImportedAudioClips.mData[hashedpath];
+			auto result = &AssetLibrary::GetInstance().mImportedAudioClips.AddAsset();
 			Audio::AudioEngine::GetInstance().GetSystem()->createSound(Path.GetRealPath().c_str(), Desc.mMode, 0, &result->mSound);
 
-			FinishImportingAsset(result, Path, hashedpath);
+			FinishImportingAsset(result, Path);
 
 			return result;
 		}
@@ -242,34 +208,21 @@ namespace Nuclear
 
 		Model* Importer::ImportModel(const Core::Path& Path, const ModelImportingDesc& desc)
 		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
+			auto result = &AssetLibrary::GetInstance().mImportedModels.AddAsset();
 
-
-			//Check if exists
-			auto result = AssetLibrary::GetInstance().mImportedModels.GetAsset(hashedpath);
-			if (result)
-			{
-				return result;
-			}
-			result = &AssetLibrary::GetInstance().mImportedModels.AddAsset(hashedpath);
-			if (desc.LoadMesh)
-			{
-				result->pMesh = AssetLibrary::GetInstance().mImportedMeshes.GetOrAddAsset(hashedpath);
-			}
-
-			if (desc.LoadMaterialData)
-			{
-				result->pMaterialData = AssetLibrary::GetInstance().mImportedMaterialDatas.GetOrAddAsset(hashedpath);
-			}
-
-			if (desc.LoadAnimation)
-			{
-				result->pAnimations = AssetLibrary::GetInstance().mImportedAnimations.GetOrAddAsset(hashedpath);
-			}
+			if (desc.LoadMesh)			
+				result->pMesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
+			
+			if (desc.LoadMaterialData)			
+				result->pMaterialData = &AssetLibrary::GetInstance().mImportedMaterialDatas.AddAsset();
+			
+			if (desc.LoadAnimation)			
+				result->pAnimations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
+			
 
 			if (!mAssimpImporter.Load(Path.GetRealPath(), result, desc))
 			{
-				NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+				NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}'", Path.GetInputPath());
 
 				return nullptr;
 			}
@@ -278,12 +231,12 @@ namespace Nuclear
 			{
 				if (result->pAnimations->GetState() != IAsset::State::Loaded)
 				{
-					AssetLibrary::GetInstance().mImportedAnimations.mData.erase(hashedpath);
+					AssetLibrary::GetInstance().mImportedAnimations.mData.erase(result->pAnimations->GetUUID());
 				}
 			}
-			FinishImportingAsset(result->pMesh, Path, hashedpath);
-			FinishImportingAsset(result->pMaterialData, Path, hashedpath, false);
-			FinishImportingAsset(result->pAnimations, Path, hashedpath, false);
+			FinishImportingAsset(result->pMesh, Path);
+			FinishImportingAsset(result->pMaterialData, Path, false);
+			FinishImportingAsset(result->pAnimations, Path, false);
 
 			if (result->pMesh)
 				result->pMesh->Create();
@@ -360,9 +313,7 @@ namespace Nuclear
 				//	success = myProject::submitAtlasBitmapAndLayout(generator.atlasStorage(), glyphs);
 				auto atlas = generator.atlasStorage();
 
-				AssetLibrary::GetInstance().mImportedFonts.SavePath(hashedpath, Path);
-				AssetLibrary::GetInstance().mImportedFonts.mData[hashedpath] = Font();
-				Font* result = &AssetLibrary::GetInstance().mImportedFonts.mData[hashedpath];
+				Font* result = &AssetLibrary::GetInstance().mImportedFonts.AddAsset();
 
 				FontCreationDesc desc;
 				fillfontdesc<1>(atlas, desc);
@@ -402,18 +353,8 @@ namespace Nuclear
 
 		Shader* Importer::ImportShader(const Core::Path& Path, const ShaderImportingDesc& desc)
 		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
+			Shader* result = &AssetLibrary::GetInstance().mImportedShaders.AddAsset();
 
-			//Check if exists
-			auto it = AssetLibrary::GetInstance().mImportedShaders.mData.find(hashedpath);
-			if (it != AssetLibrary::GetInstance().mImportedShaders.mData.end())
-			{
-				return &it->second;
-			}
-
-
-			Shader* result;
-			result = &AssetLibrary::GetInstance().mImportedShaders.mData[hashedpath];
 			auto source = Platform::FileSystem::GetInstance().LoadFileToString(Path.GetRealPath());
 			ShaderBuildDesc shaderbuilddesc;
 			shaderbuilddesc.mType = desc.mType;
@@ -424,23 +365,14 @@ namespace Nuclear
 				result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
 			}
 
-			FinishImportingAsset(result, Path, hashedpath);
+			FinishImportingAsset(result, Path);
 
 			return result;
 		}
 
 		Script* Importer::ImportScript(const Core::Path& Path, const ScriptImportingDesc& desc)
 		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-			//Check if exists
-			auto it = AssetLibrary::GetInstance().mImportedScripts.mData.find(hashedpath);
-			if (it != AssetLibrary::GetInstance().mImportedScripts.mData.end())
-			{
-				return &it->second;
-			}
-			Script* result;
-			result = &AssetLibrary::GetInstance().mImportedScripts.mData[hashedpath];
+			Script* result = &AssetLibrary::GetInstance().mImportedScripts.AddAsset();
 
 			std::string fullname = "";
 			if (desc.mClassNameFromPath)
@@ -452,7 +384,7 @@ namespace Nuclear
 				fullname = desc.mScriptFullName;
 			}
 			Scripting::ScriptingEngine::GetInstance().CreateScriptAsset(result, fullname);
-			FinishImportingAsset(result, Path, hashedpath);
+			FinishImportingAsset(result, Path);
 
 			return result;
 		}
@@ -501,64 +433,44 @@ namespace Nuclear
 
 		Scene* Importer::ImportScene(const Core::Path& Path, const SceneImportingDesc& desc)
 		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-			//Check if exists
-			auto it = AssetLibrary::GetInstance().mImportedScenes.mData.find(hashedpath);
-			if (it != AssetLibrary::GetInstance().mImportedScenes.mData.end())
-			{
-				return &it->second;
-			}
-			Scene* result = &AssetLibrary::GetInstance().mImportedScenes.mData[hashedpath];
+			Scene* result = &AssetLibrary::GetInstance().mImportedScenes.AddAsset();
 
 			Platform::FileSystem::GetInstance().LoadBinaryBuffer(result->mBinaryBuffer, Path);
 
-			NUCLEAR_INFO("[Importer] Imported Scene : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+			NUCLEAR_INFO("[Importer] Imported Scene : '{0}'", Path.GetInputPath());
 			return result;
 		}
 
 		Image* Importer::TextureCube_Import(const Core::Path& Path, const ImageImportingDesc& importingdesc)
 		{
+			auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
 
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-			//Check if Texture has been Imported before
-			auto it = AssetLibrary::GetInstance().mImportedImages.mData.find(hashedpath);
-			if (it != AssetLibrary::GetInstance().mImportedImages.mData.end())
-			{
-				return &it->second;
-			}
-
-			Image result;
 			ImageDesc imagedesc;
 			ImageData imagedata;
 
 			if (!Importers::ImageImporter::GetInstance().Load(Path.GetRealPath(), &imagedesc, importingdesc))
 			{
-				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}'", Path.GetInputPath());
 				return nullptr;
 			}
 			imagedesc.mGenerateMipMaps = false;
 			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
-			Graphics::GraphicsEngine::GetInstance().CreateImage(&result, &imagedata);
+			Graphics::GraphicsEngine::GetInstance().CreateImage(result, &imagedata);
 
 			//TODO::
 			//result.mData = imagedata;
 
-			AssetLibrary::GetInstance().mImportedImages.mData[hashedpath] = result;
 
-			NUCLEAR_INFO("[Importer] Imported Texture2D (for CubeMap) : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+			NUCLEAR_INFO("[Importer] Imported Texture2D (for CubeMap) : '{0}'", Path.GetInputPath());
 
-			return &AssetLibrary::GetInstance().mImportedImages.mData[hashedpath];
+			return result;
 		}
 
-		void Importer::FinishImportingAsset(IAsset* asset, const Core::Path& path, Uint32 Hashedpath, bool log)
+		void Importer::FinishImportingAsset(IAsset* asset, const Core::Path& path, bool log)
 		{
 			if (asset)
 			{
-				asset->mPathHash = Hashedpath;
 				asset->mState = IAsset::State::Loaded;
-
 				if (log)
 				{
 					NUCLEAR_INFO("[Assets] Imported: {0} ", path.GetInputPath());

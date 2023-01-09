@@ -21,11 +21,11 @@ namespace Nuclear
 		template <class T>
 		struct ImportedAssetsMap
 		{
-			std::unordered_map<Core::UUID, T> mData; //All loaded asset T with their hashed names with crc32c (always saved)
+			std::unordered_map<Core::UUID, T> mData;
 
-			T* GetAsset(Uint32 hashedpath)
+			T* GetAsset(const Core::UUID& uuid)
 			{
-				auto it = mData.find(hashedpath);
+				auto it = mData.find(uuid);
 				if (it != mData.end())
 				{
 					return &it->second;
@@ -34,29 +34,29 @@ namespace Nuclear
 			}
 
 
-			T* GetOrAddAsset(Uint32 hashedpath)
+			T* GetOrAddAsset(const Core::UUID& uuid)
 			{
-				auto it = mData.find(hashedpath);
+				auto it = mData.find(uuid);
 				if (it != mData.end())
 				{
 					return &it->second;
 				}
-				return &AddAsset(hashedpath);
+				return &AddAsset(uuid);
 			}
 
-			T& AddAsset(Uint32 hashed)
+			T& AddAsset(const Core::UUID& uuid)
 			{
-				T& result = mData[hashed];
-				result.SetUUID(Utilities::UUID::CreateNewUUID());
+				T& result = mData[uuid];
+				result.SetUUID(uuid);
 				return result;
 			}
 
-			T& AddAsset(const Core::Path& path, Uint32 hashed)
+			T& AddAsset()
 			{
-				if (mSavePaths)
-					mHashedPaths[hashed] = path;
-
-				return AddAsset(hashed);
+				auto uuid = Core::UUID::CreateNewUUID();
+				T& result = mData[uuid];
+				result.SetUUID(uuid);
+				return result;
 			}
 
 			void Release()

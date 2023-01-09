@@ -81,7 +81,7 @@ namespace Nuclear
 			if (meta["General"]["Type"] == "AssetMetadata")
 			{
 				metadata.mName = meta["AssetMetadata"]["Name"];
-				metadata.mUUID = Utilities::UUID(meta["AssetMetadata"]["UUID"]);
+				metadata.mUUID = Core::UUID(meta["AssetMetadata"]["UUID"]);
 				metadata.mType = magic_enum::enum_cast<Assets::AssetType>(meta["AssetMetadata"]["AssetType"]).value_or(Assets::AssetType::Unknown);
 				metadata.mHashedName = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedName"]);
 
