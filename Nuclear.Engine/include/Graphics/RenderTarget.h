@@ -13,19 +13,19 @@ namespace Nuclear
 		struct NEAPI RenderTargetDesc
 		{
 			RenderTargetDesc();
-			RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT depthTexFormat, std::string name = "Unnamed RT");
+			RenderTargetDesc(Diligent::TEXTURE_FORMAT colorTexFormat, Diligent::TEXTURE_FORMAT depthTexFormat, std::string name = "Unnamed RT");
 
 			//Debug Only
 			std::string mName;
 			std::string mType;  
 
 			Math::Vector2ui mDimensions = Math::Vector2ui(800, 600);
-			TEXTURE_FORMAT ColorTexFormat = TEX_FORMAT_RGBA8_UNORM;
+			Diligent::TEXTURE_FORMAT ColorTexFormat = Diligent::TEX_FORMAT_RGBA8_UNORM;
 
 			//If it isnt equal unknown a depth RT will be created
-			TEXTURE_FORMAT DepthTexFormat = TEX_FORMAT_UNKNOWN;
+			Diligent::TEXTURE_FORMAT DepthTexFormat = Diligent::TEX_FORMAT_UNKNOWN;
 
-			OptimizedClearValue ClearValue;
+			Diligent::OptimizedClearValue ClearValue;
 		};
 
 		class NEAPI RenderTarget
@@ -41,18 +41,18 @@ namespace Nuclear
 			Math::Vector2ui GetDimensions() const;
 
 			//Shader Resource View
-			ITextureView* GetSRV();
+			Diligent::ITextureView* GetSRV();
 			//Render Target View
-			ITextureView* GetRTV();
+			Diligent::ITextureView* GetRTV();
 
-			ITextureView** GetRTVDblPtr();
+			Diligent::ITextureView** GetRTVDblPtr();
 
 			RenderTargetDesc GetDesc() const;
 		protected:
 			void CreateViews();
 
-			RefCntAutoPtr<ITextureView> mRTV;
-			RefCntAutoPtr<ITextureView> mSRV;
+			Diligent::RefCntAutoPtr<Diligent::ITextureView> mRTV;
+			Diligent::RefCntAutoPtr<Diligent::ITextureView> mSRV;
 
 			RenderTargetDesc mDesc;
 		};

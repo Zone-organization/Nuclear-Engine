@@ -58,13 +58,13 @@ namespace Nuclear
 
 		struct TextureImportingDesc
 		{
-			USAGE mUsage;
+			Diligent::USAGE mUsage;
 
-			BIND_FLAGS mBindFlags;
+			Diligent::BIND_FLAGS mBindFlags;
 
 			Uint32 mMipLevels;
 
-			CPU_ACCESS_FLAGS mCPUAccessFlags;
+			Diligent::CPU_ACCESS_FLAGS mCPUAccessFlags;
 
 			bool mIsSRGB;
 
@@ -74,7 +74,7 @@ namespace Nuclear
 
 			bool mLoadFromMemory;
 
-			RESOURCE_DIMENSION mType;
+			Diligent::RESOURCE_DIMENSION mType;
 
 			void* mMemData;
 
@@ -87,17 +87,17 @@ namespace Nuclear
 			bool mLoadOnly;
 
 			TextureImportingDesc() :
-				mUsage(USAGE_IMMUTABLE),
-				mBindFlags(BIND_SHADER_RESOURCE),
+				mUsage(Diligent::USAGE_IMMUTABLE),
+				mBindFlags(Diligent::BIND_SHADER_RESOURCE),
 				mMipLevels(0),
-				mCPUAccessFlags(CPU_ACCESS_NONE),
+				mCPUAccessFlags(Diligent::CPU_ACCESS_NONE),
 				mIsSRGB(false),
 				mGenerateMips(true),
 				mFlipY_Axis(true),
 				mLoadFromMemory(false),
 				mMemData(nullptr),
 				mMemSize(0),
-				mType(RESOURCE_DIM_TEX_2D),
+				mType(Diligent::RESOURCE_DIM_TEX_2D),
 				mExportExtension(IMAGE_EXTENSION_DDS),
 				mAsyncImporting(true),
 				mLoadOnly(true)

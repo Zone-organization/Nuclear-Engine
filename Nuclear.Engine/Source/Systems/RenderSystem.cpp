@@ -162,9 +162,9 @@ namespace Nuclear
 					////////////////////////////////////
 					//Step 2.2: Clear main RTVs
 					////////////////////////////////////
-					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetRenderTarget().GetRTVDblPtr(), camera.GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetRenderTarget().GetRTV(), (float*)&camera.mRTClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRenderTarget().GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetRenderTarget().GetRTVDblPtr(), camera.GetDepthRenderTarget().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetRenderTarget().GetRTV(), (float*)&camera.mRTClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRenderTarget().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 					////////////////////////////////////
 					//Step 2.3: Update RenderPasses
@@ -179,7 +179,7 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 3: Copy Main camera RT to RenderingEngine RTs.
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			CopyTextureAttribs attrib;
+			Diligent::CopyTextureAttribs attrib;
 			attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetRenderTarget().GetSRV()->GetTexture();
 			attrib.pDstTexture = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetSRV()->GetTexture();
 			Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
@@ -257,13 +257,13 @@ namespace Nuclear
 			{
 				mPSLightCB.Release();
 			}
-			BufferDesc CBDesc;
+			Diligent::BufferDesc CBDesc;
 			CBDesc.Name = "LightCB";
 			CBDesc.Size = static_cast<Uint32>(NE_Light_CB_Size);
-			CBDesc.Usage = USAGE_DYNAMIC;
-			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
-			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			BufferData DATA;
+			CBDesc.Usage = Diligent::USAGE_DYNAMIC;
+			CBDesc.BindFlags = Diligent::BIND_UNIFORM_BUFFER;
+			CBDesc.CPUAccessFlags = Diligent::CPU_ACCESS_WRITE;
+			Diligent::BufferData DATA;
 			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
 		}
 
@@ -363,9 +363,9 @@ namespace Nuclear
 			}
 
 			PVoid data;
-			Graphics::Context::GetInstance().GetContext()->MapBuffer(mPSLightCB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+			Graphics::Context::GetInstance().GetContext()->MapBuffer(mPSLightCB, Diligent::MAP_WRITE, Diligent::MAP_FLAG_DISCARD, (PVoid&)data);
 			data = memcpy(data, LightsBuffer.data(), NE_Light_CB_Size);
-			Graphics::Context::GetInstance().GetContext()->UnmapBuffer(mPSLightCB, MAP_WRITE);
+			Graphics::Context::GetInstance().GetContext()->UnmapBuffer(mPSLightCB, Diligent::MAP_WRITE);
 		}
 		bool RenderSystem::LightRequiresBaking()
 		{
@@ -376,7 +376,7 @@ namespace Nuclear
 
 			return false;
 		}
-		IBuffer* RenderSystem::GetLightCB()
+		Diligent::IBuffer* RenderSystem::GetLightCB()
 		{
 			return mPSLightCB.RawPtr();
 		}

@@ -18,7 +18,7 @@ namespace Nuclear
 		struct ShaderObjectCreationDesc
 		{
 			std::string mName = "";
-			SHADER_TYPE mType = SHADER_TYPE_UNKNOWN;
+			Diligent::SHADER_TYPE mType = Diligent::SHADER_TYPE_UNKNOWN;
 			std::string mEntrypoint = "main";
 
 			std::string mSource = "";
@@ -32,7 +32,7 @@ namespace Nuclear
 			ShaderObjectCreationDesc mVertexShader = ShaderObjectCreationDesc();
 			ShaderObjectCreationDesc mPixelShader = ShaderObjectCreationDesc();
 			ShaderPSOType mType = ShaderPSOType::Unknown;
-			GraphicsPipelineDesc GraphicsPipeline = GraphicsPipelineDesc();
+			Diligent::GraphicsPipelineDesc GraphicsPipeline = Diligent::GraphicsPipelineDesc();
 			std::vector<std::string> mRTsNames = std::vector<std::string>();
 		};
 	}

@@ -11,6 +11,8 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		using namespace Diligent;
+
 		RenderingEngine& RenderingEngine::GetInstance()
 		{
 			static RenderingEngine instance;

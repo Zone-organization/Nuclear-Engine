@@ -21,13 +21,13 @@ namespace Nuclear
 				mNumComponents = 0;
 				mRowStride = 0;
 				mData = nullptr;
-				mComponentType = VT_UNDEFINED;
-				mUsage = USAGE_IMMUTABLE;
-				mBindFlags = BIND_SHADER_RESOURCE;
+				mComponentType = Diligent::VT_UNDEFINED;
+				mUsage = Diligent::USAGE_IMMUTABLE;
+				mBindFlags = Diligent::BIND_SHADER_RESOURCE;
 				mMipLevels = 0;
-				mCPUAccessFlags = CPU_ACCESS_NONE;
+				mCPUAccessFlags = Diligent::CPU_ACCESS_NONE;
 				mIsSRGB = false;
-				mFormat = TEX_FORMAT_UNKNOWN;
+				mFormat = Diligent::TEX_FORMAT_UNKNOWN;
 			}
 			~ImageDesc()
 			{
@@ -38,7 +38,7 @@ namespace Nuclear
 				mNumComponents = 0;
 				mRowStride = 0;
 				mData = nullptr;
-				mComponentType = VT_UNDEFINED;
+				mComponentType = Diligent::VT_UNDEFINED;
 			}
 
 			std::string mPath;
@@ -53,20 +53,20 @@ namespace Nuclear
 
 			Uint32 mRowStride;
 
-			VALUE_TYPE mComponentType;
+			Diligent::VALUE_TYPE mComponentType;
 
 			Byte* mData;
 
 			//DESC
-			USAGE mUsage;
+			Diligent::USAGE mUsage;
 
-			BIND_FLAGS mBindFlags;
+			Diligent::BIND_FLAGS mBindFlags;
 
-			CPU_ACCESS_FLAGS mCPUAccessFlags;
+			Diligent::CPU_ACCESS_FLAGS mCPUAccessFlags;
 
-			RESOURCE_DIMENSION mType;
+			Diligent::RESOURCE_DIMENSION mType;
 
-			TEXTURE_FORMAT mFormat;
+			Diligent::TEXTURE_FORMAT mFormat;
 
 			bool mGenerateMipMaps = true;
 
@@ -76,7 +76,7 @@ namespace Nuclear
 
 			float mMipMapsAlphaCutoff = 0;
 
-			MIP_FILTER_TYPE mMipMapsFilter = MIP_FILTER_TYPE_DEFAULT;
+			Diligent::MIP_FILTER_TYPE mMipMapsFilter = Diligent::MIP_FILTER_TYPE_DEFAULT;
 		};
 
 		struct ImageData
@@ -84,11 +84,11 @@ namespace Nuclear
 			ImageData()
 			{
 				mTexDesc = Diligent::TextureDesc();
-				mSubresources = std::vector<TextureSubResData>();
+				mSubresources = std::vector<Diligent::TextureSubResData>();
 				mMips = std::vector< std::vector<Uint8> >();
 			}
 			Diligent::TextureDesc mTexDesc;
-			std::vector<TextureSubResData> mSubresources;
+			std::vector<Diligent::TextureSubResData> mSubresources;
 			std::vector< std::vector<Uint8> > mMips;
 		};
 

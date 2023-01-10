@@ -23,18 +23,18 @@ namespace Nuclear
                 //Render To Gbuffer
                 Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetGBufferPipeline());
 
-                std::vector<ITextureView*> RTargets;
+                std::vector<Diligent::ITextureView*> RTargets;
                 for (auto& i : pipeline->GetParentPipeline()->GetGBuffer()->mRenderTargets)
                 {
                     RTargets.push_back(i.GetRTV());
                 }
-                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 for (auto& i : RTargets)
                 {
-                    Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(i, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                    Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(i, nullptr, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 }
 
-                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                 pCurrentFrame->mUsedDefferedPipelines.push_back(pActivePipeline);
             }

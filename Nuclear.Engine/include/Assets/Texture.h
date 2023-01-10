@@ -17,15 +17,15 @@ namespace Nuclear
 			Texture();
 			~Texture();
 
-			void SetTextureView(ITextureView* view);
-			ITextureView* GetTextureView();
+			void SetTextureView(Diligent::ITextureView* view);
+			Diligent::ITextureView* GetTextureView();
 
 			const Uint32 GetWidth() const;
 			const Uint32 GetHeight() const;
 		protected:
 			friend class Graphics::GraphicsEngine;
 
-			RefCntAutoPtr<ITextureView> mTextureView;
+			Diligent::RefCntAutoPtr<Diligent::ITextureView> mTextureView;
 			//TextureUsageType mDefaultUsageType;
 			Uint32 mWidth, mHeight;
 

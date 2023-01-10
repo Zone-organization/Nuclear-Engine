@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 using namespace Nuclear;
+using namespace Diligent;
 
 static RefCntAutoPtr<IBuffer> g_pVB;
 static RefCntAutoPtr<IBuffer> g_pIB;

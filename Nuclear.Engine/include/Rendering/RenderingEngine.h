@@ -34,8 +34,8 @@ namespace Nuclear
 			void UpdateCameraCB(Components::CameraComponent* component);
 			void UpdateCameraCB(const Components::CameraBuffer& bufferdata);
 
-			IBuffer* GetCameraCB();
-			IBuffer* GetAnimationCB();
+			Diligent::IBuffer* GetCameraCB();
+			Diligent::IBuffer* GetAnimationCB();
 
 			Graphics::RenderTarget& GetFinalRT();
 			Graphics::RenderTarget& GetFinalDepthRT();
@@ -44,11 +44,11 @@ namespace Nuclear
 			RenderingEngineDesc mDesc;
 
 			//rendering constant buffers
-			RefCntAutoPtr<IBuffer> mCameraCB;
-			RefCntAutoPtr<IBuffer> mAnimationCB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> mCameraCB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> mAnimationCB;
 
-			RefCntAutoPtr<IPipelineState> pSceneToScreenPSO;
-			RefCntAutoPtr<IShaderResourceBinding> pSceneToScreenSRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> pSceneToScreenPSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> pSceneToScreenSRB;
 
 			Graphics::RenderTarget mFinalRT;
 			Graphics::RenderTarget mFinalDepthRT;

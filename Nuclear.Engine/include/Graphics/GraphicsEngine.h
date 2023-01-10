@@ -18,12 +18,12 @@ namespace Nuclear
 	{
 		struct GraphicsEngineDesc
 		{
-			RENDER_DEVICE_TYPE mRenderAPI = RENDER_DEVICE_TYPE::RENDER_DEVICE_TYPE_D3D11;
+			Diligent::RENDER_DEVICE_TYPE mRenderAPI = Diligent::RENDER_DEVICE_TYPE::RENDER_DEVICE_TYPE_D3D11;
 
 			bool InitImGui = true;
 			SDL_Window* pWindowHandle;
 
-			SwapChainDesc SCDesc;
+			Diligent::SwapChainDesc SCDesc;
 
 			//Note: Overrides SCDesc ColorBufferFormat
 			bool GammaCorrect = false;
@@ -46,25 +46,25 @@ namespace Nuclear
 
 			bool isGammaCorrect();
 
-			std::vector<LayoutElement> GetBasicVSLayout(bool isDeffered);
-			void CreateShader(IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
-			IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();
+			std::vector<Diligent::LayoutElement> GetBasicVSLayout(bool isDeffered);
+			void CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
+			Diligent::IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();
 
 			bool ProcessAndCreatePipeline(
-				IPipelineState** PipelineState,
-				GraphicsPipelineStateCreateInfo& Desc,
-				const std::vector<ShaderResourceVariableDesc>& Resources,
+				Diligent::IPipelineState** PipelineState,
+				Diligent::GraphicsPipelineStateCreateInfo& Desc,
+				const std::vector<Diligent::ShaderResourceVariableDesc>& Resources,
 				bool AutoCreateSamplersDesc = true,
-				const std::vector<ImmutableSamplerDesc>& StaticSamplers = std::vector<ImmutableSamplerDesc>());
+				const std::vector<Diligent::ImmutableSamplerDesc>& StaticSamplers = std::vector<Diligent::ImmutableSamplerDesc>());
 
-			std::vector<ShaderResourceVariableDesc> ReflectShaderVariables(IShader* VShader, IShader* PShader);
+			std::vector<Diligent::ShaderResourceVariableDesc> ReflectShaderVariables(Diligent::IShader* VShader, Diligent::IShader* PShader);
 
-			void CreateShader(const std::string& source, IShader** shader, SHADER_TYPE type);
+			void CreateShader(const std::string& source, Diligent::IShader** shader, Diligent::SHADER_TYPE type);
 
-			SHADER_RESOURCE_VARIABLE_TYPE ParseNameToGetType(const std::string& name);
+			Diligent::SHADER_RESOURCE_VARIABLE_TYPE ParseNameToGetType(const std::string& name);
 
 		protected:
-			RefCntAutoPtr<IShaderSourceInputStreamFactory> pShaderSourceFactory;
+			Diligent::RefCntAutoPtr<Diligent::IShaderSourceInputStreamFactory> pShaderSourceFactory;
 
 		private:
 			GraphicsEngine();

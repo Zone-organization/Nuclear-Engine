@@ -41,12 +41,12 @@ namespace Nuclear
 			void InitializeCube();
 			void RenderCube();
 
-			RefCntAutoPtr<ITextureView> mTextureSRV;
+			Diligent::RefCntAutoPtr<Diligent::ITextureView> mTextureSRV;
 		private:
-			RefCntAutoPtr<IPipelineState> mPipeline;
-			RefCntAutoPtr<IBuffer> mVBuffer;
-			RefCntAutoPtr<ISampler> mSampler;
-			RefCntAutoPtr<IShaderResourceBinding> mSRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mPipeline;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> mVBuffer;
+			Diligent::RefCntAutoPtr<Diligent::ISampler> mSampler;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mSRB;
 			bool ReleaseTex = false;
 			bool Valid = false;
 		};

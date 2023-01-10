@@ -69,7 +69,7 @@ namespace Nuclear
 			void RegisterShader(Assets::Shader* shader);
 
 			/////////////////////////////////////////////////////////////////////////////////////////
-			IBuffer* GetLightCB();
+			Diligent::IBuffer* GetLightCB();
 
 			Rendering::FrameRenderData mRenderData;
 			size_t GetDirLightsNum();
@@ -91,7 +91,7 @@ namespace Nuclear
 
 			bool HasbeenBakedBefore = false;
 
-			RefCntAutoPtr<IBuffer> mPSLightCB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> mPSLightCB;
 
 			void BakeLights();
 			void BakeLightsBuffer();

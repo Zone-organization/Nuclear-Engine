@@ -12,6 +12,7 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
+		using namespace Diligent;
 		Assets::TextureUsageType ParseTexUsageFromName(std::string& name)
 		{
 			if (name.find("Diffuse") == 0)
@@ -156,7 +157,7 @@ namespace Nuclear
 			return true;
 		}
 
-		void SetIfFound(IPipelineState* pipeline, SHADER_TYPE ShaderType, const Char* Name, IDeviceObject* obj)
+		void SetIfFound(IPipelineState* pipeline, Diligent::SHADER_TYPE ShaderType, const Char* Name, IDeviceObject* obj)
 		{
 			auto res = pipeline->GetStaticVariableByName(ShaderType, Name);
 

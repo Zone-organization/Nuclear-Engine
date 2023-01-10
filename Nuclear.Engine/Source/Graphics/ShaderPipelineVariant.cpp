@@ -17,7 +17,7 @@ namespace Nuclear
 			gRenderQueue++;
 		}
 
-		IPipelineState* ShaderPipelineVariant::GetRenderingPipeline()
+		Diligent::IPipelineState* ShaderPipelineVariant::GetRenderingPipeline()
 		{
 			if (mDesc._isDeffered)
 			{
@@ -25,7 +25,7 @@ namespace Nuclear
 			}
 			return GetMainPipeline();
 		}
-		IShaderResourceBinding* ShaderPipelineVariant::GetRenderingSRB()
+		Diligent::IShaderResourceBinding* ShaderPipelineVariant::GetRenderingSRB()
 		{
 			if (mDesc._isDeffered)
 			{
@@ -38,22 +38,22 @@ namespace Nuclear
 			return pParent;
 		}
 
-		IPipelineState* ShaderPipelineVariant::GetMainPipeline()
+		Diligent::IPipelineState* ShaderPipelineVariant::GetMainPipeline()
 		{
 			return mPipeline.RawPtr();
 		}
 
-		IShaderResourceBinding* ShaderPipelineVariant::GetMainPipelineSRB()
+		Diligent::IShaderResourceBinding* ShaderPipelineVariant::GetMainPipelineSRB()
 		{
 			return mPipelineSRB.RawPtr();
 		}
 
-		IPipelineState* ShaderPipelineVariant::GetGBufferPipeline()
+		Diligent::IPipelineState* ShaderPipelineVariant::GetGBufferPipeline()
 		{
 			return mGBufferPipeline.RawPtr();
 		}
 
-		IShaderResourceBinding* ShaderPipelineVariant::GetGBufferPipelineSRB()
+		Diligent::IShaderResourceBinding* ShaderPipelineVariant::GetGBufferPipelineSRB()
 		{
 			return mGBufferSRB.RawPtr();
 		}

@@ -14,6 +14,8 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		using namespace Diligent;
+
 		struct NEStatic_LightInfo {
 			Math::Matrix4 Model;
 			Math::Matrix4 LightSpace;

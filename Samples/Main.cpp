@@ -2,7 +2,7 @@
 #include "SampleSelector.h"
 #include <iostream>
 
-RENDER_DEVICE_TYPE SelectRenderer()
+Diligent::RENDER_DEVICE_TYPE SelectRenderer()
 {
 	std::cout << "Select Renderer: \n"
 		<< "1) DirectX 11 \n"
@@ -16,16 +16,16 @@ RENDER_DEVICE_TYPE SelectRenderer()
 	switch (i)
 	{
 	case 1:
-		return RENDER_DEVICE_TYPE_D3D11;
+		return Diligent::RENDER_DEVICE_TYPE_D3D11;
 	case 2:
-		return RENDER_DEVICE_TYPE_D3D12;
+		return Diligent::RENDER_DEVICE_TYPE_D3D12;
 	case 3:
-		return RENDER_DEVICE_TYPE_GL;
+		return Diligent::RENDER_DEVICE_TYPE_GL;
 	case 4:
-		return RENDER_DEVICE_TYPE_VULKAN;
+		return Diligent::RENDER_DEVICE_TYPE_VULKAN;
 	}
 
-	return RENDER_DEVICE_TYPE_D3D11;
+	return Diligent::RENDER_DEVICE_TYPE_D3D11;
 }
 
 int main(int argc, char* argv[])

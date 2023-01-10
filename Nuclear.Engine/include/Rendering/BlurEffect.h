@@ -14,20 +14,20 @@ namespace Nuclear
 
 			void Initialize(Uint32 RTWidth, Uint32 RTHeight);
 
-			void SetHorizentalPSO(ITextureView* texture);
+			void SetHorizentalPSO(Diligent::ITextureView* texture);
 
-			void SetVerticalPSO(ITextureView* texture);
+			void SetVerticalPSO(Diligent::ITextureView* texture);
 
 			void ResizeRenderTargets(Uint32 RTWidth, Uint32 RTHeight);
 
 		//private:
-			RefCntAutoPtr<IPipelineState> mHorzBlurPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mHorzBlurSRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mHorzBlurPSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mHorzBlurSRB;
 
-			RefCntAutoPtr<IPipelineState> mVertBlurPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mVertBlurSRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mVertBlurPSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mVertBlurSRB;
 
-			RefCntAutoPtr<IBuffer> mBlurCB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> mBlurCB;
 
 			Graphics::RenderTarget BlurHorizentalRT;
 			Graphics::RenderTarget BlurVerticalRT;

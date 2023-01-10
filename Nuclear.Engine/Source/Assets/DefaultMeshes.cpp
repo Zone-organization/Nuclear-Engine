@@ -45,11 +45,11 @@ namespace Nuclear
 		void DefaultMeshes::RenderScreenQuad()
 		{
 			Uint64 offset = 0;
-			Graphics::Context::GetInstance().GetContext()->SetIndexBuffer(gScreenQuad->mSubMeshes.at(0).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &gScreenQuad->mSubMeshes.at(0).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+			Graphics::Context::GetInstance().GetContext()->SetIndexBuffer(gScreenQuad->mSubMeshes.at(0).mIB, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &gScreenQuad->mSubMeshes.at(0).mVB, &offset, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION, Diligent::SET_VERTEX_BUFFERS_FLAG_RESET);
 
-			DrawIndexedAttribs DrawAttrs;
-			DrawAttrs.IndexType = VT_UINT32;
+			Diligent::DrawIndexedAttribs DrawAttrs;
+			DrawAttrs.IndexType = Diligent::VT_UINT32;
 			DrawAttrs.NumIndices = gScreenQuad->mSubMeshes.at(0).mIndicesCount;
 			Graphics::Context::GetInstance().GetContext()->DrawIndexed(DrawAttrs);
 		}

@@ -11,8 +11,8 @@ namespace Nuclear
 	{
 		struct ImageBasedLightingDesc
 		{
-			TEXTURE_FORMAT mIrradianceCubeFmt = TEX_FORMAT_RGBA32_FLOAT;
-			TEXTURE_FORMAT mPrefilteredEnvMapFmt = TEX_FORMAT_RGBA16_FLOAT;
+			Diligent::TEXTURE_FORMAT mIrradianceCubeFmt = Diligent::TEX_FORMAT_RGBA32_FLOAT;
+			Diligent::TEXTURE_FORMAT mPrefilteredEnvMapFmt = Diligent::TEX_FORMAT_RGBA16_FLOAT;
 			Uint32         mIrradianceCubeDim = 32;
 			Uint32         mPrefilteredEnvMapDim = 128;
 			Uint32         mBRDF_LUTDim = 512;
@@ -33,20 +33,20 @@ namespace Nuclear
 
 			Assets::Texture* GetBRDF_LUT();
 		protected:
-			RefCntAutoPtr<IPipelineState> pERectToCubemap_PSO;
-			RefCntAutoPtr<IShaderResourceBinding> pERectToCubemap_SRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> pERectToCubemap_PSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> pERectToCubemap_SRB;
 
-			RefCntAutoPtr<IPipelineState> pPrecomputeIrradiancePSO;
-			RefCntAutoPtr<IShaderResourceBinding> pPrecomputeIrradiance_SRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> pPrecomputeIrradiancePSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> pPrecomputeIrradiance_SRB;
 
-			RefCntAutoPtr<IPipelineState> pPrecomputePrefilterPSO;
-			RefCntAutoPtr<IShaderResourceBinding> pPrecomputePrefilter_SRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> pPrecomputePrefilterPSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> pPrecomputePrefilter_SRB;
 
-			RefCntAutoPtr<IPipelineState> pPrecomputeBRDF_PSO;
-			RefCntAutoPtr<IShaderResourceBinding> pPrecomputeBRDF_SRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> pPrecomputeBRDF_PSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> pPrecomputeBRDF_SRB;
 
-			RefCntAutoPtr<IBuffer> pCaptureCB;
-			RefCntAutoPtr<IBuffer> pPrefilterRoughnessCB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> pCaptureCB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> pPrefilterRoughnessCB;
 
 			Assets::Texture mBRDF_LUT_Image;
 

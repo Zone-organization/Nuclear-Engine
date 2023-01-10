@@ -34,17 +34,17 @@ namespace Nuclear
 			
 			void ResizeSwapChain(Uint32 Width, Uint32 Height);
 
-			IRenderDevice* GetDevice();
-			IDeviceContext* GetContext();
-			ISwapChain* GetSwapChain();
-			IEngineFactory* GetEngineFactory();
+			Diligent::IRenderDevice* GetDevice();
+			Diligent::IDeviceContext* GetContext();
+			Diligent::ISwapChain* GetSwapChain();
+			Diligent::IEngineFactory* GetEngineFactory();
 
 		private:
 			Context();
-			IRenderDevice* gDevice;
-			IDeviceContext* gContext;
-			ISwapChain* gSwapChain;
-			IEngineFactory* gEngineFactory;
+			Diligent::IRenderDevice* gDevice;
+			Diligent::IDeviceContext* gContext;
+			Diligent::ISwapChain* gSwapChain;
+			Diligent::IEngineFactory* gEngineFactory;
 
 			bool OpenGL = false;
 			bool Vulkan = false;

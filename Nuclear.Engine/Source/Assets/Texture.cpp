@@ -20,11 +20,11 @@ namespace Nuclear
 		{
 		}
 
-		void Texture::SetTextureView(ITextureView* view)
+		void Texture::SetTextureView(Diligent::ITextureView* view)
 		{
 			mTextureView = view;
 		}
-		ITextureView* Texture::GetTextureView()
+		Diligent::ITextureView* Texture::GetTextureView()
 		{
 			return mTextureView.RawPtr();
 		}

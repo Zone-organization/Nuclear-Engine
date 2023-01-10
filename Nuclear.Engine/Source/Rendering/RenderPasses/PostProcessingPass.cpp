@@ -9,6 +9,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		using namespace Diligent;
 		PostProcessingPass::PostProcessingPass()
 		{
 			_HashedBloomID = Utilities::Hash("BLOOM");

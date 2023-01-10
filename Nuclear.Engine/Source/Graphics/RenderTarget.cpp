@@ -6,6 +6,8 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
+		using namespace Diligent;
+
 		RenderTarget::RenderTarget()
 		{
 		}

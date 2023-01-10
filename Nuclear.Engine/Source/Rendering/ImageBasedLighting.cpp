@@ -11,6 +11,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		using namespace Diligent;
 		void ImageBasedLighting::Initialize(const ImageBasedLightingDesc& desc)
 		{
 			mDesc = desc;

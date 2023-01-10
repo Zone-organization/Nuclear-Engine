@@ -35,7 +35,7 @@ namespace Nuclear
 		//private:
 			std::unordered_map<Uint32, FontCharacter> Characters;
 
-			RefCntAutoPtr<ITextureView> mTextureView;    //Font atlas
+			Diligent::RefCntAutoPtr<Diligent::ITextureView> mTextureView;    //Font atlas
 		};
 
 

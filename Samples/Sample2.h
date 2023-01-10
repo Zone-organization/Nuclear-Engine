@@ -139,9 +139,9 @@ public:
 	{
 		//IBL
 		Assets::TextureImportingDesc desc;
-		desc.mType = RESOURCE_DIM_TEX_2D;
-		desc.mUsage = USAGE_IMMUTABLE;
-		desc.mBindFlags = BIND_SHADER_RESOURCE;
+		desc.mType = Diligent::RESOURCE_DIM_TEX_2D;
+		desc.mUsage = Diligent::USAGE_IMMUTABLE;
+		desc.mBindFlags = Diligent::BIND_SHADER_RESOURCE;
 		desc.mMipLevels = 1;
 		desc.mAsyncImporting = false;
 		HDREnv.pTexture = GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/HDR/newport_loft.hdr", desc);

@@ -26,13 +26,13 @@ namespace Nuclear {
 		void Mesh::SubMesh::Create()
 		{
 			{
-				BufferDesc VertBuffDesc;
-				VertBuffDesc.Usage = USAGE_IMMUTABLE;
-				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
+				Diligent::BufferDesc VertBuffDesc;
+				VertBuffDesc.Usage = Diligent::USAGE_IMMUTABLE;
+				VertBuffDesc.BindFlags = Diligent::BIND_VERTEX_BUFFER;
 				VertBuffDesc.Size = (unsigned int)data.Vertices.size() * sizeof(Vertex);
 				//VertBuffDesc.Size = (unsigned int)VertexData.size() * sizeof(float);
 
-				BufferData VBData;
+				Diligent::BufferData VBData;
 				VBData.pData = data.Vertices.data();
 				VBData.DataSize = (unsigned int)data.Vertices.size() * sizeof(Vertex);
 				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
@@ -41,12 +41,12 @@ namespace Nuclear {
 
 			{				
 				// Create index buffer
-				BufferDesc IndBuffDesc;
-				IndBuffDesc.Usage = USAGE_IMMUTABLE;
-				IndBuffDesc.BindFlags = BIND_INDEX_BUFFER;
+				Diligent::BufferDesc IndBuffDesc;
+				IndBuffDesc.Usage = Diligent::USAGE_IMMUTABLE;
+				IndBuffDesc.BindFlags = Diligent::BIND_INDEX_BUFFER;
 				IndBuffDesc.Size = (unsigned int)data.indices.size() * sizeof(Uint32);
 
-				BufferData IBData;
+				Diligent::BufferData IBData;
 				IBData.pData = data.indices.data();
 				IBData.DataSize = (unsigned int)data.indices.size() * sizeof(Uint32);
 				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
@@ -397,12 +397,12 @@ namespace Nuclear {
 			auto submesh = &model->mSubMeshes.at(0);
 
 			{
-				BufferDesc VertBuffDesc;
-				VertBuffDesc.Usage = USAGE_IMMUTABLE;
-				VertBuffDesc.BindFlags = BIND_VERTEX_BUFFER;
+				Diligent::BufferDesc VertBuffDesc;
+				VertBuffDesc.Usage = Diligent::USAGE_IMMUTABLE;
+				VertBuffDesc.BindFlags = Diligent::BIND_VERTEX_BUFFER;
 				VertBuffDesc.Size = (unsigned int)Vertices.size() * sizeof(ScreenVertex);
 
-				BufferData VBData;
+				Diligent::BufferData VBData;
 				VBData.pData = Vertices.data();
 				VBData.DataSize = (unsigned int)Vertices.size() * sizeof(ScreenVertex);
 				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &submesh->mVB);
@@ -411,12 +411,12 @@ namespace Nuclear {
 
 			{
 				// Create index buffer
-				BufferDesc IndBuffDesc;
-				IndBuffDesc.Usage = USAGE_IMMUTABLE;
-				IndBuffDesc.BindFlags = BIND_INDEX_BUFFER;
+				Diligent::BufferDesc IndBuffDesc;
+				IndBuffDesc.Usage = Diligent::USAGE_IMMUTABLE;
+				IndBuffDesc.BindFlags = Diligent::BIND_INDEX_BUFFER;
 				IndBuffDesc.Size = (unsigned int)Indices.size() * sizeof(Uint32);
 
-				BufferData IBData;
+				Diligent::BufferData IBData;
 				IBData.pData = Indices.data();
 				IBData.DataSize = (unsigned int)Indices.size() * sizeof(Uint32);
 				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &submesh->mIB);

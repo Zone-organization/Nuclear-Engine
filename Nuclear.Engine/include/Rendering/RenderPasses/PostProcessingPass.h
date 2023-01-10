@@ -55,8 +55,8 @@ namespace Nuclear
 
 			Graphics::RenderTarget BloomRT;
 			Rendering::BlurEffect mBloomBlur;
-			RefCntAutoPtr<IPipelineState> pBloomExtractPSO;
-			RefCntAutoPtr<IShaderResourceBinding> pBloomExtractSRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> pBloomExtractPSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> pBloomExtractSRB;
 
 			bool mBloomEnabled = false;
 

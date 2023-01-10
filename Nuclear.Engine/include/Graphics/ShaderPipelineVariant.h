@@ -43,16 +43,16 @@ namespace Nuclear
 			ShaderPipelineVariant();
 
 			//Returns the main pipeline used for rendering
-			IPipelineState* GetRenderingPipeline();
-			IShaderResourceBinding* GetRenderingSRB();
+			Diligent::IPipelineState* GetRenderingPipeline();
+			Diligent::IShaderResourceBinding* GetRenderingSRB();
 
 			Graphics::ShaderPipeline* GetParentPipeline();
 
-			IPipelineState* GetMainPipeline();
-			IShaderResourceBinding* GetMainPipelineSRB();
+			Diligent::IPipelineState* GetMainPipeline();
+			Diligent::IShaderResourceBinding* GetMainPipelineSRB();
 
-			IPipelineState* GetGBufferPipeline();
-			IShaderResourceBinding* GetGBufferPipelineSRB();
+			Diligent::IPipelineState* GetGBufferPipeline();
+			Diligent::IShaderResourceBinding* GetGBufferPipelineSRB();
 
 			Uint32 GetRenderQueue();
 
@@ -81,11 +81,11 @@ namespace Nuclear
 			friend class ShaderPipeline;
 			friend class ShaderManager;
 			friend class Systems::DebugSystem;
-			RefCntAutoPtr<IPipelineState> mPipeline;
-			RefCntAutoPtr<IShaderResourceBinding> mPipelineSRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mPipeline;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mPipelineSRB;
 
-			RefCntAutoPtr<IPipelineState> mGBufferPipeline;
-			RefCntAutoPtr<IShaderResourceBinding> mGBufferSRB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mGBufferPipeline;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mGBufferSRB;
 
 			ShaderPipelineVariantDesc mDesc;
 			ShaderVariantReflection mReflection;

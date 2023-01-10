@@ -10,7 +10,7 @@ namespace Nuclear
 
 #define TEXFMTMAP(name)	else if (!str.compare(#name)) { return name; }
 
-
+		using namespace Diligent;
 		//TODO : OPTIMIZE
 		TEXTURE_FORMAT ParseTexFormat(const std::string_view& str, TEXTURE_FORMAT defaultvalue = TEX_FORMAT_UNKNOWN)
 		{

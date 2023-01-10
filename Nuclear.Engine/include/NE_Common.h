@@ -30,7 +30,8 @@
 #define COORDSYSTEM_LH_ENABLED false
 #endif
 
-namespace Diligent{
+namespace Nuclear
+{
 	typedef float Float32; ///< 32-bit float            [4 byte]
 
 	typedef int64_t Int64; ///< 64-bit signed integer            [8 byte]
@@ -47,13 +48,11 @@ namespace Diligent{
 	typedef void* PVoid;
 	typedef const void* CPVoid;
 
-	typedef bool Bool; ///< Boolean							    [1 byte]
+	typedef bool Bool;				///< Boolean		    [1 byte]
 
-	typedef char Char;//										[1 byte]
-}
-namespace Nuclear
-{
+	typedef char Char;				//			[1 byte]
 	typedef unsigned char Byte;      ///<						[1 byte]
 	typedef double Float64;			 ///< 64-bit float          [8 byte]
-	using namespace Diligent;
+
+	//using namespace Diligent;
 }

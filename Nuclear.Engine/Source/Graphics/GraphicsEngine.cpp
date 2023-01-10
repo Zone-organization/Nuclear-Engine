@@ -14,6 +14,8 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
+		using namespace Diligent;
+
 		inline GraphicsEngine& GraphicsEngine::GetInstance()
 		{
 			static GraphicsEngine engine;
@@ -64,7 +66,7 @@ namespace Nuclear
 			result->mHeight = data->mTexDesc.Height;
 
 			//CREATE IMAGE
-			Diligent::TextureData TexData;
+			TextureData TexData;
 			TexData.pSubResources = data->mSubresources.data();
 			TexData.NumSubresources = data->mSubresources.size();
 			RefCntAutoPtr<ITexture> mTexture;

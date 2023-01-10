@@ -16,28 +16,28 @@ namespace Nuclear
 		}
 		void Font::Create(const FontCreationDesc& desc)
 		{
-			TextureDesc TexDesc;
-			TexDesc.Type = RESOURCE_DIM_TEX_2D;
+			Diligent::TextureDesc TexDesc;
+			TexDesc.Type = Diligent::RESOURCE_DIM_TEX_2D;
 			TexDesc.Width = desc.AtlasWidth;
 			TexDesc.Height = desc.AtlasHeight;
 			TexDesc.MipLevels = 1;
 			TexDesc.ArraySize = 1;
-			TexDesc.Usage = USAGE_DEFAULT;
-			TexDesc.BindFlags = BIND_SHADER_RESOURCE;
-			TexDesc.Format = TEX_FORMAT_R8_UNORM;
-			TexDesc.CPUAccessFlags = CPU_ACCESS_NONE;
+			TexDesc.Usage = Diligent::USAGE_DEFAULT;
+			TexDesc.BindFlags = Diligent::BIND_SHADER_RESOURCE;
+			TexDesc.Format = Diligent::TEX_FORMAT_R8_UNORM;
+			TexDesc.CPUAccessFlags = Diligent::CPU_ACCESS_NONE;
 
-			TextureSubResData pSubResource;
+			Diligent::TextureSubResData pSubResource;
 			pSubResource.pData = desc.Data;
 			pSubResource.Stride = desc.AtlasWidth;
 
-			TextureData TexData;
+			Diligent::TextureData TexData;
 			TexData.pSubResources = &pSubResource;
 			TexData.NumSubresources = 1;
-			RefCntAutoPtr<ITexture> mTexture;
+			Diligent::RefCntAutoPtr<Diligent::ITexture> mTexture;
 			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
-			mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+			mTextureView = mTexture->GetDefaultView(Diligent::TEXTURE_VIEW_SHADER_RESOURCE);
 		
 		}
 	}

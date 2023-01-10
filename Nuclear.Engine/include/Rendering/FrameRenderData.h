@@ -38,9 +38,9 @@ namespace Nuclear
 
             //shadows
             bool mShadowsEnabled;
-            RefCntAutoPtr<ITextureView> pDirPosShadowMapSRV;
-            RefCntAutoPtr<ITextureView> pSpotPosShadowMapSRV;
-            RefCntAutoPtr<ITextureView> pOmniDirShadowMapSRV;
+            Diligent::RefCntAutoPtr<Diligent::ITextureView> pDirPosShadowMapSRV;
+            Diligent::RefCntAutoPtr<Diligent::ITextureView> pSpotPosShadowMapSRV;
+            Diligent::RefCntAutoPtr<Diligent::ITextureView> pOmniDirShadowMapSRV;
 
             //Rendered Scene here          
             Components::CameraComponent* pCamera;

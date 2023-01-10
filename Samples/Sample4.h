@@ -153,7 +153,7 @@ public:
 			Graphics::RenderTargetDesc RTDesc, RTDepthDesc;
 			RTDesc.mName = "Camera2RT";
 			RTDesc.mDimensions = Camera2Dimensions;
-			RTDesc.ColorTexFormat = TEX_FORMAT_RGBA16_FLOAT;
+			RTDesc.ColorTexFormat = Diligent::TEX_FORMAT_RGBA16_FLOAT;
 
 			RTDepthDesc.mName = "Camera2DepthRT";
 			RTDepthDesc.mDimensions = Camera2Dimensions;

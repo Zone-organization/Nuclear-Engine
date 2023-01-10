@@ -12,6 +12,7 @@
 
 namespace Nuclear 
 {
+	using namespace Diligent;
 	void DiligentMassageCallback(DEBUG_MESSAGE_SEVERITY Severity, const Char* Message, const char* Function, const char* File, int Line)
 	{
 		switch (Severity)

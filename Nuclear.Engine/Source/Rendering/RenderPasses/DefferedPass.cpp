@@ -27,20 +27,20 @@ namespace Nuclear
 
                         //Apply Lighting
                         Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetMainPipeline());
-                        Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->pCamera->GetRenderTarget().GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->pCamera->GetRenderTarget().GetRTVDblPtr(), nullptr, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         for (int i = 0; i < gbuffer->mRenderTargets.size(); i++)
                         {
-                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i)->Set(gbuffer->mRenderTargets.at(i).GetSRV());
+                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, i)->Set(gbuffer->mRenderTargets.at(i).GetSRV());
                         }
 
                         //IBL
                         for (int i = 0; i < pipeline->GetReflection().mIBLTexturesInfo.size(); i++)
                         {
-                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, pipeline->GetReflection().mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetReflection().mIBLTexturesInfo.at(i).mTex.pTexture->GetTextureView());
+                            pipeline->GetMainPipelineSRB()->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, pipeline->GetReflection().mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->GetReflection().mIBLTexturesInfo.at(i).mTex.pTexture->GetTextureView());
                         }
 
-                        Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetMainPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetMainPipelineSRB(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         Assets::DefaultMeshes::RenderScreenQuad();
 

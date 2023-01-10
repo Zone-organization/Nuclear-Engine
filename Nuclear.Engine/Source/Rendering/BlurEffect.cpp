@@ -7,6 +7,8 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
+		using namespace Diligent;
+
 		void BlurEffect::Initialize(Uint32 RTWidth, Uint32 RTHeight)
 		{
 			RefCntAutoPtr<IShader> HorzVShader;

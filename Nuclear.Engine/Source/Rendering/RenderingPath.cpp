@@ -24,7 +24,7 @@ namespace Nuclear
 			if (pActivePipeline->isSkinned())
 			{
 				PVoid anim_data;
-				Graphics::Context::GetInstance().GetContext()->MapBuffer(Rendering::RenderingEngine::GetInstance().GetAnimationCB(), MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)anim_data);
+				Graphics::Context::GetInstance().GetContext()->MapBuffer(Rendering::RenderingEngine::GetInstance().GetAnimationCB(), Diligent::MAP_WRITE, Diligent::MAP_FLAG_DISCARD, (PVoid&)anim_data);
 
 				if (animator != nullptr)
 				{
@@ -44,7 +44,7 @@ namespace Nuclear
 					Math::Matrix4 empty(0.0f);
 					anim_data = memcpy(anim_data, &empty, sizeof(Math::Matrix4));
 				}
-				Graphics::Context::GetInstance().GetContext()->UnmapBuffer(Rendering::RenderingEngine::GetInstance().GetAnimationCB(), MAP_WRITE);
+				Graphics::Context::GetInstance().GetContext()->UnmapBuffer(Rendering::RenderingEngine::GetInstance().GetAnimationCB(), Diligent::MAP_WRITE);
 			}
 		}
 
@@ -76,11 +76,11 @@ namespace Nuclear
 			{
 				material->BindTexSet(pActivePipeline, i.data.TexSetIndex);
 
-				Graphics::Context::GetInstance().GetContext()->SetIndexBuffer(i.mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &i.mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+				Graphics::Context::GetInstance().GetContext()->SetIndexBuffer(i.mIB, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &i.mVB, &offset, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION, Diligent::SET_VERTEX_BUFFERS_FLAG_RESET);
 
-				DrawIndexedAttribs  DrawAttrs;
-				DrawAttrs.IndexType = VT_UINT32;
+				Diligent::DrawIndexedAttribs  DrawAttrs;
+				DrawAttrs.IndexType = Diligent::VT_UINT32;
 				DrawAttrs.NumIndices = i.mIndicesCount;
 				Graphics::Context::GetInstance().GetContext()->DrawIndexed(DrawAttrs);
 

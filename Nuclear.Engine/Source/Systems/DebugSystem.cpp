@@ -15,6 +15,8 @@ namespace Nuclear
 {
 	namespace Systems
 	{
+		using namespace Diligent;
+
 		DebugSystem::DebugSystem()
 		{
 			RefCntAutoPtr<IShader> VShader;

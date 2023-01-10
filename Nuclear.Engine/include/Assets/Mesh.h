@@ -68,8 +68,8 @@ namespace Nuclear {
 				Uint32 mIndicesOffset = 0;
 
 				//Buffers
-				RefCntAutoPtr<IBuffer> mIB;
-				RefCntAutoPtr<IBuffer> mVB;
+				Diligent::RefCntAutoPtr<Diligent::IBuffer> mIB;
+				Diligent::RefCntAutoPtr<Diligent::IBuffer> mVB;
 			};
 
 			Mesh(const std::vector<SubMesh>& SubMeshes, const std::unordered_map<Uint32, Animation::BoneInfo>& BoneInfoMap, int BoneCounter);

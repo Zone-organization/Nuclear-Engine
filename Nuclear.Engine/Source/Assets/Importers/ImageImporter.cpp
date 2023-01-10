@@ -84,7 +84,7 @@ namespace Nuclear
 					type = FreeImage_GetImageType(bitmap);
 				}
 
-				result->mType = RESOURCE_DIM_TEX_2D;
+				result->mType = Diligent::RESOURCE_DIM_TEX_2D;
 				result->mData = FreeImage_GetBits(bitmap);
 				result->mWidth = FreeImage_GetWidth(bitmap);
 				result->mHeight = FreeImage_GetHeight(bitmap);
@@ -97,19 +97,19 @@ namespace Nuclear
 				{
 				case FIT_BITMAP:
 					samples = bytespp / sizeof(BYTE);
-					result->mComponentType = VT_UINT8;
+					result->mComponentType = Diligent::VT_UINT8;
 					break;
 				case FIT_UINT16:
 				case FIT_RGB16:
 				case FIT_RGBA16:
 					samples = bytespp / sizeof(WORD);
-					result->mComponentType = VT_UINT16;
+					result->mComponentType = Diligent::VT_UINT16;
 					break;
 				case FIT_FLOAT:
 				case FIT_RGBF:
 				case FIT_RGBAF:
 					samples = bytespp / sizeof(float);
-					result->mComponentType = VT_FLOAT32;
+					result->mComponentType = Diligent::VT_FLOAT32;
 					break;
 				}
 
@@ -169,7 +169,7 @@ namespace Nuclear
 					bitmap = FreeImage_ConvertToRGBAF(dib);
 					type = FreeImage_GetImageType(bitmap);
 				}
-				result->mType = RESOURCE_DIM_TEX_2D;
+				result->mType = Diligent::RESOURCE_DIM_TEX_2D;
 				result->mData = FreeImage_GetBits(bitmap);
 				result->mWidth = FreeImage_GetWidth(bitmap);
 				result->mHeight = FreeImage_GetHeight(bitmap);
@@ -182,19 +182,19 @@ namespace Nuclear
 				{
 				case FIT_BITMAP:
 					samples = bytespp / sizeof(BYTE);
-					result->mComponentType = VT_UINT8;
+					result->mComponentType = Diligent::VT_UINT8;
 					break;
 				case FIT_UINT16:
 				case FIT_RGB16:
 				case FIT_RGBA16:
 					samples = bytespp / sizeof(WORD);
-					result->mComponentType = VT_UINT16;
+					result->mComponentType = Diligent::VT_UINT16;
 					break;
 				case FIT_FLOAT:
 				case FIT_RGBF:
 				case FIT_RGBAF:
 					samples = bytespp / sizeof(float);
-					result->mComponentType = VT_FLOAT32;
+					result->mComponentType = Diligent::VT_FLOAT32;
 					break;
 				}
 
@@ -237,10 +237,10 @@ namespace Nuclear
 				}
 				else if (type == FIF_DDS)
 				{
-					TextureLoadInfo info;
-					RefCntAutoPtr<ITextureLoader> loader;
+					Diligent::TextureLoadInfo info;
+					Diligent::RefCntAutoPtr<Diligent::ITextureLoader> loader;
 
-					CreateTextureLoaderFromMemory(importingdesc.mMemData, importingdesc.mMemSize, IMAGE_FILE_FORMAT_DDS, false, info, &loader);
+					Diligent::CreateTextureLoaderFromMemory(importingdesc.mMemData, importingdesc.mMemSize, Diligent::IMAGE_FILE_FORMAT_DDS, false, info, &loader);
 
 					data->mTexDesc = loader->GetTextureDesc();
 					data->mSubresources = std::move(loader->GetSubresources());
@@ -269,7 +269,7 @@ namespace Nuclear
 
 				if (type == IMAGE_EXTENSION_DDS)
 				{
-					TextureData texdata{ data->mSubresources.data(), static_cast<Uint32>(data->mSubresources.size()) };
+					Diligent::TextureData texdata{ data->mSubresources.data(), static_cast<Uint32>(data->mSubresources.size()) };
 					return SaveTextureAsDDS(exportPath.c_str(), data->mTexDesc, texdata);
 				}
 				
@@ -283,10 +283,10 @@ namespace Nuclear
 			{
 				if (Desc.mExtension == IMAGE_EXTENSION_DDS)
 				{
-					TextureLoadInfo info;
-					RefCntAutoPtr<ITextureLoader> loader;
+					Diligent::TextureLoadInfo info;
+					Diligent::RefCntAutoPtr<Diligent::ITextureLoader> loader;
 
-					CreateTextureLoaderFromMemory(Desc.mData.GetBuffer().data(), Desc.mData.GetBuffer().size(), IMAGE_FILE_FORMAT_DDS,false, info, &loader);
+					Diligent::CreateTextureLoaderFromMemory(Desc.mData.GetBuffer().data(), Desc.mData.GetBuffer().size(), Diligent::IMAGE_FILE_FORMAT_DDS,false, info, &loader);
 
 					result->mTexDesc = loader->GetTextureDesc();
 					result->mSubresources = std::move(loader->GetSubresources());

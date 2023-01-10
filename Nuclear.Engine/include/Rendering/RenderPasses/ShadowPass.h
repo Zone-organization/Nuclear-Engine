@@ -20,7 +20,7 @@ namespace Nuclear
 		struct ShadowMapInfo
 		{
 			Uint32 mResolution = 1024;
-			TEXTURE_FORMAT mFormat = TEX_FORMAT_D32_FLOAT;
+			Diligent::TEXTURE_FORMAT mFormat = Diligent::TEX_FORMAT_D32_FLOAT;
 		};
 
 
@@ -55,29 +55,29 @@ namespace Nuclear
 
 			ShadowPassBakingDesc GetBakingDesc() const;
 
-			IBuffer* GetLightSpacesCB();
+			Diligent::IBuffer* GetLightSpacesCB();
 
-			ITextureView* GetDirPosShadowMapSRV();
+			Diligent::ITextureView* GetDirPosShadowMapSRV();
 
-			ITextureView* GetSpotShadowMapSRV();
+			Diligent::ITextureView* GetSpotShadowMapSRV();
 
-			ITextureView* GetOmniDirShadowMapSRV();
+			Diligent::ITextureView* GetOmniDirShadowMapSRV();
 
 		protected:
 			ShadowPassBakingDesc mDesc;
-			RefCntAutoPtr<IBuffer> pLightSpacesCB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> pLightSpacesCB;
 
 			//Spotlight/DirLight (simple)
 			struct PosShadowMap
 			{
-				RefCntAutoPtr<ITexture> pPosShadowMap;
-				RefCntAutoPtr<ITextureView> pPosShadowMapSRV;
-				std::vector<RefCntAutoPtr<ITextureView>> pPosShadowMapDSVs;
+				Diligent::RefCntAutoPtr<Diligent::ITexture> pPosShadowMap;
+				Diligent::RefCntAutoPtr<Diligent::ITextureView> pPosShadowMapSRV;
+				std::vector<Diligent::RefCntAutoPtr<Diligent::ITextureView>> pPosShadowMapDSVs;
 			};
 
-			RefCntAutoPtr<IPipelineState> mPositionalShadowMapDepthPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mPositionalShadowMapDepthSRB;
-			RefCntAutoPtr<IBuffer> pPositionalLightInfoCB;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mPositionalShadowMapDepthPSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mPositionalShadowMapDepthSRB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> pPositionalLightInfoCB;
 			PosShadowMap mDirShadowMap;
 			PosShadowMap mSpotShadowMap;
 
@@ -86,14 +86,14 @@ namespace Nuclear
 			void InitPositionalShadowMapTextures();
 
 			//Pointlight
-			RefCntAutoPtr<IPipelineState> mOmniDirShadowPassPSO;
-			RefCntAutoPtr<IShaderResourceBinding> mOmniDirShadowPassSRB;
-			RefCntAutoPtr<IBuffer> pOmniDirShadowVS_CB;
-			RefCntAutoPtr<IBuffer> pOmniDirShadowGS_CB;
-			RefCntAutoPtr<IBuffer> pOmniDirShadowPS_CB;
-			RefCntAutoPtr<ITexture> pOmniDirShadowMap;
-			RefCntAutoPtr<ITextureView> pOmniDirShadowMapSRV;
-			std::vector<RefCntAutoPtr<ITextureView>> pOmniDirShadowMapDSVs;
+			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mOmniDirShadowPassPSO;
+			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mOmniDirShadowPassSRB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> pOmniDirShadowVS_CB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> pOmniDirShadowGS_CB;
+			Diligent::RefCntAutoPtr<Diligent::IBuffer> pOmniDirShadowPS_CB;
+			Diligent::RefCntAutoPtr<Diligent::ITexture> pOmniDirShadowMap;
+			Diligent::RefCntAutoPtr<Diligent::ITextureView> pOmniDirShadowMapSRV;
+			std::vector<Diligent::RefCntAutoPtr<Diligent::ITextureView>> pOmniDirShadowMapDSVs;
 
 			void InitOmniDirShadowPassPSO();
 			void InitOmniDirShadowMapTexture();

@@ -12,7 +12,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-
+		using namespace Diligent;
 		float skyboxVertices[] = {
 			-1.0f, -1.0f, -1.0f,
 			1.0f, -1.0f, -1.0f,
