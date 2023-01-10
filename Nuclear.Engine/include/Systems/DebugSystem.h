@@ -32,7 +32,7 @@ namespace Nuclear
 
 			bool ShowRegisteredRenderTargets = false;
 
-			void InstantRender(Assets::Mesh* mesh, Assets::Image* diffusetex);
+			void InstantRender(Assets::Mesh* mesh, Assets::Texture* diffusetex);
 
 		protected:
 			Graphics::ShaderPipelineVariant pShader;

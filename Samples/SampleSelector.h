@@ -82,8 +82,8 @@ public:
 
 		if (ImGui::Button("Playground"))
 		{
-		Playground demo;
-		return StartSample(&demo);
+			Playground demo;
+			return StartSample(&demo);
 		}
 
 		if (ImGui::Button("Build Assets Library"))

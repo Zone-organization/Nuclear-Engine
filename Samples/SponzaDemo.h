@@ -23,8 +23,8 @@ class SponzaDemo : public SampleBase
 	//IBL Settings
 	Rendering::ImageBasedLighting IBL;
 	Rendering::PBRCapture EnvCapture;
-	Graphics::Texture HDREnv;
-	Assets::Image HDR_Cube;
+	Assets::MaterialTexture HDREnv;
+	Assets::Texture HDR_Cube;
 
 	ECS::Entity ESponza;
 
@@ -109,13 +109,13 @@ public:
 	void InitIBL()
 	{
 		//IBL
-		Assets::ImageImportingDesc DESC;
+		Assets::TextureImportingDesc DESC;
 		DESC.mType = RESOURCE_DIM_TEX_2D;
 		DESC.mUsage = USAGE_IMMUTABLE;
 		DESC.mBindFlags = BIND_SHADER_RESOURCE;
 		DESC.mMipLevels = 1;
 
-		HDREnv = GetAssetManager().ImportTexture("@CommonAssets@/Textures/HDR/newport_loft.hdr", (DESC, Graphics::TextureUsageType::Unknown));
+		HDREnv.pTexture = GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/HDR/newport_loft.hdr", DESC);
 
 		Rendering::ImageBasedLightingDesc desc;
 		IBL.Initialize(desc);

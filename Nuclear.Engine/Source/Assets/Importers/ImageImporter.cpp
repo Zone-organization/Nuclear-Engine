@@ -1,7 +1,7 @@
 #include <Assets\Importers\ImageImporter.h>
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
-#include <Assets\Image.h>
+#include <Assets\Texture.h>
 #include <Graphics\Context.h>
 #include <Graphics\GraphicsEngine.h>
 
@@ -50,7 +50,7 @@ namespace Nuclear
 				FreeImage_SetOutputMessage(MyMessageFunc);
 			}
 
-			bool ImageImporter::FreeimageLoadMemory(IMAGE_EXTENSION format, Assets::ImageDesc* result, const Assets::ImageImportingDesc& Desc)
+			bool ImageImporter::FreeimageLoadMemory(IMAGE_EXTENSION format, Assets::ImageDesc* result, const Assets::TextureImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 
@@ -127,7 +127,7 @@ namespace Nuclear
 				FreeImage_DeInitialise();
 			}
 
-			bool ImageImporter::Load(const std::string& Path, Assets::ImageDesc* result, const Assets::ImageImportingDesc& Desc)
+			bool ImageImporter::Load(const std::string& Path, Assets::ImageDesc* result, const Assets::TextureImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 
@@ -227,7 +227,7 @@ namespace Nuclear
 				static ImageImporter instance;
 				return instance;
 			}
-			bool ImageImporter::Import(ImageData* data, IMAGE_EXTENSION extension, const Assets::ImageImportingDesc& importingdesc)
+			bool ImageImporter::Import(ImageData* data, IMAGE_EXTENSION extension, const Assets::TextureImportingDesc& importingdesc)
 			{
 				FREE_IMAGE_FORMAT type = (FREE_IMAGE_FORMAT)extension;
 				

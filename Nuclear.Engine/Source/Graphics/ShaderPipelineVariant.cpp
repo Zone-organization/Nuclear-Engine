@@ -66,17 +66,17 @@ namespace Nuclear
 		{
 			return mShaderAssetID;
 		}
-		Graphics::Texture ShaderPipelineVariant::GetDefaultTextureFromType(Uint8 Type)
+		Assets::MaterialTexture ShaderPipelineVariant::GetDefaultTextureFromType(Uint8 Type)
 		{
 			//TODO: Improve
 
 			switch (Type)
 			{
-			case Graphics::TextureUsageType::Diffuse:
+			case Assets::TextureUsageType::Diffuse:
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultDiffuseTex();
-			case Graphics::TextureUsageType::Specular:
+			case Assets::TextureUsageType::Specular:
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultSpecularTex();
-			case Graphics::TextureUsageType::Normal:
+			case Assets::TextureUsageType::Normal:
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultNormalTex();
 			default:
 				break;

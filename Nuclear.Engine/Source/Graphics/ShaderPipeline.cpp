@@ -12,36 +12,36 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		Graphics::TextureUsageType ParseTexUsageFromName(std::string& name)
+		Assets::TextureUsageType ParseTexUsageFromName(std::string& name)
 		{
 			if (name.find("Diffuse") == 0)
-				return Graphics::TextureUsageType::Diffuse;
+				return Assets::TextureUsageType::Diffuse;
 			else if (name.find("Albedo") == 0)
-				return Graphics::TextureUsageType::Albedo;
+				return Assets::TextureUsageType::Albedo;
 			else if (name.find("Specular") == 0)
-				return Graphics::TextureUsageType::Specular;
+				return Assets::TextureUsageType::Specular;
 			else if (name.find("Metallic") == 0)
-				return Graphics::TextureUsageType::Metallic;
+				return Assets::TextureUsageType::Metallic;
 			else if (name.find("Normal") == 0)
-				return Graphics::TextureUsageType::Normal;
+				return Assets::TextureUsageType::Normal;
 			else if (name.find("Roughness") == 0)
-				return Graphics::TextureUsageType::Roughness;
+				return Assets::TextureUsageType::Roughness;
 			else if (name.find("AO") == 0)
-				return Graphics::TextureUsageType::AO;
+				return Assets::TextureUsageType::AO;
 
 			//IBL
 			else if (name.find("IrradianceMap") == 0)
-				return Graphics::TextureUsageType::IrradianceMap;
+				return Assets::TextureUsageType::IrradianceMap;
 			else if (name.find("PrefilterMap") == 0)
-				return Graphics::TextureUsageType::PreFilterMap;
+				return Assets::TextureUsageType::PreFilterMap;
 			else if (name.find("BRDF_LUT") == 0)
-				return Graphics::TextureUsageType::BRDF_LUT;
+				return Assets::TextureUsageType::BRDF_LUT;
 
 			//Shadows
 			else if (name.find("ShadowMap") == 0)
-				return Graphics::TextureUsageType::ShadowTex;
+				return Assets::TextureUsageType::ShadowTex;
 
-			return Graphics::TextureUsageType::Unknown;
+			return Assets::TextureUsageType::Unknown;
 		}
 
 		//std::string MergeCode(const std::string& shadersource, const std::set<std::string>& defines)
@@ -449,8 +449,10 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
-							ReflectedTex.mTex.SetName(VarName);
+							ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+							ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
+							//ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
+							//ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
 							mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
@@ -489,8 +491,10 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage(), ParseTexUsageFromName(VarName));
-							tex->mTex.SetName(VarName);
+							tex->mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage();
+							tex->mTex.mUsageType = ParseTexUsageFromName(VarName);
+					/*		tex->mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage(), ParseTexUsageFromName(VarName));
+							tex->mTex.SetName(VarName);*/
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
 						}
@@ -499,11 +503,12 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
-							ReflectedTex.mTex.SetName(VarName);
+							ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+							ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
+							//ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
+							//ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
-							ReflectedTex.mTex.SetUsageType(ParseTexUsageFromName(VarName));
 							pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
 						}
 					}
@@ -541,8 +546,9 @@ namespace Nuclear
 							else {
 								assert(false);
 							}
-							tex->mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage(), ParseTexUsageFromName(VarName));
-							tex->mTex.SetName(VarName);
+							tex->mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage();
+							tex->mTex.mUsageType = ParseTexUsageFromName(VarName);
+							//tex->mTex.SetName(VarName);
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
 						}
@@ -551,8 +557,9 @@ namespace Nuclear
 							VarName.erase(0, 6);
 
 							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
-							ReflectedTex.mTex.SetName(VarName);
+							ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+							ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
+							//ReflectedTex.mTex.SetName(VarName);
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
 							pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
@@ -564,8 +571,9 @@ namespace Nuclear
 								VarName.erase(0, 6);
 
 								Assets::ShaderTexture ReflectedTex;
-								ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
-								ReflectedTex.mTex.SetName(VarName);
+								ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+								ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
+								//ReflectedTex.mTex.SetName(VarName);
 								ReflectedTex.mSlot = i;
 								ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
 								mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
@@ -581,17 +589,17 @@ namespace Nuclear
 				{
 					for (auto& i : pipeline.mReflection.mIBLTexturesInfo)
 					{
-						if (i.mTex.GetUsageType() == Graphics::TextureUsageType::IrradianceMap)
+						if (i.mTex.mUsageType == Assets::TextureUsageType::IrradianceMap)
 						{
-							i.mTex.SetImage(&pBakingDesc->pIBLContext->GetEnvironmentCapture()->mIrradiance);
+							i.mTex.pTexture = &pBakingDesc->pIBLContext->GetEnvironmentCapture()->mIrradiance;
 						}
-						else if (i.mTex.GetUsageType() == Graphics::TextureUsageType::PreFilterMap)
+						else if (i.mTex.mUsageType == Assets::TextureUsageType::PreFilterMap)
 						{
-							i.mTex.SetImage(&pBakingDesc->pIBLContext->GetEnvironmentCapture()->mPrefiltered);
+							i.mTex.pTexture = &pBakingDesc->pIBLContext->GetEnvironmentCapture()->mPrefiltered;
 						}
-						else if (i.mTex.GetUsageType() == Graphics::TextureUsageType::BRDF_LUT)
+						else if (i.mTex.mUsageType == Assets::TextureUsageType::BRDF_LUT)
 						{
-							i.mTex.SetImage(pBakingDesc->pIBLContext->GetBRDF_LUT());
+							i.mTex.pTexture = pBakingDesc->pIBLContext->GetBRDF_LUT();
 						}
 					}
 				}

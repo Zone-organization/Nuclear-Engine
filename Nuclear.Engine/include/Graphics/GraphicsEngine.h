@@ -12,7 +12,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class Image;
+		class Texture;
 	}
 	namespace Graphics
 	{
@@ -40,7 +40,7 @@ namespace Nuclear
 			bool Initialize(const GraphicsEngineDesc& desc);
 			void Shutdown();
 
-			bool CreateImage(Assets::Image* result, Assets::ImageData* desc);
+			bool CreateImage(Assets::Texture* result, Assets::ImageData* desc);
 
 			void CreateImageData(Assets::ImageData* result, const Assets::ImageDesc& desc);
 

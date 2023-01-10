@@ -1,7 +1,7 @@
 #pragma once
 #include <Rendering/PBRCapture.h>
 #include <Graphics/RenderTarget.h>
-#include <Graphics/Texture.h>
+#include <Assets/MaterialTypes.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
 #include <Rendering/Skybox.h>
 
@@ -24,14 +24,14 @@ namespace Nuclear
 			void Initialize(const ImageBasedLightingDesc& desc);
 
 			//TODO Move to asset manager
-			Assets::Image EquirectangularToCubemap(Graphics::Texture* Tex);
+			Assets::Texture EquirectangularToCubemap(Assets::MaterialTexture* Tex);
 
-			Rendering::PBRCapture PrecomputePBRCapture(Assets::Image* cubemap);
+			Rendering::PBRCapture PrecomputePBRCapture(Assets::Texture* cubemap);
 
 			void SetEnvironmentCapture(Rendering::PBRCapture* cap);
 			Rendering::PBRCapture* GetEnvironmentCapture();
 
-			Assets::Image* GetBRDF_LUT();
+			Assets::Texture* GetBRDF_LUT();
 		protected:
 			RefCntAutoPtr<IPipelineState> pERectToCubemap_PSO;
 			RefCntAutoPtr<IShaderResourceBinding> pERectToCubemap_SRB;
@@ -48,7 +48,7 @@ namespace Nuclear
 			RefCntAutoPtr<IBuffer> pCaptureCB;
 			RefCntAutoPtr<IBuffer> pPrefilterRoughnessCB;
 
-			Assets::Image mBRDF_LUT_Image;
+			Assets::Texture mBRDF_LUT_Image;
 
 			Rendering::PBRCapture* pEnvCapture;
 			ImageBasedLightingDesc mDesc;

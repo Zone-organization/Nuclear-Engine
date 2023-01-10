@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Graphics/Texture.h>
+#include <Assets/MaterialTypes.h>
 
 namespace Nuclear
 {
@@ -16,23 +16,23 @@ namespace Nuclear
 
 			void Initialize();
 			
-			Assets::Image* GetDefaultBlackImage();
-			Assets::Image* GetDefaultGreyImage();
-			Assets::Image* GetDefaultWhiteImage();
+			Assets::Texture* GetDefaultBlackImage();
+			Assets::Texture* GetDefaultGreyImage();
+			Assets::Texture* GetDefaultWhiteImage();
 
-			const Graphics::Texture& GetDefaultDiffuseTex() const;
-			const Graphics::Texture& GetDefaultSpecularTex() const;
-			const Graphics::Texture& GetDefaultNormalTex() const;
+			const Assets::MaterialTexture& GetDefaultDiffuseTex() const;
+			const Assets::MaterialTexture& GetDefaultSpecularTex() const;
+			const Assets::MaterialTexture& GetDefaultNormalTex() const;
 		private:
 			FallbacksEngine();
 
-			Assets::Image* DefaultBlackImage;
-			Assets::Image* DefaultGreyImage;
-			Assets::Image* DefaultWhiteImage;
+			Assets::Texture* DefaultBlackImage;
+			Assets::Texture* DefaultGreyImage;
+			Assets::Texture* DefaultWhiteImage;
 
-			Graphics::Texture DefaultDiffuseTex;
-			Graphics::Texture DefaultSpecularTex;
-			Graphics::Texture DefaultNormalTex;
+			Assets::MaterialTexture DefaultDiffuseTex;
+			Assets::MaterialTexture DefaultSpecularTex;
+			Assets::MaterialTexture DefaultNormalTex;
 		};
 	}
 }

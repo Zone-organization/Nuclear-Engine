@@ -6,6 +6,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Platform/FileSystem.h>
 #include <Rendering/RenderingEngine.h>
+#include <Assets\Texture.h>
 
 namespace Nuclear
 {
@@ -64,7 +65,7 @@ namespace Nuclear
 		
 		}
 
-		void Skybox::Initialize( const std::array<Assets::Image*, 6> & data)
+		void Skybox::Initialize( const std::array<Assets::Texture*, 6> & data)
 		{
 			//TODO
 			TextureDesc TexDesc;
@@ -101,7 +102,7 @@ namespace Nuclear
 			}
 		}
 
-		void Skybox::Initialize(Assets::Image* tex)
+		void Skybox::Initialize(Assets::Texture* tex)
 		{
 			mTextureSRV = tex->GetTextureView();
 

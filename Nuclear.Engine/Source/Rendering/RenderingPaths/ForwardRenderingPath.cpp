@@ -3,7 +3,7 @@
 #include <Components/MeshComponent.h>
 #include "Animation/Animator.h"
 #include <Assets\Shader.h>
-#include <Assets\Image.h>
+#include <Assets\Texture.h>
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Rendering/RenderingEngine.h>
 #include <Rendering\FrameRenderData.h>
@@ -33,7 +33,7 @@ namespace Nuclear
 			////////////////////////      IBL      ///////////////////////////
 			for (auto& i : pActivePipeline->GetReflection().mIBLTexturesInfo)
 			{
-				pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i.mSlot)->Set(i.mTex.GetImage()->GetTextureView());
+				pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i.mSlot)->Set(i.mTex.pTexture->GetTextureView());
 			}
 
 			//Shadows

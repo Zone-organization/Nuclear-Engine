@@ -4,7 +4,7 @@
 #include <Graphics\Context.h>
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Utilities/Logger.h>
-#include <Assets\Image.h>
+#include <Assets\Texture.h>
 
 namespace Nuclear
 {
@@ -38,7 +38,7 @@ namespace Nuclear
 			{
 				for (auto& tex : mPipelineUsableTextures.at(index).mData)
 				{
-					pipeline->GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.GetImage()->GetTextureView());
+					pipeline->GetRenderingSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.pTexture->GetTextureView());
 				}
 			}
 
@@ -69,7 +69,7 @@ namespace Nuclear
 						for (auto &ShaderTexinfo : pShader->mPipeline.GetReflection().mMaterialTexturesInfo)
 						{
 							//Found a match
-							if (TexSetTexture.mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
+							if (TexSetTexture.mTex.mUsageType == ShaderTexinfo.mTex.mUsageType)
 							{
 								ShaderTexture NewTex(TexSetTexture);
 								NewTex.mSlot = ShaderTexinfo.mSlot;
@@ -95,11 +95,11 @@ namespace Nuclear
 						{
 							for (int j = 0; j < mPipelineUsableTextures.at(i).mData.size(); j++)
 							{
-								if (mPipelineUsableTextures.at(i).mData.at(j).mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
+								if (mPipelineUsableTextures.at(i).mData.at(j).mTex.mUsageType == ShaderTexinfo.mTex.mUsageType)
 								{
 									for (int t = 0; t < TexSetCopy.size(); t++)
 									{
-										if (TexSetCopy.at(t).mTex.GetUsageType() == ShaderTexinfo.mTex.GetUsageType())
+										if (TexSetCopy.at(t).mTex.mUsageType == ShaderTexinfo.mTex.mUsageType)
 											TexSetCopy.erase(TexSetCopy.begin() + t);
 									}
 								}

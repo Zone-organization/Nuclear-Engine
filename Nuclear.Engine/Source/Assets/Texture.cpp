@@ -1,4 +1,4 @@
-#include <Assets/Image.h>
+#include <Assets/Texture.h>
 #include <Graphics\Context.h>
 #include "..\ThirdParty\DiligentTextureLoader\src\TextureLoader.h"
 #include <Assets/Importer.h>
@@ -8,31 +8,31 @@ namespace Nuclear
 {
 	namespace Assets 
 	{
-		Image::Image()
-			: IAsset(AssetType::Image)
+		Texture::Texture()
+			: IAsset(AssetType::Texture)
 		{
 			mWidth = 0;
 			mHeight = 0;
 			mTextureView = nullptr;
 		}
 
-		Image::~Image()
+		Texture::~Texture()
 		{
 		}
 
-		void Image::SetTextureView(ITextureView* view)
+		void Texture::SetTextureView(ITextureView* view)
 		{
 			mTextureView = view;
 		}
-		ITextureView* Image::GetTextureView()
+		ITextureView* Texture::GetTextureView()
 		{
 			return mTextureView.RawPtr();
 		}
-		const Uint32 Image::GetWidth() const
+		const Uint32 Texture::GetWidth() const
 		{
 			return mWidth;
 		}
-		const Uint32 Image::GetHeight() const
+		const Uint32 Texture::GetHeight() const
 		{
 			return mHeight;
 		}

@@ -17,37 +17,42 @@ namespace Nuclear
 		void FallbacksEngine::Initialize()
 		{
 			//Images
-			DefaultBlackImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Black32x32.png");
-			DefaultGreyImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Grey32x32.png");
-			DefaultWhiteImage = Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/White32x32.png");
+			DefaultBlackImage = Assets::Importer::GetInstance().ImportTextureST("@NuclearAssets@/DefaultTextures/Black32x32.png");
+			DefaultGreyImage = Assets::Importer::GetInstance().ImportTextureST("@NuclearAssets@/DefaultTextures/Grey32x32.png");
+			DefaultWhiteImage = Assets::Importer::GetInstance().ImportTextureST("@NuclearAssets@/DefaultTextures/White32x32.png");
 
 
 			//Textures
-			DefaultNormalTex.Set(Assets::Importer::GetInstance().ImportImageST("@NuclearAssets@/DefaultTextures/Normal32x32.png"), Graphics::TextureUsageType::Normal);
-			DefaultDiffuseTex.Set(DefaultGreyImage, Graphics::TextureUsageType::Diffuse);
-			DefaultSpecularTex.Set(DefaultWhiteImage, Graphics::TextureUsageType::Specular);
+			DefaultNormalTex.pTexture = Assets::Importer::GetInstance().ImportTextureST("@NuclearAssets@/DefaultTextures/Normal32x32.png");
+			DefaultNormalTex.mUsageType = Assets::TextureUsageType::Normal;
+
+			DefaultDiffuseTex.pTexture = DefaultGreyImage;
+			DefaultDiffuseTex.mUsageType = Assets::TextureUsageType::Diffuse;
+
+			DefaultSpecularTex.pTexture = DefaultWhiteImage;
+			DefaultSpecularTex.mUsageType = Assets::TextureUsageType::Specular;
 		}
-		Assets::Image* FallbacksEngine::GetDefaultBlackImage()
+		Assets::Texture* FallbacksEngine::GetDefaultBlackImage()
 		{
 			return DefaultBlackImage;
 		}
-		Assets::Image* FallbacksEngine::GetDefaultGreyImage()
+		Assets::Texture* FallbacksEngine::GetDefaultGreyImage()
 		{
 			return DefaultGreyImage;
 		}
-		Assets::Image* FallbacksEngine::GetDefaultWhiteImage()
+		Assets::Texture* FallbacksEngine::GetDefaultWhiteImage()
 		{
 			return nullptr;
 		}
-		const Graphics::Texture& FallbacksEngine::GetDefaultDiffuseTex() const
+		const Assets::MaterialTexture& FallbacksEngine::GetDefaultDiffuseTex() const
 		{
 			return DefaultDiffuseTex;
 		}
-		const Graphics::Texture& FallbacksEngine::GetDefaultSpecularTex() const
+		const Assets::MaterialTexture& FallbacksEngine::GetDefaultSpecularTex() const
 		{
 			return DefaultSpecularTex;
 		}
-		const Graphics::Texture& FallbacksEngine::GetDefaultNormalTex() const
+		const Assets::MaterialTexture& FallbacksEngine::GetDefaultNormalTex() const
 		{
 			return DefaultNormalTex;
 		}

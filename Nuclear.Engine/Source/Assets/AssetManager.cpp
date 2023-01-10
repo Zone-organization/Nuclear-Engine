@@ -86,14 +86,14 @@ namespace Nuclear
 			}
 
 			
-			if (Type == AssetType::Image)
+			if (Type == AssetType::Texture)
 			{
-				return Importer::GetInstance().ImportImage(Path);
+				return Importer::GetInstance().ImportTexture(Path);
 			}
 			return nullptr;
 		}
 
-		Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype)
+	/*	Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype)
 		{
 			TextureImportingDesc desc;
 			desc.mType = texturetype;
@@ -108,7 +108,7 @@ namespace Nuclear
 		Graphics::Texture AssetManager::ImportTexture(const ImageDesc& Imagedata, const TextureImportingDesc& Desc)
 		{
 			return Importer::GetInstance().ImportTexture(Imagedata, Desc);
-		}
+		}*/
 
 		//IAsset* AssetManager::Load(const Core::Path& Path, const AssetMetadata& meta)
 		//{

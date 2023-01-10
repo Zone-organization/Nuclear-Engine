@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Graphics/Texture.h>
+#include <Assets/MaterialTypes.h>
 #include <Graphics/BakeStatus.h>
 #include <Graphics/ShaderPipelineSwitch.h>
 #include <Graphics/ShaderReflection.h>
@@ -58,7 +58,7 @@ namespace Nuclear
 
 			Uint32 GetShaderID();
 			//TODO ??
-			Graphics::Texture GetDefaultTextureFromType(Uint8 Type);
+			Assets::MaterialTexture GetDefaultTextureFromType(Uint8 Type);
 
 			//Graphics::BakeStatus GetStatus();
 

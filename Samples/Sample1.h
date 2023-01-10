@@ -7,7 +7,7 @@ std::string SplitFilename(const std::string& str)
 	return str.substr(found + 1);
 }
 
-void ImageViewer(Assets::Image* img)
+void TextureViewer(Assets::Texture* img)
 {
 	ImGui::Begin("Asset Info");
 
@@ -34,11 +34,11 @@ void AssetLibraryViewer()
 		ImGuiStyle& style = ImGui::GetStyle();
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-		if (ImGui::BeginTabItem("Images"))
+		if (ImGui::BeginTabItem("Textures"))
 		{
 			static int count = 0;
-			static Assets::Image* img = nullptr;
-			for (auto& i : Assets::AssetLibrary::GetInstance().mImportedImages.mData)
+			static Assets::Texture* img = nullptr;
+			for (auto& i : Assets::AssetLibrary::GetInstance().mImportedTextures.mData)
 			{
 				ImGui::PushID(count);
 				if (i.second.GetTextureView())
@@ -59,7 +59,7 @@ void AssetLibraryViewer()
 
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + tex_sz.x; // Expected position if next button was on same line
-				if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedImages.mData.size() && next_button_x2 < window_visible_x2)
+				if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
 					ImGui::SameLine();
 				ImGui::PopID();
 
@@ -72,7 +72,7 @@ void AssetLibraryViewer()
 			{
 				//if (img->GetState() == Assets::Asset::State::Created)
 				{
-					ImageViewer(img);
+					TextureViewer(img);
 				}
 			}
 		}
@@ -159,14 +159,14 @@ public:
 		VampireAnimator.Initialize(&vampiremodel->pAnimations->mClips.at(0));
 
 		//Load some textures manually
-		Assets::ImageImportingDesc desc;
+		Assets::TextureImportingDesc desc;
 	//	desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
 		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_diffuse.png", Graphics::TextureUsageType::Diffuse) });
-		CubeSet.mData.push_back({ 1, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_specular.png", Graphics::TextureUsageType::Specular) });
-		CubeSet.mData.push_back({ 2, GetAssetManager().ImportTexture("@CommonAssets@/Textures/crate_normal.png", Graphics::TextureUsageType::Normal) });
+		CubeSet.mData.push_back({ 0,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_diffuse.png") , Assets::TextureUsageType::Diffuse}  });
+		CubeSet.mData.push_back({ 1,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_specular.png") , Assets::TextureUsageType::Specular}  });
+		CubeSet.mData.push_back({ 2,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_normal.png") , Assets::TextureUsageType::Normal}  });
 		
 		CubeTextures.mTextures.push_back(CubeSet);
 
@@ -198,7 +198,7 @@ public:
 			Core::Path("@CommonAssets@/Skybox/back.jpg")
 		};
 
-		Assets::ImageImportingDesc SkyboxDesc;
+		Assets::TextureImportingDesc SkyboxDesc;
 		//SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 		auto test =Assets::Importer::GetInstance().ImportTextureCube(SkyBoxTexturePaths, SkyboxDesc);
 		Skybox.Initialize(test);

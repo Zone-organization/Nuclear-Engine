@@ -10,7 +10,7 @@ namespace Nuclear
 			Unknown,
 			Scene,
 
-			Image,
+			Texture,
 			Model,
 			Mesh,
 			Material,

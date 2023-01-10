@@ -294,19 +294,19 @@ namespace Nuclear {
 				}
 			}
 
-			Graphics::TextureUsageType GetTextureType(aiTextureType type)
+			Assets::TextureUsageType GetTextureType(aiTextureType type)
 			{
 				switch (type)
 				{
 				case aiTextureType_DIFFUSE:
-					return Graphics::TextureUsageType::Diffuse;
+					return Assets::TextureUsageType::Diffuse;
 				case aiTextureType_SPECULAR:
-					return Graphics::TextureUsageType::Specular;
+					return Assets::TextureUsageType::Specular;
 				case aiTextureType_HEIGHT:
-					return Graphics::TextureUsageType::Normal;
+					return Assets::TextureUsageType::Normal;
 				}
 
-				return Graphics::TextureUsageType::Unknown;
+				return Assets::TextureUsageType::Unknown;
 			}
 			Assets::TextureSet AssimpLoader::ProcessMaterialTexture(aiMaterial* mat, int arttype)
 			{
@@ -318,14 +318,12 @@ namespace Nuclear {
 					aiString str;
 					mat->GetTexture(type, i, &str);
 
-					Assets::TextureImportingDesc desc;
-
-					Graphics::Texture texture;
+					Assets::MaterialTexture texture;
 
 					//Embedded Texture
 					if (auto embeddedtex = scene->GetEmbeddedTexture(str.C_Str()))
 					{
-						desc.mType = GetTextureType(type);
+						auto textype = GetTextureType(type);
 
 						if (embeddedtex->mHeight != 0)
 						{
@@ -341,14 +339,17 @@ namespace Nuclear {
 								desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 							*/
 
-							texture = Assets::AssetManager::GetInstance().ImportTexture(data, desc);
+							texture.pTexture = Assets::Importer::GetInstance().ImportTexture(data);
+							texture.mUsageType = textype;
 						}
 						else
 						{
-							desc.mImageDesc.mLoadFromMemory = true;
-							desc.mImageDesc.mMemData = (Byte*)embeddedtex->pcData;
-							desc.mImageDesc.mMemSize = embeddedtex->mWidth;
-							texture = Assets::AssetManager::GetInstance().ImportTexture(embeddedtex->mFilename.C_Str(), desc);
+							TextureImportingDesc imagedesc;
+							imagedesc.mLoadFromMemory = true;
+							imagedesc.mMemData = (Byte*)embeddedtex->pcData;
+							imagedesc.mMemSize = embeddedtex->mWidth;
+							texture.pTexture = Assets::Importer::GetInstance().ImportTexture(embeddedtex->mFilename.C_Str(),imagedesc);
+							texture.mUsageType = textype;
 						}
 
 					}
@@ -367,8 +368,9 @@ namespace Nuclear {
 						}*/
 
 
-						desc.mType = GetTextureType(type);
-						texture = Assets::AssetManager::GetInstance().ImportTexture(filename, desc);
+						auto textype = GetTextureType(type);
+						texture.pTexture = Assets::Importer::GetInstance().ImportTexture(filename);
+						texture.mUsageType = textype;
 					}
 
 					textures.mData.push_back({ 0, texture });

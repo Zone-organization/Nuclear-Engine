@@ -56,7 +56,7 @@ namespace Nuclear
 
 			switch (metadata.mType)
 			{
-			case Assets::AssetType::Image:
+			case Assets::AssetType::Texture:
 			{
 				const auto imagedesc = static_cast<Assets::ImageLoadingDesc*>(metadata.pLoadingDesc);
 				meta["ImageLoadingDesc"]["Extension"] = magic_enum::enum_name(imagedesc->mExtension);
@@ -87,7 +87,7 @@ namespace Nuclear
 
 				switch (metadata.mType)
 				{
-				case Assets::AssetType::Image:
+				case Assets::AssetType::Texture:
 				{
 					auto imagedesc = static_cast<Assets::ImageLoadingDesc*>(metadata.pLoadingDesc = new Assets::ImageLoadingDesc);
 					imagedesc->mExtension = magic_enum::enum_cast<Assets::IMAGE_EXTENSION>(meta["ImageLoadingDesc"]["Extension"]).value_or(Assets::IMAGE_EXTENSION::IMAGE_EXTENSION_UNKNOWN);

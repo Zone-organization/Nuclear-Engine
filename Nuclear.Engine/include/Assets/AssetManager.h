@@ -72,10 +72,6 @@ namespace Nuclear
 
 			IAsset* Import(const Core::Path& Path, AssetType type = AssetType::Unknown);
 
-			Graphics::Texture ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype);
-			Graphics::Texture ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
-			Graphics::Texture ImportTexture(const ImageDesc& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
-
 			AssetMetadata CreateMetadata(IAsset* asset);
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);
 			bool Export(IAsset* asset, const Core::Path& Path);
@@ -89,7 +85,7 @@ namespace Nuclear
 		public:
 			//Importing methods specializations
 
-			IMPORTING_METHOD_SPECIALIZATION(Image)
+			IMPORTING_METHOD_SPECIALIZATION(Texture)
 			IMPORTING_METHOD_SPECIALIZATION(Script)
 			IMPORTING_METHOD_SPECIALIZATION(Model)
 			IMPORTING_METHOD_SPECIALIZATION(Shader)

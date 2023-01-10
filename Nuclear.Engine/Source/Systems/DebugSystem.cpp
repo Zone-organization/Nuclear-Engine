@@ -9,6 +9,7 @@
 #include <Assets\DefaultMeshes.h>
 #include <Graphics\GraphicsEngine.h>
 #include <Rendering/RenderingEngine.h>
+#include <Assets\Texture.h>
 
 namespace Nuclear
 {
@@ -247,7 +248,7 @@ namespace Nuclear
 		{
 			mRegisteredRTs.push_back(rt);
 		}
-		void DebugSystem::InstantRender(Assets::Mesh* mesh, Assets::Image* diffusetex)
+		void DebugSystem::InstantRender(Assets::Mesh* mesh, Assets::Texture* diffusetex)
 		{
 
 			if (mesh == nullptr)

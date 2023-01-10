@@ -252,9 +252,9 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 						//	for (auto& it1 : it.mData)
 						//	{
 						//		//ImGui::Text(it1.mSlot);
-						//		if (it1.mTex.GetImage() != nullptr)
+						//		if (it1.mTex.GetTexture() != nullptr)
 						//		{
-						//			ImGui::Image(it1.mTex.GetImage()->mTextureView, { 256.f,256.f });
+						//			ImGui::Texture(it1.mTex.GetTexture()->mTextureView, { 256.f,256.f });
 						//		}
 						//	}
 						//}

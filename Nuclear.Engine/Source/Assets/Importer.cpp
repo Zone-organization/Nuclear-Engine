@@ -53,12 +53,12 @@ namespace Nuclear
 		
 		}
 
-		Image* Importer::ImportImage(const Core::Path& Path, const ImageImportingDesc& Desc)
+		Texture* Importer::ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc)
 		{
 			if (Desc.mAsyncImporting)
 			{
 				//Add to queue			
-				auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
+				auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
 				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new ImageImportTask(result, { Path, true }, Desc));
@@ -66,7 +66,7 @@ namespace Nuclear
 				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
-			return ImportImageST(Path, Desc);
+			return ImportTextureST(Path, Desc);
 		}
 
 		/**Model* Importer::AsyncImportModel(const Core::Path& Path, const ModelImportingDesc& desc)
@@ -130,7 +130,7 @@ namespace Nuclear
 			return &AssetLibrary::GetInstance().mImportedModels.mData[hashedpath];
 		}
 		*/
-		Image* Importer::ImportImageST(const Core::Path& Path, const ImageImportingDesc& importingdesc)
+		Texture* Importer::ImportTextureST(const Core::Path& Path, const TextureImportingDesc& importingdesc)
 		{
 			//Load
 			ImageDesc desc;
@@ -138,13 +138,13 @@ namespace Nuclear
 
 			Importers::ImageImporter::GetInstance().Load(Path.GetRealPath(),&desc, importingdesc);
 
-			auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
+			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 
 			Graphics::GraphicsEngine::GetInstance().CreateImageData(&data, desc);
 
 			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &data))
 			{
-				NUCLEAR_ERROR("[Importer] Failed To Load Image: '{0}'", Path.GetInputPath());
+				NUCLEAR_ERROR("[Importer] Failed To Load Texture: '{0}'", Path.GetInputPath());
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 
@@ -153,44 +153,22 @@ namespace Nuclear
 			return result;
 		}
 
-		Image* Importer::ImportImage(const ImageDesc& imagedesc, const ImageImportingDesc& importingdesc)
+		Texture* Importer::ImportTexture(const ImageDesc& imagedesc, const TextureImportingDesc& importingdesc)
 		{
 			//Create
-			auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
+			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 
 			ImageData imagedata;
 			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
 			
 			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &imagedata))
 			{
-				NUCLEAR_ERROR("[Importer] Failed To Create Image : '");
+				NUCLEAR_ERROR("[Importer] Failed To Create Texture : '");
 				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
 			}
 
 
 			FinishImportingAsset(result, imagedesc.mPath);
-
-			return result;
-		}
-
-		Graphics::Texture Importer::ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc)
-		{
-			auto image = ImportImage(Path, Desc.mImageDesc);
-
-			Graphics::Texture result;
-			result.SetImage(image);
-			result.SetUsageType(Desc.mType);
-
-			return result;
-		}
-
-		Graphics::Texture Importer::ImportTexture(const ImageDesc& imagedata, const TextureImportingDesc& Desc)
-		{
-			auto image = ImportImage(imagedata, Desc.mImageDesc);
-
-			Graphics::Texture result;
-			result.SetImage(image);
-			result.SetUsageType(Desc.mType);
 
 			return result;
 		}
@@ -389,12 +367,12 @@ namespace Nuclear
 			return result;
 		}
 
-		std::array<Image*, 6> Importer::ImportTextureCube(const std::array<Core::Path, 6>& Paths, const ImageImportingDesc& desc)
+		std::array<Texture*, 6> Importer::ImportTextureCube(const std::array<Core::Path, 6>& Paths, const TextureImportingDesc& desc)
 		{
-			ImageImportingDesc Desc = desc;
+			TextureImportingDesc Desc = desc;
 			//Desc.FlipY_Axis = false;
 
-			std::array<Image*, 6> result = {
+			std::array<Texture*, 6> result = {
 				TextureCube_Import(Paths.at(0), Desc),
 				TextureCube_Import(Paths.at(1), Desc),
 				TextureCube_Import(Paths.at(2), Desc),
@@ -412,7 +390,7 @@ namespace Nuclear
 
 			if (Importers::ImageImporter::GetInstance().IsExtensionSupported(extension))
 			{
-				return AssetType::Image;
+				return AssetType::Texture;
 			}
 			else if (mAssimpImporter.IsExtensionSupported(extension))
 			{
@@ -441,9 +419,9 @@ namespace Nuclear
 			return result;
 		}
 
-		Image* Importer::TextureCube_Import(const Core::Path& Path, const ImageImportingDesc& importingdesc)
+		Texture* Importer::TextureCube_Import(const Core::Path& Path, const TextureImportingDesc& importingdesc)
 		{
-			auto result = &AssetLibrary::GetInstance().mImportedImages.AddAsset();
+			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 
 			ImageDesc imagedesc;
 			ImageData imagedata;
@@ -471,6 +449,7 @@ namespace Nuclear
 			if (asset)
 			{
 				asset->mState = IAsset::State::Loaded;
+				asset->mName = path.GetFilename();
 				if (log)
 				{
 					NUCLEAR_INFO("[Assets] Imported: {0} ", path.GetInputPath());

@@ -275,7 +275,7 @@ namespace Nuclear
 			/* -Z */ float4x4::RotationY(PI_F)
 		};
 
-		Assets::Image ImageBasedLighting::EquirectangularToCubemap(Graphics::Texture* HDR_Env)
+		Assets::Texture ImageBasedLighting::EquirectangularToCubemap(Assets::MaterialTexture* HDR_Env)
 		{
 			RefCntAutoPtr<ITexture> TexCubeRTs;
 
@@ -299,7 +299,7 @@ namespace Nuclear
 			// IBL: convert HDR equirectangular environment map to cubemap equivalent
 			{
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pERectToCubemap_PSO.RawPtr());
-				pERectToCubemap_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(HDR_Env->GetImage()->GetTextureView());
+				pERectToCubemap_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(HDR_Env->pTexture->GetTextureView());
 
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
@@ -327,12 +327,12 @@ namespace Nuclear
 				}
 			}
 
-			Assets::Image result;
+			Assets::Texture result;
 			result.SetTextureView(TexCubeRTs->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
 			return result;
 		}
 
-		Rendering::PBRCapture ImageBasedLighting::PrecomputePBRCapture(Assets::Image* cubemap)
+		Rendering::PBRCapture ImageBasedLighting::PrecomputePBRCapture(Assets::Texture* cubemap)
 		{
 			// IBL: create an irradiance cubemap.
 			RefCntAutoPtr<ITexture> pIrradianceTex;
@@ -456,7 +456,7 @@ namespace Nuclear
 		{
 			return pEnvCapture;
 		}
-		Assets::Image* ImageBasedLighting::GetBRDF_LUT()
+		Assets::Texture* ImageBasedLighting::GetBRDF_LUT()
 		{
 			return &mBRDF_LUT_Image;
 		}

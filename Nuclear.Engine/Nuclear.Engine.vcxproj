@@ -117,7 +117,6 @@
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Fallbacks\Fallbacks.h" />
     <ClInclude Include="include\Fallbacks\FallbacksEngine.h" />
-    <ClInclude Include="include\Graphics\TextureUsageType.h" />
     <ClInclude Include="include\Parsers\INIParser.h" />
     <ClInclude Include="include\Rendering\RenderingEngine.h" />
     <ClInclude Include="include\Serialization\AssetsSerialization.h" />
@@ -356,7 +355,7 @@
     <ClInclude Include="include\Assets\ImageData.h" />
     <ClInclude Include="include\Assets\Material.h" />
     <ClInclude Include="include\Assets\MaterialTypes.h" />
-    <ClInclude Include="include\Assets\Image.h" />
+    <ClInclude Include="include\Assets\Texture.h" />
     <ClInclude Include="include\Audio\Audio.h" />
     <ClInclude Include="include\Audio\AudioEngine.h" />
     <ClInclude Include="include\Components\AudioSourceComponent.h" />
@@ -395,7 +394,6 @@
     <ClInclude Include="include\Engine\Graphics\RenderingPipelines\Skybox.h" />
     <ClInclude Include="include\Graphics\RenderTarget.h" />
     <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
-    <ClInclude Include="include\Graphics\Texture.h" />
     <ClInclude Include="include\Assets\Importer.h" />
     <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
@@ -504,7 +502,7 @@
     <ClCompile Include="Source\Animation\Bone.cpp" />
     <ClCompile Include="Source\Assets\Animations.cpp" />
     <ClCompile Include="Source\Assets\AudioClip.cpp" />
-    <ClCompile Include="Source\Assets\Image.cpp" />
+    <ClCompile Include="Source\Assets\Texture.cpp" />
     <ClCompile Include="Source\Assets\Shader.cpp" />
     <ClCompile Include="Source\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Source\Assets\DefaultMeshes.cpp" />
@@ -522,7 +520,6 @@
     <ClCompile Include="Source\Rendering\RenderPasses\PostProcessingPass.cpp" />
     <ClCompile Include="Source\Graphics\ShaderPipelineVariant.cpp" />
     <ClCompile Include="Source\Graphics\ShaderPipelineSwitch.cpp" />
-    <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Components\ColliderComponent.cpp" />
     <ClCompile Include="Source\Components\RigidBodyComponent.cpp" />

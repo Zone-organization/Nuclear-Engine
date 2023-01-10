@@ -5,7 +5,6 @@
 #include <string>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <vector>
-#include <Graphics/TextureUsageType.h>
 
 namespace Nuclear
 {
@@ -57,7 +56,7 @@ namespace Nuclear
 			bool LoadMaterialData = true;
 		};
 
-		struct ImageImportingDesc
+		struct TextureImportingDesc
 		{
 			USAGE mUsage;
 
@@ -87,7 +86,7 @@ namespace Nuclear
 
 			bool mLoadOnly;
 
-			ImageImportingDesc() :
+			TextureImportingDesc() :
 				mUsage(USAGE_IMMUTABLE),
 				mBindFlags(BIND_SHADER_RESOURCE),
 				mMipLevels(0),
@@ -104,18 +103,6 @@ namespace Nuclear
 				mLoadOnly(true)
 			{
 			}
-		};
-
-		struct TextureImportingDesc
-		{
-			TextureImportingDesc()
-				: mImageDesc(ImageImportingDesc()), mType(Graphics::TextureUsageType::Unknown)
-			{
-
-			}
-
-			ImageImportingDesc mImageDesc;
-			Graphics::TextureUsageType mType;
 		};
 
 		struct FontImportingDesc

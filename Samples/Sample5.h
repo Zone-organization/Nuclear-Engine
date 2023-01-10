@@ -1,6 +1,6 @@
 #pragma once
 #include "SampleBase.h"
-void ImageVi2ewer(Assets::Image* img)
+void TextureVi2ewer(Assets::Texture* img)
 {
 	ImGui::Begin("Asset Info");
 
@@ -27,11 +27,11 @@ void AssetLibraryVi2ewer()
 		ImGuiStyle& style = ImGui::GetStyle();
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-		if (ImGui::BeginTabItem("Images"))
+		if (ImGui::BeginTabItem("Textures"))
 		{
 			static int count = 0;
-			static Assets::Image* img = nullptr;
-			for (auto& i : Assets::AssetLibrary::GetInstance().mImportedImages.mData)
+			static Assets::Texture* img = nullptr;
+			for (auto& i : Assets::AssetLibrary::GetInstance().mImportedTextures.mData)
 			{
 				ImGui::PushID(count);
 				if (i.second.GetTextureView())
@@ -52,7 +52,7 @@ void AssetLibraryVi2ewer()
 
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + tex_sz.x; // Expected position if next button was on same line
-				if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedImages.mData.size() && next_button_x2 < window_visible_x2)
+				if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
 					ImGui::SameLine();
 				ImGui::PopID();
 
@@ -65,7 +65,7 @@ void AssetLibraryVi2ewer()
 			{
 				//if (img->GetState() == Assets::Asset::State::Created)
 				{
-					ImageVi2ewer(img);
+					TextureVi2ewer(img);
 				}
 			}
 		}
@@ -112,21 +112,21 @@ public:
 	{
 		//Initialize Materials
 		//Assets::TextureSet PBRRustedIron;
-		//PBRRustedIron.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/albedo.png", Graphics::TextureUsageType::Diffuse) });
-		//PBRRustedIron.mData.push_back({ 1, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/metallic.png", {Graphics::TextureUsageType::Specular) });
-		//PBRRustedIron.mData.push_back({ 2, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/normal.png", Graphics::TextureUsageType::Normal) });
-		//PBRRustedIron.mData.push_back({ 3, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/roughness.png",  Graphics::TextureUsageType::Roughness) });
-		//PBRRustedIron.mData.push_back({ 4, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/RustedIron/ao.png",  Graphics::TextureUsageType::AO) });
+		//PBRRustedIron.mData.push_back({ 0,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/albedo.png") , Assets::TextureUsageType::Diffuse}  });
+		//PBRRustedIron.mData.push_back({ 1,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/metallic.png") , {Assets::TextureUsageType::Specular}  });
+		//PBRRustedIron.mData.push_back({ 2,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/normal.png") , Assets::TextureUsageType::Normal}  });
+		//PBRRustedIron.mData.push_back({ 3,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/roughness.png") ,  Assets::TextureUsageType::Roughness}  });
+		//PBRRustedIron.mData.push_back({ 4,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/ao.png") ,  Assets::TextureUsageType::AO}  });
 
 	/*	RustedIron_D.mTextures.push_back(PBRRustedIron);
 		RustedIron.SetName("RustedIron Material");*/
 
 		Assets::TextureSet PBRPlastic;
-		PBRPlastic.mData.push_back({ 0, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/albedo.png", Graphics::TextureUsageType::Diffuse) });
-		PBRPlastic.mData.push_back({ 1, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/metallic.png", Graphics::TextureUsageType::Specular) });
-		PBRPlastic.mData.push_back({ 2, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/normal.png", Graphics::TextureUsageType::Normal) });
-		PBRPlastic.mData.push_back({ 3, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/roughness.png",  Graphics::TextureUsageType::Roughness) });
-		PBRPlastic.mData.push_back({ 4, GetAssetManager().ImportTexture("@CommonAssets@/Textures/PBR/plastic/ao.png",  Graphics::TextureUsageType::AO) });
+		PBRPlastic.mData.push_back({ 0,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/albedo.png") , Assets::TextureUsageType::Diffuse}  });
+		PBRPlastic.mData.push_back({ 1,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/metallic.png") , Assets::TextureUsageType::Specular}  });
+		PBRPlastic.mData.push_back({ 2,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/normal.png") , Assets::TextureUsageType::Normal}  });
+		PBRPlastic.mData.push_back({ 3,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/roughness.png") ,  Assets::TextureUsageType::Roughness}  });
+		PBRPlastic.mData.push_back({ 4,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/ao.png") ,  Assets::TextureUsageType::AO}  });
 
 		Plastic_D.mTextures.push_back(PBRPlastic);
 		Plastic.SetName("Plastic Material");
@@ -169,7 +169,7 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
+		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc(}  });
 	}
 	void FillScene()
 	{

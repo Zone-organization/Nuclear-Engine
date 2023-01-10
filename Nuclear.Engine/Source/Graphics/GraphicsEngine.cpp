@@ -8,7 +8,7 @@
 #include <Assets/DefaultMeshes.h>
 #include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp>
 #include <Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h>
-#include <Assets\Image.h>
+#include <Assets\Texture.h>
 
 namespace Nuclear
 {
@@ -56,7 +56,7 @@ namespace Nuclear
 			Graphics::Context::GetInstance().Shutdown();
 		}
 
-		bool GraphicsEngine::CreateImage(Assets::Image* result, Assets::ImageData* data)
+		bool GraphicsEngine::CreateImage(Assets::Texture* result, Assets::ImageData* data)
 		{
 			result->mTextureView = nullptr;
 

@@ -11,11 +11,11 @@ namespace Nuclear
 	}
 	namespace Assets
 	{			
-		class NEAPI Image : public IAsset
+		class NEAPI Texture : public IAsset
 		{
 		public:
-			Image();
-			~Image();
+			Texture();
+			~Texture();
 
 			void SetTextureView(ITextureView* view);
 			ITextureView* GetTextureView();
@@ -26,7 +26,9 @@ namespace Nuclear
 			friend class Graphics::GraphicsEngine;
 
 			RefCntAutoPtr<ITextureView> mTextureView;
+			//TextureUsageType mDefaultUsageType;
 			Uint32 mWidth, mHeight;
+
 			friend Serialization::Access;
 
 			template<typename S>

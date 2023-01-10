@@ -7,13 +7,16 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Sampler.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DepthStencilState.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
-#include <Assets/Image.h>
 
 namespace Nuclear
 {
 	namespace Components
 	{
 		class CameraComponent;
+	}
+	namespace Assets
+	{
+		class Texture;
 	}
 	namespace Rendering
 	{
@@ -25,9 +28,9 @@ namespace Nuclear
 			Skybox();
 			~Skybox();
 			//TODO: Move
-			void Initialize(const std::array<Assets::Image*, 6>& data);     
+			void Initialize(const std::array<Assets::Texture*, 6>& data);     
 
-			void Initialize(Assets::Image* Texture);
+			void Initialize(Assets::Texture* Texture);
 
 			void Render();
 

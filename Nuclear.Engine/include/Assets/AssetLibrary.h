@@ -76,7 +76,7 @@ namespace Nuclear
 			//Special type of asset??
 			ImportedAssetsMap<Assets::Scene> mImportedScenes;
 
-			ImportedAssetsMap<Assets::Image> mImportedImages;
+			ImportedAssetsMap<Assets::Texture> mImportedTextures;
 			ImportedAssetsMap<Assets::Model> mImportedModels;
 			ImportedAssetsMap<Assets::Mesh> mImportedMeshes;
 			ImportedAssetsMap<Assets::Material> mImportedMaterials;
@@ -93,7 +93,7 @@ namespace Nuclear
 			template<typename S>
 			void serialize(S& s)
 			{
-				s.object(mImportedImages.mData);
+				s.object(mImportedTextures.mData);
 			}
 
 		private:		

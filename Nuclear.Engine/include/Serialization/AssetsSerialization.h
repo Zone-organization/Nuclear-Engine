@@ -1,6 +1,6 @@
 #pragma once
 #include <unordered_map>
-#include <Assets/Image.h>
+#include <Assets/Texture.h>
 #include <Serialization\Access.h>
 
 //TODO: Probably not the best idea
@@ -21,6 +21,6 @@ namespace Nuclear
 
 
 
-		AssetMapSerialization(Assets::Image)
+		AssetMapSerialization(Assets::Texture)
 	}
 }

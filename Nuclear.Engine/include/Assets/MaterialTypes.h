@@ -1,12 +1,13 @@
 #pragma once
 #include <NE_Common.h>
-#include <Graphics/Texture.h>
 #include <vector>
-
+#include <string>
 namespace Nuclear
 {
 	namespace Assets
 	{
+		class Texture;
+
 		enum class ShaderTextureType : Uint8
 		{
 			Unknown = 0,
@@ -17,10 +18,38 @@ namespace Nuclear
 			ShadowTex
 		};
 
+		enum TextureUsageType : Uint8
+		{
+			Diffuse = 0,
+			Albedo = 0,
+
+			Specular = 1,
+			Metallic = 1,
+
+			Normal = 2,
+
+			Roughness = 3,
+			AO = 4,
+
+			IrradianceMap = 5,
+			PreFilterMap = 6,
+			BRDF_LUT = 7,
+
+			ShadowTex = 8,
+
+			Unknown = 255
+		};
+
+		struct MaterialTexture
+		{
+			Texture* pTexture;
+			TextureUsageType mUsageType;
+		};
+
 		struct ShaderTexture
 		{
 			Uint32 mSlot = 0;
-			Graphics::Texture mTex;
+			MaterialTexture mTex;
 
 			ShaderTextureType mType = ShaderTextureType::Unknown;
 		};

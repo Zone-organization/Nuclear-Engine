@@ -1,6 +1,6 @@
 #pragma once
 #include <Assets/ImportingDescs.h>
-#include <Assets/Image.h>
+#include <Assets/Texture.h>
 #include <Assets/Importers/ImageImporter.h>
 #include <Core/Path.h>
 #include <Assets/Importer.h>
@@ -21,7 +21,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class Image;
+		class Texture;
 		struct AssetInfo
 		{
 			Core::Path mPath;
@@ -31,19 +31,19 @@ namespace Nuclear
 		class CreateImageTask : public Threading::MainThreadTask
 		{
 		public:
-			CreateImageTask(Image* img, ImageData* data, const AssetInfo& info, const Assets::ImageDesc& desc)
-				: pImage(img), pImageData(data), mInfo(info), mDesc(desc)
+			CreateImageTask(Texture* img, ImageData* data, const AssetInfo& info, const Assets::ImageDesc& desc)
+				: pTexture(img), pImageData(data), mInfo(info), mDesc(desc)
 			{
 			}
 
 			bool OnRunning() override
 			{
-				bool result = Graphics::GraphicsEngine::GetInstance().CreateImage(pImage, pImageData);
+				bool result = Graphics::GraphicsEngine::GetInstance().CreateImage(pTexture, pImageData);
 				auto& vec = Importer::GetInstance().GetQueuedAssets();
 
 				for (Uint32 i = 0; i < vec.size(); i++)
 				{
-					if (vec[i]->GetUUID() == pImage->GetUUID())
+					if (vec[i]->GetUUID() == pTexture->GetUUID())
 					{
 						vec.erase(vec.begin() + i);
 						break;
@@ -52,10 +52,10 @@ namespace Nuclear
 
 				if (!result)
 				{
-					NUCLEAR_ERROR("[Importer] Failed To Create Image: '{0}'", mInfo.mPath.GetInputPath());
+					NUCLEAR_ERROR("[Importer] Failed To Create Texture: '{0}'", mInfo.mPath.GetInputPath());
 					return false;
 				}
-				Importer::FinishImportingAsset(pImage, mInfo.mPath, mInfo.mLog);
+				Importer::FinishImportingAsset(pTexture, mInfo.mPath, mInfo.mLog);
 				return result;
 			}
 
@@ -65,7 +65,7 @@ namespace Nuclear
 				delete this;
 			}
 			Assets::ImageDesc mDesc;
-			Image* pImage;
+			Texture* pTexture;
 			ImageData* pImageData;
 			AssetInfo mInfo;
 		};
@@ -73,7 +73,7 @@ namespace Nuclear
 		class ImageImportTask : public Threading::Task
 		{
 		public:
-			ImageImportTask(Assets::Image* result, const AssetInfo& info, const Assets::ImageImportingDesc& desc)
+			ImageImportTask(Assets::Texture* result, const AssetInfo& info, const Assets::TextureImportingDesc& desc)
 				: pResult(result), mInfo(info), pResultData(nullptr), mImportingDesc(desc)
 			{
 			}
@@ -127,7 +127,7 @@ namespace Nuclear
 				else
 				{
 					delete pResultData;
-					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}'", mInfo.mPath.GetInputPath());
+					NUCLEAR_ERROR("[Importer] Failed To Import Texture: '{0}'", mInfo.mPath.GetInputPath());
 				}
 				return result;
 			}
@@ -137,16 +137,16 @@ namespace Nuclear
 				delete this;
 			}
 		protected:
-			Assets::Image* pResult;
+			Assets::Texture* pResult;
 			ImageData* pResultData;
-			Assets::ImageImportingDesc mImportingDesc;
+			Assets::TextureImportingDesc mImportingDesc;
 			AssetInfo mInfo;
 		};
 
 		class ImageLoadTask : public Threading::Task
 		{
 		public:
-			ImageLoadTask(Assets::Image* result, const AssetInfo& info)
+			ImageLoadTask(Assets::Texture* result, const AssetInfo& info)
 				: pResult(result), mInfo(info), pResultData(nullptr)
 			{
 			}
@@ -183,7 +183,7 @@ namespace Nuclear
 				else
 				{
 					delete pResultData;
-					NUCLEAR_ERROR("[Importer] Failed To Import Image: '{0}'", mInfo.mPath.GetInputPath());
+					NUCLEAR_ERROR("[Importer] Failed To Import Texture: '{0}'", mInfo.mPath.GetInputPath());
 				}
 				return result;
 			}
@@ -193,7 +193,7 @@ namespace Nuclear
 				delete this;
 			}
 		protected:
-			Assets::Image* pResult;
+			Assets::Texture* pResult;
 			ImageData* pResultData;
 			AssetInfo mInfo;
 		};
