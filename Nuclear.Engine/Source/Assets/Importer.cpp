@@ -1,6 +1,6 @@
 #include <Assets/Importer.h>
 #include <Assets/AssetLibrary.h>
-#include <Assets/Importers\ImageImporter.h>
+#include <Assets/Importers\TextureImporter.h>
 #include <Utilities/Logger.h>
 #include <Scripting\ScriptingEngine.h>
 
@@ -21,7 +21,7 @@
 #include <Assets/AssetManager.h>
 #include <Assets\AssetLibrary.h>
 
-#include <Assets/Tasks/ImageImporting.h>
+#include <Assets/Tasks/TextureImporting.h>
 
 namespace Nuclear
 {
@@ -61,7 +61,7 @@ namespace Nuclear
 				auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
-				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new ImageImportTask(result, { Path, true }, Desc));
+				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new TextureImportTask(result, Path , Desc));
 
 				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
@@ -133,10 +133,10 @@ namespace Nuclear
 		Texture* Importer::ImportTextureST(const Core::Path& Path, const TextureImportingDesc& importingdesc)
 		{
 			//Load
-			ImageDesc desc;
-			ImageData data;
+			TextureDesc desc;
+			TextureData data;
 
-			Importers::ImageImporter::GetInstance().Load(Path.GetRealPath(),&desc, importingdesc);
+			Importers::TextureImporter::GetInstance().Load(Path.GetRealPath(), &desc, importingdesc);
 
 			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 
@@ -149,16 +149,18 @@ namespace Nuclear
 			}
 
 
-			FinishImportingAsset(result, Path);
+			result->mState = IAsset::State::Loaded;
+			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+
 			return result;
 		}
 
-		Texture* Importer::ImportTexture(const ImageDesc& imagedesc, const TextureImportingDesc& importingdesc)
+		Texture* Importer::ImportTexture(const TextureDesc& imagedesc, const TextureImportingDesc& importingdesc)
 		{
 			//Create
 			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 
-			ImageData imagedata;
+			TextureData imagedata;
 			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
 			
 			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &imagedata))
@@ -168,8 +170,8 @@ namespace Nuclear
 			}
 
 
-			FinishImportingAsset(result, imagedesc.mPath);
-
+			result->mState = IAsset::State::Loaded;
+			NUCLEAR_INFO("[Assets] Imported: {0} ", imagedesc.mPath);
 			return result;
 		}
 
@@ -178,8 +180,9 @@ namespace Nuclear
 			auto result = &AssetLibrary::GetInstance().mImportedAudioClips.AddAsset();
 			Audio::AudioEngine::GetInstance().GetSystem()->createSound(Path.GetRealPath().c_str(), Desc.mMode, 0, &result->mSound);
 
-			FinishImportingAsset(result, Path);
 
+			result->mState = IAsset::State::Loaded;
+			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
 			return result;
 		}
 
@@ -210,11 +213,19 @@ namespace Nuclear
 				if (result->pAnimations->GetState() != IAsset::State::Loaded)
 				{
 					AssetLibrary::GetInstance().mImportedAnimations.mData.erase(result->pAnimations->GetUUID());
+					result->pAnimations = nullptr;
+				}
+				else
+				{
+					result->pAnimations->mState = IAsset::State::Loaded;
 				}
 			}
-			FinishImportingAsset(result->pMesh, Path);
-			FinishImportingAsset(result->pMaterialData, Path, false);
-			FinishImportingAsset(result->pAnimations, Path, false);
+
+			result->mState = IAsset::State::Loaded;
+			result->pMesh->mState = IAsset::State::Loaded;
+			result->pMaterialData->mState = IAsset::State::Loaded;
+
+			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
 
 			if (result->pMesh)
 				result->pMesh->Create();
@@ -343,8 +354,9 @@ namespace Nuclear
 				result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
 			}
 
-			FinishImportingAsset(result, Path);
 
+			result->mState = IAsset::State::Loaded;
+			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
 			return result;
 		}
 
@@ -362,8 +374,9 @@ namespace Nuclear
 				fullname = desc.mScriptFullName;
 			}
 			Scripting::ScriptingEngine::GetInstance().CreateScriptAsset(result, fullname);
-			FinishImportingAsset(result, Path);
 
+			result->mState = IAsset::State::Loaded;
+			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
 			return result;
 		}
 
@@ -388,7 +401,7 @@ namespace Nuclear
 			std::string extension = filename.substr(filename.find_last_of("."));
 
 
-			if (Importers::ImageImporter::GetInstance().IsExtensionSupported(extension))
+			if (Importers::TextureImporter::GetInstance().IsExtensionSupported(extension))
 			{
 				return AssetType::Texture;
 			}
@@ -423,10 +436,10 @@ namespace Nuclear
 		{
 			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 
-			ImageDesc imagedesc;
-			ImageData imagedata;
+			TextureDesc imagedesc;
+			TextureData imagedata;
 
-			if (!Importers::ImageImporter::GetInstance().Load(Path.GetRealPath(), &imagedesc, importingdesc))
+			if (!Importers::TextureImporter::GetInstance().Load(Path.GetRealPath(), &imagedesc, importingdesc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}'", Path.GetInputPath());
 				return nullptr;
@@ -442,20 +455,6 @@ namespace Nuclear
 			NUCLEAR_INFO("[Importer] Imported Texture2D (for CubeMap) : '{0}'", Path.GetInputPath());
 
 			return result;
-		}
-
-		void Importer::FinishImportingAsset(IAsset* asset, const Core::Path& path, bool log)
-		{
-			if (asset)
-			{
-				asset->mState = IAsset::State::Loaded;
-				asset->mName = path.GetFilename();
-				if (log)
-				{
-					NUCLEAR_INFO("[Assets] Imported: {0} ", path.GetInputPath());
-				}
-			}
-			return;
 		}
 	}
 }

@@ -2,6 +2,7 @@
 #include <NE_Common.h>
 #include <Assets/ImportingDescs.h>
 #include <Assets/Model.h>
+#include <Assets/TextureDesc.h>
 #include <Assets\Importers\AssimpImporter.h>
 #include <Core/Path.h>
 
@@ -30,12 +31,12 @@ namespace Nuclear
 			void Test();
 
 			Texture* ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
-			Texture* ImportTexture(const ImageDesc& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
+			Texture* ImportTexture(const TextureDesc& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 
 			//	Model* AsyncImportModel(const Core::Path& Path,  const ModelImportingDesc& desc = ModelImportingDesc());
 
 			Texture* ImportTextureST(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
-			//	Image* ImportTexture(const ImageDesc& Imagedata,  const TextureImportingDesc& Desc = TextureImportingDesc());
+			//	Image* ImportTexture(const TextureDesc& Imagedata,  const TextureImportingDesc& Desc = TextureImportingDesc());
 
 			AudioClip* ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc = AudioClipImportingDesc());
 
@@ -57,7 +58,6 @@ namespace Nuclear
 
 			std::vector<IAsset*>& GetQueuedAssets();
 
-			static void FinishImportingAsset(IAsset* asset, const Core::Path& path, bool log = true);
 		private:
 			Texture* TextureCube_Import(const Core::Path& Path, const TextureImportingDesc& Desc);
 			Importers::AssimpImporter mAssimpImporter;

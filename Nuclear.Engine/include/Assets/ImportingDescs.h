@@ -1,5 +1,4 @@
 #pragma once
-#include <Assets/ImageData.h>
 #include <Assets/LoadingDescs.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/GraphicsTypes.h>
 #include <string>

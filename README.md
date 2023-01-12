@@ -2,19 +2,6 @@
   <img src="https://user-images.githubusercontent.com/11663821/206862862-6e1c396d-f782-43e8-bbc1-1bb7f8a38184.png">
 </p>
 
-## Main Features:
-  - Graphics
-    - Customizable rendering pipeline with custom shaders.
-	
-  - Scripting 
-    - C# Scripting through Mono.
-
-  - Asset Loading
-  	- Prevention of repeated loading of assets.
-    - Support for importing many types of 3D Models using Assimp.
-	- Support for importing many types of image formats using FreeImage.
-
-
 ## Current To-dos 
   - W.I.P:
 	- Improving AssetManager

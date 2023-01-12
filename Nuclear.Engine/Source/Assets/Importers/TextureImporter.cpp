@@ -1,4 +1,4 @@
-#include <Assets\Importers\ImageImporter.h>
+#include <Assets\Importers\TextureImporter.h>
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
 #include <Assets\Texture.h>
@@ -44,13 +44,13 @@ namespace Nuclear
 			{
 				std::cout << "\n*** " << message << " ***\n";
 			}
-			ImageImporter::ImageImporter()
+			TextureImporter::TextureImporter()
 			{
 				FreeImage_Initialise();
 				FreeImage_SetOutputMessage(MyMessageFunc);
 			}
 
-			bool ImageImporter::FreeimageLoadMemory(IMAGE_EXTENSION format, Assets::ImageDesc* result, const Assets::TextureImportingDesc& Desc)
+			bool TextureImporter::FreeimageLoadMemory(IMAGE_EXTENSION format, Assets::TextureDesc* result, const Assets::TextureImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 
@@ -122,12 +122,12 @@ namespace Nuclear
 				return true;
 			}
 
-			ImageImporter::~ImageImporter()
+			TextureImporter::~TextureImporter()
 			{
 				FreeImage_DeInitialise();
 			}
 
-			bool ImageImporter::Load(const std::string& Path, Assets::ImageDesc* result, const Assets::TextureImportingDesc& Desc)
+			bool TextureImporter::Load(const std::string& Path, Assets::TextureDesc* result, const Assets::TextureImportingDesc& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 
@@ -147,7 +147,7 @@ namespace Nuclear
 
 				if (!dib)
 				{
-					//Log.Error("[ImageImporter] Failed To Load: " + Path +  ".\n");
+					//Log.Error("[TextureImporter] Failed To Load: " + Path +  ".\n");
 					return false;
 				}
 				if (Desc.mFlipY_Axis)
@@ -207,7 +207,7 @@ namespace Nuclear
 				return true;
 			}
 
-			bool ImageImporter::IsExtensionSupported(const std::string& extension)
+			bool TextureImporter::IsExtensionSupported(const std::string& extension)
 			{
 
 				FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
@@ -222,12 +222,12 @@ namespace Nuclear
 
 				return false;
 			}
-			ImageImporter& ImageImporter::GetInstance()
+			TextureImporter& TextureImporter::GetInstance()
 			{
-				static ImageImporter instance;
+				static TextureImporter instance;
 				return instance;
 			}
-			bool ImageImporter::Import(ImageData* data, IMAGE_EXTENSION extension, const Assets::TextureImportingDesc& importingdesc)
+			bool TextureImporter::Import(TextureData* data, IMAGE_EXTENSION extension, const Assets::TextureImportingDesc& importingdesc)
 			{
 				FREE_IMAGE_FORMAT type = (FREE_IMAGE_FORMAT)extension;
 				
@@ -249,7 +249,7 @@ namespace Nuclear
 				}
 				else
 				{
-					Assets::ImageDesc imagedesc;
+					Assets::TextureDesc imagedesc;
 					if(FreeimageLoadMemory((IMAGE_EXTENSION)type, &imagedesc, importingdesc))
 					{
 						Graphics::GraphicsEngine::GetInstance().CreateImageData(data, imagedesc);
@@ -260,7 +260,7 @@ namespace Nuclear
 								
 				return false;
 			}
-			bool ImageImporter::Export(const std::string& exportPath, ImageData* data, IMAGE_EXTENSION type)
+			bool TextureImporter::Export(const std::string& exportPath, TextureData* data, IMAGE_EXTENSION type)
 			{
 				if (!data)
 				{
@@ -279,7 +279,7 @@ namespace Nuclear
 				//FreeImage_FIFSupportsExportType((FREE_IMAGE_FORMAT)desc.mExtension)
 				return false;
 			}
-			bool ImageImporter::Load(const Assets::ImageLoadingDesc& Desc, ImageData* result)
+			bool TextureImporter::Load(const Assets::ImageLoadingDesc& Desc, TextureData* result)
 			{
 				if (Desc.mExtension == IMAGE_EXTENSION_DDS)
 				{
@@ -299,7 +299,7 @@ namespace Nuclear
 				}
 				return false;
 			}
-			IMAGE_EXTENSION ImageImporter::GetImageExtension(const std::string& filename)
+			IMAGE_EXTENSION TextureImporter::GetImageExtension(const std::string& filename)
 			{
 				FREE_IMAGE_FORMAT type = FIF_UNKNOWN;
 

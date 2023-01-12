@@ -44,11 +44,13 @@ namespace Nuclear
 			Uint32 GetShaderID();
 
 		private:
-			Assets::Shader* pShader;
-			Uint32 mCreationShaderCommonID;
+			Assets::Shader* pShader;		//Asset UUID
+			MaterialData* pData;			//Asset UUID
+			Uint32 mCreationShaderCommonID; //Shader UUID hash
 			std::vector<TextureSet> mPipelineUsableTextures;
+
+
 			void InitializePipelineTextures();
-			MaterialData* pData;
 		};
 	}
 }

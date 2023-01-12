@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Assets/ImageData.h>
+#include <Assets/TextureDesc.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/InputLayout.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
@@ -40,9 +40,9 @@ namespace Nuclear
 			bool Initialize(const GraphicsEngineDesc& desc);
 			void Shutdown();
 
-			bool CreateImage(Assets::Texture* result, Assets::ImageData* desc);
+			bool CreateImage(Assets::Texture* result, Assets::TextureData* desc);
 
-			void CreateImageData(Assets::ImageData* result, const Assets::ImageDesc& desc);
+			void CreateImageData(Assets::TextureData* result, const Assets::TextureDesc& desc);
 
 			bool isGammaCorrect();
 

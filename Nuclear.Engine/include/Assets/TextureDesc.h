@@ -9,10 +9,10 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		struct ImageDesc
+		struct TextureDesc
 		{
 		public:
-			ImageDesc()
+			TextureDesc()
 			{
 				mPath = "";
 				mWidth = 0;
@@ -28,17 +28,6 @@ namespace Nuclear
 				mCPUAccessFlags = Diligent::CPU_ACCESS_NONE;
 				mIsSRGB = false;
 				mFormat = Diligent::TEX_FORMAT_UNKNOWN;
-			}
-			~ImageDesc()
-			{
-				mPath = "";
-				mWidth = 0;
-				mHeight = 0;
-				mBitsPerPixel = 0;
-				mNumComponents = 0;
-				mRowStride = 0;
-				mData = nullptr;
-				mComponentType = Diligent::VT_UNDEFINED;
 			}
 
 			std::string mPath;
@@ -79,9 +68,9 @@ namespace Nuclear
 			Diligent::MIP_FILTER_TYPE mMipMapsFilter = Diligent::MIP_FILTER_TYPE_DEFAULT;
 		};
 
-		struct ImageData
+		struct TextureData
 		{
-			ImageData()
+			TextureData()
 			{
 				mTexDesc = Diligent::TextureDesc();
 				mSubresources = std::vector<Diligent::TextureSubResData>();

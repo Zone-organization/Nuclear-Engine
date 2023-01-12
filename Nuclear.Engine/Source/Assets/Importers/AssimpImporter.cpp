@@ -16,7 +16,8 @@
 
 namespace Nuclear {
 	namespace Assets {
-		namespace Importers {
+		namespace Importers
+		{
 
 			class AssimpLoader
 			{
@@ -69,6 +70,7 @@ namespace Nuclear {
 				return busy;
 			}
 
+
 			bool AssimpImporter::Import(const std::string& importPath, const std::string& exportPath, Assets::Model* model, const Assets::ModelImportingDesc& desc)
 			{
 				busy = true;
@@ -104,7 +106,7 @@ namespace Nuclear {
 					loader.pMaterialData->SetState(Assets::IAsset::State::Loaded);
 				}
 
-				pExporter->Export(loader.scene, "glb2", exportPath);
+			//	pExporter->Export(loader.scene, "glb2", exportPath);
 
 				busy = false;
 				return true;
@@ -327,7 +329,7 @@ namespace Nuclear {
 
 						if (embeddedtex->mHeight != 0)
 						{
-							Assets::ImageDesc data;
+							Assets::TextureDesc data;
 							data.mWidth = embeddedtex->mWidth;
 							data.mHeight = embeddedtex->mHeight;
 							data.mData = (Byte*)embeddedtex->pcData;

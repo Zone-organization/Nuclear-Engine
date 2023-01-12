@@ -4,7 +4,6 @@
 #include <Assets/DefaultMeshes.h>
 #include <Assets/Material.h>
 #include <Assets/MaterialTypes.h>
-#include <Assets/ImageData.h>
 #include <Assets/Animations.h>
 #include <Assets/AudioClip.h>
 #include <Assets/Script.h>

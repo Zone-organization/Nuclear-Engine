@@ -14,8 +14,6 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		using namespace Diligent;
-
 		inline GraphicsEngine& GraphicsEngine::GetInstance()
 		{
 			static GraphicsEngine engine;
@@ -58,7 +56,7 @@ namespace Nuclear
 			Graphics::Context::GetInstance().Shutdown();
 		}
 
-		bool GraphicsEngine::CreateImage(Assets::Texture* result, Assets::ImageData* data)
+		bool GraphicsEngine::CreateImage(Assets::Texture* result, Assets::TextureData* data)
 		{
 			result->mTextureView = nullptr;
 
@@ -66,15 +64,15 @@ namespace Nuclear
 			result->mHeight = data->mTexDesc.Height;
 
 			//CREATE IMAGE
-			TextureData TexData;
+			Diligent::TextureData TexData;
 			TexData.pSubResources = data->mSubresources.data();
 			TexData.NumSubresources = data->mSubresources.size();
-			RefCntAutoPtr<ITexture> mTexture;
+			Diligent::RefCntAutoPtr<Diligent::ITexture> mTexture;
 			Graphics::Context::GetInstance().GetDevice()->CreateTexture(data->mTexDesc, &TexData, &mTexture);
 
 			if (mTexture.RawPtr() != nullptr)
 			{
-				result->mTextureView = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
+				result->mTextureView = mTexture->GetDefaultView(Diligent::TEXTURE_VIEW_SHADER_RESOURCE);
 				result->SetState(Assets::IAsset::State::Created);
 				return true;
 			}
@@ -115,8 +113,10 @@ namespace Nuclear
 			}
 		}
 
-		void GraphicsEngine::CreateImageData(Assets::ImageData* result, const Assets::ImageDesc& desc)
+		void GraphicsEngine::CreateImageData(Assets::TextureData* result, const Assets::TextureDesc& desc)
 		{
+			using namespace Diligent;
+
 			result->mTexDesc.Type = desc.mType;
 			result->mTexDesc.Usage = desc.mUsage;
 			result->mTexDesc.BindFlags = desc.mBindFlags;
@@ -249,14 +249,16 @@ namespace Nuclear
 
 		bool GraphicsEngine::isGammaCorrect()
 		{
-			if (Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat == TEX_FORMAT_RGBA8_UNORM_SRGB)
+			if (Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat == Diligent::TEX_FORMAT_RGBA8_UNORM_SRGB)
 				return true;
 			else
 				return false;
 		}
 
-		std::vector<LayoutElement> GraphicsEngine::GetBasicVSLayout(bool isDeffered)
+		std::vector<Diligent::LayoutElement> GraphicsEngine::GetBasicVSLayout(bool isDeffered)
 		{
+			using namespace Diligent;
+
 			std::vector<LayoutElement> LayoutElems;
 
 			LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
@@ -274,11 +276,12 @@ namespace Nuclear
 			return LayoutElems;
 		}
 
-		void GraphicsEngine::CreateShader(IShader** result, const Graphics::ShaderObjectCreationDesc& desc)
+		void GraphicsEngine::CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc)
 		{
-			ShaderCreateInfo CreationAttribs;
 
-			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			Diligent::ShaderCreateInfo CreationAttribs;
+
+			CreationAttribs.SourceLanguage = Diligent::SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.ShaderType = desc.mType;
 			CreationAttribs.EntryPoint = desc.mEntrypoint.c_str();
@@ -320,16 +323,16 @@ namespace Nuclear
 			Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, result);
 		}
 
-		IShaderSourceInputStreamFactory* GraphicsEngine::GetDefaultShaderSourceFactory()
+		Diligent::IShaderSourceInputStreamFactory* GraphicsEngine::GetDefaultShaderSourceFactory()
 		{
 			return pShaderSourceFactory;
 		}
 
 
-		void GraphicsEngine::CreateShader(const std::string& source, IShader** result, SHADER_TYPE type)
+		void GraphicsEngine::CreateShader(const std::string& source, Diligent::IShader** result, Diligent::SHADER_TYPE type)
 		{
-			ShaderCreateInfo CreationAttribs;
-			CreationAttribs.SourceLanguage = SHADER_SOURCE_LANGUAGE_HLSL;
+			Diligent::ShaderCreateInfo CreationAttribs;
+			CreationAttribs.SourceLanguage = Diligent::SHADER_SOURCE_LANGUAGE_HLSL;
 			CreationAttribs.Desc.UseCombinedTextureSamplers = true;
 			CreationAttribs.Desc.ShaderType = type;
 			CreationAttribs.EntryPoint = "main";
@@ -339,12 +342,14 @@ namespace Nuclear
 		}
 
 		bool GraphicsEngine::ProcessAndCreatePipeline(
-			IPipelineState** PipelineState,
-			GraphicsPipelineStateCreateInfo& PSOCreateInfo,
-			const std::vector<ShaderResourceVariableDesc>& Resources,
+			Diligent::IPipelineState** PipelineState,
+			Diligent::GraphicsPipelineStateCreateInfo& PSOCreateInfo,
+			const std::vector<Diligent::ShaderResourceVariableDesc>& Resources,
 			bool AutoCreateSamplersDesc,
-			const std::vector<ImmutableSamplerDesc>& StaticSamplers)
+			const std::vector<Diligent::ImmutableSamplerDesc>& StaticSamplers)
 		{
+			using namespace Diligent;
+
 			PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Resources.size());
 			PSOCreateInfo.PSODesc.ResourceLayout.Variables = Resources.data();
 			std::vector<ImmutableSamplerDesc> GeneratedSamplerDesc;
@@ -409,18 +414,18 @@ namespace Nuclear
 			return false;
 		}
 
-		std::vector<ShaderResourceVariableDesc> GraphicsEngine::ReflectShaderVariables(IShader* VShader, IShader* PShader)
+		std::vector<Diligent::ShaderResourceVariableDesc> GraphicsEngine::ReflectShaderVariables(Diligent::IShader* VShader, Diligent::IShader* PShader)
 		{
-			std::vector<ShaderResourceVariableDesc> resources;
+			std::vector<Diligent::ShaderResourceVariableDesc> resources;
 			if (VShader)
 			{
 				for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
 				{
-					ShaderResourceDesc RsrcDesc;
+					Diligent::ShaderResourceDesc RsrcDesc;
 					VShader->GetResourceDesc(i, RsrcDesc);
 					if (!CheckSampler(RsrcDesc.Name))
 					{
-						ShaderResourceVariableDesc Desc;
+						Diligent::ShaderResourceVariableDesc Desc;
 						Desc.Name = RsrcDesc.Name;
 						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
 						Desc.ShaderStages = VShader->GetDesc().ShaderType;
@@ -435,12 +440,12 @@ namespace Nuclear
 			{
 				for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
 				{
-					ShaderResourceDesc RsrcDesc;
+					Diligent::ShaderResourceDesc RsrcDesc;
 					PShader->GetResourceDesc(i, RsrcDesc);
 					if (!CheckSampler(RsrcDesc.Name))
 					{
 						std::string name(RsrcDesc.Name);
-						ShaderResourceVariableDesc Desc;
+						Diligent::ShaderResourceVariableDesc Desc;
 						Desc.Name = RsrcDesc.Name;
 						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
 						Desc.ShaderStages = PShader->GetDesc().ShaderType;
@@ -453,8 +458,9 @@ namespace Nuclear
 			}
 			return resources;
 		}
-		SHADER_RESOURCE_VARIABLE_TYPE GraphicsEngine::ParseNameToGetType(const std::string& name)
+		Diligent::SHADER_RESOURCE_VARIABLE_TYPE GraphicsEngine::ParseNameToGetType(const std::string& name)
 		{
+			using namespace Diligent;
 			if (name.find("NEStatic") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
 			else if (name.find("NEMutable") == 0)

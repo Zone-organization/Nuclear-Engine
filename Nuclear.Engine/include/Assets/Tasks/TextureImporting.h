@@ -1,7 +1,7 @@
 #pragma once
 #include <Assets/ImportingDescs.h>
 #include <Assets/Texture.h>
-#include <Assets/Importers/ImageImporter.h>
+#include <Assets/Importers/TextureImporter.h>
 #include <Core/Path.h>
 #include <Assets/Importer.h>
 
@@ -12,8 +12,10 @@
 
 #include <Graphics\GraphicsEngine.h>
 #include <Assets/LoadingDescs.h>
+#include <Assets/AssetManager.h>
 
 #include <Parsers/INIParser.h>
+#include <Platform/FileSystem.h>
 
 #include <Serialization/SerializationEngine.h>
 
@@ -22,17 +24,12 @@ namespace Nuclear
 	namespace Assets
 	{
 		class Texture;
-		struct AssetInfo
-		{
-			Core::Path mPath;
-			bool mLog = true;
-		};
 
-		class CreateImageTask : public Threading::MainThreadTask
+		class CreateTextureTask : public Threading::MainThreadTask
 		{
 		public:
-			CreateImageTask(Texture* img, ImageData* data, const AssetInfo& info, const Assets::ImageDesc& desc)
-				: pTexture(img), pImageData(data), mInfo(info), mDesc(desc)
+			CreateTextureTask(Texture* img, TextureData* data, const Core::Path& path, const Assets::TextureDesc& desc)
+				: pTexture(img), pImageData(data), mPath(path), mDesc(desc)
 			{
 			}
 
@@ -52,10 +49,11 @@ namespace Nuclear
 
 				if (!result)
 				{
-					NUCLEAR_ERROR("[Importer] Failed To Create Texture: '{0}'", mInfo.mPath.GetInputPath());
+					NUCLEAR_ERROR("[Importer] Failed To Create Texture: '{0}'", mPath.GetInputPath());
 					return false;
 				}
-				Importer::FinishImportingAsset(pTexture, mInfo.mPath, mInfo.mLog);
+
+				NUCLEAR_INFO("[Assets] Imported: {0} ", mPath.GetInputPath());
 				return result;
 			}
 
@@ -64,37 +62,37 @@ namespace Nuclear
 				delete pImageData;
 				delete this;
 			}
-			Assets::ImageDesc mDesc;
+			Assets::TextureDesc mDesc;
 			Texture* pTexture;
-			ImageData* pImageData;
-			AssetInfo mInfo;
+			TextureData* pImageData;
+			Core::Path mPath;
 		};
 		
-		class ImageImportTask : public Threading::Task
+		class TextureImportTask : public Threading::Task
 		{
 		public:
-			ImageImportTask(Assets::Texture* result, const AssetInfo& info, const Assets::TextureImportingDesc& desc)
-				: pResult(result), mInfo(info), pResultData(nullptr), mImportingDesc(desc)
+			TextureImportTask(Assets::Texture* result, const Core::Path& path, const Assets::TextureImportingDesc& desc)
+				: pResult(result), mPath(path), pResultData(nullptr), mImportingDesc(desc)
 			{
 			}
-			~ImageImportTask()
+			~TextureImportTask()
 			{
 
 			}
 			bool OnRunning() override
 			{
 				//Import
-				pResultData = new ImageData;
-				Assets::ImageDesc desc;
+				pResultData = new TextureData;
+				Assets::TextureDesc desc;
 				bool result = false;
 
 				if (!mImportingDesc.mLoadFromMemory)
 				{
-					auto extension = Importers::ImageImporter::GetInstance().GetImageExtension(mInfo.mPath.GetRealPath());
-					auto importedfile = Platform::FileSystem::GetInstance().LoadFile(mInfo.mPath.GetRealPath());
+					auto extension = Importers::TextureImporter::GetInstance().GetImageExtension(mPath.GetRealPath());
+					auto importedfile = Platform::FileSystem::GetInstance().LoadFile(mPath.GetRealPath());
 					mImportingDesc.mMemData = importedfile.mDataBuf.data();
 					mImportingDesc.mMemSize = importedfile.mDataBuf.size();
-					result = Importers::ImageImporter::GetInstance().Import(pResultData, extension, mImportingDesc);
+					result = Importers::TextureImporter::GetInstance().Import(pResultData, extension, mImportingDesc);
 				}
 				else
 				{
@@ -102,14 +100,15 @@ namespace Nuclear
 				}
 				if (result)
 				{
+					pResult->SetName(mPath.GetFilename());
 					pResult->SetState(IAsset::State::Loaded);
 
 					if (!mImportingDesc.mLoadOnly)
 					{
 						std::string exportpath = AssetLibrary::GetInstance().mPath.GetRealPath() + "/Textures/";
-						std::string exportedimagename = mInfo.mPath.GetFilename(true) + ".dds"; ///<TODO extension...
+						std::string exportedimagename = mPath.GetFilename(true) + ".dds"; ///<TODO extension...
 
-						Importers::ImageImporter::GetInstance().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension);
+						Importers::TextureImporter::GetInstance().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension);
 
 						AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(pResult);
 
@@ -119,15 +118,15 @@ namespace Nuclear
 						imageloadingdesc->mAsyncLoading = mImportingDesc.mAsyncImporting;
 
 						//Export Meta
-						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mInfo.mPath.GetFilename(true) + ".NEAsset");
+						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + exportedimagename + ".NEAsset");
 					}
 					//Create image task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateTextureTask(pResult, pResultData, mPath, desc));
 				}
 				else
 				{
 					delete pResultData;
-					NUCLEAR_ERROR("[Importer] Failed To Import Texture: '{0}'", mInfo.mPath.GetInputPath());
+					NUCLEAR_ERROR("[Importer] Failed To Import Texture: '{0}'", mPath.GetInputPath());
 				}
 				return result;
 			}
@@ -138,19 +137,19 @@ namespace Nuclear
 			}
 		protected:
 			Assets::Texture* pResult;
-			ImageData* pResultData;
+			TextureData* pResultData;
 			Assets::TextureImportingDesc mImportingDesc;
-			AssetInfo mInfo;
+			Core::Path mPath;
 		};
 
-		class ImageLoadTask : public Threading::Task
+		class TextureLoadTask : public Threading::Task
 		{
 		public:
-			ImageLoadTask(Assets::Texture* result, const AssetInfo& info)
-				: pResult(result), mInfo(info), pResultData(nullptr)
+			TextureLoadTask(Assets::Texture* result, const Core::Path& path)
+				: pResult(result), mPath(path), pResultData(nullptr)
 			{
 			}
-			~ImageLoadTask()
+			~TextureLoadTask()
 			{
 
 			}
@@ -158,16 +157,16 @@ namespace Nuclear
 			{		
 				Assets::AssetMetadata assetmeta;
 
-				Serialization::SerializationEngine::GetInstance().Deserialize(assetmeta, mInfo.mPath);
+				Serialization::SerializationEngine::GetInstance().Deserialize(assetmeta, mPath);
 				Assets::ImageLoadingDesc mLoadingDesc = *static_cast<Assets::ImageLoadingDesc*>(assetmeta.pLoadingDesc);
 				delete assetmeta.pLoadingDesc;
-				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mInfo.mPath.GetPathNoExt() + ".dds");
+				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mPath.GetPathNoExt() + ".dds");
 
 				//Load image
-				pResultData = new ImageData;
-				Assets::ImageDesc desc;
+				pResultData = new TextureData;
+				Assets::TextureDesc desc;
 
-				bool result = Importers::ImageImporter::GetInstance().Load(mLoadingDesc, pResultData);
+				bool result = Importers::TextureImporter::GetInstance().Load(mLoadingDesc, pResultData);
 
 				if (result)
 				{
@@ -175,15 +174,15 @@ namespace Nuclear
 
 					pResult->SetState(IAsset::State::Loaded);
 
-					Importers::ImageImporter::GetInstance().Export(exportpath + mInfo.mPath.GetFilename(true), pResultData, mLoadingDesc.mExtension);
+					Importers::TextureImporter::GetInstance().Export(exportpath + mPath.GetFilename(true), pResultData, mLoadingDesc.mExtension);
 
 					//Create image task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateImageTask(pResult, pResultData, mInfo, desc));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new CreateTextureTask(pResult, pResultData, mPath, desc));
 				}
 				else
 				{
 					delete pResultData;
-					NUCLEAR_ERROR("[Importer] Failed To Import Texture: '{0}'", mInfo.mPath.GetInputPath());
+					NUCLEAR_ERROR("[Importer] Failed To Import Texture: '{0}'", mPath.GetInputPath());
 				}
 				return result;
 			}
@@ -194,8 +193,8 @@ namespace Nuclear
 			}
 		protected:
 			Assets::Texture* pResult;
-			ImageData* pResultData;
-			AssetInfo mInfo;
+			TextureData* pResultData;
+			Core::Path mPath;
 		};
 	}
 }
