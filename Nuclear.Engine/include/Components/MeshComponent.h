@@ -74,12 +74,9 @@ namespace Nuclear {
 			bool mRenderSystemHasDefferedPass = false;
 			bool mRenderSystemHasShadowPass = false;
 
-			template<class S> void serialize(S& s)
+			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				s.value1b(mEnableRendering);
-				s.value1b(mCastShadow);
-				s.value1b(mReceiveShadows);
-
+				return archive(self.mEnableRendering, self.mCastShadow, self.mReceiveShadows);
 			}
 		};
 

@@ -1,7 +1,6 @@
 #pragma once
 #include <ECS/Transform.h>
 #include <ECS/Entity.h>
-#include <Serialization/Access.h>
 
 namespace Nuclear
 {
@@ -16,13 +15,12 @@ namespace Nuclear
 			ECS::Transform mTransform;
 			std::string mName;
 
-		private:
-			friend Serialization::Access;
+		//private:
+		//	friend Serialization::Access;
 
-			template<class S> void serialize(S& s)
+			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				s.text1b(mName, 256);
-				s.object(mTransform);
+				return archive(self.mName, self.mTransform);
 			}
 		};
 	}

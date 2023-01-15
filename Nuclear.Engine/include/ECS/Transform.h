@@ -1,7 +1,9 @@
 #pragma once
 #include <NE_Common.h>
 #include <Math\Math.h>
+#include <Serialization/MathSerialization.h>
 #include <Serialization/Access.h>
+
 namespace Nuclear
 {
 	namespace ECS
@@ -42,6 +44,11 @@ namespace Nuclear
 			Math::Matrix4 GetWorldMatrix();
 
 			void Update();
+
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mLocalPosition, self.mLocalRotation, self.mLocalScale, self.mWorldPosition);
+			}
 		protected:
 			friend Serialization::Access;
 
@@ -50,14 +57,6 @@ namespace Nuclear
 			Math::Vector3 mLocalScale;
 
 			Math::Vector3 mWorldPosition = Math::Vector3(0.0f);
-
-			template<class S> void serialize(S& s)
-			{
-				s.object(mLocalPosition);
-				s.object(mLocalRotation);
-				s.object(mLocalScale);
-				s.object(mWorldPosition);
-			}
 
 		private:
 			Math::Matrix4 mWorldMatrix = Math::Matrix4(1.0f);

@@ -1,9 +1,5 @@
 #include "Serialization/SerializationEngine.h"
-#include <bitsery/bitsery.h>
-#include <bitsery/adapter/buffer.h>
-#include <bitsery/traits/vector.h>
-#include <bitsery/traits/string.h>
-#include <bitsery/traits/array.h>
+#include <ThirdParty/zpp_bits.h>
 #include <Parsers/INIParser.h>
 #include <ThirdParty/magic_enum.hpp>
 #include <Utilities/Hash.h>

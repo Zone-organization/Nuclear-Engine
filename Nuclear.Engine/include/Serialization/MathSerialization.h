@@ -5,65 +5,129 @@ namespace glm
 {
 
 	//Vectors
-	template<typename S>
-	void serialize(S& s, vec2& o) {	s.value4b(o.x);	s.value4b(o.y); }
 
-	template<typename S>
-	void serialize(S& s, vec3& o){	s.value4b(o.x);	s.value4b(o.y);	s.value4b(o.z);	}
+	constexpr auto serialize(auto& s, vec2& o) {	return s(o.x,o.y); }
 
-	template<typename S>
-	void serialize(S& s, vec4& o){	s.value4b(o.x);	s.value4b(o.y);	s.value4b(o.z);	s.value4b(o.w);	}
 
-	template<typename S>
-	void serialize(S& s, ivec2& o) { s.value4b(o.x); s.value4b(o.y); }
+	constexpr auto serialize(auto& s, vec3& o){	return s(o.x,o.y,o.z);	}
 
-	template<typename S>
-	void serialize(S& s, ivec3& o) { s.value4b(o.x); s.value4b(o.y); s.value4b(o.z); }
 
-	template<typename S>
-	void serialize(S& s, ivec4& o) { s.value4b(o.x); s.value4b(o.y); s.value4b(o.z);	s.value4b(o.w); }
+	constexpr auto serialize(auto& s, vec4& o){	return s(o.x,o.y,o.z,o.w);	}
 
-	template<typename S>
-	void serialize(S& s, uvec2& o) { s.value4b(o.x); s.value4b(o.y); }
 
-	template<typename S>
-	void serialize(S& s, uvec3& o) { s.value4b(o.x); s.value4b(o.y); s.value4b(o.z); }
+	constexpr auto serialize(auto& s, ivec2& o) { return s(o.x,o.y); }
 
-	template<typename S>
-	void serialize(S& s, uvec4& o) { s.value4b(o.x); s.value4b(o.y); s.value4b(o.z); s.value4b(o.w); }
 
-	template<typename S>
-	void serialize(S& s, dvec2& o) { s.value8b(o.x); s.value8b(o.y); }
+	constexpr auto serialize(auto& s, ivec3& o) { return s(o.x,o.y,o.z); }
 
-	template<typename S>
-	void serialize(S& s, dvec3& o) { s.value8b(o.x); s.value8b(o.y); s.value8b(o.z); }
 
-	template<typename S>
-	void serialize(S& s, dvec4& o) { s.value8b(o.x); s.value8b(o.y); s.value8b(o.z); s.value8b(o.w); }
+	constexpr auto serialize(auto& s, ivec4& o) { return s(o.x,o.y,o.z,o.w); }
+
+
+	constexpr auto serialize(auto& s, uvec2& o) { return s(o.x,o.y); }
+
+
+	constexpr auto serialize(auto& s, uvec3& o) { return s(o.x,o.y,o.z); }
+
+
+	constexpr auto serialize(auto& s, uvec4& o) { return s(o.x,o.y,o.z,o.w); }
+
+
+	constexpr auto serialize(auto& s, dvec2& o) { return s(o.x,o.y); }
+
+
+	constexpr auto serialize(auto& s, dvec3& o) { return s(o.x,o.y,o.z); }
+
+
+	constexpr auto serialize(auto& s, dvec4& o) { return s(o.x,o.y,o.z,o.w); }
 
 	//Quaternions
-	template<typename S>
-	void serialize(S& s, quat& o) { s.value4b(o.x);	s.value4b(o.y);	s.value4b(o.z);	s.value4b(o.w); }
 
-	template<typename S>
-	void serialize(S& s, dquat& o) { s.value8b(o.x); s.value8b(o.y); s.value8b(o.z); s.value8b(o.w); }
+	constexpr auto serialize(auto& s, quat& o) { return s(o.x,o.y,o.z,o.w); }
+
+
+	constexpr auto serialize(auto& s, dquat& o) { return s(o.x,o.y,o.z,o.w); }
 
 	//Matrices
-	template<typename S>
-	void serialize(S& s, mat2& o) { s.object(o[0]);	s.object(o[1]); }
 
-	template<typename S>
-	void serialize(S& s, dmat2& o) { s.object(o[0]); s.object(o[1]); }
+	constexpr auto serialize(auto& s, mat2& o) { return s(o[0], o[1]); }
 
-	template<typename S>
-	void serialize(S& s, mat3& o) { s.object(o[0]); s.object(o[1]); s.object(o[2]); }
 
-	template<typename S>
-	void serialize(S& s, dmat3& o) { s.object(o[0]); s.object(o[1]); s.object(o[2]); }
+	constexpr auto serialize(auto& s, dmat2& o) { return s(o[0],o[1]); }
 
-	template<typename S>
-	void serialize(S& s, mat4& o) {	s.object(o[0]); s.object(o[1]); s.object(o[2]); s.object(o[3]);}
 
-	template<typename S>
-	void serialize(S& s, dmat4& o) {s.object(o[0]); s.object(o[1]); s.object(o[2]); s.object(o[3]);	}
+	constexpr auto serialize(auto& s, mat3& o) { return s(o[0],o[1],o[2]); }
+
+
+	constexpr auto serialize(auto& s, dmat3& o) { return s(o[0],o[1],o[2]); }
+
+
+	constexpr auto serialize(auto& s, mat4& o) { return	s(o[0],o[1],o[2],o[3]);}
+
+
+	constexpr auto serialize(auto& s, dmat4& o) { return s(o[0],o[1],o[2],o[3]);	}
+
+
+
+
+	constexpr auto serialize(auto& s, const vec2& o) { return s(o.x, o.y); }
+
+
+	constexpr auto serialize(auto& s, const vec3& o) { return s(o.x, o.y, o.z); }
+
+
+	constexpr auto serialize(auto& s, const vec4& o) { return s(o.x, o.y, o.z, o.w); }
+
+
+	constexpr auto serialize(auto& s, const ivec2& o) { return s(o.x, o.y); }
+
+
+	constexpr auto serialize(auto& s, const ivec3& o) { return s(o.x, o.y, o.z); }
+
+
+	constexpr auto serialize(auto& s, const ivec4& o) { return s(o.x, o.y, o.z, o.w); }
+
+
+	constexpr auto serialize(auto& s, const uvec2& o) { return s(o.x, o.y); }
+
+
+	constexpr auto serialize(auto& s, const uvec3& o) { return s(o.x, o.y, o.z); }
+
+
+	constexpr auto serialize(auto& s, const uvec4& o) { return s(o.x, o.y, o.z, o.w); }
+
+
+	constexpr auto serialize(auto& s, const dvec2& o) { return s(o.x, o.y); }
+
+
+	constexpr auto serialize(auto& s, const dvec3& o) { return s(o.x, o.y, o.z); }
+
+
+	constexpr auto serialize(auto& s, const dvec4& o) { return s(o.x, o.y, o.z, o.w); }
+
+	//Quaternions
+
+	constexpr auto serialize(auto& s, const quat& o) { return s(o.x, o.y, o.z, o.w); }
+
+
+	constexpr auto serialize(auto& s, const dquat& o) { return s(o.x, o.y, o.z, o.w); }
+
+	//Matrices
+
+	constexpr auto serialize(auto& s, const mat2& o) { return s(o[0], o[1]); }
+
+
+	constexpr auto serialize(auto& s, const dmat2& o) { return s(o[0], o[1]); }
+
+
+	constexpr auto serialize(auto& s, const mat3& o) { return s(o[0], o[1], o[2]); }
+
+
+	constexpr auto serialize(auto& s, const dmat3& o) { return s(o[0], o[1], o[2]); }
+
+
+	constexpr auto serialize(auto& s, const mat4& o) { return	s(o[0], o[1], o[2], o[3]); }
+
+
+	constexpr auto serialize(auto& s, const dmat4& o) { return s(o[0], o[1], o[2], o[3]); }
 }

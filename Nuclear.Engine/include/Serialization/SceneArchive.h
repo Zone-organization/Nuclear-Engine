@@ -1,5 +1,4 @@
 #pragma once
-#include <bitsery/bitsery.h>
 #include <ECS/ECS.h>
 
 namespace Nuclear
@@ -13,24 +12,25 @@ namespace Nuclear
 		{
 		public:
 			SceneOutputArchive(Serializer* const ser) : Ser(ser)
-			{ }
-
-			//Serialization
-			void operator()(entt::entity e)
 			{
-				Ser->value4b(static_cast<Uint32>(e));
 			}
 
-			void operator()(std::underlying_type_t<entt::entity> e)
+			//Serialization
+			ZPP_BITS_INLINE constexpr auto operator()(entt::entity e)
 			{
-				Ser->value4b(e);
+				return Ser->serialize_one(static_cast<Uint32>(e));
+			}
+
+			ZPP_BITS_INLINE constexpr auto operator()(std::underlying_type_t<entt::entity> size)
+			{
+				return Ser->serialize_one(size);
 			}
 
 			template <class T> inline
-			void operator()(entt::entity e, const T& c)
+				constexpr auto operator()(entt::entity e, const T& c)
 			{
-				Ser->value4b(static_cast<Uint32>(e));
-				Ser->object(c);
+				Ser->serialize_one(static_cast<Uint32>(e));
+				return Ser->serialize_one(c);
 			}
 
 			Serializer* const Ser;
@@ -42,27 +42,32 @@ namespace Nuclear
 		{
 		public:
 			SceneInputArchive(Serializer* const ser) : Ser(ser)
-			{ }
+			{
+			}
 
 			//De-Serialization
-			void operator()(entt::entity& e)
+			ZPP_BITS_INLINE constexpr auto operator()(entt::entity& e)
 			{
 				entt::id_type id;
-				Ser->value4b(id);
+				auto result = Ser->serialize_one(id);
 				e = static_cast<entt::entity>(id);
+				return result;
 			}
-			void operator()(std::underlying_type_t<entt::entity>& e)
+			ZPP_BITS_INLINE constexpr auto operator()(std::underlying_type_t<entt::entity>& s)
 			{
-				Ser->value4b(e);
+				//	entt::id_type size;
+				return Ser->serialize_one(s);
+
+				//	s = static_cast<std::underlying_type_t<entt::entity>>(size);
 			}
 
 			template <class T> inline
-				void operator()(entt::entity& e, T& c)
+				constexpr auto operator()(entt::entity& e, T& c)
 			{
 				entt::id_type id;
-				Ser->value4b(id);
+				Ser->serialize_one(id);
 				e = static_cast<entt::entity>(id);
-				Ser->object(c);
+				return Ser->serialize_one(c);
 			}
 
 			Serializer* const Ser;

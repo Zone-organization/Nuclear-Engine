@@ -11,10 +11,6 @@
 #include "Serialization/MathSerialization.h"
 #include "Serialization/SceneArchive.h"
 
-#include <bitsery/bitsery.h>
-#include <bitsery/adapter/buffer.h>
-#include <bitsery/traits/vector.h>
-#include <bitsery/traits/string.h>
 #include <Assets/AssetManager.h>
 
 
@@ -148,16 +144,15 @@ namespace Nuclear
 
 		// some helper types
 		using Buffer = std::vector<Uint8>;
-		using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-		using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 
 		bool Scene::SaveScene(Assets::Scene* scene)
 		{
 			scene->mBinaryBuffer.clear();
 
-			bitsery::Serializer<OutputAdapter> ser{ scene->mBinaryBuffer };
+			zpp::bits::out out(scene->mBinaryBuffer);
 
-			Serialization::SceneOutputArchive<bitsery::Serializer<OutputAdapter>> output(&ser);
+			//bitsery::Serializer<OutputAdapter> ser{ scene->mBinaryBuffer };
+			Serialization::SceneOutputArchive<zpp::bits::out<Buffer>> output(&out);
 			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent>(output);
 
 			//ser.object(Assets::AssetManager::GetInstance().mLibrary);
@@ -169,10 +164,10 @@ namespace Nuclear
 		{
 			mRegistry.clear();
 
+			zpp::bits::in in(scene->mBinaryBuffer);
 
-			bitsery::Deserializer<InputAdapter> deser{ scene->mBinaryBuffer.begin(), scene->mBinaryBuffer.size()};
-			Serialization::SceneInputArchive<bitsery::Deserializer<InputAdapter>> input(&deser);
-
+			//bitsery::Deserializer<InputAdapter> deser{ scene->mBinaryBuffer.begin(), scene->mBinaryBuffer.size()};
+			Serialization::SceneInputArchive<zpp::bits::in<Buffer>> input(&in);
 
 			entt::snapshot_loader{ mRegistry }.entities(input).component<Components::EntityInfoComponent, Components::LightComponent>(input);
 

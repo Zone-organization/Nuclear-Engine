@@ -23,14 +23,7 @@ namespace Nuclear
 				Math::Vector4 Attenuation_FarPlane;		 //Point - Spot (FarPlane needed only for Point)		3f,f 
 				Math::Vector4 InnerCutOf_OuterCutoff;    //Spot													f,f,null,null
 
-				template<class S> void serialize(S& s)
-				{
-					s.object(Position);
-					s.object(Direction);
-					s.object(Color_Intensity);
-					s.object(Attenuation_FarPlane);
-					s.object(InnerCutOf_OuterCutoff);
-				}
+				using serialize = zpp::bits::members<5>;
 			};
 		}
 		class NEAPI LightComponent
@@ -86,6 +79,11 @@ namespace Nuclear
 			Math::Vector3 GetInternalPosition();
 			void SetInternalPosition(Math::Vector3 pos);
 
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mData, self.mShadowType, self.mType, self.mFov, self.mNearPlane);
+			}
+
 		protected:
 			friend Serialization::Access;
 
@@ -93,16 +91,7 @@ namespace Nuclear
 			ShadowType mShadowType;
 			Type mType;
 			Float32 mFov, mNearPlane;
-
-			template<class S> void serialize(S& s)
-			{
-				s.object(mData);
-				s.value1b(mShadowType);
-				s.value1b(mType);
-				s.value4b(mFov);
-				s.value4b(mNearPlane);
-			}
-
+			
 		private:
 			friend class Rendering::ShadowPass;
 			Math::Matrix4 LightSpace;
