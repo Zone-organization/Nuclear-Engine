@@ -89,9 +89,6 @@ class Sample5 : public SampleBase
 {
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 
-	//Assets::MaterialData RustedIron_D;
-	Assets::MaterialData Plastic_D;
-
 	//Assets::Material RustedIron;
 	Assets::Material Plastic;
 
@@ -110,29 +107,19 @@ public:
 	}
 	void SetupAssets()
 	{
-		//Initialize Materials
-		//Assets::TextureSet PBRRustedIron;
-		//PBRRustedIron.mData.push_back({ 0,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/albedo.png") , Assets::TextureUsageType::Diffuse}  });
-		//PBRRustedIron.mData.push_back({ 1,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/metallic.png") , {Assets::TextureUsageType::Specular}  });
-		//PBRRustedIron.mData.push_back({ 2,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/normal.png") , Assets::TextureUsageType::Normal}  });
-		//PBRRustedIron.mData.push_back({ 3,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/roughness.png") ,  Assets::TextureUsageType::Roughness}  });
-		//PBRRustedIron.mData.push_back({ 4,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/ao.png") ,  Assets::TextureUsageType::AO}  });
-
-	/*	RustedIron_D.mTextures.push_back(PBRRustedIron);
-		RustedIron.SetName("RustedIron Material");*/
-
-		Assets::TextureSet PBRPlastic;
-		PBRPlastic.mData.push_back({ 0,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/albedo.png") , Assets::TextureUsageType::Diffuse}  });
-		PBRPlastic.mData.push_back({ 1,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/metallic.png") , Assets::TextureUsageType::Specular}  });
-		PBRPlastic.mData.push_back({ 2,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/normal.png") , Assets::TextureUsageType::Normal}  });
-		PBRPlastic.mData.push_back({ 3,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/roughness.png") ,  Assets::TextureUsageType::Roughness}  });
-		PBRPlastic.mData.push_back({ 4,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/ao.png") ,  Assets::TextureUsageType::AO}  });
-
+		Assets::MaterialTextureSet PBRPlastic;
+		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/albedo.png") , Assets::TextureUsageType::Diffuse});
+		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/metallic.png") , Assets::TextureUsageType::Specular});
+		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/normal.png") , Assets::TextureUsageType::Normal});
+		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/roughness.png") ,  Assets::TextureUsageType::Roughness});
+		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/ao.png") ,  Assets::TextureUsageType::AO});
+	
+		Assets::MaterialCreationInfo Plastic_D;
 		Plastic_D.mTextures.push_back(PBRPlastic);
 		Plastic.SetName("Plastic Material");
 
 		//RustedIron.Create(&RustedIron_D, PBR);
-		Plastic.Create(&Plastic_D, PBR);
+		Plastic.Create(Plastic_D, PBR);
 	}
 	void SetupEntities()
 	{
@@ -169,7 +156,7 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc(}  });
+		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc(});
 	}
 	void FillScene()
 	{

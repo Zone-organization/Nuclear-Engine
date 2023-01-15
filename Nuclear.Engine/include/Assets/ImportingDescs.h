@@ -52,7 +52,7 @@ namespace Nuclear
 			bool SaveMaterialNames = true;
 			bool LoadMesh = true;
 			bool LoadAnimation = true;
-			bool LoadMaterialData = true;
+			bool LoadMaterialInfo = true;
 		};
 
 		struct TextureImportingDesc

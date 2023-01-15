@@ -48,7 +48,7 @@ namespace Nuclear
 
 			};*/
 
-			//bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialData* material, Assets::Animations* anim);
+			//bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialCreationInfo* material, Assets::Animations* anim);
 		}
 	}
 }

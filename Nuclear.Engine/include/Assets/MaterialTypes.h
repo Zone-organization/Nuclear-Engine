@@ -54,22 +54,25 @@ namespace Nuclear
 			ShaderTextureType mType = ShaderTextureType::Unknown;
 		};
 
+		template<class T>
 		struct TextureSet
 		{
 			TextureSet()
-				: mData(std::vector<ShaderTexture>()), mHashedName(0), mName(std::string())
+				: mData(std::vector<T>()), mHashedName(0), mName(std::string())
 			{
 
 			}
-			~TextureSet()
-			{
-				mData.clear();
-				mHashedName = 0;
-				mName = std::string();
-			}
-			std::vector<ShaderTexture> mData;
+			std::vector<T> mData;
 			Uint32 mHashedName;
 			std::string mName;
+		};
+
+		using MaterialTextureSet = TextureSet<MaterialTexture>;
+		using ShaderTextureSet = TextureSet<ShaderTexture>;	
+
+		struct MaterialCreationInfo
+		{
+			std::vector<MaterialTextureSet> mTextures;
 		};
 	}
 }

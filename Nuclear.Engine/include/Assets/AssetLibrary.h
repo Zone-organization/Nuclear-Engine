@@ -79,7 +79,6 @@ namespace Nuclear
 			ImportedAssetsMap<Assets::Model> mImportedModels;
 			ImportedAssetsMap<Assets::Mesh> mImportedMeshes;
 			ImportedAssetsMap<Assets::Material> mImportedMaterials;
-			ImportedAssetsMap<Assets::MaterialData> mImportedMaterialDatas;
 			ImportedAssetsMap<Assets::Animations> mImportedAnimations;
 			ImportedAssetsMap<Assets::AudioClip> mImportedAudioClips;
 			ImportedAssetsMap<Assets::Font> mImportedFonts;

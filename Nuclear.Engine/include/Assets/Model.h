@@ -1,20 +1,21 @@
 #pragma once
 #include <Assets/IAsset.h>
+#include <Assets\MaterialTypes.h>
 
 namespace Nuclear
 {
 	namespace Assets
 	{
 		class Mesh;
-		class MaterialData;
 		class Animations;
 
 		class NEAPI Model : public IAsset
 		{
 		public:
 			Model();
+
+			Assets::MaterialCreationInfo mMaterialInfo;
 			Assets::Mesh* pMesh = nullptr;
-			Assets::MaterialData* pMaterialData = nullptr;
 			Assets::Animations* pAnimations = nullptr;
 		};
 	}

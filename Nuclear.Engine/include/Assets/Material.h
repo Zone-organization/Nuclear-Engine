@@ -14,20 +14,6 @@ namespace Nuclear
 	{
 		class Shader;
 
-		//Describes the textures only
-		class NEAPI MaterialData : public IAsset
-		{
-		public:
-			MaterialData()
-				: IAsset(AssetType::MaterialData)
-			{
-
-			}
-
-			std::vector<TextureSet> mTextures;
-
-		};
-
 		//Defines integration between Textures & Shaders
 		class NEAPI Material : public IAsset
 		{
@@ -35,7 +21,7 @@ namespace Nuclear
 			Material();
 			~Material();
 
-			void Create(MaterialData* data, Assets::Shader* shader);
+			void Create(const MaterialCreationInfo& desc, Assets::Shader* shader);
 
 			//Note: doesnt validate the shaders!
 			void BindTexSet(Graphics::ShaderPipelineVariant* pipeline ,Uint32 index);
@@ -45,12 +31,10 @@ namespace Nuclear
 
 		private:
 			Assets::Shader* pShader;		//Asset UUID
-			MaterialData* pData;			//Asset UUID
 			Uint32 mCreationShaderCommonID; //Shader UUID hash
-			std::vector<TextureSet> mPipelineUsableTextures;
+			std::vector<ShaderTextureSet> mMaterialShaderTextures;
 
-
-			void InitializePipelineTextures();
+			void InitializePipelineTextures(const MaterialCreationInfo& desc);
 		};
 	}
 }

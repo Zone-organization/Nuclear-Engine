@@ -40,7 +40,7 @@ namespace Nuclear
 
 			AudioClip* ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc = AudioClipImportingDesc());
 
-			//TODO: Separate to ImportMesh & MaterialData & Animations
+			//TODO: Separate to ImportMesh & MaterialCreationInfo & Animations
 			Model* ImportModel(const Core::Path& Path, const ModelImportingDesc& desc = ModelImportingDesc());
 
 			Font* ImportFont(const Core::Path& Path, const FontImportingDesc& desc = FontImportingDesc());

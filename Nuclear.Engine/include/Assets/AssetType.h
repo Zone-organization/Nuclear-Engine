@@ -10,7 +10,7 @@ namespace Nuclear
 			Unknown,
 			Scene,
 
-			Texture,
+			Texture,				//Importing & Loading done
 			Model,
 			Mesh,
 			Material,

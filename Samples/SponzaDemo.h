@@ -56,8 +56,8 @@ public:
 		//Load Sponza Model
 		auto Model = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekSponza/sponza.fbx", ModelDesc);
 
-		SponzaPBRMaterial.Create(Model->pMaterialData, PBR);
-		SponzaBlinnPhongMaterial.Create(Model->pMaterialData, BlinnPhong);
+		SponzaPBRMaterial.Create(Model->mMaterialInfo, PBR);
+		SponzaBlinnPhongMaterial.Create(Model->mMaterialInfo, BlinnPhong);
 
 		ESponza.AddComponent<Components::MeshComponent>(Model->pMesh, &SponzaPBRMaterial);
 

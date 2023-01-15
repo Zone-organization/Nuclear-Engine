@@ -46,7 +46,6 @@ namespace Nuclear
 		{
 			Assets::Model model;
 			model.pMesh = new Assets::Mesh();
-			model.pMaterialData = new Assets::MaterialData();
 			model.pAnimations = new Assets::Animations();
 
 			mAssimpImporter.Import("../Assets/Common/Models/CrytekNanosuit/nanosuit.obj", "../Assets/Common/Models/CrytekNanosuit/exportednanosuit.glb", &model, Assets::ModelImportingDesc());
@@ -194,9 +193,6 @@ namespace Nuclear
 			if (desc.LoadMesh)			
 				result->pMesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
 			
-			if (desc.LoadMaterialData)			
-				result->pMaterialData = &AssetLibrary::GetInstance().mImportedMaterialDatas.AddAsset();
-			
 			if (desc.LoadAnimation)			
 				result->pAnimations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
 			
@@ -223,7 +219,6 @@ namespace Nuclear
 
 			result->mState = IAsset::State::Loaded;
 			result->pMesh->mState = IAsset::State::Loaded;
-			result->pMaterialData->mState = IAsset::State::Loaded;
 
 			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
 

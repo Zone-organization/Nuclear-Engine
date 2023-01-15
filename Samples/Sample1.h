@@ -108,8 +108,6 @@ class Sample1 : public Core::Client
 	Assets::Material BobMaterial;
 	Assets::Material VampireMaterial;
 
-	Assets::MaterialData CubeTextures;
-
 	Animation::Animator BobAnimator;
 	Animation::Animator VampireAnimator;
 
@@ -163,18 +161,20 @@ public:
 	//	desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
-		Assets::TextureSet CubeSet;
-		CubeSet.mData.push_back({ 0,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_diffuse.png") , Assets::TextureUsageType::Diffuse}  });
-		CubeSet.mData.push_back({ 1,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_specular.png") , Assets::TextureUsageType::Specular}  });
-		CubeSet.mData.push_back({ 2,{ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_normal.png") , Assets::TextureUsageType::Normal}  });
+		Assets::MaterialTextureSet CubeSet;
+		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_diffuse.png") , Assets::TextureUsageType::Diffuse});
+		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_specular.png") , Assets::TextureUsageType::Specular} );
+		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_normal.png") , Assets::TextureUsageType::Normal});
 		
+		Assets::MaterialCreationInfo CubeTextures;
 		CubeTextures.mTextures.push_back(CubeSet);
 
-		CubeMaterial.Create(&CubeTextures, BlinnPhong);
-		NanosuitMaterial.Create(nanosuitmodel->pMaterialData, BlinnPhong);
-		CyborgMaterial.Create(cyborgmodel->pMaterialData, BlinnPhong);
-		BobMaterial.Create(bobmodel->pMaterialData, DiffuseOnly);
-		VampireMaterial.Create(vampiremodel->pMaterialData, BlinnPhong);
+		CubeMaterial.Create(CubeTextures, BlinnPhong);
+
+		NanosuitMaterial.Create(nanosuitmodel->mMaterialInfo, BlinnPhong);
+		CyborgMaterial.Create(cyborgmodel->mMaterialInfo, BlinnPhong);
+		BobMaterial.Create(bobmodel->mMaterialInfo, DiffuseOnly);
+		VampireMaterial.Create(vampiremodel->mMaterialInfo, BlinnPhong);
 
 		CubeSet.mData.clear();
 
