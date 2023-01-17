@@ -1,6 +1,5 @@
 #pragma once
 #include <NE_Common.h>
-#include <Assets/AssetLibrary.h>
 #include <Assets/AssetMetadata.h>
 
 namespace Nuclear
@@ -19,9 +18,9 @@ namespace Nuclear
 
 			bool Deserialize(Assets::AssetMetadata& inmetadata, const Core::Path& path);
 
-			bool SaveScene();
+			Assets::IAsset* DeserializeUUID(Assets::AssetType type, const Core::UUID& uuid);
 
-			bool SaveAssetLibraryInfo(Assets::AssetLibrary* lib);
+			bool SaveScene();
 
 		private:
 			SerializationEngine();

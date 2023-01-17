@@ -4,6 +4,7 @@
 #include <Platform\FileSystem.h>
 
 #include <Serialization/SerializationEngine.h>
+#include <Assets/AssetLibrary.h>
 
 namespace Nuclear
 {
@@ -158,12 +159,23 @@ namespace Nuclear
 					return true;
 				}
 			}
-			/*else  if (asset->GetType() == AssetType::Image)
+			else  if (asset->GetType() == AssetType::Material)
 			{
-				 auto image = static_cast<Image*>(asset);
+				 auto material = static_cast<Material*>(asset);
 
+				 if (material)
+				 {
+					 Serialization::BinaryBuffer buffer;
+					 zpp::bits::out out(buffer);
+					 out(*material);
+
+					 Platform::FileSystem::GetInstance().SaveBinaryBuffer(buffer, Path);
+					 NUCLEAR_INFO("[AssetManager] Exported Material '{0}' To: '{1}'", material->GetName(), Path.GetInputPath());
+					 return true;
+				 }
 			}
-			*/
+
+			
 			//WIP:
 			//Convert all assets to unified types.
 			return false;

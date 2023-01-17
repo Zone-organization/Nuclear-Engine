@@ -39,16 +39,13 @@ namespace Nuclear
 
 			static UUID CreateNewUUID();
 
-		private:
-			///////////////////////////////
-			//Serialization
-			friend Serialization::Access;
-			template<typename S>
-			void serialize(S& s)
+			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				s.container1b(_bytes);
+				return archive(self._bytes);
 			}
-			///////////////////////////////
+		private:
+			friend Serialization::Access;
+
 			void zeroify();
 
 			// actual data

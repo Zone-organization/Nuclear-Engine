@@ -215,6 +215,29 @@ public:
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
+			if (ImGui::Button("eXPORT MATERIAL"))
+			{
+				GetAssetManager().Export(&RustedIron, "@CommonAssets@/Scenes/RustedIron.bin");
+				GetAssetManager().Export(&Plastic, "@CommonAssets@/Scenes/Plastic.bin");
+			}
+
+			if (ImGui::Button("IMPORT MATERIAL"))
+			{
+
+				Serialization::BinaryBuffer buffer;
+				Platform::FileSystem::GetInstance().LoadBinaryBuffer(buffer, "@CommonAssets@/Scenes/RustedIron.bin");
+
+				zpp::bits::in in(buffer);
+
+				Assets::Material rust;
+
+				in(rust);
+
+				auto uuid = rust.GetUUID();
+				uuid.isValid();
+			}
+
+
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();

@@ -1,5 +1,6 @@
 #pragma once
 #include <Assets/AssetManager.h>
+#include <Assets/AssetLibrary.h>
 #include <Assets/Mesh.h>
 #include <Assets/DefaultMeshes.h>
 #include <Assets/Material.h>

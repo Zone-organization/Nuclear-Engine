@@ -12,6 +12,8 @@
 #include "Serialization/SceneArchive.h"
 
 #include <Assets/AssetManager.h>
+#include <Assets/Shader.h>
+#include <Assets/Texture.h>
 
 
 namespace Nuclear 
@@ -156,7 +158,6 @@ namespace Nuclear
 			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent>(output);
 
 			//ser.object(Assets::AssetManager::GetInstance().mLibrary);
-
 
 			return true;
 		}

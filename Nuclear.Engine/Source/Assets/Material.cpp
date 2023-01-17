@@ -5,13 +5,14 @@
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Utilities/Logger.h>
 #include <Assets\Texture.h>
+#include <Assets/AssetLibrary.h>
 
 namespace Nuclear
 {
 	namespace Assets
 	{	
 		Material::Material()
-			: IAsset(AssetType::Material)
+			: IAsset(AssetType::Material), mCreationShaderCommonID(0), pShader(nullptr)
 		{
 		}
 		Material::~Material()
@@ -27,7 +28,6 @@ namespace Nuclear
 				return;
 			}
 			pShader = shader;
-
 			mCreationShaderCommonID = pShader->GetID();
 			InitializePipelineTextures(desc);
 		}
@@ -52,7 +52,7 @@ namespace Nuclear
 		Uint32 Material::GetShaderID()
 		{
 			return mCreationShaderCommonID;
-		}
+		}	
 
 		void Material::InitializePipelineTextures(const MaterialCreationInfo& desc)
 		{

@@ -14,7 +14,6 @@ namespace Nuclear
 			Model,
 			Mesh,
 			Material,
-			MaterialData,
 			Animations,
 			AudioClip,
 			Font,

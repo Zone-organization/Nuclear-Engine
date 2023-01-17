@@ -22,22 +22,13 @@ namespace Nuclear
 
 			const Uint32 GetWidth() const;
 			const Uint32 GetHeight() const;
+
 		protected:
 			friend class Graphics::GraphicsEngine;
-
-			Diligent::RefCntAutoPtr<Diligent::ITextureView> mTextureView;
-			//TextureUsageType mDefaultUsageType;
-			Uint32 mWidth, mHeight;
-
 			friend Serialization::Access;
 
-			template<typename S>
-			void serialize(S& s)
-			{
-				s.value1b(mType);
-				//s.value4b(mHashedName);
-				s.text1b(mName, 256);
-			}
+			Diligent::RefCntAutoPtr<Diligent::ITextureView> mTextureView;
+			Uint32 mWidth, mHeight;
 		};
 	}
 }

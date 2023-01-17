@@ -75,7 +75,6 @@ namespace Nuclear
 			AssetMetadata CreateMetadata(IAsset* asset);
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);
 			bool Export(IAsset* asset, const Core::Path& Path);
-
 		protected:
 			AssetManagerDesc mDesc;
 

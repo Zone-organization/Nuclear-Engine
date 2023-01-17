@@ -3,6 +3,7 @@
 #include <Parsers/INIParser.h>
 #include <ThirdParty/magic_enum.hpp>
 #include <Utilities/Hash.h>
+#include <Assets/AssetLibrary.h>
 
 namespace Nuclear
 {
@@ -96,13 +97,28 @@ namespace Nuclear
 
 			return result;
 		}
+
 		bool SerializationEngine::SaveScene()
 		{
 			return false;
 		}
-		bool SerializationEngine::SaveAssetLibraryInfo(Assets::AssetLibrary* lib)
+		Assets::IAsset* SerializationEngine::DeserializeUUID(Assets::AssetType type, const Core::UUID& uuid)
 		{
-			return false;
+			if (type == Assets::AssetType::Shader)
+			{
+				return Assets::AssetLibrary::GetInstance().mImportedShaders.GetOrAddAsset(uuid);
+			}
+			else if (type == Assets::AssetType::Material)
+			{
+				return Assets::AssetLibrary::GetInstance().mImportedMaterials.GetOrAddAsset(uuid);
+			}
+			else if (type == Assets::AssetType::Texture)
+			{
+				return Assets::AssetLibrary::GetInstance().mImportedTextures.GetOrAddAsset(uuid);
+			}
+
+
+			return nullptr;
 		}
 		SerializationEngine::SerializationEngine()
 		{

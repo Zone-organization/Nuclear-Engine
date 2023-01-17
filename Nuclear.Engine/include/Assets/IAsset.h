@@ -42,6 +42,7 @@ namespace Nuclear
 		protected:
 			friend class AssetManager;
 			friend class Importer;
+			friend Serialization::Access;
 
 			//TODO: Maybe change since asset types should be compile time constant
 			AssetType mType;

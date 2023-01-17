@@ -76,7 +76,7 @@ namespace Nuclear
 			ImportedAssetsMap<Assets::Scene> mImportedScenes;
 
 			ImportedAssetsMap<Assets::Texture> mImportedTextures;
-			ImportedAssetsMap<Assets::Model> mImportedModels;
+			ImportedAssetsMap<Assets::Model> mImportedModels;			///<Should be removed
 			ImportedAssetsMap<Assets::Mesh> mImportedMeshes;
 			ImportedAssetsMap<Assets::Material> mImportedMaterials;
 			ImportedAssetsMap<Assets::Animations> mImportedAnimations;

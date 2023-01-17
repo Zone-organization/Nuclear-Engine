@@ -1,6 +1,7 @@
 #pragma once
 #include <Assets\IAsset.h>
 #include <Assets\MaterialTypes.h>
+#include <Assets\Shader.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/ShaderResourceBinding.h>
 
@@ -12,7 +13,7 @@ namespace Nuclear
 	}
 	namespace Assets
 	{
-		class Shader;
+		//class Shader;
 
 		//Defines integration between Textures & Shaders
 		class NEAPI Material : public IAsset
@@ -29,8 +30,24 @@ namespace Nuclear
 			Assets::Shader* GetShader();
 			Uint32 GetShaderID();
 
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				if (IsLoading(archive))
+				{
+					Core::UUID shaderuuid;
+					auto result = archive(self.mUUID, shaderuuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
+					self.pShader = static_cast<Shader*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(AssetType::Shader, shaderuuid));
+					return result;
+				}
+				else 
+				{
+					Core::UUID uuid = self.pShader->GetUUID();
+					return archive(self.mUUID, uuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
+				}				
+			}
+
 		private:
-			Assets::Shader* pShader;		//Asset UUID
+			Assets::Shader* pShader;
 			Uint32 mCreationShaderCommonID; //Shader UUID hash
 			std::vector<ShaderTextureSet> mMaterialShaderTextures;
 
