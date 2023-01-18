@@ -58,7 +58,7 @@ Follow the instructions below to compile and run the engine from source.
 | IMGUI | included | Built with the engine |
 | stb_truetype | included | Built with the engine |
 | entt | included | Built with the engine |
-| bitsery | included | Built with the engine |
+| zpp::bits | included | Built with the engine |
 
 Download external dependencies through their sites.
 Put all their .lib in the bin folder.
