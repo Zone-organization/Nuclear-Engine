@@ -59,7 +59,7 @@ public:
 
 	
 		Assets::TextureImportingDesc imagedesc;
-		imagedesc.mLoadOnly = false;
+		imagedesc.mCommonOptions.mLoadOnly = false;
 		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/albedo.png" , imagedesc);
 		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/metallic.png" , imagedesc);
 		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/normal.png" , imagedesc);

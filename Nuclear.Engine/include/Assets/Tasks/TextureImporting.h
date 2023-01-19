@@ -77,7 +77,7 @@ namespace Nuclear
 			}
 			~TextureImportTask()
 			{
-
+				fjkdasjfkjsakjfksajdfjkadsjkfdask
 			}
 			bool OnRunning() override
 			{
@@ -100,13 +100,17 @@ namespace Nuclear
 				}
 				if (result)
 				{
-					pResult->SetName(mPath.GetFilename());
 					pResult->SetState(IAsset::State::Loaded);
 
-					if (!mImportingDesc.mLoadOnly)
+					if (!mImportingDesc.mCommonOptions.mLoadOnly)
 					{
-						std::string exportpath = AssetLibrary::GetInstance().mPath.GetRealPath() + "/Textures/";
-						std::string exportedimagename = mPath.GetFilename(true) + ".dds"; ///<TODO extension...
+						std::string exportpath = mImportingDesc.mCommonOptions.mExportPath.GetRealPath();
+						if (!mImportingDesc.mCommonOptions.mExportPath.isValid())
+						{
+							exportpath = AssetLibrary::GetInstance().GetPath() + "Textures/";
+						}
+
+						std::string exportedimagename = pResult->GetName() + ".dds"; ///<TODO extension...
 
 						Importers::TextureImporter::GetInstance().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension);
 
@@ -115,7 +119,7 @@ namespace Nuclear
 						auto imageloadingdesc = static_cast<Assets::ImageLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::ImageLoadingDesc);
 
 						imageloadingdesc->mExtension = mImportingDesc.mExportExtension;
-						imageloadingdesc->mAsyncLoading = mImportingDesc.mAsyncImporting;
+						imageloadingdesc->mAsyncLoading = mImportingDesc.mCommonOptions.mAsyncImport;
 
 						//Export Meta
 						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + exportedimagename + ".NEAsset");
@@ -170,7 +174,7 @@ namespace Nuclear
 
 				if (result)
 				{
-					std::string exportpath = AssetLibrary::GetInstance().mPath.GetRealPath() + "/Textures/";
+					std::string exportpath = AssetLibrary::GetInstance().GetPath() + "Textures/";
 
 					pResult->SetState(IAsset::State::Loaded);
 

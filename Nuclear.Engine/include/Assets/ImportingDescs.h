@@ -9,7 +9,25 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		struct CommonImportingOptions
+		{
+			///if this string left empty the engine will assign a default name as "Directoryname::AssetFilenamewithextension"
+			///Example:
+			///c:/assets/textures/rustediron/albedotex.png -> rustediron_albedotex.png
+			std::string mAssetName = "";
 
+			///if this path is invalid the engine will import to default asset folder in assetlibrary path
+			///Path to directory only
+			Core::Path mExportPath;
+
+
+			bool mChangeExportedName = true;
+
+			//No exporting
+			bool mLoadOnly = false;
+						
+			bool mAsyncImport = true;
+		};
 		struct AudioClipImportingDesc
 		{
 			enum AUDIO_IMPORT_MODE
@@ -49,14 +67,23 @@ namespace Nuclear
 		};
 		struct ModelImportingDesc
 		{
+			CommonImportingOptions mCommonOptions;
+
 			bool SaveMaterialNames = true;
 			bool LoadMesh = true;
 			bool LoadAnimation = true;
 			bool LoadMaterialInfo = true;
 		};
 
+		struct MaterialImportingDesc
+		{
+			CommonImportingOptions mCommonOptions;
+		};
+
 		struct TextureImportingDesc
 		{
+			CommonImportingOptions mCommonOptions;
+
 			Diligent::USAGE mUsage;
 
 			Diligent::BIND_FLAGS mBindFlags;
@@ -81,10 +108,6 @@ namespace Nuclear
 
 			IMAGE_EXTENSION mExportExtension;
 
-			bool mAsyncImporting;
-
-			bool mLoadOnly;
-
 			TextureImportingDesc() :
 				mUsage(Diligent::USAGE_IMMUTABLE),
 				mBindFlags(Diligent::BIND_SHADER_RESOURCE),
@@ -97,9 +120,7 @@ namespace Nuclear
 				mMemData(nullptr),
 				mMemSize(0),
 				mType(Diligent::RESOURCE_DIM_TEX_2D),
-				mExportExtension(IMAGE_EXTENSION_DDS),
-				mAsyncImporting(true),
-				mLoadOnly(true)
+				mExportExtension(IMAGE_EXTENSION_DDS)
 			{
 			}
 		};
@@ -119,7 +140,7 @@ namespace Nuclear
 
 		struct ShaderImportingDesc
 		{
-			std::string mShaderName = "UnNamed";
+			CommonImportingOptions mCommonOptions;
 			ShaderType mType = ShaderType::Unknown;
 
 			std::vector<std::string> mDefines;

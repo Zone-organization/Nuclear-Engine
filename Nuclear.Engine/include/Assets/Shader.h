@@ -19,6 +19,12 @@ namespace Nuclear
 
             bool mSupportSkinnedMeshes = false;
             bool mSupportShadows = false;
+
+
+            constexpr static auto serialize(auto& archive, auto& self)
+            {
+               return archive(self.mPipelineDesc, self.mType, self.mDefines, self.mExcludedVariants, self.mSupportSkinnedMeshes, self.mSupportShadows);
+            }
         };
 
         class NEAPI Shader : public IAsset
@@ -32,6 +38,10 @@ namespace Nuclear
             ShaderBuildDesc mBuildDesc;
             Graphics::ShaderPipeline mPipeline;
 
+            constexpr static auto serialize(auto& archive, auto& self)
+            {
+                return archive(self.mBuildDesc);
+            }
         };
     }
 }

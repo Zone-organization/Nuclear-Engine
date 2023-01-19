@@ -6,6 +6,9 @@
 #include <Serialization/SerializationEngine.h>
 #include <Assets/AssetLibrary.h>
 
+#include <filesystem>
+
+#include <ThirdParty/magic_enum.hpp>
 namespace Nuclear
 {
 	namespace Assets
@@ -85,13 +88,40 @@ namespace Nuclear
 			{
 				Type = Importer::GetInstance().GetAssetType(Path.GetRealPath());
 			}
-
 			
 			if (Type == AssetType::Texture)
 			{
 				return Importer::GetInstance().ImportTexture(Path);
 			}
+			if (Type == AssetType::Mesh)
+			{
+				return Importer::GetInstance().ImportModel(Path);
+			}
+			if (Type == AssetType::Material)
+			{
+				return Importer::GetInstance().ImportMaterial(Path);
+			}
+			if (Type == AssetType::Scene)
+			{
+				//return Importer::GetInstance().ImportTexture(Path);
+			}
 			return nullptr;
+		}
+
+		void AssetManager::ImportFolder(const Core::Path& Path)
+		{
+			const std::filesystem::path sandbox{ Path.GetRealPath()};
+
+			for (auto const& dir_entry : std::filesystem::recursive_directory_iterator{ sandbox })
+			{
+				if (!dir_entry.is_directory())
+				{
+					auto filepath = dir_entry.path().string();
+					auto assettype = Importer::GetInstance().GetAssetType(filepath);
+					Import(filepath, assettype);
+				}
+
+			}
 		}
 
 	/*	Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype)
@@ -142,6 +172,15 @@ namespace Nuclear
 
 		bool AssetManager::Export(IAsset* asset, const Core::Path& Path)
 		{
+			Core::Path exportpath = Path;
+			if (!Path.isValid())
+			{
+				std::string assettypestr(magic_enum::enum_name(asset->GetType()));
+
+				exportpath = AssetLibrary::GetInstance().GetPath() + assettypestr + "s/";
+			}
+
+
 			if (!asset)
 			{
 				NUCLEAR_ERROR("[AssetManager] Exporting a null asset! To : '{0}'", Path.GetInputPath());
@@ -154,8 +193,8 @@ namespace Nuclear
 				auto scene = static_cast<Scene*>(asset);
 				if (!scene->mBinaryBuffer.empty())
 				{
-					Platform::FileSystem::GetInstance().SaveBinaryBuffer(scene->mBinaryBuffer, Path);
-					NUCLEAR_INFO("[AssetManager] Exported Scene '{0}' To: '{1}'", scene->GetName(), Path.GetInputPath());
+					Platform::FileSystem::GetInstance().SaveBinaryBuffer(scene->mBinaryBuffer, exportpath);
+					NUCLEAR_INFO("[AssetManager] Exported Scene '{0}' To: '{1}'", scene->GetName(), exportpath.GetInputPath());
 					return true;
 				}
 			}
@@ -169,8 +208,8 @@ namespace Nuclear
 					 zpp::bits::out out(buffer);
 					 out(*material);
 
-					 Platform::FileSystem::GetInstance().SaveBinaryBuffer(buffer, Path);
-					 NUCLEAR_INFO("[AssetManager] Exported Material '{0}' To: '{1}'", material->GetName(), Path.GetInputPath());
+					 Platform::FileSystem::GetInstance().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + material->GetName() + ".NEMaterial");
+					 NUCLEAR_INFO("[AssetManager] Exported Material '{0}' To: '{1}'", material->GetName(), exportpath.GetInputPath());
 					 return true;
 				 }
 			}

@@ -34,6 +34,7 @@ namespace Nuclear {
 				Assets::Model* pModel = nullptr;
 				const aiScene* scene;
 				std::string mDirectory;
+				std::string exportPath;
 
 				void LoadAnimations();
 				void ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene);
@@ -75,10 +76,9 @@ namespace Nuclear {
 				AssimpLoader loader;
 
 				loader.mLoadingDesc = desc;
-				loader.pModel->pMesh = model->pMesh;
-				loader.pModel->pAnimations = model->pAnimations;
+				loader.pModel = model;
 				loader.scene = pImporter->ReadFile(importPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-
+				loader.exportPath = exportPath;
 				//Failed?
 				if (!loader.scene || loader.scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !loader.scene->mRootNode)
 				{
@@ -98,7 +98,7 @@ namespace Nuclear {
 					loader.pModel->pMesh->SetState(Assets::IAsset::State::Loaded);
 				}
 		
-			//	pExporter->Export(loader.scene, "glb2", exportPath);
+				pExporter->Export(loader.scene, "glb2", loader.exportPath + model->GetName() + ".glb");
 
 				busy = false;
 				return true;
@@ -340,7 +340,10 @@ namespace Nuclear {
 						std::string filename = str.C_Str();
 						filename = mDirectory + '/' + filename;
 						auto textype = GetTextureType(type);
-						texture.pTexture = Assets::Importer::GetInstance().ImportTexture(filename);
+						TextureImportingDesc teximportdesc;
+						teximportdesc.mCommonOptions.mExportPath = exportPath + "Textures/";
+						//teximportdesc.mCommonOptions.mAssetName = 
+						texture.pTexture = Assets::Importer::GetInstance().ImportTexture(filename, teximportdesc);
 						texture.mUsageType = textype;
 					}
 

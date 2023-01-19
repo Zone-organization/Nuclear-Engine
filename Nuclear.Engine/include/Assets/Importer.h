@@ -20,6 +20,7 @@ namespace Nuclear
 		class Script;
 		class AssetLibrary;
 		class Texture;
+		class Material;
 
 		class NEAPI Importer
 		{
@@ -42,6 +43,8 @@ namespace Nuclear
 
 			//TODO: Separate to ImportMesh & MaterialCreationInfo & Animations
 			Model* ImportModel(const Core::Path& Path, const ModelImportingDesc& desc = ModelImportingDesc());
+
+			Material* ImportMaterial(const Core::Path& Path, const MaterialImportingDesc& desc = MaterialImportingDesc());
 
 			Font* ImportFont(const Core::Path& Path, const FontImportingDesc& desc = FontImportingDesc());
 
