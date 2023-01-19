@@ -77,7 +77,7 @@ namespace Nuclear
 			}
 			~TextureImportTask()
 			{
-				fjkdasjfkjsakjfksajdfjkadsjkfdask
+				
 			}
 			bool OnRunning() override
 			{
