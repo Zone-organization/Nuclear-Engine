@@ -15,6 +15,8 @@ namespace Nuclear
 			FileSystem(const FileSystem&) = delete;
 			FileSystem& operator= (const FileSystem) = delete;
 
+			bool CreateFolders(const std::string& path);
+
 			std::string LoadFileToString(const Core::Path& Filepath);
 
 			std::string LoadShader(const Core::Path& Filepath);
@@ -27,6 +29,7 @@ namespace Nuclear
 			bool SaveFile(const Utilities::DataBlob& data, const Core::Path& Filepath);
 
 			bool SaveBinaryBuffer(const std::vector<Uint8>& buffer, const Core::Path& Filepath);
+			bool SaveBinaryBuffer(const std::vector<Uint8>& buffer, const std::string& Filepath);
 
 			bool LoadBinaryBuffer(std::vector<Uint8>& buffer, const Core::Path& Filepath);
 		private:

@@ -70,7 +70,9 @@ namespace Nuclear
 			AssetLibrary(AssetLibrary const&) = delete;
 			void operator=(AssetLibrary const&) = delete;
 
-			Core::Path mPath;
+			void Initialize(const std::string& path);
+
+			const std::string& GetPath() const;
 
 			//Special type of asset??
 			ImportedAssetsMap<Assets::Scene> mImportedScenes;
@@ -94,7 +96,8 @@ namespace Nuclear
 				s.object(mImportedTextures.mData);
 			}
 
-		private:		
+		private:	
+			std::string mPath;
 			AssetLibrary();
 		};
 	}

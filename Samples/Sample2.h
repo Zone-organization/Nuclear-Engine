@@ -39,9 +39,6 @@ public:
 
 	void LoadPBRMaterials()
 	{
-		Assets::TextureImportingDesc desc;
-		auto testimg = Assets::Importer::GetInstance().ImportTextureST("@CommonAssets@/Textures/PBR/RustedIron/albedo.png" , desc);
-
 		//Initialize Materials
 		Assets::MaterialTextureSet PBRRustedIron;
 		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/albedo.png") , Assets::TextureUsageType::Diffuse});
@@ -142,7 +139,7 @@ public:
 		desc.mUsage = Diligent::USAGE_IMMUTABLE;
 		desc.mBindFlags = Diligent::BIND_SHADER_RESOURCE;
 		desc.mMipLevels = 1;
-		desc.mAsyncImporting = false;
+		desc.mCommonOptions.mAsyncImport = false;
 		HDREnv.pTexture = GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/HDR/newport_loft.hdr", desc);
 
 		Rendering::ImageBasedLightingDesc ibldesc;

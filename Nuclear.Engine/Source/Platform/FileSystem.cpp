@@ -1,6 +1,7 @@
 #include "Platform\FileSystem.h"
 #include <Utilities/Logger.h>
 #include <fstream>
+#include <filesystem>
 
 namespace Nuclear
 {
@@ -16,6 +17,23 @@ namespace Nuclear
 			static FileSystem instance;
 			return instance;
 		}
+
+		bool FileSystem::CreateFolders(const std::string& path)
+		{
+			if (std::filesystem::exists(path))
+			{
+				return true;
+			}
+			std::error_code err;
+			if (!std::filesystem::create_directories(path, err))
+			{
+				NUCLEAR_WARN("[FileSystem] Failed to create folder: {0} Error: {1}", path, err.message());
+				return false;
+			}
+
+			return true;
+		}
+
 		std::string FileSystem::LoadFileToString(const Core::Path& Filepath)
 			{
 				std::ifstream file(Filepath.GetRealPath(), std::ios::in);
@@ -186,6 +204,14 @@ namespace Nuclear
 			bool FileSystem::SaveBinaryBuffer(const std::vector<Uint8>& buffer, const Core::Path& Path)
 			{
 				std::ofstream fout(Path.GetRealPath(), std::ios::out | std::ios::binary);
+				fout.write((char*)buffer.data(), buffer.size());
+				fout.close();
+
+				return true;
+			}
+			bool FileSystem::SaveBinaryBuffer(const std::vector<Uint8>& buffer, const std::string& Filepath)
+			{
+				std::ofstream fout(Filepath, std::ios::out | std::ios::binary);
 				fout.write((char*)buffer.data(), buffer.size());
 				fout.close();
 

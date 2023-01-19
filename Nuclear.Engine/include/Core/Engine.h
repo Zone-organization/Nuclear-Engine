@@ -25,6 +25,7 @@ namespace Nuclear
 
 			std::string mScriptingClientDllName = "ClientScripts.dll";
 			std::string mScriptingAssemblyNamespace = "ClientScripts";
+			std::string mAssetsLibraryPath = "Assets/";
 			//Enables some debugging options that slows down performance in runtime
 			bool Debug = DEBUG_TRUE_BOOL;
 			bool EnableLogging = DEBUG_TRUE_BOOL;

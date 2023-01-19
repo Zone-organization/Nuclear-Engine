@@ -25,6 +25,7 @@
 #include <Threading/DelegateTask.h>
 
 #include <Assets/AssetManager.h>
+#include <Assets/AssetLibrary.h>
 
 //Dependencies Linking
 #pragma comment(lib,"assimp-vc143-mt.lib")
@@ -79,8 +80,8 @@ namespace Nuclear
 		bool Engine::Start(const EngineStartupDesc& desc)
 		{
 			PrintIntroLog();
-
-			Core::Path::mReservedPaths["@NuclearAssets@"] = "../Assets/NuclearEngine";
+			Assets::AssetLibrary::GetInstance().Initialize(desc.mAssetsLibraryPath);
+			Core::Path::mReservedPaths["@NuclearAssets@"] = Assets::AssetLibrary::GetInstance().GetPath() + "NuclearEngine";
 			Core::Path::mReservedPaths["@CurrentPath@"] = std::filesystem::current_path().string();
 
 			//Initialize SDL

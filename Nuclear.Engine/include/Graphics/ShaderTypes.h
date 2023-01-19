@@ -25,8 +25,13 @@ namespace Nuclear
 			Core::Path mPath = "";
 
 			std::set<std::string> mDefines = std::set<std::string>();
-		};
 
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mName, self.mType, self.mEntrypoint, self.mSource, self.mPath, self.mDefines);
+			}
+		};
+		
 		struct ShaderPSODesc
 		{
 			ShaderObjectCreationDesc mVertexShader = ShaderObjectCreationDesc();
@@ -34,6 +39,12 @@ namespace Nuclear
 			ShaderPSOType mType = ShaderPSOType::Unknown;
 			Diligent::GraphicsPipelineDesc GraphicsPipeline = Diligent::GraphicsPipelineDesc();
 			std::vector<std::string> mRTsNames = std::vector<std::string>();
+
+
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mVertexShader, self.mPixelShader, self.mType, self.mSource, self.GraphicsPipeline, self.mRTsNames);
+			}
 		};
 	}
 }

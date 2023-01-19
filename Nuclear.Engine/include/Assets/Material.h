@@ -35,14 +35,18 @@ namespace Nuclear
 				if (IsLoading(archive))
 				{
 					Core::UUID shaderuuid;
-					auto result = archive(self.mUUID, shaderuuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
+					auto result = archive(shaderuuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
 					self.pShader = static_cast<Shader*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(AssetType::Shader, shaderuuid));
 					return result;
 				}
 				else 
 				{
-					Core::UUID uuid = self.pShader->GetUUID();
-					return archive(self.mUUID, uuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
+					Core::UUID uuid;
+					if (self.pShader)
+					{
+						uuid = self.pShader->GetUUID();
+					}
+					return archive(uuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
 				}				
 			}
 

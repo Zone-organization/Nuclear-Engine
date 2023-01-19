@@ -57,9 +57,9 @@ int main(int argc, char* argv[])
 	desc.mEngineWindowDesc.WindowHeight = 720;
 	desc.mScriptingClientDllName = "SamplesScripts.dll";
 	desc.mScriptingAssemblyNamespace = "Samples";
+	desc.mAssetsLibraryPath = "../Assets/";
 	Core::Engine::GetInstance().Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
-	Assets::AssetLibrary::GetInstance().mPath = "../Assets/Imported";
 
 	while (!Core::Engine::GetInstance().ShouldClose())
 	{

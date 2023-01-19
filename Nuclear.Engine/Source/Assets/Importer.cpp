@@ -23,6 +23,8 @@
 
 #include <Assets/Tasks/TextureImporting.h>
 
+#include <filesystem>
+
 namespace Nuclear
 {
 	namespace Assets
@@ -47,17 +49,37 @@ namespace Nuclear
 			Assets::Model model;
 			model.pMesh = new Assets::Mesh();
 			model.pAnimations = new Assets::Animations();
-
-			mAssimpImporter.Import("../Assets/Common/Models/CrytekNanosuit/nanosuit.obj", "../Assets/Common/Models/CrytekNanosuit/exportednanosuit.glb", &model, Assets::ModelImportingDesc());
+			//mAssimpImporter.Import("../Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &model, Assets::ModelImportingDesc());
 		
+		}
+
+		std::string AssetNameFromDirectory(const std::string& str)
+		{
+			std::size_t found = str.find_last_of("/\\");
+			std::string directory_path = str.substr(0, found);
+
+			std::size_t found2 = directory_path.find_last_of("/\\");
+			std::string directory_path_name = directory_path.substr(found2 + 1);
+
+			std::string filename = str.substr(found + 1);
+
+			filename = filename.substr(0, filename.find_last_of('.'));
+
+
+			return directory_path_name + "_" + filename;
 		}
 
 		Texture* Importer::ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc)
 		{
-			if (Desc.mAsyncImporting)
+			if (Desc.mCommonOptions.mAsyncImport)
 			{
 				//Add to queue			
 				auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
+				if (Desc.mCommonOptions.mAssetName == "")
+				{
+					result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
+				}
+
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
 				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new TextureImportTask(result, Path , Desc));
@@ -138,6 +160,10 @@ namespace Nuclear
 			Importers::TextureImporter::GetInstance().Load(Path.GetRealPath(), &desc, importingdesc);
 
 			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
+			if (importingdesc.mCommonOptions.mAssetName == "")
+			{
+				result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
+			}
 
 			Graphics::GraphicsEngine::GetInstance().CreateImageData(&data, desc);
 
@@ -190,14 +216,42 @@ namespace Nuclear
 		{
 			auto result = &AssetLibrary::GetInstance().mImportedModels.AddAsset();
 
-			if (desc.LoadMesh)			
+			std::string assetname = desc.mCommonOptions.mAssetName;
+
+			if (desc.mCommonOptions.mAssetName == "")
+			{
+				assetname = AssetNameFromDirectory(Path.GetRealPath());
+			}
+
+			result->SetName(assetname);
+
+			if (desc.LoadMesh)
+			{
 				result->pMesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
-			
-			if (desc.LoadAnimation)			
+				result->pMesh->SetName(assetname);
+			}
+			if (desc.LoadAnimation)
+			{
 				result->pAnimations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
+				result->pAnimations->SetName(assetname);
+			}
+		
+
+			std::string exportpath;
+
+			if (desc.mCommonOptions.mExportPath.isValid())
+			{
+				exportpath = desc.mCommonOptions.mExportPath.GetRealPath();
+			}
+			else
+			{
+				exportpath = AssetLibrary::GetInstance().GetPath() + "Models/" + result->GetName() + '/';
+			}
+
+			Platform::FileSystem::GetInstance().CreateFolders(exportpath + "Textures/");
 			
 
-			if (!mAssimpImporter.Load(Path.GetRealPath(), result, desc))
+			if (!mAssimpImporter.Import(Path.GetRealPath(), exportpath, result, desc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}'", Path.GetInputPath());
 
@@ -226,6 +280,31 @@ namespace Nuclear
 				result->pMesh->Create();
 
 			return result;
+		}
+
+		Material* Importer::ImportMaterial(const Core::Path& Path, const MaterialImportingDesc& desc)
+		{
+			namespace fs = std::filesystem;
+			auto& material = AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
+
+			try
+			{
+				std::string newpath = AssetLibrary::GetInstance().GetPath() + "Materials/" + Path.GetFilename();
+				fs::copy_file(Path.GetRealPath(), newpath);
+
+				//load
+				Serialization::BinaryBuffer buffer;
+				Platform::FileSystem::GetInstance().LoadBinaryBuffer(buffer, newpath);
+				zpp::bits::in in(buffer);
+				in(material);
+
+				NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+			}
+			catch (fs::filesystem_error& e)
+			{
+				NUCLEAR_ERROR("[Importer] Importing Material '{0}' Failed : '{1}'", Path.GetInputPath(), e.what());
+			}
+			return &material;
 		}
 
 		template <int N>
@@ -408,6 +487,15 @@ namespace Nuclear
 			{
 				return AssetType::Shader;
 			}
+			else if (extension == ".NEMaterial")
+			{
+				return AssetType::Material;
+			}
+			else if (extension == ".NEScene")
+			{
+				return AssetType::Scene;
+			}
+
 
 			return AssetType::Unknown;
 		}
