@@ -7,25 +7,7 @@
 namespace Nuclear
 {
     namespace Assets
-    {
-
-
-        struct ShaderBuildDesc 
-        {
-            Graphics::ShaderPipelineDesc mPipelineDesc = Graphics::ShaderPipelineDesc();
-            ShaderType mType = ShaderType::Unknown;;
-            std::vector<std::string> mDefines;
-            std::vector<std::string> mExcludedVariants = std::vector<std::string>();
-
-            bool mSupportSkinnedMeshes = false;
-            bool mSupportShadows = false;
-
-
-            constexpr static auto serialize(auto& archive, auto& self)
-            {
-               return archive(self.mPipelineDesc, self.mType, self.mDefines, self.mExcludedVariants, self.mSupportSkinnedMeshes, self.mSupportShadows);
-            }
-        };
+    {     
 
         class NEAPI Shader : public IAsset
         {
@@ -35,13 +17,24 @@ namespace Nuclear
 
             Uint32 GetID();
 
-            ShaderBuildDesc mBuildDesc;
-            Graphics::ShaderPipeline mPipeline;
+            Graphics::ShaderPipeline& GetShaderPipeline();
+            const Graphics::ShaderBuildDesc& GetShaderBuildDesc() const;
+            const Graphics::ShaderReflection& GetReflection() const;
 
             constexpr static auto serialize(auto& archive, auto& self)
             {
-                return archive(self.mBuildDesc);
+                return archive(self.mBuildDesc, self.mReflection);
             }
+        protected:
+            friend class Importer;
+            friend Serialization::Access;
+
+            //Obtained from text/serialization
+            ShaderBuildDesc mBuildDesc;
+            Graphics::ShaderReflection mReflection;
+
+            //actual shaders PSOs/SRBs
+            Graphics::ShaderPipeline mPipeline;
         };
     }
 }

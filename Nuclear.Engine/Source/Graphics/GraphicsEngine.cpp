@@ -255,6 +255,25 @@ namespace Nuclear
 				return false;
 		}
 
+		bool GraphicsEngine::ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out)
+		{
+			for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
+			{
+				Diligent::ShaderResourceDesc RsrcDesc;
+				PShader->GetResourceDesc(i, RsrcDesc);
+				if (!CheckSampler(RsrcDesc.Name))
+				{
+					std::string name(RsrcDesc.Name);
+					Diligent::ShaderResourceVariableDesc Desc;
+					Desc.Name = RsrcDesc.Name;
+					Desc.Type = ParseNameToGetType(RsrcDesc.Name);
+					Desc.ShaderStages = PShader->GetDesc().ShaderType;
+					resources.push_back(Desc);
+				}
+			}
+			return false;
+		}
+
 		std::vector<Diligent::LayoutElement> GraphicsEngine::GetBasicVSLayout(bool isDeffered)
 		{
 			using namespace Diligent;

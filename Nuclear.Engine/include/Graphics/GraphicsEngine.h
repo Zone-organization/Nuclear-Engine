@@ -46,6 +46,8 @@ namespace Nuclear
 
 			bool isGammaCorrect();
 
+			bool ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out);
+
 			std::vector<Diligent::LayoutElement> GetBasicVSLayout(bool isDeffered);
 			void CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
 			Diligent::IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();

@@ -132,12 +132,6 @@ namespace Nuclear
 
 		};
 
-		enum class ShaderType
-		{	_3DRendering,
-			PostFX,
-			Unknown
-		};
-
 		struct ShaderImportingDesc
 		{
 			CommonImportingOptions mCommonOptions;

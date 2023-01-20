@@ -16,10 +16,12 @@ namespace Nuclear
 		//Should be constant for all variants
 		struct ShaderReflection
 		{
-			bool mHasDefferedPipelines = false;
-			//TODO
-			bool mAllPipelinesAreDeffered = false;
 			std::vector<Assets::ShaderTexture> mMaterialTexturesInfo = std::vector<Assets::ShaderTexture>();
+
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mHasDefferedPipelines, self.mAllPipelinesAreDeffered, self.mMaterialTexturesInfo);
+			}
 		};
 
 		//can change from a variant to the other

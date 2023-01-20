@@ -8,11 +8,36 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		enum class ShaderPSOType {
+		enum class ShaderPSOType : Uint8
+		{
+			Unknown = 0,
+
 			ForwardPipeline,
 			DefferedPipeline,
 			GBufferPipeline,
-			Unknown
+
+			UNKNOWN_MAX = UINT8_MAX
+		};
+
+		enum class SupportedRenderingTechnique : Uint8
+		{
+			Unknown = 0,
+			ForwardOnly,
+			DefferedOnly,
+			ForwardDeffered,
+
+			UNKNOWN_MAX = UINT8_MAX
+		};
+
+
+		enum class ShaderType : Uint8
+		{
+			Unknown = 0,
+
+			_3DRendering,
+			PostFX,
+
+			UNKNOWN_MAX = UINT8_MAX
 		};
 
 		struct ShaderObjectCreationDesc
@@ -46,5 +71,23 @@ namespace Nuclear
 				return archive(self.mVertexShader, self.mPixelShader, self.mType, self.mSource, self.GraphicsPipeline, self.mRTsNames);
 			}
 		};
+
+		struct ShaderBuildDesc
+		{
+			ShaderPipelineDesc mPipelineDesc = ShaderPipelineDesc();
+			ShaderType mType = ShaderType::Unknown;;
+			std::vector<std::string> mDefines;
+			std::vector<std::string> mExcludedVariants = std::vector<std::string>();
+
+			bool mSupportSkinnedMeshes = false;
+			bool mSupportShadows = false;
+			SupportedRenderingTechnique mSupportedTechniques = SupportedRenderingTechnique::Unknown;
+
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mPipelineDesc, self.mType, self.mDefines, self.mExcludedVariants, self.mSupportSkinnedMeshes, self.mSupportShadows);
+			}
+		};
+
 	}
 }

@@ -419,15 +419,30 @@ namespace Nuclear
 			Shader* result = &AssetLibrary::GetInstance().mImportedShaders.AddAsset();
 
 			auto source = Platform::FileSystem::GetInstance().LoadFileToString(Path.GetRealPath());
+
+			//Step1: Parse Source -> Build ShaderBuildDesc
 			ShaderBuildDesc shaderbuilddesc;
 			shaderbuilddesc.mType = desc.mType;
 			shaderbuilddesc.mDefines = desc.mDefines;
 			shaderbuilddesc.mExcludedVariants = desc.mExcludedVariants;
-			if (Parsers::ShaderParser::ParseSource(source, shaderbuilddesc))
+			bool parsing_ = Parsers::ShaderParser::ParseSource(source, shaderbuilddesc);
+
+
+			//Step2: Reflect Pixel shader for material reflection...?
+			if (parsing_)
 			{
+
+				
+
+
+
+				//Step3: Create actual pipeline
 				result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
 			}
+			else
+			{
 
+			}
 
 			result->mState = IAsset::State::Loaded;
 			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());

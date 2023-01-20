@@ -65,7 +65,6 @@ namespace Nuclear
 		ShaderPipeline::ShaderPipeline(Assets::Shader* parent)
 			: mParentAsset(parent)
 		{
-			mReflection = Graphics::ShaderReflection();
 		}
 
 		ShaderPipeline::~ShaderPipeline()
@@ -409,11 +408,6 @@ namespace Nuclear
 		const std::vector<ShaderPipelineSwitch>& ShaderPipeline::GetSwitches() const
 		{
 			return mDesc.Switches;
-		}
-
-		const Graphics::ShaderReflection& ShaderPipeline::GetReflection() const
-		{
-			return mReflection;
 		}
 
 		Assets::Shader* ShaderPipeline::GetShaderAsset()

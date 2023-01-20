@@ -68,7 +68,6 @@ namespace Nuclear
 			ShaderPipelineVariant* GetVariant(Uint32 Key);
 
 			const std::vector<ShaderPipelineSwitch>& GetSwitches() const;
-			const Graphics::ShaderReflection& GetReflection() const;
 
 			Assets::Shader* GetShaderAsset();
 			Rendering::GBuffer* GetGBuffer();
@@ -80,7 +79,6 @@ namespace Nuclear
 			std::vector<ShaderPipelineVariantDesc> mVariantsInfo;
 
 			ShaderPipelineDesc mDesc;
-			Graphics::ShaderReflection mReflection;
 			Rendering::GBuffer mGBuffer;
 
 			ShaderPipelineVariant CreateForwardVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
