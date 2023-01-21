@@ -5,6 +5,7 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Graphics/ShaderTypes.h>
+#include <Graphics/ShaderReflection.h>
 
 struct SDL_Window;
 

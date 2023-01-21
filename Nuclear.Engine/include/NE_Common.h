@@ -56,5 +56,3 @@ namespace Nuclear
 
 	//using namespace Diligent;
 }
-
-#define UINT8_MAX 255

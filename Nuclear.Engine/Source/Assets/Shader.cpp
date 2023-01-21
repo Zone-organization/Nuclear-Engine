@@ -7,7 +7,7 @@ namespace Nuclear
         Shader::Shader()
             : IAsset(AssetType::Shader)
         {
-            mBuildDesc = ShaderBuildDesc();
+            mBuildDesc = Graphics::ShaderBuildDesc();
             mPipeline = Graphics::ShaderPipeline(this);
         }
         Shader::~Shader()
@@ -23,7 +23,7 @@ namespace Nuclear
         {
             return mPipeline;
         }
-        const ShaderBuildDesc& Shader::GetShaderBuildDesc() const
+        const Graphics::ShaderBuildDesc& Shader::GetShaderBuildDesc() const
         {
             return mBuildDesc;
         }

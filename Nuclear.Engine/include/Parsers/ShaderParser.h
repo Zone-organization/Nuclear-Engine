@@ -8,7 +8,7 @@ namespace Nuclear
 		class NEAPI ShaderParser
 		{
 		public:
-			static bool ParseSource(const std::string& source, Assets::ShaderBuildDesc& desc);
+			static bool ParseSource(const std::string& source, Graphics::ShaderBuildDesc& desc);
 
 		};
 	}

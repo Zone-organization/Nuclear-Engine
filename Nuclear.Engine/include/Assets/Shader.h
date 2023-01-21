@@ -30,7 +30,7 @@ namespace Nuclear
             friend Serialization::Access;
 
             //Obtained from text/serialization
-            ShaderBuildDesc mBuildDesc;
+            Graphics::ShaderBuildDesc mBuildDesc;
             Graphics::ShaderReflection mReflection;
 
             //actual shaders PSOs/SRBs

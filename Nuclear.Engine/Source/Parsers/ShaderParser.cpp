@@ -246,7 +246,7 @@ namespace Nuclear
 
 
 
-		bool ShaderParser::ParseSource(const std::string& source, Assets::ShaderBuildDesc& desc)
+		bool ShaderParser::ParseSource(const std::string& source, Graphics::ShaderBuildDesc& desc)
 		{
 			toml::table tbl;
 
@@ -307,7 +307,7 @@ namespace Nuclear
 					}
 				}
 
-				if (desc.mType == Assets::ShaderType::_3DRendering)
+				if (desc.mType == Graphics::ShaderType::_3DRendering)
 				{
 					{
 						std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();

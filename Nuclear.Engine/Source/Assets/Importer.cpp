@@ -421,7 +421,7 @@ namespace Nuclear
 			auto source = Platform::FileSystem::GetInstance().LoadFileToString(Path.GetRealPath());
 
 			//Step1: Parse Source -> Build ShaderBuildDesc
-			ShaderBuildDesc shaderbuilddesc;
+			Graphics::ShaderBuildDesc shaderbuilddesc;
 			shaderbuilddesc.mType = desc.mType;
 			shaderbuilddesc.mDefines = desc.mDefines;
 			shaderbuilddesc.mExcludedVariants = desc.mExcludedVariants;

@@ -22,18 +22,6 @@ namespace Nuclear
 	}
 	namespace Graphics
 	{
-		struct ShaderPipelineVariantDesc
-		{    
-			ShaderPSODesc mMainPSOCreateInfo = ShaderPSODesc();
-			ShaderPSODesc mGBufferPSOCreateInfo = ShaderPSODesc();
-
-			bool _isDeffered = false;
-			bool _isSkinned = false;
-			bool _isShadowed = false;
-
-			std::set<std::string> mDefines = std::set<std::string>();
-			Uint32 mHashKey = 0;
-		};
 
 		//Used for both Deffered and Forward pipelines
 		//Should provide GBuffer Pipeline Implementation.

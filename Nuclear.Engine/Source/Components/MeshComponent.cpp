@@ -38,7 +38,7 @@ namespace Nuclear
 						if (mMaterialDirty)
 						{
 							auto assetptr = pMaterial->GetShader();
-							mPipelineCntrl.SetPipeline(&assetptr->mPipeline);
+							mPipelineCntrl.SetPipeline(&assetptr->GetShaderPipeline());
 							mMaterialDirty = false;
 						}
 

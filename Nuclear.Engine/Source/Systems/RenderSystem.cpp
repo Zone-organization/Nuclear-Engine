@@ -64,7 +64,7 @@ namespace Nuclear
 			{
 				if (i)
 				{
-					i->mPipeline.Bake(&bakedesc);
+					i->GetShaderPipeline().Bake(&bakedesc);
 				}
 			}
 
@@ -82,9 +82,9 @@ namespace Nuclear
 			{
 				if (i)
 				{
-					if (i->mPipeline.GetGBuffer()->GetDimensions() != newsize)
+					if (i->GetShaderPipeline().GetGBuffer()->GetDimensions() != newsize)
 					{
-						i->mPipeline.GetGBuffer()->Resize(newsize);
+						i->GetShaderPipeline().GetGBuffer()->Resize(newsize);
 					}
 				}
 			}

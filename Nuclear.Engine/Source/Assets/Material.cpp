@@ -63,7 +63,7 @@ namespace Nuclear
 				ShaderTextureSet NewTexSet;
 				for (auto& TexSetTexture : TexSet.mData)
 				{
-					for (auto& ShaderTexinfo : pShader->mPipeline.GetReflection().mMaterialTexturesInfo)
+					for (auto& ShaderTexinfo : pShader->GetReflection().mMaterialTexturesInfo)
 					{
 						//Found a match
 						if (TexSetTexture.mUsageType == ShaderTexinfo.mTex.mUsageType)
@@ -83,13 +83,13 @@ namespace Nuclear
 			for (int i = 0; i < mMaterialShaderTextures.size(); i++)
 			{
 				//Check if a texture is missing
-				if (mMaterialShaderTextures.at(i).mData.size() != pShader->mPipeline.GetReflection().mMaterialTexturesInfo.size())
+				if (mMaterialShaderTextures.at(i).mData.size() != pShader->GetReflection().mMaterialTexturesInfo.size())
 				{
 					//Stage 2A
 					//Generate a copy of the texture set that doesnt contain duplicated textures.
-					auto TexSetCopy = pShader->mPipeline.GetReflection().mMaterialTexturesInfo;
+					auto TexSetCopy = pShader->GetReflection().mMaterialTexturesInfo;
 
-					for (auto& ShaderTexinfo : pShader->mPipeline.GetReflection().mMaterialTexturesInfo)
+					for (auto& ShaderTexinfo : pShader->GetReflection().mMaterialTexturesInfo)
 					{
 						for (int j = 0; j < mMaterialShaderTextures.at(i).mData.size(); j++)
 						{

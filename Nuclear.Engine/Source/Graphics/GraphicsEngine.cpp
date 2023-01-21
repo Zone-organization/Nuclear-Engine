@@ -257,7 +257,7 @@ namespace Nuclear
 
 		bool GraphicsEngine::ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out)
 		{
-			for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
+			/*for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
 			{
 				Diligent::ShaderResourceDesc RsrcDesc;
 				PShader->GetResourceDesc(i, RsrcDesc);
@@ -270,7 +270,7 @@ namespace Nuclear
 					Desc.ShaderStages = PShader->GetDesc().ShaderType;
 					resources.push_back(Desc);
 				}
-			}
+			}*/
 			return false;
 		}
 
