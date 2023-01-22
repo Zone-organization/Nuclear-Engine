@@ -63,3 +63,5 @@
 /Assets/Models/CrytekSponza_sponza
 /Assets/Materials
 *.glb
+/Assets/Textures
+/Assets/Shaders
