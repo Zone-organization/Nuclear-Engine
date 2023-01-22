@@ -2,6 +2,8 @@
 #include <NE_Common.h>
 #include <string>
 #include <unordered_map>
+#include <Serialization/Access.h>
+
 namespace Nuclear
 {
 	namespace Graphics
@@ -32,7 +34,12 @@ namespace Nuclear
 
 			Uint32 GetID() const;
 
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mID, self.mName, self.mType, self.mValue);
+			}
 		private:
+			friend Serialization::Access;
 			Uint32 mID = 0;
 			std::string mName;
 			Type mType;

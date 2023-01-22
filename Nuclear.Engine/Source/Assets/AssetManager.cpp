@@ -213,8 +213,21 @@ namespace Nuclear
 					 return true;
 				 }
 			}
+			else if (asset->GetType() == AssetType::Shader)
+			{
+				auto shader = static_cast<Shader*>(asset);
 
-			
+				if (shader)
+				{
+					Serialization::BinaryBuffer buffer;
+					zpp::bits::out out(buffer);
+					out(*shader);
+
+					Platform::FileSystem::GetInstance().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + shader->GetName() + ".NEShader");
+					NUCLEAR_INFO("[AssetManager] Exported Shader '{0}' To: '{1}'", shader->GetName(), exportpath.GetInputPath());
+					return true;
+				}
+			}
 			//WIP:
 			//Convert all assets to unified types.
 			return false;

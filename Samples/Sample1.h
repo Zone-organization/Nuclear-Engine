@@ -246,9 +246,9 @@ public:
 		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
 
 		Assets::ShaderImportingDesc desc;
-		desc.mType = Assets::ShaderType::_3DRendering;
-		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
-		DiffuseOnly = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NEShader", desc);
+		desc.mType = Graphics::ShaderType::_3DRendering;
+		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader", desc);
+		DiffuseOnly = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NuclearShader", desc);
 
 		Renderer->RegisterShader(BlinnPhong);
 		Renderer->RegisterShader(DiffuseOnly);

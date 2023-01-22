@@ -13,38 +13,7 @@ namespace Nuclear
 	namespace Graphics
 	{
 		using namespace Diligent;
-		Assets::TextureUsageType ParseTexUsageFromName(std::string& name)
-		{
-			if (name.find("Diffuse") == 0)
-				return Assets::TextureUsageType::Diffuse;
-			else if (name.find("Albedo") == 0)
-				return Assets::TextureUsageType::Albedo;
-			else if (name.find("Specular") == 0)
-				return Assets::TextureUsageType::Specular;
-			else if (name.find("Metallic") == 0)
-				return Assets::TextureUsageType::Metallic;
-			else if (name.find("Normal") == 0)
-				return Assets::TextureUsageType::Normal;
-			else if (name.find("Roughness") == 0)
-				return Assets::TextureUsageType::Roughness;
-			else if (name.find("AO") == 0)
-				return Assets::TextureUsageType::AO;
-
-			//IBL
-			else if (name.find("IrradianceMap") == 0)
-				return Assets::TextureUsageType::IrradianceMap;
-			else if (name.find("PrefilterMap") == 0)
-				return Assets::TextureUsageType::PreFilterMap;
-			else if (name.find("BRDF_LUT") == 0)
-				return Assets::TextureUsageType::BRDF_LUT;
-
-			//Shadows
-			else if (name.find("ShadowMap") == 0)
-				return Assets::TextureUsageType::ShadowTex;
-
-			return Assets::TextureUsageType::Unknown;
-		}
-
+		
 		//std::string MergeCode(const std::string& shadersource, const std::set<std::string>& defines)
 		//{
 		//	std::vector<std::string> MergedCode;
@@ -101,7 +70,7 @@ namespace Nuclear
 							Info_.mHashKey = Info_.mHashKey + iHash;
 							if (i == "NE_DEFFERED")
 							{
-								mReflection.mHasDefferedPipelines = true;
+								//mReflection.mHasDefferedPipelines = true;
 								Info_._isDeffered = true;
 							}
 							else if (i == "NE_ANIMATION")
@@ -376,7 +345,7 @@ namespace Nuclear
 		Uint32 ShaderPipeline::GetHashedKey(const std::string& Key)
 		{
 			auto KeyHash = Utilities::Hash(Key);
-			for (auto i : mVariants)
+			for (auto& i : mVariants)
 			{
 				if (i.first == KeyHash)
 				{
@@ -428,32 +397,7 @@ namespace Nuclear
 		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
 		{
 			if (pipeline.isDeffered())
-			{
-				if (mFirstReflection)
-				{
-					//Gbuffer Reflection
-					for (Uint32 i = 0; i < pipeline.GetGBufferPipelineSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
-					{
-						auto variable = pipeline.GetGBufferPipelineSRB()->GetVariableByIndex(SHADER_TYPE_PIXEL, i);
-						ShaderResourceDesc VarDesc;
-						variable->GetResourceDesc(VarDesc);
-						std::string VarName(VarDesc.Name);
-						auto VarType = VarDesc.Type;
-						if (VarType == SHADER_RESOURCE_TYPE_TEXTURE_SRV && VarName.find("NEMat_") == 0)
-						{
-							VarName.erase(0, 6);
-
-							Assets::ShaderTexture ReflectedTex;
-							ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
-							ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
-							//ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
-							//ReflectedTex.mTex.SetName(VarName);
-							ReflectedTex.mSlot = i;
-							ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
-							mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
-						}
-					}
-				}
+			{			
 
 				//Main pipeline Reflection
 				for (Uint32 i = 0; i < pipeline.GetMainPipelineSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
@@ -487,9 +431,9 @@ namespace Nuclear
 								assert(false);
 							}
 							tex->mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage();
-							tex->mTex.mUsageType = ParseTexUsageFromName(VarName);
-					/*		tex->mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage(), ParseTexUsageFromName(VarName));
-							tex->mTex.SetName(VarName);*/
+							tex->mTex.mUsageType = GraphicsEngine::GetInstance().ParseTexUsageFromName(VarName);
+					//		tex->mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage(), ParseTexUsageFromName(VarName));
+							tex->mName = VarName;
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
 						}
@@ -499,9 +443,9 @@ namespace Nuclear
 
 							Assets::ShaderTexture ReflectedTex;
 							ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
-							ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
+							ReflectedTex.mTex.mUsageType = GraphicsEngine::GetInstance().ParseTexUsageFromName(VarName);
 							//ReflectedTex.mTex.Set(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage(), ParseTexUsageFromName(VarName));
-							//ReflectedTex.mTex.SetName(VarName);
+							ReflectedTex.mName = VarName;
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
 							pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
@@ -542,8 +486,8 @@ namespace Nuclear
 								assert(false);
 							}
 							tex->mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultWhiteImage();
-							tex->mTex.mUsageType = ParseTexUsageFromName(VarName);
-							//tex->mTex.SetName(VarName);
+							tex->mTex.mUsageType = GraphicsEngine::GetInstance().ParseTexUsageFromName(VarName);
+							tex->mName = VarName;
 							tex->mSlot = i;
 							tex->mType = Assets::ShaderTextureType::ShadowTex;
 						}
@@ -553,27 +497,12 @@ namespace Nuclear
 
 							Assets::ShaderTexture ReflectedTex;
 							ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
-							ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
-							//ReflectedTex.mTex.SetName(VarName);
+							ReflectedTex.mTex.mUsageType = GraphicsEngine::GetInstance().ParseTexUsageFromName(VarName);
+							ReflectedTex.mName = VarName;
 							ReflectedTex.mSlot = i;
 							ReflectedTex.mType = Assets::ShaderTextureType::IBL_Tex;
 							pipeline.mReflection.mIBLTexturesInfo.push_back(ReflectedTex);
-						}
-						else if (mFirstReflection)
-						{
-							if (VarName.find("NEMat_") == 0)
-							{
-								VarName.erase(0, 6);
-
-								Assets::ShaderTexture ReflectedTex;
-								ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
-								ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(VarName);
-								//ReflectedTex.mTex.SetName(VarName);
-								ReflectedTex.mSlot = i;
-								ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
-								mReflection.mMaterialTexturesInfo.push_back(ReflectedTex);
-							}
-						}
+						}						
 					}
 				}
 			}
@@ -599,8 +528,6 @@ namespace Nuclear
 					}
 				}
 			}
-
-			mFirstReflection = false;
 		}
 	}
 }

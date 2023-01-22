@@ -42,14 +42,6 @@ Source = '''
 #include "LightTypes.hlsli"
 #include "PBR\Common.hlsl"
 
-#ifdef NE_SHADOWS
-#include <ShadowCalculations.hlsl>
-#endif
-
-
-#include <CommonInput.ps.hlsl>
-
-
 #ifdef NE_DEFFERED
 
 Texture2D NE_RT_GBuffer_Position : register(t0);
@@ -76,6 +68,13 @@ SamplerState NEMat_Roughness_sampler : register(s3);
 SamplerState NEMat_AO_sampler : register(s4);
 
 #endif
+
+#ifdef NE_SHADOWS
+#include <ShadowCalculations.hlsl>
+#endif
+
+
+#include <CommonInput.ps.hlsl>
 
 
 #ifdef IBL_ENABLED
@@ -317,4 +316,4 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 Path = '@NuclearAssets@/Shaders/GBuffer.vs.hlsl'
 
 [GBufferPShader]
-Path = '@NuclearAssets@/Shaders/GBuffer.ps.hlsl'
+Path = '@NuclearAssets@/Shaders/PBR/GBuffer.ps.hlsl'

@@ -20,7 +20,7 @@ namespace Nuclear
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				return archive(self.mHasDefferedPipelines, self.mAllPipelinesAreDeffered, self.mMaterialTexturesInfo);
+				return archive(self.mMaterialTexturesInfo);
 			}
 		};
 

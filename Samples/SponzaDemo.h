@@ -97,9 +97,9 @@ public:
 	void InitShaders()
 	{
 		Assets::ShaderImportingDesc desc;
-		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
-		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NEShader", desc);
+		desc.mType = Graphics::ShaderType::_3DRendering;
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader", desc);
+		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader", desc);
 
 		Renderer->SetIBLContext(&IBL);
 		Renderer->RegisterShader(PBR);

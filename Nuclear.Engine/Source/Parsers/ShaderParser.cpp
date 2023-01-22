@@ -307,6 +307,7 @@ namespace Nuclear
 					}
 				}
 
+				bool hasforward = false, hasdeffered = false;
 				if (desc.mType == Graphics::ShaderType::_3DRendering)
 				{
 					{
@@ -314,6 +315,7 @@ namespace Nuclear
 						if (str1.has_value())
 						{
 							ParsePSO(tbl.get(str1.value())->as_table(), tbl, desc.mPipelineDesc.mForwardPSOCreateInfo);
+							hasforward = true;
 						}
 					}
 					{
@@ -323,7 +325,10 @@ namespace Nuclear
 						{
 							auto tbl1 = tbl.get(str1.value());
 							if (tbl1)
+							{
 								ParsePSO(tbl1->as_table(), tbl, desc.mPipelineDesc.mDefferedPSOCreateInfo);
+								hasdeffered = true;
+							}
 							else
 								NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> DefferedPipeline '{0}' not found", str1.value());
 						}
@@ -340,6 +345,15 @@ namespace Nuclear
 					}
 				}
 
+				if (hasforward && hasdeffered)				
+					desc.mSupportedTechniques = Graphics::SupportedRenderingTechnique::ForwardDeffered;				
+				else if (hasforward)				
+					desc.mSupportedTechniques = Graphics::SupportedRenderingTechnique::ForwardOnly;				
+				else if (hasdeffered)				
+					desc.mSupportedTechniques = Graphics::SupportedRenderingTechnique::DefferedOnly;				
+				else				
+					desc.mSupportedTechniques = Graphics::SupportedRenderingTechnique::Unknown;
+				
 			}
 			catch (const toml::parse_error& err)
 			{

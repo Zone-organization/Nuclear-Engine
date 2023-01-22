@@ -67,6 +67,7 @@ namespace Nuclear
 
 		struct ShaderTexture
 		{
+			std::string mName;
 			Uint32 mSlot = 0;
 			MaterialTexture mTex;
 

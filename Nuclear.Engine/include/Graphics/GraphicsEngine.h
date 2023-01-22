@@ -45,6 +45,8 @@ namespace Nuclear
 
 			void CreateImageData(Assets::TextureData* result, const Assets::TextureDesc& desc);
 
+			Assets::TextureUsageType ParseTexUsageFromName(std::string& name);
+
 			bool isGammaCorrect();
 
 			bool ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out);

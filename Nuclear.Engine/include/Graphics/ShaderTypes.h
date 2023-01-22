@@ -5,6 +5,8 @@
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <set>
 #include <Graphics/ShaderPipelineSwitch.h>
+#include <Serialization/DiligentSerialization.h>
+
 namespace Nuclear
 {
 	namespace Rendering
@@ -75,7 +77,7 @@ namespace Nuclear
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				return archive(self.mVertexShader, self.mPixelShader, self.mType, self.mSource, self.GraphicsPipeline, self.mRTsNames);
+				return archive(self.mVertexShader, self.mPixelShader, self.mType, self.GraphicsPipeline, self.mRTsNames);
 			}
 		};
 
@@ -108,6 +110,11 @@ namespace Nuclear
 
 			std::set<std::string> mDefines = std::set<std::string>();
 			Uint32 mHashKey = 0;
+
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mMainPSOCreateInfo, self.mGBufferPSOCreateInfo, self._isDeffered, self._isSkinned,	self._isShadowed, self.mDefines, self.mHashKey);
+			}
 		};
 
 		struct ShaderPipelineDesc
@@ -127,6 +134,15 @@ namespace Nuclear
 			bool isDeffered = false;
 			bool isRenderingPipeline = true;
 			ShaderRenderingBakingDesc* pBakingDesc;
+
+
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				return archive(self.mName, self.mForwardPSOCreateInfo, self.mDefferedPSOCreateInfo, self.mGBufferPSOCreateInfo,
+					self.mInstanceDesc, self.Switches, self.mDefines,
+					self.isDeffered, self.isRenderingPipeline
+				);
+			}
 		};
 
 		struct ShaderBuildDesc
@@ -142,7 +158,7 @@ namespace Nuclear
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				return archive(self.mPipelineDesc, self.mType, self.mDefines, self.mExcludedVariants, self.mSupportSkinnedMeshes, self.mSupportShadows);
+				return archive(self.mPipelineDesc, self.mType, self.mDefines, self.mExcludedVariants, self.mSupportSkinnedMeshes, self.mSupportShadows, self.mSupportedTechniques);
 			}
 		};
 

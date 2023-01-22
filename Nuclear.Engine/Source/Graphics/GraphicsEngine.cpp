@@ -9,6 +9,7 @@
 #include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp>
 #include <Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h>
 #include <Assets\Texture.h>
+#include <Fallbacks/FallbacksEngine.h>
 
 namespace Nuclear
 {
@@ -255,23 +256,87 @@ namespace Nuclear
 				return false;
 		}
 
+		Assets::TextureUsageType GraphicsEngine::ParseTexUsageFromName(std::string& name)
+		{
+			if (name.find("Diffuse") == 0)
+				return Assets::TextureUsageType::Diffuse;
+			else if (name.find("Albedo") == 0)
+				return Assets::TextureUsageType::Albedo;
+			else if (name.find("Specular") == 0)
+				return Assets::TextureUsageType::Specular;
+			else if (name.find("Metallic") == 0)
+				return Assets::TextureUsageType::Metallic;
+			else if (name.find("Normal") == 0)
+				return Assets::TextureUsageType::Normal;
+			else if (name.find("Roughness") == 0)
+				return Assets::TextureUsageType::Roughness;
+			else if (name.find("AO") == 0)
+				return Assets::TextureUsageType::AO;
+
+			//IBL
+			else if (name.find("IrradianceMap") == 0)
+				return Assets::TextureUsageType::IrradianceMap;
+			else if (name.find("PrefilterMap") == 0)
+				return Assets::TextureUsageType::PreFilterMap;
+			else if (name.find("BRDF_LUT") == 0)
+				return Assets::TextureUsageType::BRDF_LUT;
+
+			//Shadows
+			else if (name.find("ShadowMap") == 0)
+				return Assets::TextureUsageType::ShadowTex;
+
+			return Assets::TextureUsageType::Unknown;
+		}
+
 		bool GraphicsEngine::ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out)
 		{
-			/*for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
+			using namespace Diligent;
+
+			//create pixel shader
+			RefCntAutoPtr<IShader> PShader;
+			ShaderObjectCreationDesc pixelshader;
+
+			if(desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardDeffered || desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardOnly)
+				pixelshader = desc.mPipelineDesc.mForwardPSOCreateInfo.mPixelShader;
+			else if(desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly)
+				pixelshader =  desc.mPipelineDesc.mGBufferPSOCreateInfo.mPixelShader;
+
+			//just for reflection sake
+			pixelshader.mDefines.insert("NE_DIR_LIGHTS_NUM 1");
+			pixelshader.mDefines.insert("NE_SPOT_LIGHTS_NUM 1");
+			pixelshader.mDefines.insert("NE_POINT_LIGHTS_NUM 1");
+			pixelshader.mDefines.insert("NE_MAX_DIR_CASTERS 1");
+			pixelshader.mDefines.insert("NE_MAX_SPOT_CASTERS 1");
+			pixelshader.mDefines.insert("NE_MAX_OMNIDIR_CASTERS 1");
+
+			CreateShader(PShader.RawDblPtr(), pixelshader);
+			if (!PShader)
+			{
+				return false;
+			}
+			int slot = 0;
+			for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
 			{
 				Diligent::ShaderResourceDesc RsrcDesc;
 				PShader->GetResourceDesc(i, RsrcDesc);
-				if (!CheckSampler(RsrcDesc.Name))
+
+				if (RsrcDesc.Type == SHADER_RESOURCE_TYPE_TEXTURE_SRV)
 				{
-					std::string name(RsrcDesc.Name);
-					Diligent::ShaderResourceVariableDesc Desc;
-					Desc.Name = RsrcDesc.Name;
-					Desc.Type = ParseNameToGetType(RsrcDesc.Name);
-					Desc.ShaderStages = PShader->GetDesc().ShaderType;
-					resources.push_back(Desc);
+					std::string name = RsrcDesc.Name;
+					if (name.find("NEMat_") != std::string::npos)
+					{
+						Assets::ShaderTexture ReflectedTex;
+						ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+						ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(std::string(name).erase(0, 6));
+						ReflectedTex.mSlot = slot;
+						ReflectedTex.mName = name;
+						ReflectedTex.mType = Assets::ShaderTextureType::MaterialTex;
+						out.mMaterialTexturesInfo.push_back(ReflectedTex);
+						slot++;
+					}
 				}
-			}*/
-			return false;
+			}
+			return true;
 		}
 
 		std::vector<Diligent::LayoutElement> GraphicsEngine::GetBasicVSLayout(bool isDeffered)

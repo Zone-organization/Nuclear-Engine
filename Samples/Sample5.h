@@ -146,8 +146,8 @@ public:
 		//Renderer->AddRenderPass(&PostFXPass);
 
 		Assets::ShaderImportingDesc desc;
-		desc.mType = Assets::ShaderType::_3DRendering;
-		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NEShader", desc);
+		desc.mType = Graphics::ShaderType::_3DRendering;
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader", desc);
 
 		Renderer->RegisterShader(PBR);
 
@@ -186,7 +186,7 @@ public:
 		}
 
 		GetScene().CreatePlane(&Plastic);
-		for (auto it : boxes)
+		for (auto& it : boxes)
 		{
 			it.GetComponent<Components::RigidBodyComponent>().isKinematic = true;
 		}
