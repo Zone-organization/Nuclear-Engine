@@ -4,12 +4,11 @@
 
 ## Current To-dos 
   - W.I.P:
+  	- Serializing the scene & assets. (Current WIP)
 	- Improving AssetManager
 		- Async asset loading (Status: Images done, Models wip)
-	    - All imported assets should be exported in unified filetype to ease loading assets in a final game
-		- AssetLibrary should become a directory (and serialized into a zip file)
-	- Finish reflecting the C++ api to the C# scripting assembly
-	- Serializing the scene.
+	    - All imported assets should be exported in unified filetype to ease loading assets in a final game (80%)
+		- AssetLibrary should become a directory (and serialized into a zip file) (90%)
 	- Multithreading Engine
 
 	
@@ -17,12 +16,12 @@
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).
 	- PostProcessing effects should be processed per camera not only in the main camera.
+	- Finish reflecting the C++ api to the C# scripting assembly (prob provide a build-time solution that builds a binding lib?)
 
   - TODO:
   	- CSM
 	- SSAO
 	- Motion blur
-    - Finish Audio implementation
 	- FIX BRDF generation in IBL Pipeline
 	- Clean and document Samples.
 	- GUI (basic widgets)
