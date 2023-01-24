@@ -7,6 +7,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		struct AssetMetadata;
 
 		//FREE_IMAGE_FORMAT
 		enum IMAGE_EXTENSION
@@ -56,16 +57,17 @@ namespace Nuclear
 		struct AssetLoadingDesc
 		{
 			AssetLoadingDesc()
-				: mAsyncLoading(true)
+				: mAsyncLoading(true) , pMetadata(nullptr)
 			{
 
 			}
+			AssetMetadata* pMetadata;
 			bool mAsyncLoading = true;
 		};
 
-		struct ImageLoadingDesc : public AssetLoadingDesc
+		struct TextureLoadingDesc : public AssetLoadingDesc
 		{
-			ImageLoadingDesc()
+			TextureLoadingDesc()
 				: mExtension(IMAGE_EXTENSION_UNKNOWN)
 			{
 

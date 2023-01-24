@@ -7,6 +7,7 @@
 #include <Assets/AssetLibrary.h>
 
 #include <filesystem>
+#include <Assets\Loader.h>
 
 #include <ThirdParty/magic_enum.hpp>
 namespace Nuclear
@@ -40,28 +41,7 @@ namespace Nuclear
 
 		void AssetManager::FlushContainers()
 		{
-			/*for (auto& it : mLibrary.mImportedMaterials) {
-				 Do stuff
-
-				for (auto& it1 : it.second.mPixelShaderTextures) {
-					for (auto& it2 : it1.mData) {
-						it2.mTex.mTextureView.RawPtr()->Release
-
-						it2.mTex.mTextureView.Release();
-					}
-				}
-				it.second.mTextureView.Release();
-			}*/
-		//
-			/*mLibrary.mImportedMeshes.Release();
-
-			mLibrary.mImportedImages.Release();
-
-			mLibrary.mImportedMaterials.Release();
-
-			mLibrary.mImportedAnimations.Release();
-
-			mLibrary.mImportedAudioClips.Release();*/
+			
 		}
 
 		void AssetManager::Initialize(AssetManagerDesc desc)
@@ -69,17 +49,26 @@ namespace Nuclear
 			mDesc = desc;
 		}
 
-		//IAsset* AssetManager::Load(const Core::Path& Path)
-		//{
-		//	std::string path(Path.GetPathNoExt() + ".NEMeta");
-		//	AssetMetadata meta;
-		//	if (!Serialization::SerializationEngine::GetInstance().Deserialize(meta, path))
-		//	{
+		IAsset* AssetManager::Load(const Core::Path& Path, const AssetMetadata& meta)
+		{
+			if (meta.mType == AssetType::Texture)
+			{
+				return Loader::GetInstance().LoadTexture(Path, meta);
+			}
+			return nullptr;
+		}
 
-		//	}
+		IAsset* AssetManager::Load(const Core::Path& Path)
+		{
+			std::string path(Path.GetPathNoExt() + ".NEMeta");
+			AssetMetadata meta;
+			if (!Serialization::SerializationEngine::GetInstance().Deserialize(meta, path))
+			{
 
-		////	return Import(Path, meta);
-		//}
+			}
+
+			return Load(Path, meta);
+		}
 
 		IAsset* AssetManager::Import(const Core::Path& Path, AssetType type)
 		{
@@ -123,40 +112,12 @@ namespace Nuclear
 
 			}
 		}
-
-	/*	Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, Graphics::TextureUsageType texturetype)
-		{
-			TextureImportingDesc desc;
-			desc.mType = texturetype;
-			return ImportTexture(Path, desc);
-		}
-
-		Graphics::Texture AssetManager::ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc)
-		{
-			return Importer::GetInstance().ImportTexture(Path, Desc);
-		}
-
-		Graphics::Texture AssetManager::ImportTexture(const TextureDesc& Imagedata, const TextureImportingDesc& Desc)
-		{
-			return Importer::GetInstance().ImportTexture(Imagedata, Desc);
-		}*/
-
-		//IAsset* AssetManager::Load(const Core::Path& Path, const AssetMetadata& meta)
-		//{
-		//	if (meta.mType == AssetType::Image)
-		//	{
-		//		return Importer::GetInstance().ImportImage(Path, );
-		//	}
-		//	return nullptr;
-		//}
-
-		
+				
 		AssetMetadata AssetManager::CreateMetadata(IAsset* asset)
 		{
 			AssetMetadata result;
 
 			result.mName = asset->GetName();
-			result.mHashedName = Utilities::Hash(asset->GetName());
 			result.mUUID = asset->GetUUID();
 			result.mType = asset->GetType();
 

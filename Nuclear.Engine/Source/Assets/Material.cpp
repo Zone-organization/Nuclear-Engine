@@ -44,6 +44,12 @@ namespace Nuclear
 			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetRenderingSRB(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 
+		void Material::SetShader(Assets::Shader* shader)
+		{
+			pShader = shader;
+			mCreationShaderCommonID = pShader->GetID();
+		}
+
 		Assets::Shader* Material::GetShader()
 		{
 			return pShader;

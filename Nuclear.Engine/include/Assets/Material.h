@@ -27,6 +27,7 @@ namespace Nuclear
 			//Note: doesnt validate the shaders!
 			void BindTexSet(Graphics::ShaderPipelineVariant* pipeline ,Uint32 index);
 
+			void SetShader(Assets::Shader* shader);
 			Assets::Shader* GetShader();
 			Uint32 GetShaderID();
 

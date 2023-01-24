@@ -49,13 +49,12 @@ namespace Nuclear
 			meta["AssetMetadata"]["Name"] = metadata.mName;
 			meta["AssetMetadata"]["UUID"] = metadata.mUUID.str();
 			meta["AssetMetadata"]["AssetType"] = magic_enum::enum_name(metadata.mType);
-			meta["AssetMetadata"]["HashedName"] = Utilities::int_to_hex<Uint32>(metadata.mHashedName);
 
 			switch (metadata.mType)
 			{
 			case Assets::AssetType::Texture:
 			{
-				const auto imagedesc = static_cast<Assets::ImageLoadingDesc*>(metadata.pLoadingDesc);
+				const auto imagedesc = static_cast<Assets::TextureLoadingDesc*>(metadata.pLoadingDesc);
 				meta["ImageLoadingDesc"]["Extension"] = magic_enum::enum_name(imagedesc->mExtension);
 				meta["ImageLoadingDesc"]["AsyncLoading"] = SetBool(imagedesc->mAsyncLoading);
 			}
@@ -80,13 +79,12 @@ namespace Nuclear
 				metadata.mName = meta["AssetMetadata"]["Name"];
 				metadata.mUUID = Core::UUID(meta["AssetMetadata"]["UUID"]);
 				metadata.mType = magic_enum::enum_cast<Assets::AssetType>(meta["AssetMetadata"]["AssetType"]).value_or(Assets::AssetType::Unknown);
-				metadata.mHashedName = Utilities::hex_to_uint32(meta["AssetMetadata"]["HashedName"]);
 
 				switch (metadata.mType)
 				{
 				case Assets::AssetType::Texture:
 				{
-					auto imagedesc = static_cast<Assets::ImageLoadingDesc*>(metadata.pLoadingDesc = new Assets::ImageLoadingDesc);
+					auto imagedesc = static_cast<Assets::TextureLoadingDesc*>(metadata.pLoadingDesc = new Assets::TextureLoadingDesc);
 					imagedesc->mExtension = magic_enum::enum_cast<Assets::IMAGE_EXTENSION>(meta["ImageLoadingDesc"]["Extension"]).value_or(Assets::IMAGE_EXTENSION::IMAGE_EXTENSION_UNKNOWN);
 					imagedesc->mAsyncLoading = meta["ImageLoadingDesc"].GetBoolean("AsyncLoading", true);
 				}

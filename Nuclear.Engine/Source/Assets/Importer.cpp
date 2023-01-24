@@ -21,7 +21,7 @@
 #include <Assets/AssetManager.h>
 #include <Assets\AssetLibrary.h>
 
-#include <Assets/Tasks/TextureImporting.h>
+#include <Assets/Tasks/TextureImportTask.h>
 
 #include <filesystem>
 

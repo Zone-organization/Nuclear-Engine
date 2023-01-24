@@ -41,17 +41,17 @@ namespace Nuclear
 
 			//Generic
 
-			//template<class T> 
-			//T* Load(const Core::Path& Path)
-			//{
-			//	static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
+			template<class T> 
+			T* Load(const Core::Path& Path)
+			{
+				static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
 
-			//	return static_cast<T*>(Load(Path));
-			//}
+				return static_cast<T*>(Load(Path));
+			}
 
-			//IAsset* Load(const Core::Path& Path);
+			IAsset* Load(const Core::Path& Path);
 
-			//IAsset* Load(const Core::Path& Path, const AssetMetadata& meta);
+			IAsset* Load(const Core::Path& Path, const AssetMetadata& meta);
 
 
 			template<class T>

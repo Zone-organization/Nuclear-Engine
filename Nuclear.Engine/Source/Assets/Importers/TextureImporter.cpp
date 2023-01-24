@@ -279,7 +279,7 @@ namespace Nuclear
 				//FreeImage_FIFSupportsExportType((FREE_IMAGE_FORMAT)desc.mExtension)
 				return false;
 			}
-			bool TextureImporter::Load(const Assets::ImageLoadingDesc& Desc, TextureData* result)
+			bool TextureImporter::Load(const Assets::TextureLoadingDesc& Desc, TextureData* result)
 			{
 				if (Desc.mExtension == IMAGE_EXTENSION_DDS)
 				{

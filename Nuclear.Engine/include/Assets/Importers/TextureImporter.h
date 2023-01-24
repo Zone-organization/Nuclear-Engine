@@ -21,7 +21,7 @@ namespace Nuclear
 
 				bool Import(TextureData* data, IMAGE_EXTENSION extension, const Assets::TextureImportingDesc& desc);
 				bool Export(const std::string& exportPath, TextureData* data, IMAGE_EXTENSION type);
-				bool Load(const Assets::ImageLoadingDesc& Desc, TextureData* result);
+				bool Load(const Assets::TextureLoadingDesc& Desc, TextureData* result);
 
 				IMAGE_EXTENSION GetImageExtension(const std::string& filename);
 

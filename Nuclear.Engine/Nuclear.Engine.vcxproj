@@ -110,9 +110,12 @@
     <ClInclude Include="include\Assets\AssetMetadata.h" />
     <ClInclude Include="include\Assets\ImportingDescs.h" />
     <ClInclude Include="include\Assets\AssetType.h" />
+    <ClInclude Include="include\Assets\Loader.h" />
     <ClInclude Include="include\Assets\LoadingDescs.h" />
     <ClInclude Include="include\Assets\Model.h" />
-    <ClInclude Include="include\Assets\Tasks\TextureImporting.h" />
+    <ClInclude Include="include\Assets\Tasks\TextureCreateTask.h" />
+    <ClInclude Include="include\Assets\Tasks\TextureImportTask.h" />
+    <ClInclude Include="include\Assets\Tasks\TextureLoadTask.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Fallbacks\Fallbacks.h" />
@@ -471,6 +474,7 @@
     <ClCompile Include="Source\Assets\AssetLibrary.cpp" />
     <ClCompile Include="Source\Assets\IAsset.cpp" />
     <ClCompile Include="Source\Assets\Importer.cpp" />
+    <ClCompile Include="Source\Assets\Loader.cpp" />
     <ClCompile Include="Source\Assets\Model.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />

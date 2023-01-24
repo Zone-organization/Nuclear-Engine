@@ -30,9 +30,38 @@ public:
 		Core::Engine::GetInstance().EndClient();
 	}
 
+	void ImportModels()
+	{
+		Assets::ModelImportingDesc ModelDesc;
+
+		GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+
+		GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+
+		GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
+
+		GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
+
+		ModelDesc.LoadMaterialInfo = false;
+		ModelDesc.LoadAnimation = false;
+
+		GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
+	}
+
+	void ImportShaders()
+	{
+		Assets::ShaderImportingDesc desc;
+		desc.mType = Graphics::ShaderType::_3DRendering;
+		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader", desc);
+		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NuclearShader", desc);
+	}
+
 	void ImportPBRAssets()
 	{
 		Assets::Shader* PBR;
+		Assets::ShaderImportingDesc desc;
+		desc.mType = Graphics::ShaderType::_3DRendering;
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader", desc);
 
 		Assets::Material RustedIron;
 		Assets::Material Plastic;
@@ -95,11 +124,11 @@ public:
 		Gold_D.mTextures.push_back(PBRGold);
 		Gold.SetName("Gold");
 
-		/*RustedIron.Create(RustedIron_D, PBR);
+		RustedIron.Create(RustedIron_D, PBR);
 		Plastic.Create(Plastic_D, PBR);
 		Grass.Create(Grass_D, PBR);
 		Wall.Create(Wall_D, PBR);
-		Gold.Create(Gold_D, PBR);*/
+		Gold.Create(Gold_D, PBR);
 
 
 		//Export Materials
@@ -108,7 +137,6 @@ public:
 		GetAssetManager().Export(&Grass);
 		GetAssetManager().Export(&Wall);
 		GetAssetManager().Export(&Gold);
-
 	}
 
 	void Render(float dt) override

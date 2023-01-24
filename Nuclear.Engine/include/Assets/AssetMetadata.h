@@ -17,7 +17,6 @@ namespace Nuclear
 			{
 				mType = AssetType::Unknown;
 				mName = "";
-				mHashedName = 0;
 				pLoadingDesc = nullptr;
 			}
 			~AssetMetadata()
@@ -32,7 +31,6 @@ namespace Nuclear
 			AssetType mType;
 			Core::UUID mUUID;
 			std::string mName;
-			Uint32 mHashedName;
 			AssetLoadingDesc* pLoadingDesc = nullptr;
 		};
 	}
