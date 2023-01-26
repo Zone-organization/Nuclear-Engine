@@ -55,6 +55,14 @@ namespace Nuclear
 			{
 				return Loader::GetInstance().LoadTexture(Path, meta);
 			}
+			else if (meta.mType == AssetType::Material)
+			{
+				return Loader::GetInstance().LoadMaterial(Path, meta);
+			}
+			else if (meta.mType == AssetType::Shader)
+			{
+				return Loader::GetInstance().LoadShader(Path, meta);
+			}
 			return nullptr;
 		}
 
@@ -64,7 +72,8 @@ namespace Nuclear
 			AssetMetadata meta;
 			if (!Serialization::SerializationEngine::GetInstance().Deserialize(meta, path))
 			{
-
+				NUCLEAR_ERROR("[AssetManager] Loading Asset with no metadata! : '{0}'", Path.GetInputPath());
+				return nullptr;
 			}
 
 			return Load(Path, meta);
@@ -76,21 +85,20 @@ namespace Nuclear
 			if (Type == AssetType::Unknown)
 			{
 				Type = Importer::GetInstance().GetAssetType(Path.GetRealPath());
-			}
-			
-			if (Type == AssetType::Texture)
+			}			
+			else if (Type == AssetType::Texture)
 			{
 				return Importer::GetInstance().ImportTexture(Path);
 			}
-			if (Type == AssetType::Mesh)
+			else if (Type == AssetType::Mesh)
 			{
 				return Importer::GetInstance().ImportModel(Path);
 			}
-			if (Type == AssetType::Material)
+			else if (Type == AssetType::Material)
 			{
 				return Importer::GetInstance().ImportMaterial(Path);
 			}
-			if (Type == AssetType::Scene)
+			else if (Type == AssetType::Scene)
 			{
 				//return Importer::GetInstance().ImportTexture(Path);
 			}
@@ -131,7 +139,7 @@ namespace Nuclear
 			return false;
 		}
 
-		bool AssetManager::Export(IAsset* asset, const Core::Path& Path)
+		bool AssetManager::Export(IAsset* asset, bool exportmetadata, const Core::Path& Path)
 		{
 			Core::Path exportpath = Path;
 			if (!Path.isValid())
@@ -148,6 +156,16 @@ namespace Nuclear
 				return false;
 			}
 
+			if (!asset->GetUUID().isValid())
+			{
+				NUCLEAR_WARN("[AssetManager] Exporting an asset '{0}' with invalid UUID -> assigning a new one automatically...", Path.GetInputPath());
+				asset->mUUID = Core::UUID::CreateNewUUID();
+			}
+			if (exportmetadata)
+			{
+				auto assetmetadata = CreateMetadata(asset);
+				Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath.GetRealPath() + asset->GetName() + ".NEMeta");
+			}
 
 			if (asset->GetType() == AssetType::Scene)
 			{

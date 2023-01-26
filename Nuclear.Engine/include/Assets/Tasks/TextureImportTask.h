@@ -71,10 +71,12 @@ namespace Nuclear
 						imageloadingdesc->mAsyncLoading = mImportingDesc.mCommonOptions.mAsyncImport;
 
 						//Export Meta
-						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + exportedimagename + ".NEAsset");
+						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + exportedimagename + ".NEMeta");
+
+						delete assetmetadata.pLoadingDesc;
 					}
 					//Create image task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc,&Importer::GetInstance().GetQueuedAssets()));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, IMPORTER_FACTORY_TYPE));
 				}
 				else
 				{

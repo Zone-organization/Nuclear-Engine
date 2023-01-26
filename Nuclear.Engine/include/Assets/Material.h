@@ -43,7 +43,7 @@ namespace Nuclear
 				else 
 				{
 					Core::UUID uuid;
-					if (self.pShader)
+					if (self.pShader != nullptr)
 					{
 						uuid = self.pShader->GetUUID();
 					}

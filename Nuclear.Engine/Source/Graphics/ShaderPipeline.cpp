@@ -32,7 +32,12 @@ namespace Nuclear
 		//}
 
 		ShaderPipeline::ShaderPipeline(Assets::Shader* parent)
-			: mParentAsset(parent)
+			: pParentShader(parent), mDesc(pParentShader->mBuildDesc.mPipelineDesc)
+		{
+		}
+
+		ShaderPipeline::ShaderPipeline(ShaderPipelineDesc& desc)
+			: pParentShader(nullptr), mDesc(desc)
 		{
 		}
 
@@ -41,28 +46,27 @@ namespace Nuclear
 			mVariants.clear();
 		}
 
-		void ShaderPipeline::Create(const ShaderPipelineDesc& Desc)
+		void ShaderPipeline::Create()
 		{
-			mDesc = Desc;
 			ShaderPipelineVariantDesc ZeroInstance;
 			ZeroInstance.mHashKey = 0;
-			if (Desc.isDeffered)
+			if (mDesc.isDeffered)
 			{
 				ZeroInstance._isDeffered = true;
 			}
 			mVariantsInfo.push_back(ZeroInstance);
 
 			//Phase 1: Process Switches
-			for (Uint32 ISwitch = 0; ISwitch < Desc.Switches.size(); ISwitch++)
+			for (Uint32 ISwitch = 0; ISwitch < mDesc.Switches.size(); ISwitch++)
 			{
-				for (Uint32 NextSwitch = 0; NextSwitch < Desc.Switches.size(); NextSwitch++)
+				for (Uint32 NextSwitch = 0; NextSwitch < mDesc.Switches.size(); NextSwitch++)
 				{
-					for (Uint32 NextSwitch2 = 0; NextSwitch2 < Desc.Switches.size(); NextSwitch2++)
+					for (Uint32 NextSwitch2 = 0; NextSwitch2 < mDesc.Switches.size(); NextSwitch2++)
 					{
 						ShaderPipelineVariantDesc Info_;
-						Info_.mDefines.insert(Desc.Switches.at(ISwitch).GetName());
-						Info_.mDefines.insert(Desc.Switches.at(NextSwitch).GetName());
-						Info_.mDefines.insert(Desc.Switches.at(NextSwitch2).GetName());
+						Info_.mDefines.insert(mDesc.Switches.at(ISwitch).GetName());
+						Info_.mDefines.insert(mDesc.Switches.at(NextSwitch).GetName());
+						Info_.mDefines.insert(mDesc.Switches.at(NextSwitch2).GetName());
 
 						for (auto& i : Info_.mDefines)
 						{
@@ -145,9 +149,9 @@ namespace Nuclear
 		{
 			ShaderPipelineVariant result;
 			result.pParent = this;
-			if (mParentAsset)
+			if (pParentShader)
 			{
-				result.mShaderAssetID = mParentAsset->GetID();
+				result.mShaderAssetID = pParentShader->GetID();
 			}
 			result.mDesc = Info;
 			RefCntAutoPtr<IShader> VShader;
@@ -210,9 +214,9 @@ namespace Nuclear
 		{
 			ShaderPipelineVariant result;
 			result.pParent = this;
-			if (mParentAsset)
+			if (pParentShader)
 			{
-				result.mShaderAssetID = mParentAsset->GetID();
+				result.mShaderAssetID = pParentShader->GetID();
 			}
 			result.mDesc = Info;
 			Info.mGBufferPSOCreateInfo = Desc.mGBufferPSOCreateInfo;
@@ -381,7 +385,7 @@ namespace Nuclear
 
 		Assets::Shader* ShaderPipeline::GetShaderAsset()
 		{
-			return mParentAsset;
+			return pParentShader;
 		}
 
 		Rendering::GBuffer* ShaderPipeline::GetGBuffer()

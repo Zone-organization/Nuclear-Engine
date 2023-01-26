@@ -47,12 +47,12 @@ namespace Nuclear
 					pResult->SetState(IAsset::State::Loaded);
 
 					//Create image task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, &Loader::GetInstance().GetQueuedAssets()));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, LOADER_FACTORY_TYPE));
 				}
 				else
 				{
 					delete pResultData;
-					NUCLEAR_ERROR("[Importer] Failed To Import Texture: '{0}'", mPath.GetInputPath());
+					NUCLEAR_ERROR("[Assets] Failed To Load Texture: '{0}'", mPath.GetInputPath());
 				}
 				return result;
 			}

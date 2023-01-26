@@ -1,6 +1,8 @@
 #pragma once
 #include <Assets/Texture.h>
 #include <Core/Path.h>
+#include <Assets/Importer.h>
+#include <Assets/Loader.h>
 
 #include <Threading/MainThreadTask.h>
 #include <Threading/ThreadingEngine.h>
@@ -8,17 +10,23 @@
 
 #include <Graphics\GraphicsEngine.h>
 
+#define IMPORTER_FACTORY_TYPE 1
+#define LOADER_FACTORY_TYPE 2
+
 namespace Nuclear
 {
 	namespace Assets
 	{
 		class Texture;
-
 		class TextureCreateTask : public Threading::MainThreadTask
 		{
 		public:
-			TextureCreateTask(Texture* img, TextureData* data, const Core::Path& path, const Assets::TextureDesc& desc, std::vector<IAsset*>* queued_assets_vec)
-				: pTexture(img), pImageData(data), mPath(path), mDesc(desc), pQueuedAssets(queued_assets_vec)
+			//type int : 
+			//1: importer
+			//2: loader
+			//other
+			TextureCreateTask(Texture* img, TextureData* data, const Core::Path& path, const Assets::TextureDesc& desc, int factory_type)
+				: pTexture(img), pImageData(data), mPath(path), mDesc(desc), mFactoryType(factory_type)
 			{
 			}
 
@@ -26,25 +34,51 @@ namespace Nuclear
 			{
 				bool result = Graphics::GraphicsEngine::GetInstance().CreateImage(pTexture, pImageData);
 				
-				if (pQueuedAssets)
+				if (mFactoryType == 1)
 				{
-					for (Uint32 i = 0; i < pQueuedAssets->size(); i++)
+					auto& vec = Importer::GetInstance().GetQueuedAssets();
+					for (Uint32 i = 0; i < vec.size(); i++)
 					{
-						if (pQueuedAssets->at(i)->GetUUID() == pTexture->GetUUID())
+						if (vec.at(i)->GetUUID() == pTexture->GetUUID())
 						{
-							pQueuedAssets->erase(pQueuedAssets->begin() + i);
+							vec.erase(vec.begin() + i);
 							break;
 						}
 					}
 				}
+				else if (mFactoryType == 2)
+				{
+					auto& vec = Loader::GetInstance().GetQueuedAssets();
+					for (Uint32 i = 0; i < vec.size(); i++)
+					{
+						if (vec.at(i)->GetUUID() == pTexture->GetUUID())
+						{
+							vec.erase(vec.begin() + i);
+							break;
+						}
+					}
+				}
+				
 
 				if (!result)
 				{
-					NUCLEAR_ERROR("[Importer] Failed To Create Texture: '{0}'", mPath.GetInputPath());
+					NUCLEAR_ERROR("[TextureCreateTask] Failed To Create Texture: '{0}'", mPath.GetInputPath());
 					return false;
 				}
 
-				NUCLEAR_INFO("[Assets] Imported: {0} ", mPath.GetInputPath());
+				if (mFactoryType == 1)
+				{
+					NUCLEAR_INFO("[Assets] Imported: {0} ", mPath.GetInputPath());
+				}
+				else if (mFactoryType == 2)
+				{
+					NUCLEAR_INFO("[Assets] Loaded: {0} ", mPath.GetInputPath());
+				}
+				else
+				{
+					NUCLEAR_INFO("[TextureCreateTask] Created: {0} ", mPath.GetInputPath());
+				}
+
 				return result;
 			}
 
@@ -59,7 +93,7 @@ namespace Nuclear
 			Texture* pTexture;
 			TextureData* pImageData;
 			Core::Path mPath;
-			std::vector<IAsset*>* pQueuedAssets;
+			int mFactoryType;
 		};
 	}
 }

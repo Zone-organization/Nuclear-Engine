@@ -29,6 +29,8 @@ namespace Nuclear
 			Loader& operator= (const Loader) = delete;
 
 			Texture* LoadTexture(const Core::Path& Path,const Assets::AssetMetadata& metadata);
+			Material* LoadMaterial(const Core::Path& Path, const Assets::AssetMetadata& metadata);
+			Shader* LoadShader(const Core::Path& Path, const Assets::AssetMetadata& metadata);
 
 			std::vector<IAsset*>& GetQueuedAssets();
 

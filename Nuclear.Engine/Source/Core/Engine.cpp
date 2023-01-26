@@ -81,6 +81,7 @@ namespace Nuclear
 		{
 			PrintIntroLog();
 			Assets::AssetLibrary::GetInstance().Initialize(desc.mAssetsLibraryPath);
+			Core::Path::mReservedPaths["@Assets@"] = Assets::AssetLibrary::GetInstance().GetPath();
 			Core::Path::mReservedPaths["@NuclearAssets@"] = Assets::AssetLibrary::GetInstance().GetPath() + "NuclearEngine";
 			Core::Path::mReservedPaths["@CurrentPath@"] = std::filesystem::current_path().string();
 

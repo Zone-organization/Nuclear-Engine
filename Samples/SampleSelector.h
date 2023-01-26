@@ -132,11 +132,12 @@ public:
 
 
 		//Export Materials
-		GetAssetManager().Export(&RustedIron);
-		GetAssetManager().Export(&Plastic);
-		GetAssetManager().Export(&Grass);
-		GetAssetManager().Export(&Wall);
-		GetAssetManager().Export(&Gold);
+		std::string path = "@Assets@/Materials/PBR/";
+		GetAssetManager().Export(&RustedIron, true, path);
+		GetAssetManager().Export(&Plastic, true, path);
+		GetAssetManager().Export(&Grass, true, path);
+		GetAssetManager().Export(&Wall, true, path);
+		GetAssetManager().Export(&Gold, true, path);
 	}
 
 	void Render(float dt) override
@@ -198,9 +199,6 @@ public:
 		if (ImGui::Button("Build Assets Library"))
 		{
 			ImportPBRAssets();
-			
-			SponzaDemo demo;
-			return StartSample(&demo);
 		}
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

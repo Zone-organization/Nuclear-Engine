@@ -21,11 +21,9 @@ namespace Nuclear
 			}
 			~AssetMetadata()
 			{
-				if (pLoadingDesc)
-				{
-					delete pLoadingDesc;
-					pLoadingDesc = nullptr;
-				}
+				mType = AssetType::Unknown;
+				mName = "";
+				pLoadingDesc = nullptr;
 			}
 			//Important for loading assets
 			AssetType mType;

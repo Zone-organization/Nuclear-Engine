@@ -22,6 +22,7 @@
 #include <Assets\AssetLibrary.h>
 
 #include <Assets/Tasks/TextureImportTask.h>
+#include <Assets/Tasks/MaterialImportTask.h>
 
 #include <filesystem>
 
@@ -282,29 +283,30 @@ namespace Nuclear
 			return result;
 		}
 
-		Material* Importer::ImportMaterial(const Core::Path& Path, const MaterialImportingDesc& desc)
+		Material* Importer::ImportMaterial(const Core::Path& Path, const MaterialImportingDesc& Desc)
 		{
-			namespace fs = std::filesystem;
-			auto& material = AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
-
-			try
+			if (Desc.mCommonOptions.mAsyncImport)
 			{
-				std::string newpath = AssetLibrary::GetInstance().GetPath() + "Materials/" + Path.GetFilename();
-				fs::copy_file(Path.GetRealPath(), newpath);
+				//Add to queue			
+				auto result = &AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
+				if (Desc.mCommonOptions.mAssetName == "")
+				{
+					result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
+				}
 
-				//load
-				Serialization::BinaryBuffer buffer;
-				Platform::FileSystem::GetInstance().LoadBinaryBuffer(buffer, newpath);
-				zpp::bits::in in(buffer);
-				in(material);
+				mQueuedAssets.push_back(result);
+				result->SetState(IAsset::State::Queued);
+				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new MaterialImportTask(result, Path, Desc));
 
-				NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+				//TODO: Fallback material?
+				//result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
+				return result;
 			}
-			catch (fs::filesystem_error& e)
-			{
-				NUCLEAR_ERROR("[Importer] Importing Material '{0}' Failed : '{1}'", Path.GetInputPath(), e.what());
-			}
-			return &material;
+
+			//TODO Singlethread material loading
+			assert(0);
+			return nullptr;
+
 		}
 
 		template <int N>
@@ -435,10 +437,10 @@ namespace Nuclear
 				if (Graphics::GraphicsEngine::GetInstance().ReflectShader(shaderbuilddesc, result->mReflection))
 				{
 					//Step3: Create actual pipeline
-					result->mPipeline.Create(shaderbuilddesc.mPipelineDesc);
+					result->mPipeline.Create();
 
 					//step 4: export shader info
-					AssetManager::GetInstance().Export(result, AssetLibrary::GetInstance().GetPath() + "Shaders/");
+					AssetManager::GetInstance().Export(result,true, AssetLibrary::GetInstance().GetPath() + "Shaders/");
 				}
 			}
 			else

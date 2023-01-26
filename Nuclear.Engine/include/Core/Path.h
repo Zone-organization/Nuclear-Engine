@@ -37,6 +37,7 @@ namespace Nuclear
 				if (IsLoading(archive))
 				{
 					auto result = archive(self.mInputPath);
+					self.mRealPath = self.mInputPath;
 					self.Parse();
 					return result;
 				}

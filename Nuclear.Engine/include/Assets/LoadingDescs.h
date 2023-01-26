@@ -78,6 +78,15 @@ namespace Nuclear
 			Utilities::DataBlob mData;
 		};
 
-	
+		struct MaterialLoadingDesc : public AssetLoadingDesc
+		{
+			MaterialLoadingDesc()
+			{
+
+			}
+
+		
+		};
+
 	}
 }

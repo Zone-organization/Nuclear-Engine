@@ -49,6 +49,7 @@ namespace Nuclear
 			PostProcessingPassDesc mDesc;
 
 			//PostProcessing Effects
+			Graphics::ShaderPipelineDesc PSOCreateInfo;
 			Graphics::ShaderPipeline mPostFXPipeline;
 			Graphics::ShaderPipelineSwitchController mPipelineCntrllr;
 			Graphics::RenderTarget PostFXRT;

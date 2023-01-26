@@ -11,6 +11,7 @@ namespace Nuclear
 	{
 		using namespace Diligent;
 		PostProcessingPass::PostProcessingPass()
+			: mPostFXPipeline(PSOCreateInfo)
 		{
 			_HashedBloomID = Utilities::Hash("BLOOM");
 		}
@@ -172,8 +173,6 @@ namespace Nuclear
 			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
 			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
 			{
-
-				Graphics::ShaderPipelineDesc PSOCreateInfo;
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("HDR", true));
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("GAMMACORRECTION", true));
 				PSOCreateInfo.Switches.push_back(Graphics::ShaderPipelineSwitch("BLOOM", false));
@@ -193,7 +192,7 @@ namespace Nuclear
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
-				mPostFXPipeline.Create(PSOCreateInfo);
+				mPostFXPipeline.Create();
 				mPostFXPipeline.Bake(nullptr);
 			}
 

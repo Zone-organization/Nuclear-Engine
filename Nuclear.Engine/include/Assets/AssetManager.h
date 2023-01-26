@@ -8,7 +8,7 @@
 #include <array>
 
 #define MAX_BONE_INFLUENCE 4
-#define IMPORTING_METHOD_SPECIALIZATION(ASSETTYPE)   \
+#define ASSET_METHODS_SPECIALIZATION(ASSETTYPE)   \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path) { \
 	return Importer::GetInstance().Import##ASSETTYPE(Path); } \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path, const ASSETTYPE##ImportingDesc & desc) { \
@@ -28,7 +28,8 @@ namespace Nuclear
 		//Importing vs Loading
 		//Importing: using asset for the first time ( no metadata)
 		//Loading: loading a previously imported "exported" asset with metadata
-		class NEAPI AssetManager {
+		class NEAPI AssetManager
+		{
 		public:
 			AssetManager(AssetManager const&) = delete;
 			void operator=(AssetManager const&) = delete;
@@ -41,7 +42,7 @@ namespace Nuclear
 
 			//Generic
 
-			template<class T> 
+			template<class T>
 			T* Load(const Core::Path& Path)
 			{
 				static_assert(std::is_base_of<IAsset, T>::value, "Import<T> class must derive from IAsset!");
@@ -76,7 +77,7 @@ namespace Nuclear
 
 			AssetMetadata CreateMetadata(IAsset* asset);
 			bool Export(const Serialization::BinaryBuffer& buffer, const Core::Path& Path);
-			bool Export(IAsset* asset, const Core::Path& Path = "");
+			bool Export(IAsset* asset, bool exportmetadata = true, const Core::Path& Path = "");
 		protected:
 			AssetManagerDesc mDesc;
 
@@ -86,23 +87,14 @@ namespace Nuclear
 		public:
 			//Importing methods specializations
 
-			IMPORTING_METHOD_SPECIALIZATION(Texture)
-			IMPORTING_METHOD_SPECIALIZATION(Script)
-			IMPORTING_METHOD_SPECIALIZATION(Model)
-			IMPORTING_METHOD_SPECIALIZATION(Shader)
-			IMPORTING_METHOD_SPECIALIZATION(Font)
-			IMPORTING_METHOD_SPECIALIZATION(AudioClip)
-			IMPORTING_METHOD_SPECIALIZATION(Scene)
+				ASSET_METHODS_SPECIALIZATION(Texture)
+				ASSET_METHODS_SPECIALIZATION(Script)
+				ASSET_METHODS_SPECIALIZATION(Model)
+				ASSET_METHODS_SPECIALIZATION(Shader)
+				ASSET_METHODS_SPECIALIZATION(Font)
+				ASSET_METHODS_SPECIALIZATION(AudioClip)
+				ASSET_METHODS_SPECIALIZATION(Scene)
 
-				//template <> Assets::Script* Import<Assets::Script>(const Core::Path& Path)
-				//{
-				//	return Importer::GetInstance().ImportScript(Path, &mLibrary);
-				//}
-
-				//template <> Assets::Model* Import<Assets::Model>(const Core::Path& Path)
-				//{
-				//	return Importer::GetInstance().ImportModel(Path, &mLibrary);
-				//}
 		};
 	}
 }

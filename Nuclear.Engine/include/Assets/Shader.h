@@ -23,9 +23,10 @@ namespace Nuclear
 
             constexpr static auto serialize(auto& archive, auto& self)
             {
-                return archive(self.mBuildDesc, self.mReflection);
+                return archive(self.mBuildDesc, self.mReflection, self.mPipeline);
             }
         protected:
+            friend class  Graphics::ShaderPipeline;
             friend class Importer;
             friend Serialization::Access;
 

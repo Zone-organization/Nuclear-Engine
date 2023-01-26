@@ -113,6 +113,9 @@
     <ClInclude Include="include\Assets\Loader.h" />
     <ClInclude Include="include\Assets\LoadingDescs.h" />
     <ClInclude Include="include\Assets\Model.h" />
+    <ClInclude Include="include\Assets\Tasks\MaterialImportTask.h" />
+    <ClInclude Include="include\Assets\Tasks\MaterialLoadTask.h" />
+    <ClInclude Include="include\Assets\Tasks\ShaderLoadTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureCreateTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureImportTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureLoadTask.h" />

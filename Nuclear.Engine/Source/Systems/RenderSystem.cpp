@@ -63,7 +63,21 @@ namespace Nuclear
 			for (auto i : mRegisteredShaders)
 			{
 				if (i)
-				{
+				{					
+					if (i->GetState() == Assets::IAsset::State::Queued)
+					{
+						bool condition = true;
+						for (; condition;)
+						{
+							//wait for half a seond
+							Sleep(500);
+
+							if (i->GetState() == Assets::IAsset::State::Loaded)
+							{
+								condition = false;
+							}
+						}
+					}
 					i->GetShaderPipeline().Bake(&bakedesc);
 				}
 			}
