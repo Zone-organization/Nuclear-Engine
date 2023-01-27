@@ -23,12 +23,14 @@ namespace Nuclear
 			const std::string& GetInputPath() const;
 			const std::string& GetRealPath() const;
 
+
 			//only creates folders
 			const bool CreatePathIfDoesntExist() const;
 
 			std::string GetParentDirectory(bool addfilename) const;
 			std::string GetFilename(bool removeextension = false) const;
 			std::string GetPathNoExt() const;
+			const std::string GetExtension() const;
 
 			static std::unordered_map<std::string, std::string> mReservedPaths;
 

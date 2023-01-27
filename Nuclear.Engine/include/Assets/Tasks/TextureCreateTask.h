@@ -84,7 +84,11 @@ namespace Nuclear
 
 			void OnEnd() override
 			{
-				delete pImageData;
+				if (pImageData)
+				{
+					delete pImageData;
+					pImageData = nullptr;
+				}
 				delete this;
 			}
 

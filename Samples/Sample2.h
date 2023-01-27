@@ -39,6 +39,10 @@ public:
 
 	void LoadPBRMaterials()
 	{
+		//TODO: load textures recursively
+
+		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/");
+
 		//Initialize Materials
 		RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
 		Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");

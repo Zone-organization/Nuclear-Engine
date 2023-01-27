@@ -59,11 +59,6 @@ namespace Nuclear
 
 		bool GraphicsEngine::CreateImage(Assets::Texture* result, Assets::TextureData* data)
 		{
-			result->mTextureView = nullptr;
-
-			result->mWidth = data->mTexDesc.Width;
-			result->mHeight = data->mTexDesc.Height;
-
 			//CREATE IMAGE
 			Diligent::TextureData TexData;
 			TexData.pSubResources = data->mSubresources.data();
@@ -73,6 +68,10 @@ namespace Nuclear
 
 			if (mTexture.RawPtr() != nullptr)
 			{
+				result->mTextureView = nullptr;
+				result->mWidth = data->mTexDesc.Width;
+				result->mHeight = data->mTexDesc.Height;
+
 				result->mTextureView = mTexture->GetDefaultView(Diligent::TEXTURE_VIEW_SHADER_RESOURCE);
 				result->SetState(Assets::IAsset::State::Created);
 				return true;

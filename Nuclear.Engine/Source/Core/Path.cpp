@@ -12,7 +12,7 @@ namespace Nuclear
 		{
 		}
 
-		Path::Path(const char * path, bool ParseForReservedPaths)
+		Path::Path(const char* path, bool ParseForReservedPaths)
 		{
 			mInputPath = std::string(path);
 			mRealPath = mInputPath;
@@ -23,7 +23,7 @@ namespace Nuclear
 			}
 		}
 
-		Path::Path(const std::string & path, bool ParseForReservedPaths)
+		Path::Path(const std::string& path, bool ParseForReservedPaths)
 		{
 			mInputPath = path;
 			mRealPath = mInputPath;
@@ -65,6 +65,11 @@ namespace Nuclear
 		const std::string& Path::GetRealPath() const
 		{
 			return mRealPath;
+		}
+
+		const std::string Path::GetExtension() const
+		{
+			return mRealPath.substr(mRealPath.find_last_of("."));
 		}
 
 		const bool Path::CreatePathIfDoesntExist() const

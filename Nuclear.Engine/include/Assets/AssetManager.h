@@ -54,6 +54,7 @@ namespace Nuclear
 
 			IAsset* Load(const Core::Path& Path, const AssetMetadata& meta);
 
+			void LoadFolder(const Core::Path& Path);
 
 			template<class T>
 			T* Import(const Core::Path& Path)

@@ -21,7 +21,7 @@ namespace Nuclear
 		{
 		public:
 			TextureLoadTask(Assets::Texture* result, const Core::Path& path, const Assets::AssetMetadata& metadata)
-				: pResult(result), mPath(path), pResultData(nullptr), mAssetmeta(metadata)
+				: pResult(result), mPath(path), mAssetmeta(metadata)
 			{
 			}
 			~TextureLoadTask()
@@ -32,10 +32,10 @@ namespace Nuclear
 			{
 				Assets::TextureLoadingDesc mLoadingDesc = *static_cast<Assets::TextureLoadingDesc*>(mAssetmeta.pLoadingDesc);
 				delete mAssetmeta.pLoadingDesc;
-				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mPath.GetPathNoExt() + ".dds");
+				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mPath.GetPathNoExt());
 
 				//Load image
-				pResultData = new TextureData;
+				TextureData* pResultData = new TextureData;
 				Assets::TextureDesc desc;
 
 				bool result = Importers::TextureImporter::GetInstance().Load(mLoadingDesc, pResultData);
@@ -64,7 +64,6 @@ namespace Nuclear
 		protected:
 			Assets::AssetMetadata mAssetmeta;
 			Assets::Texture* pResult;
-			TextureData* pResultData;
 			Core::Path mPath;
 		};
 	}

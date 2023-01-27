@@ -284,7 +284,7 @@ namespace Nuclear
 				if (Desc.mExtension == IMAGE_EXTENSION_DDS)
 				{
 					Diligent::TextureLoadInfo info;
-					Diligent::RefCntAutoPtr<Diligent::ITextureLoader> loader;
+					Diligent::ITextureLoader* loader;
 
 					Diligent::CreateTextureLoaderFromMemory(Desc.mData.GetBuffer().data(), Desc.mData.GetBuffer().size(), Diligent::IMAGE_FILE_FORMAT_DDS,false, info, &loader);
 

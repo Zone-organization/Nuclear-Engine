@@ -147,133 +147,11 @@ TextureLoaderImpl::TextureLoaderImpl(IReferenceCounters*        pRefCounters,
     }
 }
 
-TextureLoaderImpl::TextureLoaderImpl(IReferenceCounters*    pRefCounters,
-                                     const TextureLoadInfo& TexLoadInfo,
-                                     Image*                 pImage) :
-    TBase{pRefCounters},
-    m_pImage{pImage},
-    m_Name{TexLoadInfo.Name != nullptr ? TexLoadInfo.Name : ""},
-    m_TexDesc{TexDescFromTexLoadInfo(TexLoadInfo, m_Name)}
-{
-    LoadFromImage(TexLoadInfo);
-}
-
 void TextureLoaderImpl::CreateTexture(IRenderDevice* pDevice,
                                       ITexture**     ppTexture)
 {
     TextureData InitData{m_SubResources.data(), static_cast<Uint32>(m_SubResources.size())};
     pDevice->CreateTexture(m_TexDesc, &InitData, ppTexture);
-}
-
-
-void TextureLoaderImpl::LoadFromImage(const TextureLoadInfo& TexLoadInfo)
-{
-    VERIFY_EXPR(m_pImage);
-
-    const auto& ImgDesc      = m_pImage->GetDesc();
-    const auto  ChannelDepth = GetValueSize(ImgDesc.ComponentType) * 8;
-
-    m_TexDesc.Type      = RESOURCE_DIM_TEX_2D;
-    m_TexDesc.Width     = ImgDesc.Width;
-    m_TexDesc.Height    = ImgDesc.Height;
-    m_TexDesc.MipLevels = ComputeMipLevelsCount(m_TexDesc.Width, m_TexDesc.Height);
-    if (TexLoadInfo.MipLevels > 0)
-        m_TexDesc.MipLevels = std::min(m_TexDesc.MipLevels, TexLoadInfo.MipLevels);
-
-    Uint32 NumComponents = 0;
-    if (m_TexDesc.Format == TEX_FORMAT_UNKNOWN)
-    {
-        NumComponents = ImgDesc.NumComponents == 3 ? 4 : ImgDesc.NumComponents;
-        if (ChannelDepth == 8)
-        {
-            switch (NumComponents)
-            {
-                case 1: m_TexDesc.Format = TEX_FORMAT_R8_UNORM; break;
-                case 2: m_TexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
-                case 4: m_TexDesc.Format = TexLoadInfo.IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
-                default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", ImgDesc.NumComponents, ")");
-            }
-        }
-        else if (ChannelDepth == 16)
-        {
-            switch (NumComponents)
-            {
-                case 1: m_TexDesc.Format = TEX_FORMAT_R16_UNORM; break;
-                case 2: m_TexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
-                case 4: m_TexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
-                default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", ImgDesc.NumComponents, ")");
-            }
-        }
-        else
-            LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
-    }
-    else
-    {
-        const auto& TexFmtDesc = GetTextureFormatAttribs(m_TexDesc.Format);
-
-        NumComponents = TexFmtDesc.NumComponents;
-        if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
-            LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
-    }
-
-    m_SubResources.resize(m_TexDesc.MipLevels);
-    m_Mips.resize(m_TexDesc.MipLevels);
-
-    if (ImgDesc.NumComponents != NumComponents)
-    {
-        auto DstStride = ImgDesc.Width * NumComponents * ChannelDepth / 8;
-        DstStride      = AlignUp(DstStride, Uint32{4});
-        m_Mips[0].resize(size_t{DstStride} * size_t{ImgDesc.Height});
-        m_SubResources[0].pData  = m_Mips[0].data();
-        m_SubResources[0].Stride = DstStride;
-        if (ChannelDepth == 8)
-        {
-            ModifyComponentCount<Uint8>(m_pImage->GetData()->GetDataPtr(), ImgDesc.RowStride, ImgDesc.NumComponents,
-                                        m_Mips[0].data(), DstStride,
-                                        ImgDesc.Width, ImgDesc.Height, NumComponents);
-        }
-        else if (ChannelDepth == 16)
-        {
-            ModifyComponentCount<Uint16>(m_pImage->GetData()->GetDataPtr(), ImgDesc.RowStride, ImgDesc.NumComponents,
-                                         m_Mips[0].data(), DstStride,
-                                         ImgDesc.Width, ImgDesc.Height, NumComponents);
-        }
-    }
-    else
-    {
-        m_SubResources[0].pData  = m_pImage->GetData()->GetDataPtr();
-        m_SubResources[0].Stride = ImgDesc.RowStride;
-    }
-
-    for (Uint32 m = 1; m < m_TexDesc.MipLevels; ++m)
-    {
-        auto MipLevelProps = GetMipLevelProperties(m_TexDesc, m);
-        m_Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
-        m_SubResources[m].pData  = m_Mips[m].data();
-        m_SubResources[m].Stride = MipLevelProps.RowSize;
-
-        if (TexLoadInfo.GenerateMips)
-        {
-            auto FinerMipProps = GetMipLevelProperties(m_TexDesc, m - 1);
-            if (TexLoadInfo.GenerateMips)
-            {
-                ComputeMipLevelAttribs Attribs;
-                Attribs.Format          = m_TexDesc.Format;
-                Attribs.FineMipWidth    = FinerMipProps.LogicalWidth;
-                Attribs.FineMipHeight   = FinerMipProps.LogicalHeight;
-                Attribs.pFineMipData    = m_SubResources[m - 1].pData;
-                Attribs.FineMipStride   = StaticCast<size_t>(m_SubResources[m - 1].Stride);
-                Attribs.pCoarseMipData  = m_Mips[m].data();
-                Attribs.CoarseMipStride = StaticCast<size_t>(m_SubResources[m].Stride);
-                Attribs.AlphaCutoff     = TexLoadInfo.AlphaCutoff;
-                static_assert(MIP_FILTER_TYPE_DEFAULT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_DEFAULT), "Inconsistent enum values");
-                static_assert(MIP_FILTER_TYPE_BOX_AVERAGE == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_BOX_AVERAGE), "Inconsistent enum values");
-                static_assert(MIP_FILTER_TYPE_MOST_FREQUENT == static_cast<MIP_FILTER_TYPE>(TEXTURE_LOAD_MIP_FILTER_MOST_FREQUENT), "Inconsistent enum values");
-                Attribs.FilterType = static_cast<MIP_FILTER_TYPE>(TexLoadInfo.MipFilter);
-                ComputeMipLevel(Attribs);
-            }
-        }
-    }
 }
 
 
@@ -329,22 +207,6 @@ void CreateTextureLoaderFromMemory(const void*            pData,
     }
 }
 
-void CreateTextureLoaderFromImage(Image*                 pSrcImage,
-                                  const TextureLoadInfo& TexLoadInfo,
-                                  ITextureLoader**       ppLoader)
-{
-    VERIFY_EXPR(pSrcImage != nullptr);
-    try
-    {
-        RefCntAutoPtr<ITextureLoader> pTexLoader{MakeNewRCObj<TextureLoaderImpl>()(TexLoadInfo, pSrcImage)};
-        if (pTexLoader)
-            pTexLoader->QueryInterface(IID_TextureLoader, reinterpret_cast<IObject**>(ppLoader));
-    }
-    catch (std::runtime_error& err)
-    {
-        LOG_ERROR("Failed to create texture loader from memory: ", err.what());
-    }
-}
 
 } // namespace Diligent
 
@@ -366,12 +228,5 @@ extern "C"
                                                 Diligent::ITextureLoader**       ppLoader)
     {
         Diligent::CreateTextureLoaderFromMemory(pData, Size, FileFormat, MakeCopy, TexLoadInfo, ppLoader);
-    }
-
-    void Diligent_CreateTextureLoaderFromImage(Diligent::Image*                 pSrcImage,
-                                               const Diligent::TextureLoadInfo& TexLoadInfo,
-                                               Diligent::ITextureLoader**       ppLoader)
-    {
-        Diligent::CreateTextureLoaderFromImage(pSrcImage, TexLoadInfo, ppLoader);
     }
 }

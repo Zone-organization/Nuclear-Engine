@@ -21,7 +21,7 @@ namespace Nuclear
 		{
 		public:
 			TextureImportTask(Assets::Texture* result, const Core::Path& path, const Assets::TextureImportingDesc& desc)
-				: pResult(result), mPath(path), pResultData(nullptr), mImportingDesc(desc)
+				: pResult(result), mPath(path), mImportingDesc(desc)
 			{
 			}
 			~TextureImportTask()
@@ -31,7 +31,7 @@ namespace Nuclear
 			bool OnRunning() override
 			{
 				//Import
-				pResultData = new TextureData;
+				TextureData* pResultData = new TextureData;
 				Assets::TextureDesc desc;
 				bool result = false;
 
@@ -92,7 +92,6 @@ namespace Nuclear
 			}
 		protected:
 			Assets::Texture* pResult;
-			TextureData* pResultData;
 			Assets::TextureImportingDesc mImportingDesc;
 			Core::Path mPath;
 		};

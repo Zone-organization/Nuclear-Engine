@@ -66,9 +66,29 @@ namespace Nuclear
 			return nullptr;
 		}
 
+		void AssetManager::LoadFolder(const Core::Path& Path)
+		{
+			namespace fs = std::filesystem;
+
+			for (const auto& entry : fs::directory_iterator(Path.GetRealPath()))
+			{
+				if (!entry.is_directory())
+				{
+					if (entry.path().extension() == ".NEMeta")
+					{
+						Load(entry.path().string());
+					}
+				}
+			}
+		}
+
 		IAsset* AssetManager::Load(const Core::Path& Path)
 		{
-			std::string path(Path.GetPathNoExt() + ".NEMeta");
+			std::string path = Path.GetRealPath();
+			if (Path.GetExtension() != ".NEMeta")
+			{
+				path = path + ".NEMeta";
+			}
 			AssetMetadata meta;
 			if (!Serialization::SerializationEngine::GetInstance().Deserialize(meta, path))
 			{
@@ -139,6 +159,23 @@ namespace Nuclear
 			return false;
 		}
 
+		std::string GetExtensionByType(AssetType Type)
+		{		
+			if (Type == AssetType::Material)
+			{
+				return ".NEMaterial";
+			}
+			else if (Type == AssetType::Scene)
+			{
+				return ".NEScene";
+			}
+			else if (Type == AssetType::Shader)
+			{
+				return ".NEShader";
+			}
+			return "";
+		}
+
 		bool AssetManager::Export(IAsset* asset, bool exportmetadata, const Core::Path& Path)
 		{
 			Core::Path exportpath = Path;
@@ -164,7 +201,7 @@ namespace Nuclear
 			if (exportmetadata)
 			{
 				auto assetmetadata = CreateMetadata(asset);
-				Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath.GetRealPath() + asset->GetName() + ".NEMeta");
+				Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath.GetRealPath() + asset->GetName() + GetExtensionByType(asset->GetType()) + ".NEMeta");
 			}
 
 			if (asset->GetType() == AssetType::Scene)

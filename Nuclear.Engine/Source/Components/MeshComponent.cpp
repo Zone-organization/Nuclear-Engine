@@ -35,33 +35,41 @@ namespace Nuclear
 				{
 					if (pMaterial)
 					{
-						if (mMaterialDirty)
+						if (pMaterial->GetShader())
 						{
-							auto assetptr = pMaterial->GetShader();
-							mPipelineCntrl.SetPipeline(&assetptr->GetShaderPipeline());
-							mMaterialDirty = false;
+							if (mMaterialDirty)
+							{
+								auto assetptr = pMaterial->GetShader();
+								mPipelineCntrl.SetPipeline(&assetptr->GetShaderPipeline());
+								mMaterialDirty = false;
+							}
+
+							if (mRenderSystemHasDefferedPass)
+								mRequestDeffered = false;
+
+							if (mRenderSystemHasShadowPass)
+								mReceiveShadows = false;
+
+							Uint32 mDefferedPipeline = Utilities::Hash("NE_DEFFERED");
+							Uint32 mAnimationHash = Utilities::Hash("NE_ANIMATION");
+							Uint32 mRecieveShadowHash = Utilities::Hash("NE_SHADOWS");
+
+							mPipelineCntrl.SetSwitch(mAnimationHash, bool(pAnimator));
+							mPipelineCntrl.SetSwitch(mRecieveShadowHash, mReceiveShadows);
+							mPipelineCntrl.SetSwitch(mDefferedPipeline, mRequestDeffered);
+
+							for (auto& i : mCustomSwitches)
+							{
+								mPipelineCntrl.SetSwitch(i.first, i.second);
+							}
+							mPipelineCntrl.Update();
+							RenderQueue = mPipelineCntrl.GetActiveVariant()->GetRenderQueue();
 						}
-
-						if (mRenderSystemHasDefferedPass)
-							mRequestDeffered = false;
-
-						if (mRenderSystemHasShadowPass)
-							mReceiveShadows = false;
-
-						Uint32 mDefferedPipeline = Utilities::Hash("NE_DEFFERED");
-						Uint32 mAnimationHash = Utilities::Hash("NE_ANIMATION");
-						Uint32 mRecieveShadowHash = Utilities::Hash("NE_SHADOWS");
-
-						mPipelineCntrl.SetSwitch(mAnimationHash, bool(pAnimator));
-						mPipelineCntrl.SetSwitch(mRecieveShadowHash, mReceiveShadows);
-						mPipelineCntrl.SetSwitch(mDefferedPipeline, mRequestDeffered);
-
-						for (auto& i : mCustomSwitches)
+						else
 						{
-							mPipelineCntrl.SetSwitch(i.first, i.second);
+							mEnableRendering = false;  //Dont render meshes with invalid material
+							RenderQueue = 0;
 						}
-						mPipelineCntrl.Update();
-						RenderQueue = mPipelineCntrl.GetActiveVariant()->GetRenderQueue();
 					}
 					else {
 						mEnableRendering = false;  //Dont render meshes with invalid material

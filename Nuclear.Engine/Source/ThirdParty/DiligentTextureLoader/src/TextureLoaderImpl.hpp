@@ -45,10 +45,6 @@ public:
                       size_t                     DataSize,
                       RefCntAutoPtr<IDataBlob>&& pDataBlob);
 
-    TextureLoaderImpl(IReferenceCounters*    pRefCounters,
-                      const TextureLoadInfo& TexLoadInfo,
-                      Image*                 pImage);
-
     IMPLEMENT_QUERY_INTERFACE_IN_PLACE(IID_TextureLoader, TBase);
 
     virtual void DILIGENT_CALL_TYPE CreateTexture(IRenderDevice* pDevice,
@@ -78,7 +74,6 @@ public:
     }
 
 private:
-    void LoadFromImage(const TextureLoadInfo& TexLoadInfo);
     void LoadFromKTX(const TextureLoadInfo& TexLoadInfo, const Uint8* pData, size_t DataSize);
     void LoadFromDDS(const TextureLoadInfo& TexLoadInfo, const Uint8* pData, size_t DataSize);
 
