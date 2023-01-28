@@ -66,14 +66,14 @@ namespace Nuclear
 
 			AUDIO_IMPORT_MODE mMode = AUDIO_IMPORT_MODE_LOOP_OFF;
 		};
-		struct ModelImportingDesc
+		struct MeshImportingDesc
 		{
 			CommonImportingOptions mCommonOptions;
 
 			bool SaveMaterialNames = true;
-			bool LoadMesh = true;
-			bool LoadAnimation = true;
-			bool LoadMaterialInfo = true;
+			bool ImportMesh = true;
+			bool ImportAnimations = true;
+			bool ImportMaterial = true;
 		};
 
 		struct MaterialImportingDesc

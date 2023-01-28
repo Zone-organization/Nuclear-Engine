@@ -22,10 +22,12 @@ namespace Nuclear
 			Material();
 			~Material();
 
-			void Create(const MaterialCreationInfo& desc, Assets::Shader* shader);
+			void Create(Assets::Shader* shader);
 
 			//Note: doesnt validate the shaders!
 			void BindTexSet(Graphics::ShaderPipelineVariant* pipeline ,Uint32 index);
+
+			std::vector<MaterialTextureSet>& GetTextures();
 
 			void SetShader(Assets::Shader* shader);
 			Assets::Shader* GetShader();
@@ -36,7 +38,7 @@ namespace Nuclear
 				if (IsLoading(archive))
 				{
 					Core::UUID shaderuuid;
-					auto result = archive(shaderuuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
+					auto result = archive(shaderuuid, self.mCreationShaderCommonID, self.mUsableTextures, self.mTextures);
 					self.pShader = static_cast<Shader*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(AssetType::Shader, shaderuuid));
 					return result;
 				}
@@ -47,16 +49,18 @@ namespace Nuclear
 					{
 						uuid = self.pShader->GetUUID();
 					}
-					return archive(uuid, self.mCreationShaderCommonID, self.mMaterialShaderTextures);
+					return archive(uuid, self.mCreationShaderCommonID, self.mUsableTextures, self.mTextures);
 				}				
 			}
 
 		private:
 			Assets::Shader* pShader;
 			Uint32 mCreationShaderCommonID; //Shader UUID hash
-			std::vector<ShaderTextureSet> mMaterialShaderTextures;
+			std::vector<ShaderTextureSet> mUsableTextures;
 
-			void InitializePipelineTextures(const MaterialCreationInfo& desc);
+			std::vector<MaterialTextureSet> mTextures;
+
+			void InitializePipelineTextures();
 		};
 	}
 }

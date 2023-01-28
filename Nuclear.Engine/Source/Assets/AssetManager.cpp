@@ -112,7 +112,7 @@ namespace Nuclear
 			}
 			else if (Type == AssetType::Mesh)
 			{
-				return Importer::GetInstance().ImportModel(Path);
+				return Importer::GetInstance().ImportMesh(Path);
 			}
 			else if (Type == AssetType::Material)
 			{

@@ -1,7 +1,6 @@
 #pragma once
 #include <NE_Common.h>
 #include <Assets/LoadingDescs.h>
-#include <Assets/Model.h>
 #include <Assets/TextureDesc.h>
 #include <Core/Path.h>
 

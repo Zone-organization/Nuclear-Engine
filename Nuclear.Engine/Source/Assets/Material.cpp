@@ -20,7 +20,7 @@ namespace Nuclear
 			mName = std::string();
 		}
 
-		void Material::Create(const MaterialCreationInfo& desc, Assets::Shader* shader)
+		void Material::Create(Assets::Shader* shader)
 		{
 			if (!shader)
 			{
@@ -29,19 +29,24 @@ namespace Nuclear
 			}
 			pShader = shader;
 			mCreationShaderCommonID = pShader->GetID();
-			InitializePipelineTextures(desc);
+			InitializePipelineTextures();
 		}
 		void Material::BindTexSet(Graphics::ShaderPipelineVariant* pipeline, Uint32 index)
 		{
-			if (!mMaterialShaderTextures.empty())
+			if (!mUsableTextures.empty())
 			{
-				for (auto& tex : mMaterialShaderTextures.at(index).mData)
+				for (auto& tex : mUsableTextures.at(index))
 				{
 					pipeline->GetRenderingSRB()->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, tex.mSlot)->Set(tex.mTex.pTexture->GetTextureView());
 				}
 			}
 
 			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetRenderingSRB(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		}
+
+		std::vector<MaterialTextureSet>& Material::GetTextures()
+		{
+			return mTextures;
 		}
 
 		void Material::SetShader(Assets::Shader* shader)
@@ -60,11 +65,11 @@ namespace Nuclear
 			return mCreationShaderCommonID;
 		}	
 
-		void Material::InitializePipelineTextures(const MaterialCreationInfo& desc)
+		void Material::InitializePipelineTextures()
 		{
 			//Stage 1
 			//Load Suitable & usable texture only from the main material texture set
-			for (auto& TexSet : desc.mTextures)
+			for (auto& TexSet : mTextures)
 			{
 				ShaderTextureSet NewTexSet;
 				for (auto& TexSetTexture : TexSet.mData)
@@ -77,19 +82,19 @@ namespace Nuclear
 							ShaderTexture NewTex;
 							NewTex.mTex = TexSetTexture;
 							NewTex.mSlot = ShaderTexinfo.mSlot;
-							NewTexSet.mData.push_back(NewTex);
+							NewTexSet.push_back(NewTex);
 						}
 					}
 				}
-				mMaterialShaderTextures.push_back(NewTexSet);
+				mUsableTextures.push_back(NewTexSet);
 			}
 
 			//Stage 2 
 			//Validate the integrity of the created vector, and set automatic textures if a texture isn't provided
-			for (int i = 0; i < mMaterialShaderTextures.size(); i++)
+			for (int i = 0; i < mUsableTextures.size(); i++)
 			{
 				//Check if a texture is missing
-				if (mMaterialShaderTextures.at(i).mData.size() != pShader->GetReflection().mMaterialTexturesInfo.size())
+				if (mUsableTextures.at(i).size() != pShader->GetReflection().mMaterialTexturesInfo.size())
 				{
 					//Stage 2A
 					//Generate a copy of the texture set that doesnt contain duplicated textures.
@@ -97,9 +102,9 @@ namespace Nuclear
 
 					for (auto& ShaderTexinfo : pShader->GetReflection().mMaterialTexturesInfo)
 					{
-						for (int j = 0; j < mMaterialShaderTextures.at(i).mData.size(); j++)
+						for (int j = 0; j < mUsableTextures.at(i).size(); j++)
 						{
-							if (mMaterialShaderTextures.at(i).mData.at(j).mTex.mUsageType == ShaderTexinfo.mTex.mUsageType)
+							if (mUsableTextures.at(i).at(j).mTex.mUsageType == ShaderTexinfo.mTex.mUsageType)
 							{
 								for (int t = 0; t < TexSetCopy.size(); t++)
 								{
@@ -114,7 +119,7 @@ namespace Nuclear
 					//Fill the orignal tex set with the missing textures from the copy.
 					for (auto& MissingTex : TexSetCopy)
 					{
-						mMaterialShaderTextures.at(i).mData.push_back(MissingTex);
+						mUsableTextures.at(i).push_back(MissingTex);
 					}
 				}
 			}

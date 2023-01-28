@@ -8,7 +8,6 @@
 #include <Assimp\include\assimp\Importer.hpp>
 #include <Assimp\include\assimp\scene.h>
 #include <Assimp\include\assimp\postprocess.h>
-#include <Assets\Model.h>
 #include <Assets\Mesh.h>
 #include <Assets\Material.h>
 #include <Assets/Animations.h>
@@ -31,7 +30,7 @@ namespace Nuclear {
 				friend class AssimpImporter;
 				std::vector<std::string> TexturePaths;
 
-				Assets::Model* pModel = nullptr;
+				Model mModel;
 				const aiScene* scene;
 				std::string mDirectory;
 				std::string exportPath;
@@ -42,7 +41,7 @@ namespace Nuclear {
 				void ReadHeirarchyData(Animation::ClipNodeData* dest, const aiNode* src);
 
 				void InitBoneData(const aiNodeAnim* channel, Animation::BoneData& data);
-				Assets::ModelImportingDesc mLoadingDesc;
+				MeshImportingDesc mLoadingDesc;
 			};
 
 
@@ -70,13 +69,13 @@ namespace Nuclear {
 			}
 
 
-			bool AssimpImporter::Import(const std::string& importPath, const std::string& exportPath, Assets::Model* model, const Assets::ModelImportingDesc& desc)
+			bool AssimpImporter::Import(const std::string& importPath, const std::string& exportPath, const Model& model, const Assets::MeshImportingDesc& desc)
 			{
 				busy = true;
 				AssimpLoader loader;
 
 				loader.mLoadingDesc = desc;
-				loader.pModel = model;
+				loader.mModel = model;
 				loader.scene = pImporter->ReadFile(importPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 				loader.exportPath = exportPath;
 				//Failed?
@@ -88,29 +87,29 @@ namespace Nuclear {
 				loader.mDirectory = importPath.substr(0, importPath.find_last_of('/'));
 				loader.ProcessNode(loader.scene->mRootNode, loader.scene);
 
-				if (loader.pModel->pAnimations && loader.scene->mAnimations != nullptr)
+				if (loader.mModel.pAnimations && loader.scene->mAnimations != nullptr)
 				{
 					loader.LoadAnimations();
-					loader.pModel->pAnimations->SetState(Assets::IAsset::State::Loaded);
+					loader.mModel.pAnimations->SetState(Assets::IAsset::State::Loaded);
 				}
-				if (loader.pModel->pMesh)
+				if (loader.mModel.pMesh)
 				{
-					loader.pModel->pMesh->SetState(Assets::IAsset::State::Loaded);
+					loader.mModel.pMesh->SetState(Assets::IAsset::State::Loaded);
 				}
 		
-				pExporter->Export(loader.scene, "glb2", loader.exportPath + model->GetName() + ".glb");
+				pExporter->Export(loader.scene, "glb2", loader.exportPath + model.mName + ".glb");
 
 				busy = false;
 				return true;
 			}
 
-			bool AssimpImporter::Load(const std::string& Path, Assets::Model* model, const Assets::ModelImportingDesc& desc)
+			bool AssimpImporter::Load(const std::string& Path, const Model& model, const MeshImportingDesc& desc)
 			{
 				busy = true;
 				AssimpLoader loader;
 
 				loader.mLoadingDesc = desc;
-				loader.pModel = model;
+				loader.mModel = model;
 
 				loader.scene = pImporter->ReadFile(Path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
@@ -123,14 +122,14 @@ namespace Nuclear {
 				loader.mDirectory = Path.substr(0, Path.find_last_of('/'));
 				loader.ProcessNode(loader.scene->mRootNode, loader.scene);
 
-				if (loader.pModel->pAnimations && loader.scene->mAnimations != nullptr)
+				if (loader.mModel.pAnimations && loader.scene->mAnimations != nullptr)
 				{
 					loader.LoadAnimations();
-					loader.pModel->pAnimations->SetState(Assets::IAsset::State::Loaded);
+					loader.mModel.pAnimations->SetState(Assets::IAsset::State::Loaded);
 				}
-				if (loader.pModel->pMesh)
+				if (loader.mModel.pMesh)
 				{
-					loader.pModel->pMesh->SetState(Assets::IAsset::State::Loaded);
+					loader.mModel.pMesh->SetState(Assets::IAsset::State::Loaded);
 				}
 
 				busy = false;
@@ -165,8 +164,9 @@ namespace Nuclear {
 			}
 			Uint32 AssimpLoader::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
 			{
-				if (mLoadingDesc.LoadMaterialInfo)
+				if (mModel.pMaterial)
 				{
+					auto& materialtextures = mModel.pMaterial->GetTextures();
 					Assets::MaterialTextureSet TexSet;
 
 					// process materials
@@ -175,9 +175,9 @@ namespace Nuclear {
 					TexSet.mHashedName = Utilities::Hash(MeshName);
 
 
-					for (Uint32 i = 0; i < pModel->mMaterialInfo.mTextures.size(); i++)
+					for (Uint32 i = 0; i < materialtextures.size(); i++)
 					{
-						if (TexSet.mHashedName == pModel->mMaterialInfo.mTextures.at(i).mHashedName)
+						if (TexSet.mHashedName == materialtextures.at(i).mHashedName)
 						{
 							return i;
 						}
@@ -212,9 +212,9 @@ namespace Nuclear {
 							TexSet.mName = MeshName;
 						}
 
-						pModel->mMaterialInfo.mTextures.push_back(TexSet);
+						materialtextures.push_back(TexSet);
 
-						return static_cast<Uint32>(pModel->mMaterialInfo.mTextures.size() - 1);
+						return static_cast<Uint32>(materialtextures.size() - 1);
 					}
 				}
 				return 0;
@@ -222,11 +222,11 @@ namespace Nuclear {
 
 			void AssimpLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 			{
-				assert(pModel->pMesh);
+				assert(mModel.pMesh);
 
-				pModel->pMesh->mSubMeshes.push_back(Assets::Mesh::SubMesh::SubMeshData());
+				mModel.pMesh->mSubMeshes.push_back(Assets::Mesh::SubMesh::SubMeshData());
 
-				Assets::Mesh::SubMesh::SubMeshData* result = &pModel->pMesh->mSubMeshes.back().data;
+				Assets::Mesh::SubMesh::SubMeshData* result = &mModel.pMesh->mSubMeshes.back().data;
 				result->Vertices.reserve(mesh->mNumVertices);
 
 
@@ -276,7 +276,7 @@ namespace Nuclear {
 				// process material		
 				result->TexSetIndex = ProcessMaterial(mesh, scene);
 
-				if (pModel->pAnimations && scene->mAnimations != nullptr)
+				if (mModel.pAnimations && scene->mAnimations != nullptr)
 				{
 					ExtractBoneWeightForVertices(result, mesh, scene);
 				}
@@ -355,11 +355,11 @@ namespace Nuclear {
 
 			void AssimpLoader::LoadAnimations()
 			{
-				pModel->pAnimations->mClips.reserve(scene->mNumAnimations);
+				mModel.pAnimations->mClips.reserve(scene->mNumAnimations);
 				for (Uint32 i = 0; i < scene->mNumAnimations; i++)
 				{
-					pModel->pAnimations->mClips.push_back(Animation::AnimationClip());
-					auto clipptr = &pModel->pAnimations->mClips.at(0);
+					mModel.pAnimations->mClips.push_back(Animation::AnimationClip());
+					auto clipptr = &mModel.pAnimations->mClips.at(0);
 					auto animation = scene->mAnimations[i];
 
 					clipptr->m_Duration = animation->mDuration;
@@ -375,8 +375,8 @@ namespace Nuclear {
 
 			void AssimpLoader::ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene)
 			{
-				auto& boneInfoMap = pModel->pMesh->mBoneInfoMap;
-				int& boneCount = pModel->pMesh->mBoneCounter;
+				auto& boneInfoMap = mModel.pMesh->mBoneInfoMap;
+				int& boneCount = mModel.pMesh->mBoneCounter;
 
 				for (Uint32 boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
 				{
@@ -415,8 +415,8 @@ namespace Nuclear {
 			{
 				int size = animation->mNumChannels;
 
-				auto& boneInfoMap = pModel->pMesh->mBoneInfoMap;//getting m_BoneInfoMap from Model class
-				int& boneCount = pModel->pMesh->mBoneCounter; //getting the m_BoneCounter from Model class
+				auto& boneInfoMap = mModel.pMesh->mBoneInfoMap;//getting m_BoneInfoMap from Model class
+				int& boneCount = mModel.pMesh->mBoneCounter; //getting the m_BoneCounter from Model class
 
 				//reading channels(bones engaged in an animation and their keyframes)
 				clip->mBones.reserve(size);

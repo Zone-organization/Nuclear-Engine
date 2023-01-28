@@ -45,15 +45,7 @@ namespace Nuclear
 
 			return instance;
 		}
-		void Importer::Test()
-		{
-			Assets::Model model;
-			model.pMesh = new Assets::Mesh();
-			model.pAnimations = new Assets::Animations();
-			//mAssimpImporter.Import("../Assets/Common/Models/CrytekNanosuit/nanosuit.obj", &model, Assets::ModelImportingDesc());
-		
-		}
-
+	
 		std::string AssetNameFromDirectory(const std::string& str)
 		{
 			std::size_t found = str.find_last_of("/\\");
@@ -213,9 +205,11 @@ namespace Nuclear
 		}
 
 
-		Model* Importer::ImportModel(const Core::Path& Path, const ModelImportingDesc& desc)
+		Mesh* Importer::ImportMesh(const Core::Path& Path, const MeshImportingDesc& desc)
 		{
-			auto result = &AssetLibrary::GetInstance().mImportedModels.AddAsset();
+			Mesh* mesh = nullptr;
+			Material* material = nullptr;
+			Animations* animations = nullptr;
 
 			std::string assetname = desc.mCommonOptions.mAssetName;
 
@@ -224,19 +218,21 @@ namespace Nuclear
 				assetname = AssetNameFromDirectory(Path.GetRealPath());
 			}
 
-			result->SetName(assetname);
-
-			if (desc.LoadMesh)
+			if (desc.ImportMesh)
 			{
-				result->pMesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
-				result->pMesh->SetName(assetname);
+				mesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
+				mesh->SetName(assetname);
 			}
-			if (desc.LoadAnimation)
+			if (desc.ImportMaterial)
 			{
-				result->pAnimations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
-				result->pAnimations->SetName(assetname);
+				material = &AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
+				material->SetName(assetname);
 			}
-		
+			if (desc.ImportAnimations)
+			{
+				animations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
+				animations->SetName(assetname);
+			}		
 
 			std::string exportpath;
 
@@ -246,41 +242,40 @@ namespace Nuclear
 			}
 			else
 			{
-				exportpath = AssetLibrary::GetInstance().GetPath() + "Models/" + result->GetName() + '/';
+				exportpath = AssetLibrary::GetInstance().GetPath() + "Meshes/" + assetname + '/';
 			}
 
 			Platform::FileSystem::GetInstance().CreateFolders(exportpath + "Textures/");
-			
 
-			if (!mAssimpImporter.Import(Path.GetRealPath(), exportpath, result, desc))
+			if (!mAssimpImporter.Import(Path.GetRealPath(), exportpath, { assetname ,mesh, material, animations }, desc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}'", Path.GetInputPath());
 
 				return nullptr;
 			}
 
-			if (desc.LoadAnimation)
+			if (desc.ImportAnimations)
 			{
-				if (result->pAnimations->GetState() != IAsset::State::Loaded)
+				if (animations->GetState() != IAsset::State::Loaded)
 				{
-					AssetLibrary::GetInstance().mImportedAnimations.mData.erase(result->pAnimations->GetUUID());
-					result->pAnimations = nullptr;
+					AssetLibrary::GetInstance().mImportedAnimations.mData.erase(animations->GetUUID());
+					animations = nullptr;
 				}
 				else
 				{
-					result->pAnimations->mState = IAsset::State::Loaded;
+					animations->mState = IAsset::State::Loaded;
 				}
 			}
 
-			result->mState = IAsset::State::Loaded;
-			result->pMesh->mState = IAsset::State::Loaded;
+			//result->mState = IAsset::State::Loaded;
+			//result->pMesh->mState = IAsset::State::Loaded;
 
 			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
 
-			if (result->pMesh)
-				result->pMesh->Create();
+			if (mesh)
+				mesh->Create();
 
-			return result;
+			return mesh;
 		}
 
 		Material* Importer::ImportMaterial(const Core::Path& Path, const MaterialImportingDesc& Desc)

@@ -1,5 +1,4 @@
 #pragma once
-#include <Assets/Model.h>
 #include <Assets/Mesh.h>
 #include <Assets/DefaultMeshes.h>
 #include <Assets/Material.h>
@@ -78,7 +77,6 @@ namespace Nuclear
 			ImportedAssetsMap<Assets::Scene> mImportedScenes;
 
 			ImportedAssetsMap<Assets::Texture> mImportedTextures;
-			ImportedAssetsMap<Assets::Model> mImportedModels;			///<Should be removed
 			ImportedAssetsMap<Assets::Mesh> mImportedMeshes;
 			ImportedAssetsMap<Assets::Material> mImportedMaterials;
 			ImportedAssetsMap<Assets::Animations> mImportedAnimations;

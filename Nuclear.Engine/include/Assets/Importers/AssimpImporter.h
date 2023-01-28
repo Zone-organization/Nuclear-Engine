@@ -16,10 +16,19 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class Model;
-
+		class Mesh;
+		class Material;
+		class Animations;
 		namespace Importers
 		{
+			struct Model
+			{
+				std::string mName;
+				Assets::Mesh* pMesh = nullptr;
+				Assets::Material* pMaterial = nullptr;
+				Assets::Animations* pAnimations = nullptr;
+			};
+
 			class NEAPI AssimpImporter
 			{
 			public:
@@ -28,9 +37,9 @@ namespace Nuclear
 
 				bool isBusy();
 
-				bool Import(const std::string& importPath, const std::string& exportPath,  Assets::Model* model, const Assets::ModelImportingDesc& desc);
+				bool Import(const std::string& importPath, const std::string& exportPath,const Model& model, const Assets::MeshImportingDesc& desc);
 
-				bool Load(const std::string& Path, Assets::Model* model, const Assets::ModelImportingDesc& desc);
+				bool Load(const std::string& Path, const Model& model, const Assets::MeshImportingDesc& desc);
 				bool IsExtensionSupported(const std::string& extension);
 				Assimp::Importer* GetImporter();
 			private:
@@ -40,13 +49,13 @@ namespace Nuclear
 			};
 					
 
-		/*	class AssimpManager
+			class AssimpManager
 			{
 			public:
 
 				std::vector<AssimpImporter> mImporters;
 
-			};*/
+			};
 
 			//bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialCreationInfo* material, Assets::Animations* anim);
 		}

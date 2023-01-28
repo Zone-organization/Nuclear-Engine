@@ -79,11 +79,10 @@ namespace Nuclear
 			}
 		};
 
-		template<class T>
-		struct TextureSet
+		struct MaterialTextureSet
 		{
-			TextureSet()
-				: mData(std::vector<T>()), mHashedName(0), mName(std::string())
+			MaterialTextureSet()
+				: mData(std::vector<MaterialTexture>()), mHashedName(0), mName(std::string())
 			{
 
 			}
@@ -93,17 +92,11 @@ namespace Nuclear
 				return archive(self.mData, self.mHashedName, self.mName);
 			}
 
-			std::vector<T> mData;
+			std::vector<MaterialTexture> mData;
 			Uint32 mHashedName;
 			std::string mName;
 		};
 
-		using MaterialTextureSet = TextureSet<MaterialTexture>;
-		using ShaderTextureSet = TextureSet<ShaderTexture>;	
-
-		struct MaterialCreationInfo
-		{
-			std::vector<MaterialTextureSet> mTextures;
-		};
+		using ShaderTextureSet = std::vector<ShaderTexture>;
 	}
 }

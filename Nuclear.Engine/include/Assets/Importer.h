@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Assets/ImportingDescs.h>
-#include <Assets/Model.h>
+#include <Assets/AssetType.h>
 #include <Assets/TextureDesc.h>
 #include <Assets\Importers\AssimpImporter.h>
 #include <Core/Path.h>
@@ -18,6 +18,7 @@ namespace Nuclear
 		class Shader;
 		class Scene;
 		class Script;
+		class Mesh;
 		class AssetLibrary;
 		class Texture;
 		class Material;
@@ -29,8 +30,6 @@ namespace Nuclear
 			Importer(const Importer&) = delete;
 			Importer& operator= (const Importer) = delete;
 
-			void Test();
-
 			Texture* ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
 			Texture* ImportTexture(const TextureDesc& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 
@@ -41,8 +40,7 @@ namespace Nuclear
 
 			AudioClip* ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc = AudioClipImportingDesc());
 
-			//TODO: Separate to ImportMesh & MaterialCreationInfo & Animations
-			Model* ImportModel(const Core::Path& Path, const ModelImportingDesc& desc = ModelImportingDesc());
+			Mesh* ImportMesh(const Core::Path& Path, const MeshImportingDesc& desc = MeshImportingDesc());
 
 			Material* ImportMaterial(const Core::Path& Path, const MaterialImportingDesc& desc = MaterialImportingDesc());
 
