@@ -286,7 +286,7 @@ namespace Nuclear
 					Diligent::TextureLoadInfo info;
 					Diligent::ITextureLoader* loader;
 
-					Diligent::CreateTextureLoaderFromMemory(Desc.mData.GetBuffer().data(), Desc.mData.GetBuffer().size(), Diligent::IMAGE_FILE_FORMAT_DDS,false, info, &loader);
+					Diligent::CreateTextureLoaderFromMemory(result->mData.GetBuffer().data(), result->mData.GetBuffer().size(), Diligent::IMAGE_FILE_FORMAT_DDS,false, info, &loader);
 
 					result->mTexDesc = loader->GetTextureDesc();
 					result->mSubresources = std::move(loader->GetSubresources());

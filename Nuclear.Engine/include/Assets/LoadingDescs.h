@@ -1,5 +1,4 @@
 #pragma once
-#include <Utilities/DataBlob.h>
 #include <Core/Path.h>
 #include <string>
 
@@ -74,8 +73,6 @@ namespace Nuclear
 			}
 
 			IMAGE_EXTENSION mExtension;
-
-			Utilities::DataBlob mData;
 		};
 
 		struct MaterialLoadingDesc : public AssetLoadingDesc

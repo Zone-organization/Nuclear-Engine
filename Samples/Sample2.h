@@ -39,16 +39,14 @@ public:
 
 	void LoadPBRMaterials()
 	{
-		//TODO: load textures recursively
-
-		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/");
-
 		//Initialize Materials
 		RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
 		Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");
 		Grass = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Grass.NEMaterial");
 		Wall = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Wall.NEMaterial");
 		Gold = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Gold.NEMaterial");
+
+		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/");
 	}
 
 	void SetupAssets()
@@ -126,11 +124,13 @@ public:
 		SetupEntities();
 
 		InitRenderer();
+
+
+		SetupAssets();
+
 		ECS::Transform sphere;
 		sphere.SetScale(Math::Vector3(5.0f));
 		ESphere = GetScene().CreateSphere(RustedIron, sphere);
-
-		SetupAssets();
 
 		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, RustedIron);
 		EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);

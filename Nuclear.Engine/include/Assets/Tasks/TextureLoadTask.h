@@ -32,10 +32,10 @@ namespace Nuclear
 			{
 				Assets::TextureLoadingDesc mLoadingDesc = *static_cast<Assets::TextureLoadingDesc*>(mAssetmeta.pLoadingDesc);
 				delete mAssetmeta.pLoadingDesc;
-				mLoadingDesc.mData = Platform::FileSystem::GetInstance().LoadFile(mPath.GetPathNoExt());
 
 				//Load image
 				TextureData* pResultData = new TextureData;
+				pResultData->mData = Platform::FileSystem::GetInstance().LoadFile(mPath.GetPathNoExt());
 				Assets::TextureDesc desc;
 
 				bool result = Importers::TextureImporter::GetInstance().Load(mLoadingDesc, pResultData);

@@ -64,24 +64,25 @@ namespace Nuclear
 							}
 							mPipelineCntrl.Update();
 							RenderQueue = mPipelineCntrl.GetActiveVariant()->GetRenderQueue();
+							mDirty = false;
+
 						}
 						else
 						{
-							mEnableRendering = false;  //Dont render meshes with invalid material
 							RenderQueue = 0;
 						}
 					}
-					else {
-						mEnableRendering = false;  //Dont render meshes with invalid material
+					else
+					{
 						RenderQueue = 0;
 					}
 				}
 				else
 				{
+					mDirty = false;
 					RenderQueue = 0;
 				}
 
-				mDirty = false;
 			}
 		}
 		Uint32 MeshComponent::GetRenderQueue() const

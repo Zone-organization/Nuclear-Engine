@@ -24,7 +24,11 @@ namespace Nuclear
 			auto result = AssetLibrary::GetInstance().mImportedTextures.GetOrAddAsset(metadata.mUUID);
 			result->SetName(metadata.mName);
 			result->SetState(IAsset::State::Queued);
-			result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
+
+			if (result->GetTextureView() == nullptr)
+			{
+				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
+			}
 
 			mQueuedAssets.push_back(result);
 

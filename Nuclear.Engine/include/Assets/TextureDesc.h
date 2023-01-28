@@ -5,6 +5,8 @@
 #include <Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h>
 #include <string>
 #include <vector>
+#include <Utilities/DataBlob.h>
+
 namespace Nuclear
 {
 	namespace Assets
@@ -79,6 +81,7 @@ namespace Nuclear
 			Diligent::TextureDesc mTexDesc;
 			std::vector<Diligent::TextureSubResData> mSubresources;
 			std::vector< std::vector<Uint8> > mMips;
+			Utilities::DataBlob mData;
 		};
 
 	}

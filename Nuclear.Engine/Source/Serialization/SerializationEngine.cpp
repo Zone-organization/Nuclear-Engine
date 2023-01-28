@@ -4,6 +4,7 @@
 #include <ThirdParty/magic_enum.hpp>
 #include <Utilities/Hash.h>
 #include <Assets/AssetLibrary.h>
+#include <Fallbacks/FallbacksEngine.h>
 
 namespace Nuclear
 {
@@ -112,7 +113,12 @@ namespace Nuclear
 			}
 			else if (type == Assets::AssetType::Texture)
 			{
-				return Assets::AssetLibrary::GetInstance().mImportedTextures.GetOrAddAsset(uuid);
+				auto result = Assets::AssetLibrary::GetInstance().mImportedTextures.GetOrAddAsset(uuid);
+				if(result->GetTextureView() == nullptr)
+				{
+					result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultGreyImage()->GetTextureView());
+				}
+				return result;
 			}
 
 
