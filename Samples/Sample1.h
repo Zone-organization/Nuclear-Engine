@@ -103,10 +103,6 @@ class Sample1 : public Core::Client
 
 
 	Assets::Material CubeMaterial;
-	Assets::Material NanosuitMaterial;
-	Assets::Material CyborgMaterial;
-	Assets::Material BobMaterial;
-	Assets::Material VampireMaterial;
 
 	Animation::Animator BobAnimator;
 	Animation::Animator VampireAnimator;
@@ -139,50 +135,43 @@ public:
 	}
 	void SetupAssets()
 	{
-		Assets::ModelImportingDesc ModelDesc;
-
 		//Load Nanosuit Model
-		auto nanosuitmodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", ModelDesc);
+		auto nanosuitmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj");
 		
 		//Load Cyborg Model
-		auto cyborgmodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", ModelDesc);
+		auto cyborgmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekCyborg/cyborg.obj");
 		
 		//Load Bob Model
-		auto bobmodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/Bob/boblampclean.md5mesh", ModelDesc);
+		auto bobmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/Bob/boblampclean.md5mesh");
 
 		//Load vampire Model
-		auto vampiremodel = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", ModelDesc);
+		auto vampiremodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx");
 
-		BobAnimator.Initialize(&bobmodel->pAnimations->mClips.at(0));
-		VampireAnimator.Initialize(&vampiremodel->pAnimations->mClips.at(0));
+		BobAnimator.Initialize(&bobmodel->GetImportedAnimations()->mClips.at(0));
+		VampireAnimator.Initialize(&vampiremodel->GetImportedAnimations()->mClips.at(0));
 
 		//Load some textures manually
-		Assets::TextureImportingDesc desc;
-	//	desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
 
 		//Initialize Materials
 		Assets::MaterialTextureSet CubeSet;
 		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_diffuse.png") , Assets::TextureUsageType::Diffuse});
 		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_specular.png") , Assets::TextureUsageType::Specular} );
 		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_normal.png") , Assets::TextureUsageType::Normal});
-		
-		Assets::MaterialCreationInfo CubeTextures;
-		CubeTextures.mTextures.push_back(CubeSet);
+		CubeMaterial.GetTextures().push_back(CubeSet);
+		CubeMaterial.Create(BlinnPhong);
 
-		CubeMaterial.Create(CubeTextures, BlinnPhong);
-
-		NanosuitMaterial.Create(nanosuitmodel->mMaterialInfo, BlinnPhong);
-		CyborgMaterial.Create(cyborgmodel->mMaterialInfo, BlinnPhong);
-		BobMaterial.Create(bobmodel->mMaterialInfo, DiffuseOnly);
-		VampireMaterial.Create(vampiremodel->mMaterialInfo, BlinnPhong);
+		nanosuitmodel->GetImportedMaterial()->Create(BlinnPhong);
+		cyborgmodel->GetImportedMaterial()->Create(BlinnPhong);
+		bobmodel->GetImportedMaterial()->Create(DiffuseOnly);
+		vampiremodel->GetImportedMaterial()->Create(BlinnPhong);
 
 		CubeSet.mData.clear();
 
 		ECube.AddComponent<Components::MeshComponent>(Assets::DefaultMeshes::GetCubeAsset(),&CubeMaterial);
-		ENanosuit.AddComponent<Components::MeshComponent>(nanosuitmodel->pMesh, &NanosuitMaterial);
-		ECyborg.AddComponent<Components::MeshComponent>(cyborgmodel->pMesh, &CyborgMaterial);
+		ENanosuit.AddComponent<Components::MeshComponent>(nanosuitmodel, nanosuitmodel->GetImportedMaterial());
+		ECyborg.AddComponent<Components::MeshComponent>(cyborgmodel, cyborgmodel->GetImportedMaterial());
 
-		EBob.AddComponent<Components::MeshComponent>(bobmodel->pMesh,&BobMaterial, &BobAnimator);
+		EBob.AddComponent<Components::MeshComponent>(bobmodel, bobmodel->GetImportedMaterial(), &BobAnimator);
 
 		//EVampire.AddComponent<Components::MeshComponent>(VampireAsset, &VampireMaterial);
 		//EVampire.AddComponent<Components::AnimatorComponent>(&VampireAnimator);

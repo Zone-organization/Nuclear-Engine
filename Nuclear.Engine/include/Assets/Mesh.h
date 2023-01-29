@@ -10,7 +10,9 @@
 
 namespace Nuclear {
 	namespace Assets {
-		
+		class Material;
+		class Animations;
+
 		class NEAPI Mesh : public IAsset
 		{
 		public:	
@@ -85,6 +87,14 @@ namespace Nuclear {
 			static void CreateGrid(Mesh* model, float width = 10.0f, float depth = 10.0f, unsigned int m = 10, unsigned int n = 10);
 			static void CreateScreenQuad(Mesh* model);
 
+			Material* GetImportedMaterial();
+			Animations* GetImportedAnimations();
+		protected:
+			friend class Importer;
+			Material* pImportedMaterial = nullptr;
+			Animations* pImportedAnimations = nullptr;
+
+		public:
 			std::unordered_map<Uint32, Animation::BoneInfo> mBoneInfoMap;
 			int mBoneCounter = 0;
 			std::vector<SubMesh> mSubMeshes;

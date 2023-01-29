@@ -51,13 +51,12 @@ public:
 
 	void SetupAssets()
 	{
-		Assets::ModelImportingDesc ModelDesc;
-		ModelDesc.LoadMaterialInfo = false;
-		ModelDesc.LoadAnimation = false;
+		Assets::MeshImportingDesc ModelDesc;
+		ModelDesc.ImportMaterial = false;
+		ModelDesc.ImportAnimations = false;
 
 		//Load Models
-		auto shaderballasset = GetAssetManager().Import<Assets::Model>("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
-		ShaderBall = shaderballasset->pMesh;
+		ShaderBall = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
 		LoadPBRMaterials();
 	}
 	void SetupEntities()

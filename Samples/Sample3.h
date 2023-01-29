@@ -6,8 +6,8 @@ class Sample3 : public SampleBase
 	std::shared_ptr<Systems::PhysXSystem> mPhysXSystem;
 	std::shared_ptr<Systems::ScriptingSystem> mScriptSystem;
 
-	Assets::Material RustedIron;
-	Assets::Material Plastic;
+	Assets::Material* RustedIron;
+	Assets::Material* Plastic;
 
 	Assets::Script* script;
 	Assets::Shader* PBR;
@@ -27,31 +27,14 @@ public:
 	{
 		script = GetAssetManager().Import<Assets::Script>("@CurrentPath@/../Textures/SamplesScripts/Sample3.cs");
 
+		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/RustedIron/");
+		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/Plastic/");
+
+
 		//Initialize Materials
-		Assets::MaterialTextureSet PBRRustedIron;
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/albedo.png") , Assets::TextureUsageType::Diffuse});
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/metallic.png") , Assets::TextureUsageType::Specular});
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/normal.png") , Assets::TextureUsageType::Normal});
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/roughness.png") ,  Assets::TextureUsageType::Roughness});
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/ao.png") ,  Assets::TextureUsageType::AO});
+		RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
+		Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");
 
-		Assets::MaterialCreationInfo RustedIron_D;
-		RustedIron_D.mTextures.push_back(PBRRustedIron);
-		RustedIron.SetName("RustedIron Material");
-
-		Assets::MaterialTextureSet PBRPlastic;
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/albedo.png") , Assets::TextureUsageType::Diffuse});
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/metallic.png") , Assets::TextureUsageType::Specular});
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/normal.png") , Assets::TextureUsageType::Normal});
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/roughness.png") ,  Assets::TextureUsageType::Roughness});
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/ao.png") ,  Assets::TextureUsageType::AO});
-
-		Assets::MaterialCreationInfo Plastic_D;
-		Plastic_D.mTextures.push_back(PBRPlastic);
-		Plastic.SetName("Plastic Material");
-
-		RustedIron.Create(RustedIron_D, PBR);
-		Plastic.Create(Plastic_D, PBR);
 	}
 	void SetupEntities()
 	{
@@ -123,7 +106,7 @@ public:
 
 				ECS::Transform ESphere(position, Math::Vector3(2.0f));
 
-				auto sphere = GetScene().CreateSphere(&RustedIron, ESphere);
+				auto sphere = GetScene().CreateSphere(RustedIron, ESphere);
 				position.z += 5.0f;
 
 				//ECS::Transform EBox(position, Math::Vector3(1.0f));
@@ -132,7 +115,7 @@ public:
 			}
 		}
 
-		GetScene().CreatePlane(&Plastic);
+		GetScene().CreatePlane(Plastic);
 		for (auto it : boxes)
 		{
 			it.GetComponent<Components::RigidBodyComponent>().isKinematic = true;
@@ -214,29 +197,6 @@ public:
 			}
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-			if (ImGui::Button("eXPORT MATERIAL"))
-			{
-				GetAssetManager().Export(&RustedIron, "@CommonAssets@/Scenes/RustedIron.bin");
-				GetAssetManager().Export(&Plastic, "@CommonAssets@/Scenes/Plastic.bin");
-			}
-
-			if (ImGui::Button("IMPORT MATERIAL"))
-			{
-
-				Serialization::BinaryBuffer buffer;
-				Platform::FileSystem::GetInstance().LoadBinaryBuffer(buffer, "@CommonAssets@/Scenes/RustedIron.bin");
-
-				zpp::bits::in in(buffer);
-
-				Assets::Material rust;
-
-				in(rust);
-
-				auto uuid = rust.GetUUID();
-				uuid.isValid();
-			}
-
 
 			if (ImGui::Button("End Game"))
 			{

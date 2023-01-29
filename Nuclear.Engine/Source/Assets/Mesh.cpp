@@ -427,5 +427,15 @@ namespace Nuclear {
 
 		}
 
+		Material* Mesh::GetImportedMaterial()
+		{
+			return pImportedMaterial;
+		}
+
+		Animations* Mesh::GetImportedAnimations()
+		{
+			return pImportedAnimations;
+		}
+
 	}
 }

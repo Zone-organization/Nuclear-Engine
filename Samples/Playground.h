@@ -5,8 +5,8 @@
 //Shadow test
 class Playground : public SampleBase
 {
-	Assets::Material RustedIron;
-	Assets::Material Plastic;
+	Assets::Material* RustedIron;
+	Assets::Material* Plastic;
 
 	Assets::Font* ArialFont;
 
@@ -22,50 +22,16 @@ public:
 	}
 	void SetupAssets()
 	{
-		//Load some textures manually
-		Assets::TextureImportingDesc desc;
-		//desc.mFormat = TEX_FORMAT_RGBA8_UNORM;
+
+		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/RustedIron/");
+		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/Plastic/");
 
 		//Initialize Materials
-
-		//Initialize Materials
-		Assets::MaterialTextureSet PBRRustedIron;
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/albedo.png") , Assets::TextureUsageType::Diffuse });
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/metallic.png") , Assets::TextureUsageType::Specular });
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/normal.png") , Assets::TextureUsageType::Normal });
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/roughness.png") ,  Assets::TextureUsageType::Roughness });
-		PBRRustedIron.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/RustedIron/ao.png") ,  Assets::TextureUsageType::AO });
-
-		Assets::MaterialCreationInfo RustedIron_D;
-		RustedIron_D.mTextures.push_back(PBRRustedIron);
-		RustedIron.SetName("RustedIron Material");
-
-		Assets::MaterialTextureSet PBRPlastic;
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/albedo.png") , Assets::TextureUsageType::Diffuse });
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/metallic.png") , Assets::TextureUsageType::Specular });
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/normal.png") , Assets::TextureUsageType::Normal });
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/roughness.png") ,  Assets::TextureUsageType::Roughness });
-		PBRPlastic.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/plastic/ao.png") ,  Assets::TextureUsageType::AO });
-
-		Assets::MaterialCreationInfo Plastic_D;
-		Plastic_D.mTextures.push_back(PBRPlastic);
-		Plastic.SetName("Plastic Material");
-
-		RustedIron.Create(RustedIron_D, PBR);
-		Plastic.Create(Plastic_D, PBR);
+		RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
+		Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");
 
 		Assets::FontImportingDesc fdesc;
 		ArialFont = GetAssetManager().Import<Assets::Font> ("@CommonAssets@/Fonts/arial.ttf", fdesc);
-
-	
-		Assets::TextureImportingDesc imagedesc;
-		imagedesc.mCommonOptions.mLoadOnly = false;
-		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/albedo.png" , imagedesc);
-		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/metallic.png" , imagedesc);
-		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/normal.png" , imagedesc);
-		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/roughness.png" , imagedesc);
-		GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/PBR/wall/ao.png" , imagedesc);
-
 
 	}
 	void SetupEntities()
@@ -130,14 +96,14 @@ public:
 			ECS::Transform TSphere;
 			TSphere.SetPosition(Math::Vector3(0.0f, 1.5f, 0.0));
 		//	TSphere.SetScale(Math::Vector3(0.5f));
-			GetScene().CreateBox(&RustedIron, TSphere);
+			GetScene().CreateBox(RustedIron, TSphere);
 		}
 		{		
 			ECS::Transform TSphere;
 
 			TSphere.SetPosition(Math::Vector3(2.0f, 0.0f, 1.0));
 		//	TSphere.SetScale(Math::Vector3(0.5f));
-			GetScene().CreateBox(&RustedIron, TSphere);
+			GetScene().CreateBox(RustedIron, TSphere);
 		}
 		{		
 			ECS::Transform TSphere;
@@ -145,9 +111,9 @@ public:
 			TSphere.SetPosition(Math::Vector3(-1.0f, 0.0f, 2.0));
 			TSphere.SetRotation(glm::normalize(glm::vec3(1.0, 0.0, 1.0)), glm::radians(60.0f));
 	//		TSphere.SetScale(Math::Vector3(0.25));
-			GetScene().CreateBox(&RustedIron, TSphere);
+			GetScene().CreateBox(RustedIron, TSphere);
 		}
-		GetScene().CreatePlane(&Plastic);
+		GetScene().CreatePlane(Plastic);
 
 		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 		//GetScene().GetMainCamera()->MovementSpeed = 15;

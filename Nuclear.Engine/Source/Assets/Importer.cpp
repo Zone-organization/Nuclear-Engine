@@ -218,11 +218,6 @@ namespace Nuclear
 				assetname = AssetNameFromDirectory(Path.GetRealPath());
 			}
 
-			if (desc.ImportMesh)
-			{
-				mesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
-				mesh->SetName(assetname);
-			}
 			if (desc.ImportMaterial)
 			{
 				material = &AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
@@ -232,8 +227,16 @@ namespace Nuclear
 			{
 				animations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
 				animations->SetName(assetname);
-			}		
+			}
 
+			if (desc.ImportMesh)
+			{
+				mesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
+				mesh->SetName(assetname);
+				mesh->pImportedMaterial = material;
+				mesh->pImportedAnimations = animations;
+			}
+		
 			std::string exportpath;
 
 			if (desc.mCommonOptions.mExportPath.isValid())

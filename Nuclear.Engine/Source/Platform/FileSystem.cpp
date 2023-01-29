@@ -185,6 +185,23 @@ namespace Nuclear
 				return Utilities::DataBlob(std::vector<Uint8>(std::istreambuf_iterator<char>(input), {}));
 			}
 
+			bool FileSystem::CreateDir(const Core::Path& dirpath)
+			{
+				if (std::filesystem::exists(dirpath.GetRealPath()))
+				{
+					return true;
+				}
+				std::error_code err;
+				if (!std::filesystem::create_directories(dirpath.GetRealPath(), err))
+				{
+					NUCLEAR_WARN("[AssetLibrary] Failed to create directory: {0} Error: {1}", dirpath.GetRealPath(), err.message());
+					return false;
+				}
+
+				return true;
+			}
+			
+
 			bool FileSystem::SaveFile(const Utilities::DataBlob& data, const Core::Path& Path)
 			{
 				std::ofstream fout(Path.GetRealPath(), std::ios::out | std::ios::binary);

@@ -58,6 +58,7 @@ namespace Nuclear
 						{
 							exportpath = AssetLibrary::GetInstance().GetPath() + "Textures/";
 						}
+						Platform::FileSystem::GetInstance().CreateDir(exportpath);
 
 						std::string exportedimagename = pResult->GetName() + ".dds"; ///<TODO extension...
 

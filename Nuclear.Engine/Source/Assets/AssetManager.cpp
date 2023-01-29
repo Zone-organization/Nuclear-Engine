@@ -79,6 +79,11 @@ namespace Nuclear
 						Load(entry.path().string());
 					}
 				}
+				else
+				{
+					//load subfolders
+					LoadFolder(entry.path().string());
+				}
 			}
 		}
 
@@ -137,7 +142,11 @@ namespace Nuclear
 					auto assettype = Importer::GetInstance().GetAssetType(filepath);
 					Import(filepath, assettype);
 				}
-
+				else
+				{
+					//load subfolders
+					ImportFolder(dir_entry.path().string());
+				}
 			}
 		}
 				

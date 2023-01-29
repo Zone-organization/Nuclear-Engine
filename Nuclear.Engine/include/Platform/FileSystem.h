@@ -26,6 +26,8 @@ namespace Nuclear
 	
 			Utilities::DataBlob LoadFile(const Core::Path& Filepath);
 
+			bool CreateDir(const  Core::Path& dirpath);
+
 			bool SaveFile(const Utilities::DataBlob& data, const Core::Path& Filepath);
 
 			bool SaveBinaryBuffer(const std::vector<Uint8>& buffer, const Core::Path& Filepath);
