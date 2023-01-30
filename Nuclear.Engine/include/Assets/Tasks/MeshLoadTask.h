@@ -82,7 +82,7 @@ namespace Nuclear
 					//Export Meta
 					Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
 					delete assetmetadata.pLoadingDesc;
-				}						
+				}
 
 				return true;
 			}

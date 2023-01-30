@@ -14,6 +14,7 @@ namespace Nuclear
 	namespace Assets
 	{
 		class Texture;
+		class Mesh;
 	}
 	namespace Graphics
 	{
@@ -40,6 +41,8 @@ namespace Nuclear
 
 			bool Initialize(const GraphicsEngineDesc& desc);
 			void Shutdown();
+
+			bool CreateMesh(Assets::Mesh* result);
 
 			bool CreateImage(Assets::Texture* result, Assets::TextureData* desc);
 

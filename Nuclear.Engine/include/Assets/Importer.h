@@ -3,7 +3,6 @@
 #include <Assets/ImportingDescs.h>
 #include <Assets/AssetType.h>
 #include <Assets/TextureDesc.h>
-#include <Assets\Importers\AssimpImporter.h>
 #include <Core/Path.h>
 
 typedef struct FT_LibraryRec_* FT_Library;
@@ -33,11 +32,6 @@ namespace Nuclear
 			Texture* ImportTexture(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
 			Texture* ImportTexture(const TextureDesc& Imagedata, const TextureImportingDesc& Desc = TextureImportingDesc());
 
-			//	Model* AsyncImportModel(const Core::Path& Path,  const ModelImportingDesc& desc = ModelImportingDesc());
-
-			Texture* ImportTextureST(const Core::Path& Path, const TextureImportingDesc& Desc = TextureImportingDesc());
-			//	Image* ImportTexture(const TextureDesc& Imagedata,  const TextureImportingDesc& Desc = TextureImportingDesc());
-
 			AudioClip* ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc = AudioClipImportingDesc());
 
 			Mesh* ImportMesh(const Core::Path& Path, const MeshImportingDesc& desc = MeshImportingDesc());
@@ -61,7 +55,6 @@ namespace Nuclear
 
 		private:
 			Texture* TextureCube_Import(const Core::Path& Path, const TextureImportingDesc& Desc);
-			Importers::AssimpImporter mAssimpImporter;
 			msdfgen::FreetypeHandle* FT_Handle;
 
 			std::vector<IAsset*> mQueuedAssets;

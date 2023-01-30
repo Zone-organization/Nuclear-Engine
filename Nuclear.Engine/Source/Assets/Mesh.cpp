@@ -1,5 +1,6 @@
 #include <Assets/Mesh.h>
 #include <Graphics\Context.h>
+#include <Graphics\GraphicsEngine.h>
 
 namespace Nuclear {
 
@@ -23,24 +24,29 @@ namespace Nuclear {
 			mIndicesOffset = 0;
 		}
 
-		void Mesh::SubMesh::Create()
+		bool Mesh::SubMesh::Create()
 		{
+			bool result = true;
+
+			// Create vertex buffer
 			{
 				Diligent::BufferDesc VertBuffDesc;
 				VertBuffDesc.Usage = Diligent::USAGE_IMMUTABLE;
 				VertBuffDesc.BindFlags = Diligent::BIND_VERTEX_BUFFER;
 				VertBuffDesc.Size = (unsigned int)data.Vertices.size() * sizeof(Vertex);
-				//VertBuffDesc.Size = (unsigned int)VertexData.size() * sizeof(float);
 
 				Diligent::BufferData VBData;
 				VBData.pData = data.Vertices.data();
 				VBData.DataSize = (unsigned int)data.Vertices.size() * sizeof(Vertex);
 				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
-
+				if (!mVB)
+				{
+					result = false;
+				}
 			}
 
+			// Create index buffer
 			{				
-				// Create index buffer
 				Diligent::BufferDesc IndBuffDesc;
 				IndBuffDesc.Usage = Diligent::USAGE_IMMUTABLE;
 				IndBuffDesc.BindFlags = Diligent::BIND_INDEX_BUFFER;
@@ -50,11 +56,18 @@ namespace Nuclear {
 				IBData.pData = data.indices.data();
 				IBData.DataSize = (unsigned int)data.indices.size() * sizeof(Uint32);
 				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
+				if (!mIB)
+				{
+					result = false;
+				}
 			}
+
 			mIndicesCount = static_cast<Uint32>(data.indices.size());			
 
 			data.Vertices.clear();
 			data.indices.clear();
+
+			return result;
 		}
 
 		Mesh::Mesh(const std::vector<SubMesh>& SubMeshes, const std::unordered_map<Uint32, Animation::BoneInfo>& BoneInfoMap, int BoneCounter)
@@ -75,15 +88,6 @@ namespace Nuclear {
 			mBoneCounter = 0;
 		}
 
-		void Mesh::Create()
-		{
-			for (unsigned int i = 0; i < mSubMeshes.size(); i++)
-			{
-				mSubMeshes.at(i).Create();
-			}
-
-			mState = IAsset::State::Created;
-		}
 		//Todo rework this since we do alot of unnecessery looping
 		void Mesh::CreateCube(Mesh* model, float width, float height, float depth)
 		{
@@ -162,7 +166,7 @@ namespace Nuclear {
 
 			model->mSubMeshes.push_back(meshData);
 
-			model->Create();
+			Graphics::GraphicsEngine::GetInstance().CreateMesh(model);
 		}
 
 		void Mesh::CreateSphere(Mesh * model, float radius, unsigned int sliceCount, unsigned int stackCount)
@@ -257,7 +261,7 @@ namespace Nuclear {
 			//meshData.textures = Textures;
 
 			model->mSubMeshes.push_back(meshData);
-			model->Create();
+			Graphics::GraphicsEngine::GetInstance().CreateMesh(model);
 		}
 
 		void Mesh::CreatePlane(Mesh * model, float width, float depth)
@@ -337,7 +341,7 @@ namespace Nuclear {
 			meshData.indices = Indices;
 			meshData.Vertices = Vertices;
 			model->mSubMeshes.push_back(meshData);
-			model->Create();
+			Graphics::GraphicsEngine::GetInstance().CreateMesh(model);
 		}
 		struct ScreenVertex
 		{

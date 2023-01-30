@@ -23,6 +23,7 @@
 
 #include <Assets/Tasks/TextureImportTask.h>
 #include <Assets/Tasks/MaterialImportTask.h>
+#include <Assets/Tasks/MeshImportTask.h>
 
 #include <filesystem>
 
@@ -80,97 +81,38 @@ namespace Nuclear
 				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
-			return ImportTextureST(Path, Desc);
-		}
-
-		/**Model* Importer::AsyncImportModel(const Core::Path& Path, const ModelImportingDesc& desc)
-		{
-			auto hashedpath = Utilities::Hash(Path.GetInputPath());
-
-			//Check if exists
-			auto result = AssetLibrary::GetInstance().mImportedModels.GetAsset(hashedpath);
-			if (result)
+			else //singlethreaded loading
 			{
+				//TODO: Check if we on main thread?
+
+				//Load
+				TextureDesc desc;
+				TextureData data;
+
+				Importers::TextureImporter::GetInstance().Load(Path.GetRealPath(), &desc, Desc);
+
+				auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
+				if (Desc.mCommonOptions.mAssetName == "")
+				{
+					result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
+				}
+
+				Graphics::GraphicsEngine::GetInstance().CreateImageData(&data, desc);
+
+				if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &data))
+				{
+					NUCLEAR_ERROR("[Importer] Failed To Load Texture: '{0}'", Path.GetInputPath());
+					return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+				}
+
+
+				result->mState = IAsset::State::Loaded;
+				NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+
+				//TODO:EXPORT
+
 				return result;
 			}
-
-			//Check if exists
-			if (desc.LoadMesh)
-			{
-				result->pMesh = AssetLibrary::GetInstance().mImportedMeshes.GetOrAddAsset(hashedpath);
-			}
-
-			if (desc.LoadMaterialData)
-			{
-				result->pMaterialData = AssetLibrary::GetInstance().mImportedMaterialDatas.GetOrAddAsset(hashedpath);
-			}
-
-			if (desc.LoadAnimation)
-			{
-				result->pAnimations = AssetLibrary::GetInstance().mImportedAnimations.GetOrAddAsset(hashedpath);
-			}
-
-
-			//Add to queue
-			result = &(AssetLibrary::GetInstance().mImportedModels.AddAsset(hashedpath));
-			mQueuedAssets.push_back(result);
-			result->SetState(IAsset::State::Queued);
-			//Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new AssimpImportTask(result, { Path, hashedpath, true }, Desc));
-
-
-			if (!mAssimpImporter.Load(desc, Path.GetRealPath(), result->pMesh, result->pMaterialData, result->pAnimations))
-			{
-				NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
-
-				return nullptr;
-			}
-
-			if (desc.LoadAnimation)
-			{
-				if (result->pAnimations->GetState() != IAsset::State::Loaded)
-				{
-					AssetLibrary::GetInstance().mImportedAnimations.mData.erase(hashedpath);
-				}
-			}
-			FinishImportingAsset(result->pMesh, Path, hashedpath);
-			FinishImportingAsset(result->pMaterialData, Path, hashedpath, "", false);
-			FinishImportingAsset(result->pAnimations, Path, hashedpath, "", false);
-
-			if (result->pMesh)
-				result->pMesh->Create();
-
-			AssetLibrary::GetInstance().mImportedModels.mData[hashedpath] = result;
-
-			return &AssetLibrary::GetInstance().mImportedModels.mData[hashedpath];
-		}
-		*/
-		Texture* Importer::ImportTextureST(const Core::Path& Path, const TextureImportingDesc& importingdesc)
-		{
-			//Load
-			TextureDesc desc;
-			TextureData data;
-
-			Importers::TextureImporter::GetInstance().Load(Path.GetRealPath(), &desc, importingdesc);
-
-			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
-			if (importingdesc.mCommonOptions.mAssetName == "")
-			{
-				result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
-			}
-
-			Graphics::GraphicsEngine::GetInstance().CreateImageData(&data, desc);
-
-			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &data))
-			{
-				NUCLEAR_ERROR("[Importer] Failed To Load Texture: '{0}'", Path.GetInputPath());
-				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
-			}
-
-
-			result->mState = IAsset::State::Loaded;
-			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
-
-			return result;
 		}
 
 		Texture* Importer::ImportTexture(const TextureDesc& imagedesc, const TextureImportingDesc& importingdesc)
@@ -222,11 +164,15 @@ namespace Nuclear
 			{
 				material = &AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
 				material->SetName(assetname);
+				material->SetState(IAsset::State::Queued);
+				mQueuedAssets.push_back(material);
 			}
 			if (desc.ImportAnimations)
 			{
 				animations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
 				animations->SetName(assetname);
+				animations->SetState(IAsset::State::Queued);
+				mQueuedAssets.push_back(animations);
 			}
 
 			if (desc.ImportMesh)
@@ -235,48 +181,18 @@ namespace Nuclear
 				mesh->SetName(assetname);
 				mesh->pImportedMaterial = material;
 				mesh->pImportedAnimations = animations;
+				mesh->SetState(IAsset::State::Queued);
+				mQueuedAssets.push_back(mesh);
 			}
 		
-			std::string exportpath;
-
-			if (desc.mCommonOptions.mExportPath.isValid())
+			if (desc.mCommonOptions.mAsyncImport)
 			{
-				exportpath = desc.mCommonOptions.mExportPath.GetRealPath();
+				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new MeshImportTask({ assetname ,mesh, material, animations }, Path, desc));
 			}
 			else
 			{
-				exportpath = AssetLibrary::GetInstance().GetPath() + "Meshes/" + assetname + '/';
+				assert(0);
 			}
-
-			Platform::FileSystem::GetInstance().CreateFolders(exportpath + "Textures/");
-
-			if (!mAssimpImporter.Import(Path.GetRealPath(), exportpath, { assetname ,mesh, material, animations }, desc))
-			{
-				NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}'", Path.GetInputPath());
-
-				return nullptr;
-			}
-
-			if (desc.ImportAnimations)
-			{
-				if (animations->GetState() != IAsset::State::Loaded)
-				{
-					AssetLibrary::GetInstance().mImportedAnimations.mData.erase(animations->GetUUID());
-					animations = nullptr;
-				}
-				else
-				{
-					animations->mState = IAsset::State::Loaded;
-				}
-			}
-
-			//result->mState = IAsset::State::Loaded;
-			//result->pMesh->mState = IAsset::State::Loaded;
-
-			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
-
-			if (mesh)
-				mesh->Create();
 
 			return mesh;
 		}
@@ -496,7 +412,7 @@ namespace Nuclear
 			{
 				return AssetType::Texture;
 			}
-			else if (mAssimpImporter.IsExtensionSupported(extension))
+			else if (Importers::AssimpManager::GetInstance().IsExtensionSupported(extension))
 			{
 				return AssetType::Mesh;
 			}

@@ -1,4 +1,4 @@
-#include <Assets\Importers\AssimpImporter.h>
+#include "AssimpImporter.h"
 #include <Assets\AssetManager.h>
 #include "Graphics\GraphicsEngine.h"
 #include <Assets\Material.h>
@@ -16,35 +16,7 @@
 namespace Nuclear {
 	namespace Assets {
 		namespace Importers
-		{
-
-			class AssimpLoader
-			{
-			public:
-				Assets::MaterialTextureSet ProcessMaterialTexture(aiMaterial* mat, int type);
-				void ProcessMesh(aiMesh* mesh, const aiScene* scene);
-				Uint32 ProcessMaterial(aiMesh* mesh, const aiScene* scene);
-				void ProcessNode(aiNode* node, const aiScene* scene);
-
-			protected:
-				friend class AssimpImporter;
-				std::vector<std::string> TexturePaths;
-
-				Model mModel;
-				const aiScene* scene;
-				std::string mDirectory;
-				std::string exportPath;
-
-				void LoadAnimations();
-				void ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene);
-				void ReadMissingBones(const aiAnimation* animation, Animation::AnimationClip* clip);
-				void ReadHeirarchyData(Animation::ClipNodeData* dest, const aiNode* src);
-
-				void InitBoneData(const aiNodeAnim* channel, Animation::BoneData& data);
-				MeshImportingDesc mLoadingDesc;
-			};
-
-
+		{				
 			inline void SetVertexBoneData(Assets::Mesh::Vertex& vertex, int boneID, float weight)
 			{
 				vertex.Weights = Math::Vector4(weight);
@@ -53,100 +25,90 @@ namespace Nuclear {
 
 			AssimpImporter::AssimpImporter()
 			{
-				pImporter = new Assimp::Importer();
-				pExporter = new Assimp::Exporter();
 			}
 
 			AssimpImporter::~AssimpImporter()
 			{
-				delete pImporter;
-				delete pExporter;
 			}
 
-			bool AssimpImporter::isBusy()
+			bool AssimpImporter::Import(const std::string& importPath, const std::string& _exportPath, const Model& model, const Assets::MeshImportingDesc& desc)
 			{
-				return busy;
-			}
+				mLoadingDesc = desc;
+				mModel = model;
+				exportPath = _exportPath;
+				Assimp::Importer importer;
+				scene = importer.ReadFile(importPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
-
-			bool AssimpImporter::Import(const std::string& importPath, const std::string& exportPath, const Model& model, const Assets::MeshImportingDesc& desc)
-			{
-				busy = true;
-				AssimpLoader loader;
-
-				loader.mLoadingDesc = desc;
-				loader.mModel = model;
-				loader.scene = pImporter->ReadFile(importPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-				loader.exportPath = exportPath;
 				//Failed?
-				if (!loader.scene || loader.scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !loader.scene->mRootNode)
+				if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 				{
-					NUCLEAR_ERROR("[AssimpImporter] Assimp Failed to import mesh: '{0}' Info: '{1}'", importPath, pImporter->GetErrorString());
+					NUCLEAR_ERROR("[AssimpImporter] Assimp Failed to import mesh: '{0}' Info: '{1}'", importPath, importer.GetErrorString());
 					return false;
 				}
-				loader.mDirectory = importPath.substr(0, importPath.find_last_of('/'));
-				loader.ProcessNode(loader.scene->mRootNode, loader.scene);
+				mDirectory = importPath.substr(0, importPath.find_last_of('/'));
+				ProcessNode(scene->mRootNode, scene);
 
-				if (loader.mModel.pAnimations && loader.scene->mAnimations != nullptr)
+				if (mModel.pAnimations && scene->mAnimations != nullptr)
 				{
-					loader.LoadAnimations();
-					loader.mModel.pAnimations->SetState(Assets::IAsset::State::Loaded);
+					LoadAnimations();
+					mModel.pAnimations->SetState(Assets::IAsset::State::Loaded);
 				}
-				if (loader.mModel.pMesh)
+				if (mModel.pMesh)
 				{
-					loader.mModel.pMesh->SetState(Assets::IAsset::State::Loaded);
+					mModel.pMesh->SetState(Assets::IAsset::State::Loaded);
 				}
-		
-				pExporter->Export(loader.scene, "glb2", loader.exportPath + model.mName + ".glb");
+				if (mModel.pMaterial)
+				{
+					mModel.pMaterial->SetState(Assets::IAsset::State::Loaded);
+				}
 
-				busy = false;
+				Assimp::Exporter exporter;
+				exporter.Export(scene, "glb2", exportPath + model.mName + ".glb");
+
 				return true;
 			}
 
 			bool AssimpImporter::Load(const std::string& Path, const Model& model, const MeshImportingDesc& desc)
 			{
-				busy = true;
-				AssimpLoader loader;
+				mLoadingDesc = desc;
+				mModel = model;
 
-				loader.mLoadingDesc = desc;
-				loader.mModel = model;
-
-				loader.scene = pImporter->ReadFile(Path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+				Assimp::Importer importer;
+				scene = importer.ReadFile(Path.c_str(), NULL);
 
 				//Failed?
-				if (!loader.scene || loader.scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !loader.scene->mRootNode)
+				if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 				{
-					NUCLEAR_ERROR("[AssimpImporter] Assimp Failed to load mesh: '{0}' Info: '{1}'", Path, pImporter->GetErrorString());
+					NUCLEAR_ERROR("[AssimpImporter] Assimp Failed to load mesh: '{0}' Info: '{1}'", Path, importer.GetErrorString());
 					return false;
 				}
-				loader.mDirectory = Path.substr(0, Path.find_last_of('/'));
-				loader.ProcessNode(loader.scene->mRootNode, loader.scene);
+				mDirectory = Path.substr(0, Path.find_last_of('/'));
+				ProcessNode(scene->mRootNode, scene);
 
-				if (loader.mModel.pAnimations && loader.scene->mAnimations != nullptr)
+				if (mModel.pAnimations && scene->mAnimations != nullptr)
 				{
-					loader.LoadAnimations();
-					loader.mModel.pAnimations->SetState(Assets::IAsset::State::Loaded);
+					LoadAnimations();
+					mModel.pAnimations->SetState(Assets::IAsset::State::Loaded);
 				}
-				if (loader.mModel.pMesh)
+				if (mModel.pMesh)
 				{
-					loader.mModel.pMesh->SetState(Assets::IAsset::State::Loaded);
+					mModel.pMesh->SetState(Assets::IAsset::State::Loaded);
 				}
-
-				busy = false;
+				if (mModel.pMaterial)
+				{
+					mModel.pMaterial->SetState(Assets::IAsset::State::Loaded);
+				}
+				
 				return true;
 			}
 
 			bool AssimpImporter::IsExtensionSupported(const std::string& extension)
 			{
-				return pImporter->IsExtensionSupported(extension);
+				static Assimp::Importer global_instance;
+				return global_instance.IsExtensionSupported(extension);
 			}
 
-			Assimp::Importer* AssimpImporter::GetImporter()
-			{
-				return pImporter;
-			}
-
-			void AssimpLoader::ProcessNode(aiNode* node, const aiScene* scene)
+			void AssimpImporter::ProcessNode(aiNode* node, const aiScene* scene)
 			{
 				// process each mesh located at the current node
 				for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -162,7 +124,7 @@ namespace Nuclear {
 					ProcessNode(node->mChildren[i], scene);
 				}
 			}
-			Uint32 AssimpLoader::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
+			Uint32 AssimpImporter::ProcessMaterial(aiMesh* mesh, const aiScene* scene)
 			{
 				if (mModel.pMaterial)
 				{
@@ -220,7 +182,7 @@ namespace Nuclear {
 				return 0;
 			}
 
-			void AssimpLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+			void AssimpImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 			{
 				assert(mModel.pMesh);
 
@@ -296,7 +258,7 @@ namespace Nuclear {
 
 				return Assets::TextureUsageType::Unknown;
 			}
-			Assets::MaterialTextureSet AssimpLoader::ProcessMaterialTexture(aiMaterial* mat, int arttype)
+			Assets::MaterialTextureSet AssimpImporter::ProcessMaterialTexture(aiMaterial* mat, int arttype)
 			{
 				Assets::MaterialTextureSet textures;
 				aiTextureType type = aiTextureType(arttype);
@@ -326,9 +288,16 @@ namespace Nuclear {
 						else
 						{
 							TextureImportingDesc imagedesc;
+							imagedesc.mCommonOptions.mExportPath = exportPath + "Textures/";
+
 							imagedesc.mLoadFromMemory = true;
-							imagedesc.mMemData = (Byte*)embeddedtex->pcData;
+							imagedesc.mEngineAllocMem = true;
 							imagedesc.mMemSize = embeddedtex->mWidth;
+
+							imagedesc.mMemData = malloc(imagedesc.mMemSize);
+							memcpy_s(imagedesc.mMemData, imagedesc.mMemSize, embeddedtex->pcData, embeddedtex->mWidth);
+
+							//imagedesc.mMemData = (Byte*)embeddedtex->pcData;
 							texture.pTexture = Assets::Importer::GetInstance().ImportTexture(embeddedtex->mFilename.C_Str(),imagedesc);
 							texture.mUsageType = textype;
 						}
@@ -353,7 +322,7 @@ namespace Nuclear {
 				return textures;
 			}
 
-			void AssimpLoader::LoadAnimations()
+			void AssimpImporter::LoadAnimations()
 			{
 				mModel.pAnimations->mClips.reserve(scene->mNumAnimations);
 				for (Uint32 i = 0; i < scene->mNumAnimations; i++)
@@ -373,7 +342,7 @@ namespace Nuclear {
 				}
 			}
 
-			void AssimpLoader::ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene)
+			void AssimpImporter::ExtractBoneWeightForVertices(Assets::Mesh::SubMesh::SubMeshData* meshdata, aiMesh* mesh, const aiScene* scene)
 			{
 				auto& boneInfoMap = mModel.pMesh->mBoneInfoMap;
 				int& boneCount = mModel.pMesh->mBoneCounter;
@@ -411,7 +380,7 @@ namespace Nuclear {
 				}
 			}
 
-			void AssimpLoader::ReadMissingBones(const aiAnimation* animation, Animation::AnimationClip* clip)
+			void AssimpImporter::ReadMissingBones(const aiAnimation* animation, Animation::AnimationClip* clip)
 			{
 				int size = animation->mNumChannels;
 
@@ -439,7 +408,7 @@ namespace Nuclear {
 				clip->mBoneInfoMap = boneInfoMap;
 			}
 
-			void AssimpLoader::ReadHeirarchyData(Animation::ClipNodeData* dest, const aiNode* src)
+			void AssimpImporter::ReadHeirarchyData(Animation::ClipNodeData* dest, const aiNode* src)
 			{
 				assert(src);
 
@@ -458,7 +427,7 @@ namespace Nuclear {
 				}
 			}
 
-			void AssimpLoader::InitBoneData(const aiNodeAnim* channel, Animation::BoneData& result)
+			void AssimpImporter::InitBoneData(const aiNodeAnim* channel, Animation::BoneData& result)
 			{
 				result.m_NumPositions = channel->mNumPositionKeys;
 
@@ -494,13 +463,6 @@ namespace Nuclear {
 					result.m_Scales.push_back(data);
 				}
 			}
-
-
-			/*	bool AssimpLoadMesh(const MeshImporterDesc& desc, Assets::Mesh* mesh, Assets::MaterialCreationInfo* material, Assets::Animations* anim)
-				{
-					AssimpImporter importer;
-					return importer.Load(desc,mesh,material,anim);
-				}*/
 		}
 	}
 }

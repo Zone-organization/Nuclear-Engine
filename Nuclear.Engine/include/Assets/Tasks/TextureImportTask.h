@@ -45,8 +45,13 @@ namespace Nuclear
 				}
 				else
 				{
-					assert(false);
+					result = Importers::TextureImporter::GetInstance().Import(pResultData, IMAGE_EXTENSION_UNKNOWN, mImportingDesc);
+					if (mImportingDesc.mEngineAllocMem)
+					{
+						free(mImportingDesc.mMemData);
+					}
 				}
+
 				if (result)
 				{
 					pResult->SetState(IAsset::State::Loaded);

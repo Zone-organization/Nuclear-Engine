@@ -107,6 +107,8 @@ namespace Nuclear
 
 			Uint32 mMemSize;
 
+			bool mEngineAllocMem;
+
 			IMAGE_EXTENSION mExportExtension;
 
 			TextureImportingDesc() :
@@ -121,7 +123,8 @@ namespace Nuclear
 				mMemData(nullptr),
 				mMemSize(0),
 				mType(Diligent::RESOURCE_DIM_TEX_2D),
-				mExportExtension(IMAGE_EXTENSION_DDS)
+				mExportExtension(IMAGE_EXTENSION_DDS),
+				mEngineAllocMem(false)
 			{
 			}
 		};

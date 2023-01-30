@@ -57,7 +57,14 @@ namespace Nuclear
 				FIMEMORY* memBuff;
 				memBuff = FreeImage_OpenMemory((Byte*)Desc.mMemData, Desc.mMemSize);
 
-				dib = FreeImage_LoadFromMemory((FREE_IMAGE_FORMAT)format, memBuff);
+				FREE_IMAGE_FORMAT imagefmt = (FREE_IMAGE_FORMAT)format;
+
+				if(imagefmt == FIF_UNKNOWN)
+				{
+					imagefmt = FreeImage_GetFileTypeFromMemory(memBuff, Desc.mMemSize);
+				}
+
+				dib = FreeImage_LoadFromMemory(imagefmt, memBuff);
 				FreeImage_CloseMemory(memBuff);
 
 				if (!dib)
@@ -231,11 +238,7 @@ namespace Nuclear
 			{
 				FREE_IMAGE_FORMAT type = (FREE_IMAGE_FORMAT)extension;
 				
-				if (type == FIF_UNKNOWN)
-				{
-					return false;
-				}
-				else if (type == FIF_DDS)
+				if (type == FIF_DDS)
 				{
 					Diligent::TextureLoadInfo info;
 					Diligent::RefCntAutoPtr<Diligent::ITextureLoader> loader;

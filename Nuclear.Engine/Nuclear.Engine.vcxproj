@@ -108,13 +108,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Assets\AssetMetadata.h" />
+    <ClInclude Include="include\Assets\Importers\Model.h" />
     <ClInclude Include="include\Assets\ImportingDescs.h" />
     <ClInclude Include="include\Assets\AssetType.h" />
     <ClInclude Include="include\Assets\Loader.h" />
     <ClInclude Include="include\Assets\LoadingDescs.h" />
     <ClInclude Include="include\Assets\Tasks\MaterialImportTask.h" />
     <ClInclude Include="include\Assets\Tasks\MaterialLoadTask.h" />
+    <ClInclude Include="include\Assets\Tasks\MeshCreateTask.h" />
     <ClInclude Include="include\Assets\Tasks\MeshImportTask.h" />
+    <ClInclude Include="include\Assets\Tasks\MeshLoadTask.h" />
     <ClInclude Include="include\Assets\Tasks\ShaderLoadTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureCreateTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureImportTask.h" />
@@ -426,6 +429,7 @@
     <ClInclude Include="include\Assets\Font.h" />
     <ClInclude Include="include\Threading\ThreadPool.h" />
     <ClInclude Include="include\Core\UUID.h" />
+    <ClInclude Include="Source\Assets\Importers\AssimpImporter.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpGLMHelpers.h" />
@@ -450,7 +454,7 @@
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="Source\Audio\FMODError.h" />
     <ClInclude Include="Source\Graphics\InitializeDiligentEngineWin32.h" />
-    <ClInclude Include="include\Assets\Importers\AssimpImporter.h" />
+    <ClInclude Include="include\Assets\Importers\AssimpManager.h" />
     <ClInclude Include="include\Assets\Importers\TextureImporter.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_textedit.h" />
@@ -477,6 +481,7 @@
     <ClCompile Include="Source\Assets\AssetLibrary.cpp" />
     <ClCompile Include="Source\Assets\IAsset.cpp" />
     <ClCompile Include="Source\Assets\Importer.cpp" />
+    <ClCompile Include="Source\Assets\Importers\AssimpManager.cpp" />
     <ClCompile Include="Source\Assets\Loader.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />

@@ -57,6 +57,26 @@ namespace Nuclear
 			Graphics::Context::GetInstance().Shutdown();
 		}
 
+		bool GraphicsEngine::CreateMesh(Assets::Mesh* mesh)
+		{
+			if (mesh)
+			{
+				bool result = true;
+
+				for (unsigned int i = 0; i < mesh->mSubMeshes.size(); i++)
+				{
+					if (!mesh->mSubMeshes.at(i).Create())
+					{
+						result = false;
+					}
+				}
+
+				mesh->SetState(Assets::IAsset::State::Created);
+				return result;
+			}
+			return false;
+		}
+
 		bool GraphicsEngine::CreateImage(Assets::Texture* result, Assets::TextureData* data)
 		{
 			//CREATE IMAGE

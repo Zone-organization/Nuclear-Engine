@@ -10,6 +10,8 @@
 #include <Assets\Loader.h>
 
 #include <ThirdParty/magic_enum.hpp>
+#include <Assets/Importers/AssimpManager.h>
+
 namespace Nuclear
 {
 	namespace Assets

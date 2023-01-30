@@ -199,6 +199,7 @@ public:
 
 		if (ImGui::Button("Build Assets Library"))
 		{
+			ImportModels();
 			ImportPBRAssets();
 		}
 

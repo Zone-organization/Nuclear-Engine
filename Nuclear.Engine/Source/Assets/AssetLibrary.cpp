@@ -25,8 +25,7 @@ namespace Nuclear
 			}
 
 			std::string assets[9] = { "Textures",				//Importing & Loading done
-				"Models",
-				"Meshs",
+				"Meshes",
 				"Materials",
 				"Animations",
 				"AudioClips",

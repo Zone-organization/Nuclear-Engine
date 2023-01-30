@@ -62,7 +62,7 @@ namespace Nuclear {
 				SubMesh(const SubMesh& obj);
 				~SubMesh();
 
-				void Create();
+				bool Create();
 
 				SubMeshData data;
 
@@ -79,8 +79,8 @@ namespace Nuclear {
 			Mesh();
 			~Mesh();
 			
-			void Create();
 
+			//TODO: MOVE!
 			static void CreateCube(Mesh* model, float width = 1.0f, float  height = 1.0f, float  depth = 1.0f);
 			static void CreateSphere(Mesh* model, float radius = 0.5f, unsigned int sliceCount = 20, unsigned int stackCount = 20);
 			static void CreatePlane(Mesh* model, float width = 5.0f, float depth = 5.0f);
@@ -91,6 +91,8 @@ namespace Nuclear {
 			Animations* GetImportedAnimations();
 		protected:
 			friend class Importer;
+			friend class GraphicsEngine;
+
 			Material* pImportedMaterial = nullptr;
 			Animations* pImportedAnimations = nullptr;
 
