@@ -101,7 +101,7 @@ namespace Nuclear
 				}
 				case Assets::AssetType::Mesh:
 				{
-					auto meshdesc = static_cast<Assets::MeshLoadingDesc*>(metadata.pLoadingDesc = new Assets::TextureLoadingDesc);
+					auto meshdesc = static_cast<Assets::MeshLoadingDesc*>(metadata.pLoadingDesc = new Assets::MeshLoadingDesc);
 					meshdesc->mMaterialUUID = Core::UUID(meta["MeshLoadingDesc"]["MaterialUUID"]);
 					meshdesc->mAnimationsUUID = Core::UUID(meta["MeshLoadingDesc"]["AnimationsUUID"]);
 					meshdesc->mSaveMaterialNames = meta["MeshLoadingDesc"].GetBoolean("SaveMaterialNames", true);
