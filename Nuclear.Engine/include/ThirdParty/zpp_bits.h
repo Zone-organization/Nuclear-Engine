@@ -1,3 +1,7 @@
+#ifdef __INTELLISENSE__
+#pragma diag_suppress 2500
+#endif
+
 #ifndef ZPP_BITS_H
 #define ZPP_BITS_H
 
