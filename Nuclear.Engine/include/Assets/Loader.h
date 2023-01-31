@@ -15,6 +15,7 @@ namespace Nuclear
 		class Font;
 		class Shader;
 		class Scene;
+		class Mesh;
 		class Script;
 		class AssetLibrary;
 		class Texture;
@@ -30,6 +31,7 @@ namespace Nuclear
 			Texture* LoadTexture(const Core::Path& Path,const Assets::AssetMetadata& metadata);
 			Material* LoadMaterial(const Core::Path& Path, const Assets::AssetMetadata& metadata);
 			Shader* LoadShader(const Core::Path& Path, const Assets::AssetMetadata& metadata);
+			Mesh* LoadMesh(const Core::Path& Path,bool auto_load_external_material , const Assets::AssetMetadata& metadata);
 
 			std::vector<IAsset*>& GetQueuedAssets();
 

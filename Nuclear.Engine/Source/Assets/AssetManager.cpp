@@ -50,24 +50,7 @@ namespace Nuclear
 		{
 			mDesc = desc;
 		}
-
-		IAsset* AssetManager::Load(const Core::Path& Path, const AssetMetadata& meta)
-		{
-			if (meta.mType == AssetType::Texture)
-			{
-				return Loader::GetInstance().LoadTexture(Path, meta);
-			}
-			else if (meta.mType == AssetType::Material)
-			{
-				return Loader::GetInstance().LoadMaterial(Path, meta);
-			}
-			else if (meta.mType == AssetType::Shader)
-			{
-				return Loader::GetInstance().LoadShader(Path, meta);
-			}
-			return nullptr;
-		}
-
+		
 		void AssetManager::LoadFolder(const Core::Path& Path)
 		{
 			namespace fs = std::filesystem;
@@ -78,7 +61,13 @@ namespace Nuclear
 				{
 					if (entry.path().extension() == ".NEMeta")
 					{
-						Load(entry.path().string());
+						AssetMetadata meta;
+						if (!Serialization::SerializationEngine::GetInstance().Deserialize(meta, entry.path().string()))
+						{
+							NUCLEAR_ERROR("[AssetManager] LoadFolder {0} Asset metadata deserialization failed! : {1}", Path.GetInputPath(), entry.path().string());
+						}
+
+						Load(entry.path().string(), meta, false);
 					}
 				}
 				else
@@ -103,8 +92,30 @@ namespace Nuclear
 				return nullptr;
 			}
 
-			return Load(Path, meta);
+			return Load(Path, meta, true);
 		}
+
+		IAsset* AssetManager::Load(const Core::Path& Path, const AssetMetadata& meta, bool auto_load_assets_dependencies)
+		{
+			if (meta.mType == AssetType::Texture)
+			{
+				return Loader::GetInstance().LoadTexture(Path, meta);
+			}
+			else if (meta.mType == AssetType::Material)
+			{
+				return Loader::GetInstance().LoadMaterial(Path, meta);
+			}
+			else if (meta.mType == AssetType::Shader)
+			{
+				return Loader::GetInstance().LoadShader(Path, meta);
+			}
+			else if (meta.mType == AssetType::Mesh)
+			{
+				return Loader::GetInstance().LoadMesh(Path, auto_load_assets_dependencies,meta);
+			}
+			return nullptr;
+		}
+
 
 		IAsset* AssetManager::Import(const Core::Path& Path, AssetType type)
 		{
@@ -259,5 +270,6 @@ namespace Nuclear
 			//Convert all assets to unified types.
 			return false;
 		}
+	
 	}
 }

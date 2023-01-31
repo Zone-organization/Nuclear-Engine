@@ -42,8 +42,8 @@ public:
 		GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx");
 
 		Assets::MeshImportingDesc ModelDesc;
-		ModelDesc.ImportMaterial = false;
-		ModelDesc.ImportAnimations = false;
+		ModelDesc.mImportMaterial = false;
+		ModelDesc.mImportAnimations = false;
 
 		GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
 	}

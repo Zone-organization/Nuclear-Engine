@@ -53,8 +53,26 @@ namespace Nuclear
 					return false;
 				}
 
+				if (mResult.pMaterial && mImportingDesc.pMaterialShader)
+				{
+					mResult.pMaterial->Create(mImportingDesc.pMaterialShader);
+				}
+
+
+				if (mImportingDesc.mExportMaterial && mResult.pMaterial)
+				{
+					AssetManager::GetInstance().Export(mResult.pMaterial,true, exportpath);
+				}
+
+				//TODO: Export Animations?
+				//if (mImportingDesc.mImportAnimations && mResult.pAnimations)
+				//{
+				//	AssetManager::GetInstance().Export(mResult.pAnimations, true, exportpath);
+				//}
+
+
 				//should do for meshes and materials?
-				if (mImportingDesc.ImportAnimations)
+				if (mImportingDesc.mImportAnimations)
 				{
 					if (mResult.pAnimations)
 					{
@@ -77,7 +95,15 @@ namespace Nuclear
 
 					AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(mResult.pMesh);
 
-					auto matloadingdesc = static_cast<Assets::MaterialLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MaterialLoadingDesc);
+					auto meshloadingdesc = static_cast<Assets::MeshLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MeshLoadingDesc);
+					meshloadingdesc->mSaveMaterialNames = mImportingDesc.mSaveMaterialNames;
+					meshloadingdesc->mExternalMaterial = mImportingDesc.mExportMaterial;
+
+					if (mResult.pMaterial)
+						meshloadingdesc->mMaterialUUID = mResult.pMaterial->GetUUID();
+
+					if (mResult.pAnimations)
+						meshloadingdesc->mAnimationsUUID = mResult.pAnimations->GetUUID();
 
 					//Export Meta
 					Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");

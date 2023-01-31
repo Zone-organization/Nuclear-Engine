@@ -6,9 +6,6 @@
   - W.I.P:
   	- Serializing the scene & assets. (Current WIP)
 	- Improving AssetManager
-		- Async asset loading (Status: Shaders & Textures & Materials done, Models wip)
-	    - All imported assets should be exported in unified filetype to ease loading assets in a final game (80%)
-		- AssetLibrary should become a directory (and serialized into a zip file) (90%)
 	- Multithreading Engine
 
 	

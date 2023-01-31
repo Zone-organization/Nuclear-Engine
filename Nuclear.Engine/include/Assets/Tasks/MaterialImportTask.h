@@ -68,7 +68,6 @@ namespace Nuclear
 
 				auto matloadingdesc = static_cast<Assets::MaterialLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MaterialLoadingDesc);
 
-				//Export Meta
 				Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, newpath + ".NEMaterial" + ".NEMeta");
 				delete assetmetadata.pLoadingDesc;
 

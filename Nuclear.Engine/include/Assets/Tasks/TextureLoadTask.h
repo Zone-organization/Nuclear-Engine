@@ -42,8 +42,6 @@ namespace Nuclear
 
 				if (result)
 				{
-					std::string exportpath = AssetLibrary::GetInstance().GetPath() + "Textures/";
-
 					pResult->SetState(IAsset::State::Loaded);
 
 					//Create image task

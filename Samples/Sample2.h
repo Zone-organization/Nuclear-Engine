@@ -52,8 +52,8 @@ public:
 	void SetupAssets()
 	{
 		Assets::MeshImportingDesc ModelDesc;
-		ModelDesc.ImportMaterial = false;
-		ModelDesc.ImportAnimations = false;
+		ModelDesc.mImportMaterial = false;
+		ModelDesc.mImportAnimations = false;
 
 		//Load Models
 		ShaderBall = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);

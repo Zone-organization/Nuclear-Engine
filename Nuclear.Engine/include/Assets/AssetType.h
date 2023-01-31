@@ -11,7 +11,6 @@ namespace Nuclear
 			Scene,
 
 			Texture,				//Importing & Loading done
-			Model,
 			Mesh,
 			Material,
 			Animations,

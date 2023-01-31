@@ -33,7 +33,7 @@ namespace Nuclear {
 
 			bool AssimpImporter::Import(const std::string& importPath, const std::string& _exportPath, const Model& model, const Assets::MeshImportingDesc& desc)
 			{
-				mLoadingDesc = desc;
+				save_materials_names = desc.mSaveMaterialNames;
 				mModel = model;
 				exportPath = _exportPath;
 				Assimp::Importer importer;
@@ -68,10 +68,15 @@ namespace Nuclear {
 				return true;
 			}
 
-			bool AssimpImporter::Load(const std::string& Path, const Model& model, const MeshImportingDesc& desc)
+			bool AssimpImporter::Load(const std::string& Path, const Model& model, const MeshLoadingDesc& desc)
 			{
-				mLoadingDesc = desc;
+				save_materials_names = desc.mSaveMaterialNames;
 				mModel = model;
+
+				if (desc.mExternalMaterial)
+				{
+					mModel.pMaterial = nullptr; //dont load material
+				}
 
 				Assimp::Importer importer;
 				scene = importer.ReadFile(Path.c_str(), NULL);
@@ -169,7 +174,7 @@ namespace Nuclear {
 					{
 						//auto MeshName = std::string(MeshMat->GetName().C_Str());
 						//TexSet.mHashedName = Utilities::Hash(MeshName);
-						if (mLoadingDesc.SaveMaterialNames == true)
+						if (save_materials_names == true)
 						{
 							TexSet.mName = MeshName;
 						}

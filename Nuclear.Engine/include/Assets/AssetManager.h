@@ -52,7 +52,7 @@ namespace Nuclear
 
 			IAsset* Load(const Core::Path& Path);
 
-			IAsset* Load(const Core::Path& Path, const AssetMetadata& meta);
+			IAsset* Load(const Core::Path& Path, const AssetMetadata& meta, bool auto_load_assets_dependencies = true);
 
 			void LoadFolder(const Core::Path& Path);
 

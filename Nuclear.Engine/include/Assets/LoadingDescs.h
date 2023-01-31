@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Path.h>
+#include <Core/UUID.h>
 #include <string>
 
 namespace Nuclear
@@ -85,5 +86,18 @@ namespace Nuclear
 		
 		};
 
+		struct MeshLoadingDesc : public AssetLoadingDesc
+		{
+			MeshLoadingDesc()
+				: mSaveMaterialNames(true), mExternalMaterial(true)
+			{
+
+			}
+			Core::UUID mMaterialUUID;
+			Core::UUID mAnimationsUUID;
+
+			bool mSaveMaterialNames;
+			bool mExternalMaterial;
+		};
 	}
 }

@@ -3,7 +3,7 @@
 #include <Threading/ThreadingEngine.h>
 #include <Assets/ImportingDescs.h>
 #include <filesystem>
-#include <Assets/Importer.h>
+#include <Assets/Loader.h>
 #include <Assets/AssetLibrary.h>
 #include <Assets\Importers\AssimpManager.h>
 
@@ -20,68 +20,50 @@ namespace Nuclear
 {
 	namespace Assets
 	{
-		class MeshImportTask : public Threading::Task
+		class MeshLoadTask : public Threading::Task
 		{
 		public:
-			MeshImportTask(const Importers::Model& model, const Core::Path& path, const Assets::MeshImportingDesc& desc)
-				: mResult(model), mPath(path), mImportingDesc(desc)
+			MeshLoadTask(const Importers::Model& model, const Core::Path& path, const Assets::AssetMetadata& metadata)
+				: mResult(model), mPath(path), mAssetmeta(metadata)
 			{
 			}
-			~MeshImportTask()
+			~MeshLoadTask()
 			{
 
 			}
 			bool OnRunning() override
 			{
-				std::string exportpath;
+				Assets::MeshLoadingDesc mLoadingDesc = *static_cast<Assets::MeshLoadingDesc*>(mAssetmeta.pLoadingDesc);
+				delete mAssetmeta.pLoadingDesc;
 
-				if (mImportingDesc.mCommonOptions.mExportPath.isValid())
+				//Load Mesh & animations
+				if (!Importers::AssimpManager::GetInstance().Load(mPath.GetRealPath(), mResult, mLoadingDesc))
 				{
-					exportpath = mImportingDesc.mCommonOptions.mExportPath.GetRealPath();
-				}
-				else
-				{
-					exportpath = AssetLibrary::GetInstance().GetPath() + "Meshes/" + mResult.mName + '/';
-				}
-
-				Platform::FileSystem::GetInstance().CreateFolders(exportpath + "Textures/");
-
-				if (!Importers::AssimpManager::GetInstance().Import(mPath.GetRealPath(), exportpath, mResult, mImportingDesc))
-				{
-					NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}'", mPath.GetInputPath());
+					NUCLEAR_ERROR("[Loader] Failed to Load Model : '{0}'", mPath.GetInputPath());
 
 					return false;
 				}
 
 				//should do for meshes and materials?
-				if (mImportingDesc.ImportAnimations)
+				if (mResult.pAnimations)
 				{
-					if (mResult.pAnimations)
+					if (mResult.pAnimations->GetState() != IAsset::State::Loaded)
 					{
-						if (mResult.pAnimations->GetState() != IAsset::State::Loaded)
-						{
-							AssetLibrary::GetInstance().mImportedAnimations.mData.erase(mResult.pAnimations->GetUUID());
-							mResult.pAnimations = nullptr;
-						}
-						else
-						{
-							mResult.pAnimations->SetState(IAsset::State::Loaded);
-						}
+						AssetLibrary::GetInstance().mImportedAnimations.mData.erase(mResult.pAnimations->GetUUID());
+						mResult.pAnimations = nullptr;
+					}
+					else
+					{
+						mResult.pAnimations->SetState(IAsset::State::Loaded);
 					}
 				}
+
 
 				if (mResult.pMesh)
 				{
 					//create task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, IMPORTER_FACTORY_TYPE));
+					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, LOADER_FACTORY_TYPE));
 
-					AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(mResult.pMesh);
-
-					auto matloadingdesc = static_cast<Assets::MaterialLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MaterialLoadingDesc);
-
-					//Export Meta
-					Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
-					delete assetmetadata.pLoadingDesc;
 				}
 
 				return true;
@@ -93,7 +75,7 @@ namespace Nuclear
 			}
 		protected:
 			Importers::Model mResult;
-			Assets::MeshImportingDesc mImportingDesc;
+			Assets::AssetMetadata mAssetmeta;
 			Core::Path mPath;
 		};
 

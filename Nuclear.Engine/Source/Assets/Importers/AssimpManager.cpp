@@ -23,7 +23,7 @@ namespace Nuclear
 				return instance.Import(importPath, exportPath, model, desc);
 			}
 
-			bool AssimpManager::Load(const std::string& Path, const Model& model, const Assets::MeshImportingDesc& desc)
+			bool AssimpManager::Load(const std::string& Path, const Model& model, const Assets::MeshLoadingDesc& desc)
 			{
 				AssimpImporter instance;
 				return instance.Load(Path, model, desc);

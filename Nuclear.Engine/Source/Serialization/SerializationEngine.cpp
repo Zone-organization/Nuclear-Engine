@@ -59,6 +59,16 @@ namespace Nuclear
 				meta["ImageLoadingDesc"]["Extension"] = magic_enum::enum_name(imagedesc->mExtension);
 				meta["ImageLoadingDesc"]["AsyncLoading"] = SetBool(imagedesc->mAsyncLoading);
 			}
+			case Assets::AssetType::Mesh:
+			{
+				const auto meshdesc = static_cast<Assets::MeshLoadingDesc*>(metadata.pLoadingDesc);
+				meta["MeshLoadingDesc"]["MaterialUUID"] = meshdesc->mMaterialUUID.str();
+				meta["MeshLoadingDesc"]["AnimationsUUID"] = meshdesc->mAnimationsUUID.str();
+				meta["MeshLoadingDesc"]["SaveMaterialNames"] = SetBool(meshdesc->mSaveMaterialNames);
+				meta["MeshLoadingDesc"]["ExternalMaterial"] = SetBool(meshdesc->mExternalMaterial);
+			}
+
+
 			default:
 				break;
 			}
@@ -88,6 +98,15 @@ namespace Nuclear
 					auto imagedesc = static_cast<Assets::TextureLoadingDesc*>(metadata.pLoadingDesc = new Assets::TextureLoadingDesc);
 					imagedesc->mExtension = magic_enum::enum_cast<Assets::IMAGE_EXTENSION>(meta["ImageLoadingDesc"]["Extension"]).value_or(Assets::IMAGE_EXTENSION::IMAGE_EXTENSION_UNKNOWN);
 					imagedesc->mAsyncLoading = meta["ImageLoadingDesc"].GetBoolean("AsyncLoading", true);
+				}
+				case Assets::AssetType::Mesh:
+				{
+					auto meshdesc = static_cast<Assets::MeshLoadingDesc*>(metadata.pLoadingDesc = new Assets::TextureLoadingDesc);
+					meshdesc->mMaterialUUID = Core::UUID(meta["MeshLoadingDesc"]["MaterialUUID"]);
+					meshdesc->mAnimationsUUID = Core::UUID(meta["MeshLoadingDesc"]["AnimationsUUID"]);
+					meshdesc->mSaveMaterialNames = meta["MeshLoadingDesc"].GetBoolean("SaveMaterialNames", true);
+					meshdesc->mExternalMaterial = meta["MeshLoadingDesc"].GetBoolean("ExternalMaterial", true);
+
 				}
 				default:
 					break;

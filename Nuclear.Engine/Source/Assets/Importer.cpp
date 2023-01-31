@@ -160,14 +160,14 @@ namespace Nuclear
 				assetname = AssetNameFromDirectory(Path.GetRealPath());
 			}
 
-			if (desc.ImportMaterial)
+			if (desc.mImportMaterial)
 			{
 				material = &AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
 				material->SetName(assetname);
 				material->SetState(IAsset::State::Queued);
 				mQueuedAssets.push_back(material);
 			}
-			if (desc.ImportAnimations)
+			if (desc.mImportAnimations)
 			{
 				animations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
 				animations->SetName(assetname);
@@ -175,7 +175,7 @@ namespace Nuclear
 				mQueuedAssets.push_back(animations);
 			}
 
-			if (desc.ImportMesh)
+			if (desc.mImportMesh)
 			{
 				mesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
 				mesh->SetName(assetname);

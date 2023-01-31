@@ -10,6 +10,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		class Shader;
 		struct CommonImportingOptions
 		{
 			///if this string left empty the engine will assign a default name as "Directoryname::AssetFilenamewithextension"
@@ -70,10 +71,14 @@ namespace Nuclear
 		{
 			CommonImportingOptions mCommonOptions;
 
-			bool SaveMaterialNames = true;
-			bool ImportMesh = true;
-			bool ImportAnimations = true;
-			bool ImportMaterial = true;
+			Shader* pMaterialShader = nullptr;
+
+			bool mSaveMaterialNames = true;
+			bool mImportMesh = true;
+			bool mImportAnimations = true;
+			bool mImportMaterial = true;
+
+			bool mExportMaterial = true;
 		};
 
 		struct MaterialImportingDesc
