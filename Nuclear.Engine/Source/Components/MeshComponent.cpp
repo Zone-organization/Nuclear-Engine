@@ -1,6 +1,7 @@
 #include "Components\MeshComponent.h"
 #include "Assets\Material.h"
 #include "Assets\Shader.h"
+#include "Assets\Mesh.h"
 
 namespace Nuclear 
 {
@@ -33,56 +34,68 @@ namespace Nuclear
 			{
 				if (mEnableRendering)
 				{
-					if (pMaterial)
+					bool invalid = false;
+					if (pMesh && pMaterial)
 					{
-						if (pMaterial->GetShader())
+						if (pMesh->GetState() != Assets::IAsset::State::Created)
 						{
-							if (mMaterialDirty)
-							{
-								auto assetptr = pMaterial->GetShader();
-								mPipelineCntrl.SetPipeline(&assetptr->GetShaderPipeline());
-								mMaterialDirty = false;
-							}
-
-							if (mRenderSystemHasDefferedPass)
-								mRequestDeffered = false;
-
-							if (mRenderSystemHasShadowPass)
-								mReceiveShadows = false;
-
-							Uint32 mDefferedPipeline = Utilities::Hash("NE_DEFFERED");
-							Uint32 mAnimationHash = Utilities::Hash("NE_ANIMATION");
-							Uint32 mRecieveShadowHash = Utilities::Hash("NE_SHADOWS");
-
-							mPipelineCntrl.SetSwitch(mAnimationHash, bool(pAnimator));
-							mPipelineCntrl.SetSwitch(mRecieveShadowHash, mReceiveShadows);
-							mPipelineCntrl.SetSwitch(mDefferedPipeline, mRequestDeffered);
-
-							for (auto& i : mCustomSwitches)
-							{
-								mPipelineCntrl.SetSwitch(i.first, i.second);
-							}
-							mPipelineCntrl.Update();
-							RenderQueue = mPipelineCntrl.GetActiveVariant()->GetRenderQueue();
-							mDirty = false;
-
+							invalid = true;
 						}
 						else
 						{
-							RenderQueue = 0;
+							if (pMaterial->GetShader())
+							{
+								if (mMaterialDirty)
+								{
+									auto assetptr = pMaterial->GetShader();
+									mPipelineCntrl.SetPipeline(&assetptr->GetShaderPipeline());
+									mMaterialDirty = false;
+								}
+
+								if (mRenderSystemHasDefferedPass)
+									mRequestDeffered = false;
+
+								if (mRenderSystemHasShadowPass)
+									mReceiveShadows = false;
+
+								Uint32 mDefferedPipeline = Utilities::Hash("NE_DEFFERED");
+								Uint32 mAnimationHash = Utilities::Hash("NE_ANIMATION");
+								Uint32 mRecieveShadowHash = Utilities::Hash("NE_SHADOWS");
+
+								mPipelineCntrl.SetSwitch(mAnimationHash, bool(pAnimator));
+								mPipelineCntrl.SetSwitch(mRecieveShadowHash, mReceiveShadows);
+								mPipelineCntrl.SetSwitch(mDefferedPipeline, mRequestDeffered);
+
+								for (auto& i : mCustomSwitches)
+								{
+									mPipelineCntrl.SetSwitch(i.first, i.second);
+								}
+								mPipelineCntrl.Update();
+								RenderQueue = mPipelineCntrl.GetActiveVariant()->GetRenderQueue();
+								mDirty = false;
+
+							}
+							else
+							{
+								invalid = true;
+							}
 						}
 					}
 					else
 					{
+						invalid = true;
+					}
+
+					if (invalid)
+					{
+						mDirty = true;
 						RenderQueue = 0;
 					}
 				}
 				else
 				{
-					mDirty = false;
 					RenderQueue = 0;
-				}
-
+				}				
 			}
 		}
 		Uint32 MeshComponent::GetRenderQueue() const

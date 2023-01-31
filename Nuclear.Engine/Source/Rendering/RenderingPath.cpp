@@ -59,11 +59,6 @@ namespace Nuclear
 			//Validation
 			if (Core::Engine::GetInstance().isDebug())
 			{
-				if (mesh == nullptr)
-				{
-					NUCLEAR_ERROR("[RenderingPath] Skipped Rendering invalid Mesh...");
-					return;
-				}
 				if (material->GetShaderID() != pActivePipeline->GetShaderID())
 				{
 					NUCLEAR_ERROR("[RenderingPath] Skipped Rendering Mesh with invalid Material (shader asset & shader pipeline mismatch)...");

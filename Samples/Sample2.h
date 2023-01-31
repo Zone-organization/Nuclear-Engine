@@ -4,7 +4,9 @@
 class Sample2 : public SampleBase
 {
 	Assets::Mesh* ShaderBall;
-	
+	Assets::Mesh* ShaderBall2;
+
+
 	Assets::Material* RustedIron;
 	Assets::Material* Plastic;
 	Assets::Material* Grass;
@@ -27,6 +29,7 @@ class Sample2 : public SampleBase
 
 	ECS::Entity EShaderBall;
 	ECS::Entity ESphere;
+	ECS::Entity EShaderBall2;
 
 	ECS::Entity ELights;
 
@@ -47,6 +50,9 @@ public:
 		Gold = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Gold.NEMaterial");
 
 		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/");
+
+		//GetAssetManager().LoadFolder("@Assets@/Meshes/");
+		//ShaderBall = GetAssetManager().Import<Assets::Mesh>("@Assets@/Meshes/shaderball_shaderball/shaderball_shaderball.glb");
 	}
 
 	void SetupAssets()
@@ -56,7 +62,9 @@ public:
 		ModelDesc.mImportAnimations = false;
 
 		//Load Models
-		ShaderBall = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/shaderball/shaderball.obj", ModelDesc);
+		ShaderBall = GetAssetManager().Load<Assets::Mesh>("@Assets@/Meshes/shaderball_shaderball/shaderball_shaderball.glb");
+		ShaderBall2 = GetAssetManager().Import<Assets::Mesh>("@Assets@/Meshes/shaderball_shaderball/shaderball_shaderball.glb");
+
 		LoadPBRMaterials();
 	}
 	void SetupEntities()
@@ -65,7 +73,11 @@ public:
 		ECS::Transform shaderballT;
 		shaderballT.SetScale(0.5f);
 
-		EShaderBall = GetScene().CreateEntity("ShaderBall" , shaderballT);
+		EShaderBall = GetScene().CreateEntity("ShaderBall", shaderballT);
+
+		shaderballT.SetPosition({ 15.0f, 0.0f, 0.0f });
+		EShaderBall2 = GetScene().CreateEntity("ShaderBall2", shaderballT);
+
 		ELights = GetScene().CreateEntity("Lights");
 		EController = GetScene().CreateEntity("Controller");
 
@@ -133,6 +145,8 @@ public:
 
 		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, RustedIron);
 		EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
+		EShaderBall2.AddComponent<Components::MeshComponent>(ShaderBall2, RustedIron);
+		EShaderBall2.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 		ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 
 		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
@@ -164,14 +178,15 @@ public:
 				activeentity = EShaderBall;
 				EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 				ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+				EShaderBall2.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 			}
 			if (ImGui::RadioButton("Sphere", &f, 1))
 			{
 				activeentity = ESphere;
 				EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 				ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
+				EShaderBall2.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 			}
-
 
 			ImGui::Text("Material");
 
