@@ -79,7 +79,7 @@ namespace Nuclear {
 				}
 
 				Assimp::Importer importer;
-				scene = importer.ReadFile(Path.c_str(), NULL);
+				scene = importer.ReadFile(Path.c_str(), aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 				//Failed?
 				if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
