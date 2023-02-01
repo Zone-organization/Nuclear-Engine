@@ -452,7 +452,6 @@
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\Assets\AssetManager.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
-    <ClInclude Include="Source\Audio\FMODError.h" />
     <ClInclude Include="Source\Graphics\InitializeDiligentEngineWin32.h" />
     <ClInclude Include="include\Assets\Importers\AssimpManager.h" />
     <ClInclude Include="include\Assets\Importers\TextureImporter.h" />

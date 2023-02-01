@@ -33,7 +33,7 @@ Follow the instructions below to compile and run the engine from source.
 * Clone repo & submodules
 * Run **RunCmakeForDependencies.bat**
 * Compile Assimp & Diligent found in External/CmakeProjects
-* Download and compile the remaining dependencies (PHYSX & FreeImage & FMOD & Freetype & msdf-atlas-gen 'as static lib')
+* Download and compile the remaining dependencies (PHYSX & FreeImage & Freetype & msdf-atlas-gen 'as static lib')
 * Run **CopyDependenciesBinaries.bat**
 * Open `Nuclear Engine.sln` and set your solution configuration and platform
 * Compile 
@@ -48,7 +48,6 @@ Follow the instructions below to compile and run the engine from source.
 | Freetype | submodule | Built with their provided build-tools |
 | msdf-atlas-gen | submodule | Built with their provided build-tools |
 | Mono | External | Put headers in External/mono |
-| FMOD SDK | External | Put headers in External/FMOD/inc  |
 | SDL2 | External | Put headers in External/SDL/include |
 | spdlog | included | Built with the engine |
 | IMGUI | included | Built with the engine |

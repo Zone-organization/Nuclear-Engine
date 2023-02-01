@@ -1,12 +1,6 @@
 #pragma once
 #include <Assets/IAsset.h>
 
-namespace FMOD
-{
-	class Sound;
-	class Channel;
-}
-
 namespace Nuclear
 {
 	namespace Audio { class Channel; }
@@ -20,7 +14,7 @@ namespace Nuclear
 			~AudioClip();
 
 		//private:
-			FMOD::Sound* mSound;
+			
 		};
 	}
 }

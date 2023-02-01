@@ -14,18 +14,6 @@ copy External\CmakeProjects\Assimp\lib\Release\assimp-vc143-mt.lib	 Bin\DebugX64
 copy External\CmakeProjects\Assimp\bin\Release\assimp-vc143-mt.dll	 Bin\ReleaseX64
 copy External\CmakeProjects\Assimp\lib\Release\assimp-vc143-mt.lib	 Bin\ReleaseX64
 
-::FMod
-copy External\FMOD\lib\x64\fmodL.dll	 Bin\DebugX64
-copy External\FMOD\lib\x64\fmodL_vc.lib	 Bin\DebugX64
-
-copy External\FMOD\lib\x64\fmodL.dll	 Bin\ReleaseX64
-copy External\FMOD\lib\x64\fmodL_vc.lib	 Bin\ReleaseX64
-
-::GLFW Debug
-copy External\CmakeProjects\GLFW\src\Debug\glfw3.lib	 Bin\DebugX64
-::GLFW Release
-copy External\CmakeProjects\GLFW\src\Release\glfw3.lib	 Bin\ReleaseX64
-
 ::PhysX Debug
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysX_64.dll	 Bin\DebugX64
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysXCommon_64.dll	 Bin\DebugX64

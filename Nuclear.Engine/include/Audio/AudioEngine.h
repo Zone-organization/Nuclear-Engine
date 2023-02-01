@@ -1,12 +1,6 @@
 #pragma once
 #include <NE_Common.h>
 
-namespace FMOD
-{
-	class System;
-	class Channel;
-}
-
 namespace Nuclear
 {
 	namespace Audio
@@ -28,11 +22,8 @@ namespace Nuclear
 
 			void Shutdown();
 
-			FMOD::System *GetSystem();
-
-			void Update(FMOD::Channel * ch);
+			void Update(/*FMOD::Channel * ch*/);
 		protected:
-			FMOD::System* pSystem;
 
 		private:
 			AudioEngine();

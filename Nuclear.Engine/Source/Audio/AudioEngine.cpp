@@ -1,9 +1,5 @@
 #include <Audio\AudioEngine.h>
 #include <Utilities/Logger.h>
-#include <FMOD/inc/fmod.hpp>
-#define FMOD_ERRCHK_IMPL
-#include "FMODError.h"
-#pragma comment (lib, "fmodL_vc.lib")
 
 namespace Nuclear
 {
@@ -16,7 +12,7 @@ namespace Nuclear
 
 		bool AudioEngine::Initialize(const AudioEngineDesc& desc)
 		{
-			FMOD_RESULT result;
+			/*FMOD_RESULT result;
 			result = FMOD::System_Create(&pSystem);
 
 			if (result != FMOD_OK)
@@ -33,6 +29,7 @@ namespace Nuclear
 				return false;
 			}
 			NUCLEAR_INFO("[AudioEngine] Initialized FMOD SoundSystem.");
+			return true;*/
 			return true;
 		}
 		AudioEngine& AudioEngine::GetInstance()
@@ -44,31 +41,12 @@ namespace Nuclear
 	
 		void AudioEngine::Shutdown()
 		{
-			pSystem->close();
-			pSystem->release();
-		}
-		FMOD::System * AudioEngine::GetSystem()
-		{
-			return pSystem;
-		}
-		void AudioEngine::Update(FMOD::Channel * channel)
-		{
-			pSystem->update();
 
-			if (channel)
-			{
-				bool playing = 0;
-				auto result = channel->isPlaying(&playing);
-				if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
-				{
-					if (result != FMOD_OK)
-					{
-						NUCLEAR_ERROR("[AudioEngine] FMOD Error: '{0}'" , FMOD_ErrorString(result));
-						return;
-					}
-				}
+		}
 
-			}
+		void AudioEngine::Update()
+		{
+			
 		}
 	}
 }

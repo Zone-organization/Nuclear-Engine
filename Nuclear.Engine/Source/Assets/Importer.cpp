@@ -13,7 +13,6 @@
 #include <Platform\FileSystem.h>
 #include <Parsers/ShaderParser.h>
 
-#include <FMOD/inc/fmod.hpp>
 #include <Threading/Task.h>
 #include <Threading/MainThreadTask.h>
 #include <Threading/ThreadingEngine.h>
@@ -138,7 +137,6 @@ namespace Nuclear
 		AudioClip* Importer::ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc)
 		{
 			auto result = &AssetLibrary::GetInstance().mImportedAudioClips.AddAsset();
-			Audio::AudioEngine::GetInstance().GetSystem()->createSound(Path.GetRealPath().c_str(), Desc.mMode, 0, &result->mSound);
 
 
 			result->mState = IAsset::State::Loaded;
