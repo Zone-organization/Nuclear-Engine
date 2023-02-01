@@ -13,3 +13,6 @@
 [submodule "External/msdf-atlas-gen"]
 	path = External/msdf-atlas-gen
 	url = https://github.com/Zone-organization/msdf-atlas-gen.git
+[submodule "External/OpenAL"]
+	path = External/OpenAL
+	url = https://github.com/Zone-organization/openal-soft
