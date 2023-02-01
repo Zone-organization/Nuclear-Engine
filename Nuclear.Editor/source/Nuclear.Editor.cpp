@@ -8,20 +8,22 @@
 
 int main()
 {
-	EngineStartupDesc desc;
+	Core::EngineStartupDesc desc;
 	desc.mEngineWindowDesc.WindowWidth = 1280;
 	desc.mEngineWindowDesc.WindowHeight = 720;
+	desc.mScriptingClientDllName = "EditorClient.dll";
+	desc.mScriptingAssemblyNamespace = "Editor";
+	desc.mAssetsLibraryPath = "../Assets/";
+	Core::Engine::GetInstance().Start(desc);
 
-	Engine::GetInstance()->Start(desc);
-	Core::Path::mReservedPaths["@CommonAssets@"] = "Assets/Common";
-	Core::Path::mReservedPaths["@NuclearAssets@"] = "Assets/NuclearEngine";
-	Core::Path::mReservedPaths["@EditorAssets@"] = "Assets/NuclearEditor";
+	Core::Path::mReservedPaths["@EditorAssets@"] = "../Assets/NuclearEditor";
+	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
 
-	while (!Engine::GetInstance()->ShouldClose())
+	while (!Core::Engine::GetInstance().ShouldClose())
 	{
 		NuclearEditor editor;
-		Engine::GetInstance()->LoadClient(&editor);
+		Core::Engine::GetInstance().LoadClient(&editor);
 	}
-	Engine::GetInstance()->EndClient();
+	Core::Engine::GetInstance().EndClient();
 	return 0;
 }

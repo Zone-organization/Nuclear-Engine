@@ -1,5 +1,4 @@
 #include "Project.h"
-#include "Core\Window.h"
 
 namespace Nuclear::Editor
 {
@@ -22,10 +21,10 @@ namespace Nuclear::Editor
 	{
 		return mInfo;
 	}
-	Assets::Scene* Project::GetActiveScene()
-    {
-        return SceneMgr.GetActiveScene();
-    }
+	//Assets::Scene* Project::GetActiveScene()
+ //   {
+ //       return SceneMgr.GetActiveScene();
+ //   }
 	Assets::Material* Project::GetDefaultMaterial()
 	{
 		return mDefaultMaterial;
@@ -33,11 +32,6 @@ namespace Nuclear::Editor
 	void Project::SetDefaultMaterial(Assets::Material* mat)
 	{
 		mDefaultMaterial = mat;
-	}
-
-	Managers::AssetManager* Project::GetAssetManager()
-	{
-		return &AssetLoader;
 	}
 
 	std::string AssetTypeToString(Assets::AssetType type)
@@ -48,14 +42,12 @@ namespace Nuclear::Editor
 			return "Unknown";
 		case Nuclear::Assets::AssetType::Scene:
 			return "Scene";
-		case Nuclear::Assets::AssetType::Image:
-			return "Image";
+		case Nuclear::Assets::AssetType::Texture:
+			return "Texture";
 		case Nuclear::Assets::AssetType::Mesh:
 			return "Mesh";
 		case Nuclear::Assets::AssetType::Material:
 			return "Material";
-		case Nuclear::Assets::AssetType::MaterialData:
-			return "MaterialData";
 		case Nuclear::Assets::AssetType::Animations:
 			return "Animations";
 		case Nuclear::Assets::AssetType::AudioClip:
@@ -71,16 +63,16 @@ namespace Nuclear::Editor
 		return "Unknown";
 	}
 
-	void Project::ImportAssetWindow(const std::string& path, const Assets::AssetType& type)
+	void Project::ImportAssetWindow(const std::string& path)
 	{
 		if (ImGui::Begin("Import Asset"))
 		{
-			if (type == Assets::AssetType::Image)
+			/*if (type == Assets::AssetType::Image)
 			{
 				Importers::ImageLoadingDesc desc;
 
 				AssetLoader.Import(path, desc);
-			}
+			}*/
 
 			ImGui::End();
 		}
@@ -92,7 +84,7 @@ namespace Nuclear::Editor
 
     void Project::ShowProjectFolderView()
     {
-		if (ImGui::Begin("FilePicker"))
+		if (ImGui::Begin("Assets Folder"))
 		{
 			// Show the current path with clickable button for each folder to travel through
 			ImGui::Text("Current path : ");
@@ -164,7 +156,7 @@ namespace Nuclear::Editor
 
 					if (ButtonFile(entryName.c_str()))
 					{
-						auto type = AssetLoader.GetAssetType(entryName.c_str());
+					/*	auto type = AssetLoader.GetAssetType(entryName.c_str());
 
 
 						if (type != Nuclear::Assets::AssetType::Unknown)
@@ -186,13 +178,13 @@ namespace Nuclear::Editor
 								Importers::MeshLoadingDesc desc;
 								AssetLoader.Import(path.string(), desc);
 							}
-						}
+						}*/
 
 
 
-						/*if (mOnPicked)
-							mOnPicked(path);
-						Hide();*/
+						//if (mOnPicked)
+						//	mOnPicked(path);
+						//Hide();
 					}
 						
 					
@@ -205,6 +197,7 @@ namespace Nuclear::Editor
 		
 		}
 		ImGui::End();
+		
     }
 	
 	void Project::SetPath(const std::filesystem::path& path)
@@ -217,15 +210,10 @@ namespace Nuclear::Editor
 
 	Assets::Scene* Project::AddNewScene()
 	{
-		auto hashedname = Utilities::Hash("UnNamed Scene");
+		auto result = &Assets::AssetLibrary::GetInstance().mImportedScenes.AddAsset();
 
-		AssetLoader.mLibrary.mImportedScenes.mData[hashedname] = Assets::Scene();
-		auto result = &AssetLoader.mLibrary.mImportedScenes.mData[hashedname];
-
-
-		//TODO
 		result->SetName("UnNamed Scene");
-		SceneMgr.CreateScene(result, (SceneMgr.GetActiveScene() == nullptr) ? true : false);
+		Core::Scene::GetInstance().LoadScene(result);
 
 		/*auto EController = result->CreateEntity();
 		EController.AddComponent<Components::CameraComponent>(&Camera);

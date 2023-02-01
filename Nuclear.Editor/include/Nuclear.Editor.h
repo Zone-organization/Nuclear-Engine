@@ -2,14 +2,14 @@
 #include <Common.h>
 #include <EditorUI.h>
 using namespace Nuclear::Editor;
-class NuclearEditor : public Client
+class NuclearEditor : public Core::Client
 {
 	
 	EditorUI GUI;
 
 public:
 	NuclearEditor()
-		:Client({"Nuclear Editor", "0.01 Alpha", "Zone - V7medZ", ClientType::Editor }),
+		:Client({"Nuclear Editor", "0.01 Alpha", "Zone - V7medZ", Core::ClientType::Editor }),
 		GUI(this)
 	{
 	}
@@ -21,7 +21,7 @@ public:
 	}
 	void OnWindowResize(int width, int height) override
 	{
-		Graphics::Context::GetSwapChain()->Resize(width, height);
+		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
 
 	}
 	void Update(float deltatime) override
@@ -32,12 +32,12 @@ public:
 	{
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 
-		auto* RTV = Graphics::Context::GetSwapChain()->GetCurrentBackBufferRTV();
-		auto* DSV = Graphics::Context::GetSwapChain()->GetDepthBufferDSV();
+		auto* RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
+		auto* DSV = Graphics::Context::GetInstance().GetSwapChain()->GetDepthBufferDSV();
 
-		Graphics::Context::GetContext()->SetRenderTargets(1, &RTV, DSV, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearRenderTarget(RTV, ClearColor, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetContext()->ClearDepthStencil(DSV, CLEAR_DEPTH_FLAG, 1.0f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, DSV, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(RTV, ClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(DSV, Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		GUI.Render();
 	}

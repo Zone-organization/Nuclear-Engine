@@ -2,7 +2,7 @@
 #include "Nuclear.Editor.h"
 #include <type_traits>
 
-#include <Engine/ECS/entt/core/type_info.hpp>
+#include <ECS/entt/core/type_info.hpp>
 using namespace entt::literals;
 
 namespace Nuclear::Editor 
@@ -224,7 +224,7 @@ namespace Nuclear::Editor
 			bool addmenuacive = false;
 			if (pActiveProject)
 			{
-				if (pActiveProject->GetActiveScene())
+				if (Core::Scene::GetInstance().GetSceneAsset())
 				{
 					addmenuacive = true;
 				}
@@ -233,21 +233,21 @@ namespace Nuclear::Editor
 			{
 				if (ImGui::MenuItem("Empty Entity"))
 				{
-					pActiveProject->GetActiveScene()->CreateEntity();
+					 Core::Scene::GetInstance().CreateEntity();
 				}
 				if (ImGui::MenuItem("Box")) 
 				{
-					pActiveProject->GetActiveScene()->CreateBox(pActiveProject->GetDefaultMaterial());
+					 Core::Scene::GetInstance().CreateBox(pActiveProject->GetDefaultMaterial());
 				}
 
 				if (ImGui::MenuItem("Sphere"))
 				{
-					pActiveProject->GetActiveScene()->CreateSphere(pActiveProject->GetDefaultMaterial());
+					 Core::Scene::GetInstance().CreateSphere(pActiveProject->GetDefaultMaterial());
 				}
 
 				if (ImGui::MenuItem("Plane"))
 				{
-					pActiveProject->GetActiveScene()->CreatePlane(pActiveProject->GetDefaultMaterial());
+					 Core::Scene::GetInstance().CreatePlane(pActiveProject->GetDefaultMaterial());
 				}
 
 				ImGui::EndMenu();
@@ -259,51 +259,47 @@ namespace Nuclear::Editor
 
 	void EditorUI::RenderEntityExplorer()
 	{
-		auto scene = pActiveProject->GetActiveScene();
+		ImGui::Begin("Entity Explorer");
 
-		if (scene)
+		if (ImGui::TreeNode(Core::Scene::GetInstance().GetName().c_str()))
 		{
-			ImGui::Begin("Entity Explorer");
+			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::EntityInfoComponent>();
 
-			if (ImGui::TreeNode(scene->GetName().c_str()))
+			for (auto entity : view)
 			{
-				auto view = scene->GetRegistry().view<Components::EntityInfoComponent>();
+				auto& Einfo = view.get<Components::EntityInfoComponent>(entity);
+				auto index = (Uint32)entity;
 
-				for (auto entity : view)
+				ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+				static int selectedindex = 0;
+
+				if (selectedindex == index)
 				{
-					auto& Einfo = view.get<Components::EntityInfoComponent>(entity);
-					auto index = (Uint32)entity;
-
-					ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-
-					static int selectedindex = 0;
-
-					if (selectedindex == index)
-					{
-						node_flags |= ImGuiTreeNodeFlags_Selected;
-						mEditor.Render(entity, scene->GetRegistry(), Einfo);
-					}
-
-					ImGui::PushID(index);
-
-
-					ImGui::TreeNodeEx(Einfo.mName.c_str(), node_flags);
-					if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-					{
-						selectedindex = index;
-					}
-
-					ImGui::PopID();
+					node_flags |= ImGuiTreeNodeFlags_Selected;
+					mEditor.Render(entity, Core::Scene::GetInstance().GetRegistry(), Einfo);
 				}
-				ImGui::TreePop();
-			}
 
-			if (ImGui::Button("Add Entity"))
-			{
-				scene->CreateEntity();
+				ImGui::PushID(index);
+
+
+				ImGui::TreeNodeEx(Einfo.mName.c_str(), node_flags);
+				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+				{
+					selectedindex = index;
+				}
+
+				ImGui::PopID();
 			}
-			ImGui::End();
+			ImGui::TreePop();
 		}
+
+		if (ImGui::Button("Add Entity"))
+		{
+			Core::Scene::GetInstance().CreateEntity();
+		}
+		ImGui::End();
 	}
+	
 
 }

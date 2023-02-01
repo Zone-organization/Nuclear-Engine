@@ -163,20 +163,32 @@ namespace Nuclear
 		}
 		bool Scene::LoadScene(Assets::Scene* scene)
 		{
+			pSceneAsset = scene;
 			mRegistry.clear();
 
-			zpp::bits::in in(scene->mBinaryBuffer);
-
-			//bitsery::Deserializer<InputAdapter> deser{ scene->mBinaryBuffer.begin(), scene->mBinaryBuffer.size()};
-			Serialization::SceneInputArchive<zpp::bits::in<Buffer>> input(&in);
-
-			entt::snapshot_loader{ mRegistry }.entities(input).component<Components::EntityInfoComponent, Components::LightComponent, Components::MeshComponent>(input);
+			if (scene->mBinaryBuffer.size() != 0)
+			{
+				zpp::bits::in in(scene->mBinaryBuffer);
+				Serialization::SceneInputArchive<zpp::bits::in<Buffer>> input(&in);
+				entt::snapshot_loader{ mRegistry }.entities(input).component<Components::EntityInfoComponent, Components::LightComponent, Components::MeshComponent>(input);
+			}
 
 			return true;
 		}
 
+		std::string Scene::GetName() const
+		{
+			return mCurrentSceneName;
+		}
+
+		Assets::Scene* Scene::GetSceneAsset()
+		{
+			return pSceneAsset;
+		}
+
 		Scene::Scene()
 		{	
+			mCurrentSceneName = "SCENE_CTOR";
 			pMainCamera = nullptr;
 		}
 	}

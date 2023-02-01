@@ -22,27 +22,23 @@ namespace Nuclear::Editor
 
 		ProjectInfo GetProjectInfo() const;
 
-		Assets::Scene* GetActiveScene();
+		//Assets::Scene* GetActiveScene();
 
 		Assets::Material* GetDefaultMaterial();
 		void SetDefaultMaterial(Assets::Material* mat);
-
-		Managers::AssetManager* GetAssetManager();
 
 		void ShowProjectFolderView();
 
 		void SetPath(const std::filesystem::path& path);
 
-		void ImportAssetWindow(const std::string& path, const Assets::AssetType& type);
+		void ImportAssetWindow(const std::string& path);
 
 		Assets::Scene* AddNewScene();
 	protected:
-		Managers::AssetManager AssetLoader;
-		Managers::SceneManager SceneMgr;
 
 		Assets::Material* mDefaultMaterial = nullptr;
 		ProjectInfo mInfo;
 		std::filesystem::path mPath;
-		Core::Parsers::XMLDocument mProjectXMLFile;
+	//	Core::Parsers::XMLDocument mProjectXMLFile;
 	};
 }

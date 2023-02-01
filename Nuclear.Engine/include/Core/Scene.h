@@ -44,12 +44,15 @@ namespace Nuclear
 
 			bool LoadScene(Assets::Scene* scene);
 
-
+			std::string GetName() const;
+			Assets::Scene* GetSceneAsset();
 		protected:
 			entt::registry mRegistry;
 			ECS::SystemManager mSystems;
 			Components::CameraComponent* pMainCamera;
 
+			std::string mCurrentSceneName;
+			Assets::Scene* pSceneAsset;
 		private:
 			Scene();
 		};

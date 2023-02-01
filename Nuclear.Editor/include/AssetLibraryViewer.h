@@ -14,10 +14,10 @@ namespace Nuclear::Editor {
 		void SetProject(Project* project);
 		void Render();
 
+		void SetPath(const std::filesystem::path& path);
 	protected:
-		Assets::AssetLibrary* pAssetLibrary;
-
 		Project* pActiveProject;
 		NuclearEditor* mEditorInstance;
+		std::filesystem::path mPath;
 	};
 }
