@@ -3,6 +3,10 @@
 #include <Math\Math.h>
 #include <Graphics\ShaderPipelineSwitch.h>
 #include <Serialization/Access.h>
+#include <Serialization/SerializationEngine.h>
+#include <Core\UUID.h>
+#include <Assets/AssetType.h>
+#include <Serialization/IsLoading.h>
 #include <vector>
 
 namespace Nuclear {
@@ -50,6 +54,37 @@ namespace Nuclear {
 			Animation::Animator* GetAnimator();
 
 			void SetRenderSystemFlags(bool hasdefferedpass, bool hasshadowpass);
+
+
+			constexpr static auto serialize(auto& archive, auto& self)
+			{
+				ISLOADING(archive)
+				{
+					Core::UUID mesh;
+					Core::UUID material;
+
+					auto result = archive(mesh, material, self.mEnableRendering, self.mCastShadow, self.mReceiveShadows);
+
+					self.pMesh = static_cast<Assets::Mesh*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(Assets::AssetType::Mesh, mesh));
+					self.pMaterial = static_cast<Assets::Material*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(Assets::AssetType::Material, material));
+
+					return result;
+				}
+				else
+				{
+					Core::UUID mesh;
+					Core::UUID material;
+
+					if (self.pMesh != nullptr)					
+						mesh = self.pMesh->GetUUID();
+
+					if (self.pMaterial != nullptr)
+						material = self.pMaterial->GetUUID();
+
+
+					return archive(mesh, material, self.mEnableRendering, self.mCastShadow, self.mReceiveShadows);
+				}
+			}
 		protected:
 			friend Serialization::Access;
 
@@ -73,11 +108,6 @@ namespace Nuclear {
 			bool mDirty = true;
 			bool mRenderSystemHasDefferedPass = false;
 			bool mRenderSystemHasShadowPass = false;
-
-			constexpr static auto serialize(auto& archive, auto& self)
-			{
-				return archive(self.mEnableRendering, self.mCastShadow, self.mReceiveShadows);
-			}
 		};
 
 	}

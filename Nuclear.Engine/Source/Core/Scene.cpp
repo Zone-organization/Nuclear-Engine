@@ -155,7 +155,7 @@ namespace Nuclear
 
 			//bitsery::Serializer<OutputAdapter> ser{ scene->mBinaryBuffer };
 			Serialization::SceneOutputArchive<zpp::bits::out<Buffer>> output(&out);
-			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent>(output);
+			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent, Components::MeshComponent >(output);
 
 			//ser.object(Assets::AssetManager::GetInstance().mLibrary);
 
@@ -170,7 +170,7 @@ namespace Nuclear
 			//bitsery::Deserializer<InputAdapter> deser{ scene->mBinaryBuffer.begin(), scene->mBinaryBuffer.size()};
 			Serialization::SceneInputArchive<zpp::bits::in<Buffer>> input(&in);
 
-			entt::snapshot_loader{ mRegistry }.entities(input).component<Components::EntityInfoComponent, Components::LightComponent>(input);
+			entt::snapshot_loader{ mRegistry }.entities(input).component<Components::EntityInfoComponent, Components::LightComponent, Components::MeshComponent>(input);
 
 			return true;
 		}

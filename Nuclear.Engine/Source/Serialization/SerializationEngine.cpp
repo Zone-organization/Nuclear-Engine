@@ -116,10 +116,6 @@ namespace Nuclear
 			return result;
 		}
 
-		bool SerializationEngine::SaveScene()
-		{
-			return false;
-		}
 		Assets::IAsset* SerializationEngine::DeserializeUUID(Assets::AssetType type, const Core::UUID& uuid)
 		{
 			if (type == Assets::AssetType::Shader)
@@ -129,6 +125,10 @@ namespace Nuclear
 			else if (type == Assets::AssetType::Material)
 			{
 				return Assets::AssetLibrary::GetInstance().mImportedMaterials.GetOrAddAsset(uuid);
+			}
+			else if (type == Assets::AssetType::Mesh)
+			{
+				return Assets::AssetLibrary::GetInstance().mImportedMeshes.GetOrAddAsset(uuid);
 			}
 			else if (type == Assets::AssetType::Texture)
 			{
