@@ -5,6 +5,7 @@ namespace Nuclear
 {
 	namespace Audio
 	{
+
 		struct AudioEngineDesc
 		{
 			unsigned int MaxChannels = 32;

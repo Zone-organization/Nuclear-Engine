@@ -122,6 +122,10 @@
     <ClInclude Include="include\Assets\Tasks\TextureCreateTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureImportTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureLoadTask.h" />
+    <ClInclude Include="include\Audio\AudioBackend.h" />
+    <ClInclude Include="include\Audio\AudioDevice.h" />
+    <ClInclude Include="include\Audio\config.h" />
+    <ClInclude Include="include\Components\AudioListenerComponent.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Fallbacks\Fallbacks.h" />
@@ -430,6 +434,7 @@
     <ClInclude Include="include\Threading\ThreadPool.h" />
     <ClInclude Include="include\Core\UUID.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpImporter.h" />
+    <ClInclude Include="Source\Audio\OpenAL\OpenALBackend.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpGLMHelpers.h" />
@@ -482,6 +487,7 @@
     <ClCompile Include="Source\Assets\Importer.cpp" />
     <ClCompile Include="Source\Assets\Importers\AssimpManager.cpp" />
     <ClCompile Include="Source\Assets\Loader.cpp" />
+    <ClCompile Include="Source\Audio\OpenAL\OpenALBackend.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />

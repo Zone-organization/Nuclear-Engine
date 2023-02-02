@@ -13,8 +13,8 @@ namespace Nuclear
 			AudioClip();
 			~AudioClip();
 
-		//private:
-			
+		private:
+			Uint32 mOALid;
 		};
 	}
 }

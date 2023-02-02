@@ -14,6 +14,16 @@ copy External\CmakeProjects\Assimp\lib\Release\assimp-vc143-mt.lib	 Bin\DebugX64
 copy External\CmakeProjects\Assimp\bin\Release\assimp-vc143-mt.dll	 Bin\ReleaseX64
 copy External\CmakeProjects\Assimp\lib\Release\assimp-vc143-mt.lib	 Bin\ReleaseX64
 
+::OpenAL-soft debug
+copy External\CmakeProjects\OpenAL\Debug\OpenAL32.dll	 Bin\DebugX64
+copy External\CmakeProjects\OpenAL\Debug\OpenAL32.exp	 Bin\DebugX64
+copy External\CmakeProjects\OpenAL\Debug\OpenAL32.lib	 Bin\DebugX64
+copy External\CmakeProjects\OpenAL\Debug\OpenAL32.pdb	 Bin\DebugX64
+
+copy External\CmakeProjects\OpenAL\Release\OpenAL32.dll	 Bin\ReleaseX64
+copy External\CmakeProjects\OpenAL\Release\OpenAL32.exp	 Bin\ReleaseX64
+copy External\CmakeProjects\OpenAL\Release\OpenAL32.lib	 Bin\ReleaseX64
+
 ::PhysX Debug
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysX_64.dll	 Bin\DebugX64
 copy External\PhysX\physx\bin\win.x86_64.vc142.mt\debug\PhysXCommon_64.dll	 Bin\DebugX64
