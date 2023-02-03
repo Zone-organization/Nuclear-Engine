@@ -364,7 +364,6 @@
     <ClInclude Include="include\Assets\Animations.h" />
     <ClInclude Include="include\Assets\Assets.h" />
     <ClInclude Include="include\Assets\AudioClip.h" />
-    <ClInclude Include="include\Engine\Assets\AudioFile.h" />
     <ClInclude Include="include\Assets\DefaultMeshes.h" />
     <ClInclude Include="include\Assets\IAsset.h" />
     <ClInclude Include="include\Assets\TextureDesc.h" />
@@ -406,9 +405,7 @@
     <ClInclude Include="include\Graphics\ShaderPipeline.h" />
     <ClInclude Include="include\Graphics\Graphics.h" />
     <ClInclude Include="include\Graphics\GraphicsEngine.h" />
-    <ClInclude Include="include\Engine\Graphics\RenderingPipelines\Skybox.h" />
     <ClInclude Include="include\Graphics\RenderTarget.h" />
-    <ClInclude Include="include\Engine\Graphics\SplashScreen.h" />
     <ClInclude Include="include\Assets\Importer.h" />
     <ClInclude Include="include\Assets\Mesh.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
