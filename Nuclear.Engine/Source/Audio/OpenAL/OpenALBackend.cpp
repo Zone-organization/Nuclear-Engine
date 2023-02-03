@@ -1,8 +1,10 @@
 #include "OpenALBackend.h"
 #include <Utilities/Logger.h>
+
 #include <OpenAL/include/AL/al.h>
 #include <OpenAL/include/AL/alc.h>
 #include <OpenAL/include/AL/alext.h>
+#pragma comment(lib,"OpenAL32.lib")
 
 namespace Nuclear
 {

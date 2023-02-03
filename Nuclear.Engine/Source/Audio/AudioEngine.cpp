@@ -1,5 +1,7 @@
 #include <Audio\AudioEngine.h>
 #include <Utilities/Logger.h>
+#include "OpenAL/OpenALBackend.h"
+#include "XAudio/XAudioBackend.h"
 
 namespace Nuclear
 {
@@ -7,11 +9,22 @@ namespace Nuclear
 	{	      
 		AudioEngine::AudioEngine()
 		{
-
+			pBackend = nullptr;
 		}
 
 		bool AudioEngine::Initialize(const AudioEngineDesc& desc)
 		{
+
+			if (desc.mRequestedBackend == AudioEngineDesc::AudioBackendType::XAudio2)
+			{
+				pBackend = new XAudioBackend();
+			}
+			else
+			{
+				pBackend = new OpenALBackend();
+			}
+
+			pBackend->Initialize();
 			/*FMOD_RESULT result;
 			result = FMOD::System_Create(&pSystem);
 
@@ -38,10 +51,19 @@ namespace Nuclear
 
 			return audioengine;
 		}
+
+		AudioBackend* AudioEngine::GetBackend()
+		{
+			return pBackend;
+		}
 	
 		void AudioEngine::Shutdown()
 		{
-
+			if (pBackend)
+			{
+				pBackend->Shutdown();
+				delete pBackend;
+			}
 		}
 
 		void AudioEngine::Update()

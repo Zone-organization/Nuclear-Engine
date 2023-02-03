@@ -435,6 +435,7 @@
     <ClInclude Include="include\Core\UUID.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpImporter.h" />
     <ClInclude Include="Source\Audio\OpenAL\OpenALBackend.h" />
+    <ClInclude Include="Source\Audio\XAudio\XAudioBackend.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpGLMHelpers.h" />
@@ -488,6 +489,7 @@
     <ClCompile Include="Source\Assets\Importers\AssimpManager.cpp" />
     <ClCompile Include="Source\Assets\Loader.cpp" />
     <ClCompile Include="Source\Audio\OpenAL\OpenALBackend.cpp" />
+    <ClCompile Include="Source\Audio\XAudio\XAudioBackend.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />
