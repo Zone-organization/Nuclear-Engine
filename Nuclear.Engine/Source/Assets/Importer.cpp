@@ -10,6 +10,8 @@
 
 #include <Fallbacks/FallbacksEngine.h>
 #include <Audio\AudioEngine.h>
+#include <Audio\AudioBackend.h>
+
 #include <Platform\FileSystem.h>
 #include <Parsers/ShaderParser.h>
 
@@ -25,6 +27,12 @@
 #include <Assets/Tasks/MeshImportTask.h>
 
 #include <filesystem>
+
+#include <ThirdParty/sndfile.h>
+#include <Assets/AudioClip.h>
+
+#pragma comment(lib,"sndfile.lib")
+
 
 namespace Nuclear
 {
@@ -137,6 +145,70 @@ namespace Nuclear
 		AudioClip* Importer::ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc)
 		{
 			auto result = &AssetLibrary::GetInstance().mImportedAudioClips.AddAsset();
+
+			SNDFILE* sndfile;
+			SF_INFO sfinfo;
+			sf_count_t num_frames;
+
+			AudioFile file;
+
+			sndfile = sf_open(Path.GetRealPath().c_str(), SFM_READ, &sfinfo);
+			if (!sndfile)
+			{
+				NUCLEAR_ERROR("[Importer] Failed To Import AudioClip: '{0}' Error: {1}", Path.GetInputPath(), sf_strerror(sndfile));
+				return result;
+			}
+			if (sfinfo.frames < 1 || sfinfo.frames >(sf_count_t)(INT_MAX / sizeof(short)) / sfinfo.channels)
+			{
+				NUCLEAR_ERROR("[Importer] Failed To Import AudioClip: '{0}' Error: Bad sample count!", Path.GetInputPath(), sf_strerror(sndfile));
+				sf_close(sndfile);
+				return result;
+			}
+
+			if (!(sfinfo.channels == 1 || sfinfo.channels == 2))
+			{
+				NUCLEAR_ERROR("[Importer] Failed To Import AudioClip: '{0}' Error: Unsupported channel count: {1}!", Path.GetInputPath(), sfinfo.channels);
+				sf_close(sndfile);
+				return result;
+
+			}
+
+
+
+			file.frames = sfinfo.frames;
+			file.samplerate = sfinfo.samplerate;
+			file.channels = sfinfo.channels;
+			file.format = sfinfo.format;
+			file.sections = sfinfo.sections;
+			file.seekable = sfinfo.seekable;
+
+			//else if (sfinfo.channels == 3)
+			//{
+			//	if (sf_command(sndfile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+			//		format = AL_FORMAT_BFORMAT2D_16;
+			//}
+			//else if (sfinfo.channels == 4)
+			//{
+			//	if (sf_command(sndfile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+			//		format = AL_FORMAT_BFORMAT3D_16;
+			//}
+
+			/* Decode the whole audio file to a buffer. */
+			file.mData = (short*)malloc((size_t)(sfinfo.frames * sfinfo.channels) * sizeof(short));
+
+			num_frames = sf_readf_short(sndfile, file.mData, sfinfo.frames);
+			if (num_frames < 1)
+			{
+				free(file.mData);
+				sf_close(sndfile);
+				NUCLEAR_ERROR("[Importer] Failed To Import AudioClip: '{0}' Error: Failed to read samples!", Path.GetInputPath());
+				return 0;
+			}
+			file.mNum_Bytes = (int)(num_frames * sfinfo.channels) * (int)sizeof(short);
+
+			sf_close(sndfile);
+
+			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioClip(result, file);
 
 
 			result->mState = IAsset::State::Loaded;

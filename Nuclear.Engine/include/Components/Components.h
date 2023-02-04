@@ -1,4 +1,7 @@
 #pragma once
+#include <Components/AudioSourceComponent.h>
+#include <Components/AudioListenerComponent.h>
+#include <Components/EntityInfoComponent.h>
 #include <Components/EntityInfoComponent.h>
 #include <Components/CameraComponent.h>
 #include <Components/MeshComponent.h>

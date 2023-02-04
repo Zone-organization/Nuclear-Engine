@@ -1,4 +1,5 @@
 #include "OpenALBackend.h"
+#include <Components/AudioSourceComponent.h>
 #include <Utilities/Logger.h>
 
 #include <OpenAL/include/AL/al.h>
@@ -22,39 +23,49 @@ namespace Nuclear
         }
 
 
-		bool OpenALBackend::Initialize()
+        OpenALBackend::OpenALBackend()
+        {
+            pDevice = NULL;
+            pMasterContext = NULL;
+        }
+
+        OpenALBackend::~OpenALBackend()
+        {
+            pDevice = NULL;
+            pMasterContext = NULL;
+        }
+
+        bool OpenALBackend::Initialize()
 		{
             const ALCchar* name;
-            ALCdevice* device;
-            ALCcontext* ctx;
 
             /* Open and initialize a device */
-            device = NULL;
+            pDevice = alcOpenDevice(NULL);
 
-            device = alcOpenDevice(NULL);
-
-            if (!device)
+            if (!pDevice)
             {
                 NUCLEAR_ERROR("[OpenALBackend] Could not open a device!");
                 return false;
             }
 
-            ctx = alcCreateContext(device, NULL);
-            if (ctx == NULL || alcMakeContextCurrent(ctx) == ALC_FALSE)
+            pMasterContext = alcCreateContext(pDevice, NULL);
+            if (pMasterContext == NULL || alcMakeContextCurrent(pMasterContext) == ALC_FALSE)
             {
-                if (ctx != NULL)
-                    alcDestroyContext(ctx);
-                alcCloseDevice(device);
+                if (pMasterContext != NULL)
+                    alcDestroyContext(pMasterContext);
+                alcCloseDevice(pDevice);
 
                 NUCLEAR_ERROR("[OpenALBackend] Could not set a context!");
                 return false;
             }
 
             name = NULL;
-            if (alcIsExtensionPresent(device, "ALC_ENUMERATE_ALL_EXT"))
-                name = alcGetString(device, ALC_ALL_DEVICES_SPECIFIER);
-            if (!name || alcGetError(device) != AL_NO_ERROR)
-                name = alcGetString(device, ALC_DEVICE_SPECIFIER);
+            if (alcIsExtensionPresent(pDevice, "ALC_ENUMERATE_ALL_EXT"))
+                name = alcGetString(pDevice, ALC_ALL_DEVICES_SPECIFIER);
+            if (!name || alcGetError(pDevice) != AL_NO_ERROR)
+                name = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
+
+
             printf("Opened \"%s\"\n", name);
 
 
@@ -75,6 +86,71 @@ namespace Nuclear
             alcMakeContextCurrent(NULL);
             alcDestroyContext(ctx);
             alcCloseDevice(device);
+        }
+        bool OpenALBackend::CreateAudioClip(Assets::AudioClip* result, Assets::AudioFile& file)
+        {
+            result->mBufferID = 0;
+            alGenBuffers(1, &result->mBufferID);
+
+
+            ALenum format = AL_NONE;
+
+            if (file.channels == 1)
+                format = AL_FORMAT_MONO16;
+            else if (file.channels == 2)
+                format = AL_FORMAT_STEREO16;
+
+            alBufferData(result->mBufferID, format, file.mData, file.mNum_Bytes, file.samplerate);
+            
+            free(file.mData);
+
+            auto err = alGetError();
+            if (err != AL_NO_ERROR)
+            {
+                fprintf(stderr, "OpenAL Error: %s\n", alGetString(err));
+                if (result->mBufferID && alIsBuffer(result->mBufferID))
+                    alDeleteBuffers(1, &result->mBufferID);
+
+                result->mBufferID = 0;
+                return false;
+            }
+
+
+
+            return true;
+        }
+
+        bool OpenALBackend::CreateAudioSource(Components::AudioSourceComponent* source)
+        {
+            alGenSources(1, &source->mSourceID);
+            auto err = alGetError();
+            if (err != AL_NO_ERROR)
+            {
+                NUCLEAR_ERROR("[OpenALBackend] Failed to create AudioSourceComponent!, Error Code: {0}", (int)err);
+                return false;
+            }
+            return true;
+        }
+
+        void OpenALBackend::SetAudioSourceClip(Components::AudioSourceComponent* source, Assets::AudioClip* clip)
+        {
+            alSourcei(source->mSourceID, AL_BUFFER, (ALint)clip->mBufferID);
+            //TODO: Debug build error checking
+        }
+
+        void OpenALBackend::Play(Components::AudioSourceComponent* src)
+        {
+            alSourcePlay(src->mSourceID);
+
+        }
+        void OpenALBackend::Pause(Components::AudioSourceComponent* src)
+        {
+            alSourcePause(src->mSourceID);
+
+        }
+        void OpenALBackend::Stop(Components::AudioSourceComponent* src)
+        {
+            alSourceStop(src->mSourceID);
         }
 	}
 }

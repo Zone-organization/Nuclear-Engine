@@ -6,6 +6,7 @@ namespace Nuclear
 	{
 		AudioSourceComponent::AudioSourceComponent()
 		{
+			mSourceID = 0;
 		}
 		AudioSourceComponent::~AudioSourceComponent()
 		{

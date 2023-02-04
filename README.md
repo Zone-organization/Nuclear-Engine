@@ -115,6 +115,7 @@ Put all their .lib in the bin folder.
   - W.I.P:
   	- AudioSystem Implementation using OpenAL-Soft/XAudio2. (5%)
   	- Serializing the scene & assets.
+	- Use CMake instead of Visual Studio.
 	
   - On-Hold:
     - Text rendering (text tile-set creation finished)

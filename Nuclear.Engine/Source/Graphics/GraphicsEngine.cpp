@@ -48,7 +48,7 @@ namespace Nuclear
 				NUCLEAR_INFO("[GraphicsEngine] ImGUI Initalized.");
 			}
 
-			NUCLEAR_INFO("[GraphicsEngine] GraphicsEngine has has been initalized successfully!.");
+			NUCLEAR_INFO("[GraphicsEngine] GraphicsEngine has has been initalized successfully!");
 			return true;
 		}
 		void GraphicsEngine::Shutdown()

@@ -140,6 +140,7 @@
     <ClInclude Include="include\ThirdParty\concurrentqueue.h" />
     <ClInclude Include="include\ThirdParty\magic_enum.hpp" />
     <ClInclude Include="include\ThirdParty\nameof.hpp" />
+    <ClInclude Include="include\ThirdParty\zpp_bits.h" />
     <ClInclude Include="include\Threading\ConcurrentQueue.h" />
     <ClInclude Include="include\Threading\ConcurrentTaskQueue.h" />
     <ClInclude Include="include\Threading\DelegateTask.h" />
@@ -433,6 +434,7 @@
     <ClInclude Include="Source\Assets\Importers\AssimpImporter.h" />
     <ClInclude Include="Source\Audio\OpenAL\OpenALBackend.h" />
     <ClInclude Include="Source\Audio\XAudio\XAudioBackend.h" />
+    <ClInclude Include="Source\Audio\XAudio\XAudioStructs.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpGLMHelpers.h" />
@@ -487,6 +489,7 @@
     <ClCompile Include="Source\Assets\Loader.cpp" />
     <ClCompile Include="Source\Audio\OpenAL\OpenALBackend.cpp" />
     <ClCompile Include="Source\Audio\XAudio\XAudioBackend.cpp" />
+    <ClCompile Include="Source\Components\AudioListenerComponent.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />

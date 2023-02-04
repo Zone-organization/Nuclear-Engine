@@ -12,6 +12,8 @@ class Playground : public SampleBase
 
 	Assets::Shader* PBR;
 
+	Assets::AudioClip* audio;
+
 	Rendering::GeometryPass GeoPass;
 	Rendering::PostProcessingPass PostFXPass;
 	//Rendering::DefferedPass DefferedPass;
@@ -33,6 +35,13 @@ public:
 		Assets::FontImportingDesc fdesc;
 		ArialFont = GetAssetManager().Import<Assets::Font> ("@CommonAssets@/Fonts/arial.ttf", fdesc);
 
+		audio = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/str3.mp3");
+
+		Components::AudioSourceComponent testcmp;
+		Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioSource(&testcmp);
+		Audio::AudioEngine::GetInstance().GetBackend()->SetAudioSourceClip(&testcmp, audio);
+
+		Audio::AudioEngine::GetInstance().GetBackend()->Play(&testcmp);
 	}
 	void SetupEntities()
 	{
