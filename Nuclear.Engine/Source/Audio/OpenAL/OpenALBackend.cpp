@@ -155,5 +155,18 @@ namespace Nuclear
         {
             alSourceStop(src->mSourceID);
         }
+
+        void OpenALBackend::SetSource_Volume(Components::AudioSourceComponent* audio_source, float vol)
+        {
+            alSourcef(audio_source->GetSourceID(), AL_GAIN, vol);
+        }
+        void OpenALBackend::SetSource_Pitch(Components::AudioSourceComponent* audio_source, float pitch)
+        {
+            alSourcef(audio_source->GetSourceID(), AL_PITCH, pitch);
+        }
+        void OpenALBackend::SetSource_IsLooping(Components::AudioSourceComponent* audio_source, bool val)
+        {
+            alSourcei(audio_source->GetSourceID(), AL_LOOPING, val);
+        }
 	}
 }

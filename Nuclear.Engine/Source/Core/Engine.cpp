@@ -113,7 +113,7 @@ namespace Nuclear
 			if (desc.AutoInitAudioEngine)
 			{
 				Audio::AudioEngineDesc desc;
-				desc.mRequestedBackend = Audio::AudioEngineDesc::AudioBackendType::XAudio2;
+				desc.mRequestedBackend = Audio::AudioEngineDesc::AudioBackendType::OpenAL;
 
 				if (!Audio::AudioEngine::GetInstance().Initialize(desc))
 				{

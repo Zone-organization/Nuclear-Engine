@@ -13,11 +13,12 @@ class Playground : public SampleBase
 	Assets::Shader* PBR;
 
 	Assets::AudioClip* audio;
+	Components::AudioSourceComponent testcmp;
 
 	Rendering::GeometryPass GeoPass;
-	Rendering::PostProcessingPass PostFXPass;
+	//Rendering::PostProcessingPass PostFXPass;
 	//Rendering::DefferedPass DefferedPass;
-	Rendering::ShadowPass ShadowPass;
+	//Rendering::ShadowPass ShadowPass;
 public:
 	Playground()
 	{
@@ -25,24 +26,21 @@ public:
 	void SetupAssets()
 	{
 
-		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/RustedIron/");
-		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/Plastic/");
+		//GetAssetManager().LoadFolder("@Assets@/Textures/PBR/RustedIron/");
+		//GetAssetManager().LoadFolder("@Assets@/Textures/PBR/Plastic/");
 
 		//Initialize Materials
-		RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
-		Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");
+	//	RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
+		//Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");
 
 		Assets::FontImportingDesc fdesc;
 		ArialFont = GetAssetManager().Import<Assets::Font> ("@CommonAssets@/Fonts/arial.ttf", fdesc);
 
 		audio = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/str3.mp3");
 
-		Components::AudioSourceComponent testcmp;
-		testcmp.pActiveClip = audio;
-		Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioSource(&testcmp);
-		Audio::AudioEngine::GetInstance().GetBackend()->SetAudioSourceClip(&testcmp, audio);
+		testcmp.SetAudioClip(audio);
 
-		Audio::AudioEngine::GetInstance().GetBackend()->Play(&testcmp);
+		testcmp.Play();
 	}
 	void SetupEntities()
 	{
@@ -70,19 +68,19 @@ public:
 	{
 		Assets::ShaderImportingDesc desc;
 		desc.mType = Graphics::ShaderType::_3DRendering;
-		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader", desc);
-		Renderer->RegisterShader(PBR);
+		//PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader", desc);
+		//Renderer->RegisterShader(PBR);
 
-		Renderer->AddRenderPass(&ShadowPass);
-		Renderer->AddRenderPass(&GeoPass);
+	//	Renderer->AddRenderPass(&ShadowPass);
+		//Renderer->AddRenderPass(&GeoPass);
 		//Renderer->AddRenderPass(&DefferedPass);
-		Renderer->AddRenderPass(&PostFXPass);
+	//	Renderer->AddRenderPass(&PostFXPass);
 
 		Systems::RenderSystemBakingDesc bakedesc;
 		bakedesc.RTWidth = _Width_;
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
-		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
+		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
 	}
 
 	void Load()
@@ -92,7 +90,7 @@ public:
 
 		spdesc.MAX_OMNIDIR_CASTERS =2;
 		spdesc.MAX_SPOT_CASTERS = 0;
-		ShadowPass.Bake(spdesc);
+		//ShadowPass.Bake(spdesc);
 
 		SetupEntities();
 
@@ -100,7 +98,7 @@ public:
 
 		SetupAssets();
 
-
+/*
 		// cubes
 		{
 			ECS::Transform TSphere;
@@ -125,7 +123,7 @@ public:
 		}
 		GetScene().CreatePlane(Plastic);
 
-		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
+		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);*/
 		//GetScene().GetMainCamera()->MovementSpeed = 15;
 		//Renderer->VisualizePointLightsPositions = true;
 		//EController.GetComponent<Components::SpotLightComponent>().mCastShadows = true;
@@ -158,7 +156,18 @@ public:
 			ImGui::Checkbox("LockSpotlight", &LockSpotlight);
 			ImGui::Checkbox("RenderLightSources", &DebugSystem->RenderLightSources);
 
-			if (ImGui::TreeNode("PostFX Effects"))
+			static float v = 1.0f, p = 1.0f;
+			if (ImGui::SliderFloat("volume: ", &v, 0.0f, 1.0f))
+			{
+				testcmp.SetVolume(v);
+			}
+			
+			if (ImGui::SliderFloat("pitch: ", &p, 0.0f, 100.0f))
+			{
+				testcmp.SetPitch(p);
+			}
+
+			/*if (ImGui::TreeNode("PostFX Effects"))
 			{
 				for (auto& it : PostFXPass.GetPipelineController().GetSwitches())
 				{
@@ -170,7 +179,7 @@ public:
 					}
 				}
 				ImGui::TreePop();
-			}
+			}*/
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

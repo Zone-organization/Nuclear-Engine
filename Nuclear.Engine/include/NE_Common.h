@@ -1,6 +1,6 @@
 #pragma once
-
 #include <cstdint>
+#include <Compiler.h>
 
 #ifdef NUCLEARENGINE_EXPORTS
 #define NEAPI __declspec(dllexport)

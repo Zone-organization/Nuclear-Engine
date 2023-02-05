@@ -198,28 +198,69 @@ namespace Nuclear
 		void XAudioBackend::Stop(Components::AudioSourceComponent* clip)
 		{
 		}
+		void XAudioBackend::SetSource_Volume(Components::AudioSourceComponent* audio_source, float vol)
+		{
+			auto source = GetSource(audio_source);
+			if (source && !source->Unused())
+			{
+				source->pVoice->SetVolume(vol);
+			}
+		}
+		void XAudioBackend::SetSource_Pitch(Components::AudioSourceComponent* audio_source, float pitch)
+		{
+			auto source = GetSource(audio_source);
+			if (source && !source->Unused())
+			{
+				source->pVoice->SetFrequencyRatio(pitch);
+			}
+		}
+		void XAudioBackend::SetSource_IsLooping(Components::AudioSourceComponent* audio_source, bool val)
+		{
+			
+			//Looping in xaudio is through buffers not source
+			//possible solutions:
+			//-maybe we can force source to replay after it finished playing?
+			//-re-creating a buffer for the source 
+		}
 		void XAudioBackend::Update()
 		{
 		}
 		XAudioSource& XAudioBackend::GetSource(Uint32 id)
 		{
-			if (id <= mSources.size())
+			if (id > mSources.size())
 			{
-				return mSources[id - 1];
+				mSources.push_back(XAudioSource());
+				return mSources.back();
 			}
-
-			mSources.push_back(XAudioSource());
-			return mSources.back();
+			return mSources[id - 1];			
 		}
 		XAudioBuffer& XAudioBackend::GetBuffer(Uint32 id)
 		{
-			if (id <= mBuffers.size())
+			if (id > mBuffers.size())
 			{
-				return mBuffers[id - 1];
+				mBuffers.push_back(XAudioBuffer());
+				return mBuffers.back();
 			}
 
-			mBuffers.push_back(XAudioBuffer());
-			return mBuffers.back();
+			return mBuffers[id - 1];
+		}
+		XAudioSource* XAudioBackend::GetSource(Components::AudioSourceComponent* audio_source)
+		{
+			auto id = audio_source->GetSourceID();
+
+			return &mSources[id - 1];
+		}
+		XAudioBuffer* XAudioBackend::GetBuffer(Components::AudioSourceComponent* audio_source)
+		{
+			if (audio_source->GetAudioClip())
+				return GetBuffer(audio_source->GetAudioClip());
+			else
+				return nullptr;
+		}
+		XAudioBuffer* XAudioBackend::GetBuffer(Assets::AudioClip* clip)
+		{
+			auto id = clip->GetBufferID();
+			return &mBuffers[id - 1];
 		}
 	}
 }

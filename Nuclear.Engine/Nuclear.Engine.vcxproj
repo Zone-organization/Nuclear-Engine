@@ -126,6 +126,7 @@
     <ClInclude Include="include\Audio\AudioFile.h" />
     <ClInclude Include="include\Audio\AudioDevice.h" />
     <ClInclude Include="include\Audio\config.h" />
+    <ClInclude Include="include\Compiler.h" />
     <ClInclude Include="include\Components\AudioListenerComponent.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Core\Scene.h" />
@@ -429,6 +430,7 @@
     <ClInclude Include="include\Threading\ThreadPool.h" />
     <ClInclude Include="include\Core\UUID.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpImporter.h" />
+    <ClInclude Include="include\Audio\NullAudioBackend.h" />
     <ClInclude Include="Source\Audio\OpenAL\OpenALBackend.h" />
     <ClInclude Include="Source\Audio\XAudio\XAudioBackend.h" />
     <ClInclude Include="Source\Audio\XAudio\XAudioStructs.h" />

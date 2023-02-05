@@ -39,7 +39,7 @@ List is W.I.P (There are lots of features not written here)
 <details>
 	<summary><b>Audio</b></summary>
 
-	- WIP
+	- Uses OpenAL or XAudio2 as a low-level backends
 
 </details>
 <details>
@@ -95,6 +95,7 @@ Consoles are planned but not a priority now...
 | msdf-atlas-gen | submodule | Built with their provided build-tools |
 | Mono | External | Put headers in External/mono |
 | SDL2 | External | Put headers in External/SDL/include |
+| libsndfile | External | Put the .lib in your Build Output directory |
 | spdlog | included | Built with the engine |
 | IMGUI | included | Built with the engine |
 | stb_truetype | included | Built with the engine |
@@ -107,13 +108,13 @@ Put all their .lib in the bin folder.
 ## RoadMap
   - V0.01 Alpha:
     - Complete RenderSystem (50%) 
-	- Complete AudioSystem Implementation. (5%)
+	- Complete AudioSystem Implementation. (15%)
 	- Basic Implementaion of PhysX.
 	- Complete Samples & their documentation.
 
 ## Current To-dos 
   - W.I.P:
-  	- AudioSystem Implementation using OpenAL-Soft/XAudio2. (5%)
+  	- AudioSystem Implementation using OpenAL-Soft/XAudio2. (20%)
   	- Serializing the scene & assets.
 	- Use CMake instead of Visual Studio.
 	

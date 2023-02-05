@@ -1,6 +1,7 @@
 #pragma once
 #include <xaudio2.h>
 #include <x3daudio.h>
+#include <Compiler.h>
 
 namespace Nuclear
 {
@@ -12,8 +13,7 @@ namespace Nuclear
 			X3DAUDIO_EMITTER mData;
 			WAVEFORMATEX mFormat;
 
-
-			bool Unused() const
+			FORCE_INLINE bool Unused() const
 			{
 				return (pVoice == nullptr);
 			}

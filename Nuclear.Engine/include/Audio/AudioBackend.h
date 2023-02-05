@@ -29,11 +29,16 @@ namespace Nuclear
 
 			virtual void SetAudioSourceClip(Components::AudioSourceComponent* source, Assets::AudioClip* clip) = 0;;
 
-			virtual void Play(Components::AudioSourceComponent* clip) = 0;
+			virtual void Play(Components::AudioSourceComponent* audio_source) = 0;
 
-			virtual void Pause(Components::AudioSourceComponent* clip) = 0;
+			virtual void Pause(Components::AudioSourceComponent* audio_source) = 0;
 
-			virtual void Stop(Components::AudioSourceComponent* clip) = 0;
+			virtual void Stop(Components::AudioSourceComponent* audio_source) = 0;
+
+			virtual void SetSource_Volume(Components::AudioSourceComponent* audio_source, float vol) = 0;
+			virtual void SetSource_Pitch(Components::AudioSourceComponent* audio_source, float pitch) = 0;
+			virtual void SetSource_IsLooping(Components::AudioSourceComponent* audio_source, bool val) = 0;
+			
 		};
 	}
 }

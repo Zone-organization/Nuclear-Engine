@@ -31,6 +31,11 @@ namespace Nuclear
 
 			void Stop(Components::AudioSourceComponent* clip) override;
 
+			void SetSource_Volume(Components::AudioSourceComponent* audio_source, float vol) override;
+
+			void SetSource_Pitch(Components::AudioSourceComponent* audio_source, float pitch) override;
+
+			void SetSource_IsLooping(Components::AudioSourceComponent* audio_source, bool val) override;
 		protected:
 			ALCdevice* pDevice;
 			ALCcontext* pMasterContext;
