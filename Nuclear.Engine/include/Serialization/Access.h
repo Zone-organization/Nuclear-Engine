@@ -1,5 +1,12 @@
 #pragma once
-#include <ThirdParty/zpp_bits.h>
+
+namespace zpp
+{
+	namespace bits
+	{
+		struct access;
+	}
+}
 
 namespace Nuclear
 {

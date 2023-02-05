@@ -1,6 +1,6 @@
 #pragma once
-#include <NE_Common.h>
-#include <Assets/AudioClip.h>
+#include <Audio/AudioFile.h>
+
 namespace Nuclear
 {
 	namespace Components
@@ -8,6 +8,10 @@ namespace Nuclear
 		class AudioSourceComponent;
 	}
 
+	namespace Assets
+	{
+		class AudioClip;
+	}
 	namespace Audio
 	{
 		
@@ -19,7 +23,7 @@ namespace Nuclear
 
 			virtual void Shutdown() = 0;
 
-			virtual bool CreateAudioClip(Assets::AudioClip* result, Assets::AudioFile& file) = 0;
+			virtual bool CreateAudioClip(Assets::AudioClip* result, AudioFile& file) = 0;
 
 			virtual bool CreateAudioSource(Components::AudioSourceComponent* source) = 0;;
 

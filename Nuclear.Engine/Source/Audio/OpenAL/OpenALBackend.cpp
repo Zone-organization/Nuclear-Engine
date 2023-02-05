@@ -1,6 +1,7 @@
 #include "OpenALBackend.h"
 #include <Components/AudioSourceComponent.h>
 #include <Utilities/Logger.h>
+#include <Assets/AudioClip.h>
 
 #include <OpenAL/include/AL/al.h>
 #include <OpenAL/include/AL/alc.h>
@@ -87,7 +88,7 @@ namespace Nuclear
             alcDestroyContext(ctx);
             alcCloseDevice(device);
         }
-        bool OpenALBackend::CreateAudioClip(Assets::AudioClip* result, Assets::AudioFile& file)
+        bool OpenALBackend::CreateAudioClip(Assets::AudioClip* result, AudioFile& file)
         {
             result->mBufferID = 0;
             alGenBuffers(1, &result->mBufferID);
@@ -95,14 +96,16 @@ namespace Nuclear
 
             ALenum format = AL_NONE;
 
-            if (file.channels == 1)
+            if (file.mInfo.mChannels == 1)
                 format = AL_FORMAT_MONO16;
-            else if (file.channels == 2)
+            else if (file.mInfo.mChannels == 2)
                 format = AL_FORMAT_STEREO16;
 
-            alBufferData(result->mBufferID, format, file.mData, file.mNum_Bytes, file.samplerate);
+            alBufferData(result->mBufferID, format, file.mData.data(), file.mData.size(), file.mInfo.mSampleRate);
             
-            free(file.mData);
+            //free the data
+            file.mData.clear();
+            file.mData.shrink_to_fit();
 
             auto err = alGetError();
             if (err != AL_NO_ERROR)

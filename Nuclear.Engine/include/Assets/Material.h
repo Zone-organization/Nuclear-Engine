@@ -35,7 +35,7 @@ namespace Nuclear
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				if (IsLoading(archive))
+				ISLOADING(archive)
 				{
 					Core::UUID shaderuuid;
 					auto result = archive(shaderuuid, self.mCreationShaderCommonID, self.mUsableTextures, self.mTextures);

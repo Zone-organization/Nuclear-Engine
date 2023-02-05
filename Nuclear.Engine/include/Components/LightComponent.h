@@ -3,6 +3,7 @@
 #include <Math/Math.h>
 #include <Graphics/Color.h>
 #include <Serialization/Access.h>
+#include <ThirdParty/zpp_bits.h>
 
 namespace Nuclear
 {

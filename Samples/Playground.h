@@ -38,6 +38,7 @@ public:
 		audio = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/str3.mp3");
 
 		Components::AudioSourceComponent testcmp;
+		testcmp.pActiveClip = audio;
 		Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioSource(&testcmp);
 		Audio::AudioEngine::GetInstance().GetBackend()->SetAudioSourceClip(&testcmp, audio);
 

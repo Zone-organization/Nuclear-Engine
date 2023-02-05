@@ -123,6 +123,7 @@
     <ClInclude Include="include\Assets\Tasks\TextureImportTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureLoadTask.h" />
     <ClInclude Include="include\Audio\AudioBackend.h" />
+    <ClInclude Include="include\Audio\AudioFile.h" />
     <ClInclude Include="include\Audio\AudioDevice.h" />
     <ClInclude Include="include\Audio\config.h" />
     <ClInclude Include="include\Components\AudioListenerComponent.h" />
@@ -137,10 +138,6 @@
     <ClInclude Include="include\Serialization\DiligentSerialization.h" />
     <ClInclude Include="include\Serialization\IsLoading.h" />
     <ClInclude Include="include\Serialization\SerializationEngine.h" />
-    <ClInclude Include="include\ThirdParty\concurrentqueue.h" />
-    <ClInclude Include="include\ThirdParty\magic_enum.hpp" />
-    <ClInclude Include="include\ThirdParty\nameof.hpp" />
-    <ClInclude Include="include\ThirdParty\zpp_bits.h" />
     <ClInclude Include="include\Threading\ConcurrentQueue.h" />
     <ClInclude Include="include\Threading\ConcurrentTaskQueue.h" />
     <ClInclude Include="include\Threading\DelegateTask.h" />
@@ -448,7 +445,6 @@
     <ClInclude Include="include\Graphics\ImGui.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_internal.h" />
-    <ClInclude Include="include\ThirdParty\crc32c.h" />
     <ClInclude Include="include\Components\EntityInfoComponent.h" />
     <ClInclude Include="include\Rendering\Skybox.h" />
     <ClInclude Include="include\ECS\Common.h" />

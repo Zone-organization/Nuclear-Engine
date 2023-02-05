@@ -50,7 +50,7 @@ namespace Nuclear
 
 			constexpr static auto serialize(auto& archive, auto& self) //load
 			{
-				if (IsLoading(archive))
+				ISLOADING(archive)
 				{
 					Core::UUID uuid;
 					auto result = archive(uuid, self.mUsageType);

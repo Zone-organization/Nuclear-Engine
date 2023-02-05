@@ -36,7 +36,7 @@ namespace Nuclear
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				if (IsLoading(archive))
+				ISLOADING(archive)
 				{
 					auto result = archive(self.mInputPath);
 					self.mRealPath = self.mInputPath;

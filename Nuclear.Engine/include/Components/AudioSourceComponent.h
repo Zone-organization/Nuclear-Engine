@@ -1,11 +1,10 @@
 #pragma once
 #include <NE_Common.h>
-#include <Assets\AudioClip.h>
 
-struct IXAudio2SourceVoice;
 namespace Nuclear
 {
-	//namespace Audio { class AudioBackend; }
+	namespace Audio { class AudioBackend; }
+	namespace Assets { class AudioClip; }
 
 	namespace Components
 	{
@@ -20,8 +19,7 @@ namespace Nuclear
 		//	friend class Audio::AudioBackend;
 			Assets::AudioClip* pActiveClip;
 
-			Uint32 mSourceID;					//Openal
-			IXAudio2SourceVoice* pSourceVoice;  //XAudio2
+			Uint32 mSourceID;					//Openal = source id , XAudio index in sources vector
 		};
 	}
 }

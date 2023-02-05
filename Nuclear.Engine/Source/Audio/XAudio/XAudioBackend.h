@@ -1,12 +1,17 @@
 #pragma once
 #include <Audio/AudioBackend.h>
+#include "XAudioStructs.h"
 
-struct IXAudio2;
-struct IXAudio2MasteringVoice;
 namespace Nuclear
 {
 	namespace Audio
 	{
+
+		struct XAudioBuffer
+		{
+			AudioFile mFile;
+			bool Used = false;
+		};
 
 		class NEAPI XAudioBackend : public AudioBackend
 		{
@@ -15,7 +20,7 @@ namespace Nuclear
 
 			void Shutdown() override;
 
-			bool CreateAudioClip(Assets::AudioClip* result, Assets::AudioFile& file) override;
+			bool CreateAudioClip(Assets::AudioClip* result, AudioFile& file) override;
 
 			bool CreateAudioSource(Components::AudioSourceComponent* source) override;
 
@@ -27,9 +32,18 @@ namespace Nuclear
 
 			void Stop(Components::AudioSourceComponent* clip) override;
 
+			void Update();
+
 		protected:
+			XAudioSource& GetSource(Uint32 id);
+			XAudioBuffer& GetBuffer(Uint32 id);
+
 			IXAudio2* pXAudio2;
 			IXAudio2MasteringVoice* pMasterVoice;
+
+			std::vector<XAudioSource> mSources;
+			std::vector<XAudioBuffer> mBuffers;
+
 		};
 	}
 }

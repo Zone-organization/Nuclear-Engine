@@ -150,8 +150,6 @@ namespace Nuclear
 			SF_INFO sfinfo;
 			sf_count_t num_frames;
 
-			AudioFile file;
-
 			sndfile = sf_open(Path.GetRealPath().c_str(), SFM_READ, &sfinfo);
 			if (!sndfile)
 			{
@@ -172,15 +170,18 @@ namespace Nuclear
 				return result;
 
 			}
+			
+			auto byterate = sf_current_byterate(sndfile);
 
+			Audio::AudioFile file;
 
-
-			file.frames = sfinfo.frames;
-			file.samplerate = sfinfo.samplerate;
-			file.channels = sfinfo.channels;
-			file.format = sfinfo.format;
-			file.sections = sfinfo.sections;
-			file.seekable = sfinfo.seekable;
+			file.mInfo.mSamples = sfinfo.frames;
+			file.mInfo.mSampleRate = sfinfo.samplerate;
+			file.mInfo.mChannels = sfinfo.channels;
+			file.mInfo.mBitsPerSample = byterate;
+			file.mInfo.mFormat = sfinfo.format;
+			file.mInfo.mSections = sfinfo.sections;
+			file.mInfo.mSeekable = sfinfo.seekable;
 
 			//else if (sfinfo.channels == 3)
 			//{
@@ -194,17 +195,19 @@ namespace Nuclear
 			//}
 
 			/* Decode the whole audio file to a buffer. */
-			file.mData = (short*)malloc((size_t)(sfinfo.frames * sfinfo.channels) * sizeof(short));
 
-			num_frames = sf_readf_short(sndfile, file.mData, sfinfo.frames);
+			
+
+			auto size = (size_t)(sfinfo.frames * sfinfo.channels) * sizeof(short);
+
+			file.mData.resize(size);
+			num_frames = sf_readf_short(sndfile, (short*)file.mData.data(), sfinfo.frames);
 			if (num_frames < 1)
 			{
-				free(file.mData);
 				sf_close(sndfile);
 				NUCLEAR_ERROR("[Importer] Failed To Import AudioClip: '{0}' Error: Failed to read samples!", Path.GetInputPath());
 				return 0;
 			}
-			file.mNum_Bytes = (int)(num_frames * sfinfo.channels) * (int)sizeof(short);
 
 			sf_close(sndfile);
 

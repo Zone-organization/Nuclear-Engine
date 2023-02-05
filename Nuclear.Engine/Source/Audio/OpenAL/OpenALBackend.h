@@ -19,7 +19,7 @@ namespace Nuclear
 
 			void Shutdown() override;
 
-			bool CreateAudioClip(Assets::AudioClip* result, Assets::AudioFile& file) override;
+			bool CreateAudioClip(Assets::AudioClip* result, AudioFile& file) override;
 
 			bool CreateAudioSource(Components::AudioSourceComponent* source) override;
 
