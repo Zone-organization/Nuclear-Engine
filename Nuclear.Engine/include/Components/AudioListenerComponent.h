@@ -1,29 +1,18 @@
 #pragma once
 #include <NE_Common.h>
 #include <Assets\AudioClip.h>
+#include <Math/Math.h>
 
 namespace Nuclear
 {
+	namespace Systems { class AudioSystem; }
+
 	namespace Components
 	{
 
-		/*
-		Multiple listeners in OpenAL is a problem, probable solutions:
+		//each scene should have only one (Active) audio listener since it emulates the player ears 
+		//its unrealistic to have multiple audio listeners. (realistically you have only one pair of ears)
 
-		1-Multiple Contexts and change context each time a listener is activated 
-		   downsides:
-		   Expensive context changes
-		   fixed-array allocated at initialization of contexts
-		   recursive operations for each audio source function
-
-		2-single context but multiple openal sources for each registered audio listener 
-		    ex:
-			 if max listeners are 8 then each audio source should have 8 sources
-			downsides:
-			 memory expensive?
-			 can be more expensive than context switches if a scene has too much audio sources.
-
-		*/
 		class NEAPI AudioListenerComponent		//= OpenAL Context i guess
 		{
 		public:
@@ -31,8 +20,13 @@ namespace Nuclear
 			~AudioListenerComponent();
 
 
-			//protected:
-			Uint32 mContextID;
+		protected:
+			friend class Systems::AudioSystem;
+
+			bool mIsActive;
+
+			Math::Vector3 mVelocity;
+			Math::Vector3 mPrevPos;
 		};
 	}
 }

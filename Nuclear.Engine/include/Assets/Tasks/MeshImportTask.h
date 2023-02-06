@@ -58,10 +58,12 @@ namespace Nuclear
 					mResult.pMaterial->Create(mImportingDesc.pMaterialShader);
 				}
 
-
-				if (mImportingDesc.mExportMaterial && mResult.pMaterial)
+				if (!mImportingDesc.mCommonOptions.mLoadOnly)
 				{
-					AssetManager::GetInstance().Export(mResult.pMaterial,true, exportpath);
+					if (mImportingDesc.mExportMaterial && mResult.pMaterial)
+					{
+						AssetManager::GetInstance().Export(mResult.pMaterial, true, exportpath);
+					}
 				}
 
 				//TODO: Export Animations?
@@ -93,21 +95,24 @@ namespace Nuclear
 					//create task
 					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, IMPORTER_FACTORY_TYPE));
 
-					AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(mResult.pMesh);
+					if (!mImportingDesc.mCommonOptions.mLoadOnly)
+					{
+						AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(mResult.pMesh);
 
-					auto meshloadingdesc = static_cast<Assets::MeshLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MeshLoadingDesc);
-					meshloadingdesc->mSaveMaterialNames = mImportingDesc.mSaveMaterialNames;
-					meshloadingdesc->mExternalMaterial = mImportingDesc.mExportMaterial;
+						auto meshloadingdesc = static_cast<Assets::MeshLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MeshLoadingDesc);
+						meshloadingdesc->mSaveMaterialNames = mImportingDesc.mSaveMaterialNames;
+						meshloadingdesc->mExternalMaterial = mImportingDesc.mExportMaterial;
 
-					if (mResult.pMaterial)
-						meshloadingdesc->mMaterialUUID = mResult.pMaterial->GetUUID();
+						if (mResult.pMaterial)
+							meshloadingdesc->mMaterialUUID = mResult.pMaterial->GetUUID();
 
-					if (mResult.pAnimations)
-						meshloadingdesc->mAnimationsUUID = mResult.pAnimations->GetUUID();
+						if (mResult.pAnimations)
+							meshloadingdesc->mAnimationsUUID = mResult.pAnimations->GetUUID();
 
-					//Export Meta
-					Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
-					delete assetmetadata.pLoadingDesc;
+						//Export Meta
+						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
+						delete assetmetadata.pLoadingDesc;
+					}
 				}						
 
 				return true;

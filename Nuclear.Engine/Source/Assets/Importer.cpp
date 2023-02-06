@@ -38,6 +38,7 @@ namespace Nuclear
 {
 	namespace Assets
 	{
+		
 		Importer::Importer()
 		{
 			FT_Handle = msdfgen::initializeFreetype();
@@ -211,7 +212,7 @@ namespace Nuclear
 
 			sf_close(sndfile);
 
-			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioClip(result, file);
+			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioClip(result->mBufferID, file);
 
 
 			result->mState = IAsset::State::Loaded;
@@ -263,8 +264,9 @@ namespace Nuclear
 				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new MeshImportTask({ assetname ,mesh, material, animations }, Path, desc));
 			}
 			else
-			{
-				assert(0);
+			{			
+				MeshImportTask* task = new MeshImportTask({ assetname ,mesh, material, animations }, Path, desc);
+				task->Execute();
 			}
 
 			return mesh;
@@ -429,10 +431,17 @@ namespace Nuclear
 					//step 4: export shader info
 					AssetManager::GetInstance().Export(result,true, AssetLibrary::GetInstance().GetPath() + "Shaders/");
 				}
+				else
+				{
+					NUCLEAR_WARN("[Importer] Reflecting Shader: {0} Failed!", result->GetName());
+					result->mPipeline.Create();
+				}
 			}
 			else
 			{
-
+				NUCLEAR_ERROR("[Importer] Importing Shader: {0} Failed!", result->GetName());
+				result->mState = IAsset::State::Unknown;
+				return result;
 			}
 
 			result->mState = IAsset::State::Loaded;

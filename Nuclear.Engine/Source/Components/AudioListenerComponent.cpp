@@ -6,7 +6,7 @@ namespace Nuclear
 	{
 		AudioListenerComponent::AudioListenerComponent()
 		{
-			mContextID = 0;
+
 		}
 		AudioListenerComponent::~AudioListenerComponent()
 		{

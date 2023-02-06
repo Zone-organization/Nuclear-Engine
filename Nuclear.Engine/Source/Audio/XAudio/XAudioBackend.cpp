@@ -3,6 +3,10 @@
 #include <Components/AudioSourceComponent.h>
 #include <Assets/AudioClip.h>
 
+#define VEC_CAST(vec) (*((X3DAUDIO_VECTOR*)&vec))
+
+#pragma comment(lib,"XAudio2.lib")
+
 namespace Nuclear
 {
 	namespace Audio
@@ -21,16 +25,28 @@ namespace Nuclear
 
 			COM_DECLSPEC_NOTHROW void OnCriticalError(HRESULT error) override
 			{
-				NUCLEAR_ERROR("[XAudioBackend] XAudio2 Critical Error! Code: {0}", error);
+				NUCLEAR_ERROR("[XAudioBackend] XAudio2 Critical Error! Code: 0x{0:x}", error);
 			}
 		};
 
-		bool XAudioBackend::Initialize()		
+		XAudioBackend::XAudioBackend()
+		{
+			pXAudio2 = nullptr;
+			pMasterVoice = nullptr;
+		}
+
+		XAudioBackend::~XAudioBackend()
+		{
+			pXAudio2 = nullptr;
+			pMasterVoice = nullptr;
+		}
+
+		bool XAudioBackend::Initialize()
 		{
 			HRESULT hr = XAudio2Create(&pXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
 			if (FAILED(hr))
 			{
-				NUCLEAR_ERROR("[XAudioBackend] Failed to initalize XAudio2! Error Code: {0}", hr);
+				NUCLEAR_ERROR("[XAudioBackend] Failed to initalize XAudio2! Error Code: 0x{0:x}", hr);
 				return false;
 			}
 			
@@ -42,12 +58,22 @@ namespace Nuclear
 
 			if (FAILED(hr))
 			{
-				NUCLEAR_ERROR("[XAudioBackend] Failed to Create XAudio2 MasterVoice! Error Code: {0}", hr);
+				NUCLEAR_ERROR("[XAudioBackend] Failed to Create XAudio2 MasterVoice! Error Code: 0x{0:x}", hr);
 				return false;
 			}
 
+			DWORD dwChannelMask;
+			pMasterVoice->GetChannelMask(&dwChannelMask);
+			hr = X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, X3DInstance);
+			if (FAILED(hr))
+			{
+				NUCLEAR_ERROR("[XAudioBackend] Failed to initalize X3DAudio! Error Code: 0x{0:x}", hr);
+				return false;
+			}
+			
 			//TODO: this number should be modifiable in initialization;
 			mSources.reserve(8);
+			mBuffers.reserve(8);
 
 			NUCLEAR_INFO("[XAudioBackend] Initialized XAudio2 successfully.");
 			return true;
@@ -67,7 +93,7 @@ namespace Nuclear
 				pXAudio2 = nullptr;
 			}
 		}
-		bool XAudioBackend::CreateAudioClip(Assets::AudioClip* result, AudioFile& file)
+		bool XAudioBackend::CreateAudioClip(Uint32& result, AudioFile& file)
 		{
 			bool match = false;
 			for (Uint32 i = 0; i < mBuffers.size(); i++)
@@ -90,7 +116,7 @@ namespace Nuclear
 				buffer.mFile.mInfo = file.mInfo;
 				buffer.Used = true;
 				mBuffers.push_back(buffer);
-				result->mBufferID = mBuffers.size();
+				result = mBuffers.size();
 
 				//should probably notify engine/allocate more buffers
 			}
@@ -99,9 +125,9 @@ namespace Nuclear
 			return false;
 		}
 
-		bool XAudioBackend::CreateAudioSource(Components::AudioSourceComponent* comp)
+		bool XAudioBackend::CreateAudioSource(Uint32& sourceid)
 		{
-			auto& xbuffer = GetBuffer(comp->pActiveClip->mBufferID);
+			auto& xbuffer = GetBuffer(sourceid);
 			if (!xbuffer.Used)
 			{
 				return false;
@@ -132,7 +158,7 @@ namespace Nuclear
 				auto& source = GetSource(i);
 				if (source.Unused())
 				{
-					comp->mSourceID = i;
+					sourceid = i;
 					source.pVoice = voice;
 					match = true;
 					break;
@@ -144,7 +170,7 @@ namespace Nuclear
 				XAudioSource source;
 				source.pVoice = voice;
 				mSources.push_back(source);
-				comp->mSourceID = mSources.size();
+				sourceid = mSources.size();
 
 				//should probably notify engine/allocate more sources
 			}
@@ -152,15 +178,15 @@ namespace Nuclear
 			return true;
 		}
 
-		void XAudioBackend::SetAudioSourceClip(Components::AudioSourceComponent* source, Assets::AudioClip* clip)
+		void XAudioBackend::SetAudioSourceClip(const Uint32 source, const Uint32 clip)
 		{
-			auto& xsource = GetSource(source->mSourceID);
+			auto& xsource = GetSource(source);
 			if (xsource.Unused())
 			{
 				return;
 			}
 
-			auto& xbuffer = GetBuffer(clip->mBufferID);
+			auto& xbuffer = GetBuffer(clip);
 			if (!xbuffer.Used)
 			{
 				return;
@@ -187,34 +213,34 @@ namespace Nuclear
 			return;
 		}
 
-		void XAudioBackend::Play(Components::AudioSourceComponent* clip)
+		void XAudioBackend::Play(const Uint32 source)
 		{
-			GetSource(clip->mSourceID).pVoice->Start(0);
+			GetSource(source).pVoice->Start(0);
 		}
-		void XAudioBackend::Pause(Components::AudioSourceComponent* clip)
+		void XAudioBackend::Pause(const Uint32 source)
 		{
-
+			GetSource(source).pVoice->Stop(0);
 		}
-		void XAudioBackend::Stop(Components::AudioSourceComponent* clip)
+		void XAudioBackend::Stop(const Uint32 source)
 		{
 		}
-		void XAudioBackend::SetSource_Volume(Components::AudioSourceComponent* audio_source, float vol)
+		void XAudioBackend::SetSource_Volume(const Uint32 audio_source, float vol)
 		{
-			auto source = GetSource(audio_source);
+			auto source = GetSourcePtr(audio_source);
 			if (source && !source->Unused())
 			{
 				source->pVoice->SetVolume(vol);
 			}
 		}
-		void XAudioBackend::SetSource_Pitch(Components::AudioSourceComponent* audio_source, float pitch)
+		void XAudioBackend::SetSource_Pitch(const Uint32 audio_source, float pitch)
 		{
-			auto source = GetSource(audio_source);
+			auto source = GetSourcePtr(audio_source);
 			if (source && !source->Unused())
 			{
 				source->pVoice->SetFrequencyRatio(pitch);
 			}
 		}
-		void XAudioBackend::SetSource_IsLooping(Components::AudioSourceComponent* audio_source, bool val)
+		void XAudioBackend::SetSource_IsLooping(const Uint32 audio_source, bool val)
 		{
 			
 			//Looping in xaudio is through buffers not source
@@ -222,10 +248,69 @@ namespace Nuclear
 			//-maybe we can force source to replay after it finished playing?
 			//-re-creating a buffer for the source 
 		}
+
+		void XAudioBackend::SetSource_Transform(const Uint32 audio_source, const Math::Vector3& pos, const Math::Quaternion& rot)
+		{
+			auto source = GetSourcePtr(audio_source);
+			if (source && !source->Unused())
+			{
+				const Math::Vector3 front = rot * Math::Vector3(0.0f, 0.0f, -1.0f); // Forward
+				const Math::Vector3 top = rot * Math::Vector3(0.0f, 1.0f, 0.0f);    // Up
+
+				source->m3D_Data.OrientFront = VEC_CAST(front);
+				source->m3D_Data.OrientTop = VEC_CAST(top);
+				source->m3D_Data.Position = VEC_CAST(pos);
+
+				source->mDirty = true;
+			}
+		}
+		void XAudioBackend::SetSource_Velocity(const Uint32 audio_source, const Math::Vector3& val)
+		{
+			auto source = GetSourcePtr(audio_source);
+			if (source && !source->Unused())
+			{
+				source->m3D_Data.Velocity = VEC_CAST(val);
+
+				source->mDirty = true;
+			}
+		}
+		void XAudioBackend::SetListener_Velocity(const Math::Vector3& val)
+		{
+			m3DListener.Velocity = VEC_CAST(val);
+		}
+		void XAudioBackend::SetListener_Transform(const Math::Vector3& pos, const Math::Quaternion& rot)
+		{
+			const Math::Vector3 front = rot * Math::Vector3(0.0f, 0.0f, -1.0f); // Forward
+			const Math::Vector3 top = rot * Math::Vector3(0.0f, 1.0f, 0.0f);    // Up
+
+			m3DListener.OrientFront = VEC_CAST(front);
+			m3DListener.OrientTop = VEC_CAST(top);
+			m3DListener.Position = VEC_CAST(pos);
+		}
+
 		void XAudioBackend::Update()
 		{
+			//TODO
+			assert(0);
+			X3DAUDIO_DSP_SETTINGS DSPSettings = { 0 };
+			DSPSettings.DstChannelCount = 0;
+			DSPSettings.pMatrixCoefficients = 0;
+
+			for (Uint32 i = 0; i < mSources.size(); i++)
+			{
+				auto& source = mSources[i];
+				if (source.Unused() || !source.mDirty)
+					continue;
+
+			X3DAudioCalculate(X3DInstance, &m3DListener, &source.m3D_Data,
+						X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER | X3DAUDIO_CALCULATE_LPF_DIRECT | X3DAUDIO_CALCULATE_REVERB,
+						&DSPSettings);
+
+				source.mDirty = false;
+			}
 		}
-		XAudioSource& XAudioBackend::GetSource(Uint32 id)
+
+		XAudioSource& XAudioBackend::GetSource(const Uint32 id)
 		{
 			if (id > mSources.size())
 			{
@@ -234,7 +319,7 @@ namespace Nuclear
 			}
 			return mSources[id - 1];			
 		}
-		XAudioBuffer& XAudioBackend::GetBuffer(Uint32 id)
+		XAudioBuffer& XAudioBackend::GetBuffer(const Uint32 id)
 		{
 			if (id > mBuffers.size())
 			{
@@ -244,23 +329,22 @@ namespace Nuclear
 
 			return mBuffers[id - 1];
 		}
-		XAudioSource* XAudioBackend::GetSource(Components::AudioSourceComponent* audio_source)
+		XAudioSource* XAudioBackend::GetSourcePtr(const Uint32 audio_source)
 		{
-			auto id = audio_source->GetSourceID();
-
-			return &mSources[id - 1];
+			return &mSources[audio_source - 1];
 		}
-		XAudioBuffer* XAudioBackend::GetBuffer(Components::AudioSourceComponent* audio_source)
-		{
-			if (audio_source->GetAudioClip())
-				return GetBuffer(audio_source->GetAudioClip());
-			else
-				return nullptr;
-		}
-		XAudioBuffer* XAudioBackend::GetBuffer(Assets::AudioClip* clip)
-		{
-			auto id = clip->GetBufferID();
-			return &mBuffers[id - 1];
-		}
+		//XAudioBuffer* XAudioBackend::GetBufferPtr(const Uint32 audio_source)
+		//{
+		//	auto source = GetSourcePtr(audio_source);
+		//	if (source)
+		//		return GetBufferPtr(source.);
+		//	else
+		//		return nullptr;
+		//}
+		//XAudioBuffer* XAudioBackend::GetBufferPtr(const Uint32 clip)
+		//{
+		//	auto id = clip->GetBufferID();
+		//	return &mBuffers[id - 1];
+		//}
 	}
 }

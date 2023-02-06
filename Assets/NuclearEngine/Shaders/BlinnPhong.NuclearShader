@@ -7,6 +7,7 @@ ForwardPipeline = "MainPSO"
 DefferedPipeline = "DefferedPSO"
 GBufferPipeline = "GBufferPSO"
 Variants = [ "NE_DEFFERED" ,"NE_SHADOWS","NE_ANIMATION" ]
+VariantsValues = [ false, false, true ]
 
 [MainPSO]
 RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]
@@ -187,7 +188,7 @@ float4 DoLighting(PixelInputType input)
 // phase 1: dir light
 #ifdef NE_DIR_LIGHTS_NUM
 
-#ifdef NE_MAX_DIR_CASTERS
+#if defined(NE_MAX_DIR_CASTERS) && defined(NE_SHADOWS)
 
     float dir_Shadow[NE_DIR_LIGHTS_NUM];
     for (i = 0; i < NE_DIR_LIGHTS_NUM; i++)   //initialize array
@@ -216,7 +217,7 @@ float4 DoLighting(PixelInputType input)
 // phase 2: spot light
 #ifdef NE_SPOT_LIGHTS_NUM
 
-#ifdef NE_MAX_SPOT_CASTERS 
+#if defined(NE_MAX_SPOT_CASTERS) && defined(NE_SHADOWS)
     float Spot_Shadow[NE_SPOT_LIGHTS_NUM];
  
     for (i = 0; i < NE_SPOT_LIGHTS_NUM; i++)   //initialize array
@@ -243,7 +244,7 @@ float4 DoLighting(PixelInputType input)
 
 // phase 3: point lights
 #ifdef NE_POINT_LIGHTS_NUM   
-#ifdef NE_MAX_OMNIDIR_CASTERS
+#if defined(NE_MAX_OMNIDIR_CASTERS) && defined(NE_SHADOWS)
 
     float point_shadow[NE_POINT_LIGHTS_NUM];
     for (i = 0; i < NE_POINT_LIGHTS_NUM; i++)   //initialize array

@@ -328,6 +328,7 @@ namespace Nuclear
 			pixelshader.mDefines.insert("NE_MAX_SPOT_CASTERS 1");
 			pixelshader.mDefines.insert("NE_MAX_OMNIDIR_CASTERS 1");
 
+			pixelshader.mName = pixelshader.mName + "_ShaderReflection_TempObject";
 			CreateShader(PShader.RawDblPtr(), pixelshader);
 			if (!PShader)
 			{

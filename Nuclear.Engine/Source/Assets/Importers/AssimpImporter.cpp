@@ -62,8 +62,11 @@ namespace Nuclear {
 					mModel.pMaterial->SetState(Assets::IAsset::State::Loaded);
 				}
 
-				Assimp::Exporter exporter;
-				exporter.Export(scene, "glb2", exportPath + model.mName + ".glb");
+				if (!desc.mCommonOptions.mLoadOnly)
+				{
+					Assimp::Exporter exporter;
+					exporter.Export(scene, "glb2", exportPath + model.mName + ".glb");
+				}
 
 				return true;
 			}

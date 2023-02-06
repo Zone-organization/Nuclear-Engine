@@ -433,7 +433,6 @@
     <ClInclude Include="include\Audio\NullAudioBackend.h" />
     <ClInclude Include="Source\Audio\OpenAL\OpenALBackend.h" />
     <ClInclude Include="Source\Audio\XAudio\XAudioBackend.h" />
-    <ClInclude Include="Source\Audio\XAudio\XAudioStructs.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_impl_sdl.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpGLMHelpers.h" />
@@ -501,6 +500,7 @@
     <ClCompile Include="Source\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Platform\FileSystem.cpp" />
     <ClCompile Include="Source\Serialization\SerializationEngine.cpp" />
+    <ClCompile Include="Source\Systems\AudioSystem.cpp" />
     <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\BCTools.cpp" />
     <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\DDSLoader.cpp" />
     <ClCompile Include="Source\ThirdParty\DiligentTextureLoader\src\DImage.cpp" />

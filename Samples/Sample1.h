@@ -97,7 +97,8 @@ void AssetsFolderViewer(Assets::AssetLibrary& obj)
 }
 
 class Sample1 : public Core::Client
-{
+{	
+	std::shared_ptr<Systems::AudioSystem> AudioSystem;
 	std::shared_ptr<Systems::RenderSystem> Renderer;
 //	std::shared_ptr<Systems::DebugSystem> mDebugSystem;
 
@@ -124,6 +125,11 @@ class Sample1 : public Core::Client
 
 	ECS::Entity EController;
 
+	Assets::AudioClip* mBackgroundMusic;
+	Assets::AudioClip* mBoxAudio;
+	Assets::AudioClip* mGunFire;
+
+
 	float lastX = _Width_ / 2.0f;
 	float lastY = _Height_ / 2.0f;
 	bool firstMouse = true;
@@ -135,17 +141,24 @@ public:
 	}
 	void SetupAssets()
 	{
+		mBackgroundMusic = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/str3.mp3");
+		mBoxAudio = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/box_audio.mp3");
+
+
 		//Load Nanosuit Model
-		auto nanosuitmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj");
+		Assets::MeshImportingDesc desc;
+		desc.mCommonOptions.mLoadOnly = true;
+		desc.mCommonOptions.mAsyncImport = false;
+		auto nanosuitmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj", desc);
 		
 		//Load Cyborg Model
-		auto cyborgmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekCyborg/cyborg.obj");
+		auto cyborgmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekCyborg/cyborg.obj", desc);
 		
 		//Load Bob Model
-		auto bobmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/Bob/boblampclean.md5mesh");
+		auto bobmodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/Bob/boblampclean.md5mesh", desc);
 
 		//Load vampire Model
-		auto vampiremodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx");
+		auto vampiremodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", desc);
 
 		BobAnimator.Initialize(&bobmodel->GetImportedAnimations()->mClips.at(0));
 		VampireAnimator.Initialize(&vampiremodel->GetImportedAnimations()->mClips.at(0));
@@ -153,10 +166,12 @@ public:
 		//Load some textures manually
 
 		//Initialize Materials
+		Assets::TextureImportingDesc texdesc;
+		texdesc.mCommonOptions.mLoadOnly = true;
 		Assets::MaterialTextureSet CubeSet;
-		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_diffuse.png") , Assets::TextureUsageType::Diffuse});
-		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_specular.png") , Assets::TextureUsageType::Specular} );
-		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_normal.png") , Assets::TextureUsageType::Normal});
+		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_diffuse.png", texdesc) , Assets::TextureUsageType::Diffuse});
+		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_specular.png", texdesc) , Assets::TextureUsageType::Specular} );
+		CubeSet.mData.push_back({ GetAssetManager().Import<Assets::Texture>("@CommonAssets@/Textures/crate_normal.png", texdesc) , Assets::TextureUsageType::Normal});
 		CubeMaterial.GetTextures().push_back(CubeSet);
 		CubeMaterial.Create(BlinnPhong);
 
@@ -229,13 +244,27 @@ public:
 		ELights.GetComponent<Components::EntityInfoComponent>().mTransform.SetPosition(Math::Vector3(0.7f, 0.2f, 2.0f));
 	}
 
+	void InitAudioComponents()
+	{
+		ECube.AddComponent<Components::AudioListenerComponent>();
+
+		//auto& bgd_audio = EController.AddComponent<Components::AudioSourceComponent>();
+		//bgd_audio.SetAudioClip(mBackgroundMusic);
+
+		auto& box_audio = EController.AddComponent<Components::AudioSourceComponent>();
+		box_audio.SetAudioClip(mBoxAudio);
+
+
+	}
 	void InitRenderer()
 	{
-	//	mDebugSystem = GetScene().GetSystemManager().Add<Systems::DebugSystem>();
+		AudioSystem = GetScene().GetSystemManager().Add<Systems::AudioSystem>();
 		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
 
 		Assets::ShaderImportingDesc desc;
 		desc.mType = Graphics::ShaderType::_3DRendering;
+		desc.mCommonOptions.mLoadOnly = true;
+		desc.mCommonOptions.mAsyncImport = false;
 		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader", desc);
 		DiffuseOnly = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NuclearShader", desc);
 
@@ -269,6 +298,8 @@ public:
 		InitRenderer();
 
 		SetupAssets();
+
+		InitAudioComponents();
 
 		Renderer->AddRenderPass(&GeoPass);
 	//	Renderer->GetBackground().SetSkybox(&Skybox);
@@ -371,6 +402,36 @@ public:
 				ImGui::End();
 				return Core::Engine::GetInstance().EndClient();
 			}
+
+			static Components::AudioSourceComponent* active_audio = &EController.GetComponent<Components::AudioSourceComponent>();;
+			static int f = 0;
+			if (ImGui::RadioButton("Background Audio", &f, 0))			
+			//	active_audio = &EController.GetComponent<Components::AudioSourceComponent>();
+						
+			if (ImGui::RadioButton("Box Audio", &f, 1))			
+				active_audio = &EController.GetComponent<Components::AudioSourceComponent>();
+			
+			if (ImGui::Button("Play"))			
+				active_audio->Play();
+			
+			if (ImGui::Button("Pause"))			
+				active_audio->Pause();
+
+			if (ImGui::Button("Stop"))			
+				active_audio->Stop();
+			
+			static float v = 1.0f, v2 = 1.0f;
+			if (ImGui::SliderFloat("bgd music volume: ", &v, 0.0f, 1.0f))
+			{
+			//	auto& bgd_audio = EController.GetComponent<Components::AudioSourceComponent>();
+			//	bgd_audio.SetVolume(v);
+			}
+			if (ImGui::SliderFloat("box music volume: ", &v2, 0.0f, 1.0f))
+			{
+				auto& box_audio = EController.GetComponent<Components::AudioSourceComponent>();
+				box_audio.SetVolume(v);
+			}
+
 
 			ImGui::End();
 			EntityExplorer();

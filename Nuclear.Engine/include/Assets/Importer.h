@@ -58,8 +58,6 @@ namespace Nuclear
 			msdfgen::FreetypeHandle* FT_Handle;
 
 			std::vector<IAsset*> mQueuedAssets;
-
-			//std::vector<Threading::Task*> mQueuedTasks;
 			Importer();
 		};
 	}

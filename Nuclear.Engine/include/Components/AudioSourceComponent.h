@@ -1,15 +1,10 @@
 #pragma once
 #include <NE_Common.h>
-
+#include <Math/Math.h>
 namespace Nuclear
 {
-	namespace Audio { 
-		class AudioBackend; 
-		class OpenALBackend;
-		class XAudioBackend;
-	}
 	namespace Assets { class AudioClip; }
-
+	namespace Systems {	class AudioSystem; }
 	namespace Components
 	{
 		class NEAPI AudioSourceComponent
@@ -61,15 +56,14 @@ namespace Nuclear
 			void Play();
 			void Pause();
 			void Stop();
+
 		protected:
-			friend class Audio::AudioBackend;
-			friend class Audio::XAudioBackend;
-			friend class Audio::OpenALBackend;
-
-
+			friend class Systems::AudioSystem;
 			State mState;
 			Uint32 mSourceID;					//Openal = source id , XAudio index in sources vector
 
+			Math::Vector3 mVelocity;
+			Math::Vector3 mPrevPos;
 		private:
 			float mVolume;   //Note: [0, 1] range
 			float mPitch;
