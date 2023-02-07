@@ -88,20 +88,63 @@ namespace Nuclear
             alcDestroyContext(ctx);
             alcCloseDevice(device);
         }
-        bool OpenALBackend::CreateAudioClip(Uint32& result, AudioFile& file)
+
+        ALenum GetFormat(Uint32 channels, Uint32 bits)
         {
-            result = 0;
-            alGenBuffers(1, &result);
+            switch (bits)
+            {
+            case 8:
+            {
+                switch (channels)
+                {
+                case 1:
+                    return AL_FORMAT_MONO8;
+                case 2:
+                    return AL_FORMAT_STEREO8;
+                default:
+                    return AL_NONE;
+                }
+            }
+            case 16:
+            {
+                switch (channels)
+                {
+                case 1:
+                    return AL_FORMAT_MONO16;
+                case 2:
+                    return AL_FORMAT_STEREO16;
+                default:
+                    return AL_NONE;
+                }
+            }
+            case 32:
+            {
+                switch (channels)
+                {
+                case 1:
+                    return AL_FORMAT_MONO16;
+                case 2:
+                    return AL_FORMAT_STEREO16;
+                default:
+                    return AL_NONE;
+                }
+            }
+            default:
+                return AL_NONE;
+            }
+        }
 
 
-            ALenum format = AL_NONE;
+        bool OpenALBackend::CreateAudioClip(Assets::AudioClip* result, AudioFile& file)
+        {
+            result->mBufferID = 0;
+            alGenBuffers(1, &result->mBufferID);
 
-            if (file.mInfo.mChannels == 1)
-                format = AL_FORMAT_MONO16;
-            else if (file.mInfo.mChannels == 2)
-                format = AL_FORMAT_STEREO16;
 
-            alBufferData(result, format, file.mData.data(), file.mData.size(), file.mInfo.mSampleRate);
+            ALenum format = GetFormat(file.mInfo.mChannels, file.mInfo.mBitsPerSample);
+
+
+            alBufferData(result->mBufferID, format, file.mData.data(), file.mData.size(), file.mInfo.mSampleRate);
             
             //free the data
             file.mData.clear();
@@ -111,35 +154,42 @@ namespace Nuclear
             if (err != AL_NO_ERROR)
             {
                 fprintf(stderr, "OpenAL Error: %s\n", alGetString(err));
-                if (result && alIsBuffer(result))
-                    alDeleteBuffers(1, &result);
+                if (result && alIsBuffer(result->mBufferID))
+                    alDeleteBuffers(1, &result->mBufferID);
 
-                result = 0;
+                result->mBufferID = 0;
                 return false;
             }
 
             return true;
         }
 
-        bool OpenALBackend::CreateAudioSource(Uint32& source)
+        bool OpenALBackend::CreateAudioSource(Components::AudioSourceComponent* source, const ECS::Transform& trans)
         {
-            alGenSources(1, &source);
+            alGenSources(1, &source->mSourceID);
             auto err = alGetError();
             if (err != AL_NO_ERROR)
             {
                 NUCLEAR_ERROR("[OpenALBackend] Failed to create AudioSourceComponent!, Error Code: {0}", (int)err);
                 return false;
             }
-          //  alSourcei(source, AL_SOURCE_RELATIVE, false);
-            alSourcef(source, AL_SEC_OFFSET, 0.0f);
-            alSourcef(source, AL_REFERENCE_DISTANCE,1.0f);
-            alSourcef(source, AL_ROLLOFF_FACTOR, 1.0f);
+            alSourcei(source->mSourceID, AL_SOURCE_RELATIVE, !source->GetAudioClip()->Is3D());
+            alSourcef(source->mSourceID, AL_SEC_OFFSET, 0.0f);
+            alSourcef(source->mSourceID, AL_REFERENCE_DISTANCE,1.0f);
+            alSourcef(source->mSourceID, AL_ROLLOFF_FACTOR, 1.0f);
+            alSourcei(source->mSourceID, AL_LOOPING, source->GetAudioClip()->mLoop);
+
+            if (source->GetAudioClip())
+            {
+                SetAudioSourceClip(source->mSourceID, source->GetAudioClip()->GetBufferID());
+            }
             return true;
         }
 
         void OpenALBackend::SetAudioSourceClip(const Uint32 source, const Uint32 clip)
         {
             alSourcei(source, AL_BUFFER, (ALint)clip);
+
             //TODO: Debug build error checking
         }
 
@@ -166,36 +216,17 @@ namespace Nuclear
         {
             alSourcef(audio_source, AL_PITCH, pitch);
         }
-        void OpenALBackend::SetSource_IsLooping(const Uint32 audio_source, bool val)
-        {
-            alSourcei(audio_source, AL_LOOPING, val);
-        }
         void OpenALBackend::SetSource_Transform(const Uint32 audio_source, const Math::Vector3& pos, const Math::Quaternion& rot)
         {
             alSource3f(audio_source, AL_POSITION, pos.x, pos.y, -pos.z);
-            auto err = alGetError();
-            if (err != AL_NO_ERROR)
-            {
-                assert(0);
-            }
         }
         void OpenALBackend::SetSource_Velocity(const Uint32 audio_source, const Math::Vector3& val)
         {
             alSource3f(audio_source, AL_VELOCITY, val.x, val.y, -val.z);
-            auto err = alGetError();
-            if (err != AL_NO_ERROR)
-            {
-                assert(0);
-            }
         }
         void OpenALBackend::SetListener_Velocity(const Math::Vector3& val)
         {
             alListener3f( AL_VELOCITY, val.x, val.y, -val.z);
-            auto err = alGetError();
-            if (err != AL_NO_ERROR)
-            {
-                assert(0);
-            }
         }
         void OpenALBackend::SetListener_Transform(const Math::Vector3& pos, const Math::Quaternion& quat)
         {
@@ -208,11 +239,11 @@ namespace Nuclear
             };
             alListener3f(AL_POSITION, pos.x, pos.y, -pos.z);
             alListenerfv(AL_ORIENTATION, (float*)orientation);
-            auto err = alGetError();
-            if (err != AL_NO_ERROR)
-            {
-                assert(0);
-            }
+        }
+
+        void OpenALBackend::Update()
+        {
+
         }
 	}
 }

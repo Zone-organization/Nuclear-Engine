@@ -18,6 +18,7 @@ namespace Nuclear
 			};
 
 			AudioSourceComponent();
+			AudioSourceComponent(Assets::AudioClip* clip);
 			~AudioSourceComponent();
 
 			FORCE_INLINE Assets::AudioClip* GetAudioClip()
@@ -57,7 +58,7 @@ namespace Nuclear
 			void Pause();
 			void Stop();
 
-		protected:
+		//protected:
 			friend class Systems::AudioSystem;
 			State mState;
 			Uint32 mSourceID;					//Openal = source id , XAudio index in sources vector

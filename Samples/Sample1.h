@@ -141,8 +141,10 @@ public:
 	}
 	void SetupAssets()
 	{
-		mBackgroundMusic = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/str3.mp3");
-		mBoxAudio = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/box_audio.mp3");
+		Assets::AudioClipImportingDesc adesc;
+		adesc.mIs3D = true;
+		mBackgroundMusic = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/test.mp3", adesc);
+		//mBoxAudio = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/box_audio.mp3");
 
 
 		//Load Nanosuit Model
@@ -251,10 +253,7 @@ public:
 		//auto& bgd_audio = EController.AddComponent<Components::AudioSourceComponent>();
 		//bgd_audio.SetAudioClip(mBackgroundMusic);
 
-		auto& box_audio = EController.AddComponent<Components::AudioSourceComponent>();
-		box_audio.SetAudioClip(mBoxAudio);
-
-
+		auto& box_audio = EController.AddComponent<Components::AudioSourceComponent>(mBackgroundMusic);
 	}
 	void InitRenderer()
 	{

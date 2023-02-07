@@ -7,9 +7,13 @@ namespace Nuclear
 	namespace Components
 	{
 		AudioSourceComponent::AudioSourceComponent()
-			: pActiveClip(nullptr), mSourceID(0), mVolume(1.0f), mPitch(1.0f), mLoop(false), mState(AudioSourceComponent::State::Stopped)
+			: AudioSourceComponent(nullptr)
 		{
 
+		}
+		AudioSourceComponent::AudioSourceComponent(Assets::AudioClip* clip)
+			: pActiveClip(clip), mSourceID(0), mVolume(1.0f), mPitch(1.0f), mLoop(false), mState(AudioSourceComponent::State::Stopped)
+		{
 		}
 		AudioSourceComponent::~AudioSourceComponent()
 		{
@@ -18,10 +22,6 @@ namespace Nuclear
 		{
 			pActiveClip = clip;
 
-			if (mSourceID == 0)
-			{
-				Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioSource(mSourceID);
-			}
 			Audio::AudioEngine::GetInstance().GetBackend()->SetAudioSourceClip(mSourceID, pActiveClip->GetBufferID());
 		}
 		void AudioSourceComponent::SetVolume(float vol)

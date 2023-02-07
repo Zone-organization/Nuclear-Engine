@@ -6,13 +6,37 @@
 #include <Audio/AudioBackend.h>
 
 #include <Core/Scene.h>
+#include <Utilities/Logger.h>
 
 namespace Nuclear
 {
 	namespace Systems
 	{
+		void AudioSourceInit(entt::registry& reg, entt::entity entity)
+		{
+			auto& source = reg.get<Components::AudioSourceComponent>(entity);
+			auto& transform = reg.get<Components::EntityInfoComponent>(entity).mTransform;
+
+			if (!source.GetAudioClip())
+			{
+				NUCLEAR_WARN("[AudioSystem] Creating AudioSourceComponent with no audio clip!");
+			}
+			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioSource(&source, transform);
+		}
+
+		void AudioListenerInit(entt::registry& reg, entt::entity entity)
+		{
+			auto& listener = reg.get<Components::AudioListenerComponent>(entity);
+			auto& transform = reg.get<Components::EntityInfoComponent>(entity).mTransform;
+
+			Audio::AudioEngine::GetInstance().GetBackend()->SetListener_Transform(transform.GetLocalPosition(), transform.GetLocalRotation());
+			Audio::AudioEngine::GetInstance().GetBackend()->SetListener_Velocity(Math::Vector3(0.0f));
+		}
+
 		AudioSystem::AudioSystem()
 		{
+			Core::Scene::GetInstance().GetRegistry().on_construct<Components::AudioListenerComponent>().connect<&AudioListenerInit>();
+			Core::Scene::GetInstance().GetRegistry().on_construct<Components::AudioSourceComponent>().connect<&AudioSourceInit>();
 		}
 		AudioSystem::~AudioSystem()
 		{
@@ -51,21 +75,26 @@ namespace Nuclear
 				auto& audio_source = eView.get<Components::AudioSourceComponent>(entity);				
 				auto Einfo = Core::Scene::GetInstance().GetRegistry().try_get<Components::EntityInfoComponent>(entity);
 
-				const Math::Vector3 pos = Einfo->mTransform.GetLocalPosition();
-				
-				if (audio_source.mPrevPos != pos)
+				if (audio_source.GetAudioClip()->Is3D())
 				{
-					const Math::Vector3 prevVelocity = audio_source.mVelocity;
-					audio_source.mVelocity = (pos - audio_source.mPrevPos) / dt;
-					audio_source.mPrevPos = pos;
-					if (audio_source.mVelocity != prevVelocity)
+					const Math::Vector3 pos = Einfo->mTransform.GetLocalPosition();
+
+					if (audio_source.mPrevPos != pos)
 					{
-						Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Velocity(audio_source.GetSourceID(), audio_source.mVelocity);
+						const Math::Vector3 prevVelocity = audio_source.mVelocity;
+						audio_source.mVelocity = (pos - audio_source.mPrevPos) / dt;
+						audio_source.mPrevPos = pos;
+						if (audio_source.mVelocity != prevVelocity)
+						{
+							Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Velocity(audio_source.GetSourceID(), audio_source.mVelocity);
+						}
+						Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Transform(audio_source.GetSourceID(), pos, Einfo->mTransform.GetLocalRotation());
+
 					}
-					Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Transform(audio_source.GetSourceID(), pos, Einfo->mTransform.GetLocalRotation());
-			
 				}
 			}
+
+			Audio::AudioEngine::GetInstance().GetBackend()->Update();
 		}
 	}
 }

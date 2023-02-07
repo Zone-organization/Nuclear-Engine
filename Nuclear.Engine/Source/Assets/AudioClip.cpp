@@ -13,10 +13,5 @@ namespace Nuclear
 		{
 
 		}
-		const Uint32 AudioClip::GetBufferID() const
-		{
-			return mBufferID;
-		}
-
 	}
 }

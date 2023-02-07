@@ -20,7 +20,7 @@ namespace Nuclear
 			~AudioListenerComponent();
 
 
-		protected:
+	//	protected:
 			friend class Systems::AudioSystem;
 
 			bool mIsActive;

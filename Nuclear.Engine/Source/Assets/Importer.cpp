@@ -212,7 +212,10 @@ namespace Nuclear
 
 			sf_close(sndfile);
 
-			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioClip(result->mBufferID, file);
+			result->m3D = Desc.mIs3D;
+			result->mLoop = Desc.mLoop;
+
+			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioClip(result, file);
 
 
 			result->mState = IAsset::State::Loaded;

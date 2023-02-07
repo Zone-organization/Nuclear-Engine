@@ -34,14 +34,37 @@ namespace Nuclear
 			void SetScale(const Math::Vector3& scale);
 			void SetScale(float scale);
 
-			Math::Vector3 GetLocalPosition();
-			Math::Quaternion GetLocalRotation();
-			Math::Vector3 GetLocalRotationEular();
-			Math::Vector3 GetLocalScale();
 
-			Math::Vector3 GetWorldPosition();
+			FORCE_INLINE Math::Vector3 GetLocalPosition() const
+			{
+				return mLocalPosition;
+			}
 
-			Math::Matrix4 GetWorldMatrix();
+			FORCE_INLINE Math::Quaternion GetLocalRotation() const
+			{
+				return mLocalRotation;
+			}
+
+			FORCE_INLINE Math::Vector3 GetLocalRotationEular() const
+			{
+				return glm::eulerAngles(mLocalRotation);
+			}
+
+			FORCE_INLINE Math::Vector3 GetLocalScale() const
+			{
+				return mLocalScale;
+			}
+
+			FORCE_INLINE Math::Vector3 GetWorldPosition() const
+			{
+				return mWorldPosition;
+			}
+
+			FORCE_INLINE Math::Matrix4 GetWorldMatrix()  const
+			{
+				return mWorldMatrix;
+			}
+
 
 			void Update();
 

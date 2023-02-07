@@ -19,9 +19,9 @@ namespace Nuclear
 
 			void Shutdown() override;
 
-			bool CreateAudioClip(Uint32& result, AudioFile& file) override;
+			bool CreateAudioClip(Assets::AudioClip* result, AudioFile& file) override;
 
-			bool CreateAudioSource(Uint32& source) override;
+			bool CreateAudioSource(Components::AudioSourceComponent* source, const ECS::Transform& trans) override;
 
 			void SetAudioSourceClip(const Uint32 source, const Uint32 clip) override;
 
@@ -35,7 +35,7 @@ namespace Nuclear
 
 			void SetSource_Pitch(const Uint32 audio_source, float pitch) override;
 
-			void SetSource_IsLooping(const Uint32 audio_source, bool val) override;
+			//void SetSource_IsLooping(const Uint32 audio_source, bool val) override;
 
 			void SetSource_Transform(const Uint32 audio_source, const Math::Vector3& pos, const Math::Quaternion& rot) override;
 
@@ -45,6 +45,7 @@ namespace Nuclear
 
 			void SetListener_Transform(const Math::Vector3& pos, const Math::Quaternion& orientation) override;
 
+			void Update() override;
 		protected:
 			ALCdevice* pDevice;
 			ALCcontext* pMasterContext;

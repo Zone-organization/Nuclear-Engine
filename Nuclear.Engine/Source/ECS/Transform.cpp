@@ -62,36 +62,6 @@ namespace Nuclear
 			SetScale(Math::Vector3(scale));
 		}
 
-		Math::Vector3 Transform::GetLocalPosition()
-		{
-			return mLocalPosition;
-		}
-
-		Math::Quaternion Transform::GetLocalRotation()
-		{
-			return mLocalRotation;
-		}
-
-		Math::Vector3 Transform::GetLocalRotationEular()
-		{
-			return glm::eulerAngles(mLocalRotation);
-		}
-
-		Math::Vector3 Transform::GetLocalScale()
-		{
-			return mLocalScale;
-		}
-
-		Math::Vector3 Transform::GetWorldPosition()
-		{
-			return mWorldPosition;
-		}
-
-		Math::Matrix4 Transform::GetWorldMatrix()
-		{
-			return mWorldMatrix;
-		}
-
 		void Transform::Update()
 		{
 
