@@ -4,67 +4,8 @@
 #include <Assets/AudioClip.h>
 
 
-//as in XACT3D3 
-#define LEFT_AZIMUTH					(3.0f * X3DAUDIO_PI / 2.0f)
-#define RIGHT_AZIMUTH					(X3DAUDIO_PI / 2.0f)
-#define FRONT_LEFT_AZIMUTH              (7*X3DAUDIO_PI/4)
-#define FRONT_RIGHT_AZIMUTH             (X3DAUDIO_PI/4)
-#define FRONT_CENTER_AZIMUTH            0.0f
-#define LOW_FREQUENCY_AZIMUTH           X3DAUDIO_2PI
-#define BACK_LEFT_AZIMUTH               (5*X3DAUDIO_PI/4)
-#define BACK_RIGHT_AZIMUTH              (3*X3DAUDIO_PI/4)
-#define BACK_CENTER_AZIMUTH             X3DAUDIO_PI
-#define FRONT_LEFT_OF_CENTER_AZIMUTH    (15*X3DAUDIO_PI/8)
-#define FRONT_RIGHT_OF_CENTER_AZIMUTH   (X3DAUDIO_PI/8)
-
 #pragma comment(lib,"XAudio2.lib")
 
-static const float aStereoLayout[] =
-{
-	LEFT_AZIMUTH,
-	RIGHT_AZIMUTH
-};
-static const float a2Point1Layout[] =
-{
-	LEFT_AZIMUTH,
-	RIGHT_AZIMUTH,
-	LOW_FREQUENCY_AZIMUTH
-};
-static const float aQuadLayout[] =
-{
-	FRONT_LEFT_AZIMUTH,
-	FRONT_RIGHT_AZIMUTH,
-	BACK_LEFT_AZIMUTH,
-	BACK_RIGHT_AZIMUTH
-};
-static const float a4Point1Layout[] =
-{
-	FRONT_LEFT_AZIMUTH,
-	FRONT_RIGHT_AZIMUTH,
-	LOW_FREQUENCY_AZIMUTH,
-	BACK_LEFT_AZIMUTH,
-	BACK_RIGHT_AZIMUTH
-};
-static const float a5Point1Layout[] =
-{
-	FRONT_LEFT_AZIMUTH,
-	FRONT_RIGHT_AZIMUTH,
-	FRONT_CENTER_AZIMUTH,
-	LOW_FREQUENCY_AZIMUTH,
-	BACK_LEFT_AZIMUTH,
-	BACK_RIGHT_AZIMUTH
-};
-static const float a7Point1Layout[] =
-{
-	FRONT_LEFT_AZIMUTH,
-	FRONT_RIGHT_AZIMUTH,
-	FRONT_CENTER_AZIMUTH,
-	LOW_FREQUENCY_AZIMUTH,
-	BACK_LEFT_AZIMUTH,
-	BACK_RIGHT_AZIMUTH,
-	LEFT_AZIMUTH,
-	RIGHT_AZIMUTH
-};
 namespace Nuclear
 {
 	namespace Audio
@@ -187,7 +128,7 @@ namespace Nuclear
 			waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 			waveFormat.nChannels = xbuffer.mFile.mInfo.mChannels;
 			waveFormat.nSamplesPerSec = xbuffer.mFile.mInfo.mSampleRate;
-			waveFormat.wBitsPerSample = xbuffer.mFile.mInfo.mBitsPerSample;
+			waveFormat.wBitsPerSample = xbuffer.mFile.mInfo.mBitDepth;
 			waveFormat.nBlockAlign = waveFormat.nChannels *	waveFormat.wBitsPerSample / 8;
 			waveFormat.nAvgBytesPerSec =waveFormat.nSamplesPerSec *	waveFormat.nBlockAlign;
 			waveFormat.cbSize = sizeof(WAVEFORMATEX);
@@ -208,20 +149,9 @@ namespace Nuclear
 				emitter.CurveDistanceScaler = emitter.DopplerScaler = 1.0f;
 				emitter.InnerRadius = 1.0f;
 
-				if (emitter.ChannelCount > 1 && emitter.pChannelAzimuths == NULL)
+				if (emitter.ChannelCount > 1)
 				{
-					emitter.ChannelRadius = 1.0f;
-
-					switch (emitter.ChannelCount)
-					{
-					case 2: emitter.pChannelAzimuths = (float*)&aStereoLayout[0]; break;
-					case 3: emitter.pChannelAzimuths = (float*)&a2Point1Layout[0]; break;
-					case 4: emitter.pChannelAzimuths = (float*)&aQuadLayout[0]; break;
-					case 5: emitter.pChannelAzimuths = (float*)&a4Point1Layout[0]; break;
-					case 6: emitter.pChannelAzimuths = (float*)&a5Point1Layout[0]; break;
-					case 8: emitter.pChannelAzimuths = (float*)&a7Point1Layout[0]; break;
-					default: hr = E_FAIL; break;
-					}
+					NUCLEAR_WARN("[XAudioBackend] 3D AudioClips should be mono channeled!");
 				}
 
 				static X3DAUDIO_DISTANCE_CURVE_POINT DefaultCurvePoints[2] = { 0.0f, 1.0f, 1.0f, 1.0f };
@@ -231,8 +161,7 @@ namespace Nuclear
 					emitter.pVolumeCurve = &DefaultCurve;
 				
 				if (emitter.pLFECurve == NULL)				
-					emitter.pLFECurve = &DefaultCurve;
-				
+					emitter.pLFECurve = &DefaultCurve;			
 
 			}
 
@@ -311,7 +240,9 @@ namespace Nuclear
 			auto source = GetSourcePtr(audio_source);
 			if (source && !source->Unused())
 			{
-				source->pVoice->SetFrequencyRatio(pitch);
+				//source->pVoice->SetFrequencyRatio(pitch);
+				source->mPitch = pitch;
+				source->mDirty = true;
 			}
 		}
 	//	void XAudioBackend::SetSource_IsLooping(const Uint32 audio_source, bool val)
@@ -336,21 +267,24 @@ namespace Nuclear
 			auto source = GetSourcePtr(audio_source);
 			if (source && !source->Unused())
 			{
-				source->SetVelocity(val);
+			//	source->SetVelocity(Math::Vector3(0.0f, 0.0f, 0.0f));
 			}
 		}
 		void XAudioBackend::SetListener_Velocity(const Math::Vector3& val)
 		{
-			m3DListener.Velocity = VEC_CAST(val);
+			//m3DListener.Velocity = VEC_CAST(val);
+			//mListenerDirty = true;
+
 		}
 		void XAudioBackend::SetListener_Transform(const Math::Vector3& pos, const Math::Quaternion& rot)
 		{
-			const Math::Vector3 front = rot * Math::Vector3(0.0f, 0.0f, -1.0f); // Forward
+			const Math::Vector3 front = rot * Math::Vector3(0.0f, 0.0f, 1.0f); // Forward
 			const Math::Vector3 top = rot * Math::Vector3(0.0f, 1.0f, 0.0f);    // Up
 
 			m3DListener.OrientFront = VEC_CAST(front);
 			m3DListener.OrientTop = VEC_CAST(top);
 			m3DListener.Position = VEC_CAST(pos);
+			mListenerDirty = true;
 		}
 
 		void XAudioBackend::Update()
@@ -363,25 +297,30 @@ namespace Nuclear
 			for (Uint32 i = 0; i < mSources.size(); i++)
 			{
 				auto& source = mSources[i];
-				if (source.Unused() || !source.mDirty)
-					continue;
-
-				DSPSettings.SrcChannelCount = source.m3DEmitter.ChannelCount;
-				
-				if (source.mIs3D)
+								
+				if (!source.Unused())
 				{
-					X3DAudioCalculate(X3DInstance, &m3DListener, &source.m3DEmitter,X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER ,	&DSPSettings);
+					if (mListenerDirty || source.mDirty)
+					{
+						DSPSettings.SrcChannelCount = source.m3DEmitter.ChannelCount;
 
-					source.pVoice->SetOutputMatrix(pMasterVoice, DSPSettings.SrcChannelCount, DSPSettings.DstChannelCount, DSPSettings.pMatrixCoefficients);
-					source.pVoice->SetFrequencyRatio(DSPSettings.DopplerFactor);
-				}
-				else
-				{
-					assert(0);
-				}
+						if (source.mIs3D)
+						{
+							X3DAudioCalculate(X3DInstance, &m3DListener, &source.m3DEmitter, X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER, &DSPSettings);
 
+							source.pVoice->SetOutputMatrix(pMasterVoice, DSPSettings.SrcChannelCount, DSPSettings.DstChannelCount, DSPSettings.pMatrixCoefficients);
+							float frequency_ratio = source.mPitch * DSPSettings.DopplerFactor;
+							source.pVoice->SetFrequencyRatio(frequency_ratio);
+						}
+						else
+						{
+							source.pVoice->SetFrequencyRatio(source.mPitch);
+						}
 
-				source.mDirty = false;
+						mListenerDirty = false;
+						source.mDirty = false;
+					}
+				}						
 			}
 		}
 
@@ -438,6 +377,7 @@ namespace Nuclear
 		}
 		XAudioSource* XAudioBackend::GetSourcePtr(const Uint32 audio_source)
 		{
+			assert(audio_source != 0);
 			return &mSources[audio_source - 1];
 		}
 		//XAudioBuffer* XAudioBackend::GetBufferPtr(const Uint32 audio_source)

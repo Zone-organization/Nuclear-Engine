@@ -174,9 +174,9 @@ namespace Nuclear
                 return false;
             }
             alSourcei(source->mSourceID, AL_SOURCE_RELATIVE, !source->GetAudioClip()->Is3D());
-            alSourcef(source->mSourceID, AL_SEC_OFFSET, 0.0f);
-            alSourcef(source->mSourceID, AL_REFERENCE_DISTANCE,1.0f);
-            alSourcef(source->mSourceID, AL_ROLLOFF_FACTOR, 1.0f);
+        //    alSourcef(source->mSourceID, AL_SEC_OFFSET, 0.0f);
+        //    alSourcef(source->mSourceID, AL_REFERENCE_DISTANCE,1.0f);
+          //  alSourcef(source->mSourceID, AL_ROLLOFF_FACTOR, 1.0f);
             alSourcei(source->mSourceID, AL_LOOPING, source->GetAudioClip()->mLoop);
 
             if (source->GetAudioClip())
@@ -222,7 +222,7 @@ namespace Nuclear
         }
         void OpenALBackend::SetSource_Velocity(const Uint32 audio_source, const Math::Vector3& val)
         {
-            alSource3f(audio_source, AL_VELOCITY, val.x, val.y, -val.z);
+           alSource3f(audio_source, AL_VELOCITY, val.x, val.y, -val.z);
         }
         void OpenALBackend::SetListener_Velocity(const Math::Vector3& val)
         {
@@ -233,11 +233,11 @@ namespace Nuclear
             //AL_ORIENTATION = float[6]
             Math::Vector3 orientation[2] =
             {                
-                quat* Math::Vector3(0.0f, 0.0f, -1.0f), // Forward
+                quat* Math::Vector3(0.0f, 0.0f, 1.0f), // Forward
                
                 quat* Math::Vector3(0.0f, 1.0f, 0.0f)    // Up
             };
-            alListener3f(AL_POSITION, pos.x, pos.y, -pos.z);
+            alListener3f(AL_POSITION, pos.x,pos.y,-pos.z);
             alListenerfv(AL_ORIENTATION, (float*)orientation);
         }
 

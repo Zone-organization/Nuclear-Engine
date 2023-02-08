@@ -431,6 +431,7 @@
     <ClInclude Include="include\Core\UUID.h" />
     <ClInclude Include="Source\Assets\Importers\AssimpImporter.h" />
     <ClInclude Include="include\Audio\NullAudioBackend.h" />
+    <ClInclude Include="Source\Audio\AudioConverter.h" />
     <ClInclude Include="Source\Audio\OpenAL\OpenALBackend.h" />
     <ClInclude Include="Source\Audio\XAudio\XAudioBackend.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imgui_freetype.h" />

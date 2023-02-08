@@ -16,12 +16,13 @@ namespace Nuclear
 			IXAudio2SourceVoice* pVoice = nullptr;
 			X3DAUDIO_EMITTER m3DEmitter = { 0 };
 			WAVEFORMATEX mFormat = { 0 };
+			float mPitch = 1.0f;
 			bool mDirty = false;
 			bool mIs3D = false;
 
 			FORCE_INLINE void SetTransform(const Math::Vector3& pos, const Math::Quaternion& rot)
 			{
-				const Math::Vector3 front = rot * Math::Vector3(0.0f, 0.0f, -1.0f); // Forward
+				const Math::Vector3 front = rot * Math::Vector3(0.0f, 0.0f, 1.0f); // Forward
 				const Math::Vector3 top = rot * Math::Vector3(0.0f, 1.0f, 0.0f);    // Up
 
 				m3DEmitter.OrientFront = VEC_CAST(front);
@@ -33,7 +34,7 @@ namespace Nuclear
 
 			FORCE_INLINE void SetVelocity(const Math::Vector3& val)
 			{
-				m3DEmitter.Velocity = VEC_CAST(val);
+			//	m3DEmitter.Velocity = VEC_CAST(val);
 
 				mDirty = true;
 			}
@@ -107,6 +108,7 @@ namespace Nuclear
 			X3DAUDIO_HANDLE X3DInstance;
 			X3DAUDIO_LISTENER m3DListener;
 
+			bool mListenerDirty = false;
 			std::vector<XAudioSource> mSources;
 			std::vector<XAudioBuffer> mBuffers;
 		};

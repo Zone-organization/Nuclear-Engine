@@ -33,7 +33,7 @@
 
 #pragma comment(lib,"sndfile.lib")
 
-
+#include "../Audio/AudioConverter.h"
 namespace Nuclear
 {
 	namespace Assets
@@ -183,6 +183,7 @@ namespace Nuclear
 			file.mInfo.mFormat = sfinfo.format;
 			file.mInfo.mSections = sfinfo.sections;
 			file.mInfo.mSeekable = sfinfo.seekable;
+			file.mInfo.mBitDepth = Desc.mBitDepth;
 
 			//else if (sfinfo.channels == 3)
 			//{
@@ -197,12 +198,49 @@ namespace Nuclear
 
 			/* Decode the whole audio file to a buffer. */
 
-			
+			auto size = (size_t)(sfinfo.frames * sfinfo.channels);
 
-			auto size = (size_t)(sfinfo.frames * sfinfo.channels) * sizeof(short);
+			switch (Desc.mBitDepth)
+			{
+			case 8:
+			{
+				size *= sizeof(Byte);
+				file.mData.resize(size);
 
-			file.mData.resize(size);
-			num_frames = sf_readf_short(sndfile, (short*)file.mData.data(), sfinfo.frames);
+				num_frames = sf_read_raw(sndfile, file.mData.data(), sfinfo.frames);
+				break;
+			}
+			case 16:
+			{
+				size *= sizeof(short);
+				file.mData.resize(size);
+				num_frames = sf_readf_short(sndfile, (short*)file.mData.data(), sfinfo.frames);
+				break;
+			}
+			case 24:
+			{
+				size *= sizeof(int);
+				file.mData.resize(size);
+				num_frames = sf_readf_int(sndfile, (int*)file.mData.data(), sfinfo.frames);
+				break;
+			}
+			case 32:
+			{
+				size *= sizeof(float);
+				file.mData.resize(size);
+				num_frames = sf_readf_float(sndfile, (float*)file.mData.data(), sfinfo.frames);
+				break;
+			}
+			default:
+			{
+				size *= sizeof(short);
+				file.mData.resize(size);
+				num_frames = sf_readf_short(sndfile, (short*)file.mData.data(), sfinfo.frames);
+				file.mInfo.mBitDepth = 16;
+				break;
+			}
+			}
+
 			if (num_frames < 1)
 			{
 				sf_close(sndfile);
@@ -210,10 +248,27 @@ namespace Nuclear
 				return 0;
 			}
 
+			//convert to mono for 3d sounds
+			if (Desc.mIs3D && sfinfo.channels > 1)
+			{
+				Uint32 samples_per_channel = sfinfo.frames / sfinfo.channels;
+
+				std::vector<Byte> result;
+				result.resize(samples_per_channel * 2);
+
+				Audio::ConvertToMono(file.mData.data(), result.data(), 16, samples_per_channel, sfinfo.channels);
+				file.mData.swap(result);
+				
+				file.mInfo.mSamples = samples_per_channel;
+				file.mInfo.mChannels = 1;
+			}
+
+
 			sf_close(sndfile);
 
 			result->m3D = Desc.mIs3D;
 			result->mLoop = Desc.mLoop;
+
 
 			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioClip(result, file);
 

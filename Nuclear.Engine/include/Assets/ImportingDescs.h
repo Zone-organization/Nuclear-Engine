@@ -36,6 +36,7 @@ namespace Nuclear
 
 			bool mLoop = false;
 			bool mIs3D = false;
+			Uint32 mBitDepth = 16; 
 		};
 		struct MeshImportingDesc
 		{

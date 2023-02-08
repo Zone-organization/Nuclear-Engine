@@ -143,7 +143,8 @@ public:
 	{
 		Assets::AudioClipImportingDesc adesc;
 		adesc.mIs3D = true;
-		mBackgroundMusic = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/test.mp3", adesc);
+		adesc.mLoop = true;
+		mBackgroundMusic = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/str3.mp3", adesc);
 		//mBoxAudio = GetAssetManager().Import<Assets::AudioClip>("@Assets@/AudioClips/box_audio.mp3");
 
 
@@ -248,12 +249,12 @@ public:
 
 	void InitAudioComponents()
 	{
-		ECube.AddComponent<Components::AudioListenerComponent>();
+		EController.AddComponent<Components::AudioListenerComponent>();
 
 		//auto& bgd_audio = EController.AddComponent<Components::AudioSourceComponent>();
 		//bgd_audio.SetAudioClip(mBackgroundMusic);
-
-		auto& box_audio = EController.AddComponent<Components::AudioSourceComponent>(mBackgroundMusic);
+		
+		auto& box_audio = ECube.AddComponent<Components::AudioSourceComponent>(mBackgroundMusic);
 	}
 	void InitRenderer()
 	{
@@ -402,13 +403,13 @@ public:
 				return Core::Engine::GetInstance().EndClient();
 			}
 
-			static Components::AudioSourceComponent* active_audio = &EController.GetComponent<Components::AudioSourceComponent>();;
+			static Components::AudioSourceComponent* active_audio = &ECube.GetComponent<Components::AudioSourceComponent>();;
 			static int f = 0;
 			if (ImGui::RadioButton("Background Audio", &f, 0))			
 			//	active_audio = &EController.GetComponent<Components::AudioSourceComponent>();
 						
 			if (ImGui::RadioButton("Box Audio", &f, 1))			
-				active_audio = &EController.GetComponent<Components::AudioSourceComponent>();
+				active_audio = &ECube.GetComponent<Components::AudioSourceComponent>();
 			
 			if (ImGui::Button("Play"))			
 				active_audio->Play();
@@ -427,7 +428,7 @@ public:
 			}
 			if (ImGui::SliderFloat("box music volume: ", &v2, 0.0f, 1.0f))
 			{
-				auto& box_audio = EController.GetComponent<Components::AudioSourceComponent>();
+				auto& box_audio = ECube.GetComponent<Components::AudioSourceComponent>();
 				box_audio.SetVolume(v);
 			}
 

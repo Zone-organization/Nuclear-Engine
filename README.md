@@ -108,13 +108,13 @@ Put all their .lib in the bin folder.
 ## RoadMap
   - V0.01 Alpha:
     - Complete RenderSystem (50%) 
-	- Complete AudioSystem Implementation. (15%)
+	- Complete AudioSystem Implementation. (65%)
 	- Basic Implementaion of PhysX.
 	- Complete Samples & their documentation.
 
 ## Current To-dos 
   - W.I.P:
-  	- AudioSystem Implementation using OpenAL-Soft/XAudio2. (20%)
+  	- AudioSystem Implementation using OpenAL-Soft/XAudio2. (70%)
   	- Serializing the scene & assets.
 	- Use CMake instead of Visual Studio.
 	

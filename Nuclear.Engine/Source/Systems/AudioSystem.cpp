@@ -22,6 +22,8 @@ namespace Nuclear
 				NUCLEAR_WARN("[AudioSystem] Creating AudioSourceComponent with no audio clip!");
 			}
 			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioSource(&source, transform);
+			Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Transform(source.GetSourceID(), transform.GetLocalPosition(), transform.GetLocalRotation());
+			Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Velocity(source.GetSourceID(), Math::Vector3(0.0f));
 		}
 
 		void AudioListenerInit(entt::registry& reg, entt::entity entity)
@@ -61,7 +63,7 @@ namespace Nuclear
 					audio_listener.mPrevPos = pos;
 					if (audio_listener.mVelocity != prevVelocity)
 					{
-						Audio::AudioEngine::GetInstance().GetBackend()->SetListener_Velocity(audio_listener.mVelocity);
+					//	Audio::AudioEngine::GetInstance().GetBackend()->SetListener_Velocity(audio_listener.mVelocity);
 					}
 					Audio::AudioEngine::GetInstance().GetBackend()->SetListener_Transform(pos, Einfo->mTransform.GetLocalRotation());
 
@@ -82,11 +84,11 @@ namespace Nuclear
 					if (audio_source.mPrevPos != pos)
 					{
 						const Math::Vector3 prevVelocity = audio_source.mVelocity;
-						audio_source.mVelocity = (pos - audio_source.mPrevPos) / dt;
+					//	audio_source.mVelocity = (pos - audio_source.mPrevPos) / dt;
 						audio_source.mPrevPos = pos;
 						if (audio_source.mVelocity != prevVelocity)
 						{
-							Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Velocity(audio_source.GetSourceID(), audio_source.mVelocity);
+						//	Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Velocity(audio_source.GetSourceID(), audio_source.mVelocity);
 						}
 						Audio::AudioEngine::GetInstance().GetBackend()->SetSource_Transform(audio_source.GetSourceID(), pos, Einfo->mTransform.GetLocalRotation());
 

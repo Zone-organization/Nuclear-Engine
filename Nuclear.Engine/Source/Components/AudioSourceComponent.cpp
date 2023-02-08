@@ -12,7 +12,7 @@ namespace Nuclear
 
 		}
 		AudioSourceComponent::AudioSourceComponent(Assets::AudioClip* clip)
-			: pActiveClip(clip), mSourceID(0), mVolume(1.0f), mPitch(1.0f), mLoop(false), mState(AudioSourceComponent::State::Stopped)
+			: pActiveClip(clip), mSourceID(0), mVolume(1.0f), mPitch(1.0f), mLoop(false), mState(AudioSourceComponent::State::Stopped), mPrevPos(0.0f), mVelocity(0.0f)
 		{
 		}
 		AudioSourceComponent::~AudioSourceComponent()

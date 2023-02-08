@@ -11,7 +11,7 @@ namespace Nuclear
 			Uint32 mFormat;
 			Uint32 mSections;
 			Uint32 mSeekable;
-
+			Uint32 mBitDepth;
 			Uint32 mSamples; //Frames
 			Uint32 mChannels;
 			Uint32 mSampleRate;
