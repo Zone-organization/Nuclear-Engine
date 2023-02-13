@@ -129,6 +129,7 @@
     <ClInclude Include="include\Compiler.h" />
     <ClInclude Include="include\Components\AudioListenerComponent.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
+    <ClInclude Include="include\Components\SpriteRenderer.h" />
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Fallbacks\Fallbacks.h" />
     <ClInclude Include="include\Fallbacks\FallbacksEngine.h" />
@@ -489,6 +490,7 @@
     <ClCompile Include="Source\Audio\XAudio\XAudioBackend.cpp" />
     <ClCompile Include="Source\Components\AudioListenerComponent.cpp" />
     <ClCompile Include="Source\Components\LightComponent.cpp" />
+    <ClCompile Include="Source\Components\SpriteRenderer.cpp" />
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />
     <ClCompile Include="Source\Fallbacks\FallbacksEngine.cpp" />

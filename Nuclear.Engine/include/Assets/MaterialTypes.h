@@ -17,8 +17,11 @@ namespace Nuclear
 
 			MaterialTex = 1,
 			RenderTarget = 2,
-			IBL_Tex = 3,		
-			ShadowTex
+			IBL_Tex = 3,
+			ShadowTex = 4,
+			Sprite = 5,
+
+			UNKNOWN_MAX = 255
 		};
 
 		enum TextureUsageType : Uint8
@@ -39,6 +42,8 @@ namespace Nuclear
 			BRDF_LUT = 7,
 
 			ShadowTex = 8,
+
+			Sprite = 9,
 
 			Unknown = 255
 		};

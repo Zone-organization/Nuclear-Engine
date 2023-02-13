@@ -24,35 +24,43 @@ List is W.I.P (There are lots of features not written here)
 </details>
 <details>
 	<summary><b>Assets</b></summary>
-
-	- W.I.P
+	
+	- All assets are loaded/imported asynchronously.
+	- Uses Assimp to import 40+ 3D model formats.
+	- Uses Freeimage to import 30+ image formats.
+	- Uses libsndfile to import 20+ sound files formats.
+	- All imported assets are exported into a unified formats for faster loading.
+	- All imported assets have a meta file that describes further loading.
+	- Every asset is identified with a unique UUID given on its creation.
+	- Section W.I.P
 
 </details>
 <details>
 	<summary><b>Graphics</b></summary>
 
 	- Dynamic light Comoponent (Directional & Point & Spot)
-	
-
+		- Section W.I.P
 
 </details>
 <details>
 	<summary><b>Audio</b></summary>
 
 	- Uses OpenAL or XAudio2 as a low-level backends
+	- Section W.I.P
 
 </details>
 <details>
 	<summary><b>Physics</b></summary>
 
 	- PhysX 4.1 integration
+	- Section W.I.P
 
 </details>
 <details>
 	<summary><b>Scripting</b></summary>
 
 	- C# Scripting through Mono
-
+	- Section W.I.P
 
 </details>
 
@@ -108,26 +116,28 @@ Put all their .lib in the bin folder.
 ## RoadMap
   - V0.01 Alpha:
     - Complete RenderSystem (50%) 
-	- Complete AudioSystem Implementation. (65%)
+	- Complete AudioSystem Implementation. (75%) 
+	  - Fix AudioSource/Listener Velocity change callbacks
+	  - Add Support for streaming AudioClips
+	  - Add AudioCapture support (Microphones)
 	- Basic Implementaion of PhysX.
 	- Complete Samples & their documentation.
 
 ## Current To-dos 
   - W.I.P:
-  	- AudioSystem Implementation using OpenAL-Soft/XAudio2. (70%)
-  	- Serializing the scene & assets.
-	- Use CMake instead of Visual Studio.
+  	- Use CMake instead of Visual Studio / Port to linux.
+    - New Rendering Effects (Fog - SSAO - SSR - Motion Blur)
+	- PostProcessing effects should be processed per camera not only in the main camera.
+	- Start implementing 2D sprite rendering (+ start implementing GUI/Text Rendering)
 	
   - On-Hold:
     - Text rendering (text tile-set creation finished)
 	- Basic Editor support (Nuclear Editor).
-	- PostProcessing effects should be processed per camera not only in the main camera.
 	- Finish reflecting the C++ api to the C# scripting assembly (prob provide a build-time solution that builds a binding lib?)
+  	- Serializing the scene & assets.
 
   - TODO:
   	- CSM
-	- SSAO
-	- Motion blur
 	- FIX BRDF generation in IBL Pipeline
 	- Clean and document Samples.
 	- GUI (basic widgets)
