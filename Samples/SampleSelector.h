@@ -50,18 +50,14 @@ public:
 
 	void ImportShaders()
 	{
-		Assets::ShaderImportingDesc desc;
-		desc.mType = Graphics::ShaderType::_3DRendering;
-		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader", desc);
-		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NuclearShader", desc);
+		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader");
+		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NuclearShader");
 	}
 
 	void ImportPBRAssets()
 	{
 		Assets::Shader* PBR;
-		Assets::ShaderImportingDesc desc;
-		desc.mType = Graphics::ShaderType::_3DRendering;
-		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader", desc);
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader");
 
 		Assets::Material RustedIron;
 		Assets::Material Plastic;

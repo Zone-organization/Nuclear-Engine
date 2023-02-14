@@ -4,7 +4,6 @@
 #include <string>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <vector>
-#include <Graphics/ShaderTypes.h>
 
 namespace Nuclear
 {
@@ -115,7 +114,6 @@ namespace Nuclear
 		struct ShaderImportingDesc
 		{
 			CommonImportingOptions mCommonOptions;
-			Graphics::ShaderType mType = Graphics::ShaderType::Unknown;
 
 			std::vector<std::string> mDefines;
 			std::vector<std::string> mExcludedVariants;

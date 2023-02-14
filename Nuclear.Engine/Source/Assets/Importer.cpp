@@ -472,11 +472,9 @@ namespace Nuclear
 
 			//Step1: Parse Source -> Build ShaderBuildDesc
 			Graphics::ShaderBuildDesc& shaderbuilddesc = result->mBuildDesc;
-			shaderbuilddesc.mType = desc.mType;
 			shaderbuilddesc.mDefines = desc.mDefines;
 			shaderbuilddesc.mExcludedVariants = desc.mExcludedVariants;
 			bool parsing_ = Parsers::ShaderParser::ParseSource(source, shaderbuilddesc);
-
 
 			if (parsing_)
 			{
@@ -484,15 +482,17 @@ namespace Nuclear
 				if (Graphics::GraphicsEngine::GetInstance().ReflectShader(shaderbuilddesc, result->mReflection))
 				{
 					//Step3: Create actual pipeline
-					result->mPipeline.Create();
+					result->mPipeline.BuildVariants();
 
 					//step 4: export shader info
-					AssetManager::GetInstance().Export(result,true, AssetLibrary::GetInstance().GetPath() + "Shaders/");
+					if (!desc.mCommonOptions.mLoadOnly)
+						AssetManager::GetInstance().Export(result, true, AssetLibrary::GetInstance().GetPath() + "Shaders/");
+
 				}
 				else
 				{
 					NUCLEAR_WARN("[Importer] Reflecting Shader: {0} Failed!", result->GetName());
-					result->mPipeline.Create();
+					result->mPipeline.BuildVariants();
 				}
 			}
 			else

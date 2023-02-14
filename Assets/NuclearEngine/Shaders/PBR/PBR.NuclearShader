@@ -1,6 +1,7 @@
 #PBR Nuclear Shader
 [Shader]
 Name = "PBR"
+Type = "Rendering3D"
 SupportSkinnedMeshes = true
 SupportShadows = true
 ForwardPipeline = "MainPSO"

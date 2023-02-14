@@ -315,10 +315,19 @@ namespace Nuclear
 			RefCntAutoPtr<IShader> PShader;
 			ShaderObjectCreationDesc pixelshader;
 
-			if(desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardDeffered || desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardOnly)
+			if((desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardDeffered
+				|| desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardOnly)
+				&& desc.mPipelineDesc.mForwardPSOCreateInfo.mValid)
 				pixelshader = desc.mPipelineDesc.mForwardPSOCreateInfo.mPixelShader;
-			else if(desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly)
+			else if(desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly && desc.mPipelineDesc.mGBufferPSOCreateInfo.mValid)
 				pixelshader =  desc.mPipelineDesc.mGBufferPSOCreateInfo.mPixelShader;
+			else if(desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly && desc.mPipelineDesc.mDefferedPSOCreateInfo.mValid)
+				pixelshader = desc.mPipelineDesc.mDefferedPSOCreateInfo.mPixelShader;
+			else
+			{
+				NUCLEAR_INFO("[GraphicsEngine] ReflectShader Error: All Pipelines are invalid!");
+				return false;
+			}
 
 			//just for reflection sake
 			pixelshader.mDefines.insert("NE_DIR_LIGHTS_NUM 1");

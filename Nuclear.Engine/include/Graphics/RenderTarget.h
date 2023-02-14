@@ -10,10 +10,21 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		struct NEAPI RenderTargetDesc
+		struct RenderTargetDesc
 		{
-			RenderTargetDesc();
-			RenderTargetDesc(Diligent::TEXTURE_FORMAT colorTexFormat, Diligent::TEXTURE_FORMAT depthTexFormat, std::string name = "Unnamed RT");
+			RenderTargetDesc()
+			{
+				mName = "UnNamed";
+				mType = "UnNamed";
+			}
+
+			RenderTargetDesc(Diligent::TEXTURE_FORMAT colorTexFormat, Diligent::TEXTURE_FORMAT depthTexFormat, std::string name = "Unnamed RT")
+			{
+				ColorTexFormat = colorTexFormat;
+				DepthTexFormat = depthTexFormat;
+				mName = name;
+				mType = "UnNamed";
+			}
 
 			//Debug Only
 			std::string mName;

@@ -192,7 +192,7 @@ namespace Nuclear
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Layout.data();
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
-				mPostFXPipeline.Create();
+				mPostFXPipeline.BuildVariants();
 				mPostFXPipeline.Bake(nullptr);
 			}
 

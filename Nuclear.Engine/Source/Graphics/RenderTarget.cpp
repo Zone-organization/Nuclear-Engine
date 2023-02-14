@@ -91,17 +91,5 @@ namespace Nuclear
 				mSRV = pRTColor->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 			}
 		}
-		RenderTargetDesc::RenderTargetDesc()
-		{
-			mName = "UnNamed";
-			mType = "UnNamed";
-		}
-		RenderTargetDesc::RenderTargetDesc(TEXTURE_FORMAT colorTexFormat, TEXTURE_FORMAT mDepthTexFormat, std::string name)
-		{
-			ColorTexFormat = colorTexFormat;
-			DepthTexFormat = mDepthTexFormat;
-			mName = name;
-			mType = "UnNamed";
-		}
 	}
 }

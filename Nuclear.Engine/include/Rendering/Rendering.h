@@ -9,4 +9,5 @@
 #include <Rendering\RenderPasses\DefferedPass.h>
 #include <Rendering\RenderPasses\GeometryPass.h>
 #include <Rendering\RenderPasses\PostProcessingPass.h>
+#include <Rendering\RenderPasses\AmbientOcclusionPass.h>
 

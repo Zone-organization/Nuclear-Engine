@@ -18,6 +18,7 @@ class Sample2 : public SampleBase
 	Rendering::GeometryPass GeoPass;
 	Rendering::PostProcessingPass PostFXPass;
 	Rendering::DefferedPass DefferedPass;
+	Rendering::AmbientOcclusionPass SSAOPass;
 
 	//IBL Settings
 	Rendering::ImageBasedLighting IBL;
@@ -112,7 +113,10 @@ public:
 	{
 		InitIBL();
 
+		SSAOPass.Bake(_Width_, _Height_);
+
 		Renderer->AddRenderPass(&GeoPass);
+		Renderer->AddRenderPass(&SSAOPass);
 		Renderer->AddRenderPass(&DefferedPass);
 		Renderer->AddRenderPass(&PostFXPass);
 

@@ -262,7 +262,6 @@ public:
 		Renderer = GetScene().GetSystemManager().Add<Systems::RenderSystem>();
 
 		Assets::ShaderImportingDesc desc;
-		desc.mType = Graphics::ShaderType::_3DRendering;
 		desc.mCommonOptions.mLoadOnly = true;
 		desc.mCommonOptions.mAsyncImport = false;
 		BlinnPhong = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader", desc);

@@ -46,11 +46,11 @@ namespace Nuclear
 			mVariants.clear();
 		}
 
-		void ShaderPipeline::Create()
+		void ShaderPipeline::BuildVariants()
 		{
 			ShaderPipelineVariantDesc ZeroInstance;
 			ZeroInstance.mHashKey = 0;
-			if (mDesc.isDeffered)
+			if (pParentShader->mBuildDesc.mSupportedTechniques == Graphics::SupportedRenderingTechnique::DefferedOnly)
 			{
 				ZeroInstance._isDeffered = true;
 			}
@@ -110,18 +110,20 @@ namespace Nuclear
 		{
 			mDesc.pBakingDesc = bakingdesc;
 
+			bool hasdeffered = false;
 			for (auto& Info : mVariantsInfo)
 			{
 				if (Info._isDeffered)
 				{
 					mVariants[Info.mHashKey] = CreateDefferedVariant(Info, mDesc);
+					hasdeffered = true;
 				}
 				else {
 					mVariants[Info.mHashKey] = CreateForwardVariant(Info, mDesc);
 				}
 			}
 
-			if (bakingdesc)
+			if (bakingdesc && hasdeffered)
 			{
 				mGBuffer.Bake(Math::Vector2ui(bakingdesc->mRTWidth, bakingdesc->mRTHeight));
 			}
@@ -223,6 +225,7 @@ namespace Nuclear
 			Info.mMainPSOCreateInfo = Desc.mDefferedPSOCreateInfo;
 
 			//Geometry -GBuffer- Pass
+			if(Info.mGBufferPSOCreateInfo.mValid)
 			{
 
 				//Pipeline
@@ -297,6 +300,7 @@ namespace Nuclear
 				}
 			}
 			//Deffered -Lighting- Pass
+			if (Info.mMainPSOCreateInfo.mValid)
 			{
 				GraphicsPipelineStateCreateInfo PSOCreateInfo;
 				std::string psoname(Desc.mName + "_DID_" + std::to_string(Info.mHashKey));
@@ -401,8 +405,7 @@ namespace Nuclear
 		void ShaderPipeline::ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc)
 		{
 			if (pipeline.isDeffered())
-			{			
-
+			{
 				//Main pipeline Reflection
 				for (Uint32 i = 0; i < pipeline.GetMainPipelineSRB()->GetVariableCount(SHADER_TYPE_PIXEL); i++)
 				{
@@ -511,24 +514,21 @@ namespace Nuclear
 				}
 			}
 
-			if (pBakingDesc)
+			if (pBakingDesc && pBakingDesc->pIBLContext)
 			{
-				if (pBakingDesc->pIBLContext)
+				for (auto& i : pipeline.mReflection.mIBLTexturesInfo)
 				{
-					for (auto& i : pipeline.mReflection.mIBLTexturesInfo)
+					if (i.mTex.mUsageType == Assets::TextureUsageType::IrradianceMap)
 					{
-						if (i.mTex.mUsageType == Assets::TextureUsageType::IrradianceMap)
-						{
-							i.mTex.pTexture = &pBakingDesc->pIBLContext->GetEnvironmentCapture()->mIrradiance;
-						}
-						else if (i.mTex.mUsageType == Assets::TextureUsageType::PreFilterMap)
-						{
-							i.mTex.pTexture = &pBakingDesc->pIBLContext->GetEnvironmentCapture()->mPrefiltered;
-						}
-						else if (i.mTex.mUsageType == Assets::TextureUsageType::BRDF_LUT)
-						{
-							i.mTex.pTexture = pBakingDesc->pIBLContext->GetBRDF_LUT();
-						}
+						i.mTex.pTexture = &pBakingDesc->pIBLContext->GetEnvironmentCapture()->mIrradiance;
+					}
+					else if (i.mTex.mUsageType == Assets::TextureUsageType::PreFilterMap)
+					{
+						i.mTex.pTexture = &pBakingDesc->pIBLContext->GetEnvironmentCapture()->mPrefiltered;
+					}
+					else if (i.mTex.mUsageType == Assets::TextureUsageType::BRDF_LUT)
+					{
+						i.mTex.pTexture = pBakingDesc->pIBLContext->GetBRDF_LUT();
 					}
 				}
 			}

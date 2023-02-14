@@ -30,7 +30,7 @@ namespace Nuclear
 
 			~ShaderPipeline();
 
-			void Create();
+			void BuildVariants();
 
 			bool Bake(ShaderRenderingBakingDesc* bakingdesc);
 

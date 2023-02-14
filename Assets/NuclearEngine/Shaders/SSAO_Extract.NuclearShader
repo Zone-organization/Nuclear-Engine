@@ -1,0 +1,88 @@
+#SSAO Extraction Nuclear Shader
+[Shader]
+Name = "SSAO_Extract"
+Type = "Effect"
+DefferedPipeline = "MainPSO"
+
+[MainPSO]
+RTVFormats = [ "TEX_FORMAT_R32_FLOAT" ]
+DSVFormat = "TEX_FORMAT_UNKNOWN"
+VertexShader = "VShader"
+PixelShader = "PShader"
+
+[VShader]
+EntryPoint = "main"
+Path = '@NuclearAssets@/Shaders/PostProcessing.vs.hlsl'
+
+[PShader]
+Source = '''
+struct PixelInputType
+{
+    float4 Position : SV_POSITION;
+    float2 UV : TEXCOORD0;
+};
+
+Texture2D NE_RT_GBuffer_Position : register(t0);
+Texture2D NE_RT_GBuffer_Normal : register(t1);
+Texture2D NE_SSAO_Noise : register(t2);
+
+SamplerState NE_RT_GBuffer_Position_sampler : register(s0);
+SamplerState NE_RT_GBuffer_Normal_sampler : register(s1);
+SamplerState NE_SSAO_Noise_sampler : register(s2);
+
+#define SAMPLES_NUM 64
+
+cbuffer NEStatic_SSAO_Samples
+{
+    float3 Samples[SAMPLES_NUM];
+	matrix CameraProjection;
+};
+
+// parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
+static int kernelSize = 64;
+static float radius = 0.5;
+static float bias = 0.025;
+
+float main(PixelInputType input) : SV_TARGET
+{
+	// tile noise texture over screen based on screen dimensions divided by noise size
+	float w;
+	float h;
+	NE_RT_GBuffer_Position.GetDimensions(w, h);
+	const float2 noiseScale = float2(w/4.0, h/4.0); 
+
+	// get input for SSAO algorithm
+    float3 fragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.UV).rgb;
+    float3 normal = normalize(NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.UV).rgb);
+    float3 randomVec = normalize(NE_SSAO_Noise.Sample(NE_SSAO_Noise_sampler, input.UV * noiseScale).rgb);
+    // create TBN change-of-basis matrix: from tangent-space to view-space
+    float3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
+    float3 bitangent = cross(normal, tangent);
+    float3x3 TBN = float3x3(tangent, bitangent, normal);
+    // iterate over the sample kernel and calculate occlusion factor
+    float occlusion = 0.0;
+    for(int i = 0; i < kernelSize; ++i)
+    {
+        // get sample position
+        float3 samplePos = mul(TBN , Samples[i]); // from tangent to view-space
+        samplePos = fragPos + samplePos * radius; 
+        
+        // project sample position (to sample texture) (to get position on screen/texture)
+        float4 offset = float4(samplePos, 1.0);
+        offset = mul(CameraProjection , offset); // from view to clip-space
+        offset.xyz /= offset.w; // perspective divide
+        offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
+        
+        // get sample depth , get depth value of kernel sample
+        float sampleDepth = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, offset.xy).z;
+        
+        // range check & accumulate
+        float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
+        occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0) * rangeCheck;           
+    }
+    occlusion = 1.0 - (occlusion / kernelSize);
+    
+    return occlusion;
+
+}
+'''

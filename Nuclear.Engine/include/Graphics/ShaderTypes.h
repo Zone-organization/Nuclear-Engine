@@ -43,8 +43,10 @@ namespace Nuclear
 		{
 			Unknown = 0,
 
-			_3DRendering,
-			PostFX,
+			Rendering2D = 1,
+			Rendering3D = 2,
+			RenderingEffect = 3,
+			PostFX = 4,
 
 			UNKNOWN_MAX = UINT8_MAX
 		};
@@ -73,11 +75,11 @@ namespace Nuclear
 			ShaderPSOType mType = ShaderPSOType::Unknown;
 			Diligent::GraphicsPipelineDesc GraphicsPipeline = Diligent::GraphicsPipelineDesc();
 			std::vector<std::string> mRTsNames = std::vector<std::string>();
-
+			bool mValid = false;
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				return archive(self.mVertexShader, self.mPixelShader, self.mType, self.GraphicsPipeline, self.mRTsNames);
+				return archive(self.mVertexShader, self.mPixelShader, self.mType, self.GraphicsPipeline, self.mRTsNames, self.mValid);
 			}
 		};
 
@@ -131,16 +133,12 @@ namespace Nuclear
 
 			std::vector<std::string> mDefines = std::vector<std::string>();
 
-			bool isDeffered = false;
-			bool isRenderingPipeline = true;
 			ShaderRenderingBakingDesc* pBakingDesc;
-
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
 				return archive(self.mName, self.mForwardPSOCreateInfo, self.mDefferedPSOCreateInfo, self.mGBufferPSOCreateInfo,
-					self.mInstanceDesc, self.Switches, self.mDefines,
-					self.isDeffered, self.isRenderingPipeline
+					self.mInstanceDesc, self.Switches, self.mDefines
 				);
 			}
 		};

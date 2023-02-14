@@ -1,6 +1,7 @@
 #include <Parsers/ShaderParser.h>
 #include <Parsers/toml.h>
 #include <Utilities/Logger.h>
+#include <ThirdParty/magic_enum.hpp>
 using namespace std::string_view_literals;
 
 namespace Nuclear
@@ -239,12 +240,9 @@ namespace Nuclear
 				auto str2 = psnode->value<std::string_view>();
 				ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL, desc.mPixelShader);
 			}
+
+			desc.mValid = true;
 		}
-
-
-
-
-
 
 		bool ShaderParser::ParseSource(const std::string& source, Graphics::ShaderBuildDesc& desc)
 		{
@@ -258,7 +256,7 @@ namespace Nuclear
 				desc.mPipelineDesc.mName = ShaderName;
 				desc.mSupportSkinnedMeshes = tbl["Shader"]["SupportSkinnedMeshes"].value_or(false);
 				desc.mSupportShadows = tbl["Shader"]["SupportShadows"].value_or(false);
-
+				desc.mType = magic_enum::enum_cast<Graphics::ShaderType>(tbl["Shader"]["Type"].value_or("Unknown")).value_or(Graphics::ShaderType::Unknown);
 				toml::array* arr = tbl["Shader"]["Variants"].as_array();
 				if (arr)
 				{
@@ -308,7 +306,6 @@ namespace Nuclear
 				}
 
 				bool hasforward = false, hasdeffered = false;
-				if (desc.mType == Graphics::ShaderType::_3DRendering)
 				{
 					{
 						std::optional<std::string_view> str1 = tbl["Shader"]["ForwardPipeline"].value<std::string_view>();
@@ -345,7 +342,9 @@ namespace Nuclear
 					}
 				}
 
-				if (hasforward && hasdeffered)				
+
+
+				if (hasforward && hasdeffered)
 					desc.mSupportedTechniques = Graphics::SupportedRenderingTechnique::ForwardDeffered;				
 				else if (hasforward)				
 					desc.mSupportedTechniques = Graphics::SupportedRenderingTechnique::ForwardOnly;				
