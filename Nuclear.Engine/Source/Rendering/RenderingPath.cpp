@@ -21,7 +21,7 @@ namespace Nuclear
 
 		void RenderingPath::UpdateAnimationCB(Animation::Animator* animator)
 		{
-			if (pActivePipeline->isSkinned())
+			if (pActivePipeline->mDesc.isSkinned)
 			{
 				PVoid anim_data;
 				Graphics::Context::GetInstance().GetContext()->MapBuffer(Rendering::RenderingEngine::GetInstance().GetAnimationCB(), Diligent::MAP_WRITE, Diligent::MAP_FLAG_DISCARD, (PVoid&)anim_data);
@@ -59,7 +59,7 @@ namespace Nuclear
 			//Validation
 			if (Core::Engine::GetInstance().isDebug())
 			{
-				if (material->GetShaderID() != pActivePipeline->GetShaderID())
+				if (material->GetShaderID() != pActivePipeline->mShaderAssetID)
 				{
 					NUCLEAR_ERROR("[RenderingPath] Skipped Rendering Mesh with invalid Material (shader asset & shader pipeline mismatch)...");
 					return;

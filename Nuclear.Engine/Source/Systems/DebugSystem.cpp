@@ -139,10 +139,10 @@ namespace Nuclear
 			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
 			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pShader.mPipeline, PSOCreateInfo, Vars, true);
 
-			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingEngine::GetInstance().GetCameraCB());
-			pShader.GetMainPipeline()->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingEngine::GetInstance().GetAnimationCB());
+			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingEngine::GetInstance().GetCameraCB());
+			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingEngine::GetInstance().GetAnimationCB());
 
-			pShader.GetMainPipeline()->CreateShaderResourceBinding(&pShader.mPipelineSRB, true);
+			pShader.mPipeline->CreateShaderResourceBinding(&pShader.mPipelineSRB, true);
 
 
 
@@ -171,7 +171,7 @@ namespace Nuclear
 			//Render Light Sources
 			if (RenderLightSources)
 			{
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pShader.GetMainPipeline());
+				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pShader.mPipeline);
 				auto RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
 				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, Rendering::RenderingEngine::GetInstance().GetFinalDepthRT().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
@@ -267,8 +267,8 @@ namespace Nuclear
 
 		Uint64 offset = 0;
 
-		pShader.GetMainPipelineSRB()->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(diffusetex->GetTextureView());
-		Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pShader.GetMainPipelineSRB(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		pShader.mPipelineSRB->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(diffusetex->GetTextureView());
+		Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pShader.mPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
 			{

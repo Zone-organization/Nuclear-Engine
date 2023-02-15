@@ -9,7 +9,7 @@ namespace Nuclear
 		class RenderSystem;
 	}
 	namespace Graphics {
-		class ShaderPipelineVariant;
+		struct ShaderPipelineVariant;
 	}
 	namespace Rendering
 	{

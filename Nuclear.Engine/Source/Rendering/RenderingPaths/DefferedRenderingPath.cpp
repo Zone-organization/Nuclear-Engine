@@ -21,10 +21,10 @@ namespace Nuclear
                 pActivePipeline = pipeline;
 
                 //Render To Gbuffer
-                Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetGBufferPipeline());
+                Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->mGBufferPipeline);
 
                 std::vector<Diligent::ITextureView*> RTargets;
-                for (auto& i : pipeline->GetParentPipeline()->GetGBuffer()->mRenderTargets)
+                for (auto& i : pipeline->pParent->GetGBuffer()->mRenderTargets)
                 {
                     RTargets.push_back(i.GetRTV());
                 }

@@ -21,7 +21,7 @@ namespace Nuclear
 		class ImageBasedLighting;
 	}
 	namespace Graphics
-	{				
+	{			
 		class NEAPI ShaderPipeline
 		{
 		public:
@@ -32,7 +32,7 @@ namespace Nuclear
 
 			void BuildVariants();
 
-			bool Bake(ShaderRenderingBakingDesc* bakingdesc);
+			bool Bake(ShaderPipelineBakingDesc& bakingdesc);
 
 			Uint32 GetHashedKey(const std::string& Key);
 			ShaderPipelineVariant* GetVariant(Uint32 Key);
@@ -62,9 +62,9 @@ namespace Nuclear
 				}
 
 			}
-			//bool GetAlwaysRequestDeffered();
 		protected:
 			friend Serialization::Access;
+			friend class ShaderPipelineVariantFactory;
 
 			Assets::Shader* pParentShader;
 			std::unordered_map<Uint32, ShaderPipelineVariant> mVariants;
@@ -72,14 +72,6 @@ namespace Nuclear
 
 			ShaderPipelineDesc& mDesc;
 			Rendering::GBuffer mGBuffer;
-
-			ShaderPipelineVariant CreateForwardVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
-			ShaderPipelineVariant CreateDefferedVariant(ShaderPipelineVariantDesc& variantdesc, ShaderPipelineDesc& pipelinedesc);
-
-			//bool mAlwaysRequestDeffered = true;
-		private:
-			void ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline, ShaderRenderingBakingDesc* pBakingDesc);
-			bool mFirstReflection = true;
 		};
 	}
 }

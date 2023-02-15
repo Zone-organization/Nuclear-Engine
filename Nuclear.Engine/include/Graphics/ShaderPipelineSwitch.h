@@ -9,7 +9,7 @@ namespace Nuclear
 	namespace Graphics
 	{
 		class ShaderPipeline;
-		class ShaderPipelineVariant;
+		struct ShaderPipelineVariant;
 
 		class NEAPI ShaderPipelineSwitch
 		{

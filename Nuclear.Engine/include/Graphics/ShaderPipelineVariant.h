@@ -16,77 +16,49 @@ namespace Nuclear
 	namespace Assets {
 		class Shader;
 	}
-	namespace Systems
-	{
-		class DebugSystem;
-	}
+
 	namespace Graphics
 	{
 
 		//Used for both Deffered and Forward pipelines
 		//Should provide GBuffer Pipeline Implementation.
-		class NEAPI ShaderPipelineVariant
+		struct ShaderPipelineVariant
 		{
-		public:
-			ShaderPipelineVariant();
-
-			//Returns the main pipeline used for rendering
-			Diligent::IPipelineState* GetRenderingPipeline();
-			Diligent::IShaderResourceBinding* GetRenderingSRB();
-
-			Graphics::ShaderPipeline* GetParentPipeline();
-
-			Diligent::IPipelineState* GetMainPipeline();
-			Diligent::IShaderResourceBinding* GetMainPipelineSRB();
-
-			Diligent::IPipelineState* GetGBufferPipeline();
-			Diligent::IShaderResourceBinding* GetGBufferPipelineSRB();
-
-			Uint32 GetRenderQueue();
-
-			Uint32 GetShaderID();
-			//TODO ??
-			Assets::MaterialTexture GetDefaultTextureFromType(Uint8 Type);
-
-			//Graphics::BakeStatus GetStatus();
-
-			//std::vector<Graphics::RenderTargetDesc> GetGBufferDesc();
-
-			const std::string& GetName() const;
-			Graphics::ShaderVariantReflection& GetReflection();
-
-			bool mAutoBake = true;
-
-			bool isValid();
-
-			bool isSkinned();
-
-			bool isDeffered();
-
-			bool isShadowed();
-
-		protected:
-			friend class ShaderPipeline;
-			friend class ShaderManager;
-			friend class Systems::DebugSystem;
 			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mPipeline;
 			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mPipelineSRB;
 
 			Diligent::RefCntAutoPtr<Diligent::IPipelineState> mGBufferPipeline;
 			Diligent::RefCntAutoPtr<Diligent::IShaderResourceBinding> mGBufferSRB;
 
-			ShaderPipelineVariantDesc mDesc;
-			ShaderVariantReflection mReflection;
+			ShaderPipelineVariantDesc mDesc = ShaderPipelineVariantDesc();
+			ShaderVariantReflection mReflection = ShaderVariantReflection();
 
 			Graphics::BakeStatus mStatus = Graphics::BakeStatus::NotInitalized;
 
-			Uint32 mRenderQueue = 1;
+			Uint32 mRenderQueue = 0;
 			Uint32 mShaderAssetID = 0;
-			std::string mName;
+			std::string mName = "";
 
-			Graphics::ShaderPipeline* pParent;
+			Graphics::ShaderPipeline* pParent = nullptr;
 
-			bool _isValid = false;
+			bool isValid = false;
+
+			FORCE_INLINE Diligent::IPipelineState* GetRenderingPipeline()
+			{
+				if (mDesc.isDeffered)
+				{
+					return mGBufferPipeline.RawPtr();
+				}
+				return mPipeline.RawPtr();
+			}
+			FORCE_INLINE Diligent::IShaderResourceBinding* GetRenderingSRB()
+			{
+				if (mDesc.isDeffered)
+				{
+					return mGBufferSRB.RawPtr();
+				}
+				return mPipelineSRB.RawPtr();
+			}
 		};
 
 	}

@@ -76,24 +76,24 @@ namespace Nuclear
 			bool operator !=(const multicast_Delegate<RET(PARAMS...)>& another) const { return another != (*this); }
 
 			template <class T, RET(T::*TMethod)(PARAMS...)>
-			static Delegate create(T* instance) {
+			static Delegate Create(T* instance) {
 				return Delegate(instance, method_stub<T, TMethod>);
-			} //create
+			} //Create
 
 			template <class T, RET(T::*TMethod)(PARAMS...) const>
-			static Delegate create(T const* instance) {
+			static Delegate Create(T const* instance) {
 				return Delegate(const_cast<T*>(instance), const_method_stub<T, TMethod>);
-			} //create
+			} //Create
 
 			template <RET(*TMethod)(PARAMS...)>
-			static Delegate create() {
+			static Delegate Create() {
 				return Delegate(nullptr, function_stub<TMethod>);
-			} //create
+			} //Create
 
 			template <typename LAMBDA>
-			static Delegate create(const LAMBDA & instance) {
+			static Delegate Create(const LAMBDA & instance) {
 				return Delegate((void*)(&instance), lambda_stub<LAMBDA>);
-			} //create
+			} //Create
 
 			RET operator()(PARAMS... arg) const {
 				return (*invocation.stub)(invocation.object, arg...);

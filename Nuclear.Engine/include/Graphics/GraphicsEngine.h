@@ -1,5 +1,6 @@
 #pragma once
 #include <NE_Common.h>
+#include <Graphics/ShaderPipelineVariantFactory.h>
 #include <Assets/TextureDesc.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/InputLayout.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Shader.h>
@@ -71,9 +72,10 @@ namespace Nuclear
 
 			Diligent::SHADER_RESOURCE_VARIABLE_TYPE ParseNameToGetType(const std::string& name);
 
+			ShaderPipelineVariantFactory& GetDefaultShaderPipelineVariantFactory();
 		protected:
 			Diligent::RefCntAutoPtr<Diligent::IShaderSourceInputStreamFactory> pShaderSourceFactory;
-
+			ShaderPipelineVariantFactory mDefaultVariantFactory;
 		private:
 			GraphicsEngine();
 		};

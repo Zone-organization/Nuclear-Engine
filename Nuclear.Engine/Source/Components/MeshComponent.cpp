@@ -71,7 +71,7 @@ namespace Nuclear
 									mPipelineCntrl.SetSwitch(i.first, i.second);
 								}
 								mPipelineCntrl.Update();
-								RenderQueue = mPipelineCntrl.GetActiveVariant()->GetRenderQueue();
+								RenderQueue = mPipelineCntrl.GetActiveVariant()->mRenderQueue;
 								mDirty = false;
 
 							}

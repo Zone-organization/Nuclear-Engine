@@ -12,13 +12,19 @@ namespace Nuclear
 
 		void AmbientOcclusionPass::Bake(Uint32 RTWidth, Uint32 RTHeight)
 		{
+			std::vector<LayoutElement> Layout;
+			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
+			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
+
 			Assets::ShaderImportingDesc desc;
 			desc.mCommonOptions.mLoadOnly = true;
 
 			pSSAO_ExtractShader = Assets::AssetManager::GetInstance().Import<Assets::Shader>("@NuclearAssets@/Shaders/SSAO_Extract.NuclearShader");
-
+		
 			//bake pipeline
-			pSSAO_ExtractShader->GetShaderPipeline().Bake(nullptr);
+			Graphics::ShaderPipelineBakingDesc bakedesc;
+			bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
+			pSSAO_ExtractShader->GetShaderPipeline().Bake(bakedesc);
 
 			//create cb
 			BufferDesc CBDesc;

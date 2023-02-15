@@ -7,8 +7,7 @@
 namespace Nuclear
 {
     namespace Assets
-    {     
-
+    {
         class NEAPI Shader : public IAsset
         {
         public: 
@@ -17,16 +16,25 @@ namespace Nuclear
 
             Uint32 GetID();
 
-            Graphics::ShaderPipeline& GetShaderPipeline();
-            const Graphics::ShaderBuildDesc& GetShaderBuildDesc() const;
-            const Graphics::ShaderReflection& GetReflection() const;
+            FORCE_INLINE Graphics::ShaderPipeline& GetShaderPipeline()
+            {
+                return mPipeline;
+            }
+            FORCE_INLINE const Graphics::ShaderBuildDesc& GetShaderBuildDesc() const
+            {
+                return mBuildDesc;
+            }
+            FORCE_INLINE const Graphics::ShaderReflection& GetReflection() const
+            {
+                return mReflection;
+            }
 
             constexpr static auto serialize(auto& archive, auto& self)
             {
                 return archive(self.mBuildDesc, self.mReflection, self.mPipeline);
             }
         protected:
-            friend class  Graphics::ShaderPipeline;
+            friend class Graphics::ShaderPipeline;
             friend class Importer;
             friend Serialization::Access;
 

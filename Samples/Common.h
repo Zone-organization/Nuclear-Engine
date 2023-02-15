@@ -207,8 +207,8 @@ void EntityView(entt::entity& entity, entt::registry& reg, Components::EntityInf
 				{
 					if (meshcomponent->GetRenderingVariant())
 					{
-						ImGui::Text("Active Rendering Variant name: %s", meshcomponent->GetRenderingVariant()->GetName().c_str());
-						ImGui::Text("Shader AssetID: %i", meshcomponent->GetRenderingVariant()->GetShaderID());
+						ImGui::Text("Active Rendering Variant name: %s", meshcomponent->GetRenderingVariant()->mName.c_str());
+						ImGui::Text("Shader AssetID: %i", meshcomponent->GetRenderingVariant()->mShaderAssetID);
 					}
 					ImGui::Text("RenderQueue: %i", meshcomponent->GetRenderQueue());
 

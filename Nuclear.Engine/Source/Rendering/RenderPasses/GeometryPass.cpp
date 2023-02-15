@@ -39,7 +39,7 @@ namespace Nuclear
 				{			
 					auto pipelinevariant = mesh.GetRenderingVariant();
 
-					if (pipelinevariant->isDeffered())
+					if (pipelinevariant->mDesc.isDeffered)
 					{
 						pRenderingPath = &mDefferedPath;
 					}

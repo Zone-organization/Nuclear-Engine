@@ -18,7 +18,7 @@ namespace Nuclear
         class Shader;
     }
     namespace Graphics {
-        class ShaderPipelineVariant;
+        struct ShaderPipelineVariant;
     }
 	namespace Rendering
 	{
@@ -43,7 +43,7 @@ namespace Nuclear
             Diligent::RefCntAutoPtr<Diligent::ITextureView> pOmniDirShadowMapSRV;
 
             //Rendered Scene here          
-            Components::CameraComponent* pCamera;
+            Components::CameraComponent* pCamera = nullptr;
 		};
 	}
 }

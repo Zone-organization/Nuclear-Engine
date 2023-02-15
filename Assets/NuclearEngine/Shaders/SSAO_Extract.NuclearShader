@@ -1,8 +1,8 @@
 #SSAO Extraction Nuclear Shader
 [Shader]
 Name = "SSAO_Extract"
-Type = "Effect"
-DefferedPipeline = "MainPSO"
+Type = "RenderingEffect"
+ForwardPipeline = "MainPSO"
 
 [MainPSO]
 RTVFormats = [ "TEX_FORMAT_R32_FLOAT" ]

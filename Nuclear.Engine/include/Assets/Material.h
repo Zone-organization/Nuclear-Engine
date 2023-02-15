@@ -9,7 +9,7 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		class ShaderPipelineVariant;
+		struct ShaderPipelineVariant;
 	}
 	namespace Assets
 	{

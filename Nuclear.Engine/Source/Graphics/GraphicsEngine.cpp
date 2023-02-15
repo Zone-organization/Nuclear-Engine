@@ -391,7 +391,6 @@ namespace Nuclear
 
 		void GraphicsEngine::CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc)
 		{
-
 			Diligent::ShaderCreateInfo CreationAttribs;
 
 			CreationAttribs.SourceLanguage = Diligent::SHADER_SOURCE_LANGUAGE_HLSL;
@@ -590,6 +589,11 @@ namespace Nuclear
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 
 			return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
+		}
+
+		ShaderPipelineVariantFactory& GraphicsEngine::GetDefaultShaderPipelineVariantFactory()
+		{
+			return mDefaultVariantFactory;
 		}
 
 		GraphicsEngine::GraphicsEngine()

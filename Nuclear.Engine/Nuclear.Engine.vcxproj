@@ -133,6 +133,7 @@
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Fallbacks\Fallbacks.h" />
     <ClInclude Include="include\Fallbacks\FallbacksEngine.h" />
+    <ClInclude Include="include\Graphics\ShaderPipelineVariantFactory.h" />
     <ClInclude Include="include\Parsers\INIParser.h" />
     <ClInclude Include="include\Rendering\PostProcessingEffects\Bloom.h" />
     <ClInclude Include="include\Rendering\RenderingEngine.h" />
@@ -496,6 +497,7 @@
     <ClCompile Include="Source\Core\Scene.cpp" />
     <ClCompile Include="Source\ECS\Transform.cpp" />
     <ClCompile Include="Source\Fallbacks\FallbacksEngine.cpp" />
+    <ClCompile Include="Source\Graphics\ShaderPipelineVariantFactory.cpp" />
     <ClCompile Include="Source\Parsers\ShaderParser.cpp" />
     <ClCompile Include="Source\Platform\Input.cpp" />
     <ClCompile Include="Source\ECS\Entity.cpp" />
@@ -543,7 +545,6 @@
     <ClCompile Include="Source\Rendering\RenderPasses\DefferedPass.cpp" />
     <ClCompile Include="Source\Rendering\RenderPasses\GeometryPass.cpp" />
     <ClCompile Include="Source\Rendering\RenderPasses\PostProcessingPass.cpp" />
-    <ClCompile Include="Source\Graphics\ShaderPipelineVariant.cpp" />
     <ClCompile Include="Source\Graphics\ShaderPipelineSwitch.cpp" />
     <ClCompile Include="Source\Audio\AudioEngine.cpp" />
     <ClCompile Include="Source\Components\ColliderComponent.cpp" />

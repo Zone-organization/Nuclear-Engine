@@ -50,7 +50,7 @@ namespace Nuclear
 
 		struct MaterialTexture
 		{
-			Texture* pTexture;
+			Texture* pTexture = nullptr;
 			TextureUsageType mUsageType;
 
 			constexpr static auto serialize(auto& archive, auto& self) //load

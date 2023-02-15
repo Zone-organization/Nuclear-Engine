@@ -18,7 +18,7 @@ namespace Nuclear
 			{
 				pCurrentFrame = frame;
 				pActivePipeline = pipeline;
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->GetMainPipeline());
+				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->mPipeline);
 				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pCurrentFrame->pCamera->GetRenderTarget().GetRTVDblPtr(), pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 			}
 		}
@@ -31,27 +31,27 @@ namespace Nuclear
 			UpdateAnimationCB(mesh.GetAnimator());
 
 			////////////////////////      IBL      ///////////////////////////
-			for (auto& i : pActivePipeline->GetReflection().mIBLTexturesInfo)
+			for (auto& i : pActivePipeline->mReflection.mIBLTexturesInfo)
 			{
-				pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, i.mSlot)->Set(i.mTex.pTexture->GetTextureView());
+				pActivePipeline->mPipelineSRB->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, i.mSlot)->Set(i.mTex.pTexture->GetTextureView());
 			}
 
 			//Shadows
 			////////////////////////     TODO    //////////////////////////////////////
-			if (pCurrentFrame->mShadowsEnabled && pActivePipeline->isShadowed())
+			if (pCurrentFrame->mShadowsEnabled && pActivePipeline->mDesc.isShadowed)
 			{
-				auto& shadowmapsInfo = pActivePipeline->GetReflection().mShadowMapsInfo;
+				auto& shadowmapsInfo = pActivePipeline->mReflection.mShadowMapsInfo;
 				if (shadowmapsInfo.mDirPos_SMInfo.mType != Assets::ShaderTextureType::Unknown)
 				{
-					pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, shadowmapsInfo.mDirPos_SMInfo.mSlot)->Set(pCurrentFrame->pDirPosShadowMapSRV);
+					pActivePipeline->mPipelineSRB->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, shadowmapsInfo.mDirPos_SMInfo.mSlot)->Set(pCurrentFrame->pDirPosShadowMapSRV);
 				}
 				if (shadowmapsInfo.mSpot_SMInfo.mType != Assets::ShaderTextureType::Unknown)
 				{
-					pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, shadowmapsInfo.mSpot_SMInfo.mSlot)->Set(pCurrentFrame->pSpotPosShadowMapSRV);
+					pActivePipeline->mPipelineSRB->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, shadowmapsInfo.mSpot_SMInfo.mSlot)->Set(pCurrentFrame->pSpotPosShadowMapSRV);
 				}
 				if (shadowmapsInfo.mOmniDir_SMInfo.mType != Assets::ShaderTextureType::Unknown)
 				{
-					pActivePipeline->GetMainPipelineSRB()->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, shadowmapsInfo.mOmniDir_SMInfo.mSlot)->Set(pCurrentFrame->pOmniDirShadowMapSRV);
+					pActivePipeline->mPipelineSRB->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, shadowmapsInfo.mOmniDir_SMInfo.mSlot)->Set(pCurrentFrame->pOmniDirShadowMapSRV);
 				}
 			}
 

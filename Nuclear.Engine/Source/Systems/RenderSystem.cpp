@@ -13,6 +13,7 @@
 #include <Rendering\RenderPasses\DefferedPass.h>
 #include <Rendering\RenderingEngine.h>
 #include <Assets\Shader.h>
+#include <Rendering\ImageBasedLighting.h>
 
 namespace Nuclear
 {
@@ -35,31 +36,75 @@ namespace Nuclear
 			return false;
 		}
 
+		void AddToDefinesIfNotZero(std::set<std::string>& defines, const std::string& name, Uint32 value)
+		{
+			if (value > 0)
+			{
+				defines.insert(name + std::to_string(value));
+			}
+		}
+	
 		void RenderSystem::Bake(const RenderSystemBakingDesc& desc)
 		{								
 			BakeLights();
 
-			Graphics::ShaderRenderingBakingDesc bakedesc;
-			bakedesc.DirLights = static_cast<Uint32>(GetDirLightsNum());
-			bakedesc.SpotLights = static_cast<Uint32>(GetSpotLightsNum());
-			bakedesc.PointLights = static_cast<Uint32>(GetPointLightsNum());
-			bakedesc.LightsBufferPtr = GetLightCB();
-			bakedesc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
-			bakedesc.pIBLContext = pIBLContext;
+			Graphics::ShaderPipelineBakingDesc bakedesc;
 			bakedesc.mRTWidth = desc.RTWidth;
 			bakedesc.mRTHeight = desc.RTHeight;
 
+			Graphics::Rendering3DShaderBakingDesc rendering3d_bake_desc;
+			rendering3d_bake_desc.DirLights = static_cast<Uint32>(GetDirLightsNum());
+			rendering3d_bake_desc.SpotLights = static_cast<Uint32>(GetSpotLightsNum());
+			rendering3d_bake_desc.PointLights = static_cast<Uint32>(GetPointLightsNum());
+			rendering3d_bake_desc.pShadowPass = GetRenderPass<Rendering::ShadowPass>();
+			rendering3d_bake_desc.pIBLContext = pIBLContext;
+
 			if (GetRenderPass<Rendering::DefferedPass>())
-			{
-				bakedesc.mRenderSystemHasDefferedPass = true;
-			}
-
+				rendering3d_bake_desc.mRenderSystemHasDefferedPass = true;
+			
 			if (GetRenderPass<Rendering::ShadowPass>())
+				rendering3d_bake_desc.mRenderSystemHasShadowPass = true;
+
+			bakedesc.pRendering3DBakingDesc = &rendering3d_bake_desc;
+			bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
+
+			bakedesc.mCBsBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingEngine::GetInstance().GetCameraCB() });
+			bakedesc.mCBsBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingEngine::GetInstance().GetAnimationCB() });
+			bakedesc.mCBsBindings.push_back({ Diligent::SHADER_TYPE_PIXEL, "NEStatic_Lights", GetLightCB() });
+
+			AddToDefinesIfNotZero(bakedesc.mDefines, "NE_DIR_LIGHTS_NUM ", rendering3d_bake_desc.DirLights);
+			AddToDefinesIfNotZero(bakedesc.mDefines, "NE_SPOT_LIGHTS_NUM ", rendering3d_bake_desc.SpotLights);
+			AddToDefinesIfNotZero(bakedesc.mDefines, "NE_POINT_LIGHTS_NUM ", rendering3d_bake_desc.PointLights);
+
+			if (rendering3d_bake_desc.pShadowPass)
 			{
-				bakedesc.mRenderSystemHasShadowPass = true;
+				AddToDefinesIfNotZero(bakedesc.mDefines, "NE_MAX_DIR_CASTERS ", rendering3d_bake_desc.pShadowPass->GetBakingDesc().MAX_DIR_CASTERS);
+				AddToDefinesIfNotZero(bakedesc.mDefines, "NE_MAX_SPOT_CASTERS ", rendering3d_bake_desc.pShadowPass->GetBakingDesc().MAX_SPOT_CASTERS);
+				AddToDefinesIfNotZero(bakedesc.mDefines, "NE_MAX_OMNIDIR_CASTERS ", rendering3d_bake_desc.pShadowPass->GetBakingDesc().MAX_OMNIDIR_CASTERS);
 			}
 
-
+			if (pIBLContext)
+			{
+				bakedesc.mPostVariantReflectionCallback.Create(
+					[this](Graphics::ShaderVariantReflection& reflection) {
+						for (auto& i : reflection.mIBLTexturesInfo)
+						{
+							if (i.mTex.mUsageType == Assets::TextureUsageType::IrradianceMap)
+							{
+								i.mTex.pTexture = &pIBLContext->GetEnvironmentCapture()->mIrradiance;
+							}
+							else if (i.mTex.mUsageType == Assets::TextureUsageType::PreFilterMap)
+							{
+								i.mTex.pTexture = &pIBLContext->GetEnvironmentCapture()->mPrefiltered;
+							}
+							else if (i.mTex.mUsageType == Assets::TextureUsageType::BRDF_LUT)
+							{
+								i.mTex.pTexture = pIBLContext->GetBRDF_LUT();
+							}
+						}
+					});
+			
+			}
 			for (auto i : mRegisteredShaders)
 			{
 				if (i)
@@ -78,7 +123,7 @@ namespace Nuclear
 							}
 						}
 					}
-					i->GetShaderPipeline().Bake(&bakedesc);
+					i->GetShaderPipeline().Bake(bakedesc);
 				}
 			}
 

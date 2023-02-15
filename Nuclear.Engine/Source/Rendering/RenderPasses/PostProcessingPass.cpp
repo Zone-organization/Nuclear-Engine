@@ -19,8 +19,8 @@ namespace Nuclear
 		void PostProcessingPass::Update(FrameRenderData* framedata)
 		{
 			mPipelineCntrllr.Update();
-			auto pipeline = mPipelineCntrllr.GetActiveVariant()->GetMainPipeline();
-			auto pipelineSRB = mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB();
+			auto pipeline = mPipelineCntrllr.GetActiveVariant()->mPipeline;
+			auto pipelineSRB = mPipelineCntrllr.GetActiveVariant()->mPipelineSRB;
 
 			//Render Skybox
 
@@ -149,8 +149,8 @@ namespace Nuclear
 			PostFXRT.Resize(Math::Vector2ui(Width, Height));
 
 
-		//	mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB().Release();
-		//	mPipelineCntrllr.GetActiveVariant()->GetMainPipeline()->CreateShaderResourceBinding(mPipelineCntrllr.GetActiveVariant()->GetMainPipelineSRB(), true);
+		//	mPipelineCntrllr.GetActiveVariant()->mPipelineSRB.Release();
+		//	mPipelineCntrllr.GetActiveVariant()->mPipeline->CreateShaderResourceBinding(mPipelineCntrllr.GetActiveVariant()->mPipelineSRB, true);
 		
 		
 		//mActiveSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(SceneRT.GetSRV());
@@ -193,7 +193,10 @@ namespace Nuclear
 				PSOCreateInfo.mForwardPSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
 				mPostFXPipeline.BuildVariants();
-				mPostFXPipeline.Bake(nullptr);
+
+				Graphics::ShaderPipelineBakingDesc bakedesc;
+				bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
+				mPostFXPipeline.Bake(bakedesc);
 			}
 
 			//bloom
