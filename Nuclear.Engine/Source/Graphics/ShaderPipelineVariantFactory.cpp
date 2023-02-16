@@ -6,6 +6,7 @@
 #include <Graphics/GraphicsEngine.h>
 #include <Platform/FileSystem.h>
 #include <Rendering/RenderingEngine.h>
+#include <Utilities/Logger.h>
 
 namespace Nuclear
 {
@@ -15,6 +16,24 @@ namespace Nuclear
 		ShaderPipelineVariantFactory::ShaderPipelineVariantFactory()
 		{
 			mRenderQueueCounter = 1;
+		}
+
+		void SetSuitableLayout(InputLayoutDesc& result, ShaderType shadertype)
+		{
+			if (shadertype == ShaderType::Rendering3D)
+			{
+				result.LayoutElements = Graphics::GraphicsEngine::GetInstance().GetRendering3DInputLayout().data();
+				result.NumElements = static_cast<Uint32>(Graphics::GraphicsEngine::GetInstance().GetRendering3DInputLayout().size());
+			}
+			else if (shadertype == ShaderType::PostFX || shadertype == ShaderType::RenderingEffect)
+			{
+				result.LayoutElements = Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().data();
+				result.NumElements = static_cast<Uint32>(Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().size());
+			}
+			else
+			{
+				NUCLEAR_WARN("[ShaderPipelineVariantFactory] No suitable InputLayoutDesc found for the shader...");
+			}
 		}
 
 		bool ShaderPipelineVariantFactory::CreateForwardVariant(ShaderPipelineVariant& variant, ShaderPipeline& pipeline, ShaderPipelineBakingDesc& bakingdesc)
@@ -57,11 +76,9 @@ namespace Nuclear
 			PSOCreateInfo.pVS = VShader;
 			PSOCreateInfo.pPS = PShader;
 
-			std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(false);
-			if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
+			if (variantdesc.mMainPSOCreateInfo.mLayout.size() == 0)
 			{
-				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+				SetSuitableLayout(PSOCreateInfo.GraphicsPipeline.InputLayout, pipeline.pParentShader->GetShaderBuildDesc().mType);
 			}
 			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
 			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&variant.mPipeline, PSOCreateInfo, Vars, true);
@@ -129,11 +146,9 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = true;
 
-				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(false);
-				if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
+				if (variant.mDesc.mGBufferPSOCreateInfo.mLayout.size() == 0)
 				{
-					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+					SetSuitableLayout(PSOCreateInfo.GraphicsPipeline.InputLayout, pipeline.pParentShader->GetShaderBuildDesc().mType);
 				}
 
 				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
@@ -193,11 +208,10 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 				PSOCreateInfo.GraphicsPipeline.DepthStencilDesc.DepthEnable = false;
 
-				std::vector<LayoutElement> LayoutElems = Graphics::GraphicsEngine::GetInstance().GetBasicVSLayout(true);
 				if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
 				{
-					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = LayoutElems.data();
-					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
+					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().data();
+					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().size());
 				}
 
 				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);

@@ -55,7 +55,16 @@ namespace Nuclear
 
 			bool ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out);
 
-			std::vector<Diligent::LayoutElement> GetBasicVSLayout(bool isDeffered);
+			FORCE_INLINE const std::vector<Diligent::LayoutElement>& GetRendering3DInputLayout() const
+			{
+				return mRendering3D_InputLayout;
+			}
+
+			FORCE_INLINE const std::vector<Diligent::LayoutElement>& GetRenderToTextureInputLayout() const
+			{
+				return mRenderToTextureInputLayout;
+			}
+
 			void CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
 			Diligent::IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();
 
@@ -73,9 +82,15 @@ namespace Nuclear
 			Diligent::SHADER_RESOURCE_VARIABLE_TYPE ParseNameToGetType(const std::string& name);
 
 			ShaderPipelineVariantFactory& GetDefaultShaderPipelineVariantFactory();
+
 		protected:
+			void ReflectShaderResourceVariable(Diligent::IShader* Shader, std::vector<Diligent::ShaderResourceVariableDesc>& result);
 			Diligent::RefCntAutoPtr<Diligent::IShaderSourceInputStreamFactory> pShaderSourceFactory;
 			ShaderPipelineVariantFactory mDefaultVariantFactory;
+
+			std::vector<Diligent::LayoutElement> mRendering3D_InputLayout;
+			std::vector<Diligent::LayoutElement> mRenderToTextureInputLayout;
+
 		private:
 			GraphicsEngine();
 		};

@@ -91,6 +91,7 @@ namespace Nuclear
 			ShaderObjectCreationDesc mPixelShader = ShaderObjectCreationDesc();
 			ShaderPSOType mType = ShaderPSOType::Unknown;
 			Diligent::GraphicsPipelineDesc GraphicsPipeline = Diligent::GraphicsPipelineDesc();
+			std::vector<Diligent::LayoutElement> mLayout;
 			std::vector<std::string> mRTsNames = std::vector<std::string>();
 			bool mValid = false;
 

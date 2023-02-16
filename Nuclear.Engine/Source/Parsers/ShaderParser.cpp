@@ -8,120 +8,8 @@ namespace Nuclear
 {
 	namespace Parsers
 	{
-
-#define TEXFMTMAP(name)	else if (!str.compare(#name)) { return name; }
-
 		using namespace Diligent;
-		//TODO : OPTIMIZE
-		TEXTURE_FORMAT ParseTexFormat(const std::string_view& str, TEXTURE_FORMAT defaultvalue = TEX_FORMAT_UNKNOWN)
-		{
-			if (!str.compare("TEX_FORMAT_UNKNOWN")) { return TEX_FORMAT_UNKNOWN; }
-			TEXFMTMAP(TEX_FORMAT_RGBA32_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RGBA32_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RGBA32_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_RGBA32_UINT)
-				TEXFMTMAP(TEX_FORMAT_RGBA32_SINT)
-				TEXFMTMAP(TEX_FORMAT_RGB32_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RGB32_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_RGB32_UINT)
-				TEXFMTMAP(TEX_FORMAT_RGB32_SINT)
-				TEXFMTMAP(TEX_FORMAT_RGBA16_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RGBA16_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_RGBA16_UNORM)
-				TEXFMTMAP(TEX_FORMAT_RGBA16_UINT)
-				TEXFMTMAP(TEX_FORMAT_RGBA16_SNORM)
-				TEXFMTMAP(TEX_FORMAT_RGBA16_SINT)
-				TEXFMTMAP(TEX_FORMAT_RG32_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RG32_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_RG32_UINT)
-				TEXFMTMAP(TEX_FORMAT_RG32_SINT)
-				TEXFMTMAP(TEX_FORMAT_R32G8X24_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_D32_FLOAT_S8X24_UINT)
-				TEXFMTMAP(TEX_FORMAT_R32_FLOAT_X8X24_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_X32_TYPELESS_G8X24_UINT)
-				TEXFMTMAP(TEX_FORMAT_RGB10A2_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RGB10A2_UNORM)
-				TEXFMTMAP(TEX_FORMAT_RGB10A2_UINT)
-				TEXFMTMAP(TEX_FORMAT_R11G11B10_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_RGBA8_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RGBA8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_RGBA8_UNORM_SRGB)
-				TEXFMTMAP(TEX_FORMAT_RGBA8_UINT)
-				TEXFMTMAP(TEX_FORMAT_RGBA8_SNORM)
-				TEXFMTMAP(TEX_FORMAT_RGBA8_SINT)
-				TEXFMTMAP(TEX_FORMAT_RG16_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RG16_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_RG16_UNORM)
-				TEXFMTMAP(TEX_FORMAT_RG16_UINT)
-				TEXFMTMAP(TEX_FORMAT_RG16_SNORM)
-				TEXFMTMAP(TEX_FORMAT_RG16_SINT)
-				TEXFMTMAP(TEX_FORMAT_R32_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_D32_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_R32_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_R32_UINT)
-				TEXFMTMAP(TEX_FORMAT_R32_SINT)
-				TEXFMTMAP(TEX_FORMAT_R24G8_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_D24_UNORM_S8_UINT)
-				TEXFMTMAP(TEX_FORMAT_R24_UNORM_X8_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_X24_TYPELESS_G8_UINT)
-				TEXFMTMAP(TEX_FORMAT_RG8_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_RG8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_RG8_UINT)
-				TEXFMTMAP(TEX_FORMAT_RG8_SNORM)
-				TEXFMTMAP(TEX_FORMAT_RG8_SINT)
-				TEXFMTMAP(TEX_FORMAT_R16_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_R16_FLOAT)
-				TEXFMTMAP(TEX_FORMAT_D16_UNORM)
-				TEXFMTMAP(TEX_FORMAT_R16_UNORM)
-				TEXFMTMAP(TEX_FORMAT_R16_UINT)
-				TEXFMTMAP(TEX_FORMAT_R16_SNORM)
-				TEXFMTMAP(TEX_FORMAT_R16_SINT)
-				TEXFMTMAP(TEX_FORMAT_R8_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_R8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_R8_UINT)
-				TEXFMTMAP(TEX_FORMAT_R8_SNORM)
-				TEXFMTMAP(TEX_FORMAT_R8_SINT)
-				TEXFMTMAP(TEX_FORMAT_A8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_R1_UNORM)
-				TEXFMTMAP(TEX_FORMAT_RGB9E5_SHAREDEXP)
-				TEXFMTMAP(TEX_FORMAT_RG8_B8G8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_G8R8_G8B8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BC1_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BC1_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BC1_UNORM_SRGB)
-				TEXFMTMAP(TEX_FORMAT_BC2_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BC2_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BC2_UNORM_SRGB)
-				TEXFMTMAP(TEX_FORMAT_BC3_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BC3_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BC3_UNORM_SRGB)
-				TEXFMTMAP(TEX_FORMAT_BC4_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BC4_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BC4_SNORM)
-				TEXFMTMAP(TEX_FORMAT_BC5_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BC5_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BC5_SNORM)
-				TEXFMTMAP(TEX_FORMAT_B5G6R5_UNORM)
-				TEXFMTMAP(TEX_FORMAT_B5G5R5A1_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BGRA8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BGRX8_UNORM)
-				TEXFMTMAP(TEX_FORMAT_R10G10B10_XR_BIAS_A2_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BGRA8_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BGRA8_UNORM_SRGB)
-				TEXFMTMAP(TEX_FORMAT_BGRX8_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BGRX8_UNORM_SRGB)
-				TEXFMTMAP(TEX_FORMAT_BC6H_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BC6H_UF16)
-				TEXFMTMAP(TEX_FORMAT_BC6H_SF16)
-				TEXFMTMAP(TEX_FORMAT_BC7_TYPELESS)
-				TEXFMTMAP(TEX_FORMAT_BC7_UNORM)
-				TEXFMTMAP(TEX_FORMAT_BC7_UNORM_SRGB)
-				TEXFMTMAP(TEX_FORMAT_NUM_FORMATS)
-
-				return defaultvalue;
-		}
-
-
+	
 		void ParsePSOShader(toml::table* tbl, std::string_view& name, SHADER_TYPE type, Graphics::ShaderObjectCreationDesc& result)
 		{
 			result.mType = type;
@@ -172,7 +60,6 @@ namespace Nuclear
 			}
 		}
 
-
 		void ParsePSO(toml::table* tbl, toml::table& parent, Graphics::ShaderPSODesc& desc)
 		{
 			if (toml::array* arr = tbl->get("RTVFormats")->as_array())
@@ -181,7 +68,7 @@ namespace Nuclear
 
 				for (Uint32 i = 0; i < arr->size(); i++)
 				{
-					desc.GraphicsPipeline.RTVFormats[i] = ParseTexFormat(arr->at(i).value_or("TEX_FORMAT_RGBA8_UNORM_SRGB"sv));
+					desc.GraphicsPipeline.RTVFormats[i] = magic_enum::enum_cast<TEXTURE_FORMAT>(arr->at(i).value_or("TEX_FORMAT_RGBA8_UNORM_SRGB")).value_or(TEX_FORMAT_RGBA8_UNORM_SRGB);
 				}
 			}
 
@@ -207,8 +94,13 @@ namespace Nuclear
 					desc.mRTsNames.push_back("UnNamed RT" + std::to_string(i));
 				}
 			}
-
-			desc.GraphicsPipeline.DSVFormat = ParseTexFormat(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT"sv));
+			
+			desc.GraphicsPipeline.DSVFormat = magic_enum::enum_cast<TEXTURE_FORMAT>(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT")).value_or(TEX_FORMAT_D32_FLOAT);
+			desc.GraphicsPipeline.PrimitiveTopology = magic_enum::enum_cast<PRIMITIVE_TOPOLOGY>(tbl->get("PrimitiveTopology")->value_or("PRIMITIVE_TOPOLOGY_TRIANGLE_LIST")).value_or(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+			desc.GraphicsPipeline.RasterizerDesc.CullMode = magic_enum::enum_cast<CULL_MODE>(tbl->get("RasterizerDesc.CullMode")->value_or("CULL_MODE_BACK")).value_or(CULL_MODE_BACK);
+			desc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = tbl->get("RasterizerDesc.FrontCounterClockwise")->value_or(!COORDSYSTEM_LH_ENABLED);
+			desc.GraphicsPipeline.DepthStencilDesc.DepthEnable = tbl->get("DepthStencilDesc.DepthEnable")->value_or(true);
+			desc.GraphicsPipeline.DepthStencilDesc.StencilEnable = tbl->get("DepthStencilDesc.StencilEnable")->value_or(false);
 
 			auto defines = tbl->get("Defines");
 			if (defines)
@@ -234,12 +126,54 @@ namespace Nuclear
 				auto str1 = vsnode->value<std::string_view>();
 				ParsePSOShader(parent.get(str1.value())->as_table(), str1.value(), SHADER_TYPE_VERTEX, desc.mVertexShader);
 			}
+
 			auto psnode = tbl->get("PixelShader");
 			if (psnode)
 			{
 				auto str2 = psnode->value<std::string_view>();
 				ParsePSOShader(parent.get(str2.value())->as_table(), str2.value(), SHADER_TYPE_PIXEL, desc.mPixelShader);
 			}
+
+
+			auto layout = tbl->get("InputLayout");
+			if (layout)
+			{
+				toml::array* arr = layout->as_array();
+				if (arr->is_array())
+				{
+					for (Uint32 i = 0; i < arr->size(); i++)
+					{
+						if (arr->at(i).is_array())
+						{
+							auto layoutobj = arr->at(i).as_array();
+							assert(layoutobj->size() == 5);
+							Diligent::LayoutElement element;
+
+							element.InputIndex = layoutobj->at(0).as_integer()->value_or(0);
+							element.BufferSlot = layoutobj->at(1).as_integer()->value_or(0);
+							element.NumComponents = layoutobj->at(2).as_integer()->value_or(0);
+							element.ValueType = magic_enum::enum_cast<VALUE_TYPE>(layoutobj->at(3).as_string()->value_or("VT_FLOAT32")).value_or(VT_FLOAT32);
+							element.IsNormalized = layoutobj->at(4).as_boolean()->value_or(true);
+							//element.RelativeOffset = layoutobj->at(5).as_integer()->value_or(LAYOUT_ELEMENT_AUTO_OFFSET);
+							//element.Stride = layoutobj->at(6).as_integer()->value_or(LAYOUT_ELEMENT_AUTO_STRIDE);
+							//element.Frequency = magic_enum::enum_cast<INPUT_ELEMENT_FREQUENCY>(layoutobj->at(7).as_string()->value_or("INPUT_ELEMENT_FREQUENCY_PER_VERTEX")).value_or(INPUT_ELEMENT_FREQUENCY_PER_VERTEX);
+							//element.InstanceDataStepRate = layoutobj->at(8).as_integer()->value_or(1);
+
+							desc.mLayout.push_back(element);
+						}
+						else
+						{
+							NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> InputLayout element {0} isn't an array", i);
+						}
+					}
+				}
+				else
+				{
+					NUCLEAR_ERROR("[ShaderManager] Parsing Shader error -> InputLayout isn't an array");
+				}
+
+			}
+
 
 			desc.mValid = true;
 		}

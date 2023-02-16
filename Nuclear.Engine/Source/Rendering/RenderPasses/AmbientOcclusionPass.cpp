@@ -12,10 +12,6 @@ namespace Nuclear
 
 		void AmbientOcclusionPass::Bake(Uint32 RTWidth, Uint32 RTHeight)
 		{
-			std::vector<LayoutElement> Layout;
-			Layout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));
-			Layout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));
-
 			Assets::ShaderImportingDesc desc;
 			desc.mCommonOptions.mLoadOnly = true;
 

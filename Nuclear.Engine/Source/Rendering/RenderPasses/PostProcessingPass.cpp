@@ -19,8 +19,8 @@ namespace Nuclear
 		void PostProcessingPass::Update(FrameRenderData* framedata)
 		{
 			mPipelineCntrllr.Update();
-			auto pipeline = mPipelineCntrllr.GetActiveVariant()->mPipeline;
-			auto pipelineSRB = mPipelineCntrllr.GetActiveVariant()->mPipelineSRB;
+			auto& pipeline = mPipelineCntrllr.GetActiveVariant()->mPipeline;
+			auto& pipelineSRB = mPipelineCntrllr.GetActiveVariant()->mPipelineSRB;
 
 			//Render Skybox
 

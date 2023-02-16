@@ -368,27 +368,6 @@ namespace Nuclear
 			return true;
 		}
 
-		std::vector<Diligent::LayoutElement> GraphicsEngine::GetBasicVSLayout(bool isDeffered)
-		{
-			using namespace Diligent;
-
-			std::vector<LayoutElement> LayoutElems;
-
-			LayoutElems.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));//POS
-			LayoutElems.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
-
-			if (!isDeffered)
-			{
-				LayoutElems.push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
-				LayoutElems.push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
-				LayoutElems.push_back(LayoutElement(4, 0, 3, VT_FLOAT32, false));  //Bitangents
-				LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
-				LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
-			}
-
-			return LayoutElems;
-		}
-
 		void GraphicsEngine::CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc)
 		{
 			Diligent::ShaderCreateInfo CreationAttribs;
@@ -526,48 +505,33 @@ namespace Nuclear
 			return false;
 		}
 
+		void GraphicsEngine::ReflectShaderResourceVariable(Diligent::IShader* Shader, std::vector<Diligent::ShaderResourceVariableDesc>& result)
+		{
+			if (Shader)
+			{
+				for (Uint32 i = 0; i < Shader->GetResourceCount(); i++)
+				{
+					Diligent::ShaderResourceDesc RsrcDesc;
+					Shader->GetResourceDesc(i, RsrcDesc);
+					if (!CheckSampler(RsrcDesc.Name))
+					{
+						Diligent::ShaderResourceVariableDesc Desc;
+						Desc.Name = RsrcDesc.Name;
+						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
+						Desc.ShaderStages = Shader->GetDesc().ShaderType;
+						result.push_back(Desc);
+					}
+				}
+			}
+		}
+
 		std::vector<Diligent::ShaderResourceVariableDesc> GraphicsEngine::ReflectShaderVariables(Diligent::IShader* VShader, Diligent::IShader* PShader)
 		{
 			std::vector<Diligent::ShaderResourceVariableDesc> resources;
-			if (VShader)
-			{
-				for (Uint32 i = 0; i < VShader->GetResourceCount(); i++)
-				{
-					Diligent::ShaderResourceDesc RsrcDesc;
-					VShader->GetResourceDesc(i, RsrcDesc);
-					if (!CheckSampler(RsrcDesc.Name))
-					{
-						Diligent::ShaderResourceVariableDesc Desc;
-						Desc.Name = RsrcDesc.Name;
-						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
-						Desc.ShaderStages = VShader->GetDesc().ShaderType;
-						resources.push_back(Desc);
-					}
-				}
-			}
-			else {
-				NUCLEAR_WARN("[GraphicsEngine] ReflectShaderVariables() skipped null Vertex Shader...");
-			}
-			if (PShader)
-			{
-				for (Uint32 i = 0; i < PShader->GetResourceCount(); i++)
-				{
-					Diligent::ShaderResourceDesc RsrcDesc;
-					PShader->GetResourceDesc(i, RsrcDesc);
-					if (!CheckSampler(RsrcDesc.Name))
-					{
-						std::string name(RsrcDesc.Name);
-						Diligent::ShaderResourceVariableDesc Desc;
-						Desc.Name = RsrcDesc.Name;
-						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
-						Desc.ShaderStages = PShader->GetDesc().ShaderType;
-						resources.push_back(Desc);
-					}
-				}
-			}
-			else {
-				NUCLEAR_WARN("[GraphicsEngine] ReflectShaderVariables() skipped null Pixel Shader...");
-			}
+
+			ReflectShaderResourceVariable(VShader, resources);
+			ReflectShaderResourceVariable(PShader, resources);
+						
 			return resources;
 		}
 		Diligent::SHADER_RESOURCE_VARIABLE_TYPE GraphicsEngine::ParseNameToGetType(const std::string& name)
@@ -598,6 +562,24 @@ namespace Nuclear
 
 		GraphicsEngine::GraphicsEngine()
 		{
+			using namespace Diligent;
+
+			{
+				mRenderToTextureInputLayout.clear();
+				mRenderToTextureInputLayout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));  //POS
+				mRenderToTextureInputLayout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
+			}
+
+			{
+				mRendering3D_InputLayout.clear();
+				mRendering3D_InputLayout.push_back(LayoutElement(0, 0, 3, VT_FLOAT32, false));  //POS
+				mRendering3D_InputLayout.push_back(LayoutElement(1, 0, 2, VT_FLOAT32, false));  //UV
+				mRendering3D_InputLayout.push_back(LayoutElement(2, 0, 3, VT_FLOAT32, false));  //NORMAL
+				mRendering3D_InputLayout.push_back(LayoutElement(3, 0, 3, VT_FLOAT32, false));  //Tangents
+				mRendering3D_InputLayout.push_back(LayoutElement(4, 0, 3, VT_FLOAT32, false));  //Bitangents
+				mRendering3D_InputLayout.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
+				mRendering3D_InputLayout.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
+			}
 		}
 
 	}

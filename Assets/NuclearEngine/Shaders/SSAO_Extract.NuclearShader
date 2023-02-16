@@ -9,6 +9,12 @@ RTVFormats = [ "TEX_FORMAT_R32_FLOAT" ]
 DSVFormat = "TEX_FORMAT_UNKNOWN"
 VertexShader = "VShader"
 PixelShader = "PShader"
+InputLayout = [ [ 0, 0, 3, "VT_FLOAT32", false ] , [ 1, 0, 2, "VT_FLOAT32", false ] ]
+PrimitiveTopology = "PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP"
+DepthStencilDesc.DepthEnable = false
+DepthStencilDesc.StencilEnable = false
+RasterizerDesc.FrontCounterClockwise = true;
+RasterizerDesc.CullMode = "CULL_MODE_BACK";
 
 [VShader]
 EntryPoint = "main"
