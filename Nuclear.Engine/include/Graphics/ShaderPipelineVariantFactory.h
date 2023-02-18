@@ -10,8 +10,8 @@ namespace Nuclear
 		public:
 			ShaderPipelineVariantFactory();
 
-			bool CreateForwardVariant(ShaderPipelineVariant& result, ShaderPipeline& pipeline, ShaderPipelineBakingDesc& bakingdesc);
-			bool CreateDefferedVariant(ShaderPipelineVariant& result, ShaderPipeline& pipeline, ShaderPipelineBakingDesc& bakingdesc);
+			bool CreateForwardVariant(ShaderPipelineVariant& result, ShaderPipeline& pipeline, const ShaderPipelineBakingDesc& bakingdesc);
+			bool CreateDefferedVariant(ShaderPipelineVariant& result, ShaderPipeline& pipeline, const ShaderPipelineBakingDesc& bakingdesc);
 		private:
 			void SetIfFound(Diligent::IPipelineState* pipeline, Diligent::SHADER_TYPE ShaderType, const Char* Name, Diligent::IDeviceObject* obj);
 			void ReflectShaderPipelineVariant(ShaderPipelineVariant& pipeline);

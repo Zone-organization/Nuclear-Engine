@@ -62,8 +62,10 @@ namespace Nuclear
 
 		void ParsePSO(toml::table* tbl, toml::table& parent, Graphics::ShaderPSODesc& desc)
 		{
-			if (toml::array* arr = tbl->get("RTVFormats")->as_array())
+			auto rtvformats = tbl->get("RTVFormats");
+			if (rtvformats)
 			{
+				auto arr = rtvformats->as_array();
 				desc.GraphicsPipeline.NumRenderTargets = arr->size();
 
 				for (Uint32 i = 0; i < arr->size(); i++)
@@ -95,13 +97,33 @@ namespace Nuclear
 				}
 			}
 			
-			desc.GraphicsPipeline.DSVFormat = magic_enum::enum_cast<TEXTURE_FORMAT>(tbl->get("DSVFormat")->value_or("TEX_FORMAT_D32_FLOAT")).value_or(TEX_FORMAT_D32_FLOAT);
-			desc.GraphicsPipeline.PrimitiveTopology = magic_enum::enum_cast<PRIMITIVE_TOPOLOGY>(tbl->get("PrimitiveTopology")->value_or("PRIMITIVE_TOPOLOGY_TRIANGLE_LIST")).value_or(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-			desc.GraphicsPipeline.RasterizerDesc.CullMode = magic_enum::enum_cast<CULL_MODE>(tbl->get("RasterizerDesc.CullMode")->value_or("CULL_MODE_BACK")).value_or(CULL_MODE_BACK);
-			desc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = tbl->get("RasterizerDesc.FrontCounterClockwise")->value_or(!COORDSYSTEM_LH_ENABLED);
-			desc.GraphicsPipeline.DepthStencilDesc.DepthEnable = tbl->get("DepthStencilDesc.DepthEnable")->value_or(true);
-			desc.GraphicsPipeline.DepthStencilDesc.StencilEnable = tbl->get("DepthStencilDesc.StencilEnable")->value_or(false);
+			auto dsv_format = tbl->get("DSVFormat");
+			if (dsv_format)
+			{
+				desc.GraphicsPipeline.DSVFormat = magic_enum::enum_cast<TEXTURE_FORMAT>(dsv_format->value_or("TEX_FORMAT_D32_FLOAT")).value_or(TEX_FORMAT_D32_FLOAT);
+			}
+			auto topology = tbl->get("PrimitiveTopology");
+			if (topology)
+			{
+				desc.GraphicsPipeline.PrimitiveTopology = magic_enum::enum_cast<PRIMITIVE_TOPOLOGY>(topology->value_or("PRIMITIVE_TOPOLOGY_TRIANGLE_LIST")).value_or(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+			}
 
+			auto rasterdesc = tbl->get("RasterizerDesc");
+			if (rasterdesc)
+			{
+				auto table = rasterdesc->as_table();
+				desc.GraphicsPipeline.RasterizerDesc.CullMode = magic_enum::enum_cast<CULL_MODE>(table->get("CullMode")->value_or("CULL_MODE_BACK")).value_or(CULL_MODE_BACK);
+				desc.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = table->get("FrontCounterClockwise")->value_or(!COORDSYSTEM_LH_ENABLED);
+			}
+
+			auto depthstencildesc = tbl->get("DepthStencilDesc");
+			if (depthstencildesc)
+			{
+				auto table = depthstencildesc->as_table();
+				desc.GraphicsPipeline.DepthStencilDesc.DepthEnable = table->get("DepthEnable")->value_or(true);
+				desc.GraphicsPipeline.DepthStencilDesc.StencilEnable = table->get("StencilEnable")->value_or(false);
+			}
+			
 			auto defines = tbl->get("Defines");
 			if (defines)
 			{
@@ -290,7 +312,7 @@ namespace Nuclear
 			}
 			catch (const toml::parse_error& err)
 			{
-				NUCLEAR_ERROR("[ShaderManager] Parsing Shader failed: '{0}'", err.description());
+				NUCLEAR_ERROR("[ShaderManager] Parsing Shader failed: {0} - At Line: {1} , Col:{2} To: Line: {3} , Col:{4}", err.description(), err.source().begin.line , err.source().begin.column, err.source().end.line , err.source().end.column);
 				return false;
 			}
 

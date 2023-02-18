@@ -68,9 +68,9 @@ namespace Nuclear
 			bakedesc.pRendering3DBakingDesc = &rendering3d_bake_desc;
 			bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
 
-			bakedesc.mCBsBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingEngine::GetInstance().GetCameraCB() });
-			bakedesc.mCBsBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingEngine::GetInstance().GetAnimationCB() });
-			bakedesc.mCBsBindings.push_back({ Diligent::SHADER_TYPE_PIXEL, "NEStatic_Lights", GetLightCB() });
+			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingEngine::GetInstance().GetCameraCB() });
+			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingEngine::GetInstance().GetAnimationCB() });
+			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_PIXEL, "NEStatic_Lights", GetLightCB() });
 
 			AddToDefinesIfNotZero(bakedesc.mDefines, "NE_DIR_LIGHTS_NUM ", rendering3d_bake_desc.DirLights);
 			AddToDefinesIfNotZero(bakedesc.mDefines, "NE_SPOT_LIGHTS_NUM ", rendering3d_bake_desc.SpotLights);
@@ -85,8 +85,7 @@ namespace Nuclear
 
 			if (pIBLContext)
 			{
-				bakedesc.mPostVariantReflectionCallback.Create(
-					[this](Graphics::ShaderVariantReflection& reflection) {
+				bakedesc.mPostVariantReflectionCallback = ([this](Graphics::ShaderVariantReflection& reflection) {
 						for (auto& i : reflection.mIBLTexturesInfo)
 						{
 							if (i.mTex.mUsageType == Assets::TextureUsageType::IrradianceMap)
@@ -421,7 +420,7 @@ namespace Nuclear
 				LightsBuffer.push_back(Color);
 			}
 
-			PVoid data;
+			PVoid data = NULL;
 			Graphics::Context::GetInstance().GetContext()->MapBuffer(mPSLightCB, Diligent::MAP_WRITE, Diligent::MAP_FLAG_DISCARD, (PVoid&)data);
 			data = memcpy(data, LightsBuffer.data(), NE_Light_CB_Size);
 			Graphics::Context::GetInstance().GetContext()->UnmapBuffer(mPSLightCB, Diligent::MAP_WRITE);

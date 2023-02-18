@@ -7,6 +7,7 @@
 #include <Platform/FileSystem.h>
 #include <Rendering/RenderingEngine.h>
 #include <Utilities/Logger.h>
+#include <Graphics\Context.h>
 
 namespace Nuclear
 {
@@ -36,7 +37,7 @@ namespace Nuclear
 			}
 		}
 
-		bool ShaderPipelineVariantFactory::CreateForwardVariant(ShaderPipelineVariant& variant, ShaderPipeline& pipeline, ShaderPipelineBakingDesc& bakingdesc)
+		bool ShaderPipelineVariantFactory::CreateForwardVariant(ShaderPipelineVariant& variant, ShaderPipeline& pipeline, const ShaderPipelineBakingDesc& bakingdesc)
 		{
 			variant.mRenderQueue = mRenderQueueCounter;
 			mRenderQueueCounter++;
@@ -80,12 +81,22 @@ namespace Nuclear
 			{
 				SetSuitableLayout(PSOCreateInfo.GraphicsPipeline.InputLayout, pipeline.pParentShader->GetShaderBuildDesc().mType);
 			}
-			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
-			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&variant.mPipeline, PSOCreateInfo, Vars, true);
-
-			for (auto& i : bakingdesc.mCBsBindings)
+			else
 			{
-				SetIfFound(variant.mPipeline, i.mShaderStage, i.mName.c_str(), i.pCB);
+				PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = variantdesc.mMainPSOCreateInfo.mLayout.data();
+				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(variantdesc.mMainPSOCreateInfo.mLayout.size());
+			}
+			PSOResourcesInitInfo pso_resources = bakingdesc.mPipelineResourcesInfo;
+			Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, pso_resources);
+
+			if (!bakingdesc.mPreVariantPipelineCreationCallback.isNull())
+				bakingdesc.mPreVariantPipelineCreationCallback(PSOCreateInfo);
+
+			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mPipeline);
+
+			for (auto& i : bakingdesc.mStaticVariablesBindings)
+			{
+				SetIfFound(variant.mPipeline, i.mShaderStage, i.mName.c_str(), i.pObject);
 			}
 
 			variant.mPipeline->CreateShaderResourceBinding(&variant.mPipelineSRB, true);
@@ -98,7 +109,7 @@ namespace Nuclear
 			return true;
 		}
 
-		bool ShaderPipelineVariantFactory::CreateDefferedVariant(ShaderPipelineVariant& variant, ShaderPipeline& pipeline, ShaderPipelineBakingDesc& bakingdesc)
+		bool ShaderPipelineVariantFactory::CreateDefferedVariant(ShaderPipelineVariant& variant, ShaderPipeline& pipeline, const ShaderPipelineBakingDesc& bakingdesc)
 		{
 			variant.mRenderQueue = mRenderQueueCounter;
 			mRenderQueueCounter++;
@@ -150,13 +161,23 @@ namespace Nuclear
 				{
 					SetSuitableLayout(PSOCreateInfo.GraphicsPipeline.InputLayout, pipeline.pParentShader->GetShaderBuildDesc().mType);
 				}
-
-				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&variant.mGBufferPipeline, PSOCreateInfo, Vars, true);
-
-				for (auto& i : bakingdesc.mCBsBindings)
+				else
 				{
-					SetIfFound(variant.mGBufferPipeline, i.mShaderStage, i.mName.c_str(), i.pCB);
+					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = variant.mDesc.mMainPSOCreateInfo.mLayout.data();
+					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(variant.mDesc.mMainPSOCreateInfo.mLayout.size());
+				}
+				PSOResourcesInitInfo pso_resources = bakingdesc.mPipelineResourcesInfo;
+				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, pso_resources);
+
+				if (!bakingdesc.mPreVariantPipelineCreationCallback.isNull())
+					bakingdesc.mPreVariantPipelineCreationCallback(PSOCreateInfo);
+
+				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mGBufferPipeline);
+
+
+				for (auto& i : bakingdesc.mStaticVariablesBindings)
+				{
+					SetIfFound(variant.mGBufferPipeline, i.mShaderStage, i.mName.c_str(), i.pObject);
 				}
 
 				variant.mGBufferPipeline->CreateShaderResourceBinding(&variant.mGBufferSRB, true);
@@ -213,13 +234,22 @@ namespace Nuclear
 					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().data();
 					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().size());
 				}
-
-				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&variant.mPipeline, PSOCreateInfo, Vars, true);
-
-				for (auto& i : bakingdesc.mCBsBindings)
+				else
 				{
-					SetIfFound(variant.mPipeline, i.mShaderStage, i.mName.c_str(), i.pCB);
+					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = variant.mDesc.mMainPSOCreateInfo.mLayout.data();
+					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(variant.mDesc.mMainPSOCreateInfo.mLayout.size());
+				}
+				PSOResourcesInitInfo pso_resources = bakingdesc.mPipelineResourcesInfo;
+				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, pso_resources);
+
+				if (!bakingdesc.mPreVariantPipelineCreationCallback.isNull())
+					bakingdesc.mPreVariantPipelineCreationCallback(PSOCreateInfo);
+
+				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mPipeline);
+
+				for (auto& i : bakingdesc.mStaticVariablesBindings)
+				{
+					SetIfFound(variant.mPipeline, i.mShaderStage, i.mName.c_str(), i.pObject);
 				}
 
 				variant.mPipeline->CreateShaderResourceBinding(&variant.mPipelineSRB, true);

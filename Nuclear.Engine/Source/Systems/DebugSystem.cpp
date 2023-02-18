@@ -133,8 +133,10 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsEngine::GetInstance().GetRendering3DInputLayout().data();
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsEngine::GetInstance().GetRendering3DInputLayout().size());
 
-			auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VShader, PShader);
-			Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pShader.mPipeline, PSOCreateInfo, Vars, true);
+			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
+			Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+
+			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pShader.mPipeline);
 
 			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingEngine::GetInstance().GetCameraCB());
 			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingEngine::GetInstance().GetAnimationCB());

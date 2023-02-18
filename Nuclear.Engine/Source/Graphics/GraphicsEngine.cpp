@@ -48,6 +48,11 @@ namespace Nuclear
 				NUCLEAR_INFO("[GraphicsEngine] ImGUI Initalized.");
 			}
 
+			mDefaultStaticSamplers["NEMat_"] = SamLinearWrapDesc;
+			mDefaultStaticSamplers["NE_ShadowMap"] = ShadowMapSamplerDesc;
+			mDefaultStaticSamplers["NE_RT_"] = SamLinearClampDesc;
+			mDefaultStaticSamplers["NEIBL_"] = SamLinearClampDesc;
+
 			NUCLEAR_INFO("[GraphicsEngine] GraphicsEngine has has been initalized successfully!");
 			return true;
 		}
@@ -315,13 +320,13 @@ namespace Nuclear
 			RefCntAutoPtr<IShader> PShader;
 			ShaderObjectCreationDesc pixelshader;
 
-			if((desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardDeffered
+			if ((desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardDeffered
 				|| desc.mSupportedTechniques == SupportedRenderingTechnique::ForwardOnly)
 				&& desc.mPipelineDesc.mForwardPSOCreateInfo.mValid)
 				pixelshader = desc.mPipelineDesc.mForwardPSOCreateInfo.mPixelShader;
-			else if(desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly && desc.mPipelineDesc.mGBufferPSOCreateInfo.mValid)
-				pixelshader =  desc.mPipelineDesc.mGBufferPSOCreateInfo.mPixelShader;
-			else if(desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly && desc.mPipelineDesc.mDefferedPSOCreateInfo.mValid)
+			else if (desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly && desc.mPipelineDesc.mGBufferPSOCreateInfo.mValid)
+				pixelshader = desc.mPipelineDesc.mGBufferPSOCreateInfo.mPixelShader;
+			else if (desc.mSupportedTechniques == SupportedRenderingTechnique::DefferedOnly && desc.mPipelineDesc.mDefferedPSOCreateInfo.mValid)
 				pixelshader = desc.mPipelineDesc.mDefferedPSOCreateInfo.mPixelShader;
 			else
 			{
@@ -419,6 +424,49 @@ namespace Nuclear
 			return pShaderSourceFactory;
 		}
 
+		void GraphicsEngine::InitPSOResources(Diligent::GraphicsPipelineStateCreateInfo& PSOCreateInfo, PSOResourcesInitInfo& desc)
+		{
+			if (desc.mResources.size() == 0)
+			{
+				ReflectShaderResources(PSOCreateInfo.pVS, desc);
+				ReflectShaderResources(PSOCreateInfo.pPS, desc);
+				ReflectShaderResources(PSOCreateInfo.pDS, desc);
+				ReflectShaderResources(PSOCreateInfo.pHS, desc);
+				ReflectShaderResources(PSOCreateInfo.pGS, desc);
+				ReflectShaderResources(PSOCreateInfo.pAS, desc);
+				ReflectShaderResources(PSOCreateInfo.pMS, desc);
+			}
+
+			if (desc.mStaticSamplers.size() == 0)
+			{
+				for (auto& i : desc.mTexturesSamplers)
+				{
+					bool match = false;
+					for (auto& j : mDefaultStaticSamplers)
+					{
+						if (i.first.find(j.first) != std::string::npos)
+						{
+							Diligent::ImmutableSamplerDesc samdesc(i.second.ShaderStages, i.first.c_str() , j.second);
+							desc.mStaticSamplers.push_back(samdesc);
+							match = true;
+						}
+					}
+
+					if (!match)
+					{
+						Diligent::ImmutableSamplerDesc samdesc(i.second.ShaderStages, i.first.c_str(), SamLinearWrapDesc);
+						desc.mStaticSamplers.push_back(samdesc);
+					}
+				}
+			}
+
+			PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(desc.mResources.size());
+			PSOCreateInfo.PSODesc.ResourceLayout.Variables = desc.mResources.data();
+
+			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(desc.mStaticSamplers.size());
+			PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = desc.mStaticSamplers.data();
+		}
+
 
 		void GraphicsEngine::CreateShader(const std::string& source, Diligent::IShader** result, Diligent::SHADER_TYPE type)
 		{
@@ -432,80 +480,7 @@ namespace Nuclear
 			Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, result);
 		}
 
-		bool GraphicsEngine::ProcessAndCreatePipeline(
-			Diligent::IPipelineState** PipelineState,
-			Diligent::GraphicsPipelineStateCreateInfo& PSOCreateInfo,
-			const std::vector<Diligent::ShaderResourceVariableDesc>& Resources,
-			bool AutoCreateSamplersDesc,
-			const std::vector<Diligent::ImmutableSamplerDesc>& StaticSamplers)
-		{
-			using namespace Diligent;
-
-			PSOCreateInfo.PSODesc.ResourceLayout.NumVariables = static_cast<Uint32>(Resources.size());
-			PSOCreateInfo.PSODesc.ResourceLayout.Variables = Resources.data();
-			std::vector<ImmutableSamplerDesc> GeneratedSamplerDesc;
-
-			if (!AutoCreateSamplersDesc)
-			{
-				PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(StaticSamplers.size());
-				PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers.data();
-			}
-			else
-			{
-
-				for (auto& i : Resources)
-				{
-					std::string name(i.Name);
-					//Check its type
-					if (name.find("NEMat_") != std::string::npos)
-					{
-						SamplerDesc SamLinearWrapDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
-							TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP);
-						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearWrapDesc);
-						GeneratedSamplerDesc.push_back(desc);
-					}
-					else if (name.find("NE_ShadowMap") != std::string::npos)
-					{
-						SamplerDesc SamLinearWrapDesc(FILTER_TYPE_POINT, FILTER_TYPE_POINT, FILTER_TYPE_POINT,
-							TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER);
-						//SamLinearWrapDesc.ComparisonFunc = COMPARISON_FUNC_LESS;
-						SamLinearWrapDesc.BorderColor[0] = 1.0f;
-						SamLinearWrapDesc.BorderColor[1] = 1.0f;
-						SamLinearWrapDesc.BorderColor[2] = 1.0f;
-						SamLinearWrapDesc.BorderColor[3] = 1.0f;
-
-						//	SamLinearWrapDesc.MipLODBias = 0.f;
-							//SamLinearWrapDesc.MaxAnisotropy = 0;
-						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearWrapDesc);
-						GeneratedSamplerDesc.push_back(desc);
-					}
-					else if (name.find("NE_RT_") != std::string::npos || name.find("NEIBL_") != std::string::npos)
-					{
-						SamplerDesc SamLinearClampDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
-							TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
-						ImmutableSamplerDesc desc(SHADER_TYPE_PIXEL, i.Name, SamLinearClampDesc);
-						GeneratedSamplerDesc.push_back(desc);
-					}
-				}
-
-				PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = static_cast<Uint32>(GeneratedSamplerDesc.size());
-				PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = GeneratedSamplerDesc.data();
-			}
-
-			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, PipelineState);
-
-			return true;
-		}
-
-		bool CheckSampler(const std::string& name)
-		{
-			if (name.find("_sampler") != std::string::npos)
-				return true;
-
-			return false;
-		}
-
-		void GraphicsEngine::ReflectShaderResourceVariable(Diligent::IShader* Shader, std::vector<Diligent::ShaderResourceVariableDesc>& result)
+		void GraphicsEngine::ReflectShaderResources(Diligent::IShader* Shader, PSOResourcesInitInfo& result)
 		{
 			if (Shader)
 			{
@@ -513,27 +488,22 @@ namespace Nuclear
 				{
 					Diligent::ShaderResourceDesc RsrcDesc;
 					Shader->GetResourceDesc(i, RsrcDesc);
-					if (!CheckSampler(RsrcDesc.Name))
-					{
-						Diligent::ShaderResourceVariableDesc Desc;
-						Desc.Name = RsrcDesc.Name;
-						Desc.Type = ParseNameToGetType(RsrcDesc.Name);
-						Desc.ShaderStages = Shader->GetDesc().ShaderType;
-						result.push_back(Desc);
-					}
+
+					Diligent::ShaderResourceVariableDesc Desc;
+					Desc.Name = RsrcDesc.Name;
+					Desc.Type = ParseNameToGetType(RsrcDesc.Name);
+					Desc.ShaderStages = Shader->GetDesc().ShaderType;
+
+					std::string name(RsrcDesc.Name);
+					if (name.find("_sampler") != std::string::npos)
+						result.mTexturesSamplers[name.erase(name.length() - 8)] = Desc;
+					else					
+						result.mResources.push_back(Desc);
+					
 				}
 			}
 		}
 
-		std::vector<Diligent::ShaderResourceVariableDesc> GraphicsEngine::ReflectShaderVariables(Diligent::IShader* VShader, Diligent::IShader* PShader)
-		{
-			std::vector<Diligent::ShaderResourceVariableDesc> resources;
-
-			ReflectShaderResourceVariable(VShader, resources);
-			ReflectShaderResourceVariable(PShader, resources);
-						
-			return resources;
-		}
 		Diligent::SHADER_RESOURCE_VARIABLE_TYPE GraphicsEngine::ParseNameToGetType(const std::string& name)
 		{
 			using namespace Diligent;
@@ -580,7 +550,21 @@ namespace Nuclear
 				mRendering3D_InputLayout.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
 				mRendering3D_InputLayout.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 			}
-		}
 
+			SamLinearWrapDesc = SamplerDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
+				TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP, TEXTURE_ADDRESS_WRAP);
+
+			SamPointBorderDesc = SamplerDesc(FILTER_TYPE_POINT, FILTER_TYPE_POINT, FILTER_TYPE_POINT,
+				TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER, TEXTURE_ADDRESS_BORDER);
+
+			SamLinearClampDesc = SamplerDesc(FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR, FILTER_TYPE_LINEAR,
+				TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP, TEXTURE_ADDRESS_CLAMP);
+
+			ShadowMapSamplerDesc = SamPointBorderDesc;
+			ShadowMapSamplerDesc.BorderColor[0] = 1.0f;
+			ShadowMapSamplerDesc.BorderColor[1] = 1.0f;
+			ShadowMapSamplerDesc.BorderColor[2] = 1.0f;
+			ShadowMapSamplerDesc.BorderColor[3] = 1.0f;
+		}
 	}
 }

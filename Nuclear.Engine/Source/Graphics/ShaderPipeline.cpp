@@ -29,7 +29,7 @@ namespace Nuclear
 		{
 			ShaderPipelineVariantDesc ZeroInstance;
 			ZeroInstance.mHashKey = 0;
-			if (pParentShader->mBuildDesc.mSupportedTechniques == Graphics::SupportedRenderingTechnique::DefferedOnly)
+			if (pParentShader && pParentShader->mBuildDesc.mSupportedTechniques == Graphics::SupportedRenderingTechnique::DefferedOnly)
 			{
 				ZeroInstance.isDeffered = true;
 			}

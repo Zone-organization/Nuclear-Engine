@@ -1,0 +1,64 @@
+#PostProcessing Nuclear Shader
+[Shader]
+Name = "PostProcessing"
+Type = "RenderingEffect"
+ForwardPipeline = "MainPSO"
+Variants = [ "HDR" ,"GAMMACORRECTION","BLOOM" ]
+VariantsValues = [ true, true, false ]
+
+[MainPSO]
+#RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]
+#DSVFormat = "TEX_FORMAT_D32_FLOAT"
+VertexShader = "VShader"
+PixelShader = "PShader"
+InputLayout = [ [ 0, 0, 3, "VT_FLOAT32", false ] , [ 1, 0, 2, "VT_FLOAT32", false ] ]
+PrimitiveTopology = "PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP"
+DepthStencilDesc.DepthEnable = false
+DepthStencilDesc.StencilEnable = false
+RasterizerDesc.FrontCounterClockwise = true
+RasterizerDesc.CullMode = "CULL_MODE_BACK"
+
+[VShader]
+EntryPoint = "main"
+Path = '@NuclearAssets@/Shaders/PostProcessing.vs.hlsl'
+
+[PShader]
+Source = '''
+struct PixelInputType
+{
+    float4 Position : SV_POSITION;
+    float2 Tex : TEXCOORD;
+};
+
+Texture2D NEMat_RenderTargetTex : register(t0);
+SamplerState NEMat_RenderTargetTex_sampler : register(s0);
+
+#ifdef BLOOM
+Texture2D  NEMat_BloomBlurTex : register(t1);
+SamplerState  NEMat_BloomBlurTex_sampler : register(s1);
+#endif
+
+float4 main(PixelInputType input) : SV_TARGET
+{
+    float3 SceneColor = NEMat_RenderTargetTex.Sample(NEMat_RenderTargetTex_sampler, input.Tex).rgb;
+
+#ifdef HDR
+	SceneColor = SceneColor / (SceneColor + float3(1.0f, 1.0f, 1.0f));
+#endif
+
+#ifdef BLOOM
+
+	float3 BloomColor = NEMat_BloomBlurTex.Sample(NEMat_BloomBlurTex_sampler, input.Tex).rgb;
+
+	SceneColor += BloomColor;
+#endif
+
+
+#ifdef GAMMACORRECTION
+	float GammaCorrectionValue = 1.0f / 2.2f;
+	SceneColor = pow(abs(SceneColor), float3(GammaCorrectionValue, GammaCorrectionValue, GammaCorrectionValue));
+#endif
+
+    return float4(SceneColor, 1.0f);
+}
+'''

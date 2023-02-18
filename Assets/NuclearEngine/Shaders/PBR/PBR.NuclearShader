@@ -36,7 +36,7 @@ Defines = [ "PBR" ]
 [VShader]
 EntryPoint = "main"
 Path = '@NuclearAssets@/Shaders/Basic.vs.hlsl'
-Defines = 
+#Defines = 
 
 [PShader]
 Source = '''

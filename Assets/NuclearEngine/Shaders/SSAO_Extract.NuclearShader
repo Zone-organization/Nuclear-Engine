@@ -13,8 +13,8 @@ InputLayout = [ [ 0, 0, 3, "VT_FLOAT32", false ] , [ 1, 0, 2, "VT_FLOAT32", fals
 PrimitiveTopology = "PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP"
 DepthStencilDesc.DepthEnable = false
 DepthStencilDesc.StencilEnable = false
-RasterizerDesc.FrontCounterClockwise = true;
-RasterizerDesc.CullMode = "CULL_MODE_BACK";
+RasterizerDesc.FrontCounterClockwise = true
+RasterizerDesc.CullMode = "CULL_MODE_BACK"
 
 [VShader]
 EntryPoint = "main"

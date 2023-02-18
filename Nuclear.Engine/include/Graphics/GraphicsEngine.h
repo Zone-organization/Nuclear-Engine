@@ -7,6 +7,7 @@
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Graphics/ShaderTypes.h>
 #include <Graphics/ShaderReflection.h>
+#include <unordered_map>
 
 struct SDL_Window;
 
@@ -68,14 +69,7 @@ namespace Nuclear
 			void CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc);
 			Diligent::IShaderSourceInputStreamFactory* GetDefaultShaderSourceFactory();
 
-			bool ProcessAndCreatePipeline(
-				Diligent::IPipelineState** PipelineState,
-				Diligent::GraphicsPipelineStateCreateInfo& Desc,
-				const std::vector<Diligent::ShaderResourceVariableDesc>& Resources,
-				bool AutoCreateSamplersDesc = true,
-				const std::vector<Diligent::ImmutableSamplerDesc>& StaticSamplers = std::vector<Diligent::ImmutableSamplerDesc>());
-
-			std::vector<Diligent::ShaderResourceVariableDesc> ReflectShaderVariables(Diligent::IShader* VShader, Diligent::IShader* PShader);
+			void InitPSOResources(Diligent::GraphicsPipelineStateCreateInfo& result, PSOResourcesInitInfo& desc);
 
 			void CreateShader(const std::string& source, Diligent::IShader** shader, Diligent::SHADER_TYPE type);
 
@@ -84,13 +78,19 @@ namespace Nuclear
 			ShaderPipelineVariantFactory& GetDefaultShaderPipelineVariantFactory();
 
 		protected:
-			void ReflectShaderResourceVariable(Diligent::IShader* Shader, std::vector<Diligent::ShaderResourceVariableDesc>& result);
+			void ReflectShaderResources(Diligent::IShader* Shader, PSOResourcesInitInfo& result);
 			Diligent::RefCntAutoPtr<Diligent::IShaderSourceInputStreamFactory> pShaderSourceFactory;
 			ShaderPipelineVariantFactory mDefaultVariantFactory;
 
 			std::vector<Diligent::LayoutElement> mRendering3D_InputLayout;
 			std::vector<Diligent::LayoutElement> mRenderToTextureInputLayout;
 
+			std::unordered_map<std::string, Diligent::SamplerDesc> mDefaultStaticSamplers;
+
+			Diligent::SamplerDesc SamLinearWrapDesc;
+			Diligent::SamplerDesc SamLinearClampDesc;
+			Diligent::SamplerDesc SamPointBorderDesc;
+			Diligent::SamplerDesc ShadowMapSamplerDesc;
 		private:
 			GraphicsEngine();
 		};

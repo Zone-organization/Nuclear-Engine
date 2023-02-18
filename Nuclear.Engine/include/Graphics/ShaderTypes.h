@@ -84,7 +84,14 @@ namespace Nuclear
 				return archive(self.mName, self.mType, self.mEntrypoint, self.mSource, self.mPath, self.mDefines);
 			}
 		};
-		
+
+		struct PSOResourcesInitInfo
+		{
+			std::vector<Diligent::ShaderResourceVariableDesc> mResources = std::vector<Diligent::ShaderResourceVariableDesc>();
+			std::unordered_map<std::string, Diligent::ShaderResourceVariableDesc> mTexturesSamplers = std::unordered_map<std::string, Diligent::ShaderResourceVariableDesc>();
+			std::vector<Diligent::ImmutableSamplerDesc> mStaticSamplers = std::vector<Diligent::ImmutableSamplerDesc>();
+		};
+
 		struct ShaderPSODesc
 		{
 			ShaderObjectCreationDesc mVertexShader = ShaderObjectCreationDesc();
@@ -114,11 +121,11 @@ namespace Nuclear
 			bool mRenderSystemHasShadowPass = false;
 		};
 
-		struct ShaderConstantBufferBinding
+		struct StaticShaderVariableBinding
 		{
 			Diligent::SHADER_TYPE mShaderStage = Diligent::SHADER_TYPE_UNKNOWN;
 			std::string mName = std::string();
-			Diligent::IDeviceObject* pCB = nullptr;
+			Diligent::IDeviceObject* pObject = nullptr;
 		};
 
 		struct ShaderPipelineBakingDesc
@@ -126,10 +133,12 @@ namespace Nuclear
 			Uint32 mRTWidth = 800;
 			Uint32 mRTHeight = 600;
 
+			Utilities::Delegate<void(Diligent::GraphicsPipelineStateCreateInfo&)> mPreVariantPipelineCreationCallback;
 			Utilities::Delegate<void(ShaderVariantReflection&)> mPostVariantReflectionCallback;
 			Rendering3DShaderBakingDesc* pRendering3DBakingDesc = nullptr;
 			ShaderPipelineVariantFactory* pVariantsFactory = nullptr;
-			std::vector<ShaderConstantBufferBinding> mCBsBindings = std::vector<ShaderConstantBufferBinding>();
+			std::vector<StaticShaderVariableBinding> mStaticVariablesBindings = std::vector<StaticShaderVariableBinding>();
+			PSOResourcesInitInfo mPipelineResourcesInfo = PSOResourcesInitInfo();
 			std::set<std::string> mDefines = std::set<std::string>();  //TODO: Currently defines is added to all shader stages and should be separated to specific stages
 		};
 

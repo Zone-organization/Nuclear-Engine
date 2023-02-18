@@ -85,8 +85,12 @@ namespace Nuclear
 				PSOCreateInfo.pVS = CubeVSShader;
 				PSOCreateInfo.pPS = PSShader;
 
-				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(CubeVSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pERectToCubemap_PSO, PSOCreateInfo, Vars, true);
+
+				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
+				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+
+				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pERectToCubemap_PSO);
+
 
 				pERectToCubemap_PSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
 
@@ -129,8 +133,11 @@ namespace Nuclear
 
 				PSOCreateInfo.pVS = CubeVSShader;
 				PSOCreateInfo.pPS = PSShader;
-				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(CubeVSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pPrecomputeIrradiancePSO, PSOCreateInfo, Vars, true);
+
+				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
+				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+
+				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeIrradiancePSO);
 
 				pPrecomputeIrradiancePSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
 				pPrecomputeIrradiancePSO->CreateShaderResourceBinding(&pPrecomputeIrradiance_SRB, true);
@@ -171,8 +178,12 @@ namespace Nuclear
 
 				PSOCreateInfo.pVS = CubeVSShader;
 				PSOCreateInfo.pPS = PSShader;
-				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(CubeVSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pPrecomputePrefilterPSO, PSOCreateInfo, Vars, true);
+
+				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
+				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+
+				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputePrefilterPSO);
+
 
 				pPrecomputePrefilterPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
 				pPrecomputePrefilterPSO->GetStaticVariableByName(SHADER_TYPE_PIXEL, "NEStatic_Roughness")->Set(pPrefilterRoughnessCB);
@@ -230,8 +241,12 @@ namespace Nuclear
 
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
-				auto Vars = Graphics::GraphicsEngine::GetInstance().ReflectShaderVariables(VSShader, PSShader);
-				Graphics::GraphicsEngine::GetInstance().ProcessAndCreatePipeline(&pPrecomputeBRDF_PSO, PSOCreateInfo, Vars, true);
+
+				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
+				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+
+				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeBRDF_PSO);
+
 				pPrecomputeBRDF_PSO->CreateShaderResourceBinding(&pPrecomputeBRDF_SRB, true);
 			}
 			//IBL: generate a 2D LUT from the BRDF equations used.

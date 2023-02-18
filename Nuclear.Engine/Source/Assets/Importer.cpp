@@ -423,7 +423,7 @@ namespace Nuclear
 
 
 				//	success = myProject::submitAtlasBitmapAndLayout(generator.atlasStorage(), glyphs);
-				auto atlas = generator.atlasStorage();
+				auto& atlas = generator.atlasStorage();
 
 				Font* result = &AssetLibrary::GetInstance().mImportedFonts.AddAsset();
 

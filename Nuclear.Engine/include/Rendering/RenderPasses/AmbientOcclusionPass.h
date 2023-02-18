@@ -30,6 +30,7 @@ namespace Nuclear
             Assets::Shader* pSSAO_BlurShader;
 
             Diligent::RefCntAutoPtr<Diligent::IBuffer> pSSAO_ExtractCB;
+            Diligent::RefCntAutoPtr<Diligent::ITextureView> pNoiseTexView;
 
             Graphics::RenderTarget mSSAO_RT;
         };
