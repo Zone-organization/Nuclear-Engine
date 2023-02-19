@@ -20,13 +20,18 @@ namespace Nuclear
     namespace Graphics {
         struct ShaderPipelineVariant;
     }
+    namespace Systems
+    {
+        class RenderSystem;
+    }
 	namespace Rendering
 	{
         typedef entt::basic_view<entt::entity, entt::get_t<Nuclear::Components::MeshComponent>, entt::exclude_t<>, void> MeshView;
 
-		struct NEAPI FrameRenderData
+		struct FrameRenderData
 		{
-		public:
+            Systems::RenderSystem* pRenderer = nullptr;
+
             MeshView mMeshView;
 
             //baked lights

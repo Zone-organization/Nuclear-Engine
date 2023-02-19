@@ -17,7 +17,7 @@ namespace Nuclear
 
 			MaterialTex = 1,
 			RenderTarget = 2,
-			IBL_Tex = 3,
+			RenderingEffect = 3,
 			ShadowTex = 4,
 			Sprite = 5,
 
@@ -44,6 +44,8 @@ namespace Nuclear
 			ShadowTex = 8,
 
 			Sprite = 9,
+
+			AmbientOcclusion = 10,
 
 			Unknown = 255
 		};

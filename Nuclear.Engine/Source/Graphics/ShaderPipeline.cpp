@@ -33,54 +33,46 @@ namespace Nuclear
 			{
 				ZeroInstance.isDeffered = true;
 			}
+
+			//Phase 1: Process Switches ->
+			int n = (int)std::pow(2.0, (double)mDesc.Switches.size()); // Get size of power set of v
+			mVariantsInfo.reserve(n);
 			mVariantsInfo.push_back(ZeroInstance);
 
-			//Phase 1: Process Switches
-			for (Uint32 ISwitch = 0; ISwitch < mDesc.Switches.size(); ISwitch++)
+
+			//2^n
+			for (auto& it : mDesc.Switches)
 			{
-				for (Uint32 NextSwitch = 0; NextSwitch < mDesc.Switches.size(); NextSwitch++)
+				unsigned int tempSize = mVariantsInfo.size();
+
+				for (std::size_t j = 0; j < tempSize; j++)
 				{
-					for (Uint32 NextSwitch2 = 0; NextSwitch2 < mDesc.Switches.size(); NextSwitch2++)
+					ShaderPipelineVariantDesc Info_;
+
+					auto& prev = mVariantsInfo[j];
+					Info_.mDefines.insert(prev.mDefines.begin(), prev.mDefines.end());
+					Info_.mDefines.insert(it.GetName());
+
+					for (auto& i : Info_.mDefines)
 					{
-						ShaderPipelineVariantDesc Info_;
-						Info_.mDefines.insert(mDesc.Switches.at(ISwitch).GetName());
-						Info_.mDefines.insert(mDesc.Switches.at(NextSwitch).GetName());
-						Info_.mDefines.insert(mDesc.Switches.at(NextSwitch2).GetName());
-
-						for (auto& i : Info_.mDefines)
+						auto iHash = Utilities::Hash(i);
+						Info_.mHashKey = Info_.mHashKey + iHash;
+						if (i == "NE_DEFFERED")
 						{
-							auto iHash = Utilities::Hash(i);
-							Info_.mHashKey = Info_.mHashKey + iHash;
-							if (i == "NE_DEFFERED")
-							{
-								//mReflection.mHasDefferedPipelines = true;
-								Info_.isDeffered = true;
-							}
-							else if (i == "NE_ANIMATION")
-							{
-								Info_.isSkinned = true;
-							}
-							else if (i == "NE_SHADOWS")
-							{
-								Info_.isShadowed = true;
-							}
+							//mReflection.mHasDefferedPipelines = true;
+							Info_.isDeffered = true;
 						}
-
-						int Found = 0;
-
-						for (auto& i : mVariantsInfo)
+						else if (i == "NE_ANIMATION")
 						{
-							if (i.mHashKey == Info_.mHashKey)
-							{
-								Found = Found + 1;
-							}
+							Info_.isSkinned = true;
 						}
-
-						if (Found == 0)
+						else if (i == "NE_SHADOWS")
 						{
-							mVariantsInfo.push_back(Info_);
+							Info_.isShadowed = true;
 						}
 					}
+					
+					mVariantsInfo.push_back(Info_);
 				}
 			}
 		}

@@ -7,8 +7,8 @@ SupportShadows = true
 ForwardPipeline = "MainPSO"
 DefferedPipeline = "DefferedPSO"
 GBufferPipeline = "GBufferPSO"
-Variants = [ "NE_DEFFERED", "NE_SHADOWS", "NE_ANIMATION" , "IBL_ENABLED" ]
-VariantsValues = [ false, false, true, false ]
+Variants = [ "NE_DEFFERED", "NE_SHADOWS", "NE_ANIMATION" , "NE_SSAO" , "IBL_ENABLED" ]
+VariantsValues = [ false, false, true, false,  false ]
 
 [MainPSO]
 RTVFormats = [ "TEX_FORMAT_RGBA8_UNORM_SRGB" ]
@@ -53,7 +53,13 @@ Texture2D NE_RT_GBuffer_RoughnessAO : register(t3);
 SamplerState NE_RT_GBuffer_Position_sampler : register(s0);
 SamplerState NE_RT_GBuffer_Normal_sampler : register(s1);
 SamplerState NE_RT_GBuffer_AlbedoMetallic_sampler : register(s2);
-SamplerState NE_RT_GBuffer_RoughnessAO_sampler : register(s3);  //1 Component
+SamplerState NE_RT_GBuffer_RoughnessAO_sampler : register(s3);
+
+
+#ifdef NE_SSAO
+Texture2D NE_FX_SSAO : register(t4);
+SamplerState NE_FX_SSAO_sampler : register(s4);
+#endif
 
 #else
 Texture2D NEMat_Albedo : register(t0);
@@ -136,6 +142,11 @@ PS_OUTPUT main(PixelInputType input) : SV_TARGET
 	float roughness = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoord).r;
 	float ao = NE_RT_GBuffer_RoughnessAO.Sample(NE_RT_GBuffer_RoughnessAO_sampler, input.TexCoord).g;
 	float3 N = normalize(NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.TexCoord).rgb);
+
+#ifdef NE_SSAO
+	ao = min(ao, NE_FX_SSAO.Sample(NE_FX_SSAO_sampler, input.TexCoord).r);
+#endif
+	
 #else
 	float3 FragPos = input.FragPos;
 	float3 albedo = pow(NEMat_Albedo.Sample(NEMat_Albedo_sampler, input.TexCoord).xyz, float3(2.2f,2.2f,2.2f));

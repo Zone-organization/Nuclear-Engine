@@ -7,6 +7,8 @@
 #include <Systems\DebugSystem.h>
 #include <Core\Scene.h>
 #include <Assets\DefaultMeshes.h>
+#include <Systems\RenderSystem.h>
+#include <Rendering/RenderPasses/AmbientOcclusionPass.h>
 
 namespace Nuclear
 {
@@ -38,6 +40,18 @@ namespace Nuclear
                         for (int i = 0; i < pipeline->mReflection.mIBLTexturesInfo.size(); i++)
                         {
                             pipeline->mPipelineSRB->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, pipeline->mReflection.mIBLTexturesInfo.at(i).mSlot)->Set(pipeline->mReflection.mIBLTexturesInfo.at(i).mTex.pTexture->GetTextureView());
+                        }
+
+                        for (auto& i : pipeline->mReflection.mRenderingEffects)
+                        {
+                            if (i.mTex.mUsageType == Assets::TextureUsageType::AmbientOcclusion)
+                            {
+                                auto ao_pass = framedata->pRenderer->GetRenderPass<Rendering::AmbientOcclusionPass>();
+
+                                if(ao_pass)
+                                    pipeline->mPipelineSRB->GetVariableByIndex(Diligent::SHADER_TYPE_PIXEL, i.mSlot)->Set(ao_pass->GetSSAO_SRV());
+
+                            }
                         }
 
                         Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->mPipelineSRB, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

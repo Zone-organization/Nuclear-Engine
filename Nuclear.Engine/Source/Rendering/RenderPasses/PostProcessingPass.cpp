@@ -229,7 +229,7 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "BloomExtractVS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PostProcessing.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
+					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/ScreenSpace.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
 					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
 

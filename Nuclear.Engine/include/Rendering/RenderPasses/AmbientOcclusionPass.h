@@ -25,6 +25,7 @@ namespace Nuclear
 
             void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight) override;
 
+            Diligent::ITextureView* GetSSAO_SRV();
         protected:
             Assets::Shader* pSSAO_ExtractShader;
             Assets::Shader* pSSAO_BlurShader;
@@ -32,7 +33,9 @@ namespace Nuclear
             Diligent::RefCntAutoPtr<Diligent::IBuffer> pSSAO_ExtractCB;
             Diligent::RefCntAutoPtr<Diligent::ITextureView> pNoiseTexView;
 
-            Graphics::RenderTarget mSSAO_RT;
+            Graphics::RenderTarget mSSAO_Extract_RT;
+            Graphics::RenderTarget mSSAO_Blur_RT;
+
         };
     }
 }

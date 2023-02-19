@@ -21,6 +21,7 @@ namespace Nuclear
 	{
 		RenderSystem::RenderSystem()
 		{
+			mRenderData.pRenderer = this;
 		}
 		RenderSystem::~RenderSystem()
 		{

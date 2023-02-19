@@ -7,11 +7,11 @@ class Sample2 : public SampleBase
 	Assets::Mesh* ShaderBall2;
 
 
-	Assets::Material* RustedIron;
-	Assets::Material* Plastic;
-	Assets::Material* Grass;
+	//Assets::Material* RustedIron;
+	//Assets::Material* Plastic;
+	//Assets::Material* Grass;
 	Assets::Material* Gold;
-	Assets::Material* Wall;
+	//Assets::Material* Wall;
 
 	Assets::Shader* PBR;
 
@@ -44,13 +44,13 @@ public:
 	void LoadPBRMaterials()
 	{
 		//Initialize Materials
-		RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
-		Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");
-		Grass = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Grass.NEMaterial");
-		Wall = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Wall.NEMaterial");
+		//RustedIron = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/RustedIron.NEMaterial");
+		//Plastic = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Plastic.NEMaterial");
+		//Grass = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Grass.NEMaterial");
+		//Wall = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Wall.NEMaterial");
 		Gold = GetAssetManager().Load<Assets::Material>("@Assets@/Materials/PBR/Gold.NEMaterial");
 
-		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/");
+		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/Gold/");
 
 		//GetAssetManager().LoadFolder("@Assets@/Meshes/");
 		//ShaderBall = GetAssetManager().Import<Assets::Mesh>("@Assets@/Meshes/shaderball_shaderball/shaderball_shaderball.glb");
@@ -145,11 +145,11 @@ public:
 
 		ECS::Transform sphere;
 		sphere.SetScale(Math::Vector3(5.0f));
-		ESphere = GetScene().CreateSphere(RustedIron, sphere);
+		ESphere = GetScene().CreateSphere(Gold, sphere);
 
-		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, RustedIron);
+		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, Gold);
 		EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
-		EShaderBall2.AddComponent<Components::MeshComponent>(ShaderBall2, RustedIron);
+		EShaderBall2.AddComponent<Components::MeshComponent>(ShaderBall2, Gold);
 		EShaderBall2.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 		ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 
@@ -162,7 +162,8 @@ public:
 	}
 
 	bool iskinematic = false;
-	bool isDeffered = true;
+	bool isDeffered = false;
+	bool ssao_enabled = false;
 	void Render(float dt) override
 	{
 		GetScene().Update(dt);
@@ -200,6 +201,11 @@ public:
 				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
 			}
 
+			if (ImGui::Checkbox("Enable SSAO", &ssao_enabled))
+			{
+				ESphere.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_SSAO"), ssao_enabled);
+				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_SSAO"), ssao_enabled);
+			}
 			static bool IBL_ = false;
 
 			if (ImGui::Checkbox("IBL", &IBL_))
@@ -207,26 +213,26 @@ public:
 				ESphere.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
 				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
 			}
-			if (ImGui::Button("Rusted Iron"))
-			{
-				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(RustedIron);
-			}
-			if (ImGui::Button("Wall"))
-			{
-				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Wall);
-			}
-			if (ImGui::Button("Grass"))
-			{
-				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Grass);
-			}
-			if (ImGui::Button("Gold"))
-			{
-				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Gold);
-			}
-			if (ImGui::Button("Plastic"))
-			{
-				activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Plastic);
-			}
+			//if (ImGui::Button("Rusted Iron"))
+			//{
+			//	activeentity.GetComponent<Components::MeshComponent>().SetMaterial(RustedIron);
+			//}
+			//if (ImGui::Button("Wall"))
+			//{
+			//	activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Wall);
+			//}
+			//if (ImGui::Button("Grass"))
+			//{
+			//	activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Grass);
+			//}
+			//if (ImGui::Button("Gold"))
+			//{
+			//	activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Gold);
+			//}
+			//if (ImGui::Button("Plastic"))
+			//{
+			//	activeentity.GetComponent<Components::MeshComponent>().SetMaterial(Plastic);
+			//}
 
 
 			ImGui::SliderFloat("Rotation Speed", &rotationspeed, 0.0f, 2.0f);

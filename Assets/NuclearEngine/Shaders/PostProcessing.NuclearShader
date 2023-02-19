@@ -20,7 +20,7 @@ RasterizerDesc.CullMode = "CULL_MODE_BACK"
 
 [VShader]
 EntryPoint = "main"
-Path = '@NuclearAssets@/Shaders/PostProcessing.vs.hlsl'
+Path = '@NuclearAssets@/Shaders/ScreenSpace.vs.hlsl'
 
 [PShader]
 Source = '''

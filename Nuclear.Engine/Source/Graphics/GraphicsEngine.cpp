@@ -297,6 +297,9 @@ namespace Nuclear
 			else if (name.find("AO") == 0)
 				return Assets::TextureUsageType::AO;
 
+			else if (name.find("SSAO") == 0 || name.find("AmbientOcclusion") == 0)
+				return Assets::TextureUsageType::AmbientOcclusion;
+
 			//IBL
 			else if (name.find("IrradianceMap") == 0)
 				return Assets::TextureUsageType::IrradianceMap;
@@ -516,6 +519,8 @@ namespace Nuclear
 			else if (name.find("NEMat") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 			else if (name.find("NE_RT") == 0)
+				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
+			else if (name.find("NE_FX_") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;
 			else if (name.find("NEIBL") == 0)
 				return SHADER_RESOURCE_VARIABLE_TYPE_DYNAMIC;

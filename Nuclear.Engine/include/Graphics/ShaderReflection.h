@@ -29,6 +29,7 @@ namespace Nuclear
 		{
 			ShaderShadowMapsInfo mShadowMapsInfo = ShaderShadowMapsInfo();
 			std::vector<Assets::ShaderTexture> mIBLTexturesInfo = std::vector<Assets::ShaderTexture>();
+			std::vector<Assets::ShaderTexture> mRenderingEffects = std::vector<Assets::ShaderTexture>();
 		};
 	}
 }

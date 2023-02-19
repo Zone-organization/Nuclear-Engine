@@ -18,7 +18,7 @@ RasterizerDesc.CullMode = "CULL_MODE_BACK"
 
 [VShader]
 EntryPoint = "main"
-Path = '@NuclearAssets@/Shaders/PostProcessing.vs.hlsl'
+Path = '@NuclearAssets@/Shaders/ScreenSpace.vs.hlsl'
 
 [PShader]
 Source = '''
@@ -40,14 +40,23 @@ SamplerState NE_SSAO_Noise_sampler : register(s2);
 
 cbuffer NEStatic_SSAO_Samples
 {
-    float3 Samples[SAMPLES_NUM];
 	matrix CameraProjection;
+    float4 Samples[SAMPLES_NUM];
 };
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
 static int kernelSize = 64;
 static float radius = 0.5;
 static float bias = 0.025;
+
+inline float3x3 UnpackNormal(float3 norm, float3 tang)
+{
+    const float3 T = normalize(tang - dot(norm, tang) * norm);
+    const float3 N = normalize(norm);
+    const float3 B = normalize(cross(T, N));
+    float3x3 TBN = float3x3(T, B, N);
+    return TBN;
+}
 
 float main(PixelInputType input) : SV_TARGET
 {
@@ -61,24 +70,29 @@ float main(PixelInputType input) : SV_TARGET
     float3 fragPos = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, input.UV).rgb;
     float3 normal = normalize(NE_RT_GBuffer_Normal.Sample(NE_RT_GBuffer_Normal_sampler, input.UV).rgb);
     float3 randomVec = normalize(NE_SSAO_Noise.Sample(NE_SSAO_Noise_sampler, input.UV * noiseScale).rgb);
+	
     // create TBN change-of-basis matrix: from tangent-space to view-space
-    float3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
-    float3 bitangent = cross(normal, tangent);
-    float3x3 TBN = float3x3(tangent, bitangent, normal);
+   // float3 T = normalize(randomVec - normal * dot(randomVec, normal));
+   // float3 B = cross(normal, T);
+   // float3x3 TBN = float3x3(T, B, normal);	
+	float3x3 TBN = UnpackNormal(normal, randomVec);
+	
     // iterate over the sample kernel and calculate occlusion factor
     float occlusion = 0.0;
     for(int i = 0; i < kernelSize; ++i)
     {
         // get sample position
-        float3 samplePos = mul(TBN , Samples[i]); // from tangent to view-space
+        float3 samplePos = mul(TBN, Samples[i].xyz); // from tangent to view-space
         samplePos = fragPos + samplePos * radius; 
         
         // project sample position (to sample texture) (to get position on screen/texture)
         float4 offset = float4(samplePos, 1.0);
-        offset = mul(CameraProjection , offset); // from view to clip-space
+        offset = mul(CameraProjection, offset); // from view to clip-space
         offset.xyz /= offset.w; // perspective divide
-        offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
-        
+      //  offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
+
+		offset.xy = NormalizedDeviceXYToTexUV(offset.xy);
+
         // get sample depth , get depth value of kernel sample
         float sampleDepth = NE_RT_GBuffer_Position.Sample(NE_RT_GBuffer_Position_sampler, offset.xy).z;
         
