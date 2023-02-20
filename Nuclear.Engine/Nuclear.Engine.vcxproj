@@ -465,6 +465,8 @@
     <ClInclude Include="Source\Graphics\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\Graphics\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="Source\Rendering\RenderPasses\XeGTAO\GTAO.h" />
+    <ClInclude Include="Source\Rendering\RenderPasses\XeGTAO\XeGTAO.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_arm64_linux_check.h" />
     <ClInclude Include="Source\ThirdParty\crc32c\crc32c_config.h" />
@@ -505,6 +507,7 @@
     <ClCompile Include="Source\Rendering\PostProcessingEffects\Bloom.cpp" />
     <ClCompile Include="Source\Rendering\RenderingEngine.cpp" />
     <ClCompile Include="Source\Rendering\RenderPasses\AmbientOcclusionPass.cpp" />
+    <ClCompile Include="Source\Rendering\RenderPasses\XeGTAO\GTAO.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingBindings.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingClass.cpp" />
     <ClCompile Include="Source\Platform\FileSystem.cpp" />
@@ -729,6 +732,7 @@
     <None Include="include\Parsers\impl\toml_formatter.inl" />
     <None Include="include\Parsers\impl\unicode.inl" />
     <None Include="include\Parsers\impl\yaml_formatter.inl" />
+    <None Include="Source\Rendering\RenderPasses\XeGTAO\XeGTAO.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
