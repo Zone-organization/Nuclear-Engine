@@ -381,7 +381,7 @@ namespace Nuclear
 			Diligent::ShaderCreateInfo CreationAttribs;
 
 			CreationAttribs.SourceLanguage = Diligent::SHADER_SOURCE_LANGUAGE_HLSL;
-			CreationAttribs.Desc.UseCombinedTextureSamplers = true;
+			CreationAttribs.Desc.UseCombinedTextureSamplers = desc.mUseCombinedTextureSamplers;
 			CreationAttribs.Desc.ShaderType = desc.mType;
 			CreationAttribs.EntryPoint = desc.mEntrypoint.c_str();
 			CreationAttribs.Desc.Name = desc.mName.c_str();

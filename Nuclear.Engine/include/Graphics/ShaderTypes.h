@@ -79,9 +79,10 @@ namespace Nuclear
 
 			std::set<std::string> mDefines = std::set<std::string>();
 
+			bool mUseCombinedTextureSamplers = true;
 			constexpr static auto serialize(auto& archive, auto& self)
 			{
-				return archive(self.mName, self.mType, self.mEntrypoint, self.mSource, self.mPath, self.mDefines);
+				return archive(self.mName, self.mType, self.mEntrypoint, self.mSource, self.mPath, self.mDefines, self.mUseCombinedTextureSamplers);
 			}
 		};
 

@@ -49,9 +49,24 @@ namespace Nuclear
 			void ProcessMovement(CAMERA_MOVEMENT direction, float deltaTime);
 			void ProcessZoom(float yoffset);
 
-			Math::Vector3 GetFrontView();
-
+			const Math::Vector3 GetFrontView() const
+			{
+				return Front;
+			}
 			void UpdateBuffer();
+
+			const Math::Matrix4 GetModelMatrix() const
+			{
+				return mCameraData.Model;
+			}
+			const Math::Matrix4 GetViewMatrix() const
+			{
+				return mCameraData.Model;
+			}
+			const Math::Matrix4 GetProjectionMatrix() const
+			{
+				return mCameraData.Projection;
+			}
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
@@ -62,7 +77,10 @@ namespace Nuclear
 			Math::Matrix4 GetProjectionMatrix();
 
 			void SetPosition(Math::Vector3 cameraposition);
-			Math::Vector3 GetPosition();
+			const Math::Vector3 GetPosition() const
+			{
+				return Position;
+			}
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 

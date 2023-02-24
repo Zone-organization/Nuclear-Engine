@@ -71,29 +71,13 @@ namespace Nuclear
 			UpdateBuffer();
 
 		}
-
-		Math::Matrix4 CameraComponent::GetModelMatrix()
-		{
-			return mCameraData.Model;
-		}
-		Math::Matrix4 CameraComponent::GetViewMatrix()
-		{
-			return this->mCameraData.Model;
-		}
-		Math::Matrix4 CameraComponent::GetProjectionMatrix()
-		{
-			return mCameraData.Projection;
-		}
-
+		
 		void CameraComponent::SetPosition(Math::Vector3 cameraposition)
 		{
 			Position = cameraposition;
 		}
 
-		Math::Vector3 CameraComponent::GetPosition()
-		{
-			return Position;
-		}
+	
 
 		void CameraComponent::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
@@ -180,9 +164,6 @@ namespace Nuclear
 			if (Zoom >= 45.0f)
 				Zoom = 45.0f;
 		}
-		Math::Vector3 CameraComponent::GetFrontView()
-		{
-			return Front;
-		}
+		
 	}
 }
