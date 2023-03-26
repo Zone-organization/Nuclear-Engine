@@ -27,13 +27,13 @@ namespace Nuclear
     namespace Rendering
     {
         using namespace Diligent;
-        Diligent::RefCntAutoPtr<Diligent::ITexture> CreateTexture(TEXTURE_FORMAT format, Uint32 w, Uint32 h, Uint32 mipLevels, Uint32 arraySize, Uint32 sampleCount, BIND_FLAGS bind_flags, const char* name) inline
+        Diligent::RefCntAutoPtr<Diligent::ITexture> CreateTexture(TEXTURE_FORMAT format, Uint32 w, Uint32 h, Uint32 mipLevels, Uint32 arraySize, Uint32 sampleCount, BIND_FLAGS bind_flags, const char* name)
         {
             Diligent::TextureDesc mdesc;
             mdesc.BindFlags = bind_flags;
             mdesc.Name = name;
-
-       
+            Diligent::ITexture *result;
+            return Diligent::RefCntAutoPtr<Diligent::ITexture>(result);
         }
 
         GTAO::GTAO()
@@ -58,8 +58,8 @@ namespace Nuclear
                         assert(r2index < 65536);
                         data[x + 64 * y] = (Uint16)r2index;
                     }
-                m_hilbertLUT = CreateTexture(TEX_FORMAT_R16_UINT, 64, 64, 1, 1, 1, BIND_SHADER_RESOURCE, vaResourceAccessFlags::Default, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, vaTextureFlags::None, vaTextureContentsType::GenericLinear,
-                    data, 64 * 2);
+      ///   //       m_hilbertLUT = CreateTexture(TEX_FORMAT_R16_UINT, 64, 64, 1, 1, 1, BIND_SHADER_RESOURCE, vaResourceAccessFlags::Default, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, vaTextureFlags::None, vaTextureContentsType::GenericLinear,
+       ////             data, 64 * 2);
                 delete[] data;
             }
         }
@@ -273,7 +273,7 @@ namespace Nuclear
 
 
                     m_workingDepths->CreateView(viewdesc, &m_workingDepthsMIPViews[mip]);
-                    m_workingDepthsMIPViews[mip] = vaTexture::CreateView(m_workingDepths, m_workingDepths->GetBindSupportFlags(), TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, vaTextureFlags::None, mip, 1);
+      /////              m_workingDepthsMIPViews[mip] = vaTexture::CreateView(m_workingDepths, m_workingDepths->GetBindSupportFlags(), TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, TEX_FORMAT_Automatic, vaTextureFlags::None, mip, 1);
                 }
                 m_workingEdges = CreateTexture(TEX_FORMAT_R8_UNORM, m_size.x, m_size.y, 1, 1, 1, BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS, "XeGTA_WorkingEdges");
                 m_workingAOTerm = CreateTexture(requiredAOTermFormat, m_size.x, m_size.y, 1, 1, 1, BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS, "XeGTAO_WorkingAOTerm1");
@@ -333,7 +333,7 @@ namespace Nuclear
 //#else
 //            VA_TRACE_CPUGPU_SCOPE(XeGTAO, renderContext);
 //#endif
-
+/*
             if (inputNormals != nullptr)
             {
                 auto inNormalsdesc = inputNormals->GetDesc();
@@ -459,7 +459,7 @@ namespace Nuclear
                     std::swap(m_workingAOTerm, m_workingAOTermPong);      // ping becomes pong, pong becomes ping.
                 }
             }
-
+            */
             return;
         }
     }

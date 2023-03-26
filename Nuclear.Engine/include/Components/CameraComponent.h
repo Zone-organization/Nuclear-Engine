@@ -72,10 +72,6 @@ namespace Nuclear
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
 			void SetProjectionMatrix(Math::Matrix4 projectionMatrix);
 
-			Math::Matrix4 GetModelMatrix();
-			Math::Matrix4 GetViewMatrix();
-			Math::Matrix4 GetProjectionMatrix();
-
 			void SetPosition(Math::Vector3 cameraposition);
 			const Math::Vector3 GetPosition() const
 			{

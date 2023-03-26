@@ -39,17 +39,23 @@ namespace Nuclear
 			Diligent::ISwapChain* GetSwapChain();
 			Diligent::IEngineFactory* GetEngineFactory();
 
-		private:
+		protected:
 			Context();
 			Diligent::IRenderDevice* gDevice;
 			Diligent::IDeviceContext* gContext;
 			Diligent::ISwapChain* gSwapChain;
 			Diligent::IEngineFactory* gEngineFactory;
+			Diligent::GraphicsAdapterInfo mAdapterAttribs;
+			Uint32       mAdapterId = Diligent::DEFAULT_ADAPTER_ID;
+			Diligent::ADAPTER_TYPE mAdapterType = Diligent::ADAPTER_TYPE_UNKNOWN;
+			std::string  mAdapterDetailsString;
 
 			bool OpenGL = false;
 			bool Vulkan = false;
 			bool Direct3D = false;
 			bool Metal = false;
+
+			bool InitializeDiligentEngine(SDL_Window* window, const Diligent::RENDER_DEVICE_TYPE& type, const Diligent::SwapChainDesc& SCDesc);
 		};
 	}
 }

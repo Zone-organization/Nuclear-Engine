@@ -18,7 +18,8 @@ List is W.I.P (There are lots of features not written here)
 <details>
 	<summary><b>Engine</b></summary>
 	
-	- Entity Component System
+	- Custom Entity Component System (using entt as back-bone while providing systems that manages components)
+	- Multi-Threaded tasks execution (Job-system)
 
 
 </details>
@@ -38,8 +39,11 @@ List is W.I.P (There are lots of features not written here)
 <details>
 	<summary><b>Graphics</b></summary>
 
-	- Dynamic light Comoponent (Directional & Point & Spot)
-		- Section W.I.P
+	- Dynamic light Component (Directional & Point & Spot)
+	- Flexable Material System (using different pipelines/shaders/textures for every material)
+	- Shadow Mapping for all light sources.
+	- PBR With Image Based Lighting shaders.
+	- Section W.I.P
 
 </details>
 <details>
