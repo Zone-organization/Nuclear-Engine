@@ -21,7 +21,6 @@
 #include <NE_Common.h>
 
 #define GLM_FORCE_AVX
-#define GLM_FORCE_MESSAGES
 
 #ifdef COORDINATE_SYSTEM_LEFT_HANDED
 #define GLM_FORCE_LEFT_HANDED
