@@ -59,7 +59,7 @@ namespace Nuclear
 
 				FREE_IMAGE_FORMAT imagefmt = (FREE_IMAGE_FORMAT)format;
 
-				if(imagefmt == FIF_UNKNOWN)
+				if (imagefmt == FIF_UNKNOWN)
 				{
 					imagefmt = FreeImage_GetFileTypeFromMemory(memBuff, Desc.mMemSize);
 				}
@@ -83,6 +83,11 @@ namespace Nuclear
 				{
 					bitmap = FreeImage_ConvertTo32Bits(dib);
 					SwapRedBlue32(bitmap);
+				}
+				else if (type == FIT_UINT16)
+				{
+					bitmap = FreeImage_ConvertToRGB16(dib);
+					type = FreeImage_GetImageType(bitmap);
 				}
 
 				if (type == FIT_RGBF)

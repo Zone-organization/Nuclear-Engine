@@ -62,10 +62,17 @@ namespace Nuclear
 
 			Client* GetClient();
 
+			FORCE_INLINE void SetSwapChainSyncInterval(Uint32 val)
+			{
+				SwapChainSyncInterval = val;
+			}
+
 		private:
 			Engine();
 			Client* pClient;
 			Platform::Window MainWindow;
+
+			Uint32 SwapChainSyncInterval;
 
 			Engine::State Engine_State;
 			bool gisDebug = DEBUG_TRUE_BOOL;

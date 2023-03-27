@@ -220,7 +220,7 @@ namespace Nuclear
 		{
 			ImGui::Render();
 			ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
-			Graphics::Context::GetInstance().GetSwapChain()->Present();
+			Graphics::Context::GetInstance().GetSwapChain()->Present(SwapChainSyncInterval);
 		}
 		Platform::Window* Engine::GetMainWindow()
 		{
@@ -275,6 +275,7 @@ namespace Nuclear
 		}
 
 		Engine::Engine()
+			: SwapChainSyncInterval(0)
 		{
 
 		}

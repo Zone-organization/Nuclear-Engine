@@ -9,7 +9,6 @@
 
 #include <Assets/AssetManager.h>
 
-#include <Platform/FileSystem.h>
 #include <Utilities/Logger.h>
 
 #include <Serialization/SerializationEngine.h>
@@ -43,8 +42,6 @@ namespace Nuclear
 				{
 					exportpath = AssetLibrary::GetInstance().GetPath() + "Meshes/" + mResult.mName + '/';
 				}
-
-				Platform::FileSystem::GetInstance().CreateFolders(exportpath + "Textures/");
 
 				if (!Importers::AssimpManager::GetInstance().Import(mPath.GetRealPath(), exportpath, mResult, mImportingDesc))
 				{

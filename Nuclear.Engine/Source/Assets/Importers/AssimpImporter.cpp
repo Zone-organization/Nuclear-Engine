@@ -12,6 +12,7 @@
 #include <Assets\Material.h>
 #include <Assets/Animations.h>
 #include "Animation\Bone.h"
+#include <Platform/FileSystem.h>
 
 namespace Nuclear {
 	namespace Assets {
@@ -64,6 +65,8 @@ namespace Nuclear {
 
 				if (!desc.mCommonOptions.mLoadOnly)
 				{
+					Platform::FileSystem::GetInstance().CreateFolders(exportPath + "Textures/");
+
 					Assimp::Exporter exporter;
 					exporter.Export(scene, "glb2", exportPath + model.mName + ".glb");
 				}

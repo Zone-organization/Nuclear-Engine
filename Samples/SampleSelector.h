@@ -199,6 +199,17 @@ public:
 			ImportPBRAssets();
 		}
 
+		static bool vsync = false;
+		ImGui::Checkbox("VSync", &vsync);
+		if (vsync)
+		{
+			Core::Engine::GetInstance().SetSwapChainSyncInterval(1);
+		}
+		else
+		{
+			Core::Engine::GetInstance().SetSwapChainSyncInterval(0);
+		}
+
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
