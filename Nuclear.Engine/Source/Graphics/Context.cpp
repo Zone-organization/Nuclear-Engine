@@ -66,9 +66,7 @@ namespace Nuclear
 				return false;
 			}
 
-			auto deviceinfo = gDevice->GetAdapterInfo();
-
-			NUCLEAR_INFO("[Context] Diligent Graphics API Initialized On: {0}", deviceinfo.Description);
+			NUCLEAR_INFO("[Context] Diligent Graphics API Initialized On: {0}", mAdapterAttribs.Description);
 			return true;
 		}
 
@@ -131,6 +129,22 @@ namespace Nuclear
 			gSwapChain = nullptr;
 			gEngineFactory = nullptr;
 		}
+
+		std::string GetAdapterTypeString(ADAPTER_TYPE type)
+		{
+			switch (type)
+			{
+			case ADAPTER_TYPE_SOFTWARE:
+				return "Software";
+			case ADAPTER_TYPE_INTEGRATED:
+				return "Integrated";
+			case ADAPTER_TYPE_DISCRETE:
+				return "Discrete";
+			default:
+				return "Unknown";
+			}
+			return "Unknown";
+		}
 		bool Context::InitializeDiligentEngine(SDL_Window* window, const RENDER_DEVICE_TYPE& type, const SwapChainDesc& SCDesc)
 		{
 			Uint32 NumDeferredCtx = 0;
@@ -143,6 +157,7 @@ namespace Nuclear
 			NativeWindow DLWindow;
 			DLWindow.hWnd = wmInfo.info.win.window;
 
+
 			auto FindAdapter = [this](auto* pFactory, Version GraphicsAPIVersion, GraphicsAdapterInfo& AdapterAttribs) {
 				Uint32 NumAdapters = 0;
 				pFactory->EnumerateAdapters(GraphicsAPIVersion, NumAdapters, nullptr);
@@ -151,6 +166,16 @@ namespace Nuclear
 					pFactory->EnumerateAdapters(GraphicsAPIVersion, NumAdapters, Adapters.data());
 				else
 					LOG_ERROR_AND_THROW("Failed to find compatible hardware adapters");
+
+				NUCLEAR_INFO("[Context] Available GPU Adapters: ");
+				for (Uint32 i = 0; i < Adapters.size(); ++i)
+				{
+					const auto& AdapterInfo = Adapters[i];
+					const auto  AdapterType = AdapterInfo.Type;
+
+					NUCLEAR_INFO("[ID: {0}] {1} - Type: {2} - Dedicated Memory: {3}, Total Memory: {4}",
+						i, AdapterInfo.Description, GetAdapterTypeString(AdapterType), AdapterInfo.Memory.LocalMemory / 1024 / 1024, (AdapterInfo.Memory.LocalMemory + AdapterInfo.Memory.HostVisibleMemory + AdapterInfo.Memory.UnifiedMemory) /1024/1024);
+				}
 
 				auto AdapterId = mAdapterId;
 				if (AdapterId != DEFAULT_ADAPTER_ID)
@@ -215,7 +240,6 @@ namespace Nuclear
 				if (AdapterId != DEFAULT_ADAPTER_ID)
 				{
 					AdapterAttribs = Adapters[AdapterId];
-					LOG_INFO_MESSAGE("Using adapter ", AdapterId, ": '", AdapterAttribs.Description, "'");
 				}
 
 				return AdapterId;
@@ -313,7 +337,7 @@ namespace Nuclear
 			break;
 
 			default:
-				NUCLEAR_FATAL("[InitializeDiligentEngineWin32] Unknown &gDevice type!");
+				NUCLEAR_FATAL("[InitializeDiligentEngineWin32] Unknown Device type!");
 				return false;
 			}
 
