@@ -22,7 +22,7 @@ namespace Nuclear
             auto allowedthreads = std::thread::hardware_concurrency() - 1;
             mMainPool.Initialize(allowedthreads);
 
-            NUCLEAR_INFO("[ThreadingEngine] ThreadingEngine has been initalized succesfully!");
+            NUCLEAR_INFO("[ThreadingEngine] ThreadingEngine has been initialized succesfully!");
             return true;
         }
         void ThreadingEngine::AddTask(Task* task)

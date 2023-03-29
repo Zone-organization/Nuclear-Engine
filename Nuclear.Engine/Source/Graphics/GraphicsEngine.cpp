@@ -53,7 +53,7 @@ namespace Nuclear
 			mDefaultStaticSamplers["NE_RT_"] = SamLinearClampDesc;
 			mDefaultStaticSamplers["NEIBL_"] = SamLinearClampDesc;
 
-			NUCLEAR_INFO("[GraphicsEngine] GraphicsEngine has has been initalized successfully!");
+			NUCLEAR_INFO("[GraphicsEngine] GraphicsEngine has been initialized successfully!");
 			return true;
 		}
 		void GraphicsEngine::Shutdown()

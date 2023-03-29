@@ -39,7 +39,7 @@ namespace Nuclear
 			RTDesc.DepthTexFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
 			mFinalDepthRT.Create(RTDesc);
 
-			NUCLEAR_INFO("[RenderingEngine] RenderingEngine has been initalized succesfully!");
+			NUCLEAR_INFO("[RenderingEngine] RenderingEngine has been initialized succesfully!");
 			return true;
 		}
 

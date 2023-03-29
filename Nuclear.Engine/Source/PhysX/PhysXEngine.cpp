@@ -69,7 +69,7 @@ namespace Nuclear
 				return false;
 			}
 
-			NUCLEAR_INFO("[PhysXEngine] PhysX has been initalized succesfully!");
+			NUCLEAR_INFO("[PhysXEngine] PhysX has been initialized succesfully!");
 			return true;
 		}
 		void PhysXEngine::Shutdown()

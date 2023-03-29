@@ -26,7 +26,7 @@ namespace Nuclear
 
 			pBackend->Initialize();
 	
-			NUCLEAR_INFO("[AudioEngine] AudioEngine has has been initalized successfully!.");
+			NUCLEAR_INFO("[AudioEngine] AudioEngine has been initialized successfully!.");
 			return true;
 		}
 		AudioEngine& AudioEngine::GetInstance()

@@ -48,7 +48,7 @@ namespace Nuclear
 
 			InitBindings();
 			InitCoreAssembly();
-			NUCLEAR_INFO("[ScriptingEngine] ScriptingEngine has been initalized succesfully!");
+			NUCLEAR_INFO("[ScriptingEngine] ScriptingEngine has been initialized succesfully!");
 			return true;
 		}
 		void ScriptingEngine::Shutdown()

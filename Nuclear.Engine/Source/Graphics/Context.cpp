@@ -232,6 +232,7 @@ namespace Nuclear
 				LoadGraphicsEngineD3D11(GetEngineFactoryD3D11);
 #endif
 				auto* pFactoryD3D11 = GetEngineFactoryD3D11();
+				pFactoryD3D11->SetMessageCallback(DiligentMassageCallback);
 
 				EngineCI.GraphicsAPIVersion = { 11, 0 };
 				pEngineFactory = pFactoryD3D11;
@@ -242,7 +243,6 @@ namespace Nuclear
 					&pContext);
 				pFactoryD3D11->CreateSwapChainD3D11(pDevice, pContext,
 					SCDesc, FSDesc, DLWindow, &pSwapChain);
-				pFactoryD3D11->SetMessageCallback(DiligentMassageCallback);
 
 			}
 			break;
@@ -258,6 +258,8 @@ namespace Nuclear
 				EngineCI.GraphicsAPIVersion = { 11, 0 };
 
 				auto* pFactoryD3D12 = GetEngineFactoryD3D12();
+				pFactoryD3D12->SetMessageCallback(DiligentMassageCallback);
+
 				pEngineFactory = pFactoryD3D12;
 				EngineCI.AdapterId = FindAdapter(pFactoryD3D12, EngineCI.GraphicsAPIVersion, mAdapterAttribs);
 
@@ -265,7 +267,6 @@ namespace Nuclear
 					&pContext);
 				pFactoryD3D12->CreateSwapChainD3D12(pDevice, pContext,
 					SCDesc, FSDesc, DLWindow, &pSwapChain);
-				pFactoryD3D12->SetMessageCallback(DiligentMassageCallback);
 			}
 			break;
 
@@ -279,13 +280,14 @@ namespace Nuclear
 				LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL);
 #endif
 				auto* pFactoryOpenGL = GetEngineFactoryOpenGL();
+				pFactoryOpenGL->SetMessageCallback(DiligentMassageCallback);
+
 				pEngineFactory = pFactoryOpenGL;
 
 				EngineGLCreateInfo CreationCreateInfo;
 				CreationCreateInfo.Window = DLWindow;
 				pFactoryOpenGL->CreateDeviceAndSwapChainGL(
 					CreationCreateInfo, &pDevice, &pContext, SCDesc, &pSwapChain);
-				pFactoryOpenGL->SetMessageCallback(DiligentMassageCallback);
 
 			}
 			break;
@@ -300,6 +302,8 @@ namespace Nuclear
 				EngineVkCreateInfo EngVkCreateInfo;
 
 				auto* pFactoryVk = GetEngineFactoryVk();
+				pFactoryVk->SetMessageCallback(DiligentMassageCallback);
+
 				pEngineFactory = pFactoryVk;
 				EngVkCreateInfo.AdapterId = FindAdapter(pFactoryVk, EngVkCreateInfo.GraphicsAPIVersion, mAdapterAttribs);
 
@@ -307,7 +311,6 @@ namespace Nuclear
 					&pContext);
 				pFactoryVk->CreateSwapChainVk(pDevice, pContext,
 					SCDesc, DLWindow, &pSwapChain);
-				pFactoryVk->SetMessageCallback(DiligentMassageCallback);
 
 			}
 			break;
