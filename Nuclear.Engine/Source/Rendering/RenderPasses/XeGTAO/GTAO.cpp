@@ -20,6 +20,7 @@
 #include <Graphics/ImGui.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Platform\FileSystem.h>
+#include <Graphics/GraphicsEngine.h>
 
 #define VA_IMGUI_INTEGRATION_ENABLED
 namespace Nuclear
@@ -30,8 +31,16 @@ namespace Nuclear
         Diligent::RefCntAutoPtr<Diligent::ITexture> CreateTexture(TEXTURE_FORMAT format, Uint32 w, Uint32 h, Uint32 mipLevels, Uint32 arraySize, Uint32 sampleCount, BIND_FLAGS bind_flags, const char* name)
         {
             Diligent::TextureDesc mdesc;
-            mdesc.BindFlags = bind_flags;
             mdesc.Name = name;
+            mdesc.Format = format;
+            mdesc.Width = w;
+            mdesc.Height = h;
+            mdesc.MipLevels = mipLevels;
+            mdesc.ArraySize = arraySize;
+            mdesc.SampleCount = sampleCount;
+            mdesc.BindFlags = bind_flags;
+
+
             Diligent::ITexture *result;
             return Diligent::RefCntAutoPtr<Diligent::ITexture>(result);
         }
@@ -333,7 +342,7 @@ namespace Nuclear
 //#else
 //            VA_TRACE_CPUGPU_SCOPE(XeGTAO, renderContext);
 //#endif
-/*
+
             if (inputNormals != nullptr)
             {
                 auto inNormalsdesc = inputNormals->GetDesc();
@@ -351,7 +360,7 @@ namespace Nuclear
             //computeItem.GlobalUAVBarrierAfter = false;
 
             // constants used by all/some passes
-            computeItem.ConstantBuffers[0] = m_constantBuffer;
+         /*   computeItem.ConstantBuffers[0] = m_constantBuffer;
             // SRVs used by all/some passes
             computeItem.BIND_SHADER_RESOURCEViews[5] = m_hilbertLUT;
 

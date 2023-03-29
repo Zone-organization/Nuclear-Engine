@@ -1,12 +1,14 @@
 #pragma once
 #include <NE_Common.h>
-#include <Platform\Window.h>
-#include <Diligent/Common/interface/RefCntAutoPtr.hpp>
+#include <Graphics\GraphicsEngineDesc.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/EngineFactory.h>
-#include "Graphics\GraphicsEngine.h"
+
+namespace Diligent
+{
+	struct ISwapChain;
+	struct IEngineFactory;
+}
 
 namespace Nuclear
 {
@@ -18,7 +20,12 @@ namespace Nuclear
 			Context(Context const&) = delete;
 			void operator=(Context const&) = delete;
 
-			static Context& GetInstance();
+			FORCE_INLINE static Context& GetInstance()
+			{
+				static Context instance;
+
+				return instance;
+			}
 
 			bool Initialize(const Graphics::GraphicsEngineDesc& GraphicsDesc);
 
@@ -34,17 +41,35 @@ namespace Nuclear
 			
 			void ResizeSwapChain(Uint32 Width, Uint32 Height);
 
-			Diligent::IRenderDevice* GetDevice();
-			Diligent::IDeviceContext* GetContext();
-			Diligent::ISwapChain* GetSwapChain();
-			Diligent::IEngineFactory* GetEngineFactory();
+			FORCE_INLINE Diligent::IRenderDevice* GetDevice() const
+			{
+				return pDevice;
+			}
+
+			FORCE_INLINE Diligent::IDeviceContext* GetContext() const
+			{
+				return pContext;
+			}
+
+			FORCE_INLINE Diligent::ISwapChain* GetSwapChain() const
+			{
+				return pSwapChain;
+			}
+
+			FORCE_INLINE Diligent::IEngineFactory* GetEngineFactory() const
+			{
+				return pEngineFactory;
+			}
+
 
 		protected:
 			Context();
-			Diligent::IRenderDevice* gDevice;
-			Diligent::IDeviceContext* gContext;
-			Diligent::ISwapChain* gSwapChain;
-			Diligent::IEngineFactory* gEngineFactory;
+
+			Diligent::IRenderDevice* pDevice;
+			Diligent::IDeviceContext* pContext;
+			Diligent::ISwapChain* pSwapChain;
+			Diligent::IEngineFactory* pEngineFactory;
+
 			Diligent::GraphicsAdapterInfo mAdapterAttribs;
 			Uint32       mAdapterId = Diligent::DEFAULT_ADAPTER_ID;
 			Diligent::ADAPTER_TYPE mAdapterType = Diligent::ADAPTER_TYPE_UNKNOWN;

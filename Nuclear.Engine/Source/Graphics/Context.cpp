@@ -1,7 +1,8 @@
 #include <Graphics\Context.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
-#include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
+#include <Platform\Window.h>
+#include <Diligent/Primitives/interface/Errors.hpp>
 #include <Diligent/Graphics/GraphicsEngine/interface/SwapChain.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/EngineFactory.h>
 #include "Diligent/Graphics/GraphicsEngineD3D11/interface/EngineFactoryD3D11.h"
 #include "Diligent/Graphics/GraphicsEngineD3D12/interface/EngineFactoryD3D12.h"
 #include "Diligent/Graphics/GraphicsEngineOpenGL/interface/EngineFactoryOpenGL.h"
@@ -39,13 +40,6 @@ namespace Nuclear
 
 		}
 
-		inline Context& Context::GetInstance()
-		{
-			static Context context;
-
-			return context;
-		}
-
 		bool Context::Initialize(const Graphics::GraphicsEngineDesc& GraphicsDesc)
 		{
 			SwapChainDesc SCDesc(GraphicsDesc.SCDesc);
@@ -73,14 +67,14 @@ namespace Nuclear
 		void Context::Shutdown()
 		{
 			NUCLEAR_INFO("[Context] Shutting down...");
-			gDevice->Release();
-			gContext->Release();
-			gSwapChain->Release();
+			pDevice->Release();
+			pContext->Release();
+			pSwapChain->Release();
 		}
 
 		void Context::PresentFrame()
 		{
-			gSwapChain->Present();
+			pSwapChain->Present();
 		}
 
 		bool Context::IsOpenGL()
@@ -100,34 +94,16 @@ namespace Nuclear
 
 		void Context::ResizeSwapChain(Uint32 Width, Uint32 Height)
 		{
-			if (gSwapChain)
-				gSwapChain->Resize(Width, Height);
+			if (pSwapChain)
+				pSwapChain->Resize(Width, Height);
 		}
 
-		IRenderDevice * Context::GetDevice()
-		{
-			return gDevice;
-		}
-
-		IDeviceContext * Context::GetContext()
-		{
-			return gContext;
-		}
-
-		ISwapChain * Context::GetSwapChain()
-		{
-			return gSwapChain;
-		}
-		IEngineFactory* Context::GetEngineFactory()
-		{
-			return gEngineFactory;
-		}
 		Context::Context()
 		{
-			gDevice = nullptr;
-			gContext = nullptr;
-			gSwapChain = nullptr;
-			gEngineFactory = nullptr;
+			pDevice = nullptr;
+			pContext = nullptr;
+			pSwapChain = nullptr;
+			pEngineFactory = nullptr;
 		}
 
 		std::string GetAdapterTypeString(ADAPTER_TYPE type)
@@ -258,14 +234,14 @@ namespace Nuclear
 				auto* pFactoryD3D11 = GetEngineFactoryD3D11();
 
 				EngineCI.GraphicsAPIVersion = { 11, 0 };
-				gEngineFactory = pFactoryD3D11;
+				pEngineFactory = pFactoryD3D11;
 
 				EngineCI.AdapterId = FindAdapter(pFactoryD3D11, EngineCI.GraphicsAPIVersion, mAdapterAttribs);
 
-				pFactoryD3D11->CreateDeviceAndContextsD3D11(EngineCI, &gDevice,
-					&gContext);
-				pFactoryD3D11->CreateSwapChainD3D11(gDevice, gContext,
-					SCDesc, FSDesc, DLWindow, &gSwapChain);
+				pFactoryD3D11->CreateDeviceAndContextsD3D11(EngineCI, &pDevice,
+					&pContext);
+				pFactoryD3D11->CreateSwapChainD3D11(pDevice, pContext,
+					SCDesc, FSDesc, DLWindow, &pSwapChain);
 				pFactoryD3D11->SetMessageCallback(DiligentMassageCallback);
 
 			}
@@ -282,13 +258,13 @@ namespace Nuclear
 				EngineCI.GraphicsAPIVersion = { 11, 0 };
 
 				auto* pFactoryD3D12 = GetEngineFactoryD3D12();
-				gEngineFactory = pFactoryD3D12;
+				pEngineFactory = pFactoryD3D12;
 				EngineCI.AdapterId = FindAdapter(pFactoryD3D12, EngineCI.GraphicsAPIVersion, mAdapterAttribs);
 
-				pFactoryD3D12->CreateDeviceAndContextsD3D12(EngineCI, &gDevice,
-					&gContext);
-				pFactoryD3D12->CreateSwapChainD3D12(gDevice, gContext,
-					SCDesc, FSDesc, DLWindow, &gSwapChain);
+				pFactoryD3D12->CreateDeviceAndContextsD3D12(EngineCI, &pDevice,
+					&pContext);
+				pFactoryD3D12->CreateSwapChainD3D12(pDevice, pContext,
+					SCDesc, FSDesc, DLWindow, &pSwapChain);
 				pFactoryD3D12->SetMessageCallback(DiligentMassageCallback);
 			}
 			break;
@@ -303,12 +279,12 @@ namespace Nuclear
 				LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL);
 #endif
 				auto* pFactoryOpenGL = GetEngineFactoryOpenGL();
-				gEngineFactory = pFactoryOpenGL;
+				pEngineFactory = pFactoryOpenGL;
 
 				EngineGLCreateInfo CreationCreateInfo;
 				CreationCreateInfo.Window = DLWindow;
 				pFactoryOpenGL->CreateDeviceAndSwapChainGL(
-					CreationCreateInfo, &gDevice, &gContext, SCDesc, &gSwapChain);
+					CreationCreateInfo, &pDevice, &pContext, SCDesc, &pSwapChain);
 				pFactoryOpenGL->SetMessageCallback(DiligentMassageCallback);
 
 			}
@@ -324,13 +300,13 @@ namespace Nuclear
 				EngineVkCreateInfo EngVkCreateInfo;
 
 				auto* pFactoryVk = GetEngineFactoryVk();
-				gEngineFactory = pFactoryVk;
+				pEngineFactory = pFactoryVk;
 				EngVkCreateInfo.AdapterId = FindAdapter(pFactoryVk, EngVkCreateInfo.GraphicsAPIVersion, mAdapterAttribs);
 
-				pFactoryVk->CreateDeviceAndContextsVk(EngVkCreateInfo, &gDevice,
-					&gContext);
-				pFactoryVk->CreateSwapChainVk(gDevice, gContext,
-					SCDesc, DLWindow, &gSwapChain);
+				pFactoryVk->CreateDeviceAndContextsVk(EngVkCreateInfo, &pDevice,
+					&pContext);
+				pFactoryVk->CreateSwapChainVk(pDevice, pContext,
+					SCDesc, DLWindow, &pSwapChain);
 				pFactoryVk->SetMessageCallback(DiligentMassageCallback);
 
 			}

@@ -2,6 +2,7 @@
 #include <Assets/AssetManager.h>
 #include <Assets/Shader.h>
 #include <Graphics/Context.h>
+#include <Graphics/GraphicsEngine.h>
 #include <random>
 #include <Rendering\FrameRenderData.h>
 #include <Assets\DefaultMeshes.h>

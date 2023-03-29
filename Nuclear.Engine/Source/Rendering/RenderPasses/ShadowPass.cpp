@@ -1,6 +1,7 @@
 #include "Rendering\RenderPasses\ShadowPass.h"
 #include <Platform\FileSystem.h>
 #include <Graphics\Context.h>
+#include <Graphics/GraphicsEngine.h>
 #include <Utilities/Logger.h>
 #include <Components/MeshComponent.h>
 #include <Assets/Mesh.h>

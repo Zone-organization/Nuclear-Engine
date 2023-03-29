@@ -6,6 +6,7 @@
 #include <Platform\FileSystem.h>
 #include <Assets/AssetManager.h>
 #include <Assets/Shader.h>
+#include <Graphics/GraphicsEngine.h>
 
 namespace Nuclear
 {

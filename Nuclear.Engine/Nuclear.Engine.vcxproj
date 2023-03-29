@@ -133,6 +133,7 @@
     <ClInclude Include="include\Core\Scene.h" />
     <ClInclude Include="include\Fallbacks\Fallbacks.h" />
     <ClInclude Include="include\Fallbacks\FallbacksEngine.h" />
+    <ClInclude Include="include\Graphics\GraphicsEngineDesc.h" />
     <ClInclude Include="include\Graphics\ShaderPipelineVariantFactory.h" />
     <ClInclude Include="include\Parsers\INIParser.h" />
     <ClInclude Include="include\Rendering\PostProcessingEffects\Bloom.h" />

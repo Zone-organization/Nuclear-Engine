@@ -6,6 +6,7 @@
 #include <Assets/DefaultMeshes.h>
 #include <array>
 #include "Diligent/Common/interface/BasicMath.hpp"
+#include <Graphics/GraphicsEngine.h>
 
 namespace Nuclear
 {

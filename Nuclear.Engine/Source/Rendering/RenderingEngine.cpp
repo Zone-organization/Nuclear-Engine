@@ -6,6 +6,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Components\ShaderStructs.h>
 #include <Utilities/Logger.h>
+#include <Graphics/GraphicsEngine.h>
 
 namespace Nuclear
 {

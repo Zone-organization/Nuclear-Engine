@@ -4,6 +4,7 @@
 #include <Rendering/FrameRenderData.h>
 #include <Assets\DefaultMeshes.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
+#include <Graphics/GraphicsEngine.h>
 
 namespace Nuclear
 {
