@@ -46,7 +46,7 @@ namespace Nuclear
 			HRESULT hr = XAudio2Create(&pXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
 			if (FAILED(hr))
 			{
-				NUCLEAR_ERROR("[XAudioBackend] Failed to initialize XAudio2! Error Code: 0x{0:x}", hr);
+				NUCLEAR_ERROR("[XAudioBackend] Failed to initalize XAudio2! Error Code: 0x{0:x}", hr);
 				return false;
 			}
 			
@@ -72,7 +72,7 @@ namespace Nuclear
 			hr = X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, X3DInstance);
 			if (FAILED(hr))
 			{
-				NUCLEAR_ERROR("[XAudioBackend] Failed to initialize X3DAudio! Error Code: 0x{0:x}", hr);
+				NUCLEAR_ERROR("[XAudioBackend] Failed to initalize X3DAudio! Error Code: 0x{0:x}", hr);
 				return false;
 			}
 			

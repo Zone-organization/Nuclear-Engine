@@ -1,6 +1,6 @@
 #pragma once
-#include <NE_Common.h>
-#include <spdlog/spdlog.h>
+#include <NE_Compiler.h>
+#include <spdlog/logger.h>
 
 #pragma warning( disable : 4251)
 
@@ -14,14 +14,21 @@ namespace Nuclear
 			Logger(Logger const&) = delete;
 			void operator=(Logger const&) = delete;
 
-			std::shared_ptr<spdlog::logger>& GetEngineLogger() { return mEngineLogger; }
-			std::shared_ptr<spdlog::logger>& GetClientLogger() { return mClientLogger; }
+			FORCE_INLINE std::shared_ptr<spdlog::logger>& GetEngineLogger() { return mEngineLogger; }
+			FORCE_INLINE std::shared_ptr<spdlog::logger>& GetClientLogger() { return mClientLogger; }
 
-			static Logger& GetInstance();
-		private:
-			Logger();
+			FORCE_INLINE static Logger& GetInstance()
+			{
+				static Logger logger;
+
+				return logger;
+			}
+
+		protected:
 			std::shared_ptr<spdlog::logger> mEngineLogger;
 			std::shared_ptr<spdlog::logger> mClientLogger;
+		private:
+			Logger();
 		};
 	}
 }

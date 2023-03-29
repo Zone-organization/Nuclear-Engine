@@ -126,7 +126,7 @@
     <ClInclude Include="include\Audio\AudioFile.h" />
     <ClInclude Include="include\Audio\AudioDevice.h" />
     <ClInclude Include="include\Audio\config.h" />
-    <ClInclude Include="include\Compiler.h" />
+    <ClInclude Include="include\NE_Compiler.h" />
     <ClInclude Include="include\Components\AudioListenerComponent.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
     <ClInclude Include="include\Components\SpriteRenderer.h" />

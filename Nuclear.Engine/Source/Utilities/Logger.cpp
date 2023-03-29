@@ -1,17 +1,12 @@
 #include <Utilities/Logger.h>
+#include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
 namespace Nuclear
 {
 	namespace Utilities
-	{
-		inline Logger& Logger::GetInstance()
-		{
-			static Logger logger;
-
-			return logger;
-		}
+	{		
 		Logger::Logger()
 		{
 			std::vector<spdlog::sink_ptr> logSinks;

@@ -1,24 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <Compiler.h>
-
-#ifdef NUCLEARENGINE_EXPORTS
-#define NEAPI __declspec(dllexport)
-#else
-#define NEAPI __declspec(dllimport)
-#endif
-
-#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
-#ifdef _DEBUG
-#define DEBUG_TRUE_BOOL true
-#define DEBUG_FALSE_BOOL false
-#else
-#define DEBUG_TRUE_BOOL false
-#define DEBUG_FALSE_BOOL true
-#endif
+#include <NE_Compiler.h>
 
 //Default!!  (D3D: LH , ClipSpace Z [0,1] -- OpenGL: RH , ClipSpace Z [-1,1])
 #define COORDINATE_SYSTEM_LEFT_HANDED

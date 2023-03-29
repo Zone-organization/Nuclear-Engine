@@ -2,7 +2,6 @@
 #include <Audio/AudioBackend.h>
 #include <xaudio2.h>
 #include <x3daudio.h>
-#include <Compiler.h>
 
 #define VEC_CAST(vec) (*((X3DAUDIO_VECTOR*)&vec))
 

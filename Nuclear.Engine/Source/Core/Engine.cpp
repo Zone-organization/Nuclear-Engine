@@ -105,7 +105,7 @@ namespace Nuclear
 				GraphicsEngineDesc.pWindowHandle = GetMainWindow()->GetSDLWindowPtr();
 				if (!Graphics::GraphicsEngine::GetInstance().Initialize(GraphicsEngineDesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initialize GraphicsEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize GraphicsEngine...");
 					return false;
 				}
 			}
@@ -117,7 +117,7 @@ namespace Nuclear
 
 				if (!Audio::AudioEngine::GetInstance().Initialize(desc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initialize AudioEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize AudioEngine...");
 					return false;
 				}
 			}
@@ -142,7 +142,7 @@ namespace Nuclear
 				scdesc.mClientNamespace = desc.mScriptingAssemblyNamespace;
 				if (!Scripting::ScriptingEngine::GetInstance().Initialize(scdesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initialize ScriptingEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingEngine...");
 					return false;
 				}
 			}
@@ -153,7 +153,7 @@ namespace Nuclear
 
 				if (!PhysX::PhysXEngine::GetInstance().Initialize(pxdesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initialize PhysXEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize PhysXEngine...");
 					return false;
 				}
 			}
@@ -166,7 +166,7 @@ namespace Nuclear
 									
 				if (!Rendering::RenderingEngine::GetInstance().Initialize(redesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initialize RenderingEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize RenderingEngine...");
 					return false;
 				}			
 			}
@@ -175,7 +175,7 @@ namespace Nuclear
 			{
 				if (!Threading::ThreadingEngine::GetInstance().Initialize())
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initialize ThreadingEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize ThreadingEngine...");
 					return false;
 				}
 			}
