@@ -221,9 +221,9 @@ namespace Nuclear
 					////////////////////////////////////
 					//Step 2.2: Clear main RTVs
 					////////////////////////////////////
-					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetRenderTarget().GetRTVDblPtr(), camera.GetDepthRenderTarget().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetRenderTarget().GetRTV(), (float*)&camera.mRTClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRenderTarget().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetColorRT().GetRTVDblPtr(), camera.GetDepthRT().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetColorRT().GetRTV(), (float*)&camera.mRTClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 					////////////////////////////////////
 					//Step 2.3: Update RenderPasses
@@ -239,7 +239,7 @@ namespace Nuclear
 			//Step 3: Copy Main camera RT to RenderingEngine RTs.
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			Diligent::CopyTextureAttribs attrib;
-			attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetRenderTarget().GetSRV()->GetTexture();
+			attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetColorRT().GetSRV()->GetTexture();
 			attrib.pDstTexture = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetSRV()->GetTexture();
 			Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
 			

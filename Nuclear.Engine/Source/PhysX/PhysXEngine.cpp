@@ -75,6 +75,9 @@ namespace Nuclear
 		void PhysXEngine::Shutdown()
 		{
 			NUCLEAR_INFO("[PhysXEngine] Shutting down...");
+
+			PX_RELEASE(gDefaultMaterial)
+			PX_RELEASE(gPvd)
 			PX_RELEASE(gDispatcher)
 			PX_RELEASE(gPhysics)
 			PX_RELEASE(gFoundation)	

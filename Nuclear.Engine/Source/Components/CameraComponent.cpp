@@ -13,6 +13,7 @@ namespace Nuclear
 		}
 		CameraComponent::~CameraComponent()
 		{
+
 		}
 
 		CameraComponent::CameraComponent(const CameraComponentDesc& desc)
@@ -83,16 +84,6 @@ namespace Nuclear
 		{
 			mRT.Resize({ RTWidth, RTHeight });
 			mDepthRT.Resize({ RTWidth, RTHeight });
-		}
-	
-		Graphics::RenderTarget& CameraComponent::GetRenderTarget()
-		{
-			return mRT;
-		}
-
-		Graphics::RenderTarget& CameraComponent::GetDepthRenderTarget()
-		{
-			return mDepthRT;
 		}
 
 		void CameraComponent::SetIsActive(bool value)

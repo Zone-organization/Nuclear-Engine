@@ -10,14 +10,31 @@ namespace Nuclear
 
 		RenderTarget::RenderTarget()
 		{
+			mRTV = nullptr;
+			mSRV = nullptr;
 		}
 		RenderTarget::~RenderTarget()
 		{
+
 		}
 		void RenderTarget::Create(const RenderTargetDesc& Desc)
 		{
 			mDesc = Desc;
 			CreateViews();
+		}
+
+		void RenderTarget::Release()
+		{
+			if (mRTV.RawPtr() != nullptr)
+			{
+				mRTV.Release();
+			}
+			if (mSRV.RawPtr() != nullptr)
+			{
+				mSRV.Release();
+			}
+			mRTV = nullptr;
+			mSRV = nullptr;
 		}
 
 		void RenderTarget::Resize(const Math::Vector2ui& dimensions)
@@ -50,14 +67,7 @@ namespace Nuclear
 		}
 		void RenderTarget::CreateViews()
 		{
-			if (mRTV.RawPtr() != nullptr)
-			{
-				mRTV.Release();
-			}
-			if (mSRV.RawPtr() != nullptr)
-			{
-				mSRV.Release();
-			}
+			Release();
 
 			TextureDesc TexDesc;
 			TexDesc.Type = RESOURCE_DIM_TEX_2D;

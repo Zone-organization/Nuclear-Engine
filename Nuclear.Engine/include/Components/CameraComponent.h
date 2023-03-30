@@ -55,33 +55,42 @@ namespace Nuclear
 			}
 			void UpdateBuffer();
 
-			const Math::Matrix4 GetModelMatrix() const
+			FORCE_INLINE const Math::Matrix4 GetModelMatrix() const
 			{
 				return mCameraData.Model;
 			}
-			const Math::Matrix4 GetViewMatrix() const
+			FORCE_INLINE const Math::Matrix4 GetViewMatrix() const
 			{
 				return mCameraData.Model;
 			}
-			const Math::Matrix4 GetProjectionMatrix() const
+			FORCE_INLINE const Math::Matrix4 GetProjectionMatrix() const
 			{
 				return mCameraData.Projection;
 			}
+
+
+			FORCE_INLINE Graphics::RenderTarget& GetColorRT()
+			{
+				return mRT;
+			}
+
+			FORCE_INLINE Graphics::RenderTarget& GetDepthRT()
+			{
+				return mDepthRT;
+			}
+
 
 			void SetModelMatrix(Math::Matrix4 modelMatrix);
 			void SetViewMatrix(Math::Matrix4 viewMatrix);
 			void SetProjectionMatrix(Math::Matrix4 projectionMatrix);
 
 			void SetPosition(Math::Vector3 cameraposition);
-			const Math::Vector3 GetPosition() const
+			FORCE_INLINE const Math::Vector3 GetPosition() const
 			{
 				return Position;
 			}
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
-
-			Graphics::RenderTarget& GetRenderTarget();
-			Graphics::RenderTarget& GetDepthRenderTarget();
 
 			void SetIsActive(bool value);
 			bool GetIsActive();

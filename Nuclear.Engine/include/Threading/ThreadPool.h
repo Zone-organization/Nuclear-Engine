@@ -16,9 +16,10 @@ namespace Nuclear
 
             void Initialize(Uint32 threadscount);
             void AddTask(Task* task);
+            void Shutdown();
 
         protected:
-            std::vector<std::thread> mThreads;
+            std::vector<std::jthread> mThreads;
             ConcurrentTaskQueue<Task> mTasks;
             std::mutex mTasksMutex;
             std::condition_variable mTaskConditionVar;

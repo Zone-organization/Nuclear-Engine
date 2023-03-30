@@ -66,6 +66,6 @@ int main(int argc, char* argv[])
 		SampleSelector selector;
 		Core::Engine::GetInstance().LoadClient(&selector);
 	}
-
+	Core::Engine::GetInstance().Shutdown();
 	return 0;
 }

@@ -101,7 +101,7 @@ namespace Nuclear
 			{
 				//1 - Extract bloom from scene rt
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pBloomExtractPSO);
-				pBloomExtractSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->pCamera->GetRenderTarget().GetSRV());
+				pBloomExtractSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->pCamera->GetColorRT().GetSRV());
 				Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pBloomExtractSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, BloomRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);

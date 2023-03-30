@@ -40,7 +40,10 @@ public:
 	{
 
 	}
+	~Sample2()
+	{
 
+	}
 	void LoadPBRMaterials()
 	{
 		//Initialize Materials

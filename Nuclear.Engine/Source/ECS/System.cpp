@@ -19,6 +19,11 @@ namespace Nuclear
 			}
 		}
 
+		void SystemManager::Clear()
+		{
+			systems_.clear();
+		}
+
 		BaseSystem::~BaseSystem()
 		{
 		}

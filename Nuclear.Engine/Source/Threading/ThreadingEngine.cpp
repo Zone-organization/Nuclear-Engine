@@ -25,6 +25,10 @@ namespace Nuclear
             NUCLEAR_INFO("[ThreadingEngine] ThreadingEngine has been initialized succesfully!");
             return true;
         }
+        void ThreadingEngine::Shutdown()
+        {
+            mMainPool.Shutdown();
+        }
         void ThreadingEngine::AddTask(Task* task)
         {
             mMainPool.AddTask(task);

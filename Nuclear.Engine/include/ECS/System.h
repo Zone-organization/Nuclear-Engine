@@ -83,7 +83,7 @@ namespace Nuclear
 
 			void Update_All(ECS::TimeDelta dt);
 
-
+			void Clear();
 			//void Configure();
 
 		private:

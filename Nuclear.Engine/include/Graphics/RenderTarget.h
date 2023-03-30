@@ -47,6 +47,8 @@ namespace Nuclear
 
 			void Create(const RenderTargetDesc& Desc);
 
+			void Release();
+
 			void Resize(const Math::Vector2ui& dimensions);
 
 			Math::Vector2ui GetDimensions() const;

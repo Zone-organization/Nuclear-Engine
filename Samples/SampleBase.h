@@ -18,7 +18,10 @@ public:
 	{
 
 	}
-	virtual ~SampleBase() = default;
+	virtual ~SampleBase()
+	{
+
+	}
 
 	void Load() override
 	{
@@ -31,7 +34,9 @@ public:
 		{
 			Components::CameraComponentDesc cameradesc;
 			cameradesc.mProjection = Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f);
+			cameradesc.mRTDesc.mName = "CameraRT";
 			cameradesc.mRTDesc = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc();
+			cameradesc.mDepthRTDesc.mName = "CameraDepthRT";
 			cameradesc.mDepthRTDesc = Rendering::RenderingEngine::GetInstance().GetFinalDepthRT().GetDesc();
 			GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(cameradesc));
 		}
@@ -112,6 +117,7 @@ public:
 
 	void Shutdown() override
 	{
+		GetScene().Clear();
 		GetAssetManager().FlushContainers();
 	}
 };

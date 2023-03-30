@@ -198,8 +198,10 @@ namespace Nuclear
 		void Engine::Shutdown()
 		{
 			NUCLEAR_INFO("[Engine] Shutting Down Engine.");
-
+			Assets::AssetLibrary::GetInstance().Clear();
 			pClient = nullptr;
+			Threading::ThreadingEngine::GetInstance().Shutdown();
+			Rendering::RenderingEngine::GetInstance().Shutdown();
 			Audio::AudioEngine::GetInstance().Shutdown();
 			PhysX::PhysXEngine::GetInstance().Shutdown();
 			Graphics::GraphicsEngine::GetInstance().Shutdown();

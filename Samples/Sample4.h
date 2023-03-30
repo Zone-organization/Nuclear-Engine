@@ -174,7 +174,7 @@ public:
 
 			ImGui::Separator();
 
-			ImGui::Image(camera2.GetRenderTarget().GetSRV(), { 800, 600 });
+			ImGui::Image(camera2.GetColorRT().GetSRV(), { 800, 600 });
 			ImGui::Separator();
 
 		/*	ImGui::Text("PostFX Pipeline");

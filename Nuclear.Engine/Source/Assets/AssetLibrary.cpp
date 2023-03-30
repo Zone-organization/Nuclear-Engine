@@ -50,5 +50,17 @@ namespace Nuclear
 
 			return instance;
 		}
+		void AssetLibrary::Clear()
+		{
+			mImportedScenes.Release();
+			mImportedTextures.Release();
+			mImportedMeshes.Release();
+			mImportedMaterials.Release();
+			mImportedAnimations.Release();
+			mImportedAudioClips.Release();
+			mImportedFonts.Release();
+			mImportedShaders.Release();
+			mImportedScripts.Release();
+		}
 	}
 }

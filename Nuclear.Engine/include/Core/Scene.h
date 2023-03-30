@@ -30,6 +30,8 @@ namespace Nuclear
 			ECS::Entity CreateSphere(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 			ECS::Entity CreatePlane(Assets::Material* material, const ECS::Transform& transform = ECS::Transform(), bool addcollider = true);
 
+			void Clear();
+
 			void SetMainCamera(const ECS::Entity& entity);
 			void SetMainCamera(Components::CameraComponent* camera);
 			Components::CameraComponent* GetMainCamera();

@@ -15,6 +15,7 @@ namespace Nuclear
             static ThreadingEngine& GetInstance();
 
             bool Initialize();
+            void Shutdown();
             void AddTask(Task* task);
             void AddMainThreadTask(MainThreadTask* task);
 

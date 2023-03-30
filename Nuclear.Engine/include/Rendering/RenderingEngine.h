@@ -27,6 +27,8 @@ namespace Nuclear
 
 			bool Initialize(const RenderingEngineDesc& desc);
 
+			void Shutdown();
+
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 
 			void RenderFinalRT();

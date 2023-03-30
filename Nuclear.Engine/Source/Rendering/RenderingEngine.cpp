@@ -43,6 +43,18 @@ namespace Nuclear
 			return true;
 		}
 
+		void RenderingEngine::Shutdown()
+		{
+			mCameraCB.Release();;
+			mAnimationCB.Release();
+
+			pSceneToScreenPSO.Release();
+			pSceneToScreenSRB.Release();
+
+			mFinalRT.Release();
+			mFinalDepthRT.Release();
+		}
+
 		void RenderingEngine::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
 			Math::Vector2ui newsize(RTWidth, RTHeight);

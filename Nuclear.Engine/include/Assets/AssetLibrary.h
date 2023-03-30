@@ -87,6 +87,7 @@ namespace Nuclear
 
 			static AssetLibrary& GetInstance();
 
+			void Clear();
 
 			template<typename S>
 			void serialize(S& s)

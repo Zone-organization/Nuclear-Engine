@@ -28,13 +28,13 @@ namespace Nuclear
                 {
                     RTargets.push_back(i.GetRTV());
                 }
-                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->pCamera->GetDepthRT().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 for (auto& i : RTargets)
                 {
                     Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(i, nullptr, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 }
 
-                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->pCamera->GetDepthRenderTarget().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->pCamera->GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                 pCurrentFrame->mUsedDefferedPipelines.push_back(pActivePipeline);
             }

@@ -26,6 +26,13 @@ namespace Nuclear
 
 			return instance;
 		}
+		void CameraInitialization(entt::registry& reg, entt::entity entity)
+		{
+			auto& camera = reg.get<Components::CameraComponent>(entity);
+			auto& eInfo = reg.get<Components::EntityInfoComponent>(entity);
+
+			NUCLEAR_INFO("[Scene] Registered a new Camera to Entity: ", eInfo.mName);
+		}
 		ECS::Entity Scene::CreateEntity()
 		{
 			ECS::Entity result(GetRegistry(), GetRegistry().create());
@@ -114,6 +121,12 @@ namespace Nuclear
 			return Result;
 		}
 
+		void Scene::Clear()
+		{
+			mSystems.Clear();
+			mRegistry.clear();
+		}
+
 		void Scene::SetMainCamera(const ECS::Entity& entity)
 		{
 			pMainCamera = entity.TryToGetComponent<Components::CameraComponent>();
@@ -187,7 +200,9 @@ namespace Nuclear
 		}
 
 		Scene::Scene()
-		{	
+		{
+			GetRegistry().on_construct<Components::CameraComponent>().connect<&CameraInitialization>();
+
 			mCurrentSceneName = "SCENE_CTOR";
 			pMainCamera = nullptr;
 		}

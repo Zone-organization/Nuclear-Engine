@@ -28,7 +28,7 @@ namespace Nuclear
 
 			if (GetBackground().GetSkybox() != nullptr)
 			{
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->pCamera->GetRenderTarget().GetRTVDblPtr(), framedata->pCamera->GetDepthRenderTarget().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->pCamera->GetColorRT().GetRTVDblPtr(), framedata->pCamera->GetDepthRT().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				GetBackground().GetSkybox()->Render();
 			}
 
@@ -36,7 +36,7 @@ namespace Nuclear
 			{		
 				//1 - Extract bloom from scene rt
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pBloomExtractPSO);
-				pBloomExtractSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->pCamera->GetRenderTarget().GetSRV());
+				pBloomExtractSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->pCamera->GetColorRT().GetSRV());
 				Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pBloomExtractSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, BloomRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
@@ -100,7 +100,7 @@ namespace Nuclear
 
 			Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline);
 
-			pipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->pCamera->GetRenderTarget().GetSRV());
+			pipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->pCamera->GetColorRT().GetSRV());
 			if (mBloomEnabled)
 			{
 				pipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(mBloomBlur.BlurVerticalRT.GetSRV());
@@ -113,7 +113,7 @@ namespace Nuclear
 			//4- copy results to camera rt
 			CopyTextureAttribs attrib;
 			attrib.pSrcTexture = PostFXRT.GetSRV()->GetTexture();
-			attrib.pDstTexture = framedata->pCamera->GetRenderTarget().GetSRV()->GetTexture();
+			attrib.pDstTexture = framedata->pCamera->GetColorRT().GetSRV()->GetTexture();
 			Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
 		
 		}
