@@ -1,20 +1,20 @@
-#include "Threading/ThreadingEngine.h"
+#include "Threading/ThreadingModule.h"
 #include <Utilities/Logger.h>
 namespace Nuclear
 {
     namespace Threading
     {
-        ThreadingEngine::ThreadingEngine()
+        ThreadingModule::ThreadingModule()
         {
 
         }
-        ThreadingEngine& ThreadingEngine::GetInstance()
+        ThreadingModule& ThreadingModule::GetInstance()
         {
-            static ThreadingEngine instance;
+            static ThreadingModule instance;
 
             return instance;
         }
-        bool ThreadingEngine::Initialize()
+        bool ThreadingModule::Initialize()
         {
             mMainThreadID = std::this_thread::get_id();
 
@@ -22,28 +22,28 @@ namespace Nuclear
             auto allowedthreads = std::thread::hardware_concurrency() - 1;
             mMainPool.Initialize(allowedthreads);
 
-            NUCLEAR_INFO("[ThreadingEngine] ThreadingEngine has been initialized succesfully!");
+            NUCLEAR_INFO("[ThreadingModule] ThreadingModule has been initialized succesfully!");
             return true;
         }
-        void ThreadingEngine::Shutdown()
+        void ThreadingModule::Shutdown()
         {
             mMainPool.Shutdown();
         }
-        void ThreadingEngine::AddTask(Task* task)
+        void ThreadingModule::AddTask(Task* task)
         {
             mMainPool.AddTask(task);
         }
-        void ThreadingEngine::AddMainThreadTask(MainThreadTask* task)
+        void ThreadingModule::AddMainThreadTask(MainThreadTask* task)
         {
             mMainTTasksMutex.lock();
             mMainTTasks.push_back(task);
             mMainTTasksMutex.unlock();
         }
-        ThreadPool& ThreadingEngine::GetThreadPool()
+        ThreadPool& ThreadingModule::GetThreadPool()
         {
             return mMainPool;
         }
-        void ThreadingEngine::ExecuteMainThreadTasks(Uint32 count)
+        void ThreadingModule::ExecuteMainThreadTasks(Uint32 count)
         {
             for (Uint32 i = 0; i < mMainTTasks.size() && i < count; i++)
             {
@@ -52,7 +52,7 @@ namespace Nuclear
             }
          
         }
-        std::vector<MainThreadTask*>& ThreadingEngine::GetMainTasks()
+        std::vector<MainThreadTask*>& ThreadingModule::GetMainTasks()
         {
             return mMainTTasks;
         }

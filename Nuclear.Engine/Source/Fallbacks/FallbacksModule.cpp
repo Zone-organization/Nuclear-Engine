@@ -1,20 +1,20 @@
-#include <Fallbacks/FallbacksEngine.h>
+#include <Fallbacks/FallbacksModule.h>
 #include <Assets/AssetManager.h>
 
 namespace Nuclear
 {
 	namespace Fallbacks
 	{
-		FallbacksEngine::FallbacksEngine()
+		FallbacksModule::FallbacksModule()
 		{
 			Initialize();
 		}
-		FallbacksEngine& FallbacksEngine::GetInstance()
+		FallbacksModule& FallbacksModule::GetInstance()
 		{
-			static FallbacksEngine instance;
+			static FallbacksModule instance;
 			return instance;
 		}
-		void FallbacksEngine::Initialize()
+		void FallbacksModule::Initialize()
 		{
 			//Images
 			Assets::TextureImportingDesc desc;
@@ -35,27 +35,27 @@ namespace Nuclear
 			DefaultSpecularTex.pTexture = DefaultWhiteImage;
 			DefaultSpecularTex.mUsageType = Assets::TextureUsageType::Specular;
 		}
-		Assets::Texture* FallbacksEngine::GetDefaultBlackImage()
+		Assets::Texture* FallbacksModule::GetDefaultBlackImage()
 		{
 			return DefaultBlackImage;
 		}
-		Assets::Texture* FallbacksEngine::GetDefaultGreyImage()
+		Assets::Texture* FallbacksModule::GetDefaultGreyImage()
 		{
 			return DefaultGreyImage;
 		}
-		Assets::Texture* FallbacksEngine::GetDefaultWhiteImage()
+		Assets::Texture* FallbacksModule::GetDefaultWhiteImage()
 		{
 			return nullptr;
 		}
-		const Assets::MaterialTexture& FallbacksEngine::GetDefaultDiffuseTex() const
+		const Assets::MaterialTexture& FallbacksModule::GetDefaultDiffuseTex() const
 		{
 			return DefaultDiffuseTex;
 		}
-		const Assets::MaterialTexture& FallbacksEngine::GetDefaultSpecularTex() const
+		const Assets::MaterialTexture& FallbacksModule::GetDefaultSpecularTex() const
 		{
 			return DefaultSpecularTex;
 		}
-		const Assets::MaterialTexture& FallbacksEngine::GetDefaultNormalTex() const
+		const Assets::MaterialTexture& FallbacksModule::GetDefaultNormalTex() const
 		{
 			return DefaultNormalTex;
 		}

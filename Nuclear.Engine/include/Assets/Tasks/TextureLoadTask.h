@@ -9,7 +9,7 @@
 
 #include <Platform/FileSystem.h>
 
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 
 namespace Nuclear
 {
@@ -45,7 +45,7 @@ namespace Nuclear
 					pResult->SetState(IAsset::State::Loaded);
 
 					//Create image task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, LOADER_FACTORY_TYPE));
+					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, LOADER_FACTORY_TYPE));
 				}
 				else
 				{

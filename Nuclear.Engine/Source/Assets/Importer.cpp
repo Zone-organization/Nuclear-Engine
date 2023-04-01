@@ -2,14 +2,14 @@
 #include <Assets/AssetLibrary.h>
 #include <Assets/Importers\TextureImporter.h>
 #include <Utilities/Logger.h>
-#include <Scripting\ScriptingEngine.h>
+#include <Scripting\ScriptingModule.h>
 
 #include <ft2build.h>
 #include <freetype/freetype.h> 
 #include <msdf-atlas-gen/msdf-atlas-gen/msdf-atlas-gen.h>
 
-#include <Fallbacks/FallbacksEngine.h>
-#include <Audio\AudioEngine.h>
+#include <Fallbacks/FallbacksModule.h>
+#include <Audio\AudioModule.h>
 #include <Audio\AudioBackend.h>
 
 #include <Platform\FileSystem.h>
@@ -17,7 +17,7 @@
 
 #include <Threading/Task.h>
 #include <Threading/MainThreadTask.h>
-#include <Threading/ThreadingEngine.h>
+#include <Threading/ThreadingModule.h>
 
 #include <Assets/AssetManager.h>
 #include <Assets\AssetLibrary.h>
@@ -84,9 +84,9 @@ namespace Nuclear
 
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
-				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new TextureImportTask(result, Path , Desc));
+				Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new TextureImportTask(result, Path , Desc));
 
-				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
+				result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
 			else //singlethreaded loading
@@ -105,12 +105,12 @@ namespace Nuclear
 					result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
 				}
 
-				Graphics::GraphicsEngine::GetInstance().CreateImageData(&data, desc);
+				Graphics::GraphicsModule::GetInstance().CreateImageData(&data, desc);
 
-				if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &data))
+				if (!Graphics::GraphicsModule::GetInstance().CreateImage(result, &data))
 				{
 					NUCLEAR_ERROR("[Importer] Failed To Load Texture: '{0}'", Path.GetInputPath());
-					return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+					return Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage();
 				}
 
 
@@ -129,12 +129,12 @@ namespace Nuclear
 			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
 
 			TextureData imagedata;
-			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
+			Graphics::GraphicsModule::GetInstance().CreateImageData(&imagedata, imagedesc);
 			
-			if (!Graphics::GraphicsEngine::GetInstance().CreateImage(result, &imagedata))
+			if (!Graphics::GraphicsModule::GetInstance().CreateImage(result, &imagedata))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Create Texture : '");
-				return Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+				return Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage();
 			}
 
 
@@ -270,7 +270,7 @@ namespace Nuclear
 			result->mLoop = Desc.mLoop;
 
 
-			Audio::AudioEngine::GetInstance().GetBackend()->CreateAudioClip(result, file);
+			Audio::AudioModule::GetInstance().GetBackend()->CreateAudioClip(result, file);
 
 
 			result->mState = IAsset::State::Loaded;
@@ -319,7 +319,7 @@ namespace Nuclear
 		
 			if (desc.mCommonOptions.mAsyncImport)
 			{
-				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new MeshImportTask({ assetname ,mesh, material, animations }, Path, desc));
+				Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MeshImportTask({ assetname ,mesh, material, animations }, Path, desc));
 			}
 			else
 			{			
@@ -343,10 +343,10 @@ namespace Nuclear
 
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
-				Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new MaterialImportTask(result, Path, Desc));
+				Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MaterialImportTask(result, Path, Desc));
 
 				//TODO: Fallback material?
-				//result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
+				//result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
 
@@ -479,7 +479,7 @@ namespace Nuclear
 			if (parsing_)
 			{
 				//Step2: Reflect Pixel shader for material reflection
-				if (Graphics::GraphicsEngine::GetInstance().ReflectShader(shaderbuilddesc, result->mReflection))
+				if (Graphics::GraphicsModule::GetInstance().ReflectShader(shaderbuilddesc, result->mReflection))
 				{
 					//Step3: Create actual pipeline
 					result->mPipeline.BuildVariants();
@@ -514,13 +514,13 @@ namespace Nuclear
 			std::string fullname = "";
 			if (desc.mClassNameFromPath)
 			{
-				fullname = Scripting::ScriptingEngine::GetInstance().GetClientAssembly()->GetNamespaceName() + '.' + Path.GetFilename(true);
+				fullname = Scripting::ScriptingModule::GetInstance().GetClientAssembly()->GetNamespaceName() + '.' + Path.GetFilename(true);
 			}
 			else
 			{
 				fullname = desc.mScriptFullName;
 			}
-			Scripting::ScriptingEngine::GetInstance().CreateScriptAsset(result, fullname);
+			Scripting::ScriptingModule::GetInstance().CreateScriptAsset(result, fullname);
 
 			result->mState = IAsset::State::Loaded;
 			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
@@ -601,8 +601,8 @@ namespace Nuclear
 				return nullptr;
 			}
 			imagedesc.mGenerateMipMaps = false;
-			Graphics::GraphicsEngine::GetInstance().CreateImageData(&imagedata, imagedesc);
-			Graphics::GraphicsEngine::GetInstance().CreateImage(result, &imagedata);
+			Graphics::GraphicsModule::GetInstance().CreateImageData(&imagedata, imagedesc);
+			Graphics::GraphicsModule::GetInstance().CreateImage(result, &imagedata);
 
 			//TODO::
 			//result.mData = imagedata;

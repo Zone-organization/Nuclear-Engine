@@ -1,4 +1,4 @@
-#include "Graphics\GraphicsEngine.h"
+#include "Graphics\GraphicsModule.h"
 #include <Graphics\Context.h>
 #include <Assets\AssetManager.h>
 #include "..\Graphics\ImGUI\imgui_impl_sdl.h"
@@ -9,24 +9,24 @@
 #include <Diligent\Graphics\GraphicsAccessories\interface\GraphicsAccessories.hpp>
 #include <Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h>
 #include <Assets\Texture.h>
-#include <Fallbacks/FallbacksEngine.h>
+#include <Fallbacks/FallbacksModule.h>
 
 namespace Nuclear
 {
 	namespace Graphics
 	{
-		inline GraphicsEngine& GraphicsEngine::GetInstance()
+		inline GraphicsModule& GraphicsModule::GetInstance()
 		{
-			static GraphicsEngine engine;
+			static GraphicsModule Module;
 
-			return engine;
+			return Module;
 		}
-		bool GraphicsEngine::Initialize(const GraphicsEngineDesc& desc)
+		bool GraphicsModule::Initialize(const GraphicsModuleDesc& desc)
 		{
 			//Initialize Context
 			if (!Graphics::Context::GetInstance().Initialize(desc))
 			{
-				NUCLEAR_INFO("[GraphicsEngine] Failed to initialize Context!");
+				NUCLEAR_INFO("[GraphicsModule] Failed to initialize Context!");
 				return false;
 			}
 
@@ -45,7 +45,7 @@ namespace Nuclear
 				ImGui_Impl_CreateDeviceObjects();
 				//io.Fonts->GetTexDataAsAlpha8()
 
-				NUCLEAR_INFO("[GraphicsEngine] ImGUI Initalized.");
+				NUCLEAR_INFO("[GraphicsModule] ImGUI Initalized.");
 			}
 
 			mDefaultStaticSamplers["NEMat_"] = SamLinearWrapDesc;
@@ -53,16 +53,16 @@ namespace Nuclear
 			mDefaultStaticSamplers["NE_RT_"] = SamLinearClampDesc;
 			mDefaultStaticSamplers["NEIBL_"] = SamLinearClampDesc;
 
-			NUCLEAR_INFO("[GraphicsEngine] GraphicsEngine has been initialized successfully!");
+			NUCLEAR_INFO("[GraphicsModule] GraphicsModule has been initialized successfully!");
 			return true;
 		}
-		void GraphicsEngine::Shutdown()
+		void GraphicsModule::Shutdown()
 		{
-			NUCLEAR_INFO("[GraphicsEngine] Shutting down...");
+			NUCLEAR_INFO("[GraphicsModule] Shutting down...");
 			Graphics::Context::GetInstance().Shutdown();
 		}
 
-		bool GraphicsEngine::CreateMesh(Assets::Mesh* mesh)
+		bool GraphicsModule::CreateMesh(Assets::Mesh* mesh)
 		{
 			if (mesh)
 			{
@@ -82,7 +82,7 @@ namespace Nuclear
 			return false;
 		}
 
-		bool GraphicsEngine::CreateImage(Assets::Texture* result, Assets::TextureData* data)
+		bool GraphicsModule::CreateImage(Assets::Texture* result, Assets::TextureData* data)
 		{
 			//CREATE IMAGE
 			Diligent::TextureData TexData;
@@ -138,7 +138,7 @@ namespace Nuclear
 			}
 		}
 
-		void GraphicsEngine::CreateImageData(Assets::TextureData* result, const Assets::TextureDesc& desc)
+		void GraphicsModule::CreateImageData(Assets::TextureData* result, const Assets::TextureDesc& desc)
 		{
 			using namespace Diligent;
 
@@ -272,7 +272,7 @@ namespace Nuclear
 			}
 		}
 
-		bool GraphicsEngine::isGammaCorrect()
+		bool GraphicsModule::isGammaCorrect()
 		{
 			if (Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat == Diligent::TEX_FORMAT_RGBA8_UNORM_SRGB)
 				return true;
@@ -280,7 +280,7 @@ namespace Nuclear
 				return false;
 		}
 
-		Assets::TextureUsageType GraphicsEngine::ParseTexUsageFromName(std::string& name)
+		Assets::TextureUsageType GraphicsModule::ParseTexUsageFromName(std::string& name)
 		{
 			if (name.find("Diffuse") == 0)
 				return Assets::TextureUsageType::Diffuse;
@@ -315,7 +315,7 @@ namespace Nuclear
 			return Assets::TextureUsageType::Unknown;
 		}
 
-		bool GraphicsEngine::ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out)
+		bool GraphicsModule::ReflectShader(const ShaderBuildDesc& desc, ShaderReflection& out)
 		{
 			using namespace Diligent;
 
@@ -333,7 +333,7 @@ namespace Nuclear
 				pixelshader = desc.mPipelineDesc.mDefferedPSOCreateInfo.mPixelShader;
 			else
 			{
-				NUCLEAR_INFO("[GraphicsEngine] ReflectShader Error: All Pipelines are invalid!");
+				NUCLEAR_INFO("[GraphicsModule] ReflectShader Error: All Pipelines are invalid!");
 				return false;
 			}
 
@@ -363,7 +363,7 @@ namespace Nuclear
 					if (name.find("NEMat_") != std::string::npos)
 					{
 						Assets::ShaderTexture ReflectedTex;
-						ReflectedTex.mTex.pTexture = Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage();
+						ReflectedTex.mTex.pTexture = Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage();
 						ReflectedTex.mTex.mUsageType = ParseTexUsageFromName(std::string(name).erase(0, 6));
 						ReflectedTex.mSlot = slot;
 						ReflectedTex.mName = name;
@@ -376,7 +376,7 @@ namespace Nuclear
 			return true;
 		}
 
-		void GraphicsEngine::CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc)
+		void GraphicsModule::CreateShader(Diligent::IShader** result, const Graphics::ShaderObjectCreationDesc& desc)
 		{
 			Diligent::ShaderCreateInfo CreationAttribs;
 
@@ -422,12 +422,12 @@ namespace Nuclear
 			Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, result);
 		}
 
-		Diligent::IShaderSourceInputStreamFactory* GraphicsEngine::GetDefaultShaderSourceFactory()
+		Diligent::IShaderSourceInputStreamFactory* GraphicsModule::GetDefaultShaderSourceFactory()
 		{
 			return pShaderSourceFactory;
 		}
 
-		void GraphicsEngine::InitPSOResources(Diligent::GraphicsPipelineStateCreateInfo& PSOCreateInfo, PSOResourcesInitInfo& desc)
+		void GraphicsModule::InitPSOResources(Diligent::GraphicsPipelineStateCreateInfo& PSOCreateInfo, PSOResourcesInitInfo& desc)
 		{
 			if (desc.mResources.size() == 0)
 			{
@@ -471,7 +471,7 @@ namespace Nuclear
 		}
 
 
-		void GraphicsEngine::CreateShader(const std::string& source, Diligent::IShader** result, Diligent::SHADER_TYPE type)
+		void GraphicsModule::CreateShader(const std::string& source, Diligent::IShader** result, Diligent::SHADER_TYPE type)
 		{
 			Diligent::ShaderCreateInfo CreationAttribs;
 			CreationAttribs.SourceLanguage = Diligent::SHADER_SOURCE_LANGUAGE_HLSL;
@@ -483,7 +483,7 @@ namespace Nuclear
 			Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, result);
 		}
 
-		void GraphicsEngine::ReflectShaderResources(Diligent::IShader* Shader, PSOResourcesInitInfo& result)
+		void GraphicsModule::ReflectShaderResources(Diligent::IShader* Shader, PSOResourcesInitInfo& result)
 		{
 			if (Shader)
 			{
@@ -507,7 +507,7 @@ namespace Nuclear
 			}
 		}
 
-		Diligent::SHADER_RESOURCE_VARIABLE_TYPE GraphicsEngine::ParseNameToGetType(const std::string& name)
+		Diligent::SHADER_RESOURCE_VARIABLE_TYPE GraphicsModule::ParseNameToGetType(const std::string& name)
 		{
 			using namespace Diligent;
 			if (name.find("NEStatic") == 0)
@@ -530,12 +530,12 @@ namespace Nuclear
 			return SHADER_RESOURCE_VARIABLE_TYPE_STATIC;
 		}
 
-		ShaderPipelineVariantFactory& GraphicsEngine::GetDefaultShaderPipelineVariantFactory()
+		ShaderPipelineVariantFactory& GraphicsModule::GetDefaultShaderPipelineVariantFactory()
 		{
 			return mDefaultVariantFactory;
 		}
 
-		GraphicsEngine::GraphicsEngine()
+		GraphicsModule::GraphicsModule()
 		{
 			using namespace Diligent;
 

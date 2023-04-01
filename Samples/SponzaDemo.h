@@ -139,7 +139,7 @@
 //		bakedesc.RTWidth = _Width_;
 //		bakedesc.RTHeight = _Height_;
 //		Renderer->Bake(bakedesc);	
-//		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingEngine::GetInstance().GetFinalRT().GetDesc() });
+//		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc() });
 //
 //		PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), false);
 //		PostFXPass.SetPostProcessingEffect(Utilities::Hash("GAMMACORRECTION"), false);

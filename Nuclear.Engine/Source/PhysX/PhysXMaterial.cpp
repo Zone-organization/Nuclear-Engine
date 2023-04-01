@@ -1,6 +1,6 @@
 #include <PhysX\PhysXMaterial.h>
 #include <PhysX/include/PxPhysicsAPI.h>
-#include "PhysX\PhysXEngine.h"
+#include "PhysX\PhysXModule.h"
 
 namespace Nuclear
 {
@@ -15,7 +15,7 @@ namespace Nuclear
 		//}
 		//void PhysXMaterial::Create(float staticFriction, float dynamicFriction, float restitution)
 		//{
-		//	mMaterial = PhysXEngine::GetPhysics()->createMaterial(staticFriction, dynamicFriction, restitution);
+		//	mMaterial = PhysXModule::GetPhysics()->createMaterial(staticFriction, dynamicFriction, restitution);
 		//}
 		//void PhysXMaterial::SetStaticFriction(float value)
 		//{

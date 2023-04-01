@@ -1,5 +1,5 @@
 #include "Systems\ScriptingSystem.h"
-#include "Scripting\ScriptingEngine.h"
+#include "Scripting\ScriptingModule.h"
 #include "Components\ScriptComponent.h"
 #include "Core\Scene.h"
 #include <Utilities/Logger.h>

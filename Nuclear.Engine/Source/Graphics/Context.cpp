@@ -40,7 +40,7 @@ namespace Nuclear
 
 		}
 
-		bool Context::Initialize(const Graphics::GraphicsEngineDesc& GraphicsDesc)
+		bool Context::Initialize(const Graphics::GraphicsModuleDesc& GraphicsDesc)
 		{
 			SwapChainDesc SCDesc(GraphicsDesc.SCDesc);
 

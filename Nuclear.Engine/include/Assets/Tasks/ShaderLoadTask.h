@@ -1,6 +1,6 @@
 #pragma once
 #include <Threading/MainThreadTask.h>
-#include <Threading/ThreadingEngine.h>
+#include <Threading/ThreadingModule.h>
 #include <Assets/ImportingDescs.h>
 #include <Assets/Loader.h>
 #include <Assets/AssetLibrary.h>
@@ -10,7 +10,7 @@
 #include <Platform/FileSystem.h>
 #include <Utilities/Logger.h>
 
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 
 namespace Nuclear
 {

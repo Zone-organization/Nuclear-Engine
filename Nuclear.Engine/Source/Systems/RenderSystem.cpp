@@ -4,14 +4,14 @@
 #include <Components/EntityInfoComponent.h>
 #include <Components\CameraComponent.h>
 #include <Components\MeshComponent.h>
-#include <Graphics\GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 #include <Assets\AssetManager.h>
 #include <Core\Scene.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Assets\Material.h>
 #include <Platform\FileSystem.h>
 #include <Rendering\RenderPasses\DefferedPass.h>
-#include <Rendering\RenderingEngine.h>
+#include <Rendering\RenderingModule.h>
 #include <Assets\Shader.h>
 #include <Rendering\ImageBasedLighting.h>
 #include <Profiling/Profiler.h>
@@ -67,10 +67,10 @@ namespace Nuclear
 				rendering3d_bake_desc.mRenderSystemHasShadowPass = true;
 
 			bakedesc.pRendering3DBakingDesc = &rendering3d_bake_desc;
-			bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
+			bakedesc.pVariantsFactory = &Graphics::GraphicsModule::GetInstance().GetDefaultShaderPipelineVariantFactory();
 
-			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingEngine::GetInstance().GetCameraCB() });
-			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingEngine::GetInstance().GetAnimationCB() });
+			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingModule::GetInstance().GetCameraCB() });
+			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingModule::GetInstance().GetAnimationCB() });
 			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_PIXEL, "NEStatic_Lights", GetLightCB() });
 
 			AddToDefinesIfNotZero(bakedesc.mDefines, "NE_DIR_LIGHTS_NUM ", rendering3d_bake_desc.DirLights);
@@ -239,12 +239,12 @@ namespace Nuclear
 			}		
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 3: Copy Main camera RT to RenderingEngine RTs.
+			//Step 3: Copy Main camera RT to RenderingModule RTs.
 			//////////////////////////////////////////////////////////////////////////////////////////////
 
 				Diligent::CopyTextureAttribs attrib;
 				attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetColorRT().GetSRV()->GetTexture();
-				attrib.pDstTexture = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetSRV()->GetTexture();
+				attrib.pDstTexture = Rendering::RenderingModule::GetInstance().GetFinalRT().GetSRV()->GetTexture();
 				Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
 
 	
@@ -253,7 +253,7 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 4: Render to screen
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			Rendering::RenderingEngine::GetInstance().RenderFinalRT();
+			Rendering::RenderingModule::GetInstance().RenderFinalRT();
 
 		}
 

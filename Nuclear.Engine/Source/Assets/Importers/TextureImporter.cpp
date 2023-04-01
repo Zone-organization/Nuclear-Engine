@@ -3,7 +3,7 @@
 #include <Diligent/Common/interface/Align.hpp>
 #include <Assets\Texture.h>
 #include <Graphics\Context.h>
-#include <Graphics\GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 
 #include "..\..\ThirdParty\DiligentTextureLoader\src\TextureLoader.h"
 
@@ -260,7 +260,7 @@ namespace Nuclear
 					Assets::TextureDesc imagedesc;
 					if(FreeimageLoadMemory((IMAGE_EXTENSION)type, &imagedesc, importingdesc))
 					{
-						Graphics::GraphicsEngine::GetInstance().CreateImageData(data, imagedesc);
+						Graphics::GraphicsModule::GetInstance().CreateImageData(data, imagedesc);
 						return true;
 					}
 					return false;

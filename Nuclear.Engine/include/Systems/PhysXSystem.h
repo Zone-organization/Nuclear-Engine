@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <ECS/ECS.h>
-#include "PhysX\PhysXEngine.h"
+#include "PhysX\PhysXModule.h"
 #include "PhysX\RaycastHit.h"
 #include <Components\RigidBodyComponent.h>
 #include <Components\ColliderComponent.h>

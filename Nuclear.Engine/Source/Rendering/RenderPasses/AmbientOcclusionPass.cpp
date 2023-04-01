@@ -2,7 +2,7 @@
 #include <Assets/AssetManager.h>
 #include <Assets/Shader.h>
 #include <Graphics/Context.h>
-#include <Graphics/GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 #include <random>
 #include <Rendering\FrameRenderData.h>
 #include <Assets\DefaultMeshes.h>
@@ -94,7 +94,7 @@ namespace Nuclear
 			//bake pipeline
 			{
 				Graphics::ShaderPipelineBakingDesc bakedesc;
-				bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
+				bakedesc.pVariantsFactory = &Graphics::GraphicsModule::GetInstance().GetDefaultShaderPipelineVariantFactory();
 				bakedesc.mStaticVariablesBindings.push_back({ SHADER_TYPE_PIXEL ,"NEStatic_SSAO_Samples" ,pSSAO_ExtractCB });
 				bakedesc.mStaticVariablesBindings.push_back({ SHADER_TYPE_PIXEL ,"NE_SSAO_Noise" ,pNoiseTexView });
 
@@ -104,7 +104,7 @@ namespace Nuclear
 			{
 
 				Graphics::ShaderPipelineBakingDesc bakedesc;
-				bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
+				bakedesc.pVariantsFactory = &Graphics::GraphicsModule::GetInstance().GetDefaultShaderPipelineVariantFactory();
 				pSSAO_BlurShader->GetShaderPipeline().Bake(bakedesc);
 			}
 

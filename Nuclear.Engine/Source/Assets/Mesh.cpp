@@ -1,6 +1,6 @@
 #include <Assets/Mesh.h>
 #include <Graphics\Context.h>
-#include <Graphics\GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear {
 
@@ -166,7 +166,7 @@ namespace Nuclear {
 
 			model->mSubMeshes.push_back(meshData);
 
-			Graphics::GraphicsEngine::GetInstance().CreateMesh(model);
+			Graphics::GraphicsModule::GetInstance().CreateMesh(model);
 		}
 
 		void Mesh::CreateSphere(Mesh * model, float radius, unsigned int sliceCount, unsigned int stackCount)
@@ -261,7 +261,7 @@ namespace Nuclear {
 			//meshData.textures = Textures;
 
 			model->mSubMeshes.push_back(meshData);
-			Graphics::GraphicsEngine::GetInstance().CreateMesh(model);
+			Graphics::GraphicsModule::GetInstance().CreateMesh(model);
 		}
 
 		void Mesh::CreatePlane(Mesh * model, float width, float depth)
@@ -341,7 +341,7 @@ namespace Nuclear {
 			meshData.indices = Indices;
 			meshData.Vertices = Vertices;
 			model->mSubMeshes.push_back(meshData);
-			Graphics::GraphicsEngine::GetInstance().CreateMesh(model);
+			Graphics::GraphicsModule::GetInstance().CreateMesh(model);
 		}
 		struct ScreenVertex
 		{

@@ -7,7 +7,7 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		struct GraphicsEngineDesc
+		struct GraphicsModuleDesc
 		{
 			Diligent::RENDER_DEVICE_TYPE mRenderAPI = Diligent::RENDER_DEVICE_TYPE::RENDER_DEVICE_TYPE_D3D11;
 

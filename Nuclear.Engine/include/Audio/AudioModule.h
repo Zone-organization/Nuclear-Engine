@@ -8,7 +8,7 @@ namespace Nuclear
 		class AudioBackend;
 
 		
-		struct AudioEngineDesc
+		struct AudioModuleDesc
 		{
 			enum class AudioBackendType : Uint8
 			{
@@ -23,17 +23,17 @@ namespace Nuclear
 			unsigned int MaxChannels = 32;
 		};
 
-		class NEAPI AudioEngine
+		class NEAPI AudioModule
 		{
 		public:
-			AudioEngine(AudioEngine const&) = delete;
-			void operator=(AudioEngine const&) = delete;
+			AudioModule(AudioModule const&) = delete;
+			void operator=(AudioModule const&) = delete;
 
-			static AudioEngine& GetInstance();
+			static AudioModule& GetInstance();
 
 			AudioBackend* GetBackend();
 
-			bool Initialize(const AudioEngineDesc& desc);
+			bool Initialize(const AudioModuleDesc& desc);
 
 			void Shutdown();
 
@@ -41,7 +41,7 @@ namespace Nuclear
 		protected:
 			AudioBackend* pBackend;
 		private:
-			AudioEngine();
+			AudioModule();
 		};
 	}
 }

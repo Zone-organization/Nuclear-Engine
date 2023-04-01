@@ -1,4 +1,4 @@
-#include <Scripting/ScriptingEngine.h>
+#include <Scripting/ScriptingModule.h>
 #include <Scripting/ScriptingBindings.h>
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -9,7 +9,7 @@ namespace Nuclear
 {
 	namespace Scripting
 	{
-		bool ScriptingEngine::Initialize(const ScriptingEngineDesc& desc)
+		bool ScriptingModule::Initialize(const ScriptingModuleDesc& desc)
 		{
 			std::string lib = desc.mMonoRuntimeDir.GetRealPath() + "/lib";
 			std::string etc = desc.mMonoRuntimeDir.GetRealPath() + "/etc";
@@ -20,7 +20,7 @@ namespace Nuclear
 			
 			if (!pRuntimeDomain)
 			{
-				NUCLEAR_ERROR("[ScriptingEngine] Failed to initialize pRuntimeDomain...");
+				NUCLEAR_ERROR("[ScriptingModule] Failed to initialize pRuntimeDomain...");
 				return false;
 			}
 
@@ -30,7 +30,7 @@ namespace Nuclear
 				CoreAssemblyDesc.mPath = desc.mScriptingCoreAssemblyDir.GetRealPath() + "/Nuclear.ScriptCore.DLL";				
 				if (!CreateScriptingAssembly(&mCoreAssembly, CoreAssemblyDesc))
 				{
-					NUCLEAR_ERROR("[ScriptingEngine] Failed to create Nuclear.ScriptCore assembly!");
+					NUCLEAR_ERROR("[ScriptingModule] Failed to create Nuclear.ScriptCore assembly!");
 					return false;
 				}
 			}
@@ -42,21 +42,21 @@ namespace Nuclear
 				ClientAssemblyDesc.mPath = desc.mClientAssemblyPath.GetRealPath();
 				if (!CreateScriptingAssembly(&mClientAssembly, ClientAssemblyDesc))
 				{
-					NUCLEAR_ERROR("[ScriptingEngine] Failed to create client assembly!");
+					NUCLEAR_ERROR("[ScriptingModule] Failed to create client assembly!");
 				}
 			}
 
 			InitBindings();
 			InitCoreAssembly();
-			NUCLEAR_INFO("[ScriptingEngine] ScriptingEngine has been initialized succesfully!");
+			NUCLEAR_INFO("[ScriptingModule] ScriptingModule has been initialized succesfully!");
 			return true;
 		}
-		void ScriptingEngine::Shutdown()
+		void ScriptingModule::Shutdown()
 		{
 			mono_jit_cleanup(pRuntimeDomain);
 		}
 
-		bool ScriptingEngine::CreateScriptAsset(Assets::Script* script, const std::string& scriptclassname)
+		bool ScriptingModule::CreateScriptAsset(Assets::Script* script, const std::string& scriptclassname)
 		{
 			script->mClass = CreateScriptClass(&mClientAssembly, ScriptingClassCreationDesc(scriptclassname));
 			script->mConstructor = ScriptCoreClass.GetMethod(".ctor(uint)");
@@ -66,7 +66,7 @@ namespace Nuclear
 			return false;
 		}
 	
-	//	bool ScriptingEngine::CreateScript(Assets::Script* script, Scripting::ScriptingAssembly* assembly, const ScriptCreationDesc& desc)
+	//	bool ScriptingModule::CreateScript(Assets::Script* script, Scripting::ScriptingAssembly* assembly, const ScriptCreationDesc& desc)
 		//{
 
 			//MonoMethodDesc* ptrTickMethodDesc = mono_method_desc_new(".Test:HelloWorld()", false);
@@ -90,7 +90,7 @@ namespace Nuclear
 			//object.CallMethod(helloworld);
 		//	return true;
 	//	}
-		Scripting::ScriptingClass ScriptingEngine::CreateScriptClass(Scripting::ScriptingAssembly* assembly, const ScriptingClassCreationDesc& desc)
+		Scripting::ScriptingClass ScriptingModule::CreateScriptClass(Scripting::ScriptingAssembly* assembly, const ScriptingClassCreationDesc& desc)
 		{
 			Scripting::ScriptingClass result;
 			result.mDesc = desc;
@@ -98,18 +98,18 @@ namespace Nuclear
 			
 			if (!result.pClass)
 			{
-				NUCLEAR_ERROR("[ScriptingEngine] Failed to get class in C# {0}.{1} !", desc.mNamespaceName, desc.mClassName);
+				NUCLEAR_ERROR("[ScriptingModule] Failed to get class in C# {0}.{1} !", desc.mNamespaceName, desc.mClassName);
 			}
 			return result;
 		}
-		bool ScriptingEngine::CreateScriptingAssembly(Scripting::ScriptingAssembly* scriptmodule, const ScriptingAssemblyCreationDesc& desc)
+		bool ScriptingModule::CreateScriptingAssembly(Scripting::ScriptingAssembly* scriptmodule, const ScriptingAssemblyCreationDesc& desc)
 		{
 			scriptmodule->pAssembly = mono_domain_assembly_open(pRuntimeDomain, desc.mPath.GetRealPath().c_str());
 			scriptmodule->mNamespaceName = desc.mNamespaceName;
 
 			if (!scriptmodule->pAssembly)
 			{
-				NUCLEAR_ERROR("[ScriptingEngine] Failed to open Assembly {0}..." , desc.mPath.GetRealPath());
+				NUCLEAR_ERROR("[ScriptingModule] Failed to open Assembly {0}..." , desc.mPath.GetRealPath());
 				return false;
 			}
 
@@ -117,14 +117,14 @@ namespace Nuclear
 			scriptmodule->pImage = mono_assembly_get_image(scriptmodule->pAssembly);
 			if (!scriptmodule->pImage)
 			{
-				NUCLEAR_ERROR("[ScriptingEngine] Failed to get image from Assembly {0}...", desc.mPath.GetRealPath());
+				NUCLEAR_ERROR("[ScriptingModule] Failed to get image from Assembly {0}...", desc.mPath.GetRealPath());
 				return false;
 			}
 
 			return true;
 		}
 
-		std::string ScriptingEngine::ToStdString(_MonoString* monostring)
+		std::string ScriptingModule::ToStdString(_MonoString* monostring)
 		{
 			char* ptr = mono_string_to_utf8(monostring);
 			std::string str{ ptr };
@@ -132,26 +132,26 @@ namespace Nuclear
 			return str;
 		}
 		
-		_MonoDomain* ScriptingEngine::GetDomain()
+		_MonoDomain* ScriptingModule::GetDomain()
 		{
 			return pRuntimeDomain;
 		}
 
-		ScriptingAssembly* ScriptingEngine::GetCoreAssembly()
+		ScriptingAssembly* ScriptingModule::GetCoreAssembly()
 		{
 			return &mCoreAssembly;
 		}
 
-		ScriptingAssembly* ScriptingEngine::GetClientAssembly()
+		ScriptingAssembly* ScriptingModule::GetClientAssembly()
 		{
 			return &mClientAssembly;
 		}
 
-		ScriptingRegistry& ScriptingEngine::GetRegistry()
+		ScriptingRegistry& ScriptingModule::GetRegistry()
 		{
 			return mRegistry;
 		}
-		ScriptingEngine::ScriptingEngine()
+		ScriptingModule::ScriptingModule()
 		{
 			pRuntimeDomain = nullptr;
 		}
@@ -160,7 +160,7 @@ namespace Nuclear
 		{
 			NUCLEAR_INFO("\n HELLO WORLD \n");
 		}
-		void ScriptingEngine::InitBindings()
+		void ScriptingModule::InitBindings()
 		{
 			//Utilities::Logger
 			mono_add_internal_call("Nuclear.Utilities.Logger::LoggerInfo_Native", &Bindings::Utilities_Logger_Info);
@@ -178,7 +178,7 @@ namespace Nuclear
 
 		}
 
-		void ScriptingEngine::InitCoreAssembly()
+		void ScriptingModule::InitCoreAssembly()
 		{
 			ScriptingClassCreationDesc desc;
 			desc.mNamespaceName = "Nuclear.ECS";
@@ -187,9 +187,9 @@ namespace Nuclear
 			mRegistry.RegisterEngineComponents(&mCoreAssembly);
 		}
 
-		ScriptingEngine& ScriptingEngine::GetInstance()
+		ScriptingModule& ScriptingModule::GetInstance()
 		{
-			static ScriptingEngine instance;
+			static ScriptingModule instance;
 
 			return instance;
 		}

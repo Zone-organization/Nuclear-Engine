@@ -1,6 +1,6 @@
 #pragma once
 #include <ECS\Transform.h>
-#include <PhysX/PhysXEngine.h>
+#include <PhysX/PhysXModule.h>
 #include <PhysX/RigidDynamic.h>
 
 #define RigidActorStatic true

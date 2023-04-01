@@ -6,7 +6,7 @@
 #include <Assets/DefaultMeshes.h>
 #include <array>
 #include "Diligent/Common/interface/BasicMath.hpp"
-#include <Graphics/GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear
 {
@@ -28,7 +28,7 @@ namespace Nuclear
 
 				auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/CubemapSample.vs.hlsl", std::set<std::string>());
 				CreationAttribs.Source = source.c_str();
-				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 
 				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &CubeVSShader);
@@ -78,7 +78,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/EquirectangularToCubemap.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
@@ -88,7 +88,7 @@ namespace Nuclear
 
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pERectToCubemap_PSO);
 
@@ -127,7 +127,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/IrradianceConvolution.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
@@ -136,7 +136,7 @@ namespace Nuclear
 				PSOCreateInfo.pPS = PSShader;
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeIrradiancePSO);
 
@@ -172,7 +172,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/PrefilterConvolution.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
@@ -181,7 +181,7 @@ namespace Nuclear
 				PSOCreateInfo.pPS = PSShader;
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputePrefilterPSO);
 
@@ -219,7 +219,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/FullScreenTriangle.vs.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &VSShader);
 				}
@@ -235,7 +235,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/BRDF.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
@@ -244,7 +244,7 @@ namespace Nuclear
 				PSOCreateInfo.pPS = PSShader;
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeBRDF_PSO);
 

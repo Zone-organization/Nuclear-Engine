@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <Serialization/IsLoading.h>
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 
 namespace Nuclear
 {
@@ -61,7 +61,7 @@ namespace Nuclear
 				{
 					Core::UUID uuid;
 					auto result = archive(uuid, self.mUsageType);
-					self.pTexture = static_cast<Texture*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(AssetType::Texture, uuid));
+					self.pTexture = static_cast<Texture*>(Serialization::SerializationModule::GetInstance().DeserializeUUID(AssetType::Texture, uuid));
 					return result;
 				}
 				else

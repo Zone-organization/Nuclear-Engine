@@ -3,7 +3,7 @@
 
 #include <Platform\FileSystem.h>
 
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 #include <Assets/AssetLibrary.h>
 
 #include <filesystem>
@@ -62,7 +62,7 @@ namespace Nuclear
 					if (entry.path().extension() == ".NEMeta")
 					{
 						AssetMetadata meta;
-						if (!Serialization::SerializationEngine::GetInstance().Deserialize(meta, entry.path().string()))
+						if (!Serialization::SerializationModule::GetInstance().Deserialize(meta, entry.path().string()))
 						{
 							NUCLEAR_ERROR("[AssetManager] LoadFolder {0} Asset metadata deserialization failed! : {1}", Path.GetInputPath(), entry.path().string());
 						}
@@ -86,7 +86,7 @@ namespace Nuclear
 				path = path + ".NEMeta";
 			}
 			AssetMetadata meta;
-			if (!Serialization::SerializationEngine::GetInstance().Deserialize(meta, path))
+			if (!Serialization::SerializationModule::GetInstance().Deserialize(meta, path))
 			{
 				NUCLEAR_ERROR("[AssetManager] Loading Asset with no metadata! : '{0}'", Path.GetInputPath());
 				return nullptr;
@@ -223,7 +223,7 @@ namespace Nuclear
 			if (exportmetadata)
 			{
 				auto assetmetadata = CreateMetadata(asset);
-				Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath.GetRealPath() + asset->GetName() + GetExtensionByType(asset->GetType()) + ".NEMeta");
+				Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, exportpath.GetRealPath() + asset->GetName() + GetExtensionByType(asset->GetType()) + ".NEMeta");
 			}
 
 			if (asset->GetType() == AssetType::Scene)

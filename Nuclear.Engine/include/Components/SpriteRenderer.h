@@ -3,7 +3,7 @@
 #include <Math\Math.h>
 #include <Graphics\ShaderPipelineSwitch.h>
 #include <Serialization/Access.h>
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 #include <Core\UUID.h>
 #include <Assets/AssetType.h>
 #include <Serialization/IsLoading.h>

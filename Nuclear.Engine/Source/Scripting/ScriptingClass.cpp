@@ -1,5 +1,5 @@
 #include <Scripting/ScriptingClass.h>
-#include <Scripting/ScriptingEngine.h>
+#include <Scripting/ScriptingModule.h>
 #include <Utilities/Logger.h>
 
 #include <mono/jit/jit.h>
@@ -14,7 +14,7 @@ namespace Nuclear
 		{
 			ScriptingObject result;
 
-			MonoObject* instance = mono_object_new(ScriptingEngine::GetInstance().GetDomain(), pClass);
+			MonoObject* instance = mono_object_new(ScriptingModule::GetInstance().GetDomain(), pClass);
 
 			if (!instance)
 			{

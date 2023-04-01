@@ -48,7 +48,7 @@ namespace Nuclear
 				{
 					Core::UUID shaderuuid;
 					auto result = archive(shaderuuid, self.mVariantsInfo);
-					self.pParentShader = static_cast<Assets::Shader*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(Assets::AssetType::Shader, shaderuuid));
+					self.pParentShader = static_cast<Assets::Shader*>(Serialization::SerializationModule::GetInstance().DeserializeUUID(Assets::AssetType::Shader, shaderuuid));
 					return result;
 				}
 				else

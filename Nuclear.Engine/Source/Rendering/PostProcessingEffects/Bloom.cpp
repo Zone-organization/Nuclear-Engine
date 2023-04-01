@@ -4,7 +4,7 @@
 #include <Rendering/FrameRenderData.h>
 #include <Assets\DefaultMeshes.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
-#include <Graphics/GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear
 {
@@ -60,7 +60,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PostProcessing.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 				}
@@ -90,7 +90,7 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pBloomExtractPSO);
 

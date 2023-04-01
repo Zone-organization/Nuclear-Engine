@@ -23,7 +23,7 @@ namespace Nuclear
 			_MonoImage* GetImage();
 
 		private:
-			friend class ScriptingEngine;
+			friend class ScriptingModule;
 			_MonoAssembly* pAssembly;
 			_MonoImage* pImage;
 			std::string mNamespaceName;

@@ -14,7 +14,7 @@ namespace Nuclear
 		RigidBodyComponent::RigidBodyComponent(ECS::Transform trans)
 			:  isKinematic(false), InternalisKinematic(false)
 		{
-			mDynamicActor.mPtr = PhysX::PhysXEngine::GetInstance().GetPhysics()->createRigidDynamic(PhysX::To(trans));
+			mDynamicActor.mPtr = PhysX::PhysXModule::GetInstance().GetPhysics()->createRigidDynamic(PhysX::To(trans));
 		}
 
 		RigidBodyComponent::~RigidBodyComponent()

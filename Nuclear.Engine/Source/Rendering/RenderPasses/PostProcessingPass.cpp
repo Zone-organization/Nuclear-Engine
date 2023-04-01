@@ -6,7 +6,7 @@
 #include <Platform\FileSystem.h>
 #include <Assets/AssetManager.h>
 #include <Assets/Shader.h>
-#include <Graphics/GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear
 {
@@ -177,7 +177,7 @@ namespace Nuclear
 				pPostFXShader = Assets::AssetManager::GetInstance().Import<Assets::Shader>("@NuclearAssets@/Shaders/PostProcessing.NuclearShader");
 
 				Graphics::ShaderPipelineBakingDesc bakedesc;
-				bakedesc.pVariantsFactory = &Graphics::GraphicsEngine::GetInstance().GetDefaultShaderPipelineVariantFactory();
+				bakedesc.pVariantsFactory = &Graphics::GraphicsModule::GetInstance().GetDefaultShaderPipelineVariantFactory();
 				bakedesc.mPreVariantPipelineCreationCallback = ([](Diligent::GraphicsPipelineStateCreateInfo& PSOCreateInfo) {
 					PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 					PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
@@ -232,7 +232,7 @@ namespace Nuclear
 
 					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/ScreenSpace.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 				}
@@ -263,7 +263,7 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pBloomExtractPSO);
 

@@ -1,6 +1,6 @@
 #include "AssimpImporter.h"
 #include <Assets\AssetManager.h>
-#include "Graphics\GraphicsEngine.h"
+#include "Graphics\GraphicsModule.h"
 #include <Assets\Material.h>
 #include "AssimpGLMHelpers.h"
 #include <Utilities/Logger.h>

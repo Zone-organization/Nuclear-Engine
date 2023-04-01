@@ -1,17 +1,17 @@
-#include "Serialization/SerializationEngine.h"
+#include "Serialization/SerializationModule.h"
 #include <ThirdParty/zpp_bits.h>
 #include <Parsers/INIParser.h>
 #include <ThirdParty/magic_enum.hpp>
 #include <Utilities/Hash.h>
 #include <Assets/AssetLibrary.h>
-#include <Fallbacks/FallbacksEngine.h>
+#include <Fallbacks/FallbacksModule.h>
 
 namespace Nuclear
 {
 	namespace Serialization
 	{
-		inline SerializationEngine& SerializationEngine::GetInstance() {
-			static SerializationEngine instance;
+		inline SerializationModule& SerializationModule::GetInstance() {
+			static SerializationModule instance;
 
 			return instance;
 		}
@@ -40,7 +40,7 @@ namespace Nuclear
 
 			return "false";
 		}
-		bool SerializationEngine::Serialize(const Assets::AssetMetadata& metadata, const Core::Path& path)
+		bool SerializationModule::Serialize(const Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
 			Parsers::INIFile file(path.GetRealPath());
 
@@ -77,7 +77,7 @@ namespace Nuclear
 		}
 
 
-		bool SerializationEngine::Deserialize(Assets::AssetMetadata& metadata, const Core::Path& path)
+		bool SerializationModule::Deserialize(Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
 			Parsers::INIFile file(path.GetRealPath());
 
@@ -116,7 +116,7 @@ namespace Nuclear
 			return result;
 		}
 
-		Assets::IAsset* SerializationEngine::DeserializeUUID(Assets::AssetType type, const Core::UUID& uuid)
+		Assets::IAsset* SerializationModule::DeserializeUUID(Assets::AssetType type, const Core::UUID& uuid)
 		{
 			if (type == Assets::AssetType::Shader)
 			{
@@ -135,7 +135,7 @@ namespace Nuclear
 				auto result = Assets::AssetLibrary::GetInstance().mImportedTextures.GetOrAddAsset(uuid);
 				if(result->GetTextureView() == nullptr)
 				{
-					result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultGreyImage()->GetTextureView());
+					result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultGreyImage()->GetTextureView());
 				}
 				return result;
 			}
@@ -143,7 +143,7 @@ namespace Nuclear
 
 			return nullptr;
 		}
-		SerializationEngine::SerializationEngine()
+		SerializationModule::SerializationModule()
 		{
 		}
 	}

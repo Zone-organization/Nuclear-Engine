@@ -5,7 +5,7 @@
 #include <Assets\Shader.h>
 #include <Assets\Texture.h>
 #include <Graphics\ShaderPipelineVariant.h>
-#include <Rendering/RenderingEngine.h>
+#include <Rendering/RenderingModule.h>
 #include <Rendering\FrameRenderData.h>
 
 namespace Nuclear
@@ -26,7 +26,7 @@ namespace Nuclear
 		void ForwardRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
 		{
 			pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
-			Rendering::RenderingEngine::GetInstance().UpdateCameraCB(pCurrentFrame->pCamera);
+			Rendering::RenderingModule::GetInstance().UpdateCameraCB(pCurrentFrame->pCamera);
 
 			UpdateAnimationCB(mesh.GetAnimator());
 

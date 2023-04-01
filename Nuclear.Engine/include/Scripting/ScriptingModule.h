@@ -10,7 +10,7 @@ namespace Nuclear
 {
 	namespace Systems
 	{
-		class ScriptingEngine;
+		class ScriptingModule;
 	}
 	namespace Scripting
 	{
@@ -19,7 +19,7 @@ namespace Nuclear
 			std::string mNamespaceName;
 			Core::Path mPath;
 		};
-		struct ScriptingEngineDesc
+		struct ScriptingModuleDesc
 		{
 			//Directory only
 			Core::Path mMonoRuntimeDir;
@@ -30,15 +30,15 @@ namespace Nuclear
 			Core::Path mClientAssemblyPath;
 			bool mAutoInitClientAssembly = true;
 		};
-		class NEAPI ScriptingEngine
+		class NEAPI ScriptingModule
 		{
 		public:
-			ScriptingEngine(ScriptingEngine const&) = delete;
-			void operator=(ScriptingEngine const&) = delete;
+			ScriptingModule(ScriptingModule const&) = delete;
+			void operator=(ScriptingModule const&) = delete;
 
-			static ScriptingEngine& GetInstance();
+			static ScriptingModule& GetInstance();
 
-			bool Initialize(const ScriptingEngineDesc& desc);
+			bool Initialize(const ScriptingModuleDesc& desc);
 
 			void Shutdown();
 
@@ -55,7 +55,7 @@ namespace Nuclear
 			ScriptingAssembly* GetClientAssembly();
 			ScriptingRegistry& GetRegistry();
 		private:
-			ScriptingEngine();
+			ScriptingModule();
 
 			void InitBindings();
 			void InitCoreAssembly();
@@ -70,7 +70,7 @@ namespace Nuclear
 		};
 
 
-		//class NEAPI ScriptingEngine
+		//class NEAPI ScriptingModule
 		//{
 		//public:
 		//	bool Initialize();

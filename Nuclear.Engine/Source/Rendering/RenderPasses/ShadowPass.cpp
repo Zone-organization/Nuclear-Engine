@@ -1,7 +1,7 @@
 #include "Rendering\RenderPasses\ShadowPass.h"
 #include <Platform\FileSystem.h>
 #include <Graphics\Context.h>
-#include <Graphics/GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 #include <Utilities/Logger.h>
 #include <Components/MeshComponent.h>
 #include <Assets/Mesh.h>
@@ -298,7 +298,7 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 
 			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-			Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPositionalShadowMapDepthPSO);
 
@@ -471,7 +471,7 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 
 			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-			Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mOmniDirShadowPassPSO);
 

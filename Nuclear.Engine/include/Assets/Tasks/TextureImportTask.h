@@ -9,7 +9,7 @@
 
 #include <Platform/FileSystem.h>
 
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 
 namespace Nuclear
 {
@@ -77,12 +77,12 @@ namespace Nuclear
 						imageloadingdesc->mAsyncLoading = mImportingDesc.mCommonOptions.mAsyncImport;
 
 						//Export Meta
-						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + exportedimagename + ".NEMeta");
+						Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, exportpath + exportedimagename + ".NEMeta");
 
 						delete assetmetadata.pLoadingDesc;
 					}
 					//Create image task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, IMPORTER_FACTORY_TYPE));
+					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, IMPORTER_FACTORY_TYPE));
 				}
 				else
 				{

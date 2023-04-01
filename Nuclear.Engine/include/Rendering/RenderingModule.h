@@ -9,7 +9,7 @@ namespace Nuclear
 {
 	namespace Rendering
 	{
-		struct RenderingEngineDesc
+		struct RenderingModuleDesc
 		{
 			Uint32 RTWidth;
 			Uint32 RTHeight;
@@ -17,15 +17,15 @@ namespace Nuclear
 
 		};
 
-		class NEAPI RenderingEngine
+		class NEAPI RenderingModule
 		{
 		public:
-			static RenderingEngine& GetInstance();
+			static RenderingModule& GetInstance();
 
-			RenderingEngine(const RenderingEngine&) = delete;
-			RenderingEngine& operator= (const RenderingEngine) = delete;
+			RenderingModule(const RenderingModule&) = delete;
+			RenderingModule& operator= (const RenderingModule) = delete;
 
-			bool Initialize(const RenderingEngineDesc& desc);
+			bool Initialize(const RenderingModuleDesc& desc);
 
 			void Shutdown();
 
@@ -43,7 +43,7 @@ namespace Nuclear
 			Graphics::RenderTarget& GetFinalDepthRT();
 
 		protected:
-			RenderingEngineDesc mDesc;
+			RenderingModuleDesc mDesc;
 
 			//rendering constant buffers
 			Diligent::RefCntAutoPtr<Diligent::IBuffer> mCameraCB;
@@ -58,7 +58,7 @@ namespace Nuclear
 			bool InitSceneToScreenPSO();
 
 		private:
-			RenderingEngine();
+			RenderingModule();
 		};
 
 	}

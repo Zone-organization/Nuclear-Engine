@@ -18,20 +18,20 @@ namespace Nuclear
 	namespace PhysX
 	{
 		using namespace physx;
-		struct PhysXEngineDesc
+		struct PhysXModuleDesc
 		{
 
 		};
 
-		class NEAPI PhysXEngine
+		class NEAPI PhysXModule
 		{
 		public:	
-			PhysXEngine(PhysXEngine const&) = delete;
-			void operator=(PhysXEngine const&) = delete;
+			PhysXModule(PhysXModule const&) = delete;
+			void operator=(PhysXModule const&) = delete;
 
-			static PhysXEngine& GetInstance();
+			static PhysXModule& GetInstance();
 
-			bool Initialize(const PhysXEngineDesc& desc);
+			bool Initialize(const PhysXModuleDesc& desc);
 			void Shutdown();
 
 			PxFoundation* GetFoundation();
@@ -49,7 +49,7 @@ namespace Nuclear
 			PxMaterial* gDefaultMaterial;
 
 		private:
-			PhysXEngine();
+			PhysXModule();
 		};
 	}
 }

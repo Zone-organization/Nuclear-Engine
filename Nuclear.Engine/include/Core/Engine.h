@@ -16,12 +16,12 @@ namespace Nuclear
 			bool VSync = true;
 			bool AutoSelectRenderer = true;
 
-			bool AutoInitGraphicsEngine = true;
-			bool AutoInitAudioEngine = true;
-			bool AutoInitPhysXEngine = true;
-			bool AutoInitScriptingEngine = true;
-			bool AutoInitRenderingEngine = true;
-			bool AutoInitThreadingEngine = true;
+			bool AutoInitGraphicsModule = true;
+			bool AutoInitAudioModule = true;
+			bool AutoInitPhysXModule = true;
+			bool AutoInitScriptingModule = true;
+			bool AutoInitRenderingModule = true;
+			bool AutoInitThreadingModule = true;
 
 			std::string mScriptingClientDllName = "ClientScripts.dll";
 			std::string mScriptingAssemblyNamespace = "ClientScripts";

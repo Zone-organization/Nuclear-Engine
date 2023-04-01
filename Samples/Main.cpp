@@ -46,11 +46,11 @@ int main(int argc, char* argv[])
 	//}
 	//else
 	//{
-	//	EngineStartupDesc desc;
+	//	ModuleStartupDesc desc;
 	//	Core::Engine::GetInstance().Start(desc);
 	//}
 
-	//EngineStartupDesc desc;
+	//ModuleStartupDesc desc;
 
 
 	desc.mEngineWindowDesc.WindowWidth = 1280;

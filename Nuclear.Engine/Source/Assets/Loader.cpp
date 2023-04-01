@@ -4,7 +4,7 @@
 #include <Assets/Tasks/MaterialLoadTask.h>
 #include <Assets/Tasks/ShaderLoadTask.h>
 #include <Assets/Tasks/MeshLoadTask.h>
-#include <Fallbacks/FallbacksEngine.h>
+#include <Fallbacks/FallbacksModule.h>
 
 namespace Nuclear
 {
@@ -28,12 +28,12 @@ namespace Nuclear
 
 			if (result->GetTextureView() == nullptr)
 			{
-				result->SetTextureView(Fallbacks::FallbacksEngine::GetInstance().GetDefaultBlackImage()->GetTextureView());
+				result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage()->GetTextureView());
 			}
 
 			mQueuedAssets.push_back(result);
 
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new TextureLoadTask(result, Path, metadata));
+			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new TextureLoadTask(result, Path, metadata));
 
 			return result;
 		}
@@ -46,7 +46,7 @@ namespace Nuclear
 
 			mQueuedAssets.push_back(result);
 
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new MaterialLoadTask(result, Path, metadata));
+			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MaterialLoadTask(result, Path, metadata));
 
 			return result;
 		}
@@ -59,7 +59,7 @@ namespace Nuclear
 
 			mQueuedAssets.push_back(result);
 
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new ShaderLoadTask(result, Path, metadata));
+			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new ShaderLoadTask(result, Path, metadata));
 
 			return result;
 		}
@@ -83,7 +83,7 @@ namespace Nuclear
 					if (auto_load_external_material)
 					{
 						AssetMetadata material_meta;
-						if (!Serialization::SerializationEngine::GetInstance().Deserialize(material_meta, Path.GetPathNoExt() + ".NEMaterial.NEMeta"))
+						if (!Serialization::SerializationModule::GetInstance().Deserialize(material_meta, Path.GetPathNoExt() + ".NEMaterial.NEMeta"))
 						{
 							NUCLEAR_ERROR("[Loader] Loading Mesh's External Material with no metadata! : '{0}'", Path.GetInputPath());
 							return nullptr;
@@ -105,7 +105,7 @@ namespace Nuclear
 
 			mQueuedAssets.push_back(mesh);
 
-			Threading::ThreadingEngine::GetInstance().GetThreadPool().AddTask(new MeshLoadTask({ metadata.mName, mesh, material, animations }, Path, metadata));
+			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MeshLoadTask({ metadata.mName, mesh, material, animations }, Path, metadata));
 
 			return mesh;
 		}

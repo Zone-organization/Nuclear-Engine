@@ -7,12 +7,12 @@ namespace Nuclear
 {
     namespace Threading
     {
-        class NEAPI ThreadingEngine {
+        class NEAPI ThreadingModule {
         public:
-            ThreadingEngine(ThreadingEngine const&) = delete;
-            void operator=(ThreadingEngine const&) = delete;
+            ThreadingModule(ThreadingModule const&) = delete;
+            void operator=(ThreadingModule const&) = delete;
 
-            static ThreadingEngine& GetInstance();
+            static ThreadingModule& GetInstance();
 
             bool Initialize();
             void Shutdown();
@@ -28,7 +28,7 @@ namespace Nuclear
             std::vector<MainThreadTask*> mMainTTasks;
             std::mutex mMainTTasksMutex;
         private:
-            ThreadingEngine();
+            ThreadingModule();
         };
 
     }

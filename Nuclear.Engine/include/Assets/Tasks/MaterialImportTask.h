@@ -1,6 +1,6 @@
 #pragma once
 #include <Threading/MainThreadTask.h>
-#include <Threading/ThreadingEngine.h>
+#include <Threading/ThreadingModule.h>
 #include <Assets/ImportingDescs.h>
 #include <filesystem>
 #include <Assets/Importer.h>
@@ -11,7 +11,7 @@
 #include <Platform/FileSystem.h>
 #include <Utilities/Logger.h>
 
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 
 namespace Nuclear
 {
@@ -68,7 +68,7 @@ namespace Nuclear
 
 				auto matloadingdesc = static_cast<Assets::MaterialLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MaterialLoadingDesc);
 
-				Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, newpath + ".NEMaterial" + ".NEMeta");
+				Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, newpath + ".NEMaterial" + ".NEMeta");
 				delete assetmetadata.pLoadingDesc;
 
 				NUCLEAR_INFO("[Assets] Imported: {0} ", mPath.GetInputPath());

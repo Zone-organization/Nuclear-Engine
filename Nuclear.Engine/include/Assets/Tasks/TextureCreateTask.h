@@ -5,10 +5,10 @@
 #include <Assets/Loader.h>
 
 #include <Threading/MainThreadTask.h>
-#include <Threading/ThreadingEngine.h>
+#include <Threading/ThreadingModule.h>
 #include <Utilities/Logger.h>
 
-#include <Graphics\GraphicsEngine.h>
+#include <Graphics\GraphicsModule.h>
 
 #define IMPORTER_FACTORY_TYPE 1
 #define LOADER_FACTORY_TYPE 2
@@ -32,7 +32,7 @@ namespace Nuclear
 
 			bool OnRunning() override
 			{
-				bool result = Graphics::GraphicsEngine::GetInstance().CreateImage(pTexture, pImageData);
+				bool result = Graphics::GraphicsModule::GetInstance().CreateImage(pTexture, pImageData);
 				
 				if (mFactoryType == 1)
 				{

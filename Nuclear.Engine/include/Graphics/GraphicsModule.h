@@ -8,7 +8,7 @@
 #include <Graphics/ShaderTypes.h>
 #include <Graphics/ShaderReflection.h>
 #include <unordered_map>
-#include <Graphics\GraphicsEngineDesc.h>
+#include <Graphics\GraphicsModuleDesc.h>
 
 namespace Nuclear
 {
@@ -19,15 +19,15 @@ namespace Nuclear
 	}
 	namespace Graphics
 	{
-		class NEAPI GraphicsEngine
+		class NEAPI GraphicsModule
 		{
 		public:
-			GraphicsEngine(GraphicsEngine const&) = delete;
-			void operator=(GraphicsEngine const&) = delete;
+			GraphicsModule(GraphicsModule const&) = delete;
+			void operator=(GraphicsModule const&) = delete;
 
-			static GraphicsEngine& GetInstance();
+			static GraphicsModule& GetInstance();
 
-			bool Initialize(const GraphicsEngineDesc& desc);
+			bool Initialize(const GraphicsModuleDesc& desc);
 			void Shutdown();
 
 			bool CreateMesh(Assets::Mesh* result);
@@ -78,7 +78,7 @@ namespace Nuclear
 			Diligent::SamplerDesc SamPointBorderDesc;
 			Diligent::SamplerDesc ShadowMapSamplerDesc;
 		private:
-			GraphicsEngine();
+			GraphicsModule();
 		};
 	}
 }

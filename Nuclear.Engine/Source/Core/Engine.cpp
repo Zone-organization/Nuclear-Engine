@@ -15,13 +15,13 @@
 
 #include <filesystem>
 
-//Sub-engines
-#include <Audio\AudioEngine.h>
-#include <Graphics\GraphicsEngine.h>
-#include <PhysX\PhysXEngine.h>
-#include <Scripting/ScriptingEngine.h>
-#include <Rendering\RenderingEngine.h>
-#include <Threading/ThreadingEngine.h>
+//Engine Modules
+#include <Audio\AudioModule.h>
+#include <Graphics\GraphicsModule.h>
+#include <PhysX\PhysXModule.h>
+#include <Scripting/ScriptingModule.h>
+#include <Rendering\RenderingModule.h>
+#include <Threading/ThreadingModule.h>
 #include <Threading/DelegateTask.h>
 
 #include <Assets/AssetManager.h>
@@ -99,33 +99,33 @@ namespace Nuclear
 
 			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
 
-			if (desc.AutoInitGraphicsEngine)
+			if (desc.AutoInitGraphicsModule)
 			{
-				Graphics::GraphicsEngineDesc GraphicsEngineDesc;
-				GraphicsEngineDesc.pWindowHandle = GetMainWindow()->GetSDLWindowPtr();
-				if (!Graphics::GraphicsEngine::GetInstance().Initialize(GraphicsEngineDesc))
+				Graphics::GraphicsModuleDesc GraphicsModuleDesc;
+				GraphicsModuleDesc.pWindowHandle = GetMainWindow()->GetSDLWindowPtr();
+				if (!Graphics::GraphicsModule::GetInstance().Initialize(GraphicsModuleDesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initalize GraphicsEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize GraphicsModule...");
 					return false;
 				}
 			}
 
-			if (desc.AutoInitAudioEngine)
+			if (desc.AutoInitAudioModule)
 			{
-				Audio::AudioEngineDesc desc;
-				desc.mRequestedBackend = Audio::AudioEngineDesc::AudioBackendType::XAudio2;
+				Audio::AudioModuleDesc desc;
+				desc.mRequestedBackend = Audio::AudioModuleDesc::AudioBackendType::XAudio2;
 
-				if (!Audio::AudioEngine::GetInstance().Initialize(desc))
+				if (!Audio::AudioModule::GetInstance().Initialize(desc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initalize AudioEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize AudioModule...");
 					return false;
 				}
 			}
-			if (desc.AutoInitScriptingEngine)
+			if (desc.AutoInitScriptingModule)
 			{
 				namespace fs = std::filesystem;
 
-				Scripting::ScriptingEngineDesc scdesc;
+				Scripting::ScriptingModuleDesc scdesc;
 				fs::path monopath = std::filesystem::current_path().string() + "/mono";
 
 				if (!fs::exists(monopath))
@@ -140,42 +140,42 @@ namespace Nuclear
 				scdesc.mScriptingCoreAssemblyDir = std::filesystem::current_path().string();
 				scdesc.mClientAssemblyPath = std::filesystem::current_path().string() + "/" + desc.mScriptingClientDllName;
 				scdesc.mClientNamespace = desc.mScriptingAssemblyNamespace;
-				if (!Scripting::ScriptingEngine::GetInstance().Initialize(scdesc))
+				if (!Scripting::ScriptingModule::GetInstance().Initialize(scdesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingModule...");
 					return false;
 				}
 			}
 
-			if (desc.AutoInitPhysXEngine)
+			if (desc.AutoInitPhysXModule)
 			{
-				PhysX::PhysXEngineDesc pxdesc;
+				PhysX::PhysXModuleDesc pxdesc;
 
-				if (!PhysX::PhysXEngine::GetInstance().Initialize(pxdesc))
+				if (!PhysX::PhysXModule::GetInstance().Initialize(pxdesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initalize PhysXEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize PhysXModule...");
 					return false;
 				}
 			}
 
-			if (desc.AutoInitRenderingEngine)
+			if (desc.AutoInitRenderingModule)
 			{
-				Rendering::RenderingEngineDesc redesc;
+				Rendering::RenderingModuleDesc redesc;
 				redesc.RTWidth = desc.mEngineWindowDesc.WindowWidth;
 				redesc.RTHeight = desc.mEngineWindowDesc.WindowHeight;;
 									
-				if (!Rendering::RenderingEngine::GetInstance().Initialize(redesc))
+				if (!Rendering::RenderingModule::GetInstance().Initialize(redesc))
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initalize RenderingEngine...");
+					NUCLEAR_FATAL("[Engine] Failed to initalize RenderingModule...");
 					return false;
 				}			
 			}
 
-			if (desc.AutoInitThreadingEngine)
+			if (desc.AutoInitThreadingModule)
 			{
-				if (!Threading::ThreadingEngine::GetInstance().Initialize())
+				if (!Threading::ThreadingModule::GetInstance().Initialize())
 				{
-					NUCLEAR_FATAL("[Engine] Failed to initalize ThreadingEngine...");
+					NUCLEAR_FATAL("[Module] Failed to initalize ThreadingModule...");
 					return false;
 				}
 			}
@@ -200,11 +200,11 @@ namespace Nuclear
 			NUCLEAR_INFO("[Engine] Shutting Down Engine.");
 			Assets::AssetLibrary::GetInstance().Clear();
 			pClient = nullptr;
-			Threading::ThreadingEngine::GetInstance().Shutdown();
-			Rendering::RenderingEngine::GetInstance().Shutdown();
-			Audio::AudioEngine::GetInstance().Shutdown();
-			PhysX::PhysXEngine::GetInstance().Shutdown();
-			Graphics::GraphicsEngine::GetInstance().Shutdown();
+			Threading::ThreadingModule::GetInstance().Shutdown();
+			Rendering::RenderingModule::GetInstance().Shutdown();
+			Audio::AudioModule::GetInstance().Shutdown();
+			PhysX::PhysXModule::GetInstance().Shutdown();
+			Graphics::GraphicsModule::GetInstance().Shutdown();
 			MainWindow.Destroy();
 			//Graphics::ImGui_Renderer::Shutdown();
 			SDL_Quit();
@@ -324,7 +324,7 @@ namespace Nuclear
 				}
 
 				//Process MainThread tasks
-				Threading::ThreadingEngine::GetInstance().ExecuteMainThreadTasks(1);
+				Threading::ThreadingModule::GetInstance().ExecuteMainThreadTasks(1);
 					
 				//Render
 				Platform::Input::GetInstance().Update();

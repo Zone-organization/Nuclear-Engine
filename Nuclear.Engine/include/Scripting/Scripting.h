@@ -1,3 +1,3 @@
 #pragma once
-#include "Scripting\ScriptingEngine.h"
+#include "Scripting\ScriptingModule.h"
 #include "Scripting\ScriptingAssembly.h"

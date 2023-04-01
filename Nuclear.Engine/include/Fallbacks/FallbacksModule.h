@@ -6,13 +6,13 @@ namespace Nuclear
 {
 	namespace Fallbacks
 	{
-		class NEAPI FallbacksEngine
+		class NEAPI FallbacksModule
 		{
 		public:
-			static FallbacksEngine& GetInstance();
+			static FallbacksModule& GetInstance();
 
-			FallbacksEngine(const FallbacksEngine&) = delete;
-			FallbacksEngine& operator= (const FallbacksEngine) = delete;
+			FallbacksModule(const FallbacksModule&) = delete;
+			FallbacksModule& operator= (const FallbacksModule) = delete;
 
 			void Initialize();
 			
@@ -24,7 +24,7 @@ namespace Nuclear
 			const Assets::MaterialTexture& GetDefaultSpecularTex() const;
 			const Assets::MaterialTexture& GetDefaultNormalTex() const;
 		private:
-			FallbacksEngine();
+			FallbacksModule();
 
 			Assets::Texture* DefaultBlackImage;
 			Assets::Texture* DefaultGreyImage;

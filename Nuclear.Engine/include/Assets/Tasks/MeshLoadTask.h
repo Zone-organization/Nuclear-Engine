@@ -1,6 +1,6 @@
 #pragma once
 #include <Threading/MainThreadTask.h>
-#include <Threading/ThreadingEngine.h>
+#include <Threading/ThreadingModule.h>
 #include <Assets/ImportingDescs.h>
 #include <filesystem>
 #include <Assets/Loader.h>
@@ -12,7 +12,7 @@
 #include <Platform/FileSystem.h>
 #include <Utilities/Logger.h>
 
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 
 #include <Assets/Tasks/MeshCreateTask.h>
 
@@ -62,7 +62,7 @@ namespace Nuclear
 				if (mResult.pMesh)
 				{
 					//create task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, LOADER_FACTORY_TYPE));
+					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, LOADER_FACTORY_TYPE));
 
 				}
 

@@ -6,7 +6,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Systems\DebugSystem.h>
 #include <Rendering\FrameRenderData.h>
-#include <Rendering/RenderingEngine.h>
+#include <Rendering/RenderingModule.h>
 
 namespace Nuclear
 {
@@ -42,7 +42,7 @@ namespace Nuclear
         void DefferedRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
-            Rendering::RenderingEngine::GetInstance().UpdateCameraCB(pCurrentFrame->pCamera);
+            Rendering::RenderingModule::GetInstance().UpdateCameraCB(pCurrentFrame->pCamera);
 
             UpdateAnimationCB(mesh.GetAnimator());
 

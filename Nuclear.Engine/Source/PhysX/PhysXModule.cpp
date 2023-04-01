@@ -1,4 +1,4 @@
-#include "PhysX\PhysXEngine.h"
+#include "PhysX\PhysXModule.h"
 #include "Components\ColliderComponent.h"
 #include <PhysX/include/PxPhysicsAPI.h>
 #include <Utilities/Logger.h>
@@ -26,19 +26,19 @@ namespace Nuclear
 			}
 		}gErrorCallback;
 
-		PhysXEngine::PhysXEngine()
+		PhysXModule::PhysXModule()
 		{
 
 		}
-		PhysXEngine& PhysXEngine::GetInstance()
+		PhysXModule& PhysXModule::GetInstance()
 		{
-			static PhysXEngine pxengine;
+			static PhysXModule pxModule;
 
-			return pxengine;
+			return pxModule;
 		}
 		PxDefaultAllocator gAllocator;
 
-		bool PhysXEngine::Initialize(const PhysXEngineDesc& desc)
+		bool PhysXModule::Initialize(const PhysXModuleDesc& desc)
 		{
 			gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 			
@@ -46,7 +46,7 @@ namespace Nuclear
 
 			if (gPhysics == NULL)
 			{
-				NUCLEAR_ERROR("[PhysXEngine] PxCreatePhysics Failed!");
+				NUCLEAR_ERROR("[PhysXModule] PxCreatePhysics Failed!");
 				return false;
 			}
 
@@ -57,7 +57,7 @@ namespace Nuclear
 
 			if (!gDispatcher)
 			{
-				NUCLEAR_ERROR("[PhysXEngine] PxDefaultCpuDispatcherCreate Failed!");
+				NUCLEAR_ERROR("[PhysXModule] PxDefaultCpuDispatcherCreate Failed!");
 				return false;
 			}
 
@@ -65,16 +65,16 @@ namespace Nuclear
 			gDefaultMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.1f);
 			if (!gDefaultMaterial)
 			{
-				NUCLEAR_ERROR("[PhysXEngine] createMaterial(gDefaultMaterial) Failed!");
+				NUCLEAR_ERROR("[PhysXModule] createMaterial(gDefaultMaterial) Failed!");
 				return false;
 			}
 
-			NUCLEAR_INFO("[PhysXEngine] PhysX has been initialized succesfully!");
+			NUCLEAR_INFO("[PhysXModule] PhysX has been initialized succesfully!");
 			return true;
 		}
-		void PhysXEngine::Shutdown()
+		void PhysXModule::Shutdown()
 		{
-			NUCLEAR_INFO("[PhysXEngine] Shutting down...");
+			NUCLEAR_INFO("[PhysXModule] Shutting down...");
 
 			PX_RELEASE(gDefaultMaterial)
 			PX_RELEASE(gPvd)
@@ -82,23 +82,23 @@ namespace Nuclear
 			PX_RELEASE(gPhysics)
 			PX_RELEASE(gFoundation)	
 		}
-		PxFoundation* PhysXEngine::GetFoundation()
+		PxFoundation* PhysXModule::GetFoundation()
 		{
 			return gFoundation;
 		}
-		PxPhysics* PhysXEngine::GetPhysics()
+		PxPhysics* PhysXModule::GetPhysics()
 		{
 			return gPhysics;
 		}
-		PxPvd* PhysXEngine::GetPvd()
+		PxPvd* PhysXModule::GetPvd()
 		{
 			return gPvd;
 		}
-		PxCpuDispatcher* PhysXEngine::GetCPUDispatcher()
+		PxCpuDispatcher* PhysXModule::GetCPUDispatcher()
 		{
 			return gDispatcher;
 		}
-		PxMaterial& PhysXEngine::GetDefaultMaterial()
+		PxMaterial& PhysXModule::GetDefaultMaterial()
 		{
 			return *gDefaultMaterial;
 		}

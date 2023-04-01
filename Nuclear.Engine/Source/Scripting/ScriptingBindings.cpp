@@ -1,5 +1,5 @@
 #include "Scripting/ScriptingBindings.h"
-#include "Scripting/ScriptingEngine.h"
+#include "Scripting/ScriptingModule.h"
 #include "Core/Scene.h"
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/appdomain.h>
@@ -17,41 +17,41 @@ namespace Nuclear
 			void Utilities_Logger_Trace(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				CLIENT_TRACE(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_TRACE(ScriptingModule::GetInstance().ToStdString(str));
 			}
 			void Utilities_Logger_Info(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				CLIENT_INFO(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_INFO(ScriptingModule::GetInstance().ToStdString(str));
 			}
 			void Utilities_Logger_Warn(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				CLIENT_WARN(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_WARN(ScriptingModule::GetInstance().ToStdString(str));
 			}
 			void Utilities_Logger_Error(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				CLIENT_ERROR(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_ERROR(ScriptingModule::GetInstance().ToStdString(str));
 			}
 			void Utilities_Logger_FatalError(_MonoObject* message)
 			{
 				MonoString* str = mono_object_to_string(message, NULL);
-				CLIENT_FATAL(ScriptingEngine::GetInstance().ToStdString(str));
+				CLIENT_FATAL(ScriptingModule::GetInstance().ToStdString(str));
 			}
 			void ECS_Entity_AddComponent(Uint32 id, void* type)
 			{
 				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 
 				MonoType* monoType = mono_reflection_type_get_type((MonoReflectionType*)type);
-				ScriptingEngine::GetInstance().GetRegistry().mAddComponentFuncs[monoType](entity);				
+				ScriptingModule::GetInstance().GetRegistry().mAddComponentFuncs[monoType](entity);				
 			}
 			bool ECS_Entity_HasComponent(Uint32 id, void* type)
 			{
 				ECS::Entity entity(Core::Scene::GetInstance().GetRegistry(), id);
 
 				MonoType* monoType = mono_reflection_type_get_type((MonoReflectionType*)type);
-				bool result = ScriptingEngine::GetInstance().GetRegistry().mHasComponentFuncs[monoType](entity);
+				bool result = ScriptingModule::GetInstance().GetRegistry().mHasComponentFuncs[monoType](entity);
 				return result;
 			}
 

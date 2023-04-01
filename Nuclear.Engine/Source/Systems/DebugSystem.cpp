@@ -3,12 +3,12 @@
 #include <Components/LightComponent.h>
 #include <Components/EntityInfoComponent.h>
 #include <Systems/RenderSystem.h>
-#include <Fallbacks/FallbacksEngine.h>
+#include <Fallbacks/FallbacksModule.h>
 #include <Core/Scene.h>
 #include <Utilities/Logger.h>
 #include <Assets\DefaultMeshes.h>
-#include <Graphics\GraphicsEngine.h>
-#include <Rendering/RenderingEngine.h>
+#include <Graphics/GraphicsModule.h>
+#include <Rendering/RenderingModule.h>
 #include <Assets\Texture.h>
 
 namespace Nuclear
@@ -130,16 +130,16 @@ namespace Nuclear
 			PSOCreateInfo.pVS = VShader;
 			PSOCreateInfo.pPS = PShader;
 
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsEngine::GetInstance().GetRendering3DInputLayout().data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsEngine::GetInstance().GetRendering3DInputLayout().size());
+			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsModule::GetInstance().GetRendering3DInputLayout().data();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::GetInstance().GetRendering3DInputLayout().size());
 
 			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-			Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pShader.mPipeline);
 
-			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingEngine::GetInstance().GetCameraCB());
-			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingEngine::GetInstance().GetAnimationCB());
+			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingModule::GetInstance().GetCameraCB());
+			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingModule::GetInstance().GetAnimationCB());
 
 			pShader.mPipeline->CreateShaderResourceBinding(&pShader.mPipelineSRB, true);
 
@@ -172,7 +172,7 @@ namespace Nuclear
 			{
 				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pShader.mPipeline);
 				auto RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, Rendering::RenderingEngine::GetInstance().GetFinalDepthRT().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, Rendering::RenderingModule::GetInstance().GetFinalDepthRT().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
 				{
 					auto view = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
@@ -183,9 +183,9 @@ namespace Nuclear
 
 						EntityInfo.mTransform.Update();
 						Core::Scene::GetInstance().GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						Rendering::RenderingEngine::GetInstance().UpdateCameraCB(Core::Scene::GetInstance().GetMainCamera());
+						Rendering::RenderingModule::GetInstance().UpdateCameraCB(Core::Scene::GetInstance().GetMainCamera());
 
-						auto AnimationBufferPtr = Rendering::RenderingEngine::GetInstance().GetAnimationCB();
+						auto AnimationBufferPtr = Rendering::RenderingModule::GetInstance().GetAnimationCB();
 
 						Math::Matrix4 empty(0.0f);
 						PVoid data;
@@ -194,7 +194,7 @@ namespace Nuclear
 						Graphics::Context::GetInstance().GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
 
 
-						InstantRender(Assets::DefaultMeshes::GetSphereAsset(),Fallbacks::FallbacksEngine::GetInstance().GetDefaultGreyImage());
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(),Fallbacks::FallbacksModule::GetInstance().GetDefaultGreyImage());
 
 
 						//TODO: Render Cube at direction

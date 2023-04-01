@@ -21,13 +21,13 @@ namespace Nuclear
 			return Assets::AssetType::Unknown;
 		}*/
 
-		class NEAPI SerializationEngine
+		class NEAPI SerializationModule
 		{
 		public:
-			static SerializationEngine& GetInstance();
+			static SerializationModule& GetInstance();
 
-			SerializationEngine(const SerializationEngine&) = delete;
-			SerializationEngine& operator= (const SerializationEngine) = delete;
+			SerializationModule(const SerializationModule&) = delete;
+			SerializationModule& operator= (const SerializationModule) = delete;
 
 			bool Serialize(const Assets::AssetMetadata& metadata, const Core::Path& path);
 
@@ -46,7 +46,7 @@ namespace Nuclear
 			Assets::IAsset* DeserializeUUID(Assets::AssetType type, const Core::UUID& uuid);
 
 		private:
-			SerializationEngine();
+			SerializationModule();
 		};
 
 

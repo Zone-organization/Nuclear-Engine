@@ -2,10 +2,10 @@
 #include <Graphics/Context.h>
 #include <Assets\AssetManager.h>
 #include <Components/CameraComponent.h>
-#include "Graphics/GraphicsEngine.h"
+#include "Graphics/GraphicsModule.h"
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <Platform/FileSystem.h>
-#include <Rendering/RenderingEngine.h>
+#include <Rendering/RenderingModule.h>
 #include <Assets\Texture.h>
 
 namespace Nuclear
@@ -141,8 +141,8 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
-			Graphics::GraphicsEngine::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
+			Graphics::GraphicsModule::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
+			Graphics::GraphicsModule::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 
 			LayoutElement LayoutElems[] =
@@ -177,7 +177,7 @@ namespace Nuclear
 			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = _countof(StaticSamplers);
 			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPipeline);
 
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(RenderingEngine::GetInstance().GetCameraCB());
+			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(RenderingModule::GetInstance().GetCameraCB());
 
 
 			mPipeline->CreateShaderResourceBinding(&mSRB, true);

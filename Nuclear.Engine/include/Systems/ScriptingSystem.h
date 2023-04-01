@@ -1,5 +1,5 @@
 #pragma once
-#include "Scripting\ScriptingEngine.h"
+#include "Scripting\ScriptingModule.h"
 #include "ECS\System.h"
 #include <vector>
 
@@ -9,7 +9,7 @@ namespace Nuclear
 	//{
 	//	namespace Internal
 	//	{
-	//		class AngelScriptEngine;
+	//		class AngelScriptModule;
 	//	}
 	//}
 			

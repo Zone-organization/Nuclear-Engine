@@ -3,7 +3,7 @@
 #include <Math\Math.h>
 #include <Graphics\ShaderPipelineSwitch.h>
 #include <Serialization/Access.h>
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 #include <Core\UUID.h>
 #include <Assets/AssetType.h>
 #include <Serialization/IsLoading.h>
@@ -65,8 +65,8 @@ namespace Nuclear {
 
 					auto result = archive(mesh, material, self.mEnableRendering, self.mCastShadow, self.mReceiveShadows);
 
-					self.pMesh = static_cast<Assets::Mesh*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(Assets::AssetType::Mesh, mesh));
-					self.pMaterial = static_cast<Assets::Material*>(Serialization::SerializationEngine::GetInstance().DeserializeUUID(Assets::AssetType::Material, material));
+					self.pMesh = static_cast<Assets::Mesh*>(Serialization::SerializationModule::GetInstance().DeserializeUUID(Assets::AssetType::Mesh, mesh));
+					self.pMaterial = static_cast<Assets::Material*>(Serialization::SerializationModule::GetInstance().DeserializeUUID(Assets::AssetType::Material, material));
 
 					return result;
 				}

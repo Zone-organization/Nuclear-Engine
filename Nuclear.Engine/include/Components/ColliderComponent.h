@@ -1,7 +1,7 @@
 #pragma once
 #include <NE_Common.h>
 #include <Math\Math.h>
-#include <PhysX/PhysXEngine.h>
+#include <PhysX/PhysXModule.h>
 #include <PhysX/PhysXMaterial.h>
 #include <PhysX/PhysXShape.h>
 #include <PhysX/RigidStatic.h>

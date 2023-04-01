@@ -1,6 +1,6 @@
 #pragma once
 #include <Threading/MainThreadTask.h>
-#include <Threading/ThreadingEngine.h>
+#include <Threading/ThreadingModule.h>
 #include <Assets/ImportingDescs.h>
 #include <filesystem>
 #include <Assets/Importer.h>
@@ -11,7 +11,7 @@
 
 #include <Utilities/Logger.h>
 
-#include <Serialization/SerializationEngine.h>
+#include <Serialization/SerializationModule.h>
 
 #include <Assets/Tasks/MeshCreateTask.h>
 
@@ -90,7 +90,7 @@ namespace Nuclear
 				if (mResult.pMesh)
 				{
 					//create task
-					Threading::ThreadingEngine::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, IMPORTER_FACTORY_TYPE));
+					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, IMPORTER_FACTORY_TYPE));
 
 					if (!mImportingDesc.mCommonOptions.mLoadOnly)
 					{
@@ -107,7 +107,7 @@ namespace Nuclear
 							meshloadingdesc->mAnimationsUUID = mResult.pAnimations->GetUUID();
 
 						//Export Meta
-						Serialization::SerializationEngine::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
+						Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
 						delete assetmetadata.pLoadingDesc;
 					}
 				}						

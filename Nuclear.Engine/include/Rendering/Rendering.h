@@ -1,5 +1,5 @@
 #pragma once
-#include <Rendering\RenderingEngine.h>
+#include <Rendering\RenderingModule.h>
 #include <Rendering\RenderingPath.h>
 #include <Rendering\RenderingPaths\ForwardRenderingPath.h>
 #include <Rendering\RenderingPaths\DefferedRenderingPath.h>

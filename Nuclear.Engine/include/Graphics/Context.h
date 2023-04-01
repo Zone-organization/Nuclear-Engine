@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Graphics\GraphicsEngineDesc.h>
+#include <Graphics\GraphicsModuleDesc.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
 
@@ -27,7 +27,7 @@ namespace Nuclear
 				return instance;
 			}
 
-			bool Initialize(const Graphics::GraphicsEngineDesc& GraphicsDesc);
+			bool Initialize(const Graphics::GraphicsModuleDesc& GraphicsDesc);
 
 			void Shutdown();
 

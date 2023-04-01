@@ -20,7 +20,7 @@
 #include <Graphics/ImGui.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Platform\FileSystem.h>
-#include <Graphics/GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 
 #define VA_IMGUI_INTEGRATION_ENABLED
 namespace Nuclear
@@ -208,7 +208,7 @@ namespace Nuclear
                 shader_desc.mDefines = shadermacros;
                 shader_desc.mUseCombinedTextureSamplers = false;
 
-                Graphics::GraphicsEngine::GetInstance().CreateShader(shader.RawDblPtr(), shader_desc);
+                Graphics::GraphicsModule::GetInstance().CreateShader(shader.RawDblPtr(), shader_desc);
 
                 for (Uint32 i = 0; i < shader->GetResourceCount(); i++)
                 {

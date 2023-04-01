@@ -1,4 +1,4 @@
-#include <Rendering\RenderingEngine.h>
+#include <Rendering\RenderingModule.h>
 #include <Graphics\Context.h>
 #include <Math/Math.h>
 #include <Platform\FileSystem.h>
@@ -6,7 +6,7 @@
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Components\ShaderStructs.h>
 #include <Utilities/Logger.h>
-#include <Graphics/GraphicsEngine.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear
 {
@@ -14,19 +14,19 @@ namespace Nuclear
 	{
 		using namespace Diligent;
 
-		RenderingEngine& RenderingEngine::GetInstance()
+		RenderingModule& RenderingModule::GetInstance()
 		{
-			static RenderingEngine instance;
+			static RenderingModule instance;
 
 			return instance;
 		}
-		bool RenderingEngine::Initialize(const RenderingEngineDesc& desc)
+		bool RenderingModule::Initialize(const RenderingModuleDesc& desc)
 		{
 			mDesc = desc;
 
 			if (!InitSceneToScreenPSO())
 			{
-				NUCLEAR_ERROR("[RenderingEngine] Initialization Failed : InitSceneToScreenPSO() failed!");
+				NUCLEAR_ERROR("[RenderingModule] Initialization Failed : InitSceneToScreenPSO() failed!");
 				return false;
 			}
 
@@ -39,11 +39,11 @@ namespace Nuclear
 			RTDesc.DepthTexFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
 			mFinalDepthRT.Create(RTDesc);
 
-			NUCLEAR_INFO("[RenderingEngine] RenderingEngine has been initialized succesfully!");
+			NUCLEAR_INFO("[RenderingModule] RenderingModule has been initialized succesfully!");
 			return true;
 		}
 
-		void RenderingEngine::Shutdown()
+		void RenderingModule::Shutdown()
 		{
 			mCameraCB.Release();;
 			mAnimationCB.Release();
@@ -55,14 +55,14 @@ namespace Nuclear
 			mFinalDepthRT.Release();
 		}
 
-		void RenderingEngine::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
+		void RenderingModule::ResizeRTs(Uint32 RTWidth, Uint32 RTHeight)
 		{
 			Math::Vector2ui newsize(RTWidth, RTHeight);
 			mFinalRT.Resize(newsize);
 			mFinalDepthRT.Resize(newsize);
 		}
 
-		void RenderingEngine::RenderFinalRT()
+		void RenderingModule::RenderFinalRT()
 		{
 			auto* RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
 			auto* DSV = Graphics::Context::GetInstance().GetSwapChain()->GetDepthBufferDSV();
@@ -77,35 +77,35 @@ namespace Nuclear
 			Assets::DefaultMeshes::RenderScreenQuad();
 		}
 
-		void RenderingEngine::UpdateCameraCB(Components::CameraComponent* component)
+		void RenderingModule::UpdateCameraCB(Components::CameraComponent* component)
 		{
 			UpdateCameraCB(component->mCameraData);
 		}
 
-		void RenderingEngine::UpdateCameraCB(const Components::CameraBuffer& bufferdata)
+		void RenderingModule::UpdateCameraCB(const Components::CameraBuffer& bufferdata)
 		{
 			Diligent::MapHelper<Components::CameraBuffer> CBConstants(Graphics::Context::GetInstance().GetContext(), mCameraCB, MAP_WRITE, MAP_FLAG_DISCARD);
 			*CBConstants = bufferdata;
 		}
 
-		IBuffer* RenderingEngine::GetCameraCB()
+		IBuffer* RenderingModule::GetCameraCB()
 		{
 			return mCameraCB;
 		}
 
-		IBuffer* RenderingEngine::GetAnimationCB()
+		IBuffer* RenderingModule::GetAnimationCB()
 		{
 			return mAnimationCB;
 		}
-		Graphics::RenderTarget& RenderingEngine::GetFinalRT()
+		Graphics::RenderTarget& RenderingModule::GetFinalRT()
 		{
 			return mFinalRT;
 		}
-		Graphics::RenderTarget& RenderingEngine::GetFinalDepthRT()
+		Graphics::RenderTarget& RenderingModule::GetFinalDepthRT()
 		{
 			return mFinalDepthRT;
 		}
-		bool RenderingEngine::InitSceneToScreenPSO()
+		bool RenderingModule::InitSceneToScreenPSO()
 		{
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 
@@ -136,7 +136,7 @@ namespace Nuclear
 
 				auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/BasicVertex.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 				CreationAttribs.Source = source.c_str();
-				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsEngine::GetInstance().GetDefaultShaderSourceFactory();
+				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
 
 				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 			}
@@ -158,11 +158,11 @@ namespace Nuclear
 
 			PSOCreateInfo.pVS = VSShader;
 			PSOCreateInfo.pPS = PSShader;
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsEngine::GetInstance().GetRenderToTextureInputLayout().size());
+			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsModule::GetInstance().GetRenderToTextureInputLayout().data();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::GetInstance().GetRenderToTextureInputLayout().size());
 
 			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-			Graphics::GraphicsEngine::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
 			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pSceneToScreenPSO);
 
@@ -175,7 +175,7 @@ namespace Nuclear
 			pSceneToScreenPSO->CreateShaderResourceBinding(pSceneToScreenSRB.RawDblPtr());
 			return true;
 		}
-		RenderingEngine::RenderingEngine()
+		RenderingModule::RenderingModule()
 		{
 			{
 				BufferDesc CBDesc;

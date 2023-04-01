@@ -7,7 +7,7 @@ namespace Nuclear
 {
 	namespace Graphics
 	{
-		class GraphicsEngine;
+		class GraphicsModule;
 	}
 	namespace Assets
 	{			
@@ -24,7 +24,7 @@ namespace Nuclear
 			const Uint32 GetHeight() const;
 
 		protected:
-			friend class Graphics::GraphicsEngine;
+			friend class Graphics::GraphicsModule;
 			friend Serialization::Access;
 
 			Diligent::RefCntAutoPtr<Diligent::ITextureView> mTextureView;

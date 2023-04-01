@@ -52,7 +52,7 @@ namespace Nuclear
 
 			_MonoClass* GetClassPtr();
 		private:
-			friend class ScriptingEngine;
+			friend class ScriptingModule;
 			_MonoClass* pClass = nullptr;
 			ScriptingClassCreationDesc mDesc;
 		};
