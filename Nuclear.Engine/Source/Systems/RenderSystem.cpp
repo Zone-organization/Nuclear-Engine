@@ -14,7 +14,7 @@
 #include <Rendering\RenderingEngine.h>
 #include <Assets\Shader.h>
 #include <Rendering\ImageBasedLighting.h>
-
+#include <Profiling/Profiler.h>
 namespace Nuclear
 {
 	namespace Systems
@@ -224,13 +224,16 @@ namespace Nuclear
 					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetColorRT().GetRTVDblPtr(), camera.GetDepthRT().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetColorRT().GetRTV(), (float*)&camera.mRTClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-
-					////////////////////////////////////
-					//Step 2.3: Update RenderPasses
-					////////////////////////////////////
-					for (auto pass : mRenderPasses)
 					{
-						pass->Update(&mRenderData);
+						PROFILE_GPU(test);
+						////////////////////////////////////
+						//Step 2.3: Update RenderPasses
+						////////////////////////////////////
+						for (auto pass : mRenderPasses)
+						{
+							pass->Update(&mRenderData);
+						}
+						NUCLEAR_INFO("Test {0}", test.End());
 					}
 				}
 			}		
@@ -238,17 +241,20 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 3: Copy Main camera RT to RenderingEngine RTs.
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			Diligent::CopyTextureAttribs attrib;
-			attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetColorRT().GetSRV()->GetTexture();
-			attrib.pDstTexture = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetSRV()->GetTexture();
-			Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
-			
+
+				Diligent::CopyTextureAttribs attrib;
+				attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetColorRT().GetSRV()->GetTexture();
+				attrib.pDstTexture = Rendering::RenderingEngine::GetInstance().GetFinalRT().GetSRV()->GetTexture();
+				Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
+
+	
 			//---------TODO: Maybe copy main camera depth rt?--------------
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 4: Render to screen
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			Rendering::RenderingEngine::GetInstance().RenderFinalRT();
+
 		}
 
 		//Shader Structs

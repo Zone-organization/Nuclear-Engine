@@ -136,6 +136,8 @@
     <ClInclude Include="include\Graphics\GraphicsEngineDesc.h" />
     <ClInclude Include="include\Graphics\ShaderPipelineVariantFactory.h" />
     <ClInclude Include="include\Parsers\INIParser.h" />
+    <ClInclude Include="include\Profiling\Profiler.h" />
+    <ClInclude Include="include\Profiling\ProfilingModule.h" />
     <ClInclude Include="include\Rendering\PostProcessingEffects\Bloom.h" />
     <ClInclude Include="include\Rendering\RenderingEngine.h" />
     <ClInclude Include="include\Rendering\RenderPasses\AmbientOcclusionPass.h" />

@@ -129,6 +129,7 @@ Put all their .lib in the bin folder.
 
 ## Current To-dos 
   - W.I.P:
+    - CPU & GPU Queries & Memory/Performance Profilers
   	- Use CMake instead of Visual Studio / Port to linux.
     - New Rendering Effects (Fog - SSAO - SSR - Motion Blur)
 	- PostProcessing effects should be processed per camera not only in the main camera.
