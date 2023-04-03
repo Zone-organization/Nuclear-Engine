@@ -9,24 +9,20 @@ namespace Nuclear
 		{
 			Initialize();
 		}
-		FallbacksModule& FallbacksModule::GetInstance()
-		{
-			static FallbacksModule instance;
-			return instance;
-		}
+
 		void FallbacksModule::Initialize()
 		{
 			//Images
 			Assets::TextureImportingDesc desc;
 			desc.mCommonOptions.mAsyncImport = false;
 			desc.mCommonOptions.mLoadOnly = true;
-			DefaultBlackImage = Assets::Importer::GetInstance().ImportTexture("@NuclearAssets@/DefaultTextures/Black32x32.png", desc);
-			DefaultGreyImage = Assets::Importer::GetInstance().ImportTexture("@NuclearAssets@/DefaultTextures/Grey32x32.png", desc);
-			DefaultWhiteImage = Assets::Importer::GetInstance().ImportTexture("@NuclearAssets@/DefaultTextures/White32x32.png", desc);
+			DefaultBlackImage = Assets::Importer::Get().ImportTexture("@NuclearAssets@/DefaultTextures/Black32x32.png", desc);
+			DefaultGreyImage = Assets::Importer::Get().ImportTexture("@NuclearAssets@/DefaultTextures/Grey32x32.png", desc);
+			DefaultWhiteImage = Assets::Importer::Get().ImportTexture("@NuclearAssets@/DefaultTextures/White32x32.png", desc);
 
 
 			//Textures
-			DefaultNormalTex.pTexture = Assets::Importer::GetInstance().ImportTexture("@NuclearAssets@/DefaultTextures/Normal32x32.png", desc);
+			DefaultNormalTex.pTexture = Assets::Importer::Get().ImportTexture("@NuclearAssets@/DefaultTextures/Normal32x32.png", desc);
 			DefaultNormalTex.mUsageType = Assets::TextureUsageType::Normal;
 
 			DefaultDiffuseTex.pTexture = DefaultGreyImage;
@@ -34,6 +30,9 @@ namespace Nuclear
 
 			DefaultSpecularTex.pTexture = DefaultWhiteImage;
 			DefaultSpecularTex.mUsageType = Assets::TextureUsageType::Specular;
+		}
+		void FallbacksModule::Shutdown()
+		{
 		}
 		Assets::Texture* FallbacksModule::GetDefaultBlackImage()
 		{

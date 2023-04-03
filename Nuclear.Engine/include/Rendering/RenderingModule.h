@@ -1,5 +1,5 @@
 #pragma once
-#include <NE_Common.h>
+#include <Core/EngineModule.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Buffer.h>
 #include <Diligent/Common/interface/RefCntAutoPtr.hpp>
 #include <Graphics/RenderTarget.h>
@@ -17,17 +17,13 @@ namespace Nuclear
 
 		};
 
-		class NEAPI RenderingModule
+		class NEAPI RenderingModule : public Core::EngineModule<RenderingModule>
 		{
+			friend class Core::EngineModule<RenderingModule>;
 		public:
-			static RenderingModule& GetInstance();
-
-			RenderingModule(const RenderingModule&) = delete;
-			RenderingModule& operator= (const RenderingModule) = delete;
-
 			bool Initialize(const RenderingModuleDesc& desc);
 
-			void Shutdown();
+			void Shutdown() override;
 
 			void ResizeRTs(Uint32 RTWidth, Uint32 RTHeight);
 

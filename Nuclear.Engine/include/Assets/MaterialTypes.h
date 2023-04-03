@@ -61,7 +61,7 @@ namespace Nuclear
 				{
 					Core::UUID uuid;
 					auto result = archive(uuid, self.mUsageType);
-					self.pTexture = static_cast<Texture*>(Serialization::SerializationModule::GetInstance().DeserializeUUID(AssetType::Texture, uuid));
+					self.pTexture = static_cast<Texture*>(Serialization::SerializationModule::Get().DeserializeUUID(AssetType::Texture, uuid));
 					return result;
 				}
 				else

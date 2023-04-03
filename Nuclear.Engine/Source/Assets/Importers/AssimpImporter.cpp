@@ -65,7 +65,7 @@ namespace Nuclear {
 
 				if (!desc.mCommonOptions.mLoadOnly)
 				{
-					Platform::FileSystem::GetInstance().CreateFolders(exportPath + "Textures/");
+					Platform::FileSystem::Get().CreateFolders(exportPath + "Textures/");
 
 					Assimp::Exporter exporter;
 					exporter.Export(scene, "glb2", exportPath + model.mName + ".glb");
@@ -293,7 +293,7 @@ namespace Nuclear {
 							data.mHeight = embeddedtex->mHeight;
 							data.mData = (Byte*)embeddedtex->pcData;
 							data.mPath = embeddedtex->mFilename.C_Str();
-							texture.pTexture = Assets::Importer::GetInstance().ImportTexture(data);
+							texture.pTexture = Assets::Importer::Get().ImportTexture(data);
 							texture.mUsageType = textype;
 						}
 						else
@@ -309,7 +309,7 @@ namespace Nuclear {
 							memcpy_s(imagedesc.mMemData, imagedesc.mMemSize, embeddedtex->pcData, embeddedtex->mWidth);
 
 							//imagedesc.mMemData = (Byte*)embeddedtex->pcData;
-							texture.pTexture = Assets::Importer::GetInstance().ImportTexture(embeddedtex->mFilename.C_Str(),imagedesc);
+							texture.pTexture = Assets::Importer::Get().ImportTexture(embeddedtex->mFilename.C_Str(),imagedesc);
 							texture.mUsageType = textype;
 						}
 
@@ -323,7 +323,7 @@ namespace Nuclear {
 						TextureImportingDesc teximportdesc;
 						teximportdesc.mCommonOptions.mExportPath = exportPath + "Textures/";
 						//teximportdesc.mCommonOptions.mAssetName = 
-						texture.pTexture = Assets::Importer::GetInstance().ImportTexture(filename, teximportdesc);
+						texture.pTexture = Assets::Importer::Get().ImportTexture(filename, teximportdesc);
 						texture.mUsageType = textype;
 					}
 

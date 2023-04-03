@@ -24,7 +24,7 @@ namespace Nuclear
 		class NEAPI Loader
 		{
 		public:
-			static Loader& GetInstance();
+			static Loader& Get();
 			Loader(const Loader&) = delete;
 			Loader& operator= (const Loader) = delete;
 

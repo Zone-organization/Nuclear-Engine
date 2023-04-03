@@ -1,6 +1,6 @@
 #pragma once
 #include <NE_Common.h>
-#include <Graphics/Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Diligent/Graphics/GraphicsTools/interface/DurationQueryHelper.hpp>
 #include <chrono>
 
@@ -37,24 +37,24 @@ namespace Nuclear
 			FORCE_INLINE Profiler_GPU(std::string name)
 				: mName(name)
 			{
-				pQuery.reset(new Diligent::DurationQueryHelper{ Graphics::Context::GetInstance().GetDevice(), 2 });			
+				pQuery.reset(new Diligent::DurationQueryHelper{ Graphics::GraphicsModule::Get().GetDevice(), 2 });			
 			}
 
 			FORCE_INLINE void Begin()
 			{
-				pQuery->Begin(Graphics::Context::GetInstance().GetContext());
+				pQuery->Begin(Graphics::GraphicsModule::Get().GetContext());
 			}
 
 			FORCE_INLINE Float64 End()
 			{
 				Float64 result= 0.0;
-				pQuery->End(Graphics::Context::GetInstance().GetContext(), result);
+				pQuery->End(Graphics::GraphicsModule::Get().GetContext(), result);
 				return result;
 			}
 
 			FORCE_INLINE bool End(Float64 result)
 			{
-				return pQuery->End(Graphics::Context::GetInstance().GetContext(), result);
+				return pQuery->End(Graphics::GraphicsModule::Get().GetContext(), result);
 			}
 
 		protected:

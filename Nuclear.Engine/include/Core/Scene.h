@@ -17,7 +17,7 @@ namespace Nuclear
 		class NEAPI Scene
 		{
 		public:
-			static Scene& GetInstance();
+			static Scene& Get();
 
 			Scene(const Scene&) = delete;
 			Scene& operator= (const Scene) = delete;

@@ -35,17 +35,17 @@ namespace Nuclear
 
 				//Load image
 				TextureData* pResultData = new TextureData;
-				pResultData->mData = Platform::FileSystem::GetInstance().LoadFile(mPath.GetPathNoExt());
+				pResultData->mData = Platform::FileSystem::Get().LoadFile(mPath.GetPathNoExt());
 				Assets::TextureDesc desc;
 
-				bool result = Importers::TextureImporter::GetInstance().Load(mLoadingDesc, pResultData);
+				bool result = Importers::TextureImporter::Get().Load(mLoadingDesc, pResultData);
 
 				if (result)
 				{
 					pResult->SetState(IAsset::State::Loaded);
 
 					//Create image task
-					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, LOADER_FACTORY_TYPE));
+					Threading::ThreadingModule::Get().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, LOADER_FACTORY_TYPE));
 				}
 				else
 				{

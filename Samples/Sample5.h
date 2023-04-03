@@ -31,7 +31,7 @@ void AssetLibraryVi2ewer()
 		{
 			static int count = 0;
 			static Assets::Texture* img = nullptr;
-			for (auto& i : Assets::AssetLibrary::GetInstance().mImportedTextures.mData)
+			for (auto& i : Assets::AssetLibrary::Get().mImportedTextures.mData)
 			{
 				ImGui::PushID(count);
 				if (i.second.GetTextureView())
@@ -52,7 +52,7 @@ void AssetLibraryVi2ewer()
 
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + tex_sz.x; // Expected position if next button was on same line
-				if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
+				if (count + 1 < Assets::AssetLibrary::Get().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
 					ImGui::SameLine();
 				ImGui::PopID();
 
@@ -143,7 +143,7 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc(});
+		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::Get().GetFinalRT().GetDesc(});
 	}
 	void FillScene()
 	{
@@ -194,7 +194,7 @@ public:
 		//Main Camera RT
 		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
 
-		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 
 	bool iskinematic = false;
@@ -217,7 +217,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::GetInstance().EndClient();
+				return Core::Engine::Get().EndClient();
 			}
 
 			ImGui::End();

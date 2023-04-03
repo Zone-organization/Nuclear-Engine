@@ -17,7 +17,7 @@ namespace Nuclear
 				void operator=(TextureImporter const&) = delete;
 				~TextureImporter();
 
-				static TextureImporter& GetInstance();
+				static TextureImporter& Get();
 
 				bool Import(TextureData* data, IMAGE_EXTENSION extension, const Assets::TextureImportingDesc& desc);
 				bool Export(const std::string& exportPath, TextureData* data, IMAGE_EXTENSION type);

@@ -65,8 +65,8 @@ namespace Nuclear {
 
 					auto result = archive(mesh, material, self.mEnableRendering, self.mCastShadow, self.mReceiveShadows);
 
-					self.pMesh = static_cast<Assets::Mesh*>(Serialization::SerializationModule::GetInstance().DeserializeUUID(Assets::AssetType::Mesh, mesh));
-					self.pMaterial = static_cast<Assets::Material*>(Serialization::SerializationModule::GetInstance().DeserializeUUID(Assets::AssetType::Material, material));
+					self.pMesh = static_cast<Assets::Mesh*>(Serialization::SerializationModule::Get().DeserializeUUID(Assets::AssetType::Mesh, mesh));
+					self.pMaterial = static_cast<Assets::Material*>(Serialization::SerializationModule::Get().DeserializeUUID(Assets::AssetType::Material, material));
 
 					return result;
 				}

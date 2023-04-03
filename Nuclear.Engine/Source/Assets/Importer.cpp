@@ -48,7 +48,7 @@ namespace Nuclear
 				NUCLEAR_ERROR("[Importer] Failed To Initialize FreeType library");
 			}
 		}
-		Importer& Importer::GetInstance()
+		Importer& Importer::Get()
 		{
 			static Importer instance;
 
@@ -76,7 +76,7 @@ namespace Nuclear
 			if (Desc.mCommonOptions.mAsyncImport)
 			{
 				//Add to queue			
-				auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
+				auto result = &AssetLibrary::Get().mImportedTextures.AddAsset();
 				if (Desc.mCommonOptions.mAssetName == "")
 				{
 					result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
@@ -84,9 +84,9 @@ namespace Nuclear
 
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
-				Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new TextureImportTask(result, Path , Desc));
+				Threading::ThreadingModule::Get().GetThreadPool().AddTask(new TextureImportTask(result, Path , Desc));
 
-				result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage()->GetTextureView());
+				result->SetTextureView(Fallbacks::FallbacksModule::Get().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
 			else //singlethreaded loading
@@ -97,20 +97,20 @@ namespace Nuclear
 				TextureDesc desc;
 				TextureData data;
 
-				Importers::TextureImporter::GetInstance().Load(Path.GetRealPath(), &desc, Desc);
+				Importers::TextureImporter::Get().Load(Path.GetRealPath(), &desc, Desc);
 
-				auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
+				auto result = &AssetLibrary::Get().mImportedTextures.AddAsset();
 				if (Desc.mCommonOptions.mAssetName == "")
 				{
 					result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
 				}
 
-				Graphics::GraphicsModule::GetInstance().CreateImageData(&data, desc);
+				Graphics::GraphicsModule::Get().CreateImageData(&data, desc);
 
-				if (!Graphics::GraphicsModule::GetInstance().CreateImage(result, &data))
+				if (!Graphics::GraphicsModule::Get().CreateImage(result, &data))
 				{
 					NUCLEAR_ERROR("[Importer] Failed To Load Texture: '{0}'", Path.GetInputPath());
-					return Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage();
+					return Fallbacks::FallbacksModule::Get().GetDefaultBlackImage();
 				}
 
 
@@ -126,15 +126,15 @@ namespace Nuclear
 		Texture* Importer::ImportTexture(const TextureDesc& imagedesc, const TextureImportingDesc& importingdesc)
 		{
 			//Create
-			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
+			auto result = &AssetLibrary::Get().mImportedTextures.AddAsset();
 
 			TextureData imagedata;
-			Graphics::GraphicsModule::GetInstance().CreateImageData(&imagedata, imagedesc);
+			Graphics::GraphicsModule::Get().CreateImageData(&imagedata, imagedesc);
 			
-			if (!Graphics::GraphicsModule::GetInstance().CreateImage(result, &imagedata))
+			if (!Graphics::GraphicsModule::Get().CreateImage(result, &imagedata))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Create Texture : '");
-				return Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage();
+				return Fallbacks::FallbacksModule::Get().GetDefaultBlackImage();
 			}
 
 
@@ -145,7 +145,7 @@ namespace Nuclear
 
 		AudioClip* Importer::ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc)
 		{
-			auto result = &AssetLibrary::GetInstance().mImportedAudioClips.AddAsset();
+			auto result = &AssetLibrary::Get().mImportedAudioClips.AddAsset();
 
 			SNDFILE* sndfile;
 			SF_INFO sfinfo;
@@ -270,7 +270,7 @@ namespace Nuclear
 			result->mLoop = Desc.mLoop;
 
 
-			Audio::AudioModule::GetInstance().GetBackend()->CreateAudioClip(result, file);
+			Audio::AudioModule::Get().GetBackend()->CreateAudioClip(result, file);
 
 
 			result->mState = IAsset::State::Loaded;
@@ -294,14 +294,14 @@ namespace Nuclear
 
 			if (desc.mImportMaterial)
 			{
-				material = &AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
+				material = &AssetLibrary::Get().mImportedMaterials.AddAsset();
 				material->SetName(assetname);
 				material->SetState(IAsset::State::Queued);
 				mQueuedAssets.push_back(material);
 			}
 			if (desc.mImportAnimations)
 			{
-				animations = &AssetLibrary::GetInstance().mImportedAnimations.AddAsset();
+				animations = &AssetLibrary::Get().mImportedAnimations.AddAsset();
 				animations->SetName(assetname);
 				animations->SetState(IAsset::State::Queued);
 				mQueuedAssets.push_back(animations);
@@ -309,7 +309,7 @@ namespace Nuclear
 
 			if (desc.mImportMesh)
 			{
-				mesh = &AssetLibrary::GetInstance().mImportedMeshes.AddAsset();
+				mesh = &AssetLibrary::Get().mImportedMeshes.AddAsset();
 				mesh->SetName(assetname);
 				mesh->pImportedMaterial = material;
 				mesh->pImportedAnimations = animations;
@@ -319,7 +319,7 @@ namespace Nuclear
 		
 			if (desc.mCommonOptions.mAsyncImport)
 			{
-				Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MeshImportTask({ assetname ,mesh, material, animations }, Path, desc));
+				Threading::ThreadingModule::Get().GetThreadPool().AddTask(new MeshImportTask({ assetname ,mesh, material, animations }, Path, desc));
 			}
 			else
 			{			
@@ -335,7 +335,7 @@ namespace Nuclear
 			if (Desc.mCommonOptions.mAsyncImport)
 			{
 				//Add to queue			
-				auto result = &AssetLibrary::GetInstance().mImportedMaterials.AddAsset();
+				auto result = &AssetLibrary::Get().mImportedMaterials.AddAsset();
 				if (Desc.mCommonOptions.mAssetName == "")
 				{
 					result->SetName(AssetNameFromDirectory(Path.GetRealPath()));
@@ -343,10 +343,10 @@ namespace Nuclear
 
 				mQueuedAssets.push_back(result);
 				result->SetState(IAsset::State::Queued);
-				Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MaterialImportTask(result, Path, Desc));
+				Threading::ThreadingModule::Get().GetThreadPool().AddTask(new MaterialImportTask(result, Path, Desc));
 
 				//TODO: Fallback material?
-				//result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage()->GetTextureView());
+				//result->SetTextureView(Fallbacks::FallbacksModule::Get().GetDefaultBlackImage()->GetTextureView());
 				return result;
 			}
 
@@ -425,7 +425,7 @@ namespace Nuclear
 				//	success = myProject::submitAtlasBitmapAndLayout(generator.atlasStorage(), glyphs);
 				auto& atlas = generator.atlasStorage();
 
-				Font* result = &AssetLibrary::GetInstance().mImportedFonts.AddAsset();
+				Font* result = &AssetLibrary::Get().mImportedFonts.AddAsset();
 
 				FontCreationDesc desc;
 				fillfontdesc<1>(atlas, desc);
@@ -465,10 +465,10 @@ namespace Nuclear
 
 		Shader* Importer::ImportShader(const Core::Path& Path, const ShaderImportingDesc& desc)
 		{
-			Shader* result = &AssetLibrary::GetInstance().mImportedShaders.AddAsset();
+			Shader* result = &AssetLibrary::Get().mImportedShaders.AddAsset();
 			result->SetName(Path.GetFilename(true));
 
-			auto source = Platform::FileSystem::GetInstance().LoadFileToString(Path.GetRealPath());
+			auto source = Platform::FileSystem::Get().LoadFileToString(Path.GetRealPath());
 
 			//Step1: Parse Source -> Build ShaderBuildDesc
 			Graphics::ShaderBuildDesc& shaderbuilddesc = result->mBuildDesc;
@@ -479,14 +479,14 @@ namespace Nuclear
 			if (parsing_)
 			{
 				//Step2: Reflect Pixel shader for material reflection
-				if (Graphics::GraphicsModule::GetInstance().ReflectShader(shaderbuilddesc, result->mReflection))
+				if (Graphics::GraphicsModule::Get().ReflectShader(shaderbuilddesc, result->mReflection))
 				{
 					//Step3: Create actual pipeline
 					result->mPipeline.BuildVariants();
 
 					//step 4: export shader info
 					if (!desc.mCommonOptions.mLoadOnly)
-						AssetManager::GetInstance().Export(result, true, AssetLibrary::GetInstance().GetPath() + "Shaders/");
+						AssetManager::Get().Export(result, true, AssetLibrary::Get().GetPath() + "Shaders/");
 
 				}
 				else
@@ -509,18 +509,18 @@ namespace Nuclear
 
 		Script* Importer::ImportScript(const Core::Path& Path, const ScriptImportingDesc& desc)
 		{
-			Script* result = &AssetLibrary::GetInstance().mImportedScripts.AddAsset();
+			Script* result = &AssetLibrary::Get().mImportedScripts.AddAsset();
 
 			std::string fullname = "";
 			if (desc.mClassNameFromPath)
 			{
-				fullname = Scripting::ScriptingModule::GetInstance().GetClientAssembly()->GetNamespaceName() + '.' + Path.GetFilename(true);
+				fullname = Scripting::ScriptingModule::Get().GetClientAssembly()->GetNamespaceName() + '.' + Path.GetFilename(true);
 			}
 			else
 			{
 				fullname = desc.mScriptFullName;
 			}
-			Scripting::ScriptingModule::GetInstance().CreateScriptAsset(result, fullname);
+			Scripting::ScriptingModule::Get().CreateScriptAsset(result, fullname);
 
 			result->mState = IAsset::State::Loaded;
 			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
@@ -548,11 +548,11 @@ namespace Nuclear
 			std::string extension = filename.substr(filename.find_last_of("."));
 
 
-			if (Importers::TextureImporter::GetInstance().IsExtensionSupported(extension))
+			if (Importers::TextureImporter::Get().IsExtensionSupported(extension))
 			{
 				return AssetType::Texture;
 			}
-			else if (Importers::AssimpManager::GetInstance().IsExtensionSupported(extension))
+			else if (Importers::AssimpManager::Get().IsExtensionSupported(extension))
 			{
 				return AssetType::Mesh;
 			}
@@ -580,9 +580,9 @@ namespace Nuclear
 
 		Scene* Importer::ImportScene(const Core::Path& Path, const SceneImportingDesc& desc)
 		{
-			Scene* result = &AssetLibrary::GetInstance().mImportedScenes.AddAsset();
+			Scene* result = &AssetLibrary::Get().mImportedScenes.AddAsset();
 
-			Platform::FileSystem::GetInstance().LoadBinaryBuffer(result->mBinaryBuffer, Path);
+			Platform::FileSystem::Get().LoadBinaryBuffer(result->mBinaryBuffer, Path);
 
 			NUCLEAR_INFO("[Importer] Imported Scene : '{0}'", Path.GetInputPath());
 			return result;
@@ -590,19 +590,19 @@ namespace Nuclear
 
 		Texture* Importer::TextureCube_Import(const Core::Path& Path, const TextureImportingDesc& importingdesc)
 		{
-			auto result = &AssetLibrary::GetInstance().mImportedTextures.AddAsset();
+			auto result = &AssetLibrary::Get().mImportedTextures.AddAsset();
 
 			TextureDesc imagedesc;
 			TextureData imagedata;
 
-			if (!Importers::TextureImporter::GetInstance().Load(Path.GetRealPath(), &imagedesc, importingdesc))
+			if (!Importers::TextureImporter::Get().Load(Path.GetRealPath(), &imagedesc, importingdesc))
 			{
 				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}'", Path.GetInputPath());
 				return nullptr;
 			}
 			imagedesc.mGenerateMipMaps = false;
-			Graphics::GraphicsModule::GetInstance().CreateImageData(&imagedata, imagedesc);
-			Graphics::GraphicsModule::GetInstance().CreateImage(result, &imagedata);
+			Graphics::GraphicsModule::Get().CreateImageData(&imagedata, imagedesc);
+			Graphics::GraphicsModule::Get().CreateImage(result, &imagedata);
 
 			//TODO::
 			//result.mData = imagedata;

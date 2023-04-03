@@ -20,7 +20,7 @@ namespace Nuclear
 {
 	namespace Core
 	{
-		Scene& Scene::GetInstance()
+		Scene& Scene::Get()
 		{
 			static Scene instance;
 
@@ -170,7 +170,7 @@ namespace Nuclear
 			Serialization::SceneOutputArchive<zpp::bits::out<Buffer>> output(&out);
 			entt::snapshot{ mRegistry }.entities(output).component < Components::EntityInfoComponent, Components::LightComponent, Components::MeshComponent >(output);
 
-			//ser.object(Assets::AssetManager::GetInstance().mLibrary);
+			//ser.object(Assets::AssetManager::Get().mLibrary);
 
 			return true;
 		}

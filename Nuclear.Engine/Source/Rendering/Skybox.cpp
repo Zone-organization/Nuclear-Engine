@@ -1,5 +1,5 @@
 #include "Rendering/Skybox.h"
-#include <Graphics/Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Assets\AssetManager.h>
 #include <Components/CameraComponent.h>
 #include "Graphics/GraphicsModule.h"
@@ -81,7 +81,7 @@ namespace Nuclear
 
 			RefCntAutoPtr<ITexture> TexCube;
 
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &TexCube);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, nullptr, &TexCube);
 
 			for (unsigned int i = 0; i < data.size(); i++)
 			{
@@ -89,7 +89,7 @@ namespace Nuclear
 				attrib.pSrcTexture = data[i]->GetTextureView()->GetTexture();
 				attrib.DstSlice = i;
 				attrib.pDstTexture = TexCube;
-				Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
+				Graphics::GraphicsModule::Get().GetContext()->CopyTexture(attrib);
 
 			}
 
@@ -115,8 +115,8 @@ namespace Nuclear
 		{
 			if (Valid)
 			{
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(mPipeline);
-				Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(mPipeline);
+				Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(mSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				RenderCube();
 			}
@@ -127,9 +127,9 @@ namespace Nuclear
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			PSOCreateInfo.PSODesc.Name = "SkyBox_PSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().DepthBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
@@ -141,8 +141,8 @@ namespace Nuclear
 			//Create Shaders
 			RefCntAutoPtr<IShader> VSShader;
 			RefCntAutoPtr<IShader> PSShader;
-			Graphics::GraphicsModule::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
-			Graphics::GraphicsModule::GetInstance().CreateShader(Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
+			Graphics::GraphicsModule::Get().CreateShader(Platform::FileSystem::Get().LoadFileToString("@NuclearAssets@/Shaders/Background.vs.hlsl"), VSShader.RawDblPtr(), SHADER_TYPE_VERTEX);
+			Graphics::GraphicsModule::Get().CreateShader(Platform::FileSystem::Get().LoadFileToString("@NuclearAssets@/Shaders/Background.Ps.hlsl"), PSShader.RawDblPtr(), SHADER_TYPE_PIXEL);
 
 
 			LayoutElement LayoutElems[] =
@@ -175,9 +175,9 @@ namespace Nuclear
 			};
 			PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers;
 			PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = _countof(StaticSamplers);
-			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPipeline);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPipeline);
 
-			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(RenderingModule::GetInstance().GetCameraCB());
+			mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(RenderingModule::Get().GetCameraCB());
 
 
 			mPipeline->CreateShaderResourceBinding(&mSRB, true);
@@ -195,16 +195,16 @@ namespace Nuclear
 			BufferData VBData;
 			VBData.pData = skyboxVertices;
 			VBData.DataSize = sizeof(skyboxVertices);
-			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVBuffer);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVBuffer);
 		}
 
 		void Skybox::RenderCube()
 		{
-			Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &mVBuffer, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+			Graphics::GraphicsModule::Get().GetContext()->SetVertexBuffers(0, 1, &mVBuffer, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 			DrawAttribs DrawAttrs;
 			DrawAttrs.NumVertices = 36;
-			Graphics::Context::GetInstance().GetContext()->Draw(DrawAttrs);
+			Graphics::GraphicsModule::Get().GetContext()->Draw(DrawAttrs);
 		}
 
 	}

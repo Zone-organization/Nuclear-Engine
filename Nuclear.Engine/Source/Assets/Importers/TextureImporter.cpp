@@ -2,7 +2,7 @@
 #include <FreeImage\Source\FreeImage.h>
 #include <Diligent/Common/interface/Align.hpp>
 #include <Assets\Texture.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics/GraphicsModule.h>
 
 #include "..\..\ThirdParty\DiligentTextureLoader\src\TextureLoader.h"
@@ -234,7 +234,7 @@ namespace Nuclear
 
 				return false;
 			}
-			TextureImporter& TextureImporter::GetInstance()
+			TextureImporter& TextureImporter::Get()
 			{
 				static TextureImporter instance;
 				return instance;
@@ -260,7 +260,7 @@ namespace Nuclear
 					Assets::TextureDesc imagedesc;
 					if(FreeimageLoadMemory((IMAGE_EXTENSION)type, &imagedesc, importingdesc))
 					{
-						Graphics::GraphicsModule::GetInstance().CreateImageData(data, imagedesc);
+						Graphics::GraphicsModule::Get().CreateImageData(data, imagedesc);
 						return true;
 					}
 					return false;

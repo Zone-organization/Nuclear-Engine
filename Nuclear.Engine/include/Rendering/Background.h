@@ -1,7 +1,7 @@
 #pragma once
 #include <Rendering\Skybox.h>
 #include <Math\Math.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics\Color.h>
 
 namespace Nuclear

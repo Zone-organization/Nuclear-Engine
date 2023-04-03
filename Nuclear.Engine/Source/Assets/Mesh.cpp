@@ -1,5 +1,5 @@
 #include <Assets/Mesh.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics/GraphicsModule.h>
 
 namespace Nuclear {
@@ -38,7 +38,7 @@ namespace Nuclear {
 				Diligent::BufferData VBData;
 				VBData.pData = data.Vertices.data();
 				VBData.DataSize = (unsigned int)data.Vertices.size() * sizeof(Vertex);
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &mVB);
 				if (!mVB)
 				{
 					result = false;
@@ -55,7 +55,7 @@ namespace Nuclear {
 				Diligent::BufferData IBData;
 				IBData.pData = data.indices.data();
 				IBData.DataSize = (unsigned int)data.indices.size() * sizeof(Uint32);
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &mIB);
 				if (!mIB)
 				{
 					result = false;
@@ -166,7 +166,7 @@ namespace Nuclear {
 
 			model->mSubMeshes.push_back(meshData);
 
-			Graphics::GraphicsModule::GetInstance().CreateMesh(model);
+			Graphics::GraphicsModule::Get().CreateMesh(model);
 		}
 
 		void Mesh::CreateSphere(Mesh * model, float radius, unsigned int sliceCount, unsigned int stackCount)
@@ -261,7 +261,7 @@ namespace Nuclear {
 			//meshData.textures = Textures;
 
 			model->mSubMeshes.push_back(meshData);
-			Graphics::GraphicsModule::GetInstance().CreateMesh(model);
+			Graphics::GraphicsModule::Get().CreateMesh(model);
 		}
 
 		void Mesh::CreatePlane(Mesh * model, float width, float depth)
@@ -341,7 +341,7 @@ namespace Nuclear {
 			meshData.indices = Indices;
 			meshData.Vertices = Vertices;
 			model->mSubMeshes.push_back(meshData);
-			Graphics::GraphicsModule::GetInstance().CreateMesh(model);
+			Graphics::GraphicsModule::Get().CreateMesh(model);
 		}
 		struct ScreenVertex
 		{
@@ -367,10 +367,10 @@ namespace Nuclear {
 
 			float VTexCoord = +1.0f;
 
-			if (Graphics::Context::GetInstance().IsOpenGL())
+		/*	if (Graphics::GraphicsModule::Get().IsOpenGL())
 			{
 				VTexCoord = -1.0f;
-			}
+			}*/
 			// Position coordinates specified in NDC space.
 
 			Vertices.push_back(ScreenVertex(
@@ -409,7 +409,7 @@ namespace Nuclear {
 				Diligent::BufferData VBData;
 				VBData.pData = Vertices.data();
 				VBData.DataSize = (unsigned int)Vertices.size() * sizeof(ScreenVertex);
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &submesh->mVB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(VertBuffDesc, &VBData, &submesh->mVB);
 
 			}
 
@@ -423,7 +423,7 @@ namespace Nuclear {
 				Diligent::BufferData IBData;
 				IBData.pData = Indices.data();
 				IBData.DataSize = (unsigned int)Indices.size() * sizeof(Uint32);
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &submesh->mIB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(IndBuffDesc, &IBData, &submesh->mIB);
 			}
 			submesh->mIndicesCount = static_cast<Uint32>(Indices.size());
 

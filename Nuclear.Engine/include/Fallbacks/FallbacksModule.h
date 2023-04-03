@@ -1,21 +1,18 @@
 #pragma once
-#include <NE_Common.h>
+#include <Core/EngineModule.h>
 #include <Assets/MaterialTypes.h>
 
 namespace Nuclear
 {
 	namespace Fallbacks
 	{
-		class NEAPI FallbacksModule
+		class NEAPI FallbacksModule : public Core::EngineModule<FallbacksModule>
 		{
+			friend class Core::EngineModule<FallbacksModule>;	
 		public:
-			static FallbacksModule& GetInstance();
-
-			FallbacksModule(const FallbacksModule&) = delete;
-			FallbacksModule& operator= (const FallbacksModule) = delete;
-
 			void Initialize();
-			
+			void Shutdown() override;
+
 			Assets::Texture* GetDefaultBlackImage();
 			Assets::Texture* GetDefaultGreyImage();
 			Assets::Texture* GetDefaultWhiteImage();

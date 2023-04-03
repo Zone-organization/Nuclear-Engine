@@ -10,7 +10,7 @@ namespace Nuclear
 		class NEAPI FileSystem
 		{
 		public:
-			static FileSystem& GetInstance();
+			static FileSystem& Get();
 
 			FileSystem(const FileSystem&) = delete;
 			FileSystem& operator= (const FileSystem) = delete;

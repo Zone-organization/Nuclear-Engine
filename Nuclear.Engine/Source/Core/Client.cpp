@@ -36,11 +36,11 @@ namespace Nuclear {
 		}
 		Core::Scene& Client::GetScene()
 		{
-			return Core::Scene::GetInstance();
+			return Core::Scene::Get();
 		}
 		Assets::AssetManager& Client::GetAssetManager()
 		{
-			return Assets::AssetManager::GetInstance();
+			return Assets::AssetManager::Get();
 		}
 
 		void Client::OnMouseScroll(double val1, double val2)

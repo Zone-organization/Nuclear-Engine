@@ -1,5 +1,5 @@
 #include <Assets/Texture.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include "..\ThirdParty\DiligentTextureLoader\src\TextureLoader.h"
 #include <Assets/Importer.h>
 #include <chrono>

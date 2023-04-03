@@ -72,7 +72,7 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc()});
+		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::Get().GetFinalRT().GetDesc()});
 	}
 
 	void Load()
@@ -135,7 +135,7 @@ public:
 
 		//GetScene().LoadScene(&scene);
 
-		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 
 	bool iskinematic = false;
@@ -158,7 +158,7 @@ public:
 			PhysX::RaycastHit hit;
 			if (ImGui::TreeNode("Raycast Info"))
 			{
-				if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_F))
+				if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_F))
 				{
 					if (mPhysXSystem->Raycast(GetScene().GetMainCamera()->GetPosition(), GetScene().GetMainCamera()->GetFrontView(), 100.f, hit))
 					{
@@ -199,7 +199,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::GetInstance().EndClient();
+				return Core::Engine::Get().EndClient();
 			}
 
 			ImGui::End();

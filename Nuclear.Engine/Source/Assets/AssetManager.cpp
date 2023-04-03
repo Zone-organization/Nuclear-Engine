@@ -34,7 +34,7 @@ namespace Nuclear
 		{
 			
 		}
-		AssetManager& AssetManager::GetInstance()
+		AssetManager& AssetManager::Get()
 		{
 			static AssetManager instance;
 
@@ -62,7 +62,7 @@ namespace Nuclear
 					if (entry.path().extension() == ".NEMeta")
 					{
 						AssetMetadata meta;
-						if (!Serialization::SerializationModule::GetInstance().Deserialize(meta, entry.path().string()))
+						if (!Serialization::SerializationModule::Get().Deserialize(meta, entry.path().string()))
 						{
 							NUCLEAR_ERROR("[AssetManager] LoadFolder {0} Asset metadata deserialization failed! : {1}", Path.GetInputPath(), entry.path().string());
 						}
@@ -86,7 +86,7 @@ namespace Nuclear
 				path = path + ".NEMeta";
 			}
 			AssetMetadata meta;
-			if (!Serialization::SerializationModule::GetInstance().Deserialize(meta, path))
+			if (!Serialization::SerializationModule::Get().Deserialize(meta, path))
 			{
 				NUCLEAR_ERROR("[AssetManager] Loading Asset with no metadata! : '{0}'", Path.GetInputPath());
 				return nullptr;
@@ -99,19 +99,19 @@ namespace Nuclear
 		{
 			if (meta.mType == AssetType::Texture)
 			{
-				return Loader::GetInstance().LoadTexture(Path, meta);
+				return Loader::Get().LoadTexture(Path, meta);
 			}
 			else if (meta.mType == AssetType::Material)
 			{
-				return Loader::GetInstance().LoadMaterial(Path, meta);
+				return Loader::Get().LoadMaterial(Path, meta);
 			}
 			else if (meta.mType == AssetType::Shader)
 			{
-				return Loader::GetInstance().LoadShader(Path, meta);
+				return Loader::Get().LoadShader(Path, meta);
 			}
 			else if (meta.mType == AssetType::Mesh)
 			{
-				return Loader::GetInstance().LoadMesh(Path, auto_load_assets_dependencies,meta);
+				return Loader::Get().LoadMesh(Path, auto_load_assets_dependencies,meta);
 			}
 			return nullptr;
 		}
@@ -122,23 +122,23 @@ namespace Nuclear
 			AssetType Type = type;
 			if (Type == AssetType::Unknown)
 			{
-				Type = Importer::GetInstance().GetAssetType(Path.GetRealPath());
+				Type = Importer::Get().GetAssetType(Path.GetRealPath());
 			}			
 			else if (Type == AssetType::Texture)
 			{
-				return Importer::GetInstance().ImportTexture(Path);
+				return Importer::Get().ImportTexture(Path);
 			}
 			else if (Type == AssetType::Mesh)
 			{
-				return Importer::GetInstance().ImportMesh(Path);
+				return Importer::Get().ImportMesh(Path);
 			}
 			else if (Type == AssetType::Material)
 			{
-				return Importer::GetInstance().ImportMaterial(Path);
+				return Importer::Get().ImportMaterial(Path);
 			}
 			else if (Type == AssetType::Scene)
 			{
-				//return Importer::GetInstance().ImportTexture(Path);
+				//return Importer::Get().ImportTexture(Path);
 			}
 			return nullptr;
 		}
@@ -152,7 +152,7 @@ namespace Nuclear
 				if (!dir_entry.is_directory())
 				{
 					auto filepath = dir_entry.path().string();
-					auto assettype = Importer::GetInstance().GetAssetType(filepath);
+					auto assettype = Importer::Get().GetAssetType(filepath);
 					Import(filepath, assettype);
 				}
 				else
@@ -176,7 +176,7 @@ namespace Nuclear
 
 		bool AssetManager::Export(const Serialization::BinaryBuffer& asset, const Core::Path& Path)
 		{
-			Platform::FileSystem::GetInstance().SaveBinaryBuffer(asset, Path);
+			Platform::FileSystem::Get().SaveBinaryBuffer(asset, Path);
 
 			return false;
 		}
@@ -205,7 +205,7 @@ namespace Nuclear
 			{
 				std::string assettypestr(magic_enum::enum_name(asset->GetType()));
 
-				exportpath = AssetLibrary::GetInstance().GetPath() + assettypestr + "s/";
+				exportpath = AssetLibrary::Get().GetPath() + assettypestr + "s/";
 			}
 
 
@@ -223,7 +223,7 @@ namespace Nuclear
 			if (exportmetadata)
 			{
 				auto assetmetadata = CreateMetadata(asset);
-				Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, exportpath.GetRealPath() + asset->GetName() + GetExtensionByType(asset->GetType()) + ".NEMeta");
+				Serialization::SerializationModule::Get().Serialize(assetmetadata, exportpath.GetRealPath() + asset->GetName() + GetExtensionByType(asset->GetType()) + ".NEMeta");
 			}
 
 			if (asset->GetType() == AssetType::Scene)
@@ -231,7 +231,7 @@ namespace Nuclear
 				auto scene = static_cast<Scene*>(asset);
 				if (!scene->mBinaryBuffer.empty())
 				{
-					Platform::FileSystem::GetInstance().SaveBinaryBuffer(scene->mBinaryBuffer, exportpath);
+					Platform::FileSystem::Get().SaveBinaryBuffer(scene->mBinaryBuffer, exportpath);
 					NUCLEAR_INFO("[AssetManager] Exported Scene '{0}' To: '{1}'", scene->GetName(), exportpath.GetInputPath());
 					return true;
 				}
@@ -246,7 +246,7 @@ namespace Nuclear
 					 zpp::bits::out out(buffer);
 					 out(*material);
 
-					 Platform::FileSystem::GetInstance().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + material->GetName() + ".NEMaterial");
+					 Platform::FileSystem::Get().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + material->GetName() + ".NEMaterial");
 					 NUCLEAR_INFO("[AssetManager] Exported Material '{0}' To: '{1}'", material->GetName(), exportpath.GetInputPath());
 					 return true;
 				 }
@@ -261,7 +261,7 @@ namespace Nuclear
 					zpp::bits::out out(buffer);
 					out(*shader);
 
-					Platform::FileSystem::GetInstance().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + shader->GetName() + ".NEShader");
+					Platform::FileSystem::Get().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + shader->GetName() + ".NEShader");
 					NUCLEAR_INFO("[AssetManager] Exported Shader '{0}' To: '{1}'", shader->GetName(), exportpath.GetInputPath());
 					return true;
 				}

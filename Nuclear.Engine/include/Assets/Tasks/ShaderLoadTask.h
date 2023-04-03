@@ -33,12 +33,12 @@ namespace Nuclear
 			{
 				//load
 				Serialization::BinaryBuffer buffer;
-				Platform::FileSystem::GetInstance().LoadBinaryBuffer(buffer, mPath.GetPathNoExt() + ".NEShader");
+				Platform::FileSystem::Get().LoadBinaryBuffer(buffer, mPath.GetPathNoExt() + ".NEShader");
 				zpp::bits::in in(buffer);
 				in(*pResult);
 
 				//delete from queued assets
-				auto& vec = Loader::GetInstance().GetQueuedAssets();
+				auto& vec = Loader::Get().GetQueuedAssets();
 				for (Uint32 i = 0; i < vec.size(); i++)
 				{
 					if (vec.at(i)->GetUUID() == pResult->GetUUID())

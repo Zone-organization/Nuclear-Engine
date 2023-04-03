@@ -10,12 +10,6 @@ namespace Nuclear
 {
 	namespace Serialization
 	{
-		inline SerializationModule& SerializationModule::GetInstance() {
-			static SerializationModule instance;
-
-			return instance;
-		}
-
 		/*
 		
 		//Important for loading assets
@@ -39,6 +33,9 @@ namespace Nuclear
 				return "true";
 
 			return "false";
+		}
+		void SerializationModule::Shutdown()
+		{
 		}
 		bool SerializationModule::Serialize(const Assets::AssetMetadata& metadata, const Core::Path& path)
 		{
@@ -120,22 +117,22 @@ namespace Nuclear
 		{
 			if (type == Assets::AssetType::Shader)
 			{
-				return Assets::AssetLibrary::GetInstance().mImportedShaders.GetOrAddAsset(uuid);
+				return Assets::AssetLibrary::Get().mImportedShaders.GetOrAddAsset(uuid);
 			}
 			else if (type == Assets::AssetType::Material)
 			{
-				return Assets::AssetLibrary::GetInstance().mImportedMaterials.GetOrAddAsset(uuid);
+				return Assets::AssetLibrary::Get().mImportedMaterials.GetOrAddAsset(uuid);
 			}
 			else if (type == Assets::AssetType::Mesh)
 			{
-				return Assets::AssetLibrary::GetInstance().mImportedMeshes.GetOrAddAsset(uuid);
+				return Assets::AssetLibrary::Get().mImportedMeshes.GetOrAddAsset(uuid);
 			}
 			else if (type == Assets::AssetType::Texture)
 			{
-				auto result = Assets::AssetLibrary::GetInstance().mImportedTextures.GetOrAddAsset(uuid);
+				auto result = Assets::AssetLibrary::Get().mImportedTextures.GetOrAddAsset(uuid);
 				if(result->GetTextureView() == nullptr)
 				{
-					result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultGreyImage()->GetTextureView());
+					result->SetTextureView(Fallbacks::FallbacksModule::Get().GetDefaultGreyImage()->GetTextureView());
 				}
 				return result;
 			}

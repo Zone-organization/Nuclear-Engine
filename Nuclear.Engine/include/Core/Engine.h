@@ -37,7 +37,7 @@ namespace Nuclear
 			Engine(Engine const&) = delete;
 			void operator=(Engine const&) = delete;
 
-			static Engine& GetInstance();
+			static Engine& Get();
 
 			enum class State { Initializing, Loading, Rendering, ExitingRendering, Shuttingdown };
 

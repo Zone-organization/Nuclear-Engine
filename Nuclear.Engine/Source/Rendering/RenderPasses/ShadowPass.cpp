@@ -1,6 +1,6 @@
 #include "Rendering\RenderPasses\ShadowPass.h"
 #include <Platform\FileSystem.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics/GraphicsModule.h>
 #include <Utilities/Logger.h>
 #include <Components/MeshComponent.h>
@@ -40,7 +40,7 @@ namespace Nuclear
 				CBDesc.Usage = USAGE_DYNAMIC;
 				CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 				CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pLightSpacesCB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pLightSpacesCB);
 			}
 
 			if (mDesc.MAX_OMNIDIR_CASTERS > 0)
@@ -125,27 +125,27 @@ namespace Nuclear
 
 		void ShadowPass::PointLightShadowDepthPass(Components::LightComponent* pointlight, Uint32 RTindex)
 		{
-			Graphics::Context::GetInstance().GetContext()->SetPipelineState(mOmniDirShadowPassPSO.RawPtr());
+			Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(mOmniDirShadowPassPSO.RawPtr());
 
-			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(0, nullptr, pOmniDirShadowMapDSVs[RTindex], RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pOmniDirShadowMapDSVs[RTindex], CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(0, nullptr, pOmniDirShadowMapDSVs[RTindex], RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().GetContext()->ClearDepthStencil(pOmniDirShadowMapDSVs[RTindex], CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mOmniDirShadowPassSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(mOmniDirShadowPassSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
+			auto view = Core::Scene::Get().GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : view)
 			{
 				auto& MeshObject = view.get<Components::MeshComponent>(entity);
 				if (MeshObject.GetCastShadow())               //TODO Animation component
 				{
-					auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
+					auto& EntityInfo = Core::Scene::Get().GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
 
 					auto lightPos = pointlight->GetInternalPosition();
 
 					//Update cbuffer NEStatic_PointShadowVS	{	matrix Model;	};
 					{
-						Diligent::MapHelper<Math::Matrix4> CBConstants(Graphics::Context::GetInstance().GetContext(), pOmniDirShadowVS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
+						Diligent::MapHelper<Math::Matrix4> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pOmniDirShadowVS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = EntityInfo.mTransform.GetWorldMatrix();
 					}
 					//Update cbuffer NEStatic_PointShadowGS	{matrix ShadowMatrices[6];	};
@@ -164,13 +164,13 @@ namespace Nuclear
 
 
 						PVoid data;
-						Graphics::Context::GetInstance().GetContext()->MapBuffer(pOmniDirShadowGS_CB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+						Graphics::GraphicsModule::Get().GetContext()->MapBuffer(pOmniDirShadowGS_CB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
 						data = memcpy(data, shadowTransforms.data(), sizeof(Math::Matrix4) * 6);
-						Graphics::Context::GetInstance().GetContext()->UnmapBuffer(pOmniDirShadowGS_CB, MAP_WRITE);
+						Graphics::GraphicsModule::Get().GetContext()->UnmapBuffer(pOmniDirShadowGS_CB, MAP_WRITE);
 					}
 				//	Update cbuffer NEStatic_PointShadowPS	{    float3 gLightPos;	float gFarPlane;	};
 				    {
-						Diligent::MapHelper<Math::vec4> CBConstants(Graphics::Context::GetInstance().GetContext(), pOmniDirShadowPS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
+						Diligent::MapHelper<Math::vec4> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pOmniDirShadowPS_CB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = glm::vec4(lightPos, pointlight->GetFarPlane());
 					}
 					RenderMeshForDepthPass(MeshObject.GetMesh());
@@ -202,27 +202,27 @@ namespace Nuclear
 		}
 		void ShadowPass::PositionalLightShadowDepthPass(Uint32 RTindex, const Math::Matrix4 lightspace, PosShadowMap& type)
 		{
-			Graphics::Context::GetInstance().GetContext()->SetPipelineState(mPositionalShadowMapDepthPSO.RawPtr());
+			Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(mPositionalShadowMapDepthPSO.RawPtr());
 
-			Graphics::Context::GetInstance().GetContext()->SetRenderTargets(0, nullptr, type.pPosShadowMapDSVs[RTindex], RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-			Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(type.pPosShadowMapDSVs[RTindex], CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(0, nullptr, type.pPosShadowMapDSVs[RTindex], RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().GetContext()->ClearDepthStencil(type.pPosShadowMapDSVs[RTindex], CLEAR_DEPTH_FLAG, 1.f, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mPositionalShadowMapDepthSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(mPositionalShadowMapDepthSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
+			auto view = Core::Scene::Get().GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : view)
 			{
 				auto& MeshObject = view.get<Components::MeshComponent>(entity);
 				if (MeshObject.GetCastShadow())               //TODO Animation component
 				{
-					auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
+					auto& EntityInfo = Core::Scene::Get().GetRegistry().get<Components::EntityInfoComponent>(entity);
 					EntityInfo.mTransform.Update();
 
 					NEStatic_LightInfo cbdata;
 					cbdata.Model = EntityInfo.mTransform.GetWorldMatrix();
 					cbdata.LightSpace = lightspace;
 					{
-						Diligent::MapHelper<NEStatic_LightInfo> CBConstants(Graphics::Context::GetInstance().GetContext(), pPositionalLightInfoCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						Diligent::MapHelper<NEStatic_LightInfo> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pPositionalLightInfoCB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = cbdata;
 					}
 
@@ -262,7 +262,7 @@ namespace Nuclear
 			LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
 			LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 
-			auto source = Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/PositionalShadowDepthPass.hlsl");
+			auto source = Platform::FileSystem::Get().LoadFileToString("@NuclearAssets@/Shaders/PositionalShadowDepthPass.hlsl");
 
 			//Create Vertex Shader
 			{
@@ -275,7 +275,7 @@ namespace Nuclear
 
 				CreationAttribs.Source = source.c_str();
 
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &VSShader);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &VSShader);
 			}
 
 			//Create Pixel Shader
@@ -289,7 +289,7 @@ namespace Nuclear
 				CreationAttribs.Source = source.c_str();
 
 
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 			}
 			
 			PSOCreateInfo.pVS = VSShader;
@@ -298,9 +298,9 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 
 			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+			Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPositionalShadowMapDepthPSO);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mPositionalShadowMapDepthPSO);
 
 
 			BufferDesc CBDesc;
@@ -309,7 +309,7 @@ namespace Nuclear
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pPositionalLightInfoCB);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pPositionalLightInfoCB);
 
 			mPositionalShadowMapDepthPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_LightInfo")->Set(pPositionalLightInfoCB);
 
@@ -331,7 +331,7 @@ namespace Nuclear
 				ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D_ARRAY;
 				ShadowMapDesc.ArraySize = mDesc.MAX_DIR_CASTERS;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &mDirShadowMap.pPosShadowMap);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &mDirShadowMap.pPosShadowMap);
 
 				{
 					TextureViewDesc SRVDesc{ "DirPosShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_2D_ARRAY };
@@ -366,7 +366,7 @@ namespace Nuclear
 				ShadowMapDesc.Type = RESOURCE_DIM_TEX_2D_ARRAY;
 				ShadowMapDesc.ArraySize = mDesc.MAX_SPOT_CASTERS;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &mSpotShadowMap.pPosShadowMap);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &mSpotShadowMap.pPosShadowMap);
 
 				{
 					TextureViewDesc SRVDesc{ "SpotShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_2D_ARRAY };
@@ -420,7 +420,7 @@ namespace Nuclear
 			LayoutElems.push_back(LayoutElement(5, 0, 4, VT_INT32, false));    //BONE ID
 			LayoutElems.push_back(LayoutElement(6, 0, 4, VT_FLOAT32, false));  //WEIGHT
 
-			auto source = Platform::FileSystem::GetInstance().LoadFileToString("@NuclearAssets@/Shaders/OmniDirShadowDepthPass.hlsl");
+			auto source = Platform::FileSystem::Get().LoadFileToString("@NuclearAssets@/Shaders/OmniDirShadowDepthPass.hlsl");
 
 			//Create Vertex Shader
 			{
@@ -433,7 +433,7 @@ namespace Nuclear
 
 				CreationAttribs.Source = source.c_str();
 
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &VSShader);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &VSShader);
 			}
 
 			//Create Geometry Shader
@@ -447,7 +447,7 @@ namespace Nuclear
 
 				CreationAttribs.Source = source.c_str();
 
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &GSShader);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &GSShader);
 			}
 
 			//Create Pixel Shader
@@ -461,7 +461,7 @@ namespace Nuclear
 				CreationAttribs.Source = source.c_str();
 
 
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 			}
 
 			PSOCreateInfo.pVS = VSShader;
@@ -471,9 +471,9 @@ namespace Nuclear
 			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(LayoutElems.size());
 
 			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+			Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mOmniDirShadowPassPSO);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &mOmniDirShadowPassPSO);
 
 			{
 				BufferDesc CBDesc;
@@ -482,16 +482,16 @@ namespace Nuclear
 				CBDesc.Usage = USAGE_DYNAMIC;
 				CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 				CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pOmniDirShadowVS_CB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pOmniDirShadowVS_CB);
 
 				CBDesc.Name = "NEStatic_OmniDirShadowGS";
 				CBDesc.Size = sizeof(Math::Matrix4) * 6;
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pOmniDirShadowGS_CB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pOmniDirShadowGS_CB);
 
 				CBDesc.Name = "NEStatic_OmniDirShadowPS";
 				CBDesc.Size = sizeof(Math::Vector4);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pOmniDirShadowPS_CB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pOmniDirShadowPS_CB);
 			}
 			mOmniDirShadowPassPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_OmniDirShadowVS")->Set(pOmniDirShadowVS_CB);
 			mOmniDirShadowPassPSO->GetStaticVariableByName(SHADER_TYPE_GEOMETRY, "NEStatic_OmniDirShadowGS")->Set(pOmniDirShadowGS_CB);
@@ -514,7 +514,7 @@ namespace Nuclear
 			ShadowMapDesc.ArraySize = 6 * mDesc.MAX_OMNIDIR_CASTERS;
 
 			ShadowMapDesc.Type = RESOURCE_DIM_TEX_CUBE_ARRAY;
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &pOmniDirShadowMap);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(ShadowMapDesc, nullptr, &pOmniDirShadowMap);
 
 			{
 				TextureViewDesc SRVDesc{ "ShadowMap_SRV", TEXTURE_VIEW_SHADER_RESOURCE, RESOURCE_DIM_TEX_CUBE_ARRAY };
@@ -549,13 +549,13 @@ namespace Nuclear
 			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
 			{
 
-				Graphics::Context::GetInstance().GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+				Graphics::GraphicsModule::Get().GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 				DrawIndexedAttribs  DrawAttrs;
 				DrawAttrs.IndexType = VT_UINT32;
 				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
-				Graphics::Context::GetInstance().GetContext()->DrawIndexed(DrawAttrs);
+				Graphics::GraphicsModule::Get().GetContext()->DrawIndexed(DrawAttrs);
 
 			}
 		}

@@ -186,12 +186,5 @@ namespace Nuclear
 			ScriptCoreClass = CreateScriptClass(&mCoreAssembly, desc);
 			mRegistry.RegisterEngineComponents(&mCoreAssembly);
 		}
-
-		ScriptingModule& ScriptingModule::GetInstance()
-		{
-			static ScriptingModule instance;
-
-			return instance;
-		}
 	}
 }

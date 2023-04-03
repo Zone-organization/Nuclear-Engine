@@ -1,5 +1,5 @@
 #include <Systems\RenderSystem.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Utilities/Logger.h>
 #include <Components/EntityInfoComponent.h>
 #include <Components\CameraComponent.h>
@@ -67,10 +67,10 @@ namespace Nuclear
 				rendering3d_bake_desc.mRenderSystemHasShadowPass = true;
 
 			bakedesc.pRendering3DBakingDesc = &rendering3d_bake_desc;
-			bakedesc.pVariantsFactory = &Graphics::GraphicsModule::GetInstance().GetDefaultShaderPipelineVariantFactory();
+			bakedesc.pVariantsFactory = &Graphics::GraphicsModule::Get().GetDefaultShaderPipelineVariantFactory();
 
-			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingModule::GetInstance().GetCameraCB() });
-			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingModule::GetInstance().GetAnimationCB() });
+			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Camera", Rendering::RenderingModule::Get().GetCameraCB() });
+			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_VERTEX, "NEStatic_Animation", Rendering::RenderingModule::Get().GetAnimationCB() });
 			bakedesc.mStaticVariablesBindings.push_back({ Diligent::SHADER_TYPE_PIXEL, "NEStatic_Lights", GetLightCB() });
 
 			AddToDefinesIfNotZero(bakedesc.mDefines, "NE_DIR_LIGHTS_NUM ", rendering3d_bake_desc.DirLights);
@@ -185,7 +185,7 @@ namespace Nuclear
 				hasshadowpass = true;
 			}
 
-			auto meshview = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
+			auto meshview = Core::Scene::Get().GetRegistry().view<Components::MeshComponent>();
 			for (auto entity : meshview)
 			{
 				auto& mesh = meshview.get<Components::MeshComponent>(entity);
@@ -194,17 +194,17 @@ namespace Nuclear
 			}
 
 			//sort accroding to shadingmodels (aka pipelines) & update their renderqueues
-			Core::Scene::GetInstance().GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
+			Core::Scene::Get().GetRegistry().sort<Nuclear::Components::MeshComponent>([](const auto& lhs, const auto& rhs)
 				{
 					return lhs.GetRenderQueue() < rhs.GetRenderQueue();
 				});
 
-			mRenderData.mMeshView = Core::Scene::GetInstance().GetRegistry().view<Components::MeshComponent>();
+			mRenderData.mMeshView = Core::Scene::Get().GetRegistry().view<Components::MeshComponent>();
 
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 2: Render scene from each camera pov
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			auto CameraView = Core::Scene::GetInstance().GetRegistry().view<Components::CameraComponent>();
+			auto CameraView = Core::Scene::Get().GetRegistry().view<Components::CameraComponent>();
 			for (auto entity : CameraView)
 			{
 				auto& camera = CameraView.get<Components::CameraComponent>(entity);
@@ -221,9 +221,9 @@ namespace Nuclear
 					////////////////////////////////////
 					//Step 2.2: Clear main RTVs
 					////////////////////////////////////
-					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, camera.GetColorRT().GetRTVDblPtr(), camera.GetDepthRT().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(camera.GetColorRT().GetRTV(), (float*)&camera.mRTClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(camera.GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, camera.GetColorRT().GetRTVDblPtr(), camera.GetDepthRT().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(camera.GetColorRT().GetRTV(), (float*)&camera.mRTClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->ClearDepthStencil(camera.GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					{
 						PROFILE_GPU(test);
 						////////////////////////////////////
@@ -243,9 +243,9 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 
 				Diligent::CopyTextureAttribs attrib;
-				attrib.pSrcTexture = Core::Scene::GetInstance().GetMainCamera()->GetColorRT().GetSRV()->GetTexture();
-				attrib.pDstTexture = Rendering::RenderingModule::GetInstance().GetFinalRT().GetSRV()->GetTexture();
-				Graphics::Context::GetInstance().GetContext()->CopyTexture(attrib);
+				attrib.pSrcTexture = Core::Scene::Get().GetMainCamera()->GetColorRT().GetSRV()->GetTexture();
+				attrib.pDstTexture = Rendering::RenderingModule::Get().GetFinalRT().GetSRV()->GetTexture();
+				Graphics::GraphicsModule::Get().GetContext()->CopyTexture(attrib);
 
 	
 			//---------TODO: Maybe copy main camera depth rt?--------------
@@ -253,7 +253,7 @@ namespace Nuclear
 			//////////////////////////////////////////////////////////////////////////////////////////////
 			//Step 4: Render to screen
 			//////////////////////////////////////////////////////////////////////////////////////////////
-			Rendering::RenderingModule::GetInstance().RenderFinalRT();
+			Rendering::RenderingModule::Get().RenderFinalRT();
 
 		}
 
@@ -329,12 +329,12 @@ namespace Nuclear
 			CBDesc.BindFlags = Diligent::BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = Diligent::CPU_ACCESS_WRITE;
 			Diligent::BufferData DATA;
-			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
+			Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, &DATA, mPSLightCB.RawDblPtr());
 		}
 
 		void RenderSystem::BakeLights()
 		{
-			auto LightSourcesView = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
+			auto LightSourcesView = Core::Scene::Get().GetRegistry().view<Components::LightComponent>();
 
 			std::vector<Components::LightComponent*> DirLights_noShadows;
 			std::vector<Components::LightComponent*> PointLights_noShadows;
@@ -382,11 +382,11 @@ namespace Nuclear
 
 		void RenderSystem::UpdateLights()
 		{
-			auto LightView = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
+			auto LightView = Core::Scene::Get().GetRegistry().view<Components::LightComponent>();
 			for (auto entity : LightView)
 			{
 				auto& Light = LightView.get<Components::LightComponent>(entity);
-				auto& Einfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
+				auto& Einfo = Core::Scene::Get().GetRegistry().get<Components::EntityInfoComponent>(entity);
 				Light.SetInternalPosition(Einfo.mTransform.GetLocalPosition());
 			}		
 		}
@@ -428,9 +428,9 @@ namespace Nuclear
 			}
 
 			PVoid data = NULL;
-			Graphics::Context::GetInstance().GetContext()->MapBuffer(mPSLightCB, Diligent::MAP_WRITE, Diligent::MAP_FLAG_DISCARD, (PVoid&)data);
+			Graphics::GraphicsModule::Get().GetContext()->MapBuffer(mPSLightCB, Diligent::MAP_WRITE, Diligent::MAP_FLAG_DISCARD, (PVoid&)data);
 			data = memcpy(data, LightsBuffer.data(), NE_Light_CB_Size);
-			Graphics::Context::GetInstance().GetContext()->UnmapBuffer(mPSLightCB, Diligent::MAP_WRITE);
+			Graphics::GraphicsModule::Get().GetContext()->UnmapBuffer(mPSLightCB, Diligent::MAP_WRITE);
 		}
 		bool RenderSystem::LightRequiresBaking()
 		{

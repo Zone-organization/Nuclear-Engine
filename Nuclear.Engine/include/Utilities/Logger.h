@@ -17,7 +17,7 @@ namespace Nuclear
 			FORCE_INLINE std::shared_ptr<spdlog::logger>& GetEngineLogger() { return mEngineLogger; }
 			FORCE_INLINE std::shared_ptr<spdlog::logger>& GetClientLogger() { return mClientLogger; }
 
-			FORCE_INLINE static Logger& GetInstance()
+			FORCE_INLINE static Logger& Get()
 			{
 				static Logger logger;
 
@@ -34,15 +34,15 @@ namespace Nuclear
 }
 
 // engine logger
-#define NUCLEAR_TRACE(...)    Nuclear::Utilities::Logger::GetInstance().GetEngineLogger()->trace(__VA_ARGS__)
-#define NUCLEAR_INFO(...)     Nuclear::Utilities::Logger::GetInstance().GetEngineLogger()->info(__VA_ARGS__)
-#define NUCLEAR_WARN(...)     Nuclear::Utilities::Logger::GetInstance().GetEngineLogger()->warn(__VA_ARGS__)
-#define NUCLEAR_ERROR(...)    Nuclear::Utilities::Logger::GetInstance().GetEngineLogger()->error(__VA_ARGS__)
-#define NUCLEAR_FATAL(...) Nuclear::Utilities::Logger::GetInstance().GetEngineLogger()->critical(__VA_ARGS__)
+#define NUCLEAR_TRACE(...)    Nuclear::Utilities::Logger::Get().GetEngineLogger()->trace(__VA_ARGS__)
+#define NUCLEAR_INFO(...)     Nuclear::Utilities::Logger::Get().GetEngineLogger()->info(__VA_ARGS__)
+#define NUCLEAR_WARN(...)     Nuclear::Utilities::Logger::Get().GetEngineLogger()->warn(__VA_ARGS__)
+#define NUCLEAR_ERROR(...)    Nuclear::Utilities::Logger::Get().GetEngineLogger()->error(__VA_ARGS__)
+#define NUCLEAR_FATAL(...) Nuclear::Utilities::Logger::Get().GetEngineLogger()->critical(__VA_ARGS__)
 
 // Client logger
-#define CLIENT_TRACE(...)         Nuclear::Utilities::Logger::GetInstance().GetClientLogger()->trace(__VA_ARGS__)
-#define CLIENT_INFO(...)          Nuclear::Utilities::Logger::GetInstance().GetClientLogger()->info(__VA_ARGS__)
-#define CLIENT_WARN(...)          Nuclear::Utilities::Logger::GetInstance().GetClientLogger()->warn(__VA_ARGS__)
-#define CLIENT_ERROR(...)         Nuclear::Utilities::Logger::GetInstance().GetClientLogger()->error(__VA_ARGS__)
-#define CLIENT_FATAL(...)      Nuclear::Utilities::Logger::GetInstance().GetClientLogger()->critical(__VA_ARGS__)
+#define CLIENT_TRACE(...)         Nuclear::Utilities::Logger::Get().GetClientLogger()->trace(__VA_ARGS__)
+#define CLIENT_INFO(...)          Nuclear::Utilities::Logger::Get().GetClientLogger()->info(__VA_ARGS__)
+#define CLIENT_WARN(...)          Nuclear::Utilities::Logger::Get().GetClientLogger()->warn(__VA_ARGS__)
+#define CLIENT_ERROR(...)         Nuclear::Utilities::Logger::Get().GetClientLogger()->error(__VA_ARGS__)
+#define CLIENT_FATAL(...)      Nuclear::Utilities::Logger::Get().GetClientLogger()->critical(__VA_ARGS__)

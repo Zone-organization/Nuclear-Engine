@@ -37,7 +37,7 @@ namespace Nuclear
 				delete mAssetmeta.pLoadingDesc;
 
 				//Load Mesh & animations
-				if (!Importers::AssimpManager::GetInstance().Load(mPath.GetRealPath(), mResult, mLoadingDesc))
+				if (!Importers::AssimpManager::Get().Load(mPath.GetRealPath(), mResult, mLoadingDesc))
 				{
 					NUCLEAR_ERROR("[Loader] Failed to Load Model : '{0}'", mPath.GetInputPath());
 
@@ -49,7 +49,7 @@ namespace Nuclear
 				{
 					if (mResult.pAnimations->GetState() != IAsset::State::Loaded)
 					{
-						AssetLibrary::GetInstance().mImportedAnimations.mData.erase(mResult.pAnimations->GetUUID());
+						AssetLibrary::Get().mImportedAnimations.mData.erase(mResult.pAnimations->GetUUID());
 						mResult.pAnimations = nullptr;
 					}
 					else
@@ -62,7 +62,7 @@ namespace Nuclear
 				if (mResult.pMesh)
 				{
 					//create task
-					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, LOADER_FACTORY_TYPE));
+					Threading::ThreadingModule::Get().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, LOADER_FACTORY_TYPE));
 
 				}
 

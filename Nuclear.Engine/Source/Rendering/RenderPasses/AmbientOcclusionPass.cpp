@@ -1,7 +1,7 @@
 #include <Rendering/RenderPasses/AmbientOcclusionPass.h>
 #include <Assets/AssetManager.h>
 #include <Assets/Shader.h>
-#include <Graphics/Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics/GraphicsModule.h>
 #include <random>
 #include <Rendering\FrameRenderData.h>
@@ -28,8 +28,8 @@ namespace Nuclear
 			Assets::ShaderImportingDesc desc;
 			desc.mCommonOptions.mLoadOnly = true;
 
-			pSSAO_ExtractShader = Assets::AssetManager::GetInstance().Import<Assets::Shader>("@NuclearAssets@/Shaders/SSAO_Extract.NuclearShader");
-			pSSAO_BlurShader = Assets::AssetManager::GetInstance().Import<Assets::Shader>("@NuclearAssets@/Shaders/SSAO_Blur.NuclearShader");
+			pSSAO_ExtractShader = Assets::AssetManager::Get().Import<Assets::Shader>("@NuclearAssets@/Shaders/SSAO_Extract.NuclearShader");
+			pSSAO_BlurShader = Assets::AssetManager::Get().Import<Assets::Shader>("@NuclearAssets@/Shaders/SSAO_Blur.NuclearShader");
 
 			auto test = sizeof(SSAO_CB);
 			auto test2 = (sizeof(Math::Vector3) * SAMPLES_NUM) + sizeof(Math::Matrix4);
@@ -41,7 +41,7 @@ namespace Nuclear
 			CBDesc.Usage = USAGE_DYNAMIC;
 			CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 			CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-			Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pSSAO_ExtractCB);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pSSAO_ExtractCB);
 
 			// generate sample kernel
 			 // ----------------------
@@ -87,14 +87,14 @@ namespace Nuclear
 			TexData.pSubResources = &data;
 			TexData.NumSubresources = 1;
 
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, pNoiseTex.RawDblPtr());
+			Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, &TexData, pNoiseTex.RawDblPtr());
 
 			pNoiseTexView = pNoiseTex->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 
 			//bake pipeline
 			{
 				Graphics::ShaderPipelineBakingDesc bakedesc;
-				bakedesc.pVariantsFactory = &Graphics::GraphicsModule::GetInstance().GetDefaultShaderPipelineVariantFactory();
+				bakedesc.pVariantsFactory = &Graphics::GraphicsModule::Get().GetDefaultShaderPipelineVariantFactory();
 				bakedesc.mStaticVariablesBindings.push_back({ SHADER_TYPE_PIXEL ,"NEStatic_SSAO_Samples" ,pSSAO_ExtractCB });
 				bakedesc.mStaticVariablesBindings.push_back({ SHADER_TYPE_PIXEL ,"NE_SSAO_Noise" ,pNoiseTexView });
 
@@ -104,7 +104,7 @@ namespace Nuclear
 			{
 
 				Graphics::ShaderPipelineBakingDesc bakedesc;
-				bakedesc.pVariantsFactory = &Graphics::GraphicsModule::GetInstance().GetDefaultShaderPipelineVariantFactory();
+				bakedesc.pVariantsFactory = &Graphics::GraphicsModule::Get().GetDefaultShaderPipelineVariantFactory();
 				pSSAO_BlurShader->GetShaderPipeline().Bake(bakedesc);
 			}
 
@@ -127,14 +127,14 @@ namespace Nuclear
 			{
 				auto SSAO_ExtractPipeline = pSSAO_ExtractShader->GetShaderPipeline().GetVariant(0)->GetRenderingPipeline();
 				auto SSAO_ExtractPipelineSRB = pSSAO_ExtractShader->GetShaderPipeline().GetVariant(0)->GetRenderingSRB();
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, mSSAO_Extract_RT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(mSSAO_Extract_RT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, mSSAO_Extract_RT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(mSSAO_Extract_RT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(SSAO_ExtractPipeline);
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(SSAO_ExtractPipeline);
 
 				cbdata.CameraProj = framedata->pCamera->GetProjectionMatrix();
 				{
-					Diligent::MapHelper<SSAO_CB> CBConstants(Graphics::Context::GetInstance().GetContext(), pSSAO_ExtractCB, MAP_WRITE, MAP_FLAG_DISCARD);
+					Diligent::MapHelper<SSAO_CB> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pSSAO_ExtractCB, MAP_WRITE, MAP_FLAG_DISCARD);
 					*CBConstants = cbdata;
 				}
 				for (auto deffered_Variant : framedata->mUsedDefferedPipelines)
@@ -142,7 +142,7 @@ namespace Nuclear
 					SSAO_ExtractPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(deffered_Variant->pParent->GetGBuffer()->mRenderTargets.at(0).GetSRV());
 					SSAO_ExtractPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 1)->Set(deffered_Variant->pParent->GetGBuffer()->mRenderTargets.at(1).GetSRV());
 
-					Graphics::Context::GetInstance().GetContext()->CommitShaderResources(SSAO_ExtractPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(SSAO_ExtractPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 					Assets::DefaultMeshes::RenderScreenQuad();
 				}
@@ -150,12 +150,12 @@ namespace Nuclear
 				//Blur
 				auto SSAO_BlurPipeline = pSSAO_BlurShader->GetShaderPipeline().GetVariant(0)->GetRenderingPipeline();
 				auto SSAO_BlurPipelineSRB = pSSAO_BlurShader->GetShaderPipeline().GetVariant(0)->GetRenderingSRB();
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, mSSAO_Blur_RT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(mSSAO_Blur_RT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, mSSAO_Blur_RT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(mSSAO_Blur_RT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(SSAO_BlurPipeline);
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(SSAO_BlurPipeline);
 				SSAO_BlurPipelineSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(mSSAO_Extract_RT.GetSRV());
-				Graphics::Context::GetInstance().GetContext()->CommitShaderResources(SSAO_BlurPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(SSAO_BlurPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				Assets::DefaultMeshes::RenderScreenQuad();
 			}

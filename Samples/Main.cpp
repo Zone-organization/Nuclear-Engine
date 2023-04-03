@@ -41,13 +41,13 @@ int main(int argc, char* argv[])
 //	if (i == 2)
 	//{
 	//	desc.Renderer = SelectRenderer();
-	//	Core::Engine::GetInstance().Start(desc);
+	//	Core::Engine::Get().Start(desc);
 
 	//}
 	//else
 	//{
 	//	ModuleStartupDesc desc;
-	//	Core::Engine::GetInstance().Start(desc);
+	//	Core::Engine::Get().Start(desc);
 	//}
 
 	//ModuleStartupDesc desc;
@@ -58,14 +58,14 @@ int main(int argc, char* argv[])
 	desc.mScriptingClientDllName = "SamplesScripts.dll";
 	desc.mScriptingAssemblyNamespace = "Samples";
 	desc.mAssetsLibraryPath = "../Assets/";
-	Core::Engine::GetInstance().Start(desc);
+	Core::Engine::Get().Start(desc);
 	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
 
-	while (!Core::Engine::GetInstance().ShouldClose())
+	while (!Core::Engine::Get().ShouldClose())
 	{
 		SampleSelector selector;
-		Core::Engine::GetInstance().LoadClient(&selector);
+		Core::Engine::Get().LoadClient(&selector);
 	}
-	Core::Engine::GetInstance().Shutdown();
+	Core::Engine::Get().Shutdown();
 	return 0;
 }

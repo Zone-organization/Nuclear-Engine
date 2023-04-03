@@ -48,7 +48,7 @@ namespace Nuclear
 					}
 					pRenderingPath->StartRendering(frame, pipelinevariant);
 
-					auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(meshentity);
+					auto& EntityInfo = Core::Scene::Get().GetRegistry().get<Components::EntityInfoComponent>(meshentity);
 					EntityInfo.mTransform.Update();
 
 					pRenderingPath->Render(mesh, EntityInfo.mTransform.GetWorldMatrix());

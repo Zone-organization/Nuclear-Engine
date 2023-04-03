@@ -76,7 +76,7 @@
 //		dircomp.SetDirection(Math::Vector3(-0.2f, -1.0f, -0.3f));
 //		dircomp.SetColor(Graphics::Color(0.4f, 0.4f, 0.4f, 0.0f));
 //
-//		auto ELights = Core::Scene::GetInstance().CreateEntity("PointLight1");
+//		auto ELights = Core::Scene::Get().CreateEntity("PointLight1");
 //		auto& lightcomp = ELights.AddComponent<Components::LightComponent>(Components::LightComponent::Type::Point);
 //		lightcomp.SetIntensity(10.0f);
 //		lightcomp.mCastShadows = true;
@@ -139,7 +139,7 @@
 //		bakedesc.RTWidth = _Width_;
 //		bakedesc.RTHeight = _Height_;
 //		Renderer->Bake(bakedesc);	
-//		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc() });
+//		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::Get().GetFinalRT().GetDesc() });
 //
 //		PostFXPass.SetPostProcessingEffect(Utilities::Hash("HDR"), false);
 //		PostFXPass.SetPostProcessingEffect(Utilities::Hash("GAMMACORRECTION"), false);
@@ -175,7 +175,7 @@
 //		SetupAssets();
 //
 //		//Renderer->GetBackground().SetSkybox(&Skybox);
-//		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+//		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 //	}
 //
 //	void Render(float dt) override
@@ -250,7 +250,7 @@
 //			if (ImGui::Button("End Game"))
 //			{
 //				ImGui::End();
-//				return Core::Engine::GetInstance().EndClient();
+//				return Core::Engine::Get().EndClient();
 //			}
 //
 //			ImGui::End();

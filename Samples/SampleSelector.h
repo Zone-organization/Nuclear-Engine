@@ -14,7 +14,7 @@ public:
 
 	void OnWindowResize(int width, int height) override
 	{
-		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
+		Graphics::GraphicsModule::Get().GetSwapChain()->Resize(width, height);
 	}
 	SampleSelector()
 	{
@@ -23,11 +23,11 @@ public:
 	void StartSample(Client* sample)
 	{
 		ImGui::End();
-		Core::Engine::GetInstance().EndFrame();
-		Core::Engine::GetInstance().EndClient();
+		Core::Engine::Get().EndFrame();
+		Core::Engine::Get().EndClient();
 
-		Core::Engine::GetInstance().LoadClient(sample);
-		Core::Engine::GetInstance().EndClient();
+		Core::Engine::Get().LoadClient(sample);
+		Core::Engine::Get().EndClient();
 	}
 
 	void ImportModels()
@@ -141,12 +141,12 @@ public:
 	{
 		const float ClearColor[] = { 0.350f,  0.350f,  0.350f, 1.0f };
 
-		auto* RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
-		auto* DSV = Graphics::Context::GetInstance().GetSwapChain()->GetDepthBufferDSV();
+		auto* RTV = Graphics::GraphicsModule::Get().GetSwapChain()->GetCurrentBackBufferRTV();
+		auto* DSV = Graphics::GraphicsModule::Get().GetSwapChain()->GetDepthBufferDSV();
 
-		Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, DSV, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(RTV, ClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-		Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(DSV, Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, &RTV, DSV, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(RTV, ClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::GraphicsModule::Get().GetContext()->ClearDepthStencil(DSV, Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 		using namespace Graphics;
 		ImGui::Begin("SampleSelector");
@@ -203,11 +203,11 @@ public:
 		ImGui::Checkbox("VSync", &vsync);
 		if (vsync)
 		{
-			Core::Engine::GetInstance().SetSwapChainSyncInterval(1);
+			Core::Engine::Get().SetSwapChainSyncInterval(1);
 		}
 		else
 		{
-			Core::Engine::GetInstance().SetSwapChainSyncInterval(0);
+			Core::Engine::Get().SetSwapChainSyncInterval(0);
 		}
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

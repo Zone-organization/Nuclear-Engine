@@ -2,7 +2,7 @@
 
 #include "imgui_impl.h"
 #include "Assets/Assets.h"
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include "Diligent\Graphics\GraphicsTools\interface\GraphicsUtilities.h"
 #include <stdio.h>
 
@@ -44,7 +44,7 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 		VertBuffDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
 		VertBuffDesc.Size = g_VertexBufferSize * sizeof(ImDrawVert);
 
-		Graphics::Context::GetInstance().GetDevice()->CreateBuffer(VertBuffDesc, NULL, &g_pVB);
+		Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(VertBuffDesc, NULL, &g_pVB);
 
     }
     if (!g_pIB || g_IndexBufferSize < draw_data->TotalIdxCount)
@@ -59,13 +59,13 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 		IndBuffDesc.Size = g_IndexBufferSize * sizeof(ImDrawIdx);
 
 
-		Graphics::Context::GetInstance().GetDevice()->CreateBuffer(IndBuffDesc, NULL, &g_pIB);
+		Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(IndBuffDesc, NULL, &g_pIB);
     }
 
     // Upload vertex/index data into a single contiguous GPU buffer
 	PVoid vtx_resource, idx_resource;
-	Graphics::Context::GetInstance().GetInstance().GetContext()->MapBuffer(g_pVB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)vtx_resource);
-	Graphics::Context::GetInstance().GetInstance().GetContext()->MapBuffer(g_pIB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)idx_resource);
+	Graphics::GraphicsModule::Get().Get().GetContext()->MapBuffer(g_pVB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)vtx_resource);
+	Graphics::GraphicsModule::Get().Get().GetContext()->MapBuffer(g_pIB, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)idx_resource);
 
 	ImDrawVert* vtx_dst = (ImDrawVert*)vtx_resource;
 	ImDrawIdx* idx_dst = (ImDrawIdx*)idx_resource;
@@ -78,14 +78,14 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 		idx_dst += cmd_list->IdxBuffer.Size;
 	}
 
-	Graphics::Context::GetInstance().GetInstance().GetContext()->UnmapBuffer(g_pVB, MAP_WRITE);
-	Graphics::Context::GetInstance().GetInstance().GetContext()->UnmapBuffer(g_pIB, MAP_WRITE);
+	Graphics::GraphicsModule::Get().Get().GetContext()->UnmapBuffer(g_pVB, MAP_WRITE);
+	Graphics::GraphicsModule::Get().Get().GetContext()->UnmapBuffer(g_pIB, MAP_WRITE);
 
     // Setup orthographic projection matrix into our constant buffer
     // Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayPos is (0,0) for single viewport apps.
     {
 		PVoid mapped_resource;
-		Graphics::Context::GetInstance().GetInstance().GetContext()->MapBuffer(g_pVertexConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)mapped_resource);
+		Graphics::GraphicsModule::Get().Get().GetContext()->MapBuffer(g_pVertexConstantBuffer, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)mapped_resource);
 
         VERTEX_CONSTANT_BUFFER* constant_buffer = (VERTEX_CONSTANT_BUFFER*)mapped_resource;
         float L = draw_data->DisplayPos.x;
@@ -100,14 +100,14 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
             { (R+L)/(L-R),  (T+B)/(B-T),    0.5f,       1.0f },
         };
         memcpy(&constant_buffer->mvp, mvp, sizeof(mvp));
-		Graphics::Context::GetInstance().GetInstance().GetContext()->UnmapBuffer(g_pVertexConstantBuffer, MAP_WRITE);
+		Graphics::GraphicsModule::Get().Get().GetContext()->UnmapBuffer(g_pVertexConstantBuffer, MAP_WRITE);
 	}
 
 	// Setup desired DX state
 	unsigned int stride = sizeof(ImDrawVert);
 	unsigned int offset = 0;
 
-	Graphics::Context::GetInstance().GetInstance().GetContext()->SetPipelineState(g_pPSO);
+	Graphics::GraphicsModule::Get().Get().GetContext()->SetPipelineState(g_pPSO);
 
 	Diligent::Viewport vp;
 	vp.Width = draw_data->DisplaySize.x;
@@ -115,11 +115,11 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = vp.TopLeftY = 0;
-	Graphics::Context::GetInstance().GetInstance().GetContext()->SetViewports(1, &vp,0,0);
+	Graphics::GraphicsModule::Get().Get().GetContext()->SetViewports(1, &vp,0,0);
 
 
-	Graphics::Context::GetInstance().GetInstance().GetContext()->SetIndexBuffer(g_pIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-	Graphics::Context::GetInstance().GetInstance().GetContext()->SetVertexBuffers(0, 1, &g_pVB, (const Uint64 *)offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+	Graphics::GraphicsModule::Get().Get().GetContext()->SetIndexBuffer(g_pIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+	Graphics::GraphicsModule::Get().Get().GetContext()->SetVertexBuffers(0, 1, &g_pVB, (const Uint64 *)offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
     // Render command lists
     // (Because we merged all buffers into a single one, we maintain our own offset into them)
@@ -135,20 +135,20 @@ void ImGui_Impl_RenderDrawData(ImDrawData* draw_data)
 
 			// Apply scissor/clipping rectangle
 			const Rect r = { (long)(pcmd->ClipRect.x - clip_off.x), (long)(pcmd->ClipRect.y - clip_off.y), (long)(pcmd->ClipRect.z - clip_off.x), (long)(pcmd->ClipRect.w - clip_off.y) };
-			Graphics::Context::GetInstance().GetInstance().GetContext()->SetScissorRects(1, &r, 0, 0);
+			Graphics::GraphicsModule::Get().Get().GetContext()->SetScissorRects(1, &r, 0, 0);
 
 			// Bind texture, Draw
 			ITextureView* Tex = static_cast<ITextureView*>(pcmd->TextureId);
 
 			g_pSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(Tex);
-			Graphics::Context::GetInstance().GetInstance().GetContext()->CommitShaderResources(g_pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().Get().GetContext()->CommitShaderResources(g_pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			DrawIndexedAttribs DrawAttrs;
 			DrawAttrs.IndexType = sizeof(ImDrawIdx) == 2 ? VT_UINT16 : VT_UINT32;
 			DrawAttrs.NumIndices = pcmd->ElemCount;
 			DrawAttrs.FirstIndexLocation = pcmd->IdxOffset + global_idx_offset;
 			DrawAttrs.BaseVertex = pcmd->VtxOffset + global_vtx_offset;
-			Graphics::Context::GetInstance().GetInstance().GetContext()->DrawIndexed(DrawAttrs);
+			Graphics::GraphicsModule::Get().Get().GetContext()->DrawIndexed(DrawAttrs);
 
 		}
         global_idx_offset += cmd_list->IdxBuffer.Size;
@@ -185,7 +185,7 @@ static void ImGui_Impl_CreateFontsTexture()
 		TexData.pSubResources = &pSubResource;
 		TexData.NumSubresources = 1;
 		RefCntAutoPtr<ITexture> mTexture;
-		Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
+		Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
 		if (mTexture.RawPtr() != nullptr)
 			g_pFontTexture = mTexture->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
@@ -204,8 +204,8 @@ bool ImGui_Impl_CreateDeviceObjects()
 	PSOCreateInfo.PSODesc.Name = "IMGUI_PSO";
 
 	PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-	PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
-	PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
+	PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().ColorBufferFormat;
+	PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().DepthBufferFormat;
 	PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
 
@@ -273,9 +273,9 @@ bool ImGui_Impl_CreateDeviceObjects()
 		ShaderCI.EntryPoint = "main";
 		ShaderCI.Desc.Name = "IMGUI_VS";
 		ShaderCI.Source = vertexShader;
-		Graphics::Context::GetInstance().GetDevice()->CreateShader(ShaderCI, &pVS);
+		Graphics::GraphicsModule::Get().GetDevice()->CreateShader(ShaderCI, &pVS);
 
-		CreateUniformBuffer(Graphics::Context::GetInstance().GetDevice(), sizeof(Math::Matrix4), "IMGUI_VS_CB", &g_pVertexConstantBuffer);
+		CreateUniformBuffer(Graphics::GraphicsModule::Get().GetDevice(), sizeof(Math::Matrix4), "IMGUI_VS_CB", &g_pVertexConstantBuffer);
 	}
 
 	// Create pixel shader
@@ -301,7 +301,7 @@ bool ImGui_Impl_CreateDeviceObjects()
 		ShaderCI.EntryPoint = "main";
 		ShaderCI.Desc.Name = "IMGUI_PS";
 		ShaderCI.Source = pixelShader;
-		Graphics::Context::GetInstance().GetDevice()->CreateShader(ShaderCI, &pPS);
+		Graphics::GraphicsModule::Get().GetDevice()->CreateShader(ShaderCI, &pPS);
 	}
 
 	// Define vertex shader input layout
@@ -344,7 +344,7 @@ bool ImGui_Impl_CreateDeviceObjects()
 	PSOCreateInfo.PSODesc.ResourceLayout.ImmutableSamplers = StaticSamplers;
 	PSOCreateInfo.PSODesc.ResourceLayout.NumImmutableSamplers = _countof(StaticSamplers);
 
-	Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &g_pPSO);
+	Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &g_pPSO);
 
 	g_pPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "vertexBuffer")->Set(g_pVertexConstantBuffer);
 

@@ -14,7 +14,7 @@ namespace Nuclear
 		{
 			ScriptingObject result;
 
-			MonoObject* instance = mono_object_new(ScriptingModule::GetInstance().GetDomain(), pClass);
+			MonoObject* instance = mono_object_new(ScriptingModule::Get().GetDomain(), pClass);
 
 			if (!instance)
 			{

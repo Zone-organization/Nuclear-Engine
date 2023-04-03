@@ -1,5 +1,5 @@
 #include "Rendering\RenderingPaths\DefferedRenderingPath.h"
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Components/MeshComponent.h>
 #include <Assets\Shader.h>
 #include "Animation/Animator.h"
@@ -21,20 +21,20 @@ namespace Nuclear
                 pActivePipeline = pipeline;
 
                 //Render To Gbuffer
-                Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->mGBufferPipeline);
+                Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pipeline->mGBufferPipeline);
 
                 std::vector<Diligent::ITextureView*> RTargets;
                 for (auto& i : pipeline->pParent->GetGBuffer()->mRenderTargets)
                 {
                     RTargets.push_back(i.GetRTV());
                 }
-                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->pCamera->GetDepthRT().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(RTargets.size(), RTargets.data(), pCurrentFrame->pCamera->GetDepthRT().GetRTV(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 for (auto& i : RTargets)
                 {
-                    Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(i, nullptr, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                    Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(i, nullptr, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
                 }
 
-                Graphics::Context::GetInstance().GetContext()->ClearDepthStencil(pCurrentFrame->pCamera->GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->ClearDepthStencil(pCurrentFrame->pCamera->GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                 pCurrentFrame->mUsedDefferedPipelines.push_back(pActivePipeline);
             }
@@ -42,7 +42,7 @@ namespace Nuclear
         void DefferedRenderingPath::Render(Components::MeshComponent& mesh, const Math::Matrix4& modelmatrix)
         {
             pCurrentFrame->pCamera->SetModelMatrix(modelmatrix);
-            Rendering::RenderingModule::GetInstance().UpdateCameraCB(pCurrentFrame->pCamera);
+            Rendering::RenderingModule::Get().UpdateCameraCB(pCurrentFrame->pCamera);
 
             UpdateAnimationCB(mesh.GetAnimator());
 

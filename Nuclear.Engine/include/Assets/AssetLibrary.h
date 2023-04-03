@@ -85,7 +85,7 @@ namespace Nuclear
 			ImportedAssetsMap<Assets::Shader> mImportedShaders;
 			ImportedAssetsMap<Assets::Script> mImportedScripts;
 
-			static AssetLibrary& GetInstance();
+			static AssetLibrary& Get();
 
 			void Clear();
 

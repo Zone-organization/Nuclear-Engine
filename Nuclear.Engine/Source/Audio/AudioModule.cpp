@@ -29,12 +29,6 @@ namespace Nuclear
 			NUCLEAR_INFO("[AudioModule] AudioModule has been initialized successfully!.");
 			return true;
 		}
-		AudioModule& AudioModule::GetInstance()
-		{
-			static AudioModule audioModule;
-
-			return audioModule;
-		}
 
 		AudioBackend* AudioModule::GetBackend()
 		{

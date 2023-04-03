@@ -9,9 +9,9 @@
 #define MAX_BONE_INFLUENCE 4
 #define ASSET_METHODS_SPECIALIZATION(ASSETTYPE)   \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path) { \
-	return Importer::GetInstance().Import##ASSETTYPE(Path); } \
+	return Importer::Get().Import##ASSETTYPE(Path); } \
 template <> ASSETTYPE* Import<ASSETTYPE>(const Core::Path& Path, const ASSETTYPE##ImportingDesc & desc) { \
-return Importer::GetInstance().Import##ASSETTYPE(Path, desc); } \
+return Importer::Get().Import##ASSETTYPE(Path, desc); } \
 
 namespace Nuclear 
 {
@@ -33,7 +33,7 @@ namespace Nuclear
 			AssetManager(AssetManager const&) = delete;
 			void operator=(AssetManager const&) = delete;
 
-			static AssetManager& GetInstance();
+			static AssetManager& Get();
 
 			//Note: Automatically called on Destruction
 			void FlushContainers();

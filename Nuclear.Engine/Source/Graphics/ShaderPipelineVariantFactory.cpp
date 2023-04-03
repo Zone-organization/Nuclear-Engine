@@ -7,7 +7,7 @@
 #include <Platform/FileSystem.h>
 #include <Rendering/RenderingModule.h>
 #include <Utilities/Logger.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear
 {
@@ -23,13 +23,13 @@ namespace Nuclear
 		{
 			if (shadertype == ShaderType::Rendering3D)
 			{
-				result.LayoutElements = Graphics::GraphicsModule::GetInstance().GetRendering3DInputLayout().data();
-				result.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::GetInstance().GetRendering3DInputLayout().size());
+				result.LayoutElements = Graphics::GraphicsModule::Get().GetRendering3DInputLayout().data();
+				result.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::Get().GetRendering3DInputLayout().size());
 			}
 			else if (shadertype == ShaderType::PostFX || shadertype == ShaderType::RenderingEffect)
 			{
-				result.LayoutElements = Graphics::GraphicsModule::GetInstance().GetRenderToTextureInputLayout().data();
-				result.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::GetInstance().GetRenderToTextureInputLayout().size());
+				result.LayoutElements = Graphics::GraphicsModule::Get().GetRenderToTextureInputLayout().data();
+				result.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::Get().GetRenderToTextureInputLayout().size());
 			}
 			else
 			{
@@ -66,8 +66,8 @@ namespace Nuclear
 			RefCntAutoPtr<IShader> VShader;
 			RefCntAutoPtr<IShader> PShader;
 
-			GraphicsModule::GetInstance().CreateShader(VShader.RawDblPtr(), variantdesc.mMainPSOCreateInfo.mVertexShader);
-			GraphicsModule::GetInstance().CreateShader(PShader.RawDblPtr(), variantdesc.mMainPSOCreateInfo.mPixelShader);
+			GraphicsModule::Get().CreateShader(VShader.RawDblPtr(), variantdesc.mMainPSOCreateInfo.mVertexShader);
+			GraphicsModule::Get().CreateShader(PShader.RawDblPtr(), variantdesc.mMainPSOCreateInfo.mPixelShader);
 
 			GraphicsPipelineStateCreateInfo PSOCreateInfo;
 			std::string psoname(Desc.mName + "_FID_" + std::to_string(variantdesc.mHashKey));
@@ -87,12 +87,12 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(variantdesc.mMainPSOCreateInfo.mLayout.size());
 			}
 			PSOResourcesInitInfo pso_resources = bakingdesc.mPipelineResourcesInfo;
-			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, pso_resources);
+			Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, pso_resources);
 
 			if (!bakingdesc.mPreVariantPipelineCreationCallback.isNull())
 				bakingdesc.mPreVariantPipelineCreationCallback(PSOCreateInfo);
 
-			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mPipeline);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mPipeline);
 
 			for (auto& i : bakingdesc.mStaticVariablesBindings)
 			{
@@ -146,8 +146,8 @@ namespace Nuclear
 				RefCntAutoPtr<IShader> VSShader;
 				RefCntAutoPtr<IShader> PSShader;
 
-				GraphicsModule::GetInstance().CreateShader(VSShader.RawDblPtr(), variant.mDesc.mGBufferPSOCreateInfo.mVertexShader);
-				GraphicsModule::GetInstance().CreateShader(PSShader.RawDblPtr(), variant.mDesc.mGBufferPSOCreateInfo.mPixelShader);
+				GraphicsModule::Get().CreateShader(VSShader.RawDblPtr(), variant.mDesc.mGBufferPSOCreateInfo.mVertexShader);
+				GraphicsModule::Get().CreateShader(PSShader.RawDblPtr(), variant.mDesc.mGBufferPSOCreateInfo.mPixelShader);
 
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
@@ -167,12 +167,12 @@ namespace Nuclear
 					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(variant.mDesc.mMainPSOCreateInfo.mLayout.size());
 				}
 				PSOResourcesInitInfo pso_resources = bakingdesc.mPipelineResourcesInfo;
-				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, pso_resources);
+				Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, pso_resources);
 
 				if (!bakingdesc.mPreVariantPipelineCreationCallback.isNull())
 					bakingdesc.mPreVariantPipelineCreationCallback(PSOCreateInfo);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mGBufferPipeline);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mGBufferPipeline);
 
 
 				for (auto& i : bakingdesc.mStaticVariablesBindings)
@@ -218,8 +218,8 @@ namespace Nuclear
 				RefCntAutoPtr<IShader> VSShader;
 				RefCntAutoPtr<IShader> PSShader;
 
-				GraphicsModule::GetInstance().CreateShader(VSShader.RawDblPtr(), variant.mDesc.mMainPSOCreateInfo.mVertexShader);
-				GraphicsModule::GetInstance().CreateShader(PSShader.RawDblPtr(), variant.mDesc.mMainPSOCreateInfo.mPixelShader);
+				GraphicsModule::Get().CreateShader(VSShader.RawDblPtr(), variant.mDesc.mMainPSOCreateInfo.mVertexShader);
+				GraphicsModule::Get().CreateShader(PSShader.RawDblPtr(), variant.mDesc.mMainPSOCreateInfo.mPixelShader);
 				PSOCreateInfo.PSODesc.Name = psoname.c_str();
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
@@ -231,8 +231,8 @@ namespace Nuclear
 
 				if (PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements == 0)  //TODO: Move to shader parsing
 				{
-					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsModule::GetInstance().GetRenderToTextureInputLayout().data();
-					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::GetInstance().GetRenderToTextureInputLayout().size());
+					PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsModule::Get().GetRenderToTextureInputLayout().data();
+					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::Get().GetRenderToTextureInputLayout().size());
 				}
 				else
 				{
@@ -240,12 +240,12 @@ namespace Nuclear
 					PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(variant.mDesc.mMainPSOCreateInfo.mLayout.size());
 				}
 				PSOResourcesInitInfo pso_resources = bakingdesc.mPipelineResourcesInfo;
-				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, pso_resources);
+				Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, pso_resources);
 
 				if (!bakingdesc.mPreVariantPipelineCreationCallback.isNull())
 					bakingdesc.mPreVariantPipelineCreationCallback(PSOCreateInfo);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mPipeline);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &variant.mPipeline);
 
 				for (auto& i : bakingdesc.mStaticVariablesBindings)
 				{
@@ -294,8 +294,8 @@ namespace Nuclear
 						{
 							assert(false);
 						}
-						tex->mTex.pTexture = Fallbacks::FallbacksModule::GetInstance().GetDefaultWhiteImage();
-						tex->mTex.mUsageType = GraphicsModule::GetInstance().ParseTexUsageFromName(VarName);
+						tex->mTex.pTexture = Fallbacks::FallbacksModule::Get().GetDefaultWhiteImage();
+						tex->mTex.mUsageType = GraphicsModule::Get().ParseTexUsageFromName(VarName);
 						tex->mName = VarName;
 						tex->mSlot = i;
 						tex->mType = Assets::ShaderTextureType::ShadowTex;
@@ -305,8 +305,8 @@ namespace Nuclear
 						VarName.erase(0, 6);
 
 						Assets::ShaderTexture ReflectedTex;
-						ReflectedTex.mTex.pTexture = Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage();
-						ReflectedTex.mTex.mUsageType = GraphicsModule::GetInstance().ParseTexUsageFromName(VarName);
+						ReflectedTex.mTex.pTexture = Fallbacks::FallbacksModule::Get().GetDefaultBlackImage();
+						ReflectedTex.mTex.mUsageType = GraphicsModule::Get().ParseTexUsageFromName(VarName);
 						ReflectedTex.mName = VarName;
 						ReflectedTex.mSlot = i;
 						ReflectedTex.mType = Assets::ShaderTextureType::RenderingEffect;
@@ -316,8 +316,8 @@ namespace Nuclear
 					{
 						VarName.erase(0, 6);
 						Assets::ShaderTexture ReflectedTex;
-						ReflectedTex.mTex.pTexture = Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage();
-						ReflectedTex.mTex.mUsageType = GraphicsModule::GetInstance().ParseTexUsageFromName(VarName);
+						ReflectedTex.mTex.pTexture = Fallbacks::FallbacksModule::Get().GetDefaultBlackImage();
+						ReflectedTex.mTex.mUsageType = GraphicsModule::Get().ParseTexUsageFromName(VarName);
 						ReflectedTex.mName = VarName;
 						ReflectedTex.mSlot = i;
 						ReflectedTex.mType = Assets::ShaderTextureType::RenderingEffect;

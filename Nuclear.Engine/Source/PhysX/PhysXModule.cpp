@@ -30,12 +30,7 @@ namespace Nuclear
 		{
 
 		}
-		PhysXModule& PhysXModule::GetInstance()
-		{
-			static PhysXModule pxModule;
 
-			return pxModule;
-		}
 		PxDefaultAllocator gAllocator;
 
 		bool PhysXModule::Initialize(const PhysXModuleDesc& desc)

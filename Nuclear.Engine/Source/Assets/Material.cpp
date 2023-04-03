@@ -1,7 +1,7 @@
 #include <Assets\Material.h>
 #include <Assets\Shader.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/PipelineState.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Utilities/Logger.h>
 #include <Assets\Texture.h>
@@ -41,7 +41,7 @@ namespace Nuclear
 				}
 			}
 
-			Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->GetRenderingSRB(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+			Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pipeline->GetRenderingSRB(), Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 		}
 
 		std::vector<MaterialTextureSet>& Material::GetTextures()

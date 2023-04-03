@@ -2,7 +2,7 @@
 #include <Rendering\FrameRenderData.h>
 #include <Assets\Shader.h>
 #include <Assets\Texture.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics\ShaderPipelineVariant.h>
 #include <Systems\DebugSystem.h>
 #include <Core\Scene.h>
@@ -28,8 +28,8 @@ namespace Nuclear
                         auto gbuffer = pipeline->pParent->GetGBuffer();
 
                         //Apply Lighting
-                        Graphics::Context::GetInstance().GetContext()->SetPipelineState(pipeline->mPipeline);
-                        Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, framedata->pCamera->GetColorRT().GetRTVDblPtr(), nullptr, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pipeline->mPipeline);
+                        Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, framedata->pCamera->GetColorRT().GetRTVDblPtr(), nullptr, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         for (int i = 0; i < gbuffer->mRenderTargets.size(); i++)
                         {
@@ -54,16 +54,16 @@ namespace Nuclear
                             }
                         }
 
-                        Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pipeline->mPipelineSRB, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                        Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pipeline->mPipelineSRB, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
                         Assets::DefaultMeshes::RenderScreenQuad();
 
                         //Send GBUFFER to DebugSystem
-                        if (Core::Scene::GetInstance().GetSystemManager().GetSystem<Systems::DebugSystem>())
+                        if (Core::Scene::Get().GetSystemManager().GetSystem<Systems::DebugSystem>())
                         {
                             for (auto& i : gbuffer->mRenderTargets)
                             {
-                                Core::Scene::GetInstance().GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
+                                Core::Scene::Get().GetSystemManager().GetSystem<Systems::DebugSystem>()->mRegisteredRTs.push_back(&i);
                             }
                         }
                     }

@@ -14,7 +14,7 @@ namespace Nuclear
 		{
 
 		}
-		Loader& Loader::GetInstance()
+		Loader& Loader::Get()
 		{
 			static Loader instance;
 			return instance;
@@ -22,51 +22,51 @@ namespace Nuclear
 		Texture* Loader::LoadTexture(const Core::Path& Path, const Assets::AssetMetadata& metadata)
 		{
 			//Add to queue			
-			auto result = AssetLibrary::GetInstance().mImportedTextures.GetOrAddAsset(metadata.mUUID);
+			auto result = AssetLibrary::Get().mImportedTextures.GetOrAddAsset(metadata.mUUID);
 			result->SetName(metadata.mName);
 			result->SetState(IAsset::State::Queued);
 
 			if (result->GetTextureView() == nullptr)
 			{
-				result->SetTextureView(Fallbacks::FallbacksModule::GetInstance().GetDefaultBlackImage()->GetTextureView());
+				result->SetTextureView(Fallbacks::FallbacksModule::Get().GetDefaultBlackImage()->GetTextureView());
 			}
 
 			mQueuedAssets.push_back(result);
 
-			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new TextureLoadTask(result, Path, metadata));
+			Threading::ThreadingModule::Get().GetThreadPool().AddTask(new TextureLoadTask(result, Path, metadata));
 
 			return result;
 		}
 		Material* Loader::LoadMaterial(const Core::Path& Path, const Assets::AssetMetadata& metadata)
 		{
 			//Add to queue			
-			auto result = AssetLibrary::GetInstance().mImportedMaterials.GetOrAddAsset(metadata.mUUID);
+			auto result = AssetLibrary::Get().mImportedMaterials.GetOrAddAsset(metadata.mUUID);
 			result->SetName(metadata.mName);
 			result->SetState(IAsset::State::Queued);
 
 			mQueuedAssets.push_back(result);
 
-			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MaterialLoadTask(result, Path, metadata));
+			Threading::ThreadingModule::Get().GetThreadPool().AddTask(new MaterialLoadTask(result, Path, metadata));
 
 			return result;
 		}
 		Shader* Loader::LoadShader(const Core::Path& Path, const Assets::AssetMetadata& metadata)
 		{
 			//Add to queue			
-			auto result = AssetLibrary::GetInstance().mImportedShaders.GetOrAddAsset(metadata.mUUID);
+			auto result = AssetLibrary::Get().mImportedShaders.GetOrAddAsset(metadata.mUUID);
 			result->SetName(metadata.mName);
 			result->SetState(IAsset::State::Queued);
 
 			mQueuedAssets.push_back(result);
 
-			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new ShaderLoadTask(result, Path, metadata));
+			Threading::ThreadingModule::Get().GetThreadPool().AddTask(new ShaderLoadTask(result, Path, metadata));
 
 			return result;
 		}
 		Mesh* Loader::LoadMesh(const Core::Path& Path, bool auto_load_external_material, const Assets::AssetMetadata& metadata)
 		{
 			//Add to queue			
-			Mesh* mesh = AssetLibrary::GetInstance().mImportedMeshes.GetOrAddAsset(metadata.mUUID);
+			Mesh* mesh = AssetLibrary::Get().mImportedMeshes.GetOrAddAsset(metadata.mUUID);
 			mesh->SetName(metadata.mName);
 			mesh->SetState(IAsset::State::Queued);
 
@@ -83,7 +83,7 @@ namespace Nuclear
 					if (auto_load_external_material)
 					{
 						AssetMetadata material_meta;
-						if (!Serialization::SerializationModule::GetInstance().Deserialize(material_meta, Path.GetPathNoExt() + ".NEMaterial.NEMeta"))
+						if (!Serialization::SerializationModule::Get().Deserialize(material_meta, Path.GetPathNoExt() + ".NEMaterial.NEMeta"))
 						{
 							NUCLEAR_ERROR("[Loader] Loading Mesh's External Material with no metadata! : '{0}'", Path.GetInputPath());
 							return nullptr;
@@ -93,19 +93,19 @@ namespace Nuclear
 				}
 				else
 				{
-					material = AssetLibrary::GetInstance().mImportedMaterials.GetOrAddAsset(mLoadingDesc.mMaterialUUID);
+					material = AssetLibrary::Get().mImportedMaterials.GetOrAddAsset(mLoadingDesc.mMaterialUUID);
 					mQueuedAssets.push_back(material);
 				}
 			}
 			if (mLoadingDesc.mAnimationsUUID.isValid())
 			{
-				animations = AssetLibrary::GetInstance().mImportedAnimations.GetOrAddAsset(mLoadingDesc.mAnimationsUUID);
+				animations = AssetLibrary::Get().mImportedAnimations.GetOrAddAsset(mLoadingDesc.mAnimationsUUID);
 				mQueuedAssets.push_back(animations);
 			}
 
 			mQueuedAssets.push_back(mesh);
 
-			Threading::ThreadingModule::GetInstance().GetThreadPool().AddTask(new MeshLoadTask({ metadata.mName, mesh, material, animations }, Path, metadata));
+			Threading::ThreadingModule::Get().GetThreadPool().AddTask(new MeshLoadTask({ metadata.mName, mesh, material, animations }, Path, metadata));
 
 			return mesh;
 		}

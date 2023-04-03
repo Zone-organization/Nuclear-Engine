@@ -34,7 +34,7 @@ namespace Nuclear
 			{
 				namespace fs = std::filesystem;
 
-				std::string newpath = AssetLibrary::GetInstance().GetPath() + "Materials/" + mPath.GetFilename(true);
+				std::string newpath = AssetLibrary::Get().GetPath() + "Materials/" + mPath.GetFilename(true);
 				std::error_code ec;
 				fs::copy_file(mPath.GetRealPath(), newpath + ".NEMaterial", ec);
 
@@ -46,12 +46,12 @@ namespace Nuclear
 
 				//load
 				Serialization::BinaryBuffer buffer;
-				Platform::FileSystem::GetInstance().LoadBinaryBuffer(buffer, newpath);
+				Platform::FileSystem::Get().LoadBinaryBuffer(buffer, newpath);
 				zpp::bits::in in(buffer);
 				in(*pResult);
 
 				//delete from queued assets
-				auto& vec = Importer::GetInstance().GetQueuedAssets();
+				auto& vec = Importer::Get().GetQueuedAssets();
 				for (Uint32 i = 0; i < vec.size(); i++)
 				{
 					if (vec.at(i)->GetUUID() == pResult->GetUUID())
@@ -64,11 +64,11 @@ namespace Nuclear
 				pResult->SetState(IAsset::State::Created);
 
 				//export meta
-				AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(pResult);
+				AssetMetadata assetmetadata = Assets::AssetManager::Get().CreateMetadata(pResult);
 
 				auto matloadingdesc = static_cast<Assets::MaterialLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MaterialLoadingDesc);
 
-				Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, newpath + ".NEMaterial" + ".NEMeta");
+				Serialization::SerializationModule::Get().Serialize(assetmetadata, newpath + ".NEMaterial" + ".NEMeta");
 				delete assetmetadata.pLoadingDesc;
 
 				NUCLEAR_INFO("[Assets] Imported: {0} ", mPath.GetInputPath());

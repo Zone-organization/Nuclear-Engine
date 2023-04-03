@@ -13,12 +13,12 @@ namespace Nuclear
 		PhysXSystem::PhysXSystem(const PhysXSystemDesc &sceneDesc)
 		{
 			
-			PhysX::PxSceneDesc SceneDesc(PhysX::PhysXModule::GetInstance().GetPhysics()->getTolerancesScale());
+			PhysX::PxSceneDesc SceneDesc(PhysX::PhysXModule::Get().GetPhysics()->getTolerancesScale());
 			SceneDesc.gravity = PhysX::To(sceneDesc.mGravity);
-			SceneDesc.cpuDispatcher = PhysX::PhysXModule::GetInstance().GetCPUDispatcher();
+			SceneDesc.cpuDispatcher = PhysX::PhysXModule::Get().GetCPUDispatcher();
 			SceneDesc.filterShader = PhysX::PxDefaultSimulationFilterShader;
 	
-			mPhysXScene = PhysX::PhysXModule::GetInstance().GetPhysics()->createScene(SceneDesc);
+			mPhysXScene = PhysX::PhysXModule::Get().GetPhysics()->createScene(SceneDesc);
 		}
 		PhysXSystem::~PhysXSystem()
 		{
@@ -53,12 +53,12 @@ namespace Nuclear
 		}
 		void PhysXSystem::Bake()
 		{
-			auto eView = Core::Scene::GetInstance().GetRegistry().view<Components::ColliderComponent>();
+			auto eView = Core::Scene::Get().GetRegistry().view<Components::ColliderComponent>();
 			for (auto entity : eView)
 			{
 				auto& Obj = eView.get<Components::ColliderComponent>(entity);
 
-				auto RigidComponent = Core::Scene::GetInstance().GetRegistry().try_get<Components::RigidBodyComponent>(entity);
+				auto RigidComponent = Core::Scene::Get().GetRegistry().try_get<Components::RigidBodyComponent>(entity);
 				if (RigidComponent)
 				{		
 					RigidComponent->GetActor().mPtr->attachShape(*Obj.GetShape().mPtr);
@@ -72,13 +72,13 @@ namespace Nuclear
 
 		void PhysXSystem::AddunAssignedActors()
 		{
-			auto eView = Core::Scene::GetInstance().GetRegistry().view<Components::ColliderComponent>();
+			auto eView = Core::Scene::Get().GetRegistry().view<Components::ColliderComponent>();
 			for (auto entity : eView)
 			{
 				auto& Obj = eView.get<Components::ColliderComponent>(entity);
 				if (!Obj.isValid())
 				{
-					auto RigidComponent = Core::Scene::GetInstance().GetRegistry().try_get<Components::RigidBodyComponent>(entity);
+					auto RigidComponent = Core::Scene::Get().GetRegistry().try_get<Components::RigidBodyComponent>(entity);
 					if (RigidComponent)
 					{
 						RigidComponent->GetActor().mPtr->attachShape(*Obj.GetShape().mPtr);
@@ -140,7 +140,7 @@ namespace Nuclear
 				outhit.position = PhysX::From(hit.block.position);
 				outhit.normal = PhysX::From(hit.block.normal);
 				outhit.distance = hit.block.distance;
-				outhit.HitEntity = ECS::Entity(Core::Scene::GetInstance().GetRegistry(), (entt::entity&)hit.block.actor->userData);
+				outhit.HitEntity = ECS::Entity(Core::Scene::Get().GetRegistry(), (entt::entity&)hit.block.actor->userData);
 					
 				outhit.valid = true;
 				return true;
@@ -155,7 +155,7 @@ namespace Nuclear
 			mPhysXScene->fetchResults(true);
 
 			//Update Entities transforms
-			auto eView = Core::Scene::GetInstance().GetRegistry().view<Components::RigidBodyComponent>();
+			auto eView = Core::Scene::Get().GetRegistry().view<Components::RigidBodyComponent>();
 			for (auto entity : eView)
 			{
 				auto& RigidBodyObj = eView.get<Components::RigidBodyComponent>(entity);
@@ -164,7 +164,7 @@ namespace Nuclear
 				{
 					RigidBodyObj.SetisKinematic(RigidBodyObj.isKinematic);
 				}
-				auto Einfo = Core::Scene::GetInstance().GetRegistry().try_get<Components::EntityInfoComponent>(entity);
+				auto Einfo = Core::Scene::Get().GetRegistry().try_get<Components::EntityInfoComponent>(entity);
 
 				if (!RigidBodyObj.isKinematic)
 				{

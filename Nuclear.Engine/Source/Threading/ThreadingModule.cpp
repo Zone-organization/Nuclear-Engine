@@ -8,12 +8,7 @@ namespace Nuclear
         {
 
         }
-        ThreadingModule& ThreadingModule::GetInstance()
-        {
-            static ThreadingModule instance;
 
-            return instance;
-        }
         bool ThreadingModule::Initialize()
         {
             mMainThreadID = std::this_thread::get_id();

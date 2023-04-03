@@ -5,7 +5,7 @@ namespace Nuclear
 {
 	namespace Platform
 	{
-		Input& Input::GetInstance()
+		Input& Input::Get()
 		{
 			static Input gInput;
 			return gInput;

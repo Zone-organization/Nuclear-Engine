@@ -1,5 +1,7 @@
 #pragma once
-#include <NE_Common.h>
+#include <Core/EngineModule.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/DeviceContext.h>
+#include <Diligent/Graphics/GraphicsEngine/interface/RenderDevice.h>
 #include <Graphics/ShaderPipelineVariantFactory.h>
 #include <Assets/TextureDesc.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/InputLayout.h>
@@ -10,6 +12,13 @@
 #include <unordered_map>
 #include <Graphics\GraphicsModuleDesc.h>
 
+
+namespace Diligent
+{
+	struct ISwapChain;
+	struct IEngineFactory;
+}
+
 namespace Nuclear
 {
 	namespace Assets
@@ -19,16 +28,36 @@ namespace Nuclear
 	}
 	namespace Graphics
 	{
-		class NEAPI GraphicsModule
+		class NEAPI GraphicsModule : public Core::EngineModule<GraphicsModule>
 		{
+			friend class Core::EngineModule<GraphicsModule>;
 		public:
-			GraphicsModule(GraphicsModule const&) = delete;
-			void operator=(GraphicsModule const&) = delete;
-
-			static GraphicsModule& GetInstance();
-
 			bool Initialize(const GraphicsModuleDesc& desc);
-			void Shutdown();
+			void Shutdown() override;
+
+			void PresentFrame();
+
+			FORCE_INLINE Diligent::IRenderDevice* GetDevice() const
+			{
+				return pDevice;
+			}
+
+			FORCE_INLINE Diligent::IDeviceContext* GetContext() const
+			{
+				return pContext;
+			}
+
+			FORCE_INLINE Diligent::ISwapChain* GetSwapChain() const
+			{
+				return pSwapChain;
+			}
+
+			FORCE_INLINE Diligent::IEngineFactory* GetEngineFactory() const
+			{
+				return pEngineFactory;
+			}
+
+			void ResizeSwapChain(Uint32 Width, Uint32 Height);
 
 			bool CreateMesh(Assets::Mesh* result);
 
@@ -77,8 +106,21 @@ namespace Nuclear
 			Diligent::SamplerDesc SamLinearClampDesc;
 			Diligent::SamplerDesc SamPointBorderDesc;
 			Diligent::SamplerDesc ShadowMapSamplerDesc;
-		private:
+
 			GraphicsModule();
+
+		private:
+			Diligent::IRenderDevice* pDevice;
+			Diligent::IDeviceContext* pContext;
+			Diligent::ISwapChain* pSwapChain;
+			Diligent::IEngineFactory* pEngineFactory;
+
+			Diligent::GraphicsAdapterInfo mAdapterAttribs;
+			Uint32       mAdapterId = Diligent::DEFAULT_ADAPTER_ID;
+			Diligent::ADAPTER_TYPE mAdapterType = Diligent::ADAPTER_TYPE_UNKNOWN;
+			std::string  mAdapterDetailsString;
+
+			bool InitializeDiligentEngine(SDL_Window* window, const Diligent::RENDER_DEVICE_TYPE& type, const Diligent::SwapChainDesc& SCDesc);
 		};
 	}
 }

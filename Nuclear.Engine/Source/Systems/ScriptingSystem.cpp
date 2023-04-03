@@ -33,7 +33,7 @@ namespace Nuclear
 		bool ScriptingSystem::Initialize()
 		{
 			// connects a free function
-			Core::Scene::GetInstance().GetRegistry().on_construct<Components::ScriptComponent>().connect<&ScriptInitialization>();
+			Core::Scene::Get().GetRegistry().on_construct<Components::ScriptComponent>().connect<&ScriptInitialization>();
 
 			
 
@@ -43,7 +43,7 @@ namespace Nuclear
 
 		void ScriptingSystem::Load()
 		{
-			//auto view = Core::Scene::GetInstance().GetRegistry().view<Components::ScriptComponent>();
+			//auto view = Core::Scene::Get().GetRegistry().view<Components::ScriptComponent>();
 
 			//for (auto entity : view)
 			//{
@@ -55,7 +55,7 @@ namespace Nuclear
 
 		void ScriptingSystem::Update(ECS::TimeDelta dt)
 		{
-			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::ScriptComponent>();
+			auto view = Core::Scene::Get().GetRegistry().view<Components::ScriptComponent>();
 
 			for (auto entity : view)
 			{

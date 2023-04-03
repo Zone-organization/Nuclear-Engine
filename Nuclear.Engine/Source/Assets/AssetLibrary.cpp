@@ -35,7 +35,7 @@ namespace Nuclear
 
 			for (int i = 0; i < 9; i++)
 			{
-				Platform::FileSystem::GetInstance().CreateDir(mPath + assets[i]);
+				Platform::FileSystem::Get().CreateDir(mPath + assets[i]);
 			}
 		}
 
@@ -44,7 +44,7 @@ namespace Nuclear
 			return mPath;
 		}
 
-		AssetLibrary& AssetLibrary::GetInstance()
+		AssetLibrary& AssetLibrary::Get()
 		{
 			static AssetLibrary instance;
 

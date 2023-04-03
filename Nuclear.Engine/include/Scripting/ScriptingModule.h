@@ -1,4 +1,5 @@
 #pragma once
+#include <Core/EngineModule.h>
 #include <Scripting/ScriptingAssembly.h>
 #include <Scripting/ScriptingClass.h>
 #include <Scripting/ScriptingObject.h>
@@ -30,17 +31,13 @@ namespace Nuclear
 			Core::Path mClientAssemblyPath;
 			bool mAutoInitClientAssembly = true;
 		};
-		class NEAPI ScriptingModule
+		class NEAPI ScriptingModule : public Core::EngineModule<ScriptingModule>
 		{
+			friend class Core::EngineModule<ScriptingModule>;
 		public:
-			ScriptingModule(ScriptingModule const&) = delete;
-			void operator=(ScriptingModule const&) = delete;
-
-			static ScriptingModule& GetInstance();
-
 			bool Initialize(const ScriptingModuleDesc& desc);
 
-			void Shutdown();
+			void Shutdown() override;
 
 			bool CreateScriptAsset(Assets::Script* script,const std::string& scriptclassname);
 

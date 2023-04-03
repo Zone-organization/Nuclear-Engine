@@ -14,7 +14,7 @@ namespace Nuclear
 			class AssimpManager
 			{
 			public:
-				static AssimpManager& GetInstance();
+				static AssimpManager& Get();
 
 				AssimpManager(const AssimpManager&) = delete;
 				AssimpManager& operator= (const AssimpManager) = delete;

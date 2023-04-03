@@ -16,7 +16,7 @@
 
 #include "GTAO.h"
 
-#include <Graphics/Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Graphics/ImGui.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Platform\FileSystem.h>
@@ -54,7 +54,7 @@ namespace Nuclear
                 CBDesc.Usage = USAGE_DYNAMIC;
                 CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
                 CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-                Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &m_constantBuffer);
+                Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &m_constantBuffer);
             }
 
             // Hilbert look-up texture! It's a 64 x 64 Uint16 texture generated using XeGTAO::HilbertIndex
@@ -194,7 +194,7 @@ namespace Nuclear
                 shadermacros.insert(i.first + " " + i.second);
             }
 
-            std::string ShaderSource = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/GTAO.hlsl", shadermacros, std::set<std::string>(), true);
+            std::string ShaderSource = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/GTAO.hlsl", shadermacros, std::set<std::string>(), true);
 
             auto CreateGTAOShader = [&shadermacros, &ShaderSource](const std::string& entrypoint)
             {
@@ -208,7 +208,7 @@ namespace Nuclear
                 shader_desc.mDefines = shadermacros;
                 shader_desc.mUseCombinedTextureSamplers = false;
 
-                Graphics::GraphicsModule::GetInstance().CreateShader(shader.RawDblPtr(), shader_desc);
+                Graphics::GraphicsModule::Get().CreateShader(shader.RawDblPtr(), shader_desc);
 
                 for (Uint32 i = 0; i < shader->GetResourceCount(); i++)
                 {
@@ -304,7 +304,7 @@ namespace Nuclear
             XeGTAO::GTAOUpdateConstants(consts, m_size.x, m_size.y, m_settings, &projMatrix[1][1], true, usingTAA);
 
             {
-                Diligent::MapHelper<XeGTAO::GTAOConstants> CBConstants(Graphics::Context::GetInstance().GetContext(), m_constantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
+                Diligent::MapHelper<XeGTAO::GTAOConstants> CBConstants(Graphics::GraphicsModule::Get().GetContext(), m_constantBuffer, MAP_WRITE, MAP_FLAG_DISCARD);
                 *CBConstants = consts;
             }
         }
@@ -318,7 +318,7 @@ namespace Nuclear
             assert(outAOdesc.GetWidth() == inDepthdesc.GetWidth());
             assert(inDepthdesc.SampleCount == 1); // MSAA no longer supported!
 
-            auto renderContext = Graphics::Context::GetInstance().GetContext();
+            auto renderContext = Graphics::GraphicsModule::Get().GetContext();
             m_generateNormals |= inputNormals == nullptr;   // if normals not provided, we must generate them ourselves
 
             m_outputBentNormals = outputBentNormals;
@@ -378,13 +378,13 @@ namespace Nuclear
                 computeItem.BIND_SHADER_RESOURCEViews[0] = inputDepth;
 
 
-                Graphics::Context::GetInstance().GetContext()->SetPipelineState(m_GenerateNormals.pPipeline);
+                Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(m_GenerateNormals.pPipeline);
 
                 auto RT = m_workingNormals->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS);
-                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RT, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, &RT, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-                Graphics::Context::GetInstance().GetContext()->CommitShaderResources(m_GenerateNormals.pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-                Graphics::Context::GetInstance().GetContext()->DispatchCompute(DispatAttribs);
+                Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(m_GenerateNormals.pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->DispatchCompute(DispatAttribs);
 
            ///     renderContext.ExecuteSingleItem(computeItem, vaRenderOutputs::FromUAVs(m_workingNormals), &drawAttributes);
             }
@@ -401,12 +401,12 @@ namespace Nuclear
                 DispatchComputeAttribs DispatAttribs((m_size.x + 16 - 1) / 16, (m_size.y + 16 - 1) / 16, 1);
 
 
-                Graphics::Context::GetInstance().GetContext()->SetPipelineState(m_PrefilterDepths16x16.pPipeline);
+                Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(m_PrefilterDepths16x16.pPipeline);
 
-                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(XE_GTAO_DEPTH_MIP_LEVELS, m_workingDepthsMIPViews, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(XE_GTAO_DEPTH_MIP_LEVELS, m_workingDepthsMIPViews, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-                Graphics::Context::GetInstance().GetContext()->CommitShaderResources(m_PrefilterDepths16x16.pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-                Graphics::Context::GetInstance().GetContext()->DispatchCompute(DispatAttribs);
+                Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(m_PrefilterDepths16x16.pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->DispatchCompute(DispatAttribs);
                /// renderContext.ExecuteSingleItem(computeItem, vaRenderOutputs::FromUAVs(m_workingDepthsMIPViews[0], m_workingDepthsMIPViews[1], m_workingDepthsMIPViews[2], m_workingDepthsMIPViews[3], m_workingDepthsMIPViews[4]), &drawAttributes);
             }
 
@@ -422,17 +422,17 @@ namespace Nuclear
                 DispatchComputeAttribs DispatAttribs((m_size.x + XE_GTAO_NUMTHREADS_X - 1) / XE_GTAO_NUMTHREADS_X, (m_size.y + XE_GTAO_NUMTHREADS_Y - 1) / XE_GTAO_NUMTHREADS_Y, 1);
 
 
-                Graphics::Context::GetInstance().GetContext()->SetPipelineState(shaders[m_settings.QualityLevel].pPipeline);
+                Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(shaders[m_settings.QualityLevel].pPipeline);
 
                 Diligent::ITextureView* rendertargets[3];
                 rendertargets[0] = m_workingNormals->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS);
                 rendertargets[1] = m_workingEdges->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS);
                 rendertargets[2] = m_debugImage->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS);
 
-                Graphics::Context::GetInstance().GetContext()->SetRenderTargets(3, rendertargets, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(3, rendertargets, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-                Graphics::Context::GetInstance().GetContext()->CommitShaderResources(shaders[m_settings.QualityLevel].pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-                Graphics::Context::GetInstance().GetContext()->DispatchCompute(DispatAttribs);
+                Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(shaders[m_settings.QualityLevel].pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                Graphics::GraphicsModule::Get().GetContext()->DispatchCompute(DispatAttribs);
 
              //   renderContext.ExecuteSingleItem(computeItem, vaRenderOutputs::FromUAVs(m_workingAOTerm, m_workingEdges, m_debugImage), &drawAttributes);
             }
@@ -454,16 +454,16 @@ namespace Nuclear
                     DispatchComputeAttribs DispatAttribs((m_size.x + (XE_GTAO_NUMTHREADS_X * 2) - 1) / (XE_GTAO_NUMTHREADS_X * 2), (m_size.y + XE_GTAO_NUMTHREADS_Y - 1) / XE_GTAO_NUMTHREADS_Y, 1);
 
 
-                    Graphics::Context::GetInstance().GetContext()->SetPipelineState(shader.pPipeline);
+                    Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(shader.pPipeline);
 
                     Diligent::ITextureView* rendertargets[3];
                     rendertargets[0] = (lastPass) ? (outputAO->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS)) : (m_workingAOTermPong->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS));
                     rendertargets[1] = nullptr;
                     rendertargets[2] = m_debugImage->GetDefaultView(TEXTURE_VIEW_UNORDERED_ACCESS);
-                    Graphics::Context::GetInstance().GetContext()->SetRenderTargets(3, rendertargets, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                    Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(3, rendertargets, nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-                    Graphics::Context::GetInstance().GetContext()->CommitShaderResources(shader.pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-                    Graphics::Context::GetInstance().GetContext()->DispatchCompute(DispatAttribs);
+                    Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(shader.pSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+                    Graphics::GraphicsModule::Get().GetContext()->DispatchCompute(DispatAttribs);
 
                     std::swap(m_workingAOTerm, m_workingAOTermPong);      // ping becomes pong, pong becomes ping.
                 }

@@ -38,7 +38,7 @@ void AssetLibraryViewer()
 		{
 			static int count = 0;
 			static Assets::Texture* img = nullptr;
-			for (auto& i : Assets::AssetLibrary::GetInstance().mImportedTextures.mData)
+			for (auto& i : Assets::AssetLibrary::Get().mImportedTextures.mData)
 			{
 				ImGui::PushID(count);
 				if (i.second.GetTextureView())
@@ -59,7 +59,7 @@ void AssetLibraryViewer()
 
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + tex_sz.x; // Expected position if next button was on same line
-				if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
+				if (count + 1 < Assets::AssetLibrary::Get().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
 					ImGui::SameLine();
 				ImGui::PopID();
 
@@ -207,7 +207,7 @@ public:
 
 		Assets::TextureImportingDesc SkyboxDesc;
 		//SkyboxDesc.mFormat = TEX_FORMAT_RGBA8_UNORM;
-		auto test =Assets::Importer::GetInstance().ImportTextureCube(SkyBoxTexturePaths, SkyboxDesc);
+		auto test =Assets::Importer::Get().ImportTextureCube(SkyBoxTexturePaths, SkyboxDesc);
 		Skybox.Initialize(test);
 	}
 	void SetupEntities()
@@ -286,9 +286,9 @@ public:
 		//Initialize camera
 		{
 			Components::CameraComponentDesc cameradesc;
-			cameradesc.mProjection = Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f);
-			cameradesc.mRTDesc = Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc();
-			cameradesc.mDepthRTDesc = Rendering::RenderingModule::GetInstance().GetFinalDepthRT().GetDesc();
+			cameradesc.mProjection = Math::perspective(Math::radians(45.0f), Core::Engine::Get().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f);
+			cameradesc.mRTDesc = Rendering::RenderingModule::Get().GetFinalRT().GetDesc();
+			cameradesc.mDepthRTDesc = Rendering::RenderingModule::Get().GetFinalDepthRT().GetDesc();
 			GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(cameradesc));
 		}
 
@@ -303,7 +303,7 @@ public:
 		Renderer->AddRenderPass(&GeoPass);
 	//	Renderer->GetBackground().SetSkybox(&Skybox);
 
-		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 	void OnMouseMovement(int xpos_a, int ypos_a) override
 	{
@@ -332,39 +332,39 @@ public:
 
 	void OnWindowResize(int width, int height) override
 	{
-		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
+		Graphics::GraphicsModule::Get().GetSwapChain()->Resize(width, height);
 		GetScene().GetMainCamera()->ResizeRTs(width, height);
-		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::Get().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		GetScene().GetSystemManager().ResizeRTs(width, height);
-		Rendering::RenderingModule::GetInstance().ResizeRTs(width, height);
+		Rendering::RenderingModule::Get().ResizeRTs(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_W))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_A))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_S))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_D))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LSHIFT))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_LSHIFT))
 			GetScene().GetMainCamera()->MovementSpeed = 10;
 		else
 			GetScene().GetMainCamera()->MovementSpeed = 4.5;
 
 		//Change Mouse Mode
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
 		{
 			isMouseDisabled = true;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
+			Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
 		}
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_M))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_M))
 		{
 			isMouseDisabled = false;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+			Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
 		GetScene().GetMainCamera()->UpdateBuffer();
@@ -399,7 +399,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::GetInstance().EndClient();
+				return Core::Engine::Get().EndClient();
 			}
 
 			static Components::AudioSourceComponent* active_audio = &ECube.GetComponent<Components::AudioSourceComponent>();;

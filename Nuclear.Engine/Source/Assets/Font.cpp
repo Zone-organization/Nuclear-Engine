@@ -1,6 +1,6 @@
 #include <Assets/Font.h>
 
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear
 {
@@ -35,7 +35,7 @@ namespace Nuclear
 			TexData.pSubResources = &pSubResource;
 			TexData.NumSubresources = 1;
 			Diligent::RefCntAutoPtr<Diligent::ITexture> mTexture;
-			Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, &TexData, &mTexture);
 
 			mTextureView = mTexture->GetDefaultView(Diligent::TEXTURE_VIEW_SHADER_RESOURCE);
 		

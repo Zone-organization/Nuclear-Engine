@@ -33,11 +33,11 @@ public:
 		//Initialize camera
 		{
 			Components::CameraComponentDesc cameradesc;
-			cameradesc.mProjection = Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f);
+			cameradesc.mProjection = Math::perspective(Math::radians(45.0f), Core::Engine::Get().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f);
 			cameradesc.mRTDesc.mName = "CameraRT";
-			cameradesc.mRTDesc = Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc();
+			cameradesc.mRTDesc = Rendering::RenderingModule::Get().GetFinalRT().GetDesc();
 			cameradesc.mDepthRTDesc.mName = "CameraDepthRT";
-			cameradesc.mDepthRTDesc = Rendering::RenderingModule::GetInstance().GetFinalDepthRT().GetDesc();
+			cameradesc.mDepthRTDesc = Rendering::RenderingModule::Get().GetFinalDepthRT().GetDesc();
 			GetScene().SetMainCamera(&EController.AddComponent<Components::CameraComponent>(cameradesc));
 		}
 
@@ -74,37 +74,37 @@ public:
 	}
 	void OnWindowResize(int width, int height) override
 	{
-		Graphics::Context::GetInstance().GetSwapChain()->Resize(width, height);
+		Graphics::GraphicsModule::Get().GetSwapChain()->Resize(width, height);
 		GetScene().GetMainCamera()->ResizeRTs(width, height);
-		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::GetInstance().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		GetScene().GetMainCamera()->SetProjectionMatrix(Math::perspective(Math::radians(45.0f), Core::Engine::Get().GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 		GetScene().GetSystemManager().ResizeRTs(width, height);
-		Rendering::RenderingModule::GetInstance().ResizeRTs(width, height);
+		Rendering::RenderingModule::Get().ResizeRTs(width, height);
 	}
 	void Update(float deltatime) override
 	{
 		//Movement
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_W))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_W))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_FORWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_A))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_A))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_LEFT, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_S))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_S))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_BACKWARD, deltatime);
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_D))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_D))
 			GetScene().GetMainCamera()->ProcessMovement(Components::CAMERA_MOVEMENT_RIGHT, deltatime);
 
 		//Change Mouse Mode
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_ESCAPE))
 		{
 			isMouseDisabled = true;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
+			Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
 		}
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_M))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_M))
 		{
 			isMouseDisabled = false;
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+			Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 		}
 
-		if (Platform::Input::GetInstance().IsKeyPressed(Platform::Input::KEYCODE_LSHIFT))
+		if (Platform::Input::Get().IsKeyPressed(Platform::Input::KEYCODE_LSHIFT))
 			GetScene().GetMainCamera()->MovementSpeed = 10;
 		else
 			GetScene().GetMainCamera()->MovementSpeed = 4.5;

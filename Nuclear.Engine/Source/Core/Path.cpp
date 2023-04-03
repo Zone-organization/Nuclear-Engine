@@ -79,7 +79,7 @@ namespace Nuclear
 				std::size_t found = mRealPath.find_last_of("/\\");
 				std::string directory_path = mRealPath.substr(0, found);
 
-				return Platform::FileSystem::GetInstance().CreateFolders(directory_path);
+				return Platform::FileSystem::Get().CreateFolders(directory_path);
 			}
 			return false;
 		}

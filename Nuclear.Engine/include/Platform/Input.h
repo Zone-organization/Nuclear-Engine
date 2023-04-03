@@ -23,7 +23,7 @@ namespace Nuclear
             Input(Input const&) = delete;
             void operator=(Input const&) = delete;
 
-            static Input& GetInstance();
+            static Input& Get();
 
 			enum class MouseInputMode { Normal = 0, Hidden = 1, Locked = 2 };
 

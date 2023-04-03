@@ -12,7 +12,7 @@ namespace Nuclear
 
 		}
 
-		FileSystem& FileSystem::GetInstance()
+		FileSystem& FileSystem::Get()
 		{
 			static FileSystem instance;
 			return instance;

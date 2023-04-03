@@ -25,7 +25,7 @@ namespace Nuclear
 		class NEAPI Importer
 		{
 		public:
-			static Importer& GetInstance();
+			static Importer& Get();
 			Importer(const Importer&) = delete;
 			Importer& operator= (const Importer) = delete;
 

@@ -79,7 +79,7 @@ public:
 		bakedesc.RTWidth = _Width_;
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
-		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc() });
+		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::Get().GetFinalRT().GetDesc() });
 	}
 
 	void Load()
@@ -127,7 +127,7 @@ public:
 		//Renderer->VisualizePointLightsPositions = true;
 		//EController.GetComponent<Components::SpotLightComponent>().mCastShadows = true;
 
-		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 	bool iskinematic = false;
 
@@ -185,7 +185,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::GetInstance().EndClient();
+				return Core::Engine::Get().EndClient();
 			}
 
 			ImGui::End();

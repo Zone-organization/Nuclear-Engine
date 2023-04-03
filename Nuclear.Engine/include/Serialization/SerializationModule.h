@@ -1,5 +1,5 @@
 #pragma once
-#include <NE_Common.h>
+#include <Core/EngineModule.h>
 #include <Assets/AssetMetadata.h>
 
 namespace Nuclear
@@ -21,10 +21,11 @@ namespace Nuclear
 			return Assets::AssetType::Unknown;
 		}*/
 
-		class NEAPI SerializationModule
+		class NEAPI SerializationModule : public Core::EngineModule<SerializationModule>
 		{
+			friend class Core::EngineModule<SerializationModule>;
 		public:
-			static SerializationModule& GetInstance();
+			void Shutdown() override;
 
 			SerializationModule(const SerializationModule&) = delete;
 			SerializationModule& operator= (const SerializationModule) = delete;

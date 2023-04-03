@@ -1,5 +1,5 @@
 #pragma once
-#include <NE_Common.h>
+#include <Core/EngineModule.h>
 #include <Threading/ThreadPool.h>
 #include <Threading/MainThreadTask.h>
 
@@ -7,15 +7,13 @@ namespace Nuclear
 {
     namespace Threading
     {
-        class NEAPI ThreadingModule {
+        class NEAPI ThreadingModule : public Core::EngineModule<ThreadingModule>
+        {
+            friend class Core::EngineModule<ThreadingModule>;
         public:
-            ThreadingModule(ThreadingModule const&) = delete;
-            void operator=(ThreadingModule const&) = delete;
-
-            static ThreadingModule& GetInstance();
-
             bool Initialize();
-            void Shutdown();
+
+            void Shutdown() override;
             void AddTask(Task* task);
             void AddMainThreadTask(MainThreadTask* task);
 

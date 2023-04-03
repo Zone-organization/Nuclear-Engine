@@ -1,6 +1,6 @@
 #include <Graphics\RenderTarget.h>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 
 namespace Nuclear
 {
@@ -84,7 +84,7 @@ namespace Nuclear
 				TexDesc.ClearValue.DepthStencil.Stencil = 0;
 				TexDesc.BindFlags = BIND_SHADER_RESOURCE | BIND_DEPTH_STENCIL;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &pRTDepth);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, nullptr, &pRTDepth);
 				mRTV = pRTDepth->GetDefaultView(TEXTURE_VIEW_DEPTH_STENCIL);
 			}
 			else {
@@ -96,7 +96,7 @@ namespace Nuclear
 				TexDesc.MipLevels = 1;
 				TexDesc.ClearValue = mDesc.ClearValue;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &pRTColor);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, nullptr, &pRTColor);
 				mRTV = pRTColor->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
 				mSRV = pRTColor->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE);
 			}

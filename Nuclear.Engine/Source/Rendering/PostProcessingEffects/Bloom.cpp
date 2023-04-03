@@ -1,5 +1,5 @@
 #include <Rendering/PostProcessingEffects/Bloom.h>
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Platform\FileSystem.h>
 #include <Rendering/FrameRenderData.h>
 #include <Assets\DefaultMeshes.h>
@@ -37,7 +37,7 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
 				PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = TEX_FORMAT_RGBA16_FLOAT;
 				PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
+				PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().DepthBufferFormat;
 				PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
 				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = true;
 				PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
@@ -58,11 +58,11 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "BloomExtractVS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PostProcessing.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
+					auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/PostProcessing.vs.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::Get().GetDefaultShaderSourceFactory();
 
-					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
+					Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, VSShader.RawDblPtr());
 				}
 
 				//Create Pixel Shader
@@ -75,9 +75,9 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "BloomExtractPS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/BloomExtract.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
+					auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/BloomExtract.ps.hlsl", std::set<std::string>(), std::set<std::string>(), true);
 					CreationAttribs.Source = source.c_str();
-					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
+					Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, PSShader.RawDblPtr());
 				}
 
 				PSOCreateInfo.pVS = VSShader;
@@ -90,9 +90,9 @@ namespace Nuclear
 				PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Layout.size());
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pBloomExtractPSO);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pBloomExtractPSO);
 
 				pBloomExtractPSO->CreateShaderResourceBinding(pBloomExtractSRB.RawDblPtr());
 
@@ -100,12 +100,12 @@ namespace Nuclear
 			void Bloom::Update(FrameRenderData* framedata)
 			{
 				//1 - Extract bloom from scene rt
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pBloomExtractPSO);
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pBloomExtractPSO);
 				pBloomExtractSRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(framedata->pCamera->GetColorRT().GetSRV());
-				Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pBloomExtractSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pBloomExtractSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, BloomRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(BloomRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, BloomRT.GetRTVDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(BloomRT.GetRTV(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				Assets::DefaultMeshes::RenderScreenQuad();
 
@@ -135,18 +135,18 @@ namespace Nuclear
 						data.x = BloomRT.GetDimensions().x;
 						data.y = BloomRT.GetDimensions().y;
 
-						Diligent::MapHelper<Math::Vector4i> CBConstants(Graphics::Context::GetInstance().GetContext(), mBloomBlur.mBlurCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						Diligent::MapHelper<Math::Vector4i> CBConstants(Graphics::GraphicsModule::Get().GetContext(), mBloomBlur.mBlurCB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = data;
 					}
 
 
 					if (horizontal)
 					{
-						Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mBloomBlur.mHorzBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(mBloomBlur.mHorzBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					}
 					else
 					{
-						Graphics::Context::GetInstance().GetContext()->CommitShaderResources(mBloomBlur.mVertBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(mBloomBlur.mVertBlurSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					}
 					Assets::DefaultMeshes::RenderScreenQuad();
 

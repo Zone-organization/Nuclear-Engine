@@ -133,7 +133,7 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc() });
+		PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::Get().GetFinalRT().GetDesc() });
 	}
 
 	void Load() override
@@ -161,7 +161,7 @@ public:
 		Skybox.Initialize(&HDR_Cube);
 		PostFXPass.GetBackground().SetSkybox(&Skybox);
 
-		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 
 	bool iskinematic = false;
@@ -276,7 +276,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::GetInstance().EndClient();
+				return Core::Engine::Get().EndClient();
 			}
 
 			ImGui::End();

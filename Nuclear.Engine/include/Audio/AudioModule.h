@@ -1,5 +1,6 @@
 #pragma once
 #include <NE_Common.h>
+#include <Core/EngineModule.h>
 
 namespace Nuclear
 {
@@ -23,24 +24,21 @@ namespace Nuclear
 			unsigned int MaxChannels = 32;
 		};
 
-		class NEAPI AudioModule
+		class NEAPI AudioModule : public Core::EngineModule<AudioModule>
 		{
+			friend class Core::EngineModule<AudioModule>;
 		public:
-			AudioModule(AudioModule const&) = delete;
-			void operator=(AudioModule const&) = delete;
-
-			static AudioModule& GetInstance();
-
 			AudioBackend* GetBackend();
 
 			bool Initialize(const AudioModuleDesc& desc);
 
-			void Shutdown();
+			void Shutdown() override;
 
 			void Update(/*FMOD::Channel * ch*/);
+
 		protected:
 			AudioBackend* pBackend;
-		private:
+
 			AudioModule();
 		};
 	}

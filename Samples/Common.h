@@ -12,7 +12,7 @@ void EntityExplorer()
 	ImGui::Begin("Entity Explorer");
 	if (ImGui::TreeNode("Scene"))
 	{
-		auto view = Core::Scene::GetInstance().GetRegistry().view<Components::EntityInfoComponent>();
+		auto view = Core::Scene::Get().GetRegistry().view<Components::EntityInfoComponent>();
 
 		for (auto entity : view)
 		{
@@ -27,7 +27,7 @@ void EntityExplorer()
 			if (selectedindex == index)
 			{
 				node_flags |= ImGuiTreeNodeFlags_Selected;
-				EntityView(entity, Core::Scene::GetInstance().GetRegistry(), Einfo);
+				EntityView(entity, Core::Scene::Get().GetRegistry(), Einfo);
 			}
 
 			ImGui::PushID(index);

@@ -126,6 +126,7 @@
     <ClInclude Include="include\Audio\AudioFile.h" />
     <ClInclude Include="include\Audio\AudioDevice.h" />
     <ClInclude Include="include\Audio\config.h" />
+    <ClInclude Include="include\Core\EngineModule.h" />
     <ClInclude Include="include\NE_Compiler.h" />
     <ClInclude Include="include\Components\AudioListenerComponent.h" />
     <ClInclude Include="include\Components\ShaderStructs.h" />
@@ -390,7 +391,6 @@
     <ClInclude Include="include\Rendering\Background.h" />
     <ClInclude Include="include\Graphics\BakeStatus.h" />
     <ClInclude Include="include\Graphics\Color.h" />
-    <ClInclude Include="include\Graphics\Context.h" />
     <ClInclude Include="include\Rendering\BlurEffect.h" />
     <ClInclude Include="include\Rendering\PostProcessingEffects\PostProcessingEffect.h" />
     <ClInclude Include="include\Rendering\RenderingPaths\DefferedRenderingPath.h" />
@@ -557,10 +557,9 @@
     <ClCompile Include="Source\Components\ScriptComponent.cpp" />
     <ClCompile Include="Source\Rendering\Background.cpp" />
     <ClCompile Include="Source\Graphics\Color.cpp" />
-    <ClCompile Include="Source\Graphics\Context.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui_tables.cpp" />
     <ClCompile Include="Source\Graphics\ShaderPipeline.cpp" />
-    <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Graphics\GraphicsModule.cpp" />
     <ClCompile Include="Source\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui.cpp" />
     <ClCompile Include="Source\Graphics\ImGUI\imgui_draw.cpp" />

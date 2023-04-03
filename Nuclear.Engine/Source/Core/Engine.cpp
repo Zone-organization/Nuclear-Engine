@@ -5,7 +5,7 @@
 
 #include <Utilities\Logger.h>
 
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Assets\DefaultMeshes.h>
 
 #include "..\Graphics\ImGUI\imgui_impl_sdl.h"
@@ -75,14 +75,14 @@ namespace Nuclear
 			{
 				return;
 			}
-			Engine::GetInstance().GetClient()->OnWindowResize(Width, Height);
+			Engine::Get().GetClient()->OnWindowResize(Width, Height);
 		}
 		bool Engine::Start(const EngineStartupDesc& desc)
 		{
 			PrintIntroLog();
-			Assets::AssetLibrary::GetInstance().Initialize(desc.mAssetsLibraryPath);
-			Core::Path::mReservedPaths["@Assets@"] = Assets::AssetLibrary::GetInstance().GetPath();
-			Core::Path::mReservedPaths["@NuclearAssets@"] = Assets::AssetLibrary::GetInstance().GetPath() + "NuclearEngine";
+			Assets::AssetLibrary::Get().Initialize(desc.mAssetsLibraryPath);
+			Core::Path::mReservedPaths["@Assets@"] = Assets::AssetLibrary::Get().GetPath();
+			Core::Path::mReservedPaths["@NuclearAssets@"] = Assets::AssetLibrary::Get().GetPath() + "NuclearEngine";
 			Core::Path::mReservedPaths["@CurrentPath@"] = std::filesystem::current_path().string();
 
 			//Initialize SDL
@@ -97,13 +97,13 @@ namespace Nuclear
 				NUCLEAR_FATAL("[Engine] Failed To Create Window...");
 			}
 
-			Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
+			Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Normal);
 
 			if (desc.AutoInitGraphicsModule)
 			{
 				Graphics::GraphicsModuleDesc GraphicsModuleDesc;
 				GraphicsModuleDesc.pWindowHandle = GetMainWindow()->GetSDLWindowPtr();
-				if (!Graphics::GraphicsModule::GetInstance().Initialize(GraphicsModuleDesc))
+				if (!Graphics::GraphicsModule::Get().Initialize(GraphicsModuleDesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize GraphicsModule...");
 					return false;
@@ -115,7 +115,7 @@ namespace Nuclear
 				Audio::AudioModuleDesc desc;
 				desc.mRequestedBackend = Audio::AudioModuleDesc::AudioBackendType::XAudio2;
 
-				if (!Audio::AudioModule::GetInstance().Initialize(desc))
+				if (!Audio::AudioModule::Get().Initialize(desc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize AudioModule...");
 					return false;
@@ -140,7 +140,7 @@ namespace Nuclear
 				scdesc.mScriptingCoreAssemblyDir = std::filesystem::current_path().string();
 				scdesc.mClientAssemblyPath = std::filesystem::current_path().string() + "/" + desc.mScriptingClientDllName;
 				scdesc.mClientNamespace = desc.mScriptingAssemblyNamespace;
-				if (!Scripting::ScriptingModule::GetInstance().Initialize(scdesc))
+				if (!Scripting::ScriptingModule::Get().Initialize(scdesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingModule...");
 					return false;
@@ -151,7 +151,7 @@ namespace Nuclear
 			{
 				PhysX::PhysXModuleDesc pxdesc;
 
-				if (!PhysX::PhysXModule::GetInstance().Initialize(pxdesc))
+				if (!PhysX::PhysXModule::Get().Initialize(pxdesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize PhysXModule...");
 					return false;
@@ -164,7 +164,7 @@ namespace Nuclear
 				redesc.RTWidth = desc.mEngineWindowDesc.WindowWidth;
 				redesc.RTHeight = desc.mEngineWindowDesc.WindowHeight;;
 									
-				if (!Rendering::RenderingModule::GetInstance().Initialize(redesc))
+				if (!Rendering::RenderingModule::Get().Initialize(redesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize RenderingModule...");
 					return false;
@@ -173,7 +173,7 @@ namespace Nuclear
 
 			if (desc.AutoInitThreadingModule)
 			{
-				if (!Threading::ThreadingModule::GetInstance().Initialize())
+				if (!Threading::ThreadingModule::Get().Initialize())
 				{
 					NUCLEAR_FATAL("[Module] Failed to initalize ThreadingModule...");
 					return false;
@@ -182,13 +182,13 @@ namespace Nuclear
 
 			gisDebug = desc.Debug;
 
-			Assets::AssetManager::GetInstance().Initialize();
+			Assets::AssetManager::Get().Initialize();
 
 			NUCLEAR_INFO("[Engine] Nuclear Engine has been initialized successfully!");
 			return true;
 		}
 
-		inline Engine& Engine::GetInstance()
+		inline Engine& Engine::Get()
 		{
 			static Engine engine;
 
@@ -198,13 +198,13 @@ namespace Nuclear
 		void Engine::Shutdown()
 		{
 			NUCLEAR_INFO("[Engine] Shutting Down Engine.");
-			Assets::AssetLibrary::GetInstance().Clear();
+			Assets::AssetLibrary::Get().Clear();
 			pClient = nullptr;
-			Threading::ThreadingModule::GetInstance().Shutdown();
-			Rendering::RenderingModule::GetInstance().Shutdown();
-			Audio::AudioModule::GetInstance().Shutdown();
-			PhysX::PhysXModule::GetInstance().Shutdown();
-			Graphics::GraphicsModule::GetInstance().Shutdown();
+			Threading::ThreadingModule::Get().Shutdown();
+			Rendering::RenderingModule::Get().Shutdown();
+			Audio::AudioModule::Get().Shutdown();
+			PhysX::PhysXModule::Get().Shutdown();
+			Graphics::GraphicsModule::Get().Shutdown();
 			MainWindow.Destroy();
 			//Graphics::ImGui_Renderer::Shutdown();
 			SDL_Quit();
@@ -222,7 +222,7 @@ namespace Nuclear
 		{
 			ImGui::Render();
 			ImGui_Impl_RenderDrawData(ImGui::GetDrawData());
-			Graphics::Context::GetInstance().GetSwapChain()->Present(SwapChainSyncInterval);
+			Graphics::GraphicsModule::Get().GetSwapChain()->Present(SwapChainSyncInterval);
 		}
 		Platform::Window* Engine::GetMainWindow()
 		{
@@ -324,10 +324,10 @@ namespace Nuclear
 				}
 
 				//Process MainThread tasks
-				Threading::ThreadingModule::GetInstance().ExecuteMainThreadTasks(1);
+				Threading::ThreadingModule::Get().ExecuteMainThreadTasks(1);
 					
 				//Render
-				Platform::Input::GetInstance().Update();
+				Platform::Input::Get().Update();
 
 				// per-frame time logic (ensure speed is constant through all platforms)
 				float currentFrame = static_cast<float>(timer.GetElapsedTimeInSeconds());

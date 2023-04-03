@@ -1,5 +1,6 @@
 #pragma once
 #include <NE_Common.h>
+#include <Core/EngineModule.h>
 
 namespace physx {
 	class PxFoundation;
@@ -23,16 +24,13 @@ namespace Nuclear
 
 		};
 
-		class NEAPI PhysXModule
+		class NEAPI PhysXModule : public Core::EngineModule<PhysXModule>
 		{
+			friend class Core::EngineModule<PhysXModule>;
 		public:	
-			PhysXModule(PhysXModule const&) = delete;
-			void operator=(PhysXModule const&) = delete;
-
-			static PhysXModule& GetInstance();
 
 			bool Initialize(const PhysXModuleDesc& desc);
-			void Shutdown();
+			void Shutdown() override;
 
 			PxFoundation* GetFoundation();
 			PxPhysics* GetPhysics();

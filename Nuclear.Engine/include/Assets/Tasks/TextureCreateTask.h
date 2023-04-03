@@ -32,11 +32,11 @@ namespace Nuclear
 
 			bool OnRunning() override
 			{
-				bool result = Graphics::GraphicsModule::GetInstance().CreateImage(pTexture, pImageData);
+				bool result = Graphics::GraphicsModule::Get().CreateImage(pTexture, pImageData);
 				
 				if (mFactoryType == 1)
 				{
-					auto& vec = Importer::GetInstance().GetQueuedAssets();
+					auto& vec = Importer::Get().GetQueuedAssets();
 					for (Uint32 i = 0; i < vec.size(); i++)
 					{
 						if (vec.at(i)->GetUUID() == pTexture->GetUUID())
@@ -48,7 +48,7 @@ namespace Nuclear
 				}
 				else if (mFactoryType == 2)
 				{
-					auto& vec = Loader::GetInstance().GetQueuedAssets();
+					auto& vec = Loader::Get().GetQueuedAssets();
 					for (Uint32 i = 0; i < vec.size(); i++)
 					{
 						if (vec.at(i)->GetUUID() == pTexture->GetUUID())

@@ -64,7 +64,7 @@ public:
 		bakedesc.RTHeight = _Height_;
 		Renderer->Bake(bakedesc);
 
-		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::GetInstance().GetFinalRT().GetDesc(} });
+		//PostFXPass.Bake({ _Width_, _Height_,Rendering::RenderingModule::Get().GetFinalRT().GetDesc(} });
 	}
 	void FillScene()
 	{
@@ -134,7 +134,7 @@ public:
 
 			RTDepthDesc.mName = "Camera2DepthRT";
 			RTDepthDesc.mDimensions = Camera2Dimensions;
-			RTDepthDesc.DepthTexFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
+			RTDepthDesc.DepthTexFormat = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().DepthBufferFormat;
 			
 			cameradesc.mRTDesc = RTDesc;
 			cameradesc.mDepthRTDesc = RTDepthDesc;
@@ -144,7 +144,7 @@ public:
 			ECamera2.AddComponent<Components::CameraComponent>(cameradesc);
 		} 
 
-		Platform::Input::GetInstance().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
+		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}
 
 	bool iskinematic = false;
@@ -198,7 +198,7 @@ public:
 			if (ImGui::Button("End Game"))
 			{
 				ImGui::End();
-				return Core::Engine::GetInstance().EndClient();
+				return Core::Engine::Get().EndClient();
 			}
 
 			ImGui::End();

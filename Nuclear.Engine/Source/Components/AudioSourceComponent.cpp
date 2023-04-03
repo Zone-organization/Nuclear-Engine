@@ -22,34 +22,34 @@ namespace Nuclear
 		{
 			pActiveClip = clip;
 
-			Audio::AudioModule::GetInstance().GetBackend()->SetAudioSourceClip(mSourceID, pActiveClip->GetBufferID());
+			Audio::AudioModule::Get().GetBackend()->SetAudioSourceClip(mSourceID, pActiveClip->GetBufferID());
 		}
 		void AudioSourceComponent::SetVolume(float vol)
 		{
 			mVolume = vol;
-			Audio::AudioModule::GetInstance().GetBackend()->SetSource_Volume(mSourceID, vol);
+			Audio::AudioModule::Get().GetBackend()->SetSource_Volume(mSourceID, vol);
 		}
 		void AudioSourceComponent::SetPitch(float pitch)
 		{
 			mPitch = pitch;
-			Audio::AudioModule::GetInstance().GetBackend()->SetSource_Volume(mSourceID, pitch);
+			Audio::AudioModule::Get().GetBackend()->SetSource_Volume(mSourceID, pitch);
 		}
 		void AudioSourceComponent::SetIsLooping(bool val)
 		{
 			mLoop = val;
-			Audio::AudioModule::GetInstance().GetBackend()->SetSource_Volume(mSourceID, val);
+			Audio::AudioModule::Get().GetBackend()->SetSource_Volume(mSourceID, val);
 		}
 		void AudioSourceComponent::Play()
 		{
-			Audio::AudioModule::GetInstance().GetBackend()->Play(mSourceID);
+			Audio::AudioModule::Get().GetBackend()->Play(mSourceID);
 		}
 		void AudioSourceComponent::Pause()
 		{
-			Audio::AudioModule::GetInstance().GetBackend()->Pause(mSourceID);
+			Audio::AudioModule::Get().GetBackend()->Pause(mSourceID);
 		}
 		void AudioSourceComponent::Stop()
 		{
-			Audio::AudioModule::GetInstance().GetBackend()->Stop(mSourceID);
+			Audio::AudioModule::Get().GetBackend()->Stop(mSourceID);
 		}
 	}
 }

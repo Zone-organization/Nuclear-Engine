@@ -1,5 +1,5 @@
 #include "Rendering/ImageBasedLighting.h"
-#include <Graphics\Context.h>
+#include <Graphics/GraphicsModule.h>
 #include <Platform\FileSystem.h>
 #include <Diligent/Graphics/GraphicsTools/interface/MapHelper.hpp>
 #include <Graphics/ImGui.h>
@@ -26,12 +26,12 @@ namespace Nuclear
 				CreationAttribs.EntryPoint = "main";
 				CreationAttribs.Desc.Name = "CubemapSample_VS";
 
-				auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/CubemapSample.vs.hlsl", std::set<std::string>());
+				auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/PBR/CubemapSample.vs.hlsl", std::set<std::string>());
 				CreationAttribs.Source = source.c_str();
-				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
+				CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::Get().GetDefaultShaderSourceFactory();
 
 
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &CubeVSShader);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &CubeVSShader);
 			}
 
 			//Create Constant buffer
@@ -42,12 +42,12 @@ namespace Nuclear
 				CBDesc.Usage = USAGE_DYNAMIC;
 				CBDesc.BindFlags = BIND_UNIFORM_BUFFER;
 				CBDesc.CPUAccessFlags = CPU_ACCESS_WRITE;
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pCaptureCB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pCaptureCB);
 
 				CBDesc.Name = "Roughness_CB";
 				CBDesc.Size = sizeof(Math::Vector4);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateBuffer(CBDesc, nullptr, &pPrefilterRoughnessCB);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateBuffer(CBDesc, nullptr, &pPrefilterRoughnessCB);
 			}
 
 			//Create ERectToCubemap PSO
@@ -76,11 +76,11 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "ERectToCubemap_PS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/EquirectangularToCubemap.ps.hlsl", std::set<std::string>());
+					auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/PBR/EquirectangularToCubemap.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::Get().GetDefaultShaderSourceFactory();
 
-					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
+					Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
 
 				PSOCreateInfo.pVS = CubeVSShader;
@@ -88,9 +88,9 @@ namespace Nuclear
 
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pERectToCubemap_PSO);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pERectToCubemap_PSO);
 
 
 				pERectToCubemap_PSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
@@ -125,20 +125,20 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeIrradiance_PS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/IrradianceConvolution.ps.hlsl", std::set<std::string>());
+					auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/PBR/IrradianceConvolution.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::Get().GetDefaultShaderSourceFactory();
 
-					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
+					Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
 
 				PSOCreateInfo.pVS = CubeVSShader;
 				PSOCreateInfo.pPS = PSShader;
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeIrradiancePSO);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeIrradiancePSO);
 
 				pPrecomputeIrradiancePSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
 				pPrecomputeIrradiancePSO->CreateShaderResourceBinding(&pPrecomputeIrradiance_SRB, true);
@@ -170,20 +170,20 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputePrefilter_PS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/PrefilterConvolution.ps.hlsl", std::set<std::string>());
+					auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/PBR/PrefilterConvolution.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::Get().GetDefaultShaderSourceFactory();
 
-					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
+					Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
 
 				PSOCreateInfo.pVS = CubeVSShader;
 				PSOCreateInfo.pPS = PSShader;
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputePrefilterPSO);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputePrefilterPSO);
 
 
 				pPrecomputePrefilterPSO->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_CaptureInfo")->Set(pCaptureCB);
@@ -217,11 +217,11 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeBRDF_VS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/FullScreenTriangle.vs.hlsl", std::set<std::string>());
+					auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/FullScreenTriangle.vs.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::Get().GetDefaultShaderSourceFactory();
 
-					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &VSShader);
+					Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &VSShader);
 				}
 
 				//Create Pixel Shader
@@ -233,20 +233,20 @@ namespace Nuclear
 					CreationAttribs.EntryPoint = "main";
 					CreationAttribs.Desc.Name = "PrecomputeBRDF_PS";
 
-					auto source = Platform::FileSystem::GetInstance().LoadShader("@NuclearAssets@/Shaders/PBR/BRDF.ps.hlsl", std::set<std::string>());
+					auto source = Platform::FileSystem::Get().LoadShader("@NuclearAssets@/Shaders/PBR/BRDF.ps.hlsl", std::set<std::string>());
 					CreationAttribs.Source = source.c_str();
-					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::GetInstance().GetDefaultShaderSourceFactory();
+					CreationAttribs.pShaderSourceStreamFactory = Graphics::GraphicsModule::Get().GetDefaultShaderSourceFactory();
 
-					Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, &PSShader);
+					Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, &PSShader);
 				}
 
 				PSOCreateInfo.pVS = VSShader;
 				PSOCreateInfo.pPS = PSShader;
 
 				Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-				Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+				Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-				Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeBRDF_PSO);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pPrecomputeBRDF_PSO);
 
 				pPrecomputeBRDF_PSO->CreateShaderResourceBinding(&pPrecomputeBRDF_SRB, true);
 			}
@@ -265,21 +265,21 @@ namespace Nuclear
 				TexDesc.Format = TEX_FORMAT_RG16_FLOAT;
 				TexDesc.MipLevels = 1;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &pBRDF_LUT);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, nullptr, &pBRDF_LUT);
 			}
 			mBRDF_LUT_Image.SetTextureView(pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_SHADER_RESOURCE));
 			pBRDF_LUT_RTV = pBRDF_LUT->GetDefaultView(TEXTURE_VIEW_RENDER_TARGET);
 
 			{
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pPrecomputeBRDF_PSO.RawPtr());
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pPrecomputeBRDF_PSO.RawPtr());
 
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pBRDF_LUT_RTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(pBRDF_LUT_RTV.RawPtr(), NULL, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, pBRDF_LUT_RTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(pBRDF_LUT_RTV.RawPtr(), NULL, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-				Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pPrecomputeBRDF_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pPrecomputeBRDF_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 				DrawAttribs attrs(3, DRAW_FLAG_VERIFY_ALL);
-				Graphics::Context::GetInstance().GetContext()->Draw(attrs);
+				Graphics::GraphicsModule::Get().GetContext()->Draw(attrs);
 			}
 		}
 		const std::array<float4x4, 6> Matrices =
@@ -310,12 +310,12 @@ namespace Nuclear
 				TexDesc.ArraySize = 6;
 				TexDesc.MipLevels = 1;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &TexCubeRTs);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, nullptr, &TexCubeRTs);
 			}
 		
 			// IBL: convert HDR equirectangular environment map to cubemap equivalent
 			{
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pERectToCubemap_PSO.RawPtr());
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pERectToCubemap_PSO.RawPtr());
 				pERectToCubemap_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(HDR_Env->pTexture->GetTextureView());
 
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
@@ -323,7 +323,7 @@ namespace Nuclear
 				for (unsigned int i = 0; i < 6; ++i)
 				{
 					{
-						Diligent::MapHelper<float4x4> CBConstants(Graphics::Context::GetInstance().GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						Diligent::MapHelper<float4x4> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = Matrices[i];
 					}
 					TextureViewDesc RTVDesc{ "ERect_Cube_RTV", TEXTURE_VIEW_RENDER_TARGET, RESOURCE_DIM_TEX_2D_ARRAY };
@@ -334,13 +334,13 @@ namespace Nuclear
 					TexCubeRTs->CreateView(RTVDesc, &pRTV);
 
 
-					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-					Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pERectToCubemap_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pERectToCubemap_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 					DrawAttribs drawAttrs(4, DRAW_FLAG_VERIFY_ALL);
-					Graphics::Context::GetInstance().GetContext()->Draw(drawAttrs);
+					Graphics::GraphicsModule::Get().GetContext()->Draw(drawAttrs);
 				}
 			}
 
@@ -365,12 +365,12 @@ namespace Nuclear
 				TexDesc.ArraySize = 6;
 				TexDesc.MipLevels = 1;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &pIrradianceTex);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, nullptr, &pIrradianceTex);
 			}
 
 			//IBL: Precompute Irradiance
 			{
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pPrecomputeIrradiancePSO.RawPtr());
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pPrecomputeIrradiancePSO.RawPtr());
 
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 				pPrecomputeIrradiance_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(cubemap->GetTextureView());
@@ -378,7 +378,7 @@ namespace Nuclear
 				for (unsigned int i = 0; i < 6; ++i)
 				{
 					{
-						Diligent::MapHelper<float4x4> CBConstants(Graphics::Context::GetInstance().GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						Diligent::MapHelper<float4x4> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = Matrices[i];
 					}
 					TextureViewDesc RTVDesc{ "IrradianceConvolution_RTV", TEXTURE_VIEW_RENDER_TARGET, RESOURCE_DIM_TEX_2D_ARRAY };
@@ -389,12 +389,12 @@ namespace Nuclear
 					pIrradianceTex->CreateView(RTVDesc, &pRTV);
 
 
-					Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-					Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-					Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pPrecomputeIrradiance_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+					Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pPrecomputeIrradiance_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					DrawAttribs drawAttrs(4, DRAW_FLAG_VERIFY_ALL);
-					Graphics::Context::GetInstance().GetContext()->Draw(drawAttrs);
+					Graphics::GraphicsModule::Get().GetContext()->Draw(drawAttrs);
 				}
 			}
 
@@ -412,13 +412,13 @@ namespace Nuclear
 				TexDesc.ArraySize = 6;
 				TexDesc.MipLevels = 0;
 
-				Graphics::Context::GetInstance().GetDevice()->CreateTexture(TexDesc, nullptr, &pPrefilterTex);
+				Graphics::GraphicsModule::Get().GetDevice()->CreateTexture(TexDesc, nullptr, &pPrefilterTex);
 			}
 
 
 			//IBL: Precompute Prefilter
 			{
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pPrecomputePrefilterPSO.RawPtr());
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pPrecomputePrefilterPSO.RawPtr());
 
 				float col[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
 				pPrecomputePrefilter_SRB->GetVariableByIndex(SHADER_TYPE_PIXEL, 0)->Set(cubemap->GetTextureView());
@@ -430,14 +430,14 @@ namespace Nuclear
 					float roughness = (float)mip / (float)(PrefilteredEnvMapDesc.MipLevels);
 
 					{
-						Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::Context::GetInstance().GetContext(), pPrefilterRoughnessCB, MAP_WRITE, MAP_FLAG_DISCARD);
+						Diligent::MapHelper<Math::Vector4> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pPrefilterRoughnessCB, MAP_WRITE, MAP_FLAG_DISCARD);
 						*CBConstants = Math::Vector4(roughness);
 					}
 
 					for (unsigned int face = 0; face < 6; ++face)
 					{
 						{
-							Diligent::MapHelper<float4x4> CBConstants(Graphics::Context::GetInstance().GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
+							Diligent::MapHelper<float4x4> CBConstants(Graphics::GraphicsModule::Get().GetContext(), pCaptureCB, MAP_WRITE, MAP_FLAG_DISCARD);
 							*CBConstants = Matrices[face];
 						}
 						TextureViewDesc RTVDesc{ "PrefilterConvolution_RTV", TEXTURE_VIEW_RENDER_TARGET, RESOURCE_DIM_TEX_2D_ARRAY };
@@ -448,12 +448,12 @@ namespace Nuclear
 						pPrefilterTex->CreateView(RTVDesc, &pRTV);
 
 
-						Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-						Graphics::Context::GetInstance().GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, pRTV.RawDblPtr(), nullptr, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(pRTV.RawPtr(), col, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
-						Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pPrecomputePrefilter_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+						Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pPrecomputePrefilter_SRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 						DrawAttribs drawAttrs(4, DRAW_FLAG_VERIFY_ALL);
-						Graphics::Context::GetInstance().GetContext()->Draw(drawAttrs);
+						Graphics::GraphicsModule::Get().GetContext()->Draw(drawAttrs);
 					}
 				}
 			}

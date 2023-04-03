@@ -40,10 +40,10 @@ namespace Nuclear
 				}
 				else
 				{
-					exportpath = AssetLibrary::GetInstance().GetPath() + "Meshes/" + mResult.mName + '/';
+					exportpath = AssetLibrary::Get().GetPath() + "Meshes/" + mResult.mName + '/';
 				}
 
-				if (!Importers::AssimpManager::GetInstance().Import(mPath.GetRealPath(), exportpath, mResult, mImportingDesc))
+				if (!Importers::AssimpManager::Get().Import(mPath.GetRealPath(), exportpath, mResult, mImportingDesc))
 				{
 					NUCLEAR_ERROR("[Importer] Failed to import Model : '{0}'", mPath.GetInputPath());
 
@@ -59,14 +59,14 @@ namespace Nuclear
 				{
 					if (mImportingDesc.mExportMaterial && mResult.pMaterial)
 					{
-						AssetManager::GetInstance().Export(mResult.pMaterial, true, exportpath);
+						AssetManager::Get().Export(mResult.pMaterial, true, exportpath);
 					}
 				}
 
 				//TODO: Export Animations?
 				//if (mImportingDesc.mImportAnimations && mResult.pAnimations)
 				//{
-				//	AssetManager::GetInstance().Export(mResult.pAnimations, true, exportpath);
+				//	AssetManager::Get().Export(mResult.pAnimations, true, exportpath);
 				//}
 
 
@@ -77,7 +77,7 @@ namespace Nuclear
 					{
 						if (mResult.pAnimations->GetState() != IAsset::State::Loaded)
 						{
-							AssetLibrary::GetInstance().mImportedAnimations.mData.erase(mResult.pAnimations->GetUUID());
+							AssetLibrary::Get().mImportedAnimations.mData.erase(mResult.pAnimations->GetUUID());
 							mResult.pAnimations = nullptr;
 						}
 						else
@@ -90,11 +90,11 @@ namespace Nuclear
 				if (mResult.pMesh)
 				{
 					//create task
-					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, IMPORTER_FACTORY_TYPE));
+					Threading::ThreadingModule::Get().AddMainThreadTask(new MeshCreateTask(mResult.pMesh, mPath, IMPORTER_FACTORY_TYPE));
 
 					if (!mImportingDesc.mCommonOptions.mLoadOnly)
 					{
-						AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(mResult.pMesh);
+						AssetMetadata assetmetadata = Assets::AssetManager::Get().CreateMetadata(mResult.pMesh);
 
 						auto meshloadingdesc = static_cast<Assets::MeshLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::MeshLoadingDesc);
 						meshloadingdesc->mSaveMaterialNames = mImportingDesc.mSaveMaterialNames;
@@ -107,7 +107,7 @@ namespace Nuclear
 							meshloadingdesc->mAnimationsUUID = mResult.pAnimations->GetUUID();
 
 						//Export Meta
-						Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
+						Serialization::SerializationModule::Get().Serialize(assetmetadata, exportpath + mResult.mName + ".glb" + ".NEMeta");
 						delete assetmetadata.pLoadingDesc;
 					}
 				}						

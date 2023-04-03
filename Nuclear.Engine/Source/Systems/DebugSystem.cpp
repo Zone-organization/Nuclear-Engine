@@ -26,9 +26,9 @@ namespace Nuclear
 
 			PSOCreateInfo.PSODesc.Name = "DebugSystem PSO";
 			PSOCreateInfo.GraphicsPipeline.NumRenderTargets = 1;
-			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().ColorBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.RTVFormats[0] = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().ColorBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.BlendDesc.RenderTargets[0].BlendEnable = false;
-			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::Context::GetInstance().GetSwapChain()->GetDesc().DepthBufferFormat;
+			PSOCreateInfo.GraphicsPipeline.DSVFormat = Graphics::GraphicsModule::Get().GetSwapChain()->GetDesc().DepthBufferFormat;
 			PSOCreateInfo.GraphicsPipeline.PrimitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.FrontCounterClockwise = !COORDSYSTEM_LH_ENABLED;
 			PSOCreateInfo.GraphicsPipeline.RasterizerDesc.CullMode = CULL_MODE_BACK;
@@ -96,7 +96,7 @@ namespace Nuclear
 				CreationAttribs.Desc.Name = "DebugSystemVS";
 
 				CreationAttribs.Source = mVShader.c_str();
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, VShader.RawDblPtr());
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, VShader.RawDblPtr());
 			}
 
 			//Create Pixel Shader
@@ -125,21 +125,21 @@ namespace Nuclear
 				CreationAttribs.Desc.Name = "DebugSystemPS";
 
 				CreationAttribs.Source = mPShader.c_str();
-				Graphics::Context::GetInstance().GetDevice()->CreateShader(CreationAttribs, PShader.RawDblPtr());
+				Graphics::GraphicsModule::Get().GetDevice()->CreateShader(CreationAttribs, PShader.RawDblPtr());
 			}
 			PSOCreateInfo.pVS = VShader;
 			PSOCreateInfo.pPS = PShader;
 
-			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsModule::GetInstance().GetRendering3DInputLayout().data();
-			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::GetInstance().GetRendering3DInputLayout().size());
+			PSOCreateInfo.GraphicsPipeline.InputLayout.LayoutElements = Graphics::GraphicsModule::Get().GetRendering3DInputLayout().data();
+			PSOCreateInfo.GraphicsPipeline.InputLayout.NumElements = static_cast<Uint32>(Graphics::GraphicsModule::Get().GetRendering3DInputLayout().size());
 
 			Graphics::PSOResourcesInitInfo ResourcesInitinfo;
-			Graphics::GraphicsModule::GetInstance().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
+			Graphics::GraphicsModule::Get().InitPSOResources(PSOCreateInfo, ResourcesInitinfo);
 
-			Graphics::Context::GetInstance().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pShader.mPipeline);
+			Graphics::GraphicsModule::Get().GetDevice()->CreateGraphicsPipelineState(PSOCreateInfo, &pShader.mPipeline);
 
-			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingModule::GetInstance().GetCameraCB());
-			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingModule::GetInstance().GetAnimationCB());
+			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Camera")->Set(Rendering::RenderingModule::Get().GetCameraCB());
+			pShader.mPipeline->GetStaticVariableByName(SHADER_TYPE_VERTEX, "NEStatic_Animation")->Set(Rendering::RenderingModule::Get().GetAnimationCB());
 
 			pShader.mPipeline->CreateShaderResourceBinding(&pShader.mPipelineSRB, true);
 
@@ -148,7 +148,7 @@ namespace Nuclear
 
 			////////////////////////////////////////////	
 			/*		Rendering::ShadingModelBakingDesc info;
-					info.CameraBufferPtr = Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB();
+					info.CameraBufferPtr = Core::Scene::Get().GetSystemManager().GetSystem<CameraSystem>()->GetCameraCB();
 					info.AnimationBufferPtr = _AnimationBufferPtr;
 
 					DebugRP.Bake(info);
@@ -170,37 +170,37 @@ namespace Nuclear
 			//Render Light Sources
 			if (RenderLightSources)
 			{
-				Graphics::Context::GetInstance().GetContext()->SetPipelineState(pShader.mPipeline);
-				auto RTV = Graphics::Context::GetInstance().GetSwapChain()->GetCurrentBackBufferRTV();
-				Graphics::Context::GetInstance().GetContext()->SetRenderTargets(1, &RTV, Rendering::RenderingModule::GetInstance().GetFinalDepthRT().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetPipelineState(pShader.mPipeline);
+				auto RTV = Graphics::GraphicsModule::Get().GetSwapChain()->GetCurrentBackBufferRTV();
+				Graphics::GraphicsModule::Get().GetContext()->SetRenderTargets(1, &RTV, Rendering::RenderingModule::Get().GetFinalDepthRT().GetRTV(), RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 				
 				{
-					auto view = Core::Scene::GetInstance().GetRegistry().view<Components::LightComponent>();
+					auto view = Core::Scene::Get().GetRegistry().view<Components::LightComponent>();
 					for (auto entity : view)
 					{
 						auto& LightComp = view.get<Components::LightComponent>(entity);
-						auto& EntityInfo = Core::Scene::GetInstance().GetRegistry().get<Components::EntityInfoComponent>(entity);
+						auto& EntityInfo = Core::Scene::Get().GetRegistry().get<Components::EntityInfoComponent>(entity);
 
 						EntityInfo.mTransform.Update();
-						Core::Scene::GetInstance().GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						Rendering::RenderingModule::GetInstance().UpdateCameraCB(Core::Scene::GetInstance().GetMainCamera());
+						Core::Scene::Get().GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						Rendering::RenderingModule::Get().UpdateCameraCB(Core::Scene::Get().GetMainCamera());
 
-						auto AnimationBufferPtr = Rendering::RenderingModule::GetInstance().GetAnimationCB();
+						auto AnimationBufferPtr = Rendering::RenderingModule::Get().GetAnimationCB();
 
 						Math::Matrix4 empty(0.0f);
 						PVoid data;
-						Graphics::Context::GetInstance().GetContext()->MapBuffer(AnimationBufferPtr, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
+						Graphics::GraphicsModule::Get().GetContext()->MapBuffer(AnimationBufferPtr, MAP_WRITE, MAP_FLAG_DISCARD, (PVoid&)data);
 						data = memcpy(data, &empty, sizeof(Math::Matrix4));
-						Graphics::Context::GetInstance().GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
+						Graphics::GraphicsModule::Get().GetContext()->UnmapBuffer(AnimationBufferPtr, MAP_WRITE);
 
 
-						InstantRender(Assets::DefaultMeshes::GetSphereAsset(),Fallbacks::FallbacksModule::GetInstance().GetDefaultGreyImage());
+						InstantRender(Assets::DefaultMeshes::GetSphereAsset(),Fallbacks::FallbacksModule::Get().GetDefaultGreyImage());
 
 
 						//TODO: Render Cube at direction
 						/*EntityInfo.mTransform.Update();
-						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
-						Core::Scene::GetInstance().GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
+						Core::Scene::Get().GetSystemManager().GetSystem<CameraSystem>()->GetMainCamera()->SetModelMatrix(EntityInfo.mTransform.GetWorldMatrix());
+						Core::Scene::Get().GetSystemManager().GetSystem<CameraSystem>()->UpdateBuffer();
 
 						InstantRender(Assets::DefaultMeshes::GetCubeAsset(), Assets::AssetManager::DefaultGreyTex.GetImage());*/
 					}
@@ -267,17 +267,17 @@ namespace Nuclear
 		Uint64 offset = 0;
 
 		pShader.mPipelineSRB->GetVariableByName(SHADER_TYPE_PIXEL, "NEMat_Diffuse1")->Set(diffusetex->GetTextureView());
-		Graphics::Context::GetInstance().GetContext()->CommitShaderResources(pShader.mPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+		Graphics::GraphicsModule::Get().GetContext()->CommitShaderResources(pShader.mPipelineSRB, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 
 			for (size_t i = 0; i < mesh->mSubMeshes.size(); i++)
 			{
-				Graphics::Context::GetInstance().GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
-				Graphics::Context::GetInstance().GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
+				Graphics::GraphicsModule::Get().GetContext()->SetIndexBuffer(mesh->mSubMeshes.at(i).mIB, 0, RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
+				Graphics::GraphicsModule::Get().GetContext()->SetVertexBuffers(0, 1, &mesh->mSubMeshes.at(i).mVB, &offset, RESOURCE_STATE_TRANSITION_MODE_TRANSITION, SET_VERTEX_BUFFERS_FLAG_RESET);
 
 				DrawIndexedAttribs  DrawAttrs;
 				DrawAttrs.IndexType = VT_UINT32;
 				DrawAttrs.NumIndices = mesh->mSubMeshes.at(i).mIndicesCount;
-				Graphics::Context::GetInstance().GetContext()->DrawIndexed(DrawAttrs);
+				Graphics::GraphicsModule::Get().GetContext()->DrawIndexed(DrawAttrs);
 
 			}
 		}

@@ -11,7 +11,7 @@ namespace Nuclear
 			{
 			}
 
-			AssimpManager& Importers::AssimpManager::GetInstance()
+			AssimpManager& Importers::AssimpManager::Get()
 			{
 				static AssimpManager instance;
 				return instance;

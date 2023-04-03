@@ -37,15 +37,15 @@ namespace Nuclear
 
 				if (!mImportingDesc.mLoadFromMemory)
 				{
-					auto extension = Importers::TextureImporter::GetInstance().GetImageExtension(mPath.GetRealPath());
-					auto importedfile = Platform::FileSystem::GetInstance().LoadFile(mPath.GetRealPath());
+					auto extension = Importers::TextureImporter::Get().GetImageExtension(mPath.GetRealPath());
+					auto importedfile = Platform::FileSystem::Get().LoadFile(mPath.GetRealPath());
 					mImportingDesc.mMemData = importedfile.mDataBuf.data();
 					mImportingDesc.mMemSize = importedfile.mDataBuf.size();
-					result = Importers::TextureImporter::GetInstance().Import(pResultData, extension, mImportingDesc);
+					result = Importers::TextureImporter::Get().Import(pResultData, extension, mImportingDesc);
 				}
 				else
 				{
-					result = Importers::TextureImporter::GetInstance().Import(pResultData, IMAGE_EXTENSION_UNKNOWN, mImportingDesc);
+					result = Importers::TextureImporter::Get().Import(pResultData, IMAGE_EXTENSION_UNKNOWN, mImportingDesc);
 					if (mImportingDesc.mEngineAllocMem)
 					{
 						free(mImportingDesc.mMemData);
@@ -61,15 +61,15 @@ namespace Nuclear
 						std::string exportpath = mImportingDesc.mCommonOptions.mExportPath.GetRealPath();
 						if (!mImportingDesc.mCommonOptions.mExportPath.isValid())
 						{
-							exportpath = AssetLibrary::GetInstance().GetPath() + "Textures/";
+							exportpath = AssetLibrary::Get().GetPath() + "Textures/";
 						}
-						Platform::FileSystem::GetInstance().CreateDir(exportpath);
+						Platform::FileSystem::Get().CreateDir(exportpath);
 
 						std::string exportedimagename = pResult->GetName() + ".dds"; ///<TODO extension...
 
-						Importers::TextureImporter::GetInstance().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension);
+						Importers::TextureImporter::Get().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension);
 
-						AssetMetadata assetmetadata = Assets::AssetManager::GetInstance().CreateMetadata(pResult);
+						AssetMetadata assetmetadata = Assets::AssetManager::Get().CreateMetadata(pResult);
 
 						auto imageloadingdesc = static_cast<Assets::TextureLoadingDesc*>(assetmetadata.pLoadingDesc = new Assets::TextureLoadingDesc);
 
@@ -77,12 +77,12 @@ namespace Nuclear
 						imageloadingdesc->mAsyncLoading = mImportingDesc.mCommonOptions.mAsyncImport;
 
 						//Export Meta
-						Serialization::SerializationModule::GetInstance().Serialize(assetmetadata, exportpath + exportedimagename + ".NEMeta");
+						Serialization::SerializationModule::Get().Serialize(assetmetadata, exportpath + exportedimagename + ".NEMeta");
 
 						delete assetmetadata.pLoadingDesc;
 					}
 					//Create image task
-					Threading::ThreadingModule::GetInstance().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, IMPORTER_FACTORY_TYPE));
+					Threading::ThreadingModule::Get().AddMainThreadTask(new TextureCreateTask(pResult, pResultData, mPath, desc, IMPORTER_FACTORY_TYPE));
 				}
 				else
 				{
