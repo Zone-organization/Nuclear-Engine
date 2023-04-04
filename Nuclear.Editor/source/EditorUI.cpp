@@ -127,6 +127,7 @@ namespace Nuclear::Editor
 					pActiveProject->Initalize(info);
 
 					mAssetLibViewer.SetProject(pActiveProject);
+					pActiveProject->AddNewScene();
 
 					//Finish close window
 					mNewPrjWindowOpen = false;
@@ -167,6 +168,7 @@ namespace Nuclear::Editor
 		}
 
 		RenderMainMenuBar();
+		RenderStatusBar();
 		if (mNewPrjWindowOpen)
 		{
 			ImGui::OpenPopup("New Project");
@@ -180,6 +182,47 @@ namespace Nuclear::Editor
 			pActiveProject->ShowProjectFolderView();
 			RenderEntityExplorer();
 			mAssetLibViewer.Render();
+		}
+		else {
+			//no project
+		}
+	}
+
+	void EditorUI::RenderSceneView()
+	{
+		ImGui::Begin("Scene View");
+
+		ImGui::End();
+	}
+
+	void EditorUI::RenderStatusBar()
+	{
+		auto viewport = ImGui::GetMainViewport();
+
+
+		// Set position to the bottom of the viewport
+		ImGui::SetNextWindowPos(
+			ImVec2(viewport->Pos.x,
+				viewport->Pos.y + viewport->Size.y - ImGui::GetFrameHeight()));
+
+		// Extend width to viewport width
+		ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, ImGui::GetFrameHeight()));
+
+		// Add menu bar flag and disable everything else
+		ImGuiWindowFlags flags =
+			ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs |
+			ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollWithMouse |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoBackground |
+			ImGuiWindowFlags_MenuBar;
+
+		if (ImGui::Begin("StatusBar", nullptr, flags)) {
+			if (ImGui::BeginMenuBar()) {
+				auto adapter = Graphics::GraphicsModule::Get().GetAdapterInfo();
+				ImGui::Text("Nuclear Engine 0.01A Running On: %s", adapter.Description);
+				ImGui::EndMenuBar();
+			}
+			ImGui::End();
 		}
 	}
 
@@ -224,7 +267,7 @@ namespace Nuclear::Editor
 			bool addmenuacive = false;
 			if (pActiveProject)
 			{
-				if (Core::Scene::GetInstance().GetSceneAsset())
+				if (Core::Scene::Get().GetSceneAsset())
 				{
 					addmenuacive = true;
 				}
@@ -233,25 +276,36 @@ namespace Nuclear::Editor
 			{
 				if (ImGui::MenuItem("Empty Entity"))
 				{
-					 Core::Scene::GetInstance().CreateEntity();
+					 Core::Scene::Get().CreateEntity();
 				}
 				if (ImGui::MenuItem("Box")) 
 				{
-					 Core::Scene::GetInstance().CreateBox(pActiveProject->GetDefaultMaterial());
+					 Core::Scene::Get().CreateBox(pActiveProject->GetDefaultMaterial());
 				}
 
 				if (ImGui::MenuItem("Sphere"))
 				{
-					 Core::Scene::GetInstance().CreateSphere(pActiveProject->GetDefaultMaterial());
+					 Core::Scene::Get().CreateSphere(pActiveProject->GetDefaultMaterial());
 				}
 
 				if (ImGui::MenuItem("Plane"))
 				{
-					 Core::Scene::GetInstance().CreatePlane(pActiveProject->GetDefaultMaterial());
+					 Core::Scene::Get().CreatePlane(pActiveProject->GetDefaultMaterial());
 				}
 
 				ImGui::EndMenu();
 			}
+
+			if (ImGui::BeginMenu("Systems", addmenuacive))
+			{
+				if (ImGui::MenuItem("Render System"))
+				{
+					Core::Scene::Get().CreateEntity();
+				}
+
+				ImGui::EndMenu();
+			}
+
 
 			ImGui::EndMainMenuBar();
 		}
@@ -261,9 +315,9 @@ namespace Nuclear::Editor
 	{
 		ImGui::Begin("Entity Explorer");
 
-		if (ImGui::TreeNode(Core::Scene::GetInstance().GetName().c_str()))
+		if (ImGui::TreeNode(Core::Scene::Get().GetName().c_str()))
 		{
-			auto view = Core::Scene::GetInstance().GetRegistry().view<Components::EntityInfoComponent>();
+			auto view = Core::Scene::Get().GetRegistry().view<Components::EntityInfoComponent>();
 
 			for (auto entity : view)
 			{
@@ -277,7 +331,7 @@ namespace Nuclear::Editor
 				if (selectedindex == index)
 				{
 					node_flags |= ImGuiTreeNodeFlags_Selected;
-					mEditor.Render(entity, Core::Scene::GetInstance().GetRegistry(), Einfo);
+					mEditor.Render(entity, Core::Scene::Get().GetRegistry(), Einfo);
 				}
 
 				ImGui::PushID(index);
@@ -296,7 +350,7 @@ namespace Nuclear::Editor
 
 		if (ImGui::Button("Add Entity"))
 		{
-			Core::Scene::GetInstance().CreateEntity();
+			Core::Scene::Get().CreateEntity();
 		}
 		ImGui::End();
 	}

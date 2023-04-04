@@ -48,7 +48,7 @@ namespace Nuclear
 		void RenderSystem::Bake(const RenderSystemBakingDesc& desc)
 		{								
 			BakeLights();
-
+			mRenderToScreen = desc.mRenderToScreen;
 			Graphics::ShaderPipelineBakingDesc bakedesc;
 			bakedesc.mRTWidth = desc.RTWidth;
 			bakedesc.mRTHeight = desc.RTHeight;
@@ -238,23 +238,21 @@ namespace Nuclear
 				}
 			}		
 
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 3: Copy Main camera RT to RenderingModule RTs.
-			//////////////////////////////////////////////////////////////////////////////////////////////
 
+			if (mRenderToScreen)
+			{
+				//Step 3: Copy Main camera RT to RenderingModule RTs.
 				Diligent::CopyTextureAttribs attrib;
 				attrib.pSrcTexture = Core::Scene::Get().GetMainCamera()->GetColorRT().GetSRV()->GetTexture();
 				attrib.pDstTexture = Rendering::RenderingModule::Get().GetFinalRT().GetSRV()->GetTexture();
 				Graphics::GraphicsModule::Get().GetContext()->CopyTexture(attrib);
 
-	
-			//---------TODO: Maybe copy main camera depth rt?--------------
 
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			//Step 4: Render to screen
-			//////////////////////////////////////////////////////////////////////////////////////////////
-			Rendering::RenderingModule::Get().RenderFinalRT();
+				//---------TODO: Maybe copy main camera depth rt?--------------
 
+				//Step 4: Render to screen
+				Rendering::RenderingModule::Get().RenderFinalRT();
+			}
 		}
 
 		//Shader Structs

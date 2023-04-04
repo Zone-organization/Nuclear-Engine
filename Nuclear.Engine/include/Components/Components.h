@@ -9,10 +9,12 @@
 #include <Components\LightComponent.h>
 #include <Components\ScriptComponent.h>
 
-//#define ALL_COMPONENTS 	Components::EntityInfoComponent,\
-//					    Components::CameraComponent,    \
-//						Components::MeshComponent,      \
-//						Components::ColliderComponent,  \
-//						Components::RigidBodyComponent, \
-//						Components::LightComponent,  \
-//						Components::ScriptComponent    
+#define ALL_COMPONENTS 	Components::EntityInfoComponent,\
+					    Components::CameraComponent,    \
+						Components::MeshComponent,      \
+						Components::ColliderComponent,  \
+						Components::RigidBodyComponent, \
+						Components::LightComponent,  \
+						Components::ScriptComponent,    \
+						Components::AudioSourceComponent,  \
+						Components::AudioListenerComponent

@@ -27,6 +27,8 @@ namespace Nuclear
 			Uint32 RTWidth;
 			Uint32 RTHeight;
 
+			bool mRenderToScreen = true;
+
 			//requests deffered pipeline for all meshes (if exists)
 			bool mIsDefferedByDefault = false;
 		};
@@ -90,7 +92,7 @@ namespace Nuclear
 			size_t NUM_OF_LIGHT_VECS;
 
 			bool HasbeenBakedBefore = false;
-
+			bool mRenderToScreen = false;
 			Diligent::RefCntAutoPtr<Diligent::IBuffer> mPSLightCB;
 
 			void BakeLights();

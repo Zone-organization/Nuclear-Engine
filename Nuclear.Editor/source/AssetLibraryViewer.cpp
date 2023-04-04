@@ -10,7 +10,7 @@ namespace Nuclear::Editor
 	{
 		pActiveProject = project;
 
-		mPath = Assets::AssetLibrary::GetInstance().GetPath();
+		mPath = Assets::AssetLibrary::Get().GetPath();
 	}
 	std::string SplitFilename(const std::string& str)
 	{
@@ -58,7 +58,7 @@ namespace Nuclear::Editor
 				{
 					static int count = 0;
 					static Assets::Texture* img = nullptr;
-					for (auto& i : Assets::AssetLibrary::GetInstance().mImportedTextures.mData)
+					for (auto& i : Assets::AssetLibrary::Get().mImportedTextures.mData)
 					{
 						ImGui::PushID(count);
 						if (i.second.GetTextureView())
@@ -79,7 +79,7 @@ namespace Nuclear::Editor
 
 						float last_button_x2 = ImGui::GetItemRectMax().x;
 						float next_button_x2 = last_button_x2 + style.ItemSpacing.x + tex_sz.x; // Expected position if next button was on same line
-						if (count + 1 < Assets::AssetLibrary::GetInstance().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
+						if (count + 1 < Assets::AssetLibrary::Get().mImportedTextures.mData.size() && next_button_x2 < window_visible_x2)
 							ImGui::SameLine();
 						ImGui::PopID();
 

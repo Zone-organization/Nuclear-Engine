@@ -112,6 +112,7 @@
     <ClInclude Include="include\Project.h" />
     <ClInclude Include="include\ProjectTemplate.h" />
     <ClInclude Include="include\SystemsEditor.h" />
+    <ClInclude Include="Systems.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

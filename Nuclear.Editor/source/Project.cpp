@@ -12,7 +12,7 @@ namespace Nuclear::Editor
 		mInfo = info;
 
 
-		//Engine::GetInstance()->GetMainWindow()->SetTitle("Nuclear Engine - " + mInfo.mProjectName);
+		//Engine::Get()->GetMainWindow()->SetTitle("Nuclear Engine - " + mInfo.mProjectName);
 
 		//TODO
 	//	mDefaultMaterial = &AssetLoader.DefaultGreyTex;
@@ -210,14 +210,14 @@ namespace Nuclear::Editor
 
 	Assets::Scene* Project::AddNewScene()
 	{
-		auto result = &Assets::AssetLibrary::GetInstance().mImportedScenes.AddAsset();
+		auto result = &Assets::AssetLibrary::Get().mImportedScenes.AddAsset();
 
 		result->SetName("UnNamed Scene");
-		Core::Scene::GetInstance().LoadScene(result);
+		Core::Scene::Get().LoadScene(result);
 
 		/*auto EController = result->CreateEntity();
 		EController.AddComponent<Components::CameraComponent>(&Camera);
-		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::GetInstance()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
+		Camera.Initialize(Math::perspective(Math::radians(45.0f), Engine::Get()->GetMainWindow()->GetAspectRatioF32(), 0.1f, 100.0f));
 
 		result->GetSystemManager().Add<Systems::DebugSystem>();
 		result->GetSystemManager().Add<Systems::RenderSystem>();

@@ -56,7 +56,10 @@ namespace Nuclear
 			{
 				return pEngineFactory;
 			}
-
+			FORCE_INLINE const Diligent::GraphicsAdapterInfo GetAdapterInfo() const
+			{
+				return mAdapterAttribs;
+			}
 			void ResizeSwapChain(Uint32 Width, Uint32 Height);
 
 			bool CreateMesh(Assets::Mesh* result);

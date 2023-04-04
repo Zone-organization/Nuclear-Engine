@@ -61,6 +61,7 @@ namespace Nuclear::Editor
 	}
 
 	//For display only
+	//TODO: Move to engine
 	const std::string GetComponentName(entt::id_type id)
 	{
 		if (id == entt::type_id<Components::EntityInfoComponent>().hash())
@@ -77,9 +78,12 @@ namespace Nuclear::Editor
 			return "Light Component";
 		else if (id == entt::type_id<Components::ScriptComponent>().hash())
 			return "Script Component";
+		else if (id == entt::type_id<Components::AudioListenerComponent>().hash())
+			return "Audio Listener Component";
+		else if (id == entt::type_id<Components::AudioSourceComponent>().hash())
+			return "Audio Source Component";
 
-
-		return "Unknown";
+		return "Unknown / UnRegistered Component";
 	}
 
 
@@ -99,21 +103,24 @@ namespace Nuclear::Editor
 					Components::EntityInfoComponent* transform = reg.try_get< Components::EntityInfoComponent>(entity);
 
 					Math::Vector3 pos = transform->mTransform.GetLocalPosition();
-					ImGui::DragFloat3("Position", (float*)&pos, 0.2f);
+					ImGui::Text("Position"); ImGui::SameLine();
+					ImGui::DragFloat3("##Position", (float*)&pos, 0.2f);
 					if (pos != transform->mTransform.GetLocalPosition())
 					{
 						transform->mTransform.SetPosition(pos);
 					}
 
 					Math::Vector3 rot = transform->mTransform.GetLocalRotationEular();
-					ImGui::DragFloat3("Rotation", (float*)&rot, 0.2f);
+					ImGui::Text("Rotation"); ImGui::SameLine();
+					ImGui::DragFloat3("##Rotation", (float*)&rot, 0.2f);
 					if (rot != transform->mTransform.GetLocalRotationEular())
 					{
 						transform->mTransform.SetRotation(rot);
 					}
 
 					Math::Vector3 scale = transform->mTransform.GetLocalScale();
-					ImGui::DragFloat3("Scale", (float*)&scale, 0.2f);
+					ImGui::Text("Scale"); ImGui::SameLine();
+					ImGui::DragFloat3("##Scale", (float*)&scale, 0.2f);
 					if (scale != transform->mTransform.GetLocalScale())
 					{
 						transform->mTransform.SetScale(scale);
@@ -241,29 +248,30 @@ namespace Nuclear::Editor
 						{
 							if (meshcomponent->GetRenderingVariant())
 							{
-								ImGui::Text("Active Rendering Variant name: %s", meshcomponent->GetRenderingVariant()->GetName().c_str());
-								ImGui::Text("Shader AssetID: %i", meshcomponent->GetRenderingVariant()->GetShaderID());
+								ImGui::Text("Active Rendering Variant name: %s", meshcomponent->GetRenderingVariant()->mName.c_str());
+								ImGui::Text("Shader AssetID: %i", meshcomponent->GetRenderingVariant()->mShaderAssetID);
+
+								ImGui::Text("RenderQueue: %i", meshcomponent->GetRenderQueue());
+
+								bool b = meshcomponent->GetEnableRendering();
+								if (ImGui::Checkbox("Enable Rendering", &b))
+								{
+									meshcomponent->SetEnableRendering(b);
+								}
+								bool castshadows = meshcomponent->GetCastShadow();
+								if (ImGui::Checkbox("Casts Shadow", &castshadows))
+								{
+									meshcomponent->SetCastShadow(castshadows);
+								}
+								bool recieveshadows = meshcomponent->GetReceiveShadows();
+								if (ImGui::Checkbox("Recieves Shadows", &recieveshadows))
+								{
+									meshcomponent->SetReceiveShadows(recieveshadows);
+								}
 							}
 							else {
 								ImGui::Text("No Active Rendering Variant...");
-							}
-							ImGui::Text("RenderQueue: %i", meshcomponent->GetRenderQueue());
-
-							bool b = meshcomponent->GetEnableRendering();
-							if (ImGui::Checkbox("Enable Rendering", &b))
-							{
-								meshcomponent->SetEnableRendering(b);
-							}
-							bool castshadows = meshcomponent->GetCastShadow();
-							if (ImGui::Checkbox("Casts Shadow", &castshadows))
-							{
-								meshcomponent->SetCastShadow(castshadows);
-							}
-							bool recieveshadows = meshcomponent->GetReceiveShadows();
-							if (ImGui::Checkbox("Recieves Shadows", &recieveshadows))
-							{
-								meshcomponent->SetReceiveShadows(recieveshadows);
-							}
+							}						
 
 							if (meshcomponent->GetMesh())
 							{
@@ -274,6 +282,9 @@ namespace Nuclear::Editor
 								else {
 									ImGui::Text("Unnamed Mesh");
 								}
+							}
+							else {
+								ImGui::Text("No Mesh Assigned");
 							}
 							if (meshcomponent->GetMaterial())
 							{
@@ -298,6 +309,9 @@ namespace Nuclear::Editor
 								//		}
 								//	}
 								//}
+							}
+							else {
+								ImGui::Text("No Material Assigned");
 							}
 
 						}

@@ -15,7 +15,8 @@ namespace Nuclear::Editor {
 		void SetProject(Project* project);
 		void NewProjectWindow();
 		void Render();
-
+		void RenderSceneView();
+		void RenderStatusBar();
 	protected:
 		void RenderMainMenuBar();
 		EntityEditor mEditor;

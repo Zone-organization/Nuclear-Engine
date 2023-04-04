@@ -3,8 +3,6 @@
 #include <Nuclear.Editor.h>
 
 #pragma comment(lib,"Nuclear.Engine.lib")
-#pragma comment(lib,"Nuclear.Core.lib")
-//#pragma comment(lib,"glfw3.lib")
 
 int main()
 {
@@ -14,16 +12,16 @@ int main()
 	desc.mScriptingClientDllName = "EditorClient.dll";
 	desc.mScriptingAssemblyNamespace = "Editor";
 	desc.mAssetsLibraryPath = "../Assets/";
-	Core::Engine::GetInstance().Start(desc);
+	Core::Engine::Get().Start(desc);
 
 	Core::Path::mReservedPaths["@EditorAssets@"] = "../Assets/NuclearEditor";
 	Core::Path::mReservedPaths["@CommonAssets@"] = "../Assets/Common";
 
-	while (!Core::Engine::GetInstance().ShouldClose())
+	while (!Core::Engine::Get().ShouldClose())
 	{
 		NuclearEditor editor;
-		Core::Engine::GetInstance().LoadClient(&editor);
+		Core::Engine::Get().LoadClient(&editor);
 	}
-	Core::Engine::GetInstance().EndClient();
+	Core::Engine::Get().EndClient();
 	return 0;
 }
