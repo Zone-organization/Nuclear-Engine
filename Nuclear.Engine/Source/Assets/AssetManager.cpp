@@ -124,7 +124,8 @@ namespace Nuclear
 			{
 				Type = Importer::Get().GetAssetType(Path.GetRealPath());
 			}			
-			else if (Type == AssetType::Texture)
+			
+			if (Type == AssetType::Texture)
 			{
 				return Importer::Get().ImportTexture(Path);
 			}
@@ -140,6 +141,12 @@ namespace Nuclear
 			{
 				//return Importer::Get().ImportTexture(Path);
 			}
+			else
+			{
+				NUCLEAR_ERROR("[AssetManager] Importing an Asset with Unknown Type: {0}", Path.GetRealPath());
+				return nullptr;
+			}
+
 			return nullptr;
 		}
 

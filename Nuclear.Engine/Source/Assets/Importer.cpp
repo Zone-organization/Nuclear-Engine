@@ -568,6 +568,11 @@ namespace Nuclear
 			{
 				return AssetType::Scene;
 			}
+			else
+			{
+				NUCLEAR_ERROR("[Importer] GetAssetType(filename) Unknown Type: {0}", extension);
+				return AssetType::Unknown;
+			}
 
 
 			return AssetType::Unknown;

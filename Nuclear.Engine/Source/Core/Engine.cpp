@@ -118,7 +118,6 @@ namespace Nuclear
 				if (!Audio::AudioModule::Get().Initialize(desc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize AudioModule...");
-					return false;
 				}
 			}
 			if (desc.AutoInitScriptingModule)
@@ -143,7 +142,6 @@ namespace Nuclear
 				if (!Scripting::ScriptingModule::Get().Initialize(scdesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize ScriptingModule...");
-					return false;
 				}
 			}
 
@@ -154,7 +152,6 @@ namespace Nuclear
 				if (!PhysX::PhysXModule::Get().Initialize(pxdesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize PhysXModule...");
-					return false;
 				}
 			}
 
@@ -167,7 +164,6 @@ namespace Nuclear
 				if (!Rendering::RenderingModule::Get().Initialize(redesc))
 				{
 					NUCLEAR_FATAL("[Engine] Failed to initalize RenderingModule...");
-					return false;
 				}			
 			}
 
@@ -176,7 +172,6 @@ namespace Nuclear
 				if (!Threading::ThreadingModule::Get().Initialize())
 				{
 					NUCLEAR_FATAL("[Module] Failed to initalize ThreadingModule...");
-					return false;
 				}
 			}
 

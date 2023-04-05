@@ -1,4 +1,5 @@
 #include "AssetLibraryViewer.h"
+#include "FileDialog.h"
 namespace Nuclear::Editor
 {
 	AssetLibraryViewer::AssetLibraryViewer(NuclearEditor* editor)
@@ -45,7 +46,7 @@ namespace Nuclear::Editor
 
 	void AssetLibraryViewer::Render()
 	{
-		if(ImGui::Begin("Assets Library"))
+		if (ImGui::Begin("Assets Library"))
 		{
 			ImVec2 tex_sz(128.f, 128.f);
 
@@ -53,6 +54,22 @@ namespace Nuclear::Editor
 			{
 				ImGuiStyle& style = ImGui::GetStyle();
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+				static char* file_dialog_buffer = nullptr;
+				static char path[500] = "";
+
+				ImGui::PushID("imprtbttn");
+				ImGui::PushStyleColor(ImGuiCol_Tab, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
+				ImGui::PushStyleColor(ImGuiCol_TabHovered, (ImVec4)ImColor::HSV(1.0f, 0.7f, 0.7f));
+				ImGui::PushStyleColor(ImGuiCol_TabActive, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));
+				if (ImGui::TabItemButton("Import"))
+				{
+
+					file_dialog_buffer = path;
+					FileDialog::file_dialog_open = true;
+				}
+				ImGui::PopStyleColor(3);
+				ImGui::PopID();
 
 				if (ImGui::BeginTabItem("Textures"))
 				{
@@ -106,123 +123,38 @@ namespace Nuclear::Editor
 					//Should show material rendered on a sphere
 					ImGui::EndTabItem();
 				}
+		
+
 				ImGui::EndTabBar();
+
+				if (FileDialog::file_dialog_open)
+				{
+					FileDialog::ShowFileDialog(&FileDialog::file_dialog_open, file_dialog_buffer, sizeof(file_dialog_buffer), FileDialog::FileDialogType::OpenFile);
+					if (!FileDialog::file_dialog_open)
+					{
+						Assets::AssetManager::Get().Import(path);
+					}
+				}
 			}
 
+
+
+			/*static char* file_dialog_buffer = nullptr;
+			static char path[500] = "";
+
+			ImGui::TextUnformatted("Path: ");
+			ImGui::InputText("##path", path, sizeof(path));
+			ImGui::SameLine();
+			if (ImGui::Button("Browse##path")) {
+				file_dialog_buffer = path;
+				FileDialog::file_dialog_open = true;
+				FileDialog::file_dialog_open_type = FileDialog::FileDialogType::SelectFolder;
+			}
+
+			if (FileDialog::file_dialog_open) {
+				FileDialog::ShowFileDialog(&FileDialog::file_dialog_open, file_dialog_buffer, sizeof(file_dialog_buffer), FileDialog::file_dialog_open_type);
+			}*/
 			ImGui::End();
 		}
-
-		//if (ImGui::Begin("Assets Library Folder"))
-		//{
-		//	// Show the current path with clickable button for each folder to travel through
-		//	std::filesystem::path fullpath;
-
-		//	for (const std::filesystem::path& path : mPath)
-		//	{
-		//		//fullpath /= path;
-		//		ImGui::SameLine();
-		//		if (ImGui::Button(path.string().c_str()))
-		//		{
-		//			//SetPath(fullpath);
-		//			break;
-		//		}
-		//	}
-
-		//	auto ButtonNoIcon = [](const std::string& name)
-		//	{
-		//		ImGui::PushID(name.c_str());
-		//		bool clicked = false;
-		//		clicked |= ImGui::Button(name.c_str());
-		//		ImGui::PopID();
-		//		return clicked;
-		//	};
-
-		//	//auto ButtonWithIcon = [](const std::string& name, const sf::Texture& icon)
-		//	//{
-		//	//	ImGui::PushID(name.c_str());
-		//	//	bool clicked = false;
-		//	//	if (icon.getSize().x && icon.getSize().y)
-		//	//	{
-		//	//		const ImTextureID imTex = ImGuiSFML::GLHandleToImTexture(icon.getNativeHandle());
-		//	//		clicked |= ImGui::ImageButton(imTex, ImVec2(16, 16));
-		//	//		ImGui::SameLine();
-		//	//	}
-		//	//	clicked |= ImGui::Button(name.c_str());
-		//	//	ImGui::PopID();
-		//	//	return clicked;
-		//	//};
-		//	auto ButtonFile = [&, this](const std::string& name) { return ButtonNoIcon(name); };
-		//	auto ButtonFolder = [&, this](const std::string& name) { return ButtonNoIcon(name); };
-		//	//auto IsMatchingFilter = [this](const std::string& extension) { return mSettings.extensionsFilter.empty() || std::any_of(mSettings.extensionsFilter.begin(), mSettings.extensionsFilter.end(), [&](const std::string& ext) { return ext == extension; }); };
-
-		//	if (mPath.has_parent_path())
-		//	{
-		//		const std::filesystem::path parent = mPath.parent_path();
-		//		if (ButtonFolder(".."))
-		//		{
-		//			SetPath(parent);
-		//		}
-		//	}
-
-		//	while (!std::filesystem::exists(mPath))
-		//		mPath = mPath.parent_path();
-
-		//	for (const auto& entry : std::filesystem::directory_iterator(mPath))
-		//	{
-		//		const std::filesystem::path& path = entry.path();
-		//		const std::string entryName = std::filesystem::relative(path, mPath).string();
-		//		if (entry.is_directory())
-		//		{
-		//			if (ButtonFolder(entryName))
-		//			{
-		//				SetPath(path);
-		//				break;
-		//			}
-		//		}
-		//		else if (entry.is_regular_file())
-		//		{
-
-		//			if (ButtonFile(entryName.c_str()))
-		//			{
-		//				/*	auto type = AssetLoader.GetAssetType(entryName.c_str());
-
-
-		//					if (type != Nuclear::Assets::AssetType::Unknown)
-		//					{
-		//						if (type == Assets::AssetType::Image)
-		//						{
-		//							Importers::ImageLoadingDesc desc;
-
-		//							AssetLoader.Import(path.string(), desc);
-		//						}
-		//						else if (type == Assets::AssetType::Shader)
-		//						{
-		//							Importers::ShaderLoadingDesc desc;
-
-		//							AssetLoader.Import(path.string(), desc);
-		//						}
-		//						else if (type == Assets::AssetType::Mesh)
-		//						{
-		//							Importers::MeshLoadingDesc desc;
-		//							AssetLoader.Import(path.string(), desc);
-		//						}
-		//					}*/
-
-
-
-		//					/*if (mOnPicked)
-		//						mOnPicked(path);
-		//					Hide();*/
-		//			}
-
-
-		//		}
-		//		else
-		//		{
-		//			ImGui::Text(entryName.c_str());
-		//		}
-		//	}
-		//	ImGui::End();
-		//}
 	}
 }

@@ -154,6 +154,12 @@ namespace Nuclear
 			return mReceiveShadows;
 		}
 
+		void MeshComponent::SetMesh(Assets::Mesh* mesh)
+		{
+			pMesh = mesh;
+			mDirty = true;
+		}
+
 		void MeshComponent::SetMaterial(Assets::Material* material)
 		{
 			pMaterial = material;

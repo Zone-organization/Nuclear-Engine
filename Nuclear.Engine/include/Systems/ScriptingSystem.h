@@ -4,15 +4,7 @@
 #include <vector>
 
 namespace Nuclear
-{
-	//namespace Scripting
-	//{
-	//	namespace Internal
-	//	{
-	//		class AngelScriptModule;
-	//	}
-	//}
-			
+{			
 	namespace Systems
 	{
 		class NEAPI ScriptingSystem : public ECS::System<ScriptingSystem>

@@ -49,6 +49,20 @@ namespace Nuclear::Editor
 
 			if (firstpage)
 			{
+				if (ImGui::Button("Create"))
+				{
+					pActiveProject = &mEditorInstance->mActiveProject;
+					ProjectInfo info;
+					info.mProjectName = ProjectName;
+					pActiveProject->Initalize(info);
+
+					mAssetLibViewer.SetProject(pActiveProject);
+					pActiveProject->AddNewScene();
+
+					//Finish close window
+					mNewPrjWindowOpen = false;
+					ImGui::CloseCurrentPopup();
+				}
 				// Left
 				{
 					ImGui::BeginChild("left pane", ImVec2(150, 0), true);

@@ -47,6 +47,7 @@ namespace Nuclear {
 			bool GetCastShadow() const;
 			bool GetReceiveShadows() const;
 
+			void SetMesh(Assets::Mesh* mesh);
 			void SetMaterial(Assets::Material* material);
 
 			Assets::Mesh* GetMesh();
