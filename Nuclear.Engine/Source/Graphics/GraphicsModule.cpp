@@ -139,8 +139,9 @@ namespace Nuclear
 			TexData.pSubResources = data->mSubresources.data();
 			TexData.NumSubresources = data->mSubresources.size();
 			Diligent::RefCntAutoPtr<Diligent::ITexture> mTexture;
+			data->mTexDesc.MiscFlags = MISC_TEXTURE_FLAG_GENERATE_MIPS;
 			GetDevice()->CreateTexture(data->mTexDesc, &TexData, &mTexture);
-
+			
 			if (mTexture.RawPtr() != nullptr)
 			{
 				result->mTextureView = nullptr;
@@ -148,6 +149,8 @@ namespace Nuclear
 				result->mHeight = data->mTexDesc.Height;
 
 				result->mTextureView = mTexture->GetDefaultView(Diligent::TEXTURE_VIEW_SHADER_RESOURCE);
+				GetContext()->GenerateMips(result->mTextureView);
+
 				result->SetState(Assets::IAsset::State::Created);
 				return true;
 			}
