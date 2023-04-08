@@ -37,6 +37,10 @@ namespace Nuclear
 				TextureData* pResultData = new TextureData;
 				pResultData->mData = Platform::FileSystem::Get().LoadFile(mPath.GetPathNoExt());
 				Assets::TextureDesc desc;
+				mLoadingDesc.mData.mMemData = (void*)pResultData->mData.GetBuffer().data();
+				mLoadingDesc.mData.mMemSize = pResultData->mData.GetBuffer().size();
+
+				mLoadingDesc.mExtension = Importers::TextureImporter::Get().GetImageExtension(mPath.GetPathNoExt());
 
 				bool result = Importers::TextureImporter::Get().Load(mLoadingDesc, pResultData);
 

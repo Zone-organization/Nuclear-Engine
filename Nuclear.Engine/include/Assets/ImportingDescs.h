@@ -4,7 +4,6 @@
 #include <string>
 #include <Diligent/Graphics/GraphicsEngine/interface/Texture.h>
 #include <vector>
-
 namespace Nuclear
 {
 	namespace Assets
@@ -64,6 +63,7 @@ namespace Nuclear
 
 			Diligent::BIND_FLAGS mBindFlags;
 
+			//0-> Create full mip map chain
 			Uint32 mMipLevels;
 
 			Diligent::CPU_ACCESS_FLAGS mCPUAccessFlags;
@@ -72,17 +72,15 @@ namespace Nuclear
 
 			bool mGenerateMips;
 
-			bool mFlipY_Axis;
+			TextureLoadingData mData;
 
 			bool mLoadFromMemory;
 
+			bool mGenerateMipsOnCPU;
+
+			bool mFlipY_Axis;
+
 			Diligent::RESOURCE_DIMENSION mType;
-
-			void* mMemData;
-
-			Uint32 mMemSize;
-
-			bool mEngineAllocMem;
 
 			IMAGE_EXTENSION mExportExtension;
 
@@ -93,13 +91,12 @@ namespace Nuclear
 				mCPUAccessFlags(Diligent::CPU_ACCESS_NONE),
 				mIsSRGB(false),
 				mGenerateMips(true),
-				mFlipY_Axis(true),
 				mLoadFromMemory(false),
-				mMemData(nullptr),
-				mMemSize(0),
+				mData(TextureLoadingData()),
+				mGenerateMipsOnCPU(false),
 				mType(Diligent::RESOURCE_DIM_TEX_2D),
-				mExportExtension(IMAGE_EXTENSION_DDS),
-				mEngineAllocMem(false)
+				mFlipY_Axis(true),
+				mExportExtension(IMAGE_EXTENSION_UNKNOWN)
 			{
 			}
 		};

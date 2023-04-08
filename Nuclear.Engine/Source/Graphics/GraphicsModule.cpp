@@ -191,7 +191,6 @@ namespace Nuclear
 		void GraphicsModule::CreateImageData(Assets::TextureData* result, const Assets::TextureDesc& desc)
 		{
 			using namespace Diligent;
-
 			result->mTexDesc.Type = desc.mType;
 			result->mTexDesc.Usage = desc.mUsage;
 			result->mTexDesc.BindFlags = desc.mBindFlags;
@@ -199,126 +198,140 @@ namespace Nuclear
 			result->mTexDesc.CPUAccessFlags = desc.mCPUAccessFlags;
 			result->mTexDesc.Width = desc.mWidth;
 			result->mTexDesc.Height = desc.mHeight;
+			result->mTexDesc.MipLevels = desc.mMipLevels;
 
-			if (result->mSubresources.size() == 0)
+			Uint32 AvailMips = ComputeMipLevelsCount(result->mTexDesc.Width, result->mTexDesc.Height);
+			Uint32 MipsToUse = 1;
+
+			if (desc.mMipLevels > 0)
+				MipsToUse = std::min(AvailMips, desc.mMipLevels);
+			else
+				MipsToUse = AvailMips;
+
+			result->mSubresources = std::vector<TextureSubResData>(MipsToUse);
+			result->mMips = std::vector< std::vector<Uint8> >(MipsToUse);
+
+			ModifyImageComponents(result, desc);
+
+			auto& pSubResources = result->mSubresources;
+			auto& Mips = result->mMips;
+
+			//Allocate memory for the mipmaps
+			for (Uint32 m = 1; m < MipsToUse; ++m)
 			{
-				result->mTexDesc.MipLevels = ComputeMipLevelsCount(result->mTexDesc.Width, result->mTexDesc.Height);
-				if (desc.mMipLevels > 0)
-					result->mTexDesc.MipLevels = std::min(result->mTexDesc.MipLevels, desc.mMipLevels);
+				auto MipLevelProps = GetMipLevelProperties(result->mTexDesc, m);
+				Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
+				pSubResources[m].pData = Mips[m].data();
+				pSubResources[m].Stride = MipLevelProps.RowSize;
+			}
 
-				Uint32 NumComponents = 0;
-				const auto ChannelDepth = GetValueSize(desc.mComponentType) * 8;
-
-				bool IsSRGB = (desc.mNumComponents >= 3 && ChannelDepth == 8) ? desc.mIsSRGB : false;
-				if (result->mTexDesc.Format == TEX_FORMAT_UNKNOWN)
+			if (desc.mGenerateMipsOnCPU)
+			{
+				for (Uint32 m = 1; m < MipsToUse; ++m)
 				{
-					NumComponents = desc.mNumComponents == 3 ? 4 : desc.mNumComponents;
-
-					if (ChannelDepth == 8)
-					{
-						switch (NumComponents)
-						{
-						case 1: result->mTexDesc.Format = TEX_FORMAT_R8_UNORM; break;
-						case 2: result->mTexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
-						case 4: result->mTexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
-						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
-						}
-					}
-					else if (ChannelDepth == 16)
-					{
-						switch (NumComponents)
-						{
-						case 1: result->mTexDesc.Format = TEX_FORMAT_R16_UNORM; break;
-						case 2: result->mTexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
-						case 4: result->mTexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
-						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
-						}
-					}
-					else if (ChannelDepth == 32)
-					{
-						switch (NumComponents)
-						{
-						case 1: result->mTexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
-						case 2: result->mTexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
-						case 4: result->mTexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
-						default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
-						}
-					}
-					else
-						LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
+					auto FinerMipProps = GetMipLevelProperties(result->mTexDesc, m - 1);
+					ComputeMipLevelAttribs Attribs;
+					Attribs.Format = result->mTexDesc.Format;
+					Attribs.FineMipWidth = FinerMipProps.LogicalWidth;
+					Attribs.FineMipHeight = FinerMipProps.LogicalHeight;
+					Attribs.pFineMipData = pSubResources[m - 1].pData;
+					Attribs.FineMipStride = StaticCast<size_t>(pSubResources[m - 1].Stride);
+					Attribs.pCoarseMipData = Mips[m].data();
+					Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
+					Attribs.AlphaCutoff = desc.mMipMapsAlphaCutoff;
+					Attribs.FilterType = desc.mMipMapsFilter;
+					ComputeMipLevel(Attribs);
 				}
-				else
-				{
-					const auto& TexFmtDesc = GetTextureFormatAttribs(result->mTexDesc.Format);
+			}
+		}
 
-					NumComponents = TexFmtDesc.NumComponents;
-					if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
-						LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
+		void GraphicsModule::ModifyImageComponents(Assets::TextureData* result, const Assets::TextureDesc& desc)
+		{
+			Uint32 NumComponents = 0;
+			const auto ChannelDepth = GetValueSize(desc.mComponentType) * 8;
+
+			bool IsSRGB = (desc.mNumComponents >= 3 && ChannelDepth == 8) ? desc.mIsSRGB : false;
+			if (result->mTexDesc.Format == TEX_FORMAT_UNKNOWN)
+			{
+				NumComponents = desc.mNumComponents == 3 ? 4 : desc.mNumComponents;
+
+				if (ChannelDepth == 8)
+				{
+					switch (NumComponents)
+					{
+					case 1: result->mTexDesc.Format = TEX_FORMAT_R8_UNORM; break;
+					case 2: result->mTexDesc.Format = TEX_FORMAT_RG8_UNORM; break;
+					case 4: result->mTexDesc.Format = IsSRGB ? TEX_FORMAT_RGBA8_UNORM_SRGB : TEX_FORMAT_RGBA8_UNORM; break;
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
+					}
 				}
-				result->mSubresources = std::vector<TextureSubResData>(result->mTexDesc.MipLevels);
-				result->mMips = std::vector< std::vector<Uint8> >(result->mTexDesc.MipLevels);
-
-				auto& pSubResources = result->mSubresources;
-				auto& Mips = result->mMips;
-
-				if (desc.mNumComponents != NumComponents)
+				else if (ChannelDepth == 16)
 				{
-					auto DstStride = desc.mWidth * NumComponents * ChannelDepth / 8;
-					DstStride = AlignUp(DstStride, Uint32{ 4 });
-					Mips[0].resize(size_t{ DstStride } *size_t{ desc.mHeight });
-					pSubResources[0].pData = Mips[0].data();
-					pSubResources[0].Stride = DstStride;
-					if (ChannelDepth == 8)
+					switch (NumComponents)
 					{
-						ModifyComponentCount<Uint8>(desc.mData, desc.mRowStride, desc.mNumComponents,
-							Mips[0].data(), DstStride,
-							desc.mWidth, desc.mHeight, NumComponents);
+					case 1: result->mTexDesc.Format = TEX_FORMAT_R16_UNORM; break;
+					case 2: result->mTexDesc.Format = TEX_FORMAT_RG16_UNORM; break;
+					case 4: result->mTexDesc.Format = TEX_FORMAT_RGBA16_UNORM; break;
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
 					}
-					else if (ChannelDepth == 16)
+				}
+				else if (ChannelDepth == 32)
+				{
+					switch (NumComponents)
 					{
-						ModifyComponentCount<Uint16>(desc.mData, desc.mRowStride, desc.mNumComponents,
-							Mips[0].data(), DstStride,
-							desc.mWidth, desc.mHeight, NumComponents);
-					}
-					else if (ChannelDepth == 32)
-					{
-						ModifyComponentCount<float>(desc.mData, desc.mRowStride, desc.mNumComponents,
-							Mips[0].data(), DstStride,
-							desc.mWidth, desc.mHeight, NumComponents);
+					case 1: result->mTexDesc.Format = TEX_FORMAT_R16_FLOAT; break;
+					case 2: result->mTexDesc.Format = TEX_FORMAT_RG16_FLOAT; break;
+					case 4: result->mTexDesc.Format = TEX_FORMAT_RGBA32_FLOAT; break;
+					default: LOG_ERROR_AND_THROW("Unexpected number of color channels (", desc.mNumComponents, ")");
 					}
 				}
 				else
+					LOG_ERROR_AND_THROW("Unsupported color channel depth (", ChannelDepth, ")");
+			}
+			else
+			{
+				const auto& TexFmtDesc = GetTextureFormatAttribs(result->mTexDesc.Format);
+
+				NumComponents = TexFmtDesc.NumComponents;
+				if (TexFmtDesc.ComponentSize != ChannelDepth / 8)
+					LOG_ERROR_AND_THROW("Image channel size ", ChannelDepth, " is not compatible with texture format ", TexFmtDesc.Name);
+			}
+
+			auto& pSubResources = result->mSubresources;
+			auto& Mips = result->mMips;
+
+			if (desc.mNumComponents != NumComponents)
+			{
+				auto DstStride = desc.mWidth * NumComponents * ChannelDepth / 8;
+				DstStride = AlignUp(DstStride, Uint32{ 4 });
+				Mips[0].resize(size_t{ DstStride } *size_t{ desc.mHeight });
+				pSubResources[0].pData = Mips[0].data();
+				pSubResources[0].Stride = DstStride;
+				if (ChannelDepth == 8)
 				{
-					auto MipLevelProps = GetMipLevelProperties(result->mTexDesc, 0);
-
-					pSubResources[0].pData = desc.mData;
-					pSubResources[0].Stride = MipLevelProps.RowSize;
+					ModifyComponentCount<Uint8>(desc.mData, desc.mRowStride, desc.mNumComponents,
+						Mips[0].data(), DstStride,
+						desc.mWidth, desc.mHeight, NumComponents);
 				}
-
-				for (Uint32 m = 1; m < result->mTexDesc.MipLevels; ++m)
+				else if (ChannelDepth == 16)
 				{
-					auto MipLevelProps = GetMipLevelProperties(result->mTexDesc, m);
-					Mips[m].resize(StaticCast<size_t>(MipLevelProps.MipSize));
-					pSubResources[m].pData = Mips[m].data();
-					pSubResources[m].Stride = MipLevelProps.RowSize;
-
-					if (desc.mGenerateMipMaps)
-					{
-						auto FinerMipProps = GetMipLevelProperties(result->mTexDesc, m - 1);
-
-						ComputeMipLevelAttribs Attribs;
-						Attribs.Format = result->mTexDesc.Format;
-						Attribs.FineMipWidth = FinerMipProps.LogicalWidth;
-						Attribs.FineMipHeight = FinerMipProps.LogicalHeight;
-						Attribs.pFineMipData = pSubResources[m - 1].pData;
-						Attribs.FineMipStride = StaticCast<size_t>(pSubResources[m - 1].Stride);
-						Attribs.pCoarseMipData = Mips[m].data();
-						Attribs.CoarseMipStride = StaticCast<size_t>(pSubResources[m].Stride);
-						Attribs.AlphaCutoff = desc.mMipMapsAlphaCutoff;
-						Attribs.FilterType = desc.mMipMapsFilter;
-						ComputeMipLevel(Attribs);
-					}
+					ModifyComponentCount<Uint16>(desc.mData, desc.mRowStride, desc.mNumComponents,
+						Mips[0].data(), DstStride,
+						desc.mWidth, desc.mHeight, NumComponents);
 				}
+				else if (ChannelDepth == 32)
+				{
+					ModifyComponentCount<float>(desc.mData, desc.mRowStride, desc.mNumComponents,
+						Mips[0].data(), DstStride,
+						desc.mWidth, desc.mHeight, NumComponents);
+				}
+			}
+			else
+			{
+				auto MipLevelProps = GetMipLevelProperties(result->mTexDesc, 0);
+
+				pSubResources[0].pData = desc.mData;
+				pSubResources[0].Stride = MipLevelProps.RowSize;
 			}
 		}
 

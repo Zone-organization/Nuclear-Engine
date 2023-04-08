@@ -225,7 +225,7 @@ namespace Nuclear
 					Graphics::GraphicsModule::Get().GetContext()->ClearRenderTarget(camera.GetColorRT().GetRTV(), (float*)&camera.mRTClearColor, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					Graphics::GraphicsModule::Get().GetContext()->ClearDepthStencil(camera.GetDepthRT().GetRTV(), Diligent::CLEAR_DEPTH_FLAG, 1.0f, 0, Diligent::RESOURCE_STATE_TRANSITION_MODE_TRANSITION);
 					{
-						PROFILE_GPU(test);
+					//	PROFILE_GPU(test);
 						////////////////////////////////////
 						//Step 2.3: Update RenderPasses
 						////////////////////////////////////
@@ -233,7 +233,7 @@ namespace Nuclear
 						{
 							pass->Update(&mRenderData);
 						}
-						NUCLEAR_INFO("Test {0}", test.End());
+				//		NUCLEAR_INFO("Test {0}", test.End());
 					}
 				}
 			}		

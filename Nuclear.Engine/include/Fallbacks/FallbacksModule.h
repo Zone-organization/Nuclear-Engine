@@ -10,7 +10,7 @@ namespace Nuclear
 		{
 			friend class Core::EngineModule<FallbacksModule>;	
 		public:
-			void Initialize();
+			bool Initialize();
 			void Shutdown() override;
 
 			Assets::Texture* GetDefaultBlackImage();

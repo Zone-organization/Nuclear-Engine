@@ -24,7 +24,7 @@ namespace Nuclear
 				mRowStride = 0;
 				mData = nullptr;
 				mComponentType = Diligent::VT_UNDEFINED;
-				mUsage = Diligent::USAGE_IMMUTABLE;
+				mUsage = Diligent::USAGE_DEFAULT;
 				mBindFlags = Diligent::BIND_SHADER_RESOURCE;
 				mMipLevels = 0;
 				mCPUAccessFlags = Diligent::CPU_ACCESS_NONE;
@@ -59,7 +59,7 @@ namespace Nuclear
 
 			Diligent::TEXTURE_FORMAT mFormat;
 
-			bool mGenerateMipMaps = true;
+			bool mGenerateMipsOnCPU = false;
 
 			Uint32 mMipLevels;
 

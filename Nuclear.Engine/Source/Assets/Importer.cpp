@@ -605,7 +605,7 @@ namespace Nuclear
 				NUCLEAR_ERROR("[Importer] Failed To Load Texture2D (For CubeMap): '{0}'", Path.GetInputPath());
 				return nullptr;
 			}
-			imagedesc.mGenerateMipMaps = false;
+			imagedesc.mMipLevels = 1;
 			Graphics::GraphicsModule::Get().CreateImageData(&imagedata, imagedesc);
 			Graphics::GraphicsModule::Get().CreateImage(result, &imagedata);
 

@@ -57,6 +57,16 @@ copy External\CmakeProjects\Diligent\Platforms\Basic\Debug\Diligent-BasicPlatfor
 copy External\CmakeProjects\Diligent\Platforms\Win32\Debug\Diligent-Win32Platform.lib      					         Bin\DebugX64
 copy External\CmakeProjects\Diligent\Common\Debug\Diligent-Common.lib            									     Bin\DebugX64
 
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Debug\GraphicsEngineD3D11_64d.pdb          	 Bin\DebugX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Debug\GraphicsEngineD3D12_64d.pdb          	 Bin\DebugX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.pdb          Bin\DebugX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineVulkan\Debug\GraphicsEngineVk_64d.pdb          	 Bin\DebugX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsAccessories\Debug\Diligent-GraphicsAccessories.pdb                Bin\DebugX64
+copy External\CmakeProjects\Diligent\Graphics\GraphicsTools\Debug\Diligent-GraphicsTools.pdb            			     Bin\DebugX64
+copy External\CmakeProjects\Diligent\Platforms\Basic\Debug\Diligent-BasicPlatform.pdb      					         Bin\DebugX64
+copy External\CmakeProjects\Diligent\Platforms\Win32\Debug\Diligent-Win32Platform.pdb      					         Bin\DebugX64
+copy External\CmakeProjects\Diligent\Common\Debug\Diligent-Common.pdb     
+
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D11\Debug\GraphicsEngineD3D11_64d.dll          	 Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineD3D12\Debug\GraphicsEngineD3D12_64d.dll          	 Bin\DebugX64
 copy External\CmakeProjects\Diligent\Graphics\GraphicsEngineOpenGL\Debug\GraphicsEngineOpenGL_64d.dll            Bin\DebugX64

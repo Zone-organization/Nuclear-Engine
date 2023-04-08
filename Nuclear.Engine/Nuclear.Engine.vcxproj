@@ -122,6 +122,7 @@
     <ClInclude Include="include\Assets\Tasks\TextureCreateTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureImportTask.h" />
     <ClInclude Include="include\Assets\Tasks\TextureLoadTask.h" />
+    <ClInclude Include="include\Assets\TextureTypes.h" />
     <ClInclude Include="include\Audio\AudioBackend.h" />
     <ClInclude Include="include\Audio\AudioFile.h" />
     <ClInclude Include="include\Audio\AudioDevice.h" />

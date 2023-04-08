@@ -23,5 +23,7 @@ int main()
 		Core::Engine::Get().LoadClient(&editor);
 	}
 	Core::Engine::Get().EndClient();
+	Core::Engine::Get().Shutdown();
+
 	return 0;
 }

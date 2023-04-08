@@ -10,6 +10,7 @@
 #include <Platform/FileSystem.h>
 
 #include <Serialization/SerializationModule.h>
+#include <filesystem>
 
 namespace Nuclear
 {
@@ -39,16 +40,17 @@ namespace Nuclear
 				{
 					auto extension = Importers::TextureImporter::Get().GetImageExtension(mPath.GetRealPath());
 					auto importedfile = Platform::FileSystem::Get().LoadFile(mPath.GetRealPath());
-					mImportingDesc.mMemData = importedfile.mDataBuf.data();
-					mImportingDesc.mMemSize = importedfile.mDataBuf.size();
+					mImportingDesc.mData.mMemData = importedfile.mDataBuf.data();
+					mImportingDesc.mData.mMemSize = importedfile.mDataBuf.size();
 					result = Importers::TextureImporter::Get().Import(pResultData, extension, mImportingDesc);
 				}
 				else
 				{
 					result = Importers::TextureImporter::Get().Import(pResultData, IMAGE_EXTENSION_UNKNOWN, mImportingDesc);
-					if (mImportingDesc.mEngineAllocMem)
+					if (mImportingDesc.mData.mEngineAllocMem)
 					{
-						free(mImportingDesc.mMemData);
+						if(mImportingDesc.mData.mMemData)
+							free(mImportingDesc.mData.mMemData);
 					}
 				}
 
@@ -58,6 +60,7 @@ namespace Nuclear
 
 					if (!mImportingDesc.mCommonOptions.mLoadOnly)
 					{
+						namespace fs = std::filesystem;			
 						std::string exportpath = mImportingDesc.mCommonOptions.mExportPath.GetRealPath();
 						if (!mImportingDesc.mCommonOptions.mExportPath.isValid())
 						{
@@ -65,9 +68,12 @@ namespace Nuclear
 						}
 						Platform::FileSystem::Get().CreateDir(exportpath);
 
-						std::string exportedimagename = pResult->GetName() + ".dds"; ///<TODO extension...
+						std::string exportedimagename = pResult->GetName() + mPath.GetExtension(); ///<TODO extension...
 
-						Importers::TextureImporter::Get().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension);
+						std::error_code ec;
+						fs::copy_file(mPath.GetRealPath(), exportpath + exportedimagename, ec);
+
+					/*	Importers::TextureImporter::Get().Export(exportpath + exportedimagename, pResultData, mImportingDesc.mExportExtension); */
 
 						AssetMetadata assetmetadata = Assets::AssetManager::Get().CreateMetadata(pResult);
 

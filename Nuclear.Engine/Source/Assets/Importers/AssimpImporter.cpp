@@ -302,11 +302,11 @@ namespace Nuclear {
 							imagedesc.mCommonOptions.mExportPath = exportPath + "Textures/";
 
 							imagedesc.mLoadFromMemory = true;
-							imagedesc.mEngineAllocMem = true;
-							imagedesc.mMemSize = embeddedtex->mWidth;
+							imagedesc.mData.mEngineAllocMem = true;
+							imagedesc.mData.mMemSize = embeddedtex->mWidth;
 
-							imagedesc.mMemData = malloc(imagedesc.mMemSize);
-							memcpy_s(imagedesc.mMemData, imagedesc.mMemSize, embeddedtex->pcData, embeddedtex->mWidth);
+							imagedesc.mData.mMemData = malloc(imagedesc.mData.mMemSize);
+							memcpy_s(imagedesc.mData.mMemData, imagedesc.mData.mMemSize, embeddedtex->pcData, embeddedtex->mWidth);
 
 							//imagedesc.mMemData = (Byte*)embeddedtex->pcData;
 							texture.pTexture = Assets::Importer::Get().ImportTexture(embeddedtex->mFilename.C_Str(),imagedesc);

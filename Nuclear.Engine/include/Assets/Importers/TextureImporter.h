@@ -33,7 +33,7 @@ namespace Nuclear
 			private:
 				TextureImporter();
 
-				bool FreeimageLoadMemory(IMAGE_EXTENSION type, Assets::TextureDesc* result, const Assets::TextureImportingDesc& Desc);
+				bool FreeimageLoadMemory(IMAGE_EXTENSION type,bool flip_y, Assets::TextureDesc* result, const Assets::TextureLoadingData& Desc);
 			};
 		}
 	}

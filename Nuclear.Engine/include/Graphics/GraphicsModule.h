@@ -68,6 +68,9 @@ namespace Nuclear
 
 			void CreateImageData(Assets::TextureData* result, const Assets::TextureDesc& desc);
 
+			void ModifyImageComponents(Assets::TextureData* result, const Assets::TextureDesc& desc);
+			void GenerateMipMapsCPU(Assets::TextureData* result, const Assets::TextureDesc& desc);
+
 			Assets::TextureUsageType ParseTexUsageFromName(std::string& name);
 
 			bool isGammaCorrect();

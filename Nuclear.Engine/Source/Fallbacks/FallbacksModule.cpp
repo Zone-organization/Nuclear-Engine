@@ -7,17 +7,24 @@ namespace Nuclear
 	{
 		FallbacksModule::FallbacksModule()
 		{
-			Initialize();
+			DefaultBlackImage = nullptr;
+
+			DefaultGreyImage = nullptr;
+
+			DefaultWhiteImage = nullptr;
 		}
 
-		void FallbacksModule::Initialize()
+		bool FallbacksModule::Initialize()
 		{
 			//Images
 			Assets::TextureImportingDesc desc;
 			desc.mCommonOptions.mAsyncImport = false;
 			desc.mCommonOptions.mLoadOnly = true;
+
 			DefaultBlackImage = Assets::Importer::Get().ImportTexture("@NuclearAssets@/DefaultTextures/Black32x32.png", desc);
+
 			DefaultGreyImage = Assets::Importer::Get().ImportTexture("@NuclearAssets@/DefaultTextures/Grey32x32.png", desc);
+
 			DefaultWhiteImage = Assets::Importer::Get().ImportTexture("@NuclearAssets@/DefaultTextures/White32x32.png", desc);
 
 
@@ -30,6 +37,8 @@ namespace Nuclear
 
 			DefaultSpecularTex.pTexture = DefaultWhiteImage;
 			DefaultSpecularTex.mUsageType = Assets::TextureUsageType::Specular;
+
+			return true;
 		}
 		void FallbacksModule::Shutdown()
 		{

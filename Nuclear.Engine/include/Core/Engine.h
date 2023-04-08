@@ -22,6 +22,7 @@ namespace Nuclear
 			bool AutoInitScriptingModule = true;
 			bool AutoInitRenderingModule = true;
 			bool AutoInitThreadingModule = true;
+			bool AutoInitFallbacksModule = true;
 
 			std::string mScriptingClientDllName = "ClientScripts.dll";
 			std::string mScriptingAssemblyNamespace = "ClientScripts";

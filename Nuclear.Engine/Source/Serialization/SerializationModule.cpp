@@ -53,8 +53,9 @@ namespace Nuclear
 			case Assets::AssetType::Texture:
 			{
 				const auto imagedesc = static_cast<Assets::TextureLoadingDesc*>(metadata.pLoadingDesc);
-				meta["ImageLoadingDesc"]["Extension"] = magic_enum::enum_name(imagedesc->mExtension);
-				meta["ImageLoadingDesc"]["AsyncLoading"] = SetBool(imagedesc->mAsyncLoading);
+				meta["TextureLoadingDesc"]["Extension"] = magic_enum::enum_name(imagedesc->mExtension);
+				meta["TextureLoadingDesc"]["AsyncLoading"] = SetBool(imagedesc->mAsyncLoading);
+				meta["TextureLoadingDesc"]["FlipYAxis"] = SetBool(imagedesc->mFlipYAxis);
 			}
 			case Assets::AssetType::Mesh:
 			{
@@ -93,8 +94,9 @@ namespace Nuclear
 				case Assets::AssetType::Texture:
 				{
 					auto imagedesc = static_cast<Assets::TextureLoadingDesc*>(metadata.pLoadingDesc = new Assets::TextureLoadingDesc);
-					imagedesc->mExtension = magic_enum::enum_cast<Assets::IMAGE_EXTENSION>(meta["ImageLoadingDesc"]["Extension"]).value_or(Assets::IMAGE_EXTENSION::IMAGE_EXTENSION_UNKNOWN);
-					imagedesc->mAsyncLoading = meta["ImageLoadingDesc"].GetBoolean("AsyncLoading", true);
+					imagedesc->mExtension = magic_enum::enum_cast<Assets::IMAGE_EXTENSION>(meta["TextureLoadingDesc"]["Extension"]).value_or(Assets::IMAGE_EXTENSION::IMAGE_EXTENSION_UNKNOWN);
+					imagedesc->mAsyncLoading = meta["TextureLoadingDesc"].GetBoolean("AsyncLoading", true);
+					imagedesc->mFlipYAxis = meta["TextureLoadingDesc"].GetBoolean("FlipYAxis", true);
 				}
 				case Assets::AssetType::Mesh:
 				{

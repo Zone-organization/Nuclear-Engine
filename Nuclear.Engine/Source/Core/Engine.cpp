@@ -23,6 +23,7 @@
 #include <Rendering\RenderingModule.h>
 #include <Threading/ThreadingModule.h>
 #include <Threading/DelegateTask.h>
+#include <Fallbacks/FallbacksModule.h>
 
 #include <Assets/AssetManager.h>
 #include <Assets/AssetLibrary.h>
@@ -174,6 +175,15 @@ namespace Nuclear
 					NUCLEAR_FATAL("[Module] Failed to initalize ThreadingModule...");
 				}
 			}
+
+			if (desc.AutoInitFallbacksModule)
+			{
+				if (!Fallbacks::FallbacksModule::Get().Initialize())
+				{
+					NUCLEAR_FATAL("[Module] Failed to initalize FallbacksModule...");
+				}
+			}
+
 
 			gisDebug = desc.Debug;
 

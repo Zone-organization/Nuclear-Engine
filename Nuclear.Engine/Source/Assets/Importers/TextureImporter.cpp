@@ -50,7 +50,7 @@ namespace Nuclear
 				FreeImage_SetOutputMessage(MyMessageFunc);
 			}
 
-			bool TextureImporter::FreeimageLoadMemory(IMAGE_EXTENSION format, Assets::TextureDesc* result, const Assets::TextureImportingDesc& Desc)
+			bool TextureImporter::FreeimageLoadMemory(IMAGE_EXTENSION format, bool flip_y, Assets::TextureDesc* result, const  Assets::TextureLoadingData& Desc)
 			{
 				FIBITMAP* dib = nullptr;
 
@@ -71,7 +71,7 @@ namespace Nuclear
 				{
 					return false;
 				}
-				if (Desc.mFlipY_Axis)
+				if (flip_y)
 					FreeImage_FlipVertical(dib);
 
 				FIBITMAP* bitmap = nullptr;
@@ -146,7 +146,7 @@ namespace Nuclear
 				if (Desc.mLoadFromMemory == true)
 				{
 					FIMEMORY* memBuff;
-					memBuff = FreeImage_OpenMemory((Byte*)Desc.mMemData, Desc.mMemSize);
+					memBuff = FreeImage_OpenMemory((Byte*)Desc.mData.mMemData, Desc.mData.mMemSize);
 
 					auto type = FreeImage_GetFileTypeFromMemory(memBuff, 0);
 					dib = FreeImage_LoadFromMemory(type, memBuff);
@@ -248,7 +248,7 @@ namespace Nuclear
 					Diligent::TextureLoadInfo info;
 					Diligent::RefCntAutoPtr<Diligent::ITextureLoader> loader;
 
-					Diligent::CreateTextureLoaderFromMemory(importingdesc.mMemData, importingdesc.mMemSize, Diligent::IMAGE_FILE_FORMAT_DDS, false, info, &loader);
+					Diligent::CreateTextureLoaderFromMemory(importingdesc.mData.mMemData, importingdesc.mData.mMemSize, Diligent::IMAGE_FILE_FORMAT_DDS, false, info, &loader);
 
 					data->mTexDesc = loader->GetTextureDesc();
 					data->mSubresources = std::move(loader->GetSubresources());
@@ -258,7 +258,7 @@ namespace Nuclear
 				else
 				{
 					Assets::TextureDesc imagedesc;
-					if(FreeimageLoadMemory((IMAGE_EXTENSION)type, &imagedesc, importingdesc))
+					if(FreeimageLoadMemory((IMAGE_EXTENSION)type, importingdesc.mFlipY_Axis, &imagedesc, importingdesc.mData))
 					{
 						Graphics::GraphicsModule::Get().CreateImageData(data, imagedesc);
 						return true;
@@ -303,7 +303,13 @@ namespace Nuclear
 				}
 				else
 				{
-					//FreeimageLoadMemory()
+					Assets::TextureDesc imagedesc;
+					if (FreeimageLoadMemory((IMAGE_EXTENSION)Desc.mExtension, Desc.mFlipYAxis, &imagedesc, Desc.mData))
+					{
+						Graphics::GraphicsModule::Get().CreateImageData(result, imagedesc);
+						return true;
+					}
+					return false;
 				}
 				return false;
 			}

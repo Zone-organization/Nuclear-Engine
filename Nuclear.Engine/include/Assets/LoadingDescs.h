@@ -2,6 +2,7 @@
 #include <Core/Path.h>
 #include <Core/UUID.h>
 #include <string>
+#include <Assets/TextureTypes.h>
 
 namespace Nuclear
 {
@@ -68,11 +69,12 @@ namespace Nuclear
 		struct TextureLoadingDesc : public AssetLoadingDesc
 		{
 			TextureLoadingDesc()
-				: mExtension(IMAGE_EXTENSION_UNKNOWN)
+				: mExtension(IMAGE_EXTENSION_UNKNOWN), mData(TextureLoadingData()), mFlipYAxis(true)
 			{
 
 			}
-
+			TextureLoadingData mData;
+			bool mFlipYAxis;
 			IMAGE_EXTENSION mExtension;
 		};
 
