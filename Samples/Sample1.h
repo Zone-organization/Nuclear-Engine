@@ -114,7 +114,7 @@ class Sample1 : public Core::Client
 	Rendering::Skybox Skybox;
 
 	Rendering::ForwardRenderingPath ForwardRP;
-
+	Rendering::PostProcessingPass SkyboxPass;
 	Rendering::GeometryPass GeoPass;
 
 	ECS::Entity ECube;
@@ -163,8 +163,8 @@ public:
 		//Load vampire Model
 		auto vampiremodel = GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx", desc);
 
-		BobAnimator.Initialize(&bobmodel->GetImportedAnimations()->mClips.at(0));
-		VampireAnimator.Initialize(&vampiremodel->GetImportedAnimations()->mClips.at(0));
+		BobAnimator.Initialize(bobmodel->GetImportedAnimations());
+		VampireAnimator.Initialize(vampiremodel->GetImportedAnimations());
 
 		//Load some textures manually
 
@@ -301,7 +301,7 @@ public:
 		InitAudioComponents();
 
 		Renderer->AddRenderPass(&GeoPass);
-	//	Renderer->GetBackground().SetSkybox(&Skybox);
+	//	Renderer->(&Skybox);
 
 		Platform::Input::Get().SetMouseInputMode(Platform::Input::MouseInputMode::Locked);
 	}

@@ -1,4 +1,5 @@
 #include "Animation/Animator.h"
+#include <Assets/Animations.h>
 
 namespace Nuclear
 {
@@ -13,6 +14,16 @@ namespace Nuclear
 		inline Animator::Animator(Animation::AnimationClip* animation)
 		{
 			Initialize(animation);
+		}
+		void Animator::Initialize(Assets::Animations* animation)
+		{
+			if (animation)
+			{
+				if (animation->mClips.size() > 0)
+				{
+					Initialize(&animation->mClips.at(0));
+				}
+			}
 		}
 		void Animator::Initialize(Animation::AnimationClip* animation)
 		{

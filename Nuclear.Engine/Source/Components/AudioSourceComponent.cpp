@@ -6,6 +6,10 @@ namespace Nuclear
 {
 	namespace Components
 	{
+
+#define CheckIfValid() 	if (GetAudioClip()->GetState() != Assets::IAsset::State::Created) return
+		
+
 		AudioSourceComponent::AudioSourceComponent()
 			: AudioSourceComponent(nullptr)
 		{
@@ -27,28 +31,34 @@ namespace Nuclear
 		void AudioSourceComponent::SetVolume(float vol)
 		{
 			mVolume = vol;
+			CheckIfValid();
 			Audio::AudioModule::Get().GetBackend()->SetSource_Volume(mSourceID, vol);
 		}
 		void AudioSourceComponent::SetPitch(float pitch)
 		{
 			mPitch = pitch;
+			CheckIfValid();
 			Audio::AudioModule::Get().GetBackend()->SetSource_Volume(mSourceID, pitch);
 		}
 		void AudioSourceComponent::SetIsLooping(bool val)
 		{
 			mLoop = val;
+			CheckIfValid();
 			Audio::AudioModule::Get().GetBackend()->SetSource_Volume(mSourceID, val);
 		}
 		void AudioSourceComponent::Play()
 		{
+			CheckIfValid();
 			Audio::AudioModule::Get().GetBackend()->Play(mSourceID);
 		}
 		void AudioSourceComponent::Pause()
 		{
+			CheckIfValid();
 			Audio::AudioModule::Get().GetBackend()->Pause(mSourceID);
 		}
 		void AudioSourceComponent::Stop()
 		{
+			CheckIfValid();
 			Audio::AudioModule::Get().GetBackend()->Stop(mSourceID);
 		}
 	}

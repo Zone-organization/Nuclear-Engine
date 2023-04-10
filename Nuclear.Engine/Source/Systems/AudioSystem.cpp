@@ -20,7 +20,14 @@ namespace Nuclear
 			if (!source.GetAudioClip())
 			{
 				NUCLEAR_WARN("[AudioSystem] Creating AudioSourceComponent with no audio clip!");
+
 			}
+			if (source.GetAudioClip()->GetState() != Assets::IAsset::State::Loaded)
+			{
+				NUCLEAR_ERROR("[AudioSystem] Creating AudioSourceComponent with invalid audio clip!");
+				return;
+			}
+
 			Audio::AudioModule::Get().GetBackend()->CreateAudioSource(&source, transform);
 			Audio::AudioModule::Get().GetBackend()->SetSource_Transform(source.GetSourceID(), transform.GetLocalPosition(), transform.GetLocalRotation());
 			Audio::AudioModule::Get().GetBackend()->SetSource_Velocity(source.GetSourceID(), Math::Vector3(0.0f));
@@ -77,6 +84,10 @@ namespace Nuclear
 				auto& audio_source = eView.get<Components::AudioSourceComponent>(entity);				
 				auto Einfo = Core::Scene::Get().GetRegistry().try_get<Components::EntityInfoComponent>(entity);
 
+				if (audio_source.GetAudioClip()->GetState() != Assets::IAsset::State::Created)
+				{
+					continue;
+				}
 				if (audio_source.GetAudioClip()->Is3D())
 				{
 					const Math::Vector3 pos = Einfo->mTransform.GetLocalPosition();

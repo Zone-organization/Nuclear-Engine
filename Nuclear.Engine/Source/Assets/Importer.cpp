@@ -146,7 +146,6 @@ namespace Nuclear
 		AudioClip* Importer::ImportAudioClip(const Core::Path& Path, const AudioClipImportingDesc& Desc)
 		{
 			auto result = &AssetLibrary::Get().mImportedAudioClips.AddAsset();
-
 			SNDFILE* sndfile;
 			SF_INFO sfinfo;
 			sf_count_t num_frames;

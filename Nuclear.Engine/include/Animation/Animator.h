@@ -9,6 +9,10 @@
 
 namespace Nuclear
 {
+	namespace Assets
+	{
+		class Animations;
+	}
 	namespace Animation
 	{
 		class NEAPI Animator
@@ -16,6 +20,8 @@ namespace Nuclear
 		public:
 			Animator();
 			Animator(Animation::AnimationClip* animation);
+
+			void Initialize(Assets::Animations* animation);
 
 			void Initialize(Animation::AnimationClip* animation);
 			

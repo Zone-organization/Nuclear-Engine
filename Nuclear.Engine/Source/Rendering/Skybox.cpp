@@ -67,6 +67,14 @@ namespace Nuclear
 
 		void Skybox::Initialize( const std::array<Assets::Texture*, 6> & data)
 		{
+			for (auto i : data)
+			{
+				if (i == nullptr)
+				{
+					//Log Error?
+					return;
+				}
+			}
 			//TODO
 			TextureDesc TexDesc;
 			TexDesc.Name = "SkyBox_TextureCube";
