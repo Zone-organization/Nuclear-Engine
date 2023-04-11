@@ -37,10 +37,23 @@ namespace Nuclear
 			Uint32 GetHashedKey(const std::string& Key);
 			ShaderPipelineVariant* GetVariant(Uint32 Key);
 
-			const std::vector<ShaderPipelineSwitch>& GetSwitches() const;
+			FORCE_INLINE const std::vector<ShaderPipelineSwitch>& GetSwitches() const
+			{
+				return mDesc.Switches;
+			}
+			FORCE_INLINE const std::unordered_map<Uint32, ShaderPipelineVariant>& GetVariants() const
+			{
+				return mVariants;
+			}
 
-			Assets::Shader* GetShaderAsset();
-			Rendering::GBuffer* GetGBuffer();
+			FORCE_INLINE Assets::Shader* GetShaderAsset()
+			{
+				return pParentShader;
+			}
+			FORCE_INLINE Rendering::GBuffer* GetGBuffer()
+			{
+				return &mGBuffer;
+			}
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{

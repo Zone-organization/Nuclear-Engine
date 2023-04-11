@@ -25,6 +25,7 @@ public:
 	}
 	void SetupAssets()
 	{
+
 		script = GetAssetManager().Import<Assets::Script>("@CurrentPath@/../Textures/SamplesScripts/Sample3.cs");
 
 		GetAssetManager().LoadFolder("@Assets@/Textures/PBR/RustedIron/");
@@ -63,7 +64,7 @@ public:
 		Renderer->AddRenderPass(&GeoPass);
 		Renderer->AddRenderPass(&PostFXPass);
 
-		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader");
+		PBR = GetAssetManager().Load<Assets::Shader>("@Assets@/Shaders/PBR.NEShader");
 
 		Renderer->RegisterShader(PBR);
 

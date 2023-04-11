@@ -20,14 +20,11 @@ namespace Samples
             //bool result = HasComponent<Nuclear.Components.EntityInfoComponent>();
             //Logger.Info("Result " + result);
 
-            if(Input.IsKeyPressed(Input.KeyCode.W))
+            if(Input.IsKeyPressed(Input.KeyCode.G))
             {
-                Logger.Info("W KeyPressed ");
+                Logger.Info("G KeyPressed ");
             }
-            if (Input.IsKeyPressed(Input.KeyCode.S))
-            {
-                Logger.Info("S KeyPressed ");
-            }
+        
         }
     }
 }

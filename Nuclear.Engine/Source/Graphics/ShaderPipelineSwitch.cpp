@@ -93,8 +93,12 @@ namespace Nuclear
 			return false;
 		}
 
-		void ShaderPipelineSwitchController::Update(bool ForceDirty)
+		bool ShaderPipelineSwitchController::Update(bool ForceDirty)
 		{
+			if (pPipeline->GetVariants().size() == 0)
+			{
+				return false;
+			}
 			mRequiredHash = 0;
 
 			if (mDirty || ForceDirty)
@@ -119,6 +123,8 @@ namespace Nuclear
 				pActiveVariant = pPipeline->GetVariant(mRequiredHash);
 				mDirty = false;
 			}
+
+			return true;
 		}
 
 		Uint32 ShaderPipelineSwitchController::GetRequiredHash()

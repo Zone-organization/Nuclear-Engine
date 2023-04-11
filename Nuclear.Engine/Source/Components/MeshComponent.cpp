@@ -34,14 +34,11 @@ namespace Nuclear
 			{
 				if (mEnableRendering)
 				{
-					bool invalid = false;
+					bool not_ready = true;
 					if (pMesh && pMaterial)
 					{
-						if (pMesh->GetState() != Assets::IAsset::State::Created)
-						{
-							invalid = true;
-						}
-						else
+						if (pMesh->GetState() == Assets::IAsset::State::Created	&& 
+							pMaterial->GetState() == Assets::IAsset::State::Created)
 						{
 							if (pMaterial->GetShader())
 							{
@@ -70,23 +67,19 @@ namespace Nuclear
 								{
 									mPipelineCntrl.SetSwitch(i.first, i.second);
 								}
-								mPipelineCntrl.Update();
-								RenderQueue = mPipelineCntrl.GetActiveVariant()->mRenderQueue;
-								mDirty = false;
 
-							}
-							else
-							{
-								invalid = true;
+								if (mPipelineCntrl.Update())									
+								{
+									RenderQueue = mPipelineCntrl.GetActiveVariant()->mRenderQueue;
+									mDirty = false;
+
+									not_ready = false;
+								}
 							}
 						}
 					}
-					else
-					{
-						invalid = true;
-					}
 
-					if (invalid)
+					if (not_ready)
 					{
 						mDirty = true;
 						RenderQueue = 0;
@@ -98,14 +91,7 @@ namespace Nuclear
 				}				
 			}
 		}
-		Uint32 MeshComponent::GetRenderQueue() const
-		{
-			return RenderQueue;
-		}
-		Graphics::ShaderPipelineVariant* MeshComponent::GetRenderingVariant()
-		{
-			return mPipelineCntrl.GetActiveVariant();
-		}
+
 		void MeshComponent::SetVariantSwitch(Uint32 VariantID, bool val)
 		{
 			if (VariantID == Utilities::Hash("NE_DEFFERED"))
@@ -140,20 +126,6 @@ namespace Nuclear
 				mDirty = true;
 			}
 		}
-
-		bool MeshComponent::GetEnableRendering() const
-		{
-			return mEnableRendering;
-		}
-		bool MeshComponent::GetCastShadow() const
-		{
-			return mCastShadow;
-		}
-		bool MeshComponent::GetReceiveShadows() const
-		{
-			return mReceiveShadows;
-		}
-
 		void MeshComponent::SetMesh(Assets::Mesh* mesh)
 		{
 			pMesh = mesh;
@@ -166,18 +138,7 @@ namespace Nuclear
 			mDirty = true;
 			mMaterialDirty = true;
 		}
-		Assets::Mesh* MeshComponent::GetMesh()
-		{
-			return pMesh;
-		}
-		Assets::Material* MeshComponent::GetMaterial()
-		{
-			return pMaterial;
-		}
-		Animation::Animator* MeshComponent::GetAnimator()
-		{
-			return pAnimator;
-		}
+
 		void MeshComponent::SetRenderSystemFlags(bool hasdefferedpass, bool hasshadowpass)
 		{
 			if (mRenderSystemHasDefferedPass != hasdefferedpass)

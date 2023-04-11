@@ -34,8 +34,6 @@ namespace Nuclear {
 			~MeshComponent();
 
 			void Update(bool forcedirty = false);
-			Uint32 GetRenderQueue() const;
-			Graphics::ShaderPipelineVariant* GetRenderingVariant();
 
 			void SetVariantSwitch(Uint32 VariantID, bool val);
 
@@ -43,19 +41,45 @@ namespace Nuclear {
 			void SetCastShadow(bool val);
 			void SetReceiveShadows(bool val);
 
-			bool GetEnableRendering() const;
-			bool GetCastShadow() const;
-			bool GetReceiveShadows() const;
-
 			void SetMesh(Assets::Mesh* mesh);
 			void SetMaterial(Assets::Material* material);
 
-			Assets::Mesh* GetMesh();
-			Assets::Material* GetMaterial();
-			Animation::Animator* GetAnimator();
-
 			void SetRenderSystemFlags(bool hasdefferedpass, bool hasshadowpass);
 
+			FORCE_INLINE Uint32 GetRenderQueue() const
+			{
+				return RenderQueue;
+			}
+			FORCE_INLINE Graphics::ShaderPipelineVariant* GetRenderingVariant()
+			{
+				return mPipelineCntrl.GetActiveVariant();
+			}
+
+			FORCE_INLINE bool GetEnableRendering() const
+			{
+				return mEnableRendering;
+			}
+			FORCE_INLINE bool GetCastShadow() const
+			{
+				return mCastShadow;
+			}
+			FORCE_INLINE bool GetReceiveShadows() const
+			{
+				return mReceiveShadows;
+			}
+
+			FORCE_INLINE Assets::Mesh* GetMesh()
+			{
+				return pMesh;
+			}
+			FORCE_INLINE Assets::Material* GetMaterial()
+			{
+				return pMaterial;
+			}
+			FORCE_INLINE Animation::Animator* GetAnimator()
+			{
+				return pAnimator;
+			}
 
 			constexpr static auto serialize(auto& archive, auto& self)
 			{

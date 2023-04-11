@@ -54,7 +54,7 @@ namespace Nuclear
 
 			void SetPipeline(ShaderPipeline* pipeline);
 			bool SetSwitch(Uint32 switchId, bool value, bool controllersupport = true);
-			void Update(bool ForceDirty = false);
+			bool Update(bool ForceDirty = false);
 
 			Uint32 GetRequiredHash();
 			ShaderPipelineVariant* GetActiveVariant();

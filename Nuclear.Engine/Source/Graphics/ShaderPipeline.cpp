@@ -149,20 +149,5 @@ namespace Nuclear
 
 			return nullptr;
 		}
-
-		const std::vector<ShaderPipelineSwitch>& ShaderPipeline::GetSwitches() const
-		{
-			return mDesc.Switches;
-		}
-
-		Assets::Shader* ShaderPipeline::GetShaderAsset()
-		{
-			return pParentShader;
-		}
-
-		Rendering::GBuffer* ShaderPipeline::GetGBuffer()
-		{
-			return &mGBuffer;
-		}
 	}
 }
