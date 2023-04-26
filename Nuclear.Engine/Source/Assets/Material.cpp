@@ -30,6 +30,7 @@ namespace Nuclear
 			pShader = shader;
 			mCreationShaderCommonID = pShader->GetID();
 			InitializePipelineTextures();
+			mState = IAsset::State::Created;
 		}
 		void Material::BindTexSet(Graphics::ShaderPipelineVariant* pipeline, Uint32 index)
 		{

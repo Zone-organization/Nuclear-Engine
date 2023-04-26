@@ -155,11 +155,6 @@ namespace Nuclear
 		{
 			pRuntimeDomain = nullptr;
 		}
-
-		void HelloWorld()
-		{
-			NUCLEAR_INFO("\n HELLO WORLD \n");
-		}
 		void ScriptingModule::InitBindings()
 		{
 			//Utilities::Logger
