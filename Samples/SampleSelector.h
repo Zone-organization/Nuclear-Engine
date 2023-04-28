@@ -5,12 +5,12 @@
 #include "Sample3.h"
 #include "Sample4.h"
 #include "Sample5.h"
-#include "SponzaDemo.h"
 #include "Playground.h"
 
 class SampleSelector : public Core::Client
 {
 public:
+	Assets::Shader* PBR;
 
 	void OnWindowResize(int width, int height) override
 	{
@@ -32,6 +32,7 @@ public:
 
 	void ImportModels()
 	{
+		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader");
 
 		GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekNanosuit/nanosuit.obj");
 
@@ -40,6 +41,10 @@ public:
 		GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/Bob/boblampclean.md5mesh");
 
 		GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/vampire/vampire_a_lusth.fbx");
+
+		Assets::MeshImportingDesc sponza_desc;
+		sponza_desc.pMaterialShader = PBR;
+		GetAssetManager().Import<Assets::Mesh>("@CommonAssets@/Models/CrytekSponza/Sponza.fbx", sponza_desc);
 
 		Assets::MeshImportingDesc ModelDesc;
 		ModelDesc.mImportMaterial = false;
@@ -50,15 +55,13 @@ public:
 
 	void ImportShaders()
 	{
+
 		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/BlinnPhong.NuclearShader");
 		GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/DiffuseOnly.NuclearShader");
 	}
 
 	void ImportPBRAssets()
 	{
-		Assets::Shader* PBR;
-		PBR = GetAssetManager().Import<Assets::Shader>("@NuclearAssets@/Shaders/PBR/PBR.NuclearShader");
-
 		Assets::Material RustedIron;
 		Assets::Material Plastic;
 		Assets::Material Grass;
@@ -180,12 +183,6 @@ public:
 		}
 
 		ImGui::Text("Select Demo");
-
-	/*	if (ImGui::Button("Sponza Demo"))
-		{
-			SponzaDemo demo;
-			return StartSample(&demo);
-		}*/
 
 		if (ImGui::Button("Playground"))
 		{

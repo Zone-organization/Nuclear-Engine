@@ -104,7 +104,6 @@
     <ClInclude Include="Sample5.h" />
     <ClInclude Include="SampleBase.h" />
     <ClInclude Include="SampleSelector.h" />
-    <ClInclude Include="SponzaDemo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\NuclearEngine\Shaders\DiffuseOnly.neshader">

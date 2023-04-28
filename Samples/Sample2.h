@@ -4,8 +4,9 @@
 class Sample2 : public SampleBase
 {
 	Assets::Mesh* ShaderBall;
-	Assets::Mesh* ShaderBall2;
 
+	Assets::Mesh* Sponza;
+	Assets::Material* SponzaMaterial;
 
 	Assets::Material* RustedIron;
 	Assets::Material* Plastic;
@@ -30,7 +31,7 @@ class Sample2 : public SampleBase
 
 	ECS::Entity EShaderBall;
 	ECS::Entity ESphere;
-	ECS::Entity EShaderBall2;
+	ECS::Entity ESponza;
 
 	ECS::Entity ELights;
 
@@ -44,6 +45,7 @@ public:
 	{
 
 	}
+
 	void LoadPBRMaterials()
 	{
 		//Initialize Materials
@@ -67,7 +69,10 @@ public:
 
 		//Load Models
 		ShaderBall = GetAssetManager().Load<Assets::Mesh>("@Assets@/Meshes/shaderball_shaderball/shaderball_shaderball.glb");
-		ShaderBall2 = GetAssetManager().Import<Assets::Mesh>("@Assets@/Meshes/shaderball_shaderball/shaderball_shaderball.glb");
+		Sponza = GetAssetManager().Load<Assets::Mesh>("@Assets@/Meshes/CrytekSponza_sponza/CrytekSponza_sponza.glb");
+		GetAssetManager().LoadFolder("@Assets@/Meshes/CrytekSponza_sponza/Textures/");
+
+		SponzaMaterial = Sponza->GetImportedMaterial();
 
 		LoadPBRMaterials();
 	}
@@ -78,9 +83,10 @@ public:
 		shaderballT.SetScale(0.5f);
 
 		EShaderBall = GetScene().CreateEntity("ShaderBall", shaderballT);
+		ECS::Transform TSponza;
+		TSponza.SetScale(Math::Vector3(0.05f, 0.05f, 0.05f));
+		ESponza = GetScene().CreateEntity("Sponza", TSponza);
 
-		shaderballT.SetPosition({ 15.0f, 0.0f, 0.0f });
-		EShaderBall2 = GetScene().CreateEntity("ShaderBall2", shaderballT);
 
 		ELights = GetScene().CreateEntity("Lights");
 		EController = GetScene().CreateEntity("Controller");
@@ -152,8 +158,10 @@ public:
 
 		EShaderBall.AddComponent<Components::MeshComponent>(ShaderBall, Gold);
 		EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
-		EShaderBall2.AddComponent<Components::MeshComponent>(ShaderBall2, Gold);
-		EShaderBall2.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
+
+		ESponza.AddComponent<Components::MeshComponent>(Sponza, SponzaMaterial);
+		ESponza.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+
 		ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 
 		GetScene().GetMainCamera()->mRTClearColor = Graphics::Color(0.15f, 0.15f, 0.15f, 1.0f);
@@ -186,14 +194,21 @@ public:
 				activeentity = EShaderBall;
 				EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 				ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
-				EShaderBall2.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
+				ESponza.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+
 			}
 			if (ImGui::RadioButton("Sphere", &f, 1))
 			{
 				activeentity = ESphere;
 				EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
 				ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
-				EShaderBall2.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+				ESponza.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+			}
+			if (ImGui::RadioButton("Sponza", &f, 3))
+			{
+				EShaderBall.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+				ESphere.GetComponent<Components::MeshComponent>().SetEnableRendering(false);
+				ESponza.GetComponent<Components::MeshComponent>().SetEnableRendering(true);
 			}
 
 			ImGui::Text("Material");
@@ -202,12 +217,14 @@ public:
 			{
 				ESphere.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
 				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
+				ESponza.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_DEFFERED"), isDeffered);
 			}
 
 			if (ImGui::Checkbox("Enable SSAO", &ssao_enabled))
 			{
 				ESphere.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_SSAO"), ssao_enabled);
 				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_SSAO"), ssao_enabled);
+				ESponza.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("NE_SSAO"), ssao_enabled);
 			}
 			static bool IBL_ = false;
 
@@ -215,6 +232,7 @@ public:
 			{
 				ESphere.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
 				EShaderBall.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
+				ESponza.GetComponent<Components::MeshComponent>().SetVariantSwitch(Utilities::Hash("IBL_ENABLED"), IBL_);
 			}
 			if (ImGui::Button("Rusted Iron"))
 			{

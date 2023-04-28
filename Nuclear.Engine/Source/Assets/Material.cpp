@@ -75,15 +75,18 @@ namespace Nuclear
 				ShaderTextureSet NewTexSet;
 				for (auto& TexSetTexture : TexSet.mData)
 				{
-					for (auto& ShaderTexinfo : pShader->GetReflection().mMaterialTexturesInfo)
+					bool match = false;
+					for (Uint32 i = 0; i < pShader->GetReflection().mMaterialTexturesInfo.size() && !match; i++)
 					{
-						//Found a match
+						auto& ShaderTexinfo = pShader->GetReflection().mMaterialTexturesInfo.at(i);
 						if (TexSetTexture.mUsageType == ShaderTexinfo.mTex.mUsageType)
 						{
 							ShaderTexture NewTex;
 							NewTex.mTex = TexSetTexture;
 							NewTex.mSlot = ShaderTexinfo.mSlot;
+							NewTex.mType = ShaderTextureType::MaterialTex;
 							NewTexSet.push_back(NewTex);
+							match = true;
 						}
 					}
 				}

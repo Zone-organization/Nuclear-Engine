@@ -54,6 +54,11 @@ namespace Nuclear
 		void AssetManager::LoadFolder(const Core::Path& Path)
 		{
 			namespace fs = std::filesystem;
+			if (!std::filesystem::is_directory(Path.GetRealPath()))
+			{
+				NUCLEAR_ERROR("[AssetManager] LoadFolder() Directory '{0}' doesn't exist!", Path.GetInputPath());
+				return;
+			}
 
 			for (const auto& entry : fs::directory_iterator(Path.GetRealPath()))
 			{

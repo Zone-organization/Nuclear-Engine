@@ -79,10 +79,10 @@ namespace Nuclear {
 				save_materials_names = desc.mSaveMaterialNames;
 				mModel = model;
 
-				if (desc.mExternalMaterial)
-				{
-					mModel.pMaterial = nullptr; //dont load material
-				}
+				//if (desc.mExternalMaterial)
+				//{
+				//	mModel.pMaterial = nullptr; //dont load material
+				//}
 
 				Assimp::Importer importer;
 				scene = importer.ReadFile(Path.c_str(), aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -105,7 +105,7 @@ namespace Nuclear {
 				{
 					mModel.pMesh->SetState(Assets::IAsset::State::Loaded);
 				}
-				if (mModel.pMaterial)
+				if (mModel.pMaterial && mModel.pMaterial->GetState() != Assets::IAsset::State::Created)
 				{
 					mModel.pMaterial->SetState(Assets::IAsset::State::Loaded);
 				}

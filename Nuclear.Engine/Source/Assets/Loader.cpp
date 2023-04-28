@@ -103,6 +103,9 @@ namespace Nuclear
 				mQueuedAssets.push_back(animations);
 			}
 
+			mesh->pImportedAnimations = animations;
+			mesh->pImportedMaterial = material;
+
 			mQueuedAssets.push_back(mesh);
 
 			Threading::ThreadingModule::Get().GetThreadPool().AddTask(new MeshLoadTask({ metadata.mName, mesh, material, animations }, Path, metadata));

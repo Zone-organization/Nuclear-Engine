@@ -91,6 +91,7 @@ namespace Nuclear {
 			Animations* GetImportedAnimations();
 		protected:
 			friend class Importer;
+			friend class Loader;
 			friend class GraphicsEngine;
 
 			Material* pImportedMaterial = nullptr;
