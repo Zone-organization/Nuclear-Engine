@@ -256,7 +256,13 @@ namespace Nuclear
 				 {
 					 Serialization::BinaryBuffer buffer;
 					 zpp::bits::out out(buffer);
-					 out(*material);
+				     auto err = out(*material);
+
+					 if (failure(err))
+					 {
+						 NUCLEAR_INFO("[AssetManager] Failed to serialize material '{0}' To: '{1}'", material->GetName(), exportpath.GetInputPath());
+						 return false;
+					 }
 
 					 Platform::FileSystem::Get().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + material->GetName() + ".NEMaterial");
 					 NUCLEAR_INFO("[AssetManager] Exported Material '{0}' To: '{1}'", material->GetName(), exportpath.GetInputPath());
@@ -271,8 +277,13 @@ namespace Nuclear
 				{
 					Serialization::BinaryBuffer buffer;
 					zpp::bits::out out(buffer);
-					out(*shader);
+					auto err = out(*shader);
 
+					if (failure(err))
+					{
+						NUCLEAR_INFO("[AssetManager] Failed to serialize shader '{0}' To: '{1}'", shader->GetName(), exportpath.GetInputPath());
+						return false;
+					}
 					Platform::FileSystem::Get().SaveBinaryBuffer(buffer, exportpath.GetRealPath() + shader->GetName() + ".NEShader");
 					NUCLEAR_INFO("[AssetManager] Exported Shader '{0}' To: '{1}'", shader->GetName(), exportpath.GetInputPath());
 					return true;

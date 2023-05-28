@@ -51,7 +51,7 @@ namespace Nuclear
 				if (animationTime < mData.m_Positions[index + 1].timeStamp)
 					return index;
 			}
-			assert(0);
+			return 0;
 		}
 		inline int Bone::GetRotationIndex(float animationTime)
 		{
@@ -60,7 +60,7 @@ namespace Nuclear
 				if (animationTime < mData.m_Rotations[index + 1].timeStamp)
 					return index;
 			}
-			assert(0);
+			return 0;
 		}
 		inline int Bone::GetScaleIndex(float animationTime)
 		{
@@ -69,7 +69,7 @@ namespace Nuclear
 				if (animationTime < mData.m_Scales[index + 1].timeStamp)
 					return index;
 			}
-			assert(0);
+			return 0;
 		}
 		inline float Bone::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
 		{

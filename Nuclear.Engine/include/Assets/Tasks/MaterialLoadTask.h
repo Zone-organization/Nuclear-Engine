@@ -35,8 +35,9 @@ namespace Nuclear
 				Serialization::BinaryBuffer buffer;
 				Platform::FileSystem::Get().LoadBinaryBuffer(buffer, mPath.GetPathNoExt() + ".NEMaterial");
 				zpp::bits::in in(buffer);
-				in(*pResult);
 
+				auto err = in(*pResult);
+				
 				//delete from queued assets
 				auto& vec = Loader::Get().GetQueuedAssets();
 				for (Uint32 i = 0; i < vec.size(); i++)
@@ -46,6 +47,13 @@ namespace Nuclear
 						vec.erase(vec.begin() + i);
 						break;
 					}
+				}
+
+				if (failure(err))
+				{
+					NUCLEAR_INFO("[Assets] Failed to de-serialize material '{0}'", mPath.GetInputPath());
+					pResult->SetState(IAsset::State::Unknown);
+					return false;
 				}
 
 				pResult->SetState(IAsset::State::Created);

@@ -104,6 +104,7 @@
     <None Include="include\Nuclear.Editor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\EditorUILayer.h" />
     <ClInclude Include="include\FileDialog.h" />
     <ClInclude Include="include\AssetLibraryViewer.h" />
     <ClInclude Include="include\Common.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="include\ProjectTemplate.h" />
     <ClInclude Include="include\SystemsEditor.h" />
     <ClInclude Include="include\Systems.h" />
+    <ClInclude Include="include\UILayers\LoggerView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -35,7 +35,7 @@ namespace Nuclear
 				Serialization::BinaryBuffer buffer;
 				Platform::FileSystem::Get().LoadBinaryBuffer(buffer, mPath.GetPathNoExt() + ".NEShader");
 				zpp::bits::in in(buffer);
-				in(*pResult);
+				auto err = in(*pResult);
 
 				//delete from queued assets
 				auto& vec = Loader::Get().GetQueuedAssets();
@@ -46,6 +46,13 @@ namespace Nuclear
 						vec.erase(vec.begin() + i);
 						break;
 					}
+				}
+
+				if (failure(err))
+				{
+					NUCLEAR_INFO("[Assets] Failed to de-serialize shader '{0}'", mPath.GetInputPath());
+					pResult->SetState(IAsset::State::Unknown);
+					return false;
 				}
 
 				pResult->SetState(IAsset::State::Loaded);
