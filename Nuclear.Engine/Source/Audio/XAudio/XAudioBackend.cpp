@@ -80,7 +80,7 @@ namespace Nuclear
 			mSources.reserve(8);
 			mBuffers.reserve(8);
 
-			NUCLEAR_INFO("[XAudioBackend] Initialized XAudio2 successfully.");
+			NUCLEAR_TRACE("[XAudioBackend] Initialized XAudio2 successfully.");
 			return true;
 		}
 		void XAudioBackend::Shutdown()

@@ -31,7 +31,7 @@ namespace Nuclear
 			switch (Severity)
 			{
 			case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_INFO:
-				NUCLEAR_INFO("[Diligent] {0}", Message);
+				NUCLEAR_TRACE("[Diligent] {0}", Message);
 				return;
 			case DEBUG_MESSAGE_SEVERITY::DEBUG_MESSAGE_SEVERITY_WARNING:
 				NUCLEAR_WARN("[Diligent] {0}", Message);
@@ -88,7 +88,7 @@ namespace Nuclear
 				ImGui_Impl_CreateDeviceObjects();
 				//io.Fonts->GetTexDataAsAlpha8()
 
-				NUCLEAR_INFO("[GraphicsModule] ImGUI Initalized.");
+				NUCLEAR_TRACE("[GraphicsModule] ImGUI Initalized.");
 			}
 
 			mDefaultStaticSamplers["NEMat_"] = SamLinearWrapDesc;
@@ -399,7 +399,7 @@ namespace Nuclear
 				pixelshader = desc.mPipelineDesc.mDefferedPSOCreateInfo.mPixelShader;
 			else
 			{
-				NUCLEAR_INFO("[GraphicsModule] ReflectShader Error: All Pipelines are invalid!");
+				NUCLEAR_ERROR("[GraphicsModule] ReflectShader Error: All Pipelines are invalid!");
 				return false;
 			}
 
@@ -670,12 +670,12 @@ namespace Nuclear
 				else
 					LOG_ERROR_AND_THROW("Failed to find compatible hardware adapters");
 
-				NUCLEAR_INFO("[GraphicsModule] Available GPU Adapters: ");
+				NUCLEAR_TRACE("[GraphicsModule] Available GPU Adapters: ");
 				for (Uint32 i = 0; i < Adapters.size(); ++i)
 				{
 					const auto& AdapterInfo = Adapters[i];
 
-					NUCLEAR_INFO("[ID: {0}] {1} - Type: {2} - Dedicated Memory: {3}, Total Memory: {4}",
+					NUCLEAR_TRACE("[ID: {0}] {1} - Type: {2} - Dedicated Memory: {3}, Total Memory: {4}",
 						i, AdapterInfo.Description, GetAdapterTypeString(AdapterInfo.Type), AdapterInfo.Memory.LocalMemory / 1024 / 1024, (AdapterInfo.Memory.LocalMemory + AdapterInfo.Memory.HostVisibleMemory + AdapterInfo.Memory.UnifiedMemory) / 1024 / 1024);
 				}
 

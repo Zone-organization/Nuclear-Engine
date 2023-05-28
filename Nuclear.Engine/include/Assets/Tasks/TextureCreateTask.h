@@ -68,15 +68,15 @@ namespace Nuclear
 
 				if (mFactoryType == 1)
 				{
-					NUCLEAR_INFO("[Assets] Imported: {0} ", mPath.GetInputPath());
+					NUCLEAR_TRACE("[Assets] Imported: {0} ", mPath.GetInputPath());
 				}
 				else if (mFactoryType == 2)
 				{
-					NUCLEAR_INFO("[Assets] Loaded: {0} ", mPath.GetInputPath());
+					NUCLEAR_TRACE("[Assets] Loaded: {0} ", mPath.GetInputPath());
 				}
 				else
 				{
-					NUCLEAR_INFO("[TextureCreateTask] Created: {0} ", mPath.GetInputPath());
+					NUCLEAR_TRACE("[TextureCreateTask] Created: {0} ", mPath.GetInputPath());
 				}
 
 				return result;

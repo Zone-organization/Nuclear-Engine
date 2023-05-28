@@ -99,6 +99,7 @@
     <ClCompile Include="source\Project.cpp" />
     <ClCompile Include="source\EditorUI.cpp" />
     <ClCompile Include="source\Nuclear.Editor.cpp" />
+    <ClCompile Include="source\UILayers\LoggerView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Nuclear.Editor.h" />

@@ -70,7 +70,7 @@ namespace Nuclear
             printf("Opened \"%s\"\n", name);
 
 
-            NUCLEAR_INFO("[OpenALBackend] Initialized OpenAL-Soft successfully.");
+            NUCLEAR_TRACE("[OpenALBackend] Initialized OpenAL-Soft successfully.");
             return true;
 		}
         void OpenALBackend::Shutdown()

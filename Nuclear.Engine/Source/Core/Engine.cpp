@@ -384,8 +384,8 @@ namespace Nuclear
 			NUCLEAR_INFO("-------------------------- -Nuclear Engine- --------------------------");
 			NUCLEAR_INFO("------------------------- Zone Organization --------------------------");
 			NUCLEAR_INFO("--------------------------------v7medz--------------------------------");
-			NUCLEAR_INFO("[Engine] Starting Engine...");
-			NUCLEAR_INFO("[Engine] Engine Build: '{0}'.'{1}'  On: '{2}' At: '{3}'", MajorVersion, MinorVersion, __DATE__, __TIME__);
+			NUCLEAR_TRACE("[Engine] Starting Engine...");
+			NUCLEAR_TRACE("[Engine] Engine Build: '{0}'.'{1}'  On: '{2}' At: '{3}'", MajorVersion, MinorVersion, __DATE__, __TIME__);
 
 			//			NUCLEAR_INFO("[Engine] Built For: ");
 

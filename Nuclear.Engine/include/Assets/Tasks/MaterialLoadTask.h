@@ -51,14 +51,14 @@ namespace Nuclear
 
 				if (failure(err))
 				{
-					NUCLEAR_INFO("[Assets] Failed to de-serialize material '{0}'", mPath.GetInputPath());
+					NUCLEAR_TRACE("[Assets] Failed to de-serialize material '{0}'", mPath.GetInputPath());
 					pResult->SetState(IAsset::State::Unknown);
 					return false;
 				}
 
 				pResult->SetState(IAsset::State::Created);
 
-				NUCLEAR_INFO("[Assets] Loaded: {0} ", mPath.GetInputPath());
+				NUCLEAR_TRACE("[Assets] Loaded: {0} ", mPath.GetInputPath());
 
 				return true;
 			}

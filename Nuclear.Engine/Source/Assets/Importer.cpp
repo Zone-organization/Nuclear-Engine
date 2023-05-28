@@ -115,7 +115,7 @@ namespace Nuclear
 
 
 				result->mState = IAsset::State::Loaded;
-				NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+				NUCLEAR_TRACE("[Assets] Imported: {0} ", Path.GetInputPath());
 
 				//TODO:EXPORT
 
@@ -139,7 +139,7 @@ namespace Nuclear
 
 
 			result->mState = IAsset::State::Loaded;
-			NUCLEAR_INFO("[Assets] Imported: {0} ", imagedesc.mPath);
+			NUCLEAR_TRACE("[Assets] Imported: {0} ", imagedesc.mPath);
 			return result;
 		}
 
@@ -273,7 +273,7 @@ namespace Nuclear
 
 
 			result->mState = IAsset::State::Loaded;
-			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+			NUCLEAR_TRACE("[Assets] Imported: {0} ", Path.GetInputPath());
 			return result;
 		}
 
@@ -446,7 +446,7 @@ namespace Nuclear
 				}
 				result->Create(desc);
 
-				NUCLEAR_INFO("[Importer] Imported Font : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
+				NUCLEAR_TRACE("[Importer] Imported Font : '{0}' : '{1}'", Path.GetInputPath(), Utilities::int_to_hex<Uint32>(hashedpath));
 
 				// Cleanup
 				msdfgen::destroyFont(font);
@@ -502,7 +502,7 @@ namespace Nuclear
 			}
 
 			result->mState = IAsset::State::Loaded;
-			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+			NUCLEAR_TRACE("[Assets] Imported: {0} ", Path.GetInputPath());
 			return result;
 		}
 
@@ -522,7 +522,7 @@ namespace Nuclear
 			Scripting::ScriptingModule::Get().CreateScriptAsset(result, fullname);
 
 			result->mState = IAsset::State::Loaded;
-			NUCLEAR_INFO("[Assets] Imported: {0} ", Path.GetInputPath());
+			NUCLEAR_TRACE("[Assets] Imported: {0} ", Path.GetInputPath());
 			return result;
 		}
 
@@ -588,7 +588,7 @@ namespace Nuclear
 
 			Platform::FileSystem::Get().LoadBinaryBuffer(result->mBinaryBuffer, Path);
 
-			NUCLEAR_INFO("[Importer] Imported Scene : '{0}'", Path.GetInputPath());
+			NUCLEAR_TRACE("[Importer] Imported Scene : '{0}'", Path.GetInputPath());
 			return result;
 		}
 
@@ -612,7 +612,7 @@ namespace Nuclear
 			//result.mData = imagedata;
 
 
-			NUCLEAR_INFO("[Importer] Imported Texture2D (for CubeMap) : '{0}'", Path.GetInputPath());
+			NUCLEAR_TRACE("[Importer] Imported Texture2D (for CubeMap) : '{0}'", Path.GetInputPath());
 
 			return result;
 		}

@@ -71,7 +71,7 @@ namespace Nuclear
 				Serialization::SerializationModule::Get().Serialize(assetmetadata, newpath + ".NEMaterial" + ".NEMeta");
 				delete assetmetadata.pLoadingDesc;
 
-				NUCLEAR_INFO("[Assets] Imported: {0} ", mPath.GetInputPath());
+				NUCLEAR_TRACE("[Assets] Imported: {0} ", mPath.GetInputPath());
 
 				return true;
 			}
